@@ -13,7 +13,7 @@ This document is for user-facing behavior and workflows.
 ### Initial version
 
 - Create, edit, complete, and organize tasks
-- Show a Today-oriented workflow rather than a generic database-first UI
+- Show a Todo-oriented workflow rather than a generic database-first UI
 - Support recurring tasks
 - Support assignment as a suggestion and for filtering
 
@@ -29,7 +29,7 @@ Everything in the initial version, plus:
 
 ### Main screen
 
-The default home screen is a Today view. The Today view should include these user-facing sections:
+The default home screen is a Todo view. The Todo view should include these user-facing sections:
 
 - an active timer / current task area at the top
 - an inbox area near the top for fresh captures that still need sorting
@@ -92,7 +92,7 @@ One-off tasks should be completable from the main workflow with minimal friction
 
 ### Recurring tasks
 
-Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurring tasks should preserve their calendar-based schedule in the task's time zone rather than preserving a fixed elapsed duration between occurrences. A recurring task can also be marked done permanently. Doing so completes the current occurrence, removes it from the normal Today workflow, and retires its recurrence so that no future occurrences are generated. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
+Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurring tasks should preserve their calendar-based schedule in the task's time zone rather than preserving a fixed elapsed duration between occurrences. A recurring task can also be marked done permanently. Doing so completes the current occurrence, removes it from the normal Todo workflow, and retires its recurrence so that no future occurrences are generated. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
 
 ## Time Tracking Behavior
 
@@ -109,7 +109,7 @@ If sync produces overlapping time intervals for the same user because different 
 
 ### Current task prominence
 
-When a timer is running, the active task / active timer should be the most prominent item in the Today view. When a timer is not running, the task at the top of the list should take its place.
+When a timer is running, the active task / active timer should be the most prominent item in the Todo view. When a timer is not running, the task at the top of the list should take its place.
 
 ### Non-task activity tracking
 
@@ -170,8 +170,8 @@ When a timer is running, the app should show a persistent notification reflectin
 - The timer notification should offer an action to end the current timed item.
   - If the timed item is a task, that action should complete the task.
   - If the timed item is a generic activity, that action should stop that activity.
-  - After that action, the app should recompute the canonical Today task list (i.e. what Today shows before any sort/filter modifications) and automatically start timing the top eligible task from that list.
-  - If recomputing the canonical Today task list yields no eligible task, the timer notification should disappear.
+  - After that action, the app should recompute the canonical Todo task list (i.e. what the Todo view shows before any sort/filter modifications) and automatically start timing the top eligible task from that list.
+  - If recomputing the canonical Todo task list yields no eligible task, the timer notification should disappear.
 - If sync changes which item is currently being timed on another device, timer notifications on that user's devices should update, clear, or be replaced to reflect the synced state once sync catches up.
 
 ## Later Features
@@ -189,6 +189,6 @@ When a timer is running, the app should show a persistent notification reflectin
 - The app can be set as the digital assistant on Android to support adding tasks by voice
 - Done list
 - Task tags (hierarchical)
-  - can be used to filter Today or Done list
+  - can be used to filter Todo or Done list
 - Subtasks
   - Have a little % indicator with changing colors when all of the subtasks are done
