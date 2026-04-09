@@ -2,13 +2,14 @@
 
 ## Storage: Append-Only Event Log
 
-The database is a log of immutable events, not a table of mutable state. Current state is *derived* by replaying events in order.
+The database is a log of immutable events, not a table of mutable state. Current state is _derived_ by replaying events in order.
 
 **Per-node JSONL logs** are the unit of storage: one append-only file per node, one event per line.
 
 Each install generates a stable `node_id` automatically: 128 random bits encoded as base64url without padding. This `node_id` is opaque and is used in the owning node's log filename. Reinstallation will simply orphan the old `node_id` and generate a new one.
 
 Example:
+
 ```
 logs/q7L9xT2eWmN4Kc8pV1aZ0Q.jsonl
 logs/bM6rH1sNf2YpJ8dLw4UcXA.jsonl
@@ -20,6 +21,7 @@ Each node only appends to its own log file. No two nodes should ever write to th
 If a log ends with a truncated or otherwise invalid final JSON line, readers should treat the file as ending at the last valid line. If the reader owns that log file, it should truncate the broken tail away.
 
 Each event is a JSON object:
+
 ```json
 {
   "clock": 1741376580000000000,
@@ -47,10 +49,12 @@ A central server is intentionally avoided so that any two devices that can see e
 ## Convergence: Deterministic Replay Order
 
 On startup:
+
 1. Load the local JSON snapshot (contains per-node log read offsets); if no snapshot exists yet, start from an empty local cache and perform a full rebuild from the synced logs before allowing local writes
 2. Load the local SQLite DB (per-entity event history + indexes)
 
 After startup initialization, run the following incremental ingestion flow once immediately, and again whenever synced logs change while the app is running:
+
 1. For each known node log, seek to the stored local byte offset and read forward; if a saved offset is invalid (for example, because the file was truncated or manually repaired), fall back to a full rescan of that node's log
 2. Parse any newly appended events
 3. Insert the new events into SQLite, indexed by entity, with `node_id` inferred from the log filename; enforce uniqueness on `(node_id, clock)` so rescans and reprocessing are idempotent

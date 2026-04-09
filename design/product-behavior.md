@@ -86,7 +86,7 @@ One-off tasks should be completable from the main workflow with minimal friction
 
 ### Recurring tasks
 
-Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be  from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
+Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
 
 ## Time Tracking Behavior
 
@@ -172,12 +172,12 @@ When a timer is running, the app should show a persistent notification reflectin
   - I folded clothes for an hour and a half while watching TV. If I hadn't had the TV going, it might have taken me seventy minutes instead.
 - Task tags (hierarchical)
 - Subtasks
-    - Have a little % indicator with changing colors when all of the subtasks are done
+  - Have a little % indicator with changing colors when all of the subtasks are done
 - Done list
 - Accomplishment tag that can be used to filter Done list (and also can filter by tags like work, personal, etc.)
 - One-off modifications to repeating tasks (e.g. hide this task until my wife will be available because I can't progress on it without her)
 - Max repetitions (mostly for game stuff)
-    - For five weeks after an expansion launch, WoW will release a new campaign quest line each week
-    - I need to collect 10 of a certain item, but I can only get one per day
-    - World bosses are available on a rotation. To get all 4 of them, I need to do one each week
+  - For five weeks after an expansion launch, WoW will release a new campaign quest line each week
+  - I need to collect 10 of a certain item, but I can only get one per day
+  - World bosses are available on a rotation. To get all 4 of them, I need to do one each week
 - Marking a repeated task done; some goals (e.g. maxing out a faction's reputation or reaching a gear level) can't be programmed in. I'd still like to be able to mark a task done (as opposed to continuing to repeat it) when the underlying goal is met.
