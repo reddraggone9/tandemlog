@@ -76,6 +76,12 @@ Additionally, floating target dates (via priority buffer) should be supported fo
 - a priority buffer can be set when the task has a target due date or no explicit due date
 - a priority buffer must be a maximum distance if no target date is set
 
+#### Time zone semantics
+
+- A task can have a single time zone setting that applies to all of its date fields.
+- By default, a task's time zone floats with the user's current time zone so a task such as "brush teeth at 20:00" stays at 20:00 local time wherever the user is.
+- A task can instead be pinned to a specific time zone so its dates and times stay tied to that time zone, for cases such as external schedules or game resets.
+
 ### Hiding tasks
 
 If a task has a future start, it should stay hidden until that start. A toggle similar to the user toggle should allow display of tasks with future starts.
@@ -86,7 +92,7 @@ One-off tasks should be completable from the main workflow with minimal friction
 
 ### Recurring tasks
 
-Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
+Recurrence requires at least one date field: start, due, or both. Recurring tasks should repeat from either a date field or the completion time based on a toggle. If the toggle selects date-field recurrence, the next occurrence should be from the current due date, or from the current start date if due is unset, and written back to that same field. If the toggle selects completion-time recurrence, the next occurrence should be calculated from the time of completion and written to due, or to start if due is unset. When a recurring task also has a start/due relationship, the offset between start and due should remain stable across recurrences. Recurring tasks should preserve their calendar-based schedule in the task's time zone rather than preserving a fixed elapsed duration between occurrences. A recurring task can also be marked done permanently. Doing so completes the current occurrence, removes it from the normal Today workflow, and retires its recurrence so that no future occurrences are generated. Recurrence should be specified via text such as "every day", "every week on Tuesday, Thursday", or "every month on the last" (specifically matching rrule.js's `rule.toText()` format, though that particular library need not necessarily be used).
 
 ## Time Tracking Behavior
 
@@ -168,24 +174,21 @@ When a timer is running, the app should show a persistent notification reflectin
   - If recomputing the canonical Today task list yields no eligible task, the timer notification should disappear.
 - If sync changes which item is currently being timed on another device, timer notifications on that user's devices should update, clear, or be replaced to reflect the synced state once sync catches up.
 
-## Open Areas
+## Later Features
 
-- Longer-term user-readable history views beyond immediate undo and creator display
-- Semantics for date-only fields across time zones
-- Which task times are absolute instants versus current-time-zone-local times
-- How recurrences should preserve durations and offsets when time zones or DST boundaries change
-- Overlapping time tracking. Examples:
-  - I did the dishes for 25 minutes, but my wife was texting me while I did them, so about 10 minutes of that time was texting instead of dishes. However, I probably swapped back and forth 6 or more times and the overhead of tracking that wouldn't be worth it.
-  - I played WoW for 3 hours, but I got up to eat somewhere in the middle of it. That break took about 20 contiguous minutes, but I didn't record exactly when it happened.
-  - I folded clothes for an hour and a half while watching TV. If I hadn't had the TV going, it might have taken me seventy minutes instead.
-- Task tags (hierarchical)
-- Subtasks
-  - Have a little % indicator with changing colors when all of the subtasks are done
-- Done list
-- Accomplishment tag that can be used to filter Done list (and also can filter by tags like work, personal, etc.)
 - One-off modifications to repeating tasks (e.g. hide this task until my wife will be available because I can't progress on it without her)
 - Max repetitions (mostly for game stuff)
   - For five weeks after an expansion launch, WoW will release a new campaign quest line each week
   - I need to collect 10 of a certain item, but I can only get one per day
   - World bosses are available on a rotation. To get all 4 of them, I need to do one each week
-- Marking a repeated task done; some goals (e.g. maxing out a faction's reputation or reaching a gear level) can't be programmed in. I'd still like to be able to mark a task done (as opposed to continuing to repeat it) when the underlying goal is met.
+- Overlapping time tracking. Examples:
+  - I did the dishes for 25 minutes, but my wife was texting me while I did them, so about 10 minutes of that time was texting instead of dishes. However, I probably swapped back and forth 6 or more times and the overhead of tracking that wouldn't be worth it.
+  - I played WoW for 3 hours, but I got up to eat somewhere in the middle of it. That break took about 20 contiguous minutes, but I didn't record exactly when it happened.
+  - I folded clothes for an hour and a half while watching TV. If I hadn't had the TV going, it might have taken me seventy minutes instead.
+- Longer-term user-readable history views beyond immediate undo and creator display
+- The app can be set as the digital assistant on Android to support adding tasks by voice
+- Done list
+- Task tags (hierarchical)
+  - can be used to filter Today or Done list
+- Subtasks
+  - Have a little % indicator with changing colors when all of the subtasks are done
