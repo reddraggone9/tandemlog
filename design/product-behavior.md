@@ -131,7 +131,7 @@ The app should present a folder picker on first launch. Any folder that already 
 
 ## Notifications and Reminders
 
-Notifications will be implemented in a later version.
+Notifications will be implemented in a later version. Android is the required platform for notification behavior. Windows and Linux should support equivalent notification behavior where practical.
 
 ### Task reminders
 
@@ -159,6 +159,14 @@ A recurring task's reminder should recur with the task when the task advances to
 ### Timer notifications
 
 When a timer is running, the app should show a persistent notification reflecting the current task or activity and its elapsed time.
+
+- Timer notification behavior should continue to work while the app is backgrounded or otherwise not in the foreground.
+- The timer notification should offer an action to end the current timed item.
+  - If the timed item is a task, that action should complete the task.
+  - If the timed item is a generic activity, that action should stop that activity.
+  - After that action, the app should recompute the canonical Today task list (i.e. what Today shows before any sort/filter modifications) and automatically start timing the top eligible task from that list.
+  - If recomputing the canonical Today task list yields no eligible task, the timer notification should disappear.
+- If sync changes which item is currently being timed on another device, timer notifications on that user's devices should update, clear, or be replaced to reflect the synced state once sync catches up.
 
 ## Open Areas
 
