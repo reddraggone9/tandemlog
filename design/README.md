@@ -22,5 +22,4 @@ Goals:
 
 ## Unanswered Decisions
 
-- [ ] Make the tech stack decision
 - [ ] Refine the data model and event schema
