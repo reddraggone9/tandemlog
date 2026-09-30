@@ -99,3 +99,12 @@ Validation of signing preparation: six release-gate tests and actionlint pass; a
 Owner key generation is confirmed on Farnsworth (RSA 3072, PKCS12, alias `tandemlog-release`); only its public certificate SHA-256 is pinned here: `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`. Secret provisioning remains owner-pending. Android worker reports build-4 debug QA passed for settings/radio themes, one-line multiline-note previews, 130% text, capture/completion/Undo/reopen, persisted SAF access and external updates. Local debug build 3→4 upgraded successfully with the same cloud certificate; this does not establish public rc1 compatibility. Final owner-signed build-5 installation/launch smoke remains required.
 
 [Signing-preparation CI](https://github.com/reddraggone9/tandemlog/actions/runs/36759005277) passed all Linux, Windows and Android jobs at `aa323d068c80085cc2c902680bd89be2f9c66c3a`, including six release-gate tests, domain/integrity tests and native Linux workflows. Android here is the secret-free debug validation build; this does not claim the pending owner-signed APK has been built or installed.
+
+
+## Owner-signed candidate ready for native smoke
+
+[Signed candidate run 36762053783](https://github.com/reddraggone9/tandemlog/actions/runs/36762053783) completed successfully from source `d89a7d99fabecd27993e81707e98e7f0a3a8227c`. All platform gates and the owner-signing job passed. The integration cannot list repository secret metadata (HTTP 403); the required-input checks and successful signing establish that all four owner inputs were supplied and usable, without the cloud agent reading their values.
+
+The `android-release` artifact (ID `11118684574`) was downloaded through the supported GitHub connector, ZIP-CRC checked, and independently verified locally. APK SHA-256: `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046`; owner certificate matches the pinned fingerprint, package `dev.tandemlog.tandemlog`, version `0.1.0-rc.2`, code 5, non-debuggable, API 24 minimum/API 36 target, ARMv7/arm64/x86_64. The exact artifact ZIP was delivered through Library for native installation/launch smoke. No public rc2 release has been created.
+
+After successful native acceptance, publish from this candidate run using the exact APK SHA above. Do not rebuild or substitute another artifact. Preserve the external canonical folder across the required debug-to-owner-signature reinstall transition.

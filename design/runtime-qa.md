@@ -162,3 +162,8 @@ The final Android build-3 worker was subsequently admitted successfully; its cur
 ### External Android build-4 result
 
 The parent reports native accelerated Android QA passed for source `434771783eeba45499c30179b46794931bd3f342`, debug version `0.1.0-rc.2+4`: final settings/radio choice, full multiline editor notes versus one-line preview, 130% font scaling, capture/completion/Undo/checked-row reopening, persisted SAF grants and external updates. Public rc1 was preserved; the local build 3→4 upgrade succeeded because those cloud APKs share a certificate, distinct from public rc1. Touch-video verification was still finishing when this result was recorded. This is worker-supplied evidence, not a cloud emulator run. The code-5 owner-signed release APK needs a separate installed smoke test because build mode and signer differ; domain/UI source is unchanged from tested build 4.
+
+
+### Owner-signed build-5 artifact verification
+
+Candidate run `36762053783` at source `d89a7d99fabecd27993e81707e98e7f0a3a8227c` passed the full platform matrix and owner-signing gate. Independent downloaded-archive CRC, APK checksum, apksigner, aapt package/version/non-debuggable/ABI and source-metadata checks passed. APK SHA-256 is `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046`, certificate SHA-256 is `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`. This confirms build/signing integrity; native install/launch smoke of this exact release APK remains pending the device worker. Earlier build-4 debug QA is separate evidence.
