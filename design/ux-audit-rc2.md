@@ -28,3 +28,5 @@ The dark-mode Undo background was visibly too pale in the prior walkthrough. Exp
 Same 390×820 client area, default text scale, identical twelve sanitized tasks (two with notes): rc1 shows **four fully visible rows and part of a fifth**, while build 3 shows **ten fully visible rows and part of an eleventh**. Captures are `evidence/density-rc1-linux-390x820.png` and `evidence/density-rc2-linux-390x820.png`. This is Linux with desktop font/theme metrics, not an Android result or a claim about the private reference screenshots.
 
 The final native build additionally showed a long title wrapping fully across three lines, a checked Completed row reopening when unchecked, and the corrected dark Undo surface/text/action contrast. Screenshots are `evidence/linux-rc2-build3-*`. Checkbox dimensions are asserted at least 48×48 by the native integration test. Actual same-size phone screenshots remain blocked by worker dispatch.
+
+The build 3 walkthrough exposed a stale completion snackbar after reopening from Completed. Successful reopening now clears it; the native regression verifies that Undo is no longer shown for the reopened task.

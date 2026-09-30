@@ -83,6 +83,15 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Buy oats'), findsOneWidget);
       expect(find.text('Inbox'), findsNothing);
+      await tester.tap(find.byTooltip('Complete Buy oats'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Completed'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Reopen Buy oats'));
+      await tester.pumpAndSettle();
+      expect(find.text('Undo'), findsNothing);
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
       // Periodic ingestion must not steal an unfinished capture's input/focus.
       await tester.enterText(find.byType(TextField), 'Unsubmitted draft');
       await tester.pump(const Duration(seconds: 4));

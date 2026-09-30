@@ -641,7 +641,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _reopen(Map<String, dynamic> task) async {
     final origin = store!;
     final observed = origin.activeCompletionIds(task['id']);
-    await _act(() => origin.reopen(task['id'], observed));
+    await _act(() async {
+      await origin.reopen(task['id'], observed);
+      if (mounted && identical(store, origin)) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      }
+    });
   }
 
   Future<void> _complete(Map<String, dynamic> task) async {
