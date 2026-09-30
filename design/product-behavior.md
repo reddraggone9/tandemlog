@@ -30,3 +30,11 @@ For UI changes run and visually inspect capture/edit/complete/undo plus empty/er
 ## Onboarding and everyday interaction
 
 Follow [decision 0002](decisions/0002-onboarding-and-everyday-interface.md): explicit desktop Start with a default folder, secondary existing-folder choice, unchanged Android SAF selection, inline first user, local System/Light/Dark preference, compact filtered task count and automatic foreground imports. Workspace switching and opening are settings actions. No permanent refresh control or explanatory sync footer. Preserve capture/edit buffers and selection through incoming updates. Desktop Enter submits and Shift+Enter inserts another task line; Android Enter is a newline. IME composition must not submit.
+
+## Completed tasks and capture grouping
+
+The compact Open/Completed switch defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and user/Everyone filtering applies to both. Capture appears in Open; switching views preserves its draft. Short-lived Undo remains a convenience, not the only recovery route.
+
+Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
+
+Keep the stored Inbox state but hide its repeated row badge. Future Inbox grouping should place bulk captures near the top until meaningful details (description, due date/time) move them into the normal sorted list. That future detail-based transition is not implemented: the current historical projection still clears Inbox on any edit. Do not silently change replay meaning before a compatible migration decision.

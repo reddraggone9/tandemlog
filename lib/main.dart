@@ -46,6 +46,11 @@ class _TandemlogAppState extends State<TandemlogApp> {
           ? const Color(0xfff6f7f2)
           : colors.surface,
       cardTheme: CardThemeData(color: colors.surfaceContainerLow),
+      snackBarTheme: SnackBarThemeData(
+        backgroundColor: colors.surfaceContainerHigh,
+        contentTextStyle: TextStyle(color: colors.onSurface),
+        actionTextColor: colors.primary,
+      ),
       inputDecorationTheme: InputDecorationTheme(
         border: const OutlineInputBorder(),
         filled: true,
@@ -93,7 +98,7 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
   String? user, error;
-  bool busy = true, all = false;
+  bool busy = true, all = false, showCompleted = false;
   String? privateRoot;
   LocalSettings? settings;
   bool settingsLoaded = false;
@@ -451,6 +456,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!mounted) return;
       ScaffoldMessenger.of(context).clearSnackBars();
       pendingCapture.clear();
+      showCompleted = false;
       capture.clear();
       firstName.clear();
       pendingUserId = null;
@@ -632,6 +638,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await _act(() => store!.command(task['id'], 'task.edited', changed));
   }
 
+  Future<void> _reopen(Map<String, dynamic> task) async {
+    final origin = store!;
+    final observed = origin.activeCompletionIds(task['id']);
+    await _act(() => origin.reopen(task['id'], observed));
+  }
+
   Future<void> _complete(Map<String, dynamic> task) async {
     await _act(() async {
       final origin = store!;
@@ -678,7 +690,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         .where(
           (r) =>
               r['kind'] == 'task' &&
-              r['completed'] != true &&
+              (r['completed'] == true) == showCompleted &&
               (all || r['assignee'] == user),
         )
         .toList();
@@ -690,12 +702,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 24, 16, 12),
+                  padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
                   child: Row(
                     children: [
                       Icon(
                         Icons.check_circle_outline,
-                        size: 32,
+                        size: 24,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 10),
@@ -705,8 +717,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
@@ -891,7 +903,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     List<Map<String, dynamic>> tasks,
     List<Map<String, dynamic>> users,
   ) => ListView(
-    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     children: [
       Wrap(
         alignment: WrapAlignment.spaceBetween,
@@ -910,7 +922,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ),
                 ),
                 TextSpan(
-                  text: ' · ${tasks.length} open',
+                  text:
+                      ' · ${tasks.length} ${showCompleted ? 'completed' : 'open'}',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
               ],
@@ -954,70 +967,81 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ),
         ],
       ),
-      const SizedBox(height: 16),
-      Focus(
-        onKeyEvent: (_, event) {
-          final enter =
-              event.logicalKey == LogicalKeyboardKey.enter ||
-              event.logicalKey == LogicalKeyboardKey.numpadEnter;
-          if (widget.folderActions.requiresPicker ||
-              !enter ||
-              (capture.value.composing.isValid &&
-                  !capture.value.composing.isCollapsed)) {
-            return KeyEventResult.ignored;
-          }
-          if (event is KeyDownEvent) {
-            if (HardwareKeyboard.instance.isShiftPressed) {
-              if (!busy && pendingCapture.isEmpty) {
-                final value = capture.value;
-                final selection = value.selection.isValid
-                    ? value.selection
-                    : TextSelection.collapsed(offset: value.text.length);
-                capture.value = TextEditingValue(
-                  text: value.text.replaceRange(
-                    selection.start,
-                    selection.end,
-                    '\n',
-                  ),
-                  selection: TextSelection.collapsed(
-                    offset: selection.start + 1,
-                  ),
-                );
-              }
-            } else {
-              unawaited(_capture());
-            }
-            return KeyEventResult.handled;
-          }
-          if (event is KeyRepeatEvent) return KeyEventResult.handled;
-          return KeyEventResult.ignored;
-        },
-        child: TextField(
-          controller: capture,
-          focusNode: captureFocus,
-          readOnly: pendingCapture.isNotEmpty,
-          keyboardType: TextInputType.multiline,
-          textInputAction: TextInputAction.newline,
-          minLines: 1,
-          maxLines: 4,
-          enabled: !busy,
-          decoration: InputDecoration(
-            labelText: 'What needs doing?',
-            hintText: 'One task per line',
-            helperText: captureFailure && pendingCapture.isNotEmpty
-                ? 'Retry to check these tasks before editing.'
-                : widget.folderActions.requiresPicker
-                ? null
-                : 'Enter to add · Shift+Enter for another task',
-            suffixIcon: IconButton(
-              tooltip: 'Add tasks',
-              onPressed: busy ? null : _capture,
-              icon: const Icon(Icons.arrow_upward),
-            ),
-          ),
-          onSubmitted: (_) => _capture(),
-        ),
+      const SizedBox(height: 8),
+      SegmentedButton<bool>(
+        segments: const [
+          ButtonSegment(value: false, label: Text('Open')),
+          ButtonSegment(value: true, label: Text('Completed')),
+        ],
+        selected: {showCompleted},
+        onSelectionChanged: (values) =>
+            setState(() => showCompleted = values.first),
       ),
+      const SizedBox(height: 16),
+      if (!showCompleted)
+        Focus(
+          onKeyEvent: (_, event) {
+            final enter =
+                event.logicalKey == LogicalKeyboardKey.enter ||
+                event.logicalKey == LogicalKeyboardKey.numpadEnter;
+            if (widget.folderActions.requiresPicker ||
+                !enter ||
+                (capture.value.composing.isValid &&
+                    !capture.value.composing.isCollapsed)) {
+              return KeyEventResult.ignored;
+            }
+            if (event is KeyDownEvent) {
+              if (HardwareKeyboard.instance.isShiftPressed) {
+                if (!busy && pendingCapture.isEmpty) {
+                  final value = capture.value;
+                  final selection = value.selection.isValid
+                      ? value.selection
+                      : TextSelection.collapsed(offset: value.text.length);
+                  capture.value = TextEditingValue(
+                    text: value.text.replaceRange(
+                      selection.start,
+                      selection.end,
+                      '\n',
+                    ),
+                    selection: TextSelection.collapsed(
+                      offset: selection.start + 1,
+                    ),
+                  );
+                }
+              } else {
+                unawaited(_capture());
+              }
+              return KeyEventResult.handled;
+            }
+            if (event is KeyRepeatEvent) return KeyEventResult.handled;
+            return KeyEventResult.ignored;
+          },
+          child: TextField(
+            controller: capture,
+            focusNode: captureFocus,
+            readOnly: pendingCapture.isNotEmpty,
+            keyboardType: TextInputType.multiline,
+            textInputAction: TextInputAction.newline,
+            minLines: 1,
+            maxLines: 4,
+            enabled: !busy,
+            decoration: InputDecoration(
+              labelText: 'What needs doing?',
+              hintText: 'One task per line',
+              helperText: captureFailure && pendingCapture.isNotEmpty
+                  ? 'Retry to check these tasks before editing.'
+                  : widget.folderActions.requiresPicker
+                  ? null
+                  : 'Enter to add · Shift+Enter for another task',
+              suffixIcon: IconButton(
+                tooltip: 'Add tasks',
+                onPressed: busy ? null : _capture,
+                icon: const Icon(Icons.arrow_upward),
+              ),
+            ),
+            onSubmitted: (_) => _capture(),
+          ),
+        ),
       const SizedBox(height: 12),
       if (tasks.isEmpty)
         Padding(
@@ -1031,39 +1055,42 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               ),
               SizedBox(height: 12),
               Text(
-                'No open tasks',
+                showCompleted ? 'No completed tasks' : 'No open tasks',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 8),
-              Text('Add a task above.'),
+              Text(
+                showCompleted
+                    ? 'Completed tasks will appear here.'
+                    : 'Add a task above.',
+              ),
             ],
           ),
         ),
-      for (final task in tasks)
-        Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: Card(
-            margin: EdgeInsets.zero,
-
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              leading: IconButton(
-                tooltip: 'Complete ${task['title']}',
-                onPressed: busy ? null : () => _complete(task),
-                icon: const Icon(Icons.radio_button_unchecked),
-              ),
-              title: Text(
-                task['title'],
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 6),
-                child: Text(
+      for (final task in tasks) ...[
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minVerticalPadding: 6,
+          horizontalTitleGap: 8,
+          leading: Tooltip(
+            message:
+                '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
+            child: Checkbox(
+              materialTapTargetSize: MaterialTapTargetSize.padded,
+              value: showCompleted,
+              onChanged: busy
+                  ? null
+                  : (_) => showCompleted ? _reopen(task) : _complete(task),
+            ),
+          ),
+          title: Text(
+            task['title'],
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          subtitle: !all && (task['description'] as String).isEmpty
+              ? null
+              : Text(
                   [
-                    if (task['inbox'] == true) 'Inbox',
                     if (all)
                       users
                               .where((u) => u['id'] == task['assignee'])
@@ -1076,12 +1103,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
-              ),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: busy ? null : () => _edit(task),
-            ),
-          ),
+          onTap: busy ? null : () => _edit(task),
         ),
+        const Divider(height: 1),
+      ],
     ],
   );
 }

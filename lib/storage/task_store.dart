@@ -320,11 +320,48 @@ class TaskStore {
     return result;
   }
 
+  /// Snapshot the completions represented by the currently displayed cache.
+  /// Reopening must not cancel a completion that arrives after this observation.
+  List<String> activeCompletionIds(String entity) {
+    final events = db
+        .select('SELECT raw FROM events WHERE entity=?', [entity])
+        .map((row) => LogEvent.decode(row['raw'] as String))
+        .toList();
+    final undone = events
+        .where((e) => e.type == 'task.completionUndone')
+        .map((e) => e.data['completion'])
+        .toSet();
+    return events
+        .where((e) => e.type == 'task.completed' && !undone.contains(e.id))
+        .map((e) => e.id)
+        .toList();
+  }
+
+  Future<void> reopen(String entity, List<String> observedCompletions) {
+    final targets = observedCompletions.toSet();
+    return _serialize(() async {
+      for (final target in targets) {
+        await _refresh();
+        if (activeCompletionIds(entity).contains(target)) {
+          await _command(entity, 'task.completionUndone', {
+            'completion': target,
+          });
+        }
+      }
+    });
+  }
+
   Future<LogEvent> command(
     String entity,
     String type,
     Map<String, dynamic> data,
-  ) => _serialize(() async {
+  ) => _serialize(() => _command(entity, type, data));
+
+  Future<LogEvent> _command(
+    String entity,
+    String type,
+    Map<String, dynamic> data,
+  ) async {
     await _refresh();
     final seq =
         (db.select(
@@ -385,7 +422,7 @@ class TaskStore {
     // Durable log append is the commit point. A cache failure is recoverable.
     await _refresh();
     return e;
-  });
+  }
 
   Future<void> close() {
     _closed = true;

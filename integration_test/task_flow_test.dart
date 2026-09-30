@@ -57,6 +57,32 @@ void main() {
       await tester.tap(find.text('Undo'));
       await tester.pumpAndSettle();
       expect(find.text('Buy oats'), findsOneWidget);
+      await tester.tap(find.byTooltip('Complete Buy oats'));
+      await tester.pumpAndSettle();
+      // Persistent completed browsing works even after dismissing transient Undo.
+      ScaffoldMessenger.of(
+        tester.element(find.byType(Scaffold)),
+      ).clearSnackBars();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Completed'));
+      await tester.pumpAndSettle();
+      expect(tester.widget<Checkbox>(find.byType(Checkbox)).value, isTrue);
+      expect(
+        tester.getSize(find.byType(Checkbox)).width,
+        greaterThanOrEqualTo(48),
+      );
+      expect(
+        tester.getSize(find.byType(Checkbox)).height,
+        greaterThanOrEqualTo(48),
+      );
+      expect(find.text('Large bag'), findsOneWidget);
+      await tester.tap(find.byTooltip('Reopen Buy oats'));
+      await tester.pumpAndSettle();
+      expect(find.text('No completed tasks'), findsOneWidget);
+      await tester.tap(find.text('Open'));
+      await tester.pumpAndSettle();
+      expect(find.text('Buy oats'), findsOneWidget);
+      expect(find.text('Inbox'), findsNothing);
       // Periodic ingestion must not steal an unfinished capture's input/focus.
       await tester.enterText(find.byType(TextField), 'Unsubmitted draft');
       await tester.pump(const Duration(seconds: 4));

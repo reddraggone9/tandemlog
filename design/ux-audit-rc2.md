@@ -16,3 +16,9 @@ Scope: actual native Linux release under Xvfb/Openbox, 1280-pixel desktop and 39
 The independent reviewer noted that an upward submit arrow is less explicit than a plus, and repeated Inbox subtitles add little when all tasks are new. Keep the current controls for this candidate; revisit based on real usage rather than taste alone. Lee reports an already-open user menu needs reopening to display a newly synced user; keep active selection stable and treat this as low-priority polish.
 
 Screenshots establish visual layout, not screen-reader behavior or real phone touch/IME acceptance. Task-based audit and user testing complement correctness tests; neither replaces the other.
+
+## Build 3: completed browsing and mobile density
+
+Lee requested ordinary checked rows in Completed, unchecking to reopen, and less padding/card decoration. The unpublished rc2 now includes these changes. Task rows use a flat divided list, normal-weight wrapping titles, optional notes, and explicit 48-pixel checkbox targets on desktop as well as Android. Repeated Inbox badges are hidden without rewriting stored state. Header/body spacing is reduced; there is no density preference.
+
+The dark-mode Undo background was visibly too pale in the prior walkthrough. Explicit theme surface, foreground and action colors address it. A sanitized twelve-task fixture (mixed title lengths and two notes) is used for comparison; no user screenshot/text is copied into the repository. Actual same-size phone comparison remains pending worker dispatch.

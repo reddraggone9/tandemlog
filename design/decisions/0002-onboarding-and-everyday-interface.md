@@ -20,3 +20,9 @@ Reduce setup decisions and daily visual clutter while preserving offline durabil
 Automatic workspace creation before Start makes the secondary chooser create unnecessary data. A common app-private Android default sacrifices interoperability and uninstall safety. Keeping both open/copy actions, a permanent refresh knob, static transport notices and marketing headers burdens routine capture with infrastructure and decoration. A background polling service adds battery/permission complexity without evidence it is necessary.
 
 Revisit polling cadence with measured device/provider costs, not speculative framework changes. Add migration/export UI only with a concrete workflow and recovery tests. Review onboarding and everyday screens together as features grow: settings should reveal infrequent decisions; actionable errors must remain visible; task capture and accessibility must not be displaced by explanatory clutter.
+
+## Accepted follow-up: completed browsing and theme feedback
+
+Lee found transient Undo insufficient. Add a compact Open/Completed switch; use the same task rows with checked boxes and uncheck to reopen, rather than a separate Reopen action. Keep capture in Open and preserve its draft across the switch. Existing per-completion undo records support this without changing canonical format, and unseen concurrent completions remain intact.
+
+Hide repeated Inbox subtitles while retaining the stored state. A future grouped Inbox for bulk captures/details is useful but not part of this candidate. Explicit snackbar surface/text/action theme colors replace the pale dark-mode popup observed in the demo.

@@ -49,6 +49,86 @@ void main() {
       store.rows.firstWhere((r) => r['id'] == id);
 
   test(
+    'reopen targets observed completions, is idempotent and survives restart',
+    () async {
+      final id = await task();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.command(id, 'task.completed', {});
+      await b!.command(id, 'task.completed', {});
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      final observed = a!.activeCompletionIds(id);
+      expect(observed, hasLength(2));
+      await a!.reopen(id, observed);
+      expect(state(a!, id)['completed'], isFalse);
+      final bytes = await File(
+        '${aFolder.location}/${a!.writer}.jsonl',
+      ).readAsString();
+      await a!.reopen(id, observed);
+      expect(
+        await File('${aFolder.location}/${a!.writer}.jsonl').readAsString(),
+        bytes,
+      );
+      // A completion unseen by this reopen survives synchronization.
+      await b!.command(id, 'task.completed', {});
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      expect(state(a!, id)['completed'], isTrue);
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(state(a!, id), state(b!, id));
+      await a!.reopen(id, a!.activeCompletionIds(id));
+      await a!.close();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(state(a!, id)['completed'], isFalse);
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(state(a!, id), state(b!, id));
+    },
+  );
+
+  test('reopen refresh does not expand the observed target set', () async {
+    final id = await task();
+    await copy(aFolder, bFolder);
+    await b!.refresh();
+    await a!.command(id, 'task.completed', {});
+    final observed = a!.activeCompletionIds(id);
+    final unseen = await b!.command(id, 'task.completed', {});
+    await File(
+      '${bFolder.location}/${b!.writer}.jsonl',
+    ).copy('${aFolder.location}/${b!.writer}.jsonl');
+    await a!.reopen(id, observed);
+    expect(a!.activeCompletionIds(id), [unseen.id]);
+    expect(state(a!, id)['completed'], isTrue);
+  });
+
+  test('partial reopen retries without duplicating a committed undo', () async {
+    final id = await task();
+    await a!.command(id, 'task.completed', {});
+    await a!.command(id, 'task.completed', {});
+    final observed = a!.activeCompletionIds(id);
+    await a!.close();
+    final failing = _FailAfterAppendFolder(aFolder);
+    a = await TaskStore.open(failing, '${root.path}/private-a');
+    failing.failNext = true;
+    await expectLater(a!.reopen(id, observed), throwsStateError);
+    await a!.reopen(id, observed);
+    expect(state(a!, id)['completed'], isFalse);
+    final events = a!.db
+        .select('SELECT raw FROM events')
+        .map((r) => LogEvent.decode(r['raw'] as String));
+    expect(
+      events.where((e) => e.type == 'task.completionUndone'),
+      hasLength(2),
+    );
+  });
+
+  test(
     'restart retains state and unchanged files avoid parsing/replay',
     () async {
       final id = await task();
@@ -551,5 +631,28 @@ class _GatedAppendFolder implements LogFolder {
     entered.complete();
     await release.future;
     await delegate.append(name, bytes);
+  }
+}
+
+class _FailAfterAppendFolder implements LogFolder {
+  _FailAfterAppendFolder(this.delegate);
+  final LogFolder delegate;
+  bool failNext = false;
+  @override
+  String get location => delegate.location;
+  @override
+  Future<List<LogFileInfo>> list() => delegate.list();
+  @override
+  Future<Uint8List> read(String name) => delegate.read(name);
+  @override
+  Future<void> create(String name, Uint8List bytes) =>
+      delegate.create(name, bytes);
+  @override
+  Future<void> append(String name, Uint8List bytes) async {
+    await delegate.append(name, bytes);
+    if (failNext) {
+      failNext = false;
+      throw StateError('Injected failure after durable append');
+    }
   }
 }
