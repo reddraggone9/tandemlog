@@ -12,10 +12,10 @@ class ReleaseGates(unittest.TestCase):
 
     def test_apk_identity_and_install_metadata(self):
         cert = 'Signer #1 certificate SHA-256 digest: ' + 'a'*64
-        badging = "package: name='dev.tandemlog.tandemlog' versionCode='5' versionName='0.1.0-rc.2'\nnative-code: 'armeabi-v7a' 'arm64-v8a' 'x86_64'"
+        badging = "package: name='com.reddraggone9.tandemlog' versionCode='5' versionName='0.1.0-rc.2'\nnative-code: 'armeabi-v7a' 'arm64-v8a' 'x86_64'"
         verify_apk(cert, badging, 'a'*64, ('0.1.0-rc.2', 5))
         for changed in (badging+'\napplication-debuggable', badging.replace("'5'", "'4'"),
-                        badging.replace(" 'x86_64'", ''), badging.replace('dev.tandemlog.tandemlog', 'another.app')):
+                        badging.replace(" 'x86_64'", ''), badging.replace('com.reddraggone9.tandemlog', 'another.app')):
             with self.assertRaises(ValueError): verify_apk(cert, changed, 'a'*64, ('0.1.0-rc.2', 5))
         with self.assertRaises(ValueError): verify_apk(cert, badging, 'b'*64, ('0.1.0-rc.2', 5))
         with self.assertRaises(ValueError): verify_apk(cert+'\n'+cert, badging, 'a'*64, ('0.1.0-rc.2', 5))

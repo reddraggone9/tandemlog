@@ -28,7 +28,7 @@ def verify_apk(cert_output, badging, pin, expected_version):
         raise ValueError('APK signer does not match the pinned owner certificate')
     name, code = expected_version
     package = re.search(r"^package: name='([^']+)' versionCode='([0-9]+)' versionName='([^']+)'", badging, re.M)
-    if not package or package.groups() != ('dev.tandemlog.tandemlog', str(code), name):
+    if not package or package.groups() != ('com.reddraggone9.tandemlog', str(code), name):
         raise ValueError('APK package/version does not match source')
     if 'application-debuggable' in badging:
         raise ValueError('Distributable APK must not be debuggable')

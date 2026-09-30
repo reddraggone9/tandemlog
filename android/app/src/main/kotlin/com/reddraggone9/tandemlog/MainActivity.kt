@@ -1,4 +1,4 @@
-package dev.tandemlog.tandemlog
+package com.reddraggone9.tandemlog
 
 import android.app.Activity
 import android.content.Intent
