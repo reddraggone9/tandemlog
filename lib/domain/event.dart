@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'hlc.dart';
-export 'hlc.dart';
+import 'event_clock.dart';
+export 'event_clock.dart';
 import 'package:uuid/uuid.dart';
 import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
@@ -20,7 +20,7 @@ class FormatFailure implements Exception {
 class LogEvent {
   final String space, writer, entity, type;
   final int sequence;
-  final HlcClock clock;
+  final EventClock clock;
   final Map<String, dynamic> data;
   LogEvent(
     this.space,
@@ -195,7 +195,7 @@ class LogEvent {
         j['space'],
         j['writer'],
         j['seq'],
-        HlcClock.fromJson(j['clock']),
+        EventClock.fromJson(j['clock']),
         j['entity'],
         j['type'],
         d,

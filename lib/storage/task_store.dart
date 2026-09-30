@@ -16,7 +16,8 @@ class TaskStore {
   final String writer;
   final RandomAccessFile lock;
   final DateTime Function() now;
-  static const maximumFutureSkew = Duration(minutes: 5);
+  static const materialClockSkew = Duration(minutes: 5);
+  String? clockWarning;
   late final String space;
   int readFiles = 0;
   Future<void> _queue = Future<void>.value();
@@ -94,23 +95,21 @@ class TaskStore {
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
       final version = db.select('PRAGMA user_version').first.values.first;
-      if (version != 0 && version != 3) {
+      if (version != 0 && version != 4) {
         throw FormatFailure(
           'Unsupported cache version. Preserve logs and rebuild cache with a compatible app.',
         );
       }
       db.execute(
-        'CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, logical INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
+        'CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
       );
       db.execute(
-        'CREATE INDEX IF NOT EXISTS events_entity ON events(entity,clock,logical,writer)',
+        'CREATE INDEX IF NOT EXISTS events_entity ON events(entity,clock,writer)',
       );
       db.execute(
         "CREATE INDEX IF NOT EXISTS events_type ON events(json_extract(raw,'\$.type'))",
       );
-      db.execute(
-        'CREATE INDEX IF NOT EXISTS events_clock ON events(clock,logical)',
-      );
+      db.execute('CREATE INDEX IF NOT EXISTS events_clock ON events(clock)');
       db.execute(
         "CREATE INDEX IF NOT EXISTS events_successor ON events(json_extract(raw,'\$.data.successor.id'))",
       );
@@ -123,7 +122,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=3');
+      db.execute('PRAGMA user_version=4');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -174,26 +173,25 @@ class TaskStore {
     }
   }
 
-  HlcClock? _maximumClock([String? writerId]) {
+  EventClock? _maximumClock([String? writerId]) {
     final result = db.select(
-      'SELECT clock,logical FROM events ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC,logical DESC LIMIT 1',
+      'SELECT clock FROM events ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC LIMIT 1',
       writerId == null ? [] : [writerId],
     );
     return result.isEmpty
         ? null
-        : HlcClock(
-            result.first['clock'] as int,
-            result.first['logical'] as int,
-          );
+        : EventClock(BigInt.from(result.first['clock'] as int));
   }
 
-  void _checkFutureClock(HlcClock? clock, int nowMs) {
-    if (clock != null &&
-        clock.wallMs > nowMs + maximumFutureSkew.inMilliseconds) {
-      throw FormatFailure(
-        'An event clock is more than five minutes ahead of this device. Check device date/time before retrying. Canonical history and cached state were preserved; no incoming timestamp was rewritten.',
-      );
-    }
+  BigInt _nowNs() =>
+      BigInt.from(now().microsecondsSinceEpoch) * BigInt.from(1000);
+
+  void _updateClockWarning(EventClock? maximum, BigInt nowNs) {
+    final threshold =
+        BigInt.from(materialClockSkew.inMicroseconds) * BigInt.from(1000);
+    clockWarning = maximum != null && maximum.value - nowNs > threshold
+        ? 'A saved change is ahead of this device’s clock. You can keep editing; check device dates and times.'
+        : null;
   }
 
   Future<bool> refresh() => _serialize(_refresh);
@@ -201,8 +199,7 @@ class TaskStore {
     if (await _readSpace(folder) != space) {
       throw FormatFailure('Workspace identity changed at this location.');
     }
-    final admissionTime = now().millisecondsSinceEpoch;
-    _checkFutureClock(_maximumClock(), admissionTime);
+    _updateClockWarning(_maximumClock(), _nowNs());
     final files = await folder.list();
     if (files.any((f) => f.name.contains('sync-conflict'))) {
       throw FormatFailure(
@@ -278,7 +275,6 @@ class TaskStore {
             'Invalid space, writer, sequence or clock in ${info.name}.',
           );
         }
-        _checkFutureClock(e.clock, admissionTime);
         lastSeq = e.sequence;
         lastClock = e.clock;
         newEvents.add(e);
@@ -294,13 +290,12 @@ class TaskStore {
     db.execute('BEGIN IMMEDIATE');
     try {
       for (final e in newEvents) {
-        db.execute('INSERT INTO events VALUES (?,?,?,?,?,?,?)', [
+        db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
           e.id,
           e.entity,
           e.writer,
           e.sequence,
-          e.clock.wallMs,
-          e.clock.logical,
+          e.clock.value.toInt(),
           e.encode(),
         ]);
       }
@@ -356,6 +351,7 @@ class TaskStore {
         db.execute('INSERT OR REPLACE INTO streams VALUES (?,?,?,?)', c);
       }
       db.execute('COMMIT');
+      _updateClockWarning(_maximumClock(), _nowNs());
       return newEvents.isNotEmpty;
     } catch (_) {
       db.execute('ROLLBACK');
@@ -393,7 +389,7 @@ class TaskStore {
       (a, b) => (a['order'] as String).compareTo(b['order'] as String),
     );
     final seeds = db.select(
-      "SELECT entity,json_extract(raw,'\$.data.successor.id') AS next FROM events WHERE json_extract(raw,'\$.type')='task.completed' AND json_extract(raw,'\$.data.successor.id') IS NOT NULL ORDER BY clock,logical,writer,seq",
+      "SELECT entity,json_extract(raw,'\$.data.successor.id') AS next FROM events WHERE json_extract(raw,'\$.type')='task.completed' AND json_extract(raw,'\$.data.successor.id') IS NOT NULL ORDER BY clock,writer,seq",
     );
     final placed = <String>{};
     for (final seed in seeds) {
@@ -410,7 +406,7 @@ class TaskStore {
       }
     }
     final moves = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' ORDER BY clock,logical,writer,seq",
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' ORDER BY clock,writer,seq",
     );
     for (final row in moves) {
       final e = LogEvent.decode(row['raw'] as String);
@@ -480,10 +476,10 @@ class TaskStore {
             ).first['n']
             as int) +
         1;
-    final writeTime = now().millisecondsSinceEpoch;
+    final writeTime = _nowNs();
     final maximum = _maximumClock();
-    _checkFutureClock(maximum, writeTime);
-    final clock = HlcClock.next(writeTime, maximum);
+    _updateClockWarning(maximum, writeTime);
+    final clock = EventClock.next(writeTime, maximum);
     final e = LogEvent.decode(
       LogEvent(space, writer, seq, clock, entity, type, data).encode(),
     );
@@ -693,7 +689,7 @@ class TaskStore {
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
     final seeds = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,logical,writer,seq",
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
     );
     if (seeds.isNotEmpty) {

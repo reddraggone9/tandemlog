@@ -17,8 +17,8 @@ class MigrationBundle {
     String userName = 'Imported user',
     DateTime? importBatchTime,
   }) {
-    final batchTime = DateTime.fromMillisecondsSinceEpoch(
-      (importBatchTime ?? DateTime.now()).millisecondsSinceEpoch,
+    final batchTime = DateTime.fromMicrosecondsSinceEpoch(
+      (importBatchTime ?? DateTime.now()).microsecondsSinceEpoch,
       isUtc: true,
     );
     final batchTimeText = batchTime.toIso8601String();
@@ -28,7 +28,7 @@ class MigrationBundle {
       final h = sha256
           .convert(
             utf8.encode(
-              'tandemlog-import-v2:$digest:$userName:$batchTimeText:$role',
+              'tandemlog-import-v3:$digest:$userName:$batchTimeText:$role',
             ),
           )
           .toString();
@@ -48,7 +48,11 @@ class MigrationBundle {
             space,
             writer,
             n,
-            HlcClock(batchTime.millisecondsSinceEpoch, n - 1),
+            EventClock(
+              BigInt.from(batchTime.microsecondsSinceEpoch) *
+                      BigInt.from(1000) +
+                  BigInt.from(n - 1),
+            ),
             entity,
             type,
             data,
@@ -273,7 +277,7 @@ class MigrationBundle {
     }
     for (final stream in byWriter.values) {
       stream.sort((a, b) => a.sequence.compareTo(b.sequence));
-      HlcClock? previousClock;
+      EventClock? previousClock;
       for (var n = 0; n < stream.length; n++) {
         if (stream[n].sequence != n + 1 ||
             (previousClock != null &&
@@ -287,15 +291,86 @@ class MigrationBundle {
     }
   }
 
+  Map<String, dynamic> get inventory {
+    final schedules = events
+        .where((e) => e.type == 'task.created')
+        .map((e) => e.data['schedule'] as Map<String, dynamic>)
+        .toList();
+    final ruleCounts = <String, int>{};
+    for (final schedule in schedules) {
+      final rule = schedule['recurrence'] as String?;
+      if (rule != null) ruleCounts[rule] = (ruleCounts[rule] ?? 0) + 1;
+    }
+    return {
+      'recurrences': ruleCounts.values.fold<int>(0, (a, b) => a + b),
+      'distinctRecurrenceForms': ruleCounts.length,
+      'recurrenceForms': ruleCounts,
+      'dateFields': {
+        for (final field in ['startDate', 'scheduledDate', 'dueDate'])
+          field: schedules.where((schedule) => schedule[field] != null).length,
+      },
+      'timeFields': {
+        for (final field in ['startTime', 'scheduledTime', 'dueTime'])
+          field: schedules.where((schedule) => schedule[field] != null).length,
+      },
+    };
+  }
+
+  Map<String, dynamic> auditRecurrence(String completionDate) {
+    final completionDay = parseCivilDate(completionDate);
+    // Establish this is still the unchanged source import before producing an
+    // audit. No completion commands or successor events are appended.
+    exportBytes();
+    final rows = events.where((e) => e.type == 'task.created').toList()
+      ..sort((a, b) {
+        final c = a.clock.compareTo(b.clock);
+        return c != 0 ? c : a.writer.compareTo(b.writer);
+      });
+    final entries = <Map<String, dynamic>>[];
+    for (final event in rows) {
+      final schedule = TaskSchedule.fromJson(
+        event.data['schedule'] as Map<String, dynamic>,
+      );
+      if (schedule.recurrence == null) continue;
+      entries.add({
+        'id': event.entity,
+        'rule': schedule.recurrence,
+        'startDate': schedule.startDate,
+        'scheduledDate': schedule.scheduledDate,
+        'dueDate': schedule.dueDate,
+        'sourceLine': (event.data['import'] as Map)['line'],
+        'historicallyCompleted': events.any(
+          (e) => e.entity == event.entity && e.type == 'task.completed',
+        ),
+        'next': {
+          for (final entry in schedule.next(completionDay).toJson().entries)
+            if (['startDate', 'scheduledDate', 'dueDate'].contains(entry.key))
+              entry.key: entry.value,
+        },
+      });
+    }
+    return {
+      'auditVersion': 1,
+      'completion': completionDate,
+      ...inventory,
+      'cases': entries,
+      'scope':
+          'Read-only predictions from shared task domain; includes historical completed rows; no successors created.',
+    };
+  }
+
   String get log => '${events.map((e) => e.encode()).join('\n')}\n';
   Map<String, dynamic> get report => {
     'format': protocolVersion,
-    'importBatchTime': DateTime.fromMillisecondsSinceEpoch(
-      events.singleWhere((e) => e.type == 'import.document').clock.wallMs,
+    'importBatchTime': DateTime.fromMicrosecondsSinceEpoch(
+      (events.firstWhere((e) => e.sequence == 1).clock.value ~/
+              BigInt.from(1000))
+          .toInt(),
       isUtc: true,
     ).toIso8601String(),
     'tasks': events.where((e) => e.type == 'task.created').length,
     'completed': events.where((e) => e.type == 'task.completed').length,
+    ...inventory,
     'semanticReplay': 'passed',
     'unchangedByteRoundTrip': 'passed',
     'scope':
@@ -313,9 +388,12 @@ bool _same(List<int> a, List<int> b) {
 
 DateTime _parseBatchTime(String text) {
   final value = DateTime.tryParse(text);
-  if (value == null || !text.endsWith('Z') || value.microsecond != 0) {
+  if (value == null ||
+      !RegExp(
+        r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?Z$',
+      ).hasMatch(text)) {
     throw const FormatException(
-      'Import batch time must be an explicit UTC ISO timestamp with millisecond precision.',
+      'Import batch time must be an explicit UTC ISO timestamp with at most microsecond precision.',
     );
   }
   return value;
@@ -323,9 +401,13 @@ DateTime _parseBatchTime(String text) {
 
 Future<void> main(List<String> args) async {
   try {
-    if (args.length < 3 || !['dry-run', 'export'].contains(args[0])) {
+    if (args.length < 3 ||
+        !['dry-run', 'export', 'audit-recurrence'].contains(args[0]) ||
+        (args.isNotEmpty &&
+            args[0] == 'audit-recurrence' &&
+            args.length != 4)) {
       throw const FormatException(
-        'Usage: dart run tool/migration.dart dry-run SOURCE.md NEW_STAGING_DIR [USER_NAME] [IMPORT_BATCH_UTC]\n       dart run tool/migration.dart export STAGING_DIR NEW_OUTPUT.md',
+        'Usage: dart run tool/migration.dart dry-run SOURCE.md NEW_STAGING_DIR [USER_NAME] [IMPORT_BATCH_UTC]\n       dart run tool/migration.dart export STAGING_DIR NEW_OUTPUT.md\n       dart run tool/migration.dart audit-recurrence STAGING_DIR COMPLETION_YYYY-MM-DD NEW_OUTPUT.json',
       );
     }
     if (args[0] == 'dry-run') {
@@ -391,19 +473,25 @@ Future<void> main(List<String> args) async {
       if (events.any((e) => e.space != manifest['id'])) {
         throw const FormatException('Mismatched workspace.');
       }
-      final bytes = MigrationBundle(
-        manifest['id'] as String,
-        '',
-        events,
-      ).exportBytes();
-      final file = File(args[2]);
+      final bundle = MigrationBundle(manifest['id'] as String, '', events);
+      final audit = args[0] == 'audit-recurrence';
+      final bytes = audit
+          ? utf8.encode(
+              '${const JsonEncoder.withIndent('  ').convert(bundle.auditRecurrence(args[2]))}\n',
+            )
+          : bundle.exportBytes();
+      final file = File(args[audit ? 3 : 2]);
       if (await FileSystemEntity.type(file.path, followLinks: false) !=
           FileSystemEntityType.notFound) {
         throw const FormatException('Output exists; nothing overwritten.');
       }
       await file.create(exclusive: true);
       await file.writeAsBytes(bytes, flush: true);
-      stdout.writeln('Exported unchanged import; semantic replay validated.');
+      stdout.writeln(
+        audit
+            ? 'Read-only recurrence audit written; canonical source unchanged.'
+            : 'Exported unchanged import; semantic replay validated.',
+      );
     }
   } catch (e) {
     stderr.writeln('Migration stopped: $e');

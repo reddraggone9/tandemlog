@@ -244,7 +244,7 @@ void main() {
       a!.space,
       remote,
       1,
-      HlcClock(1, 0),
+      testClock(1, 0),
       id,
       'user.created',
       {'name': 'Lee'},
@@ -297,12 +297,12 @@ void main() {
         a!.space,
         a!.writer,
         seq,
-        HlcClock.next(
-          testNow.millisecondsSinceEpoch,
+        EventClock.next(
+          BigInt.from(testNow.microsecondsSinceEpoch) * BigInt.from(1000),
           LogEvent.decode(
             a!.db
                     .select(
-                      'SELECT raw FROM events ORDER BY clock DESC,logical DESC LIMIT 1',
+                      'SELECT raw FROM events ORDER BY clock DESC LIMIT 1',
                     )
                     .first['raw']
                 as String,
@@ -456,7 +456,7 @@ void main() {
         a!.space,
         remote,
         1,
-        HlcClock(10, 0),
+        testClock(10, 0),
         id,
         'task.completionUndone',
         {'completion': '$other:1'},
@@ -470,7 +470,7 @@ void main() {
         a!.space,
         other,
         1,
-        HlcClock(9, 0),
+        testClock(9, 0),
         id,
         'task.completed',
         {},
@@ -490,7 +490,7 @@ void main() {
       a!.space,
       remote,
       1,
-      HlcClock(10, 0),
+      testClock(10, 0),
       id,
       'task.completionUndone',
       {'completion': '$other:1'},
@@ -504,7 +504,7 @@ void main() {
       a!.space,
       other,
       1,
-      HlcClock(11, 0),
+      testClock(11, 0),
       id,
       'task.completed',
       {},
@@ -568,7 +568,7 @@ void main() {
         a!.space,
         remote,
         1,
-        HlcClock(20, 0),
+        testClock(20, 0),
         id,
         'task.completionUndone',
         {'completion': '${a!.writer}:$nextSeq'},
@@ -973,7 +973,7 @@ void main() {
       a!.space,
       b!.writer,
       1,
-      HlcClock(100, 0),
+      testClock(100, 0),
       id,
       'task.tagsChanged',
       {
@@ -992,7 +992,7 @@ void main() {
     await a!.refresh();
   });
   test(
-    'offline older high logical count loses to a later wall-clock edit',
+    'offline older high sequence loses to a later wall-clock edit',
     () async {
       final id = await task();
       await copy(aFolder, bFolder);
@@ -1003,7 +1003,7 @@ void main() {
       }
       testNow = testNow.add(const Duration(hours: 1));
       final recent = await b!.command(id, 'task.edited', {'title': 'Newer'});
-      expect(old!.clock.logical, greaterThan(recent.clock.logical));
+      expect(old!.sequence, greaterThan(recent.sequence));
       expect(recent.clock, greaterThan(old.clock));
       await File(
         '${bFolder.location}/${b!.writer}.jsonl',
@@ -1016,7 +1016,7 @@ void main() {
     },
   );
   test(
-    'HLC receives precede local writes across rollback and restart',
+    'observed clocks precede local writes across rollback and restart',
     () async {
       final id = await task();
       await copy(aFolder, bFolder);
@@ -1032,7 +1032,7 @@ void main() {
         'title': 'Causal later',
       });
       expect(local.clock > remote.clock, isTrue);
-      expect(local.clock.wallMs, remote.clock.wallMs);
+      expect(local.clock.value, remote.clock.value + BigInt.one);
       final expected = a!.rows;
       await a!.close();
       a = null;
@@ -1049,59 +1049,49 @@ void main() {
       expect(afterRestart.clock > local.clock, isTrue);
     },
   );
+
   test(
-    'future HLC admission preserves bytes checkpoints and cache until exact retry',
+    'future records remain immutable and readable while warning permits writes',
     () async {
       final id = await task();
-      final expected = a!.rows;
       final future = LogEvent(
         a!.space,
         b!.writer,
         1,
-        HlcClock(testNow.millisecondsSinceEpoch + 300001, 0),
+        testClock(testNow.millisecondsSinceEpoch + 3600000, 123),
         id,
         'task.edited',
         {'title': 'Future record'},
       );
       final bytes = Uint8List.fromList(utf8.encode('${future.encode()}\n'));
       await aFolder.append('${b!.writer}.jsonl', bytes);
-      final owned = await aFolder.read('${a!.writer}.jsonl');
-      final checkpoints = a!.db
-          .select('SELECT * FROM streams')
-          .map((r) => Map<String, dynamic>.from(r))
-          .toList();
-      await expectLater(
-        a!.refresh(),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'message',
-            contains('five minutes'),
-          ),
-        ),
-      );
-      expect(a!.rows, expected);
-      expect(
-        a!.db
-            .select('SELECT * FROM streams')
-            .map((r) => Map<String, dynamic>.from(r))
-            .toList(),
-        checkpoints,
-      );
-      await expectLater(
-        a!.command(id, 'task.edited', {'title': 'Blocked'}),
-        throwsA(isA<FormatFailure>()),
-      );
-      expect(await aFolder.read('${a!.writer}.jsonl'), owned);
-      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
-      testNow = testNow.add(const Duration(milliseconds: 1));
       await a!.refresh();
       expect(state(a!, id)['title'], 'Future record');
+      expect(a!.clockWarning, isNotNull);
       final later = await a!.command(id, 'task.edited', {
-        'title': 'Observed then edited',
+        'title': 'Continued edit',
       });
-      expect(later.clock > future.clock, isTrue);
-      expect(later.clock.wallMs, future.clock.wallMs);
+      expect(later.clock.value, future.clock.value + BigInt.one);
+      expect(state(a!, id)['title'], 'Continued edit');
+      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
+      final expected = a!.rows;
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(
+        aFolder,
+        '${root.path}/private-a',
+        now: () => testNow,
+      );
+      expect(a!.clockWarning, isNotNull);
+      expect(a!.rows, expected);
+      expect(a!.readFiles, 0);
+      final restarted = await a!.command(id, 'task.edited', {
+        'description': 'Still writable',
+      });
+      expect(restarted.clock.value, later.clock.value + BigInt.one);
+      testNow = testNow.add(const Duration(hours: 2));
+      await a!.refresh();
+      expect(a!.clockWarning, isNull);
       expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
       expect(
         a!.db.select('SELECT * FROM events WHERE writer=?', [b!.writer]),
@@ -1110,19 +1100,25 @@ void main() {
     },
   );
   test(
-    'accepted future timestamp does not spread after excessive local rollback',
+    'large clock rollback warns without blocking and warning clears when caught up',
     () async {
       final id = await task();
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
-      testNow = testNow.subtract(const Duration(minutes: 6));
-      await expectLater(
-        a!.command(id, 'task.edited', {'title': 'Blocked rollback'}),
-        throwsA(isA<FormatFailure>()),
+      final previous = LogEvent.decode(
+        a!.db
+                .select('SELECT raw FROM events ORDER BY clock DESC LIMIT 1')
+                .first['raw']
+            as String,
       );
-      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      testNow = testNow.subtract(const Duration(minutes: 6));
+      final changed = await a!.command(id, 'task.edited', {
+        'title': 'Continued despite rollback',
+      });
+      expect(a!.clockWarning, isNotNull);
+      expect(changed.clock.value, previous.clock.value + BigInt.one);
+      expect(state(a!, id)['title'], 'Continued despite rollback');
       testNow = testNow.add(const Duration(minutes: 6));
-      await a!.command(id, 'task.edited', {'title': 'Recovered'});
-      expect(state(a!, id)['title'], 'Recovered');
+      await a!.refresh();
+      expect(a!.clockWarning, isNull);
     },
   );
   test(
@@ -1148,6 +1144,63 @@ void main() {
       expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
       await a!.refresh();
       expect(state(a!, id)['completed'], false);
+    },
+  );
+  test(
+    'SQLite and canonical clock retain exact signed-64-bit nanoseconds',
+    () async {
+      final id = await task();
+      final exact = EventClock(EventClock.maximum - BigInt.from(2));
+      final remote = LogEvent(
+        a!.space,
+        b!.writer,
+        1,
+        exact,
+        id,
+        'task.edited',
+        {'title': 'Exact large timestamp'},
+      );
+      await aFolder.append(
+        '${b!.writer}.jsonl',
+        Uint8List.fromList(utf8.encode('${remote.encode()}\n')),
+      );
+      await a!.refresh();
+      expect(
+        BigInt.from(
+          a!.db.select('SELECT clock FROM events WHERE writer=?', [
+                b!.writer,
+              ]).single['clock']
+              as int,
+        ),
+        exact.value,
+      );
+      expect(a!.clockWarning, isNotNull);
+      final changed = await a!.command(id, 'task.edited', {
+        'description': 'Continued',
+      });
+      expect(changed.clock.value, exact.value + BigInt.one);
+      expect(
+        jsonDecode(changed.encode())['clock'],
+        (exact.value + BigInt.one).toString(),
+      );
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(
+        aFolder,
+        '${root.path}/private-a',
+        now: () => testNow,
+      );
+      expect(state(a!, id)['description'], 'Continued');
+      final finalInRange = await a!.command(id, 'task.edited', {
+        'description': 'Last representable clock',
+      });
+      expect(finalInRange.clock.value, EventClock.maximum);
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      await expectLater(
+        a!.command(id, 'task.edited', {'description': 'Overflow'}),
+        throwsFormatException,
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
     },
   );
 }
@@ -1197,3 +1250,7 @@ class _FailAfterAppendFolder implements LogFolder {
     }
   }
 }
+
+EventClock testClock(int wallMs, int increment) => EventClock(
+  BigInt.from(wallMs) * BigInt.from(1000000) + BigInt.from(increment),
+);

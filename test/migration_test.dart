@@ -16,7 +16,7 @@ MigrationBundle _fixtureImport(List<int> bytes) => MigrationBundle.importBytes(
 
 void main() {
   test(
-    'import HLC batch time is explicit, stable and distinct from source history',
+    'import scalar nanosecond batch time is explicit, stable and distinct from source history',
     () {
       final source = utf8.encode('- [x] Example ✅ 2020-01-02');
       final time = DateTime.utc(2026, 10, 1, 12);
@@ -28,16 +28,12 @@ void main() {
       );
       expect(first.log, again.log);
       expect(first.writer, isNot(later.writer));
+      final base = BigInt.from(time.microsecondsSinceEpoch) * BigInt.from(1000);
       expect(
-        first.events.every(
-          (e) => e.clock.wallMs == time.millisecondsSinceEpoch,
-        ),
-        isTrue,
+        first.events.map((e) => e.clock.value).toList(),
+        List.generate(first.events.length, (i) => base + BigInt.from(i)),
       );
-      expect(
-        first.events.map((e) => e.clock.logical).toList(),
-        List.generate(first.events.length, (i) => i),
-      );
+      expect(first.events.every((e) => e.toJson()['clock'] is String), isTrue);
       expect(
         first.events
             .singleWhere((e) => e.type == 'task.completed')
@@ -45,6 +41,11 @@ void main() {
         '2020-01-02',
       );
       final legacy = first.events.first.toJson()..['clock'] = 1;
+      expect(
+        () => LogEvent.decode(jsonEncode(legacy)),
+        throwsA(isA<FormatFailure>()),
+      );
+      legacy['clock'] = {'wallMs': time.millisecondsSinceEpoch, 'logical': 0};
       expect(
         () => LogEvent.decode(jsonEncode(legacy)),
         throwsA(isA<FormatFailure>()),
@@ -177,6 +178,48 @@ void main() {
         hasLength(99),
       );
       expect(utf8.decode(bundle.exportBytes()), source);
+    },
+  );
+
+  test(
+    'read-only recurrence audit covers all 99 cases/37 forms without title disclosure or writes',
+    () {
+      final source = [
+        for (var i = 0; i < 220; i++)
+          '- [${i < 10 ? 'x' : ' '}] Sanitized title ${i + 1}'
+              '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03' : ''}'
+              '${i < 10 ? ' ✅ 2026-09-30' : ''}',
+      ].join('\n');
+      final bundle = _fixtureImport(utf8.encode(source));
+      final before = bundle.log;
+      final audit = bundle.auditRecurrence('2026-10-20');
+      expect(audit['completion'], '2026-10-20');
+      expect(audit['recurrences'], 99);
+      expect(audit['distinctRecurrenceForms'], 37);
+      expect(audit['dateFields'], {
+        'startDate': 99,
+        'scheduledDate': 99,
+        'dueDate': 99,
+      });
+      expect(audit['timeFields'], {
+        'startTime': 0,
+        'scheduledTime': 0,
+        'dueTime': 0,
+      });
+      final cases = audit['cases'] as List;
+      expect(cases, hasLength(99));
+      expect(
+        cases.where((c) => c['historicallyCompleted'] == true),
+        hasLength(10),
+      );
+      expect(cases.first['next'], {
+        'startDate': '2026-10-19',
+        'scheduledDate': null,
+        'dueDate': '2026-10-21',
+      });
+      expect(jsonEncode(audit), isNot(contains('Sanitized title')));
+      expect(bundle.log, before);
+      expect(bundle.exportBytes(), utf8.encode(source));
     },
   );
 
@@ -335,6 +378,25 @@ void main() {
       result = await run(['export', stage, source.path]);
       expect(result.exitCode, 1);
       expect(source.readAsStringSync(), '- [ ] Example #demo\r\n');
+      result = await run([
+        'audit-recurrence',
+        stage,
+        '2026-10-20',
+        '${temp.path}/audit.json',
+      ]);
+      expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
+      expect(
+        (jsonDecode(File('${temp.path}/audit.json').readAsStringSync())
+            as Map)['cases'],
+        isEmpty,
+      );
+      result = await run([
+        'audit-recurrence',
+        stage,
+        '2026-10-20',
+        '${temp.path}/audit.json',
+      ]);
+      expect(result.exitCode, 1);
       final log = Directory(stage).listSync().whereType<File>().singleWhere(
         (f) => f.path.endsWith('.jsonl'),
       );

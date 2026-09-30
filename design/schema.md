@@ -6,7 +6,7 @@ Implementation: `lib/domain/event.dart`, `lib/storage/task_store.dart`. This pre
 
 A selected canonical folder contains `tandemlog-space.json` (`v: 2`, UUID `id`) and `<writer UUID>.jsonl`. Initialize once and transport the manifest to joining devices. SQLite is the sole rebuildable cache; never sync the private profile or writer identity.
 
-Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, hybrid `clock` (`wallMs`, `logical`), `entity`, `type`, `data`. Counters fit the exactly representable JSON integer range. Total replay order is `(clock.wallMs, clock.logical, writer, seq)`. Every writer clock strictly increases lexicographically. HLC approximates concurrent human recency using wall time while preserving observed causality; it does not establish true recency between clocks that disagree. Unknown active fields/types/versions fail explicitly. Complete records are bounded to 1 MiB.
+Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, `clock` (exact decimal nanosecond string), `entity`, `type`, `data`. Counters fit the exactly representable JSON integer range. Total replay order is `(numeric clock, writer, seq)`. Every writer clock strictly increases numerically. The clock approximates concurrent human recency using wall time while preserving observed causality; it does not establish true recency between clocks that disagree. Unknown active fields/types/versions fail explicitly. Complete records are bounded to 1 MiB.
 
 | Event | Payload |
 | --- | --- |
@@ -21,17 +21,19 @@ Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, hybrid
 
 Creation is unique. Missing remote dependencies remain recorded and are revalidated when they arrive. Local commands require an existing task/user and valid known references before append. Users are attribution choices, not authentication.
 
-## Hybrid clock and skew admission
+## Wall-time-aware nanosecond clock
 
-This restores the original design's wall-time-aware ordering intent using explicit HLC components rather than its nanosecond scalar. On a command after reconciliation, `wallMs = max(nowMs, maxSeen.wallMs)`; logical is zero if wall time advances, otherwise `maxSeen.logical + 1`. Large same-millisecond imports consume logical increments, not future milliseconds. Both components are bounded nonnegative JSON-safe integers. Exhaustion fails explicitly. Injected clocks make ordering/skew tests deterministic.
+The user confirmed the [original design](archive/storage-and-sync.md): on a command after reconciliation, `clock = max(now_ns, max_seen_clock + 1)`. This supersedes the temporary pure-Lamport and HLC proposals. `now_ns` is computed exactly as `BigInt.from(DateTime.now().microsecondsSinceEpoch) * 1000`: microsecond wall-clock resolution represented in nanosecond units, with borrowed nanoseconds when necessary.
 
-An unseen older offline edit with a large logical counter cannot defeat a later physical timestamp merely because of more unrelated writes. Writes after observing an event still sort after it even through a small clock rollback. The stored timestamp and replay comparator never change with ingestion time, current time or cache rebuild. Occurrence dates and completion civil days remain separate domain data.
+Canonical JSON encodes the clock as a decimal string without sign, exponent, whitespace or leading zeros (except `"0"`). Domain arithmetic/comparison uses BigInt. Values are bounded to nonnegative signed-64-bit range, up to `9223372036854775807`. SQLite stores the validated value as a native exact 64-bit integer; conversion happens only after range validation. View sort keys use 19-digit zero padding. No JSON numeric conversion is involved. Unknown draft numeric/tuple encodings fail explicitly rather than being reinterpreted.
 
-Admission allows event physical time up to five minutes ahead of this device. A farther-future batch is not checkpointed or materialized; canonical bytes and the previous cache are preserved, and commands fail with a clock-recovery error. The gate also checks the already accepted maximum before local writes, stopping propagation after a larger local clock rollback. An already open screen can retain its previous rows; startup currently shows the recovery error rather than opening the cached view, while retaining that cache on disk. Retry can admit the same unchanged bytes when the discrepancy falls within tolerance. No timestamp clamping, ignored records or canonical rewrite is allowed.
+An older offline edit with a high sequence count cannot dominate a later wall-time edit merely because it performed more unrelated operations. Equal or backward wall time borrows one nanosecond beyond the highest observed clock. The canonical timestamp and replay comparison never change with arrival time or cache rebuild. Occurrence dates and completion civil days remain separate domain data.
 
-This deliberately trades write availability for containing bad forward-clock propagation. A device cannot detect its own incorrect forward clock without another reference. Correcting that device's clock does not alter an already written far-future record: such history may require an explicit reviewed recovery into a fresh space rather than waiting. No automatic repair is implemented. A wrong receiving clock can also trigger the gate. HLC improves typical conflict ordering; concurrent edits within the clock uncertainty window remain deterministically resolved, not provably ordered by human intent.
+If the maximum event clock is more than five minutes ahead of this device, `clockWarning` supplies a nonblocking diagnostic. **Clock skew never blocks opening, ingestion or writes.** Future-dated canonical records are imported unchanged; subsequent writes advance beyond them. The warning is recomputed on refresh and after writes and disappears once the wall clock is sufficiently close again. The UI presents it separately from actionable errors and leaves ordinary task controls enabled.
 
-The unpublished v2 scalar draft is not accepted as hybrid: scalar `clock` fields fail explicitly, and SQLite cache format 3 rejects older cache layouts. Published v1 canonical folders remain untouched and unsupported by this prerelease.
+A wrong forward clock can therefore influence later conflict ordering, including other devices that observe it. This availability-first tradeoff is explicitly accepted; recovery tooling is deferred. No timestamp clamping, silent record omission, background repair or history rewrite is implemented. Malformed values, unsupported formats and signed-64-bit exhaustion still fail explicitly; these are format/range errors, not skew admission gates.
+
+The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 4 rejects older layouts. Published v1 folders remain untouched and unsupported by this prerelease.
 
 ## Fields, dates and tags
 
