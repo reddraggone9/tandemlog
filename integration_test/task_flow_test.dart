@@ -717,6 +717,10 @@ void main() {
       expect((successor['schedule'] as Map)['dueDate'], '2026-02-28');
       expect((successor['schedule'] as Map)['scheduledDate'], isNull);
       expect((successor['schedule'] as Map)['timeZone'], 'UTC');
+      expect(
+        tester.getTopLeft(find.text('Second task')).dy,
+        lessThan(tester.getTopLeft(find.text('Monthly review')).dy),
+      );
       ScaffoldMessenger.of(
         tester.element(find.byType(Scaffold)),
       ).clearSnackBars();
@@ -742,6 +746,41 @@ void main() {
       await root.delete(recursive: true);
     },
   );
+  testWidgets('future event clock warns without blocking capture', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('clock-warning-ui-');
+    final folder = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final user = const Uuid().v4();
+    final remote = await TaskStore.open(
+      LocalLogFolder(folder.path),
+      '${root.path}/remote',
+      now: () => DateTime.now().add(const Duration(minutes: 10)),
+    );
+    await remote.command(user, 'user.created', {'name': 'Example user'});
+    await File(
+      '${profile.path}/settings.json',
+    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('ahead of this device'), findsOneWidget);
+    final field = find.widgetWithText(TextField, 'What needs doing?');
+    expect(tester.widget<TextField>(field).enabled, isTrue);
+    await tester.tap(field);
+    await tester.pumpAndSettle();
+    await tester.enterText(field, 'Capture remains available');
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pumpAndSettle();
+    expect(find.text('Capture remains available'), findsOneWidget);
+    expect(find.textContaining('ahead of this device'), findsOneWidget);
+    await remote.refresh();
+    expect(remote.rows.where((r) => r['kind'] == 'task').length, 1);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await remote.close();
+    await root.delete(recursive: true);
+  });
 }
 
 class TestFolders extends FolderActions {

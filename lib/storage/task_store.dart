@@ -160,9 +160,21 @@ class TaskStore {
       ]);
       mark('manifest');
       await store.refresh();
-      if (db.select('SELECT COUNT(*) AS n FROM positions').first['n'] !=
-          db.select('SELECT COUNT(*) AS n FROM views').first['n']) {
-        store._rebuildOrder();
+      final orderVersion = db.select(
+        "SELECT value FROM metadata WHERE key='order_projection'",
+      );
+      if (orderVersion.isEmpty ||
+          orderVersion.single['value'] != '2' ||
+          db.select('SELECT COUNT(*) AS n FROM positions').first['n'] !=
+              db.select('SELECT COUNT(*) AS n FROM views').first['n']) {
+        db.execute('BEGIN IMMEDIATE');
+        try {
+          store._rebuildOrder();
+          db.execute('COMMIT');
+        } catch (_) {
+          db.execute('ROLLBACK');
+          rethrow;
+        }
       }
       mark('ingest');
       return store;
@@ -381,49 +393,66 @@ class TaskStore {
 
   /// Persist disposable sequence positions only when order-affecting history changes.
   void _rebuildOrder() {
-    final result = db
-        .select("SELECT id,json_extract(raw,'\$.order') AS 'order' FROM views")
-        .map((r) => Map<String, dynamic>.from(r))
-        .toList();
-    result.sort(
-      (a, b) => (a['order'] as String).compareTo(b['order'] as String),
+    final views = db.select(
+      "SELECT id FROM views ORDER BY json_extract(raw,'\$.order'),id",
     );
-    final seeds = db.select(
-      "SELECT entity,json_extract(raw,'\$.data.successor.id') AS next FROM events WHERE json_extract(raw,'\$.type')='task.completed' AND json_extract(raw,'\$.data.successor.id') IS NOT NULL ORDER BY clock,writer,seq",
+    final available = views.map((row) => row['id'] as String).toSet();
+    final ordered = <String>[];
+    final pending = <(String, String?)>[];
+    final seeded = <String>{};
+    bool move(String entity, String? before) {
+      if (!ordered.contains(entity) ||
+          (before != null && !ordered.contains(before))) {
+        return false;
+      }
+      ordered.remove(entity);
+      ordered.insert(
+        before == null ? ordered.length : ordered.indexOf(before),
+        entity,
+      );
+      return true;
+    }
+
+    void settlePending() {
+      pending.removeWhere((action) => move(action.$1, action.$2));
+    }
+
+    final history = db.select(
+      "SELECT entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','import.document','task.completed','task.moved') ORDER BY clock,writer,seq",
     );
-    final placed = <String>{};
-    for (final seed in seeds) {
-      final next = seed['next'] as String;
-      if (!placed.add(next)) continue;
-      final at = result.indexWhere((r) => r['id'] == next);
-      final parent = result.indexWhere((r) => r['id'] == seed['entity']);
-      if (at >= 0 && parent >= 0) {
-        final item = result.removeAt(at);
-        result.insert(
-          result.indexWhere((r) => r['id'] == seed['entity']),
-          item,
-        );
+    for (final event in history) {
+      final entity = event['entity'] as String;
+      final type = event['type'] as String;
+      if (type == 'task.completed') {
+        final next = event['successor'] as String?;
+        if (next == null || !seeded.add(next) || !available.contains(next)) {
+          continue;
+        }
+        if (!ordered.contains(next)) ordered.add(next);
+        if (!move(next, entity)) pending.add((next, entity));
+        settlePending();
+      } else if (type == 'task.moved') {
+        final before = event['before_id'] as String?;
+        if (!move(entity, before)) pending.add((entity, before));
+      } else if (available.contains(entity) && !ordered.contains(entity)) {
+        ordered.add(entity);
+        settlePending();
       }
     }
-    final moves = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' ORDER BY clock,writer,seq",
-    );
-    for (final row in moves) {
-      final e = LogEvent.decode(row['raw'] as String);
-      final index = result.indexWhere((r) => r['id'] == e.entity);
-      if (index < 0) continue;
-      final anchor = e.data['before'];
-      if (anchor != null && !result.any((r) => r['id'] == anchor)) continue;
-      final moved = result.removeAt(index);
-      final target = anchor == null
-          ? result.length
-          : result.indexWhere((r) => r['id'] == anchor);
-      result.insert(target, moved);
+    // A materialized dependency may precede its missing creation log. Preserve
+    // visible rows and defer unresolved anchors; a later ingest replays the same
+    // canonical sequence with the newly available dependencies.
+    for (final id in available) {
+      if (!ordered.contains(id)) ordered.add(id);
     }
+    settlePending();
     db.execute('DELETE FROM positions');
-    for (var i = 0; i < result.length; i++) {
-      db.execute('INSERT INTO positions VALUES (?,?)', [result[i]['id'], i]);
+    for (var i = 0; i < ordered.length; i++) {
+      db.execute('INSERT INTO positions VALUES (?,?)', [ordered[i], i]);
     }
+    db.execute(
+      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','2')",
+    );
   }
 
   /// Snapshot the completions represented by the currently displayed cache.

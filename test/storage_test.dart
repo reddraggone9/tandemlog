@@ -1203,6 +1203,127 @@ void main() {
       expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
     },
   );
+  test(
+    'recurrence inserts at current parent position and later moves stay independent',
+    () async {
+      final monthly = await task();
+      await a!.command(monthly, 'task.edited', {
+        'title': 'Monthly review',
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every month'},
+      });
+      final read = const Uuid().v4();
+      await a!.command(read, 'task.created', {
+        'title': 'Read project notes',
+        'description': '',
+        'assignee': state(a!, monthly)['assignee'],
+      });
+      List<String> order() => a!.rows
+          .where((r) => r['kind'] == 'task')
+          .map((r) => r['id'] as String)
+          .toList();
+      await a!.moveBefore(monthly, null);
+      expect(order(), [read, monthly]);
+      await a!.complete(monthly, completionDay: DateTime.utc(2026, 10, 20));
+      final next = const Uuid().v5(monthly, 'successor');
+      expect(order(), [read, next, monthly]);
+      await a!.moveBefore(monthly, read);
+      expect(order(), [
+        monthly,
+        read,
+        next,
+      ], reason: 'Moving completed history does not drag its successor.');
+      await a!.moveBefore(next, monthly);
+      expect(order(), [next, monthly, read]);
+      await a!.moveBefore(monthly, null);
+      expect(order(), [next, read, monthly]);
+      await a!.reopen(monthly, a!.activeCompletionIds(monthly));
+      await a!.complete(monthly, completionDay: DateTime.utc(2026, 10, 21));
+      expect(order(), [
+        next,
+        read,
+        monthly,
+      ], reason: 'Recompletion must not reposition the existing occurrence.');
+    },
+  );
+  test('later creation stays after an earlier move to end', () async {
+    final first = await task();
+    final user = state(a!, first)['assignee'];
+    final second = const Uuid().v4(), third = const Uuid().v4();
+    await a!.command(second, 'task.created', {
+      'title': 'Second',
+      'description': '',
+      'assignee': user,
+    });
+    await a!.moveBefore(first, null);
+    await a!.command(third, 'task.created', {
+      'title': 'Third',
+      'description': '',
+      'assignee': user,
+    });
+    expect(a!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
+      second,
+      first,
+      third,
+    ]);
+  });
+  test(
+    'late pre-completion move converges and old order cache rebuilds without log writes',
+    () async {
+      final monthly = await task();
+      await a!.command(monthly, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every month'},
+      });
+      final read = const Uuid().v4();
+      await a!.command(read, 'task.created', {
+        'title': 'Read project notes',
+        'description': '',
+        'assignee': state(a!, monthly)['assignee'],
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.moveBefore(monthly, null);
+      testNow = testNow.add(const Duration(milliseconds: 1));
+      await b!.complete(monthly, completionDay: DateTime.utc(2026, 10, 20));
+      final next = const Uuid().v5(monthly, 'successor');
+      expect(b!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
+        next,
+        monthly,
+        read,
+      ]);
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(a!.rows, b!.rows);
+      expect(a!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
+        read,
+        next,
+        monthly,
+      ]);
+      final expected = a!.rows;
+      final raw = await aFolder.read('${a!.writer}.jsonl');
+      a!.db.execute('UPDATE positions SET rank=-rank');
+      a!.db.execute("DELETE FROM metadata WHERE key='order_projection'");
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(
+        aFolder,
+        '${root.path}/private-a',
+        now: () => testNow,
+      );
+      expect(a!.rows, expected);
+      expect(a!.readFiles, 0);
+      expect(await aFolder.read('${a!.writer}.jsonl'), raw);
+      expect(
+        a!.db
+            .select("SELECT value FROM metadata WHERE key='order_projection'")
+            .single['value'],
+        '2',
+      );
+    },
+  );
 }
 
 /// Holds an append open so shutdown tests exercise real asynchronous overlap.
