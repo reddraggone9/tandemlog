@@ -2,7 +2,7 @@
 
 CI uses standard GitHub-hosted Ubuntu 24.04 and Windows 2022 runners, pinned official actions and Flutter 3.47.5 at a verified source revision. No larger/paid runners or billing changes. Intermediate artifacts expire after five days.
 
-Every main push and pull request runs formatting, analysis, the complete domain/storage integrity/convergence/recovery suite and native Linux integration, plus Linux release, native Windows release and Android debug builds. Windows also runs domain/storage tests. Fast Linux checks start immediately; platform builds run independently. No integrity tests are removed for previews.
+Every main push and pull request runs formatting, analysis, the complete domain/storage integrity/convergence/recovery suite and native Linux integration and release startup smoke checks (fresh/warm SQLite), plus Linux release, native Windows release and Android debug builds. Windows also runs domain/storage tests. Fast Linux checks start immediately; platform builds run independently. No integrity tests are removed for previews.
 
 To publish an authorized candidate, dispatch **Experimental prerelease** on main with `v0.1.0-rc.1` (increment for later candidates). It reruns the same full matrix, checks downloaded artifact hashes and the 2 GiB asset limit, then creates the release at that exact workflow commit with `--prerelease --latest=false`. Existing tags/releases must not be overwritten. The publication job alone receives contents-write permission. CI artifacts and releases are public in this public repository.
 

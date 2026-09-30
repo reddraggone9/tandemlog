@@ -17,8 +17,12 @@ jobs:
       - run: flutter test
       - run: xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux
       - run: flutter build linux --release
+      - name: Smoke-test native release startup with fresh and warm cache
+        run: |
+          xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" > linux-startup.json
       - run: |
           mkdir dist
+          cp linux-startup.json dist/
           tar -C build/linux/x64/release/bundle -czf dist/tandemlog-linux-x64.tar.gz .
           cd dist
           sha256sum tandemlog-linux-x64.tar.gz > linux-SHA256SUMS.txt
