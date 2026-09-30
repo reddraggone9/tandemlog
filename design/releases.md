@@ -17,3 +17,12 @@ Linux x64 tarball is a first-class preview artifact with checksum. Native Linux 
 ## Documentation-only pushes
 
 Push CI skips commits changing only Markdown or recorded evidence, avoiding three full platform builds for QA notes. Any code, dependency, tooling or workflow change still runs the full matrix. Pull requests and manual CI retain full checks; candidate publication always invokes the full reusable validation workflow regardless of paths. This filter does not alter branch protections or release gates.
+
+
+## Android signing continuity — decision pending
+
+Current hosted jobs invoke `flutter build apk --debug` on fresh runners, without preserving a keystore; only APK, public certificate details and checksums are artifacts. Local cloud debug signing differs from public rc1, so Android rejects an in-place update. No rc1 private key is retained in the repository/release artifacts or configured cache. Do not infer update compatibility from package name/version alone.
+
+Recommended next step, subject to explicit authorization: generate a dedicated long-lived release-signing keystore on Lee's trusted machine, retain an encrypted backup under Lee's control, and have Lee provision it and its password through GitHub's secret settings. CI should reconstruct it only in a temporary release-job directory, use it only on an authorized main release workflow (never PR jobs), verify the expected public certificate fingerprint, and remove temporary files; do not upload/cache the key or print credentials. No such key has been generated or transmitted. Source changes for that workflow follow the decision separately.
+
+Without rc1's private key, this transition requires reinstalling. First back up and verify the complete external canonical folder, including the manifest and all per-device logs, then reinstall, grant SAF access to that same folder and select the existing user. Local settings, SQLite cache, writer identity and grants are recreated; unsaved drafts are not durable. Preserve the external history rather than starting a new empty folder. Signing requirements: [Android official guide](https://developer.android.com/studio/publish/app-signing).

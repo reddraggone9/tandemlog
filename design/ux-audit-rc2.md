@@ -30,3 +30,12 @@ Same 390×820 client area, default text scale, identical twelve sanitized tasks 
 The final native build additionally showed a long title wrapping fully across three lines, a checked Completed row reopening when unchecked, and the corrected dark Undo surface/text/action contrast. Screenshots are `evidence/linux-rc2-build3-*`. Checkbox dimensions are asserted at least 48×48 by the native integration test. Actual same-size phone screenshots remain blocked by worker dispatch.
 
 The build 3 walkthrough exposed a stale completion snackbar after reopening from Completed. Successful reopening now clears it; the native regression verifies that Undo is no longer shown for the reopened task.
+
+
+## Build 4: settings and notes preview
+
+User feedback identified the vertical appearance pill as awkward. The replacement Theme row/current choice opens ordinary radio choices. Content aligns to one inset, a divider separates appearance from folder actions, and cancel preserves the preference. Full multiline descriptions remain in the editor; the list shows only one ellipsized preview line, never an empty reserved line.
+
+Actual native Linux release inspection at 390×820 and 1000×820 confirmed the revised dialog and realistic sanitized multiline notes in light/dark. At 200% text, a temporary native debug entrypoint wrapped the unmodified application widgets in a MediaQuery with `TextScaler.linear(2)`; this wrapper was removed and is not shipped. The settings body scrolls, Done remains reachable, and all theme options/Cancel fit. Screenshots: `evidence/linux-rc2-build4-*`; names containing `200` identify that injected-scale harness. Other screenshots and the 20-second walkthrough use the actual release binary. The recorder captured 20.36 seconds for a 20-second video with visible pointer; it is not a startup benchmark.
+
+Independent code and screenshot review found no concrete regression. Native integration tests cover radio cancel, persisted choice/system changes, full multiline-note preservation, one-line preview and 390-pixel/200% layout bounds. Initial test-harness screen captures did not reliably reflect active dialogs and were excluded; final screenshots were captured from visibly inspected native windows. Android-specific behavior remains with the device worker, not inferred from these Linux results.

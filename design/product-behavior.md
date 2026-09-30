@@ -38,3 +38,6 @@ The compact Open/Completed switch defaults to Open. Completed tasks use the same
 Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
 
 Keep the stored Inbox state but hide its repeated row badge. Future Inbox grouping should place bulk captures near the top until meaningful details (description, due date/time) move them into the normal sorted list. That future detail-based transition is not implemented: the current historical projection still clears Inbox on any edit. Do not silently change replay meaning before a compatible migration decision.
+
+
+Description previews use one ellipsized line with embedded whitespace flattened for display; whitespace-only notes reserve no subtitle. Titles wrap fully, and the editor preserves complete multiline notes. Settings exposes Theme/current choice, with System/Light/Dark radio choices and cancel without saving.

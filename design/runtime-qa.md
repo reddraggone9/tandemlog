@@ -152,3 +152,8 @@ A subsequent three-process minimal Flutter release comparison in the same displa
 The benchmark resets only its isolated local cache before run 1; OS page caches are not flushed. The loaded post-frame marker approximates task-ready startup, not physical presentation or a measured first successful input. Internal phase timers exclude engine startup; first frame can precede task readiness. Windows and Android startup acceptance remain separate.
 
 The final Android build-3 worker was subsequently admitted successfully; its current regression result is pending. Publication is held for that result, with no speculative app changes during the freeze.
+
+
+### Build 4 validation delta
+
+`434771783eeba45499c30179b46794931bd3f342` passes analyzer, 31 tests and five native workflows locally. Linux release and Android x86_64 debug builds passed; Android versionName `0.1.0-rc.2`, code 4, APK SHA-256 `1223efd0091faf41ad15c5bf0d7592673971f1fb46e1b1033abab777152519a0`. The APK uses the existing cloud debug certificate, matching local build 3 but differing from public rc1. No new signing identity was generated. The [UX audit](ux-audit-rc2.md#build-4-settings-and-notes-preview) distinguishes native release screenshots from the temporary 200% text harness. Android settings/notes recheck is pending; do not carry forward build-3 UI evidence as if it covered this delta.
