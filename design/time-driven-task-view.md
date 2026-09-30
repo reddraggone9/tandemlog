@@ -26,3 +26,9 @@ Compute midnight using the relevant civil calendar/zone, never by assuming every
 - Native desktop and Android: actual boundary, background/resume and platform time/zone notification behavior, then refreshed feature demos. A fake-clock unit test is not evidence of native notification delivery.
 
 No final import or source edits are authorized by this plan. Markdown remains authoritative, and the private serializer must be revalidated for newly discovered functional fields after the renderer audit.
+
+## Implemented infrastructure checkpoint
+
+`domain/timed_view.dart` defines the pure projection contract: one instant and explicit local-zone identity/offset in, view value and optional strictly-future boundary out. `presentation/view_clock.dart` implements a single cancellable foreground timer, exact boundary wakes, immediate explicit invalidation/start, monotonic-versus-wall-clock jump detection, and a one-minute watchdog. Ordinary watchdog wakes do not rerun projection. Generation checks ignore cancelled callbacks; callback-triggered disposal cannot rearm the timer. The controller has no database, event writer, widget, or editor dependency.
+
+Eight injected-clock tests cover exact boundaries, idle watchdogs, suspension/resume, forward/backward clock changes, same-offset zone identity changes, delayed callbacks, input changes, teardown, invalid boundaries, and 23/25-hour calendar days. These are infrastructure tests, not proof of task policy, actual draft preservation in widgets, or native platform notification delivery. No task visibility/sort/bound default has changed. Task-view wiring and native signals remain release blockers pending the renderer audit and subsequent integration tests.
