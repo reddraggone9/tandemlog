@@ -181,6 +181,128 @@ void main() {
       isNull,
     );
   });
+  test('exact due bounds are inclusive; date-only due covers whole day', () {
+    for (final zone in <String?>[null, 'UTC', 'America/Chicago']) {
+      TaskSchedule make(String start, String? due) => TaskSchedule(
+        startDate: '2026-10-02',
+        dueDate: '2026-10-02',
+        startTime: start,
+        dueTime: due,
+        timeZone: zone,
+      );
+      expect(make('09:30', '09:30').dueTime, '09:30');
+      expect(make('09:29', '09:30').startTime, '09:29');
+      expect(() => make('09:31', '09:30'), throwsFormatException);
+      expect(make('23:59', null).dueTime, isNull);
+      expect(
+        () => TaskSchedule(
+          startDate: '2026-10-03',
+          startTime: '00:00',
+          dueDate: '2026-10-02',
+          timeZone: zone,
+        ),
+        throwsFormatException,
+      );
+      expect(
+        TaskSchedule(
+          startDate: '2026-10-02',
+          dueDate: '2026-10-02',
+          dueTime: '00:00',
+          timeZone: zone,
+        ).startTime,
+        isNull,
+      );
+    }
+    expect(() => TaskSchedule(dueTime: '09:00'), throwsFormatException);
+    expect(() => TaskSchedule(scheduledTime: '09:00'), throwsFormatException);
+    expect(
+      () => TaskSchedule(dueDate: '2026-10-02', dueTime: '24:00'),
+      throwsFormatException,
+    );
+    expect(
+      () => TaskSchedule(scheduledDate: '2026-10-02', scheduledTime: '12:99'),
+      throwsFormatException,
+    );
+  });
+  test('precise named-zone bounds compare resolved gap and fold instants', () {
+    // Spring gap moves 02:30 to 03:30, after the entered 03:00 due time.
+    expect(
+      () => TaskSchedule(
+        startDate: '2026-03-08',
+        startTime: '02:30',
+        dueDate: '2026-03-08',
+        dueTime: '03:00',
+        timeZone: 'America/Chicago',
+      ),
+      throwsFormatException,
+    );
+    final equal = TaskSchedule(
+      startDate: '2026-03-08',
+      startTime: '02:30',
+      dueDate: '2026-03-08',
+      dueTime: '03:30',
+      timeZone: 'America/Chicago',
+    );
+    expect(equal.dueTime, '03:30');
+    final fold = TaskSchedule(
+      startDate: '2026-11-01',
+      startTime: '01:30',
+      dueDate: '2026-11-01',
+      dueTime: '01:30',
+      timeZone: 'America/Chicago',
+    );
+    expect(fold.startTime, fold.dueTime);
+    expect(
+      TaskSchedule(
+        startDate: '2026-03-08',
+        startTime: '02:30',
+        dueDate: '2026-03-08',
+        dueTime: '03:00',
+      ).timeZone,
+      isNull,
+    );
+  });
+  test(
+    'recurrence preserves exact times and removes scheduled time with its date',
+    () {
+      final value = TaskSchedule(
+        startDate: '2026-10-01',
+        startTime: '08:30',
+        scheduledDate: '2026-10-02',
+        scheduledTime: '10:00',
+        dueDate: '2026-10-03',
+        dueTime: '17:00',
+        timeZone: 'UTC',
+        recurrence: 'every week',
+      );
+      expect(TaskSchedule.fromJson(value.toJson()).toJson(), value.toJson());
+      final next = value.next(DateTime.utc(2026, 10, 5));
+      expect(next.startTime, '08:30');
+      expect(next.dueTime, '17:00');
+      expect(next.timeZone, 'UTC');
+      expect(next.scheduledDate, isNull);
+      expect(next.scheduledTime, isNull);
+      final scheduledOnly = TaskSchedule(
+        scheduledDate: '2026-10-02',
+        scheduledTime: '10:00',
+        recurrence: 'every week',
+      ).next(DateTime.utc(2026, 10, 5));
+      expect(scheduledOnly.scheduledDate, '2026-10-09');
+      expect(scheduledOnly.scheduledTime, '10:00');
+    },
+  );
+  test('last supported due day accepts its internal next-year boundary', () {
+    for (final zone in <String?>[null, 'UTC', 'America/Chicago']) {
+      final schedule = TaskSchedule(
+        startDate: '9999-12-31',
+        startTime: '23:59',
+        dueDate: '9999-12-31',
+        timeZone: zone,
+      );
+      expect(schedule.dueDate, '9999-12-31');
+    }
+    expect(() => parseCivilDate('10000-01-01'), throwsFormatException);
+  });
   test('clamping evolves while explicit last remains month end', () {
     final day = DateTime.utc(2026, 1, 31);
     final plain = TaskSchedule(

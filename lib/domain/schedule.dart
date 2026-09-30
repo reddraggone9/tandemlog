@@ -10,6 +10,8 @@ class TaskSchedule {
   final String? scheduledDate;
   final String? dueDate;
   final String? startTime;
+  final String? scheduledTime;
+  final String? dueTime;
   final String? timeZone;
   final String? recurrence;
 
@@ -18,6 +20,8 @@ class TaskSchedule {
     'scheduledDate',
     'dueDate',
     'startTime',
+    'scheduledTime',
+    'dueTime',
     'timeZone',
     'recurrence',
   };
@@ -27,50 +31,64 @@ class TaskSchedule {
     String? scheduledDate,
     String? dueDate,
     String? startTime,
+    String? scheduledTime,
+    String? dueTime,
     String? timeZone,
     String? recurrence,
   }) {
     for (final date in [startDate, scheduledDate, dueDate]) {
       if (date != null) parseCivilDate(date);
     }
-    if (startTime != null &&
-        !RegExp(r'^(?:[01]\d|2[0-3]):[0-5]\d$').hasMatch(startTime)) {
-      throw const FormatException('Start time must be HH:mm.');
+    for (final (label, date, time) in [
+      ('Start', startDate, startTime),
+      ('Scheduled', scheduledDate, scheduledTime),
+      ('Due', dueDate, dueTime),
+    ]) {
+      if (time != null &&
+          !RegExp(r'^(?:[01]\d|2[0-3]):[0-5]\d$').hasMatch(time)) {
+        throw FormatException('$label time must be HH:mm.');
+      }
+      if (time != null && date == null) {
+        throw FormatException(
+          'Choose a ${label.toLowerCase()} date before adding a time.',
+        );
+      }
     }
-    if (startTime != null && startDate == null) {
-      throw const FormatException(
-        'Choose a start date before adding a start time.',
-      );
+    if (timeZone != null) {
+      try {
+        timeZoneLocation(timeZone);
+      } catch (_) {
+        throw const FormatException('Unknown time zone identifier.');
+      }
     }
-    // A date-only due date includes that entire civil day. The schedule has one
-    // zone, so canonical YYYY-MM-DD comparison is sufficient for date bounds.
-    if (startDate != null &&
-        dueDate != null &&
-        startDate.compareTo(dueDate) > 0) {
-      throw const FormatException(
-        'Start date must be on or before the due date.',
-      );
-    }
-    // A zone is metadata for a civil wall time, not permission to infer a date
-    // or resolve a DST fold/gap into an instant.
-    if (timeZone != null &&
-        !RegExp(r'^[A-Za-z][A-Za-z0-9_+\-/]{0,99}$').hasMatch(timeZone)) {
-      throw const FormatException('Invalid time zone identifier.');
-    }
-    if (timeZone != null && startTime != null && dueDate != null) {
-      // Rare zone transitions can skip a date or move a late start into the
-      // following day. Validate the resolved start against the exclusive end
-      // of the due day, not midnight at the beginning of that day.
-      final endDay = parseCivilDate(dueDate).add(const Duration(days: 1));
-      final start = resolveZonedWallTime(startDate!, startTime, timeZone);
-      final end = resolveZonedWallTime(
-        formatCivilDate(endDay),
-        '00:00',
-        timeZone,
-      );
-      if (!start.instant.isBefore(end.instant)) {
+    if (startDate != null && dueDate != null) {
+      // Date-only start means beginning of day. Date-only due includes that
+      // whole day; an exact due time is inclusive. Never use elapsed 24 hours
+      // to find the end of a named-zone day across DST.
+      DateTime resolve(DateTime day, String time) {
+        final parts = time.split(':').map(int.parse).toList();
+        final civil = DateTime.utc(
+          day.year,
+          day.month,
+          day.day,
+          parts[0],
+          parts[1],
+        );
+        return timeZone == null
+            ? civil
+            : resolveCivilWallTime(civil, timeZone).instant;
+      }
+
+      final start = resolve(parseCivilDate(startDate), startTime ?? '00:00');
+      final due = dueTime != null
+          ? resolve(parseCivilDate(dueDate), dueTime)
+          : resolve(
+              parseCivilDate(dueDate).add(const Duration(days: 1)),
+              '00:00',
+            );
+      if (dueTime == null ? !start.isBefore(due) : start.isAfter(due)) {
         throw const FormatException(
-          'Start time falls after the due day in this time zone.',
+          'Start must be on or before the due date and time.',
         );
       }
     }
@@ -85,6 +103,8 @@ class TaskSchedule {
       scheduledDate,
       dueDate,
       startTime,
+      scheduledTime,
+      dueTime,
       timeZone,
       recurrence,
     );
@@ -95,6 +115,8 @@ class TaskSchedule {
     this.scheduledDate,
     this.dueDate,
     this.startTime,
+    this.scheduledTime,
+    this.dueTime,
     this.timeZone,
     this.recurrence,
   );
@@ -109,6 +131,8 @@ class TaskSchedule {
       scheduledDate: json['scheduledDate'] as String?,
       dueDate: json['dueDate'] as String?,
       startTime: json['startTime'] as String?,
+      scheduledTime: json['scheduledTime'] as String?,
+      dueTime: json['dueTime'] as String?,
       timeZone: json['timeZone'] as String?,
       recurrence: json['recurrence'] as String?,
     );
@@ -119,6 +143,8 @@ class TaskSchedule {
     'scheduledDate': scheduledDate,
     'dueDate': dueDate,
     'startTime': startTime,
+    'scheduledTime': scheduledTime,
+    'dueTime': dueTime,
     'timeZone': timeZone,
     'recurrence': recurrence,
   };
@@ -153,6 +179,10 @@ class TaskSchedule {
           : shift(scheduledDate),
       dueDate: shift(dueDate),
       startTime: startTime,
+      scheduledTime: startDate != null || dueDate != null
+          ? null
+          : scheduledTime,
+      dueTime: dueTime,
       timeZone: timeZone,
       recurrence: recurrence,
     );

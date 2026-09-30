@@ -41,6 +41,20 @@ ResolvedWallTime resolveZonedWallTime(String date, String time, String zone) {
       civil.minute != t[1]) {
     throw FormatException('Invalid date or time.');
   }
+  return resolveCivilWallTime(civil, zone);
+}
+
+/// Resolve already validated civil components, including internal exclusive
+/// end-of-day boundaries beyond the public four-digit date range. This value
+/// carries calendar components, not an instant or a device-local zone.
+ResolvedWallTime resolveCivilWallTime(DateTime civil, String zone) {
+  civil = DateTime.utc(
+    civil.year,
+    civil.month,
+    civil.day,
+    civil.hour,
+    civil.minute,
+  );
   final location = timeZoneLocation(zone);
   // Only offsets near this date are candidates; historical offsets must not
   // manufacture a smaller apparent gap than the actual transition.
