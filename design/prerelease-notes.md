@@ -2,7 +2,7 @@ Experimental task-management preview. Use a new dedicated test folder and synthe
 
 Includes folder selection, household user selection/creation, task capture, edit, completion and targeted undo, with canonical JSON logs and a rebuildable private SQLite cache.
 
-- Linux: native release bundle, extract then run `tandemlog`. Requires a compatible Linux GTK desktop. Native Linux workflows, restart, error handling and integration tests were exercised.
+- Linux: native release bundle, extract then run `tandemlog`. Built on Ubuntu 24.04 x64; use Ubuntu 24.04 or a compatible/newer glibc desktop. Requires GTK 3 and the standard C++ runtime (`sudo apt install libgtk-3-0t64 libstdc++6` on Ubuntu 24.04), plus a graphical session. Keep the bundle’s `lib/` and `data/` beside the executable. Other distributions/older glibc are unverified. Native Linux workflows, restart, error handling and integration tests were exercised.
 - Windows: unsigned portable x64 ZIP; extract the entire bundle and run `tandemlog.exe`. Built on a native Windows runner with domain/storage tests. Interactive Windows launch/UI acceptance remains pending. Windows may require the Microsoft Visual C++ runtime and show an unsigned-app warning.
 - Android: test-only debug APK, signed with an ephemeral CI debug certificate. Native app launch and SAF grants/restart/remote replacement remain **unverified**: this cloud's software emulator failed before app installation. Do not treat compilation as Android acceptance. Subsequent candidates may use a different certificate and require uninstall/reinstall; preserve the shared canonical folder first. Private settings, grants and cache can be lost on uninstall.
 

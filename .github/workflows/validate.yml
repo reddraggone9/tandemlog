@@ -60,7 +60,8 @@ jobs:
           java-version: '21'
       - uses: ./.github/actions/setup-flutter
       - run: flutter pub get
-      - run: sdkmanager "build-tools;36.0.0"
+      # The standard Ubuntu runner image includes this exact build-tools version.
+      - run: test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
       - run: flutter build apk --debug
       - run: |
           mkdir dist

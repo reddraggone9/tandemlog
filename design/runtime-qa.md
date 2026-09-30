@@ -4,7 +4,7 @@
 
 | Target | Verified evidence | Remaining limit |
 | --- | --- | --- |
-| Linux native | Flutter GTK app built in debug/release, launched under Xvfb/Openbox; actual folder picker, capture/edit/completion shown; native integration flow passed restart, undo and unsupported-record recovery | Linux is a development target, not Windows coverage. Software display/container performance does not predict phones. |
+| Linux native | Flutter GTK app built in debug/release, launched under Xvfb/Openbox; actual folder picker, capture/edit/completion shown; native integration flow passed restart, undo and unsupported-record recovery | Linux is the accepted primary desktop visual QA target, not proof of Windows-specific behavior. Software display/container performance does not predict phones. |
 | Android build | `flutter build apk --debug` passed (262.0 s); APK at `build/app/outputs/flutter-apk/app-debug.apk`, 153 MiB universal debug | Kotlin bridge compiles; this does not verify SAF or native UI. |
 | Android runtime | Official API 36 AOSP x86_64 emulator launches using software CPU/SwiftShader; ADB becomes available | No KVM/CPU virtualization extensions. API 30 completed boot but System UI ANR prevented app installation; API 36 never completed usable boot. App/SAF acceptance pending. |
 | Windows | Generated Flutter desktop scaffold | No Windows runtime exposed. Native build/run/video pending on Windows. |
@@ -35,6 +35,10 @@ Visual inspection: cream background, green primary action, bounded white task ca
 
 Android uses [SAF tree/document URIs and persisted grants](https://developer.android.com/training/data-storage/shared/documents-files), not ordinary filesystem paths. SQLite remains private. Syncthing Android's [official retirement](https://forum.syncthing.net/t/discontinuing-syncthing-android/23002) and [closed replacement/grant report #10887](https://github.com/syncthing/syncthing/issues/10887) motivate provider testing; the report is not universal proof of failure or an assertion that the upstream issue remains open.
 
+## Desktop verification split
+
+Linux is the primary desktop visual QA target and ships an x64 bundle. Routine shared UI changes require native Linux visual inspection. Windows retains hosted native builds and targeted packaging, Unicode/path, folder-dialog and startup smoke checks; a full emulated Windows session is not required for every shared UI change. Android still needs independent native visual, lifecycle and SAF tests.
+
 ## Windows verification path
 
 On Windows with official Flutter and Visual Studio's Desktop development with C++ workload: `flutter doctor -v`, `flutter pub get`, `flutter analyze`, `flutter test`, `flutter test integration_test/task_flow_test.dart -d windows`, `flutter build windows --release`. Run the generated executable; test native folder picker, keyboard/focus, scaling, Unicode paths, restart, read-only/missing folder and two local profiles exchanging logs. Record an actual Windows video. Do not label a Linux build, cross-compilation, or Wine run as native Windows verification.
@@ -43,7 +47,7 @@ Every subsequent UI change requires rerunning the affected workflow, visually in
 
 ### Recorded release measurements
 
-Final measurement batch (native Linux release, Xvfb/Openbox, software emulator paused; no Gradle build active at batch start):
+Historical pre-fix measurement batch (native Linux release, Xvfb/Openbox, software emulator paused; no Gradle build active at batch start):
 
 | Run | SQLite | External launch → loaded-frame marker | Dart state → marker | Log files read |
 | --- | --- | ---: | ---: | ---: |
@@ -98,7 +102,7 @@ The deliverable video was recorded before the session-bus correction; its edited
 
 Official build tools and a matching Debian OpenJDK 21 JDK live under `/workspace/toolchains`. Maven Central HTTP 429 was handled with a workspace-only Gradle initialization file using Google's Maven Central mirror; Java proxy settings are also workspace-only. The repository does not force this workaround on other developers. The final debug APK rebuild passed in **26.0 seconds**; the first successful complete build took **262.0 seconds**. Static analysis and all 23 domain/storage tests pass; the final native Linux integration rerun passed after the indexed capture existence-check change.
 
-API 36 software emulation was tried at the original device dimensions, then 480×800 with 3 GiB RAM, two virtual cores, SwiftShader, Vulkan disabled and fresh userdata. It reaches ADB and system_server/package service, but installation returned `Error: device is still booting.` Screen capture has timed out. No native Android app run, tree-grant restart, atomic-replacement test, or Android demo is yet verified. An official API 30 AOSP x86_64 fallback is also being tried; its default 12 GiB userdata request exceeded available disk, so the unused test AVD was configured with a 2 GiB userdata partition. Any success there must be labeled API 30, not current-phone coverage.
+API 36 software emulation was tried at the original device dimensions, then 480×800 with 3 GiB RAM, two virtual cores, SwiftShader, Vulkan disabled and fresh userdata. It reaches ADB and system_server/package service, but installation returned `Error: device is still booting.` Screen capture has timed out. No native Android app run, tree-grant restart, atomic-replacement test, or Android demo is yet verified. An official API 30 AOSP x86_64 fallback was also tried; its default 12 GiB userdata request exceeded available disk, so the test AVD was configured with a smaller userdata partition. Its final failure is recorded below.
 
 Raw logs: `/workspace/toolchains/android-build-final.log`, `android-install-retry.log`, `emulator-small.log`, `emulator-api30.log`. This is a practical unaccelerated-runtime limitation established in this environment, not a claim that Android emulation is universally impossible. No native Windows environment is exposed.
 
