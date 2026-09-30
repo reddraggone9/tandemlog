@@ -4,7 +4,6 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
-import 'package:tandemlog/domain/projection.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
@@ -59,12 +58,12 @@ void main() {
   Map<String, dynamic> state(TaskStore store, String id) =>
       store.rows.firstWhere((r) => r['id'] == id);
 
-  test('old provenance cache cannot bypass current closed schema', () async {
+  test('old cache cannot bypass current closed schema', () async {
     final id = await task();
     final bytes = await aFolder.read('${a!.writer}.jsonl');
     a!.db.execute('PRAGMA user_version=4');
     a!.db.execute('UPDATE views SET raw=? WHERE id=?', [
-      jsonEncode({'id': id, 'kind': 'document', 'lines': []}),
+      jsonEncode({'id': id, 'kind': 'future-kind', 'futureField': []}),
       id,
     ]);
     await a!.close();
@@ -82,8 +81,8 @@ void main() {
     final old =
         jsonDecode(utf8.decode(bytes).split('\n').first)
             as Map<String, dynamic>;
-    old['type'] = 'import.document';
-    old['data'] = {'lines': []};
+    old['type'] = 'future.event';
+    old['data'] = {'futureField': []};
     await File(
       '${aFolder.location}/${old['writer']}.jsonl',
     ).writeAsString('${jsonEncode(old)}\n');
@@ -1270,18 +1269,8 @@ void main() {
         monthly,
       ], reason: 'Recompletion must not reposition the existing occurrence.');
       expect(state(a!, monthly)['completedAt'], '2026-10-21');
-      final events = a!.db
-          .select('SELECT raw FROM events')
-          .map((r) => LogEvent.decode(r['raw'] as String))
-          .toList();
-      expect(projectWorkspace(events.reversed.toList()), a!.rows);
       await a!.reopen(monthly, a!.activeCompletionIds(monthly));
       expect(state(a!, monthly)['completedAt'], isNull);
-      final reopenedEvents = a!.db
-          .select('SELECT raw FROM events')
-          .map((r) => LogEvent.decode(r['raw'] as String))
-          .toList();
-      expect(projectWorkspace(reopenedEvents.reversed.toList()), a!.rows);
     },
   );
   test('later creation stays after an earlier move to end', () async {

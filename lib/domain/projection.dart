@@ -82,36 +82,3 @@ List<String> projectOrder(
   settlePending();
   return ordered;
 }
-
-/// Project validated canonical history without a database, preserving the same
-/// occurrence seeds and ordering used by TaskStore. External tools validate
-/// stream identity/sequence and wire records before invoking this helper.
-List<Map<String, dynamic>> projectWorkspace(List<LogEvent> history) {
-  final events = [...history]..sort(compareEvents);
-  final byEntity = <String, List<LogEvent>>{};
-  final seeds = <String, LogEvent>{};
-  for (final event in events) {
-    (byEntity[event.entity] ??= []).add(event);
-    if (event.type == 'task.completed' && event.data['successor'] != null) {
-      final id = (event.data['successor'] as Map)['id'] as String;
-      seeds.putIfAbsent(id, () => event);
-    }
-  }
-  final rows = <Map<String, dynamic>>[];
-  for (final id in {...byEntity.keys, ...seeds.keys}) {
-    final entityEvents = [...?byEntity[id]];
-    final seed = seeds[id];
-    if (seed != null) entityEvents.add(successorCreation(seed));
-    final state = project(entityEvents);
-    if (state != null) rows.add(state);
-  }
-  rows.sort((a, b) {
-    final compared = (a['order'] as String).compareTo(b['order'] as String);
-    return compared != 0
-        ? compared
-        : (a['id'] as String).compareTo(b['id'] as String);
-  });
-  final byId = {for (final row in rows) row['id'] as String: row};
-  final order = projectOrder(byId.keys, events.map(OrderAction.fromEvent));
-  return order.map((id) => byId[id]!).toList();
-}
