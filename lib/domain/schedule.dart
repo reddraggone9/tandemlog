@@ -6,6 +6,10 @@ import 'wall_time.dart';
 /// due > scheduled > start reference, preserved day offsets, and configured
 /// scheduled-date removal. Implementation is independent of the upstream code.
 class TaskSchedule {
+  /// A finite 1000-year relative horizon, far beyond practical task planning.
+  /// Reject at admission before untrusted integers reach duration arithmetic.
+  static const maxRelativeDays = 365000;
+
   final String? startDate;
   final String? scheduledDate;
   final String? dueDate;
@@ -42,11 +46,13 @@ class TaskSchedule {
     int? dueMinDays,
     int? dueMaxDays,
   }) {
-    if ((dueMinDays != null && dueMinDays < 0) ||
-        (dueMaxDays != null && dueMaxDays < 0) ||
+    if ((dueMinDays != null &&
+            (dueMinDays < 0 || dueMinDays > maxRelativeDays)) ||
+        (dueMaxDays != null &&
+            (dueMaxDays < 0 || dueMaxDays > maxRelativeDays)) ||
         (dueMinDays != null && dueMaxDays != null && dueMinDays > dueMaxDays)) {
       throw const FormatException(
-        'Due bounds must be nonnegative days, with minimum no greater than maximum.',
+        'Sort-date bounds must be 0–365000 days, with minimum no greater than maximum.',
       );
     }
     for (final date in [startDate, scheduledDate, dueDate]) {

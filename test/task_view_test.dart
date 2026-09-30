@@ -30,7 +30,15 @@ void main() {
   test(
     'bounds accept only nullable integers and preserve recurrence anchor',
     () {
-      for (final value in [-1, 1.0, '1', true, <int>[]]) {
+      for (final value in [
+        -1,
+        365001,
+        9223372036854775807,
+        1.0,
+        '1',
+        true,
+        <int>[],
+      ]) {
         expect(
           () => TaskSchedule.fromJson({'dueMinDays': value}),
           throwsFormatException,
@@ -258,17 +266,33 @@ void main() {
     );
   });
   test(
-    'out-of-range relative bounds fail explicitly before integer overflow',
+    'supported bound horizon is admitted and renderable, larger values rejected',
     () {
-      final rows = [
-        row('invalid', schedule: TaskSchedule(dueMaxDays: 9223372036854775807)),
-      ];
       expect(
-        () => projectTaskView(rows, at('2026-10-02T12:00:00Z')),
+        () => TaskSchedule(dueMaxDays: 9223372036854775807),
         throwsFormatException,
+      );
+      expect(
+        () => TaskSchedule(dueMinDays: TaskSchedule.maxRelativeDays + 1),
+        throwsFormatException,
+      );
+      final schedule = TaskSchedule(dueMaxDays: TaskSchedule.maxRelativeDays);
+      final view = projectTaskView([
+        row('far', schedule: schedule),
+      ], at('2026-10-02T12:00:00Z'));
+      expect(
+        view.value.open.single.effectiveDate,
+        DateTime.utc(2026, 10, 2).add(const Duration(days: 365000)),
       );
     },
   );
+  test('derived bound groups may cross the persisted date year limit', () {
+    final view = projectTaskView([
+      row('futureGroup', schedule: TaskSchedule(dueMaxDays: 1)),
+    ], at('9999-12-31T12:00:00Z'));
+    expect(view.value.open.single.effectiveDate, DateTime.utc(10000, 1, 1));
+    expect(view.value.openGroups.single.date, '10000-01-01');
+  });
   test('bounds midnight boundary follows 23 and 25 hour local days', () {
     final rows = [row('bound', schedule: TaskSchedule(dueMaxDays: 0))];
     final spring = projectTaskView(

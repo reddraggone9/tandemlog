@@ -30,12 +30,17 @@ class TaskView {
   final List<TaskViewGroup> completedGroups;
 }
 
+// Group dates are derived values, so a supported relative horizon may extend
+// beyond the four-digit range permitted for persisted user-entered dates.
+String _groupDate(DateTime value) =>
+    '${value.year.toString().padLeft(4, '0')}-${value.month.toString().padLeft(2, '0')}-${value.day.toString().padLeft(2, '0')}';
+
 List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
   final groups = <TaskViewGroup>[];
   for (final entry in entries) {
     final date = entry.effectiveDate == null
         ? null
-        : formatCivilDate(entry.effectiveDate!);
+        : _groupDate(entry.effectiveDate!);
     if (groups.isEmpty || groups.last.date != date) {
       groups.add(TaskViewGroup(date, entry.effectiveDate?.weekday, [entry]));
     } else {
@@ -79,15 +84,15 @@ TimedView<TaskView> projectTaskView(
   final nowCivil = localCivil(time.instant);
   final today = DateTime.utc(nowCivil.year, nowCivil.month, nowCivil.day);
   DateTime boundDay(int days) {
-    // Validate before constructing Duration: multiplying attacker-controlled
-    // integer days by microseconds can overflow before DateTime sees it.
-    final remaining = DateTime.utc(9999, 12, 31).difference(today).inDays;
-    if (days > remaining) {
+    // TaskSchedule admission bounds the duration before multiplication. Only
+    // a clock near DateTime's own representable limits can still overflow.
+    try {
+      return today.add(Duration(days: days));
+    } on ArgumentError {
       throw const FormatException(
-        'Due bound exceeds the supported calendar range.',
+        'Current clock and sort-date bound exceed the supported calendar range.',
       );
     }
-    return today.add(Duration(days: days));
   }
 
   DateTime? nextChange;
