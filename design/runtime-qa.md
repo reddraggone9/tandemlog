@@ -141,3 +141,14 @@ Implementation `0d66917402c2647c3badab9a50b75161b3e8716a`, version `0.1.0-rc.2+3
 Native release visual inspection confirms compact rows, full long-title wrapping, dark snackbar contrast and checked Completed rows. The [UX audit](ux-audit-rc2.md#measured-native-linux-comparison) records measured density and exact limits. Android build 3 regression and its phone/video evidence remain pending: the accelerated worker dispatch hit approval-service timeouts before task admission. This is not an application failure or a new user-approval requirement.
 
 Final build-3 implementation `20e4f3e5bb9032aed628ffee698fcc96c20bddca` clears the stale Undo snackbar after reopening. The native regression and release walkthrough verify that change. [Final full CI](https://github.com/reddraggone9/tandemlog/actions/runs/36752532225) passed on Linux, Windows and Android. The final independent UX review found no concrete regression in the native Linux screenshots/walkthrough; Android-specific runtime evidence remains pending as stated above.
+
+
+### Final build-3 startup sample
+
+Frozen app source `20e4f3e` was measured in five fresh native Linux release processes, with 2,000 synthetic tasks, explicit session bus, Xvfb/software graphics and no emulator/build or demo app running. Launch to loaded-frame marker: **1,880 ms cache rebuild; 978 / 844 / 801 / 860 ms warm cache**. External first-frame times were **1,328 / 757 / 683 / 589 / 629 ms**. The rebuild reached Dart main at 987 ms, then reported 246 ms ingestion and 8 ms total query/decode/sort; warm runs read zero canonical log contents. The complete cached task count was asserted on every run. Raw data: `evidence/startup-rc2-build3.json`.
+
+A subsequent three-process minimal Flutter release comparison in the same display/session measured **474 / 428 / 379 ms** to its first frame, with Dart main at **365 / 319 / 291 ms** (`evidence/startup-minimal-rc2-build3.json`). Retain the slower rebuild sample rather than replacing it with earlier favorable timings. Its longer pre-Dart interval does not establish an application regression or prove an environmental cause. These are sequential samples, not controlled target-device acceptance.
+
+The benchmark resets only its isolated local cache before run 1; OS page caches are not flushed. The loaded post-frame marker approximates task-ready startup, not physical presentation or a measured first successful input. Internal phase timers exclude engine startup; first frame can precede task readiness. Windows and Android startup acceptance remain separate.
+
+The final Android build-3 worker was subsequently admitted successfully; its current regression result is pending. Publication is held for that result, with no speculative app changes during the freeze.

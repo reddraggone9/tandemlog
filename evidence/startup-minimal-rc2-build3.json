@@ -1,0 +1,41 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 0,
+  "label": "minimal-final-build3",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "not used",
+      "external_ms": 474,
+      "marker": "TANDEMLOG_READY_MS=109 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=109 FILES_READ=0"
+      ],
+      "external_main_ms": 365
+    },
+    {
+      "run": 2,
+      "cache": "not used",
+      "external_ms": 428,
+      "marker": "TANDEMLOG_READY_MS=109 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=109 FILES_READ=0"
+      ],
+      "external_main_ms": 319
+    },
+    {
+      "run": 3,
+      "cache": "not used",
+      "external_ms": 379,
+      "marker": "TANDEMLOG_READY_MS=87 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=87 FILES_READ=0"
+      ],
+      "external_main_ms": 291
+    }
+  ]
+}
