@@ -1,62 +1,51 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/domain/projection.dart';
 import 'package:tandemlog/domain/schedule.dart';
 import 'migration_source.dart';
 
-/// An external, fresh-workspace-only rehearsal. Never opens a live app cache or
-/// borrows its writer. Canonical events contain the source map and domain data.
+/// External fresh-workspace importer and domain-only Markdown serializer.
+/// Source syntax exists only transiently during parsing, never in canonical logs.
 class MigrationBundle {
   final String space, writer;
   final List<LogEvent> events;
-  MigrationBundle(this.space, this.writer, this.events);
+  final Map<String, dynamic> importAnalysis;
+  MigrationBundle(
+    this.space,
+    this.writer,
+    this.events, {
+    this.importAnalysis = const {},
+  });
 
   factory MigrationBundle.importBytes(
     List<int> bytes, {
     String userName = 'Imported user',
     DateTime? importBatchTime,
   }) {
-    final batchTime = DateTime.fromMicrosecondsSinceEpoch(
-      (importBatchTime ?? DateTime.now()).microsecondsSinceEpoch,
-      isUtc: true,
-    );
-    final batchTimeText = batchTime.toIso8601String();
+    final batch = (importBatchTime ?? DateTime.now()).toUtc();
     final source = MarkdownSource.parse(bytes);
-    if (!_same(source.render(), bytes)) {
-      throw StateError(
-        'Original source-map byte fidelity failed before import.',
-      );
-    }
     final digest = sha256.convert(bytes).toString();
-    String id(String role) {
-      final h = sha256
-          .convert(
-            utf8.encode(
-              'tandemlog-import-v3:$digest:$userName:$batchTimeText:$role',
-            ),
-          )
-          .toString();
-      return '${h.substring(0, 8)}-${h.substring(8, 12)}-${h.substring(12, 16)}-${h.substring(16, 20)}-${h.substring(20, 32)}';
-    }
+    String id(String role) => const Uuid().v5(
+      '6ba7b811-9dad-11d1-80b4-00c04fd430c8',
+      'tandemlog-import-v5:$digest:$userName:${batch.toIso8601String()}:$role',
+    );
 
-    final space = id('space'),
-        writer = id('writer'),
-        user = id('user'),
-        document = id('document');
+    final space = id('space'), writer = id('writer'), user = id('user');
     final events = <LogEvent>[];
     void add(String entity, String type, Map<String, dynamic> data) {
-      final n = events.length + 1;
+      final seq = events.length + 1;
       events.add(
         LogEvent.decode(
           LogEvent(
             space,
             writer,
-            n,
+            seq,
             EventClock(
-              BigInt.from(batchTime.microsecondsSinceEpoch) *
-                      BigInt.from(1000) +
-                  BigInt.from(n - 1),
+              BigInt.from(batch.microsecondsSinceEpoch) * BigInt.from(1000) +
+                  BigInt.from(seq - 1),
             ),
             entity,
             type,
@@ -67,49 +56,87 @@ class MigrationBundle {
     }
 
     add(user, 'user.created', {'name': userName});
+    final expected = <Map<String, dynamic>>[];
+    var deleteToKeep = 0, addedFlags = 0, nonTaskLines = 0;
     for (var n = 0; n < source.lines.length; n++) {
       final line = source.lines[n];
-      if (!line.containsKey('fields')) continue;
-      final task = id('line:$n');
-      line['taskId'] = task;
-      final fields = line['fields'] as Map<String, dynamic>;
-      Map<String, dynamic> schedule;
-      try {
-        if (fields['startTime'] != null && fields['start'] == null) {
-          throw const FormatException('Start time requires a start date.');
+      if (!line.containsKey('fields')) {
+        if ((line['literal'] as String).trim().isNotEmpty) {
+          throw FormatException(
+            'Line ${n + 1}: Non-task source content is not representable; import stopped rather than dropping it.',
+          );
         }
-        schedule = scheduleOf(fields);
+        nonTaskLines++;
+        continue;
+      }
+      final fields = line['fields'] as Map<String, dynamic>;
+      try {
+        final task = id('line:$n');
+        final schedule = scheduleOf(fields);
+        if (fields['done'] != null && fields['completed'] != true) {
+          throw const FormatException(
+            'An open source task has a completion date.',
+          );
+        }
+        final tags = ordinaryTags(fields);
+        add(task, 'task.created', {
+          'title': fields['title'],
+          'description': '',
+          'assignee': user,
+          'schedule': schedule,
+          'tags': tags,
+        });
+        if (fields['completed'] == true) {
+          add(task, 'task.completed', {
+            if (fields['done'] != null) 'completedAt': fields['done'],
+          });
+        }
+        expected.add(sourceSemantics(fields));
+        final action = (fields['completionAction'] as String?)?.toLowerCase();
+        if (action == 'delete') deleteToKeep++;
+        if (fields['completed'] == false &&
+            fields['recurrence'] != null &&
+            action != 'delete') {
+          addedFlags++;
+        }
       } catch (error) {
         throw FormatException('Line ${n + 1}: $error');
       }
-      add(task, 'task.created', {
-        'title': fields['title'],
-        'description': '',
-        'assignee': user,
-        'schedule': schedule,
-        'tags': (fields['tags'] as List)
-            .cast<String>()
-            .where((t) => !t.startsWith('#start-time-'))
-            .map((t) => t.substring(1))
-            .toSet()
-            .toList(),
-        'import': {'documentId': document, 'line': n + 1},
-      });
-      if (fields['completed'] == true) {
-        add(task, 'task.completed', {
-          if (fields['done'] != null) 'completedAt': fields['done'],
-        });
-      }
     }
-    if (events.length == 1) throw const FormatException('No task lines found.');
-    add(document, 'import.document', {
-      'documentId': document,
-      ...source.toJson(),
-    });
+    if (expected.isEmpty) throw const FormatException('No task lines found.');
     final bundle = MigrationBundle(space, writer, events);
-    bundle.exportBytes(); // Includes authorized Markdown flag normalization.
-    return bundle;
+    final rows = bundle.tasks;
+    if (jsonEncode(rows.map(taskSemantics).toList()) != jsonEncode(expected)) {
+      throw const FormatException(
+        'Imported task semantics/order differ from source.',
+      );
+    }
+    final output = bundle.exportBytes();
+    return MigrationBundle(
+      space,
+      writer,
+      events,
+      importAnalysis: {
+        'importBatchTime': batch.toIso8601String(),
+        'sourceByteExact': _same(bytes, output),
+        'sourceSemanticReplay': 'passed',
+        'sourceDeleteMappedToAppKeep': deleteToKeep,
+        'markdownDeleteFlagsAddedOrChanged': addedFlags,
+        'blankLinesNormalized': nonTaskLines,
+        'formatPolicy':
+            'Canonical Markdown; original formatting is not retained.',
+      },
+    );
   }
+
+  static List<String> ordinaryTags(Map<String, dynamic> fields) =>
+      (fields['tags'] as List)
+          .cast<String>()
+          .where((t) => !t.startsWith('#start-time-'))
+          .map((t) => t.substring(1))
+          .toSet()
+          .toList()
+        ..sort();
 
   static Map<String, dynamic> scheduleOf(Map<String, dynamic> f) =>
       TaskSchedule(
@@ -117,176 +144,193 @@ class MigrationBundle {
         scheduledDate: f['scheduled'] as String?,
         dueDate: f['due'] as String?,
         startTime: f['startTime'] as String?,
-        timeZone: null,
         recurrence: f['recurrence'] as String?,
       ).toJson();
 
-  List<int> exportBytes() {
-    validateStreams();
-    final documents = events.where((e) => e.type == 'import.document').toList();
-    if (documents.length != 1) {
-      throw const FormatException('Expected exactly one import document.');
+  static Map<String, dynamic> sourceSemantics(Map<String, dynamic> f) => {
+    'title': f['title'],
+    'description': '',
+    'tags': ordinaryTags(f),
+    'schedule': scheduleOf(f),
+    'completed': f['completed'],
+    'doneDate': f['done'],
+  };
+
+  static String? doneDate(Map<String, dynamic> task) {
+    if (task['completed'] != true || task['completedAt'] == null) return null;
+    final value = task['completedAt'] as String;
+    if (value.length == 10) {
+      parseCivilDate(value);
+      return value;
     }
-    final document = documents.single;
-    final source = MarkdownSource.fromJson(
-      jsonDecode(jsonEncode(document.data)) as Map<String, dynamic>,
+    throw const FormatException(
+      'Markdown done dates cannot preserve a precise completion timestamp; only date-only completion is exportable.',
     );
-    final imported = <String>{};
-    for (final line in source.lines) {
-      if (!line.containsKey('fields')) continue;
-      final taskId = line['taskId'] as String;
-      if (!imported.add(taskId)) {
-        throw const FormatException('Duplicate source task reference.');
-      }
-      final taskEvents = events.where((e) => e.entity == taskId).toList();
-      final actual = project(taskEvents);
-      if (actual == null || actual['kind'] != 'task') {
-        throw const FormatException('Missing imported task.');
-      }
-      final f = line['fields'] as Map<String, dynamic>;
-      final provenance = actual['import'];
-      if (provenance is! Map ||
-          provenance['documentId'] != document.entity ||
-          provenance['line'] != source.lines.indexOf(line) + 1) {
+  }
+
+  static Map<String, dynamic> taskSemantics(Map<String, dynamic> task) => {
+    'title': task['title'],
+    'description': task['description'],
+    'tags': (task['tags'] as List).cast<String>().toSet().toList()..sort(),
+    'schedule': TaskSchedule.fromJson(
+      task['schedule'] as Map<String, dynamic>,
+    ).toJson(),
+    'completed': task['completed'],
+    'doneDate': doneDate(task),
+  };
+
+  List<Map<String, dynamic>> get tasks {
+    validateStreams();
+    final rows = projectWorkspace(events);
+    _validateCompleteReferences(rows);
+    return rows.where((row) => row['kind'] == 'task').toList();
+  }
+
+  void _validateCompleteReferences(List<Map<String, dynamic>> rows) {
+    final entities = {for (final row in rows) row['id'] as String: row};
+    final ids = {for (final event in events) event.id: event};
+    for (final row in rows.where((r) => r['kind'] == 'task')) {
+      if (entities[row['assignee']]?['kind'] != 'user') {
         throw const FormatException(
-          'Imported task/document reference mismatch.',
+          'Missing or invalid task assignee; export requires complete history.',
         );
       }
-      final expectedTags =
-          (f['tags'] as List)
-              .cast<String>()
-              .where((t) => !t.startsWith('#start-time-'))
-              .map((t) => t.substring(1))
-              .toSet()
-              .toList()
-            ..sort();
-      final actualTags = (actual['tags'] as List).cast<String>().toList()
-        ..sort();
-      final completionDates = taskEvents
-          .where((e) => e.type == 'task.completed')
-          .map((e) => e.data['completedAt'])
-          .toList();
-      // This tool promises an unchanged-import round trip, not an edited-note
-      // serializer. Reject divergence explicitly rather than emit stale source.
-      if (actual['title'] != f['title'] ||
-          actual['description'] != '' ||
-          actual['completed'] != f['completed'] ||
-          jsonEncode(actualTags) != jsonEncode(expectedTags) ||
-          jsonEncode(actual['schedule']) != jsonEncode(scheduleOf(f)) ||
-          (f['completed'] == true &&
-              (completionDates.length != 1 ||
-                  completionDates.single != f['done'])) ||
-          taskEvents.any(
-            (e) => !['task.created', 'task.completed'].contains(e.type),
-          )) {
+    }
+    for (final event in events) {
+      if (!entities.containsKey(event.entity)) {
         throw const FormatException(
-          'Task changed since import; unchanged-source exporter refuses stale output.',
+          'Unresolved entity dependency; export requires complete history.',
         );
       }
-      // Regenerate every semantic slot from independently replayed state. Title
-      // segments must concatenate to the replayed title; formatting is separate.
-      if ((f['titlePieces'] as List).join(' ') != actual['title']) {
-        throw const FormatException('Title source map mismatch.');
+      if (event.type == 'task.completionUndone') {
+        final target = ids[event.data['completion']];
+        if (target == null ||
+            target.type != 'task.completed' ||
+            target.entity != event.entity ||
+            target.clock >= event.clock) {
+          throw const FormatException(
+            'Missing or invalid completion reference.',
+          );
+        }
       }
-      final schedule = actual['schedule'] as Map;
-      f['title'] = actual['title'];
-      f['completed'] = actual['completed'];
-      f['tags'] = actualTags.map((t) => '#$t').toList();
-      if (f.containsKey('startTime')) f['startTime'] = schedule['startTime'];
-      for (final pair in {
-        'start': 'startDate',
-        'scheduled': 'scheduledDate',
-        'due': 'dueDate',
-        'recurrence': 'recurrence',
-      }.entries) {
-        if (f.containsKey(pair.key)) f[pair.key] = schedule[pair.value];
+      if (event.type == 'task.moved' &&
+          event.data['before'] != null &&
+          entities[event.data['before']]?['kind'] != 'task') {
+        throw const FormatException('Missing or invalid task order anchor.');
       }
-      if (f.containsKey('done') && f['completed'] == true) {
-        f['done'] = completionDates.single;
-      }
-      if (f['completed'] == false &&
-          f['recurrence'] != null &&
-          (f['completionAction'] as String?)?.toLowerCase() != 'delete') {
-        final hadAction = f.containsKey('completionAction');
-        f['completionAction'] = 'delete';
-        if (!hadAction) {
-          final parts = (line['parts'] as List).cast<Map<String, dynamic>>();
-          Map<String, dynamic>? trailing;
-          if (parts.isNotEmpty &&
-              parts.last['literal'] is String &&
-              RegExp(r'^\s+$').hasMatch(parts.last['literal'] as String)) {
-            trailing = parts.removeLast();
+      final changes = event.type == 'task.tagsChanged'
+          ? event.data
+          : event.data['tagChanges'];
+      if (changes == null) continue;
+      for (final token in (changes['remove'] as List).cast<String>()) {
+        final parts = token.split(':');
+        final target = ids['${parts[0]}:${parts[1]}'];
+        if (target != null) {
+          final additions = target.type == 'task.created'
+              ? target.data['tags'] as List? ?? []
+              : target.type == 'task.tagsChanged'
+              ? target.data['add'] as List
+              : (target.data['tagChanges'] as Map?)?['add'] as List?;
+          final index = int.parse(parts[2]);
+          if (target.entity != event.entity ||
+              target.clock >= event.clock ||
+              additions == null ||
+              index >= additions.length) {
+            throw const FormatException('Invalid observed tag reference.');
           }
-          parts.addAll([
-            {'literal': ' 🏁 '},
-            {'field': 'completionAction'},
-          ]);
-          if (trailing != null) parts.add(trailing);
-          line['parts'] = parts;
+        } else {
+          final seeds = events.where((candidate) {
+            final successor = candidate.data['successor'];
+            return successor is Map &&
+                successor['id'] == event.entity &&
+                candidate.clock < event.clock &&
+                (successor['tags'] as List? ?? []).any(
+                  (tag) =>
+                      '${const Uuid().v5(event.entity, 'tag:$tag')}:1:0' ==
+                      token,
+                );
+          });
+          if (seeds.isEmpty) {
+            throw const FormatException(
+              'Missing derived tag dependency; export requires complete history.',
+            );
+          }
         }
       }
     }
-    final createdTasks = events
-        .where((e) => e.type == 'task.created')
-        .map((e) => e.entity)
-        .toSet();
-    if (createdTasks.length != imported.length ||
-        !createdTasks.containsAll(imported)) {
-      throw const FormatException('Tasks added or missing since import.');
-    }
-    final ordered = events.where((e) => e.type == 'task.created').toList()
-      ..sort((a, b) {
-        final c = a.clock.compareTo(b.clock);
-        return c != 0 ? c : a.writer.compareTo(b.writer);
-      });
-    if (jsonEncode(ordered.map((e) => e.entity).toList()) !=
-        jsonEncode(imported.toList())) {
+  }
+
+  List<int> exportBytes() {
+    final rows = tasks;
+    if (rows.map((t) => t['assignee']).toSet().length > 1) {
       throw const FormatException(
-        'Imported order does not match canonical creation order.',
+        'Markdown export cannot preserve multiple assignees; select a single-user workspace.',
       );
     }
-    if (events.any((e) => e.type == 'task.moved')) {
-      throw const FormatException('Order changed since import.');
-    }
-    final restored = source.render();
-    final reparsed = MarkdownSource.parse(restored);
-    final expectedFields = source.lines
-        .where((l) => l.containsKey('fields'))
-        .map((l) => l['fields'] as Map<String, dynamic>)
-        .toList();
-    final actualFields = reparsed.lines
-        .where((l) => l.containsKey('fields'))
-        .map((l) => l['fields'] as Map<String, dynamic>)
-        .toList();
-    if (expectedFields.length != actualFields.length) {
-      throw const FormatException(
-        'Rendered source task inventory differs from replay.',
+    final output = StringBuffer();
+    for (final task in rows) {
+      final schedule = TaskSchedule.fromJson(
+        task['schedule'] as Map<String, dynamic>,
       );
-    }
-    for (var i = 0; i < expectedFields.length; i++) {
-      final expected = Map<String, dynamic>.from(expectedFields[i]);
-      final actual = Map<String, dynamic>.from(actualFields[i]);
-      // Tags are a membership set in the domain; lexical duplicate occurrences
-      // are separately checked by the strict source-map slot validator.
-      List<String> ordinaryTags(Map<String, dynamic> f) =>
-          (f['tags'] as List)
-              .cast<String>()
-              .where((t) => !t.startsWith('#start-time-'))
-              .toSet()
-              .toList()
-            ..sort();
-      expected['tags'] = ordinaryTags(expected);
-      actual['tags'] = ordinaryTags(actual);
-      bool sameFields(Map<String, dynamic> a, Map<String, dynamic> b) =>
-          a.length == b.length &&
-          a.keys.every((key) => jsonEncode(a[key]) == jsonEncode(b[key]));
-      if (!sameFields(expected, actual)) {
-        throw FormatException(
-          'Rendered semantics differ from replay on task ${i + 1}.',
+      if (task['description'] != '') {
+        throw const FormatException(
+          'Markdown export does not yet represent task notes.',
         );
       }
+      if (schedule.scheduledTime != null ||
+          schedule.dueTime != null ||
+          schedule.timeZone != null) {
+        throw const FormatException(
+          'Markdown export cannot represent precise scheduled/due times or a pinned time zone.',
+        );
+      }
+      final tokens = <String>[
+        '- [${task['completed'] == true ? 'x' : ' '}]',
+        task['title'] as String,
+      ];
+      final tags = (task['tags'] as List).cast<String>().toList()..sort();
+      for (final tag in tags) {
+        if (!RegExp(r'^[^\s#]+$').hasMatch(tag) ||
+            tag.startsWith('start-time-')) {
+          throw const FormatException(
+            'An app tag is not representable as an ordinary Markdown tag.',
+          );
+        }
+        tokens.add('#$tag');
+      }
+      if (schedule.startTime != null) {
+        tokens.add('#start-time-${schedule.startTime!.replaceAll(':', '')}');
+      }
+      if (schedule.recurrence != null) tokens.add('🔁 ${schedule.recurrence}');
+      if (schedule.recurrence != null && task['completed'] != true) {
+        tokens.add('🏁 delete');
+      }
+      if (schedule.startDate != null) tokens.add('🛫 ${schedule.startDate}');
+      if (schedule.scheduledDate != null) {
+        tokens.add('⏳ ${schedule.scheduledDate}');
+      }
+      if (schedule.dueDate != null) tokens.add('📅 ${schedule.dueDate}');
+      final done = doneDate(task);
+      if (done != null) tokens.add('✅ $done');
+      output.writeln(tokens.join(' '));
     }
-    return restored;
+    final bytes = utf8.encode(output.toString());
+    final parsed = MarkdownSource.parse(bytes);
+    if (parsed.lines.any((l) => !l.containsKey('fields'))) {
+      throw const FormatException(
+        'Exported task content became non-task Markdown.',
+      );
+    }
+    final actual = parsed.lines
+        .map((l) => sourceSemantics(l['fields'] as Map<String, dynamic>))
+        .toList();
+    final expected = rows.map(taskSemantics).toList();
+    if (jsonEncode(actual) != jsonEncode(expected)) {
+      throw const FormatException(
+        'Exported Markdown cannot represent current task semantics exactly.',
+      );
+    }
+    return bytes;
   }
 
   void validateStreams() {
@@ -300,132 +344,88 @@ class MigrationBundle {
     }
     for (final stream in byWriter.values) {
       stream.sort((a, b) => a.sequence.compareTo(b.sequence));
-      EventClock? previousClock;
-      for (var n = 0; n < stream.length; n++) {
-        if (stream[n].sequence != n + 1 ||
-            (previousClock != null &&
-                stream[n].clock.compareTo(previousClock) <= 0)) {
+      EventClock? previous;
+      for (var i = 0; i < stream.length; i++) {
+        if (stream[i].sequence != i + 1 ||
+            (previous != null && stream[i].clock <= previous)) {
           throw const FormatException(
             'Missing, duplicate, or unordered writer event.',
           );
         }
-        previousClock = stream[n].clock;
+        previous = stream[i].clock;
       }
     }
   }
 
-  MarkdownSource get originalSource => MarkdownSource.fromJson(
-    jsonDecode(
-          jsonEncode(
-            events.singleWhere((e) => e.type == 'import.document').data,
-          ),
-        )
-        as Map<String, dynamic>,
-  );
-
-  int get markdownFlagNormalizations => originalSource.lines.where((line) {
-    final f = line['fields'];
-    return f is Map &&
-        f['completed'] == false &&
-        f['recurrence'] != null &&
-        (f['completionAction'] as String?)?.toLowerCase() != 'delete';
-  }).length;
-
-  Map<String, dynamic> get fidelity => {
-    'sourceByteExact': _same(originalSource.render(), exportBytes()),
-    'markdownFlagNormalizations': markdownFlagNormalizations,
-    'sourceDeleteMappedToAppKeep': originalSource.lines.where((line) {
-      final f = line['fields'];
-      return f is Map &&
-          (f['completionAction'] as String?)?.toLowerCase() == 'delete';
-    }).length,
-    'appCompletionPolicy': 'keep-history',
-  };
-
   Map<String, dynamic> get inventory {
-    final schedules = events
-        .where((e) => e.type == 'task.created')
-        .map((e) => e.data['schedule'] as Map<String, dynamic>)
+    final schedules = tasks
+        .map((t) => t['schedule'] as Map<String, dynamic>)
         .toList();
-    final ruleCounts = <String, int>{};
+    final rules = <String, int>{};
     for (final schedule in schedules) {
       final rule = schedule['recurrence'] as String?;
-      if (rule != null) ruleCounts[rule] = (ruleCounts[rule] ?? 0) + 1;
+      if (rule != null) rules[rule] = (rules[rule] ?? 0) + 1;
     }
     return {
-      'recurrences': ruleCounts.values.fold<int>(0, (a, b) => a + b),
-      'distinctRecurrenceForms': ruleCounts.length,
-      'recurrenceForms': ruleCounts,
+      'recurrences': rules.values.fold<int>(0, (a, b) => a + b),
+      'distinctRecurrenceForms': rules.length,
+      'recurrenceForms': rules,
       'dateFields': {
         for (final field in ['startDate', 'scheduledDate', 'dueDate'])
-          field: schedules.where((schedule) => schedule[field] != null).length,
+          field: schedules.where((s) => s[field] != null).length,
       },
       'timeFields': {
         for (final field in ['startTime', 'scheduledTime', 'dueTime'])
-          field: schedules.where((schedule) => schedule[field] != null).length,
+          field: schedules.where((s) => s[field] != null).length,
       },
     };
   }
 
   Map<String, dynamic> auditRecurrence(String completionDate) {
-    final completionDay = parseCivilDate(completionDate);
-    // Establish this is still the unchanged source import before producing an
-    // audit. No completion commands or successor events are appended.
-    exportBytes();
-    final rows = events.where((e) => e.type == 'task.created').toList()
-      ..sort((a, b) {
-        final c = a.clock.compareTo(b.clock);
-        return c != 0 ? c : a.writer.compareTo(b.writer);
-      });
-    final entries = <Map<String, dynamic>>[];
-    for (final event in rows) {
+    final day = parseCivilDate(completionDate);
+    final rows = tasks;
+    final cases = <Map<String, dynamic>>[];
+    for (var i = 0; i < rows.length; i++) {
+      final row = rows[i];
       final schedule = TaskSchedule.fromJson(
-        event.data['schedule'] as Map<String, dynamic>,
+        row['schedule'] as Map<String, dynamic>,
       );
       if (schedule.recurrence == null) continue;
-      entries.add({
-        'id': event.entity,
+      cases.add({
+        'id': row['id'],
+        'position': i + 1,
         'rule': schedule.recurrence,
         'startDate': schedule.startDate,
         'scheduledDate': schedule.scheduledDate,
         'dueDate': schedule.dueDate,
-        'sourceLine': (event.data['import'] as Map)['line'],
-        'historicallyCompleted': events.any(
-          (e) => e.entity == event.entity && e.type == 'task.completed',
-        ),
+        'historicallyCompleted': row['completed'],
         'next': {
-          for (final entry in schedule.next(completionDay).toJson().entries)
-            if (['startDate', 'scheduledDate', 'dueDate'].contains(entry.key))
-              entry.key: entry.value,
+          for (final e in schedule.next(day).toJson().entries)
+            if (['startDate', 'scheduledDate', 'dueDate'].contains(e.key))
+              e.key: e.value,
         },
       });
     }
     return {
-      'auditVersion': 1,
+      'auditVersion': 2,
       'completion': completionDate,
       ...inventory,
-      'cases': entries,
+      'cases': cases,
       'scope':
-          'Read-only predictions from shared task domain; includes historical completed rows; no successors created.',
+          'Read-only current-domain predictions; positions are canonical order, not original source lines.',
     };
   }
 
   String get log => '${events.map((e) => e.encode()).join('\n')}\n';
   Map<String, dynamic> get report => {
     'format': protocolVersion,
-    'importBatchTime': DateTime.fromMicrosecondsSinceEpoch(
-      (events.firstWhere((e) => e.sequence == 1).clock.value ~/
-              BigInt.from(1000))
-          .toInt(),
-      isUtc: true,
-    ).toIso8601String(),
-    'tasks': events.where((e) => e.type == 'task.created').length,
-    'completed': events.where((e) => e.type == 'task.completed').length,
+    'tasks': tasks.length,
+    'completed': tasks.where((t) => t['completed'] == true).length,
     ...inventory,
-    'semanticReplay': 'passed',
-    ...fidelity,
-    'scope':
-        'Fresh staging only; UTF-8; unchanged import export; no live data touched.',
+    ...importAnalysis,
+    'appCompletionPolicy': 'keep-history',
+    'canonicalFormattingProvenance': false,
+    'assigneeIds': tasks.map((t) => t['assignee']).toSet().toList(),
   };
 }
 
@@ -494,6 +494,15 @@ Future<void> main(List<String> args) async {
       stdout.writeln(jsonEncode(bundle.report));
     } else {
       final root = Directory(args[1]);
+      if (await FileSystemEntity.type(
+            '${root.path}/tandemlog-space.json',
+            followLinks: false,
+          ) !=
+          FileSystemEntityType.file) {
+        throw const FormatException(
+          'Manifest must be a regular file, not a link.',
+        );
+      }
       final manifest =
           jsonDecode(
                 await File('${root.path}/tandemlog-space.json').readAsString(),
@@ -504,6 +513,11 @@ Future<void> main(List<String> args) async {
       }
       final events = <LogEvent>[];
       await for (final entry in root.list(followLinks: false)) {
+        if (entry.path.endsWith('.jsonl') && entry is! File) {
+          throw const FormatException(
+            'Canonical logs must be regular files, not links or directories.',
+          );
+        }
         if (entry is File && entry.path.endsWith('.jsonl')) {
           final raw = await entry.readAsString();
           if (!raw.endsWith('\n')) {
@@ -532,6 +546,24 @@ Future<void> main(List<String> args) async {
             )
           : bundle.exportBytes();
       final file = File(args[audit ? 3 : 2]);
+      String pathKey(String value) {
+        final normalized = value
+            .replaceAll(r'\', '/')
+            .replaceAll(RegExp(r'/+$'), '');
+        return Platform.isWindows ? normalized.toLowerCase() : normalized;
+      }
+
+      final canonicalRoot = pathKey(await root.resolveSymbolicLinks());
+      final outputParent = pathKey(
+        await file.absolute.parent.resolveSymbolicLinks(),
+      );
+      if (outputParent == canonicalRoot ||
+          outputParent.startsWith('$canonicalRoot/')) {
+        throw const FormatException(
+          'Export/audit output must be outside the canonical data folder.',
+        );
+      }
+
       if (await FileSystemEntity.type(file.path, followLinks: false) !=
           FileSystemEntityType.notFound) {
         throw const FormatException('Output exists; nothing overwritten.');
@@ -541,7 +573,7 @@ Future<void> main(List<String> args) async {
       stdout.writeln(
         audit
             ? 'Read-only recurrence audit written; canonical source unchanged.'
-            : 'Exported Markdown; semantic replay validated; flag normalizations=${bundle.markdownFlagNormalizations}; sourceByteExact=${bundle.fidelity['sourceByteExact']}.',
+            : 'Exported canonical Markdown from current domain state; semantic reparse validated. Original formatting is not retained. Assignee mapping (not encoded in Markdown): ${bundle.tasks.map((t) => t['assignee']).toSet().join(', ')}.',
       );
     }
   } catch (e) {

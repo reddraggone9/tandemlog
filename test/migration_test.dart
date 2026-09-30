@@ -5,261 +5,140 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/domain/schedule.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
-import 'package:tandemlog/domain/import_provenance.dart';
+import 'package:uuid/uuid.dart';
 import '../tool/migration.dart';
-import '../tool/migration_source.dart';
 
-MigrationBundle _fixtureImport(List<int> bytes) => MigrationBundle.importBytes(
-  bytes,
+MigrationBundle fixture(String source) => MigrationBundle.importBytes(
+  utf8.encode(source),
   importBatchTime: DateTime.utc(2026, 10, 1, 12),
 );
+void append(
+  MigrationBundle b,
+  String entity,
+  String type,
+  Map<String, dynamic> data,
+) {
+  b.events.add(
+    LogEvent.decode(
+      LogEvent(
+        b.space,
+        b.writer,
+        b.events.length + 1,
+        EventClock(b.events.last.clock.value + BigInt.one),
+        entity,
+        type,
+        data,
+      ).encode(),
+    ),
+  );
+}
 
 void main() {
   test(
-    'import scalar nanosecond batch time is explicit, stable and distinct from source history',
+    'scalar clock and deterministic identities; no formatting provenance events',
     () {
-      final source = utf8.encode('- [x] Example ✅ 2020-01-02');
-      final time = DateTime.utc(2026, 10, 1, 12);
-      final first = MigrationBundle.importBytes(source, importBatchTime: time);
-      final again = MigrationBundle.importBytes(source, importBatchTime: time);
-      final later = MigrationBundle.importBytes(
-        source,
-        importBatchTime: time.add(const Duration(milliseconds: 1)),
-      );
-      expect(first.log, again.log);
-      expect(first.writer, isNot(later.writer));
-      final base = BigInt.from(time.microsecondsSinceEpoch) * BigInt.from(1000);
+      final b = fixture('- [x] Example ✅ 2020-01-02\n');
+      expect(b.log, fixture('- [x] Example ✅ 2020-01-02\n').log);
+      final base =
+          BigInt.from(DateTime.utc(2026, 10, 1, 12).microsecondsSinceEpoch) *
+          BigInt.from(1000);
       expect(
-        first.events.map((e) => e.clock.value).toList(),
-        List.generate(first.events.length, (i) => base + BigInt.from(i)),
+        b.events.map((e) => e.clock.value).toList(),
+        List.generate(b.events.length, (i) => base + BigInt.from(i)),
       );
-      expect(first.events.every((e) => e.toJson()['clock'] is String), isTrue);
-      expect(
-        first.events
-            .singleWhere((e) => e.type == 'task.completed')
-            .data['completedAt'],
-        '2020-01-02',
-      );
-      final legacy = first.events.first.toJson()..['clock'] = 1;
-      expect(
-        () => LogEvent.decode(jsonEncode(legacy)),
-        throwsA(isA<FormatFailure>()),
-      );
-      legacy['clock'] = {'wallMs': time.millisecondsSinceEpoch, 'logical': 0};
-      expect(
-        () => LogEvent.decode(jsonEncode(legacy)),
-        throwsA(isA<FormatFailure>()),
-      );
-    },
-  );
-
-  test(
-    'export reparses rendered literals instead of trusting provenance fields',
-    () {
-      final bundle = _fixtureImport(utf8.encode('- [ ] Example'));
-      final doc = bundle.events.singleWhere((e) => e.type == 'import.document');
-      final parts = ((doc.data['lines'] as List).first['parts'] as List);
-      parts[2]['literal'] = '] Injected title ';
-      expect(bundle.exportBytes, throwsFormatException);
-    },
-  );
-
-  test(
-    'UTF8 BOM mixed line endings, opaque links, duplicate tags and title fragments round trip',
-    () {
-      final bytes = [
-        239,
-        187,
-        191,
-        ...utf8.encode(
-          '# Example\r\n\r\n'
-          '- [ ]  Read [[Example#section|alias]] and [reference](https://example.org/#anchor) #Area/tag #Area/tag 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03 🔁 every week when done 🏁 delete  \n'
-          '+ [X]\tExample #tag with trailing title ✅ 2026-09-30\r'
-          '- [ ] Same title\n- [ ] Same title',
-        ),
-      ];
-      final bundle = _fixtureImport(bytes);
-      expect(bundle.exportBytes(), bytes);
-      final tasks = bundle.events
-          .where((e) => e.type == 'task.created')
-          .toList();
-      expect(tasks, hasLength(4));
-      expect(tasks[0].data['tags'], ['Area/tag']);
-      expect(tasks[0].data['title'], contains('https://example.org/#anchor'));
-      expect(tasks[2].entity, isNot(tasks[3].entity));
-      expect(_fixtureImport(bytes).log, bundle.log);
-      expect(
-        bundle.events.where((e) => e.type == 'task.completed').single.data,
-        {'completedAt': '2026-09-30'},
-      );
-    },
-  );
-
-  test(
-    'all 37 source recurrence forms produce valid shared-domain schedules',
-    () {
-      expect(observedRecurrences, hasLength(37));
-      final source = [
-        for (final rule in observedRecurrences)
-          '- [ ] Example #start-time-0930 🔁 $rule 🏁 delete 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03',
-      ].join('\r\n');
-      final bundle = _fixtureImport(utf8.encode(source));
-      expect(utf8.decode(bundle.exportBytes()), source);
-      final tasks = bundle.events
-          .where((e) => e.type == 'task.created')
-          .toList();
-      expect(tasks, hasLength(37));
-      expect(tasks.first.data['tags'], isEmpty);
-      expect(tasks.first.data['schedule'], {
-        'startDate': '2026-10-01',
-        'scheduledDate': '2026-10-02',
-        'dueDate': '2026-10-03',
-        'startTime': '09:30',
-        'scheduledTime': null,
-        'dueTime': null,
-        'timeZone': null,
-        'recurrence': observedRecurrences.first,
-      });
-    },
-  );
-
-  test(
-    'missing start date for time reports source line; completed import never advances repeat',
-    () {
-      expect(
-        () => _fixtureImport(
-          utf8.encode(
-            '- [x] Example #start-time-0815 📅 2026-09-29 ✅ 2026-09-30',
-          ),
-        ),
-        throwsA(
-          isA<FormatException>().having(
-            (e) => e.message,
-            'message',
-            contains('Line 1'),
-          ),
-        ),
-      );
-      final source =
-          '- [x] Example #start-time-0815 🛫 2026-09-28 📅 2026-09-29 ✅ 2026-09-30 🔁 every day';
-      final bundle = _fixtureImport(utf8.encode(source));
-      expect(
-        bundle.events
-            .singleWhere((e) => e.type == 'task.completed')
-            .data
-            .containsKey('successor'),
-        isFalse,
-      );
-      expect(utf8.decode(bundle.exportBytes()), source);
-    },
-  );
-
-  test('sanitized 220 tasks / 99 repeats / 10 completed independently replay', () {
-    final source = [
-      for (var i = 0; i < 220; i++)
-        '- [${i < 3 || i >= 213 ? 'x' : ' '}] Example ${i + 1} #fixture${i % 24}'
-            '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 📅 2026-10-03' : ''}'
-            '${i >= 3 && i < 99 ? ' 🏁 delete' : ''}'
-            '${i < 3 || i >= 213 ? ' ✅ 2026-09-30' : ''}',
-    ].join('\n');
-    final bundle = _fixtureImport(utf8.encode(source));
-    final taskEvents = <String, List<LogEvent>>{};
-    for (final event in bundle.events.where(
-      (e) => e.type.startsWith('task.'),
-    )) {
-      taskEvents.putIfAbsent(event.entity, () => []).add(event);
-    }
-    final tasks = taskEvents.values.map(project).toList();
-    expect(tasks, hasLength(220));
-    expect(tasks.where((t) => t!['completed'] == true), hasLength(10));
-    expect(bundle.fidelity, {
-      'sourceByteExact': true,
-      'markdownFlagNormalizations': 0,
-      'sourceDeleteMappedToAppKeep': 96,
-      'appCompletionPolicy': 'keep-history',
-    });
-    expect(
-      tasks.where((t) => (t!['schedule'] as Map)['recurrence'] != null),
-      hasLength(99),
-    );
-    expect(utf8.decode(bundle.exportBytes()), source);
-  });
-
-  test(
-    'completion flags preserve provenance, keep app history, and normalize only open repeats',
-    () {
-      final source =
-          '- [ ] Open repeat 🔁 every day 🏁 KEEP 📅 2026-10-03  \r\n'
-          '- [ ] Missing flag 🔁 every week 📅 2026-10-03\n'
-          '- [x] History 🔁 every month 📅 2026-10-03 ✅ 2026-09-30\n'
-          '- [ ] Ordinary 🏁 KEEP\n'
-          '- [ ] Already delete 🔁 every day 🏁 DELETE 📅 2026-10-03';
-      final bundle = _fixtureImport(utf8.encode(source));
-      final output = utf8.decode(bundle.exportBytes());
-      expect(
-        output,
-        '- [ ] Open repeat 🔁 every day 🏁 delete 📅 2026-10-03  \r\n'
-        '- [ ] Missing flag 🔁 every week 📅 2026-10-03 🏁 delete\n'
-        '- [x] History 🔁 every month 📅 2026-10-03 ✅ 2026-09-30\n'
-        '- [ ] Ordinary 🏁 KEEP\n'
-        '- [ ] Already delete 🔁 every day 🏁 DELETE 📅 2026-10-03',
-      );
-      expect(bundle.fidelity, {
-        'sourceByteExact': false,
-        'markdownFlagNormalizations': 2,
-        'sourceDeleteMappedToAppKeep': 1,
-        'appCompletionPolicy': 'keep-history',
-      });
-      expect(bundle.originalSource.render(), utf8.encode(source));
-      final tasks = bundle.events
-          .where((e) => e.type == 'task.created')
-          .toList();
-      expect(tasks.first.data['title'], 'Open repeat');
-      expect(
-        tasks.every((e) => !e.data.containsKey('completionAction')),
-        isTrue,
-      );
-      expect(
-        bundle.events.where((e) => e.type == 'task.completed'),
-        hasLength(1),
-      );
-      for (final invalid in ['archive', 'delete forever', 'keep 🏁 keep']) {
+      expect(b.events.map((e) => e.type), [
+        'user.created',
+        'task.created',
+        'task.completed',
+      ]);
+      expect(b.events.every((e) => !e.data.containsKey('import')), isTrue);
+      expect(b.log, isNot(contains('titlePieces')));
+      expect(b.importAnalysis['sourceByteExact'], true);
+      for (final value in [
+        1,
+        {'wallMs': 1, 'logical': 0},
+      ]) {
         expect(
-          () => _fixtureImport(utf8.encode('- [ ] Example 🏁 $invalid')),
-          throwsA(anything),
+          () => LogEvent.decode(
+            jsonEncode(b.events.first.toJson()..['clock'] = value),
+          ),
+          throwsA(isA<FormatFailure>()),
         );
       }
     },
   );
 
   test(
-    'read-only recurrence audit covers all 99 cases/37 forms without title disclosure or writes',
+    'canonical UTF8 LF formatting preserves internal title whitespace and opaque links',
+    () {
+      final source =
+          '\uFEFF\r\n+ [X]  Read  [[Example#anchor|alias]] and [link](https://example.org/#x) #z #A #z ✅ 2026-09-30\r\n';
+      final b = fixture(source);
+      expect(
+        utf8.decode(b.exportBytes()),
+        '- [x] Read  [[Example#anchor|alias]] and [link](https://example.org/#x) #A #z ✅ 2026-09-30\n',
+      );
+      expect(b.importAnalysis['sourceByteExact'], false);
+      expect(b.importAnalysis['blankLinesNormalized'], 1);
+      expect(b.log, isNot(contains('encoding')));
+      expect(b.log, isNot(contains('completionAction')));
+      // Reload from only standard logs; neither source bytes nor transient report.
+      final reloaded = MigrationBundle(
+        b.space,
+        b.writer,
+        b.log.trim().split('\n').map(LogEvent.decode).toList(),
+      );
+      expect(reloaded.exportBytes(), b.exportBytes());
+    },
+  );
+
+  test(
+    'all 37 rules retain domain schedule and open-repeat delete serialization',
     () {
       final source = [
-        for (var i = 0; i < 220; i++)
-          '- [${i < 3 || i >= 213 ? 'x' : ' '}] Sanitized title ${i + 1}'
-              '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03' : ''}'
-              '${i >= 3 && i < 99 ? ' 🏁 delete' : ''}'
-              '${i < 3 || i >= 213 ? ' ✅ 2026-09-30' : ''}',
+        for (final rule in observedRecurrences)
+          '- [ ] Example #start-time-0930 🔁 $rule 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03',
       ].join('\n');
-      final bundle = _fixtureImport(utf8.encode(source));
-      final before = bundle.log;
-      final audit = bundle.auditRecurrence('2026-10-20');
-      expect(audit['completion'], '2026-10-20');
+      final b = fixture(source);
+      expect(b.tasks, hasLength(37));
+      expect(b.inventory['distinctRecurrenceForms'], 37);
+      expect(b.tasks.first['tags'], isEmpty);
+      expect(
+        b.tasks.first['schedule'],
+        TaskSchedule(
+          startDate: '2026-10-01',
+          scheduledDate: '2026-10-02',
+          dueDate: '2026-10-03',
+          startTime: '09:30',
+          recurrence: observedRecurrences.first,
+        ).toJson(),
+      );
+      expect(
+        RegExp('🏁 delete').allMatches(utf8.decode(b.exportBytes())),
+        hasLength(37),
+      );
+    },
+  );
+
+  test(
+    'synthetic inventory and recurrence oracle audit independently project all source rows',
+    () {
+      final source =
+          '${[for (var i = 0; i < 220; i++) '- [${i < 3 || i >= 213 ? 'x' : ' '}] Example ${i + 1}'
+                '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]}' : ''}'
+                '${i >= 3 && i < 99 ? ' 🏁 delete' : ''}'
+                '${i < 99 ? ' 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03' : ''}'
+                '${i < 3 || i >= 213 ? ' ✅ 2026-09-30' : ''}'].join('\n')}\n';
+      final b = fixture(source);
+      expect(b.tasks, hasLength(220));
+      expect(b.report['completed'], 10);
+      expect(b.importAnalysis['sourceByteExact'], true);
+      expect(b.importAnalysis['sourceDeleteMappedToAppKeep'], 96);
+      final before = b.log;
+      final audit = b.auditRecurrence('2026-10-20');
       expect(audit['recurrences'], 99);
       expect(audit['distinctRecurrenceForms'], 37);
-      expect(audit['dateFields'], {
-        'startDate': 99,
-        'scheduledDate': 99,
-        'dueDate': 99,
-      });
-      expect(audit['timeFields'], {
-        'startTime': 0,
-        'scheduledTime': 0,
-        'dueTime': 0,
-      });
       final cases = audit['cases'] as List;
-      expect(cases, hasLength(99));
       expect(
         cases.where((c) => c['historicallyCompleted'] == true),
         hasLength(3),
@@ -269,116 +148,214 @@ void main() {
         'scheduledDate': null,
         'dueDate': '2026-10-21',
       });
-      expect(jsonEncode(audit), isNot(contains('Sanitized title')));
-      expect(bundle.log, before);
-      expect(bundle.exportBytes(), utf8.encode(source));
+      expect(jsonEncode(audit), isNot(contains('Example')));
+      expect(b.log, before);
     },
   );
 
-  test('unknown or malformed metadata is a visible blocker', () {
-    for (final source in [
-      '- [/] Example',
-      '- [ ] Example 📅 2026-02-30',
-      '- [ ] Example 🔁 every fortnight 📅 2026-10-03',
-      '- [ ] Example 🔁 every day except Sunday 📅 2026-10-03',
-      '- [ ] Example #start-time-2500',
-      '- [ ] Example 📅 2026-10-01 📅 2026-10-02',
-      '- [ ] Example ⏫',
-      '- [ ] Example [[broken',
-    ]) {
-      expect(
-        () => _fixtureImport(utf8.encode(source)),
-        throwsA(anything),
-        reason: source,
+  test(
+    'keep/delete metadata is adapted, not persisted; completed history stays',
+    () {
+      final b = fixture(
+        '- [ ] Open 🔁 every day 🏁 KEEP 📅 2026-10-03\n'
+        '- [x] History 🔁 every day 🏁 delete 📅 2026-10-03 ✅ 2026-09-30\n',
       );
-    }
-    expect(() => MarkdownSource.parse([255]), throwsFormatException);
-  });
+      expect(
+        utf8.decode(b.exportBytes()),
+        '- [ ] Open 🔁 every day 🏁 delete 📅 2026-10-03\n'
+        '- [x] History 🔁 every day 📅 2026-10-03 ✅ 2026-09-30\n',
+      );
+      expect(b.importAnalysis['sourceDeleteMappedToAppKeep'], 1);
+      expect(b.importAnalysis['markdownDeleteFlagsAddedOrChanged'], 1);
+      expect(b.events.where((e) => e.type == 'task.completed'), hasLength(1));
+      expect(b.log, isNot(contains('🏁')));
+    },
+  );
 
   test(
-    'import leaves due/scheduled times absent and exporter rejects newly precise times',
+    'edited title tags schedule manual order completion and reopen export current state',
     () {
-      final source = utf8.encode(
-        '- [ ] Example 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03',
+      final b = fixture('- [ ] First\n- [ ] Second\n');
+      final first = b.tasks[0]['id'] as String,
+          second = b.tasks[1]['id'] as String;
+      append(b, first, 'task.edited', {
+        'title': 'Renamed  [[link]]',
+        'schedule': TaskSchedule(dueDate: '2026-11-02').toJson(),
+      });
+      append(b, first, 'task.tagsChanged', {
+        'add': ['new'],
+        'remove': <String>[],
+      });
+      append(b, second, 'task.moved', {'before': first});
+      append(b, second, 'task.completed', {'completedAt': '2026-10-02'});
+      final completion = b.events.last.id;
+      expect(
+        utf8.decode(b.exportBytes()),
+        '- [x] Second ✅ 2026-10-02\n- [ ] Renamed  [[link]] #new 📅 2026-11-02\n',
       );
-      for (final field in ['scheduledTime', 'dueTime']) {
-        final bundle = _fixtureImport(source);
-        final task = bundle.events.singleWhere((e) => e.type == 'task.created');
-        final schedule = task.data['schedule'] as Map<String, dynamic>;
-        expect(schedule.containsKey(field), isTrue);
-        expect(schedule[field], isNull);
-        expect(bundle.exportBytes(), source);
-        schedule[field] = '17:30';
-        // The edited schedule is valid in the app but cannot be represented by
-        // this unchanged-source export contract; refuse instead of dropping time.
-        TaskSchedule.fromJson(schedule);
-        expect(bundle.exportBytes, throwsFormatException);
+      append(b, second, 'task.completionUndone', {'completion': completion});
+      expect(utf8.decode(b.exportBytes()), startsWith('- [ ] Second\n'));
+    },
+  );
+
+  test(
+    'derived recurrence successors and their edits use production projection/order',
+    () {
+      final b = fixture('- [ ] Repeat 🔁 every week 📅 2026-10-03\n');
+      final task = b.tasks.single, id = task['id'] as String;
+      final successor = const Uuid().v5(id, 'successor');
+      append(b, id, 'task.completed', {
+        'completedAt': '2026-10-20',
+        'successor': {
+          'id': successor,
+          'title': 'Repeat',
+          'description': '',
+          'assignee': task['assignee'],
+          'schedule': TaskSchedule(
+            dueDate: '2026-10-10',
+            recurrence: 'every week',
+          ).toJson(),
+          'tags': <String>[],
+        },
+      });
+      append(b, successor, 'task.edited', {'title': 'Next occurrence'});
+      expect(
+        utf8.decode(b.exportBytes()),
+        '- [ ] Next occurrence 🔁 every week 🏁 delete 📅 2026-10-10\n'
+        '- [x] Repeat 🔁 every week 📅 2026-10-03 ✅ 2026-10-20\n',
+      );
+    },
+  );
+
+  test(
+    'unsupported fields and precise timestamps fail without silent loss',
+    () {
+      for (final change in [
+        {'description': 'Important notes'},
+        {
+          'schedule': TaskSchedule(
+            dueDate: '2026-10-03',
+            dueTime: '17:00',
+          ).toJson(),
+        },
+        {
+          'schedule': TaskSchedule(
+            scheduledDate: '2026-10-03',
+            scheduledTime: '17:00',
+          ).toJson(),
+        },
+        {
+          'schedule': TaskSchedule(
+            startDate: '2026-10-03',
+            startTime: '09:00',
+            timeZone: 'America/Chicago',
+          ).toJson(),
+        },
+        {'title': 'Text #would-be-metadata'},
+      ]) {
+        final b = fixture('- [ ] Example\n');
+        append(b, b.tasks.single['id'] as String, 'task.edited', change);
+        expect(b.exportBytes, throwsA(anything));
+      }
+      for (final time in ['2026-10-02T00:00:00.000Z', '2026-10-02T12:30:00Z']) {
+        final b = fixture('- [ ] Example\n');
+        append(b, b.tasks.single['id'] as String, 'task.completed', {
+          'completedAt': time,
+        });
+        expect(b.exportBytes, throwsFormatException);
       }
     },
   );
 
-  test('domain divergence cannot be hidden by source provenance', () {
-    final bundle = _fixtureImport(
-      utf8.encode('- [ ] Example #tag 📅 2026-10-03'),
-    );
-    final task = bundle.events.singleWhere((e) => e.type == 'task.created');
-    task.data['title'] = 'Different';
-    expect(bundle.exportBytes, throwsFormatException);
-  });
-
-  test('missing/duplicate events and altered creation order fail export', () {
-    final bundle = _fixtureImport(utf8.encode('- [ ] First\n- [ ] Second'));
-    expect(
-      () => MigrationBundle(bundle.space, bundle.writer, [
-        ...bundle.events,
-        bundle.events[1],
-      ]).exportBytes(),
-      throwsFormatException,
-    );
-    expect(
-      () => MigrationBundle(
-        bundle.space,
-        bundle.writer,
-        bundle.events.sublist(1),
-      ).exportBytes(),
-      throwsFormatException,
-    );
+  test('multiple assignees cannot silently flatten to one Markdown user', () {
+    final b = fixture('- [ ] First\n- [ ] Second\n');
+    b.events.where((e) => e.type == 'task.created').last.data['assignee'] =
+        '11111111-1111-4111-8111-111111111111';
+    append(b, '11111111-1111-4111-8111-111111111111', 'user.created', {
+      'name': 'Other',
+    });
+    expect(b.exportBytes, throwsFormatException);
   });
 
   test(
-    'closed provenance validation rejects malformed slots and unknown nested fields',
+    'unsupported source content/metadata and missing dates fail with no import',
     () {
-      final bundle = _fixtureImport(
-        utf8.encode(
-          '- [ ] Example #start-time-0930 🛫 2026-10-01 📅 2026-10-03',
-        ),
-      );
-      Map<String, dynamic> data() =>
-          jsonDecode(
-                jsonEncode(
-                  bundle.events
-                      .singleWhere((e) => e.type == 'import.document')
-                      .data,
-                ),
-              )
-              as Map<String, dynamic>;
-      validateImportDocument(data());
-      final unknown = data();
-      (unknown['lines'] as List).first['extra'] = 1;
-      expect(() => validateImportDocument(unknown), throwsFormatException);
-      final badSlot = data();
-      ((badSlot['lines'] as List).first['parts'] as List).add({
-        'field': 'title',
-        'piece': 50,
+      for (final source in [
+        '# Meaningful heading\n- [ ] Task',
+        '- [ ] Task\n  note',
+        '- [/] Example',
+        '- [ ] Example #start-time-0930',
+        '- [ ] Example 🏁 archive',
+        '- [ ] Example 🔁 every day except Sunday 📅 2026-10-03',
+        '- [ ] Example 📅 2026-02-30',
+      ]) {
+        expect(() => fixture(source), throwsA(anything), reason: source);
+      }
+    },
+  );
+
+  test('missing/duplicate stream events and old provenance cannot export', () {
+    final b = fixture('- [ ] Example\n');
+    expect(
+      () =>
+          MigrationBundle(b.space, b.writer, b.events.sublist(1)).exportBytes(),
+      throwsFormatException,
+    );
+    expect(
+      () => MigrationBundle(b.space, b.writer, [
+        ...b.events,
+        b.events.last,
+      ]).exportBytes(),
+      throwsFormatException,
+    );
+    final old = b.events.last.toJson();
+    (old['data'] as Map)['import'] = {'documentId': b.space, 'line': 1};
+    expect(
+      () => LogEvent.decode(jsonEncode(old)),
+      throwsA(isA<FormatFailure>()),
+    );
+  });
+  test('complete export refuses unresolved and cross-entity dependencies', () {
+    final missing = '11111111-1111-4111-8111-111111111111';
+    final orphan = fixture('- [ ] Example\n');
+    append(orphan, missing, 'task.edited', {'title': 'Orphan'});
+    expect(orphan.exportBytes, throwsFormatException);
+    final undo = fixture('- [ ] First\n- [ ] Second\n');
+    final ids = undo.tasks.map((t) => t['id'] as String).toList();
+    append(undo, ids.first, 'task.completed', {'completedAt': '2026-10-02'});
+    final completion = undo.events.last.id;
+    append(undo, ids.last, 'task.completionUndone', {'completion': completion});
+    expect(undo.exportBytes, throwsFormatException);
+    final move = fixture('- [ ] Example\n');
+    append(move, move.tasks.single['id'] as String, 'task.moved', {
+      'before': missing,
+    });
+    expect(move.exportBytes, throwsFormatException);
+    final tags = fixture('- [ ] Example\n');
+    append(tags, tags.tasks.single['id'] as String, 'task.tagsChanged', {
+      'add': <String>[],
+      'remove': ['$missing:1:0'],
+    });
+    expect(tags.exportBytes, throwsFormatException);
+  });
+
+  test(
+    'shared projection rejects task operations on users and duplicate creations',
+    () {
+      final userEdit = fixture('- [ ] Example\n');
+      append(userEdit, userEdit.events.first.entity, 'task.edited', {
+        'title': 'Invalid',
       });
-      expect(() => validateImportDocument(badSlot), throwsFormatException);
-      final mismatch = data();
-      (mismatch['lines'] as List).first['fields']['startTime'] = '10:30';
-      expect(() => validateImportDocument(mismatch), throwsFormatException);
-      expect(
-        () => validateTaskImport({'documentId': bundle.space, 'line': 0}),
-        throwsFormatException,
+      expect(userEdit.exportBytes, throwsA(isA<FormatFailure>()));
+      final duplicate = fixture('- [ ] Example\n');
+      final created = duplicate.events.last;
+      append(
+        duplicate,
+        created.entity,
+        'task.created',
+        Map<String, dynamic>.from(created.data),
       );
+      expect(duplicate.exportBytes, throwsA(isA<FormatFailure>()));
     },
   );
 
@@ -405,6 +382,18 @@ void main() {
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
       result = await run(['dry-run', source.path, stage]);
       expect(result.exitCode, 1);
+      result = await run(['export', stage, '$stage/forbidden.md']);
+      expect(result.exitCode, 1);
+      expect(result.stderr, contains('outside the canonical'));
+      expect(File('$stage/forbidden.md').existsSync(), isFalse);
+      result = await run([
+        'audit-recurrence',
+        stage,
+        '2026-10-20',
+        '$stage/forbidden.jsonl',
+      ]);
+      expect(result.exitCode, 1);
+      expect(result.stderr, contains('outside the canonical'));
       final store = await TaskStore.open(
         LocalLogFolder(stage),
         '${temp.path}/private',
@@ -431,8 +420,8 @@ void main() {
       result = await run(['export', stage, '${temp.path}/out.md']);
       expect(result.exitCode, 0, reason: '${result.stdout}\n${result.stderr}');
       expect(
-        File('${temp.path}/out.md').readAsBytesSync(),
-        source.readAsBytesSync(),
+        File('${temp.path}/out.md').readAsStringSync(),
+        '- [ ] Example #demo\n',
       );
       result = await run(['export', stage, source.path]);
       expect(result.exitCode, 1);
@@ -463,6 +452,13 @@ void main() {
       result = await run(['export', stage, '${temp.path}/conflict.md']);
       expect(result.exitCode, 1);
       expect(result.stderr, contains('filename'));
+      if (!Platform.isWindows) {
+        File('$stage/conflict.jsonl').renameSync(log.path);
+        Link('$stage/linked.jsonl').createSync(log.path);
+        result = await run(['export', stage, '${temp.path}/linked.md']);
+        expect(result.exitCode, 1);
+        expect(result.stderr, contains('regular files'));
+      }
     },
   );
 }
