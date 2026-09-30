@@ -136,6 +136,31 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   late final ViewClock<TaskView> viewClock;
   TaskView? taskView;
   String? viewError;
+  bool startupReported = false, startupReportPending = false;
+
+  String? get _startupMarker {
+    if (busy || !settingsLoaded || error != null) return null;
+    if (store == null || user == null) return 'TANDEMLOG_ONBOARDING_READY_MS';
+    if (!timeSource.ready || viewError != null || taskView == null) return null;
+    return 'TANDEMLOG_READY_MS';
+  }
+
+  void _reportStartupAfterFrame() {
+    if (startupReported || startupReportPending || _startupMarker == null) {
+      return;
+    }
+    startupReportPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startupReportPending = false;
+      if (!mounted || startupReported) return;
+      final marker = _startupMarker;
+      if (marker == null) return;
+      startupReported = true;
+      debugPrint(
+        '$marker=${startup.elapsedMilliseconds} FILES_READ=${store?.readFiles ?? 0}',
+      );
+    });
+  }
 
   void _invalidateView() {
     if (!mounted || !foreground) return;
@@ -173,7 +198,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
       },
       onView: (view) {
-        if (mounted) setState(() => taskView = view.value);
+        if (mounted) {
+          setState(() => taskView = view.value);
+          _reportStartupAfterFrame();
+        }
       },
     );
     timeSource.start();
@@ -202,12 +230,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     if (!mounted) return;
     setState(() => busy = false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      debugPrint(
-        'TANDEMLOG_READY_MS=${startup.elapsedMilliseconds} FILES_READ=${store?.readFiles ?? 0}',
-      );
-    });
     _configureImporter();
+    _reportStartupAfterFrame();
   }
 
   Future<void> _open(String location) async {

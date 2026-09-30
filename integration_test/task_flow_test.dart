@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
@@ -818,6 +819,82 @@ void main() {
     await tester.pumpAndSettle();
     await remote.close();
     await root.delete(recursive: true);
+  });
+  testWidgets('loaded startup marker waits for a rendered time projection', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('startup-projection-');
+    final folder = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final writer = await TaskStore.open(
+      LocalLogFolder(folder.path),
+      '${root.path}/writer',
+    );
+    final user = const Uuid().v4();
+    await writer.command(user, 'user.created', {'name': 'Example user'});
+    await writer.command(const Uuid().v4(), 'task.created', {
+      'title': 'Ready after projection',
+      'description': '',
+      'assignee': user,
+    });
+    await writer.close();
+    await File(
+      '${profile.path}/settings.json',
+    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    final printed = <String>[];
+    final originalPrint = debugPrint;
+    debugPrint = (message, {wrapWidth}) {
+      if (message != null) printed.add(message);
+      originalPrint(message, wrapWidth: wrapWidth);
+    };
+    try {
+      final zone = Completer<String>();
+      late ViewTimeSource source;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => source = ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () => zone.future,
+            now: () => DateTime.utc(2026, 10, 1),
+          ),
+        ),
+      );
+      for (
+        var attempt = 0;
+        attempt < 100 &&
+            !printed.any((line) => line.startsWith('TANDEMLOG_ROWS'));
+        attempt++
+      ) {
+        await Future<void>.delayed(const Duration(milliseconds: 20));
+        await tester.pump();
+      }
+      expect(printed.any((line) => line.startsWith('TANDEMLOG_ROWS')), isTrue);
+      await tester.pump();
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(
+        printed.where((line) => line.startsWith('TANDEMLOG_READY_MS=')),
+        isEmpty,
+      );
+      zone.complete('UTC');
+      await tester.pumpAndSettle();
+      expect(find.text('Ready after projection'), findsOneWidget);
+      expect(
+        printed.where((line) => line.startsWith('TANDEMLOG_READY_MS=')),
+        hasLength(1),
+      );
+      source.onChanged();
+      await tester.pumpAndSettle();
+      expect(
+        printed.where((line) => line.startsWith('TANDEMLOG_READY_MS=')),
+        hasLength(1),
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+    } finally {
+      debugPrint = originalPrint;
+      await root.delete(recursive: true);
+    }
   });
   testWidgets(
     'timed task groups preserve drafts and editors without log writes',
