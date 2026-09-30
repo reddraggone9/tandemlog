@@ -12,6 +12,7 @@ void main() {
   late Directory root;
   late LocalLogFolder aFolder, bFolder;
   TaskStore? a, b;
+  late DateTime testNow;
   Future<void> copy(LocalLogFolder from, LocalLogFolder to) async {
     for (final f in await from.list()) {
       await File('${from.location}/${f.name}').copy('${to.location}/${f.name}');
@@ -24,9 +25,18 @@ void main() {
     await Directory('${root.path}/b').create();
     aFolder = LocalLogFolder('${root.path}/a');
     bFolder = LocalLogFolder('${root.path}/b');
-    a = await TaskStore.open(aFolder, '${root.path}/private-a');
+    testNow = DateTime.now().toUtc();
+    a = await TaskStore.open(
+      aFolder,
+      '${root.path}/private-a',
+      now: () => testNow,
+    );
     await copy(aFolder, bFolder);
-    b = await TaskStore.open(bFolder, '${root.path}/private-b');
+    b = await TaskStore.open(
+      bFolder,
+      '${root.path}/private-b',
+      now: () => testNow,
+    );
   });
   tearDown(() async {
     await a?.close();
@@ -230,9 +240,15 @@ void main() {
   test('incomplete remote tail is retried after completion', () async {
     final remote = const Uuid().v4();
     final id = const Uuid().v4();
-    final raw = LogEvent(a!.space, remote, 1, 1, id, 'user.created', {
-      'name': 'Lee',
-    }).encode();
+    final raw = LogEvent(
+      a!.space,
+      remote,
+      1,
+      HlcClock(1, 0),
+      id,
+      'user.created',
+      {'name': 'Lee'},
+    ).encode();
     await aFolder.create(
       '$remote.jsonl',
       Uint8List.fromList(utf8.encode(raw.substring(0, 20))),
@@ -281,7 +297,17 @@ void main() {
         a!.space,
         a!.writer,
         seq,
-        seq,
+        HlcClock.next(
+          testNow.millisecondsSinceEpoch,
+          LogEvent.decode(
+            a!.db
+                    .select(
+                      'SELECT raw FROM events ORDER BY clock DESC,logical DESC LIMIT 1',
+                    )
+                    .first['raw']
+                as String,
+          ).clock,
+        ),
         id,
         'task.completed',
         {},
@@ -430,7 +456,7 @@ void main() {
         a!.space,
         remote,
         1,
-        10,
+        HlcClock(10, 0),
         id,
         'task.completionUndone',
         {'completion': '$other:1'},
@@ -444,7 +470,7 @@ void main() {
         a!.space,
         other,
         1,
-        9,
+        HlcClock(9, 0),
         id,
         'task.completed',
         {},
@@ -464,7 +490,7 @@ void main() {
       a!.space,
       remote,
       1,
-      10,
+      HlcClock(10, 0),
       id,
       'task.completionUndone',
       {'completion': '$other:1'},
@@ -478,7 +504,7 @@ void main() {
       a!.space,
       other,
       1,
-      11,
+      HlcClock(11, 0),
       id,
       'task.completed',
       {},
@@ -542,7 +568,7 @@ void main() {
         a!.space,
         remote,
         1,
-        20,
+        HlcClock(20, 0),
         id,
         'task.completionUndone',
         {'completion': '${a!.writer}:$nextSeq'},
@@ -607,6 +633,521 @@ void main() {
       expect(a!.space, originalSpace);
       expect(a!.rows, expected);
       expect(state(a!, id)['title'], 'Groceries');
+    },
+  );
+  test(
+    'offline tag removal preserves unseen same-name additions and atomic edits',
+    () async {
+      final id = await task();
+      await a!.setTags(id, ['home']);
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      final observed = Map<String, String>.from(
+        state(a!, id)['tagRefs'] as Map,
+      );
+      await b!.command(id, 'task.tagsChanged', {
+        'add': ['home', 'other'],
+        'remove': <String>[],
+      });
+      await a!.edit(
+        id,
+        {'title': 'Revised'},
+        tags: [],
+        observedTagRefs: observed,
+      );
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(state(a!, id)['title'], 'Revised');
+      expect(state(a!, id)['tags'], ['home', 'other']);
+      expect(a!.rows, b!.rows);
+    },
+  );
+  test(
+    'concurrent relative moves converge and survive cache rebuild',
+    () async {
+      final first = await task();
+      final user = state(a!, first)['assignee'];
+      final second = const Uuid().v4(), third = const Uuid().v4();
+      for (final id in [second, third]) {
+        await a!.command(id, 'task.created', {
+          'title': id,
+          'description': '',
+          'assignee': user,
+        });
+      }
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.moveBefore(third, first);
+      await b!.moveBefore(second, first);
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(a!.rows, b!.rows);
+      final expected = a!.rows;
+      await a!.close();
+      a = null;
+      await File('${root.path}/private-a/cache.sqlite').delete();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.rows, expected);
+    },
+  );
+  test(
+    'concurrent recurrence completion has one durable successor and history reopen retains edits',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {
+          'startDate': '2026-10-01',
+          'scheduledDate': '2026-10-02',
+          'dueDate': '2026-10-03',
+          'startTime': '09:30',
+          'timeZone': 'America/Chicago',
+          'recurrence': 'every week when done',
+        },
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      final one = await a!.complete(
+        id,
+        completionDay: DateTime.utc(2026, 10, 20),
+      );
+      await b!.complete(id, completionDay: DateTime.utc(2026, 10, 21));
+      final next = const Uuid().v5(id, 'successor');
+      await a!.command(next, 'task.edited', {'description': 'Successor work'});
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(a!.rows, b!.rows);
+      expect(a!.rows.where((r) => r['kind'] == 'task').length, 2);
+      expect(state(a!, next)['description'], 'Successor work');
+      expect((state(a!, next)['schedule'] as Map)['scheduledDate'], null);
+      expect(
+        a!.rows.indexWhere((r) => r['id'] == next),
+        lessThan(a!.rows.indexWhere((r) => r['id'] == id)),
+      );
+      await a!.reopen(id, a!.activeCompletionIds(id));
+      expect(state(a!, id)['completed'], false);
+      expect(state(a!, next)['description'], 'Successor work');
+      await a!.complete(id, completionDay: DateTime.utc(2026, 10, 22));
+      expect(a!.rows.where((r) => r['kind'] == 'task').length, 2);
+      expect(one.data['successor'], isNotNull);
+      final expected = a!.rows;
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.rows, expected);
+      expect(a!.readFiles, 0);
+    },
+  );
+  test('protocol v1 remains untouched and explicitly rejected', () async {
+    await a!.close();
+    a = null;
+    final old = jsonEncode({'v': 1, 'id': const Uuid().v4()});
+    await File('${aFolder.location}/tandemlog-space.json').writeAsString(old);
+    await expectLater(
+      TaskStore.open(aFolder, '${root.path}/fresh-private'),
+      throwsA(
+        isA<FormatFailure>().having(
+          (error) => error.message,
+          'message',
+          allOf(
+            contains('older prerelease'),
+            contains('Preserve this folder'),
+            contains('new data folder'),
+          ),
+        ),
+      ),
+    );
+    expect(
+      await File('${aFolder.location}/tandemlog-space.json').readAsString(),
+      old,
+    );
+  });
+  test(
+    'late winning recurrence seed cannot resurrect removed successor tags',
+    () async {
+      final id = await task();
+      await a!.setTags(id, ['seed']);
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-03', 'recurrence': 'every week'},
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      final early = a!.writer.compareTo(b!.writer) < 0 ? a! : b!;
+      final late = identical(early, a) ? b! : a!;
+      await early.complete(id, completionDay: DateTime.utc(2026, 10, 20));
+      await late.complete(id, completionDay: DateTime.utc(2026, 10, 20));
+      final next = const Uuid().v5(id, 'successor');
+      await late.setTags(next, []);
+      expect(state(late, next)['tags'], isEmpty);
+      await File(
+        '${early.folder.location}/${early.writer}.jsonl',
+      ).copy('${late.folder.location}/${early.writer}.jsonl');
+      await late.refresh();
+      expect(state(late, next)['tags'], isEmpty);
+      await copy(late.folder as LocalLogFolder, early.folder as LocalLogFolder);
+      await early.refresh();
+      expect(early.rows, late.rows);
+    },
+  );
+  test(
+    'successor collision and invalid tag/move references fail before append',
+    () async {
+      final id = await task();
+      await a!.setTags(id, ['tag']);
+      final user = state(a!, id)['assignee'] as String;
+      final next = const Uuid().v5(id, 'successor');
+      await a!.command(next, 'task.created', {
+        'title': 'Existing',
+        'description': '',
+        'assignee': user,
+      });
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-03', 'recurrence': 'every week'},
+      });
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      await expectLater(
+        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
+        throwsA(isA<FormatFailure>()),
+      );
+      final ref = (state(a!, id)['tagRefs'] as Map).keys.single as String;
+      await expectLater(
+        a!.command(next, 'task.tagsChanged', {
+          'add': [],
+          'remove': [ref],
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(a!.moveBefore(id, user), throwsA(isA<FormatFailure>()));
+      await expectLater(
+        a!.moveBefore(id, const Uuid().v4()),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      await a!.refresh();
+    },
+  );
+  test(
+    'offline schedule edits converge atomically without mixing precise date-times',
+    () async {
+      final id = await task();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      final left = {
+        'startDate': '2026-10-01',
+        'scheduledDate': '2026-10-01',
+        'dueDate': '2026-10-01',
+        'startTime': '09:00',
+        'scheduledTime': '09:30',
+        'dueTime': '10:00',
+        'timeZone': 'UTC',
+      };
+      final right = {
+        'startDate': '2026-10-01',
+        'scheduledDate': '2026-10-01',
+        'dueDate': '2026-10-01',
+        'startTime': '11:00',
+        'scheduledTime': '11:30',
+        'dueTime': '12:00',
+        'timeZone': 'UTC',
+      };
+      await a!.command(id, 'task.edited', {'schedule': left});
+      await b!.command(id, 'task.edited', {'schedule': right});
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(a!.rows, b!.rows);
+      expect(
+        state(a!, id)['schedule'],
+        a!.writer.compareTo(b!.writer) > 0 ? left : right,
+      );
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      await expectLater(
+        a!.command(id, 'task.edited', {
+          'schedule': {'startDate': '2026-12-01', 'dueDate': '2026-11-01'},
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(
+        a!.command(id, 'task.completed', {
+          'successor': {
+            'id': const Uuid().v5(id, 'successor'),
+            'title': 'Invalid interval',
+            'description': '',
+            'assignee': state(a!, id)['assignee'],
+            'tags': [],
+            'schedule': {
+              'startDate': '2026-10-01',
+              'dueDate': '2026-10-01',
+              'startTime': '11:00',
+              'dueTime': '10:00',
+            },
+          },
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+    },
+  );
+  test(
+    'completion reconciles changed timezone before selecting civil day',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {
+          'dueDate': '2026-10-01',
+          'timeZone': 'UTC',
+          'recurrence': 'every day when done',
+        },
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await b!.command(id, 'task.edited', {
+        'schedule': {
+          'dueDate': '2026-10-01',
+          'timeZone': 'America/Chicago',
+          'recurrence': 'every day when done',
+        },
+      });
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      final completion = await a!.complete(
+        id,
+        completionInstant: DateTime.utc(2026, 10, 20, 2),
+      );
+      expect(completion.data['completedAt'], '2026-10-19T00:00:00.000Z');
+      expect(
+        ((completion.data['successor'] as Map)['schedule'] as Map)['dueDate'],
+        '2026-10-20',
+      );
+    },
+  );
+  test(
+    'completion durable append failure recovers parent and sole successor together',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
+      });
+      await a!.close();
+      a = null;
+      final failing = _FailAfterAppendFolder(aFolder);
+      a = await TaskStore.open(failing, '${root.path}/private-a');
+      failing.failNext = true;
+      await expectLater(
+        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
+        throwsStateError,
+      );
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(state(a!, id)['completed'], true);
+      expect(a!.rows.where((r) => r['kind'] == 'task'), hasLength(2));
+      expect(state(a!, const Uuid().v5(id, 'successor'))['completed'], false);
+      expect(a!.activeCompletionIds(id), hasLength(1));
+    },
+  );
+  test('pending future tag removal cannot poison next local append', () async {
+    final id = await task();
+    final seq =
+        (a!.db.select('SELECT MAX(seq) AS n FROM events WHERE writer=?', [
+              a!.writer,
+            ]).first['n']
+            as int) +
+        1;
+    final remote = LogEvent(
+      a!.space,
+      b!.writer,
+      1,
+      HlcClock(100, 0),
+      id,
+      'task.tagsChanged',
+      {
+        'add': [],
+        'remove': ['${a!.writer}:$seq:0'],
+      },
+    );
+    await aFolder.append(
+      '${b!.writer}.jsonl',
+      Uint8List.fromList(utf8.encode('${remote.encode()}\n')),
+    );
+    await a!.refresh();
+    final bytes = await aFolder.read('${a!.writer}.jsonl');
+    await expectLater(a!.setTags(id, ['later']), throwsA(isA<FormatFailure>()));
+    expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+    await a!.refresh();
+  });
+  test(
+    'offline older high logical count loses to a later wall-clock edit',
+    () async {
+      final id = await task();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      LogEvent? old;
+      for (var i = 0; i < 30; i++) {
+        old = await a!.command(id, 'task.edited', {'title': 'Older $i'});
+      }
+      testNow = testNow.add(const Duration(hours: 1));
+      final recent = await b!.command(id, 'task.edited', {'title': 'Newer'});
+      expect(old!.clock.logical, greaterThan(recent.clock.logical));
+      expect(recent.clock, greaterThan(old.clock));
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(state(a!, id)['title'], 'Newer');
+      expect(a!.rows, b!.rows);
+    },
+  );
+  test(
+    'HLC receives precede local writes across rollback and restart',
+    () async {
+      final id = await task();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      final remote = await b!.command(id, 'task.edited', {
+        'description': 'Remote',
+      });
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      testNow = testNow.subtract(const Duration(minutes: 1));
+      final local = await a!.command(id, 'task.edited', {
+        'title': 'Causal later',
+      });
+      expect(local.clock > remote.clock, isTrue);
+      expect(local.clock.wallMs, remote.clock.wallMs);
+      final expected = a!.rows;
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(
+        aFolder,
+        '${root.path}/private-a',
+        now: () => testNow,
+      );
+      expect(a!.readFiles, 0);
+      expect(a!.rows, expected);
+      final afterRestart = await a!.command(id, 'task.edited', {
+        'description': 'After restart',
+      });
+      expect(afterRestart.clock > local.clock, isTrue);
+    },
+  );
+  test(
+    'future HLC admission preserves bytes checkpoints and cache until exact retry',
+    () async {
+      final id = await task();
+      final expected = a!.rows;
+      final future = LogEvent(
+        a!.space,
+        b!.writer,
+        1,
+        HlcClock(testNow.millisecondsSinceEpoch + 300001, 0),
+        id,
+        'task.edited',
+        {'title': 'Future record'},
+      );
+      final bytes = Uint8List.fromList(utf8.encode('${future.encode()}\n'));
+      await aFolder.append('${b!.writer}.jsonl', bytes);
+      final owned = await aFolder.read('${a!.writer}.jsonl');
+      final checkpoints = a!.db
+          .select('SELECT * FROM streams')
+          .map((r) => Map<String, dynamic>.from(r))
+          .toList();
+      await expectLater(
+        a!.refresh(),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.message,
+            'message',
+            contains('five minutes'),
+          ),
+        ),
+      );
+      expect(a!.rows, expected);
+      expect(
+        a!.db
+            .select('SELECT * FROM streams')
+            .map((r) => Map<String, dynamic>.from(r))
+            .toList(),
+        checkpoints,
+      );
+      await expectLater(
+        a!.command(id, 'task.edited', {'title': 'Blocked'}),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), owned);
+      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
+      testNow = testNow.add(const Duration(milliseconds: 1));
+      await a!.refresh();
+      expect(state(a!, id)['title'], 'Future record');
+      final later = await a!.command(id, 'task.edited', {
+        'title': 'Observed then edited',
+      });
+      expect(later.clock > future.clock, isTrue);
+      expect(later.clock.wallMs, future.clock.wallMs);
+      expect(await aFolder.read('${b!.writer}.jsonl'), bytes);
+      expect(
+        a!.db.select('SELECT * FROM events WHERE writer=?', [b!.writer]),
+        hasLength(1),
+      );
+    },
+  );
+  test(
+    'accepted future timestamp does not spread after excessive local rollback',
+    () async {
+      final id = await task();
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      testNow = testNow.subtract(const Duration(minutes: 6));
+      await expectLater(
+        a!.command(id, 'task.edited', {'title': 'Blocked rollback'}),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      testNow = testNow.add(const Duration(minutes: 6));
+      await a!.command(id, 'task.edited', {'title': 'Recovered'});
+      expect(state(a!, id)['title'], 'Recovered');
+    },
+  );
+  test(
+    'derived successor cannot resolve pending import document after append',
+    () async {
+      final id = await task();
+      final next = const Uuid().v5(id, 'successor');
+      final dependent = const Uuid().v4();
+      await a!.command(dependent, 'task.created', {
+        'title': 'Pending source',
+        'description': '',
+        'assignee': state(a!, id)['assignee'],
+        'import': {'documentId': next, 'line': 1},
+      });
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
+      });
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      await expectLater(
+        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
+      await a!.refresh();
+      expect(state(a!, id)['completed'], false);
     },
   );
 }
