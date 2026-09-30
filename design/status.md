@@ -38,7 +38,7 @@ Owner: next implementation session, reviewed with Lee at M1 acceptance. Keep dom
 - Entire changed stream is read and prefix hashed; record sizes are validated after reading, but stream allocation is not bounded. Exit: add bounded/streaming reads and benchmark larger realistic histories before large-history mobile use. Android currently revalidates every poll because metadata reliability is unproven.
 - All undo references are revalidated on ingestion. Exit: measure real histories, then index/restrict to newly resolved references without weakening correctness.
 - Failed appends can be uncertain. In-session task capture retries retain identity, but drafts are not durable across termination. Exit: explicit recovery/draft UX before claiming interruption-safe drafts.
-- Android SAF durability and grant/provider replacement behavior are unverified until live tests. Exit: runtime matrix below plus real-device provider test. No broad-storage permission workaround.
+- rc1 SAF restart and atomic-replacement behavior passed on an accelerated API 30 emulator. Actual phone/BasicSync behavior and revised rc2 UI still need live checks. Exit: runtime matrix plus real-device provider test. No broad-storage permission workaround.
 - No recurrence, dates, deletion, private spaces, games, food or LLM ingestion implemented. Their contracts stay separate from v1 tasks.
 
 Latest checks: 23 domain/storage tests passed after three independent review rounds; static analysis clean; native Linux debug integration and release build passed. [Startup measurements](runtime-qa.md#recorded-release-measurements) now include a controlled minimal-app comparison and a verified D-Bus session fix: 2,000-task loaded-frame startup is 908–1,091 ms with emulator paused. Target-device performance is still pending. Final native Linux demo is recorded/reviewed. Video and emulator ANR evidence were delivered through Library; private artifact identifiers are excluded from the public repository.
@@ -62,3 +62,15 @@ Windows and Android CI artifacts uploaded successfully. This executor's direct d
 All three **public release** bundles were downloaded successfully and their SHA-256 checksums verified. Windows ZIP CRC integrity passed. Android APK signature verifies as Android Debug; version is `0.1.0-rc.1`, build 1, API 24 minimum/API 36 target, with `arm64-v8a`, `armeabi-v7a` and `x86_64`. Its SHA-256 is `c0aecfb70f54dadf36439e0168a83f64e87ccde8ee4ca888d61104750eec2ee7`. This does not establish Android runtime acceptance.
 
 The downloaded Linux release ran locally under Xvfb, loaded all ten synthetic tasks and passed completion/undo visual inspection. Fresh/warm cache startup measured 781/705 ms locally and 371/314 ms on the hosted Linux runner; OS page caches were not flushed. Raw metrics and screenshots are in `evidence/startup-published-release-*` and `evidence/linux-published-*`. Earlier 2,000-task controlled measurements remain the larger workload evidence.
+
+## rc2 revision in validation
+
+Desktop explicit Start/default workspace, secondary chooser, inline first-user creation, locally persisted System/Light/Dark themes, compact task header, settings-only folder management and automatic foreground import are implemented. Desktop Enter/keypad Enter submits; Shift+Enter adds a task line. Android retains its SAF chooser and regular Enter newline. These are new rc2 behaviors, not claims about rc1. See [decision rationale](decisions/0002-onboarding-and-everyday-interface.md).
+
+Static analysis and all 28 unit/integrity tests pass. Native workflow tests and release visual QA are being finalized. Independent review found and fixed uncertain-capture identity reuse, first-user retry selection, and keypad Enter handling; final read-only review found no remaining concrete data-loss/duplication issue. No canonical schema migration is required; legacy local settings default to System.
+
+rc1 now has successful external native Android evidence; [runtime QA](runtime-qa.md#android-rc1-device-worker-evidence) distinguishes it from the earlier cloud emulator limitation and from untested rc2 UI.
+
+## CI efficiency follow-up
+
+Owner: next repository-maintenance session. Avoid rebuilding all three platforms for documentation/evidence-only pushes. Add a lightweight docs check or change classification while preserving required-check behavior; changes to app code, dependencies, platform scaffolds, tests, tooling or workflows must retain appropriate executable checks. Candidate/release workflows must always run the full integrity/convergence/recovery and target-build matrix, regardless of changed paths. Do not weaken branch protections or release gates. The doc-only run 36733292643 completed successfully after slow runner setup. This is a maintenance follow-up; no app change was needed for the transient infrastructure delay.

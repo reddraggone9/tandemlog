@@ -6,7 +6,7 @@
 | --- | --- | --- |
 | Linux native | Flutter GTK app built in debug/release, launched under Xvfb/Openbox; actual folder picker, capture/edit/completion shown; native integration flow passed restart, undo and unsupported-record recovery | Linux is the accepted primary desktop visual QA target, not proof of Windows-specific behavior. Software display/container performance does not predict phones. |
 | Android build | `flutter build apk --debug` passed (262.0 s); APK at `build/app/outputs/flutter-apk/app-debug.apk`, 153 MiB universal debug | Kotlin bridge compiles; this does not verify SAF or native UI. |
-| Android runtime | Official API 36 AOSP x86_64 emulator launches using software CPU/SwiftShader; ADB becomes available | No KVM/CPU virtualization extensions. API 30 completed boot but System UI ANR prevented app installation; API 36 never completed usable boot. App/SAF acceptance pending. |
+| Android runtime | rc1 passed eight native API 30 workflow/SAF assertions on accelerated Farnsworth; see evidence below | Revised rc2 UI, real phones, API 36 and actual BasicSync remain pending. Cloud software emulation is unusable. |
 | Windows | Hosted Windows native release build and domain/storage tests passed | Native launch and targeted packaging/path/dialog/startup checks remain pending. Linux is the routine desktop visual QA target. |
 | Web | Not used for app acceptance | A browser preview would not validate Android or Windows. |
 
@@ -111,3 +111,13 @@ Final fallback result: API 30 reached `sys.boot_completed=1`, but the package se
 Hosted target build/test evidence is linked in [current status](status.md#hosted-validation-and-publication). Distribution follows Flutter’s official [Linux bundle guidance](https://docs.flutter.dev/platform-integration/linux/building) and [Windows ZIP guidance](https://docs.flutter.dev/platform-integration/windows/building). Keep all bundle files together; system runtime dependencies are documented in the candidate notes.
 
 Published v0.1.0-rc.1 was downloaded, checksum-verified and run as a native Linux binary. Visual checks showed ten loaded tasks, completion reducing the count to nine, and Undo restoring ten. Captured at 1280×900 under Xvfb/Openbox; screenshots are `linux-published-release.png`, `linux-published-complete.png`, and `linux-published-undo.png`. The public Windows ZIP passed CRC/checksum validation; the public Android APK passed signature/checksum/version/ABI inspection, without implying native execution. See current status for exact release/commit and startup metrics.
+
+## Android rc1 device-worker evidence
+
+The parent supplied successful native **rc1** evidence from an accelerated local Linux/KVM host: Android API 30, 720p, SwiftShader with Vulkan disabled, a 4 GiB/two-CPU container cap and 2 GiB guest RAM. Eight assertions covered capture/edit/complete/undo, SAF force-stop/reopen, external atomic-replacement ingestion and subsequent local writes; eleven unique canonical events were preserved. The emulator was stopped afterward and its video delivered through Library. These are rc1 observations, not coverage of the changed onboarding/theme/keyboard UI in the next candidate. Real phones, API 36 and the actual BasicSync provider remain unverified.
+
+Future Android demo recordings should enable Show taps and visibly verify the touch indicators in the video. Desktop recordings should retain the pointer. Keep exact candidate/version, native platform, fixture, restart/provider actions and remaining gaps with each recording.
+
+## User-reported rc1 cross-device observation
+
+Lee reports users and tasks syncing between their devices and the UI updating promptly. An already-open user menu does not show a newly arrived user until reopened; retain selection stability and treat this as low-priority polish. This is user-reported real setup evidence, not an independently observed device/provider matrix or exhaustive BasicSync validation.

@@ -6,10 +6,10 @@ Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 202
 
 1. [Status, commands and limitations](status.md)
 2. [Product and milestone](product-behavior.md)
-3. [Approved decision](decisions/0001-client-and-storage.md) and [stack](tech-stack.md)
+3. [Onboarding and everyday UI rationale](decisions/0002-onboarding-and-everyday-interface.md), [approved stack decision](decisions/0001-client-and-storage.md) and [stack](tech-stack.md)
 4. [Architecture](architecture.md)
 5. [Storage design](storage-and-sync.md), [implemented schema](schema.md), [recovery](recovery.md)
-6. [Runtime/visual QA](runtime-qa.md)
+6. [Runtime/visual QA](runtime-qa.md) and [rc2 task-based UX audit](ux-audit-rc2.md)
 7. [Deferred modules](future-modules.md)
 8. [Repository rules](../AGENTS.md)
 

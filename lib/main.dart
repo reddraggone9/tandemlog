@@ -2,11 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
-import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'platform/log_folder.dart';
+import 'platform/folder_actions.dart';
+import 'platform/foreground_importer.dart';
+import 'storage/local_settings.dart';
 import 'storage/task_store.dart';
 
 void main() {
@@ -15,30 +18,74 @@ void main() {
   runApp(const TandemlogApp());
 }
 
-class TandemlogApp extends StatelessWidget {
-  const TandemlogApp({super.key, this.profilePath});
+class TandemlogApp extends StatefulWidget {
+  const TandemlogApp({super.key, this.profilePath, this.folderActions});
   final String? profilePath;
+  final FolderActions? folderActions;
   @override
-  Widget build(BuildContext context) => MaterialApp(
-    title: 'Tandemlog',
-    debugShowCheckedModeBanner: false,
-    theme: ThemeData(
+  State<TandemlogApp> createState() => _TandemlogAppState();
+}
+
+class _TandemlogAppState extends State<TandemlogApp> {
+  final appearance = ValueNotifier<Appearance>(Appearance.system);
+  @override
+  void dispose() {
+    appearance.dispose();
+    super.dispose();
+  }
+
+  ThemeData _theme(Brightness brightness) {
+    final colors = ColorScheme.fromSeed(
+      seedColor: const Color(0xff267461),
+      brightness: brightness,
+    );
+    return ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xff267461)),
-      scaffoldBackgroundColor: const Color(0xfff6f7f2),
-      inputDecorationTheme: const InputDecorationTheme(
-        border: OutlineInputBorder(),
+      colorScheme: colors,
+      scaffoldBackgroundColor: brightness == Brightness.light
+          ? const Color(0xfff6f7f2)
+          : colors.surface,
+      cardTheme: CardThemeData(color: colors.surfaceContainerLow),
+      inputDecorationTheme: InputDecorationTheme(
+        border: const OutlineInputBorder(),
         filled: true,
-        fillColor: Colors.white,
+        fillColor: colors.surfaceContainerLowest,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => ValueListenableBuilder<Appearance>(
+    valueListenable: appearance,
+    builder: (_, value, _) => MaterialApp(
+      title: 'Tandemlog',
+      debugShowCheckedModeBanner: false,
+      theme: _theme(Brightness.light),
+      darkTheme: _theme(Brightness.dark),
+      themeMode: switch (value) {
+        Appearance.system => ThemeMode.system,
+        Appearance.light => ThemeMode.light,
+        Appearance.dark => ThemeMode.dark,
+      },
+      home: TasksPage(
+        profilePath: widget.profilePath,
+        appearance: appearance,
+        folderActions: widget.folderActions ?? FolderActions(),
       ),
     ),
-    home: TasksPage(profilePath: profilePath),
   );
 }
 
 class TasksPage extends StatefulWidget {
-  const TasksPage({super.key, this.profilePath});
+  const TasksPage({
+    super.key,
+    this.profilePath,
+    required this.appearance,
+    required this.folderActions,
+  });
   final String? profilePath;
+  final ValueNotifier<Appearance> appearance;
+  final FolderActions folderActions;
   @override
   State<TasksPage> createState() => _TasksPageState();
 }
@@ -48,10 +95,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   String? user, error;
   bool busy = true, all = false;
   String? privateRoot;
+  LocalSettings? settings;
+  bool settingsLoaded = false;
+  final firstName = TextEditingController();
+  final firstNameFocus = FocusNode();
+  String? pendingUserId;
   List<Map<String, dynamic>> rows = [];
   final capture = TextEditingController();
+  final captureFocus = FocusNode();
+  bool captureFailure = false;
   List<({String id, String title})> pendingCapture = [];
-  Timer? timer;
+  ForegroundImporter? importer;
+  TaskStore? watchedStore;
+  bool foreground = true, errorFromRefresh = false;
+  String? pendingUserName;
   Future<void>? syncing;
   final startup = Stopwatch()..start();
   @override
@@ -71,12 +128,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           Platform.environment['TANDEMLOG_PROFILE'] ??
           (await getApplicationSupportDirectory()).path;
       await Directory(privateRoot!).create(recursive: true);
-      final settings = File('$privateRoot/settings.json');
-      if (await settings.exists()) {
-        final s = jsonDecode(await settings.readAsString());
-        user = s['user'];
-        await _open(s['folder'] as String);
-      }
+      settings = LocalSettings(privateRoot!);
+      await settings!.load();
+      settingsLoaded = true;
+      if (!mounted) return;
+      widget.appearance.value = settings!.appearance;
+      user = settings!.user;
+      if (settings!.folder != null) await _open(settings!.folder!);
     } catch (e) {
       error = '$e';
     }
@@ -87,7 +145,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         'TANDEMLOG_READY_MS=${startup.elapsedMilliseconds} FILES_READ=${store?.readFiles ?? 0}',
       );
     });
-    timer = Timer.periodic(const Duration(seconds: 3), (_) => _refresh());
+    _configureImporter();
   }
 
   Future<void> _open(String location) async {
@@ -111,13 +169,156 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _saveSettings() async {
-    final file = File('$privateRoot/settings.json');
-    final temp = File('${file.path}.tmp');
-    await temp.writeAsString(
-      jsonEncode({'folder': store!.folder.location, 'user': user}),
-      flush: true,
+    final preferences = settings!;
+    preferences.folder = store?.folder.location ?? preferences.folder;
+    preferences.user = user;
+    await preferences.save();
+  }
+
+  Future<void> _selectUser(String? selected) async {
+    final previous = settings!.user;
+    settings!.folder = store!.folder.location;
+    settings!.user = selected;
+    try {
+      await settings!.save();
+    } catch (_) {
+      settings!.user = previous;
+      rethrow;
+    }
+    if (!mounted) return;
+    rows = store!.rows;
+    user = selected;
+  }
+
+  Future<void> _startDefault() => _act(() async {
+    if (!settingsLoaded || settings!.folder != null) return;
+    final location = '$privateRoot/data';
+    await Directory(location).create(recursive: true);
+    await _open(location);
+    if (!mounted) return;
+    await _saveSettings();
+  });
+
+  Future<void> _setAppearance(Appearance value) => _act(() async {
+    final previous = settings!.appearance;
+    settings!.appearance = value;
+    try {
+      await _saveSettings();
+      if (mounted) widget.appearance.value = value;
+    } catch (_) {
+      settings!.appearance = previous;
+      rethrow;
+    }
+  });
+
+  Future<void> _showSettings() async {
+    final location = store?.folder.location ?? settings?.folder;
+    bool canOpen = false;
+    if (location != null) {
+      try {
+        canOpen = await widget.folderActions.canOpen(location);
+      } catch (_) {
+        /* unavailable */
+      }
+    }
+    if (!mounted) return;
+    final action = await showDialog<String>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Settings'),
+        content: SizedBox(
+          width: 440,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Appearance'),
+                const SizedBox(height: 12),
+                SegmentedButton<Appearance>(
+                  segments: const [
+                    ButtonSegment(
+                      value: Appearance.system,
+                      label: Text('System'),
+                    ),
+                    ButtonSegment(
+                      value: Appearance.light,
+                      label: Text('Light'),
+                    ),
+                    ButtonSegment(value: Appearance.dark, label: Text('Dark')),
+                  ],
+                  selected: {widget.appearance.value},
+                  onSelectionChanged: settingsLoaded
+                      ? (values) => Navigator.pop(ctx, values.first.name)
+                      : null,
+                ),
+                const SizedBox(height: 24),
+                const Text('Data folder'),
+                const SizedBox(height: 8),
+                if (location != null) ...[
+                  if (!widget.folderActions.requiresPicker)
+                    SelectableText(location),
+                  const Text(
+                    'Sync this folder with your preferred sync app. Other devices receive changes when that app syncs.',
+                  ),
+                  if (!widget.folderActions.requiresPicker) ...[
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: canOpen
+                          ? () => Navigator.pop(ctx, 'open')
+                          : null,
+                      icon: const Icon(Icons.folder_open),
+                      label: const Text('Open data folder'),
+                    ),
+                    if (!canOpen)
+                      const Text(
+                        'No file manager is available to open this folder.',
+                      ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Back up or sync this folder before removing Tandemlog’s app data.',
+                    ),
+                  ],
+                  if (widget.folderActions.requiresPicker)
+                    const Text(
+                      'Manage this folder in Android’s Files or your sync app.',
+                    ),
+                ] else
+                  const Text('A data folder will be set up when you start.'),
+                TextButton(
+                  onPressed: settingsLoaded
+                      ? () => Navigator.pop(ctx, 'choose')
+                      : null,
+                  child: Text(
+                    location == null
+                        ? 'Choose an existing folder'
+                        : 'Use a different folder',
+                  ),
+                ),
+                if (location != null)
+                  const Text(
+                    'Switching folders does not move or delete your tasks.',
+                  ),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Done'),
+          ),
+        ],
+      ),
     );
-    await temp.rename(file.path);
+    if (!mounted || action == null) return;
+    if (action == 'choose') {
+      await _chooseFolder();
+    } else if (action == 'open') {
+      await _act(() => widget.folderActions.open(location!));
+    } else {
+      await _setAppearance(Appearance.values.byName(action));
+    }
   }
 
   Future<void> _act(Future<void> Function() action) async {
@@ -129,29 +330,81 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (mounted) {
         setState(() {
           error = null;
+          errorFromRefresh = false;
           rows = store?.rows ?? [];
         });
       }
     } catch (e) {
-      if (mounted) setState(() => error = '$e');
+      if (mounted) {
+        setState(() {
+          error = '$e';
+          errorFromRefresh = false;
+        });
+      }
     } finally {
-      if (mounted) setState(() => busy = false);
+      if (mounted) {
+        setState(() => busy = false);
+        _configureImporter();
+        importer?.request();
+      }
+    }
+  }
+
+  void _configureImporter() {
+    if (!identical(watchedStore, store)) {
+      importer?.dispose();
+      watchedStore = store;
+      final origin = store;
+      importer = origin == null
+          ? null
+          : ForegroundImporter(
+              events: origin.folder is LocalLogFolder
+                  ? () => Directory(origin.folder.location).watch()
+                  : null,
+              reconcile: _refresh,
+            );
+    }
+    if (foreground) {
+      importer?.start();
+    } else {
+      importer?.stop();
     }
   }
 
   Future<void> _refresh() async {
-    if (store == null || busy || syncing != null) return;
+    if (!mounted || !foreground || store == null || busy || syncing != null) {
+      return;
+    }
+    final origin = store!;
     syncing = () async {
       try {
-        final changed = await store!.refresh();
-        if (mounted && (changed || error != null)) {
+        final changed = await origin.refresh();
+        final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
+        if (mounted && identical(store, origin) && reconcileCapture) {
+          final unsaved = pendingCapture
+              .where((entry) => !origin.hasEntity(entry.id))
+              .toList();
+          capture.text = unsaved.map((entry) => entry.title).join('\n');
+          pendingCapture.clear();
+          captureFailure = false;
+          if (unsaved.isEmpty) error = null;
+        }
+        if (mounted &&
+            identical(store, origin) &&
+            (changed || errorFromRefresh || reconcileCapture)) {
           setState(() {
-            rows = store!.rows;
-            error = null;
+            rows = origin.rows;
+            if (errorFromRefresh) error = null;
+            errorFromRefresh = false;
           });
         }
       } catch (e) {
-        if (mounted && error != '$e') setState(() => error = '$e');
+        if (mounted && identical(store, origin)) {
+          setState(() {
+            error = '$e';
+            errorFromRefresh = true;
+          });
+        }
       }
     }();
     await syncing;
@@ -160,24 +413,65 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _refresh();
+    foreground =
+        state == AppLifecycleState.resumed ||
+        state == AppLifecycleState.inactive;
+    _configureImporter();
+    if (state == AppLifecycleState.resumed) importer?.request();
   }
 
   Future<void> _chooseFolder() async {
     await _act(() async {
-      final selected = Platform.isAndroid
-          ? await AndroidLogFolder.pick()
-          : await getDirectoryPath(confirmButtonText: 'Use this folder');
+      final selected = await widget.folderActions.pick();
       if (selected == null || !mounted) return;
-      if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
+      if (selected == store?.folder.location) return;
+      final previousStore = store;
+      final previousUser = user;
+      final previousRows = rows;
+      final previousFolder = settings!.folder;
+      try {
+        await _open(selected);
+        if (!mounted) return;
+        await _saveSettings();
+      } catch (_) {
+        if (!identical(store, previousStore)) await store?.close();
+        store = previousStore;
+        user = previousUser;
+        rows = previousRows;
+        settings!.folder = previousFolder;
+        settings!.user = previousUser;
+        rethrow;
+      }
+      await previousStore?.close();
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).clearSnackBars();
       pendingCapture.clear();
       capture.clear();
-      await store?.close();
-      store = null;
-      user = null;
-      rows = [];
-      await _open(selected);
-      await _saveSettings();
+      firstName.clear();
+      pendingUserId = null;
+      pendingUserName = null;
+    });
+  }
+
+  Future<void> _createFirstUser() async {
+    final name = firstName.text.trim();
+    if (busy || name.isEmpty) return;
+    await _act(() async {
+      pendingUserId ??= const Uuid().v4();
+      pendingUserName ??= name;
+      await store!.refresh();
+      if (!store!.hasEntity(pendingUserId!)) {
+        await store!.command(pendingUserId!, 'user.created', {
+          'name': pendingUserName,
+        });
+      }
+      await _selectUser(pendingUserId);
+      pendingUserId = null;
+      pendingUserName = null;
+      firstName.clear();
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && user == null) firstNameFocus.requestFocus();
     });
   }
 
@@ -187,8 +481,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await _act(() async {
       final id = const Uuid().v4();
       await store!.command(id, 'user.created', {'name': name});
-      user = id;
-      await _saveSettings();
+      await _selectUser(id);
     });
   }
 
@@ -229,6 +522,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _capture() async {
+    if (busy ||
+        (capture.value.composing.isValid &&
+            !capture.value.composing.isCollapsed)) {
+      return;
+    }
     final titles = capture.text
         .split('\n')
         .map((s) => s.trim())
@@ -239,8 +537,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       setState(() => error = 'Keep each task title under 500 characters.');
       return;
     }
-    if (pendingCapture.map((entry) => entry.title).join('\n') !=
-        titles.join('\n')) {
+    if (pendingCapture.isEmpty) {
       pendingCapture = titles
           .map((title) => (id: const Uuid().v4(), title: title))
           .toList();
@@ -261,6 +558,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         pendingCapture.removeAt(0);
         capture.text = pendingCapture.map((entry) => entry.title).join('\n');
       }
+    });
+    captureFailure = pendingCapture.isNotEmpty;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && user != null) captureFocus.requestFocus();
     });
   }
 
@@ -355,9 +656,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    timer?.cancel();
+    importer?.dispose();
     WidgetsBinding.instance.removeObserver(this);
     capture.dispose();
+    captureFocus.dispose();
+    firstName.dispose();
+    firstNameFocus.dispose();
     unawaited(store?.close());
     super.dispose();
   }
@@ -384,10 +688,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   padding: const EdgeInsets.fromLTRB(24, 24, 16, 12),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.check_circle_outline,
                         size: 32,
-                        color: Color(0xff267461),
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 10),
                       const Text(
@@ -398,16 +702,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         ),
                       ),
                       const Spacer(),
-                      if (store != null)
-                        IconButton(
-                          tooltip: 'Refresh folder',
-                          onPressed: busy ? null : _refresh,
-                          icon: const Icon(Icons.refresh),
-                        ),
                       IconButton(
-                        tooltip: 'Choose data folder',
-                        onPressed: busy ? null : _chooseFolder,
-                        icon: const Icon(Icons.folder_open),
+                        tooltip: 'Settings',
+                        onPressed: busy ? null : _showSettings,
+                        icon: const Icon(Icons.settings_outlined),
                       ),
                     ],
                   ),
@@ -430,6 +728,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                             const Icon(Icons.error_outline),
                             const SizedBox(width: 12),
                             Expanded(child: Text(error!)),
+                            if (errorFromRefresh && store != null)
+                              TextButton(
+                                onPressed: busy ? null : _refresh,
+                                child: const Text('Retry'),
+                              ),
                           ],
                         ),
                       ),
@@ -441,30 +744,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       : user == null
                       ? _users(users)
                       : _tasks(tasks, users),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-                  child: Row(
-                    children: [
-                      Icon(
-                        error == null
-                            ? Icons.offline_bolt_outlined
-                            : Icons.warning_amber,
-                        size: 16,
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          store == null
-                              ? 'Your data, in your folder'
-                              : error != null
-                              ? 'Needs attention · writes will validate history first'
-                              : 'Saved on this device · folder sync handled separately',
-                          style: Theme.of(context).textTheme.bodySmall,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
@@ -486,142 +765,269 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 16),
-          const Text(
-            'Keep household tasks together, even offline.\nChoose a dedicated folder for your shared task history.',
+          Text(
+            settings?.folder != null
+                ? 'Your saved data folder needs attention. Retry it or choose a different folder in Settings.'
+                : widget.folderActions.requiresPicker
+                ? 'Keep household tasks together, even offline. Choose or create a Tandemlog folder so your sync app can access it.'
+                : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
           ),
           const SizedBox(height: 24),
-          FilledButton.icon(
-            onPressed: busy ? null : _chooseFolder,
-            icon: const Icon(Icons.folder_open),
-            label: const Text('Choose data folder'),
+          FilledButton(
+            onPressed: busy || !settingsLoaded
+                ? null
+                : settings!.folder != null
+                ? () => _act(() => _open(settings!.folder!))
+                : widget.folderActions.requiresPicker
+                ? _chooseFolder
+                : _startDefault,
+            child: Text(settings?.folder != null ? 'Try again' : 'Start'),
           ),
+          if (!widget.folderActions.requiresPicker && settings?.folder == null)
+            TextButton(
+              onPressed: busy || !settingsLoaded ? null : _chooseFolder,
+              child: const Text('Choose an existing folder'),
+            ),
           const SizedBox(height: 16),
-          const Text(
-            'To share across devices, sync that folder with your preferred folder-sync app.',
-          ),
+          const Text('Set up folder sync whenever you’re ready.'),
         ],
       ),
     ),
   );
-  Widget _users(List<Map<String, dynamic>> users) => ListView(
-    padding: const EdgeInsets.all(24),
-    children: [
-      const Text(
-        'Who’s here?',
-        style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 8),
-      const Text(
-        'Names identify changes. Everyone in this folder can see and edit its tasks.',
-      ),
-      const SizedBox(height: 20),
-      for (final u in users)
-        Card(
-          child: ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: Text(u['name']),
-            onTap: busy
-                ? null
-                : () => _act(() async {
-                    user = u['id'];
-                    await _saveSettings();
-                  }),
+  Widget _users(List<Map<String, dynamic>> users) =>
+      users.isEmpty || pendingUserId != null
+      ? Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 440),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'What should we call you?',
+                    style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 12),
+                  const Text(
+                    'Your name identifies your tasks. Everyone sharing this folder can see and edit them.',
+                  ),
+                  const SizedBox(height: 24),
+                  TextField(
+                    controller: firstName,
+                    focusNode: firstNameFocus,
+                    readOnly: pendingUserName != null,
+                    autofocus: true,
+                    enabled: !busy,
+                    maxLength: 100,
+                    textInputAction: TextInputAction.done,
+                    decoration: InputDecoration(
+                      labelText: 'Your name',
+                      helperText: pendingUserName == null
+                          ? null
+                          : 'Continue to finish saving this name.',
+                    ),
+                    onChanged: (_) => setState(() {}),
+                    onSubmitted: (_) => _createFirstUser(),
+                  ),
+                  const SizedBox(height: 16),
+                  FilledButton(
+                    onPressed: busy || firstName.text.trim().isEmpty
+                        ? null
+                        : _createFirstUser,
+                    child: const Text('Continue'),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-      const SizedBox(height: 12),
-      Align(
-        alignment: Alignment.centerLeft,
-        child: FilledButton.icon(
-          onPressed: busy ? null : _addUser,
-          icon: const Icon(Icons.add),
-          label: const Text('Create user'),
-        ),
-      ),
-    ],
-  );
+        )
+      : ListView(
+          padding: const EdgeInsets.all(24),
+          children: [
+            const Text(
+              'Who’s here?',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Names identify changes. Everyone in this folder can see and edit its tasks.',
+            ),
+            const SizedBox(height: 20),
+            for (final u in users)
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.person_outline),
+                  title: Text(u['name']),
+                  onTap: busy
+                      ? null
+                      : () => _act(() async {
+                          user = u['id'];
+                          await _saveSettings();
+                        }),
+                ),
+              ),
+            const SizedBox(height: 12),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: FilledButton.icon(
+                onPressed: busy ? null : _addUser,
+                icon: const Icon(Icons.add),
+                label: const Text('Create user'),
+              ),
+            ),
+          ],
+        );
   Widget _tasks(
     List<Map<String, dynamic>> tasks,
     List<Map<String, dynamic>> users,
   ) => ListView(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
     children: [
-      Row(
+      Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        spacing: 16,
+        runSpacing: 8,
         children: [
-          const Expanded(
-            child: Text(
-              'Room for what matters.',
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+          Text.rich(
+            TextSpan(
+              children: [
+                TextSpan(
+                  text: all ? 'All tasks' : 'Your tasks',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                TextSpan(
+                  text: ' · ${tasks.length} open',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
             ),
           ),
-          PopupMenuButton<String>(
-            tooltip: 'Switch user',
-            onSelected: (v) => _act(() async {
-              user = v == 'new' ? null : v;
-              await _saveSettings();
-            }),
-            itemBuilder: (_) => [
-              for (final u in users)
-                PopupMenuItem(value: u['id'], child: Text(u['name'])),
-              const PopupMenuItem(value: 'new', child: Text('Manage users')),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              PopupMenuButton<String>(
+                tooltip: 'Switch user',
+                onSelected: (v) => _act(() async {
+                  await _selectUser(v == 'new' ? null : v);
+                }),
+                itemBuilder: (_) => [
+                  for (final u in users)
+                    PopupMenuItem(value: u['id'], child: Text(u['name'])),
+                  const PopupMenuItem(
+                    value: 'new',
+                    child: Text('Manage users'),
+                  ),
+                ],
+                child: Chip(
+                  avatar: const Icon(Icons.person_outline, size: 18),
+                  label: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 160),
+                    child: Text(
+                      users.firstWhere((u) => u['id'] == user)['name'],
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ),
+              ),
+              FilterChip(
+                label: const Text('Everyone'),
+                selected: all,
+                onSelected: (value) => setState(() => all = value),
+              ),
             ],
-            child: Chip(
-              avatar: const Icon(Icons.person_outline, size: 18),
-              label: Text(users.firstWhere((u) => u['id'] == user)['name']),
-            ),
           ),
         ],
-      ),
-      const SizedBox(height: 8),
-      Text(
-        '${tasks.length} open ${tasks.length == 1 ? 'task' : 'tasks'} · take them one at a time',
-        style: Theme.of(context).textTheme.bodyLarge,
-      ),
-      const SizedBox(height: 24),
-      TextField(
-        controller: capture,
-        minLines: 1,
-        maxLines: 4,
-        enabled: !busy,
-        decoration: InputDecoration(
-          labelText: 'What needs doing?',
-          hintText: 'One task per line',
-          suffixIcon: IconButton(
-            tooltip: 'Add tasks',
-            onPressed: busy ? null : _capture,
-            icon: const Icon(Icons.arrow_upward),
-          ),
-        ),
-        onSubmitted: (_) => _capture(),
       ),
       const SizedBox(height: 16),
-      Row(
-        children: [
-          const Text(
-            'YOUR TASKS',
-            style: TextStyle(fontWeight: FontWeight.w700, letterSpacing: 1.4),
+      Focus(
+        onKeyEvent: (_, event) {
+          final enter =
+              event.logicalKey == LogicalKeyboardKey.enter ||
+              event.logicalKey == LogicalKeyboardKey.numpadEnter;
+          if (widget.folderActions.requiresPicker ||
+              !enter ||
+              (capture.value.composing.isValid &&
+                  !capture.value.composing.isCollapsed)) {
+            return KeyEventResult.ignored;
+          }
+          if (event is KeyDownEvent) {
+            if (HardwareKeyboard.instance.isShiftPressed) {
+              if (!busy && pendingCapture.isEmpty) {
+                final value = capture.value;
+                final selection = value.selection.isValid
+                    ? value.selection
+                    : TextSelection.collapsed(offset: value.text.length);
+                capture.value = TextEditingValue(
+                  text: value.text.replaceRange(
+                    selection.start,
+                    selection.end,
+                    '\n',
+                  ),
+                  selection: TextSelection.collapsed(
+                    offset: selection.start + 1,
+                  ),
+                );
+              }
+            } else {
+              unawaited(_capture());
+            }
+            return KeyEventResult.handled;
+          }
+          if (event is KeyRepeatEvent) return KeyEventResult.handled;
+          return KeyEventResult.ignored;
+        },
+        child: TextField(
+          controller: capture,
+          focusNode: captureFocus,
+          readOnly: pendingCapture.isNotEmpty,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
+          minLines: 1,
+          maxLines: 4,
+          enabled: !busy,
+          decoration: InputDecoration(
+            labelText: 'What needs doing?',
+            hintText: 'One task per line',
+            helperText: captureFailure && pendingCapture.isNotEmpty
+                ? 'Retry to check these tasks before editing.'
+                : widget.folderActions.requiresPicker
+                ? null
+                : 'Enter to add · Shift+Enter for another task',
+            suffixIcon: IconButton(
+              tooltip: 'Add tasks',
+              onPressed: busy ? null : _capture,
+              icon: const Icon(Icons.arrow_upward),
+            ),
           ),
-          const Spacer(),
-          FilterChip(
-            label: const Text('Everyone'),
-            selected: all,
-            onSelected: (v) => setState(() => all = v),
-          ),
-        ],
+          onSubmitted: (_) => _capture(),
+        ),
       ),
       const SizedBox(height: 12),
       if (tasks.isEmpty)
-        const Padding(
-          padding: EdgeInsets.symmetric(vertical: 56),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 56),
           child: Column(
             children: [
-              Icon(Icons.done_all, size: 48, color: Color(0xff267461)),
+              Icon(
+                Icons.done_all,
+                size: 48,
+                color: Theme.of(context).colorScheme.primary,
+              ),
               SizedBox(height: 12),
               Text(
-                'A clear slate.',
+                'No open tasks',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 8),
-              Text('Capture something above when it comes to mind.'),
+              Text('Add a task above.'),
             ],
           ),
         ),
@@ -630,7 +1036,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           padding: const EdgeInsets.only(bottom: 10),
           child: Card(
             margin: EdgeInsets.zero,
-            color: Colors.white,
+
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 12,
