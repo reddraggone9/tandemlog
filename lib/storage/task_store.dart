@@ -40,7 +40,7 @@ class TaskStore {
     if (manifest is Map<String, dynamic> &&
         manifest['v'] == 1 &&
         manifest['id'] is String &&
-        idPattern.hasMatch(manifest['id']) &&
+        isCanonicalId(manifest['id']) &&
         manifest.keys.every((key) => {'v', 'id'}.contains(key))) {
       throw FormatFailure(
         'This folder uses an older prerelease format (v1). Preserve this folder and choose a new data folder for this prerelease.',
@@ -49,7 +49,7 @@ class TaskStore {
     if (manifest is! Map<String, dynamic> ||
         manifest['v'] != protocolVersion ||
         manifest['id'] is! String ||
-        !idPattern.hasMatch(manifest['id']) ||
+        !isCanonicalId(manifest['id']) ||
         manifest.keys.any((key) => !{'v', 'id'}.contains(key))) {
       throw FormatFailure('Unsupported or invalid workspace manifest.');
     }
@@ -88,7 +88,7 @@ class TaskStore {
         await identity.writeAsString(const Uuid().v4(), flush: true);
       }
       final writer = (await identity.readAsString()).trim();
-      if (!idPattern.hasMatch(writer)) {
+      if (!isCanonicalId(writer)) {
         throw FormatFailure('Invalid local writer identity.');
       }
       mark('identity_lock');
@@ -96,7 +96,7 @@ class TaskStore {
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
       final version = db.select('PRAGMA user_version').first.values.first;
-      if (version != 0 && version != 5) {
+      if (version != 0 && version != 6) {
         throw FormatFailure(
           'Unsupported cache version. Preserve logs and rebuild cache with a compatible app.',
         );
@@ -123,7 +123,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=5');
+      db.execute('PRAGMA user_version=6');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -232,7 +232,7 @@ class TaskStore {
     final checkpoints = <List<Object?>>[];
     for (final info in logs) {
       final writerName = info.name.substring(0, info.name.length - 6);
-      if (!idPattern.hasMatch(writerName)) {
+      if (!isCanonicalId(writerName)) {
         throw FormatFailure('Unrecognized log filename ${info.name}.');
       }
       final saved = db.select('SELECT * FROM streams WHERE name=?', [

@@ -41,3 +41,7 @@ Failure paths still attempt canonical integrity evidence, including when cache c
 ## Validation
 
 The focused tests cover production ingestion/cache reopen, exact canonical preservation, refused output reuse/containment, case-insensitive Windows path guards, denied transport writes, private Unix output permissions, and close-error reporting. Relocation must also be exercised on the compiled bundle: copy only its declared files into a new directory, clear environment variables and run against sanitized canonical data. Inspect native loading to ensure SQLite comes from the relocated `lib` directory, not a build workspace or SDK cache.
+
+## Explicit recurrence rehearsal
+
+`bin/store_audit --exercise-recurrence EXISTING_CANONICAL_FOLDER NEW_PRIVATE_OUTPUT_DIRECTORY YYYY-MM-DD` first copies all canonical files into the new private output, then completes the first open recurring task using the production store **only in that copy**. It checks retained completed history, exactly one derived successor with the expected schedule/content and position, then identical cached reopening. Source hashes must remain unchanged. The output includes the modified private `exercise-canonical/` copy. Default audit remains read-only. This mode requires a fresh occurrence without an existing successor and never edits live/source canonical files.

@@ -434,6 +434,20 @@ void main() {
       a!.command(const Uuid().v4(), 'task.completed', {}),
       throwsA(isA<FormatFailure>()),
     );
+    for (final invalid in [
+      '------------------------------------',
+      '11111111-1111-1111-1111-111111111111',
+    ]) {
+      await expectLater(
+        a!.command(invalid, 'task.created', {
+          'title': 'Rejected recurring task',
+          'description': '',
+          'assignee': user,
+          'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every month'},
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+    }
     expect(await aFolder.read('${a!.writer}.jsonl'), before);
     await a!.command(id, 'task.edited', {'title': 'Still works'});
   });

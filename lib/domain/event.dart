@@ -6,7 +6,25 @@ import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
 
 const protocolVersion = 2;
-final idPattern = RegExp(r'^[a-f0-9-]{36}$');
+final _idShape = RegExp(
+  r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
+);
+
+/// Same UUID namespace admission as the installed UUID implementation, with
+/// canonical lowercase spelling so identities cannot alias by case.
+bool isCanonicalId(Object? value) =>
+    value is String &&
+    _idShape.hasMatch(value) &&
+    Uuid.isValidUUID(fromString: value);
+
+bool _validReference(Object? value, {bool tag = false}) {
+  if (value is! String) return false;
+  final parts = value.split(':');
+  return parts.length == (tag ? 3 : 2) &&
+      isCanonicalId(parts[0]) &&
+      RegExp(r'^[1-9][0-9]*$').hasMatch(parts[1]) &&
+      (!tag || RegExp(r'^(0|[1-9][0-9]*)$').hasMatch(parts[2]));
+}
 
 class FormatFailure implements Exception {
   final String message;
@@ -57,7 +75,7 @@ class LogEvent {
         );
       }
       for (final key in ['space', 'writer', 'entity']) {
-        if (j[key] is! String || !idPattern.hasMatch(j[key])) {
+        if (j[key] is! String || !isCanonicalId(j[key])) {
           throw FormatFailure('Invalid $key identifier.');
         }
       }
@@ -81,7 +99,7 @@ class LogEvent {
         case 'task.created':
           text('title', 500);
           text('description', 10000, empty: true);
-          if (d['assignee'] is! String || !idPattern.hasMatch(d['assignee'])) {
+          if (d['assignee'] is! String || !isCanonicalId(d['assignee'])) {
             throw FormatFailure('Invalid assignee.');
           }
         case 'task.edited':
@@ -100,7 +118,7 @@ class LogEvent {
         case 'task.moved':
           if (d['before'] != null &&
               (d['before'] is! String ||
-                  !idPattern.hasMatch(d['before']) ||
+                  !isCanonicalId(d['before']) ||
                   d['before'] == j['entity'])) {
             throw FormatFailure('Invalid order anchor.');
           }
@@ -121,7 +139,7 @@ class LogEvent {
             final next = d['successor'];
             if (next is! Map<String, dynamic> ||
                 next['id'] is! String ||
-                !idPattern.hasMatch(next['id'])) {
+                !isCanonicalId(next['id'])) {
               throw FormatFailure('Invalid successor.');
             }
             validateTask(next, successor: true);
@@ -132,9 +150,7 @@ class LogEvent {
           break;
         case 'task.completionUndone':
           text('completion', 80);
-          if (!RegExp(
-            r'^[a-f0-9-]{36}:[1-9][0-9]*$',
-          ).hasMatch(d['completion'])) {
+          if (!_validReference(d['completion'])) {
             throw FormatFailure('Invalid completion reference.');
           }
         default:
@@ -303,7 +319,7 @@ void validateTask(Map<String, dynamic> d, {bool successor = false}) {
       d['description'] is! String ||
       (d['description'] as String).length > 10000 ||
       d['assignee'] is! String ||
-      !idPattern.hasMatch(d['assignee'])) {
+      !isCanonicalId(d['assignee'])) {
     throw FormatFailure('Invalid task snapshot.');
   }
   if (d.containsKey('schedule')) validateSchedule(d['schedule']);
@@ -331,9 +347,7 @@ void validateTagChanges(dynamic changes) {
   validateTags(changes['add']);
   if (changes['remove'] is! List ||
       (changes['remove'] as List).any(
-        (x) =>
-            x is! String ||
-            !RegExp(r'^[a-f0-9-]{36}:[1-9][0-9]*:[0-9]+$').hasMatch(x),
+        (x) => x is! String || !_validReference(x, tag: true),
       )) {
     throw FormatFailure('Invalid tag removal references.');
   }

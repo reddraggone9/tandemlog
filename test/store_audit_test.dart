@@ -41,6 +41,51 @@ void main() {
   });
 
   test(
+    'recurrence exercise writes only its private copy and reopens exact result',
+    () async {
+      final before = await audit.hashFolder(folder);
+      final output = '${root.path}/exercise';
+      final report = await audit.auditStore(
+        folder.location,
+        output,
+        exerciseCompletionDay: DateTime.utc(2026, 11, 20),
+      );
+      expect(report['recurrenceExercise'], {
+        'copiedCanonicalOnly': true,
+        'parentCompleted': true,
+        'singleSuccessor': true,
+        'successorScheduleMatches': true,
+        'successorBeforeParent': true,
+      });
+      expect(report['tasks'], 3);
+      expect(report['completedTasks'], 2);
+      expect(report['cacheReopenIdentical'], true);
+      expect(report['reopenLogReads'], 0);
+      expect(await audit.hashFolder(folder), before);
+      expect(
+        await audit.hashFolder(LocalLogFolder('$output/exercise-canonical')),
+        isNot(before),
+      );
+      await expectLater(
+        audit.auditStore(
+          folder.location,
+          output,
+          exerciseCompletionDay: DateTime.utc(2026, 11, 20),
+        ),
+        throwsStateError,
+      );
+      await expectLater(
+        audit.auditStore(
+          folder.location,
+          '${folder.location}/exercise',
+          exerciseCompletionDay: DateTime.utc(2026, 11, 20),
+        ),
+        throwsStateError,
+      );
+    },
+  );
+
+  test(
     'actual production store audit preserves canonical bytes and reopens cached views',
     () async {
       final before = await audit.hashFolder(folder);

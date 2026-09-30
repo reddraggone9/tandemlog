@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
+import 'package:tandemlog/domain/schedule.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 
@@ -12,6 +14,7 @@ Future<Map<String, dynamic>> auditStore(
   String canonicalPath,
   String outputPath, {
   Future<void> Function(TaskStore)? closeStore,
+  DateTime? exerciseCompletionDay,
 }) async {
   final close = closeStore ?? (TaskStore value) => value.close();
   final canonical = Directory(
@@ -56,7 +59,71 @@ Future<Map<String, dynamic>> auditStore(
         throw StateError('Cannot restrict audit output directory permissions.');
       }
     }
-    store = await TaskStore.open(folder, cachePath);
+    LogFolder activeFolder = folder;
+    if (exerciseCompletionDay != null) {
+      final copyPath = '${output.path}/exercise-canonical';
+      await Directory(copyPath).create();
+      final copied = LocalLogFolder(copyPath);
+      for (final name in before.keys) {
+        await copied.create(name, await folder.read(name));
+      }
+      if (jsonEncode(await hashFolder(copied)) != jsonEncode(before)) {
+        throw StateError('Source changed while copying rehearsal data.');
+      }
+      activeFolder = copied;
+    }
+    store = await TaskStore.open(activeFolder, cachePath);
+    Map<String, dynamic>? exercise;
+    if (exerciseCompletionDay != null) {
+      final parent = store.rows.firstWhere(
+        (row) =>
+            row['kind'] == 'task' &&
+            row['completed'] == false &&
+            (row['schedule'] as Map?)?['recurrence'] != null,
+        orElse: () =>
+            throw StateError('No open recurring task available for rehearsal.'),
+      );
+      final parentId = parent['id'] as String;
+      final nextId = const Uuid().v5(parentId, 'successor');
+      if (store.rows.any((row) => row['id'] == nextId)) {
+        throw StateError(
+          'Selected task already has a successor; choose fresh imported staging.',
+        );
+      }
+      final expectedSchedule = TaskSchedule.fromJson(
+        Map<String, dynamic>.from(parent['schedule'] as Map),
+      ).next(exerciseCompletionDay).toJson();
+      final count = store.rows.length;
+      await store.complete(parentId, completionDay: exerciseCompletionDay);
+      final next = store.rows.where((row) => row['id'] == nextId).toList();
+      if (next.length != 1 ||
+          store.rows.length != count + 1 ||
+          store.rows.firstWhere((row) => row['id'] == parentId)['completed'] !=
+              true ||
+          next.single['completed'] != false ||
+          jsonEncode(next.single['schedule']) != jsonEncode(expectedSchedule) ||
+          next.single['title'] != parent['title'] ||
+          next.single['description'] != parent['description'] ||
+          next.single['assignee'] != parent['assignee'] ||
+          jsonEncode(next.single['tags']) != jsonEncode(parent['tags'])) {
+        throw StateError(
+          'Production completion did not retain history and create the expected single successor.',
+        );
+      }
+      final ids = store.rows.map((row) => row['id']).toList();
+      if (ids.indexOf(nextId) != ids.indexOf(parentId) - 1) {
+        throw StateError(
+          'Production successor was not placed immediately before its parent.',
+        );
+      }
+      exercise = {
+        'copiedCanonicalOnly': true,
+        'parentCompleted': true,
+        'singleSuccessor': true,
+        'successorScheduleMatches': true,
+        'successorBeforeParent': true,
+      };
+    }
     final initialRows = store.rows;
     final initialEncoding = jsonEncode(initialRows);
     final firstReads = store.readFiles;
@@ -66,7 +133,7 @@ Future<Map<String, dynamic>> auditStore(
         store.db.select('SELECT COUNT(*) AS n FROM events').single['n'] as int;
     await close(store);
     store = null;
-    store = await TaskStore.open(folder, cachePath);
+    store = await TaskStore.open(activeFolder, cachePath);
     final reopenedRows = store.rows;
     if (jsonEncode(reopenedRows) != initialEncoding) {
       throw StateError(
@@ -90,6 +157,7 @@ Future<Map<String, dynamic>> auditStore(
     final tasks = initialRows.where((row) => row['kind'] == 'task').toList();
     final report = <String, dynamic>{
       'ok': true,
+      'recurrenceExercise': ?exercise,
       'canonicalUnchanged': true,
       'cacheReopenIdentical': true,
       'firstLogReads': firstReads,
@@ -214,16 +282,38 @@ Future<Map<String, String>> hashFolder(LogFolder folder) async {
 }
 
 Future<void> main(List<String> args) async {
-  if (args.length != 2) {
+  final exerciseMode = args.isNotEmpty && args.first == '--exercise-recurrence';
+  if ((!exerciseMode && args.length != 2) ||
+      (exerciseMode && args.length != 4)) {
     stderr.writeln(
-      'Usage: tandemlog-store-audit EXISTING_CANONICAL_FOLDER NEW_PRIVATE_OUTPUT_DIRECTORY',
+      'Usage: tandemlog-store-audit [--exercise-recurrence] EXISTING_CANONICAL_FOLDER NEW_PRIVATE_OUTPUT_DIRECTORY [COMPLETION_YYYY-MM-DD]',
     );
     exitCode = 64;
     return;
   }
   try {
     // Aggregate output contains no task titles, descriptions, tags or source text.
-    stdout.writeln(jsonEncode(await auditStore(args[0], args[1])));
+    DateTime? day;
+    if (exerciseMode) {
+      final value = args[3];
+      day = DateTime.tryParse(value);
+      if (!RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(value) ||
+          day == null ||
+          day.toIso8601String().substring(0, 10) != value) {
+        throw const FormatException(
+          'Completion must be a valid YYYY-MM-DD civil date.',
+        );
+      }
+    }
+    stdout.writeln(
+      jsonEncode(
+        await auditStore(
+          args[exerciseMode ? 1 : 0],
+          args[exerciseMode ? 2 : 1],
+          exerciseCompletionDay: day,
+        ),
+      ),
+    );
   } catch (error) {
     stderr.writeln('Audit failed: $error');
     exitCode = 1;

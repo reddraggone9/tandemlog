@@ -6,6 +6,52 @@ import 'package:uuid/uuid.dart';
 
 void main() {
   test(
+    'canonical UUID admission matches namespace validation and rejects aliases',
+    () {
+      final good = const Uuid().v4();
+      for (final id in [
+        good,
+        const Uuid().v5(good, 'fixture'),
+        '00000000-0000-0000-0000-000000000000',
+        'ffffffff-ffff-ffff-ffff-ffffffffffff',
+      ]) {
+        expect(isCanonicalId(id), isTrue);
+        expect(() => const Uuid().v5(id, 'successor'), returnsNormally);
+      }
+      for (final bad in [
+        '------------------------------------',
+        '11111111-1111-1111-1111-111111111111',
+        good.toUpperCase(),
+        good.replaceAll('-', ''),
+      ]) {
+        expect(isCanonicalId(bad), isFalse);
+        for (final entry in [
+          LogEvent(good, good, 1, testClock(1, 0), bad, 'user.created', {
+            'name': 'Fixture',
+          }),
+          LogEvent(
+            good,
+            good,
+            1,
+            testClock(1, 0),
+            good,
+            'task.completionUndone',
+            {'completion': '$bad:1'},
+          ),
+          LogEvent(good, good, 1, testClock(1, 0), good, 'task.tagsChanged', {
+            'add': <String>[],
+            'remove': ['$bad:1:0'],
+          }),
+        ]) {
+          expect(
+            () => LogEvent.decode(entry.encode()),
+            throwsA(isA<FormatFailure>()),
+          );
+        }
+      }
+    },
+  );
+  test(
     'all arrival permutations yield identical field conflict and undo state',
     () {
       final space = const Uuid().v4(),
