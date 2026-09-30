@@ -96,7 +96,7 @@ class TaskStore {
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
       final version = db.select('PRAGMA user_version').first.values.first;
-      if (version != 0 && version != 6) {
+      if (version != 0 && version != 7) {
         throw FormatFailure(
           'Unsupported cache version. Preserve logs and rebuild cache with a compatible app.',
         );
@@ -123,7 +123,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=6');
+      db.execute('PRAGMA user_version=7');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(

@@ -2,6 +2,10 @@ package com.reddraggone9.tandemlog
 
 import android.app.Activity
 import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import java.util.TimeZone
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.os.Handler
@@ -14,11 +18,50 @@ import java.util.concurrent.Executors
 
 /** Folder capabilities, never guessed filesystem paths. Resolve children anew. */
 class MainActivity : FlutterActivity() {
+    private var timeChannel: MethodChannel? = null
+    private var observingTime = false
+    private val timeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            TimeZone.setDefault(null) // reread OS zone, including equal-offset changes
+            timeChannel?.invokeMethod("changed", null)
+        }
+    }
+    private fun stopTimeObservation() {
+        if (observingTime) { unregisterReceiver(timeReceiver); observingTime = false }
+    }
+    override fun onDestroy() {
+        stopTimeObservation()
+        timeChannel?.setMethodCallHandler(null)
+        timeChannel = null
+        super.onDestroy()
+    }
     private var picker: MethodChannel.Result? = null
     private val io = Executors.newSingleThreadExecutor()
     private val main = Handler(Looper.getMainLooper())
     override fun configureFlutterEngine(engine: FlutterEngine) {
         super.configureFlutterEngine(engine)
+        timeChannel = MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/time").also { channel ->
+            channel.setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "zone" -> {
+                        TimeZone.setDefault(null)
+                        val zone = TimeZone.getDefault()
+                        result.success(mapOf("id" to zone.id, "offsetSeconds" to zone.getOffset(System.currentTimeMillis()) / 1000))
+                    }
+                    "start" -> {
+                        if (!observingTime) {
+                            val filter = IntentFilter().apply { addAction(Intent.ACTION_TIME_CHANGED); addAction(Intent.ACTION_TIMEZONE_CHANGED) }
+                            // Only protected system broadcasts; no exported app receiver or service.
+                            registerReceiver(timeReceiver, filter)
+                            observingTime = true
+                        }
+                        result.success(null)
+                    }
+                    "stop" -> { stopTimeObservation(); result.success(null) }
+                    else -> result.notImplemented()
+                }
+            }
+        }
         MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/folders").setMethodCallHandler { call, result ->
             if (call.method == "pick") {
                 if (picker != null) { result.error("busy", "Folder picker is already open", null); return@setMethodCallHandler }

@@ -58,6 +58,68 @@ void main() {
   Map<String, dynamic> state(TaskStore store, String id) =>
       store.rows.firstWhere((r) => r['id'] == id);
 
+  test(
+    'typed due bounds are atomic across offline edits and rebuild',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'dueMinDays': 1, 'dueMaxDays': 3},
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-02', 'dueMinDays': 4, 'dueMaxDays': 8},
+      });
+      testNow = testNow.add(const Duration(milliseconds: 1));
+      await b!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-03', 'dueMinDays': 2, 'dueMaxDays': 2},
+      });
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      expect(state(a!, id)['schedule'], containsPair('dueMinDays', 2));
+      expect(state(a!, id)['schedule'], containsPair('dueMaxDays', 2));
+      expect(state(a!, id)['schedule'], containsPair('dueDate', '2026-10-03'));
+      final before = await aFolder.read('${a!.writer}.jsonl');
+      for (final bounds in [
+        {'dueMinDays': 3, 'dueMaxDays': 2},
+        {'dueMinDays': '2'},
+        {'dueMaxDays': 2.5},
+        {'dueMaxDays': 9223372036854775807},
+      ]) {
+        await expectLater(
+          a!.command(id, 'task.edited', {'schedule': bounds}),
+          throwsA(isA<FormatFailure>()),
+        );
+      }
+      for (final tag in [
+        'due-min-2-days',
+        '#due-max-1-day',
+        'start-time-0930',
+      ]) {
+        await expectLater(
+          a!.command(id, 'task.tagsChanged', {
+            'add': [tag],
+            'remove': <String>[],
+          }),
+          throwsA(isA<FormatFailure>()),
+        );
+      }
+      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      await a!.command(id, 'task.tagsChanged', {
+        'add': ['Due-min-2-days', 'ordinary'],
+        'remove': <String>[],
+      });
+      final expected = a!.rows;
+      await a!.close();
+      a = null;
+      await File('${root.path}/private-a/cache.sqlite').delete();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.rows, expected);
+    },
+  );
+
   test('old cache cannot bypass current closed schema', () async {
     final id = await task();
     final bytes = await aFolder.read('${a!.writer}.jsonl');

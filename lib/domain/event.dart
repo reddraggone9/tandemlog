@@ -301,6 +301,14 @@ void validateTags(dynamic value) {
       value.any((x) => x is! String || x.trim().isEmpty || x.length > 200)) {
     throw FormatFailure('Invalid tags.');
   }
+  final reserved = RegExp(
+    r'^#?(?:due-(?:min|max)-[0-9]+-days?|start-time-[0-9]{4})$',
+  );
+  if (value.any((tag) => reserved.hasMatch(tag as String))) {
+    throw FormatFailure(
+      'Reserved scheduling tag. Use task schedule fields; existing history was preserved and requires a compatible fresh import.',
+    );
+  }
 }
 
 void validateSchedule(dynamic value) {
