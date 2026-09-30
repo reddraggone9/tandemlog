@@ -2,7 +2,7 @@
 Synthetic data only. Does not flush OS page caches or claim device cold boot.
 Run from repo with its native Linux release binary built and DISPLAY configured.
 """
-import json, os, pathlib, subprocess, time, uuid, hashlib, selectors, argparse
+import json, os, pathlib, subprocess, time, uuid, hashlib, selectors, argparse, sqlite3
 parser=argparse.ArgumentParser()
 parser.add_argument('--tasks', type=int, default=2000)
 parser.add_argument('--runs', type=int, default=5)
@@ -55,5 +55,14 @@ for i in range(args.runs):
  try:proc.wait(timeout=5)
  except subprocess.TimeoutExpired:proc.kill();proc.wait()
  if not marker:raise RuntimeError('No loaded-frame marker: '+output.decode(errors='replace'))
+ if not args.label.startswith('minimal'):
+  if not any(line.startswith('TANDEMLOG_ROWS ') for line in lines):
+   raise RuntimeError('Ready marker was emitted without a successful model load')
+  with sqlite3.connect(f'file:{cache / "cache.sqlite"}?mode=ro', uri=True) as db:
+   projected=[json.loads(row[0]) for row in db.execute('SELECT raw FROM views')]
+  if len(projected)!=args.tasks+1 or sum(row['kind']=='task' for row in projected)!=args.tasks:
+   raise RuntimeError('Loaded cache does not contain the complete synthetic workload')
+  if i>0 and not marker.endswith('FILES_READ=0'):
+   raise RuntimeError('Warm cache unexpectedly replayed canonical log contents')
  results.append({'run':i+1,'cache':('not used' if args.label.startswith('minimal') else ('rebuild' if i==0 else 'warm')),'external_ms':elapsed,'marker':marker,'phases':lines,**marks})
 print(json.dumps({'target':'Linux x86_64 native release / Xvfb','tasks':args.tasks,'label':args.label,'os_page_cache':'not flushed','results':results},indent=2))
