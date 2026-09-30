@@ -142,7 +142,9 @@ void main() {
 
       Future<void> theme(String name) async {
         await settings();
-        await tester.tap(find.text(name));
+        await tester.tap(find.text('Theme'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.text(name).last);
         await tester.pumpAndSettle();
       }
 
@@ -152,6 +154,15 @@ void main() {
       await launch();
       expect(brightness(), Brightness.dark);
       expect(await Directory('${profile.path}/data').exists(), isFalse);
+      await settings();
+      await tester.tap(find.text('Theme'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.text('Settings'), findsOneWidget);
+      expect(brightness(), Brightness.dark);
+      await tester.tap(find.text('Done'));
+      await tester.pumpAndSettle();
       await theme('Light');
       expect(brightness(), Brightness.light);
       expect(await Directory('${profile.path}/data').exists(), isFalse);
@@ -360,6 +371,30 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('Changed while suspended'), findsOneWidget);
       expect(capture.text, 'Unsent draft');
+      const notes =
+          'Bring reusable bags and check the pantry before shopping.\n'
+          'Include fruit, vegetables and ingredients for the weekend meals.';
+      await tester.tap(find.text('Local edited title'));
+      await tester.pumpAndSettle();
+      await tester.enterText(find.widgetWithText(TextField, 'Notes'), notes);
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      final preview = tester.widget<Text>(
+        find.text(notes.replaceAll('\n', ' ')),
+      );
+      expect(preview.maxLines, 1);
+      expect(preview.overflow, TextOverflow.ellipsis);
+      await tester.tap(find.text('Local edited title'));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Notes'))
+            .controller!
+            .text,
+        notes,
+      );
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
       tester.view.physicalSize = const Size(390, 740);
       tester.view.devicePixelRatio = 1;
       tester.platformDispatcher.textScaleFactorTestValue = 2;
@@ -371,6 +406,13 @@ void main() {
       await tester.tap(find.byTooltip('Settings'));
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
+      await tester.tap(find.text('Theme'));
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+      expect(find.text('System'), findsWidgets);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.text('Settings'), findsOneWidget);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await remote.close();

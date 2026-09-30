@@ -26,3 +26,10 @@ Revisit polling cadence with measured device/provider costs, not speculative fra
 Lee found transient Undo insufficient. Add a compact Open/Completed switch; use the same task rows with checked boxes and uncheck to reopen, rather than a separate Reopen action. Keep capture in Open and preserve its draft across the switch. Existing per-completion undo records support this without changing canonical format, and unseen concurrent completions remain intact.
 
 Hide repeated Inbox subtitles while retaining the stored state. A future grouped Inbox for bulk captures/details is useful but not part of this candidate. Explicit snackbar surface/text/action theme colors replace the pale dark-mode popup observed in the demo.
+
+
+## Accepted settings correction and description previews
+
+Lee found the narrow vertical segmented theme control awkward. Replace it with a conventional Theme row showing the current local choice, opening System/Light/Dark radio choices. Cancel returns to Settings unchanged; choosing persists through the existing settings path. A section divider and consistent spacing separate appearance from folder management. This avoids a large pill-shaped control at narrow widths without adding density or appearance options.
+
+Task titles continue wrapping in full. Description previews are lower emphasis and use a single ellipsized line, with embedded whitespace normalized only for display. Whitespace-only descriptions reserve no line; the editor preserves the complete original text. This improves scanning without truncating stored content or sacrificing accessible title scaling.

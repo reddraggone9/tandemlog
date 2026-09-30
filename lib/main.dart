@@ -238,36 +238,72 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Appearance'),
-                const SizedBox(height: 12),
-                SegmentedButton<Appearance>(
-                  direction:
-                      MediaQuery.sizeOf(ctx).width < 480 ||
-                          MediaQuery.textScalerOf(ctx).scale(14) > 20
-                      ? Axis.vertical
-                      : Axis.horizontal,
-                  segments: const [
-                    ButtonSegment(
-                      value: Appearance.system,
-                      label: Text('System'),
-                    ),
-                    ButtonSegment(
-                      value: Appearance.light,
-                      label: Text('Light'),
-                    ),
-                    ButtonSegment(value: Appearance.dark, label: Text('Dark')),
-                  ],
-                  selected: {widget.appearance.value},
-                  onSelectionChanged: settingsLoaded
-                      ? (values) => Navigator.pop(ctx, values.first.name)
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Theme'),
+                  subtitle: Text(switch (widget.appearance.value) {
+                    Appearance.system => 'System',
+                    Appearance.light => 'Light',
+                    Appearance.dark => 'Dark',
+                  }),
+                  trailing: const Icon(Icons.chevron_right),
+                  enabled: settingsLoaded,
+                  onTap: settingsLoaded
+                      ? () async {
+                          final choice = await showDialog<Appearance>(
+                            context: ctx,
+                            builder: (themeContext) => AlertDialog(
+                              title: const Text('Theme'),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 12,
+                              ),
+                              content: SingleChildScrollView(
+                                child: RadioGroup<Appearance>(
+                                  groupValue: widget.appearance.value,
+                                  onChanged: (value) =>
+                                      Navigator.pop(themeContext, value),
+                                  child: const Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      RadioListTile<Appearance>(
+                                        value: Appearance.system,
+                                        title: Text('System'),
+                                      ),
+                                      RadioListTile<Appearance>(
+                                        value: Appearance.light,
+                                        title: Text('Light'),
+                                      ),
+                                      RadioListTile<Appearance>(
+                                        value: Appearance.dark,
+                                        title: Text('Dark'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(themeContext),
+                                  child: const Text('Cancel'),
+                                ),
+                              ],
+                            ),
+                          );
+                          if (choice != null && ctx.mounted) {
+                            Navigator.pop(ctx, choice.name);
+                          }
+                        }
                       : null,
                 ),
-                const SizedBox(height: 24),
+                const Divider(height: 32),
                 const Text('Data folder'),
                 const SizedBox(height: 8),
                 if (location != null) ...[
                   if (!widget.folderActions.requiresPicker)
-                    SelectableText(location),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: SelectableText(location),
+                    ),
                   const Text(
                     'Sync this folder with your preferred sync app. Other devices receive changes when that app syncs.',
                   ),
@@ -1092,7 +1128,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             task['title'],
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
-          subtitle: !all && (task['description'] as String).isEmpty
+          subtitle: !all && (task['description'] as String).trim().isEmpty
               ? null
               : Text(
                   [
@@ -1102,10 +1138,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               .map((u) => u['name'])
                               .firstOrNull ??
                           'Unknown user',
-                    if ((task['description'] as String).isNotEmpty)
-                      task['description'],
+                    if ((task['description'] as String).trim().isNotEmpty)
+                      (task['description'] as String)
+                          .replaceAll(RegExp(r'\s+'), ' ')
+                          .trim(),
                   ].join(' · '),
-                  maxLines: 2,
+                  maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
           onTap: busy ? null : () => _edit(task),
