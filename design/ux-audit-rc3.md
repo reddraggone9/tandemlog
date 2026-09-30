@@ -19,6 +19,16 @@ The list remains flat and dense, with full title wrapping and one ellipsized met
 
 ## Deliberate limits
 
-The complete three-date editor is long at 200% text, and 37 recurrence examples form a long menu. These are subjective follow-ups rather than observed failures; seek actual use feedback before another redesign. Manual ordering currently uses accessible move-up/down actions, not drag-and-drop. Tags can be edited; a general filter builder is outside this candidate.
+The complete three-date editor is long at 200% text, and 37 recurrence examples form a long menu. These are subjective follow-ups rather than observed failures; seek actual use feedback before another redesign. Manual ordering keeps accessible move-up/down actions and adds dragging only within an equal effective date/time bucket. No pure manual-sort mode is approved. Tags can be edited; a general filter builder is outside this candidate.
 
 Android keyboard, SAF/lifecycle, native text scaling and exact signed-artifact smoke remain separate gates. Linux screenshots cannot replace them. Private source import acceptance is separate from synthetic UI fixtures.
+
+## Constrained drag review
+
+Native Linux pointer tests cover valid peer movement while preserving hidden/filtered global order, rejected same-day/different-time drops with unchanged logs, and cancellation after a changed projection. Actual screenshots at desktop 1000px/100% and narrow 390px/200%, both themes, show an insertion line for valid targets and error-colored boundary/background for invalid targets during dragging. This is desktop native evidence, not Android touch acceptance.
+
+Independent review found and verified the fix for a late-ingestion race between the UI check and storage refresh. The serialized operation compares the task snapshot after ingestion and synchronously rechecks caller eligibility/current time immediately before append. Injected late schedule/order/completion changes and clock-only invalidation append no move. Both drag and menu actions use the guard; 45 storage tests pass. The scheduled-date warning remains informational: saving a nonrecurring scheduled value must preserve it.
+
+Show upcoming is off by default and session-only. Native focused coverage verifies finding/editing a future task, preserving capture text through filtering, and resetting to off on app restart. Final screenshots include the enlarged-text scheduled warning with Save available and responsive upcoming controls in both themes.
+
+Drag destinations must be rendered: edge auto-scrolling is not implemented in this preview. Accessible Move up/down remains available for incremental movement. Seek hands-on feedback before adding that gesture behavior.

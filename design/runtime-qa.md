@@ -246,3 +246,21 @@ The initial field/recurrence rehearsal did not cover the adjacent renderer’s f
 Native Linux idle-boundary regression passed: future-start tasks appeared without an edit/import, capture focus/selection/draft and an open notes editor survived, and canonical JSONL remained byte-identical. Invalid bounds produced no write; valid typed bounds preserved the stored deadline. Eight viewport/theme/text-scale visual configurations passed; screenshots remain outside the repository. Linux’s foreground timerfd count decreased by one on disposal, confirming observer cleanup; this is not a test that changes the host clock. Actual Android/Windows system-change delivery remains pending.
 
 A separate Dart JIT microbenchmark with 2,000 synthetic timed/bounded tasks measured pure projection at 225 ms on the first invocation (including initialization) and 39–42 ms on three subsequent invocations. This is not an AOT startup or end-to-end UI latency measurement. Final candidate startup/device checks remain required after behavior and private renderer acceptance.
+
+### Build 10 renderer acceptance checkpoint
+
+The independent private actual-renderer comparison passed all 7,812 task/instant evaluations. Someday representation (null versus legacy sentinel) and group-label wording/countdown were normalized as intentional differences; availability, effective dates, bounds and ordering had zero unexpected differences. This applies to the audited snapshot, not future edits automatically.
+
+[Candidate run 36790803679](https://github.com/reddraggone9/tandemlog/actions/runs/36790803679), source `09bb3cf1cd7d9804a2fc7199b2349d80e29bae62`, passed Linux native workflows/release startup, Windows tests/native compilation, Android compilation and owner signing. The readiness marker now waits for successful time projection and the loaded task frame; a delayed-zone native regression prevents early readiness claims. Build 10 is available for exact Android testing but predates the final drag/warning changes. Compilation does not establish native Windows or Android runtime acceptance.
+
+### Build 10 native Android timing evidence
+
+The authorized local worker reported successful build-10 native Android tests for idle start-time appearance with capture draft preservation; intraday ordering of precise and bounded times; midnight bound advancement retaining task time/draft; floating visibility after Los Angeles/Chicago zone changes and resume; and multiline keyboard behavior. Canonical hashes were unchanged for view-only clock/zone operations. These are build-10 results, before drag/Show upcoming and the cache recovery fix.
+
+A retained build-7 fixture exposed a cache-version-4 versus current-version-7 opening failure. Both the fixture and cache were preserved for exact code-11 upgrade testing. Tags have an editor field but no tag-filter UI; final native QA must not infer a filter from model support.
+
+### Code 11 final local acceptance
+
+Formatting and analysis pass, with 102 generic app tests and six release-gate tests. All 12 native Linux workflows pass in 154 seconds on the final production source. The drag scenario covers hidden global order, rejected different-time destinations, stale view cancellation, and a wall-clock advance without a timer callback; the guarded append rejects the expired bucket. Show upcoming preserves capture text, permits editing a future task and resets off after restart. Nonrecurring scheduled values warn and save without loss.
+
+Known obsolete cache regressions preserve writer identity, a readable old SQLite snapshot, workspace binding and committed-stream checks through failed replay/retry. Unknown future cache versions and incompatible canonical records remain explicit failures. Exact Android retained-cache upgrade remains a separate gate.

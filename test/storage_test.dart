@@ -59,6 +59,92 @@ void main() {
       store.rows.firstWhere((r) => r['id'] == id);
 
   test(
+    'guarded move rejects changes arriving inside its refresh without append',
+    () async {
+      final id = await task();
+      final second = const Uuid().v4();
+      await a!.command(second, 'task.created', {
+        'title': 'Second task',
+        'description': '',
+        'assignee': state(a!, id)['assignee'],
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.close();
+      a = null;
+      final transport = _OnNextListFolder(aFolder);
+      a = await TaskStore.open(
+        transport,
+        '${root.path}/private-a',
+        now: () => testNow,
+      );
+      for (final change in <Future<void> Function()>[
+        () async {
+          await b!.command(id, 'task.edited', {
+            'schedule': {'startDate': '2026-10-01', 'dueDate': '2026-10-02'},
+          });
+        },
+        () async {
+          await b!.moveBefore(id, null);
+        },
+        () async {
+          await b!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
+        },
+      ]) {
+        final snapshot = a!.taskSnapshot;
+        final before = await aFolder.read('${a!.writer}.jsonl');
+        await change();
+        transport.beforeNextList = () async {
+          await File(
+            '${bFolder.location}/${b!.writer}.jsonl',
+          ).copy('${aFolder.location}/${b!.writer}.jsonl');
+        };
+        await expectLater(
+          a!.moveBefore(second, id, expectedTaskSnapshot: snapshot),
+          throwsA(isA<StaleTaskSnapshot>()),
+        );
+        expect(await aFolder.read('${a!.writer}.jsonl'), before);
+        expect(a!.taskSnapshot, isNot(snapshot));
+      }
+      final timeSnapshot = a!.taskSnapshot;
+      final timeBytes = await aFolder.read('${a!.writer}.jsonl');
+      var stillEligible = true;
+      transport.beforeNextList = () async {
+        stillEligible = false;
+      };
+      await expectLater(
+        a!.moveBefore(
+          id,
+          second,
+          expectedTaskSnapshot: timeSnapshot,
+          canCommit: () => stillEligible,
+        ),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      expect(
+        a!.taskSnapshot,
+        timeSnapshot,
+        reason: 'Only caller-owned time/view conditions changed.',
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), timeBytes);
+      final snapshot = a!.taskSnapshot;
+      await b!.command(const Uuid().v4(), 'user.created', {
+        'name': 'Another user',
+      });
+      transport.beforeNextList = () async {
+        await File(
+          '${bFolder.location}/${b!.writer}.jsonl',
+        ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      };
+      await a!.moveBefore(id, second, expectedTaskSnapshot: snapshot);
+      expect(
+        a!.rows.where((row) => row['kind'] == 'task').map((row) => row['id']),
+        [id, second],
+      );
+    },
+  );
+
+  test(
     'typed due bounds are atomic across offline edits and rebuild',
     () async {
       final id = await task();
@@ -120,41 +206,185 @@ void main() {
     },
   );
 
-  test('old cache cannot bypass current closed schema', () async {
-    final id = await task();
-    final bytes = await aFolder.read('${a!.writer}.jsonl');
-    a!.db.execute('PRAGMA user_version=4');
-    a!.db.execute('UPDATE views SET raw=? WHERE id=?', [
-      jsonEncode({'id': id, 'kind': 'future-kind', 'futureField': []}),
-      id,
-    ]);
-    await a!.close();
-    a = null;
-    await expectLater(
-      TaskStore.open(aFolder, '${root.path}/private-a'),
-      throwsA(isA<FormatFailure>()),
-    );
-    expect(
-      await aFolder.read(
-        '${jsonDecode(utf8.decode(bytes).split('\n').first)['writer']}.jsonl',
-      ),
-      bytes,
-    );
-    final old =
-        jsonDecode(utf8.decode(bytes).split('\n').first)
-            as Map<String, dynamic>;
-    old['type'] = 'future.event';
-    old['data'] = {'futureField': []};
-    await File(
-      '${aFolder.location}/${old['writer']}.jsonl',
-    ).writeAsString('${jsonEncode(old)}\n');
-    final rejectedBytes = await aFolder.read('${old['writer']}.jsonl');
-    await expectLater(
-      TaskStore.open(aFolder, '${root.path}/fresh-cache'),
-      throwsA(isA<FormatFailure>()),
-    );
-    expect(await aFolder.read('${old['writer']}.jsonl'), rejectedBytes);
-  });
+  test(
+    'failed obsolete-cache replay preserves identity and prior stream guards on retry',
+    () async {
+      final id = await task();
+      final expected = a!.rows;
+      final writer = a!.writer;
+      final original = await aFolder.read('$writer.jsonl');
+      final manifest = await aFolder.read('tandemlog-space.json');
+      a!.db.execute('PRAGMA user_version=6');
+      await a!.close();
+      a = null;
+      final foreign = const Uuid().v4();
+      final unknown = LogEvent(
+        jsonDecode(utf8.decode(manifest))['id'],
+        foreign,
+        1,
+        testClock(1, 0),
+        const Uuid().v4(),
+        'future.event',
+        {},
+      );
+      final file = File('${aFolder.location}/$foreign.jsonl');
+      await file.writeAsString('${unknown.encode()}\n');
+      final unknownBytes = await file.readAsBytes();
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/private-a'),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await file.readAsBytes(), unknownBytes);
+      expect(await aFolder.read('$writer.jsonl'), original);
+      await File(
+        '${aFolder.location}/tandemlog-space.json',
+      ).writeAsString(jsonEncode({'v': 2, 'id': const Uuid().v4()}));
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/private-a'),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.message,
+            'identity',
+            contains('identity changed'),
+          ),
+        ),
+      );
+      await File(
+        '${aFolder.location}/tandemlog-space.json',
+      ).writeAsBytes(manifest);
+      await File('${aFolder.location}/$writer.jsonl').delete();
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/private-a'),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.message,
+            'missing',
+            contains('Previously imported log'),
+          ),
+        ),
+      );
+      await File('${aFolder.location}/$writer.jsonl').writeAsBytes(original);
+      // The test explicitly removes only its unsupported, never-ingested stream.
+      await file.delete();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.writer, writer);
+      expect(a!.rows, expected);
+      expect(state(a!, id)['title'], 'Groceries');
+      expect(await aFolder.read('$writer.jsonl'), original);
+      expect(
+        await Directory('${root.path}/private-a')
+            .list()
+            .where((file) => file.uri.pathSegments.last.startsWith('cache-v6-'))
+            .length,
+        1,
+      );
+    },
+  );
+
+  test(
+    'future caches and v1 canonical protocol are retained and not auto-converted',
+    () async {
+      await task();
+      a!.db.execute('PRAGMA user_version=99');
+      await a!.close();
+      a = null;
+      final cache = File('${root.path}/private-a/cache.sqlite');
+      final before = await cache.readAsBytes();
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/private-a'),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.message,
+            'future',
+            contains('newer app'),
+          ),
+        ),
+      );
+      expect(await cache.readAsBytes(), before);
+      final oldManifest =
+          jsonDecode(utf8.decode(await aFolder.read('tandemlog-space.json')))
+              as Map;
+      oldManifest['v'] = 1;
+      await File(
+        '${aFolder.location}/tandemlog-space.json',
+      ).writeAsString(jsonEncode(oldManifest));
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/fresh-cache'),
+        throwsA(
+          isA<FormatFailure>().having(
+            (e) => e.message,
+            'protocol',
+            contains('older prerelease format (v1)'),
+          ),
+        ),
+      );
+    },
+  );
+
+  test(
+    'known obsolete cache rebuilds canonical state and retains backup',
+    () async {
+      final id = await task();
+      final bytes = await aFolder.read('${a!.writer}.jsonl');
+      a!.db.execute('PRAGMA user_version=4');
+      a!.db.execute('UPDATE views SET raw=? WHERE id=?', [
+        jsonEncode({'id': id, 'kind': 'future-kind', 'futureField': []}),
+        id,
+      ]);
+      await a!.close();
+      a = null;
+      final writerBefore = await File(
+        '${root.path}/private-a/writer-id',
+      ).readAsString();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(state(a!, id)['kind'], 'task');
+      expect(state(a!, id)['title'], 'Groceries');
+      expect(a!.readFiles, 1);
+      expect(
+        await File('${root.path}/private-a/writer-id').readAsString(),
+        writerBefore,
+      );
+      final backups = await Directory('${root.path}/private-a')
+          .list()
+          .where((file) => file.uri.pathSegments.last.startsWith('cache-v4-'))
+          .toList();
+      expect(backups, hasLength(1));
+      expect(await (backups.single as File).length(), greaterThan(0));
+      a!.db.execute('ATTACH DATABASE ? AS retained', [backups.single.path]);
+      expect(
+        a!.db.select('SELECT raw FROM retained.views WHERE id=?', [
+          id,
+        ]).single['raw'],
+        contains('future-kind'),
+      );
+      a!.db.execute('DETACH DATABASE retained');
+
+      await a!.close();
+      a = null;
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.readFiles, 0);
+      expect(
+        await aFolder.read(
+          '${jsonDecode(utf8.decode(bytes).split('\n').first)['writer']}.jsonl',
+        ),
+        bytes,
+      );
+      final old =
+          jsonDecode(utf8.decode(bytes).split('\n').first)
+              as Map<String, dynamic>;
+      old['type'] = 'future.event';
+      old['data'] = {'futureField': []};
+      await File(
+        '${aFolder.location}/${old['writer']}.jsonl',
+      ).writeAsString('${jsonEncode(old)}\n');
+      final rejectedBytes = await aFolder.read('${old['writer']}.jsonl');
+      await expectLater(
+        TaskStore.open(aFolder, '${root.path}/fresh-cache'),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${old['writer']}.jsonl'), rejectedBytes);
+    },
+  );
 
   test(
     'reopen targets observed completions, is idempotent and survives restart',
@@ -1465,3 +1695,27 @@ class _FailAfterAppendFolder implements LogFolder {
 EventClock testClock(int wallMs, int increment) => EventClock(
   BigInt.from(wallMs) * BigInt.from(1000000) + BigInt.from(increment),
 );
+
+class _OnNextListFolder implements LogFolder {
+  _OnNextListFolder(this.delegate);
+  final LogFolder delegate;
+  Future<void> Function()? beforeNextList;
+  @override
+  String get location => delegate.location;
+  @override
+  Future<List<LogFileInfo>> list() async {
+    final callback = beforeNextList;
+    beforeNextList = null;
+    if (callback != null) await callback();
+    return delegate.list();
+  }
+
+  @override
+  Future<Uint8List> read(String name) => delegate.read(name);
+  @override
+  Future<void> create(String name, Uint8List bytes) =>
+      delegate.create(name, bytes);
+  @override
+  Future<void> append(String name, Uint8List bytes) =>
+      delegate.append(name, bytes);
+}

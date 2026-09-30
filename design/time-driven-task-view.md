@@ -1,12 +1,12 @@
 # Time-driven task views — implementation plan
 
-Status: release blocker identified by owner feedback; renderer audit received and implementation underway. Build 9 is diagnostic only and must not be published as workflow parity. The prior private rehearsal proved parsed-field reconstruction and recurrence behavior, not the complete adjacent Markdown renderer's semantics. Tags such as `#due-min` and `#due-max` carry behavior beyond opaque tag membership. They now map to typed sorting bounds under the audited rules in product behavior; prior opaque-tag rehearsals are superseded.
+Status: renderer implementation and private actual-renderer comparison pass; exact final native Android acceptance remains required. Build 9 is diagnostic only and must not be published as workflow parity. The prior private rehearsal proved parsed-field reconstruction and recurrence behavior, not the complete adjacent Markdown renderer's semantics. Tags such as `#due-min` and `#due-max` carry behavior beyond opaque tag membership. They now map to typed sorting bounds under the audited rules in product behavior; prior opaque-tag rehearsals are superseded.
 
-## Current gap
+## Original gap (corrected)
 
-`TasksPage` currently filters by completion and assignee, using stored manual order. It displays schedule metadata but does not implement start-based availability or effective-due sorting. `didChangeAppLifecycleState` requests folder ingestion on resume; unchanged logs do not cause a view rebuild. Therefore neither foreground folder polling nor an unrelated edit is a valid time-refresh mechanism.
+The pre-correction `TasksPage` filtered by completion and assignee, using stored manual order. It displays schedule metadata but does not implement start-based availability or effective-due sorting. `didChangeAppLifecycleState` requests folder ingestion on resume; unchanged logs do not cause a view rebuild. Therefore neither foreground folder polling nor an unrelated edit is a valid time-refresh mechanism.
 
-## Proposed boundary
+## Implemented boundary
 
 Keep persisted task facts and event clocks separate from derived view time. A pure task-view calculation receives projected tasks, one current instant, current local-zone context, and the renderer-backed view policy. It returns visible ordered rows/counts and the earliest future instant at which that result can change. Effective due bounds belong in functional domain fields; do not persist a constantly moving derived date or emit events when time passes. Retain manual order as a deterministic tie-break or explicit ordering mode only as supported by the audited workflow.
 
@@ -31,7 +31,7 @@ No final import or source edits are authorized by this plan. Markdown remains au
 
 `domain/timed_view.dart` defines the pure projection contract: one instant and explicit local-zone identity/offset in, view value and optional strictly-future boundary out. `presentation/view_clock.dart` implements a single cancellable foreground timer, exact boundary wakes, immediate explicit invalidation/start, monotonic-versus-wall-clock jump detection, and a one-minute watchdog. Ordinary watchdog wakes do not rerun projection. Generation checks ignore cancelled callbacks; callback-triggered disposal cannot rearm the timer. The controller has no database, event writer, widget, or editor dependency.
 
-Eight injected-clock tests cover exact boundaries, idle watchdogs, suspension/resume, forward/backward clock changes, same-offset zone identity changes, delayed callbacks, input changes, teardown, invalid boundaries, and 23/25-hour calendar days. These are infrastructure tests, not proof of task policy, actual draft preservation in widgets, or native platform notification delivery. No task visibility/sort/bound default has changed. Task-view wiring and native signals remain release blockers pending the ongoing audited-policy integration and subsequent native tests.
+Eight injected-clock tests cover exact boundaries, idle watchdogs, suspension/resume, forward/backward clock changes, same-offset zone identity changes, delayed callbacks, input changes, teardown, invalid boundaries, and 23/25-hour calendar days. These are infrastructure tests, not proof of task policy, actual draft preservation in widgets, or native platform notification delivery. The subsequent task-view integration implements the audited policy. Native Linux idle-boundary tests also preserve active drafts and leave canonical logs unchanged; actual OS notification delivery remains separately scoped.
 
 ## Native adapter implementation and remaining evidence
 

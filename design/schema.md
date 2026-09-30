@@ -1,6 +1,6 @@
 # Task protocol v2
 
-Implementation: `lib/domain/event.dart`, `lib/storage/task_store.dart`. This prerelease format explicitly rejects v1 manifests, events and caches. It does not rewrite or delete old canonical data. Use a new dedicated v2 folder; stable compatibility promises begin at 0.1.0.
+Implementation: `lib/domain/event.dart`, `lib/storage/task_store.dart`. This prerelease format explicitly rejects v1 canonical manifests and events. It does not rewrite or delete old canonical data. Use a new dedicated v2 folder; stable compatibility promises begin at 0.1.0.
 
 ## Data space and files
 
@@ -32,7 +32,7 @@ If the maximum event clock is more than five minutes ahead of this device, `cloc
 
 A wrong forward clock can therefore influence later conflict ordering, including other devices that observe it. This availability-first tradeoff is explicitly accepted; recovery tooling is deferred. No timestamp clamping, silent record omission, background repair or history rewrite is implemented. Malformed values, unsupported formats and signed-64-bit exhaustion still fail explicitly; these are format/range errors, not skew admission gates.
 
-The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 7 rejects older layouts, including cached source-map rehearsal views, records admitted by earlier lax UUID validation, and opaque reserved schedule tags; preserve canonical files and use a fresh cache/profile for this prerelease. Published v1 folders remain untouched and unsupported by this prerelease.
+The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 7 rebuilds known older local layouts from canonical logs after retaining an obsolete-cache backup; unknown future layouts remain explicit errors. Current closed-schema validation still rejects source-map rehearsal events, invalid UUIDs and opaque reserved schedule tags in canonical history; a cache rebuild never makes incompatible logs acceptable. Published v1 folders remain untouched and unsupported by this prerelease.
 
 ## Fields, dates and tags
 

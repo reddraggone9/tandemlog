@@ -5,7 +5,9 @@ Experimental task-parity preview. This is a public prerelease, not Latest or a s
 New in rc3:
 
 - Separate start, scheduled and due dates, each with optional time. Choose Local or a shared pinned IANA zone (including UTC) for the task schedule. Omitted times retain date-only precision. Invalid start-after-due values fail without discarding the editor draft.
-- Tags, accessible move-up/down ordering, and the 37 observed Obsidian Tasks recurrence expressions. Completion creates one successor atomically. Scheduled dates/times are removed according to the selected source behavior; the successor precedes completed history. Reopening or Undo preserves the next occurrence and its work; recompleting history does not create another successor.
+- Scheduled-first date groups and start-time availability update while the app stays open. Optional sort-date bounds move the displayed day without changing deadlines and preserve precise time within that day. Native time/zone signals plus a foreground fallback recompute the view.
+- Tags, constrained drag and accessible move-up/down ordering within equal effective date/time keys, and the 37 observed Obsidian Tasks recurrence expressions. Completion creates one successor atomically. Scheduled dates/times are removed according to the selected source behavior; the successor precedes completed history. Reopening or Undo preserves the next occurrence and its work; recompleting history does not create another successor.
+- Show upcoming is off by default and makes future-start tasks editable. A scheduled date without recurrence warns without clearing the value. Known obsolete local caches rebuild from validated logs while preserving writer identity and a private backup.
 - Spaced responsive onboarding/settings actions, stable Open/Completed headers, and immediate caret visibility after Shift+Enter. Large-text editor controls wrap; the everyday task list stays compact.
 - The original wall-clock/causal event ordering is restored: max(current nanoseconds, highest seen clock + 1), encoded as an exact decimal string. Imported clocks are immutable. A materially future clock warns but does not block writes; bad future clocks can propagate. Automatic history repair is not implemented.
 
@@ -18,3 +20,5 @@ Android: universal non-debuggable APK signed by the retained owner identity. The
 Task users are attribution, not access control: a folder is all-shared. No notifications, deletion, durable drafts, private spaces or future modules are implemented. Unknown/invalid history fails explicitly without silent deletion. Checksums accompany all platform bundles; the owner Android certificate fingerprint and source metadata accompany the APK. Stable-only clients have no stable build available yet.
 
 Markdown remains authoritative during prereleases. Testing uses copies in the permanent sync folder; only test contents are disposable. The private one-time migration tooling is separate and is not shipped or supported as an app feature. Stable cutover requires a coordinated fresh snapshot/import and explicit approval.
+
+Filter state lasts for the current app session; it does not change shared task facts.

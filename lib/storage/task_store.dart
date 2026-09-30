@@ -10,6 +10,12 @@ import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
 import 'log_folder.dart';
 
+/// The task state observed by a caller changed before a guarded command.
+class StaleTaskSnapshot implements Exception {
+  @override
+  String toString() => 'Tasks changed while moving. Try again.';
+}
+
 /// Owns durable log ingestion and one disposable SQLite materialization.
 class TaskStore {
   final LogFolder folder;
@@ -93,13 +99,17 @@ class TaskStore {
       }
       mark('identity_lock');
       db = sqlite3.open('$privatePath/cache.sqlite');
+      final version =
+          db.select('PRAGMA user_version').first.values.first as int;
+      if (version < 0 || version > 7) {
+        throw FormatFailure(
+          'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
+        );
+      }
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
-      final version = db.select('PRAGMA user_version').first.values.first;
-      if (version != 0 && version != 7) {
-        throw FormatFailure(
-          'Unsupported cache version. Preserve logs and rebuild cache with a compatible app.',
-        );
+      if (version > 0 && version < 7) {
+        await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
         'CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
@@ -186,6 +196,53 @@ class TaskStore {
     }
   }
 
+  /// Keep prior integrity checkpoints and space binding while discarding only
+  /// obsolete materializations. A failed/restarted replay keeps these guards.
+  static Future<void> _prepareCacheReplay(
+    Database db,
+    LogFolder folder,
+    String privatePath,
+    int version,
+  ) async {
+    final savedSpace = db.select(
+      "SELECT value FROM metadata WHERE key='space'",
+    );
+    if (savedSpace.length != 1 || !isCanonicalId(savedSpace.single['value'])) {
+      throw FormatFailure(
+        'Old cache has no valid workspace identity. It was retained; recover the workspace before rebuilding.',
+      );
+    }
+    if (!(await folder.list()).any(
+      (file) => file.name == 'tandemlog-space.json',
+    )) {
+      throw FormatFailure(
+        'Previously opened workspace manifest is missing. Restore it before rebuilding.',
+      );
+    }
+    if (await _readSpace(folder) != savedSpace.single['value']) {
+      throw FormatFailure('Workspace identity changed at this location.');
+    }
+    // A complete SQLite snapshot includes committed WAL data. It is retained
+    // even if replay later finds invalid or unsupported canonical records.
+    final backup = '$privatePath/cache-v$version-${const Uuid().v4()}.sqlite';
+    db.execute('VACUUM INTO ?', [backup]);
+    db.execute('BEGIN IMMEDIATE');
+    try {
+      for (final table in ['events', 'views', 'positions']) {
+        db.execute('DROP TABLE IF EXISTS $table');
+      }
+      db.execute("DELETE FROM metadata WHERE key='order_projection'");
+      db.execute(
+        "INSERT OR REPLACE INTO metadata VALUES ('replay_pending','1')",
+      );
+      db.execute('PRAGMA user_version=7');
+      db.execute('COMMIT');
+    } catch (_) {
+      db.execute('ROLLBACK');
+      rethrow;
+    }
+  }
+
   EventClock? _maximumClock([String? writerId]) {
     final result = db.select(
       'SELECT clock FROM events ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC LIMIT 1',
@@ -228,6 +285,9 @@ class TaskStore {
         );
       }
     }
+    final replay = db
+        .select("SELECT value FROM metadata WHERE key='replay_pending'")
+        .isNotEmpty;
     final newEvents = <LogEvent>[];
     final checkpoints = <List<Object?>>[];
     for (final info in logs) {
@@ -239,7 +299,10 @@ class TaskStore {
         info.name,
       ]);
       final row = saved.isEmpty ? null : saved.first;
-      if (row != null && info.stamp.isNotEmpty && row['stamp'] == info.stamp) {
+      if (!replay &&
+          row != null &&
+          info.stamp.isNotEmpty &&
+          row['stamp'] == info.stamp) {
         continue;
       }
       final bytes = await folder.read(info.name);
@@ -270,7 +333,7 @@ class TaskStore {
               ).first['n']
               as int;
       var lastClock = _maximumClock(writerName);
-      final appended = utf8.decode(bytes.sublist(offset, end));
+      final appended = utf8.decode(bytes.sublist(replay ? 0 : offset, end));
       final lines = appended.isEmpty
           ? <String>[]
           : (appended.split('\n')..removeLast());
@@ -299,7 +362,10 @@ class TaskStore {
         end == bytes.length ? info.stamp : '',
       ]);
     }
-    if (checkpoints.isEmpty) return false;
+    if (checkpoints.isEmpty) {
+      if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
+      return false;
+    }
     db.execute('BEGIN IMMEDIATE');
     try {
       for (final e in newEvents) {
@@ -361,6 +427,7 @@ class TaskStore {
       for (final c in checkpoints) {
         db.execute('INSERT OR REPLACE INTO streams VALUES (?,?,?,?)', c);
       }
+      db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       db.execute('COMMIT');
       _updateClockWarning(_maximumClock(), _nowNs());
       return newEvents.isNotEmpty;
@@ -457,9 +524,14 @@ class TaskStore {
   Future<LogEvent> _command(
     String entity,
     String type,
-    Map<String, dynamic> data,
-  ) async {
+    Map<String, dynamic> data, {
+    String? expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) async {
     await _refresh();
+    if (expectedTaskSnapshot != null && expectedTaskSnapshot != taskSnapshot) {
+      throw StaleTaskSnapshot();
+    }
     final seq =
         (db.select(
               'SELECT COALESCE(MAX(seq),0) AS n FROM events WHERE writer=?',
@@ -522,6 +594,7 @@ class TaskStore {
         );
       }
     }
+    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
     await folder.append(
       '$writer.jsonl',
       Uint8List.fromList(utf8.encode('${e.encode()}\n')),
@@ -697,8 +770,28 @@ class TaskStore {
     return _command(entity, 'task.completed', data);
   });
 
-  Future<LogEvent> moveBefore(String entity, String? before) =>
-      command(entity, 'task.moved', {'before': before});
+  /// Immutable comparison token for current task content and global order.
+  /// User-only changes do not invalidate a task move. No display policy lives
+  /// here: callers separately validate filters/time-dependent move eligibility.
+  String get taskSnapshot =>
+      jsonEncode(rows.where((row) => row['kind'] == 'task').toList());
+
+  /// Optional synchronous guard checks caller-owned conditions after ingestion
+  /// and immediately before append. It must not mutate this store.
+  Future<LogEvent> moveBefore(
+    String entity,
+    String? before, {
+    String? expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) => _serialize(
+    () => _command(
+      entity,
+      'task.moved',
+      {'before': before},
+      expectedTaskSnapshot: expectedTaskSnapshot,
+      canCommit: canCommit,
+    ),
+  );
 
   Future<LogEvent> edit(
     String entity,
