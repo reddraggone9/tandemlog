@@ -157,3 +157,8 @@ The final Android build-3 worker was subsequently admitted successfully; its cur
 ### Build 4 validation delta
 
 `434771783eeba45499c30179b46794931bd3f342` passes analyzer, 31 tests and five native workflows locally. Linux release and Android x86_64 debug builds passed; Android versionName `0.1.0-rc.2`, code 4, APK SHA-256 `1223efd0091faf41ad15c5bf0d7592673971f1fb46e1b1033abab777152519a0`. The APK uses the existing cloud debug certificate, matching local build 3 but differing from public rc1. No new signing identity was generated. The [UX audit](ux-audit-rc2.md#build-4-settings-and-notes-preview) distinguishes native release screenshots from the temporary 200% text harness. Android settings/notes recheck is pending; do not carry forward build-3 UI evidence as if it covered this delta.
+
+
+### External Android build-4 result
+
+The parent reports native accelerated Android QA passed for source `434771783eeba45499c30179b46794931bd3f342`, debug version `0.1.0-rc.2+4`: final settings/radio choice, full multiline editor notes versus one-line preview, 130% font scaling, capture/completion/Undo/checked-row reopening, persisted SAF grants and external updates. Public rc1 was preserved; the local build 3→4 upgrade succeeded because those cloud APKs share a certificate, distinct from public rc1. Touch-video verification was still finishing when this result was recorded. This is worker-supplied evidence, not a cloud emulator run. The code-5 owner-signed release APK needs a separate installed smoke test because build mode and signer differ; domain/UI source is unchanged from tested build 4.
