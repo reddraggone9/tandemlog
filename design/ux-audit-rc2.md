@@ -22,3 +22,9 @@ Screenshots establish visual layout, not screen-reader behavior or real phone to
 Lee requested ordinary checked rows in Completed, unchecking to reopen, and less padding/card decoration. The unpublished rc2 now includes these changes. Task rows use a flat divided list, normal-weight wrapping titles, optional notes, and explicit 48-pixel checkbox targets on desktop as well as Android. Repeated Inbox badges are hidden without rewriting stored state. Header/body spacing is reduced; there is no density preference.
 
 The dark-mode Undo background was visibly too pale in the prior walkthrough. Explicit theme surface, foreground and action colors address it. A sanitized twelve-task fixture (mixed title lengths and two notes) is used for comparison; no user screenshot/text is copied into the repository. Actual same-size phone comparison remains pending worker dispatch.
+
+### Measured native Linux comparison
+
+Same 390×820 client area, default text scale, identical twelve sanitized tasks (two with notes): rc1 shows **four fully visible rows and part of a fifth**, while build 3 shows **ten fully visible rows and part of an eleventh**. Captures are `evidence/density-rc1-linux-390x820.png` and `evidence/density-rc2-linux-390x820.png`. This is Linux with desktop font/theme metrics, not an Android result or a claim about the private reference screenshots.
+
+The final native build additionally showed a long title wrapping fully across three lines, a checked Completed row reopening when unchecked, and the corrected dark Undo surface/text/action contrast. Screenshots are `evidence/linux-rc2-build3-*`. Checkbox dimensions are asserted at least 48×48 by the native integration test. Actual same-size phone screenshots remain blocked by worker dispatch.

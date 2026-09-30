@@ -133,3 +133,9 @@ The rc2 native Linux walkthrough is time-compressed (23 seconds), shows five cap
 The final responsive correction at `106f90aaf3671cee798d5e055ff98bfe7ebfca10` rebuilt successfully for Linux release and Android x86_64 debug. The native suite passed again; the revised narrow Settings layout was visually inspected. Screenshots are `evidence/linux-rc2-*`. The initial hosted failure exposed real large-text overflow; it was fixed rather than relaxing the assertion.
 
 [Corrected rc2 full CI](https://github.com/reddraggone9/tandemlog/actions/runs/36746991732) passed Linux native integration/release startup, Windows native build/tests, and Android build/signature verification for implementation `106f90a`. This resolves the large-text failure in the preceding run. Device-worker acceptance of this corrected APK is still tracked separately.
+
+## rc2 build 3
+
+Implementation `0d66917402c2647c3badab9a50b75161b3e8716a`, version `0.1.0-rc.2+3`: 31 unit/integrity tests and five native workflows pass, including persistent Completed browsing/unchecking and 48×48 hit targets. Independent persistence review requested two additional reopen boundary tests (arrival between snapshot and refresh; partial durable undo then retry); both pass. Linux release and Android x86_64 debug builds succeeded. The APK was signature/version-verified and handed off separately for device regression.
+
+Native release visual inspection confirms compact rows, full long-title wrapping, dark snackbar contrast and checked Completed rows. The [UX audit](ux-audit-rc2.md#measured-native-linux-comparison) records measured density and exact limits. Android build 3 regression and its phone/video evidence remain pending: the accelerated worker dispatch hit approval-service timeouts before task admission. This is not an application failure or a new user-approval requirement.
