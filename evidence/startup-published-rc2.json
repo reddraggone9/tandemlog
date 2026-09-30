@@ -1,0 +1,44 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 10,
+  "label": "tasks",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 959,
+      "marker": "TANDEMLOG_READY_MS=521 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=318",
+        "TANDEMLOG_PHASE identity_lock=25",
+        "TANDEMLOG_PHASE sqlite_open_schema=8",
+        "TANDEMLOG_PHASE manifest=12",
+        "TANDEMLOG_PHASE ingest=22",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=521 FILES_READ=1"
+      ],
+      "external_main_ms": 433,
+      "external_first_frame_ms": 756
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 678,
+      "marker": "TANDEMLOG_READY_MS=435 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=304",
+        "TANDEMLOG_PHASE identity_lock=9",
+        "TANDEMLOG_PHASE sqlite_open_schema=2",
+        "TANDEMLOG_PHASE manifest=9",
+        "TANDEMLOG_PHASE ingest=10",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=435 FILES_READ=0"
+      ],
+      "external_main_ms": 238,
+      "external_first_frame_ms": 547
+    }
+  ]
+}

@@ -167,3 +167,10 @@ The parent reports native accelerated Android QA passed for source `434771783eeb
 ### Owner-signed build-5 artifact verification
 
 Candidate run `36762053783` at source `d89a7d99fabecd27993e81707e98e7f0a3a8227c` passed the full platform matrix and owner-signing gate. Independent downloaded-archive CRC, APK checksum, apksigner, aapt package/version/non-debuggable/ABI and source-metadata checks passed. APK SHA-256 is `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046`, certificate SHA-256 is `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`. This confirms build/signing integrity; native install/launch smoke of this exact release APK remains pending the device worker. Earlier build-4 debug QA is separate evidence.
+
+
+### Signed native acceptance and public release
+
+The device worker reports PASS for the exact owner-signed APK SHA-256 `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046` on KVM Android 11/API 30: launch, SAF access to copied canonical history, retained users/tasks/notes, capture/completion/checked-row reopening and process restart; fourteen unique events and four UI states checked. No OOM; services were stopped and rc1/debug AVDs preserved. This acceptance preceded publication and was supplied by the parent; evidence ZIP was delivered through Library.
+
+Published rc2 preserves that exact APK, and public-download checks additionally passed for its signature/version/checksum, all asset SHA-256 values, Windows archive CRC and native Linux release startup. See [final publication status](status.md#verified-rc2-publication). Real phones/API 36/provider matrix and interactive Windows acceptance remain broader gates; no stable release was published.

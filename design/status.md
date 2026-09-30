@@ -1,6 +1,8 @@
 # Current status — 2026-09-30
 
-## Implemented locally
+Current published preview: [v0.1.0-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.2), Android build 5, source `d89a7d99fabecd27993e81707e98e7f0a3a8227c`. Public experimental prerelease, not Latest; stable remains deferred. Signed Android API 30 native smoke passed before publication. Historical development checkpoints below retain their original scope; final release verification is at the end.
+
+## Implemented
 
 Flutter/Dart task slice: dedicated folder selection, user creation/selection, Inbox capture, title/notes editing, completion/targeted undo, periodic/resume ingestion, visible errors. Canonical JSONL logs plus private SQLite cache; desktop path adapter and Android SAF bridge. Public experimental prerelease preparation is authorized; stable release remains deferred.
 
@@ -8,7 +10,7 @@ Persistence tests cover restart/cache rebuild, shuffled delivery, conflicting fi
 
 ## Remaining acceptance gates
 
-1. Native Android live SAF folder grants, restart, atomic replacement, permission revocation, and app workflow; then video. Real BasicSync/provider and phone-to-phone offline transport still require intended devices even if emulator succeeds.
+1. Broader Android real-phone/API 36/provider, permission-revocation and target startup acceptance. Native API 30 workflow, retained SAF/restart and replacement evidence now exists; real setup sync was also user-reported. Keep those specific results separate from exhaustive provider coverage.
 2. Windows native launch and targeted packaging/path/dialog/startup checks; hosted native builds and domain/storage tests have passed. Linux is the primary routine desktop visual QA target.
 3. Broader interrupted/error interaction and accessibility review before daily use. Persisted drafts and explicit recovery UI are not implemented.
 
@@ -108,3 +110,10 @@ Owner key generation is confirmed on Farnsworth (RSA 3072, PKCS12, alias `tandem
 The `android-release` artifact (ID `11118684574`) was downloaded through the supported GitHub connector, ZIP-CRC checked, and independently verified locally. APK SHA-256: `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046`; owner certificate matches the pinned fingerprint, package `dev.tandemlog.tandemlog`, version `0.1.0-rc.2`, code 5, non-debuggable, API 24 minimum/API 36 target, ARMv7/arm64/x86_64. The exact artifact ZIP was delivered through Library for native installation/launch smoke. No public rc2 release has been created.
 
 After successful native acceptance, publish from this candidate run using the exact APK SHA above. Do not rebuild or substitute another artifact. Preserve the external canonical folder across the required debug-to-owner-signature reinstall transition.
+
+
+## Verified rc2 publication
+
+[Publication run 36764934306](https://github.com/reddraggone9/tandemlog/actions/runs/36764934306) passed and published [v0.1.0-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.2) from candidate `36762053783` without rebuilding. Tag resolves to `d89a7d99fabecd27993e81707e98e7f0a3a8227c`; release is public, `prerelease=true`, and not Latest (Latest API returns 404; no stable release). rc1 is preserved.
+
+All nine public assets were downloaded and compared with GitHub's SHA-256 digests; all three bundle checksum files match. Public Android APK is byte-identical to the native-accepted candidate and passes signer/version/non-debuggable/ABI checks. Windows ZIP CRC passed; no interactive Windows runtime claim is made. Downloaded Linux native release startup passed with ten synthetic tasks: 959 ms cache rebuild / 678 ms warm to loaded-frame marker, with complete cached rows and zero warm log reads. OS page caches were not flushed; this is a release-download smoke, not target cold-boot/input-latency acceptance. Evidence: `evidence/rc2-public-download-verification.json`, `evidence/startup-published-rc2.json`.

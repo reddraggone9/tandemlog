@@ -1,0 +1,17 @@
+{
+  "release": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.2",
+  "prerelease": true,
+  "draft": false,
+  "source_commit": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+  "assets_sha256": {
+    "android-release-metadata.json": "bd4752a842dac5dfcb08651e189f0e02b29643570a2d0814eaa119cf602fa070",
+    "android-SHA256SUMS.txt": "eaff3694a4ae040486a86be0a9324aec6559f137a64f7cf5ece810c8faa0db54",
+    "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "linux-SHA256SUMS.txt": "01f420f12fededc938a9a97c822127bd7fecca2d2ecd7e2c4412c944fc4fdc43",
+    "linux-startup.json": "dba0ad25f5af262394f411fed76e312ec73e624278d030f697b840dd09e86d66",
+    "tandemlog-android.apk": "cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046",
+    "tandemlog-linux-x64.tar.gz": "b36b36cce5380defa466b227c4fda55ecaef92808088e6f5af6f6a5633e56a90",
+    "tandemlog-windows-x64-unsigned.zip": "8f7b0a8acbe940d0e51b60ace67fc2ea3837cc694037bf54fb1eb584fe8be711",
+    "windows-SHA256SUMS.txt": "5f461e9c4b534ab54683d5c2cd1abd845e90b9a95ca1b54665dc4e78b3a9b8ee"
+  }
+}
