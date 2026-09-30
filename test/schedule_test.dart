@@ -56,13 +56,17 @@ void main() {
       () => TaskSchedule(dueDate: '2026-01-01', recurrence: 'every nonsense'),
       throwsFormatException,
     );
-    final undated = TaskSchedule(
-      startTime: '09:30',
-      timeZone: 'America/Chicago',
+    expect(() => TaskSchedule(startTime: '09:30'), throwsFormatException);
+    expect(
+      () => TaskSchedule.fromJson({
+        'dueDate': '2026-10-02',
+        'startTime': '09:30',
+      }),
+      throwsFormatException,
     );
-    expect(TaskSchedule.fromJson(undated.toJson()).toJson(), undated.toJson());
-    expect(undated.startDate, isNull);
-    expect(() => undated.next(DateTime.utc(2026, 1, 1)), throwsStateError);
+    final empty = TaskSchedule();
+    expect(TaskSchedule.fromJson(empty.toJson()).toJson(), empty.toJson());
+    expect(() => empty.next(DateTime.utc(2026, 1, 1)), throwsStateError);
   });
   test(
     'reference precedence, missing dates and configured scheduled removal',
@@ -98,15 +102,85 @@ void main() {
       ).next(completion);
       expect(startOnly.startDate, '2026-10-09');
       expect(startOnly.scheduledDate, isNull);
-      final dueWithTime = TaskSchedule(
-        dueDate: '2026-10-02',
-        startTime: '09:30',
-        recurrence: 'every day',
-      ).next(completion);
-      expect(dueWithTime.startDate, isNull);
-      expect(dueWithTime.startTime, '09:30');
     },
   );
+  test('start bounds reject invalid edits without inventing dates', () {
+    for (final zone in <String?>[null, 'UTC', 'America/Chicago']) {
+      expect(
+        () => TaskSchedule(
+          startDate: '2026-10-03',
+          dueDate: '2026-10-02',
+          timeZone: zone,
+        ),
+        throwsFormatException,
+      );
+      expect(
+        () => TaskSchedule.fromJson({
+          'startDate': '2026-10-03',
+          'dueDate': '2026-10-02',
+          'timeZone': zone,
+        }),
+        throwsFormatException,
+      );
+      final sameDay = TaskSchedule(
+        startDate: '2026-10-02',
+        dueDate: '2026-10-02',
+        startTime: '23:59',
+        timeZone: zone,
+        recurrence: 'every day',
+      );
+      expect(sameDay.next(DateTime.utc(2026, 10, 20)).startDate, '2026-10-03');
+      expect(sameDay.next(DateTime.utc(2026, 10, 20)).dueDate, '2026-10-03');
+    }
+    final startOnly = TaskSchedule(startDate: '2026-10-02', startTime: '09:30');
+    expect(startOnly.dueDate, isNull);
+    final dueOnly = TaskSchedule(dueDate: '2026-10-02');
+    expect(dueOnly.startDate, isNull);
+  });
+  test('named-zone gap and fold obey end-of-due-day bounds', () {
+    for (final (date, time) in [
+      ('2026-03-08', '02:30'),
+      ('2026-11-01', '01:30'),
+    ]) {
+      final valid = TaskSchedule(
+        startDate: date,
+        dueDate: date,
+        startTime: time,
+        timeZone: 'America/Chicago',
+      );
+      expect(valid.startTime, time);
+    }
+    expect(
+      () => TaskSchedule(
+        startDate: '2011-12-30',
+        dueDate: '2011-12-30',
+        startTime: '12:00',
+        timeZone: 'Pacific/Apia',
+      ),
+      throwsFormatException,
+    );
+    final beforeSkippedDate = TaskSchedule(
+      startDate: '2011-12-29',
+      dueDate: '2011-12-29',
+      startTime: '12:00',
+      timeZone: 'Pacific/Apia',
+      recurrence: 'every day',
+    );
+    expect(
+      () => beforeSkippedDate.next(DateTime.utc(2011, 12, 29)),
+      throwsFormatException,
+    );
+    // The same civil values remain valid floating values: no device zone is
+    // inferred during validation or replay.
+    expect(
+      TaskSchedule(
+        startDate: '2011-12-30',
+        dueDate: '2011-12-30',
+        startTime: '12:00',
+      ).timeZone,
+      isNull,
+    );
+  });
   test('clamping evolves while explicit last remains month end', () {
     final day = DateTime.utc(2026, 1, 31);
     final plain = TaskSchedule(

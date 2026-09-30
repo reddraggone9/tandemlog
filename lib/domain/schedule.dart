@@ -1,3 +1,5 @@
+import 'wall_time.dart';
+
 /// Civil task dates. These values are not device-local DateTime instants.
 ///
 /// Recurrence semantics match the observed Obsidian Tasks 7.20.0 subset:
@@ -35,11 +37,42 @@ class TaskSchedule {
         !RegExp(r'^(?:[01]\d|2[0-3]):[0-5]\d$').hasMatch(startTime)) {
       throw const FormatException('Start time must be HH:mm.');
     }
+    if (startTime != null && startDate == null) {
+      throw const FormatException(
+        'Choose a start date before adding a start time.',
+      );
+    }
+    // A date-only due date includes that entire civil day. The schedule has one
+    // zone, so canonical YYYY-MM-DD comparison is sufficient for date bounds.
+    if (startDate != null &&
+        dueDate != null &&
+        startDate.compareTo(dueDate) > 0) {
+      throw const FormatException(
+        'Start date must be on or before the due date.',
+      );
+    }
     // A zone is metadata for a civil wall time, not permission to infer a date
     // or resolve a DST fold/gap into an instant.
     if (timeZone != null &&
         !RegExp(r'^[A-Za-z][A-Za-z0-9_+\-/]{0,99}$').hasMatch(timeZone)) {
       throw const FormatException('Invalid time zone identifier.');
+    }
+    if (timeZone != null && startTime != null && dueDate != null) {
+      // Rare zone transitions can skip a date or move a late start into the
+      // following day. Validate the resolved start against the exclusive end
+      // of the due day, not midnight at the beginning of that day.
+      final endDay = parseCivilDate(dueDate).add(const Duration(days: 1));
+      final start = resolveZonedWallTime(startDate!, startTime, timeZone);
+      final end = resolveZonedWallTime(
+        formatCivilDate(endDay),
+        '00:00',
+        timeZone,
+      );
+      if (!start.instant.isBefore(end.instant)) {
+        throw const FormatException(
+          'Start time falls after the due day in this time zone.',
+        );
+      }
     }
     if (recurrence != null) {
       _Rule.parse(recurrence);
