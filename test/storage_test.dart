@@ -4,6 +4,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/domain/projection.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
@@ -57,6 +58,42 @@ void main() {
 
   Map<String, dynamic> state(TaskStore store, String id) =>
       store.rows.firstWhere((r) => r['id'] == id);
+
+  test('old provenance cache cannot bypass current closed schema', () async {
+    final id = await task();
+    final bytes = await aFolder.read('${a!.writer}.jsonl');
+    a!.db.execute('PRAGMA user_version=4');
+    a!.db.execute('UPDATE views SET raw=? WHERE id=?', [
+      jsonEncode({'id': id, 'kind': 'document', 'lines': []}),
+      id,
+    ]);
+    await a!.close();
+    a = null;
+    await expectLater(
+      TaskStore.open(aFolder, '${root.path}/private-a'),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(
+      await aFolder.read(
+        '${jsonDecode(utf8.decode(bytes).split('\n').first)['writer']}.jsonl',
+      ),
+      bytes,
+    );
+    final old =
+        jsonDecode(utf8.decode(bytes).split('\n').first)
+            as Map<String, dynamic>;
+    old['type'] = 'import.document';
+    old['data'] = {'lines': []};
+    await File(
+      '${aFolder.location}/${old['writer']}.jsonl',
+    ).writeAsString('${jsonEncode(old)}\n');
+    final rejectedBytes = await aFolder.read('${old['writer']}.jsonl');
+    await expectLater(
+      TaskStore.open(aFolder, '${root.path}/fresh-cache'),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(await aFolder.read('${old['writer']}.jsonl'), rejectedBytes);
+  });
 
   test(
     'reopen targets observed completions, is idempotent and survives restart',
@@ -929,7 +966,7 @@ void main() {
         id,
         completionInstant: DateTime.utc(2026, 10, 20, 2),
       );
-      expect(completion.data['completedAt'], '2026-10-19T00:00:00.000Z');
+      expect(completion.data['completedAt'], '2026-10-19');
       expect(
         ((completion.data['successor'] as Map)['schedule'] as Map)['dueDate'],
         '2026-10-20',
@@ -1122,31 +1159,6 @@ void main() {
     },
   );
   test(
-    'derived successor cannot resolve pending import document after append',
-    () async {
-      final id = await task();
-      final next = const Uuid().v5(id, 'successor');
-      final dependent = const Uuid().v4();
-      await a!.command(dependent, 'task.created', {
-        'title': 'Pending source',
-        'description': '',
-        'assignee': state(a!, id)['assignee'],
-        'import': {'documentId': next, 'line': 1},
-      });
-      await a!.command(id, 'task.edited', {
-        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
-      });
-      final bytes = await aFolder.read('${a!.writer}.jsonl');
-      await expectLater(
-        a!.complete(id, completionDay: DateTime.utc(2026, 10, 20)),
-        throwsA(isA<FormatFailure>()),
-      );
-      expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
-      await a!.refresh();
-      expect(state(a!, id)['completed'], false);
-    },
-  );
-  test(
     'SQLite and canonical clock retain exact signed-64-bit nanoseconds',
     () async {
       final id = await task();
@@ -1243,6 +1255,19 @@ void main() {
         read,
         monthly,
       ], reason: 'Recompletion must not reposition the existing occurrence.');
+      expect(state(a!, monthly)['completedAt'], '2026-10-21');
+      final events = a!.db
+          .select('SELECT raw FROM events')
+          .map((r) => LogEvent.decode(r['raw'] as String))
+          .toList();
+      expect(projectWorkspace(events.reversed.toList()), a!.rows);
+      await a!.reopen(monthly, a!.activeCompletionIds(monthly));
+      expect(state(a!, monthly)['completedAt'], isNull);
+      final reopenedEvents = a!.db
+          .select('SELECT raw FROM events')
+          .map((r) => LogEvent.decode(r['raw'] as String))
+          .toList();
+      expect(projectWorkspace(reopenedEvents.reversed.toList()), a!.rows);
     },
   );
   test('later creation stays after an earlier move to end', () async {

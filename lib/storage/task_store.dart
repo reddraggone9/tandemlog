@@ -5,6 +5,7 @@ import 'package:crypto/crypto.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
+import '../domain/projection.dart';
 import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
 import 'log_folder.dart';
@@ -95,7 +96,7 @@ class TaskStore {
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
       final version = db.select('PRAGMA user_version').first.values.first;
-      if (version != 0 && version != 4) {
+      if (version != 0 && version != 5) {
         throw FormatFailure(
           'Unsupported cache version. Preserve logs and rebuild cache with a compatible app.',
         );
@@ -122,7 +123,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=4');
+      db.execute('PRAGMA user_version=5');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -330,7 +331,6 @@ class TaskStore {
           }
         }
       }
-      _validateImports();
       _validateMoves();
       _validateTagReferences();
       final affected = newEvents.map((e) => e.entity).toSet();
@@ -352,7 +352,6 @@ class TaskStore {
         (e) => {
           'task.created',
           'user.created',
-          'import.document',
           'task.completed',
           'task.moved',
         }.contains(e.type),
@@ -393,59 +392,22 @@ class TaskStore {
 
   /// Persist disposable sequence positions only when order-affecting history changes.
   void _rebuildOrder() {
-    final views = db.select(
-      "SELECT id FROM views ORDER BY json_extract(raw,'\$.order'),id",
-    );
-    final available = views.map((row) => row['id'] as String).toSet();
-    final ordered = <String>[];
-    final pending = <(String, String?)>[];
-    final seeded = <String>{};
-    bool move(String entity, String? before) {
-      if (!ordered.contains(entity) ||
-          (before != null && !ordered.contains(before))) {
-        return false;
-      }
-      ordered.remove(entity);
-      ordered.insert(
-        before == null ? ordered.length : ordered.indexOf(before),
-        entity,
-      );
-      return true;
-    }
-
-    void settlePending() {
-      pending.removeWhere((action) => move(action.$1, action.$2));
-    }
-
-    final history = db.select(
-      "SELECT entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','import.document','task.completed','task.moved') ORDER BY clock,writer,seq",
-    );
-    for (final event in history) {
-      final entity = event['entity'] as String;
-      final type = event['type'] as String;
-      if (type == 'task.completed') {
-        final next = event['successor'] as String?;
-        if (next == null || !seeded.add(next) || !available.contains(next)) {
-          continue;
-        }
-        if (!ordered.contains(next)) ordered.add(next);
-        if (!move(next, entity)) pending.add((next, entity));
-        settlePending();
-      } else if (type == 'task.moved') {
-        final before = event['before_id'] as String?;
-        if (!move(entity, before)) pending.add((entity, before));
-      } else if (available.contains(entity) && !ordered.contains(entity)) {
-        ordered.add(entity);
-        settlePending();
-      }
-    }
-    // A materialized dependency may precede its missing creation log. Preserve
-    // visible rows and defer unresolved anchors; a later ingest replays the same
-    // canonical sequence with the newly available dependencies.
-    for (final id in available) {
-      if (!ordered.contains(id)) ordered.add(id);
-    }
-    settlePending();
+    final ids = db
+        .select("SELECT id FROM views ORDER BY json_extract(raw,'\$.order'),id")
+        .map((row) => row['id'] as String);
+    final actions = db
+        .select(
+          "SELECT entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.completed','task.moved') ORDER BY clock,writer,seq",
+        )
+        .map(
+          (row) => OrderAction(
+            row['entity'] as String,
+            row['type'] as String,
+            before: row['before_id'] as String?,
+            successor: row['successor'] as String?,
+          ),
+        );
+    final ordered = projectOrder(ids, actions);
     db.execute('DELETE FROM positions');
     for (var i = 0; i < ordered.length; i++) {
       db.execute('INSERT INTO positions VALUES (?,?)', [ordered[i], i]);
@@ -547,13 +509,12 @@ class TaskStore {
         );
       }
     }
-    _validateImports(e);
     _validateMoves(e);
     _validateTagReferences(e);
     if (type == 'task.completed' && data['successor'] != null) {
       final successorId = (data['successor'] as Map)['id'];
       if (db.select(
-        "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','user.created','import.document')",
+        "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','user.created')",
         [successorId],
       ).isNotEmpty) {
         throw FormatFailure(
@@ -568,41 +529,6 @@ class TaskStore {
     // Durable log append is the commit point. A cache failure is recoverable.
     await _refresh();
     return e;
-  }
-
-  void _validateImports([LogEvent? pending]) {
-    final creations = db
-        .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.created' AND json_extract(raw,'\$.data.import') IS NOT NULL",
-        )
-        .map((r) => LogEvent.decode(r['raw'] as String))
-        .toList();
-    if (pending?.type == 'task.created' && pending!.data['import'] != null) {
-      creations.add(pending);
-    }
-    final documents = <String, Map<String, dynamic>?>{};
-    for (final task in creations) {
-      final provenance = task.data['import'] as Map;
-      final docId = provenance['documentId'] as String;
-      if (pending?.type == 'task.completed' &&
-          (pending!.data['successor'] as Map?)?['id'] == docId) {
-        throw FormatFailure(
-          'A successor task cannot resolve an import document reference.',
-        );
-      }
-      final document = documents.putIfAbsent(docId, () {
-        final documentEvents = _entityEvents(docId);
-        if (pending?.entity == docId) documentEvents.add(pending!);
-        return project(documentEvents);
-      });
-      if (document == null) continue;
-      final line = provenance['line'] as int;
-      if (document['kind'] != 'document' ||
-          line > (document['lines'] as List).length ||
-          (document['lines'] as List)[line - 1]['taskId'] != task.entity) {
-        throw FormatFailure('Invalid import document line reference.');
-      }
-    }
   }
 
   void _validateMoves([LogEvent? pending]) {
@@ -723,30 +649,14 @@ class TaskStore {
     );
     if (seeds.isNotEmpty) {
       if (own.any(
-        (e) =>
-            e.type == 'task.created' ||
-            e.type == 'user.created' ||
-            e.type == 'import.document',
+        (e) => e.type == 'task.created' || e.type == 'user.created',
       )) {
         throw FormatFailure(
           'Successor identifier collides with existing entity.',
         );
       }
       final seed = LogEvent.decode(seeds.first['raw'] as String);
-      final data = Map<String, dynamic>.from(seed.data['successor'] as Map)
-        ..remove('id');
-      data['tagOrigin'] = entity;
-      own.add(
-        LogEvent(
-          space,
-          seed.writer,
-          seed.sequence,
-          seed.clock,
-          entity,
-          'task.created',
-          data,
-        ),
-      );
+      own.add(successorCreation(seed));
     }
     return own;
   }
@@ -769,7 +679,10 @@ class TaskStore {
     }
     final day =
         completionDay ?? civilDayAt(completionInstant!, schedule.timeZone);
-    final data = <String, dynamic>{'completedAt': day.toIso8601String()};
+    final data = <String, dynamic>{
+      'completedAt':
+          '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
+    };
     if (schedule.recurrence != null) {
       final next = schedule.next(day);
       data['successor'] = {

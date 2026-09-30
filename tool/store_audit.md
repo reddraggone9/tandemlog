@@ -29,7 +29,7 @@ The transport exposes canonical reads only: `create` and `append` fail. A pre-ex
 
 Aggregate JSON goes to stdout. Private outputs are:
 
-- `semantic.json`: actual production rows, including source provenance; this contains personal data when run on personal input.
+- `semantic.json`: actual production domain rows, including current order and completion dates; this contains personal data when run on personal input.
 - `canonical-hashes.json`: before/after hashes for every top-level canonical file.
 - `report.json`: counts and audit results, or failure details.
 - `cache/`: disposable production SQLite cache and audit-only local writer identity.

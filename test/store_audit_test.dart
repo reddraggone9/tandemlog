@@ -61,6 +61,14 @@ void main() {
         (snapshot['rows'] as List).where((row) => row['kind'] == 'task'),
         hasLength(2),
       );
+      expect(
+        (snapshot['rows'] as List).every(
+          (row) => ['user', 'task'].contains(row['kind']),
+        ),
+        isTrue,
+      );
+      expect(jsonEncode(snapshot), isNot(contains('provenance')));
+      expect(jsonEncode(snapshot), isNot(contains('import.document')));
       expect(jsonEncode(report), isNot(contains('Synthetic monthly review')));
       if (Platform.isLinux) {
         expect((await Directory(output).stat()).mode & 0x1ff, 0x1c0);

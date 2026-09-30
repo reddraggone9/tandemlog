@@ -41,6 +41,15 @@ void main() {
     final id = const Uuid().v4();
     for (final e in [
       LogEvent(id, id, 1, testClock(1, 0), id, 'future.event', {}),
+      LogEvent(id, id, 1, testClock(1, 0), id, 'import.document', {
+        'lines': [],
+      }),
+      LogEvent(id, id, 1, testClock(1, 0), id, 'task.created', {
+        'title': 'Fixture',
+        'description': '',
+        'assignee': id,
+        'import': {'documentId': id, 'line': 1},
+      }),
       LogEvent(id, id, 1, testClock(1, 0), id, 'user.created', {
         'name': 'Lee',
         'future': true,

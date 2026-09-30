@@ -4,7 +4,6 @@ export 'event_clock.dart';
 import 'package:uuid/uuid.dart';
 import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
-import 'import_provenance.dart';
 
 const protocolVersion = 2;
 final idPattern = RegExp(r'^[a-f0-9-]{36}$');
@@ -77,11 +76,6 @@ class LogEvent {
       }
 
       switch (j['type']) {
-        case 'import.document':
-          validateImportDocument(d);
-          if (d['documentId'] != j['entity']) {
-            throw FormatFailure('Import document identity mismatch.');
-          }
         case 'user.created':
           text('name', 100);
         case 'task.created':
@@ -154,13 +148,6 @@ class LogEvent {
       }
       if (d.containsKey('tagChanges')) validateTagChanges(d['tagChanges']);
       final allowed = switch (j['type']) {
-        'import.document' => {
-          'documentId',
-          'formatVersion',
-          'encoding',
-          'bom',
-          'lines',
-        },
         'user.created' => {'name'},
         'task.created' => {
           'title',
@@ -168,7 +155,6 @@ class LogEvent {
           'assignee',
           'schedule',
           'tags',
-          'import',
         },
         'task.edited' => {'title', 'description', 'schedule', 'tagChanges'},
         'task.tagsChanged' => {'add', 'remove'},
@@ -210,35 +196,31 @@ class LogEvent {
   }
 }
 
+int compareEvents(LogEvent a, LogEvent b) {
+  final c = a.clock.compareTo(b.clock);
+  return c != 0
+      ? c
+      : (a.writer != b.writer
+            ? a.writer.compareTo(b.writer)
+            : a.sequence.compareTo(b.sequence));
+}
+
 /// Replay is a pure function of an event set; never emits authoritative events.
 Map<String, dynamic>? project(List<LogEvent> events) {
-  events.sort((a, b) {
-    final c = a.clock.compareTo(b.clock);
-    return c != 0
-        ? c
-        : (a.writer != b.writer
-              ? a.writer.compareTo(b.writer)
-              : a.sequence.compareTo(b.sequence));
-  });
+  events.sort(compareEvents);
   Map<String, dynamic>? state;
   final completions = <String>{};
   final undone = <String>{};
   final tagAdds = <String, String>{};
   final tagRemoves = <String>{};
   for (final e in events) {
-    if (e.type == 'user.created' ||
-        e.type == 'task.created' ||
-        e.type == 'import.document') {
+    if (e.type == 'user.created' || e.type == 'task.created') {
       if (state != null) {
         throw FormatFailure('Duplicate entity creation: ${e.entity}');
       }
       state = {
         'id': e.entity,
-        'kind': e.type == 'user.created'
-            ? 'user'
-            : e.type == 'import.document'
-            ? 'document'
-            : 'task',
+        'kind': e.type == 'user.created' ? 'user' : 'task',
         ...e.data,
         'order': '${e.clock.sortKey}:${e.writer}',
         'inbox': true,
@@ -286,7 +268,14 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     tagAdds.entries.where((e) => !tagRemoves.contains(e.key)),
   );
   state['tags'] = (state['tagRefs'] as Map).values.toSet().toList()..sort();
-  state['completed'] = completions.difference(undone).isNotEmpty;
+  final active = completions.difference(undone);
+  state['completed'] = active.isNotEmpty;
+  final activeEvents = events.where(
+    (event) => event.type == 'task.completed' && active.contains(event.id),
+  );
+  state['completedAt'] = activeEvents.isEmpty
+      ? null
+      : activeEvents.last.data['completedAt'];
   return state;
 }
 
@@ -319,12 +308,6 @@ void validateTask(Map<String, dynamic> d, {bool successor = false}) {
   }
   if (d.containsKey('schedule')) validateSchedule(d['schedule']);
   if (d.containsKey('tags')) validateTags(d['tags']);
-  if (d.containsKey('import')) {
-    if (d['import'] is! Map<String, dynamic>) {
-      throw FormatFailure('Invalid import provenance.');
-    }
-    validateTaskImport(d['import'] as Map<String, dynamic>);
-  }
   if (successor &&
       d.keys.any(
         (k) => !{
