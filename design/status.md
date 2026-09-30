@@ -74,3 +74,9 @@ rc1 now has successful external native Android evidence; [runtime QA](runtime-qa
 ## CI efficiency
 
 Documentation/evidence-only main pushes skip platform builds; executable/tooling/workflow changes, all PRs/manual runs and every release candidate retain full checks. See [release policy](releases.md#documentation-only-pushes). The earlier doc-only run 36733292643 completed successfully after slow runner setup; no application change was needed.
+
+## Next user priority: completed tasks and reopening
+
+Lee requested persistent completed-task browsing and reopening because transient Undo is insufficient. Schedule this immediately after rc2, rather than extending the onboarding/theme/import revision indefinitely. Keep the default view focused on open tasks; add a compact Completed view and explicit Reopen. Reopen must target the completions actually observed, preserving concurrent unseen completions; test offline/reordered/duplicate delivery, restart and partial failure before shipping. Decide the smallest compatible command representation during implementation.
+
+Inbox historically meant a fresh capture until its first edit (`archive/product-behavior.md`); the projector implements that transition, but the planned separate inbox/sorting workflow is absent. The repeated badge is not a user-selectable status. Proposed UX follow-up: remove the badge until it supports a useful workflow, subject to the current user discussion.
