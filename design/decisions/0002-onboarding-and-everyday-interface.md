@@ -33,3 +33,19 @@ Hide repeated Inbox subtitles while retaining the stored state. A future grouped
 Lee found the narrow vertical segmented theme control awkward. Replace it with a conventional Theme row showing the current local choice, opening System/Light/Dark radio choices. Cancel returns to Settings unchanged; choosing persists through the existing settings path. A section divider and consistent spacing separate appearance from folder management. This avoids a large pill-shaped control at narrow widths without adding density or appearance options.
 
 Task titles continue wrapping in full. Description previews are lower emphasis and use a single ellipsized line, with embedded whitespace normalized only for display. Whitespace-only descriptions reserve no line; the editor preserves the complete original text. This improves scanning without truncating stored content or sacrificing accessible title scaling.
+
+## Accepted next-candidate onboarding spacing
+
+Lee observed that Start and Choose an existing folder were stacked without separation. Lay out these actions side by side when their text fits, wrapping with a 12-pixel gap on narrow or enlarged-text layouts. Retain filled primary versus text secondary styling and the standard label text scale. Use standard visual density with 48-pixel minimum targets so desktop density does not shrink them. The welcome content can scroll when text scaling exceeds available height. This is a local next-candidate correction, not a separate release or a change to when folders are created.
+
+## Accepted next-candidate capture caret correction
+
+Lee reported that Shift+Enter beyond the four visible capture lines left the caret below the viewport until another character was typed. The desktop shortcut must use Flutter's user-edit method, which schedules caret reveal after text layout, rather than directly assigning the controller. Preserve the existing composition guard, selected-range replacement and desktop submit distinction. Do not add a general controller listener that scrolls on remote refresh or unrelated changes.
+
+## Accepted next-candidate stable task header
+
+Switching Open/Completed must not move user/filter controls merely because the count label changes length. Use a viewport/text-scale breakpoint for one-row versus stacked header layout; within that layout reserve the maximum space needed by both actual count labels. Only the selected label is visible or exposed to accessibility. Keep full-size text, allow enlarged labels and long usernames to wrap, and avoid clipping as a way to stabilize the layout. This preserves the compact normal-size task list while making navigation predictable.
+
+## Accepted next-candidate Data folder copy and actions
+
+Lee requested one coherent paragraph instead of scattered explanation. Keep the folder path separately selectable, then explain storage, external sync and switching in one paragraph; retain the desktop backup warning. Group Open data folder and Use a different folder in a wrapping row with 12-pixel gaps and comfortable targets. Keep the unavailable-file-manager message contextual. Android keeps its existing folder-picker behavior and platform-specific explanation; this does not change where data lives or add controls.

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'domain/schedule.dart';
+import 'domain/wall_time.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
@@ -298,52 +300,61 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 const Divider(height: 32),
                 const Text('Data folder'),
                 const SizedBox(height: 8),
-                if (location != null) ...[
-                  if (!widget.folderActions.requiresPicker)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: SelectableText(location),
-                    ),
-                  const Text(
-                    'Sync this folder with your preferred sync app. Other devices receive changes when that app syncs.',
+                if (location != null && !widget.folderActions.requiresPicker)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: SelectableText(location),
                   ),
-                  if (!widget.folderActions.requiresPicker) ...[
-                    const SizedBox(height: 8),
-                    OutlinedButton.icon(
-                      onPressed: canOpen
-                          ? () => Navigator.pop(ctx, 'open')
-                          : null,
-                      icon: const Icon(Icons.folder_open),
-                      label: const Text('Open data folder'),
-                    ),
-                    if (!canOpen)
-                      const Text(
-                        'No file manager is available to open this folder.',
+                Text(
+                  location == null
+                      ? 'A data folder will be set up when you start.'
+                      : widget.folderActions.requiresPicker
+                      ? 'Tasks are stored in this folder. Manage it in Android’s Files and use your sync app to share changes between devices. Switching folders does not move or delete tasks.'
+                      : 'Tasks are stored in this folder. Use your sync app to share changes between devices, and back up the folder before removing app data. Switching folders does not move or delete tasks.',
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    if (location != null &&
+                        !widget.folderActions.requiresPicker)
+                      OutlinedButton.icon(
+                        style: OutlinedButton.styleFrom(
+                          minimumSize: const Size(64, 48),
+                          visualDensity: VisualDensity.standard,
+                        ),
+                        onPressed: canOpen
+                            ? () => Navigator.pop(ctx, 'open')
+                            : null,
+                        icon: const Icon(Icons.folder_open),
+                        label: const Text('Open data folder'),
                       ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Back up or sync this folder before removing Tandemlog’s app data.',
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(64, 48),
+                        visualDensity: VisualDensity.standard,
+                      ),
+                      onPressed: settingsLoaded
+                          ? () => Navigator.pop(ctx, 'choose')
+                          : null,
+                      child: Text(
+                        location == null
+                            ? 'Choose an existing folder'
+                            : 'Use a different folder',
+                      ),
                     ),
                   ],
-                  if (widget.folderActions.requiresPicker)
-                    const Text(
-                      'Manage this folder in Android’s Files or your sync app.',
-                    ),
-                ] else
-                  const Text('A data folder will be set up when you start.'),
-                TextButton(
-                  onPressed: settingsLoaded
-                      ? () => Navigator.pop(ctx, 'choose')
-                      : null,
-                  child: Text(
-                    location == null
-                        ? 'Choose an existing folder'
-                        : 'Use a different folder',
-                  ),
                 ),
-                if (location != null)
-                  const Text(
-                    'Switching folders does not move or delete your tasks.',
+                if (location != null &&
+                    !widget.folderActions.requiresPicker &&
+                    !canOpen)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text(
+                      'No file manager is available to open this folder.',
+                    ),
                   ),
               ],
             ),
@@ -424,7 +435,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final origin = store!;
     syncing = () async {
       try {
+        final previousClockWarning = origin.clockWarning;
         final changed = await origin.refresh();
+        final clockWarningChanged = previousClockWarning != origin.clockWarning;
         final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
         if (mounted && identical(store, origin) && reconcileCapture) {
           final unsaved = pendingCapture
@@ -437,7 +450,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
         if (mounted &&
             identical(store, origin) &&
-            (changed || errorFromRefresh || reconcileCapture)) {
+            (changed ||
+                clockWarningChanged ||
+                errorFromRefresh ||
+                reconcileCapture)) {
           setState(() {
             rows = origin.rows;
             if (errorFromRefresh) error = null;
@@ -613,65 +629,80 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _edit(Map<String, dynamic> task) async {
-    final title = TextEditingController(text: task['title']);
-    final description = TextEditingController(text: task['description']);
-    final values = await showDialog<Map<String, dynamic>>(
+    final origin = store!;
+    await showDialog<void>(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Edit task'),
-        content: SizedBox(
-          width: 480,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: title,
-                  autofocus: true,
-                  maxLength: 500,
-                  decoration: const InputDecoration(labelText: 'Title'),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: description,
-                  minLines: 3,
-                  maxLines: 6,
-                  maxLength: 10000,
-                  decoration: const InputDecoration(labelText: 'Notes'),
-                ),
-              ],
+      barrierDismissible: false,
+      builder: (_) => _TaskEditor(
+        task: task,
+        save: (fields, addedTags, removedTags) async {
+          await syncing;
+          if (!identical(store, origin)) {
+            throw StateError('The data folder changed. Reopen the task.');
+          }
+          final tags = Set<String>.from(task['tags'] as List? ?? [])
+            ..addAll(addedTags)
+            ..removeAll(removedTags);
+          if (fields.isEmpty && addedTags.isEmpty && removedTags.isEmpty) {
+            return;
+          }
+          await origin.edit(
+            task['id'],
+            fields,
+            tags: tags.toList(),
+            observedTagRefs: Map<String, String>.from(
+              task['tagRefs'] as Map? ?? {},
             ),
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              if (title.text.trim().isNotEmpty) {
-                Navigator.pop(ctx, {
-                  'title': title.text.trim(),
-                  'description': description.text,
-                });
-              }
-            },
-            child: const Text('Save changes'),
-          ),
-        ],
+          );
+          if (mounted) setState(() => rows = origin.rows);
+        },
       ),
     );
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      title.dispose();
-      description.dispose();
-    });
-    if (values == null) return;
-    // Emit only changed fields so independent edits can merge.
-    final changed = Map<String, dynamic>.from(values)
-      ..removeWhere((k, v) => task[k] == v);
-    if (changed.isEmpty) return;
-    await _act(() => store!.command(task['id'], 'task.edited', changed));
+  }
+
+  Future<void> _moveTask(
+    Map<String, dynamic> task,
+    List<Map<String, dynamic>> visible,
+    bool up,
+  ) => _act(() async {
+    final index = visible.indexWhere((row) => row['id'] == task['id']);
+    final neighbor = index + (up ? -1 : 1);
+    if (index < 0 || neighbor < 0 || neighbor >= visible.length) return;
+    final global = rows.where((row) => row['kind'] == 'task').toList();
+    final globalNeighbor = global.indexWhere(
+      (row) => row['id'] == visible[neighbor]['id'],
+    );
+    final before = up
+        ? visible[neighbor]['id']
+        : globalNeighbor + 1 < global.length
+        ? global[globalNeighbor + 1]['id']
+        : null;
+    await store!.moveBefore(task['id'], before);
+  });
+
+  String _taskPreview(
+    Map<String, dynamic> task,
+    List<Map<String, dynamic>> users,
+  ) {
+    final schedule = task['schedule'] as Map<String, dynamic>? ?? {};
+    return [
+      if (all)
+        users
+                .where((u) => u['id'] == task['assignee'])
+                .map((u) => u['name'])
+                .firstOrNull ??
+            'Unknown user',
+      if (schedule['dueDate'] != null)
+        'Due ${[schedule['dueDate'], schedule['dueTime'], if (schedule['dueTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
+      if (schedule['scheduledDate'] != null)
+        'Scheduled ${[schedule['scheduledDate'], schedule['scheduledTime'], if (schedule['scheduledTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
+      if (schedule['startDate'] != null || schedule['startTime'] != null)
+        'Start ${[schedule['startDate'], schedule['startTime'], if (schedule['startTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
+      if (schedule['recurrence'] != null) '↻ ${schedule['recurrence']}',
+      for (final tag in task['tags'] as List? ?? []) '#$tag',
+      if ((task['description'] as String).trim().isNotEmpty)
+        (task['description'] as String).replaceAll(RegExp(r'\s+'), ' ').trim(),
+    ].join(' · ');
   }
 
   Future<void> _reopen(Map<String, dynamic> task) async {
@@ -681,6 +712,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await origin.reopen(task['id'], observed);
       if (mounted && identical(store, origin)) {
         ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        if (origin.hasEntity(const Uuid().v5(task['id'], 'successor'))) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Task reopened; next occurrence kept.'),
+            ),
+          );
+        }
       }
     });
   }
@@ -688,7 +726,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _complete(Map<String, dynamic> task) async {
     await _act(() async {
       final origin = store!;
-      final event = await origin.command(task['id'], 'task.completed', {});
+      final event = await origin.complete(
+        task['id'],
+        completionInstant: DateTime.now(),
+      );
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       ScaffoldMessenger.of(context).showSnackBar(
@@ -799,6 +840,42 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
+                if (store?.clockWarning != null)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                    child: Semantics(
+                      liveRegion: true,
+                      child: Material(
+                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Icon(
+                                Icons.schedule_outlined,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onTertiaryContainer,
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  store!.clockWarning!,
+                                  style: TextStyle(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onTertiaryContainer,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 Expanded(
                   child: store == null
                       ? _welcome()
@@ -815,7 +892,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Widget _welcome() => Center(
-    child: Padding(
+    child: SingleChildScrollView(
       padding: const EdgeInsets.all(32),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -834,21 +911,39 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 : 'Keep household tasks together, even offline. We’ll create a data folder for you.',
           ),
           const SizedBox(height: 24),
-          FilledButton(
-            onPressed: busy || !settingsLoaded
-                ? null
-                : settings!.folder != null
-                ? () => _act(() => _open(settings!.folder!))
-                : widget.folderActions.requiresPicker
-                ? _chooseFolder
-                : _startDefault,
-            child: Text(settings?.folder != null ? 'Try again' : 'Start'),
+          Wrap(
+            spacing: 12,
+            runSpacing: 12,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              FilledButton(
+                style: FilledButton.styleFrom(
+                  minimumSize: const Size(64, 48),
+                  visualDensity: VisualDensity.standard,
+                  textStyle: Theme.of(context).textTheme.labelLarge,
+                ),
+                onPressed: busy || !settingsLoaded
+                    ? null
+                    : settings!.folder != null
+                    ? () => _act(() => _open(settings!.folder!))
+                    : widget.folderActions.requiresPicker
+                    ? _chooseFolder
+                    : _startDefault,
+                child: Text(settings?.folder != null ? 'Try again' : 'Start'),
+              ),
+              if (!widget.folderActions.requiresPicker &&
+                  settings?.folder == null)
+                TextButton(
+                  style: TextButton.styleFrom(
+                    minimumSize: const Size(64, 48),
+                    visualDensity: VisualDensity.standard,
+                    textStyle: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  onPressed: busy || !settingsLoaded ? null : _chooseFolder,
+                  child: const Text('Choose an existing folder'),
+                ),
+            ],
           ),
-          if (!widget.folderActions.requiresPicker && settings?.folder == null)
-            TextButton(
-              onPressed: busy || !settingsLoaded ? null : _chooseFolder,
-              child: const Text('Choose an existing folder'),
-            ),
           const SizedBox(height: 16),
           const Text('Set up folder sync whenever you’re ready.'),
         ],
@@ -940,74 +1035,109 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
           ],
         );
+  Widget _taskHeader(List<Map<String, dynamic>> users) {
+    final visibleTasks = rows.where(
+      (row) => row['kind'] == 'task' && (all || row['assignee'] == user),
+    );
+    final openCount = visibleTasks
+        .where((row) => row['completed'] != true)
+        .length;
+    final completedCount = visibleTasks
+        .where((row) => row['completed'] == true)
+        .length;
+    Widget heading(bool completed, int count) => Visibility(
+      visible: showCompleted == completed,
+      maintainState: true,
+      maintainAnimation: true,
+      maintainSize: true,
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: all ? 'All tasks' : 'Your tasks',
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            TextSpan(
+              text: ' · $count ${completed ? 'completed' : 'open'}',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ),
+      ),
+    );
+    // Both labels participate in layout; only the selected one is visible or
+    // exposed to accessibility. Tab changes cannot move the controls below.
+    final title = Stack(
+      children: [heading(false, openCount), heading(true, completedCount)],
+    );
+    final controls = Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: [
+        PopupMenuButton<String>(
+          tooltip: 'Switch user',
+          onSelected: (v) => _act(() async {
+            await _selectUser(v == 'new' ? null : v);
+          }),
+          itemBuilder: (_) => [
+            for (final u in users)
+              PopupMenuItem(value: u['id'], child: Text(u['name'])),
+            const PopupMenuItem(value: 'new', child: Text('Manage users')),
+          ],
+          child: Chip(
+            avatarBoxConstraints: const BoxConstraints.tightFor(
+              width: 18,
+              height: 18,
+            ),
+            avatar: const Icon(Icons.person_outline, size: 18),
+            label: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 160),
+              child: Builder(
+                builder: (context) => DefaultTextStyle(
+                  // Chip defaults force one line. Keep the full name readable.
+                  style: DefaultTextStyle.of(context).style,
+                  child: Text(users.firstWhere((u) => u['id'] == user)['name']),
+                ),
+              ),
+            ),
+          ),
+        ),
+        FilterChip(
+          label: const Text('Everyone'),
+          selected: all,
+          onSelected: (value) => setState(() => all = value),
+        ),
+      ],
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final labelScale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        if (constraints.maxWidth >= 720 * labelScale) {
+          return Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(child: title),
+              const SizedBox(width: 16),
+              Flexible(child: controls),
+            ],
+          );
+        }
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [title, const SizedBox(height: 8), controls],
+        );
+      },
+    );
+  }
+
   Widget _tasks(
     List<Map<String, dynamic>> tasks,
     List<Map<String, dynamic>> users,
   ) => ListView(
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
     children: [
-      Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        spacing: 16,
-        runSpacing: 8,
-        children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: all ? 'All tasks' : 'Your tasks',
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                TextSpan(
-                  text:
-                      ' · ${tasks.length} ${showCompleted ? 'completed' : 'open'}',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-          ),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
-              PopupMenuButton<String>(
-                tooltip: 'Switch user',
-                onSelected: (v) => _act(() async {
-                  await _selectUser(v == 'new' ? null : v);
-                }),
-                itemBuilder: (_) => [
-                  for (final u in users)
-                    PopupMenuItem(value: u['id'], child: Text(u['name'])),
-                  const PopupMenuItem(
-                    value: 'new',
-                    child: Text('Manage users'),
-                  ),
-                ],
-                child: Chip(
-                  avatar: const Icon(Icons.person_outline, size: 18),
-                  label: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 160),
-                    child: Text(
-                      users.firstWhere((u) => u['id'] == user)['name'],
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ),
-              ),
-              FilterChip(
-                label: const Text('Everyone'),
-                selected: all,
-                onSelected: (value) => setState(() => all = value),
-              ),
-            ],
-          ),
-        ],
-      ),
+      _taskHeader(users),
       const SizedBox(height: 8),
       SegmentedButton<bool>(
         segments: const [
@@ -1038,15 +1168,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   final selection = value.selection.isValid
                       ? value.selection
                       : TextSelection.collapsed(offset: value.text.length);
-                  capture.value = TextEditingValue(
-                    text: value.text.replaceRange(
-                      selection.start,
-                      selection.end,
-                      '\n',
+                  // Use the editor's user-input path so it reveals the caret
+                  // after layout, including a newly inserted blank last line.
+                  final editor = captureFocus.context!
+                      .findAncestorStateOfType<EditableTextState>()!;
+                  editor.userUpdateTextEditingValue(
+                    TextEditingValue(
+                      text: value.text.replaceRange(
+                        selection.start,
+                        selection.end,
+                        '\n',
+                      ),
+                      selection: TextSelection.collapsed(
+                        offset: selection.start + 1,
+                      ),
                     ),
-                    selection: TextSelection.collapsed(
-                      offset: selection.start + 1,
-                    ),
+                    SelectionChangedCause.keyboard,
                   );
                 }
               } else {
@@ -1128,28 +1265,425 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             task['title'],
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
-          subtitle: !all && (task['description'] as String).trim().isEmpty
+          subtitle: _taskPreview(task, users).isEmpty
               ? null
               : Text(
-                  [
-                    if (all)
-                      users
-                              .where((u) => u['id'] == task['assignee'])
-                              .map((u) => u['name'])
-                              .firstOrNull ??
-                          'Unknown user',
-                    if ((task['description'] as String).trim().isNotEmpty)
-                      (task['description'] as String)
-                          .replaceAll(RegExp(r'\s+'), ' ')
-                          .trim(),
-                  ].join(' · '),
+                  _taskPreview(task, users),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
+          trailing: PopupMenuButton<String>(
+            tooltip: 'Task actions',
+            enabled: !busy,
+            onSelected: (action) {
+              if (action == 'edit') {
+                _edit(task);
+              } else {
+                _moveTask(task, tasks, action == 'up');
+              }
+            },
+            itemBuilder: (_) => [
+              const PopupMenuItem(value: 'edit', child: Text('Edit task')),
+              PopupMenuItem(
+                value: 'up',
+                enabled: task != tasks.first,
+                child: const Text('Move up'),
+              ),
+              PopupMenuItem(
+                value: 'down',
+                enabled: task != tasks.last,
+                child: const Text('Move down'),
+              ),
+            ],
+          ),
           onTap: busy ? null : () => _edit(task),
         ),
         const Divider(height: 1),
       ],
     ],
+  );
+}
+
+/// Owns an edit buffer independently of incoming folder updates. Only fields
+/// changed from the opening snapshot are submitted, retaining concurrent edits.
+class _TaskEditor extends StatefulWidget {
+  const _TaskEditor({required this.task, required this.save});
+  final Map<String, dynamic> task;
+  final Future<void> Function(
+    Map<String, dynamic> fields,
+    List<String> addedTags,
+    List<String> removedTags,
+  )
+  save;
+
+  @override
+  State<_TaskEditor> createState() => _TaskEditorState();
+}
+
+class _TaskEditorState extends State<_TaskEditor> {
+  final form = GlobalKey<FormState>();
+  late final TextEditingController title, notes, tags;
+  late final Map<String, TextEditingController> schedule;
+  late final Map<String, dynamic> originalSchedule;
+  late final Set<String> originalTags;
+  bool saving = false;
+  late String zoneMode;
+  String? failure;
+
+  @override
+  void initState() {
+    super.initState();
+    title = TextEditingController(text: widget.task['title']);
+    notes = TextEditingController(text: widget.task['description']);
+    originalTags = Set<String>.from(widget.task['tags'] as List? ?? []);
+    tags = TextEditingController(text: originalTags.join(' '));
+    originalSchedule = Map<String, dynamic>.from(
+      widget.task['schedule'] as Map? ?? {},
+    );
+    final originalZone = originalSchedule['timeZone'];
+    zoneMode = originalZone == null
+        ? 'local'
+        : originalZone == 'UTC'
+        ? 'UTC'
+        : 'named';
+    schedule = {
+      for (final key in [
+        'startDate',
+        'scheduledDate',
+        'dueDate',
+        'startTime',
+        'scheduledTime',
+        'dueTime',
+        'timeZone',
+        'recurrence',
+      ])
+        key: TextEditingController(
+          text: originalSchedule[key] as String? ?? '',
+        ),
+    };
+  }
+
+  @override
+  void dispose() {
+    title.dispose();
+    notes.dispose();
+    tags.dispose();
+    for (final controller in schedule.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Future<void> submit() async {
+    if (saving || !form.currentState!.validate()) return;
+    setState(() {
+      saving = true;
+      failure = null;
+    });
+    try {
+      final parsed = TaskSchedule.fromJson({
+        for (final entry in schedule.entries)
+          entry.key: entry.value.text.trim().isEmpty
+              ? null
+              : entry.value.text.trim(),
+      }).toJson();
+      if (parsed['timeZone'] != null) {
+        try {
+          timeZoneLocation(parsed['timeZone'] as String);
+        } catch (_) {
+          throw const FormatException(
+            'Choose a valid time zone, such as America/Chicago.',
+          );
+        }
+      }
+      final desiredTags = tags.text
+          .split(RegExp(r'\s+'))
+          .where((tag) => tag.isNotEmpty)
+          .map((tag) => tag.startsWith('#') ? tag.substring(1) : tag)
+          .toSet();
+      if (desiredTags.contains('')) {
+        throw const FormatException('Enter a name after #, or remove it.');
+      }
+      final fields = <String, dynamic>{
+        if (title.text.trim() != widget.task['title'])
+          'title': title.text.trim(),
+        if (notes.text != widget.task['description']) 'description': notes.text,
+        if (parsed.entries.any((e) => originalSchedule[e.key] != e.value))
+          'schedule': parsed,
+      };
+      await widget.save(
+        fields,
+        desiredTags.difference(originalTags).toList(),
+        originalTags.difference(desiredTags).toList(),
+      );
+      if (mounted) Navigator.pop(context);
+    } catch (error) {
+      if (mounted) {
+        setState(() {
+          failure = error is FormatException ? error.message : '$error';
+          saving = false;
+        });
+      }
+    }
+  }
+
+  String? get zonedPreview {
+    final zone = schedule['timeZone']!.text.trim();
+    if (zone.isEmpty) return null;
+    final previews = <String>[];
+    for (final kind in ['start', 'scheduled', 'due']) {
+      try {
+        final resolved = resolveZonedWallTime(
+          schedule['${kind}Date']!.text.trim(),
+          schedule['${kind}Time']!.text.trim(),
+          zone,
+        );
+        final local = resolved.instant.toLocal();
+        final note = resolved.gapShift > Duration.zero
+            ? ' (clock change: shifted forward ${resolved.gapShift.inMinutes} minutes)'
+            : resolved.ambiguous
+            ? ' (earlier occurrence of repeated time)'
+            : '';
+        final label = '${kind[0].toUpperCase()}${kind.substring(1)}';
+        previews.add(
+          '$label: ${formatCivilDate(local)} '
+          '${local.hour.toString().padLeft(2, '0')}:'
+          '${local.minute.toString().padLeft(2, '0')}$note',
+        );
+      } catch (_) {
+        // The save validator explains incomplete or invalid fields.
+      }
+    }
+    return previews.isEmpty ? null : 'On this device:\n${previews.join('\n')}';
+  }
+
+  Widget timeField(String kind, String label) => TextFormField(
+    controller: schedule['${kind}Time'],
+    onChanged: (_) => setState(() {}),
+    enabled: !saving,
+    decoration: InputDecoration(
+      labelText: '$label time',
+      hintText: 'HH:mm',
+      helperText:
+          'Optional; uses the ${kind == 'scheduled' ? 'scheduled' : kind} date.',
+      helperMaxLines: 3,
+    ),
+  );
+
+  Widget dateField(String key, String label) => TextFormField(
+    controller: schedule[key],
+    onChanged: (_) => setState(() {}),
+    enabled: !saving,
+    decoration: InputDecoration(
+      labelText: label,
+      hintText: 'YYYY-MM-DD',
+      suffixIcon: IconButton(
+        tooltip: 'Choose $label',
+        onPressed: saving
+            ? null
+            : () async {
+                final parsedDate = DateTime.tryParse(schedule[key]!.text);
+                final current =
+                    parsedDate != null &&
+                        parsedDate.year >= 1900 &&
+                        parsedDate.year <= 9999
+                    ? parsedDate
+                    : null;
+                final chosen = await showDatePicker(
+                  context: context,
+                  initialDate: current ?? DateTime.now(),
+                  firstDate: DateTime(1900),
+                  lastDate: DateTime(9999),
+                );
+                if (chosen != null && mounted) {
+                  schedule[key]!.text =
+                      '${chosen.year.toString().padLeft(4, '0')}-'
+                      '${chosen.month.toString().padLeft(2, '0')}-'
+                      '${chosen.day.toString().padLeft(2, '0')}';
+                  setState(() {});
+                }
+              },
+        icon: const Icon(Icons.calendar_today_outlined),
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) => PopScope(
+    canPop: !saving,
+    child: AlertDialog(
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Edit task'),
+          if (failure != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Semantics(
+                liveRegion: true,
+                child: Text(
+                  failure!,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+      content: SizedBox(
+        width: 480,
+        child: SingleChildScrollView(
+          child: Form(
+            key: form,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                TextFormField(
+                  controller: title,
+                  autofocus: true,
+                  enabled: !saving,
+                  maxLength: 500,
+                  minLines: 1,
+                  maxLines: 4,
+                  validator: (value) =>
+                      value!.trim().isEmpty ? 'Enter a task title.' : null,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: notes,
+                  enabled: !saving,
+                  minLines: 3,
+                  maxLines: 6,
+                  maxLength: 10000,
+                  decoration: const InputDecoration(labelText: 'Notes'),
+                ),
+                const SizedBox(height: 12),
+                TextFormField(
+                  controller: tags,
+                  enabled: !saving,
+                  minLines: 1,
+                  maxLines: 3,
+                  decoration: const InputDecoration(
+                    labelText: 'Tags',
+                    helperText: 'Separate tags with spaces.',
+                  ),
+                ),
+                const SizedBox(height: 8),
+                ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.only(top: 8),
+                  title: const Text('Dates and repeat'),
+                  initiallyExpanded: originalSchedule.values.any(
+                    (v) => v != null,
+                  ),
+                  children: [
+                    dateField('startDate', 'Start date'),
+                    const SizedBox(height: 12),
+                    timeField('start', 'Start'),
+                    const SizedBox(height: 12),
+                    dateField('scheduledDate', 'Scheduled date'),
+                    const SizedBox(height: 12),
+                    timeField('scheduled', 'Scheduled'),
+                    const SizedBox(height: 12),
+                    dateField('dueDate', 'Due date'),
+                    const SizedBox(height: 12),
+                    timeField('due', 'Due'),
+                    const SizedBox(height: 12),
+                    DropdownButtonFormField<String>(
+                      initialValue: zoneMode,
+                      isExpanded: true,
+                      decoration: InputDecoration(
+                        labelText: 'Time zone',
+                        helperText: zoneMode == 'local'
+                            ? 'All three dates follow this device’s time zone.'
+                            : 'Applies to all three dates.',
+                        helperMaxLines: 3,
+                      ),
+                      items: const [
+                        DropdownMenuItem(value: 'local', child: Text('Local')),
+                        DropdownMenuItem(value: 'UTC', child: Text('UTC')),
+                        DropdownMenuItem(
+                          value: 'named',
+                          child: Text('Named zone'),
+                        ),
+                      ],
+                      onChanged: saving
+                          ? null
+                          : (value) => setState(() {
+                              zoneMode = value!;
+                              schedule['timeZone']!.text = value == 'UTC'
+                                  ? 'UTC'
+                                  : '';
+                            }),
+                    ),
+                    if (zoneMode == 'named') ...[
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: schedule['timeZone'],
+                        onChanged: (_) => setState(() {}),
+                        enabled: !saving,
+                        validator: (value) => value!.trim().isEmpty
+                            ? 'Enter a time zone or choose Local.'
+                            : null,
+                        decoration: const InputDecoration(
+                          labelText: 'Named time zone',
+                          hintText: 'America/Chicago',
+                        ),
+                      ),
+                    ],
+                    if (zonedPreview != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        zonedPreview!,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                    const SizedBox(height: 12),
+                    TextFormField(
+                      controller: schedule['recurrence'],
+                      enabled: !saving,
+                      minLines: 1,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        suffixIcon: PopupMenuButton<String>(
+                          tooltip: 'Repeat examples',
+                          enabled: !saving,
+                          icon: const Icon(Icons.expand_more),
+                          onSelected: (rule) =>
+                              schedule['recurrence']!.text = rule,
+                          itemBuilder: (_) => [
+                            for (final rule in observedRecurrences)
+                              PopupMenuItem(value: rule, child: Text(rule)),
+                          ],
+                        ),
+                        labelText: 'Repeat',
+                        hintText: 'every week when done',
+                        helperText:
+                            'Add “when done” to repeat from completion.\nLeave blank for no repeat.',
+                        helperMaxLines: 8,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: saving ? null : () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        FilledButton(
+          onPressed: saving ? null : submit,
+          child: Text(saving ? 'Saving…' : 'Save changes'),
+        ),
+      ],
+    ),
   );
 }
