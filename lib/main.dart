@@ -113,7 +113,7 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
   String? user, error;
-  bool busy = true, all = false, showCompleted = false;
+  bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   String? privateRoot;
   LocalSettings? settings;
   bool settingsLoaded = false;
@@ -136,6 +136,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   late final ViewClock<TaskView> viewClock;
   TaskView? taskView;
   String? viewError;
+  int viewRevision = 0;
+  ({
+    String id,
+    TaskStore? store,
+    int revision,
+    String snapshot,
+    bool completed,
+    bool everyone,
+    bool upcoming,
+    String? user,
+  })?
+  taskDrag;
   bool startupReported = false, startupReportPending = false;
 
   String? get _startupMarker {
@@ -191,7 +203,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       project: (time) {
         try {
           viewError = null;
-          return projectTaskView(rows, time, assignee: all ? null : user);
+          return projectTaskView(
+            rows,
+            time,
+            assignee: all ? null : user,
+            includeUpcoming: showUpcoming,
+          );
         } catch (failure) {
           viewError = 'Cannot update the task view: $failure';
           return TimedView(taskView ?? TaskView([], []));
@@ -199,7 +216,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       },
       onView: (view) {
         if (mounted) {
-          setState(() => taskView = view.value);
+          setState(() {
+            taskView = view.value;
+            viewRevision++;
+          });
           _reportStartupAfterFrame();
         }
       },
@@ -767,8 +787,234 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         : globalNeighbor + 1 < global.length
         ? global[globalNeighbor + 1]['id']
         : null;
-    await store!.moveBefore(task['id'], before);
+    await _moveBeforeGuarded(
+      task['id'],
+      before,
+      store!.taskSnapshot,
+      _moveCommitGuard(task['id'], visible[neighbor]['id']),
+    );
   });
+
+  Future<void> _moveBeforeGuarded(
+    String id,
+    String? before,
+    String snapshot,
+    bool Function() canCommit,
+  ) async {
+    try {
+      await store!.moveBefore(
+        id,
+        before,
+        expectedTaskSnapshot: snapshot,
+        canCommit: canCommit,
+      );
+    } on StaleTaskSnapshot {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('The task list changed. Try moving the task again.'),
+        ),
+      );
+    }
+  }
+
+  bool Function() _moveCommitGuard(String source, String target) {
+    final origin = store,
+        revision = viewRevision,
+        completed = showCompleted,
+        everyone = all,
+        upcoming = showUpcoming,
+        selected = user;
+    final entries = (completed ? taskView?.completed : taskView?.open) ?? [];
+    final expected = entries
+        .where((entry) => entry.task['id'] == source)
+        .firstOrNull;
+    return () {
+      if (!mounted ||
+          origin == null ||
+          expected == null ||
+          !identical(origin, store) ||
+          revision != viewRevision ||
+          completed != showCompleted ||
+          everyone != all ||
+          upcoming != showUpcoming ||
+          selected != user ||
+          !timeSource.ready) {
+        return false;
+      }
+      try {
+        // Evaluate the actual current wall clock at the serialized write boundary;
+        // a delayed timer callback must not authorize an expired sort bucket.
+        final current = projectTaskView(
+          origin.rows,
+          timeSource.readTime(),
+          assignee: everyone ? null : selected,
+          includeUpcoming: upcoming,
+        ).value;
+        final visible = completed ? current.completed : current.open;
+        final from = visible
+            .where((entry) => entry.task['id'] == source)
+            .firstOrNull;
+        final to = visible
+            .where((entry) => entry.task['id'] == target)
+            .firstOrNull;
+        return from != null &&
+            to != null &&
+            from.effectiveDate == expected.effectiveDate &&
+            to.effectiveDate == expected.effectiveDate;
+      } catch (_) {
+        return false;
+      }
+    };
+  }
+
+  bool _dragIsCurrent() {
+    final drag = taskDrag;
+    return drag != null &&
+        !busy &&
+        identical(drag.store, store) &&
+        drag.revision == viewRevision &&
+        drag.completed == showCompleted &&
+        drag.everyone == all &&
+        drag.upcoming == showUpcoming &&
+        drag.user == user;
+  }
+
+  bool _canDropTask(String source, String target) {
+    if (!_dragIsCurrent() || taskDrag!.id != source || source == target) {
+      return false;
+    }
+    final entries =
+        (showCompleted ? taskView?.completed : taskView?.open) ?? [];
+    final from = entries
+        .where((entry) => entry.task['id'] == source)
+        .firstOrNull;
+    final to = entries.where((entry) => entry.task['id'] == target).firstOrNull;
+    return from != null && to != null && from.effectiveDate == to.effectiveDate;
+  }
+
+  void _cancelDrag() {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          _dragIsCurrent()
+              ? 'Reorder canceled. Drop beside a task with the same date and time.'
+              : 'The task list changed. Try dragging again.',
+        ),
+      ),
+    );
+  }
+
+  Future<void> _dropTask(String source, String target, bool after) async {
+    // Capture the session before Draggable ends it; await any in-flight import,
+    // then recheck the projection before writing a relative-order event.
+    final drag = taskDrag;
+    if (!_canDropTask(source, target)) {
+      _cancelDrag();
+      return;
+    }
+    await _act(() async {
+      if (drag == null ||
+          !identical(drag.store, store) ||
+          drag.revision != viewRevision ||
+          drag.completed != showCompleted ||
+          drag.everyone != all ||
+          drag.upcoming != showUpcoming ||
+          drag.user != user) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('The task list changed. Try dragging again.'),
+          ),
+        );
+        return;
+      }
+      final global = rows
+          .where((row) => row['kind'] == 'task' && row['id'] != source)
+          .toList();
+      final index = global.indexWhere((row) => row['id'] == target);
+      if (index < 0) return;
+      final before = !after
+          ? target
+          : index + 1 < global.length
+          ? global[index + 1]['id'] as String
+          : null;
+      await _moveBeforeGuarded(
+        source,
+        before,
+        drag.snapshot,
+        _moveCommitGuard(source, target),
+      );
+    });
+  }
+
+  Widget _reorderableTask(Map<String, dynamic> task, Widget tile) {
+    var after = false;
+    return StatefulBuilder(
+      builder: (context, updateHover) => DragTarget<String>(
+        key: ValueKey('task-drop-${task['id']}'),
+        onWillAcceptWithDetails: (details) =>
+            _canDropTask(details.data, task['id']),
+        onMove: (details) {
+          final box = context.findRenderObject() as RenderBox;
+          final next =
+              box.globalToLocal(details.offset).dy >= box.size.height / 2;
+          if (next != after) updateHover(() => after = next);
+        },
+        onAcceptWithDetails: (details) =>
+            _dropTask(details.data, task['id'], after),
+        builder: (context, candidates, rejected) {
+          final invalid =
+              rejected.isNotEmpty ||
+              candidates.whereType<String>().any(
+                (source) => !_canDropTask(source, task['id']),
+              );
+          return MouseRegion(
+            cursor: invalid
+                ? SystemMouseCursors.forbidden
+                : SystemMouseCursors.basic,
+            child: Semantics(
+              liveRegion: invalid,
+              label: invalid
+                  ? 'Cannot reorder here: different date or time, or the list changed.'
+                  : null,
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: invalid
+                      ? Theme.of(
+                          context,
+                        ).colorScheme.errorContainer.withValues(alpha: 0.4)
+                      : null,
+                  border: invalid
+                      ? Border.all(
+                          color: Theme.of(context).colorScheme.error,
+                          width: 2,
+                        )
+                      : candidates.isEmpty
+                      ? null
+                      : Border(
+                          top: after
+                              ? BorderSide.none
+                              : BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2,
+                                ),
+                          bottom: after
+                              ? BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 2,
+                                )
+                              : BorderSide.none,
+                        ),
+                ),
+                child: Material(type: MaterialType.transparency, child: tile),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
   String _taskPreview(
     Map<String, dynamic> task,
@@ -1215,6 +1461,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             _invalidateView();
           },
         ),
+        FilterChip(
+          label: const Text('Show upcoming'),
+          selected: showUpcoming,
+          onSelected: (value) {
+            setState(() => showUpcoming = value);
+            _invalidateView();
+          },
+        ),
       ],
     );
     return LayoutBuilder(
@@ -1435,9 +1689,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ),
           for (final entry in group.entries) ...[
             Builder(
+              key: ValueKey('task-row-${entry.task['id']}'),
               builder: (context) {
                 final task = entry.task;
-                return ListTile(
+                final tile = ListTile(
                   contentPadding: EdgeInsets.zero,
                   minVerticalPadding: 6,
                   horizontalTitleGap: 8,
@@ -1464,35 +1719,94 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
-                  trailing: PopupMenuButton<String>(
-                    tooltip: 'Task actions',
-                    enabled: !busy,
-                    onSelected: (action) {
-                      if (action == 'edit') {
-                        _edit(task);
-                      } else {
-                        _moveTask(task, action == 'up');
-                      }
-                    },
-                    itemBuilder: (_) => [
-                      const PopupMenuItem(
-                        value: 'edit',
-                        child: Text('Edit task'),
-                      ),
-                      PopupMenuItem(
-                        value: 'up',
-                        enabled: movable(task, true),
-                        child: const Text('Move up'),
-                      ),
-                      PopupMenuItem(
-                        value: 'down',
-                        enabled: movable(task, false),
-                        child: const Text('Move down'),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (movable(task, true) || movable(task, false))
+                        Draggable<String>(
+                          data: task['id'],
+                          maxSimultaneousDrags: busy ? 0 : 1,
+                          dragAnchorStrategy: pointerDragAnchorStrategy,
+                          onDragStarted: () {
+                            taskDrag = (
+                              id: task['id'] as String,
+                              store: store,
+                              revision: viewRevision,
+                              snapshot: store!.taskSnapshot,
+                              completed: showCompleted,
+                              everyone: all,
+                              upcoming: showUpcoming,
+                              user: user,
+                            );
+                          },
+                          onDraggableCanceled: (_, _) {
+                            _cancelDrag();
+                            taskDrag = null;
+                          },
+                          onDragEnd: (details) {
+                            if (details.wasAccepted) taskDrag = null;
+                          },
+                          feedback: Material(
+                            elevation: 4,
+                            borderRadius: BorderRadius.circular(8),
+                            child: Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: SizedBox(
+                                width: 220,
+                                child: Text(
+                                  task['title'],
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Tooltip(
+                            message:
+                                'Drag to reorder within this date and time',
+                            child: Semantics(
+                              label:
+                                  'Drag ${task['title']} to reorder. Move up and down are also in Task actions.',
+                              child: const SizedBox(
+                                width: 48,
+                                height: 48,
+                                child: Icon(Icons.drag_indicator),
+                              ),
+                            ),
+                          ),
+                        ),
+                      PopupMenuButton<String>(
+                        tooltip: 'Task actions',
+                        enabled: !busy,
+                        onSelected: (action) {
+                          if (action == 'edit') {
+                            _edit(task);
+                          } else {
+                            _moveTask(task, action == 'up');
+                          }
+                        },
+                        itemBuilder: (_) => [
+                          const PopupMenuItem(
+                            value: 'edit',
+                            child: Text('Edit task'),
+                          ),
+                          PopupMenuItem(
+                            value: 'up',
+                            enabled: movable(task, true),
+                            child: const Text('Move up'),
+                          ),
+                          PopupMenuItem(
+                            value: 'down',
+                            enabled: movable(task, false),
+                            child: const Text('Move down'),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                   onTap: busy ? null : () => _edit(task),
                 );
+                return _reorderableTask(task, tile);
               },
             ),
             const Divider(height: 1),
@@ -1850,6 +2164,7 @@ class _TaskEditorState extends State<_TaskEditor> {
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: schedule['recurrence'],
+                      onChanged: (_) => setState(() {}),
                       enabled: !saving,
                       minLines: 1,
                       maxLines: 3,
@@ -1858,8 +2173,9 @@ class _TaskEditorState extends State<_TaskEditor> {
                           tooltip: 'Repeat examples',
                           enabled: !saving,
                           icon: const Icon(Icons.expand_more),
-                          onSelected: (rule) =>
-                              schedule['recurrence']!.text = rule,
+                          onSelected: (rule) => setState(
+                            () => schedule['recurrence']!.text = rule,
+                          ),
                           itemBuilder: (_) => [
                             for (final rule in observedRecurrences)
                               PopupMenuItem(value: rule, child: Text(rule)),
@@ -1872,6 +2188,14 @@ class _TaskEditorState extends State<_TaskEditor> {
                         helperMaxLines: 8,
                       ),
                     ),
+                    if (schedule['scheduledDate']!.text.trim().isNotEmpty &&
+                        schedule['recurrence']!.text.trim().isEmpty)
+                      const Padding(
+                        padding: EdgeInsets.only(top: 8),
+                        child: Text(
+                          'This task has a scheduled date but does not repeat. Check that this is intentional.',
+                        ),
+                      ),
                     const SizedBox(height: 16),
                     const Align(
                       alignment: Alignment.centerLeft,

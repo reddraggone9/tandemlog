@@ -27,6 +27,20 @@ List<String> ids(List<TaskViewEntry> rows) =>
     rows.map((row) => row.task['id'] as String).toList();
 
 void main() {
+  test('upcoming is opt-in and does not change stored rows', () {
+    final rows = [
+      row('future', schedule: TaskSchedule(startDate: '2026-11-01')),
+      row('ready'),
+    ];
+    final before = jsonEncode(rows);
+    final time = at('2026-10-01T12:00:00Z');
+    expect(ids(projectTaskView(rows, time).value.open), ['ready']);
+    expect(ids(projectTaskView(rows, time, includeUpcoming: true).value.open), [
+      'future',
+      'ready',
+    ]);
+    expect(jsonEncode(rows), before);
+  });
   test(
     'standalone timing evaluates hidden and completed rows without changing state',
     () {

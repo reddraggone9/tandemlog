@@ -200,6 +200,7 @@ TimedView<TaskView> projectTaskView(
   List<Map<String, dynamic>> rows,
   ViewTime time, {
   String? assignee,
+  bool includeUpcoming = false,
 }) {
   final context = _TaskTimingContext(time);
   DateTime? nextChange;
@@ -220,7 +221,7 @@ TimedView<TaskView> projectTaskView(
     if (next != null && (nextChange == null || next.isBefore(nextChange))) {
       nextChange = next;
     }
-    if (!done && !timing.available) continue;
+    if (!done && !includeUpcoming && !timing.available) continue;
     (done ? completed : open).add((
       index,
       TaskViewEntry(row, timing.effectiveDate),
