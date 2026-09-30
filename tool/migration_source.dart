@@ -151,7 +151,7 @@ class MarkdownSource {
           }
         }
         String? matchedMarker;
-        for (final marker in [...markerFields.keys, '🔁']) {
+        for (final marker in [...markerFields.keys, '🔁', '🏁']) {
           if (boundary && body.startsWith(marker, i)) {
             matchedMarker = marker;
             break;
@@ -161,6 +161,8 @@ class MarkdownSource {
           flush();
           final field = matchedMarker == '🔁'
               ? 'recurrence'
+              : matchedMarker == '🏁'
+              ? 'completionAction'
               : markerFields[matchedMarker]!;
           if (fields.containsKey(field)) {
             throw FormatException(
@@ -191,9 +193,29 @@ class MarkdownSource {
                 .substring(valueStart + value.length)
                 .trimLeft();
             if (remainder.isNotEmpty &&
-                !RegExp(r'^(#|🛫|⏳|📅|✅)').hasMatch(remainder)) {
+                !RegExp(r'^(#|🛫|⏳|📅|✅|🏁)').hasMatch(remainder)) {
               throw FormatException(
                 'Unparsed recurrence suffix on line ${lines.length + 1}.',
+              );
+            }
+          } else if (field == 'completionAction') {
+            final found = RegExp(
+              r'^[A-Za-z]+(?=\s|$)',
+            ).firstMatch(body.substring(valueStart));
+            if (found == null ||
+                !['keep', 'delete'].contains(found[0]!.toLowerCase())) {
+              throw FormatException(
+                'Unsupported completion action on line ${lines.length + 1}; expected keep or delete.',
+              );
+            }
+            value = found[0]!;
+            final remainder = body
+                .substring(valueStart + value.length)
+                .trimLeft();
+            if (remainder.isNotEmpty &&
+                !RegExp(r'^(#|🛫|⏳|📅|✅|🔁|🏁)').hasMatch(remainder)) {
+              throw FormatException(
+                'Unparsed completion-action suffix on line ${lines.length + 1}.',
               );
             }
           } else {

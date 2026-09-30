@@ -56,6 +56,7 @@ void validateImportDocument(Map<String, dynamic> data) {
       'done',
       'startTime',
       'recurrence',
+      'completionAction',
     };
     if (fields.keys.any((k) => !allowed.contains(k)) ||
         !_text(fields['title'], 500) ||
@@ -64,6 +65,16 @@ void validateImportDocument(Map<String, dynamic> data) {
         fields['completed'] is! bool ||
         fields['tags'] is! List) {
       throw const FormatException('Invalid source task fields.');
+    }
+    if (fields.containsKey('completionAction') &&
+        (fields['completionAction'] is! String ||
+            ![
+              'keep',
+              'delete',
+            ].contains((fields['completionAction'] as String).toLowerCase()))) {
+      throw const FormatException(
+        'Unsupported completion action in canonical import provenance.',
+      );
     }
     final pieces = fields['titlePieces'] as List;
     final tags = fields['tags'] as List;
@@ -154,6 +165,7 @@ void validateImportDocument(Map<String, dynamic> data) {
         case 'due':
         case 'done':
         case 'recurrence':
+        case 'completionAction':
           if (!_keys(part, {'field'}) || !fields.containsKey(part['field'])) {
             throw const FormatException('Missing source field for slot.');
           }
@@ -168,7 +180,14 @@ void validateImportDocument(Map<String, dynamic> data) {
         seenFields.where((f) => f == 'completed').length != 1) {
       throw const FormatException('Inconsistent source slots.');
     }
-    for (final field in ['start', 'scheduled', 'due', 'done', 'recurrence']) {
+    for (final field in [
+      'start',
+      'scheduled',
+      'due',
+      'done',
+      'recurrence',
+      'completionAction',
+    ]) {
       if (seenFields.where((f) => f == field).length !=
           (fields.containsKey(field) ? 1 : 0)) {
         throw const FormatException('Missing or duplicate semantic slot.');

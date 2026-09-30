@@ -73,7 +73,7 @@ void main() {
         191,
         ...utf8.encode(
           '# Example\r\n\r\n'
-          '- [ ]  Read [[Example#section|alias]] and [reference](https://example.org/#anchor) #Area/tag #Area/tag 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03 🔁 every week when done  \n'
+          '- [ ]  Read [[Example#section|alias]] and [reference](https://example.org/#anchor) #Area/tag #Area/tag 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03 🔁 every week when done 🏁 delete  \n'
           '+ [X]\tExample #tag with trailing title ✅ 2026-09-30\r'
           '- [ ] Same title\n- [ ] Same title',
         ),
@@ -101,7 +101,7 @@ void main() {
       expect(observedRecurrences, hasLength(37));
       final source = [
         for (final rule in observedRecurrences)
-          '- [ ] Example #start-time-0930 🔁 $rule 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03',
+          '- [ ] Example #start-time-0930 🔁 $rule 🏁 delete 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03',
       ].join('\r\n');
       final bundle = _fixtureImport(utf8.encode(source));
       expect(utf8.decode(bundle.exportBytes()), source);
@@ -154,30 +154,81 @@ void main() {
     },
   );
 
+  test('sanitized 220 tasks / 99 repeats / 10 completed independently replay', () {
+    final source = [
+      for (var i = 0; i < 220; i++)
+        '- [${i < 3 || i >= 213 ? 'x' : ' '}] Example ${i + 1} #fixture${i % 24}'
+            '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 📅 2026-10-03' : ''}'
+            '${i >= 3 && i < 99 ? ' 🏁 delete' : ''}'
+            '${i < 3 || i >= 213 ? ' ✅ 2026-09-30' : ''}',
+    ].join('\n');
+    final bundle = _fixtureImport(utf8.encode(source));
+    final taskEvents = <String, List<LogEvent>>{};
+    for (final event in bundle.events.where(
+      (e) => e.type.startsWith('task.'),
+    )) {
+      taskEvents.putIfAbsent(event.entity, () => []).add(event);
+    }
+    final tasks = taskEvents.values.map(project).toList();
+    expect(tasks, hasLength(220));
+    expect(tasks.where((t) => t!['completed'] == true), hasLength(10));
+    expect(bundle.fidelity, {
+      'sourceByteExact': true,
+      'markdownFlagNormalizations': 0,
+      'sourceDeleteMappedToAppKeep': 96,
+      'appCompletionPolicy': 'keep-history',
+    });
+    expect(
+      tasks.where((t) => (t!['schedule'] as Map)['recurrence'] != null),
+      hasLength(99),
+    );
+    expect(utf8.decode(bundle.exportBytes()), source);
+  });
+
   test(
-    'sanitized 220 tasks / 99 repeats / 10 completed independently replay',
+    'completion flags preserve provenance, keep app history, and normalize only open repeats',
     () {
-      final source = [
-        for (var i = 0; i < 220; i++)
-          '- [${i < 10 ? 'x' : ' '}] Example ${i + 1} #fixture${i % 24}'
-              '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 📅 2026-10-03' : ''}'
-              '${i < 10 ? ' ✅ 2026-09-30' : ''}',
-      ].join('\n');
+      final source =
+          '- [ ] Open repeat 🔁 every day 🏁 KEEP 📅 2026-10-03  \r\n'
+          '- [ ] Missing flag 🔁 every week 📅 2026-10-03\n'
+          '- [x] History 🔁 every month 📅 2026-10-03 ✅ 2026-09-30\n'
+          '- [ ] Ordinary 🏁 KEEP\n'
+          '- [ ] Already delete 🔁 every day 🏁 DELETE 📅 2026-10-03';
       final bundle = _fixtureImport(utf8.encode(source));
-      final taskEvents = <String, List<LogEvent>>{};
-      for (final event in bundle.events.where(
-        (e) => e.type.startsWith('task.'),
-      )) {
-        taskEvents.putIfAbsent(event.entity, () => []).add(event);
-      }
-      final tasks = taskEvents.values.map(project).toList();
-      expect(tasks, hasLength(220));
-      expect(tasks.where((t) => t!['completed'] == true), hasLength(10));
+      final output = utf8.decode(bundle.exportBytes());
       expect(
-        tasks.where((t) => (t!['schedule'] as Map)['recurrence'] != null),
-        hasLength(99),
+        output,
+        '- [ ] Open repeat 🔁 every day 🏁 delete 📅 2026-10-03  \r\n'
+        '- [ ] Missing flag 🔁 every week 📅 2026-10-03 🏁 delete\n'
+        '- [x] History 🔁 every month 📅 2026-10-03 ✅ 2026-09-30\n'
+        '- [ ] Ordinary 🏁 KEEP\n'
+        '- [ ] Already delete 🔁 every day 🏁 DELETE 📅 2026-10-03',
       );
-      expect(utf8.decode(bundle.exportBytes()), source);
+      expect(bundle.fidelity, {
+        'sourceByteExact': false,
+        'markdownFlagNormalizations': 2,
+        'sourceDeleteMappedToAppKeep': 1,
+        'appCompletionPolicy': 'keep-history',
+      });
+      expect(bundle.originalSource.render(), utf8.encode(source));
+      final tasks = bundle.events
+          .where((e) => e.type == 'task.created')
+          .toList();
+      expect(tasks.first.data['title'], 'Open repeat');
+      expect(
+        tasks.every((e) => !e.data.containsKey('completionAction')),
+        isTrue,
+      );
+      expect(
+        bundle.events.where((e) => e.type == 'task.completed'),
+        hasLength(1),
+      );
+      for (final invalid in ['archive', 'delete forever', 'keep 🏁 keep']) {
+        expect(
+          () => _fixtureImport(utf8.encode('- [ ] Example 🏁 $invalid')),
+          throwsA(anything),
+        );
+      }
     },
   );
 
@@ -186,9 +237,10 @@ void main() {
     () {
       final source = [
         for (var i = 0; i < 220; i++)
-          '- [${i < 10 ? 'x' : ' '}] Sanitized title ${i + 1}'
+          '- [${i < 3 || i >= 213 ? 'x' : ' '}] Sanitized title ${i + 1}'
               '${i < 99 ? ' 🔁 ${observedRecurrences[i % 37]} 🛫 2026-10-01 ⏳ 2026-10-02 📅 2026-10-03' : ''}'
-              '${i < 10 ? ' ✅ 2026-09-30' : ''}',
+              '${i >= 3 && i < 99 ? ' 🏁 delete' : ''}'
+              '${i < 3 || i >= 213 ? ' ✅ 2026-09-30' : ''}',
       ].join('\n');
       final bundle = _fixtureImport(utf8.encode(source));
       final before = bundle.log;
@@ -210,7 +262,7 @@ void main() {
       expect(cases, hasLength(99));
       expect(
         cases.where((c) => c['historicallyCompleted'] == true),
-        hasLength(10),
+        hasLength(3),
       );
       expect(cases.first['next'], {
         'startDate': '2026-10-19',
@@ -337,8 +389,15 @@ void main() {
       addTearDown(() => temp.deleteSync(recursive: true));
       final source = File('${temp.path}/source.md')
         ..writeAsStringSync('- [ ] Example #demo\r\n');
+      final executable = Platform.resolvedExecutable.replaceAll(r'\', '/');
+      final cacheIndex = executable.indexOf('/bin/cache/');
+      final flutterRoot =
+          Platform.environment['FLUTTER_ROOT'] ??
+          (cacheIndex >= 0
+              ? executable.substring(0, cacheIndex)
+              : throw StateError('Set FLUTTER_ROOT for migration CLI tests.'));
       final dart =
-          '${Platform.environment['FLUTTER_ROOT'] ?? '/workspace/toolchains/flutter'}/bin/dart';
+          '$flutterRoot/bin/cache/dart-sdk/bin/dart${Platform.isWindows ? '.exe' : ''}';
       Future<ProcessResult> run(List<String> args) =>
           Process.run(dart, ['run', 'tool/migration.dart', ...args]);
       final stage = '${temp.path}/stage';

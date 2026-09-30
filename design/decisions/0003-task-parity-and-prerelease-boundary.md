@@ -34,6 +34,12 @@ The proposed HLC pair would separate physical time from burst counters; Lee pref
 
 Coordinated history repair is deferred maintenance design, not implemented. A possible future operation would close all clients, preserve backups, rewrite deliberately and force cache rebuilds; stale offline logs and generation identity require an explicit reviewed design. This task never rewrites actual history.
 
+## Source completion actions
+
+The private rehearsal exposed `🏁 delete` metadata omitted from the initial source inventory. Obsidian Tasks removes the completed occurrence while retaining its successor; this is independent of the recurrence expression. Lee explicitly chose **retained completed history for every Tandemlog task**: the source flag only managed Markdown clutter. Preserve its original value and formatting in canonical import provenance, report the intentional behavior adaptation, and never implement app deletion from that flag.
+
+For Markdown fidelity export, Lee authorized `🏁 delete` on every open recurring row. Missing/keep flags therefore normalize to delete on those rows only; completed recurring rows remain historical and do not spawn successors during import. Report normalization counts and actual byte equality separately. Source amendment to consistent flags permits byte-exact reconstruction; do not claim it when normalized output differs. Unknown completion actions remain explicit errors. [Source semantics](https://github.com/obsidian-tasks-group/obsidian-tasks/blob/7.20.0/docs/Getting%20Started/On%20Completion.md).
+
 ## Application identity and compatibility
 
 Use `com.reddraggone9.tandemlog` for the next candidate. Android's package changes, Linux's application identity changes, and Windows's company metadata becomes `com.reddraggone9`; these affect fresh settings locations and installation identity. Retain the existing owner signing key. Public prerelease notes must disclose the separate installation and protocol break.

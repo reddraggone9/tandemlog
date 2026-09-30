@@ -1,3 +1,5 @@
+> Inventory correction from actual rehearsal: completion-action metadata `🏁 delete` was present but missed by the initial structural audit. ADR 0003 records the explicit keep-history adaptation and export normalization. Earlier completeness claims in this research snapshot are superseded.
+
 # Next task parity — review draft
 
 Status: research baseline, 2026-09-30. Implementation was subsequently authorized; [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) records accepted decisions and supersedes earlier proposals below. Actual source/live migration remains unapproved. This document contains no private source task text.

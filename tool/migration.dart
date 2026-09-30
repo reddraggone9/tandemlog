@@ -23,6 +23,11 @@ class MigrationBundle {
     );
     final batchTimeText = batchTime.toIso8601String();
     final source = MarkdownSource.parse(bytes);
+    if (!_same(source.render(), bytes)) {
+      throw StateError(
+        'Original source-map byte fidelity failed before import.',
+      );
+    }
     final digest = sha256.convert(bytes).toString();
     String id(String role) {
       final h = sha256
@@ -102,10 +107,7 @@ class MigrationBundle {
       ...source.toJson(),
     });
     final bundle = MigrationBundle(space, writer, events);
-    final restored = bundle.exportBytes();
-    if (!_same(bytes, restored)) {
-      throw StateError('Byte round-trip failed; no destination written.');
-    }
+    bundle.exportBytes(); // Includes authorized Markdown flag normalization.
     return bundle;
   }
 
@@ -202,6 +204,27 @@ class MigrationBundle {
       if (f.containsKey('done') && f['completed'] == true) {
         f['done'] = completionDates.single;
       }
+      if (f['completed'] == false &&
+          f['recurrence'] != null &&
+          (f['completionAction'] as String?)?.toLowerCase() != 'delete') {
+        final hadAction = f.containsKey('completionAction');
+        f['completionAction'] = 'delete';
+        if (!hadAction) {
+          final parts = (line['parts'] as List).cast<Map<String, dynamic>>();
+          Map<String, dynamic>? trailing;
+          if (parts.isNotEmpty &&
+              parts.last['literal'] is String &&
+              RegExp(r'^\s+$').hasMatch(parts.last['literal'] as String)) {
+            trailing = parts.removeLast();
+          }
+          parts.addAll([
+            {'literal': ' 🏁 '},
+            {'field': 'completionAction'},
+          ]);
+          if (trailing != null) parts.add(trailing);
+          line['parts'] = parts;
+        }
+      }
     }
     final createdTasks = events
         .where((e) => e.type == 'task.created')
@@ -291,6 +314,34 @@ class MigrationBundle {
     }
   }
 
+  MarkdownSource get originalSource => MarkdownSource.fromJson(
+    jsonDecode(
+          jsonEncode(
+            events.singleWhere((e) => e.type == 'import.document').data,
+          ),
+        )
+        as Map<String, dynamic>,
+  );
+
+  int get markdownFlagNormalizations => originalSource.lines.where((line) {
+    final f = line['fields'];
+    return f is Map &&
+        f['completed'] == false &&
+        f['recurrence'] != null &&
+        (f['completionAction'] as String?)?.toLowerCase() != 'delete';
+  }).length;
+
+  Map<String, dynamic> get fidelity => {
+    'sourceByteExact': _same(originalSource.render(), exportBytes()),
+    'markdownFlagNormalizations': markdownFlagNormalizations,
+    'sourceDeleteMappedToAppKeep': originalSource.lines.where((line) {
+      final f = line['fields'];
+      return f is Map &&
+          (f['completionAction'] as String?)?.toLowerCase() == 'delete';
+    }).length,
+    'appCompletionPolicy': 'keep-history',
+  };
+
   Map<String, dynamic> get inventory {
     final schedules = events
         .where((e) => e.type == 'task.created')
@@ -372,7 +423,7 @@ class MigrationBundle {
     'completed': events.where((e) => e.type == 'task.completed').length,
     ...inventory,
     'semanticReplay': 'passed',
-    'unchangedByteRoundTrip': 'passed',
+    ...fidelity,
     'scope':
         'Fresh staging only; UTF-8; unchanged import export; no live data touched.',
   };
@@ -490,7 +541,7 @@ Future<void> main(List<String> args) async {
       stdout.writeln(
         audit
             ? 'Read-only recurrence audit written; canonical source unchanged.'
-            : 'Exported unchanged import; semantic replay validated.',
+            : 'Exported Markdown; semantic replay validated; flag normalizations=${bundle.markdownFlagNormalizations}; sourceByteExact=${bundle.fidelity['sourceByteExact']}.',
       );
     }
   } catch (e) {
