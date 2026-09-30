@@ -49,3 +49,8 @@ app.*.map.json
 
 # Private artifact identity metadata
 /evidence/library-deliverables.json
+
+# Signing material must never be committed.
+*.jks
+*.keystore
+key.properties

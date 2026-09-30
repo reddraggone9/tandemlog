@@ -1,0 +1,57 @@
+name: Build signed candidate
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: android-signed-candidate
+  cancel-in-progress: false
+jobs:
+  candidate:
+    permissions:
+      contents: read
+      actions: read
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test "$GITHUB_REF" = refs/heads/main
+          python3 tool/android_release.py preflight
+          python3 tool/android_release.py candidate-history
+  checks:
+    needs: candidate
+    uses: ./.github/workflows/validate.yml
+  signed-android:
+    needs: checks
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter pub get
+      - name: Build with owner signing identity
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: bash tool/build_android_release.sh
+      - name: Remove temporary signing material
+        if: always()
+        run: rm -rf -- "$RUNNER_TEMP/tandemlog-signing"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: android-release
+          path: dist/*
+          retention-days: 5
+          if-no-files-found: error

@@ -1,0 +1,2 @@
+# Pending owner-provided public SHA-256 certificate fingerprint.
+# Candidate signing fails closed until this is a single 64-digit hex value.

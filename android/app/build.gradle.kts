@@ -4,6 +4,22 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+// Release signing is supplied only by the authorized candidate job or owner.
+// Never fall back to the SDK debug identity for a distributable release.
+val releaseStore = System.getenv("ANDROID_KEYSTORE_PATH")
+val releaseStorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+val releaseAlias = System.getenv("ANDROID_KEY_ALIAS")
+val releaseKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+val hasReleaseSigning = listOf(
+    releaseStore, releaseStorePassword, releaseAlias, releaseKeyPassword
+).all { !it.isNullOrBlank() }
+gradle.taskGraph.whenReady {
+    if (allTasks.any { it.project == project && it.name.contains("Release") }) {
+        check(hasReleaseSigning) { "Release signing inputs are required; debug fallback is forbidden." }
+        check(file(releaseStore!!).isFile) { "Release keystore file is missing." }
+    }
+}
+
 android {
     namespace = "dev.tandemlog.tandemlog"
     compileSdk = flutter.compileSdkVersion
@@ -29,11 +45,19 @@ android {
         versionName = flutter.versionName
     }
 
+    signingConfigs {
+        create("ownerRelease") {
+            if (hasReleaseSigning) {
+                storeFile = file(releaseStore!!)
+                storePassword = releaseStorePassword
+                keyAlias = releaseAlias
+                keyPassword = releaseKeyPassword
+            }
+        }
+    }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("ownerRelease")
         }
     }
 }
