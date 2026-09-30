@@ -7,6 +7,10 @@ import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'domain/schedule.dart';
+import 'domain/task_view.dart';
+import 'domain/timed_view.dart';
+import 'presentation/view_clock.dart';
+import 'platform/view_time_source.dart';
 import 'domain/wall_time.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
@@ -21,9 +25,15 @@ void main() {
 }
 
 class TandemlogApp extends StatefulWidget {
-  const TandemlogApp({super.key, this.profilePath, this.folderActions});
+  const TandemlogApp({
+    super.key,
+    this.profilePath,
+    this.folderActions,
+    this.timeSourceFactory,
+  });
   final String? profilePath;
   final FolderActions? folderActions;
+  final ViewTimeSource Function(void Function())? timeSourceFactory;
   @override
   State<TandemlogApp> createState() => _TandemlogAppState();
 }
@@ -78,6 +88,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
         profilePath: widget.profilePath,
         appearance: appearance,
         folderActions: widget.folderActions ?? FolderActions(),
+        timeSourceFactory: widget.timeSourceFactory,
       ),
     ),
   );
@@ -89,10 +100,12 @@ class TasksPage extends StatefulWidget {
     this.profilePath,
     required this.appearance,
     required this.folderActions,
+    this.timeSourceFactory,
   });
   final String? profilePath;
   final ValueNotifier<Appearance> appearance;
   final FolderActions folderActions;
+  final ViewTimeSource Function(void Function())? timeSourceFactory;
   @override
   State<TasksPage> createState() => _TasksPageState();
 }
@@ -118,10 +131,52 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   String? pendingUserName;
   Future<void>? syncing;
   final startup = Stopwatch()..start();
+  final viewElapsed = Stopwatch()..start();
+  late final ViewTimeSource timeSource;
+  late final ViewClock<TaskView> viewClock;
+  TaskView? taskView;
+  String? viewError;
+
+  void _invalidateView() {
+    if (!mounted || !foreground) return;
+    if (!timeSource.ready) {
+      viewClock.stop();
+      setState(() => viewError = timeSource.error);
+      return;
+    }
+    try {
+      viewError = null;
+      viewClock.start();
+    } catch (failure) {
+      viewClock.stop();
+      setState(() => viewError = 'Cannot update the task view: $failure');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    timeSource =
+        widget.timeSourceFactory?.call(_invalidateView) ??
+        ViewTimeSource(onChanged: _invalidateView);
+    viewClock = ViewClock<TaskView>(
+      readTime: timeSource.readTime,
+      monotonicNow: () => viewElapsed.elapsed,
+      project: (time) {
+        try {
+          viewError = null;
+          return projectTaskView(rows, time, assignee: all ? null : user);
+        } catch (failure) {
+          viewError = 'Cannot update the task view: $failure';
+          return TimedView(taskView ?? TaskView([], []));
+        }
+      },
+      onView: (view) {
+        if (mounted) setState(() => taskView = view.value);
+      },
+    );
+    timeSource.start();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       debugPrint('TANDEMLOG_FIRST_FRAME_MS=${startup.elapsedMilliseconds}');
     });
@@ -408,6 +463,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   void _configureImporter() {
+    _invalidateView();
     if (!identical(watchedStore, store)) {
       importer?.dispose();
       watchedStore = store;
@@ -459,6 +515,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             if (errorFromRefresh) error = null;
             errorFromRefresh = false;
           });
+          _invalidateView();
         }
       } catch (e) {
         if (mounted && identical(store, origin)) {
@@ -478,6 +535,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     foreground =
         state == AppLifecycleState.resumed ||
         state == AppLifecycleState.inactive;
+    if (foreground) {
+      timeSource.start();
+    } else {
+      timeSource.stop();
+      viewClock.stop();
+    }
     _configureImporter();
     if (state == AppLifecycleState.resumed) importer?.request();
   }
@@ -654,20 +717,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               task['tagRefs'] as Map? ?? {},
             ),
           );
-          if (mounted) setState(() => rows = origin.rows);
+          if (mounted) {
+            setState(() => rows = origin.rows);
+            _invalidateView();
+          }
         },
       ),
     );
   }
 
-  Future<void> _moveTask(
-    Map<String, dynamic> task,
-    List<Map<String, dynamic>> visible,
-    bool up,
-  ) => _act(() async {
+  Future<void> _moveTask(Map<String, dynamic> task, bool up) => _act(() async {
+    final entries =
+        (showCompleted ? taskView?.completed : taskView?.open) ?? [];
+    final visible = entries.map((entry) => entry.task).toList();
     final index = visible.indexWhere((row) => row['id'] == task['id']);
     final neighbor = index + (up ? -1 : 1);
     if (index < 0 || neighbor < 0 || neighbor >= visible.length) return;
+    if (entries[index].effectiveDate != entries[neighbor].effectiveDate) return;
     final global = rows.where((row) => row['kind'] == 'task').toList();
     final globalNeighbor = global.indexWhere(
       (row) => row['id'] == visible[neighbor]['id'],
@@ -756,6 +822,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     importer?.dispose();
+    viewClock.dispose();
+    timeSource.dispose();
     WidgetsBinding.instance.removeObserver(this);
     capture.dispose();
     captureFocus.dispose();
@@ -768,14 +836,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final users = rows.where((r) => r['kind'] == 'user').toList();
-    final tasks = rows
-        .where(
-          (r) =>
-              r['kind'] == 'task' &&
-              (r['completed'] == true) == showCompleted &&
-              (all || r['assignee'] == user),
-        )
-        .toList();
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -881,7 +941,34 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       ? _welcome()
                       : user == null
                       ? _users(users)
-                      : _tasks(tasks, users),
+                      : viewError != null
+                      ? Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(viewError!),
+                                const SizedBox(height: 12),
+                                TextButton(
+                                  onPressed: () {
+                                    timeSource.stop();
+                                    timeSource.start();
+                                  },
+                                  child: const Text('Retry'),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      : taskView == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : _tasks(
+                          showCompleted
+                              ? taskView!.completedGroups
+                              : taskView!.openGroups,
+                          users,
+                        ),
                 ),
               ],
             ),
@@ -1036,15 +1123,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ],
         );
   Widget _taskHeader(List<Map<String, dynamic>> users) {
-    final visibleTasks = rows.where(
-      (row) => row['kind'] == 'task' && (all || row['assignee'] == user),
-    );
-    final openCount = visibleTasks
-        .where((row) => row['completed'] != true)
-        .length;
-    final completedCount = visibleTasks
-        .where((row) => row['completed'] == true)
-        .length;
+    final openCount = taskView?.open.length ?? 0;
+    final completedCount = taskView?.completed.length ?? 0;
     Widget heading(bool completed, int count) => Visibility(
       visible: showCompleted == completed,
       maintainState: true,
@@ -1106,7 +1186,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         FilterChip(
           label: const Text('Everyone'),
           selected: all,
-          onSelected: (value) => setState(() => all = value),
+          onSelected: (value) {
+            setState(() => all = value);
+            _invalidateView();
+          },
         ),
       ],
     );
@@ -1131,207 +1214,269 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _tasks(
-    List<Map<String, dynamic>> tasks,
-    List<Map<String, dynamic>> users,
-  ) => ListView(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    children: [
-      _taskHeader(users),
-      const SizedBox(height: 8),
-      LayoutBuilder(
-        builder: (context, constraints) {
-          const labels = ['Open', 'Completed'];
-          const horizontalPadding = 12.0;
-          final labelStyle = Theme.of(context).textTheme.labelLarge;
-          var longestLabel = 0.0;
-          for (final label in labels) {
-            final painter = TextPainter(
-              text: TextSpan(text: label, style: labelStyle),
-              textDirection: Directionality.of(context),
-              textScaler: MediaQuery.textScalerOf(context),
-            )..layout();
-            if (painter.width > longestLabel) longestLabel = painter.width;
-            painter.dispose();
-          }
-          // Select the layout from measured text, never selection state. The
-          // checkmark would otherwise steal width only from the selected label.
-          final horizontalFits =
-              constraints.maxWidth >=
-              2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
-          return SegmentedButton<bool>(
-            direction: horizontalFits ? Axis.horizontal : Axis.vertical,
-            showSelectedIcon: false,
-            style: SegmentedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                horizontal: horizontalPadding,
-                vertical: 8,
-              ),
-            ),
-            segments: const [
-              ButtonSegment(value: false, label: Text('Open')),
-              ButtonSegment(value: true, label: Text('Completed')),
-            ],
-            selected: {showCompleted},
-            onSelectionChanged: (values) =>
-                setState(() => showCompleted = values.first),
-          );
-        },
-      ),
-      const SizedBox(height: 16),
-      if (!showCompleted)
-        Focus(
-          onKeyEvent: (_, event) {
-            final enter =
-                event.logicalKey == LogicalKeyboardKey.enter ||
-                event.logicalKey == LogicalKeyboardKey.numpadEnter;
-            if (widget.folderActions.requiresPicker ||
-                !enter ||
-                (capture.value.composing.isValid &&
-                    !capture.value.composing.isCollapsed)) {
-              return KeyEventResult.ignored;
+  Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) {
+    final entries = groups.expand((group) => group.entries).toList();
+    final tasks = entries.map((entry) => entry.task).toList();
+    final hasDeferredTasks =
+        !showCompleted &&
+        rows.any(
+          (row) =>
+              row['kind'] == 'task' &&
+              row['completed'] != true &&
+              (all || row['assignee'] == user),
+        );
+    bool movable(Map<String, dynamic> task, bool up) {
+      final index = entries.indexWhere(
+        (entry) => entry.task['id'] == task['id'],
+      );
+      final neighbor = index + (up ? -1 : 1);
+      return index >= 0 &&
+          neighbor >= 0 &&
+          neighbor < entries.length &&
+          entries[index].effectiveDate == entries[neighbor].effectiveDate;
+    }
+
+    String groupTitle(TaskViewGroup group) {
+      const weekdays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ];
+      return group.date == null
+          ? 'Someday'
+          : '${weekdays[group.weekday! - 1]} · ${group.date}';
+    }
+
+    return ListView(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      children: [
+        _taskHeader(users),
+        const SizedBox(height: 8),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            const labels = ['Open', 'Completed'];
+            const horizontalPadding = 12.0;
+            final labelStyle = Theme.of(context).textTheme.labelLarge;
+            var longestLabel = 0.0;
+            for (final label in labels) {
+              final painter = TextPainter(
+                text: TextSpan(text: label, style: labelStyle),
+                textDirection: Directionality.of(context),
+                textScaler: MediaQuery.textScalerOf(context),
+              )..layout();
+              if (painter.width > longestLabel) longestLabel = painter.width;
+              painter.dispose();
             }
-            if (event is KeyDownEvent) {
-              if (HardwareKeyboard.instance.isShiftPressed) {
-                if (!busy && pendingCapture.isEmpty) {
-                  final value = capture.value;
-                  final selection = value.selection.isValid
-                      ? value.selection
-                      : TextSelection.collapsed(offset: value.text.length);
-                  // Use the editor's user-input path so it reveals the caret
-                  // after layout, including a newly inserted blank last line.
-                  final editor = captureFocus.context!
-                      .findAncestorStateOfType<EditableTextState>()!;
-                  editor.userUpdateTextEditingValue(
-                    TextEditingValue(
-                      text: value.text.replaceRange(
-                        selection.start,
-                        selection.end,
-                        '\n',
-                      ),
-                      selection: TextSelection.collapsed(
-                        offset: selection.start + 1,
-                      ),
-                    ),
-                    SelectionChangedCause.keyboard,
-                  );
-                }
-              } else {
-                unawaited(_capture());
-              }
-              return KeyEventResult.handled;
-            }
-            if (event is KeyRepeatEvent) return KeyEventResult.handled;
-            return KeyEventResult.ignored;
-          },
-          child: TextField(
-            controller: capture,
-            focusNode: captureFocus,
-            readOnly: pendingCapture.isNotEmpty,
-            keyboardType: TextInputType.multiline,
-            textInputAction: TextInputAction.newline,
-            minLines: 1,
-            maxLines: 4,
-            enabled: !busy,
-            decoration: InputDecoration(
-              labelText: 'What needs doing?',
-              hintText: 'One task per line',
-              helperText: captureFailure && pendingCapture.isNotEmpty
-                  ? 'Retry to check these tasks before editing.'
-                  : widget.folderActions.requiresPicker
-                  ? null
-                  : 'Enter to add · Shift+Enter for another task',
-              suffixIcon: IconButton(
-                tooltip: 'Add tasks',
-                onPressed: busy ? null : _capture,
-                icon: const Icon(Icons.arrow_upward),
-              ),
-            ),
-            onSubmitted: (_) => _capture(),
-          ),
-        ),
-      const SizedBox(height: 12),
-      if (tasks.isEmpty)
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 56),
-          child: Column(
-            children: [
-              Icon(
-                Icons.done_all,
-                size: 48,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              SizedBox(height: 12),
-              Text(
-                showCompleted ? 'No completed tasks' : 'No open tasks',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-              SizedBox(height: 8),
-              Text(
-                showCompleted
-                    ? 'Completed tasks will appear here.'
-                    : 'Add a task above.',
-              ),
-            ],
-          ),
-        ),
-      for (final task in tasks) ...[
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minVerticalPadding: 6,
-          horizontalTitleGap: 8,
-          leading: Tooltip(
-            message:
-                '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
-            child: Checkbox(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
-              value: showCompleted,
-              onChanged: busy
-                  ? null
-                  : (_) => showCompleted ? _reopen(task) : _complete(task),
-            ),
-          ),
-          title: Text(
-            task['title'],
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-          subtitle: _taskPreview(task, users).isEmpty
-              ? null
-              : Text(
-                  _taskPreview(task, users),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+            // Select the layout from measured text, never selection state. The
+            // checkmark would otherwise steal width only from the selected label.
+            final horizontalFits =
+                constraints.maxWidth >=
+                2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
+            return SegmentedButton<bool>(
+              direction: horizontalFits ? Axis.horizontal : Axis.vertical,
+              showSelectedIcon: false,
+              style: SegmentedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: horizontalPadding,
+                  vertical: 8,
                 ),
-          trailing: PopupMenuButton<String>(
-            tooltip: 'Task actions',
-            enabled: !busy,
-            onSelected: (action) {
-              if (action == 'edit') {
-                _edit(task);
-              } else {
-                _moveTask(task, tasks, action == 'up');
-              }
-            },
-            itemBuilder: (_) => [
-              const PopupMenuItem(value: 'edit', child: Text('Edit task')),
-              PopupMenuItem(
-                value: 'up',
-                enabled: task != tasks.first,
-                child: const Text('Move up'),
               ),
-              PopupMenuItem(
-                value: 'down',
-                enabled: task != tasks.last,
-                child: const Text('Move down'),
-              ),
-            ],
-          ),
-          onTap: busy ? null : () => _edit(task),
+              segments: const [
+                ButtonSegment(value: false, label: Text('Open')),
+                ButtonSegment(value: true, label: Text('Completed')),
+              ],
+              selected: {showCompleted},
+              onSelectionChanged: (values) =>
+                  setState(() => showCompleted = values.first),
+            );
+          },
         ),
-        const Divider(height: 1),
+        const SizedBox(height: 16),
+        if (!showCompleted)
+          Focus(
+            onKeyEvent: (_, event) {
+              final enter =
+                  event.logicalKey == LogicalKeyboardKey.enter ||
+                  event.logicalKey == LogicalKeyboardKey.numpadEnter;
+              if (widget.folderActions.requiresPicker ||
+                  !enter ||
+                  (capture.value.composing.isValid &&
+                      !capture.value.composing.isCollapsed)) {
+                return KeyEventResult.ignored;
+              }
+              if (event is KeyDownEvent) {
+                if (HardwareKeyboard.instance.isShiftPressed) {
+                  if (!busy && pendingCapture.isEmpty) {
+                    final value = capture.value;
+                    final selection = value.selection.isValid
+                        ? value.selection
+                        : TextSelection.collapsed(offset: value.text.length);
+                    // Use the editor's user-input path so it reveals the caret
+                    // after layout, including a newly inserted blank last line.
+                    final editor = captureFocus.context!
+                        .findAncestorStateOfType<EditableTextState>()!;
+                    editor.userUpdateTextEditingValue(
+                      TextEditingValue(
+                        text: value.text.replaceRange(
+                          selection.start,
+                          selection.end,
+                          '\n',
+                        ),
+                        selection: TextSelection.collapsed(
+                          offset: selection.start + 1,
+                        ),
+                      ),
+                      SelectionChangedCause.keyboard,
+                    );
+                  }
+                } else {
+                  unawaited(_capture());
+                }
+                return KeyEventResult.handled;
+              }
+              if (event is KeyRepeatEvent) return KeyEventResult.handled;
+              return KeyEventResult.ignored;
+            },
+            child: TextField(
+              controller: capture,
+              focusNode: captureFocus,
+              readOnly: pendingCapture.isNotEmpty,
+              keyboardType: TextInputType.multiline,
+              textInputAction: TextInputAction.newline,
+              minLines: 1,
+              maxLines: 4,
+              enabled: !busy,
+              decoration: InputDecoration(
+                labelText: 'What needs doing?',
+                hintText: 'One task per line',
+                helperText: captureFailure && pendingCapture.isNotEmpty
+                    ? 'Retry to check these tasks before editing.'
+                    : widget.folderActions.requiresPicker
+                    ? null
+                    : 'Enter to add · Shift+Enter for another task',
+                suffixIcon: IconButton(
+                  tooltip: 'Add tasks',
+                  onPressed: busy ? null : _capture,
+                  icon: const Icon(Icons.arrow_upward),
+                ),
+              ),
+              onSubmitted: (_) => _capture(),
+            ),
+          ),
+        const SizedBox(height: 12),
+        if (tasks.isEmpty)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 56),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.done_all,
+                  size: 48,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                SizedBox(height: 12),
+                Text(
+                  showCompleted
+                      ? 'No completed tasks'
+                      : hasDeferredTasks
+                      ? 'Nothing available yet'
+                      : 'No open tasks',
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  showCompleted
+                      ? 'Completed tasks will appear here.'
+                      : hasDeferredTasks
+                      ? 'Tasks with a future start will appear when they become available.'
+                      : 'Add a task above.',
+                ),
+              ],
+            ),
+          ),
+        for (final group in groups) ...[
+          Padding(
+            padding: const EdgeInsets.only(top: 16, bottom: 4),
+            child: Semantics(
+              header: true,
+              child: Text(
+                groupTitle(group),
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+          ),
+          for (final entry in group.entries) ...[
+            Builder(
+              builder: (context) {
+                final task = entry.task;
+                return ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  minVerticalPadding: 6,
+                  horizontalTitleGap: 8,
+                  leading: Tooltip(
+                    message:
+                        '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
+                    child: Checkbox(
+                      materialTapTargetSize: MaterialTapTargetSize.padded,
+                      value: showCompleted,
+                      onChanged: busy
+                          ? null
+                          : (_) =>
+                                showCompleted ? _reopen(task) : _complete(task),
+                    ),
+                  ),
+                  title: Text(
+                    task['title'],
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  subtitle: _taskPreview(task, users).isEmpty
+                      ? null
+                      : Text(
+                          _taskPreview(task, users),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                  trailing: PopupMenuButton<String>(
+                    tooltip: 'Task actions',
+                    enabled: !busy,
+                    onSelected: (action) {
+                      if (action == 'edit') {
+                        _edit(task);
+                      } else {
+                        _moveTask(task, action == 'up');
+                      }
+                    },
+                    itemBuilder: (_) => [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Text('Edit task'),
+                      ),
+                      PopupMenuItem(
+                        value: 'up',
+                        enabled: movable(task, true),
+                        child: const Text('Move up'),
+                      ),
+                      PopupMenuItem(
+                        value: 'down',
+                        enabled: movable(task, false),
+                        child: const Text('Move down'),
+                      ),
+                    ],
+                  ),
+                  onTap: busy ? null : () => _edit(task),
+                );
+              },
+            ),
+            const Divider(height: 1),
+          ],
+        ],
       ],
-    ],
-  );
+    );
+  }
 }
 
 /// Owns an edit buffer independently of incoming folder updates. Only fields
@@ -1386,9 +1531,11 @@ class _TaskEditorState extends State<_TaskEditor> {
         'dueTime',
         'timeZone',
         'recurrence',
+        'dueMinDays',
+        'dueMaxDays',
       ])
         key: TextEditingController(
-          text: originalSchedule[key] as String? ?? '',
+          text: originalSchedule[key]?.toString() ?? '',
         ),
     };
   }
@@ -1415,6 +1562,11 @@ class _TaskEditorState extends State<_TaskEditor> {
         for (final entry in schedule.entries)
           entry.key: entry.value.text.trim().isEmpty
               ? null
+              : {'dueMinDays', 'dueMaxDays'}.contains(entry.key)
+              ? int.tryParse(entry.value.text.trim()) ??
+                    (throw const FormatException(
+                      'Sort-date bounds must be whole numbers of days.',
+                    ))
               : entry.value.text.trim(),
       }).toJson();
       if (parsed['timeZone'] != null) {
@@ -1696,6 +1848,33 @@ class _TaskEditorState extends State<_TaskEditor> {
                         helperMaxLines: 8,
                       ),
                     ),
+                    const SizedBox(height: 16),
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text('Sort-date bounds'),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Optional days from today. These change where a task is listed, not its deadline.',
+                    ),
+                    const SizedBox(height: 12),
+                    for (final bound in [
+                      ('dueMinDays', 'Minimum days'),
+                      ('dueMaxDays', 'Maximum days'),
+                    ]) ...[
+                      TextFormField(
+                        controller: schedule[bound.$1],
+                        enabled: !saving,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          signed: true,
+                        ),
+                        decoration: InputDecoration(
+                          labelText: bound.$2,
+                          hintText: 'No bound',
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                    ],
                     const SizedBox(height: 12),
                   ],
                 ),

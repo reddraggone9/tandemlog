@@ -10,6 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
+import 'package:tandemlog/platform/view_time_source.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -655,11 +656,21 @@ void main() {
         'title': 'Second task',
         'description': '',
         'assignee': user,
+        'schedule': {'scheduledDate': '2026-01-30', 'scheduledTime': '08:00'},
       });
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => ViewTimeSource(
+            onChanged: onChanged,
+            now: () => DateTime.utc(2026, 3, 1),
+            loadZone: () async => 'UTC',
+          ),
+        ),
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.text('Monthly review'));
       await tester.pumpAndSettle();
@@ -808,6 +819,161 @@ void main() {
     await remote.close();
     await root.delete(recursive: true);
   });
+  testWidgets(
+    'timed task groups preserve drafts and editors without log writes',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('timed-view-ui-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final user = const Uuid().v4();
+      final remote = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/reader',
+      );
+      await remote.command(user, 'user.created', {'name': 'Example user'});
+      final ids = <String, String>{};
+      Future<void> add(String title, Map<String, dynamic> schedule) async {
+        final id = ids[title] = const Uuid().v4();
+        await remote.command(id, 'task.created', {
+          'title': title,
+          'description': 'Original notes',
+          'assignee': user,
+          'schedule': schedule,
+        });
+      }
+
+      await add('Scheduled before due', {
+        'scheduledDate': '2026-10-02',
+        'dueDate': '2026-10-10',
+      });
+      await add('Due earlier', {'dueDate': '2026-10-01'});
+      await add('Someday example', {});
+      await add('Boundary arrival', {
+        'startDate': '2026-10-01',
+        'startTime': '10:00',
+        'dueDate': '2026-10-03',
+      });
+      await add('Second arrival', {
+        'startDate': '2026-10-01',
+        'startTime': '10:01',
+        'dueDate': '2026-10-04',
+      });
+      await add('Completed future history', {
+        'startDate': '2026-11-01',
+        'dueDate': '2026-11-02',
+      });
+      await remote.complete(
+        ids['Completed future history']!,
+        completionDay: DateTime.utc(2026, 9, 30),
+      );
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      Future<Map<String, String>> logs() async => {
+        for (final file
+            in await folder
+                .list()
+                .where((entry) => entry.path.endsWith('.jsonl'))
+                .toList())
+          file.path: await File(file.path).readAsString(),
+      };
+      final before = await logs();
+      var base = DateTime.utc(2026, 10, 1, 9, 59, 30);
+      final elapsed = Stopwatch()..start();
+      late ViewTimeSource source;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => source = ViewTimeSource(
+            onChanged: onChanged,
+            now: () => base.add(elapsed.elapsed),
+            loadZone: () async => 'UTC',
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Boundary arrival'), findsNothing);
+      expect(find.text('Second arrival'), findsNothing);
+      expect(find.text('Someday'), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.text('Due earlier')).dy,
+        lessThan(tester.getTopLeft(find.text('Scheduled before due')).dy),
+      );
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.tap(capture);
+      await tester.enterText(capture, 'Unsubmitted draft');
+      final captureWidget = tester.widget<TextField>(capture);
+      final draft = captureWidget.controller!.value;
+      expect(captureWidget.focusNode!.hasFocus, isTrue);
+      base = DateTime.utc(2026, 10, 1, 9, 59, 59);
+      elapsed.reset();
+      source.onChanged();
+      await tester.pumpAndSettle();
+      await Future<void>.delayed(const Duration(milliseconds: 1250));
+      await tester.pumpAndSettle();
+      expect(find.text('Boundary arrival'), findsOneWidget);
+      expect(tester.widget<TextField>(capture).controller!.value, draft);
+      expect(tester.widget<TextField>(capture).focusNode!.hasFocus, isTrue);
+      expect(await logs(), before);
+      await tester.ensureVisible(find.text('Scheduled before due'));
+      await tester.tap(find.text('Scheduled before due'));
+      await tester.pumpAndSettle();
+      final notes = find.widgetWithText(TextField, 'Notes');
+      await tester.tap(notes);
+      await tester.enterText(notes, 'An interrupted edit remains here.');
+      final editing = tester.widget<TextField>(notes).controller!.value;
+      base = DateTime.utc(2026, 10, 1, 10, 0, 59);
+      elapsed.reset();
+      source.onChanged();
+      await tester.pumpAndSettle();
+      await Future<void>.delayed(const Duration(milliseconds: 1250));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(tester.widget<TextField>(notes).controller!.value, editing);
+      expect(await logs(), before);
+      Future<void> fill(String label, String text) async {
+        final field = find.widgetWithText(TextField, label);
+        await tester.ensureVisible(field);
+        await tester.pumpAndSettle();
+        await tester.tap(field);
+        await tester.enterText(field, text);
+        await tester.pumpAndSettle();
+      }
+
+      await fill('Minimum days', '5');
+      await fill('Maximum days', '2');
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('minimum no greater than maximum'),
+        findsOneWidget,
+      );
+      expect(await logs(), before);
+      await fill('Minimum days', '1');
+      await fill('Maximum days', '3');
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(find.text('Second arrival'), findsOneWidget);
+      expect(tester.widget<TextField>(capture).controller!.value, draft);
+      await remote.refresh();
+      final edited = remote.rows.firstWhere(
+        (row) => row['id'] == ids['Scheduled before due'],
+      );
+      expect((edited['schedule'] as Map)['dueMinDays'], 1);
+      expect((edited['schedule'] as Map)['dueMaxDays'], 3);
+      expect((edited['schedule'] as Map)['dueDate'], '2026-10-10');
+      await tester.ensureVisible(find.text('Completed'));
+      await tester.tap(find.text('Completed'));
+      await tester.pumpAndSettle();
+      expect(find.text('Completed future history'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await remote.close();
+      await root.delete(recursive: true);
+    },
+  );
 }
 
 class TestFolders extends FolderActions {
