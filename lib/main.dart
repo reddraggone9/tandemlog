@@ -1139,14 +1139,44 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     children: [
       _taskHeader(users),
       const SizedBox(height: 8),
-      SegmentedButton<bool>(
-        segments: const [
-          ButtonSegment(value: false, label: Text('Open')),
-          ButtonSegment(value: true, label: Text('Completed')),
-        ],
-        selected: {showCompleted},
-        onSelectionChanged: (values) =>
-            setState(() => showCompleted = values.first),
+      LayoutBuilder(
+        builder: (context, constraints) {
+          const labels = ['Open', 'Completed'];
+          const horizontalPadding = 12.0;
+          final labelStyle = Theme.of(context).textTheme.labelLarge;
+          var longestLabel = 0.0;
+          for (final label in labels) {
+            final painter = TextPainter(
+              text: TextSpan(text: label, style: labelStyle),
+              textDirection: Directionality.of(context),
+              textScaler: MediaQuery.textScalerOf(context),
+            )..layout();
+            if (painter.width > longestLabel) longestLabel = painter.width;
+            painter.dispose();
+          }
+          // Select the layout from measured text, never selection state. The
+          // checkmark would otherwise steal width only from the selected label.
+          final horizontalFits =
+              constraints.maxWidth >=
+              2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
+          return SegmentedButton<bool>(
+            direction: horizontalFits ? Axis.horizontal : Axis.vertical,
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                horizontal: horizontalPadding,
+                vertical: 8,
+              ),
+            ),
+            segments: const [
+              ButtonSegment(value: false, label: Text('Open')),
+              ButtonSegment(value: true, label: Text('Completed')),
+            ],
+            selected: {showCompleted},
+            onSelectionChanged: (values) =>
+                setState(() => showCompleted = values.first),
+          );
+        },
       ),
       const SizedBox(height: 16),
       if (!showCompleted)

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/platform/log_folder.dart';
@@ -574,7 +575,14 @@ void main() {
     ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
-    for (final sample in [(1000, 1.0), (390, 1.0), (320, 1.0), (390, 2.0)]) {
+    for (final sample in [
+      (1000, 1.0),
+      (390, 1.0),
+      (320, 1.0),
+      (350, 2.0),
+      (390, 2.0),
+      (390, 2.5),
+    ]) {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = Size(sample.$1.toDouble(), 820);
       tester.platformDispatcher.textScaleFactorTestValue = sample.$2;
@@ -582,14 +590,33 @@ void main() {
       final userBefore = tester.getRect(find.byTooltip('Switch user'));
       final filterBefore = tester.getRect(find.byType(FilterChip));
       final tabsBefore = tester.getRect(find.byType(SegmentedButton<bool>));
+      void expectSingleLineLabels() {
+        for (final label in ['Open', 'Completed']) {
+          final text = tester.renderObject<RenderParagraph>(find.text(label));
+          expect(
+            text.getBoxesForSelection(
+              TextSelection(baseOffset: 0, extentOffset: label.length),
+            ),
+            hasLength(1),
+          );
+        }
+      }
+
+      expectSingleLineLabels();
       await tester.tap(find.text('Completed'));
       await tester.pumpAndSettle();
       expect(tester.getRect(find.byTooltip('Switch user')), userBefore);
       expect(tester.getRect(find.byType(FilterChip)), filterBefore);
       expect(tester.getRect(find.byType(SegmentedButton<bool>)), tabsBefore);
+      expectSingleLineLabels();
       expect(tester.takeException(), isNull);
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
+      expect(tester.getRect(find.byTooltip('Switch user')), userBefore);
+      expect(tester.getRect(find.byType(FilterChip)), filterBefore);
+      expect(tester.getRect(find.byType(SegmentedButton<bool>)), tabsBefore);
+      expectSingleLineLabels();
+      expect(tester.takeException(), isNull);
     }
     tester.platformDispatcher.clearTextScaleFactorTestValue();
     tester.view.resetPhysicalSize();
