@@ -18,7 +18,7 @@ Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, `clock
 | `task.completed` | optional completedAt ISO date/time; optional complete successor snapshot |
 | `task.completionUndone` | completion event ID |
 
-Creation is unique. Missing remote dependencies remain recorded and are revalidated when they arrive. Local commands require an existing task/user and valid known references before append. Users are attribution choices, not authentication.
+Identifiers must be canonical lowercase RFC UUIDs accepted by the same validator used for UUIDv5 successor derivation; malformed shapes/variants fail before append. Creation is unique. Missing remote dependencies remain recorded and are revalidated when they arrive. Local commands require an existing task/user and valid known references before append. Users are attribution choices, not authentication.
 
 ## Wall-time-aware nanosecond clock
 
@@ -54,7 +54,7 @@ Completion accepts an explicitly captured instant and computes its civil day fro
 
 ## External migration
 
-The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. The exporter serializes current projected functional fields and shared manual order with deterministic Markdown formatting; see [tool contract](../tool/migration.md).
+The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. Private one-off migration tooling lives outside this repository and is not shipped or supported as an application feature. Generic domain validation, ordering and persistence remain app responsibilities.
 
 ## Durability and recovery
 

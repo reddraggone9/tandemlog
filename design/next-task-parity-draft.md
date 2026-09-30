@@ -2,7 +2,7 @@
 
 # Next task parity — review draft
 
-Status: research baseline, 2026-09-30. Implementation was subsequently authorized; [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) records accepted decisions and supersedes earlier proposals below. Actual source/live migration remains unapproved. This document contains no private source task text.
+Status: research baseline, 2026-09-30. Implementation was subsequently authorized; [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) records accepted decisions and supersedes earlier proposals below. Actual source/live migration remains unapproved. This document contains no private source task text. The provenance proposals below were rejected: canonical data contains functional fields only, and one-off migration tooling/tests live outside this repository. They are historical research, not current implementation instructions.
 
 ## Goal and current gaps
 

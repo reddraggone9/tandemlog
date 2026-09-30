@@ -24,11 +24,6 @@ jobs:
       - run: |
           mkdir dist
           cp linux-startup.json dist/
-          mkdir -p build/linux/x64/release/bundle/tooling
-          dart compile exe tool/migration.dart -o build/linux/x64/release/bundle/tooling/tandemlog-migrate
-          cp tool/migration.md build/linux/x64/release/bundle/tooling/README.md
-          cp "$RUNNER_TEMP/flutter/bin/cache/dart-sdk/LICENSE" build/linux/x64/release/bundle/tooling/DART-LICENSE.txt
-          python3 tool/smoke_migration.py build/linux/x64/release/bundle/tooling/tandemlog-migrate
           tar -C build/linux/x64/release/bundle -czf dist/tandemlog-linux-x64.tar.gz .
           cd dist
           sha256sum tandemlog-linux-x64.tar.gz > linux-SHA256SUMS.txt
@@ -50,13 +45,6 @@ jobs:
       - shell: pwsh
         run: |
           New-Item -ItemType Directory dist
-          New-Item -ItemType Directory build/windows/x64/runner/Release/tooling
-          dart compile exe tool/migration.dart -o build/windows/x64/runner/Release/tooling/tandemlog-migrate.exe
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          Copy-Item tool/migration.md build/windows/x64/runner/Release/tooling/README.md
-          Copy-Item "$env:RUNNER_TEMP/flutter/bin/cache/dart-sdk/LICENSE" build/windows/x64/runner/Release/tooling/DART-LICENSE.txt
-          python tool/smoke_migration.py build/windows/x64/runner/Release/tooling/tandemlog-migrate.exe
-          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           Compress-Archive build/windows/x64/runner/Release/* dist/tandemlog-windows-x64-unsigned.zip
           $hash = (Get-FileHash dist/tandemlog-windows-x64-unsigned.zip -Algorithm SHA256).Hash.ToLower()
           "$hash  tandemlog-windows-x64-unsigned.zip" | Set-Content dist/windows-SHA256SUMS.txt
