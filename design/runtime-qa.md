@@ -121,3 +121,11 @@ Future Android demo recordings should enable Show taps and visibly verify the to
 ## User-reported rc1 cross-device observation
 
 Lee reports users and tasks syncing between their devices and the UI updating promptly. An already-open user menu does not show a newly arrived user until reopened; retain selection stability and treat this as low-priority polish. This is user-reported real setup evidence, not an independently observed device/provider matrix or exhaustive BasicSync validation.
+
+## rc2 local release validation
+
+Implementation commit `45d0b1c8f4616a7a0460a3ba61038a689c5a1a9a`: clean analyzer, 28 unit/integrity tests and five native Linux integration workflows passed. The native suite includes 390-pixel width and 200% text scaling for the list and settings. Manual release inspection covered actual desktop Enter/Shift+Enter/keypad Enter, inline setup, light/dark and narrow layout. See the [task-based UX audit](ux-audit-rc2.md).
+
+Two fresh Linux release processes with 2,000 tasks measured **979 ms cache rebuild / 740 ms warm cache** to the loaded-frame marker; first-frame markers were 589/496 ms externally. Warm cache read zero canonical log files. `evidence/startup-rc2.json` contains raw phases. OS page cache was not flushed; no emulator/build was active, but an idle native demo window was open. Methodology/limits above still apply.
+
+The rc2 native Linux walkthrough is time-compressed (23 seconds), shows five captures, inline setup, theme change, completion and settings, and overlays the measured pointer location because the reconnected display did not support normal shared-memory recording. It is not timing evidence. Open data folder was separately confirmed to launch Thunar at the actual canonical location.

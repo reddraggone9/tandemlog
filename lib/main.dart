@@ -236,6 +236,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 const Text('Appearance'),
                 const SizedBox(height: 12),
                 SegmentedButton<Appearance>(
+                  direction:
+                      MediaQuery.sizeOf(ctx).width < 480 ||
+                          MediaQuery.textScalerOf(ctx).scale(14) > 20
+                      ? Axis.vertical
+                      : Axis.horizontal,
                   segments: const [
                     ButtonSegment(
                       value: Appearance.system,
@@ -694,14 +699,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       const SizedBox(width: 10),
-                      const Text(
-                        'Tandemlog',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
+                      const Expanded(
+                        child: Text(
+                          'Tandemlog',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
                       ),
-                      const Spacer(),
                       IconButton(
                         tooltip: 'Settings',
                         onPressed: busy ? null : _showSettings,

@@ -2,6 +2,11 @@ name: CI
 on:
   push:
     branches: [main]
+    # Documentation/evidence-only pushes do not change executable behavior.
+    # PRs, manual runs and every release candidate still retain full checks.
+    paths-ignore:
+      - "**/*.md"
+      - "evidence/**"
   pull_request:
   workflow_dispatch:
 permissions:
