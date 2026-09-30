@@ -11,13 +11,12 @@ Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, `clock
 | Event | Payload |
 | --- | --- |
 | `user.created` | name |
-| `task.created` | title, description, assignee; optional schedule, tags, import |
+| `task.created` | title, description, assignee; optional schedule, tags |
 | `task.edited` | changed title/description/schedule; optional observed tagChanges |
 | `task.tagsChanged` | add tag strings, remove observed add tokens |
 | `task.moved` | before task ID, or null for end |
 | `task.completed` | optional completedAt ISO date/time; optional complete successor snapshot |
 | `task.completionUndone` | completion event ID |
-| `import.document` | immutable validated Markdown source map, described below |
 
 Creation is unique. Missing remote dependencies remain recorded and are revalidated when they arrive. Local commands require an existing task/user and valid known references before append. Users are attribution choices, not authentication.
 
@@ -33,7 +32,7 @@ If the maximum event clock is more than five minutes ahead of this device, `cloc
 
 A wrong forward clock can therefore influence later conflict ordering, including other devices that observe it. This availability-first tradeoff is explicitly accepted; recovery tooling is deferred. No timestamp clamping, silent record omission, background repair or history rewrite is implemented. Malformed values, unsupported formats and signed-64-bit exhaustion still fail explicitly; these are format/range errors, not skew admission gates.
 
-The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 4 rejects older layouts. Published v1 folders remain untouched and unsupported by this prerelease.
+The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 6 rejects older layouts, including cached source-map rehearsal views and records admitted by earlier lax UUID validation; preserve canonical files and use a fresh cache/profile for this prerelease. Published v1 folders remain untouched and unsupported by this prerelease.
 
 ## Fields, dates and tags
 
@@ -53,9 +52,9 @@ Reopening history retracts only observed completion IDs. **It always retains the
 
 Completion accepts an explicitly captured instant and computes its civil day from the freshly reconciled task zone inside the serialized command. Tests/imports may supply an explicit day instead. Replay never reads the clock. The recurrence engine handles the observed 37 rule forms; configured scheduled-date removal and calendar/completion anchors are documented in the parity decision.
 
-## Migration provenance
+## External migration
 
-`import.document` stores `documentId` (matching entity), `formatVersion: 1`, `encoding: utf-8`, BOM flag, and ordered source-line maps. Literal spans preserve formatting/non-task lines; task slots link semantic title, completion, tags, dates and recurrence to task IDs. Optional completionAction provenance preserves recognized keep/delete source flags independently from recurrence. It never controls app deletion: all completed task history is retained. The external Markdown exporter normalizes only open recurring flags and reports that change separately from actual byte equality. This is a closed, validated nested schema, not executable instructions or a raw-file-only round-trip shortcut. Imported task creation references `{documentId, line}`; known document/line references must match. The external tool checks semantic equality independently before reporting byte-exact reconstruction. Later app edits may invalidate exact original-source reconstruction; they must be reported rather than hidden by returning archived literals.
+The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. The exporter serializes current projected functional fields and shared manual order with deterministic Markdown formatting; see [tool contract](../tool/migration.md).
 
 ## Durability and recovery
 

@@ -9,7 +9,7 @@ def main():
     binary = str(pathlib.Path(sys.argv[1]).resolve(strict=True))
     source_bytes = (
         "- [ ] Example #sample #start-time-0930 🔁 every month when done 🏁 delete "
-        "🛫 2026-10-01 📅 2026-10-02\r\n"
+        "🛫 2026-10-01 📅 2026-10-02\n"
         "- [x] Finished example ✅ 2026-09-30\n"
     ).encode("utf-8")
     with tempfile.TemporaryDirectory(prefix="tandemlog-migration-smoke-") as root:
@@ -24,7 +24,7 @@ def main():
                        check=True, capture_output=True)
         if source.read_bytes() != source_bytes or reconstructed.read_bytes() != source_bytes:
             raise RuntimeError("Compiled migration round trip changed source bytes")
-    print("Compiled migration CLI preserved synthetic source and round-tripped exact bytes.")
+    print("Compiled migration CLI preserved source and reproduced canonical synthetic Markdown.")
 
 
 if __name__ == "__main__":
