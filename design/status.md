@@ -9,7 +9,7 @@ Persistence tests cover restart/cache rebuild, shuffled delivery, conflicting fi
 ## Remaining acceptance gates
 
 1. Native Android live SAF folder grants, restart, atomic replacement, permission revocation, and app workflow; then video. Real BasicSync/provider and phone-to-phone offline transport still require intended devices even if emulator succeeds.
-2. Windows native build/run, folder/text/keyboard behavior and video on a Windows runner.
+2. Windows native launch and targeted packaging/path/dialog/startup checks; hosted native builds and domain/storage tests have passed. Linux is the primary routine desktop visual QA target.
 3. Broader interrupted/error interaction and accessibility review before daily use. Persisted drafts and explicit recovery UI are not implemented.
 
 ## Commands in this environment
@@ -50,3 +50,11 @@ Concrete performance cleanup: capture retry existence checks now query the index
 A final targeted review also fixed reopen behavior when all canonical files disappeared: a known cached workspace now fails before any new manifest is created. Regression covers no mutation plus identity/projection recovery after restoring originals.
 
 API 30 completed boot but System UI repeatedly stopped responding before Tandemlog installation; package installation failed with a broken pipe. API 36 never completed usable boot. Both software emulators were stopped after bounded diagnosis. Native Android/SAF verification requires a usable accelerated emulator or device. See [release procedure](releases.md).
+
+## Hosted validation and publication
+
+[Full push CI](https://github.com/reddraggone9/tandemlog/actions/runs/36731215334) passed on all three targets: Linux format/analyze/integrity tests/native integration/release startup, Windows integrity tests/native release build, Android test APK build/signature verification. Final startup-gate strengthening separately requires a successful model-load marker, complete cached task projection and warm zero-log-read behavior. This gate is not visual QA.
+
+[Candidate workflow](https://github.com/reddraggone9/tandemlog/actions/runs/36732068434) records the final publication outcome for source `adacd395a19b94dbf4a2f00788e0ffd00a1497f0`. It publishes [v0.1.0-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.1) only after all gates pass. GitHub metadata and the workflow conclusion are authoritative; a prepared URL does not imply publication. Normal non-force main pushes and public experimental prereleases are approved, stable publication is not.
+
+Windows and Android CI artifacts uploaded successfully. This executor's direct download of temporary Actions artifact blobs returned HTTP 403; do not claim local inspection of those downloaded bundles. Release jobs perform their own checksum verification. Native Android/SAF and Windows interaction limits above remain in effect.
