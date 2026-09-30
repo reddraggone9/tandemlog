@@ -2,7 +2,9 @@
 
 Current published preview: [v0.1.0-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.2), Android build 5, source `d89a7d99fabecd27993e81707e98e7f0a3a8227c`. Public experimental prerelease, not Latest; stable remains deferred. Signed Android API 30 native smoke passed before publication. Historical development checkpoints below retain their original scope; final release verification is at the end.
 
-## Active work — rc.3 clean app boundary
+## Active work — renderer semantics release blocker
+
+**Release readiness stopped:** owner feedback exposed functional due-bound tags in the adjacent Markdown renderer and missing clock-driven task visibility/sorting. Build 9 is diagnostic only. The successful private rehearsal covers parsed fields, not full renderer behavior. Await the private renderer audit before choosing bound fields; see [time-driven view plan](time-driven-task-view.md). Updated demos are required after this gap is closed.
 
 Feature implementation is authorized and underway: dates/times, tags, manual order, observed recurrence and external dry-run migration. Includes the accepted local UI corrections and new application identifier. Protocol v2 deliberately requires a new workspace; Markdown remains authoritative throughout prereleases; all app tests use disposable copies, with final fresh migration coordinated before stable 0.1.0. No live migration or deletion has been authorized. See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md). The published rc.2 remains unchanged while candidate gates run.
 
