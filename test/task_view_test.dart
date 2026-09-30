@@ -231,35 +231,32 @@ void main() {
     );
   });
 
-  test(
-    'date-only start stays local despite a zone used by precise due time',
-    () {
-      final rows = [
-        row(
-          'localDay',
-          schedule: TaskSchedule(
-            startDate: '2026-10-02',
-            dueDate: '2026-10-03',
-            dueTime: '17:00',
-            timeZone: 'UTC',
-          ),
+  test('date-only start midnight uses the shared pinned task zone', () {
+    final rows = [
+      row(
+        'localDay',
+        schedule: TaskSchedule(
+          startDate: '2026-10-02',
+          dueDate: '2026-10-03',
+          dueTime: '17:00',
+          timeZone: 'UTC',
         ),
-      ];
-      final before = projectTaskView(
+      ),
+    ];
+    final before = projectTaskView(
+      rows,
+      at('2026-10-01T23:59:59Z', 'America/Chicago', -5),
+    );
+    expect(before.value.open, isEmpty);
+    expect(before.nextChange, DateTime.parse('2026-10-02T00:00:00Z'));
+    expect(
+      projectTaskView(
         rows,
-        at('2026-10-02T04:59:59Z', 'America/Chicago', -5),
-      );
-      expect(before.value.open, isEmpty);
-      expect(before.nextChange, DateTime.parse('2026-10-02T05:00:00Z'));
-      expect(
-        projectTaskView(
-          rows,
-          at('2026-10-02T05:00:00Z', 'America/Chicago', -5),
-        ).value.open.length,
-        1,
-      );
-    },
-  );
+        at('2026-10-02T00:00:00Z', 'America/Chicago', -5),
+      ).value.open.length,
+      1,
+    );
+  });
   test(
     'out-of-range relative bounds fail explicitly before integer overflow',
     () {

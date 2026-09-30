@@ -91,6 +91,7 @@ TimedView<TaskView> projectTaskView(
   }
 
   DateTime? nextChange;
+  DateTime? nextMidnight;
   void boundary(DateTime value) {
     if (value.isAfter(time.instant) &&
         (nextChange == null || value.isBefore(nextChange!))) {
@@ -118,18 +119,18 @@ TimedView<TaskView> projectTaskView(
     final done = row['completed'] == true;
     if (schedule.dueMinDays != null || schedule.dueMaxDays != null) {
       boundary(
-        resolveCivilWallTime(
+        nextMidnight ??= resolveCivilWallTime(
           DateTime.utc(today.year, today.month, today.day + 1),
           time.localZoneId,
         ).instant,
       );
     }
     if (!done && schedule.startDate != null) {
+      // The shared task zone applies to availability at every precision:
+      // date-only start means midnight in that zone, otherwise local midnight.
       final start = resolveCivilWallTime(
         civil(schedule.startDate!, schedule.startTime),
-        schedule.startTime == null
-            ? time.localZoneId
-            : schedule.timeZone ?? time.localZoneId,
+        schedule.timeZone ?? time.localZoneId,
       ).instant;
       if (start.isAfter(time.instant)) {
         boundary(start);
