@@ -141,13 +141,16 @@ void main() {
     );
   });
 
+  test('explicit Linux TZ identity does not need filesystem access', () async {
+    expect(
+      await readLinuxZone(environment: {'TZ': 'America/Chicago'}),
+      'America/Chicago',
+    );
+  });
+
   test(
-    'Linux zone identity honors explicit TZ and localtime symlink',
+    'Linux zone files honor localtime symlink and copied-file identity',
     () async {
-      expect(
-        await readLinuxZone(environment: {'TZ': 'America/Chicago'}),
-        'America/Chicago',
-      );
       final root = await Directory.systemTemp.createTemp('zone-identity');
       try {
         final zone = File('${root.path}/zoneinfo/Europe/Paris');
@@ -186,5 +189,6 @@ void main() {
         await root.delete(recursive: true);
       }
     },
+    skip: !Platform.isLinux, // Exercises Linux path and symlink semantics.
   );
 }
