@@ -2,6 +2,23 @@
 
 Current published preview: [v0.1.0-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.2), Android build 5, source `d89a7d99fabecd27993e81707e98e7f0a3a8227c`. Public experimental prerelease, not Latest; stable remains deferred. Signed Android API 30 native smoke passed before publication. Historical development checkpoints below retain their original scope; final release verification is at the end.
 
+## Active work — rc.3 parity candidate
+
+Feature implementation is authorized and underway: dates/times, tags, manual order, observed recurrence and external dry-run migration. Includes the accepted local UI corrections and new application identifier. Protocol v2 deliberately requires a new workspace; no source/live migration has been authorized. See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md). The published rc.2 remains unchanged while candidate gates run.
+
+## Current parity checkpoint
+
+- Independently implemented recurrence matches 185 cases evaluated against pinned Obsidian Tasks 7.20.0 source, including all 37 observed forms. Schedule/zone/clock-helper tests pass.
+- Native Linux parity scenario passed: invalid schedule preserves draft, corrected UTC schedule/tags save, manual move, recurring completion and history reopen preserve one successor. This is not Android coverage.
+- External migration tests now include independent reconstruction reparse and filename/writer checks. Real private-source rehearsal remains pending local execution.
+- Event-ordering correction is implemented: the original wall-clock/causal scalar replaces the inappropriate pure Lamport counter, with exact string serialization, explicit protocol separation and a nonblocking skew warning. Local integrated checks pass; hosted/exact-APK acceptance remains pending.
+
+Current local gates: 83 tests, six Python release-gate tests, clean static analysis and nine native Linux scenarios. The private migration rehearsal package was delivered separately; no live cutover has been authorized.
+
+## Historical implementation checkpoints
+
+The sections below record earlier slices and their original limitations. Current scope is governed by ADR 0003 and the active candidate gates above.
+
 ## Implemented
 
 Flutter/Dart task slice: dedicated folder selection, user creation/selection, Inbox capture, title/notes editing, completion/targeted undo, periodic/resume ingestion, visible errors. Canonical JSONL logs plus private SQLite cache; desktop path adapter and Android SAF bridge. Public experimental prerelease preparation is authorized; stable release remains deferred.

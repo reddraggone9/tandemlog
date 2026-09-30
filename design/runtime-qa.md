@@ -174,3 +174,37 @@ Candidate run `36762053783` at source `d89a7d99fabecd27993e81707e98e7f0a3a8227c`
 The device worker reports PASS for the exact owner-signed APK SHA-256 `cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046` on KVM Android 11/API 30: launch, SAF access to copied canonical history, retained users/tasks/notes, capture/completion/checked-row reopening and process restart; fourteen unique events and four UI states checked. No OOM; services were stopped and rc1/debug AVDs preserved. This acceptance preceded publication and was supplied by the parent; evidence ZIP was delivered through Library.
 
 Published rc2 preserves that exact APK, and public-download checks additionally passed for its signature/version/checksum, all asset SHA-256 values, Windows archive CRC and native Linux release startup. See [final publication status](status.md#verified-rc2-publication). Real phones/API 36/provider matrix and interactive Windows acceptance remain broader gates; no stable release was published.
+
+## Local next-candidate onboarding spacing (2026-09-30)
+
+Unreleased local correction after rc2: wrapping primary/secondary actions with 12-pixel horizontal/vertical gaps, standard label typography, 48-pixel minimum targets and scrollable welcome content. Actual native Linux debug inspection covered 1000×760 at normal text, 320×820 at normal text and 390×820 at 200% text. Screenshots were visually inspected: desktop actions share a row, narrow/enlarged actions stack, labels remain readable and no overflow exception occurred. The first native assertion exposed desktop visual density shrinking a requested 48-pixel minimum to 40; explicit standard density corrected it. The rerun verified both target heights, spacing and no canonical `data/` folder before Start. Temporary visual harness/screenshots are local toolchain artifacts, not shipped app code.
+
+This is Linux evidence, not Android or Windows runtime acceptance. Android verification and refreshed platform demos remain part of the next coherent candidate, not a separate release for this adjustment.
+
+### Local capture caret regression
+
+Reproduced the reported Shift+Enter bug in the native Linux app before fixing it: with four existing lines, the caret bottom reached 120 pixels in a 96-pixel editable viewport and remained clipped after layout settled. The fix calls `EditableTextState.userUpdateTextEditingValue` with the keyboard cause and explicit collapsed selection, preserving Flutter's post-layout reveal behavior. A first attempted generic replacement action preserved a selected range; the final method preserves the original shortcut's collapsed-caret behavior instead.
+
+The permanent regression in `integration_test/task_flow_test.dart` checks visibility before any further input after three successive Shift+Enter presses, multiline clipboard paste, middle selected-text replacement and active composition preservation, at normal and 200% text. Native screenshots at both scales were inspected and show the caret on the final blank line inside the field. No general controller listener or refresh-driven scroll was introduced. These are local Linux debug results, not a new published candidate or Android validation.
+
+Validation for these local corrections: `flutter analyze` passed; 31 unit/storage tests passed; the final native `task_flow_test.dart` run passed all six scenarios (53 seconds), including the added caret regression. `git diff --check` passed. Temporary screenshot capture code was removed before the final integration run.
+
+### Local stable header regression
+
+The next-candidate header uses a viewport/text-scale breakpoint and reserves both actual count-label layouts, preventing Open/Completed text changes from moving the controls. Native Linux inspection uses a sanitized long username, 1,000 open tasks versus one completed task, widths 1000/390/320 at normal text and 390 at 200% text (820-pixel height). The check compares exact user-selector, Everyone-filter and tab-bar rectangles across both tabs. Screenshots are inspected separately: equal rectangles alone would not catch clipped names. Inspection exposed Chip's inherited one-line text restriction and its avatar growing with multiline label height; the label now wraps and the icon keeps an explicit 18-pixel box. Android runtime validation remains pending with the next candidate.
+
+### Local settings paragraph/action inspection
+
+Actual native Linux debug screenshots at 1000×820, 390×820 and 390×820 with 200% text were inspected. The single paragraph is readable, desktop actions share a row with a gap, narrow actions wrap with a gap, and the enlarged dialog scrolls to both actions without overflow. The native visual harness passed action-spacing and single-paragraph assertions; temporary screenshot code remains outside the repository.
+
+Final local batch validation after the header/settings corrections: static analysis passed and all seven native Linux integration scenarios passed in 102 seconds, including the 1,001-task header fixture. The permanent header regression uses Flutter test view sizing; separate native window resizing/screenshots supplied the visual evidence above. `git diff --check` passed. No candidate was published and no Android runtime claim is made for this batch.
+
+## rc3 integrated local validation
+
+Final local static analysis passed; all 83 unit/domain/storage/migration tests and six release-gate Python tests passed. The complete native Linux integration file passed nine scenarios in 116 seconds, including precise start/scheduled/due times, zone selection, invalid-date draft preservation, tags, manual movement, successor placement after a move, history reopening and nonblocking future-clock capture. The 185 pinned upstream recurrence comparisons are part of the schedule tests, not 185 separately reported test functions.
+
+Native visual inspection covered 1000×820 and 390×820, light/dark, 100%/200% text (56 frames across eight combinations), plus the future-clock warning at desktop/narrow/enlarged sizes. Six captures with the warning visible persisted through reopen. The demo caught a genuine successor-ordering defect; chronological order projection and late-arrival/cache-rebuild regressions fixed it before the final native run. See [task-based UX findings](ux-audit-rc3.md).
+
+The compiled external migration CLI passed byte-exact synthetic reconstruction. A separate bundled oracle from official Obsidian Tasks 7.20.0 matched 99 synthetic recurring rows covering 37 forms at three completion dates, including DST/leap-day dates. These are not claims about the private source. Private-source rehearsal and exact signed Android candidate acceptance remain pending; source text is never a public fixture or release asset.
+
+Release-mode startup measurements and hosted candidate results will be recorded separately. No native Windows or Android rc3 result is inferred from Linux or compilation.

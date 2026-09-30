@@ -1,4 +1,4 @@
-# Product behavior and first milestone
+# Product behavior and milestones
 
 ## Accepted direction
 
@@ -10,7 +10,7 @@ The first slice is folder/user selection, capture, edit, complete, undo, persist
 
 With Flutter and provider-independent folder sync approved, use dedicated disposable test folders and the implemented platform adapter to prove Android tree selection and retained access; two-way file transport with a selected wrapper; replacement/reopen; reboot and process death; and no-internet hotspot behavior on the intended phones. Also launch a minimal Windows build and verify text input, folder selection and packaging prerequisites. Record versions and results. M1 implementation proceeds in parallel, but this remains a release acceptance gate. Failure prompts a product/transport decision, not an automatic broad-storage permission workaround.
 
-## Current milestone M1 — persistent shared tasks
+## Completed initial milestone M1 — persistent shared tasks
 
 - Choose/create a supported workspace namespace in an authorized folder. Detect existing workspaces and incompatible formats. Do not mutate unrelated files. Distinguish “saved locally” from transport status; never imply other devices received a change without evidence.
 - Create/select a stable user ID and display name; allow switching users. This is attribution, not authentication. Default new task assignment to the active user; retain an all-tasks view.
@@ -19,7 +19,7 @@ With Flutter and provider-independent folder sync approved, use dedicated dispos
 - Persist acknowledged changes through restart. Never report a failed write as saved. Recover from a log write followed by cache failure without duplicating the command.
 - Import two independent devices' edits, including duplicate and out-of-order delivery, and show the same materialized state after the same event set is available. Document the chosen per-field conflict rule. Rebuilding the cache must produce the same result.
 
-The implemented [protocol](schema.md) specifies only this slice. Do not revive the removed generic field-change draft.
+The initial protocol covered this slice; the current [protocol](schema.md) extends it for M2. Do not revive the removed generic field-change draft.
 
 ## Acceptance evidence
 
@@ -41,3 +41,11 @@ Keep the stored Inbox state but hide its repeated row badge. Future Inbox groupi
 
 
 Description previews use one ellipsized line with embedded whitespace flattened for display; whitespace-only notes reserve no subtitle. Titles wrap fully, and the editor preserves complete multiline notes. Settings exposes Theme/current choice, with System/Light/Dark radio choices and cancel without saving.
+
+## Current milestone M2 — Markdown task parity
+
+Separate start/scheduled/due dates with optional times and a shared Local or explicit IANA zone, spelling-preserving tags, shared relative manual ordering and all 37 observed recurrence forms. Keep date precision rather than fabricate midnight/end-of-day timestamps. Start must not follow due; derive date-only due as the exclusive beginning of the following day. The entire coupled schedule is one validated register, so concurrent field edits cannot produce an invalid hybrid.
+
+Completion writes its successor proposal atomically. Recurrence uses the configured removal of scheduled date and places the successor before completed history. Reopening history preserves the successor; recompleting does not duplicate it. The compact list retains one preview line and full title wrapping; details remain in the editor. Notifications, automatic date sorting and general planner views remain outside this candidate.
+
+See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md) for reasons, temporal/recurrence rules, event-clock correction and the explicit prerelease compatibility break. External migration rehearses in a fresh folder and verifies unchanged Markdown round trips; actual-source/destination acceptance is separate from synthetic tests.

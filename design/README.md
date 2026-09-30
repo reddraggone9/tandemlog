@@ -9,7 +9,7 @@ Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 202
 3. [Onboarding and everyday UI rationale](decisions/0002-onboarding-and-everyday-interface.md), [approved stack decision](decisions/0001-client-and-storage.md) and [stack](tech-stack.md)
 4. [Architecture](architecture.md)
 5. [Storage design](storage-and-sync.md), [implemented schema](schema.md), [recovery](recovery.md)
-6. [Runtime/visual QA](runtime-qa.md) and [rc2 task-based UX audit](ux-audit-rc2.md)
+6. [Runtime/visual QA](runtime-qa.md) and [current task-based UX audit](ux-audit-rc3.md) ([rc2 history](ux-audit-rc2.md))
 7. [Deferred modules](future-modules.md)
 8. [Repository rules](../AGENTS.md)
 
@@ -18,3 +18,9 @@ The [initial review](review.md) is historical rationale; later accepted decision
 Each subject has one source of truth. Keep status/evidence current; link rather than duplicate specifications. New consequential choices receive an ADR and explicit accepted/proposed status.
 
 - [Builds and releases](releases.md): CI gates, test installation and signing limitations.
+
+## Current milestone and supporting research
+
+- [Task parity decisions](decisions/0003-task-parity-and-prerelease-boundary.md): authorized scope, time semantics and prerelease compatibility boundary.
+
+- [Next task parity draft](next-task-parity-draft.md): research and source inventory underpinning the authorized parity milestone; ADR 0003 supersedes its earlier planning-only status.
