@@ -4,7 +4,7 @@ Current published preview: [v0.1.0-rc.2](https://github.com/reddraggone9/tandeml
 
 ## Active work — rc.3 data-only candidate
 
-Feature implementation is authorized and underway: dates/times, tags, manual order, observed recurrence and external dry-run migration. Includes the accepted local UI corrections and new application identifier. Protocol v2 deliberately requires a new workspace; no source/live migration has been authorized. See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md). The published rc.2 remains unchanged while candidate gates run.
+Feature implementation is authorized and underway: dates/times, tags, manual order, observed recurrence and external dry-run migration. Includes the accepted local UI corrections and new application identifier. Protocol v2 deliberately requires a new workspace; Markdown remains authoritative throughout prereleases; all app tests use disposable copies, with final fresh migration coordinated before stable 0.1.0. No live migration or deletion has been authorized. See [ADR 0003](decisions/0003-task-parity-and-prerelease-boundary.md). The published rc.2 remains unchanged while candidate gates run.
 
 Build 7 is superseded for publication: Lee rejected stored Markdown formatting/provenance. A data-only importer/exporter and stripped app schema are implemented; revised private formatting/semantic acceptance is pending. previous source-map rehearsal success is historical evidence, not acceptance of the replacement. Android build-7 synthetic UI QA may proceed separately, but a fresh candidate is required.
 

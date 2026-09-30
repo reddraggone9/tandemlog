@@ -1,6 +1,6 @@
 # External task migration and canonical Markdown
 
-This developer tool reads an authorized copy and writes only a **new staging folder**. It never modifies the source or an existing app folder. The app remains the source of truth after migration; formatting from the old file is deliberately not retained.
+This developer tool reads an authorized copy and writes only a **new staging folder**. It never modifies the source or an existing app folder. Markdown remains authoritative throughout prereleases; this is a disposable copy-based rehearsal, not final migration. A coordinated fresh import immediately before stable 0.1.0 requires its own freeze, backup, validation and handoff approval; see [cutover runbook](../design/releases.md#markdown-authority-and-final-cutover). Original formatting is deliberately not retained in app events.
 
 ```sh
 dart run tool/migration.dart dry-run COPY.md NEW_STAGING_DIRECTORY 'Imported user' [IMPORT_BATCH_UTC]
