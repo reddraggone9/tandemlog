@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
-import '../platform/log_folder.dart';
+import 'log_folder.dart';
 
 /// Owns durable log ingestion and one disposable SQLite materialization.
 class TaskStore {
