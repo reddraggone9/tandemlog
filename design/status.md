@@ -13,7 +13,9 @@ Feature implementation is authorized and underway: dates/times, tags, manual ord
 - External migration tests now include independent reconstruction reparse and filename/writer checks. Real private-source rehearsal remains pending local execution.
 - Event-ordering correction is implemented: the original wall-clock/causal scalar replaces the inappropriate pure Lamport counter, with exact string serialization, explicit protocol separation and a nonblocking skew warning. Local integrated checks pass; hosted/exact-APK acceptance remains pending.
 
-Current local gates: 83 tests, six Python release-gate tests, clean static analysis and nine native Linux scenarios. The private migration rehearsal package was delivered separately; no live cutover has been authorized.
+Current local gates: 89 tests, six Python release-gate tests and clean static analysis. Nine native Linux scenarios passed before the latest narrowly scoped header fix; the full rerun and hosted matrix remain gates. The corrected private migration rehearsal package includes a relocated standalone production-store/SQLite audit. Completion metadata is preserved as provenance, with explicit keep-history adaptation and reported Markdown export normalization; no live cutover has been authorized.
+
+The first hosted candidate passed Android compilation but found two failures: a Windows test launched the Unix Dart wrapper, and enlarged-font Linux filter selection changed tab height. The launcher now uses the SDK executable; selection no longer adds a width-changing checkmark. Both fixes retain their regression checks. Signing/publication remain gated by a fresh successful matrix.
 
 ## Historical implementation checkpoints
 

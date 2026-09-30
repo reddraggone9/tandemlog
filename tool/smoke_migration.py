@@ -8,7 +8,7 @@ import tempfile
 def main():
     binary = str(pathlib.Path(sys.argv[1]).resolve(strict=True))
     source_bytes = (
-        "- [ ] Example #sample #start-time-0930 🔁 every month when done "
+        "- [ ] Example #sample #start-time-0930 🔁 every month when done 🏁 delete "
         "🛫 2026-10-01 📅 2026-10-02\r\n"
         "- [x] Finished example ✅ 2026-09-30\n"
     ).encode("utf-8")

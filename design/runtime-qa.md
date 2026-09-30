@@ -208,3 +208,15 @@ Native visual inspection covered 1000×820 and 390×820, light/dark, 100%/200% t
 The compiled external migration CLI passed byte-exact synthetic reconstruction. A separate bundled oracle from official Obsidian Tasks 7.20.0 matched 99 synthetic recurring rows covering 37 forms at three completion dates, including DST/leap-day dates. These are not claims about the private source. Private-source rehearsal and exact signed Android candidate acceptance remain pending; source text is never a public fixture or release asset.
 
 Release-mode startup measurements and hosted candidate results will be recorded separately. No native Windows or Android rc3 result is inferred from Linux or compilation.
+
+### Completion metadata and standalone production-store audit
+
+Actual private rehearsal exposed a missing completion-action parser case; no source or live destination was changed. The corrected adapter preserves source flags, deliberately retains all app history, and reports any authorized Markdown export normalization separately from byte equality. The fresh source inventory is checked privately, never hardcoded from an earlier snapshot.
+
+The integrated local suite passes 89 tests and clean analysis. Five audit tests cover read-only canonical access, output containment and failure integrity. A relocated Linux bundle containing only its executable and bundled SQLite library ran with an empty environment: production TaskStore loaded canonical events, reopened identical cached rows with zero log reads, and verified unchanged canonical hashes. This is actual storage evidence, not Android/UI acceptance. Independent read-only review confirmed the completion adapter and audit guard fixes without finding further defects.
+
+### Rc3 native release startup samples
+
+After the completion-metadata/storage-audit changes (storage source `794ad22`) and the first header checkmark correction, native Linux release process launch to loaded-frame measured **996 ms** for a 2,000-task cache rebuild and **706 / 622 / 729 / 1,448 ms** for warm cache. External first-frame times were **548 / 508 / 473 / 564 / 1,049 ms**. A subsequent ten-task set measured **1,198 ms** rebuild and **1,402 / 1,239 / 759 / 1,156 ms** warm; first frames **1,033 / 1,120 / 1,066 / 607 / 973 ms**. All warm runs read zero log contents, and every projected task count was asserted. Raw samples: `evidence/startup-rc3-2000.json` and `evidence/startup-rc3-10.json`.
+
+Method: five fresh processes per workload, native release, Xvfb/software graphics and explicit session D-Bus; no local emulator, recording or native build/test running. Only the isolated first-run SQLite cache was removed; OS page caches were not flushed. These are loaded post-frame markers, not physical presentation or measured first successful input. Small-workload timings are not consistently faster, so these variable sequential VM samples cannot isolate workload cost or establish target-device performance. The subsequent narrow large-text tab orientation change is outside this measured binary; hosted final-source startup remains a candidate check.
