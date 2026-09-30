@@ -1,0 +1,37 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 2000,
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 7955,
+      "marker": "TANDEMLOG_READY_MS=963 FILES_READ=1"
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 7038,
+      "marker": "TANDEMLOG_READY_MS=657 FILES_READ=0"
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 7304,
+      "marker": "TANDEMLOG_READY_MS=837 FILES_READ=0"
+    },
+    {
+      "run": 4,
+      "cache": "warm",
+      "external_ms": 9234,
+      "marker": "TANDEMLOG_READY_MS=1927 FILES_READ=0"
+    },
+    {
+      "run": 5,
+      "cache": "warm",
+      "external_ms": 7535,
+      "marker": "TANDEMLOG_READY_MS=1056 FILES_READ=0"
+    }
+  ]
+}

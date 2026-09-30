@@ -1,0 +1,41 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 0,
+  "label": "minimal-dbus-emulator-running",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 408,
+      "marker": "TANDEMLOG_READY_MS=105 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=105 FILES_READ=0"
+      ],
+      "external_main_ms": 303
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 460,
+      "marker": "TANDEMLOG_READY_MS=97 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=97 FILES_READ=0"
+      ],
+      "external_main_ms": 363
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 384,
+      "marker": "TANDEMLOG_READY_MS=82 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=82 FILES_READ=0"
+      ],
+      "external_main_ms": 301
+    }
+  ]
+}

@@ -1,93 +1,37 @@
-# Storage & Sync
+# Storage and sync contract
 
-## Storage: Append-Only Event Log
+Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v1](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.
 
-The database is a log of immutable events, not a table of mutable state. Current state is _derived_ by replaying events in order.
+## Canonical data and local cache
 
-**Per-node JSONL logs** are the unit of storage: one append-only file per node, one event per line.
+Retain per-writer append-only JSONL as the initial format for any compatible folder-sync transport. Only the owning install writes its stream, with one local writer lock. Scope writer identity to a workspace, keep it outside synced data, and do not clone it through backup/restore. Duplicate IDs with different payloads are corruption, not ignorable duplicates. Use lowercase filename-safe IDs to avoid case-sensitive naming assumptions.
 
-Each install generates a stable `node_id` automatically: 128 random bits encoded as base64url without padding. This `node_id` is opaque and is used in the owning node's log filename. Reinstallation will simply orphan the old `node_id` and generate a new one.
+Separate event identity `(writer ID, durable sequence)` from logical order and occurrence time. A Lamport-style counter plus writer ID is sufficient for deterministic task ordering; UTC timestamps are metadata, not truth about concurrent human intent. Persist/recover sequence and clock before another write; rescan owned history and available imported records on cache rebuild. Bound counters and reject malformed values. No global sync barrier is needed to work offline.
 
-Example:
+Canonical append succeeds durably before a command is acknowledged. Then ingest/project into **one private SQLite transaction** containing event rows, affected projections and per-stream checkpoints. If the process dies between append and cache commit, re-ingest; command/event IDs make retries idempotent. If the cache is gone, rebuild from logs. An in-memory view is fine; an independently persisted JSON snapshot is unnecessary initially. Provider-specific durability must be demonstrated, not inferred from POSIX APIs.
 
-```
-logs/q7L9xT2eWmN4Kc8pV1aZ0Q.jsonl
-logs/bM6rH1sNf2YpJ8dLw4UcXA.jsonl
-...
-```
+## Ingestion and corruption
 
-Each node only appends to its own log file. No two nodes should ever write to the same canonical file. Within a log file, each event is identified by its `clock`; globally, an event is identified by `(node_id, clock)`, where `node_id` is implied by the filename.
+Reopen replaced files and rescan on resume, periodic checks and explicit refresh; watchers are hints. Offset alone is insufficient: detect changed/truncated prefixes, replacement, disappearance, and conflicting copies. At first, favor conservative full validation over an elaborate incremental optimization. Replacing an old prefix or removing a stream is a workspace integrity failure requiring visible recovery; do not silently retain stale cache data and claim convergence. Never treat missing history as entity deletion.
 
-If a log ends with a truncated or otherwise invalid final JSON line, readers should treat the file as ending at the last valid line. If the reader owns that log file, it should truncate the broken tail away.
+Read only complete newline-terminated records. Temporarily ignore an incomplete trailing record on a remote stream and retry. Repair an owned incomplete tail only under exclusive access after confirming interrupted append and preserving recovery evidence. A complete invalid record, conflicting event ID or unsupported required version gets diagnostics and write blocking for the affected scope; never truncate it as a “broken tail.” Bound input sizes and validate workspace IDs, filenames and payloads.
 
-Each event is a JSON object:
+Syncthing [replaces destinations via temporary files](https://docs.syncthing.net/users/syncing.html), can generate conflict copies, and recommends rescans alongside watchers. Single-writer ownership reduces ordinary conflicts; it does not prevent cloned identities, manual edits or restores. Detect conflict filenames and stop treating transport as healthy until reconciled.
 
-```json
-{
-  "clock": 1741376580000000000,
-  "type": "task_field_changed",
-  "payload": { "task_id": "abc123", "field": "due_date", "value": "2026-03-08" }
-}
-```
+## Convergence semantics
 
-This payload is illustrative, not prescriptive. The storage layer requires immutable events with deterministic replay ordering, but it does not require every logical change to be encoded as a single-field update. Event shapes for coupled fields and invariant enforcement belong to the data model and replay/materialization design.
+Same validated event set plus the same projection version must produce identical state, regardless of arrival order or batching. Missing referenced events may arrive later: retain pending dependencies and rerun; do not permanently reject based only on arrival order. Per-field last-writer-wins is acceptable for independent task text fields, with a stable logical tie-break; it is not appropriate for inventory consumption or coupled date fields.
 
-`clock` is a signed 64-bit integer storing UTC nanoseconds since the Unix epoch. On a local write, the node compares the current timestamp to the highest clock it has seen (from itself or any synced node). If `now_ns > max_seen_clock`, it uses `now_ns`; otherwise it uses `max_seen_clock + 1`. This preserves a local total order for writes while staying close to wall time in the common case. `(clock, node_id)` is the global deterministic replay order.
+Undo must target an operation and be repeat-safe. For M1 completion, preserve completion IDs so undoing one's own completion does not erase another user's independent completion. Deletion/restore are deferred; decide identity-preserving tombstones versus intentional copy semantics before implementing them. Do not generate new authoritative events as a side effect of replay.
 
-Each install persists `max_seen_clock` in the local snapshot so it can preserve this invariant across restarts without rescanning all logs before writing a new event. If local wall time is materially behind `max_seen_clock`, the app should warn but still allow initialization and local writes.
+## Compatibility and recovery
 
-Note: if any JS/TS layer touches `clock`, use `BigInt` or a canonical string encoding rather than `Number`.
+Version the workspace protocol/envelope and each event meaning. New meaning gets a new version/type; never reinterpret old payloads in place. Use deterministic decoders/upcasters and fixtures spanning versions. Cache migrations are disposable: rebuild when incompatible. A changed projection algorithm still needs a compatibility decision to prevent two app versions producing different outcomes.
 
-## Sync: Syncthing
+Preserve unknown records. Fail closed for unknown required semantics; independently versioned optional modules may remain unavailable while compatible tasks work only if dependency isolation is proven. Otherwise open safe read-only diagnostics and explain upgrade needs. Do not silently skip an unknown event and report a complete view.
 
-Syncthing handles file transport between devices. It works peer-to-peer, requires no central server, and syncs directly between phones over a hotspot when there's no internet. Because each node owns its own append-only log file, Syncthing is transporting per-node logs rather than arbitrating concurrent writes to a shared one.
+Retain canonical history for M1; backup separately from sync and test restore with a fresh writer identity. Health/photo data will require a retention/privacy decision before adoption: indefinite logs make true erasure harder. Keep large attachments outside JSONL, linked by stable identifiers when introduced.
 
-Node discovery is filename-based: the app scans the synced log directory for valid `logs/<node_id>.jsonl` files and starts tracking any previously unknown `node_id` automatically. While running, it watches the log directory and known log files for changes and reruns the incremental ingestion flow when new files appear or existing files grow.
+## Alternatives to evaluate only if needed
 
-A central server is intentionally avoided so that any two devices that can see each other can still exchange data, even if some other machine is offline.
-
-## Convergence: Deterministic Replay Order
-
-On startup:
-
-1. Load the local JSON snapshot (contains per-node log read offsets); if no snapshot exists yet, start from an empty local cache and perform a full rebuild from the synced logs before allowing local writes
-2. Load the local SQLite DB (per-entity event history + indexes)
-
-After startup initialization, run the following incremental ingestion flow once immediately, and again whenever synced logs change while the app is running:
-
-1. For each known node log, seek to the stored local byte offset and read forward; if a saved offset is invalid (for example, because the file was truncated or manually repaired), fall back to a full rescan of that node's log
-2. Parse any newly appended events
-3. Insert the new events into SQLite, indexed by entity, with `node_id` inferred from the log filename; enforce uniqueness on `(node_id, clock)` so rescans and reprocessing are idempotent
-4. Determine which entities were touched by the new events
-5. Rebuild only those entities from their per-entity event history in SQLite, ordered by `(clock, node_id)`
-6. Write the rebuilt entities back into the in-memory snapshot, update `max_seen_clock` and the read offsets
-
-After the startup incremental run, asynchronously persist the updated snapshot to disk if it changed.
-
-This replay order also defines conflict resolution. When the data model represents two offline edits as competing writes to the same logical value, convergence falls out of replay order, effectively yielding last-writer-wins by `(clock, node_id)`; exact convergence semantics are left up to the data model. Deletion is terminal during replay: once an entity's history includes a delete event, it is omitted from the materialized snapshot and later events for that entity are ignored. Logical restoration of a deleted entity (such as a user triggering an 'undo') is achieved by appending a new creation event with identical data, rather than modifying the historical delete event.
-
-**Why not raw wall-clock timestamps alone?**
-Raw timestamps can go backwards, collide, or arrive out of order after a partition. The clock preserves a local total order by borrowing future nanoseconds when needed, while still staying close to wall time in the common case.
-
-## Startup Performance: Local Snapshot + SQLite
-
-Replaying the full event history on every startup would become slow as the log grows. The local materialization layer avoids that.
-
-The local JSON snapshot stores the current materialized global state, `max_seen_clock`, and per-node log byte offsets:
-
-```json
-{
-  "max_seen_clock": 1741376600000000003,
-  "log_offsets": { "q7L9xT2eWmN4Kc8pV1aZ0Q": 1234567, "bM6rH1sNf2YpJ8dLw4UcXA": 987654 },
-  "tasks": { ... },
-  "time_logs": { ... }
-}
-```
-
-A local SQLite DB stores per-entity event history and indexes derived from the canonical synced per-node JSONL logs. Together, the snapshot and DB let the incremental sync process touch only affected entities rather than replaying the whole world. Snapshot writes should be atomic (for example, write temp file then rename). The app should also rewrite the snapshot on clean shutdown so a normal exit preserves the latest local cache.
-
-**Neither the snapshot nor SQLite is synced.** They are local caches, not source of truth. Every install can rebuild them from the canonical event logs if needed.
-
-## Log Retention
-
-The canonical per-node JSONL logs are retained indefinitely. No log compaction or history squashing is part of this design. Storage is treated as cheap enough that the synced append-only logs remain the source of truth in full, while the local snapshot and SQLite DB handle performance.
+Sealed immutable event batches avoid repeatedly replacing growing logs and may fit document providers better, at the cost of file counts, publishing/recovery rules and more scanning. Benchmark/prove providers before changing format. A private durable outbox exported to a shared folder can improve availability when permissions vanish, but changes which data is authoritative; it needs an ADR. A service-based outbox sync can simplify setup but changes the no-server premise. No change to the canonical log foundation is implicitly approved here.

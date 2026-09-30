@@ -1,0 +1,62 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 2000,
+  "label": "tasks2000-dbus-emulator-running",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 1231,
+      "marker": "TANDEMLOG_READY_MS=843 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=287",
+        "TANDEMLOG_PHASE identity_lock=31",
+        "TANDEMLOG_PHASE sqlite_open_schema=16",
+        "TANDEMLOG_PHASE manifest=13",
+        "TANDEMLOG_PHASE ingest=183",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":6,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=843 FILES_READ=1"
+      ],
+      "external_main_ms": 384,
+      "external_first_frame_ms": 675
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 1032,
+      "marker": "TANDEMLOG_READY_MS=656 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=269",
+        "TANDEMLOG_PHASE identity_lock=10",
+        "TANDEMLOG_PHASE sqlite_open_schema=4",
+        "TANDEMLOG_PHASE manifest=11",
+        "TANDEMLOG_PHASE ingest=39",
+        "TANDEMLOG_ROWS {\"query_ms\":3,\"decode_ms\":6,\"sort_ms\":1}",
+        "TANDEMLOG_READY_MS=656 FILES_READ=0"
+      ],
+      "external_main_ms": 373,
+      "external_first_frame_ms": 645
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 951,
+      "marker": "TANDEMLOG_READY_MS=490 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=226",
+        "TANDEMLOG_PHASE identity_lock=10",
+        "TANDEMLOG_PHASE sqlite_open_schema=7",
+        "TANDEMLOG_PHASE manifest=12",
+        "TANDEMLOG_PHASE ingest=10",
+        "TANDEMLOG_ROWS {\"query_ms\":7,\"decode_ms\":14,\"sort_ms\":1}",
+        "TANDEMLOG_READY_MS=490 FILES_READ=0"
+      ],
+      "external_main_ms": 457,
+      "external_first_frame_ms": 687
+    }
+  ]
+}

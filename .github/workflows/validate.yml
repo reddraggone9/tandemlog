@@ -1,0 +1,76 @@
+name: Validate and build
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter pub get
+      - run: dart format --output=none --set-exit-if-changed lib test integration_test
+      - run: flutter analyze
+      - run: flutter test
+      - run: xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux
+      - run: flutter build linux --release
+      - run: |
+          mkdir dist
+          tar -C build/linux/x64/release/bundle -czf dist/tandemlog-linux-x64.tar.gz .
+          cd dist
+          sha256sum tandemlog-linux-x64.tar.gz > linux-SHA256SUMS.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: linux
+          path: dist/*
+          retention-days: 5
+          if-no-files-found: error
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter pub get
+      - run: flutter test
+      - run: flutter build windows --release
+      - shell: pwsh
+        run: |
+          New-Item -ItemType Directory dist
+          Compress-Archive build/windows/x64/runner/Release/* dist/tandemlog-windows-x64-unsigned.zip
+          $hash = (Get-FileHash dist/tandemlog-windows-x64-unsigned.zip -Algorithm SHA256).Hash.ToLower()
+          "$hash  tandemlog-windows-x64-unsigned.zip" | Set-Content dist/windows-SHA256SUMS.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: windows
+          path: dist/*
+          retention-days: 5
+          if-no-files-found: error
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter pub get
+      - run: sdkmanager "build-tools;36.0.0"
+      - run: flutter build apk --debug
+      - run: |
+          mkdir dist
+          cp build/app/outputs/flutter-apk/app-debug.apk dist/tandemlog-android-test-only.apk
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs dist/tandemlog-android-test-only.apk > dist/android-signature.txt
+          cd dist
+          sha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: android
+          path: dist/*
+          retention-days: 5
+          if-no-files-found: error

@@ -1,25 +1,20 @@
-# Tandemlog
+# Design map
 
-## Overview
+## Current source of truth
 
-A personal task and time tracking app for a household to share across phones, tablets, laptops, and desktops.
+Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are the current implementation; future modules remain separate.
 
-Goals:
+1. [Status, commands and limitations](status.md)
+2. [Product and milestone](product-behavior.md)
+3. [Approved decision](decisions/0001-client-and-storage.md) and [stack](tech-stack.md)
+4. [Architecture](architecture.md)
+5. [Storage design](storage-and-sync.md), [implemented schema](schema.md), [recovery](recovery.md)
+6. [Runtime/visual QA](runtime-qa.md)
+7. [Deferred modules](future-modules.md)
+8. [Repository rules](../AGENTS.md)
 
-- Track tasks: one-off and recurring, with or without deadlines
-- Track time: how long is spent on tasks, eating, sleeping, and other activities
-- Work fully offline — every device is always functional even without connectivity
-- Sync between devices — including directly between phones via hotspot, no internet required
-- Support shared tasks: any person can complete them, assign them, or update them
-- Run on Android phones and multiple desktop OSes
+The [initial review](review.md) is historical rationale; later accepted decisions supersede its recommendations. Original [product](archive/product-behavior.md), [storage](archive/storage-and-sync.md), and [stack](archive/tech-stack.md) documents are archived, not active requirements. Obsolete `data-model.md` was removed as requested; recover it from Git if needed.
 
-## Documents
+Each subject has one source of truth. Keep status/evidence current; link rather than duplicate specifications. New consequential choices receive an ADR and explicit accepted/proposed status.
 
-- [Product Behavior](./product-behavior.md) — user-facing workflows, expectations, and behavior
-- [Storage & Sync](./storage-and-sync.md) — canonical logs, clocks, sync transport, replay, and local materialization
-- [Data Model](./data-model.md) — entities, events, payload shapes, and invariants
-- [Tech Stack](./tech-stack.md) — platform/runtime choice and its implications
-
-## Unanswered Decisions
-
-- [ ] Refine the data model and event schema
+- [Builds and releases](releases.md): CI gates, test installation and signing limitations.

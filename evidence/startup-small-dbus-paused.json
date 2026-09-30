@@ -1,0 +1,62 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 10,
+  "label": "tasks10-dbus-paused",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 941,
+      "marker": "TANDEMLOG_READY_MS=561 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=276",
+        "TANDEMLOG_PHASE identity_lock=23",
+        "TANDEMLOG_PHASE sqlite_open_schema=10",
+        "TANDEMLOG_PHASE manifest=17",
+        "TANDEMLOG_PHASE ingest=57",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=561 FILES_READ=1"
+      ],
+      "external_main_ms": 377,
+      "external_first_frame_ms": 656
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 878,
+      "marker": "TANDEMLOG_READY_MS=510 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=282",
+        "TANDEMLOG_PHASE identity_lock=13",
+        "TANDEMLOG_PHASE sqlite_open_schema=4",
+        "TANDEMLOG_PHASE manifest=11",
+        "TANDEMLOG_PHASE ingest=11",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=510 FILES_READ=0"
+      ],
+      "external_main_ms": 364,
+      "external_first_frame_ms": 651
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 863,
+      "marker": "TANDEMLOG_READY_MS=595 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=325",
+        "TANDEMLOG_PHASE identity_lock=10",
+        "TANDEMLOG_PHASE sqlite_open_schema=3",
+        "TANDEMLOG_PHASE manifest=10",
+        "TANDEMLOG_PHASE ingest=14",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=595 FILES_READ=0"
+      ],
+      "external_main_ms": 263,
+      "external_first_frame_ms": 593
+    }
+  ]
+}

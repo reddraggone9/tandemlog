@@ -1,0 +1,41 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 0,
+  "label": "minimal-dbus-paused",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 356,
+      "marker": "TANDEMLOG_READY_MS=82 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=82 FILES_READ=0"
+      ],
+      "external_main_ms": 274
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 445,
+      "marker": "TANDEMLOG_READY_MS=95 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=95 FILES_READ=0"
+      ],
+      "external_main_ms": 349
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 455,
+      "marker": "TANDEMLOG_READY_MS=82 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_READY_MS=82 FILES_READ=0"
+      ],
+      "external_main_ms": 373
+    }
+  ]
+}

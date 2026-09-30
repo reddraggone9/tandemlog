@@ -1,0 +1,14 @@
+name: Pinned Flutter
+description: Install the official stable Flutter source at a verified revision
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: |
+        git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+        test "$(git -C "$RUNNER_TEMP/flutter" rev-parse HEAD)" = 6a19cca56475dbfba1478ee68d7bd0c2ef891da1
+        echo "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"
+    - shell: bash
+      run: |
+        flutter config --no-analytics
+        flutter --version
