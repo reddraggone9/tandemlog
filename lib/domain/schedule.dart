@@ -14,6 +14,8 @@ class TaskSchedule {
   final String? dueTime;
   final String? timeZone;
   final String? recurrence;
+  final int? dueMinDays;
+  final int? dueMaxDays;
 
   static const keys = {
     'startDate',
@@ -24,6 +26,8 @@ class TaskSchedule {
     'dueTime',
     'timeZone',
     'recurrence',
+    'dueMinDays',
+    'dueMaxDays',
   };
 
   factory TaskSchedule({
@@ -35,7 +39,16 @@ class TaskSchedule {
     String? dueTime,
     String? timeZone,
     String? recurrence,
+    int? dueMinDays,
+    int? dueMaxDays,
   }) {
+    if ((dueMinDays != null && dueMinDays < 0) ||
+        (dueMaxDays != null && dueMaxDays < 0) ||
+        (dueMinDays != null && dueMaxDays != null && dueMinDays > dueMaxDays)) {
+      throw const FormatException(
+        'Due bounds must be nonnegative days, with minimum no greater than maximum.',
+      );
+    }
     for (final date in [startDate, scheduledDate, dueDate]) {
       if (date != null) parseCivilDate(date);
     }
@@ -107,6 +120,8 @@ class TaskSchedule {
       dueTime,
       timeZone,
       recurrence,
+      dueMinDays,
+      dueMaxDays,
     );
   }
 
@@ -119,11 +134,19 @@ class TaskSchedule {
     this.dueTime,
     this.timeZone,
     this.recurrence,
+    this.dueMinDays,
+    this.dueMaxDays,
   );
 
   factory TaskSchedule.fromJson(Map<String, dynamic> json) {
     if (json.keys.any((key) => !keys.contains(key)) ||
-        json.values.any((value) => value != null && value is! String)) {
+        json.entries.any(
+          (entry) =>
+              entry.value != null &&
+              ({'dueMinDays', 'dueMaxDays'}.contains(entry.key)
+                  ? entry.value is! int
+                  : entry.value is! String),
+        )) {
       throw const FormatException('Unknown or invalid schedule field.');
     }
     return TaskSchedule(
@@ -135,6 +158,8 @@ class TaskSchedule {
       dueTime: json['dueTime'] as String?,
       timeZone: json['timeZone'] as String?,
       recurrence: json['recurrence'] as String?,
+      dueMinDays: json['dueMinDays'] as int?,
+      dueMaxDays: json['dueMaxDays'] as int?,
     );
   }
 
@@ -147,6 +172,8 @@ class TaskSchedule {
     'dueTime': dueTime,
     'timeZone': timeZone,
     'recurrence': recurrence,
+    'dueMinDays': dueMinDays,
+    'dueMaxDays': dueMaxDays,
   };
 
   String? get referenceDate => dueDate ?? scheduledDate ?? startDate;
@@ -185,6 +212,8 @@ class TaskSchedule {
       dueTime: dueTime,
       timeZone: timeZone,
       recurrence: recurrence,
+      dueMinDays: dueMinDays,
+      dueMaxDays: dueMaxDays,
     );
   }
 }
