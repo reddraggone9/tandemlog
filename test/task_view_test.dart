@@ -28,6 +28,34 @@ List<String> ids(List<TaskViewEntry> rows) =>
 
 void main() {
   test(
+    'standalone timing evaluates hidden and completed rows without changing state',
+    () {
+      final time = at('2026-10-02T12:00:00Z', 'America/Chicago', -5);
+      final schedule = TaskSchedule(
+        startDate: '2026-10-04',
+        dueDate: '2026-10-05',
+        dueMaxDays: 1,
+      );
+      final timing = evaluateTaskTiming(schedule, time);
+      expect(timing.available, isFalse);
+      expect(timing.availabilityStart, DateTime.parse('2026-10-04T05:00:00Z'));
+      expect(timing.effectiveDate, DateTime.utc(2026, 10, 3));
+      expect(timing.nextChange, DateTime.parse('2026-10-03T05:00:00Z'));
+      final view = projectTaskView([
+        row('hidden', schedule: schedule),
+        row('done', schedule: schedule, completed: true),
+      ], time);
+      expect(view.value.open, isEmpty);
+      expect(view.value.completed.single.effectiveDate, timing.effectiveDate);
+      final absent = evaluateTaskTiming(TaskSchedule(), time);
+      expect(absent.available, isTrue);
+      expect(absent.availabilityStart, DateTime.parse('2026-10-02T05:00:00Z'));
+      expect(absent.effectiveDate, isNull);
+      expect(absent.nextChange, isNull);
+    },
+  );
+
+  test(
     'bounds accept only nullable integers and preserve recurrence anchor',
     () {
       for (final value in [

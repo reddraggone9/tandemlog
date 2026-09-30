@@ -58,15 +58,41 @@ List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
   );
 }
 
-/// Derive visible tasks, effective-date groups, and the next clock boundary.
-/// Input order is the shared manual order. This function never changes tasks,
-/// schedules, deadlines, recurrence anchors or canonical logs.
-TimedView<TaskView> projectTaskView(
-  List<Map<String, dynamic>> rows,
-  ViewTime time, {
-  String? assignee,
-}) {
-  final localZone = timeZoneLocation(time.localZoneId);
+/// Clock-derived timing for any task, including hidden or completed tasks.
+/// [availabilityStart] defaults to today's local midnight when no start exists;
+/// that compatibility value does not invent a persisted start date.
+class TaskTiming {
+  const TaskTiming({
+    required this.availabilityStart,
+    required this.available,
+    required this.effectiveDate,
+    required this.nextChange,
+    DateTime? nextSortChange,
+  }) : _nextSortChange = nextSortChange;
+  final DateTime availabilityStart;
+  final bool available;
+  final DateTime? effectiveDate;
+  final DateTime? nextChange;
+  final DateTime? _nextSortChange;
+}
+
+TaskTiming evaluateTaskTiming(TaskSchedule schedule, ViewTime time) =>
+    _TaskTimingContext(time).evaluate(schedule);
+
+// Shared by standalone evaluation and the complete projection. A projection
+// reuses the local-day/zone context and lazily resolves midnight only once.
+class _TaskTimingContext {
+  _TaskTimingContext(this.time)
+    : localZone = timeZoneLocation(time.localZoneId) {
+    final local = localCivil(time.instant);
+    today = DateTime.utc(local.year, local.month, local.day);
+  }
+  final ViewTime time;
+  final tz.Location localZone;
+  late final DateTime today;
+  DateTime? _nextMidnight;
+  DateTime? _todayMidnight;
+
   DateTime localCivil(DateTime instant) {
     final local = tz.TZDateTime.from(instant, localZone);
     return DateTime.utc(
@@ -81,11 +107,13 @@ TimedView<TaskView> projectTaskView(
     );
   }
 
-  final nowCivil = localCivil(time.instant);
-  final today = DateTime.utc(nowCivil.year, nowCivil.month, nowCivil.day);
+  DateTime civil(String date, String? time) {
+    final day = parseCivilDate(date);
+    final parts = (time ?? '00:00').split(':').map(int.parse).toList();
+    return DateTime.utc(day.year, day.month, day.day, parts[0], parts[1]);
+  }
+
   DateTime boundDay(int days) {
-    // TaskSchedule admission bounds the duration before multiplication. Only
-    // a clock near DateTime's own representable limits can still overflow.
     try {
       return today.add(Duration(days: days));
     } on ArgumentError {
@@ -95,53 +123,18 @@ TimedView<TaskView> projectTaskView(
     }
   }
 
-  DateTime? nextChange;
-  DateTime? nextMidnight;
-  void boundary(DateTime value) {
-    if (value.isAfter(time.instant) &&
-        (nextChange == null || value.isBefore(nextChange!))) {
-      nextChange = value.toUtc();
-    }
-  }
-
-  DateTime civil(String date, String? time) {
-    final day = parseCivilDate(date);
-    final parts = (time ?? '00:00').split(':').map(int.parse).toList();
-    return DateTime.utc(day.year, day.month, day.day, parts[0], parts[1]);
-  }
-
-  final open = <(int, TaskViewEntry)>[];
-  final completed = <(int, TaskViewEntry)>[];
-  for (var index = 0; index < rows.length; index++) {
-    final row = rows[index];
-    if (row['kind'] != 'task' ||
-        (assignee != null && row['assignee'] != assignee)) {
-      continue;
-    }
-    final schedule = TaskSchedule.fromJson(
-      Map<String, dynamic>.from(row['schedule'] as Map? ?? {}),
-    );
-    final done = row['completed'] == true;
-    if (schedule.dueMinDays != null || schedule.dueMaxDays != null) {
-      boundary(
-        nextMidnight ??= resolveCivilWallTime(
-          DateTime.utc(today.year, today.month, today.day + 1),
-          time.localZoneId,
-        ).instant,
-      );
-    }
-    if (!done && schedule.startDate != null) {
-      // The shared task zone applies to availability at every precision:
-      // date-only start means midnight in that zone, otherwise local midnight.
-      final start = resolveCivilWallTime(
-        civil(schedule.startDate!, schedule.startTime),
-        schedule.timeZone ?? time.localZoneId,
-      ).instant;
-      if (start.isAfter(time.instant)) {
-        boundary(start);
-        continue;
-      }
-    }
+  TaskTiming evaluate(TaskSchedule schedule) {
+    final start = schedule.startDate == null
+        ? _todayMidnight ??= resolveCivilWallTime(
+            today,
+            time.localZoneId,
+          ).instant
+        : resolveCivilWallTime(
+            civil(schedule.startDate!, schedule.startTime),
+            schedule.timeZone ?? time.localZoneId,
+          ).instant;
+    final available =
+        schedule.startDate == null || !start.isAfter(time.instant);
     final date = schedule.scheduledDate ?? schedule.dueDate;
     final preciseTime = schedule.scheduledDate != null
         ? schedule.scheduledTime
@@ -149,8 +142,8 @@ TimedView<TaskView> projectTaskView(
     DateTime? effective;
     if (date != null) {
       effective = civil(date, preciseTime);
-      // Date-only values retain their civil day. Pinned exact times denote an
-      // instant, so their displayed group follows the viewer's local calendar.
+      // Date-only effective dates keep their civil day. Pinned exact values
+      // use the viewer's local calendar, preserving precise clock time.
       if (preciseTime != null && schedule.timeZone != null) {
         effective = localCivil(
           resolveCivilWallTime(effective, schedule.timeZone!).instant,
@@ -164,7 +157,12 @@ TimedView<TaskView> projectTaskView(
       effective?.hour ?? 0,
       effective?.minute ?? 0,
     );
+    DateTime? sortChange;
     if (schedule.dueMinDays != null || schedule.dueMaxDays != null) {
+      sortChange = _nextMidnight ??= resolveCivilWallTime(
+        DateTime.utc(today.year, today.month, today.day + 1),
+        time.localZoneId,
+      ).instant;
       if (schedule.dueMinDays != null && effective != null) {
         final min = boundDay(schedule.dueMinDays!);
         final effectiveDay = DateTime.utc(
@@ -184,7 +182,49 @@ TimedView<TaskView> projectTaskView(
         }
       }
     }
-    (done ? completed : open).add((index, TaskViewEntry(row, effective)));
+    DateTime? next = sortChange;
+    if (!available && (next == null || start.isBefore(next))) next = start;
+    return TaskTiming(
+      availabilityStart: start,
+      available: available,
+      effectiveDate: effective,
+      nextChange: next,
+      nextSortChange: sortChange,
+    );
+  }
+}
+
+/// Input order is shared manual order. Derived values never mutate persisted
+/// tasks, deadlines or recurrence anchors. Completed history stays accessible.
+TimedView<TaskView> projectTaskView(
+  List<Map<String, dynamic>> rows,
+  ViewTime time, {
+  String? assignee,
+}) {
+  final context = _TaskTimingContext(time);
+  DateTime? nextChange;
+  final open = <(int, TaskViewEntry)>[];
+  final completed = <(int, TaskViewEntry)>[];
+  for (var index = 0; index < rows.length; index++) {
+    final row = rows[index];
+    if (row['kind'] != 'task' ||
+        (assignee != null && row['assignee'] != assignee)) {
+      continue;
+    }
+    final schedule = TaskSchedule.fromJson(
+      Map<String, dynamic>.from(row['schedule'] as Map? ?? {}),
+    );
+    final timing = context.evaluate(schedule);
+    final done = row['completed'] == true;
+    final next = done ? timing._nextSortChange : timing.nextChange;
+    if (next != null && (nextChange == null || next.isBefore(nextChange))) {
+      nextChange = next;
+    }
+    if (!done && !timing.available) continue;
+    (done ? completed : open).add((
+      index,
+      TaskViewEntry(row, timing.effectiveDate),
+    ));
   }
   List<TaskViewEntry> sorted(List<(int, TaskViewEntry)> values) {
     values.sort((a, b) {
