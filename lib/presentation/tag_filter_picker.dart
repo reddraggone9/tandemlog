@@ -22,7 +22,8 @@ class TagFilterPicker extends StatefulWidget {
   State<TagFilterPicker> createState() => TagFilterPickerState();
 }
 
-class TagFilterPickerState extends State<TagFilterPicker> {
+class TagFilterPickerState extends State<TagFilterPicker>
+    with WidgetsBindingObserver {
   final _query = TextEditingController();
   final _focus = FocusNode();
   final _portal = OverlayPortalController();
@@ -44,7 +45,11 @@ class TagFilterPickerState extends State<TagFilterPicker> {
   void initState() {
     super.initState();
     _focus.addListener(_focusChanged);
+    WidgetsBinding.instance.addObserver(this);
   }
+
+  @override
+  void didChangeMetrics() => _reposition();
 
   @override
   void didChangeDependencies() {
@@ -366,6 +371,7 @@ class TagFilterPickerState extends State<TagFilterPicker> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _scroll?.removeListener(_reposition);
     _focus.removeListener(_focusChanged);
     _focus.dispose();

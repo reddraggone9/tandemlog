@@ -1701,8 +1701,17 @@ void main() {
     await openFilters(tester);
     await tester.ensureVisible(search);
     await tester.pumpAndSettle();
+    await tester.tap(search);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+    // The keyboard may appear after opening; no typing or scrolling is needed
+    // to update the overlay's bounds or hide a now-offscreen anchor.
     tester.view.viewInsets = const FakeViewPadding(bottom: 280);
     await tester.pumpAndSettle();
+    final movedPopup = find.byKey(const ValueKey('tag-results'));
+    if (movedPopup.evaluate().isNotEmpty) {
+      expect(tester.getRect(movedPopup).bottom, lessThanOrEqualTo(540));
+    }
     await tester.ensureVisible(search);
     await tester.pumpAndSettle();
     await tester.tap(search);
