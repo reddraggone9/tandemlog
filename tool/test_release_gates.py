@@ -48,6 +48,20 @@ class ReleaseGates(unittest.TestCase):
                        {'phases': [dict(p, loaded_projection=False) for p in phases]}):
             with self.assertRaises(ValueError): verify_install_smoke(report)
 
+    def test_flatpak_requires_real_commit_replacement(self):
+        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall')
+                  for name in ('after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall')]
+        upgrade = dict(candidate_commit='a'*64, baseline_commit='b'*64,
+                       baseline_payload_equal=True, baseline_permissions_equal=True,
+                       final_candidate_restored=True)
+        verify_install_smoke(dict(phases=phases, upgrade=upgrade), require_changed_commit=True)
+        for changed in ({}, dict(upgrade, baseline_commit='a'*64),
+                        dict(upgrade, baseline_payload_equal=False),
+                        dict(upgrade, baseline_permissions_equal=False),
+                        dict(upgrade, final_candidate_restored=False)):
+            with self.assertRaises(ValueError):
+                verify_install_smoke(dict(phases=phases, upgrade=changed), require_changed_commit=True)
+
     def test_exact_accepted_artifact(self):
         metadata = dict(source_commit='a'*40, apk_sha256='b'*64, certificate_sha256='c'*64, version='0.1.0-rc.2', version_code=5)
         verify_metadata(metadata, 'a'*40, 'b'*64, 'b'*64, ('0.1.0-rc.2',5), 'c'*64)

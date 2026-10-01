@@ -17,7 +17,7 @@ def verify_metadata(metadata, sha, accepted, actual, expected_version, pin):
         raise ValueError('Accepted APK identity does not match candidate artifacts/source')
 
 
-def verify_install_smoke(report):
+def verify_install_smoke(report, require_changed_commit=False):
     phases = report.get('phases', [])
     required = ['after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall']
     if [phase.get('phase') for phase in phases] != required:
@@ -26,6 +26,15 @@ def verify_install_smoke(report):
         expected_launch = phase['phase'] != 'after-uninstall'
         if phase.get('passed') is not True or phase.get('loaded_projection') is not expected_launch:
             raise ValueError('Installed desktop launch/data preservation QA did not pass')
+
+    if require_changed_commit:
+        upgrade = report.get('upgrade', {})
+        commits = [upgrade.get(key, '') for key in ('candidate_commit', 'baseline_commit')]
+        if (not all(re.fullmatch(r'[0-9a-f]{64}', commit) for commit in commits)
+                or commits[0] == commits[1]
+                or any(upgrade.get(key) is not True for key in
+                       ('baseline_payload_equal', 'baseline_permissions_equal', 'final_candidate_restored'))):
+            raise ValueError('Flatpak real commit replacement with unchanged payload was not verified')
 
 
 if __name__ == '__main__':
@@ -50,7 +59,8 @@ if __name__ == '__main__':
     if {p.name for p in dist.iterdir()} != expected_files or any(p.stat().st_size >= 2*1024**3 for p in dist.iterdir()):
         raise ValueError('Missing/unexpected candidate assets or oversized asset')
     for platform in ('linux', 'windows'):
-        verify_install_smoke(json.loads((dist / f'{platform}-install-smoke.json').read_text()))
+        verify_install_smoke(json.loads((dist / f'{platform}-install-smoke.json').read_text()),
+                             require_changed_commit=platform == 'linux')
     apk = dist / 'tandemlog-android.apk'
     verify_metadata(json.loads((dist / 'android-release-metadata.json').read_text()), sha,
                     os.environ['ANDROID_VERIFIED_SHA256'], hashlib.sha256(apk.read_bytes()).hexdigest(),

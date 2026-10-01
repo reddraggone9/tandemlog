@@ -18,3 +18,9 @@ flatpak build-export "$repo" "$build"
 flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
   "$repo" dist/tandemlog-linux-x64.flatpak "$app"
 (cd dist && sha256sum tandemlog-linux-x64.flatpak > linux-SHA256SUMS.txt)
+
+# Private QA package: identical files/permissions, distinct OSTree commit subject.
+# It never enters dist or publication and does not recompile/change the app.
+flatpak build-export --subject='Private synthetic packaging replacement baseline' "$repo" "$build"
+flatpak build-bundle --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+  "$repo" "$RUNNER_TEMP/tandemlog-flatpak-baseline.flatpak" "$app"

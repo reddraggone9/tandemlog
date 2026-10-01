@@ -14,7 +14,10 @@ The Flatpak app bundle is also unsigned; checksums verify bytes, not publisher i
 Install the downloaded bundle with `flatpak install --user ./tandemlog-linux-x64.flatpak`
 and launch `flatpak run com.reddraggone9.tandemlog`. The GNOME 50 runtime is
 resolved from Flathub; the bundle alone is not a fully offline distribution.
-Updates install the next bundle using the same application ID. Uninstall with
+Install an updated bundle with the same `flatpak install --user ./new-bundle.flatpak`
+command and application ID. A different bundle commit updates the installed app
+without removing its data. Reinstalling the identical deployed commit can report
+`already installed`; it is not an update and needs no forced reinstall. Uninstall with
 `flatpak uninstall --user com.reddraggone9.tandemlog`; do not delete your profile
 or canonical folder. The package asks for desktop rendering/IPC and the two
 specific native profile paths, with no network, whole-home or whole-host grant.
@@ -76,13 +79,19 @@ new commercial distribution claim.
 
 Hosted Linux/Windows smoke gates install the exact candidate, launch the installed
 application against synthetic settings/history, force a fresh SQLite projection,
-replace the same candidate, uninstall, assert settings/history hash continuity,
+exercise package replacement, uninstall, assert settings/history hash continuity,
 reinstall and load again. Linux requires loaded-frame/task markers; Windows
 requires a visible native window belonging to the installed process and the full
 fresh projection. Windows checks every bundled payload file and the Start Menu
 shortcut target. The reports record all four lifecycle phases and block
-publication if incomplete. This is same-candidate replacement QA, not a claim of
-cross-version compatibility or manual Windows interaction acceptance. Windows uses an isolated synthetic profile override. Linux seeds the actual
+publication if incomplete. Windows rehearses same-candidate replacement. Linux first installs/launches the
+exact public candidate, temporarily installs a private baseline with a distinct
+OSTree commit subject but identical application payload and permissions, then
+updates back to the untouched public candidate. Its gate verifies distinct commit
+identities, equal baseline payload/permissions and restored candidate commit; every
+recorded launch uses the public candidate. The private baseline is excluded from
+release artifacts and involves no app recompile. This does not establish old-app-
+version compatibility or manual Windows interaction acceptance. Windows uses an isolated synthetic profile override. Linux seeds the actual
 native default profile/data paths on the disposable hosted runner, then launches
 without an override or extra filesystem grant to verify the production wrapper
 and default-folder permissions. Seeding refuses an existing directory; no test

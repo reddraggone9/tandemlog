@@ -12,7 +12,7 @@ Linux: install the unsigned `tandemlog-linux-x64.flatpak` with `flatpak install 
 
 Windows: run `tandemlog-windows-x64-unsigned-setup.exe`. Installs per-user without elevation; unsigned warnings are possible. Setup checks Microsoft C++ x64 runtime against the compiler version. If absent/old, setup stops with Microsoft's official download link; runtime installation/terms are not automated. Uninstall preserves profiles/shared data. Hosted native lifecycle smoke complements Linux visual QA, not full manual Windows acceptance.
 
-Android: universal non-debuggable APK signed by the retained owner identity, with increasing build19 and same package. Exact APK must pass native acceptance before publication; no rebuild after acceptance. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.
+Android: universal non-debuggable APK signed by the retained owner identity, with increasing build20 and same package. Exact APK must pass native acceptance before publication; no rebuild after acceptance. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.
 
 Bulk writes are independently durable per task. A failed operation can partially apply: the app refreshes/reconciles before retry and reports remaining tasks; it is not one all-or-nothing transaction. Dirty drafts are protected during this session, not persisted through process termination. No deletion recovery UI, notifications, private spaces or future modules are included. Users are attribution, not access control.
 
