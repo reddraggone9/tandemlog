@@ -1290,7 +1290,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         children: [
           list,
           ModalBarrier(color: Colors.black54, dismissible: false),
-          Center(child: editor),
+          // The surrounding Scaffold already resized this body above the IME.
+          // An embedded Dialog must not subtract the keyboard inset again.
+          MediaQuery.removeViewInsets(
+            context: context,
+            removeBottom: true,
+            child: Center(child: editor),
+          ),
         ],
       );
     },

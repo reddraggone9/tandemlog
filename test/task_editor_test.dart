@@ -104,6 +104,44 @@ void main() {
       expect(saved, {'title': 'Draft'});
     },
   );
+  testWidgets('bulk caret and focus changes do not apply mixed fields', (
+    tester,
+  ) async {
+    final key = GlobalKey<BulkTaskEditorState>();
+    BulkTaskEdit? saved;
+    await mount(
+      tester,
+      BulkTaskEditor(
+        key: key,
+        panel: true,
+        tasks: [
+          task({'dueDate': '2026-10-02', 'dueTime': '12:30'}),
+          task({'dueDate': '2026-10-03', 'dueTime': '13:45'}),
+        ],
+        onClose: () {},
+        onSave: (edit) async {
+          saved = edit;
+        },
+      ),
+    );
+    for (final field in ['dueDate', 'dueTime', 'startDate']) {
+      await tester.ensureVisible(input(field));
+      await tester.tap(input(field));
+      await tester.pumpAndSettle();
+      final text = tester.widget<TextField>(input(field));
+      text.controller!.selection = TextSelection.collapsed(
+        offset: text.controller!.text.length,
+      );
+      await tester.pumpAndSettle();
+    }
+    expect(await key.currentState!.canClose(), isTrue);
+    await edit(tester, 'addTags', 'new');
+    await tester.ensureVisible(find.text('Save changes'));
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(saved!.schedulePatch, isEmpty);
+    expect(saved!.addTags, ['new']);
+  });
   testWidgets(
     'bulk blank untouched preserves mixed precision; explicit blank clears',
     (tester) async {
@@ -142,7 +180,14 @@ void main() {
           },
         ),
       );
-      await edit(tester, 'dueTime', '');
+      await tester.ensureVisible(input('dueTime'));
+      final row = find
+          .ancestor(of: input('dueTime'), matching: find.byType(Row))
+          .first;
+      await tester.tap(
+        find.descendant(of: row, matching: find.byType(Checkbox)),
+      );
+      await tester.pump();
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
       expect(saved!.schedulePatch, {'dueTime': null});

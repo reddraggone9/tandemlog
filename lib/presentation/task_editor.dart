@@ -157,7 +157,13 @@ class _EditorBodyState extends State<_EditorBody> {
             ? ''
             : value?.toString() ?? '',
       );
-      controllers[key]!.addListener(() {
+      final controller = controllers[key]!;
+      var previousText = controller.text;
+      controller.addListener(() {
+        // Focus/caret changes notify too. They must not apply a blank mixed
+        // schedule field or mark an otherwise untouched draft as dirty.
+        if (controller.text == previousText) return;
+        previousText = controller.text;
         if (mounted) {
           setState(() {
             touched.add(key);
@@ -495,123 +501,115 @@ class _EditorBodyState extends State<_EditorBody> {
         ? validation
         : null;
     final content = Form(
-      child: SingleChildScrollView(
-        controller: scroll,
-        padding: const EdgeInsets.only(top: 6),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            if (!bulk) ...[
-              field('title', 'Title', lines: 2),
-              field('description', 'Notes', lines: 3),
-              field('tags', 'Tags', hint: 'Separate tags with spaces'),
-            ] else ...[
-              const Text(
-                'Only checked schedule fields are applied. Checked blank fields clear their values.',
-              ),
-              field('addTags', 'Add tags', hint: 'Separate tags with spaces'),
-              field(
-                'removeTags',
-                'Remove tags',
-                hint: 'Separate tags with spaces',
-              ),
-            ],
-            if (widget.users.isNotEmpty)
-              Row(
-                children: [
-                  if (bulk)
-                    Checkbox(
-                      value: applyAssignee,
-                      onChanged: busy
-                          ? null
-                          : (v) => setState(() => applyAssignee = v!),
-                    ),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      initialValue: widget.users.any((u) => u['id'] == assignee)
-                          ? assignee
-                          : null,
-                      decoration: InputDecoration(
-                        labelText: 'Assignee',
-                        hintText: mixed.contains('assignee') ? 'Mixed' : null,
-                      ),
-                      items: [
-                        for (final user in widget.users)
-                          DropdownMenuItem(
-                            value: user['id'] as String,
-                            child: Text(
-                              user['name'] as String? ?? user['id'] as String,
-                            ),
-                          ),
-                      ],
-                      onChanged: busy
-                          ? null
-                          : (v) => setState(() {
-                              assignee = v;
-                              if (bulk) applyAssignee = true;
-                            }),
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 12),
-            field('startDate', 'Start date', hint: 'YYYY-MM-DD'),
-            field('startTime', 'Start time', hint: 'HH:mm'),
-            field('dueDate', 'Due date', hint: 'YYYY-MM-DD'),
-            field('dueTime', 'Due time', hint: 'HH:mm'),
-            field('recurrence', 'Repeat', hint: 'every week when done'),
-            if (repeating)
-              const Padding(
-                padding: EdgeInsets.only(bottom: 8),
-                child: Text(
-                  'This occurrence changes the planned date; the base due date and repeat cadence remain.',
-                ),
-              ),
-            if (!repeating && overrides) ...[
-              const Text('Existing occurrence override is preserved.'),
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: [
-                  TextButton(
-                    onPressed: busy
-                        ? null
-                        : () => setState(() => showOverride = !showOverride),
-                    child: const Text('Edit existing override'),
-                  ),
-                  TextButton(
-                    onPressed: busy
-                        ? null
-                        : () {
-                            controllers['scheduledDate']!.clear();
-                            controllers['scheduledTime']!.clear();
-                          },
-                    child: const Text('Clear override'),
-                  ),
-                ],
-              ),
-            ],
-            if (repeating || showOverride) ...[
-              field(
-                'scheduledDate',
-                'This occurrence date',
-                hint: 'YYYY-MM-DD',
-              ),
-              field('scheduledTime', 'This occurrence time', hint: 'HH:mm'),
-            ],
-            field(
-              'timeZone',
-              'Time zone',
-              hint: 'Blank: Local; UTC; America/Chicago',
-            ),
-            const Text('Sort-date bounds'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (!bulk) ...[
+            field('title', 'Title', lines: 2),
+            field('description', 'Notes', lines: 3),
+            field('tags', 'Tags', hint: 'Separate tags with spaces'),
+          ] else ...[
             const Text(
-              'Days from today; affects listing order, not the deadline.',
+              'Only checked schedule fields are applied. Checked blank fields clear their values.',
             ),
-            field('dueMinDays', 'Minimum days', hint: 'No bound'),
-            field('dueMaxDays', 'Maximum days', hint: 'No bound'),
+            field('addTags', 'Add tags', hint: 'Separate tags with spaces'),
+            field(
+              'removeTags',
+              'Remove tags',
+              hint: 'Separate tags with spaces',
+            ),
           ],
-        ),
+          if (widget.users.isNotEmpty)
+            Row(
+              children: [
+                if (bulk)
+                  Checkbox(
+                    value: applyAssignee,
+                    onChanged: busy
+                        ? null
+                        : (v) => setState(() => applyAssignee = v!),
+                  ),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    initialValue: widget.users.any((u) => u['id'] == assignee)
+                        ? assignee
+                        : null,
+                    decoration: InputDecoration(
+                      labelText: 'Assignee',
+                      hintText: mixed.contains('assignee') ? 'Mixed' : null,
+                    ),
+                    items: [
+                      for (final user in widget.users)
+                        DropdownMenuItem(
+                          value: user['id'] as String,
+                          child: Text(
+                            user['name'] as String? ?? user['id'] as String,
+                          ),
+                        ),
+                    ],
+                    onChanged: busy
+                        ? null
+                        : (v) => setState(() {
+                            assignee = v;
+                            if (bulk) applyAssignee = true;
+                          }),
+                  ),
+                ),
+              ],
+            ),
+          const SizedBox(height: 12),
+          field('startDate', 'Start date', hint: 'YYYY-MM-DD'),
+          field('startTime', 'Start time', hint: 'HH:mm'),
+          field('dueDate', 'Due date', hint: 'YYYY-MM-DD'),
+          field('dueTime', 'Due time', hint: 'HH:mm'),
+          field('recurrence', 'Repeat', hint: 'every week when done'),
+          if (repeating)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                'This occurrence changes the planned date; the base due date and repeat cadence remain.',
+              ),
+            ),
+          if (!repeating && overrides) ...[
+            const Text('Existing occurrence override is preserved.'),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                TextButton(
+                  onPressed: busy
+                      ? null
+                      : () => setState(() => showOverride = !showOverride),
+                  child: const Text('Edit existing override'),
+                ),
+                TextButton(
+                  onPressed: busy
+                      ? null
+                      : () {
+                          controllers['scheduledDate']!.clear();
+                          controllers['scheduledTime']!.clear();
+                        },
+                  child: const Text('Clear override'),
+                ),
+              ],
+            ),
+          ],
+          if (repeating || showOverride) ...[
+            field('scheduledDate', 'This occurrence date', hint: 'YYYY-MM-DD'),
+            field('scheduledTime', 'This occurrence time', hint: 'HH:mm'),
+          ],
+          field(
+            'timeZone',
+            'Time zone',
+            hint: 'Blank: Local; UTC; America/Chicago',
+          ),
+          const Text('Sort-date bounds'),
+          const Text(
+            'Days from today; affects listing order, not the deadline.',
+          ),
+          field('dueMinDays', 'Minimum days', hint: 'No bound'),
+          field('dueMaxDays', 'Maximum days', hint: 'No bound'),
+        ],
       ),
     );
     final actions = Row(
@@ -653,7 +651,10 @@ class _EditorBodyState extends State<_EditorBody> {
             runSpacing: 4,
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
-              Text('${widget.selectionCount} selected'),
+              Text(
+                '${widget.selectionCount} selected',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               if (widget.onClearSelection != null)
                 TextButton(
                   onPressed: busy ? null : widget.onClearSelection,
@@ -686,13 +687,29 @@ class _EditorBodyState extends State<_EditorBody> {
                 children: [
                   heading,
                   const SizedBox(height: 16),
-                  Expanded(child: content),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      controller: scroll,
+                      padding: const EdgeInsets.only(top: 6),
+                      child: content,
+                    ),
+                  ),
                   actions,
                 ],
               ),
             ),
           )
         : AlertDialog(
+            // Title and form share the bounded scroll area, keeping fields
+            // reachable above the keyboard even with enlarged phone text.
+            scrollable: true,
+            insetPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 16,
+            ),
+            titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+            actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             title: heading,
             content: SizedBox(width: 480, child: content),
             actions: [actions],
