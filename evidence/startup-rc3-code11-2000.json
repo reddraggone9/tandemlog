@@ -1,0 +1,100 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 2000,
+  "label": "rc3-code11-2000",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 1570,
+      "marker": "TANDEMLOG_READY_MS=974 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=390",
+        "TANDEMLOG_PHASE identity_lock=21",
+        "TANDEMLOG_PHASE sqlite_open_schema=7",
+        "TANDEMLOG_PHASE manifest=14",
+        "TANDEMLOG_PHASE ingest=367",
+        "TANDEMLOG_ROWS {\"query_ms\":9,\"decode_ms\":8,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=974 FILES_READ=1"
+      ],
+      "external_main_ms": 583,
+      "external_first_frame_ms": 980
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 819,
+      "marker": "TANDEMLOG_READY_MS=527 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=328",
+        "TANDEMLOG_PHASE identity_lock=12",
+        "TANDEMLOG_PHASE sqlite_open_schema=1",
+        "TANDEMLOG_PHASE manifest=10",
+        "TANDEMLOG_PHASE ingest=11",
+        "TANDEMLOG_ROWS {\"query_ms\":11,\"decode_ms\":20,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=527 FILES_READ=0"
+      ],
+      "external_main_ms": 284,
+      "external_first_frame_ms": 620
+    },
+    {
+      "run": 3,
+      "cache": "warm",
+      "external_ms": 983,
+      "marker": "TANDEMLOG_READY_MS=624 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=414",
+        "TANDEMLOG_PHASE identity_lock=11",
+        "TANDEMLOG_PHASE sqlite_open_schema=2",
+        "TANDEMLOG_PHASE manifest=12",
+        "TANDEMLOG_PHASE ingest=12",
+        "TANDEMLOG_ROWS {\"query_ms\":24,\"decode_ms\":17,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=624 FILES_READ=0"
+      ],
+      "external_main_ms": 350,
+      "external_first_frame_ms": 773
+    },
+    {
+      "run": 4,
+      "cache": "warm",
+      "external_ms": 853,
+      "marker": "TANDEMLOG_READY_MS=528 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=309",
+        "TANDEMLOG_PHASE identity_lock=12",
+        "TANDEMLOG_PHASE sqlite_open_schema=1",
+        "TANDEMLOG_PHASE manifest=10",
+        "TANDEMLOG_PHASE ingest=14",
+        "TANDEMLOG_ROWS {\"query_ms\":14,\"decode_ms\":35,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=528 FILES_READ=0"
+      ],
+      "external_main_ms": 319,
+      "external_first_frame_ms": 634
+    },
+    {
+      "run": 5,
+      "cache": "warm",
+      "external_ms": 954,
+      "marker": "TANDEMLOG_READY_MS=617 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=377",
+        "TANDEMLOG_PHASE identity_lock=10",
+        "TANDEMLOG_PHASE sqlite_open_schema=1",
+        "TANDEMLOG_PHASE manifest=11",
+        "TANDEMLOG_PHASE ingest=11",
+        "TANDEMLOG_ROWS {\"query_ms\":3,\"decode_ms\":20,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=617 FILES_READ=0"
+      ],
+      "external_main_ms": 332,
+      "external_first_frame_ms": 714
+    }
+  ],
+  "source_commit": "4d255e2b06187d6d6ad383d9142bfb2b3454c6b4",
+  "version": "0.1.0-rc.3+11"
+}
