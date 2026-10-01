@@ -109,6 +109,92 @@ Future<void> selectTask(
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('phone tag dropdown stays tappable above an open keyboard', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('rc4-phone-picker-');
+    final folder = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final writer = await TaskStore.open(
+      LocalLogFolder(folder.path),
+      '${root.path}/writer',
+    );
+    final user = const Uuid().v4(), task = const Uuid().v4();
+    await writer.command(user, 'user.created', {'name': 'Alex Example'});
+    await writer.command(task, 'task.created', {
+      'title': 'Review synthetic supplies',
+      'description': '',
+      'assignee': user,
+    });
+    await writer.edit(task, {}, tags: ['edgeqa', 'Other'], observedTagRefs: {});
+    await File(
+      '${profile.path}/settings.json',
+    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+    await tester.pumpAndSettle();
+    // Android density 240: 540x960 physical pixels, 360x640 logical pixels.
+    tester.view.devicePixelRatio = 1.5;
+    tester.view.physicalSize = const Size(540, 960);
+    await tester.pumpAndSettle();
+    await openFilters(tester);
+    final search = find.byKey(const ValueKey('tag-search'));
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    await tester.tap(find.byTooltip('Expand tag options'));
+    await tester.pumpAndSettle();
+    await tester.enterText(search, 'edge');
+    await tester.pumpAndSettle();
+    tester.view.viewInsets = const FakeViewPadding(bottom: 420);
+    await tester.pumpAndSettle();
+    final keyboardPopup = find.byKey(const ValueKey('tag-results'));
+    if (keyboardPopup.evaluate().isNotEmpty) {
+      expect(
+        find.byKey(const ValueKey('tag-option-edgeqa')).hitTestable(),
+        findsOneWidget,
+      );
+    }
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    final collapse = find.byTooltip('Collapse tag options');
+    if (collapse.evaluate().isNotEmpty) {
+      await tester.tap(collapse);
+      await tester.pumpAndSettle();
+    }
+    expect(find.byTooltip('Expand tag options'), findsOneWidget);
+    final dialogRect = tester.getRect(find.byType(AlertDialog));
+    await tester.tap(find.byTooltip('Expand tag options'));
+    await tester.pumpAndSettle();
+    final result = find.byKey(const ValueKey('tag-option-edgeqa'));
+    final popup = find.byKey(const ValueKey('tag-results'));
+    // Bounds alone can pass for a zero-height or entirely clipped popup.
+    for (final query in ['does-not-exist', '', 'edge']) {
+      await tester.enterText(search, query);
+      await tester.pumpAndSettle();
+      expect(tester.widget<TextField>(search).focusNode!.hasFocus, isTrue);
+      final popupRect = tester.getRect(popup);
+      expect(popupRect.height, greaterThanOrEqualTo(48));
+      expect(popupRect.top, greaterThanOrEqualTo(0));
+      expect(popupRect.bottom, lessThanOrEqualTo(360));
+      expect(tester.getRect(find.byType(AlertDialog)), dialogRect);
+      expect(
+        query == 'does-not-exist'
+            ? find.text('No matching tags').hitTestable()
+            : result.hitTestable(),
+        findsOneWidget,
+      );
+    }
+    await tester.tap(result);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('selected-tag-edgeqa')), findsOneWidget);
+    expect(tester.getRect(find.byType(AlertDialog)), dialogRect);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    tester.view.resetViewInsets();
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+    await writer.close();
+    await root.delete(recursive: true);
+  });
   testWidgets(
     'multi-tag selection bulk editing deletion and guarded editor sessions',
     (tester) async {
