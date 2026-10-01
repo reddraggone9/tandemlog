@@ -20,6 +20,8 @@ Rejected: popup-only recovery, inverse snapshot writes that overwrite newer sync
 
 ## Accepted follow-up: completion, selection and batches
 
+Selection count/Clear Selection/Edit remain outside the task scrolling viewport whenever the side pane is unavailable, including narrow desktop windows. The strip participates in layout above the list, respects the existing safe area and wraps at larger text scales. It does not cover final rows or extend the drag viewport into controls. Wide editor headings keep their existing design. This fixes unreachable commands without adding duplicated or permanent chrome.
+
 Lee reported identical scheduled successors on early completion-relative completion, dirty side editors closing/reopening during drag, and a lost Shift anchor after reorder. Compare actual successor dates and explain unavailable completion; retain editor keys/controllers during moves, and preserve anchors by visible task ID. Reopening/Undo and recurrence computation remain unchanged. Move Undo also retains the editor because it does not touch its content; content-changing Undo still resolves the draft first.
 
 Small local batches should feel immediate. Measurements found repeated read/hash/cache/order work dominating flush time, plus progressive capture-field clearing. Shared validated JSONL appends remove repeated scans and acknowledge one coherent input update without weakening flushes, inventing whole-batch crash atomicity or changing the protocol. Incoming deferred references and exact receipt recovery remain admission gates. AOT measurements and fault tests substantiate this choice; Android provider/visual acceptance stays independent. Revisit chunk sizing if real selections substantially exceed the tested 100-task envelope.

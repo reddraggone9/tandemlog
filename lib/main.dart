@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
+import 'presentation/compact_selection_actions.dart';
 import 'presentation/task_toolbar.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
@@ -2734,7 +2735,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : '${weekdays[group.weekday! - 1]} · ${group.date}';
     }
 
-    return Listener(
+    final list = Listener(
       onPointerUp: (_) {
         if (taskDrag != null) dragReleased = true;
       },
@@ -2820,22 +2821,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 ),
                 onSubmitted: (_) => _capture(),
               ),
-            ),
-          if (selecting && !wideLayout && !mobileEditorOpen)
-            Wrap(
-              crossAxisAlignment: WrapCrossAlignment.center,
-              spacing: 8,
-              children: [
-                Text('${selectedTasks.length} selected'),
-                TextButton(
-                  onPressed: _clearTaskSelection,
-                  child: const Text('Clear'),
-                ),
-                TextButton(
-                  onPressed: _editSelected,
-                  child: const Text('Open editor'),
-                ),
-              ],
             ),
           const SizedBox(height: 12),
           if (tasks.isEmpty)
@@ -3181,6 +3166,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               const Divider(height: 1),
             ],
           ],
+        ],
+      ),
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) => Column(
+        children: [
+          if (selecting && !wideLayout && !mobileEditorOpen)
+            CompactSelectionActions(
+              key: const ValueKey('compact-selection-actions'),
+              count: selectedTasks.length,
+              onClear: busy ? null : _clearTaskSelection,
+              onEdit: busy ? null : _editSelected,
+            ),
+          Expanded(child: list),
         ],
       ),
     );

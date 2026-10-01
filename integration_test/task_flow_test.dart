@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tandemlog/storage/task_store.dart';
@@ -107,12 +108,7 @@ Future<void> selectTask(
   await tester.pumpAndSettle();
 }
 
-Finder clearSelection() => find.text(
-  find.byType(TaskEditor).evaluate().isNotEmpty ||
-          find.byType(BulkTaskEditor).evaluate().isNotEmpty
-      ? 'Clear Selection'
-      : 'Clear',
-);
+Finder clearSelection() => find.text('Clear Selection');
 Finder selectionSummary(int count) => find.text(
   find.byType(BulkTaskEditor).evaluate().isNotEmpty
       ? 'Edit $count tasks'
@@ -181,15 +177,17 @@ void main() {
         if (bulk) {
           await selectTask(tester, ids[0], control: false, longPress: true);
           await selectTask(tester, ids[1], control: false);
-          // Large text can scroll the lazy contextual toolbar out of view.
+          // The selection commands remain outside the scrolling task viewport.
           tester
               .state<ScrollableState>(find.byType(Scrollable).first)
               .position
               .jumpTo(0);
           await tester.pumpAndSettle();
-          await tester.ensureVisible(find.text('Open editor'));
+          await tester.ensureVisible(
+            find.byKey(const ValueKey('edit-selected-tasks')),
+          );
           await tester.pumpAndSettle();
-          await tester.tap(find.text('Open editor'));
+          await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));
         } else {
           await selectTask(tester, ids[0], control: false);
         }
@@ -640,7 +638,7 @@ void main() {
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(BulkTaskEditor), findsNothing);
       expect(selectionSummary(2), findsOneWidget);
-      await tester.tap(find.text('Open editor'));
+      await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));
       await tester.pumpAndSettle();
       expect(find.byType(BulkTaskEditor), findsOneWidget);
       await tester.tap(clearSelection());
@@ -3099,6 +3097,71 @@ void main() {
         tester,
         () => find.text('Review household supplies').evaluate().isNotEmpty,
       );
+      // Accessibility mode, action focus/hover, a completion burst and an
+      // unrelated metrics rebuild must not make the notice persistent.
+      final burst = const Uuid().v4();
+      await writer.command(burst, 'task.created', {
+        'title': 'Burst completion reference',
+        'description': '',
+        'assignee': user,
+      });
+      await waitForUi(
+        tester,
+        () => find.text('Burst completion reference').evaluate().isNotEmpty,
+      );
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          const FakeAccessibilityFeatures(accessibleNavigation: true);
+      await tester.pumpAndSettle();
+      await tester.tap(checkbox);
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isEmpty,
+      );
+      await tester.tap(
+        find.descendant(
+          of: find.byKey(ValueKey('task-row-$burst')),
+          matching: find.byType(Checkbox),
+        ),
+      );
+      await waitForUi(
+        tester,
+        () => find.text('Burst completion reference').evaluate().isEmpty,
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsOneWidget);
+      final actionText = find.descendant(
+        of: find.byType(SnackBarAction),
+        matching: find.text('Undo'),
+      );
+      final actionFocus = Focus.of(tester.element(actionText));
+      actionFocus.requestFocus();
+      await tester.pump();
+      expect(actionFocus.hasFocus, isTrue);
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: tester.getCenter(actionText));
+      await mouse.moveTo(tester.getCenter(actionText));
+      await tester.pump();
+      await Future<void>.delayed(const Duration(seconds: 5));
+      tester.view.padding = const FakeViewPadding(top: 2);
+      await tester.pumpAndSettle();
+      await Future<void>.delayed(const Duration(seconds: 6));
+      await tester.pump();
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      await mouse.removePointer();
+      tester.view.resetPadding();
+      tester.platformDispatcher.clearAccessibilityFeaturesTestValue();
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Burst completion reference').evaluate().isNotEmpty,
+      );
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isNotEmpty,
+      );
       // Dirty editor guard blocks Undo, retaining text on Cancel.
       await tester.pump(const Duration(seconds: 12));
       await tester.pumpAndSettle();
@@ -3548,6 +3611,164 @@ void main() {
       await tester.pumpAndSettle();
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
+  testWidgets(
+    'compact selection commands stay reachable through scrolling and resize',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp(
+        'rc5-compact-selection-',
+      );
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      final ids = List.generate(60, (_) => const Uuid().v4());
+      await writer.createTasks({
+        for (var i = 0; i < ids.length; i++) ids[i]: 'Reference task ${i + 1}',
+      }, user);
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      tester.view.physicalSize = const Size(390, 800);
+      tester.view.devicePixelRatio = 1;
+      tester.view.viewPadding = const FakeViewPadding(top: 24, bottom: 24);
+      tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await waitForUi(
+        tester,
+        () => find.text('Reference task 1').evaluate().isNotEmpty,
+      );
+      Future<Map<String, String>> contents() async => {
+        await for (final e in folder.list())
+          if (e is File) e.path: base64Encode(await e.readAsBytes()),
+      };
+      final before = await contents();
+      final viewport = find.byType(ListView).first;
+      ScrollPosition position() => tester
+          .state<ScrollableState>(
+            find
+                .descendant(of: viewport, matching: find.byType(Scrollable))
+                .first,
+          )
+          .position;
+      final bar = find.byKey(const ValueKey('compact-selection-actions'));
+      Future<void> pick(String id, {bool longPress = false}) async {
+        position().jumpTo(0);
+        await tester.pumpAndSettle();
+        await tester.scrollUntilVisible(
+          find.byKey(ValueKey('task-body-$id')),
+          300,
+          scrollable: find
+              .descendant(of: viewport, matching: find.byType(Scrollable))
+              .first,
+          maxScrolls: 60,
+        );
+        await selectTask(tester, id, control: false, longPress: longPress);
+      }
+
+      for (final scale in [1.0, 2.0]) {
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        await tester.pumpAndSettle();
+        await pick(ids[45], longPress: true);
+        await pick(ids[46]);
+        expect(find.text('2 selected'), findsOneWidget);
+        final fixed = tester.getRect(bar);
+        expect(fixed.top, greaterThanOrEqualTo(24));
+        for (final edge in [0.0, position().maxScrollExtent]) {
+          position().jumpTo(edge);
+          await tester.pumpAndSettle();
+          expect(tester.getRect(bar), fixed);
+          expect(
+            tester.getRect(viewport).top,
+            greaterThanOrEqualTo(fixed.bottom),
+          );
+          expect(
+            find.byKey(const ValueKey('clear-selected-tasks')).hitTestable(),
+            findsOneWidget,
+          );
+          expect(
+            find.byKey(const ValueKey('edit-selected-tasks')).hitTestable(),
+            findsOneWidget,
+          );
+        }
+        await tester.scrollUntilVisible(
+          find.byKey(ValueKey('task-body-${ids.last}')),
+          300,
+          scrollable: find
+              .descendant(of: viewport, matching: find.byType(Scrollable))
+              .first,
+          maxScrolls: 60,
+        );
+        await tester.pumpAndSettle();
+        expect(
+          tester.getRect(find.byKey(ValueKey('task-body-${ids.last}'))).bottom,
+          lessThanOrEqualTo(tester.getRect(viewport).bottom),
+        );
+        await tester.tap(find.byKey(const ValueKey('edit-selected-tasks')));
+        await tester.pumpAndSettle();
+        expect(find.byType(BulkTaskEditor), findsOneWidget);
+        expect(bar, findsNothing);
+        await tester.tap(find.text('Cancel'));
+        await tester.pumpAndSettle();
+        expect(bar, findsNothing);
+        await pick(ids[45], longPress: true);
+        await pick(ids[45]);
+        expect(bar, findsNothing);
+        expect(tester.takeException(), isNull);
+      }
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+      await tester.pumpAndSettle();
+      await pick(ids[40], longPress: true);
+      // The edge-scroll viewport begins below the fixed command strip.
+      final dragHandle = find.descendant(
+        of: find.byKey(ValueKey('task-drop-${ids[40]}')),
+        matching: find.byType(Draggable<String>),
+      );
+      final drag = await tester.startGesture(tester.getCenter(dragHandle));
+      await drag.moveBy(const Offset(-20, 0));
+      await tester.pump();
+      final scrollBefore = position().pixels;
+      final bounds = tester.getRect(viewport);
+      await drag.moveTo(Offset(bounds.center.dx, bounds.top + 2));
+      for (var i = 0; i < 12; i++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(position().pixels, lessThan(scrollBefore));
+      await drag.moveTo(
+        tester.getCenter(bar),
+      ); // Fixed controls are not drop targets.
+      await tester.pump();
+      await drag.up();
+      await tester.pumpAndSettle();
+      expect(await contents(), before);
+      tester.view.physicalSize = const Size(899, 800);
+      await tester.pumpAndSettle();
+      expect(bar, findsOneWidget);
+      tester.view.physicalSize = const Size(900, 800);
+      await tester.pumpAndSettle();
+      expect(bar, findsNothing);
+      expect(find.byType(TaskEditor), findsOneWidget);
+      tester.view.physicalSize = const Size(899, 800);
+      await tester.pumpAndSettle();
+      expect(find.byType(TaskEditor), findsOneWidget);
+      expect(bar, findsNothing);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(bar, findsNothing);
+      expect(await contents(), before);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.view.resetViewPadding();
+      tester.view.resetPadding();
       await writer.close();
       await root.delete(recursive: true);
     },
