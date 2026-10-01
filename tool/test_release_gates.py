@@ -40,7 +40,8 @@ class ReleaseGates(unittest.TestCase):
             with self.assertRaises(ValueError): validate_run(dict(run, **{key:value}), 'owner/repo')
 
     def test_installed_desktop_lifecycle_gate(self):
-        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall')
+        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall',
+                       sandbox_stopped=name != 'after-uninstall')
                   for name in ('after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall')]
         verify_install_smoke({'phases': phases})
         for report in ({}, {'phases': phases[:-1]}, {'phases': phases[::-1]},
@@ -49,12 +50,16 @@ class ReleaseGates(unittest.TestCase):
             with self.assertRaises(ValueError): verify_install_smoke(report)
 
     def test_flatpak_requires_real_commit_replacement(self):
-        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall')
+        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall',
+                       sandbox_stopped=name != 'after-uninstall')
                   for name in ('after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall')]
         upgrade = dict(candidate_commit='a'*64, baseline_commit='b'*64,
                        baseline_payload_equal=True, baseline_permissions_equal=True,
                        final_candidate_restored=True)
         verify_install_smoke(dict(phases=phases, upgrade=upgrade), require_changed_commit=True)
+        with self.assertRaises(ValueError):
+            verify_install_smoke(dict(phases=[dict(p, sandbox_stopped=False) for p in phases],
+                                      upgrade=upgrade), require_changed_commit=True)
         for changed in ({}, dict(upgrade, baseline_commit='a'*64),
                         dict(upgrade, baseline_payload_equal=False),
                         dict(upgrade, baseline_permissions_equal=False),

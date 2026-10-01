@@ -13,6 +13,7 @@ import queue
 import sqlite3
 import subprocess
 import threading
+import tempfile
 import time
 import uuid
 
@@ -20,6 +21,28 @@ import uuid
 def hashes(folder):
     return {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
             for p in folder.iterdir() if p.is_file()}
+
+
+def flatpak_instances(executable):
+    output = subprocess.check_output([executable, 'ps', '--columns=instance'], text=True)
+    return {line.strip() for line in output.splitlines() if line.strip().isdigit()}
+
+
+def stop_flatpak_instance(executable, instance_file):
+    # The ID is supplied by this exact flatpak run through its inherited FD.
+    # Never kill by application ID: another launch could belong to someone else.
+    instance_file.seek(0)
+    instance = instance_file.read().decode('ascii').strip()
+    if not instance.isdigit():
+        raise RuntimeError('Flatpak did not report the exact launched instance ID')
+    if instance in flatpak_instances(executable):
+        subprocess.run([executable, 'kill', instance], check=True, capture_output=True, text=True)
+    deadline = time.monotonic()+15
+    while instance in flatpak_instances(executable):
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Synthetic Flatpak instance survived cleanup: '+instance)
+        time.sleep(.1)
+    return instance
 
 
 def main():
@@ -75,8 +98,16 @@ def main():
             env.pop('TANDEMLOG_PROFILE', None)
         else:
             env['TANDEMLOG_PROFILE'] = str(profile)
+        instance_file = None
+        process_options = {}
+        if os.name != 'nt' and Path(command[0]).name == 'flatpak' and command[1:2] == ['run']:
+            instance_file = tempfile.TemporaryFile(mode='w+b', dir=root)
+            descriptor = instance_file.fileno()
+            command = command[:2]+['--die-with-parent', f'--instance-id-fd={descriptor}']+command[2:]
+            process_options['pass_fds'] = (descriptor,)
         proc = subprocess.Popen(command, env=env, stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace')
+                                stderr=subprocess.STDOUT, text=True, encoding='utf-8', errors='replace',
+                                **process_options)
         lines = queue.Queue()
         def reader():
             for line in proc.stdout:
@@ -121,12 +152,20 @@ def main():
                     except sqlite3.Error:
                         pass
         finally:
-            proc.terminate()
             try:
-                proc.wait(timeout=10)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.wait()
+                if instance_file is not None:
+                    stopped_instance = stop_flatpak_instance(command[0], instance_file)
+                    output.append('FLATPAK_INSTANCE_STOPPED='+stopped_instance)
+            finally:
+                if instance_file is not None:
+                    instance_file.close()
+                if proc.poll() is None:
+                    proc.terminate()
+                try:
+                    proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait()
         if not ready or (os.name != 'nt' and not any(line.startswith('TANDEMLOG_ROWS ') for line in output)):
             raise RuntimeError('Installed app failed to load synthetic tasks: '+'\n'.join(output))
         with sqlite3.connect(f'file:{cache.as_posix()}?mode=ro', uri=True) as db:
@@ -140,7 +179,8 @@ def main():
     report = Path(args.report)
     data = json.loads(report.read_text()) if report.exists() else {'phases': []}
     data['phases'].append({'phase': args.phase, 'passed': True,
-                           'loaded_projection': bool(command), 'markers': [x for x in output if x.startswith('TANDEMLOG_')]})
+                           'loaded_projection': bool(command),
+                           'sandbox_stopped': any(x.startswith('FLATPAK_INSTANCE_STOPPED=') for x in output), 'markers': [x for x in output if x.startswith('TANDEMLOG_')]})
     report.write_text(json.dumps(data, indent=2)+'\n')
 
 

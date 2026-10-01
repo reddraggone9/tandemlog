@@ -80,7 +80,11 @@ new commercial distribution claim.
 Hosted Linux/Windows smoke gates install the exact candidate, launch the installed
 application against synthetic settings/history, force a fresh SQLite projection,
 exercise package replacement, uninstall, assert settings/history hash continuity,
-reinstall and load again. Linux requires loaded-frame/task markers; Windows
+reinstall and load again. Linux requires loaded-frame/task markers and captures the exact sandbox instance
+ID through Flatpak’s instance-ID file descriptor. It kills that instance and waits
+for it to disappear between phases; terminating the launcher alone could leave
+the app holding its writer lock. It also requests `--die-with-parent` as a cleanup
+backstop. No application-wide kill or data reset is used. Windows
 requires a visible native window belonging to the installed process and the full
 fresh projection. Windows checks every bundled payload file and the Start Menu
 shortcut target. The reports record all four lifecycle phases and block

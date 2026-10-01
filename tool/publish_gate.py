@@ -28,6 +28,9 @@ def verify_install_smoke(report, require_changed_commit=False):
             raise ValueError('Installed desktop launch/data preservation QA did not pass')
 
     if require_changed_commit:
+        if any(phase.get('sandbox_stopped') is not True for phase in phases
+               if phase['phase'] != 'after-uninstall'):
+            raise ValueError('Synthetic Flatpak instance cleanup was not verified')
         upgrade = report.get('upgrade', {})
         commits = [upgrade.get(key, '') for key in ('candidate_commit', 'baseline_commit')]
         if (not all(re.fullmatch(r'[0-9a-f]{64}', commit) for commit in commits)
