@@ -2,6 +2,12 @@
 
 Current published preview: [v0.1.0-rc.3](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.3), Android build 17, source `8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e`. Public experimental prerelease, not Latest; stable remains deferred. The exact owner-signed APK passed native Android API 30 acceptance before publication. All public asset downloads/checksums, APK signature and tag/source were verified afterward.
 
+## RC4 work in progress — build 18
+
+Approved: multi-tag chips, direct/side editing, protected drafts/live validation, explicit mixed-field bulk edits, confirmed tombstones, equal-key bulk drag and actual Linux/Windows installers. [Decision 0004](decisions/0004-editing-bulk-actions-and-installers.md) records behavior/compatibility. Storage, editors, main UI and packaging are implemented. All 137 generic app tests and seven Python release gates pass; the full native Linux suite passed 17 workflows in 274 seconds. Final visual label/transient fixes receive focused reruns; matched Android/installer acceptance is separate.
+
+Hosted installation/lifecycle gates are required for exact Flatpak and Windows EXE. Cloud Flatpak is blocked by read-only user-namespace mappings. Windows setup checks its separately installed C++ runtime before installation; no new terms/download/admin action is automated. The parent inspected reference pixels and supplied precise guidance after the cloud download failed. Updated demos, matched signed APK, full CI and native Android affected acceptance remain pending. No RC4 publication or stable cutover has occurred.
+
 ## Published RC3 — compact filters, search and task parity
 
 [Candidate 36809817199](https://github.com/reddraggone9/tandemlog/actions/runs/36809817199) and [push CI 36809817060](https://github.com/reddraggone9/tandemlog/actions/runs/36809817060) passed all targets. Publication [36812834339](https://github.com/reddraggone9/tandemlog/actions/runs/36812834339) reused those exact accepted artifacts without rebuilding. Native Android passed search across hidden categories, filter restoration/live updates, bounded tag picker, responsive layouts, occurrence editor, time-driven updates/drafts, restart, constrained drag/hidden ranks, actual stationary edge scrolling and rejected drops without events. Native Linux affected flows, both themes and enlarged/narrow visuals also passed. Windows hosted builds/tests and archives are verified; full interactive Windows QA remains unperformed.

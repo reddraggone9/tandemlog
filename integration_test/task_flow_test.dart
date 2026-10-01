@@ -9,6 +9,7 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
+import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 
@@ -29,15 +30,23 @@ Future<void> openFilters(WidgetTester tester) async {
 
 Future<void> chooseFilter(WidgetTester tester, String label) async {
   if (label == 'All tags') {
-    final clear = find.byTooltip('Clear tag filter');
+    final clear = find.byTooltip('Clear tag filters');
     if (clear.evaluate().isNotEmpty) {
       await tester.ensureVisible(clear);
       await tester.pumpAndSettle();
       await tester.tap(clear);
     }
   } else if (label.startsWith('#')) {
+    if (find
+        .byKey(ValueKey('selected-tag-${label.substring(1)}'))
+        .evaluate()
+        .isNotEmpty) {
+      return;
+    }
     final search = find.byKey(const ValueKey('tag-search'));
     await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    await tester.tap(search);
     await tester.pumpAndSettle();
     await tester.enterText(search, label.substring(1));
     await tester.pumpAndSettle();
@@ -78,6 +87,318 @@ Future<void> openSettings(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets(
+    'multi-tag selection bulk editing deletion and guarded editor sessions',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc4-native-');
+      final folder = await Directory('${root.path}/shared').create(),
+          profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      await writer.command(other, 'user.created', {'name': 'Sam Example'});
+      final ids = <String, String>{};
+      Future<void> add(
+        String title,
+        List<String> tags, {
+        String? assigned,
+        bool done = false,
+      }) async {
+        final id = ids[title] = const Uuid().v4();
+        await writer.command(id, 'task.created', {
+          'title': title,
+          'description': 'Reference notes for $title',
+          'assignee': assigned ?? user,
+          'schedule': {'dueDate': '2030-05-01'},
+        });
+        await writer.edit(id, {}, tags: tags, observedTagRefs: {});
+        if (done) await writer.command(id, 'task.completed', {});
+      }
+
+      await add('Review household supplies', ['Home']);
+      await add('Read planning notes', ['Planning']);
+      await add('Arrange reference shelf', ['Home', 'Planning']);
+      await add('Other user review', ['Home'], assigned: other);
+      await add('Finished planning', ['Planning'], done: true);
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1200, 900);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Task actions'), findsNothing);
+      await openFilters(tester);
+      await chooseFilter(tester, '#Home');
+      await chooseFilter(tester, '#Planning');
+      expect(find.byType(InputChip), findsNWidgets(2));
+      final tagSearch = find.byKey(const ValueKey('tag-search'));
+      await tester.enterText(tagSearch, 'Planning');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('selected-tag-Planning')),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      for (final title in [
+        'Review household supplies',
+        'Read planning notes',
+        'Arrange reference shelf',
+      ]) {
+        expect(find.text(title), findsOneWidget);
+      }
+      expect(find.text('Other user review'), findsNothing);
+      await tester.tap(find.byKey(const ValueKey('open-search')));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const ValueKey('task-search')),
+        'review',
+      );
+      await tester.pumpAndSettle();
+      expect(find.text('Other user review'), findsOneWidget);
+      await tester.tap(find.byTooltip('Clear search'));
+      await tester.pumpAndSettle();
+      await openFilters(tester);
+      expect(find.byType(InputChip), findsNWidgets(2));
+      final homeChip = find.byKey(const ValueKey('selected-tag-Home'));
+      await tester.tap(
+        find.descendant(of: homeChip, matching: find.byTooltip('Delete')),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('selected-tag-Home')), findsNothing);
+      await tester.tap(find.text('Reset'));
+      await tester.pumpAndSettle();
+      expect(find.byType(InputChip), findsNothing);
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Review household supplies'));
+      await tester.pumpAndSettle();
+      expect(tester.widget<TaskEditor>(find.byType(TaskEditor)).panel, isTrue);
+      final titleField = find.widgetWithText(TextField, 'Title');
+      await tester.enterText(titleField, 'Unsubmitted household edit');
+      tester.view.physicalSize = const Size(390, 900);
+      await tester.pumpAndSettle();
+      expect(tester.widget<TaskEditor>(find.byType(TaskEditor)).panel, isFalse);
+      expect(
+        tester.widget<TextField>(titleField).controller!.text,
+        'Unsubmitted household edit',
+      );
+      tester.view.physicalSize = const Size(1200, 900);
+      await tester.pumpAndSettle();
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.text('Discard unsaved changes?'), findsOneWidget);
+      await tester.tap(find.text('Keep editing'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Read planning notes'));
+      await tester.pumpAndSettle();
+      expect(find.text('Discard unsaved changes?'), findsOneWidget);
+      await tester.tap(find.text('Keep editing'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(titleField).controller!.text,
+        'Unsubmitted household edit',
+      );
+      await tester.tap(find.text('Read planning notes'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard changes'));
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(titleField).controller!.text,
+        'Read planning notes',
+      );
+      await tester.enterText(titleField, 'Read current planning notes');
+      await tester.tap(find.text('Save changes'));
+      for (
+        var attempt = 0;
+        attempt < 100 && find.byType(TaskEditor).evaluate().isNotEmpty;
+        attempt++
+      ) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      await tester.pumpAndSettle();
+      expect(find.byType(TaskEditor), findsNothing);
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Review household supplies'],
+        )['title'],
+        'Review household supplies',
+      );
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Read planning notes'],
+        )['title'],
+        'Read current planning notes',
+      );
+      for (
+        var attempt = 0;
+        attempt < 100 && find.byType(TaskEditor).evaluate().isNotEmpty;
+        attempt++
+      ) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(find.byType(TaskEditor), findsNothing);
+      tester
+          .state<ScrollableState>(find.byType(Scrollable).first)
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+      await tester.pumpAndSettle();
+      for (final title in [
+        'Review household supplies',
+        'Read planning notes',
+      ]) {
+        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
+        await tester.pumpAndSettle();
+      }
+      final sourceRow = find.byKey(
+        ValueKey('task-drop-${ids['Review household supplies']}'),
+      );
+      final targetRow = find.byKey(
+        ValueKey('task-drop-${ids['Arrange reference shelf']}'),
+      );
+      final handle = find.descendant(
+        of: sourceRow,
+        matching: find.byType(Draggable<String>),
+      );
+      final gesture = await tester.startGesture(tester.getCenter(handle));
+      await gesture.moveBy(const Offset(0, 20));
+      await tester.pump(const Duration(milliseconds: 100));
+      final targetRect = tester.getRect(targetRow);
+      await gesture.moveTo(
+        Offset(targetRect.right - 60, targetRect.bottom - 8),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+      await gesture.up();
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      final globalIds = writer.rows
+          .where((row) => row['kind'] == 'task')
+          .map((row) => row['id'])
+          .toList();
+      expect(
+        globalIds.indexOf(ids['Arrange reference shelf']),
+        lessThan(globalIds.indexOf(ids['Review household supplies'])),
+      );
+      expect(
+        globalIds.indexOf(ids['Review household supplies']),
+        lessThan(globalIds.indexOf(ids['Read planning notes'])),
+      );
+      await tester.tap(find.text('Edit selected'));
+      await tester.pumpAndSettle();
+      expect(find.byType(BulkTaskEditor), findsOneWidget);
+      expect(find.widgetWithText(TextField, 'Title'), findsNothing);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add tags'),
+        'Frozen draft',
+      );
+      await writer.command(ids['Review household supplies']!, 'task.edited', {
+        'description': 'Updated reference notes',
+      });
+      await tester.tap(find.text('Save changes'));
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('changed'), findsWidgets);
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .controller!
+            .text,
+        'Frozen draft',
+      );
+      await tester.tap(find.text('Save changes'));
+      await tester.pump(const Duration(milliseconds: 300));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Review household supplies'],
+        )['tags'],
+        isNot(contains('Frozen draft')),
+      );
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard changes'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Edit selected'));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .controller!
+            .text,
+        isEmpty,
+      );
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add tags'),
+        'Reviewed',
+      );
+      await tester.tap(find.text('Save changes'));
+      for (
+        var attempt = 0;
+        attempt < 100 && find.byType(BulkTaskEditor).evaluate().isNotEmpty;
+        attempt++
+      ) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      await tester.pumpAndSettle();
+      expect(find.byType(BulkTaskEditor), findsNothing);
+      await writer.refresh();
+      for (final title in [
+        'Review household supplies',
+        'Read planning notes',
+      ]) {
+        expect(
+          writer.rows.firstWhere((row) => row['id'] == ids[title])['tags'],
+          contains('Reviewed'),
+        );
+      }
+      for (final title in [
+        'Review household supplies',
+        'Read planning notes',
+      ]) {
+        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
+        await tester.pumpAndSettle();
+      }
+      await tester.tap(find.text('Delete selected'));
+      await tester.pumpAndSettle();
+      expect(find.text('Delete 2 tasks?'), findsOneWidget);
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      expect(find.text('Review household supplies'), findsOneWidget);
+      await tester.tap(find.text('Delete selected'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete tasks'));
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.any((row) => row['id'] == ids['Review household supplies']),
+        isFalse,
+      );
+      expect(
+        writer.rows.any((row) => row['id'] == ids['Read planning notes']),
+        isFalse,
+      );
+      expect(find.text('Arrange reference shelf'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
 
   testWidgets(
     'workspace search preserves filters drafts and completion sections',
@@ -601,6 +922,26 @@ void main() {
       );
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
+      expect(find.textContaining('This task changed.'), findsOneWidget);
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Title'))
+            .controller!
+            .text,
+        'Local edited title',
+      );
+      await tester.tap(find.text('Cancel'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard changes'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Original task'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Title'),
+        'Local edited title',
+      );
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
       expect(find.text('Local edited title'), findsOneWidget);
       expect(find.text('Arrived automatically'), findsOneWidget);
       expect(capture.text, 'Unsent draft');
@@ -904,10 +1245,7 @@ void main() {
             .groupValue,
         isTrue,
       );
-      expect(
-        tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
-        '#Home',
-      );
+      expect(find.byKey(const ValueKey('selected-tag-Home')), findsOneWidget);
       expect(
         tester
             .widget<SwitchListTile>(
@@ -967,10 +1305,7 @@ void main() {
             .groupValue,
         isFalse,
       );
-      expect(
-        tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
-        'All tags',
-      );
+      expect(find.byType(InputChip), findsNothing);
       expect(
         tester
             .widget<SwitchListTile>(
@@ -1161,8 +1496,8 @@ void main() {
     await tester.tap(find.byKey(const ValueKey('tag-option-$targetTag')));
     await tester.pumpAndSettle();
     expect(
-      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
-      '#$targetTag',
+      find.byKey(const ValueKey('selected-tag-$targetTag')),
+      findsOneWidget,
     );
     await tester.tap(find.text('Done').last);
     await tester.pumpAndSettle();
@@ -1171,14 +1506,11 @@ void main() {
     await openFilters(tester);
     expect(tester.widget<TextField>(search).controller!.text, isEmpty);
     expect(
-      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
-      '#$targetTag',
+      find.byKey(const ValueKey('selected-tag-$targetTag')),
+      findsOneWidget,
     );
     await chooseFilter(tester, 'All tags');
-    expect(
-      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
-      'All tags',
-    );
+    expect(find.byType(InputChip), findsNothing);
     await tester.enterText(search, 'home');
     await tester.pumpAndSettle();
     await tester.tap(find.text('Reset'));
@@ -1343,6 +1675,11 @@ void main() {
       await tester.tap(find.text('Monthly review'));
       await tester.pumpAndSettle();
       Future<void> fill(String label, String value) async {
+        if (label.startsWith('This occurrence') &&
+            find.widgetWithText(TextField, label).evaluate().isEmpty) {
+          await tester.tap(find.text('Edit existing override'));
+          await tester.pumpAndSettle();
+        }
         final field = find.widgetWithText(TextField, label);
         await tester.ensureVisible(field);
         await tester.pumpAndSettle();
@@ -1356,7 +1693,7 @@ void main() {
       await fill('Start date', '2026-02-01');
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(TaskEditor), findsOneWidget);
       expect(
         tester
             .widget<TextField>(find.widgetWithText(TextField, 'Start date'))
@@ -1374,13 +1711,7 @@ void main() {
       await fill('Start time', '09:30');
       await fill('This occurrence time', '08:00');
       await fill('Due time', '17:00');
-      await tester.ensureVisible(find.text('Local'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Local'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('UTC').last);
-      await tester.pumpAndSettle();
-      expect(find.textContaining('On this device:'), findsOneWidget);
+      await fill('Time zone', 'UTC');
       await fill('Tags', '#home #weekly');
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
@@ -1405,9 +1736,24 @@ void main() {
       expect((state['schedule'] as Map)['scheduledTime'], '08:00');
       expect(find.textContaining('Start 09:30'), findsOneWidget);
       expect(find.textContaining('09:30 UTC'), findsNothing);
-      await tester.tap(find.byTooltip('Task actions').first);
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('Move down'));
+      expect(find.byTooltip('Task actions'), findsNothing);
+      final reorder = find
+          .descendant(
+            of: find.byKey(ValueKey('task-row-$task')),
+            matching: find.byType(Semantics),
+          )
+          .evaluate()
+          .map((element) => element.widget as Semantics)
+          .firstWhere(
+            (widget) =>
+                widget.properties.customSemanticsActions?.keys.any(
+                  (action) => action.label == 'Move down',
+                ) ??
+                false,
+          );
+      reorder.properties.customSemanticsActions!.entries
+          .firstWhere((entry) => entry.key.label == 'Move down')
+          .value();
       await tester.pumpAndSettle();
       expect(
         tester.getTopLeft(find.text('Second task')).dy,
@@ -1489,7 +1835,7 @@ void main() {
     await root.delete(recursive: true);
   });
   testWidgets(
-    'native tag filters preserve drafts and long drag scrolls offscreen',
+    'native tag filters preserve drafts and selected block drag scrolls offscreen',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('tag-scroll-');
       final folder = await Directory('${root.path}/shared').create();
@@ -1551,6 +1897,12 @@ void main() {
       expect(find.text('Task 3'), findsOneWidget);
       await filterChoice(tester, '#Home');
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+      await tester.pumpAndSettle();
+      for (final id in ids.take(2)) {
+        await tester.tap(find.byKey(ValueKey('select-$id')));
+        await tester.pumpAndSettle();
+      }
       final handle = find.descendant(
         of: find.byKey(ValueKey('task-drop-${ids[0]}')),
         matching: find.byType(Draggable<String>),
@@ -1590,18 +1942,19 @@ void main() {
         lessThanOrEqualTo(viewport.bottom + 1),
       );
       await gesture.up();
+      await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       await writer.refresh();
       expect(
         writer.rows.where((row) => row['kind'] == 'task').last['id'],
-        ids.first,
+        ids[1],
       );
       expect(
         writer.rows
             .where((row) => row['kind'] == 'task')
             .map((row) => row['id'])
             .toList(),
-        [...ids.skip(1), ids.first],
+        [...ids.skip(2), ...ids.take(2)],
       );
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
@@ -1624,260 +1977,279 @@ void main() {
       await root.delete(recursive: true);
     },
   );
-  testWidgets('native drag preserves hidden order and rejects other time buckets', (
-    tester,
-  ) async {
-    final root = await Directory.systemTemp.createTemp('drag-order-');
-    final folder = await Directory('${root.path}/shared').create();
-    final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
-      LocalLogFolder(folder.path),
-      '${root.path}/writer',
-    );
-    final user = const Uuid().v4(), other = const Uuid().v4();
-    await writer.command(user, 'user.created', {'name': 'Example'});
-    await writer.command(other, 'user.created', {'name': 'Other'});
-    final ids = <String, String>{};
-    Future<void> add(
-      String title, {
-      String? assignee,
-      Map<String, dynamic> schedule = const {},
-    }) async {
-      final id = ids[title] = const Uuid().v4();
-      await writer.command(id, 'task.created', {
-        'title': title,
-        'description': '',
-        'assignee': assignee ?? user,
-        'schedule': schedule,
-      });
-    }
-
-    await add('First');
-    await add('Hidden assignee', assignee: other);
-    await add('Second');
-    await add('Hidden future', schedule: {'startDate': '2026-11-01'});
-    await add('Third');
-    await add('Dated', schedule: {'dueDate': '2026-10-02', 'dueMinDays': 1});
-    await add(
-      'Dated peer',
-      schedule: {'scheduledDate': '2026-10-02', 'dueMinDays': 1},
-    );
-    await add(
-      'Different time',
-      schedule: {'dueDate': '2026-10-02', 'dueTime': '10:00'},
-    );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-    var viewNow = DateTime.utc(2026, 10, 1);
-    late ViewTimeSource source;
-    await tester.pumpWidget(
-      TandemlogApp(
-        profilePath: profile.path,
-        timeSourceFactory: (onChanged) => source = ViewTimeSource(
-          onChanged: onChanged,
-          loadZone: () async => 'UTC',
-          now: () => viewNow,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    Finder target(String title) =>
-        find.byKey(ValueKey('task-drop-${ids[title]}'));
-    Finder handle(String title) => find.descendant(
-      of: target(title),
-      matching: find.byType(Draggable<String>),
-    );
-    Future<void> drag(
-      String from,
-      String to, {
-      bool after = true,
-      bool invalidate = false,
-      bool advanceClock = false,
-    }) async {
-      await tester.ensureVisible(handle(from));
-      await tester.pumpAndSettle();
-      final start = tester.getCenter(handle(from));
-      final rect = tester.getRect(target(to));
-      final point = Offset(
-        rect.center.dx,
-        after ? rect.bottom - 8 : rect.top + 8,
+  testWidgets(
+    'native drag preserves hidden order and rejects other time buckets',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('drag-order-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
       );
-      final gesture = await tester.startGesture(start);
-      await gesture.moveBy(const Offset(-20, 0));
-      await tester.pump();
-      await gesture.moveTo(point);
-      await tester.pump();
-      if (invalidate) {
-        source.onChanged();
-        await tester.pump();
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Example'});
+      await writer.command(other, 'user.created', {'name': 'Other'});
+      final ids = <String, String>{};
+      Future<void> add(
+        String title, {
+        String? assignee,
+        Map<String, dynamic> schedule = const {},
+      }) async {
+        final id = ids[title] = const Uuid().v4();
+        await writer.command(id, 'task.created', {
+          'title': title,
+          'description': '',
+          'assignee': assignee ?? user,
+          'schedule': schedule,
+        });
       }
-      if (invalidate || to == 'Different time') {
-        expect(
-          find.byWidgetPredicate(
-            (widget) =>
-                widget is Semantics &&
-                widget.properties.label ==
-                    'Cannot reorder here: different date or time, or the list changed.',
-          ),
-          findsOneWidget,
-        );
-      }
-      if (advanceClock) viewNow = viewNow.add(const Duration(days: 1));
-      await gesture.up();
-      await tester.pumpAndSettle();
-    }
 
-    expect(tester.getSize(handle('First')).width, greaterThanOrEqualTo(48));
-    await drag('First', 'Third');
-    await writer.refresh();
-    List<String> order() => writer.rows
-        .where((r) => r['kind'] == 'task')
-        .map((r) => r['title'] as String)
-        .toList();
-    expect(order(), [
-      'Hidden assignee',
-      'Second',
-      'Hidden future',
-      'Third',
-      'First',
-      'Dated',
-      'Dated peer',
-      'Different time',
-    ]);
-    final before = order();
-    final bytes = await folder
-        .list()
-        .where((f) => f.path.endsWith('.jsonl'))
-        .asyncMap((f) => File(f.path).readAsString())
-        .toList();
-    await drag('Dated', 'Different time');
-    expect(
-      find.text(
-        'Reorder canceled. Drop beside a task with the same date and time.',
-      ),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    expect(
-      await folder
+      await add('First');
+      await add('Hidden assignee', assignee: other);
+      await add('Second');
+      await add('Hidden future', schedule: {'startDate': '2026-11-01'});
+      await add('Third');
+      await add('Dated', schedule: {'dueDate': '2026-10-02', 'dueMinDays': 1});
+      await add(
+        'Dated peer',
+        schedule: {'scheduledDate': '2026-10-02', 'dueMinDays': 1},
+      );
+      await add(
+        'Different time',
+        schedule: {'dueDate': '2026-10-02', 'dueTime': '10:00'},
+      );
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      var viewNow = DateTime.utc(2026, 10, 1);
+      late ViewTimeSource source;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => source = ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () async => 'UTC',
+            now: () => viewNow,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      Finder target(String title) =>
+          find.byKey(ValueKey('task-drop-${ids[title]}'));
+      Finder handle(String title) => find.descendant(
+        of: target(title),
+        matching: find.byType(Draggable<String>),
+      );
+      Future<void> drag(
+        String from,
+        String to, {
+        bool after = true,
+        bool invalidate = false,
+        bool advanceClock = false,
+        bool invalidSelection = false,
+      }) async {
+        await tester.ensureVisible(handle(from));
+        await tester.pumpAndSettle();
+        final start = tester.getCenter(handle(from));
+        final rect = tester.getRect(target(to));
+        final point = Offset(
+          rect.center.dx,
+          after ? rect.bottom - 8 : rect.top + 8,
+        );
+        final gesture = await tester.startGesture(start);
+        await gesture.moveBy(const Offset(-20, 0));
+        await tester.pump();
+        await gesture.moveTo(point);
+        await tester.pump();
+        if (invalidate) {
+          source.onChanged();
+          await tester.pump();
+        }
+        if (invalidate || invalidSelection || to == 'Different time') {
+          expect(
+            find.byWidgetPredicate(
+              (widget) =>
+                  widget is Semantics &&
+                  widget.properties.label ==
+                      'Cannot reorder here: different date or time, or the list changed.',
+            ),
+            findsOneWidget,
+          );
+        }
+        if (advanceClock) viewNow = viewNow.add(const Duration(days: 1));
+        await gesture.up();
+        await tester.pumpAndSettle();
+      }
+
+      expect(tester.getSize(handle('First')).width, greaterThanOrEqualTo(48));
+      await drag('First', 'Third');
+      await writer.refresh();
+      List<String> order() => writer.rows
+          .where((r) => r['kind'] == 'task')
+          .map((r) => r['title'] as String)
+          .toList();
+      expect(order(), [
+        'Hidden assignee',
+        'Second',
+        'Hidden future',
+        'Third',
+        'First',
+        'Dated',
+        'Dated peer',
+        'Different time',
+      ]);
+      final before = order();
+      final bytes = await folder
           .list()
           .where((f) => f.path.endsWith('.jsonl'))
           .asyncMap((f) => File(f.path).readAsString())
-          .toList(),
-      bytes,
-    );
-    ScaffoldMessenger.of(
-      tester.element(find.byType(Scaffold)),
-    ).clearSnackBars();
-    await tester.pumpAndSettle();
-    await drag('Second', 'First', invalidate: true);
-    expect(
-      find.text('The task list changed. Try dragging again.'),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    ScaffoldMessenger.of(
-      tester.element(find.byType(Scaffold)),
-    ).clearSnackBars();
-    await tester.pumpAndSettle();
-    await drag('Dated', 'Dated peer', advanceClock: true);
-    expect(
-      find.text('The task list changed. Try moving the task again.'),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    viewNow = DateTime.utc(2026, 10, 1);
-    source.onChanged();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Dated peer'));
-    await tester.pumpAndSettle();
-    // Existing schedule starts expanded.
-    await tester.pumpAndSettle();
-    const warning =
-        'This task has a scheduled date but does not repeat. Check that this is intentional.';
-    final repeat = find.widgetWithText(TextField, 'Repeat');
-    await tester.ensureVisible(repeat);
-    await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
-    await tester.enterText(repeat, 'every week');
-    await tester.pumpAndSettle();
-    expect(find.text(warning), findsNothing);
-    await tester.enterText(repeat, '');
-    await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
-    await tester.tap(find.text('Save changes'));
-    await tester.pumpAndSettle();
-    await writer.refresh();
-    final schedule =
-        writer.rows.firstWhere(
-              (row) => row['id'] == ids['Dated peer'],
-            )['schedule']
-            as Map;
-    expect(schedule['scheduledDate'], '2026-10-02');
-    expect(schedule['recurrence'], isNull);
-    expect(find.text('Hidden future'), findsNothing);
-    final capture = find.widgetWithText(TextField, 'What needs doing?');
-    await tester.enterText(capture, 'Keep this draft');
-    await filterChoice(tester, 'Show upcoming');
-    await tester.pumpAndSettle();
-    expect(
-      tester.widget<TextField>(capture).controller!.text,
-      'Keep this draft',
-    );
-    await tester.scrollUntilVisible(
-      find.text('Hidden future'),
-      150,
-      scrollable: find.byType(Scrollable).first,
-    );
-    await tester.tap(find.text('Hidden future'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Notes'),
-      'Edited before availability',
-    );
-    await tester.tap(find.text('Save changes'));
-    await tester.pumpAndSettle();
-    await writer.refresh();
-    expect(
-      writer.rows.firstWhere(
-        (row) => row['id'] == ids['Hidden future'],
-      )['description'],
-      'Edited before availability',
-    );
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await tester.pumpWidget(
-      TandemlogApp(
-        profilePath: profile.path,
-        timeSourceFactory: (onChanged) => ViewTimeSource(
-          onChanged: onChanged,
-          loadZone: () async => 'UTC',
-          now: () => DateTime.utc(2026, 10, 1),
+          .toList();
+      await drag('Dated', 'Different time');
+      expect(
+        find.text(
+          'Reorder canceled. Drop beside a task with the same date and time.',
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await openFilters(tester);
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.widgetWithText(SwitchListTile, 'Show upcoming'),
-          )
-          .value,
-      isFalse,
-    );
-    await tester.tap(find.text('Done').last);
-    await tester.pumpAndSettle();
-    expect(find.text('Hidden future'), findsNothing);
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await writer.close();
-    await root.delete(recursive: true);
-  });
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      expect(
+        await folder
+            .list()
+            .where((f) => f.path.endsWith('.jsonl'))
+            .asyncMap((f) => File(f.path).readAsString())
+            .toList(),
+        bytes,
+      );
+      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+      await tester.pumpAndSettle();
+      for (final title in ['Dated', 'Third']) {
+        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
+        await tester.pumpAndSettle();
+      }
+      await drag('Dated', 'Dated peer', invalidSelection: true);
+      await writer.refresh();
+      expect(
+        order(),
+        before,
+        reason: 'Every selected task must share the target key.',
+      );
+      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+      await tester.pumpAndSettle();
+      ScaffoldMessenger.of(
+        tester.element(find.byType(Scaffold)),
+      ).clearSnackBars();
+      await tester.pumpAndSettle();
+      await drag('Second', 'First', invalidate: true);
+      expect(
+        find.text('The task list changed. Try dragging again.'),
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      ScaffoldMessenger.of(
+        tester.element(find.byType(Scaffold)),
+      ).clearSnackBars();
+      await tester.pumpAndSettle();
+      await drag('Dated', 'Dated peer', advanceClock: true);
+      expect(
+        find.text('The task list changed. Try moving the task again.'),
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      viewNow = DateTime.utc(2026, 10, 1);
+      source.onChanged();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Dated peer'));
+      await tester.pumpAndSettle();
+      // Existing schedule starts expanded.
+      await tester.pumpAndSettle();
+      const warning = 'Existing occurrence override is preserved.';
+      final repeat = find.widgetWithText(TextField, 'Repeat');
+      await tester.ensureVisible(repeat);
+      await tester.pumpAndSettle();
+      expect(find.text(warning), findsOneWidget);
+      await tester.enterText(repeat, 'every week');
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('base due date and repeat cadence remain'),
+        findsOneWidget,
+      );
+      await tester.enterText(repeat, '');
+      await tester.pumpAndSettle();
+      expect(find.text(warning), findsOneWidget);
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      final schedule =
+          writer.rows.firstWhere(
+                (row) => row['id'] == ids['Dated peer'],
+              )['schedule']
+              as Map;
+      expect(schedule['scheduledDate'], '2026-10-02');
+      expect(schedule['recurrence'], isNull);
+      expect(find.text('Hidden future'), findsNothing);
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.enterText(capture, 'Keep this draft');
+      await filterChoice(tester, 'Show upcoming');
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Keep this draft',
+      );
+      await tester.scrollUntilVisible(
+        find.text('Hidden future'),
+        150,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Hidden future'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Notes'),
+        'Edited before availability',
+      );
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Hidden future'],
+        )['description'],
+        'Edited before availability',
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () async => 'UTC',
+            now: () => DateTime.utc(2026, 10, 1),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isFalse,
+      );
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Hidden future'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets('loaded startup marker waits for a rendered time projection', (
     tester,
   ) async {
@@ -2077,7 +2449,7 @@ void main() {
       await tester.pumpAndSettle();
       await Future<void>.delayed(const Duration(milliseconds: 1250));
       await tester.pumpAndSettle();
-      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(find.byType(TaskEditor), findsOneWidget);
       expect(tester.widget<TextField>(notes).controller!.value, editing);
       expect(await logs(), before);
       Future<void> fill(String label, String text) async {

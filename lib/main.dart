@@ -3,16 +3,17 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
-import 'domain/schedule.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
 import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
+import 'presentation/task_editor.dart';
 import 'platform/view_time_source.dart';
-import 'domain/wall_time.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
@@ -113,7 +114,19 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
-  String? user, error, selectedTag;
+  String? user, error;
+  final selectedTags = <String>{};
+  final selectedTasks = <String>{};
+  bool selecting = false;
+  Map<String, dynamic>? editingTask;
+  List<Map<String, dynamic>>? editingBulk;
+  TaskStore? editorStore;
+  String? bulkSnapshot;
+  List<String> bulkPending = [];
+  String lastSearchText = '';
+  bool closingEditor = false, bulkConflict = false;
+  var editorKey = GlobalKey<TaskEditorState>();
+  var bulkEditorKey = GlobalKey<BulkTaskEditorState>();
   final search = TextEditingController();
   final searchFocus = FocusNode();
   bool searchOpen = false;
@@ -164,7 +177,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bool everyone,
     bool upcoming,
     String? user,
-    String? tag,
+    Set<String> tags,
+    Set<String> selected,
     String query,
   })?
   taskDrag;
@@ -228,7 +242,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             time,
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
-            tag: selectedTag,
+            tags: Set.of(selectedTags),
             searchQuery: searchQuery,
           );
           taskViewZoneId = time.localZoneId;
@@ -242,6 +256,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (mounted) {
           setState(() {
             taskView = view.value;
+            selectedTasks.retainAll(
+              visibleEntries.map((entry) => entry.task['id'] as String),
+            );
             viewRevision++;
           });
           _reportStartupAfterFrame();
@@ -279,6 +296,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _open(String location) async {
+    if (!await _closeEditor()) return;
+    _clearSelection();
     final folder = Platform.isAndroid
         ? AndroidLogFolder(location)
         : LocalLogFolder(location);
@@ -306,6 +325,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _selectUser(String? selected) async {
+    if (!await _closeEditor()) return;
+    _clearSelection();
     final previous = settings!.user;
     settings!.folder = store!.folder.location;
     settings!.user = selected;
@@ -616,6 +637,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _chooseFolder() async {
+    if (!await _closeEditor()) return;
     await _act(() async {
       final selected = await widget.folderActions.pick();
       if (selected == null || !mounted) return;
@@ -761,68 +783,417 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
-  Future<void> _edit(Map<String, dynamic> task) async {
-    final origin = store!;
-    await showDialog<void>(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => _TaskEditor(
-        task: task,
-        save: (fields, addedTags, removedTags) async {
-          await syncing;
-          if (!identical(store, origin)) {
-            throw StateError('The data folder changed. Reopen the task.');
-          }
-          final tags = Set<String>.from(task['tags'] as List? ?? [])
-            ..addAll(addedTags)
-            ..removeAll(removedTags);
-          if (fields.isEmpty && addedTags.isEmpty && removedTags.isEmpty) {
-            return;
-          }
-          await origin.edit(
-            task['id'],
-            fields,
-            tags: tags.toList(),
-            observedTagRefs: Map<String, String>.from(
-              task['tagRefs'] as Map? ?? {},
-            ),
-          );
-          if (mounted) {
-            setState(() => rows = origin.rows);
-            _invalidateView();
-          }
-        },
-      ),
-    );
+  Future<bool> _closeEditor() async {
+    if (editingTask == null && editingBulk == null) return true;
+    if (closingEditor) return false;
+    closingEditor = true;
+    try {
+      final okay =
+          await ((editingTask != null
+                  ? editorKey.currentState?.canClose()
+                  : bulkEditorKey.currentState?.canClose()) ??
+              Future.value(true));
+      if (okay && mounted) {
+        setState(() {
+          editingTask = null;
+          editingBulk = null;
+          editorStore = null;
+        });
+      }
+      return okay;
+    } finally {
+      closingEditor = false;
+    }
   }
 
-  Future<void> _moveTask(Map<String, dynamic> task, bool up) => _act(() async {
-    final entries = visibleEntries;
-    final visible = entries.map((entry) => entry.task).toList();
-    final index = visible.indexWhere((row) => row['id'] == task['id']);
-    final neighbor = index + (up ? -1 : 1);
-    if (index < 0 || neighbor < 0 || neighbor >= visible.length) return;
-    if (entries[index].effectiveDate != entries[neighbor].effectiveDate ||
-        entries[index].task['completed'] !=
-            entries[neighbor].task['completed']) {
+  Future<void> _changeSearch(String value) async {
+    if (!await _closeEditor()) {
+      search.text = lastSearchText;
       return;
     }
-    final global = rows.where((row) => row['kind'] == 'task').toList();
-    final globalNeighbor = global.indexWhere(
-      (row) => row['id'] == visible[neighbor]['id'],
+    lastSearchText = value;
+    _clearSelection();
+    _invalidateView();
+  }
+
+  Future<void> _edit(Map<String, dynamic> task) async {
+    if (!await _closeEditor() || !mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    setState(() {
+      editorStore = store;
+      editorKey = GlobalKey<TaskEditorState>();
+      editingTask = Map<String, dynamic>.from(task);
+    });
+  }
+
+  Future<void> _editSelected() async {
+    if (selectedTasks.isEmpty || !await _closeEditor() || !mounted) return;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    setState(() {
+      editorStore = store;
+      bulkSnapshot = store!.taskSnapshot;
+      bulkConflict = false;
+      bulkEditorKey = GlobalKey<BulkTaskEditorState>();
+      editingBulk = visibleEntries
+          .where((entry) => selectedTasks.contains(entry.task['id']))
+          .map((entry) => Map<String, dynamic>.from(entry.task))
+          .toList();
+      bulkPending = editingBulk!.map((task) => task['id'] as String).toList();
+    });
+  }
+
+  bool Function() _bulkGuard(List<String> ids) {
+    final origin = store,
+        query = searchQuery,
+        assignee = user,
+        everyone = all,
+        upcoming = showUpcoming,
+        completed = showCompleted;
+    final tags = Set<String>.of(selectedTags);
+    final original = {
+      for (final row in origin!.rows.where((row) => ids.contains(row['id'])))
+        row['id']: jsonEncode(row),
+    };
+    return () {
+      if (!mounted ||
+          !foreground ||
+          !identical(store, origin) ||
+          !timeSource.ready ||
+          query != searchQuery ||
+          assignee != user ||
+          everyone != all ||
+          upcoming != showUpcoming ||
+          completed != showCompleted ||
+          !setEquals(tags, selectedTags)) {
+        return false;
+      }
+      final view = projectTaskView(
+        origin.rows,
+        timeSource.readTime(),
+        assignee: everyone ? null : assignee,
+        includeUpcoming: upcoming,
+        tags: tags,
+        searchQuery: query,
+      ).value;
+      final entries = query.isNotEmpty
+          ? [...view.open, ...view.completed]
+          : (completed ? view.completed : view.open);
+      return ids
+          .where((id) {
+            final row = origin.rows.where((row) => row['id'] == id).firstOrNull;
+            return row != null && jsonEncode(row) == original[id];
+          })
+          .every((id) => entries.any((entry) => entry.task['id'] == id));
+    };
+  }
+
+  Future<void> _saveBulk(BulkTaskEdit edit) async {
+    final origin = editorStore!;
+    final ids = List<String>.of(bulkPending);
+    if (ids.isEmpty) return;
+    if (bulkConflict) {
+      throw StateError(
+        'Selected tasks changed. Close this editor and review them before retrying.',
+      );
+    }
+    await syncing;
+    try {
+      final result = await origin.bulkEdit(
+        ids,
+        edit,
+        expectedTaskSnapshot: bulkSnapshot!,
+        canCommit: _bulkGuard(ids),
+      );
+      await origin.refresh();
+      if (mounted) {
+        setState(() => rows = origin.rows);
+        _invalidateView();
+      }
+      if (result.error is StaleTaskSnapshot) bulkConflict = true;
+      if (!bulkConflict) bulkSnapshot = origin.taskSnapshot;
+      bulkPending = result.remainingIds.where((id) {
+        final task = origin.rows
+            .where((row) => row['id'] == id && row['kind'] == 'task')
+            .firstOrNull;
+        return task != null &&
+            !((edit.assignee == null || edit.assignee == task['assignee']) &&
+                edit.schedulePatch.entries.every(
+                  (field) =>
+                      (task['schedule'] as Map)[field.key] == field.value,
+                ) &&
+                edit.addTags.every(
+                  (tag) => (task['tags'] as List).contains(tag),
+                ) &&
+                edit.removeTags.every(
+                  (tag) => !(task['tags'] as List).contains(tag),
+                ));
+      }).toList();
+      if (!result.succeeded) {
+        selectedTasks
+          ..clear()
+          ..addAll(bulkPending);
+        throw StateError(
+          '${result.committedIds.length + result.remainingIds.length - bulkPending.length} confirmed saved after refresh; ${bulkPending.length} remain. ${result.error}',
+        );
+      }
+      selectedTasks.clear();
+    } catch (error) {
+      if (error is StaleTaskSnapshot) bulkConflict = true;
+      await origin.refresh();
+      if (mounted) {
+        setState(() => rows = origin.rows);
+        _invalidateView();
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> _deleteSelected() async {
+    if (!await _closeEditor() || !mounted) return;
+    if (selectedTasks.isEmpty) return;
+    final origin = store!;
+    final snapshot = origin.taskSnapshot;
+    final ids = visibleEntries
+        .where((entry) => selectedTasks.contains(entry.task['id']))
+        .map((entry) => entry.task['id'] as String)
+        .toList();
+    final canCommit = _bulkGuard(ids);
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Delete ${selectedTasks.length} tasks?'),
+        content: const Text(
+          'These tasks will be removed from the shared workspace. Existing repeating successors remain.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Delete tasks'),
+          ),
+        ],
+      ),
     );
-    final before = up
-        ? visible[neighbor]['id']
-        : globalNeighbor + 1 < global.length
-        ? global[globalNeighbor + 1]['id']
-        : null;
-    await _moveBeforeGuarded(
-      task['id'],
-      before,
-      store!.taskSnapshot,
-      _moveCommitGuard(task['id'], visible[neighbor]['id']),
-    );
+    if (confirmed != true || !mounted) return;
+    await _act(() async {
+      final result = await origin.deleteTasks(
+        ids,
+        expectedTaskSnapshot: snapshot,
+        canCommit: canCommit,
+      );
+      await origin.refresh();
+      selectedTasks
+        ..clear()
+        ..addAll(
+          result.remainingIds.where(
+            (id) => origin.rows.any(
+              (row) => row['id'] == id && row['kind'] == 'task',
+            ),
+          ),
+        );
+      rows = origin.rows;
+      if (!result.succeeded) {
+        throw StateError(
+          '${result.committedIds.length} deleted; ${selectedTasks.length} remain after refresh. ${result.error}',
+        );
+      }
+    });
+  }
+
+  String _targetBaseline(Map<String, dynamic> task) => jsonEncode({
+    for (final key in [
+      'id',
+      'title',
+      'description',
+      'schedule',
+      'assignee',
+      'tagRefs',
+      'completed',
+    ])
+      key: task[key],
   });
+  bool _targetUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
+    final current = origin.rows
+        .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
+        .firstOrNull;
+    return identical(store, origin) &&
+        current != null &&
+        _targetBaseline(current) == _targetBaseline(frozen);
+  }
+
+  Widget _editorSurface(
+    Widget list,
+    List<Map<String, dynamic>> users,
+  ) => LayoutBuilder(
+    builder: (context, constraints) {
+      if (editingTask == null && editingBulk == null) return list;
+      final panel = constraints.maxWidth >= 900;
+      final task = editingTask;
+      final editor = task != null
+          ? TaskEditor(
+              key: editorKey,
+              task: task,
+              users: users,
+              panel: panel,
+              onClose: () {
+                setState(() => editingTask = null);
+              },
+              onDelete: () async {
+                final origin = editorStore!;
+                await origin.refresh();
+                if (!_targetUnchanged(origin, task)) {
+                  throw StateError(
+                    'This task changed. Close and reopen it to review before deleting.',
+                  );
+                }
+                await origin.deleteTask(
+                  task['id'],
+                  expectedTaskSnapshot: origin.taskSnapshot,
+                  canCommit: () => _targetUnchanged(origin, task),
+                );
+                await origin.refresh();
+                if (mounted) {
+                  setState(() => rows = origin.rows);
+                  _invalidateView();
+                }
+              },
+              save: (fields, addedTags, removedTags) async {
+                final origin = editorStore!;
+                await syncing;
+                if (!identical(store, origin)) {
+                  throw StateError('The data folder changed. Reopen the task.');
+                }
+                await origin.refresh();
+                if (!_targetUnchanged(origin, task)) {
+                  throw StateError(
+                    'This task changed. Your draft is kept; close and reopen it to review before saving.',
+                  );
+                }
+                final tags = Set<String>.from(task['tags'] as List? ?? [])
+                  ..addAll(addedTags)
+                  ..removeAll(removedTags);
+                if (fields.isNotEmpty ||
+                    addedTags.isNotEmpty ||
+                    removedTags.isNotEmpty) {
+                  await origin.edit(
+                    task['id'],
+                    fields,
+                    tags: tags.toList(),
+                    observedTagRefs: Map<String, String>.from(
+                      task['tagRefs'] as Map? ?? {},
+                    ),
+                    expectedTaskSnapshot: origin.taskSnapshot,
+                    canCommit: () => _targetUnchanged(origin, task),
+                  );
+                }
+                if (mounted) {
+                  setState(() => rows = origin.rows);
+                  _invalidateView();
+                }
+              },
+            )
+          : BulkTaskEditor(
+              key: bulkEditorKey,
+              tasks: editingBulk!,
+              users: users,
+              panel: panel,
+              onClose: () {
+                setState(() => editingBulk = null);
+              },
+              onSave: _saveBulk,
+              onDelete: () async {
+                final origin = editorStore!;
+                final ids = List<String>.of(bulkPending);
+                if (ids.isEmpty) return;
+                if (bulkConflict) {
+                  throw StateError(
+                    'These tasks changed. Close and reopen the selection to review before deleting.',
+                  );
+                }
+                final result = await origin.deleteTasks(
+                  ids,
+                  expectedTaskSnapshot: bulkSnapshot!,
+                  canCommit: _bulkGuard(ids),
+                );
+                await origin.refresh();
+                if (result.error is StaleTaskSnapshot) {
+                  bulkConflict = true;
+                } else {
+                  bulkSnapshot = origin.taskSnapshot;
+                }
+                bulkPending = result.remainingIds
+                    .where(
+                      (id) => origin.rows.any(
+                        (row) => row['id'] == id && row['kind'] == 'task',
+                      ),
+                    )
+                    .toList();
+                if (mounted) {
+                  setState(() => rows = origin.rows);
+                  _invalidateView();
+                }
+                if (!result.succeeded) {
+                  throw StateError(
+                    '${result.committedIds.length} deleted; ${bulkPending.length} remain. ${result.error}',
+                  );
+                }
+              },
+            );
+      if (panel) {
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(child: list),
+            const VerticalDivider(width: 1),
+            SizedBox(width: 420, child: editor),
+          ],
+        );
+      }
+      return Stack(
+        children: [
+          list,
+          ModalBarrier(color: Colors.black54, dismissible: false),
+          Center(child: editor),
+        ],
+      );
+    },
+  );
+
+  Future<void> _keyboardMove(Map<String, dynamic> task, bool up) =>
+      _act(() async {
+        final entries = visibleEntries;
+        final index = entries.indexWhere(
+          (entry) => entry.task['id'] == task['id'],
+        );
+        final neighbor = index + (up ? -1 : 1);
+        if (index < 0 ||
+            neighbor < 0 ||
+            neighbor >= entries.length ||
+            entries[index].effectiveDate != entries[neighbor].effectiveDate ||
+            entries[index].task['completed'] !=
+                entries[neighbor].task['completed']) {
+          return;
+        }
+        final global = rows
+            .where((row) => row['kind'] == 'task' && row['id'] != task['id'])
+            .toList();
+        final target = entries[neighbor].task['id'] as String;
+        final anchor = global.indexWhere((row) => row['id'] == target);
+        final before = up
+            ? target
+            : (anchor + 1 < global.length
+                  ? global[anchor + 1]['id'] as String
+                  : null);
+        await _moveBeforeGuarded(
+          task['id'],
+          before,
+          store!.taskSnapshot,
+          _moveCommitGuard(task['id'], target),
+        );
+      });
 
   Future<void> _moveBeforeGuarded(
     String id,
@@ -860,7 +1231,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         everyone = all,
         upcoming = showUpcoming,
         selected = user,
-        tag = selectedTag;
+        tags = Set<String>.of(selectedTags);
     final entries = visibleEntries;
     final expected = entries
         .where((entry) => entry.task['id'] == source)
@@ -876,7 +1247,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           everyone != all ||
           upcoming != showUpcoming ||
           selected != user ||
-          tag != selectedTag ||
+          !setEquals(tags, selectedTags) ||
           !timeSource.ready) {
         return false;
       }
@@ -888,7 +1259,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           timeSource.readTime(),
           assignee: everyone ? null : selected,
           includeUpcoming: upcoming,
-          tag: tag,
+          tags: tags,
           searchQuery: query,
         ).value;
         final visible = completed ? current.completed : current.open;
@@ -922,7 +1293,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         drag.everyone == all &&
         drag.upcoming == showUpcoming &&
         drag.user == user &&
-        drag.tag == selectedTag;
+        setEquals(drag.tags, selectedTags) &&
+        setEquals(
+          drag.selected,
+          selecting && selectedTasks.contains(drag.id)
+              ? selectedTasks
+              : {drag.id},
+        );
   }
 
   bool _canDropTask(String source, String target) {
@@ -930,14 +1307,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return false;
     }
     final entries = visibleEntries;
-    final from = entries
-        .where((entry) => entry.task['id'] == source)
-        .firstOrNull;
+    final ids = taskDrag!.selected;
+    if (ids.contains(target)) return false;
     final to = entries.where((entry) => entry.task['id'] == target).firstOrNull;
-    return from != null &&
-        to != null &&
-        from.task['completed'] == to.task['completed'] &&
-        from.effectiveDate == to.effectiveDate;
+    return to != null &&
+        ids.every((id) {
+          final from = entries
+              .where((entry) => entry.task['id'] == id)
+              .firstOrNull;
+          return from != null &&
+              from.task['completed'] == to.task['completed'] &&
+              from.effectiveDate == to.effectiveDate;
+        });
   }
 
   void _cancelDrag() {
@@ -970,7 +1351,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           drag.everyone != all ||
           drag.upcoming != showUpcoming ||
           drag.user != user ||
-          drag.tag != selectedTag) {
+          !setEquals(drag.tags, selectedTags)) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('The task list changed. Try dragging again.'),
@@ -979,7 +1360,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return;
       }
       final global = rows
-          .where((row) => row['kind'] == 'task' && row['id'] != source)
+          .where(
+            (row) =>
+                row['kind'] == 'task' && !drag.selected.contains(row['id']),
+          )
           .toList();
       final index = global.indexWhere((row) => row['id'] == target);
       if (index < 0) return;
@@ -988,12 +1372,56 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : index + 1 < global.length
           ? global[index + 1]['id'] as String
           : null;
-      await _moveBeforeGuarded(
-        source,
-        before,
-        drag.snapshot,
-        _moveCommitGuard(source, target),
-      );
+      if (drag.selected.length == 1) {
+        await _moveBeforeGuarded(
+          source,
+          before,
+          drag.snapshot,
+          _moveCommitGuard(source, target),
+        );
+      } else {
+        final ids = drag.selected.toList();
+        final contextGuard = _bulkGuard(ids);
+        final expected = visibleEntries
+            .where((entry) => entry.task['id'] == source)
+            .first;
+        bool canCommit() {
+          if (!contextGuard()) return false;
+          final view = projectTaskView(
+            store!.rows,
+            timeSource.readTime(),
+            assignee: all ? null : user,
+            includeUpcoming: showUpcoming,
+            tags: Set.of(selectedTags),
+            searchQuery: searchQuery,
+          ).value;
+          final entries = searching
+              ? [...view.open, ...view.completed]
+              : (showCompleted ? view.completed : view.open);
+          return [...ids, target].every((id) {
+            final entry = entries
+                .where((entry) => entry.task['id'] == id)
+                .firstOrNull;
+            return entry != null &&
+                entry.effectiveDate == expected.effectiveDate &&
+                entry.task['completed'] == expected.task['completed'];
+          });
+        }
+
+        final result = await store!.moveBlockBefore(
+          ids,
+          before,
+          expectedTaskSnapshot: drag.snapshot,
+          canCommit: canCommit,
+        );
+        await store!.refresh();
+        rows = store!.rows;
+        if (!result.succeeded) {
+          throw StateError(
+            '${result.committedIds.length} moved; ${result.remainingIds.length} remain. ${result.error}',
+          );
+        }
+      }
     });
   }
 
@@ -1285,178 +1713,189 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final users = rows.where((r) => r['kind'] == 'user').toList();
-    return CallbackShortcuts(
-      bindings: {
-        const SingleActivator(LogicalKeyboardKey.keyF, control: true):
-            _openSearch,
+    return PopScope(
+      canPop: editingTask == null && editingBulk == null,
+      onPopInvokedWithResult: (didPop, result) {
+        if (!didPop) unawaited(_closeEditor());
       },
-      child: Scaffold(
-        body: SafeArea(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 1000),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.check_circle_outline,
-                          size: 24,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: searchOpen
-                              ? TextField(
-                                  key: const ValueKey('task-search'),
-                                  controller: search,
-                                  focusNode: searchFocus,
-                                  maxLines: 1,
-                                  decoration: InputDecoration(
-                                    hintText: 'Search all tasks',
-                                    isDense: true,
-                                    border: InputBorder.none,
-                                    suffixIcon: IconButton(
-                                      tooltip: 'Clear search',
-                                      onPressed: () {
-                                        search.clear();
-                                        setState(() => searchOpen = false);
-                                        _invalidateView();
-                                      },
-                                      icon: const Icon(Icons.close),
+      child: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.keyF, control: true):
+              _openSearch,
+        },
+        child: Scaffold(
+          body: SafeArea(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 1450),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.check_circle_outline,
+                            size: 24,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: searchOpen
+                                ? TextField(
+                                    key: const ValueKey('task-search'),
+                                    controller: search,
+                                    focusNode: searchFocus,
+                                    maxLines: 1,
+                                    decoration: InputDecoration(
+                                      hintText: 'Search all tasks',
+                                      isDense: true,
+                                      border: InputBorder.none,
+                                      suffixIcon: IconButton(
+                                        tooltip: 'Clear search',
+                                        onPressed: () async {
+                                          if (!await _closeEditor()) return;
+                                          search.clear();
+                                          _clearSelection();
+                                          setState(() => searchOpen = false);
+                                          _invalidateView();
+                                        },
+                                        icon: const Icon(Icons.close),
+                                      ),
+                                    ),
+                                    onChanged: _changeSearch,
+                                  )
+                                : const Text(
+                                    'Tandemlog',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  onChanged: (_) => _invalidateView(),
-                                )
-                              : const Text(
-                                  'Tandemlog',
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                        ),
-                        if (!searchOpen && store != null && user != null)
-                          IconButton(
-                            key: const ValueKey('open-search'),
-                            tooltip: 'Search all tasks (Ctrl+F)',
-                            onPressed: _openSearch,
-                            icon: const Icon(Icons.search),
                           ),
-                        _identityMenu(users),
-                      ],
-                    ),
-                  ),
-                  if (busy) const LinearProgressIndicator(minHeight: 2),
-                  if (error != null)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 24,
-                        vertical: 8,
-                      ),
-                      child: Material(
-                        color: Theme.of(context).colorScheme.errorContainer,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Icon(Icons.error_outline),
-                              const SizedBox(width: 12),
-                              Expanded(child: Text(error!)),
-                              if (errorFromRefresh && store != null)
-                                TextButton(
-                                  onPressed: busy ? null : _refresh,
-                                  child: const Text('Retry'),
-                                ),
-                            ],
-                          ),
-                        ),
+                          if (!searchOpen && store != null && user != null)
+                            IconButton(
+                              key: const ValueKey('open-search'),
+                              tooltip: 'Search all tasks (Ctrl+F)',
+                              onPressed: _openSearch,
+                              icon: const Icon(Icons.search),
+                            ),
+                          _identityMenu(users),
+                        ],
                       ),
                     ),
-                  if (store?.clockWarning != null)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                      child: Semantics(
-                        liveRegion: true,
+                    if (busy) const LinearProgressIndicator(minHeight: 2),
+                    if (error != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
+                        ),
                         child: Material(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.tertiaryContainer,
-                          borderRadius: BorderRadius.circular(8),
+                          color: Theme.of(context).colorScheme.errorContainer,
+                          borderRadius: BorderRadius.circular(12),
                           child: Padding(
-                            padding: const EdgeInsets.all(12),
+                            padding: const EdgeInsets.all(16),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Icon(
-                                  Icons.schedule_outlined,
-                                  color: Theme.of(
-                                    context,
-                                  ).colorScheme.onTertiaryContainer,
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    store!.clockWarning!,
-                                    style: TextStyle(
-                                      color: Theme.of(
-                                        context,
-                                      ).colorScheme.onTertiaryContainer,
-                                    ),
+                                const Icon(Icons.error_outline),
+                                const SizedBox(width: 12),
+                                Expanded(child: Text(error!)),
+                                if (errorFromRefresh && store != null)
+                                  TextButton(
+                                    onPressed: busy ? null : _refresh,
+                                    child: const Text('Retry'),
                                   ),
-                                ),
                               ],
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  Expanded(
-                    child: store == null
-                        ? _welcome()
-                        : user == null
-                        ? _users(users)
-                        : viewError != null
-                        ? Center(
+                    if (store?.clockWarning != null)
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                        child: Semantics(
+                          liveRegion: true,
+                          child: Material(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.tertiaryContainer,
+                            borderRadius: BorderRadius.circular(8),
                             child: Padding(
-                              padding: const EdgeInsets.all(24),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
+                              padding: const EdgeInsets.all(12),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(viewError!),
-                                  const SizedBox(height: 12),
-                                  TextButton(
-                                    onPressed: () {
-                                      timeSource.stop();
-                                      timeSource.start();
-                                    },
-                                    child: const Text('Retry'),
+                                  Icon(
+                                    Icons.schedule_outlined,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onTertiaryContainer,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      store!.clockWarning!,
+                                      style: TextStyle(
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.onTertiaryContainer,
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          )
-                        : taskView == null
-                        ? const Center(child: CircularProgressIndicator())
-                        : _tasks(
-                            searching
-                                ? [
-                                    ...taskView!.openGroups,
-                                    ...taskView!.completedGroups,
-                                  ]
-                                : showCompleted
-                                ? taskView!.completedGroups
-                                : taskView!.openGroups,
-                            users,
                           ),
-                  ),
-                ],
+                        ),
+                      ),
+                    Expanded(
+                      child: store == null
+                          ? _welcome()
+                          : user == null
+                          ? _users(users)
+                          : viewError != null
+                          ? Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(24),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(viewError!),
+                                    const SizedBox(height: 12),
+                                    TextButton(
+                                      onPressed: () {
+                                        timeSource.stop();
+                                        timeSource.start();
+                                      },
+                                      child: const Text('Retry'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : taskView == null
+                          ? const Center(child: CircularProgressIndicator())
+                          : _editorSurface(
+                              _tasks(
+                                searching
+                                    ? [
+                                        ...taskView!.openGroups,
+                                        ...taskView!.completedGroups,
+                                      ]
+                                    : showCompleted
+                                    ? taskView!.completedGroups
+                                    : taskView!.openGroups,
+                                users,
+                              ),
+                              users,
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -1609,44 +2048,58 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
           ],
         );
-  void _openSearch() {
+  void _clearSelection() {
+    selectedTasks.clear();
+    selecting = false;
+  }
+
+  Future<void> _openSearch() async {
+    if (!await _closeEditor()) return;
     if (store == null || user == null) return;
     setState(() => searchOpen = true);
     searchFocus.requestFocus();
   }
 
   bool get _filtersActive =>
-      all || showCompleted || showUpcoming || selectedTag != null;
+      all || showCompleted || showUpcoming || selectedTags.isNotEmpty;
 
   void _resetFilters() {
+    _clearSelection();
     setState(() {
       all = false;
       showCompleted = false;
       showUpcoming = false;
-      selectedTag = null;
+      selectedTags.clear();
     });
     _invalidateView();
   }
 
   Future<void> _showFilters() async {
+    if (!await _closeEditor()) return;
+    if (!mounted) return;
     final tags = rows
         .where((row) => row['kind'] == 'task')
         .expand((row) => (row['tags'] as List? ?? []).cast<String>())
         .toSet();
-    if (selectedTag != null) tags.add(selectedTag!);
+    if (selectedTags.isNotEmpty) tags.addAll(selectedTags);
     final sortedTags = tags.toList()
       ..sort((a, b) {
         final order = a.toLowerCase().compareTo(b.toLowerCase());
         return order == 0 ? a.compareTo(b) : order;
       });
     final tagSearch = TextEditingController();
+    final tagFocus = FocusNode();
     var tagQuery = '';
+    var tagsExpanded = true;
     final route = DialogRoute<void>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, updateDialog) {
           void change(VoidCallback action) {
-            setState(action);
+            setState(() {
+              _clearSelection();
+              action();
+            });
             _invalidateView();
             updateDialog(() {});
           }
@@ -1716,98 +2169,181 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     const Divider(),
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Tag'),
+                      child: Text('Tags (match any)'),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Tooltip(
-                              message: selectedTag == null
-                                  ? 'All tags'
-                                  : '#$selectedTag',
-                              child: Text(
-                                selectedTag == null
-                                    ? 'All tags'
-                                    : '#$selectedTag',
-                                key: const ValueKey('selected-tag'),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                      child: Container(
+                        key: const ValueKey('tag-autocomplete'),
+                        decoration: BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Theme.of(context).colorScheme.outline,
                             ),
                           ),
-                          if (selectedTag != null)
-                            IconButton(
-                              tooltip: 'Clear tag filter',
-                              onPressed: () => change(() => selectedTag = null),
-                              icon: const Icon(Icons.close),
-                            ),
-                        ],
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
-                      child: TextField(
-                        key: const ValueKey('tag-search'),
-                        controller: tagSearch,
-                        decoration: const InputDecoration(
-                          labelText: 'Find a tag',
-                          prefixIcon: Icon(Icons.search),
                         ),
-                        onChanged: (value) =>
-                            updateDialog(() => tagQuery = value),
-                      ),
-                    ),
-                    Builder(
-                      builder: (context) {
-                        final matching = sortedTags
-                            .where(
-                              (tag) => tag.toLowerCase().contains(
-                                tagQuery.toLowerCase(),
-                              ),
-                            )
-                            .toList();
-                        return SizedBox(
-                          key: const ValueKey('tag-results'),
-                          height: (matching.length * 64.0).clamp(64.0, 200.0),
-                          child: matching.isEmpty
-                              ? Center(
-                                  child: Text(
-                                    sortedTags.isEmpty
-                                        ? 'No tags yet'
-                                        : 'No matching tags',
-                                  ),
-                                )
-                              : ListView.builder(
-                                  itemCount: matching.length,
-                                  itemBuilder: (context, index) {
-                                    final tag = matching[index];
-                                    return ListTile(
-                                      key: ValueKey('tag-option-$tag'),
-                                      selected: selectedTag == tag,
-                                      leading: selectedTag == tag
-                                          ? const Icon(Icons.check, size: 20)
-                                          : const SizedBox(width: 20),
-                                      title: Tooltip(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: LayoutBuilder(
+                                builder: (context, constraints) => Wrap(
+                                  spacing: 6,
+                                  runSpacing: 4,
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    for (final tag
+                                        in selectedTags.toList()..sort())
+                                      Tooltip(
                                         message: '#$tag',
-                                        child: Text(
-                                          '#$tag',
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
+                                        child: ConstrainedBox(
+                                          constraints: BoxConstraints(
+                                            maxWidth: constraints.maxWidth,
+                                          ),
+                                          child: InputChip(
+                                            key: ValueKey('selected-tag-$tag'),
+                                            label: ConstrainedBox(
+                                              constraints: BoxConstraints(
+                                                maxWidth:
+                                                    (constraints.maxWidth - 64)
+                                                        .clamp(
+                                                          0,
+                                                          double.infinity,
+                                                        ),
+                                              ),
+                                              child: Text(
+                                                '#$tag',
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                            onDeleted: () => change(
+                                              () => selectedTags.remove(tag),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                      onTap: () =>
-                                          change(() => selectedTag = tag),
-                                    );
-                                  },
+                                    SizedBox(
+                                      key: const ValueKey('tag-query-slot'),
+                                      width: constraints.maxWidth.clamp(
+                                        80.0,
+                                        160.0,
+                                      ),
+                                      child: TextField(
+                                        key: const ValueKey('tag-search'),
+                                        controller: tagSearch,
+                                        focusNode: tagFocus,
+                                        decoration: const InputDecoration(
+                                          hintText: 'Find tags',
+                                          filled: false,
+                                          isDense: true,
+                                          border: InputBorder.none,
+                                        ),
+                                        onChanged: (value) => updateDialog(
+                                          () => tagQuery = value,
+                                        ),
+                                        onSubmitted: (_) {
+                                          final match = sortedTags
+                                              .where(
+                                                (tag) =>
+                                                    tag.toLowerCase().contains(
+                                                      tagQuery.toLowerCase(),
+                                                    ),
+                                              )
+                                              .firstOrNull;
+                                          if (match != null) {
+                                            change(
+                                              () => selectedTags.add(match),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                        );
-                      },
+                              ),
+                            ),
+                            IconButton(
+                              tooltip: 'Clear tag filters',
+                              onPressed:
+                                  selectedTags.isEmpty && tagQuery.isEmpty
+                                  ? null
+                                  : () => change(() {
+                                      selectedTags.clear();
+                                      tagSearch.clear();
+                                      tagQuery = '';
+                                    }),
+                              icon: const Icon(Icons.close),
+                            ),
+                            IconButton(
+                              tooltip: tagsExpanded
+                                  ? 'Collapse tag options'
+                                  : 'Expand tag options',
+                              onPressed: () => updateDialog(
+                                () => tagsExpanded = !tagsExpanded,
+                              ),
+                              icon: Icon(
+                                tagsExpanded
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
+                    if (selectedTags.isEmpty)
+                      const SizedBox(key: ValueKey('selected-tag'), height: 0),
+                    if (tagsExpanded)
+                      Builder(
+                        builder: (context) {
+                          final matching = sortedTags
+                              .where(
+                                (tag) => tag.toLowerCase().contains(
+                                  tagQuery.toLowerCase(),
+                                ),
+                              )
+                              .toList();
+                          return SizedBox(
+                            key: const ValueKey('tag-results'),
+                            height: (matching.length * 64.0).clamp(64.0, 200.0),
+                            child: matching.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      sortedTags.isEmpty
+                                          ? 'No tags yet'
+                                          : 'No matching tags',
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    itemCount: matching.length,
+                                    itemBuilder: (context, index) {
+                                      final tag = matching[index];
+                                      return ListTile(
+                                        key: ValueKey('tag-option-$tag'),
+                                        selected: selectedTags.contains(tag),
+                                        leading: selectedTags.contains(tag)
+                                            ? const Icon(Icons.check, size: 20)
+                                            : const SizedBox(width: 20),
+                                        title: Tooltip(
+                                          message: '#$tag',
+                                          child: Text(
+                                            '#$tag',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        onTap: () => change(() {
+                                          if (!selectedTags.add(tag)) {
+                                            selectedTags.remove(tag);
+                                          }
+                                        }),
+                                      );
+                                    },
+                                  ),
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),
@@ -1835,6 +2371,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await Navigator.of(context, rootNavigator: true).push(route);
     await route.completed;
     tagSearch.dispose();
+    tagFocus.dispose();
   }
 
   Widget _identityMenu(List<Map<String, dynamic>> users) {
@@ -1920,6 +2457,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       key: const ValueKey('task-header'),
       children: [
         Expanded(child: Stack(children: [heading(false), heading(true)])),
+        IconButton(
+          key: const ValueKey('select-tasks'),
+          tooltip: selecting ? 'Exit selection' : 'Select tasks',
+          onPressed: busy
+              ? null
+              : () async {
+                  if (!await _closeEditor() || !mounted) return;
+                  setState(() {
+                    selecting = !selecting;
+                    selectedTasks.clear();
+                  });
+                },
+          icon: Icon(selecting ? Icons.close : Icons.checklist),
+        ),
         const SizedBox(width: 8),
         Tooltip(
           message: searching
@@ -1953,8 +2504,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               row['kind'] == 'task' &&
               row['completed'] != true &&
               (all || row['assignee'] == user) &&
-              (selectedTag == null ||
-                  (row['tags'] as List? ?? []).contains(selectedTag)),
+              (selectedTags.isEmpty ||
+                  selectedTags.any(
+                    (tag) => (row['tags'] as List? ?? []).contains(tag),
+                  )),
         );
     bool movable(Map<String, dynamic> task, bool up) {
       final index = entries.indexWhere(
@@ -2071,6 +2624,35 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 onSubmitted: (_) => _capture(),
               ),
             ),
+          if (selecting)
+            Wrap(
+              spacing: 8,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text('${selectedTasks.length} selected'),
+                TextButton.icon(
+                  onPressed: selectedTasks.isEmpty || busy
+                      ? null
+                      : _editSelected,
+                  icon: const Icon(Icons.edit_outlined),
+                  label: const Text('Edit selected'),
+                ),
+                TextButton.icon(
+                  onPressed: selectedTasks.isEmpty || busy
+                      ? null
+                      : _deleteSelected,
+                  icon: const Icon(Icons.delete_outline),
+                  label: const Text('Delete selected'),
+                ),
+                TextButton(
+                  onPressed: () async {
+                    if (!await _closeEditor() || !mounted) return;
+                    setState(selectedTasks.clear);
+                  },
+                  child: const Text('Clear'),
+                ),
+              ],
+            ),
           const SizedBox(height: 12),
           if (tasks.isEmpty)
             Padding(
@@ -2086,8 +2668,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   Text(
                     searching
                         ? 'No tasks match your search'
-                        : selectedTag != null
-                        ? 'No tasks match #$selectedTag'
+                        : selectedTags.isNotEmpty
+                        ? 'No tasks match the selected tags'
                         : showCompleted
                         ? 'No completed tasks'
                         : hasDeferredTasks
@@ -2099,7 +2681,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   Text(
                     searching
                         ? 'Search titles and descriptions in this workspace.'
-                        : selectedTag != null
+                        : selectedTags.isNotEmpty
                         ? 'Clear the tag filter to see other tasks.'
                         : showCompleted
                         ? 'Completed tasks will appear here.'
@@ -2148,17 +2730,55 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     contentPadding: EdgeInsets.zero,
                     minVerticalPadding: 6,
                     horizontalTitleGap: 8,
-                    leading: Tooltip(
-                      message:
-                          '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                      child: Checkbox(
-                        materialTapTargetSize: MaterialTapTargetSize.padded,
-                        value: completed,
-                        onChanged: busy
-                            ? null
-                            : (_) =>
-                                  completed ? _reopen(task) : _complete(task),
-                      ),
+                    leading: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (selecting)
+                          Tooltip(
+                            message: 'Select ${task['title']}',
+                            child: Checkbox(
+                              key: ValueKey('select-${task['id']}'),
+                              value: selectedTasks.contains(task['id']),
+                              onChanged: busy
+                                  ? null
+                                  : (_) async {
+                                      if (!await _closeEditor() || !mounted) {
+                                        return;
+                                      }
+                                      setState(() {
+                                        final first = visibleEntries
+                                            .where(
+                                              (entry) => selectedTasks.contains(
+                                                entry.task['id'],
+                                              ),
+                                            )
+                                            .firstOrNull;
+                                        if (first != null &&
+                                            first.task['completed'] !=
+                                                task['completed']) {
+                                          return;
+                                        }
+                                        if (!selectedTasks.add(task['id'])) {
+                                          selectedTasks.remove(task['id']);
+                                        }
+                                      });
+                                    },
+                            ),
+                          ),
+                        Tooltip(
+                          message:
+                              '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
+                          child: Checkbox(
+                            materialTapTargetSize: MaterialTapTargetSize.padded,
+                            value: completed,
+                            onChanged: busy
+                                ? null
+                                : (_) => completed
+                                      ? _reopen(task)
+                                      : _complete(task),
+                          ),
+                        ),
+                      ],
                     ),
                     title: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -2187,7 +2807,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         if (movable(task, true) || movable(task, false))
                           Draggable<String>(
                             data: task['id'],
-                            maxSimultaneousDrags: busy ? 0 : 1,
+                            maxSimultaneousDrags:
+                                busy ||
+                                    (selecting &&
+                                        !selectedTasks.contains(task['id']))
+                                ? 0
+                                : 1,
                             dragAnchorStrategy: pointerDragAnchorStrategy,
                             onDragStarted: () {
                               dragReleased = false;
@@ -2201,7 +2826,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   everyone: all,
                                   upcoming: showUpcoming,
                                   user: user,
-                                  tag: selectedTag,
+                                  tags: Set.of(selectedTags),
+                                  selected:
+                                      selecting &&
+                                          selectedTasks.contains(task['id'])
+                                      ? Set.of(selectedTasks)
+                                      : {task['id'] as String},
                                   query: searchQuery,
                                 ),
                               );
@@ -2238,8 +2868,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               message:
                                   'Drag to reorder within this date and time',
                               child: Semantics(
+                                customSemanticsActions: {
+                                  if (!selecting && movable(task, true))
+                                    const CustomSemanticsAction(
+                                      label: 'Move up',
+                                    ): () =>
+                                        _keyboardMove(task, true),
+                                  if (!selecting && movable(task, false))
+                                    const CustomSemanticsAction(
+                                      label: 'Move down',
+                                    ): () =>
+                                        _keyboardMove(task, false),
+                                },
                                 label:
-                                    'Drag ${task['title']} to reorder. Move up and down are also in Task actions.',
+                                    'Drag ${task['title']} to reorder. Drag within the same date and time.',
                                 child: const SizedBox(
                                   width: 48,
                                   height: 48,
@@ -2248,33 +2890,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               ),
                             ),
                           ),
-                        PopupMenuButton<String>(
-                          tooltip: 'Task actions',
-                          enabled: !busy,
-                          onSelected: (action) {
-                            if (action == 'edit') {
-                              _edit(task);
-                            } else {
-                              _moveTask(task, action == 'up');
-                            }
-                          },
-                          itemBuilder: (_) => [
-                            const PopupMenuItem(
-                              value: 'edit',
-                              child: Text('Edit task'),
-                            ),
-                            PopupMenuItem(
-                              value: 'up',
-                              enabled: movable(task, true),
-                              child: const Text('Move up'),
-                            ),
-                            PopupMenuItem(
-                              value: 'down',
-                              enabled: movable(task, false),
-                              child: const Text('Move down'),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                     onTap: busy ? null : () => _edit(task),
@@ -2324,433 +2939,3 @@ class _TaskDragLifetimeState extends State<_TaskDragLifetime>
 
 /// Owns an edit buffer independently of incoming folder updates. Only fields
 /// changed from the opening snapshot are submitted, retaining concurrent edits.
-class _TaskEditor extends StatefulWidget {
-  const _TaskEditor({required this.task, required this.save});
-  final Map<String, dynamic> task;
-  final Future<void> Function(
-    Map<String, dynamic> fields,
-    List<String> addedTags,
-    List<String> removedTags,
-  )
-  save;
-
-  @override
-  State<_TaskEditor> createState() => _TaskEditorState();
-}
-
-class _TaskEditorState extends State<_TaskEditor> {
-  final form = GlobalKey<FormState>();
-  late final TextEditingController title, notes, tags;
-  late final Map<String, TextEditingController> schedule;
-  late final Map<String, dynamic> originalSchedule;
-  late final Set<String> originalTags;
-  bool saving = false;
-  late String zoneMode;
-  String? failure;
-
-  @override
-  void initState() {
-    super.initState();
-    title = TextEditingController(text: widget.task['title']);
-    notes = TextEditingController(text: widget.task['description']);
-    originalTags = Set<String>.from(widget.task['tags'] as List? ?? []);
-    tags = TextEditingController(text: originalTags.join(' '));
-    originalSchedule = Map<String, dynamic>.from(
-      widget.task['schedule'] as Map? ?? {},
-    );
-    final originalZone = originalSchedule['timeZone'];
-    zoneMode = originalZone == null
-        ? 'local'
-        : originalZone == 'UTC'
-        ? 'UTC'
-        : 'named';
-    schedule = {
-      for (final key in [
-        'startDate',
-        'scheduledDate',
-        'dueDate',
-        'startTime',
-        'scheduledTime',
-        'dueTime',
-        'timeZone',
-        'recurrence',
-        'dueMinDays',
-        'dueMaxDays',
-      ])
-        key: TextEditingController(
-          text: originalSchedule[key]?.toString() ?? '',
-        ),
-    };
-  }
-
-  @override
-  void dispose() {
-    title.dispose();
-    notes.dispose();
-    tags.dispose();
-    for (final controller in schedule.values) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
-
-  Future<void> submit() async {
-    if (saving || !form.currentState!.validate()) return;
-    setState(() {
-      saving = true;
-      failure = null;
-    });
-    try {
-      final parsed = TaskSchedule.fromJson({
-        for (final entry in schedule.entries)
-          entry.key: entry.value.text.trim().isEmpty
-              ? null
-              : {'dueMinDays', 'dueMaxDays'}.contains(entry.key)
-              ? int.tryParse(entry.value.text.trim()) ??
-                    (throw const FormatException(
-                      'Sort-date bounds must be whole numbers of days.',
-                    ))
-              : entry.value.text.trim(),
-      }).toJson();
-      if (parsed['timeZone'] != null) {
-        try {
-          timeZoneLocation(parsed['timeZone'] as String);
-        } catch (_) {
-          throw const FormatException(
-            'Choose a valid time zone, such as America/Chicago.',
-          );
-        }
-      }
-      final desiredTags = tags.text
-          .split(RegExp(r'\s+'))
-          .where((tag) => tag.isNotEmpty)
-          .map((tag) => tag.startsWith('#') ? tag.substring(1) : tag)
-          .toSet();
-      if (desiredTags.contains('')) {
-        throw const FormatException('Enter a name after #, or remove it.');
-      }
-      final fields = <String, dynamic>{
-        if (title.text.trim() != widget.task['title'])
-          'title': title.text.trim(),
-        if (notes.text != widget.task['description']) 'description': notes.text,
-        if (parsed.entries.any((e) => originalSchedule[e.key] != e.value))
-          'schedule': parsed,
-      };
-      await widget.save(
-        fields,
-        desiredTags.difference(originalTags).toList(),
-        originalTags.difference(desiredTags).toList(),
-      );
-      if (mounted) Navigator.pop(context);
-    } catch (error) {
-      if (mounted) {
-        setState(() {
-          failure = error is FormatException ? error.message : '$error';
-          saving = false;
-        });
-      }
-    }
-  }
-
-  String? get zonedPreview {
-    final zone = schedule['timeZone']!.text.trim();
-    if (zone.isEmpty) return null;
-    final previews = <String>[];
-    for (final kind in ['start', 'scheduled', 'due']) {
-      try {
-        final resolved = resolveZonedWallTime(
-          schedule['${kind}Date']!.text.trim(),
-          schedule['${kind}Time']!.text.trim(),
-          zone,
-        );
-        final local = resolved.instant.toLocal();
-        final note = resolved.gapShift > Duration.zero
-            ? ' (clock change: shifted forward ${resolved.gapShift.inMinutes} minutes)'
-            : resolved.ambiguous
-            ? ' (earlier occurrence of repeated time)'
-            : '';
-        final label = '${kind[0].toUpperCase()}${kind.substring(1)}';
-        previews.add(
-          '$label: ${formatCivilDate(local)} '
-          '${local.hour.toString().padLeft(2, '0')}:'
-          '${local.minute.toString().padLeft(2, '0')}$note',
-        );
-      } catch (_) {
-        // The save validator explains incomplete or invalid fields.
-      }
-    }
-    return previews.isEmpty ? null : 'On this device:\n${previews.join('\n')}';
-  }
-
-  Widget timeField(String kind, String label) => TextFormField(
-    controller: schedule['${kind}Time'],
-    onChanged: (_) => setState(() {}),
-    enabled: !saving,
-    decoration: InputDecoration(
-      labelText: '$label time',
-      hintText: 'HH:mm',
-      helperText: kind == 'scheduled'
-          ? 'Optional; uses this occurrence date.'
-          : 'Optional; uses the $kind date.',
-      helperMaxLines: 3,
-    ),
-  );
-
-  Widget dateField(String key, String label) => TextFormField(
-    controller: schedule[key],
-    onChanged: (_) => setState(() {}),
-    enabled: !saving,
-    decoration: InputDecoration(
-      labelText: label,
-      hintText: 'YYYY-MM-DD',
-      suffixIcon: IconButton(
-        tooltip: 'Choose $label',
-        onPressed: saving
-            ? null
-            : () async {
-                final parsedDate = DateTime.tryParse(schedule[key]!.text);
-                final current =
-                    parsedDate != null &&
-                        parsedDate.year >= 1900 &&
-                        parsedDate.year <= 9999
-                    ? parsedDate
-                    : null;
-                final chosen = await showDatePicker(
-                  context: context,
-                  initialDate: current ?? DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime(9999),
-                );
-                if (chosen != null && mounted) {
-                  schedule[key]!.text =
-                      '${chosen.year.toString().padLeft(4, '0')}-'
-                      '${chosen.month.toString().padLeft(2, '0')}-'
-                      '${chosen.day.toString().padLeft(2, '0')}';
-                  setState(() {});
-                }
-              },
-        icon: const Icon(Icons.calendar_today_outlined),
-      ),
-    ),
-  );
-
-  @override
-  Widget build(BuildContext context) => PopScope(
-    canPop: !saving,
-    child: AlertDialog(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Edit task'),
-          if (failure != null)
-            Padding(
-              padding: const EdgeInsets.only(top: 8),
-              child: Semantics(
-                liveRegion: true,
-                child: Text(
-                  failure!,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-      content: SizedBox(
-        width: 480,
-        child: SingleChildScrollView(
-          child: Form(
-            key: form,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                TextFormField(
-                  controller: title,
-                  autofocus: true,
-                  enabled: !saving,
-                  maxLength: 500,
-                  minLines: 1,
-                  maxLines: 4,
-                  validator: (value) =>
-                      value!.trim().isEmpty ? 'Enter a task title.' : null,
-                  decoration: const InputDecoration(labelText: 'Title'),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: notes,
-                  enabled: !saving,
-                  minLines: 3,
-                  maxLines: 6,
-                  maxLength: 10000,
-                  decoration: const InputDecoration(labelText: 'Notes'),
-                ),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: tags,
-                  enabled: !saving,
-                  minLines: 1,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    labelText: 'Tags',
-                    helperText: 'Separate tags with spaces.',
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  childrenPadding: const EdgeInsets.only(top: 8),
-                  title: const Text('Dates and repeat'),
-                  initiallyExpanded: originalSchedule.values.any(
-                    (v) => v != null,
-                  ),
-                  children: [
-                    dateField('startDate', 'Start date'),
-                    const SizedBox(height: 12),
-                    timeField('start', 'Start'),
-                    const SizedBox(height: 12),
-                    dateField('scheduledDate', 'This occurrence date'),
-                    const SizedBox(height: 12),
-                    timeField('scheduled', 'This occurrence'),
-                    const SizedBox(height: 12),
-                    const Text(
-                      'This occurrence changes only this task’s planned date. It clears on repeat and keeps the base due date and repeat cadence.',
-                    ),
-                    const SizedBox(height: 12),
-                    dateField('dueDate', 'Due date'),
-                    const SizedBox(height: 12),
-                    timeField('due', 'Due'),
-                    const SizedBox(height: 12),
-                    DropdownButtonFormField<String>(
-                      initialValue: zoneMode,
-                      isExpanded: true,
-                      decoration: InputDecoration(
-                        labelText: 'Time zone',
-                        helperText: zoneMode == 'local'
-                            ? 'All three dates follow this device’s time zone.'
-                            : 'Applies to all three dates.',
-                        helperMaxLines: 3,
-                      ),
-                      items: const [
-                        DropdownMenuItem(value: 'local', child: Text('Local')),
-                        DropdownMenuItem(value: 'UTC', child: Text('UTC')),
-                        DropdownMenuItem(
-                          value: 'named',
-                          child: Text('Named zone'),
-                        ),
-                      ],
-                      onChanged: saving
-                          ? null
-                          : (value) => setState(() {
-                              zoneMode = value!;
-                              schedule['timeZone']!.text = value == 'UTC'
-                                  ? 'UTC'
-                                  : '';
-                            }),
-                    ),
-                    if (zoneMode == 'named') ...[
-                      const SizedBox(height: 12),
-                      TextFormField(
-                        controller: schedule['timeZone'],
-                        onChanged: (_) => setState(() {}),
-                        enabled: !saving,
-                        validator: (value) => value!.trim().isEmpty
-                            ? 'Enter a time zone or choose Local.'
-                            : null,
-                        decoration: const InputDecoration(
-                          labelText: 'Named time zone',
-                          hintText: 'America/Chicago',
-                        ),
-                      ),
-                    ],
-                    if (zonedPreview != null) ...[
-                      const SizedBox(height: 8),
-                      Text(
-                        zonedPreview!,
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                    const SizedBox(height: 12),
-                    TextFormField(
-                      controller: schedule['recurrence'],
-                      onChanged: (_) => setState(() {}),
-                      enabled: !saving,
-                      minLines: 1,
-                      maxLines: 3,
-                      decoration: InputDecoration(
-                        suffixIcon: PopupMenuButton<String>(
-                          tooltip: 'Repeat examples',
-                          enabled: !saving,
-                          icon: const Icon(Icons.expand_more),
-                          onSelected: (rule) => setState(
-                            () => schedule['recurrence']!.text = rule,
-                          ),
-                          itemBuilder: (_) => [
-                            for (final rule in observedRecurrences)
-                              PopupMenuItem(value: rule, child: Text(rule)),
-                          ],
-                        ),
-                        labelText: 'Repeat',
-                        hintText: 'every week when done',
-                        helperText:
-                            'Add “when done” to repeat from completion.\nLeave blank for no repeat.',
-                        helperMaxLines: 8,
-                      ),
-                    ),
-                    if (schedule['scheduledDate']!.text.trim().isNotEmpty &&
-                        schedule['recurrence']!.text.trim().isEmpty)
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text(
-                          'This task has a scheduled date but does not repeat. Check that this is intentional.',
-                        ),
-                      ),
-                    const SizedBox(height: 16),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text('Sort-date bounds'),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      'Optional days from today. These change where a task is listed, not its deadline.',
-                    ),
-                    const SizedBox(height: 12),
-                    for (final bound in [
-                      ('dueMinDays', 'Minimum days'),
-                      ('dueMaxDays', 'Maximum days'),
-                    ]) ...[
-                      TextFormField(
-                        controller: schedule[bound.$1],
-                        enabled: !saving,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          signed: true,
-                        ),
-                        decoration: InputDecoration(
-                          labelText: bound.$2,
-                          hintText: 'No bound',
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                    ],
-                    const SizedBox(height: 12),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: saving ? null : () => Navigator.pop(context),
-          child: const Text('Cancel'),
-        ),
-        FilledButton(
-          onPressed: saving ? null : submit,
-          child: Text(saving ? 'Saving…' : 'Save changes'),
-        ),
-      ],
-    ),
-  );
-}
