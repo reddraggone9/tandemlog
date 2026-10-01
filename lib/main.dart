@@ -10,6 +10,7 @@ import 'domain/schedule.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
 import 'presentation/view_clock.dart';
+import 'presentation/task_metadata.dart';
 import 'platform/view_time_source.dart';
 import 'domain/wall_time.dart';
 import 'platform/log_folder.dart';
@@ -142,6 +143,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   late final ViewTimeSource timeSource;
   late final ViewClock<TaskView> viewClock;
   TaskView? taskView;
+  String? taskViewZoneId;
   String? viewError;
   int viewRevision = 0;
   ({
@@ -211,13 +213,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       project: (time) {
         try {
           viewError = null;
-          return projectTaskView(
+          final projected = projectTaskView(
             rows,
             time,
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
             tag: selectedTag,
           );
+          taskViewZoneId = time.localZoneId;
+          return projected;
         } catch (failure) {
           viewError = 'Cannot update the task view: $failure';
           return TimedView(taskView ?? TaskView([], []));
@@ -1113,6 +1117,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   String _taskMetadata(
     Map<String, dynamic> task,
     List<Map<String, dynamic>> users,
+    String? groupDate,
   ) {
     final schedule = task['schedule'] as Map<String, dynamic>? ?? {};
     return [
@@ -1122,13 +1127,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .map((u) => u['name'])
                 .firstOrNull ??
             'Unknown user',
-      if (schedule['dueDate'] != null)
-        'Due ${[schedule['dueDate'], schedule['dueTime'], if (schedule['dueTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
-      if (schedule['scheduledDate'] != null)
-        'Scheduled ${[schedule['scheduledDate'], schedule['scheduledTime'], if (schedule['scheduledTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
-      if (schedule['startDate'] != null || schedule['startTime'] != null)
-        'Start ${[schedule['startDate'], schedule['startTime'], if (schedule['startTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
-      if (schedule['recurrence'] != null) '↻ ${schedule['recurrence']}',
+      if (scheduleMetadata(
+            schedule,
+            groupDate: groupDate,
+            localZoneId: taskViewZoneId!,
+          )
+          case final String details when details.isNotEmpty)
+        details,
       for (final tag in task['tags'] as List? ?? []) '#$tag',
     ].join(' · ');
   }
@@ -1136,8 +1141,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Widget _taskTitle(
     Map<String, dynamic> task,
     List<Map<String, dynamic>> users,
+    String? groupDate,
   ) {
-    final metadata = _taskMetadata(task, users);
+    final metadata = _taskMetadata(task, users, groupDate);
     final title = Text(
       task['title'] as String,
       key: ValueKey('task-title-${task['id']}'),
@@ -2047,7 +2053,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   : _complete(task),
                       ),
                     ),
-                    title: _taskTitle(task, users),
+                    title: _taskTitle(task, users, group.date),
                     subtitle: (task['description'] as String).trim().isEmpty
                         ? null
                         : Text(

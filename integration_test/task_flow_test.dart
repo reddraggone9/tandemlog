@@ -900,6 +900,7 @@ void main() {
     final shortMeta = find.byKey(
       ValueKey('task-metadata-${ids['Review supplies']}'),
     );
+    expect(tester.widget<Text>(shortMeta).data, '#Home');
     expect(tester.getRect(shortMeta).top, tester.getRect(shortTitle).top);
     expect(
       tester.getRect(shortMeta).left - tester.getRect(shortTitle).right,
@@ -908,10 +909,7 @@ void main() {
     final deadline = tester.widget<Text>(
       find.byKey(ValueKey('task-metadata-${ids[longTitle]}')),
     );
-    expect(
-      deadline.data,
-      contains('Due 2030-04-23 17:30 America/Argentina/Buenos_Aires'),
-    );
+    expect(deadline.data, contains('Due 17:30 America/Argentina/Buenos_Aires'));
     expect(deadline.maxLines, isNull);
     expect(
       tester
@@ -1706,6 +1704,11 @@ void main() {
       'title': 'Ready after projection',
       'description': '',
       'assignee': user,
+      'schedule': {
+        'dueDate': '2026-10-01',
+        'dueTime': '17:30',
+        'timeZone': 'UTC',
+      },
     });
     await writer.close();
     await File(
@@ -1718,7 +1721,7 @@ void main() {
       originalPrint(message, wrapWidth: wrapWidth);
     };
     try {
-      final zone = Completer<String>();
+      var zone = Completer<String>();
       late ViewTimeSource source;
       await tester.pumpWidget(
         TandemlogApp(
@@ -1759,6 +1762,15 @@ void main() {
         printed.where((line) => line.startsWith('TANDEMLOG_READY_MS=')),
         hasLength(1),
       );
+      zone = Completer<String>();
+      source.stop();
+      source.start();
+      source.onChanged();
+      await tester.pump();
+      expect(tester.takeException(), isNull);
+      expect(find.text('Due 17:30 UTC'), findsOneWidget);
+      zone.complete('UTC');
+      await tester.pumpAndSettle();
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
     } finally {
