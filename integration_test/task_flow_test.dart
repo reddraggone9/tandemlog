@@ -27,16 +27,39 @@ Future<void> openFilters(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> chooseFilter(WidgetTester tester, String label) async {
+  if (label == 'All tags') {
+    final clear = find.byTooltip('Clear tag filter');
+    if (clear.evaluate().isNotEmpty) {
+      await tester.ensureVisible(clear);
+      await tester.pumpAndSettle();
+      await tester.tap(clear);
+    }
+  } else if (label.startsWith('#')) {
+    final search = find.byKey(const ValueKey('tag-search'));
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    await tester.enterText(search, label.substring(1));
+    await tester.pumpAndSettle();
+    final result = find.byKey(ValueKey('tag-option-${label.substring(1)}'));
+    await tester.ensureVisible(result);
+    await tester.pumpAndSettle();
+    await tester.tap(result);
+  } else {
+    final choice = find.descendant(
+      of: find.byType(AlertDialog),
+      matching: find.text(label),
+    );
+    await tester.ensureVisible(choice);
+    await tester.pumpAndSettle();
+    await tester.tap(choice);
+  }
+  await tester.pumpAndSettle();
+}
+
 Future<void> filterChoice(WidgetTester tester, String label) async {
   await openFilters(tester);
-  final choice = find.descendant(
-    of: find.byType(AlertDialog),
-    matching: find.text(label),
-  );
-  await tester.ensureVisible(choice);
-  await tester.pumpAndSettle();
-  await tester.tap(choice);
-  await tester.pumpAndSettle();
+  await chooseFilter(tester, label);
   await tester.tap(find.text('Done').last);
   await tester.pumpAndSettle();
 }
@@ -638,17 +661,6 @@ void main() {
       );
       tester.widget<TextField>(capture).controller!.value = draft;
       await openFilters(tester);
-      Future<void> choose(String label) async {
-        final target = find.descendant(
-          of: find.byType(AlertDialog),
-          matching: find.text(label),
-        );
-        await tester.ensureVisible(target);
-        await tester.pumpAndSettle();
-        await tester.tap(target);
-        await tester.pumpAndSettle();
-      }
-
       await tester.sendKeyEvent(LogicalKeyboardKey.tab);
       await tester.pumpAndSettle();
       await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
@@ -677,10 +689,10 @@ void main() {
             .groupValue,
         isFalse,
       );
-      await choose('Everyone');
-      await choose('Show upcoming');
-      await choose('#Home');
-      await choose('Completed');
+      await chooseFilter(tester, 'Everyone');
+      await chooseFilter(tester, 'Show upcoming');
+      await chooseFilter(tester, '#Home');
+      await chooseFilter(tester, 'Completed');
       await tester.tap(find.text('Done').last);
       await tester.pumpAndSettle();
       expect(find.text('Completed household task'), findsOneWidget);
@@ -715,10 +727,8 @@ void main() {
         isTrue,
       );
       expect(
-        tester
-            .widget<RadioGroup<String?>>(find.byType(RadioGroup<String?>))
-            .groupValue,
-        'Home',
+        tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
+        '#Home',
       );
       expect(
         tester
@@ -780,10 +790,8 @@ void main() {
         isFalse,
       );
       expect(
-        tester
-            .widget<RadioGroup<String?>>(find.byType(RadioGroup<String?>))
-            .groupValue,
-        isNull,
+        tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
+        'All tags',
       );
       expect(
         tester
@@ -811,6 +819,206 @@ void main() {
       await root.delete(recursive: true);
     },
   );
+  testWidgets('bounded tag search and responsive task metadata remain readable', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('tag-picker-rows-');
+    final folder = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final writer = await TaskStore.open(
+      LocalLogFolder(folder.path),
+      '${root.path}/writer',
+    );
+    final user = const Uuid().v4(), other = const Uuid().v4();
+    await writer.command(user, 'user.created', {'name': 'Alex Example'});
+    await writer.command(other, 'user.created', {'name': 'Sam Example'});
+    final ids = <String, String>{};
+    Future<void> add(
+      String title, {
+      String? assigned,
+      List<String> tags = const [],
+      Map<String, dynamic> schedule = const {},
+      String description = '',
+    }) async {
+      final id = ids[title] = const Uuid().v4();
+      await writer.command(id, 'task.created', {
+        'title': title,
+        'description': description,
+        'assignee': assigned ?? user,
+        'schedule': schedule,
+      });
+      if (tags.isNotEmpty) {
+        await writer.edit(id, {}, tags: tags, observedTagRefs: {});
+      }
+    }
+
+    const targetTag =
+        'UniqueX099/VeryLongOrdinaryTagForNarrowAccessibilityInspection';
+    await add(
+      'Review supplies',
+      tags: ['Home'],
+      schedule: {'dueDate': '2030-04-23'},
+    );
+    const longTitle =
+        'Read the complete notes for next month’s shared household planning and prepare a checklist for the weekend';
+    await add(
+      longTitle,
+      tags: ['Planning'],
+      schedule: {
+        'dueDate': '2030-04-23',
+        'dueTime': '17:30',
+        'timeZone': 'America/Argentina/Buenos_Aires',
+      },
+    );
+    await add('A task without metadata');
+    await add(
+      'Bring the reference notes',
+      tags: ['home'],
+      description: 'Bring the current notes\nand checklist.',
+    );
+    await add('Search result target', tags: [targetTag]);
+    await add(
+      'Other user tag inventory',
+      assigned: other,
+      tags: List.generate(
+        100,
+        (i) =>
+            'Planning/LongOrdinaryTagForSearchAndAccessibility${i.toString().padLeft(3, '0')}',
+      ),
+    );
+    await File(
+      '${profile.path}/settings.json',
+    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+    await tester.pumpAndSettle();
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1000, 820);
+    await tester.pumpAndSettle();
+    final shortTitle = find.byKey(
+      ValueKey('task-title-${ids['Review supplies']}'),
+    );
+    final shortMeta = find.byKey(
+      ValueKey('task-metadata-${ids['Review supplies']}'),
+    );
+    expect(tester.getRect(shortMeta).top, tester.getRect(shortTitle).top);
+    expect(
+      tester.getRect(shortMeta).left - tester.getRect(shortTitle).right,
+      closeTo(12, 1),
+    );
+    final deadline = tester.widget<Text>(
+      find.byKey(ValueKey('task-metadata-${ids[longTitle]}')),
+    );
+    expect(
+      deadline.data,
+      contains('Due 2030-04-23 17:30 America/Argentina/Buenos_Aires'),
+    );
+    expect(deadline.maxLines, isNull);
+    expect(
+      tester
+          .widget<Text>(find.byKey(ValueKey('task-title-${ids[longTitle]}')))
+          .maxLines,
+      isNull,
+    );
+    expect(
+      find.byKey(ValueKey('task-metadata-${ids['A task without metadata']}')),
+      findsNothing,
+    );
+    expect(
+      tester
+          .widget<ListTile>(
+            find.ancestor(
+              of: find.text('A task without metadata'),
+              matching: find.byType(ListTile),
+            ),
+          )
+          .subtitle,
+      isNull,
+    );
+    expect(
+      tester
+          .widget<Text>(find.text('Bring the current notes and checklist.'))
+          .maxLines,
+      1,
+    );
+    await openFilters(tester);
+    final search = find.byKey(const ValueKey('tag-search'));
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    expect(
+      tester.getSize(find.byKey(const ValueKey('tag-results'))).height,
+      lessThanOrEqualTo(200),
+    );
+    expect(
+      find
+          .byWidgetPredicate(
+            (widget) =>
+                widget is ListTile &&
+                widget.key is ValueKey<String> &&
+                ((widget.key as ValueKey<String>).value).startsWith(
+                  'tag-option-',
+                ),
+          )
+          .evaluate()
+          .length,
+      lessThan(30),
+    );
+    await tester.enterText(search, 'does-not-exist');
+    await tester.pumpAndSettle();
+    expect(find.text('No matching tags'), findsOneWidget);
+    await tester.enterText(search, 'home');
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('tag-option-Home')), findsOneWidget);
+    expect(find.byKey(const ValueKey('tag-option-home')), findsOneWidget);
+    await tester.enterText(search, 'uniquex099');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const ValueKey('tag-option-$targetTag')));
+    await tester.pumpAndSettle();
+    expect(
+      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
+      '#$targetTag',
+    );
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Search result target'), findsOneWidget);
+    expect(find.text('Review supplies'), findsNothing);
+    await openFilters(tester);
+    expect(tester.widget<TextField>(search).controller!.text, isEmpty);
+    expect(
+      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
+      '#$targetTag',
+    );
+    await chooseFilter(tester, 'All tags');
+    expect(
+      tester.widget<Text>(find.byKey(const ValueKey('selected-tag'))).data,
+      'All tags',
+    );
+    await tester.enterText(search, 'home');
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Reset'));
+    await tester.pumpAndSettle();
+    expect(tester.widget<TextField>(search).controller!.text, isEmpty);
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
+    for (final scale in [1.0, 2.0]) {
+      tester.view.physicalSize = const Size(390, 820);
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(shortTitle);
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(shortMeta).top,
+        greaterThanOrEqualTo(tester.getRect(shortTitle).bottom),
+      );
+      expect(tester.takeException(), isNull);
+    }
+    tester.platformDispatcher.clearTextScaleFactorTestValue();
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await writer.close();
+    await root.delete(recursive: true);
+  });
   testWidgets('header controls stay fixed between open and completed tabs', (
     tester,
   ) async {
@@ -1173,6 +1381,12 @@ void main() {
       await writer.refresh();
       expect(writer.taskSnapshot, beforeCancel);
       final gesture = await tester.startGesture(tester.getCenter(handle));
+      // Touch users may hold before moving; a tooltip must not win the gesture.
+      await tester.pump(const Duration(milliseconds: 700));
+      expect(
+        find.text('Drag to reorder within this date and time'),
+        findsNothing,
+      );
       await gesture.moveBy(const Offset(-20, 0));
       await tester.pump();
       final list = find.byType(ListView).first;

@@ -1110,7 +1110,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
-  String _taskPreview(
+  String _taskMetadata(
     Map<String, dynamic> task,
     List<Map<String, dynamic>> users,
   ) {
@@ -1130,9 +1130,55 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         'Start ${[schedule['startDate'], schedule['startTime'], if (schedule['startTime'] != null) schedule['timeZone']].whereType<String>().join(' ')}',
       if (schedule['recurrence'] != null) '↻ ${schedule['recurrence']}',
       for (final tag in task['tags'] as List? ?? []) '#$tag',
-      if ((task['description'] as String).trim().isNotEmpty)
-        (task['description'] as String).replaceAll(RegExp(r'\s+'), ' ').trim(),
     ].join(' · ');
+  }
+
+  Widget _taskTitle(
+    Map<String, dynamic> task,
+    List<Map<String, dynamic>> users,
+  ) {
+    final metadata = _taskMetadata(task, users);
+    final title = Text(
+      task['title'] as String,
+      key: ValueKey('task-title-${task['id']}'),
+      style: const TextStyle(fontWeight: FontWeight.w500),
+    );
+    if (metadata.isEmpty) return title;
+    final style = Theme.of(context).textTheme.bodyMedium!.copyWith(
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
+    );
+    final details = Text(
+      metadata,
+      key: ValueKey('task-metadata-${task['id']}'),
+      style: style,
+    );
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+        if (constraints.maxWidth < 620 * scale) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [title, details],
+          );
+        }
+        final painter = TextPainter(
+          text: TextSpan(text: metadata, style: style),
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final width = painter.width.clamp(0.0, constraints.maxWidth * .42);
+        painter.dispose();
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Flexible(child: title),
+            const SizedBox(width: 12),
+            SizedBox(width: width, child: details),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _reopen(Map<String, dynamic> task) async {
@@ -1509,7 +1555,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final order = a.toLowerCase().compareTo(b.toLowerCase());
         return order == 0 ? a.compareTo(b) : order;
       });
-    await showDialog<void>(
+    final tagSearch = TextEditingController();
+    var tagQuery = '';
+    final route = DialogRoute<void>(
       context: context,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, updateDialog) {
@@ -1586,22 +1634,95 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       padding: EdgeInsets.symmetric(horizontal: 16),
                       child: Text('Tag'),
                     ),
-                    RadioGroup<String?>(
-                      groupValue: selectedTag,
-                      onChanged: (value) => change(() => selectedTag = value),
-                      child: Column(
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
                         children: [
-                          const RadioListTile<String?>(
-                            value: null,
-                            title: Text('All tags'),
+                          Expanded(
+                            child: Tooltip(
+                              message: selectedTag == null
+                                  ? 'All tags'
+                                  : '#$selectedTag',
+                              child: Text(
+                                selectedTag == null
+                                    ? 'All tags'
+                                    : '#$selectedTag',
+                                key: const ValueKey('selected-tag'),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
                           ),
-                          for (final tag in sortedTags)
-                            RadioListTile<String?>(
-                              value: tag,
-                              title: Text('#$tag'),
+                          if (selectedTag != null)
+                            IconButton(
+                              tooltip: 'Clear tag filter',
+                              onPressed: () => change(() => selectedTag = null),
+                              icon: const Icon(Icons.close),
                             ),
                         ],
                       ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      child: TextField(
+                        key: const ValueKey('tag-search'),
+                        controller: tagSearch,
+                        decoration: const InputDecoration(
+                          labelText: 'Find a tag',
+                          prefixIcon: Icon(Icons.search),
+                        ),
+                        onChanged: (value) =>
+                            updateDialog(() => tagQuery = value),
+                      ),
+                    ),
+                    Builder(
+                      builder: (context) {
+                        final matching = sortedTags
+                            .where(
+                              (tag) => tag.toLowerCase().contains(
+                                tagQuery.toLowerCase(),
+                              ),
+                            )
+                            .toList();
+                        return SizedBox(
+                          key: const ValueKey('tag-results'),
+                          height: (matching.length * 64.0).clamp(64.0, 200.0),
+                          child: matching.isEmpty
+                              ? Center(
+                                  child: Text(
+                                    sortedTags.isEmpty
+                                        ? 'No tags yet'
+                                        : 'No matching tags',
+                                  ),
+                                )
+                              : ListView.builder(
+                                  itemCount: matching.length,
+                                  itemBuilder: (context, index) {
+                                    final tag = matching[index];
+                                    return ListTile(
+                                      key: ValueKey('tag-option-$tag'),
+                                      selected: selectedTag == tag,
+                                      leading: selectedTag == tag
+                                          ? const Icon(Icons.check, size: 20)
+                                          : const SizedBox(width: 20),
+                                      title: Tooltip(
+                                        message: '#$tag',
+                                        child: Text(
+                                          '#$tag',
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      onTap: () =>
+                                          change(() => selectedTag = tag),
+                                    );
+                                  },
+                                ),
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -1609,10 +1730,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
             actions: [
               TextButton(
-                onPressed: _filtersActive
+                onPressed: _filtersActive || tagQuery.isNotEmpty
                     ? () {
                         _resetFilters();
-                        updateDialog(() {});
+                        tagSearch.clear();
+                        updateDialog(() => tagQuery = '');
                       }
                     : null,
                 child: const Text('Reset'),
@@ -1626,6 +1748,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         },
       ),
     );
+    await Navigator.of(context, rootNavigator: true).push(route);
+    await route.completed;
+    tagSearch.dispose();
   }
 
   Widget _identityMenu(List<Map<String, dynamic>> users) {
@@ -1922,14 +2047,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   : _complete(task),
                       ),
                     ),
-                    title: Text(
-                      task['title'],
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    subtitle: _taskPreview(task, users).isEmpty
+                    title: _taskTitle(task, users),
+                    subtitle: (task['description'] as String).trim().isEmpty
                         ? null
                         : Text(
-                            _taskPreview(task, users),
+                            (task['description'] as String)
+                                .replaceAll(RegExp(r'\s+'), ' ')
+                                .trim(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -1985,6 +2109,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               ),
                             ),
                             child: Tooltip(
+                              triggerMode: TooltipTriggerMode.manual,
                               message:
                                   'Drag to reorder within this date and time',
                               child: Semantics(
