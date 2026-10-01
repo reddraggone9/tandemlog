@@ -1,0 +1,19 @@
+# Decision 0005 — session Undo and toolbar fit
+
+Status: accepted RC5 scope, 2026-10-01; native acceptance pending. Supersedes RC4's transient Undo and permanent-deletion description. [Product behavior](../product-behavior.md), [schema](../schema.md).
+
+Lee wants task changes recoverable after a popup disappears. The toolbar keeps Undo available on desktop and phone, disabled when the session has no saved action. Repeated Undo steps through at most 50 actions; there is no redo. Restart and workspace changes clear this local history, not the canonical task history. Edits, single/bulk relative moves, completion/reopening and deletion participate. Capture creation and identity changes do not. Bulk retries belong to their original action and retain each independently confirmed operation. Save/move actions are quiet. Completion/deletion briefly offer the same Undo action through a snackbar; dismissal/expiry has no effect on availability. Ctrl/Cmd+Z acts on tasks outside editable text, leaving native text Undo in inputs. Resolve the frozen dirty editor through Save/Discard/Cancel first.
+
+## Conflict and durability behavior
+
+Undo appends a named retraction of each original operation, instead of overwriting a task with its old snapshot. Replay omits that operation's contribution and retains independent later writes. A newer title, assignee or whole atomic schedule register survives. Observed tag removals/additions retract only their operation's tokens; an independent same-name addition survives. Another device's completion or deletion can keep the task completed/deleted. Relative moves replay without the named move, retaining subsequent moves and hidden ranks. Undoing recurring completion/reopening always preserves the independent successor and its work. A newer-write notice is conservative, not a claim to recover subjective intent perfectly.
+
+Durable append is still the commit point. Only exact canonical `(ID, raw bytes)` matches admit prepared operations into session history, including writes whose acknowledgement failed. An ID can be reused after a failed pre-append attempt, so ID-only confirmation/deduplication is unsafe. Partial Undo acknowledges only the confirmed prefix, retains the remaining operations and offers Retry. No original event, timestamp or source folder is rewritten. Cache version 8 rebuilds known older disposable materializations with the existing backup/integrity guards. The new closed-schema v2 type requires all peers to update before using Undo; old readers fail explicitly.
+
+## Toolbar
+
+Remove “Tandemlog” from the everyday chrome, retaining the checkmark as the task position; no mode switch is implemented. Show the entire active user name if its measured text, current text scale and neighboring controls fit. Otherwise use an initial circle, with the full name in accessible menu labeling and a minimum 48px target. This replaces arbitrary width caps and truncation; the editor's existing 900px wide-pane breakpoint remains. Identity and assignee filtering stay distinct.
+
+Current events identify a writer device and task assignee, not the acting user for each change. Future attribution needs an explicit field; historic actors cannot safely be inferred. Actor/audit UI, rollback of other people's history, redo and cross-restart Undo are deferred.
+
+Rejected: popup-only recovery, inverse snapshot writes that overwrite newer synced work, persistent arbitrary name truncation and a general history framework. Revisit the 50-action/session boundary or conflict wording if hands-on use shows concrete friction.

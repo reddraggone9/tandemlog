@@ -25,14 +25,22 @@ class BulkTaskEdit {
       throw FormatFailure('A tag cannot be added and removed together.');
     }
     final fields = <String, dynamic>{};
-    if (assignee != null) fields['assignee'] = assignee;
+    if (assignee != null && assignee != task['assignee']) {
+      fields['assignee'] = assignee;
+    }
     if (schedulePatch.isNotEmpty) {
       final schedule = <String, dynamic>{
         ...Map<String, dynamic>.from(task['schedule'] as Map),
         ...schedulePatch,
       };
       validateSchedule(schedule);
-      fields['schedule'] = TaskSchedule.fromJson(schedule).toJson();
+      final normalized = TaskSchedule.fromJson(schedule).toJson();
+      final original = TaskSchedule.fromJson(
+        Map<String, dynamic>.from(task['schedule'] as Map),
+      ).toJson();
+      if (normalized.entries.any((e) => e.value != original[e.key])) {
+        fields['schedule'] = normalized;
+      }
     }
     final refs = Map<String, String>.from(task['tagRefs'] as Map);
     final added = addTags.toSet().difference(refs.values.toSet()).toList()

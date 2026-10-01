@@ -2987,6 +2987,187 @@ void main() {
       await root.delete(recursive: true);
     },
   );
+  testWidgets(
+    'session Undo survives notices, protects drafts and preserves newer synced edits',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc5-native-undo-');
+      final folder = await Directory('${root.path}/shared').create(),
+          profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), id = const Uuid().v4();
+      await writer.command(user, 'user.created', {
+        'name': 'Alexandria Example Household',
+      });
+      await writer.command(id, 'task.created', {
+        'title': 'Review household supplies',
+        'description': 'Keep reference notes',
+        'assignee': user,
+        'schedule': {'dueDate': '2030-05-01'},
+      });
+      await File('${profile.path}/settings.json').writeAsString(
+        jsonEncode({'folder': folder.path, 'user': user, 'appearance': 'dark'}),
+      );
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1;
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isNotEmpty,
+      );
+      final undo = find.byKey(const ValueKey('undo-task-action'));
+      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      Future<void> editTitle(String current, String next) async {
+        await tester.tap(find.text(current));
+        await tester.pumpAndSettle();
+        final field = find.byKey(const ValueKey('title'));
+        await tester.enterText(field, next);
+        await tester.pumpAndSettle();
+        await tester.tap(find.text('Save changes'));
+        await waitForUi(
+          tester,
+          () => find.byType(TaskEditor).evaluate().isEmpty,
+        );
+        expect(
+          find.byType(SnackBar),
+          findsNothing,
+          reason: 'Ordinary edits are quiet.',
+        );
+      }
+
+      await editTitle('Review household supplies', 'Check household supplies');
+      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      await editTitle('Check household supplies', 'Plan household supplies');
+      // Capture keeps its own text undo; Ctrl+Z must not consume task history.
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.tap(capture);
+      await tester.enterText(capture, 'Unsent capture draft');
+      await tester.pumpAndSettle();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyZ);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere((r) => r['id'] == id)['title'],
+        'Plan household supplies',
+      );
+      await tester.enterText(capture, 'Unsent capture draft');
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyZ);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await waitForUi(
+        tester,
+        () => find.text('Check household supplies').evaluate().isNotEmpty,
+      );
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Unsent capture draft',
+      );
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isNotEmpty,
+      );
+      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      // Completion remains undoable after its transient notice expires.
+      final checkbox = find.descendant(
+        of: find.byKey(ValueKey('task-row-$id')),
+        matching: find.byType(Checkbox),
+      );
+      await tester.tap(checkbox);
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isEmpty,
+      );
+      await Future<void>.delayed(const Duration(seconds: 11));
+      await tester.pump();
+      await tester.pumpAndSettle();
+      expect(find.byType(SnackBar), findsNothing);
+      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isNotEmpty,
+      );
+      // Dirty editor guard blocks Undo, retaining text on Cancel.
+      await tester.pump(const Duration(seconds: 12));
+      await tester.pumpAndSettle();
+      await editTitle('Review household supplies', 'Local edited supplies');
+      await tester.tap(find.text('Local edited supplies'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.byKey(const ValueKey('description')),
+        'Unsaved notes',
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(undo);
+      await tester.pumpAndSettle();
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('description')))
+            .controller!
+            .text,
+        'Unsaved notes',
+      );
+      await tester.tap(undo);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Discard'));
+      await waitForUi(
+        tester,
+        () => find.text('Review household supplies').evaluate().isNotEmpty,
+      );
+      // A remote later title must survive undoing a local full task edit.
+      await tester.pump(const Duration(seconds: 12));
+      await tester.pumpAndSettle();
+      await editTitle('Review household supplies', 'Local pending review');
+      await writer.command(id, 'task.edited', {'title': 'Newer synced review'});
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Newer synced review').evaluate().isNotEmpty,
+      );
+      expect(find.textContaining('Newer changes were kept'), findsOneWidget);
+      // Deletion restores only our tombstone, then restart clears session history.
+      await tester.tap(find.text('Newer synced review'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete').last);
+      await waitForUi(
+        tester,
+        () =>
+            find.byType(TaskEditor).evaluate().isEmpty &&
+            find.text('Newer synced review').evaluate().isEmpty,
+      );
+      await tester.tap(undo);
+      await waitForUi(
+        tester,
+        () => find.text('Newer synced review').evaluate().isNotEmpty,
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await waitForUi(
+        tester,
+        () => find.text('Newer synced review').evaluate().isNotEmpty,
+      );
+      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
 }
 
 class TestFolders extends FolderActions {

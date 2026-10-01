@@ -26,3 +26,7 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Editing, bulk actions and installers](decisions/0004-editing-bulk-actions-and-installers.md): RC4 rationale.
 
 - [Next task parity draft](next-task-parity-draft.md): research and source inventory underpinning the authorized parity milestone; ADR 0003 supersedes its earlier planning-only status.
+
+- [Session Undo and toolbar fit](decisions/0005-session-undo-and-toolbar.md): RC5 rationale and conflict boundaries.
+
+- [Stable readiness review](stable-readiness.md): required durable-data decisions before 0.1.0.

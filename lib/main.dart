@@ -8,6 +8,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'application/undo_history.dart';
+import 'presentation/task_toolbar.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
 import 'presentation/view_clock.dart';
@@ -115,6 +117,7 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
+  final undoHistory = SessionUndoHistory();
   String? user, error;
   final selectedTags = <String>{};
   final selectedTasks = <String>{};
@@ -231,6 +234,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    FocusManager.instance.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
     timeSource =
         widget.timeSourceFactory?.call(_invalidateView) ??
@@ -324,6 +328,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await opened.close();
       return;
     }
+    undoHistory.clear();
     store = opened;
     rows = store!.rows;
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
@@ -564,6 +569,128 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
+  bool get _textHasFocus {
+    final focus = FocusManager.instance.primaryFocus?.context;
+    return focus?.widget is EditableText ||
+        focus?.findAncestorWidgetOfExactType<EditableText>() != null;
+  }
+
+  void _focusChanged() {
+    if (mounted) setState(() {});
+  }
+
+  Future<T> _recordAction<T>(
+    TaskStore origin,
+    String verb,
+    Future<T> Function(void Function(OperationReceipt)) action, {
+    Object? group,
+    bool notice = false,
+  }) async {
+    final prepared = <OperationReceipt>[];
+    var failed = true;
+    try {
+      final result = await action(prepared.add);
+      failed = false;
+      return result;
+    } finally {
+      if (failed &&
+          mounted &&
+          identical(store, origin) &&
+          prepared.isNotEmpty) {
+        try {
+          await origin.refresh();
+        } catch (_) {}
+      }
+      if (mounted && identical(store, origin) && prepared.isNotEmpty) {
+        final previous = undoHistory.latest;
+        undoHistory.record(verb, prepared, group: group);
+        undoHistory.reconcile(origin.confirmedOperations);
+        final latest = undoHistory.latest;
+        final confirmed = origin.confirmedOperations(prepared);
+        final confirmedLatest =
+            latest != null && latest.operations.any(confirmed.contains);
+        setState(() {
+          rows = origin.rows;
+        });
+        _invalidateView();
+        if (latest != null &&
+            confirmedLatest &&
+            (notice || !identical(previous, latest))) {
+          final messenger = ScaffoldMessenger.of(context);
+          messenger.clearSnackBars();
+          if (notice) {
+            const past = {'completing': 'Completed', 'deleting': 'Deleted'};
+            final n = latest.operations
+                .map((id) => latest.entities[id])
+                .toSet()
+                .length;
+            final successor = prepared.any(
+              (r) => origin.hasEntity(const Uuid().v5(r.entity, 'successor')),
+            );
+            messenger.showSnackBar(
+              SnackBar(
+                content: Text(
+                  '${failed ? 'Confirmed ' : ''}${past[verb] ?? verb} $n ${n == 1 ? 'task' : 'tasks'}.${successor ? ' Next occurrence kept.' : ''}',
+                ),
+                duration: const Duration(seconds: 10),
+                persist: false,
+                action: SnackBarAction(label: 'Undo', onPressed: _undoLatest),
+              ),
+            );
+          }
+        }
+      }
+    }
+  }
+
+  Future<void> _undoLatest() async {
+    if (busy || closingEditor || undoHistory.latest == null) return;
+    final origin = store!, requested = undoHistory.latest;
+    if (!await _closeEditor() || !mounted || !identical(store, origin)) return;
+    await _act(() async {
+      await origin.refresh();
+      if (!mounted || !identical(store, origin)) return;
+      undoHistory.reconcile(origin.confirmedOperations);
+      if (!identical(requested, undoHistory.latest)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('The latest change updated. Use Undo again.'),
+          ),
+        );
+        return;
+      }
+      final entry = requested!, label = entry.label;
+      final result = await origin.undoOperations(entry.operations.toList());
+      undoHistory.acknowledge(entry, result.undone);
+      if (!mounted || !identical(store, origin)) return;
+      setState(() {
+        _clearSelection();
+        rows = origin.rows;
+      });
+      _invalidateView();
+      final newer = result.keptNewerChanges ? ' Newer changes were kept.' : '';
+      final text = result.error == null
+          ? 'Undid $label.$newer'
+          : '${result.undone.length} confirmed undone; ${result.remaining.length} remain. ${result.error}$newer';
+      final messenger = ScaffoldMessenger.of(context);
+      messenger.clearSnackBars();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(text),
+          duration: const Duration(seconds: 10),
+          persist: false,
+          action: result.remaining.isEmpty
+              ? null
+              : SnackBarAction(label: 'Retry', onPressed: _undoLatest),
+        ),
+      );
+    });
+  }
+
+  void _undoShortcut() {
+    if (!_textHasFocus) unawaited(_undoLatest());
+  }
+
   void _configureImporter() {
     _invalidateView();
     if (!identical(watchedStore, store)) {
@@ -595,6 +722,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       try {
         final previousClockWarning = origin.clockWarning;
         final changed = await origin.refresh();
+        undoHistory.reconcile(origin.confirmedOperations);
         final clockWarningChanged = previousClockWarning != origin.clockWarning;
         final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
         if (mounted && identical(store, origin) && reconcileCapture) {
@@ -1051,7 +1179,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     };
   }
 
-  Future<void> _saveBulk(BulkTaskEdit edit) async {
+  Future<void> _saveBulk(BulkTaskEdit edit) => _recordAction(
+    editorStore!,
+    'editing',
+    (prepared) => _saveBulkRecorded(edit, prepared),
+    group: (bulkEditorKey, 'edit'),
+  );
+
+  Future<void> _saveBulkRecorded(
+    BulkTaskEdit edit,
+    void Function(OperationReceipt) prepared,
+  ) async {
     final origin = editorStore!;
     final ids = List<String>.of(bulkPending);
     if (ids.isEmpty) return;
@@ -1067,6 +1205,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         edit,
         expectedTaskSnapshot: bulkSnapshot!,
         canCommit: _bulkGuard(ids),
+        onPrepared: prepared,
       );
       await origin.refresh();
       if (mounted) {
@@ -1176,10 +1315,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     'This task changed. Close and reopen it to review before deleting.',
                   );
                 }
-                await origin.deleteTask(
-                  task['id'],
-                  expectedTaskSnapshot: origin.taskSnapshot,
-                  canCommit: () => _targetUnchanged(origin, task),
+                await _recordAction(
+                  origin,
+                  'deleting',
+                  (prepared) => origin.deleteTask(
+                    task['id'],
+                    expectedTaskSnapshot: origin.taskSnapshot,
+                    canCommit: () => _targetUnchanged(origin, task),
+                    onPrepared: prepared,
+                  ),
+                  notice: true,
                 );
                 await origin.refresh();
                 if (mounted) {
@@ -1205,15 +1350,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 if (fields.isNotEmpty ||
                     addedTags.isNotEmpty ||
                     removedTags.isNotEmpty) {
-                  await origin.edit(
-                    task['id'],
-                    fields,
-                    tags: tags.toList(),
-                    observedTagRefs: Map<String, String>.from(
-                      task['tagRefs'] as Map? ?? {},
+                  await _recordAction(
+                    origin,
+                    'editing',
+                    (prepared) => origin.edit(
+                      task['id'],
+                      fields,
+                      tags: tags.toList(),
+                      observedTagRefs: Map<String, String>.from(
+                        task['tagRefs'] as Map? ?? {},
+                      ),
+                      expectedTaskSnapshot: origin.taskSnapshot,
+                      canCommit: () => _targetUnchanged(origin, task),
+                      onPrepared: prepared,
                     ),
-                    expectedTaskSnapshot: origin.taskSnapshot,
-                    canCommit: () => _targetUnchanged(origin, task),
                   );
                 }
                 if (mounted) {
@@ -1247,10 +1397,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     'These tasks changed. Close and reopen the selection to review before deleting.',
                   );
                 }
-                final result = await origin.deleteTasks(
-                  ids,
-                  expectedTaskSnapshot: bulkSnapshot!,
-                  canCommit: _bulkGuard(ids),
+                final result = await _recordAction(
+                  origin,
+                  'deleting',
+                  (prepared) => origin.deleteTasks(
+                    ids,
+                    expectedTaskSnapshot: bulkSnapshot!,
+                    canCommit: _bulkGuard(ids),
+                    onPrepared: prepared,
+                  ),
+                  group: (bulkEditorKey, 'delete'),
+                  notice: true,
                 );
                 await origin.refresh();
                 if (result.error is StaleTaskSnapshot) {
@@ -1342,11 +1499,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bool Function() canCommit,
   ) async {
     try {
-      await store!.moveBefore(
-        id,
-        before,
-        expectedTaskSnapshot: snapshot,
-        canCommit: canCommit,
+      final origin = store!;
+      await _recordAction(
+        origin,
+        'moving',
+        (prepared) => origin.moveBefore(
+          id,
+          before,
+          expectedTaskSnapshot: snapshot,
+          canCommit: canCommit,
+          onPrepared: prepared,
+        ),
       );
     } on StaleTaskSnapshot {
       if (!mounted) return;
@@ -1549,11 +1712,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           });
         }
 
-        final result = await store!.moveBlockBefore(
-          ids,
-          before,
-          expectedTaskSnapshot: drag.snapshot,
-          canCommit: canCommit,
+        final origin = store!;
+        final result = await _recordAction(
+          origin,
+          'moving',
+          (prepared) => origin.moveBlockBefore(
+            ids,
+            before,
+            expectedTaskSnapshot: drag.snapshot,
+            canCommit: canCommit,
+            onPrepared: prepared,
+          ),
         );
         await store!.refresh();
         rows = store!.rows;
@@ -1788,55 +1957,42 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _reopen(Map<String, dynamic> task) async {
-    final origin = store!;
-    final observed = origin.activeCompletionIds(task['id']);
-    await _act(() async {
-      await origin.reopen(task['id'], observed);
-      if (mounted && identical(store, origin)) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        if (origin.hasEntity(const Uuid().v5(task['id'], 'successor'))) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Task reopened; next occurrence kept.'),
-            ),
-          );
-        }
-      }
-    });
+    final origin = store!, observed = store!.activeCompletionIds(task['id']);
+    await _act(
+      () => _recordAction(
+        origin,
+        'reopening',
+        (prepared) => origin.reopen(task['id'], observed, onPrepared: prepared),
+      ),
+    );
+    if (mounted &&
+        identical(store, origin) &&
+        origin.hasEntity(const Uuid().v5(task['id'], 'successor'))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Task reopened; next occurrence kept.')),
+      );
+    }
   }
 
   Future<void> _complete(Map<String, dynamic> task) async {
-    await _act(() async {
-      final origin = store!;
-      final event = await origin.complete(
-        task['id'],
-        completionInstant: DateTime.now(),
-      );
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Completed “${task['title']}”'),
-          duration: const Duration(seconds: 10),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              if (!identical(store, origin)) return;
-              _act(() async {
-                if (!identical(store, origin)) return;
-                await origin.command(task['id'], 'task.completionUndone', {
-                  'completion': event.id,
-                });
-              });
-            },
-          ),
+    final origin = store!;
+    await _act(
+      () => _recordAction(
+        origin,
+        'completing',
+        (prepared) => origin.complete(
+          task['id'],
+          completionInstant: DateTime.now(),
+          onPrepared: prepared,
         ),
-      );
-    });
+        notice: true,
+      ),
+    );
   }
 
   @override
   void dispose() {
+    FocusManager.instance.removeListener(_focusChanged);
     _stopDragScroll();
     taskScroll.dispose();
     dragScrollTick.dispose();
@@ -1868,182 +2024,187 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       },
       child: CallbackShortcuts(
         bindings: {
+          if (!_textHasFocus) ...{
+            const SingleActivator(LogicalKeyboardKey.keyZ, control: true):
+                _undoShortcut,
+            const SingleActivator(LogicalKeyboardKey.keyZ, meta: true):
+                _undoShortcut,
+          },
           const SingleActivator(LogicalKeyboardKey.escape): _clearTaskSelection,
           const SingleActivator(LogicalKeyboardKey.keyF, control: true):
               _openSearch,
         },
-        child: Scaffold(
-          body: SafeArea(
-            child: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1450),
-                child: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.check_circle_outline,
-                            size: 24,
-                            color: Theme.of(context).colorScheme.primary,
+        child: FocusScope(
+          child: Scaffold(
+            body: SafeArea(
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 1450),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+                        child: TaskToolbar(
+                          userName:
+                              users
+                                      .where((entry) => entry['id'] == user)
+                                      .firstOrNull?['name']
+                                  as String?,
+                          identityMenu: (child) =>
+                              _identityMenu(users, child: child),
+                          undo: IconButton(
+                            key: const ValueKey('undo-task-action'),
+                            tooltip: undoHistory.latest == null
+                                ? 'Undo'
+                                : 'Undo ${undoHistory.latest!.label}',
+                            onPressed:
+                                busy ||
+                                    closingEditor ||
+                                    undoHistory.latest == null
+                                ? null
+                                : _undoLatest,
+                            icon: const Icon(Icons.undo),
                           ),
-                          const SizedBox(width: 10),
-                          Expanded(
-                            child: searchOpen
-                                ? TextField(
-                                    key: const ValueKey('task-search'),
-                                    controller: search,
-                                    focusNode: searchFocus,
-                                    maxLines: 1,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search all tasks',
-                                      isDense: true,
-                                      border: InputBorder.none,
-                                      suffixIcon: IconButton(
-                                        tooltip: 'Clear search',
-                                        onPressed: () async {
-                                          if (!await _closeEditor()) return;
-                                          search.clear();
-                                          _clearSelection();
-                                          setState(() => searchOpen = false);
-                                          _invalidateView();
-                                        },
-                                        icon: const Icon(Icons.close),
-                                      ),
-                                    ),
-                                    onChanged: _changeSearch,
-                                  )
-                                : const Text(
-                                    'Tandemlog',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
+                          search: store != null && user != null
+                              ? _openSearch
+                              : null,
+                          searchField: searchOpen
+                              ? TextField(
+                                  key: const ValueKey('task-search'),
+                                  controller: search,
+                                  focusNode: searchFocus,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    hintText: 'Search all tasks',
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    suffixIcon: IconButton(
+                                      tooltip: 'Clear search',
+                                      onPressed: () async {
+                                        if (!await _closeEditor()) return;
+                                        search.clear();
+                                        _clearSelection();
+                                        setState(() => searchOpen = false);
+                                        _invalidateView();
+                                      },
+                                      icon: const Icon(Icons.close),
                                     ),
                                   ),
-                          ),
-                          if (!searchOpen && store != null && user != null)
-                            IconButton(
-                              key: const ValueKey('open-search'),
-                              tooltip: 'Search all tasks (Ctrl+F)',
-                              onPressed: _openSearch,
-                              icon: const Icon(Icons.search),
-                            ),
-                          _identityMenu(users),
-                        ],
-                      ),
-                    ),
-                    if (busy) const LinearProgressIndicator(minHeight: 2),
-                    if (error != null)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 8,
-                        ),
-                        child: Material(
-                          color: Theme.of(context).colorScheme.errorContainer,
-                          borderRadius: BorderRadius.circular(12),
-                          child: Padding(
-                            padding: const EdgeInsets.all(16),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(Icons.error_outline),
-                                const SizedBox(width: 12),
-                                Expanded(child: Text(error!)),
-                                if (errorFromRefresh && store != null)
-                                  TextButton(
-                                    onPressed: busy ? null : _refresh,
-                                    child: const Text('Retry'),
-                                  ),
-                              ],
-                            ),
-                          ),
+                                  onChanged: _changeSearch,
+                                )
+                              : null,
                         ),
                       ),
-                    if (store?.clockWarning != null)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                        child: Semantics(
-                          liveRegion: true,
+                      if (busy) const LinearProgressIndicator(minHeight: 2),
+                      if (error != null)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 8,
+                          ),
                           child: Material(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.tertiaryContainer,
-                            borderRadius: BorderRadius.circular(8),
+                            color: Theme.of(context).colorScheme.errorContainer,
+                            borderRadius: BorderRadius.circular(12),
                             child: Padding(
-                              padding: const EdgeInsets.all(12),
+                              padding: const EdgeInsets.all(16),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Icon(
-                                    Icons.schedule_outlined,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onTertiaryContainer,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      store!.clockWarning!,
-                                      style: TextStyle(
-                                        color: Theme.of(
-                                          context,
-                                        ).colorScheme.onTertiaryContainer,
-                                      ),
+                                  const Icon(Icons.error_outline),
+                                  const SizedBox(width: 12),
+                                  Expanded(child: Text(error!)),
+                                  if (errorFromRefresh && store != null)
+                                    TextButton(
+                                      onPressed: busy ? null : _refresh,
+                                      child: const Text('Retry'),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    Expanded(
-                      child: store == null
-                          ? _welcome()
-                          : user == null
-                          ? _users(users)
-                          : viewError != null
-                          ? Center(
+                      if (store?.clockWarning != null)
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                          child: Semantics(
+                            liveRegion: true,
+                            child: Material(
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.tertiaryContainer,
+                              borderRadius: BorderRadius.circular(8),
                               child: Padding(
-                                padding: const EdgeInsets.all(24),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
+                                padding: const EdgeInsets.all(12),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(viewError!),
-                                    const SizedBox(height: 12),
-                                    TextButton(
-                                      onPressed: () {
-                                        timeSource.stop();
-                                        timeSource.start();
-                                      },
-                                      child: const Text('Retry'),
+                                    Icon(
+                                      Icons.schedule_outlined,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onTertiaryContainer,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        store!.clockWarning!,
+                                        style: TextStyle(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onTertiaryContainer,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
                               ),
-                            )
-                          : taskView == null
-                          ? const Center(child: CircularProgressIndicator())
-                          : _editorSurface(
-                              _tasks(
-                                searching
-                                    ? [
-                                        ...taskView!.openGroups,
-                                        ...taskView!.completedGroups,
-                                      ]
-                                    : showCompleted
-                                    ? taskView!.completedGroups
-                                    : taskView!.openGroups,
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: store == null
+                            ? _welcome()
+                            : user == null
+                            ? _users(users)
+                            : viewError != null
+                            ? Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(viewError!),
+                                      const SizedBox(height: 12),
+                                      TextButton(
+                                        onPressed: () {
+                                          timeSource.stop();
+                                          timeSource.start();
+                                        },
+                                        child: const Text('Retry'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              )
+                            : taskView == null
+                            ? const Center(child: CircularProgressIndicator())
+                            : _editorSurface(
+                                _tasks(
+                                  searching
+                                      ? [
+                                          ...taskView!.openGroups,
+                                          ...taskView!.completedGroups,
+                                        ]
+                                      : showCompleted
+                                      ? taskView!.completedGroups
+                                      : taskView!.openGroups,
+                                  users,
+                                ),
                                 users,
                               ),
-                              users,
-                            ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -2377,7 +2538,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await route.completed;
   }
 
-  Widget _identityMenu(List<Map<String, dynamic>> users) {
+  Widget _identityMenu(List<Map<String, dynamic>> users, {Widget? child}) {
     final name =
         users.where((entry) => entry['id'] == user).firstOrNull?['name']
             as String?;
@@ -2410,26 +2571,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         const PopupMenuDivider(),
         const PopupMenuItem(value: 'settings', child: Text('Settings')),
       ],
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: searchOpen ? 112 : 180,
-          minHeight: 48,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(Icons.person_outline, size: 20),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
-              ),
-              const Icon(Icons.arrow_drop_down, size: 20),
-            ],
-          ),
-        ),
-      ),
+      child: child,
     );
   }
 

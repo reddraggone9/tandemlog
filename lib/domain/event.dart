@@ -159,6 +159,11 @@ class LogEvent {
           if (!_validReference(d['completion'])) {
             throw FormatFailure('Invalid completion reference.');
           }
+        case 'task.operationUndone':
+          text('operation', 80);
+          if (!_validReference(d['operation'])) {
+            throw FormatFailure('Invalid operation reference.');
+          }
         default:
           throw FormatFailure(
             'Unknown event ${j['type']}. Update the app; history was preserved.',
@@ -189,6 +194,7 @@ class LogEvent {
         'task.tagsChanged' => {'add', 'remove'},
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
+        'task.operationUndone' => {'operation'},
         _ => {'completion'},
       };
       if (d.keys.any((k) => !allowed.contains(k)) ||
@@ -242,6 +248,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final undone = <String>{};
   final tagAdds = <String, String>{};
   final tagRemoves = <String>{};
+  final retracted = retractedOperationIds(events);
   for (final e in events) {
     if (e.type == 'user.created' || e.type == 'task.created') {
       if (state != null) {
@@ -273,6 +280,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     throw FormatFailure('Task event references a user entity.');
   }
   for (final e in events) {
+    if (retracted.contains(e.id)) continue;
     if (e.type == 'task.edited') {
       state.addAll(Map<String, dynamic>.from(e.data)..remove('tagChanges'));
       state['inbox'] = false;
@@ -292,7 +300,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       undone.add(e.data['completion'] as String);
     }
   }
-  state['deleted'] = events.any((e) => e.type == 'task.deleted');
+  state['deleted'] = events.any(
+    (e) => e.type == 'task.deleted' && !retracted.contains(e.id),
+  );
   state.remove('tagOrigin');
   state['tagRefs'] = Map.fromEntries(
     tagAdds.entries.where((e) => !tagRemoves.contains(e.key)),
@@ -308,6 +318,13 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       : activeEvents.last.data['completedAt'];
   return state;
 }
+
+/// Retractions are idempotent, name earlier original operations, and are never
+/// themselves Undo targets. Known reference validity is checked by ingestion.
+Set<String> retractedOperationIds(Iterable<LogEvent> events) => events
+    .where((e) => e.type == 'task.operationUndone')
+    .map((e) => e.data['operation'] as String)
+    .toSet();
 
 void validateTags(dynamic value) {
   if (value is! List ||

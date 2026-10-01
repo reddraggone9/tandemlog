@@ -5,6 +5,8 @@ import 'package:crypto/crypto.dart';
 import 'package:sqlite3/sqlite3.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
+import '../domain/undo.dart';
+export '../domain/undo.dart';
 import '../domain/projection.dart';
 import '../domain/bulk_task_edit.dart';
 export '../domain/bulk_task_edit.dart';
@@ -103,14 +105,14 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 7) {
+      if (version < 0 || version > 8) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
       }
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
-      if (version > 0 && version < 7) {
+      if (version > 0 && version < 8) {
         await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
@@ -135,7 +137,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=7');
+      db.execute('PRAGMA user_version=8');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -237,7 +239,7 @@ class TaskStore {
       db.execute(
         "INSERT OR REPLACE INTO metadata VALUES ('replay_pending','1')",
       );
-      db.execute('PRAGMA user_version=7');
+      db.execute('PRAGMA user_version=8');
       db.execute('COMMIT');
     } catch (_) {
       db.execute('ROLLBACK');
@@ -380,25 +382,7 @@ class TaskStore {
           e.encode(),
         ]);
       }
-      // Revalidate all undo references when a missing target arrives, including
-      // references whose target belongs to another entity.
-      for (final row in db.select(
-        "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completionUndone'",
-      )) {
-        final undo = LogEvent.decode(row['raw'] as String);
-        if (undo.type != 'task.completionUndone') continue;
-        final target = db.select('SELECT raw FROM events WHERE id=?', [
-          undo.data['completion'],
-        ]);
-        if (target.isNotEmpty) {
-          final completed = LogEvent.decode(target.first['raw'] as String);
-          if (completed.type != 'task.completed' ||
-              completed.entity != undo.entity ||
-              completed.clock >= undo.clock) {
-            throw FormatFailure('Invalid completion reference in ${undo.id}.');
-          }
-        }
-      }
+      _validateUndoReferences();
       _validateMoves();
       _validateTagReferences();
       final affected = newEvents.map((e) => e.entity).toSet();
@@ -417,12 +401,18 @@ class TaskStore {
         }
       }
       if (newEvents.any(
-        (e) => {
-          'task.created',
-          'user.created',
-          'task.completed',
-          'task.moved',
-        }.contains(e.type),
+        (e) =>
+            {
+              'task.created',
+              'user.created',
+              'task.completed',
+              'task.moved',
+            }.contains(e.type) ||
+            (e.type == 'task.operationUndone' &&
+                db.select(
+                  "SELECT 1 FROM events WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
+                  [e.data['operation']],
+                ).isNotEmpty),
       )) {
         _rebuildOrder();
       }
@@ -464,9 +454,20 @@ class TaskStore {
     final ids = db
         .select("SELECT id FROM views ORDER BY json_extract(raw,'\$.order'),id")
         .map((row) => row['id'] as String);
+    final retracted = retractedOperationIds(
+      db
+          .select(
+            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone'",
+          )
+          .map((r) => LogEvent.decode(r['raw'] as String)),
+    );
     final actions = db
         .select(
-          "SELECT entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.completed','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.completed','task.moved') ORDER BY clock,writer,seq",
+        )
+        .where(
+          (row) =>
+              row['type'] != 'task.moved' || !retracted.contains(row['id']),
         )
         .map(
           (row) => OrderAction(
@@ -493,17 +494,29 @@ class TaskStore {
         .select('SELECT raw FROM events WHERE entity=?', [entity])
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
+    final retracted = retractedOperationIds(events);
     final undone = events
-        .where((e) => e.type == 'task.completionUndone')
+        .where(
+          (e) => e.type == 'task.completionUndone' && !retracted.contains(e.id),
+        )
         .map((e) => e.data['completion'])
         .toSet();
     return events
-        .where((e) => e.type == 'task.completed' && !undone.contains(e.id))
+        .where(
+          (e) =>
+              e.type == 'task.completed' &&
+              !undone.contains(e.id) &&
+              !retracted.contains(e.id),
+        )
         .map((e) => e.id)
         .toList();
   }
 
-  Future<void> reopen(String entity, List<String> observedCompletions) {
+  Future<void> reopen(
+    String entity,
+    List<String> observedCompletions, {
+    void Function(OperationReceipt)? onPrepared,
+  }) {
     final targets = observedCompletions.toSet();
     return _serialize(() async {
       for (final target in targets) {
@@ -511,7 +524,7 @@ class TaskStore {
         if (activeCompletionIds(entity).contains(target)) {
           await _command(entity, 'task.completionUndone', {
             'completion': target,
-          });
+          }, onPrepared: onPrepared);
         }
       }
     });
@@ -520,8 +533,9 @@ class TaskStore {
   Future<LogEvent> command(
     String entity,
     String type,
-    Map<String, dynamic> data,
-  ) => _serialize(() => _command(entity, type, data));
+    Map<String, dynamic> data, {
+    void Function(OperationReceipt)? onPrepared,
+  }) => _serialize(() => _command(entity, type, data, onPrepared: onPrepared));
 
   Future<LogEvent> _command(
     String entity,
@@ -529,6 +543,7 @@ class TaskStore {
     Map<String, dynamic> data, {
     String? expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) async {
     await _refresh();
     if (expectedTaskSnapshot != null && expectedTaskSnapshot != taskSnapshot) {
@@ -555,6 +570,7 @@ class TaskStore {
     }
     if (type.startsWith('task.') &&
         type != 'task.created' &&
+        type != 'task.operationUndone' &&
         project(prior)?['deleted'] == true) {
       throw FormatFailure('This task was deleted.');
     }
@@ -566,29 +582,13 @@ class TaskStore {
         ).isEmpty) {
       throw FormatFailure('Choose an existing user before creating a task.');
     }
-    if (type == 'task.completionUndone') {
-      final targets = prior.where((target) => target.id == data['completion']);
-      if (targets.isEmpty ||
-          targets.single.type != 'task.completed' ||
-          targets.single.clock >= clock) {
-        throw FormatFailure(
-          'Undo requires an earlier completion of this task.',
-        );
+    if (type == 'task.completionUndone' || type == 'task.operationUndone') {
+      final field = type == 'task.operationUndone' ? 'operation' : 'completion';
+      if (!prior.any((target) => target.id == data[field])) {
+        throw FormatFailure('Undo requires an earlier operation of this task.');
       }
     }
-    for (final row in db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completionUndone' AND json_extract(raw,'\$.data.completion')=?",
-      [e.id],
-    )) {
-      final undo = LogEvent.decode(row['raw'] as String);
-      if (e.type != 'task.completed' ||
-          e.entity != undo.entity ||
-          e.clock >= undo.clock) {
-        throw FormatFailure(
-          'Local event would resolve an invalid undo reference.',
-        );
-      }
-    }
+    _validateUndoReferences(e);
     _validateMoves(e);
     _validateTagReferences(e);
     if (type == 'task.completed' && data['successor'] != null) {
@@ -603,13 +603,54 @@ class TaskStore {
       }
     }
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    final raw = e.encode();
+    onPrepared?.call(OperationReceipt(e.id, raw, e.entity));
     await folder.append(
       '$writer.jsonl',
-      Uint8List.fromList(utf8.encode('${e.encode()}\n')),
+      Uint8List.fromList(utf8.encode('$raw\n')),
     );
     // Durable log append is the commit point. A cache failure is recoverable.
     await _refresh();
     return e;
+  }
+
+  void _validateUndoReferences([LogEvent? pending]) {
+    // A join revalidates resolved references, including newly imported targets.
+    final invalid = db.select(
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone'))) LIMIT 1",
+    );
+    if (invalid.isNotEmpty) {
+      throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
+    }
+    if (pending == null) return;
+    void validate(LogEvent undo, LogEvent target) {
+      final operation = undo.type == 'task.operationUndone';
+      if (target.entity != undo.entity ||
+          target.clock >= undo.clock ||
+          (operation
+              ? !reversibleTaskEvents.contains(target.type)
+              : target.type != 'task.completed')) {
+        throw FormatFailure('Invalid undo reference in ${undo.id}.');
+      }
+    }
+
+    if (pending.type == 'task.operationUndone' ||
+        pending.type == 'task.completionUndone') {
+      final ref =
+          pending.data[pending.type == 'task.operationUndone'
+              ? 'operation'
+              : 'completion'];
+      final targets = db.select('SELECT raw FROM events WHERE id=?', [ref]);
+      if (targets.isNotEmpty) {
+        validate(pending, LogEvent.decode(targets.single['raw'] as String));
+      }
+    }
+    for (final row in db.select(
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.completionUndone','task.operationUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
+      [pending.id],
+    )) {
+      validate(LogEvent.decode(row['raw'] as String), pending);
+    }
   }
 
   void _validateMoves([LogEvent? pending]) {
@@ -746,6 +787,7 @@ class TaskStore {
     String entity, {
     DateTime? completionDay,
     DateTime? completionInstant,
+    void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
     final state = project(_entityEvents(entity));
@@ -775,7 +817,7 @@ class TaskStore {
         'schedule': next.toJson(),
       };
     }
-    return _command(entity, 'task.completed', data);
+    return _command(entity, 'task.completed', data, onPrepared: onPrepared);
   });
 
   /// Immutable comparison token for current task content and global order.
@@ -791,6 +833,7 @@ class TaskStore {
     String? before, {
     String? expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _serialize(
     () => _command(
       entity,
@@ -798,6 +841,7 @@ class TaskStore {
       {'before': before},
       expectedTaskSnapshot: expectedTaskSnapshot,
       canCommit: canCommit,
+      onPrepared: onPrepared,
     ),
   );
 
@@ -808,6 +852,7 @@ class TaskStore {
     required Map<String, String> observedTagRefs,
     String? expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     final wanted = tags.toSet();
     final removed = observedTagRefs.entries
@@ -826,6 +871,7 @@ class TaskStore {
       },
       expectedTaskSnapshot: expectedTaskSnapshot,
       canCommit: canCommit,
+      onPrepared: onPrepared,
     );
   });
 
@@ -875,6 +921,7 @@ class TaskStore {
     prepare, {
     required String expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
     if (taskSnapshot != expectedTaskSnapshot ||
@@ -915,6 +962,7 @@ class TaskStore {
           commands[id]!,
           expectedTaskSnapshot: expected,
           canCommit: canCommit,
+          onPrepared: onPrepared,
         );
         committed.add(id);
         pending.removeAt(0);
@@ -931,6 +979,7 @@ class TaskStore {
     BulkTaskEdit edit, {
     required String expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _bulk(
     ids,
     'task.edited',
@@ -941,12 +990,83 @@ class TaskStore {
     },
     expectedTaskSnapshot: expectedTaskSnapshot,
     canCommit: canCommit,
+    onPrepared: onPrepared,
   );
+
+  /// An ID alone cannot confirm an uncertain append: the next command can
+  /// reuse its sequence after a failed write. Match its complete canonical raw.
+  Set<String> confirmedOperations(Iterable<OperationReceipt> receipts) => {
+    for (final r in receipts)
+      if (db.select('SELECT 1 FROM events WHERE id=? AND raw=?', [
+        r.id,
+        r.raw,
+      ]).isNotEmpty)
+        r.id,
+  };
+
+  bool _operationUndone(String id) => db.select(
+    "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone' AND json_extract(raw,'\$.data.operation')=?",
+    [id],
+  ).isNotEmpty;
+
+  Future<TaskUndoResult> undoOperations(List<String> operations) =>
+      _serialize(() async {
+        await _refresh();
+        if (operations.isEmpty ||
+            operations.toSet().length != operations.length) {
+          throw FormatFailure('Choose distinct saved operations.');
+        }
+        final targets = <String, LogEvent>{};
+        for (final id in operations) {
+          final found = db.select('SELECT raw FROM events WHERE id=?', [id]);
+          if (found.isEmpty) {
+            throw FormatFailure('The saved operation is unavailable.');
+          }
+          final event = LogEvent.decode(found.single['raw'] as String);
+          if (!reversibleTaskEvents.contains(event.type)) {
+            throw FormatFailure('This operation cannot be undone.');
+          }
+          targets[id] = event;
+        }
+        final pending = List<String>.of(operations), undone = <String>[];
+        var newer = false;
+        while (pending.isNotEmpty) {
+          final id = pending.first, target = targets[id]!;
+          final history = _entityEvents(target.entity);
+          final inactive = retractedOperationIds(history);
+          newer |= history.any(
+            (e) =>
+                reversibleTaskEvents.contains(e.type) &&
+                compareEvents(e, target) > 0 &&
+                !inactive.contains(e.id),
+          );
+          try {
+            if (!_operationUndone(id)) {
+              await _command(target.entity, 'task.operationUndone', {
+                'operation': id,
+              });
+            }
+            undone.add(id);
+            pending.removeAt(0);
+          } catch (error) {
+            try {
+              await _refresh();
+              if (_operationUndone(id)) {
+                undone.add(id);
+                pending.removeAt(0);
+              }
+            } catch (_) {}
+            return TaskUndoResult(undone, pending, newer, error);
+          }
+        }
+        return TaskUndoResult(undone, const [], newer);
+      });
 
   Future<BulkTaskResult> deleteTasks(
     List<String> ids, {
     required String expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _bulk(
     ids,
     'task.deleted',
@@ -955,12 +1075,14 @@ class TaskStore {
     },
     expectedTaskSnapshot: expectedTaskSnapshot,
     canCommit: canCommit,
+    onPrepared: onPrepared,
   );
 
   Future<LogEvent> deleteTask(
     String id, {
     required String expectedTaskSnapshot,
     bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _serialize(
     () => _command(
       id,
@@ -968,6 +1090,7 @@ class TaskStore {
       {},
       expectedTaskSnapshot: expectedTaskSnapshot,
       canCommit: canCommit,
+      onPrepared: onPrepared,
     ),
   );
 
@@ -978,6 +1101,7 @@ class TaskStore {
     String? before, {
     required String expectedTaskSnapshot,
     required bool Function() canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) => _bulk(
     ids,
     'task.moved',
@@ -995,6 +1119,7 @@ class TaskStore {
     },
     expectedTaskSnapshot: expectedTaskSnapshot,
     canCommit: canCommit,
+    onPrepared: onPrepared,
   );
 
   Future<void> close() {
