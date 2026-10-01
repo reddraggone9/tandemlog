@@ -65,6 +65,9 @@ jobs:
           sha256sum --check windows-SHA256SUMS.txt
           sha256sum --check android-SHA256SUMS.txt
           cd ..
-          cp design/prerelease-notes.md release-notes.md
+          # Artifact/source gates remain pinned to the accepted candidate.
+          # Copy may be corrected in a later approved docs-only main commit;
+          # pin it to this dispatch commit, not a moving branch at publish time.
+          git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
           printf '\nSource commit: `%s`\n' "$CANDIDATE_SHA" >> release-notes.md
           gh release create "$CANDIDATE" dist/* --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md

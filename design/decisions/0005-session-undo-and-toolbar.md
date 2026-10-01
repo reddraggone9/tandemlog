@@ -1,6 +1,6 @@
 # Decision 0005 — session Undo and toolbar fit
 
-Status: accepted RC5 scope, 2026-10-01; native acceptance pending. Supersedes RC4's transient Undo and permanent-deletion description. [Product behavior](../product-behavior.md), [schema](../schema.md).
+Status: accepted RC5 scope, 2026-10-01; Linux acceptance passed, exact Android acceptance pending. Supersedes RC4's transient Undo and permanent-deletion description. [Product behavior](../product-behavior.md), [schema](../schema.md).
 
 Lee wants task changes recoverable after a popup disappears. The toolbar keeps Undo available on desktop and phone, disabled when the session has no saved action. Repeated Undo steps through at most 50 actions; there is no redo. Restart and workspace changes clear this local history, not the canonical task history. Edits, single/bulk relative moves, completion/reopening and deletion participate. Capture creation and identity changes do not. Bulk retries belong to their original action and retain each independently confirmed operation. Save/move actions are quiet. Completion/deletion briefly offer the same Undo action through a snackbar; dismissal/expiry has no effect on availability. Ctrl/Cmd+Z acts on tasks outside editable text, leaving native text Undo in inputs. Resolve the frozen dirty editor through Save/Discard/Cancel first.
 
@@ -14,6 +14,6 @@ Durable append is still the commit point. Only exact canonical `(ID, raw bytes)`
 
 Remove “Tandemlog” from the everyday chrome, retaining the checkmark as the task position; no mode switch is implemented. Show the entire active user name if its measured text, current text scale and neighboring controls fit. Otherwise use an initial circle, with the full name in accessible menu labeling and a minimum 48px target. This replaces arbitrary width caps and truncation; the editor's existing 900px wide-pane breakpoint remains. Identity and assignee filtering stay distinct.
 
-Current events identify a writer device and task assignee, not the acting user for each change. Future attribution needs an explicit field; historic actors cannot safely be inferred. Actor/audit UI, rollback of other people's history, redo and cross-restart Undo are deferred.
+Current events identify a writer device and task assignee, not the acting user for each change. Lee chose device-only event attribution: any advisory device-to-person association/display may come later. Historic people cannot safely be inferred from writer/assignee. Acting-user fields, audit UI, rollback of other people's history, redo and cross-restart Undo are outside this candidate. Device-signed logs remain a future idea requiring a separate key/integrity design.
 
 Rejected: popup-only recovery, inverse snapshot writes that overwrite newer synced work, persistent arbitrary name truncation and a general history framework. Revisit the 50-action/session boundary or conflict wording if hands-on use shows concrete friction.
