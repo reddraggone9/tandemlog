@@ -559,7 +559,9 @@ void main() {
       await tester.pump();
       expect(
         tester
-            .widget<TextButton>(find.widgetWithText(TextButton, 'Clear'))
+            .widget<TextButton>(
+              find.widgetWithText(TextButton, 'Clear Selection'),
+            )
             .onPressed,
         isNull,
       );
@@ -571,7 +573,7 @@ void main() {
       expect(find.textContaining('Storage failure'), findsOneWidget);
       expect(find.text('1 selected'), findsOneWidget);
       expect(clears, 0);
-      await tester.tap(find.text('Clear'));
+      await tester.tap(find.text('Clear Selection'));
       await tester.pump();
       expect(clears, 1);
     },
@@ -604,7 +606,7 @@ void main() {
           },
         ),
       );
-      await tester.tap(find.text('Clear'));
+      await tester.tap(find.text('Clear Selection'));
       expect(clears, 1);
       await edit(tester, 'startDate', '2026-10-04');
       source['schedule'] = {'dueDate': '2026-10-01'};
@@ -615,7 +617,8 @@ void main() {
       expect(await closing, true);
       expect(saved!.schedulePatch, {'startDate': '2026-10-04'});
       expect(closed, 0);
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(find.text('2 selected'), findsNothing);
+      expect(find.text('Edit 2 tasks'), findsOneWidget);
     },
   );
   testWidgets('selection header wraps at narrow large text', (tester) async {
@@ -639,7 +642,77 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.text('1 selected'), findsOneWidget);
-    expect(find.text('Clear'), findsOneWidget);
+    expect(find.text('Clear Selection'), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
+  testWidgets(
+    'bulk header is compact, wraps accessibly, and Clear retains dirty guard',
+    (tester) async {
+      final key = GlobalKey<BulkTaskEditorState>();
+      var cleared = false;
+      Future<void> clear() async {
+        if (await key.currentState!.canClose()) cleared = true;
+      }
+
+      await mount(
+        tester,
+        BulkTaskEditor(
+          key: key,
+          panel: true,
+          tasks: [task(), task()],
+          selectionCount: 2,
+          onClearSelection: clear,
+          onSave: (_) async {},
+          onClose: () {},
+        ),
+      );
+      final title = find.text('Edit 2 tasks');
+      final action = find.text('Clear Selection');
+      expect(find.text('2 selected'), findsNothing);
+      expect(find.textContaining('Only checked schedule'), findsNothing);
+      expect(
+        tester.getCenter(title).dy,
+        closeTo(tester.getCenter(action).dy, 1),
+      );
+      expect(
+        tester.getRect(action).left,
+        greaterThan(tester.getRect(title).right),
+      );
+      await edit(tester, 'addTags', 'draft');
+      await tester.tap(action);
+      await tester.pumpAndSettle();
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
+      await tester.pumpAndSettle();
+      expect(cleared, false);
+      expect(
+        tester.widget<TextField>(input('addTags')).controller!.text,
+        'draft',
+      );
+      await tester.binding.setSurfaceSize(const Size(360, 900));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: Scaffold(
+              body: BulkTaskEditor(
+                panel: true,
+                tasks: [task(), task()],
+                selectionCount: 2,
+                onClearSelection: () async {},
+                onSave: (_) async {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.getRect(action).top,
+        greaterThanOrEqualTo(tester.getRect(title).bottom),
+      );
+      expect(tester.getRect(action).right, lessThanOrEqualTo(340));
+      expect(tester.takeException(), isNull);
+    },
+  );
 }

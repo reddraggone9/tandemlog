@@ -509,9 +509,6 @@ class _EditorBodyState extends State<_EditorBody> {
             field('description', 'Notes', lines: 3),
             field('tags', 'Tags', hint: 'Separate tags with spaces'),
           ] else ...[
-            const Text(
-              'Only checked schedule fields are applied. Checked blank fields clear their values.',
-            ),
             field('addTags', 'Add tags', hint: 'Separate tags with spaces'),
             field(
               'removeTags',
@@ -641,27 +638,27 @@ class _EditorBodyState extends State<_EditorBody> {
     final heading = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          bulk ? 'Edit ${originals.length} tasks' : 'Edit task',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        if (widget.selectionCount != null)
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            children: [
+        Wrap(
+          spacing: 16,
+          runSpacing: 4,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              bulk ? 'Edit ${originals.length} tasks' : 'Edit task',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            if (!bulk && widget.selectionCount != null)
               Text(
                 '${widget.selectionCount} selected',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-              if (widget.onClearSelection != null)
-                TextButton(
-                  onPressed: busy ? null : widget.onClearSelection,
-                  child: const Text('Clear'),
-                ),
-            ],
-          ),
+            if (widget.onClearSelection != null)
+              TextButton(
+                onPressed: busy ? null : widget.onClearSelection,
+                child: const Text('Clear Selection'),
+              ),
+          ],
+        ),
         for (final message in [error, failure])
           if (message != null)
             Padding(

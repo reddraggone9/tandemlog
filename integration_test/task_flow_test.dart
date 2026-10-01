@@ -107,6 +107,31 @@ Future<void> selectTask(
   await tester.pumpAndSettle();
 }
 
+Finder clearSelection() => find.text(
+  find.byType(TaskEditor).evaluate().isNotEmpty ||
+          find.byType(BulkTaskEditor).evaluate().isNotEmpty
+      ? 'Clear Selection'
+      : 'Clear',
+);
+Finder selectionSummary(int count) => find.text(
+  find.byType(BulkTaskEditor).evaluate().isNotEmpty
+      ? 'Edit $count tasks'
+      : '$count selected',
+);
+
+Future<void> waitForUi(WidgetTester tester, bool Function() ready) async {
+  await tester.pump();
+  for (var attempt = 0; attempt < 100 && !ready(); attempt++) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  expect(
+    ready(),
+    isTrue,
+    reason: 'The expected async UI state did not become ready.',
+  );
+  await tester.pumpAndSettle();
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
@@ -542,7 +567,7 @@ void main() {
       expect(find.text('1 selected'), findsOneWidget);
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(BulkTaskEditor), findsOneWidget);
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(selectionSummary(2), findsOneWidget);
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(TaskEditor), findsOneWidget);
       expect(find.text('1 selected'), findsOneWidget);
@@ -551,7 +576,7 @@ void main() {
         tester.widget<TextField>(titleField).controller!.text,
         'Arrange reference shelf',
       );
-      await tester.tap(find.text('Clear'));
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
       expect(find.byType(TaskEditor), findsNothing);
 
@@ -562,8 +587,8 @@ void main() {
         control: false,
         shift: true,
       );
-      expect(find.text('3 selected'), findsOneWidget);
-      await tester.tap(find.text('Clear'));
+      expect(selectionSummary(3), findsOneWidget);
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
       await selectTask(
         tester,
@@ -580,7 +605,7 @@ void main() {
       expect(find.text('Unsaved changes'), findsOneWidget);
       await tester.tap(find.text('Cancel').last);
       await tester.pumpAndSettle();
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(selectionSummary(2), findsOneWidget);
       expect(
         tester
             .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
@@ -591,7 +616,7 @@ void main() {
       await selectTask(tester, ids['Arrange reference shelf']!, control: false);
       await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
-      expect(find.text('3 selected'), findsOneWidget);
+      expect(selectionSummary(3), findsOneWidget);
       expect(
         tester
             .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
@@ -599,7 +624,7 @@ void main() {
             .text,
         isEmpty,
       );
-      await tester.tap(find.text('Clear'));
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
 
       tester.view.physicalSize = const Size(390, 900);
@@ -614,11 +639,11 @@ void main() {
       expect(find.text('1 selected'), findsOneWidget);
       await selectTask(tester, ids['Read planning notes']!, control: false);
       expect(find.byType(BulkTaskEditor), findsNothing);
-      expect(find.text('2 selected'), findsOneWidget);
+      expect(selectionSummary(2), findsOneWidget);
       await tester.tap(find.text('Open editor'));
       await tester.pumpAndSettle();
       expect(find.byType(BulkTaskEditor), findsOneWidget);
-      await tester.tap(find.text('Clear'));
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
       tester.view.physicalSize = const Size(1200, 900);
       await tester.pumpAndSettle();
@@ -882,8 +907,8 @@ void main() {
       await selectTask(tester, ids[0], control: false);
       await selectTask(tester, ids[3], control: false, shift: true);
       expect(find.byType(BulkTaskEditor), findsOneWidget);
-      expect(find.text('4 selected'), findsOneWidget);
-      await tester.tap(find.text('Clear'));
+      expect(selectionSummary(4), findsOneWidget);
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
 
       Future<void> drag(String source, String target) async {
@@ -1016,7 +1041,7 @@ void main() {
         'Large bag',
       );
       await tester.tap(find.text('Save changes'));
-      await tester.pumpAndSettle();
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
       expect(find.text('Buy oats'), findsOneWidget);
       expect(find.text('Large bag'), findsOneWidget);
       await tester.tap(find.byTooltip('Complete Buy oats'));
@@ -1153,7 +1178,16 @@ void main() {
           .onPressed!;
       start();
       start();
-      await tester.pumpAndSettle();
+      await waitForUi(
+        tester,
+        () =>
+            find.byType(TextField).evaluate().length == 1 &&
+            tester
+                    .widget<TextField>(find.byType(TextField))
+                    .focusNode
+                    ?.hasFocus ==
+                true,
+      );
       expect(find.byType(AlertDialog), findsNothing);
       final name = tester.widget<TextField>(find.byType(TextField));
       expect(name.focusNode!.hasFocus, isTrue);
@@ -1169,7 +1203,15 @@ void main() {
       final originalManifest = await manifest.readAsString();
       await manifest.rename('${manifest.path}.removed');
       await tester.testTextInput.receiveAction(TextInputAction.done);
-      await tester.pumpAndSettle();
+      await waitForUi(
+        tester,
+        () =>
+            tester
+                .widget<TextField>(find.byType(TextField))
+                .focusNode
+                ?.hasFocus ==
+            true,
+      );
       expect(find.text('Lee'), findsOneWidget);
       expect(
         tester.widget<TextField>(find.byType(TextField)).focusNode!.hasFocus,
@@ -2585,7 +2627,7 @@ void main() {
         before,
         reason: 'Every selected task must share the target key.',
       );
-      await tester.tap(find.text('Clear'));
+      await tester.tap(clearSelection());
       await tester.pumpAndSettle();
 
       ScaffoldMessenger.of(
