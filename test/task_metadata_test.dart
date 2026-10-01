@@ -30,7 +30,7 @@ void main() {
         'startDate': '2020-01-01',
         'startTime': '09:00',
       }),
-      'Due 17:30 · Scheduled 14:00 · Start 09:00',
+      'Scheduled 14:00 · Start 09:00',
     );
   });
   test('day groups hide differing dates including bounded start', () {
@@ -132,6 +132,16 @@ void main() {
     expect(
       render(schedule, day: group.date, zone: 'Asia/Tokyo'),
       'Due 08:30 · Start 10:00',
+    );
+  });
+  test('date-only occurrence override suppresses timed base due', () {
+    expect(
+      render({
+        'scheduledDate': '2030-04-24',
+        'dueDate': '2030-04-23',
+        'dueTime': '17:30',
+      }),
+      '',
     );
   });
 }

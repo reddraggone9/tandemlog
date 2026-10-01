@@ -8,9 +8,10 @@ import 'wall_time.dart';
 /// Null is Someday, not a fabricated distant deadline. Dates at midnight may
 /// be date-only; original precision remains in [task]'s schedule.
 class TaskViewEntry {
-  const TaskViewEntry(this.task, this.effectiveDate);
+  const TaskViewEntry(this.task, this.effectiveDate, {this.available = true});
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
+  final bool available;
 }
 
 class TaskViewGroup {
@@ -21,9 +22,10 @@ class TaskViewGroup {
 }
 
 class TaskView {
-  TaskView(this.open, this.completed)
+  TaskView(this.open, this.completed, {this.searchActive = false})
     : openGroups = _groups(open),
       completedGroups = _groups(completed);
+  final bool searchActive;
   final List<TaskViewEntry> open;
   final List<TaskViewEntry> completed;
   final List<TaskViewGroup> openGroups;
@@ -196,13 +198,18 @@ class _TaskTimingContext {
 
 /// Input order is shared manual order. Derived values never mutate persisted
 /// tasks, deadlines or recurrence anchors. Completed history stays accessible.
+/// A nonempty title/description query bypasses view filters, within the supplied
+/// workspace rows. Availability remains derived for upcoming-result display.
 TimedView<TaskView> projectTaskView(
   List<Map<String, dynamic>> rows,
   ViewTime time, {
   String? assignee,
   bool includeUpcoming = false,
   String? tag,
+  String? searchQuery,
 }) {
+  final query = (searchQuery ?? '').trim().toLowerCase();
+  final searchActive = query.isNotEmpty;
   final context = _TaskTimingContext(time);
   DateTime? nextChange;
   final open = <(int, TaskViewEntry)>[];
@@ -210,8 +217,15 @@ TimedView<TaskView> projectTaskView(
   for (var index = 0; index < rows.length; index++) {
     final row = rows[index];
     if (row['kind'] != 'task' ||
-        (assignee != null && row['assignee'] != assignee) ||
-        (tag != null && !(row['tags'] as List? ?? []).contains(tag))) {
+        (!searchActive && assignee != null && row['assignee'] != assignee) ||
+        (!searchActive &&
+            tag != null &&
+            !(row['tags'] as List? ?? []).contains(tag))) {
+      continue;
+    }
+    if (searchActive &&
+        !(row['title'] as String? ?? '').toLowerCase().contains(query) &&
+        !(row['description'] as String? ?? '').toLowerCase().contains(query)) {
       continue;
     }
     final schedule = TaskSchedule.fromJson(
@@ -223,10 +237,12 @@ TimedView<TaskView> projectTaskView(
     if (next != null && (nextChange == null || next.isBefore(nextChange))) {
       nextChange = next;
     }
-    if (!done && !includeUpcoming && !timing.available) continue;
+    if (!searchActive && !done && !includeUpcoming && !timing.available) {
+      continue;
+    }
     (done ? completed : open).add((
       index,
-      TaskViewEntry(row, timing.effectiveDate),
+      TaskViewEntry(row, timing.effectiveDate, available: timing.available),
     ));
   }
   List<TaskViewEntry> sorted(List<(int, TaskViewEntry)> values) {
@@ -243,7 +259,7 @@ TimedView<TaskView> projectTaskView(
   }
 
   return TimedView(
-    TaskView(sorted(open), sorted(completed)),
+    TaskView(sorted(open), sorted(completed), searchActive: searchActive),
     nextChange: nextChange,
   );
 }

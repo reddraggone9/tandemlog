@@ -49,3 +49,11 @@ Switching Open/Completed must not move user/filter controls merely because the c
 ## Accepted next-candidate Data folder copy and actions
 
 Lee requested one coherent paragraph instead of scattered explanation. Keep the folder path separately selectable, then explain storage, external sync and switching in one paragraph; retain the desktop backup warning. Group Open data folder and Use a different folder in a wrapping row with 12-pixel gaps and comfortable targets. Keep the unavailable-file-manager message contextual. Android keeps its existing folder-picker behavior and platform-specific explanation; this does not change where data lives or add controls.
+
+## Accepted compact filters and workspace search
+
+Permanent assignee/upcoming/status/tag rows displaced task content. Consolidate these existing choices into one scrollable Filter surface with a nondefault indicator and reset; move active identity to the top bar with Settings in its menu. Assignee scope and active identity remain separate concepts.
+
+Search stays directly discoverable in the top bar, outside Filter. Its contextual single-line field replaces the brand slot, avoiding a permanent extra row. Titles and descriptions are searched across the current workspace, including tasks that ordinary filters hide. During a query, retained filters visibly pause; clearing returns to their previous values. Completed matches have a separate bottom section so checked history cannot be confused with current work. This favors finding a known task over composing a universal query system. Revisit richer search only with a concrete workflow.
+
+This-occurrence wording makes the scheduled override's purpose visible. Showing either override or due, plus Start, reduces duplicated metadata without changing persisted dates or recurrence anchors. The editor retains both fields and explains the override's lifecycle.

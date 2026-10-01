@@ -114,6 +114,15 @@ class TasksPage extends StatefulWidget {
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
   String? user, error, selectedTag;
+  final search = TextEditingController();
+  final searchFocus = FocusNode();
+  bool searchOpen = false;
+  String get searchQuery => search.text.trim();
+  bool get searching => searchQuery.isNotEmpty;
+  List<TaskViewEntry> get visibleEntries => searching
+      ? [...?taskView?.open, ...?taskView?.completed]
+      : (showCompleted ? taskView?.completed : taskView?.open) ?? [];
+
   final taskScroll = ScrollController();
   final taskViewport = GlobalKey();
   Timer? dragScrollTimer;
@@ -156,6 +165,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bool upcoming,
     String? user,
     String? tag,
+    String query,
   })?
   taskDrag;
   bool startupReported = false, startupReportPending = false;
@@ -219,6 +229,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
             tag: selectedTag,
+            searchQuery: searchQuery,
           );
           taskViewZoneId = time.localZoneId;
           return projected;
@@ -786,13 +797,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _moveTask(Map<String, dynamic> task, bool up) => _act(() async {
-    final entries =
-        (showCompleted ? taskView?.completed : taskView?.open) ?? [];
+    final entries = visibleEntries;
     final visible = entries.map((entry) => entry.task).toList();
     final index = visible.indexWhere((row) => row['id'] == task['id']);
     final neighbor = index + (up ? -1 : 1);
     if (index < 0 || neighbor < 0 || neighbor >= visible.length) return;
-    if (entries[index].effectiveDate != entries[neighbor].effectiveDate) return;
+    if (entries[index].effectiveDate != entries[neighbor].effectiveDate ||
+        entries[index].task['completed'] !=
+            entries[neighbor].task['completed']) {
+      return;
+    }
     final global = rows.where((row) => row['kind'] == 'task').toList();
     final globalNeighbor = global.indexWhere(
       (row) => row['id'] == visible[neighbor]['id'],
@@ -836,12 +850,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool Function() _moveCommitGuard(String source, String target) {
     final origin = store,
         revision = viewRevision,
-        completed = showCompleted,
+        completed =
+            visibleEntries
+                .where((entry) => entry.task['id'] == source)
+                .firstOrNull
+                ?.task['completed'] ==
+            true,
+        query = searchQuery,
         everyone = all,
         upcoming = showUpcoming,
         selected = user,
         tag = selectedTag;
-    final entries = (completed ? taskView?.completed : taskView?.open) ?? [];
+    final entries = visibleEntries;
     final expected = entries
         .where((entry) => entry.task['id'] == source)
         .firstOrNull;
@@ -851,7 +871,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           expected == null ||
           !identical(origin, store) ||
           revision != viewRevision ||
-          completed != showCompleted ||
+          query != searchQuery ||
+          (!searching && completed != showCompleted) ||
           everyone != all ||
           upcoming != showUpcoming ||
           selected != user ||
@@ -868,6 +889,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           assignee: everyone ? null : selected,
           includeUpcoming: upcoming,
           tag: tag,
+          searchQuery: query,
         ).value;
         final visible = completed ? current.completed : current.open;
         final from = visible
@@ -878,6 +900,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             .firstOrNull;
         return from != null &&
             to != null &&
+            (from.task['completed'] == true) == completed &&
+            (to.task['completed'] == true) == completed &&
             from.effectiveDate == expected.effectiveDate &&
             to.effectiveDate == expected.effectiveDate;
       } catch (_) {
@@ -893,7 +917,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         !busy &&
         identical(drag.store, store) &&
         drag.revision == viewRevision &&
-        drag.completed == showCompleted &&
+        drag.query == searchQuery &&
+        (searching || drag.completed == showCompleted) &&
         drag.everyone == all &&
         drag.upcoming == showUpcoming &&
         drag.user == user &&
@@ -904,13 +929,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!_dragIsCurrent() || taskDrag!.id != source || source == target) {
       return false;
     }
-    final entries =
-        (showCompleted ? taskView?.completed : taskView?.open) ?? [];
+    final entries = visibleEntries;
     final from = entries
         .where((entry) => entry.task['id'] == source)
         .firstOrNull;
     final to = entries.where((entry) => entry.task['id'] == target).firstOrNull;
-    return from != null && to != null && from.effectiveDate == to.effectiveDate;
+    return from != null &&
+        to != null &&
+        from.task['completed'] == to.task['completed'] &&
+        from.effectiveDate == to.effectiveDate;
   }
 
   void _cancelDrag() {
@@ -938,7 +965,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (drag == null ||
           !identical(drag.store, store) ||
           drag.revision != viewRevision ||
-          drag.completed != showCompleted ||
+          drag.query != searchQuery ||
+          (!searching && drag.completed != showCompleted) ||
           drag.everyone != all ||
           drag.upcoming != showUpcoming ||
           drag.user != user ||
@@ -1121,7 +1149,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   ) {
     final schedule = task['schedule'] as Map<String, dynamic>? ?? {};
     return [
-      if (all)
+      if (all || searching)
         users
                 .where((u) => u['id'] == task['assignee'])
                 .map((u) => u['name'])
@@ -1244,6 +1272,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     viewClock.dispose();
     timeSource.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    search.dispose();
+    searchFocus.dispose();
     capture.dispose();
     captureFocus.dispose();
     firstName.dispose();
@@ -1255,137 +1285,179 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final users = rows.where((r) => r['kind'] == 'user').toList();
-    return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1000),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.check_circle_outline,
-                        size: 24,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
-                      const SizedBox(width: 10),
-                      const Expanded(
-                        child: Text(
-                          'Tandemlog',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
+    return CallbackShortcuts(
+      bindings: {
+        const SingleActivator(LogicalKeyboardKey.keyF, control: true):
+            _openSearch,
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1000),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.check_circle_outline,
+                          size: 24,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: searchOpen
+                              ? TextField(
+                                  key: const ValueKey('task-search'),
+                                  controller: search,
+                                  focusNode: searchFocus,
+                                  maxLines: 1,
+                                  decoration: InputDecoration(
+                                    hintText: 'Search all tasks',
+                                    isDense: true,
+                                    border: InputBorder.none,
+                                    suffixIcon: IconButton(
+                                      tooltip: 'Clear search',
+                                      onPressed: () {
+                                        search.clear();
+                                        setState(() => searchOpen = false);
+                                        _invalidateView();
+                                      },
+                                      icon: const Icon(Icons.close),
+                                    ),
+                                  ),
+                                  onChanged: (_) => _invalidateView(),
+                                )
+                              : const Text(
+                                  'Tandemlog',
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                        ),
+                        if (!searchOpen && store != null && user != null)
+                          IconButton(
+                            key: const ValueKey('open-search'),
+                            tooltip: 'Search all tasks (Ctrl+F)',
+                            onPressed: _openSearch,
+                            icon: const Icon(Icons.search),
                           ),
-                        ),
-                      ),
-                      _identityMenu(users),
-                    ],
-                  ),
-                ),
-                if (busy) const LinearProgressIndicator(minHeight: 2),
-                if (error != null)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    child: Material(
-                      color: Theme.of(context).colorScheme.errorContainer,
-                      borderRadius: BorderRadius.circular(12),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.error_outline),
-                            const SizedBox(width: 12),
-                            Expanded(child: Text(error!)),
-                            if (errorFromRefresh && store != null)
-                              TextButton(
-                                onPressed: busy ? null : _refresh,
-                                child: const Text('Retry'),
-                              ),
-                          ],
-                        ),
-                      ),
+                        _identityMenu(users),
+                      ],
                     ),
                   ),
-                if (store?.clockWarning != null)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-                    child: Semantics(
-                      liveRegion: true,
+                  if (busy) const LinearProgressIndicator(minHeight: 2),
+                  if (error != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 8,
+                      ),
                       child: Material(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
-                        borderRadius: BorderRadius.circular(8),
+                        color: Theme.of(context).colorScheme.errorContainer,
+                        borderRadius: BorderRadius.circular(12),
                         child: Padding(
-                          padding: const EdgeInsets.all(12),
+                          padding: const EdgeInsets.all(16),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Icon(
-                                Icons.schedule_outlined,
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.onTertiaryContainer,
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Text(
-                                  store!.clockWarning!,
-                                  style: TextStyle(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onTertiaryContainer,
-                                  ),
+                              const Icon(Icons.error_outline),
+                              const SizedBox(width: 12),
+                              Expanded(child: Text(error!)),
+                              if (errorFromRefresh && store != null)
+                                TextButton(
+                                  onPressed: busy ? null : _refresh,
+                                  child: const Text('Retry'),
                                 ),
-                              ),
                             ],
                           ),
                         ),
                       ),
                     ),
-                  ),
-                Expanded(
-                  child: store == null
-                      ? _welcome()
-                      : user == null
-                      ? _users(users)
-                      : viewError != null
-                      ? Center(
+                  if (store?.clockWarning != null)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+                      child: Semantics(
+                        liveRegion: true,
+                        child: Material(
+                          color: Theme.of(
+                            context,
+                          ).colorScheme.tertiaryContainer,
+                          borderRadius: BorderRadius.circular(8),
                           child: Padding(
-                            padding: const EdgeInsets.all(24),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
+                            padding: const EdgeInsets.all(12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(viewError!),
-                                const SizedBox(height: 12),
-                                TextButton(
-                                  onPressed: () {
-                                    timeSource.stop();
-                                    timeSource.start();
-                                  },
-                                  child: const Text('Retry'),
+                                Icon(
+                                  Icons.schedule_outlined,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onTertiaryContainer,
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Text(
+                                    store!.clockWarning!,
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onTertiaryContainer,
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
-                        )
-                      : taskView == null
-                      ? const Center(child: CircularProgressIndicator())
-                      : _tasks(
-                          showCompleted
-                              ? taskView!.completedGroups
-                              : taskView!.openGroups,
-                          users,
                         ),
-                ),
-              ],
+                      ),
+                    ),
+                  Expanded(
+                    child: store == null
+                        ? _welcome()
+                        : user == null
+                        ? _users(users)
+                        : viewError != null
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(viewError!),
+                                  const SizedBox(height: 12),
+                                  TextButton(
+                                    onPressed: () {
+                                      timeSource.stop();
+                                      timeSource.start();
+                                    },
+                                    child: const Text('Retry'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        : taskView == null
+                        ? const Center(child: CircularProgressIndicator())
+                        : _tasks(
+                            searching
+                                ? [
+                                    ...taskView!.openGroups,
+                                    ...taskView!.completedGroups,
+                                  ]
+                                : showCompleted
+                                ? taskView!.completedGroups
+                                : taskView!.openGroups,
+                            users,
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -1537,6 +1609,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
           ],
         );
+  void _openSearch() {
+    if (store == null || user == null) return;
+    setState(() => searchOpen = true);
+    searchFocus.requestFocus();
+  }
+
   bool get _filtersActive =>
       all || showCompleted || showUpcoming || selectedTag != null;
 
@@ -1793,7 +1871,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         const PopupMenuItem(value: 'settings', child: Text('Settings')),
       ],
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 180, minHeight: 48),
+        constraints: BoxConstraints(
+          maxWidth: searchOpen ? 112 : 180,
+          minHeight: 48,
+        ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
@@ -1826,8 +1907,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             TextSpan(
-              text:
-                  ' · ${(completed ? taskView?.completed : taskView?.open)?.length ?? 0} ${completed ? 'completed' : 'open'}',
+              text: searching
+                  ? ' · ${visibleEntries.length} matches'
+                  : ' · ${(completed ? taskView?.completed : taskView?.open)?.length ?? 0} ${completed ? 'completed' : 'open'}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
@@ -1840,14 +1922,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         Expanded(child: Stack(children: [heading(false), heading(true)])),
         const SizedBox(width: 8),
         Tooltip(
-          message: _filtersActive
+          message: searching
+              ? 'Filters paused while searching all tasks'
+              : _filtersActive
               ? 'Filter tasks · active filters'
               : 'Filter tasks',
           child: OutlinedButton.icon(
             key: const ValueKey('task-filter'),
-            onPressed: _showFilters,
+            onPressed: searching ? null : _showFilters,
             icon: Badge(
-              isLabelVisible: _filtersActive,
+              isLabelVisible: !searching && _filtersActive,
               child: const Icon(Icons.filter_list, size: 20),
             ),
             label: const Text('Filter'),
@@ -1880,7 +1964,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return index >= 0 &&
           neighbor >= 0 &&
           neighbor < entries.length &&
-          entries[index].effectiveDate == entries[neighbor].effectiveDate;
+          entries[index].effectiveDate == entries[neighbor].effectiveDate &&
+          entries[index].task['completed'] ==
+              entries[neighbor].task['completed'];
     }
 
     String groupTitle(TaskViewGroup group) {
@@ -1914,7 +2000,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         children: [
           _taskHeader(),
           const SizedBox(height: 8),
-          if (!showCompleted)
+          if (!showCompleted || searching)
             Focus(
               onKeyEvent: (_, event) {
                 final enter =
@@ -1998,7 +2084,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ),
                   SizedBox(height: 12),
                   Text(
-                    selectedTag != null
+                    searching
+                        ? 'No tasks match your search'
+                        : selectedTag != null
                         ? 'No tasks match #$selectedTag'
                         : showCompleted
                         ? 'No completed tasks'
@@ -2009,7 +2097,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    selectedTag != null
+                    searching
+                        ? 'Search titles and descriptions in this workspace.'
+                        : selectedTag != null
                         ? 'Clear the tag filter to see other tasks.'
                         : showCompleted
                         ? 'Completed tasks will appear here.'
@@ -2021,6 +2111,21 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               ),
             ),
           for (final group in groups) ...[
+            if (searching &&
+                (identical(group, taskView!.openGroups.firstOrNull) ||
+                    identical(group, taskView!.completedGroups.firstOrNull)))
+              Padding(
+                padding: const EdgeInsets.only(top: 16),
+                child: Semantics(
+                  header: true,
+                  child: Text(
+                    group.entries.first.task['completed'] == true
+                        ? 'Completed'
+                        : 'Open',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+              ),
             Padding(
               padding: const EdgeInsets.only(top: 16, bottom: 4),
               child: Semantics(
@@ -2036,24 +2141,37 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 key: ValueKey('task-row-${entry.task['id']}'),
                 builder: (context) {
                   final task = entry.task;
+                  final completed = searching
+                      ? task['completed'] == true
+                      : showCompleted;
                   final tile = ListTile(
                     contentPadding: EdgeInsets.zero,
                     minVerticalPadding: 6,
                     horizontalTitleGap: 8,
                     leading: Tooltip(
                       message:
-                          '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
+                          '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
                       child: Checkbox(
                         materialTapTargetSize: MaterialTapTargetSize.padded,
-                        value: showCompleted,
+                        value: completed,
                         onChanged: busy
                             ? null
-                            : (_) => showCompleted
-                                  ? _reopen(task)
-                                  : _complete(task),
+                            : (_) =>
+                                  completed ? _reopen(task) : _complete(task),
                       ),
                     ),
-                    title: _taskTitle(task, users, group.date),
+                    title: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _taskTitle(task, users, group.date),
+                        if (searching && !entry.available && !completed)
+                          Text(
+                            'Upcoming',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                      ],
+                    ),
                     subtitle: (task['description'] as String).trim().isEmpty
                         ? null
                         : Text(
@@ -2079,11 +2197,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   store: store,
                                   revision: viewRevision,
                                   snapshot: store!.taskSnapshot,
-                                  completed: showCompleted,
+                                  completed: task['completed'] == true,
                                   everyone: all,
                                   upcoming: showUpcoming,
                                   user: user,
                                   tag: selectedTag,
+                                  query: searchQuery,
                                 ),
                               );
                             },
@@ -2371,7 +2490,7 @@ class _TaskEditorState extends State<_TaskEditor> {
       labelText: '$label time',
       hintText: 'HH:mm',
       helperText:
-          'Optional; uses the ${kind == 'scheduled' ? 'scheduled' : kind} date.',
+          'Optional; uses the ${kind == 'scheduled' ? 'this occurrence' : kind} date.',
       helperMaxLines: 3,
     ),
   );
@@ -2490,9 +2609,13 @@ class _TaskEditorState extends State<_TaskEditor> {
                     const SizedBox(height: 12),
                     timeField('start', 'Start'),
                     const SizedBox(height: 12),
-                    dateField('scheduledDate', 'Scheduled date'),
+                    dateField('scheduledDate', 'This occurrence date'),
                     const SizedBox(height: 12),
-                    timeField('scheduled', 'Scheduled'),
+                    timeField('scheduled', 'This occurrence'),
+                    const SizedBox(height: 12),
+                    const Text(
+                      'This occurrence changes only this task’s planned date. It clears on repeat and keeps the base due date and repeat cadence.',
+                    ),
                     const SizedBox(height: 12),
                     dateField('dueDate', 'Due date'),
                     const SizedBox(height: 12),

@@ -410,4 +410,48 @@ void main() {
       DateTime.parse('2026-10-02T13:00:00Z'),
     );
   });
+  test('search bypasses filters and availability without changing source', () {
+    final rows = [
+      {
+        ...row(
+          'future',
+          user: 'b',
+          schedule: TaskSchedule(startDate: '2026-10-03'),
+        ),
+        'title': 'Find ME',
+        'tags': ['other'],
+      },
+      {...row('history', completed: true), 'description': 'find me in notes'},
+      {...row('miss'), 'title': 'Different'},
+      {'kind': 'user', 'title': 'find me'},
+    ];
+    final view = projectTaskView(
+      rows,
+      at('2026-10-02T12:00:00Z'),
+      assignee: 'a',
+      tag: 'selected',
+      searchQuery: '  FIND me  ',
+    ).value;
+    expect(view.searchActive, isTrue);
+    expect(ids(view.open), ['future']);
+    expect(view.open.single.available, isFalse);
+    expect(ids(view.completed), ['history']);
+    expect(rows.first['assignee'], 'b');
+    expect(
+      projectTaskView(
+        rows,
+        at('2026-10-02T12:00:00Z'),
+        assignee: 'a',
+        tag: 'selected',
+        searchQuery: '   ',
+      ).value.open,
+      isEmpty,
+    );
+    final later = projectTaskView(
+      rows,
+      at('2026-10-03T00:00:00Z'),
+      searchQuery: 'find me',
+    ).value;
+    expect(later.open.single.available, isTrue);
+  });
 }

@@ -78,6 +78,184 @@ Future<void> openSettings(WidgetTester tester) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+
+  testWidgets(
+    'workspace search preserves filters drafts and completion sections',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('workspace-search-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      await writer.command(other, 'user.created', {'name': 'Sam Example'});
+      final ids = <String>[];
+      Future<void> add(
+        String title, {
+        String description = '',
+        String? assigned,
+        bool done = false,
+        bool upcoming = false,
+      }) async {
+        final id = const Uuid().v4();
+        ids.add(id);
+        await writer.command(id, 'task.created', {
+          'title': title,
+          'description': description,
+          'assignee': assigned ?? user,
+          'schedule': upcoming ? {'startDate': '2099-01-01'} : {},
+        });
+        if (done) await writer.command(id, 'task.completed', {});
+      }
+
+      await add('Planning available');
+      await add(
+        'Other household task',
+        description: 'Planning reference',
+        assigned: other,
+      );
+      await add('Planning future', upcoming: true);
+      await add('Planning finished', done: true);
+      await add('Unrelated task');
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      await filterChoice(tester, 'Completed');
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.tap(find.byKey(const ValueKey('open-search')));
+      await tester.pumpAndSettle();
+      final searchField = find.byKey(const ValueKey('task-search'));
+      await tester.enterText(searchField, '  PLANNING  ');
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<OutlinedButton>(find.byKey(const ValueKey('task-filter')))
+            .onPressed,
+        isNull,
+      );
+      for (final title in [
+        'Planning available',
+        'Other household task',
+        'Planning future',
+        'Planning finished',
+      ]) {
+        expect(find.text(title), findsOneWidget);
+      }
+      expect(find.text('Unrelated task'), findsNothing);
+      expect(find.text('Upcoming'), findsOneWidget);
+      expect(
+        tester.getTopLeft(find.text('Planning finished')).dy,
+        greaterThan(tester.getTopLeft(find.text('Planning available')).dy),
+      );
+      final doneRow = find.byKey(ValueKey('task-row-${ids[3]}'));
+      expect(
+        tester
+            .widget<Checkbox>(
+              find.descendant(of: doneRow, matching: find.byType(Checkbox)),
+            )
+            .value,
+        isTrue,
+      );
+
+      Future<void> drag(String source, String target) async {
+        final sourceRow = find.byKey(ValueKey('task-drop-$source'));
+        final handle = find.descendant(
+          of: sourceRow,
+          matching: find.byType(Draggable<String>),
+        );
+        await tester.ensureVisible(handle);
+        await tester.pumpAndSettle();
+        final gesture = await tester.startGesture(tester.getCenter(handle));
+        await gesture.moveBy(const Offset(-24, 0));
+        await tester.pump();
+        await gesture.moveTo(
+          tester.getCenter(find.byKey(ValueKey('task-drop-$target'))),
+        );
+        await tester.pump();
+        await gesture.up();
+        await tester.pumpAndSettle();
+      }
+
+      await writer.refresh();
+      final beforeMove = writer.taskSnapshot;
+      await drag(ids[0], ids[1]);
+      await writer.refresh();
+      expect(writer.taskSnapshot, isNot(beforeMove));
+      final beforeRejected = writer.taskSnapshot;
+      await drag(ids[0], ids[3]);
+      await writer.refresh();
+      expect(writer.taskSnapshot, beforeRejected);
+      tester
+          .state<ScrollableState>(find.byType(Scrollable).first)
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
+      await tester.tap(searchField);
+      await tester.enterText(searchField, 'no matching task');
+      await tester.pumpAndSettle();
+      expect(find.text('No tasks match your search'), findsOneWidget);
+      await tester.tap(find.byTooltip('Clear search'));
+      await tester.pumpAndSettle();
+      expect(find.text('Planning finished'), findsOneWidget);
+      expect(find.text('Planning available'), findsNothing);
+      await filterChoice(tester, 'Open');
+      await tester.enterText(capture, 'Unsubmitted household draft');
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+      await tester.pumpAndSettle();
+      await tester.enterText(searchField, 'planning');
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Unsubmitted household draft',
+      );
+      await writer.command(const Uuid().v4(), 'task.created', {
+        'title': 'Planning incoming',
+        'description': '',
+        'assignee': other,
+      });
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await Future<void>.delayed(const Duration(milliseconds: 600));
+      await tester.pumpAndSettle();
+      expect(find.text('Planning incoming'), findsOneWidget);
+      expect(
+        tester.widget<TextField>(searchField).controller!.text,
+        'planning',
+      );
+
+      final finished = find.byKey(ValueKey('task-row-${ids[3]}'));
+      final reopen = find.descendant(
+        of: finished,
+        matching: find.byType(Checkbox),
+      );
+      await tester.ensureVisible(reopen);
+      await tester.pumpAndSettle();
+      await tester.tap(reopen);
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere((row) => row['id'] == ids[3])['completed'],
+        isFalse,
+      );
+      expect(find.text('Completed'), findsNothing);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets(
     'native capture, edit, completion, undo, restart and error recovery',
     (tester) async {
@@ -1194,7 +1372,7 @@ void main() {
       );
       await fill('Start date', '2026-01-29');
       await fill('Start time', '09:30');
-      await fill('Scheduled time', '08:00');
+      await fill('This occurrence time', '08:00');
       await fill('Due time', '17:00');
       await tester.ensureVisible(find.text('Local'));
       await tester.pumpAndSettle();

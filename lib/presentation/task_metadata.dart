@@ -26,7 +26,7 @@ String scheduleMetadata(
   }
 
   return [
-    detail('Due', 'dueDate', 'dueTime'),
+    if (schedule['scheduledDate'] == null) detail('Due', 'dueDate', 'dueTime'),
     detail('Scheduled', 'scheduledDate', 'scheduledTime'),
     detail('Start', 'startDate', 'startTime'),
     if (schedule['recurrence'] != null) '↻ ${schedule['recurrence']}',

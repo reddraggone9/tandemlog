@@ -56,3 +56,9 @@ Lee requested times-only metadata inside a day group, including when original da
 ## Localized list times (code 16)
 
 Lee requested local clock times without timezone labels in the list. Pinned values resolve through the same gap/fold policy as the task view, then convert to its observed device zone. Floating times stay floating; date-only values keep their precision. The successful projection's cached zone keeps rows and headings consistent during resume/reload, with no live per-row time reads. All original dates/zones remain in the editor and canonical events. Reviewed wide/narrow Light/Dark screenshots show compact Due/Scheduled clock values without calendar/zone clutter. Eight presenter regressions include midnight rollover, zone changes, DST gaps/folds and bounded-group consistency; two affected native workflows pass.
+
+## Workspace search and occurrence display (code 17)
+
+Observed native Linux search at 1000px/100% and 390px/200%: the contextual field replaces the brand slot rather than adding a permanent row. Identity remains accessible, controls fit, and task titles/metadata wrap at enlarged text. Open results precede checked history under a separate Completed heading; future results have a quiet Upcoming marker. Assignee metadata identifies other-user results. Filter controls visibly disable while a query searches the whole workspace; clearing restores their choices. The occurrence override suppresses duplicate base-due metadata, while original values remain in the editor.
+
+Targeted actual-flow checks cover searching hidden work, draft preservation, incoming changes, same-key reorder and cross-completion rejection. Exact final Android inspection remains a separate gate. Screenshots use synthetic content; no private source text was published.
