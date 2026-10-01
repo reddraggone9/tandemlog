@@ -2096,6 +2096,19 @@ void main() {
       for (final id in ids.take(2)) {
         await selectTask(tester, id);
       }
+      // Selecting another row may scroll the lazy list past the first handle.
+      tester
+          .state<ScrollableState>(
+            find
+                .descendant(
+                  of: find.byType(ListView).first,
+                  matching: find.byType(Scrollable),
+                )
+                .first,
+          )
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
       final handle = find.descendant(
         of: find.byKey(ValueKey('task-drop-${ids[0]}')),
         matching: find.byType(Draggable<String>),
