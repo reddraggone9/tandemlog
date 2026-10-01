@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/platform/log_folder.dart';
@@ -12,6 +11,47 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
+
+Future<void> openFilters(WidgetTester tester) async {
+  final button = find.byKey(const ValueKey('task-filter'));
+  if (button.evaluate().isEmpty) {
+    tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position
+        .jumpTo(0);
+    await tester.pumpAndSettle();
+  }
+  await tester.ensureVisible(button);
+  await tester.pumpAndSettle();
+  await tester.tap(button);
+  await tester.pumpAndSettle();
+}
+
+Future<void> filterChoice(WidgetTester tester, String label) async {
+  await openFilters(tester);
+  final choice = find.descendant(
+    of: find.byType(AlertDialog),
+    matching: find.text(label),
+  );
+  await tester.ensureVisible(choice);
+  await tester.pumpAndSettle();
+  await tester.tap(choice);
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Done').last);
+  await tester.pumpAndSettle();
+}
+
+Future<void> openSettings(WidgetTester tester) async {
+  final direct = find.byTooltip('Settings');
+  if (direct.evaluate().isNotEmpty) {
+    await tester.tap(direct);
+  } else {
+    await tester.tap(find.byKey(const ValueKey('identity-menu')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Settings').last);
+  }
+  await tester.pumpAndSettle();
+}
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -67,7 +107,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
       ).clearSnackBars();
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Completed'));
+      await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
       expect(tester.widget<Checkbox>(find.byType(Checkbox)).value, isTrue);
       expect(
@@ -82,18 +122,18 @@ void main() {
       await tester.tap(find.byTooltip('Reopen Buy oats'));
       await tester.pumpAndSettle();
       expect(find.text('No completed tasks'), findsOneWidget);
-      await tester.tap(find.text('Open'));
+      await filterChoice(tester, 'Open');
       await tester.pumpAndSettle();
       expect(find.text('Buy oats'), findsOneWidget);
       expect(find.text('Inbox'), findsNothing);
       await tester.tap(find.byTooltip('Complete Buy oats'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Completed'));
+      await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Reopen Buy oats'));
       await tester.pumpAndSettle();
       expect(find.text('Undo'), findsNothing);
-      await tester.tap(find.text('Open'));
+      await filterChoice(tester, 'Open');
       await tester.pumpAndSettle();
       // Periodic ingestion must not steal an unfinished capture's input/focus.
       await tester.enterText(find.byType(TextField), 'Unsubmitted draft');
@@ -139,7 +179,7 @@ void main() {
       }
 
       Future<void> settings() async {
-        await tester.tap(find.byTooltip('Settings'));
+        await openSettings(tester);
         await tester.pumpAndSettle();
       }
 
@@ -411,7 +451,7 @@ void main() {
       addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
-      await tester.tap(find.byTooltip('Settings'));
+      await openSettings(tester);
       await tester.pumpAndSettle();
       expect(tester.takeException(), isNull);
       await tester.tap(find.text('Theme'));
@@ -548,6 +588,229 @@ void main() {
     await tester.pumpAndSettle();
     await root.delete(recursive: true);
   });
+  testWidgets(
+    'compact filters compose reopen reset and keep identity separate',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('compact-filter-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      const activeName = 'Alexandria Example Household Member';
+      await writer.command(user, 'user.created', {'name': activeName});
+      await writer.command(other, 'user.created', {'name': 'Sam Example'});
+      Future<void> add(
+        String title,
+        String assignee, {
+        bool future = false,
+        bool done = false,
+        String tag = 'Home',
+      }) async {
+        final id = const Uuid().v4();
+        await writer.command(id, 'task.created', {
+          'title': title,
+          'description': '',
+          'assignee': assignee,
+          'schedule': future ? {'startDate': '2099-01-01'} : {},
+        });
+        await writer.edit(id, {}, tags: [tag], observedTagRefs: {});
+        if (done) await writer.command(id, 'task.completed', {});
+      }
+
+      await add('Ready household task', user);
+      await add('Future household task', user, future: true);
+      await add('Other household task', other);
+      await add('Completed household task', other, done: true);
+      await add('Different tag task', user, tag: 'home');
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      const draft = TextEditingValue(
+        text: 'Retain this draft',
+        selection: TextSelection(baseOffset: 3, extentOffset: 9),
+        composing: TextRange(start: 3, end: 9),
+      );
+      tester.widget<TextField>(capture).controller!.value = draft;
+      await openFilters(tester);
+      Future<void> choose(String label) async {
+        final target = find.descendant(
+          of: find.byType(AlertDialog),
+          matching: find.text(label),
+        );
+        await tester.ensureVisible(target);
+        await tester.pumpAndSettle();
+        await tester.tap(target);
+        await tester.pumpAndSettle();
+      }
+
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isFalse,
+      );
+      await choose('Everyone');
+      await choose('Show upcoming');
+      await choose('#Home');
+      await choose('Completed');
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Completed household task'), findsOneWidget);
+      expect(find.text('Different tag task'), findsNothing);
+      expect(find.byTooltip('Active user: $activeName'), findsOneWidget);
+      final badge = find.descendant(
+        of: find.byKey(const ValueKey('task-filter')),
+        matching: find.byType(Badge),
+      );
+      expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Completed'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<RadioGroup<String?>>(find.byType(RadioGroup<String?>))
+            .groupValue,
+        'Home',
+      );
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isTrue,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
+      await tester.tap(find.byKey(const ValueKey('identity-menu')));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<CheckedPopupMenuItem<String>>(
+              find.ancestor(
+                of: find.text(activeName),
+                matching: find.byType(CheckedPopupMenuItem<String>),
+              ),
+            )
+            .checked,
+        isTrue,
+      );
+      await tester.tap(
+        find.ancestor(
+          of: find.text('Sam Example').last,
+          matching: find.byType(CheckedPopupMenuItem<String>),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      expect(find.text('Completed household task'), findsOneWidget);
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      await tester.tap(find.text('Reset'));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Active user'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isFalse,
+      );
+      expect(
+        tester
+            .widget<RadioGroup<String?>>(find.byType(RadioGroup<String?>))
+            .groupValue,
+        isNull,
+      );
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isFalse,
+      );
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      expect(find.text('Other household task'), findsOneWidget);
+      expect(find.text('Ready household task'), findsNothing);
+      expect(tester.widget<TextField>(capture).controller!.value, draft);
+      expect(tester.widget<Badge>(badge).isLabelVisible, isFalse);
+      await openSettings(tester);
+      expect(find.text('Settings'), findsOneWidget);
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets('header controls stay fixed between open and completed tabs', (
     tester,
   ) async {
@@ -589,54 +852,44 @@ void main() {
       tester.view.physicalSize = Size(sample.$1.toDouble(), 820);
       tester.platformDispatcher.textScaleFactorTestValue = sample.$2;
       await tester.pumpAndSettle();
-      final userBefore = tester.getRect(find.byTooltip('Switch user'));
+      final userBefore = tester.getRect(
+        find.byKey(const ValueKey('identity-menu')),
+      );
       final filterBefore = tester.getRect(
-        find.widgetWithText(FilterChip, 'Everyone'),
+        find.byKey(const ValueKey('task-filter')),
       );
-      final upcomingBefore = tester.getRect(
-        find.widgetWithText(FilterChip, 'Show upcoming'),
+      final headerBefore = tester.getRect(
+        find.byKey(const ValueKey('task-header')),
       );
-      final tabsBefore = tester.getRect(find.byType(SegmentedButton<bool>));
-      void expectSingleLineLabels() {
-        for (final label in ['Open', 'Completed']) {
-          final text = tester.renderObject<RenderParagraph>(find.text(label));
-          expect(
-            text.getBoxesForSelection(
-              TextSelection(baseOffset: 0, extentOffset: label.length),
-            ),
-            hasLength(1),
-          );
-        }
-      }
-
-      expectSingleLineLabels();
-      await tester.tap(find.text('Completed'));
-      await tester.pumpAndSettle();
-      expect(tester.getRect(find.byTooltip('Switch user')), userBefore);
+      final captureBefore = tester.getRect(
+        find.widgetWithText(TextField, 'What needs doing?'),
+      );
+      expect(find.text('Everyone'), findsNothing);
+      expect(find.text('Show upcoming'), findsNothing);
+      expect(find.byType(SegmentedButton<bool>), findsNothing);
+      await filterChoice(tester, 'Completed');
       expect(
-        tester.getRect(find.widgetWithText(FilterChip, 'Everyone')),
+        tester.getRect(find.byKey(const ValueKey('identity-menu'))),
+        userBefore,
+      );
+      expect(
+        tester.getRect(find.byKey(const ValueKey('task-filter'))),
         filterBefore,
       );
       expect(
-        tester.getRect(find.widgetWithText(FilterChip, 'Show upcoming')),
-        upcomingBefore,
+        tester.getRect(find.byKey(const ValueKey('task-header'))),
+        headerBefore,
       );
-      expect(tester.getRect(find.byType(SegmentedButton<bool>)), tabsBefore);
-      expectSingleLineLabels();
       expect(tester.takeException(), isNull);
-      await tester.tap(find.text('Open'));
-      await tester.pumpAndSettle();
-      expect(tester.getRect(find.byTooltip('Switch user')), userBefore);
+      await filterChoice(tester, 'Open');
       expect(
-        tester.getRect(find.widgetWithText(FilterChip, 'Everyone')),
+        tester.getRect(find.widgetWithText(TextField, 'What needs doing?')),
+        captureBefore,
+      );
+      expect(
+        tester.getRect(find.byKey(const ValueKey('task-filter'))),
         filterBefore,
       );
-      expect(
-        tester.getRect(find.widgetWithText(FilterChip, 'Show upcoming')),
-        upcomingBefore,
-      );
-      expect(tester.getRect(find.byType(SegmentedButton<bool>)), tabsBefore);
-      expectSingleLineLabels();
       expect(tester.takeException(), isNull);
     }
     tester.platformDispatcher.clearTextScaleFactorTestValue();
@@ -783,7 +1036,7 @@ void main() {
         tester.element(find.byType(Scaffold)),
       ).clearSnackBars();
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Completed'));
+      await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Reopen Monthly review'));
       await tester.pumpAndSettle();
@@ -877,34 +1130,30 @@ void main() {
       await tester.pumpAndSettle();
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Keep this draft');
-      await tester.tap(find.byTooltip('Filter by tag'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('#Home').last);
+      await filterChoice(tester, '#Home');
       await tester.pumpAndSettle();
       expect(find.text('Task 3'), findsNothing);
       expect(find.text('Task 1'), findsNothing);
       expect(find.text('Task 2'), findsNothing);
-      await tester.tap(find.text('Everyone'));
+      await filterChoice(tester, 'Everyone');
       await tester.pumpAndSettle();
       expect(find.text('Task 1'), findsOneWidget);
-      await tester.tap(find.text('Show upcoming'));
+      await filterChoice(tester, 'Show upcoming');
       await tester.pumpAndSettle();
       expect(find.text('Task 2'), findsOneWidget);
-      await tester.tap(find.text('Completed'));
+      await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
       expect(find.text('Task 4'), findsOneWidget);
-      await tester.tap(find.text('Open').first);
+      await filterChoice(tester, 'Open');
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(capture).controller!.text,
         'Keep this draft',
       );
-      await tester.tap(find.byTooltip('Clear tag filter'));
+      await filterChoice(tester, 'All tags');
       await tester.pumpAndSettle();
       expect(find.text('Task 3'), findsOneWidget);
-      await tester.tap(find.byTooltip('Filter by tag'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('#Home').last);
+      await filterChoice(tester, '#Home');
       await tester.pumpAndSettle();
       final handle = find.descendant(
         of: find.byKey(ValueKey('task-drop-${ids[0]}')),
@@ -956,7 +1205,17 @@ void main() {
       await tester.pumpAndSettle();
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
-      expect(find.byTooltip('Clear tag filter'), findsNothing);
+      expect(
+        tester
+            .widget<Badge>(
+              find.descendant(
+                of: find.byKey(const ValueKey('task-filter')),
+                matching: find.byType(Badge),
+              ),
+            )
+            .isLabelVisible,
+        isFalse,
+      );
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await writer.close();
@@ -1161,7 +1420,7 @@ void main() {
     expect(find.text('Hidden future'), findsNothing);
     final capture = find.widgetWithText(TextField, 'What needs doing?');
     await tester.enterText(capture, 'Keep this draft');
-    await tester.tap(find.text('Show upcoming'));
+    await filterChoice(tester, 'Show upcoming');
     await tester.pumpAndSettle();
     expect(
       tester.widget<TextField>(capture).controller!.text,
@@ -1200,12 +1459,17 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
+    await openFilters(tester);
     expect(
       tester
-          .widget<FilterChip>(find.widgetWithText(FilterChip, 'Show upcoming'))
-          .selected,
+          .widget<SwitchListTile>(
+            find.widgetWithText(SwitchListTile, 'Show upcoming'),
+          )
+          .value,
       isFalse,
     );
+    await tester.tap(find.text('Done').last);
+    await tester.pumpAndSettle();
     expect(find.text('Hidden future'), findsNothing);
     await tester.pumpWidget(const SizedBox());
     await tester.pumpAndSettle();
@@ -1432,8 +1696,7 @@ void main() {
       expect((edited['schedule'] as Map)['dueMinDays'], 1);
       expect((edited['schedule'] as Map)['dueMaxDays'], 3);
       expect((edited['schedule'] as Map)['dueDate'], '2026-10-10');
-      await tester.ensureVisible(find.text('Completed'));
-      await tester.tap(find.text('Completed'));
+      await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
       expect(find.text('Completed future history'), findsOneWidget);
       expect(tester.takeException(), isNull);

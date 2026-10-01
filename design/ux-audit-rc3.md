@@ -32,3 +32,11 @@ Independent review found and verified the fix for a late-ingestion race between 
 Show upcoming is off by default and session-only. Native focused coverage verifies finding/editing a future task, preserving capture text through filtering, and resetting to off on app restart. Final screenshots include the enlarged-text scheduled warning with Save available and responsive upcoming controls in both themes.
 
 Code 12 adds edge auto-scroll only during a drag, retaining the same-bucket restriction. A stationary-pointer regression reaches an initially unmounted destination; release resolves current row geometry rather than Flutter’s cached target. Cancellation appends no move. Only the actively dragged source stays alive offscreen, and per-frame feedback rebuilds mounted rows rather than the whole page. Native screenshots verify the exact-tag filter and reachable clear action at 390px/200% in both themes. Exact Android touch acceptance remains required.
+
+## Consolidated filter header (code 13)
+
+Lee identified excessive vertical space from permanent user/upcoming/status/tag controls. The revision puts active identity and Settings in the top-bar user menu and all existing filter choices in one scrollable dialog with direct choices and fixed Reset/Done actions. A visible dot and accessible tooltip announce nondefault filters. Identity stays distinct from assignee scope; Reset keeps identity and restores default scope. Settings remains reachable before identity setup and during recovery.
+
+Same-fixture native Linux comparisons use twelve sanitized tasks, a long username and an 820px-high viewport, both themes. At 1000px/100%, capture top moves 216→112px and fully visible rows 7→9; at 390px/100%, 253→112px and 5→7; at 390px/200%, 548→186px and 0→2. Final screenshots confirm top-right identity, bounded ellipsis/full tooltip, wrapping names/tags in the dialog, scrolling options and reachable footer actions. These are Linux density proxies, not Android screenshots.
+
+Affected native checks cover composition, reopen/reset, identity/settings access, draft selection, real Tab/arrow navigation and Escape. Header geometry is stable across both status labels at six viewport/text-scale combinations. Existing stationary edge drag and stale/cross-bucket guards pass. Final aggregate and exact Android candidate gates are recorded separately.

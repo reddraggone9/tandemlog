@@ -1231,11 +1231,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
-                      IconButton(
-                        tooltip: 'Settings',
-                        onPressed: busy ? null : _showSettings,
-                        icon: const Icon(Icons.settings_outlined),
-                      ),
+                      _identityMenu(users),
                     ],
                   ),
                 ),
@@ -1489,10 +1485,204 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             ),
           ],
         );
-  Widget _taskHeader(List<Map<String, dynamic>> users) {
-    final openCount = taskView?.open.length ?? 0;
-    final completedCount = taskView?.completed.length ?? 0;
-    Widget heading(bool completed, int count) => Visibility(
+  bool get _filtersActive =>
+      all || showCompleted || showUpcoming || selectedTag != null;
+
+  void _resetFilters() {
+    setState(() {
+      all = false;
+      showCompleted = false;
+      showUpcoming = false;
+      selectedTag = null;
+    });
+    _invalidateView();
+  }
+
+  Future<void> _showFilters() async {
+    final tags = rows
+        .where((row) => row['kind'] == 'task')
+        .expand((row) => (row['tags'] as List? ?? []).cast<String>())
+        .toSet();
+    if (selectedTag != null) tags.add(selectedTag!);
+    final sortedTags = tags.toList()
+      ..sort((a, b) {
+        final order = a.toLowerCase().compareTo(b.toLowerCase());
+        return order == 0 ? a.compareTo(b) : order;
+      });
+    await showDialog<void>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, updateDialog) {
+          void change(VoidCallback action) {
+            setState(action);
+            _invalidateView();
+            updateDialog(() {});
+          }
+
+          final activeName =
+              rows.where((row) => row['id'] == user).firstOrNull?['name']
+                  as String? ??
+              '';
+          return AlertDialog(
+            title: const Text('Filter tasks'),
+            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+            content: SizedBox(
+              width: 440,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Assignee'),
+                    ),
+                    RadioGroup<bool>(
+                      groupValue: all,
+                      onChanged: (value) => change(() => all = value!),
+                      child: Column(
+                        children: [
+                          RadioListTile<bool>(
+                            value: false,
+                            title: const Text('Active user'),
+                            subtitle: Text(activeName),
+                          ),
+                          const RadioListTile<bool>(
+                            value: true,
+                            title: Text('Everyone'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Divider(),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Status'),
+                    ),
+                    RadioGroup<bool>(
+                      groupValue: showCompleted,
+                      onChanged: (value) =>
+                          change(() => showCompleted = value!),
+                      child: const Column(
+                        children: [
+                          RadioListTile<bool>(
+                            value: false,
+                            title: Text('Open'),
+                          ),
+                          RadioListTile<bool>(
+                            value: true,
+                            title: Text('Completed'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Show upcoming'),
+                      value: showUpcoming,
+                      onChanged: (value) => change(() => showUpcoming = value),
+                    ),
+                    const Divider(),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text('Tag'),
+                    ),
+                    RadioGroup<String?>(
+                      groupValue: selectedTag,
+                      onChanged: (value) => change(() => selectedTag = value),
+                      child: Column(
+                        children: [
+                          const RadioListTile<String?>(
+                            value: null,
+                            title: Text('All tags'),
+                          ),
+                          for (final tag in sortedTags)
+                            RadioListTile<String?>(
+                              value: tag,
+                              title: Text('#$tag'),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: _filtersActive
+                    ? () {
+                        _resetFilters();
+                        updateDialog(() {});
+                      }
+                    : null,
+                child: const Text('Reset'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: const Text('Done'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _identityMenu(List<Map<String, dynamic>> users) {
+    final name =
+        users.where((entry) => entry['id'] == user).firstOrNull?['name']
+            as String?;
+    if (name == null) {
+      return IconButton(
+        tooltip: 'Settings',
+        onPressed: busy ? null : _showSettings,
+        icon: const Icon(Icons.settings_outlined),
+      );
+    }
+    return PopupMenuButton<String>(
+      key: const ValueKey('identity-menu'),
+      tooltip: 'Active user: $name',
+      enabled: !busy,
+      onSelected: (value) {
+        if (value == 'settings') {
+          _showSettings();
+        } else {
+          _act(() => _selectUser(value == 'new' ? null : value));
+        }
+      },
+      itemBuilder: (_) => [
+        for (final entry in users)
+          CheckedPopupMenuItem(
+            value: entry['id'] as String,
+            checked: entry['id'] == user,
+            child: Text(entry['name'] as String),
+          ),
+        const PopupMenuItem(value: 'new', child: Text('Manage users')),
+        const PopupMenuDivider(),
+        const PopupMenuItem(value: 'settings', child: Text('Settings')),
+      ],
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 180, minHeight: 48),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.person_outline, size: 20),
+              const SizedBox(width: 6),
+              Flexible(
+                child: Text(name, maxLines: 1, overflow: TextOverflow.ellipsis),
+              ),
+              const Icon(Icons.arrow_drop_down, size: 20),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _taskHeader() {
+    Widget heading(bool completed) => Visibility(
       visible: showCompleted == completed,
       maintainState: true,
       maintainAnimation: true,
@@ -1500,134 +1690,39 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       child: Text.rich(
         TextSpan(
           children: [
-            TextSpan(
-              text: all ? 'All tasks' : 'Your tasks',
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            const TextSpan(
+              text: 'Tasks',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
             ),
             TextSpan(
-              text: ' · $count ${completed ? 'completed' : 'open'}',
+              text:
+                  ' · ${(completed ? taskView?.completed : taskView?.open)?.length ?? 0} ${completed ? 'completed' : 'open'}',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
           ],
         ),
       ),
     );
-    // Both labels participate in layout; only the selected one is visible or
-    // exposed to accessibility. Tab changes cannot move the controls below.
-    final title = Stack(
-      children: [heading(false, openCount), heading(true, completedCount)],
-    );
-    final controls = Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      crossAxisAlignment: WrapCrossAlignment.center,
+    return Row(
+      key: const ValueKey('task-header'),
       children: [
-        PopupMenuButton<String>(
-          tooltip: 'Switch user',
-          onSelected: (v) => _act(() async {
-            await _selectUser(v == 'new' ? null : v);
-          }),
-          itemBuilder: (_) => [
-            for (final u in users)
-              PopupMenuItem(value: u['id'], child: Text(u['name'])),
-            const PopupMenuItem(value: 'new', child: Text('Manage users')),
-          ],
-          child: Chip(
-            avatarBoxConstraints: const BoxConstraints.tightFor(
-              width: 18,
-              height: 18,
+        Expanded(child: Stack(children: [heading(false), heading(true)])),
+        const SizedBox(width: 8),
+        Tooltip(
+          message: _filtersActive
+              ? 'Filter tasks · active filters'
+              : 'Filter tasks',
+          child: OutlinedButton.icon(
+            key: const ValueKey('task-filter'),
+            onPressed: _showFilters,
+            icon: Badge(
+              isLabelVisible: _filtersActive,
+              child: const Icon(Icons.filter_list, size: 20),
             ),
-            avatar: const Icon(Icons.person_outline, size: 18),
-            label: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 160),
-              child: Builder(
-                builder: (context) => DefaultTextStyle(
-                  // Chip defaults force one line. Keep the full name readable.
-                  style: DefaultTextStyle.of(context).style,
-                  child: Text(users.firstWhere((u) => u['id'] == user)['name']),
-                ),
-              ),
-            ),
+            label: const Text('Filter'),
           ),
-        ),
-        FilterChip(
-          label: const Text('Everyone'),
-          selected: all,
-          onSelected: (value) {
-            setState(() => all = value);
-            _invalidateView();
-          },
-        ),
-        PopupMenuButton<String>(
-          tooltip: 'Filter by tag',
-          onSelected: (tag) {
-            setState(() => selectedTag = tag);
-            _invalidateView();
-          },
-          itemBuilder: (_) => [
-            for (final tag
-                in (rows
-                    .where((row) => row['kind'] == 'task')
-                    .expand(
-                      (row) => (row['tags'] as List? ?? []).cast<String>(),
-                    )
-                    .toSet()
-                    .toList()
-                  ..sort((a, b) {
-                    final order = a.toLowerCase().compareTo(b.toLowerCase());
-                    return order == 0 ? a.compareTo(b) : order;
-                  })))
-              PopupMenuItem(value: tag, child: Text('#$tag')),
-          ],
-          child: Chip(
-            avatar: const Icon(Icons.label_outline, size: 18),
-            label: Tooltip(
-              message: selectedTag == null ? 'All tags' : '#$selectedTag',
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 140),
-                child: Text(
-                  selectedTag == null ? 'Tags' : '#$selectedTag',
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
-            onDeleted: selectedTag == null
-                ? null
-                : () {
-                    setState(() => selectedTag = null);
-                    _invalidateView();
-                  },
-            deleteButtonTooltipMessage: 'Clear tag filter',
-          ),
-        ),
-        FilterChip(
-          label: const Text('Show upcoming'),
-          selected: showUpcoming,
-          onSelected: (value) {
-            setState(() => showUpcoming = value);
-            _invalidateView();
-          },
         ),
       ],
-    );
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final labelScale = MediaQuery.textScalerOf(context).scale(14) / 14;
-        if (constraints.maxWidth >= 720 * labelScale) {
-          return Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(child: title),
-              const SizedBox(width: 16),
-              Flexible(child: controls),
-            ],
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [title, const SizedBox(height: 8), controls],
-        );
-      },
     );
   }
 
@@ -1686,48 +1781,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         controller: taskScroll,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         children: [
-          _taskHeader(users),
+          _taskHeader(),
           const SizedBox(height: 8),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              const labels = ['Open', 'Completed'];
-              const horizontalPadding = 12.0;
-              final labelStyle = Theme.of(context).textTheme.labelLarge;
-              var longestLabel = 0.0;
-              for (final label in labels) {
-                final painter = TextPainter(
-                  text: TextSpan(text: label, style: labelStyle),
-                  textDirection: Directionality.of(context),
-                  textScaler: MediaQuery.textScalerOf(context),
-                )..layout();
-                if (painter.width > longestLabel) longestLabel = painter.width;
-                painter.dispose();
-              }
-              // Select the layout from measured text, never selection state. The
-              // checkmark would otherwise steal width only from the selected label.
-              final horizontalFits =
-                  constraints.maxWidth >=
-                  2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
-              return SegmentedButton<bool>(
-                direction: horizontalFits ? Axis.horizontal : Axis.vertical,
-                showSelectedIcon: false,
-                style: SegmentedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: horizontalPadding,
-                    vertical: 8,
-                  ),
-                ),
-                segments: const [
-                  ButtonSegment(value: false, label: Text('Open')),
-                  ButtonSegment(value: true, label: Text('Completed')),
-                ],
-                selected: {showCompleted},
-                onSelectionChanged: (values) =>
-                    setState(() => showCompleted = values.first),
-              );
-            },
-          ),
-          const SizedBox(height: 16),
           if (!showCompleted)
             Focus(
               onKeyEvent: (_, event) {
