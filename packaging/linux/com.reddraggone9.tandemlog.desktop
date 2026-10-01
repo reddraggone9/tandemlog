@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Tandemlog
+Comment=Shared household tasks with folder sync
+Exec=tandemlog
+Icon=com.reddraggone9.tandemlog
+Terminal=false
+Type=Application
+Categories=Office;Utility;
+StartupWMClass=com.reddraggone9.tandemlog

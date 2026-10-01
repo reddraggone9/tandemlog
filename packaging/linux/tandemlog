@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+# Flatpak redirects XDG_DATA_HOME to ~/.var/app; preserve the existing native
+# profile/default canonical folder rather than silently creating a second space.
+# Explicit profile overrides remain authoritative (and need a matching grant).
+if [ -z "${TANDEMLOG_PROFILE:-}" ]; then
+  native_data="${TANDEMLOG_HOST_DATA_HOME:-$HOME/.local/share}"
+  TANDEMLOG_PROFILE="$native_data/com.reddraggone9.tandemlog"
+  # :create can create an empty ID directory before launch. Existing legacy
+  # settings still win over that newly created empty directory.
+  if [ ! -f "$TANDEMLOG_PROFILE/settings.json" ] && [ -f "$native_data/tandemlog/settings.json" ]; then
+    TANDEMLOG_PROFILE="$native_data/tandemlog"
+  fi
+  export TANDEMLOG_PROFILE
+fi
+exec /app/tandemlog/tandemlog "$@"

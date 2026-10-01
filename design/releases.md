@@ -14,7 +14,7 @@ Stable releases are not automated yet. Required gates: full integrity/recovery/c
 
 Before publishing, review architecture boundaries, duplication, stale code/data, docs drift, unresolved debt and migration/recovery behavior; record concrete fixes and remaining risks in status. Test public downloads and verify release metadata/assets after publication.
 
-Linux x64 tarball is a first-class preview artifact with checksum. Native Linux is the primary shared desktop visual QA target; Windows-specific packaging/path/dialog/startup checks remain necessary. See [runtime QA](runtime-qa.md) for the split.
+RC4 replaces loose desktop archives with a Linux x64 Flatpak bundle and unsigned per-user Windows setup EXE, each with checksum and required installed lifecycle report. The exact candidate must install, launch, replace, uninstall without data loss, and reinstall before publication. Native Linux remains the primary shared desktop visual QA target; Windows-specific packaging/path/dialog/startup checks remain necessary. [Packaging commands and prerequisites](../packaging/README.md) explain runtime/folder access, including the separately installed C++ runtime. See [runtime QA](runtime-qa.md) for the split.
 
 ## Documentation-only pushes
 

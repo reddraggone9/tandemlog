@@ -1,7 +1,7 @@
 import unittest
 from android_release import check_candidate_codes, fingerprint, verify_apk, version
 from candidate_source import validate_run
-from publish_gate import verify_metadata
+from publish_gate import verify_install_smoke, verify_metadata
 
 
 class ReleaseGates(unittest.TestCase):
@@ -38,6 +38,15 @@ class ReleaseGates(unittest.TestCase):
                            ('path','.github/workflows/ci.yml'), ('head_sha','invalid'),
                            ('head_repository',{'full_name':'other/repo'})]:
             with self.assertRaises(ValueError): validate_run(dict(run, **{key:value}), 'owner/repo')
+
+    def test_installed_desktop_lifecycle_gate(self):
+        phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall')
+                  for name in ('after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall')]
+        verify_install_smoke({'phases': phases})
+        for report in ({}, {'phases': phases[:-1]}, {'phases': phases[::-1]},
+                       {'phases': [dict(p, passed=False) for p in phases]},
+                       {'phases': [dict(p, loaded_projection=False) for p in phases]}):
+            with self.assertRaises(ValueError): verify_install_smoke(report)
 
     def test_exact_accepted_artifact(self):
         metadata = dict(source_commit='a'*40, apk_sha256='b'*64, certificate_sha256='c'*64, version='0.1.0-rc.2', version_code=5)

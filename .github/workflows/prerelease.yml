@@ -52,7 +52,7 @@ jobs:
           pattern: '{linux,windows,android-release}'
           path: dist
           merge-multiple: true
-      - name: Verify accepted artifacts and publish experimental preview
+      - name: Verify accepted APK and installed desktop gates; publish experimental preview
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE: ${{ inputs.tag }}

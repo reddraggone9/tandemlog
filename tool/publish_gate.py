@@ -17,6 +17,17 @@ def verify_metadata(metadata, sha, accepted, actual, expected_version, pin):
         raise ValueError('Accepted APK identity does not match candidate artifacts/source')
 
 
+def verify_install_smoke(report):
+    phases = report.get('phases', [])
+    required = ['after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall']
+    if [phase.get('phase') for phase in phases] != required:
+        raise ValueError('Missing installed desktop lifecycle QA phases')
+    for phase in phases:
+        expected_launch = phase['phase'] != 'after-uninstall'
+        if phase.get('passed') is not True or phase.get('loaded_projection') is not expected_launch:
+            raise ValueError('Installed desktop launch/data preservation QA did not pass')
+
+
 if __name__ == '__main__':
     expected = check_version()
     tag = os.environ['CANDIDATE']
@@ -32,14 +43,16 @@ if __name__ == '__main__':
     if subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() != sha:
         raise ValueError('Checkout is not the validated source')
     dist = Path('dist')
-    expected_files = {'tandemlog-linux-x64.tar.gz', 'linux-SHA256SUMS.txt', 'linux-startup.json',
-                      'tandemlog-windows-x64-unsigned.zip', 'windows-SHA256SUMS.txt',
+    expected_files = {'tandemlog-linux-x64.flatpak', 'linux-SHA256SUMS.txt', 'linux-startup.json', 'linux-install-smoke.json',
+                      'tandemlog-windows-x64-unsigned-setup.exe', 'windows-SHA256SUMS.txt', 'windows-install-smoke.json',
                       'tandemlog-android.apk', 'android-SHA256SUMS.txt',
                       'android-signature.txt', 'android-release-metadata.json'}
     if {p.name for p in dist.iterdir()} != expected_files or any(p.stat().st_size >= 2*1024**3 for p in dist.iterdir()):
         raise ValueError('Missing/unexpected candidate assets or oversized asset')
+    for platform in ('linux', 'windows'):
+        verify_install_smoke(json.loads((dist / f'{platform}-install-smoke.json').read_text()))
     apk = dist / 'tandemlog-android.apk'
     verify_metadata(json.loads((dist / 'android-release-metadata.json').read_text()), sha,
                     os.environ['ANDROID_VERIFIED_SHA256'], hashlib.sha256(apk.read_bytes()).hexdigest(),
                     expected, fingerprint(Path('android/signing-certificate.sha256').read_text()))
-    print('Exact tested APK, signer, source, version and asset set verified.')
+    print('Exact tested APK, signer, source, version, installed desktop QA and asset set verified.')
