@@ -1225,7 +1225,8 @@ void main() {
       expect((state['schedule'] as Map)['timeZone'], 'UTC');
       expect((state['schedule'] as Map)['dueTime'], '17:00');
       expect((state['schedule'] as Map)['scheduledTime'], '08:00');
-      expect(find.textContaining('09:30 UTC'), findsOneWidget);
+      expect(find.textContaining('Start 09:30'), findsOneWidget);
+      expect(find.textContaining('09:30 UTC'), findsNothing);
       await tester.tap(find.byTooltip('Task actions').first);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Move down'));
