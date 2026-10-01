@@ -1,0 +1,237 @@
+{
+  "source_commit": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+  "candidate_run_id": 36906871648,
+  "push_ci_run_id": 36906794308,
+  "android": {
+    "metadata": {
+      "source_commit": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+      "version": "0.1.0-rc.4",
+      "version_code": 24,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda"
+    },
+    "package": "com.reddraggone9.tandemlog",
+    "non_debuggable": true,
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "archive_sha256": "73d7e80b83d592c7f38aac2ccd08f78d3b06c68a3fb246a9f3a0631933475d03"
+  },
+  "desktop": {
+    "source_commit": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+    "run_id": 36906871648,
+    "linux": {
+      "archive_sha256": "b0a4d8e5f56a32c099c65d00a4f8270070c210e42bc2add30d3b62bddc61ced7",
+      "checksums": [
+        {
+          "name": "tandemlog-linux-x64.flatpak",
+          "sha256": "f9c4f883b596498a650d35be892e14e29a97038d19622b6d37ff856dae487ec9"
+        }
+      ],
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=90",
+              "TANDEMLOG_PHASE identity_lock=19",
+              "TANDEMLOG_PHASE sqlite_open_schema=6",
+              "TANDEMLOG_PHASE manifest=10",
+              "TANDEMLOG_PHASE ingest=14",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=1008 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=91",
+              "TANDEMLOG_PHASE identity_lock=9",
+              "TANDEMLOG_PHASE sqlite_open_schema=10",
+              "TANDEMLOG_PHASE manifest=42",
+              "TANDEMLOG_PHASE ingest=26",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=224 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=88",
+              "TANDEMLOG_PHASE identity_lock=8",
+              "TANDEMLOG_PHASE sqlite_open_schema=7",
+              "TANDEMLOG_PHASE manifest=51",
+              "TANDEMLOG_PHASE ingest=32",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=235 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "e8d9ad4c6918c90df9de3dffb302196eb9a1b81f83ef6478b8731dfba0bded8b",
+          "baseline_commit": "69814efd9cb33bd48ea08f599c939dcddf1cebac22806344cd110aee114ba218",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      }
+    },
+    "windows": {
+      "archive_sha256": "ac401958452391cf8f02c6071b12fcc42ca06a7028632ec317cefbeb4091020f",
+      "checksums": [
+        {
+          "name": "tandemlog-windows-x64-unsigned-setup.exe",
+          "sha256": "b7fab39b4eb98565f31d42f13706c6c2b1eb9ddd3687f9bbe9dd19122f37f875"
+        }
+      ],
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=52",
+              "TANDEMLOG_PHASE identity_lock=2",
+              "TANDEMLOG_PHASE sqlite_open_schema=5",
+              "TANDEMLOG_PHASE manifest=3"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=5",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=65"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=5",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=10",
+              "TANDEMLOG_PHASE manifest=3",
+              "TANDEMLOG_PHASE ingest=2",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=34 FILES_READ=1"
+            ]
+          }
+        ]
+      }
+    },
+    "startup": {
+      "original_sha256": "8491f8e861092d69d233fcafeeefcbf561f7c36bc4248ccd59b598b5f31f21f5",
+      "known_dbus_preamble": true,
+      "measurement": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 507,
+            "marker": "TANDEMLOG_READY_MS=287 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=86",
+              "TANDEMLOG_PHASE identity_lock=86",
+              "TANDEMLOG_PHASE sqlite_open_schema=6",
+              "TANDEMLOG_PHASE manifest=22",
+              "TANDEMLOG_PHASE ingest=36",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=287 FILES_READ=1"
+            ],
+            "external_main_ms": 217,
+            "external_first_frame_ms": 307
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 391,
+            "marker": "TANDEMLOG_READY_MS=220 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=87",
+              "TANDEMLOG_PHASE identity_lock=8",
+              "TANDEMLOG_PHASE sqlite_open_schema=1",
+              "TANDEMLOG_PHASE manifest=41",
+              "TANDEMLOG_PHASE ingest=30",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=220 FILES_READ=0"
+            ],
+            "external_main_ms": 168,
+            "external_first_frame_ms": 258
+          }
+        ]
+      }
+    }
+  },
+  "native_android_acceptance": "pending; build23 tag/core passes do not establish the corrected build24 editor gate",
+  "publication": "held; RC4 not published",
+  "local_geometry": {
+    "platform": "native Linux debug/Xvfb with simulated phone and IME metrics",
+    "physical_pixels": [
+      540,
+      960
+    ],
+    "density": 1.5,
+    "ime_logical_pixels": 280,
+    "text_scales": [
+      1.0,
+      1.3,
+      2.0
+    ],
+    "regression_seconds": 39,
+    "visual_seconds": 96,
+    "screenshots": 24,
+    "canonical_bytes_unchanged": true
+  },
+  "limits": [
+    "No native Android24 runtime claim until exact APK QA",
+    "Hosted Windows installed smoke complements Linux visual QA; full manual/prerequisite-missing-machine QA pending",
+    "Cloud Flatpak namespace execution blocked; installed evidence is hosted",
+    "Startup daemon/portal preamble explicitly stripped only in derived evidence; original candidate asset unchanged",
+    "Startup markers do not measure physical presentation, first input, cold OS boot or phone performance"
+  ]
+}
