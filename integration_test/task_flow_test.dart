@@ -85,6 +85,28 @@ Future<void> openSettings(WidgetTester tester) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> selectTask(
+  WidgetTester tester,
+  String id, {
+  bool control = true,
+  bool shift = false,
+  bool longPress = false,
+}) async {
+  final body = find.byKey(ValueKey('task-body-$id'));
+  await tester.ensureVisible(body);
+  await tester.pumpAndSettle();
+  if (control) await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+  if (shift) await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
+  if (longPress) {
+    await tester.longPress(body);
+  } else {
+    await tester.tap(body);
+  }
+  if (shift) await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
+  if (control) await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+  await tester.pumpAndSettle();
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   testWidgets(
@@ -133,6 +155,33 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byTooltip('Task actions'), findsNothing);
       await openFilters(tester);
+      final dialogRect = tester.getRect(find.byType(AlertDialog));
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      await tester.tap(find.byTooltip('Expand tag options'));
+      await tester.pumpAndSettle();
+      expect(tester.getRect(find.byType(AlertDialog)), dialogRect);
+      final overlaySearch = find.byKey(const ValueKey('tag-search'));
+      for (final query in ['Planning', 'no matching tag', '']) {
+        await tester.enterText(overlaySearch, query);
+        await tester.pumpAndSettle();
+        expect(tester.getRect(find.byType(AlertDialog)), dialogRect);
+      }
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(find.byType(AlertDialog), findsOneWidget);
+      expect(tester.getRect(find.byType(AlertDialog)), dialogRect);
+      await tester.tap(find.byTooltip('Expand tag options'));
+      await tester.pumpAndSettle();
+      await tester.tapAt(const Offset(8, 8));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(find.byType(AlertDialog), findsOneWidget);
+      await tester.tap(find.byTooltip('Expand tag options'));
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
       await chooseFilter(tester, '#Home');
       await chooseFilter(tester, '#Planning');
       expect(find.byType(InputChip), findsNWidgets(2));
@@ -193,13 +242,13 @@ void main() {
       await tester.pumpAndSettle();
       await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
-      expect(find.text('Discard unsaved changes?'), findsOneWidget);
-      await tester.tap(find.text('Keep editing'));
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
       await tester.pumpAndSettle();
       await tester.tap(find.text('Read planning notes'));
       await tester.pumpAndSettle();
-      expect(find.text('Discard unsaved changes?'), findsOneWidget);
-      await tester.tap(find.text('Keep editing'));
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(titleField).controller!.text,
@@ -207,7 +256,7 @@ void main() {
       );
       await tester.tap(find.text('Read planning notes'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(titleField).controller!.text,
@@ -250,14 +299,98 @@ void main() {
           .position
           .jumpTo(0);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+
+      expect(find.byKey(const ValueKey('select-tasks')), findsNothing);
+      await selectTask(tester, ids['Review household supplies']!);
+      expect(find.text('1 selected'), findsOneWidget);
+      await selectTask(tester, ids['Read planning notes']!, control: false);
+      expect(find.byType(BulkTaskEditor), findsOneWidget);
+      expect(find.text('2 selected'), findsOneWidget);
+      await selectTask(tester, ids['Read planning notes']!, control: false);
+      expect(find.byType(TaskEditor), findsOneWidget);
+      expect(find.text('1 selected'), findsOneWidget);
+      await selectTask(tester, ids['Arrange reference shelf']!, control: false);
+      expect(
+        tester.widget<TextField>(titleField).controller!.text,
+        'Arrange reference shelf',
+      );
+      await tester.tap(find.text('Clear'));
       await tester.pumpAndSettle();
+      expect(find.byType(TaskEditor), findsNothing);
+
+      await selectTask(tester, ids['Arrange reference shelf']!, control: false);
+      await selectTask(
+        tester,
+        ids['Review household supplies']!,
+        control: false,
+        shift: true,
+      );
+      expect(find.text('3 selected'), findsOneWidget);
+      await tester.tap(find.text('Clear'));
+      await tester.pumpAndSettle();
+      await selectTask(
+        tester,
+        ids['Review household supplies']!,
+        control: false,
+        longPress: true,
+      );
+      await selectTask(tester, ids['Read planning notes']!, control: false);
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Add tags'),
+        'Selection draft',
+      );
+      await selectTask(tester, ids['Arrange reference shelf']!, control: false);
+      expect(find.text('Unsaved changes'), findsOneWidget);
+      await tester.tap(find.text('Cancel').last);
+      await tester.pumpAndSettle();
+      expect(find.text('2 selected'), findsOneWidget);
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .controller!
+            .text,
+        'Selection draft',
+      );
+      await selectTask(tester, ids['Arrange reference shelf']!, control: false);
+      await tester.tap(find.text('Discard'));
+      await tester.pumpAndSettle();
+      expect(find.text('3 selected'), findsOneWidget);
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .controller!
+            .text,
+        isEmpty,
+      );
+      await tester.tap(find.text('Clear'));
+      await tester.pumpAndSettle();
+
+      tester.view.physicalSize = const Size(390, 900);
+      await tester.pumpAndSettle();
+      await selectTask(
+        tester,
+        ids['Review household supplies']!,
+        control: false,
+        longPress: true,
+      );
+      expect(find.byType(TaskEditor), findsNothing);
+      expect(find.text('1 selected'), findsOneWidget);
+      await selectTask(tester, ids['Read planning notes']!, control: false);
+      expect(find.byType(BulkTaskEditor), findsNothing);
+      expect(find.text('2 selected'), findsOneWidget);
+      await tester.tap(find.text('Open editor'));
+      await tester.pumpAndSettle();
+      expect(find.byType(BulkTaskEditor), findsOneWidget);
+      await tester.tap(find.text('Clear'));
+      await tester.pumpAndSettle();
+      tester.view.physicalSize = const Size(1200, 900);
+      await tester.pumpAndSettle();
+
       for (final title in [
         'Review household supplies',
         'Read planning notes',
       ]) {
-        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
-        await tester.pumpAndSettle();
+        await selectTask(tester, ids[title]!);
       }
       final sourceRow = find.byKey(
         ValueKey('task-drop-${ids['Review household supplies']}'),
@@ -293,8 +426,7 @@ void main() {
         globalIds.indexOf(ids['Review household supplies']),
         lessThan(globalIds.indexOf(ids['Read planning notes'])),
       );
-      await tester.tap(find.text('Edit selected'));
-      await tester.pumpAndSettle();
+
       expect(find.byType(BulkTaskEditor), findsOneWidget);
       expect(find.widgetWithText(TextField, 'Title'), findsNothing);
       await tester.enterText(
@@ -327,10 +459,15 @@ void main() {
       );
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Edit selected'));
-      await tester.pumpAndSettle();
+
+      for (final title in [
+        'Review household supplies',
+        'Read planning notes',
+      ]) {
+        await selectTask(tester, ids[title]!);
+      }
       expect(
         tester
             .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
@@ -366,18 +503,17 @@ void main() {
         'Review household supplies',
         'Read planning notes',
       ]) {
-        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
-        await tester.pumpAndSettle();
+        await selectTask(tester, ids[title]!);
       }
-      await tester.tap(find.text('Delete selected'));
+      await tester.tap(find.text('Delete'));
       await tester.pumpAndSettle();
       expect(find.text('Delete 2 tasks?'), findsOneWidget);
-      await tester.tap(find.text('Cancel'));
+      await tester.tap(find.text('Cancel').last);
       await tester.pumpAndSettle();
       expect(find.text('Review household supplies'), findsOneWidget);
-      await tester.tap(find.text('Delete selected'));
+      await tester.tap(find.text('Delete'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Delete tasks'));
+      await tester.tap(find.text('Delete').last);
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       await writer.refresh();
@@ -390,6 +526,29 @@ void main() {
         isFalse,
       );
       expect(find.text('Arrange reference shelf'), findsOneWidget);
+      final checkbox = find.descendant(
+        of: find.byKey(ValueKey('task-drop-${ids['Arrange reference shelf']}')),
+        matching: find.byType(Checkbox),
+      );
+      final checkboxGesture = find.descendant(
+        of: checkbox,
+        matching: find.byType(GestureDetector),
+      );
+      Focus.of(tester.element(checkboxGesture.first)).requestFocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.space);
+      await tester.pump(const Duration(seconds: 1));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Arrange reference shelf'],
+        )['completed'],
+        isTrue,
+      );
+      expect(find.byType(TaskEditor), findsNothing);
+      expect(find.byType(BulkTaskEditor), findsNothing);
+      expect(find.text('1 selected'), findsNothing);
       expect(tester.takeException(), isNull);
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
@@ -482,6 +641,13 @@ void main() {
             .value,
         isTrue,
       );
+
+      await selectTask(tester, ids[0], control: false);
+      await selectTask(tester, ids[3], control: false, shift: true);
+      expect(find.byType(BulkTaskEditor), findsOneWidget);
+      expect(find.text('4 selected'), findsOneWidget);
+      await tester.tap(find.text('Clear'));
+      await tester.pumpAndSettle();
 
       Future<void> drag(String source, String target) async {
         final sourceRow = find.byKey(ValueKey('task-drop-$source'));
@@ -932,7 +1098,7 @@ void main() {
       );
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Original task'));
       await tester.pumpAndSettle();
@@ -1466,6 +1632,8 @@ void main() {
     final search = find.byKey(const ValueKey('tag-search'));
     await tester.ensureVisible(search);
     await tester.pumpAndSettle();
+    await tester.tap(search);
+    await tester.pumpAndSettle();
     expect(
       tester.getSize(find.byKey(const ValueKey('tag-results'))).height,
       lessThanOrEqualTo(200),
@@ -1530,6 +1698,33 @@ void main() {
       );
       expect(tester.takeException(), isNull);
     }
+    await openFilters(tester);
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(search);
+    await tester.pumpAndSettle();
+    await tester.tap(search);
+    await tester.pumpAndSettle();
+    final insetDialogRect = tester.getRect(find.byType(AlertDialog));
+    for (final query in ['home', 'does-not-exist', '']) {
+      await tester.enterText(search, query);
+      await tester.pumpAndSettle();
+      expect(tester.getRect(find.byType(AlertDialog)), insetDialogRect);
+      final popup = tester.getRect(find.byKey(const ValueKey('tag-results')));
+      expect(popup.top, greaterThanOrEqualTo(0));
+      expect(popup.bottom, lessThanOrEqualTo(540));
+    }
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+    expect(find.byType(AlertDialog), findsOneWidget);
+    tester.view.resetViewInsets();
+    await tester.pumpAndSettle();
+    await tester.tapAt(const Offset(8, 8));
+    await tester.pumpAndSettle();
+    expect(find.byType(AlertDialog), findsNothing);
     tester.platformDispatcher.clearTextScaleFactorTestValue();
     tester.view.resetPhysicalSize();
     tester.view.resetDevicePixelRatio();
@@ -1897,11 +2092,9 @@ void main() {
       expect(find.text('Task 3'), findsOneWidget);
       await filterChoice(tester, '#Home');
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const ValueKey('select-tasks')));
-      await tester.pumpAndSettle();
+
       for (final id in ids.take(2)) {
-        await tester.tap(find.byKey(ValueKey('select-$id')));
-        await tester.pumpAndSettle();
+        await selectTask(tester, id);
       }
       final handle = find.descendant(
         of: find.byKey(ValueKey('task-drop-${ids[0]}')),
@@ -2122,11 +2315,9 @@ void main() {
             .toList(),
         bytes,
       );
-      await tester.tap(find.byKey(const ValueKey('select-tasks')));
-      await tester.pumpAndSettle();
+
       for (final title in ['Dated', 'Third']) {
-        await tester.tap(find.byKey(ValueKey('select-${ids[title]}')));
-        await tester.pumpAndSettle();
+        await selectTask(tester, ids[title]!);
       }
       await drag('Dated', 'Dated peer', invalidSelection: true);
       await writer.refresh();
@@ -2135,8 +2326,9 @@ void main() {
         before,
         reason: 'Every selected task must share the target key.',
       );
-      await tester.tap(find.byKey(const ValueKey('select-tasks')));
+      await tester.tap(find.text('Clear'));
       await tester.pumpAndSettle();
+
       ScaffoldMessenger.of(
         tester.element(find.byType(Scaffold)),
       ).clearSnackBars();

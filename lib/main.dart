@@ -12,6 +12,7 @@ import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
 import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
+import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
 import 'platform/view_time_source.dart';
 import 'platform/log_folder.dart';
@@ -118,6 +119,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final selectedTags = <String>{};
   final selectedTasks = <String>{};
   bool selecting = false;
+  bool mobileEditorOpen = false, wideLayout = false;
+  String? selectionAnchor;
+  final rowFocus = <String, FocusNode>{};
   Map<String, dynamic>? editingTask;
   List<Map<String, dynamic>>? editingBulk;
   TaskStore? editorStore;
@@ -255,10 +259,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       onView: (view) {
         if (mounted) {
           setState(() {
+            final previousOrder = visibleEntries
+                .map((entry) => entry.task['id'])
+                .toList();
             taskView = view.value;
-            selectedTasks.retainAll(
-              visibleEntries.map((entry) => entry.task['id'] as String),
-            );
+            final visibleOrder = visibleEntries
+                .map((entry) => entry.task['id'])
+                .toList();
+            if (!listEquals(previousOrder, visibleOrder)) {
+              selectionAnchor = null;
+            }
+            if (editingTask == null && editingBulk == null) {
+              selectedTasks.retainAll(visibleOrder);
+            }
             viewRevision++;
           });
           _reportStartupAfterFrame();
@@ -816,30 +829,181 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _invalidateView();
   }
 
-  Future<void> _edit(Map<String, dynamic> task) async {
+  Future<void> _clearTaskSelection() async {
     if (!await _closeEditor() || !mounted) return;
+    setState(_clearSelection);
+  }
+
+  void _openSelectionSession() {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    setState(() {
-      editorStore = store;
+    editorStore = store;
+    final tasks = rows
+        .where(
+          (row) => row['kind'] == 'task' && selectedTasks.contains(row['id']),
+        )
+        .toList();
+    if (tasks.length != selectedTasks.length) return;
+    if (tasks.length == 1) {
       editorKey = GlobalKey<TaskEditorState>();
-      editingTask = Map<String, dynamic>.from(task);
+      editingTask = Map<String, dynamic>.from(tasks.single);
+      editingBulk = null;
+    } else if (tasks.isNotEmpty) {
+      bulkSnapshot = store!.taskSnapshot;
+      bulkConflict = false;
+      bulkEditorKey = GlobalKey<BulkTaskEditorState>();
+      editingBulk = tasks
+          .map((task) => Map<String, dynamic>.from(task))
+          .toList();
+      editingTask = null;
+      bulkPending = tasks.map((task) => task['id'] as String).toList();
+    }
+  }
+
+  Future<bool> _selectTask(
+    Map<String, dynamic> task, {
+    bool explicit = false,
+    bool range = false,
+    bool longPress = false,
+  }) async {
+    final id = task['id'] as String;
+    final before = Set<String>.of(selectedTasks);
+    final next = Set<String>.of(before);
+    var nextIntent = selecting;
+    var anchor = selectionAnchor;
+    if (range) {
+      final ordered = visibleEntries
+          .map((entry) => entry.task['id'] as String)
+          .toList();
+      final from = ordered.indexOf(anchor ?? id), to = ordered.indexOf(id);
+      next.clear();
+      if (from >= 0 && to >= 0) {
+        next.addAll(
+          ordered.sublist(from < to ? from : to, (from > to ? from : to) + 1),
+        );
+      } else {
+        next.add(id);
+        anchor = id;
+      }
+      nextIntent = true;
+    } else if (longPress && !selecting) {
+      next
+        ..clear()
+        ..add(id);
+      nextIntent = true;
+      anchor = id;
+    } else if (explicit || selecting) {
+      if (!next.add(id)) next.remove(id);
+      nextIntent = true;
+      anchor = id;
+    } else {
+      next
+        ..clear()
+        ..add(id);
+      nextIntent = false;
+      anchor = id;
+    }
+    if (before.length >= 2 && next.length == 1) nextIntent = false;
+    if (next.isEmpty) nextIntent = false;
+    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
+    if (!next.every(visible.contains)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Some selected tasks are no longer visible. Clear the selection and review the list.',
+          ),
+        ),
+      );
+      return false;
+    }
+    final origin = store;
+    final plannedOrder = visibleEntries
+        .map((entry) => entry.task['id'])
+        .toList();
+    if (!await _closeEditor() || !mounted) return false;
+    if (!identical(origin, store) || !timeSource.ready) return false;
+    final current = projectTaskView(
+      store!.rows,
+      timeSource.readTime(),
+      assignee: all ? null : user,
+      includeUpcoming: showUpcoming,
+      tags: Set.of(selectedTags),
+      searchQuery: searchQuery,
+    ).value;
+    final currentEntries = searching
+        ? [...current.open, ...current.completed]
+        : (showCompleted ? current.completed : current.open);
+    final currentOrder = currentEntries
+        .map((entry) => entry.task['id'])
+        .toList();
+    if (!next.every(currentOrder.contains) ||
+        (range && !listEquals(plannedOrder, currentOrder))) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('The task list changed. Select the tasks again.'),
+        ),
+      );
+      return false;
+    }
+    if (!listEquals(plannedOrder, currentOrder) ||
+        !currentOrder.contains(anchor)) {
+      anchor = null;
+    }
+    setState(() {
+      selectedTasks
+        ..clear()
+        ..addAll(next);
+      selecting = nextIntent;
+      selectionAnchor = next.isEmpty ? null : anchor;
+      mobileEditorOpen = !nextIntent;
+      if (next.isNotEmpty) _openSelectionSession();
     });
+    return true;
   }
 
   Future<void> _editSelected() async {
     if (selectedTasks.isEmpty || !await _closeEditor() || !mounted) return;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
+    if (!selectedTasks.every(visible.contains)) return;
     setState(() {
-      editorStore = store;
-      bulkSnapshot = store!.taskSnapshot;
-      bulkConflict = false;
-      bulkEditorKey = GlobalKey<BulkTaskEditorState>();
-      editingBulk = visibleEntries
-          .where((entry) => selectedTasks.contains(entry.task['id']))
-          .map((entry) => Map<String, dynamic>.from(entry.task))
-          .toList();
-      bulkPending = editingBulk!.map((task) => task['id'] as String).toList();
+      mobileEditorOpen = true;
+      _openSelectionSession();
     });
+  }
+
+  Future<void> _focusRelativeTask(
+    Map<String, dynamic> task,
+    int direction,
+    bool range,
+  ) async {
+    final entries = visibleEntries.toList();
+    final index = entries.indexWhere((entry) => entry.task['id'] == task['id']);
+    final nextIndex = index + direction;
+    if (index < 0 || nextIndex < 0 || nextIndex >= entries.length) return;
+    final target = entries[nextIndex].task;
+    if (range && !await _selectTask(target, range: true)) return;
+    final id = target['id'] as String;
+    var targetContext = dropKeys[id]?.currentContext;
+    if (targetContext == null && taskScroll.hasClients) {
+      final box = dropKeys[task['id']]?.currentContext?.findRenderObject();
+      final step = box is RenderBox && box.hasSize ? box.size.height : 72.0;
+      await taskScroll.animateTo(
+        (taskScroll.offset + direction * step).clamp(
+          0.0,
+          taskScroll.position.maxScrollExtent,
+        ),
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+      );
+      await WidgetsBinding.instance.endOfFrame;
+      targetContext = dropKeys[id]?.currentContext;
+    }
+    if (targetContext != null && targetContext.mounted) {
+      await Scrollable.ensureVisible(
+        targetContext,
+        duration: const Duration(milliseconds: 120),
+      );
+    }
+    rowFocus[id]?.requestFocus();
   }
 
   bool Function() _bulkGuard(List<String> ids) {
@@ -948,61 +1112,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> _deleteSelected() async {
-    if (!await _closeEditor() || !mounted) return;
-    if (selectedTasks.isEmpty) return;
-    final origin = store!;
-    final snapshot = origin.taskSnapshot;
-    final ids = visibleEntries
-        .where((entry) => selectedTasks.contains(entry.task['id']))
-        .map((entry) => entry.task['id'] as String)
-        .toList();
-    final canCommit = _bulkGuard(ids);
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete ${selectedTasks.length} tasks?'),
-        content: const Text(
-          'These tasks will be removed from the shared workspace. Existing repeating successors remain.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Delete tasks'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted) return;
-    await _act(() async {
-      final result = await origin.deleteTasks(
-        ids,
-        expectedTaskSnapshot: snapshot,
-        canCommit: canCommit,
-      );
-      await origin.refresh();
-      selectedTasks
-        ..clear()
-        ..addAll(
-          result.remainingIds.where(
-            (id) => origin.rows.any(
-              (row) => row['id'] == id && row['kind'] == 'task',
-            ),
-          ),
-        );
-      rows = origin.rows;
-      if (!result.succeeded) {
-        throw StateError(
-          '${ids.length - selectedTasks.length} confirmed deleted after refresh; ${selectedTasks.length} remain. ${result.error}',
-        );
-      }
-    });
-  }
-
   String _targetBaseline(Map<String, dynamic> task) => jsonEncode({
     for (final key in [
       'id',
@@ -1029,8 +1138,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     List<Map<String, dynamic>> users,
   ) => LayoutBuilder(
     builder: (context, constraints) {
-      if (editingTask == null && editingBulk == null) return list;
+      if (editingTask == null && editingBulk == null) {
+        wideLayout = constraints.maxWidth >= 900;
+        return list;
+      }
       final panel = constraints.maxWidth >= 900;
+      if (wideLayout &&
+          !panel &&
+          (editorKey.currentState != null ||
+              bulkEditorKey.currentState != null)) {
+        mobileEditorOpen = true;
+      }
+      wideLayout = panel;
+      if (!panel && selecting && !mobileEditorOpen) return list;
       final task = editingTask;
       final editor = task != null
           ? TaskEditor(
@@ -1038,8 +1158,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               task: task,
               users: users,
               panel: panel,
+              selectionCount: selectedTasks.isEmpty
+                  ? null
+                  : selectedTasks.length,
+              onClearSelection: _clearTaskSelection,
               onClose: () {
-                setState(() => editingTask = null);
+                setState(() {
+                  editingTask = null;
+                  _clearSelection();
+                });
               },
               onDelete: () async {
                 final origin = editorStore!;
@@ -1100,8 +1227,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               tasks: editingBulk!,
               users: users,
               panel: panel,
+              selectionCount: selectedTasks.isEmpty
+                  ? null
+                  : selectedTasks.length,
+              onClearSelection: _clearTaskSelection,
               onClose: () {
-                setState(() => editingBulk = null);
+                setState(() {
+                  editingBulk = null;
+                  _clearSelection();
+                });
               },
               onSave: _saveBulk,
               onDelete: () async {
@@ -1342,6 +1476,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       _cancelDrag();
       return;
     }
+    if (!await _closeEditor() || !mounted) return;
     await _act(() async {
       if (drag == null ||
           !identical(drag.store, store) ||
@@ -1423,6 +1558,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
       }
     });
+    if (mounted && selectedTasks.isNotEmpty && wideLayout) {
+      setState(_openSelectionSession);
+    }
   }
 
   void _stopDragScroll() {
@@ -1700,6 +1838,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     viewClock.dispose();
     timeSource.dispose();
     WidgetsBinding.instance.removeObserver(this);
+    for (final node in rowFocus.values) {
+      node.dispose();
+    }
     search.dispose();
     searchFocus.dispose();
     capture.dispose();
@@ -1714,12 +1855,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final users = rows.where((r) => r['kind'] == 'user').toList();
     return PopScope(
-      canPop: editingTask == null && editingBulk == null,
+      canPop:
+          editingTask == null && editingBulk == null && selectedTasks.isEmpty,
       onPopInvokedWithResult: (didPop, result) {
-        if (!didPop) unawaited(_closeEditor());
+        if (!didPop) unawaited(_clearTaskSelection());
       },
       child: CallbackShortcuts(
         bindings: {
+          const SingleActivator(LogicalKeyboardKey.escape): _clearTaskSelection,
           const SingleActivator(LogicalKeyboardKey.keyF, control: true):
               _openSearch,
         },
@@ -2051,6 +2194,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   void _clearSelection() {
     selectedTasks.clear();
     selecting = false;
+    selectionAnchor = null;
+    mobileEditorOpen = false;
   }
 
   Future<void> _openSearch() async {
@@ -2087,12 +2232,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final order = a.toLowerCase().compareTo(b.toLowerCase());
         return order == 0 ? a.compareTo(b) : order;
       });
-    final tagSearch = TextEditingController();
-    final tagFocus = FocusNode();
-    var tagQuery = '';
-    var tagsExpanded = true;
-    final route = DialogRoute<void>(
+    final pickerKey = GlobalKey<TagFilterPickerState>();
+    late final _FilterDialogRoute route;
+    route = _FilterDialogRoute(
       context: context,
+      dropdownOpen: () => pickerKey.currentState?.dropdownOpen ?? false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, updateDialog) {
           void change(VoidCallback action) {
@@ -2108,270 +2252,123 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               rows.where((row) => row['id'] == user).firstOrNull?['name']
                   as String? ??
               '';
-          return AlertDialog(
-            title: const Text('Filter tasks'),
-            contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
-            content: SizedBox(
-              width: 440,
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Assignee'),
-                    ),
-                    RadioGroup<bool>(
-                      groupValue: all,
-                      onChanged: (value) => change(() => all = value!),
-                      child: Column(
-                        children: [
-                          RadioListTile<bool>(
-                            value: false,
-                            title: const Text('Active user'),
-                            subtitle: Text(activeName),
-                          ),
-                          const RadioListTile<bool>(
-                            value: true,
-                            title: Text('Everyone'),
-                          ),
-                        ],
+          return CallbackShortcuts(
+            bindings: {
+              const SingleActivator(LogicalKeyboardKey.escape): () {
+                if (!(pickerKey.currentState?.dismissDropdown() ?? false)) {
+                  Navigator.pop(dialogContext);
+                }
+              },
+            },
+            child: AlertDialog(
+              title: const Text('Filter tasks'),
+              contentPadding: const EdgeInsets.fromLTRB(8, 12, 8, 0),
+              content: SizedBox(
+                width: 440,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Assignee'),
                       ),
-                    ),
-                    const Divider(),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Status'),
-                    ),
-                    RadioGroup<bool>(
-                      groupValue: showCompleted,
-                      onChanged: (value) =>
-                          change(() => showCompleted = value!),
-                      child: const Column(
-                        children: [
-                          RadioListTile<bool>(
-                            value: false,
-                            title: Text('Open'),
-                          ),
-                          RadioListTile<bool>(
-                            value: true,
-                            title: Text('Completed'),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SwitchListTile(
-                      title: const Text('Show upcoming'),
-                      value: showUpcoming,
-                      onChanged: (value) => change(() => showUpcoming = value),
-                    ),
-                    const Divider(),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Text('Tags (match any)'),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: Container(
-                        key: const ValueKey('tag-autocomplete'),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            bottom: BorderSide(
-                              color: Theme.of(context).colorScheme.outline,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      RadioGroup<bool>(
+                        groupValue: all,
+                        onChanged: (value) => change(() => all = value!),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: LayoutBuilder(
-                                builder: (context, constraints) => Wrap(
-                                  spacing: 6,
-                                  runSpacing: 4,
-                                  crossAxisAlignment: WrapCrossAlignment.center,
-                                  children: [
-                                    for (final tag
-                                        in selectedTags.toList()..sort())
-                                      Tooltip(
-                                        message: '#$tag',
-                                        child: ConstrainedBox(
-                                          constraints: BoxConstraints(
-                                            maxWidth: constraints.maxWidth,
-                                          ),
-                                          child: InputChip(
-                                            key: ValueKey('selected-tag-$tag'),
-                                            label: ConstrainedBox(
-                                              constraints: BoxConstraints(
-                                                maxWidth:
-                                                    (constraints.maxWidth - 64)
-                                                        .clamp(
-                                                          0,
-                                                          double.infinity,
-                                                        ),
-                                              ),
-                                              child: Text(
-                                                '#$tag',
-                                                maxLines: 1,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                            onDeleted: () => change(
-                                              () => selectedTags.remove(tag),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    SizedBox(
-                                      key: const ValueKey('tag-query-slot'),
-                                      width: constraints.maxWidth.clamp(
-                                        80.0,
-                                        160.0,
-                                      ),
-                                      child: TextField(
-                                        key: const ValueKey('tag-search'),
-                                        controller: tagSearch,
-                                        focusNode: tagFocus,
-                                        decoration: const InputDecoration(
-                                          hintText: 'Find tags',
-                                          filled: false,
-                                          isDense: true,
-                                          border: InputBorder.none,
-                                        ),
-                                        onChanged: (value) => updateDialog(
-                                          () => tagQuery = value,
-                                        ),
-                                        onSubmitted: (_) {
-                                          final match = sortedTags
-                                              .where(
-                                                (tag) =>
-                                                    tag.toLowerCase().contains(
-                                                      tagQuery.toLowerCase(),
-                                                    ),
-                                              )
-                                              .firstOrNull;
-                                          if (match != null) {
-                                            change(
-                                              () => selectedTags.add(match),
-                                            );
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                            RadioListTile<bool>(
+                              value: false,
+                              title: const Text('Active user'),
+                              subtitle: Text(activeName),
                             ),
-                            IconButton(
-                              tooltip: 'Clear tag filters',
-                              onPressed:
-                                  selectedTags.isEmpty && tagQuery.isEmpty
-                                  ? null
-                                  : () => change(() {
-                                      selectedTags.clear();
-                                      tagSearch.clear();
-                                      tagQuery = '';
-                                    }),
-                              icon: const Icon(Icons.close),
-                            ),
-                            IconButton(
-                              tooltip: tagsExpanded
-                                  ? 'Collapse tag options'
-                                  : 'Expand tag options',
-                              onPressed: () => updateDialog(
-                                () => tagsExpanded = !tagsExpanded,
-                              ),
-                              icon: Icon(
-                                tagsExpanded
-                                    ? Icons.arrow_drop_up
-                                    : Icons.arrow_drop_down,
-                              ),
+                            const RadioListTile<bool>(
+                              value: true,
+                              title: Text('Everyone'),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                    if (selectedTags.isEmpty)
-                      const SizedBox(key: ValueKey('selected-tag'), height: 0),
-                    if (tagsExpanded)
-                      Builder(
-                        builder: (context) {
-                          final matching = sortedTags
-                              .where(
-                                (tag) => tag.toLowerCase().contains(
-                                  tagQuery.toLowerCase(),
-                                ),
-                              )
-                              .toList();
-                          return SizedBox(
-                            key: const ValueKey('tag-results'),
-                            height: (matching.length * 64.0).clamp(64.0, 200.0),
-                            child: matching.isEmpty
-                                ? Center(
-                                    child: Text(
-                                      sortedTags.isEmpty
-                                          ? 'No tags yet'
-                                          : 'No matching tags',
-                                    ),
-                                  )
-                                : ListView.builder(
-                                    itemCount: matching.length,
-                                    itemBuilder: (context, index) {
-                                      final tag = matching[index];
-                                      return ListTile(
-                                        key: ValueKey('tag-option-$tag'),
-                                        selected: selectedTags.contains(tag),
-                                        leading: selectedTags.contains(tag)
-                                            ? const Icon(Icons.check, size: 20)
-                                            : const SizedBox(width: 20),
-                                        title: Tooltip(
-                                          message: '#$tag',
-                                          child: Text(
-                                            '#$tag',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                        onTap: () => change(() {
-                                          if (!selectedTags.add(tag)) {
-                                            selectedTags.remove(tag);
-                                          }
-                                        }),
-                                      );
-                                    },
-                                  ),
-                          );
-                        },
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Status'),
                       ),
-                  ],
+                      RadioGroup<bool>(
+                        groupValue: showCompleted,
+                        onChanged: (value) =>
+                            change(() => showCompleted = value!),
+                        child: const Column(
+                          children: [
+                            RadioListTile<bool>(
+                              value: false,
+                              title: Text('Open'),
+                            ),
+                            RadioListTile<bool>(
+                              value: true,
+                              title: Text('Completed'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SwitchListTile(
+                        title: const Text('Show upcoming'),
+                        value: showUpcoming,
+                        onChanged: (value) =>
+                            change(() => showUpcoming = value),
+                      ),
+                      const Divider(),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16),
+                        child: Text('Tags (match any)'),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        child: TagFilterPicker(
+                          key: pickerKey,
+                          tags: sortedTags,
+                          selected: Set.of(selectedTags),
+                          onChanged: (tags) => change(() {
+                            selectedTags
+                              ..clear()
+                              ..addAll(tags);
+                          }),
+                          onQueryChanged: () => updateDialog(() {}),
+                          onDropdownChanged: (_) =>
+                              route.changedExternalState(),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
+              actions: [
+                TextButton(
+                  onPressed:
+                      _filtersActive ||
+                          (pickerKey.currentState?.hasQuery ?? false)
+                      ? () {
+                          _resetFilters();
+                          pickerKey.currentState?.clearQuery();
+                          updateDialog(() {});
+                        }
+                      : null,
+                  child: const Text('Reset'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Done'),
+                ),
+              ],
             ),
-            actions: [
-              TextButton(
-                onPressed: _filtersActive || tagQuery.isNotEmpty
-                    ? () {
-                        _resetFilters();
-                        tagSearch.clear();
-                        updateDialog(() => tagQuery = '');
-                      }
-                    : null,
-                child: const Text('Reset'),
-              ),
-              TextButton(
-                onPressed: () => Navigator.pop(dialogContext),
-                child: const Text('Done'),
-              ),
-            ],
           );
         },
       ),
     );
     await Navigator.of(context, rootNavigator: true).push(route);
     await route.completed;
-    tagSearch.dispose();
-    tagFocus.dispose();
   }
 
   Widget _identityMenu(List<Map<String, dynamic>> users) {
@@ -2457,21 +2454,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       key: const ValueKey('task-header'),
       children: [
         Expanded(child: Stack(children: [heading(false), heading(true)])),
-        IconButton(
-          key: const ValueKey('select-tasks'),
-          tooltip: selecting ? 'Exit selection' : 'Select tasks',
-          onPressed: busy
-              ? null
-              : () async {
-                  if (!await _closeEditor() || !mounted) return;
-                  setState(() {
-                    selecting = !selecting;
-                    selectedTasks.clear();
-                  });
-                },
-          icon: Icon(selecting ? Icons.close : Icons.checklist),
-        ),
-        const SizedBox(width: 8),
         Tooltip(
           message: searching
               ? 'Filters paused while searching all tasks'
@@ -2624,32 +2606,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 onSubmitted: (_) => _capture(),
               ),
             ),
-          if (selecting)
+          if (selecting && !wideLayout && !mobileEditorOpen)
             Wrap(
-              spacing: 8,
               crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
               children: [
                 Text('${selectedTasks.length} selected'),
-                TextButton.icon(
-                  onPressed: selectedTasks.isEmpty || busy
-                      ? null
-                      : _editSelected,
-                  icon: const Icon(Icons.edit_outlined),
-                  label: const Text('Edit selected'),
-                ),
-                TextButton.icon(
-                  onPressed: selectedTasks.isEmpty || busy
-                      ? null
-                      : _deleteSelected,
-                  icon: const Icon(Icons.delete_outline),
-                  label: const Text('Delete selected'),
+                TextButton(
+                  onPressed: _clearTaskSelection,
+                  child: const Text('Clear'),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    if (!await _closeEditor() || !mounted) return;
-                    setState(selectedTasks.clear);
-                  },
-                  child: const Text('Clear'),
+                  onPressed: _editSelected,
+                  child: const Text('Open editor'),
                 ),
               ],
             ),
@@ -2726,173 +2695,243 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   final completed = searching
                       ? task['completed'] == true
                       : showCompleted;
-                  final tile = ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    minVerticalPadding: 6,
-                    horizontalTitleGap: 8,
-                    leading: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (selecting)
-                          Tooltip(
-                            message: 'Select ${task['title']}',
-                            child: Checkbox(
-                              key: ValueKey('select-${task['id']}'),
-                              value: selectedTasks.contains(task['id']),
-                              onChanged: busy
-                                  ? null
-                                  : (_) async {
-                                      if (!await _closeEditor() || !mounted) {
-                                        return;
-                                      }
-                                      setState(() {
-                                        final first = visibleEntries
-                                            .where(
-                                              (entry) => selectedTasks.contains(
-                                                entry.task['id'],
-                                              ),
-                                            )
-                                            .firstOrNull;
-                                        if (first != null &&
-                                            first.task['completed'] !=
-                                                task['completed']) {
-                                          return;
-                                        }
-                                        if (!selectedTasks.add(task['id'])) {
-                                          selectedTasks.remove(task['id']);
-                                        }
-                                      });
-                                    },
-                            ),
-                          ),
-                        Tooltip(
-                          message:
-                              '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                          child: Checkbox(
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            value: completed,
-                            onChanged: busy
-                                ? null
-                                : (_) => completed
-                                      ? _reopen(task)
-                                      : _complete(task),
+                  final tile = Semantics(
+                    selected: selectedTasks.contains(task['id']),
+                    customSemanticsActions: {
+                      const CustomSemanticsAction(label: 'Select task'): () =>
+                          _selectTask(task, explicit: true, longPress: true),
+                    },
+                    child: Focus(
+                      focusNode: rowFocus.putIfAbsent(
+                        task['id'] as String,
+                        () => FocusNode(debugLabel: task['title']),
+                      ),
+                      onFocusChange: (_) {
+                        if (mounted) setState(() {});
+                      },
+                      onKeyEvent: (_, event) {
+                        if (!rowFocus[task['id']]!.hasPrimaryFocus ||
+                            event is! KeyDownEvent) {
+                          return KeyEventResult.ignored;
+                        }
+                        if (event.logicalKey == LogicalKeyboardKey.space) {
+                          _selectTask(task, explicit: true, longPress: true);
+                          return KeyEventResult.handled;
+                        }
+                        if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
+                            event.logicalKey == LogicalKeyboardKey.arrowDown) {
+                          _focusRelativeTask(
+                            task,
+                            event.logicalKey == LogicalKeyboardKey.arrowUp
+                                ? -1
+                                : 1,
+                            HardwareKeyboard.instance.isShiftPressed,
+                          );
+                          return KeyEventResult.handled;
+                        }
+                        return KeyEventResult.ignored;
+                      },
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: rowFocus[task['id']]!.hasPrimaryFocus
+                                ? Theme.of(context).colorScheme.outline
+                                : Colors.transparent,
                           ),
                         ),
-                      ],
-                    ),
-                    title: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _taskTitle(task, users, group.date),
-                        if (searching && !entry.available && !completed)
-                          Text(
-                            'Upcoming',
-                            style: Theme.of(context).textTheme.labelSmall,
-                          ),
-                      ],
-                    ),
-                    subtitle: (task['description'] as String).trim().isEmpty
-                        ? null
-                        : Text(
-                            (task['description'] as String)
-                                .replaceAll(RegExp(r'\s+'), ' ')
-                                .trim(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        if (movable(task, true) || movable(task, false))
-                          Draggable<String>(
-                            data: task['id'],
-                            maxSimultaneousDrags:
-                                busy ||
-                                    (selecting &&
-                                        !selectedTasks.contains(task['id']))
-                                ? 0
-                                : 1,
-                            dragAnchorStrategy: pointerDragAnchorStrategy,
-                            onDragStarted: () {
-                              dragReleased = false;
-                              setState(
-                                () => taskDrag = (
-                                  id: task['id'] as String,
-                                  store: store,
-                                  revision: viewRevision,
-                                  snapshot: store!.taskSnapshot,
-                                  completed: task['completed'] == true,
-                                  everyone: all,
-                                  upcoming: showUpcoming,
-                                  user: user,
-                                  tags: Set.of(selectedTags),
-                                  selected:
-                                      selecting &&
-                                          selectedTasks.contains(task['id'])
-                                      ? Set.of(selectedTasks)
-                                      : {task['id'] as String},
-                                  query: searchQuery,
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          minVerticalPadding: 0,
+                          minTileHeight: 48,
+                          horizontalTitleGap: 8,
+                          leading: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Tooltip(
+                                message:
+                                    '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
+                                child: Checkbox(
+                                  materialTapTargetSize:
+                                      MaterialTapTargetSize.padded,
+                                  value: completed,
+                                  onChanged: busy
+                                      ? null
+                                      : (_) => completed
+                                            ? _reopen(task)
+                                            : _complete(task),
                                 ),
-                              );
-                            },
-                            onDragUpdate: (details) =>
-                                _updateDragScroll(details.globalPosition),
-                            onDragEnd: (details) {
-                              if (dragReleased && taskDrag != null) {
-                                _dropAtPointer(
-                                  task['id'] as String,
-                                  details.offset,
-                                );
-                              }
-                              _stopDragScroll();
-                              setState(() => taskDrag = null);
-                            },
-                            feedback: Material(
-                              elevation: 4,
-                              borderRadius: BorderRadius.circular(8),
+                              ),
+                            ],
+                          ),
+                          selected: selectedTasks.contains(task['id']),
+                          selectedTileColor: Theme.of(
+                            context,
+                          ).colorScheme.primaryContainer,
+                          title: GestureDetector(
+                            key: ValueKey('task-body-${task['id']}'),
+                            behavior: HitTestBehavior.opaque,
+                            onTap: busy
+                                ? null
+                                : () => _selectTask(
+                                    task,
+                                    explicit:
+                                        HardwareKeyboard
+                                            .instance
+                                            .isControlPressed ||
+                                        HardwareKeyboard.instance.isMetaPressed,
+                                    range: HardwareKeyboard
+                                        .instance
+                                        .isShiftPressed,
+                                  ),
+                            onLongPress: busy
+                                ? null
+                                : () => _selectTask(
+                                    task,
+                                    explicit: true,
+                                    longPress: true,
+                                  ),
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(minHeight: 48),
                               child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: SizedBox(
-                                  width: 220,
-                                  child: Text(
-                                    task['title'],
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 6,
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    _taskTitle(task, users, group.date),
+                                    if (searching &&
+                                        !entry.available &&
+                                        !completed)
+                                      Text(
+                                        'Upcoming',
+                                        style: Theme.of(
+                                          context,
+                                        ).textTheme.labelSmall,
+                                      ),
+                                    if ((task['description'] as String)
+                                        .trim()
+                                        .isNotEmpty)
+                                      Text(
+                                        (task['description'] as String)
+                                            .replaceAll(RegExp(r'\s+'), ' ')
+                                            .trim(),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.onSurfaceVariant,
+                                            ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              if (movable(task, true) || movable(task, false))
+                                Draggable<String>(
+                                  data: task['id'],
+                                  maxSimultaneousDrags:
+                                      busy ||
+                                          (selecting &&
+                                              !selectedTasks.contains(
+                                                task['id'],
+                                              ))
+                                      ? 0
+                                      : 1,
+                                  dragAnchorStrategy: pointerDragAnchorStrategy,
+                                  onDragStarted: () {
+                                    dragReleased = false;
+                                    setState(
+                                      () => taskDrag = (
+                                        id: task['id'] as String,
+                                        store: store,
+                                        revision: viewRevision,
+                                        snapshot: store!.taskSnapshot,
+                                        completed: task['completed'] == true,
+                                        everyone: all,
+                                        upcoming: showUpcoming,
+                                        user: user,
+                                        tags: Set.of(selectedTags),
+                                        selected:
+                                            selecting &&
+                                                selectedTasks.contains(
+                                                  task['id'],
+                                                )
+                                            ? Set.of(selectedTasks)
+                                            : {task['id'] as String},
+                                        query: searchQuery,
+                                      ),
+                                    );
+                                  },
+                                  onDragUpdate: (details) =>
+                                      _updateDragScroll(details.globalPosition),
+                                  onDragEnd: (details) {
+                                    if (dragReleased && taskDrag != null) {
+                                      _dropAtPointer(
+                                        task['id'] as String,
+                                        details.offset,
+                                      );
+                                    }
+                                    _stopDragScroll();
+                                    setState(() => taskDrag = null);
+                                  },
+                                  feedback: Material(
+                                    elevation: 4,
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: SizedBox(
+                                        width: 220,
+                                        child: Text(
+                                          task['title'],
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  child: Tooltip(
+                                    triggerMode: TooltipTriggerMode.manual,
+                                    message:
+                                        'Drag to reorder within this date and time',
+                                    child: Semantics(
+                                      customSemanticsActions: {
+                                        if (!selecting && movable(task, true))
+                                          const CustomSemanticsAction(
+                                            label: 'Move up',
+                                          ): () =>
+                                              _keyboardMove(task, true),
+                                        if (!selecting && movable(task, false))
+                                          const CustomSemanticsAction(
+                                            label: 'Move down',
+                                          ): () =>
+                                              _keyboardMove(task, false),
+                                      },
+                                      label:
+                                          'Drag ${task['title']} to reorder. Drag within the same date and time.',
+                                      child: const SizedBox(
+                                        width: 48,
+                                        height: 48,
+                                        child: Icon(Icons.drag_indicator),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ),
-                            child: Tooltip(
-                              triggerMode: TooltipTriggerMode.manual,
-                              message:
-                                  'Drag to reorder within this date and time',
-                              child: Semantics(
-                                customSemanticsActions: {
-                                  if (!selecting && movable(task, true))
-                                    const CustomSemanticsAction(
-                                      label: 'Move up',
-                                    ): () =>
-                                        _keyboardMove(task, true),
-                                  if (!selecting && movable(task, false))
-                                    const CustomSemanticsAction(
-                                      label: 'Move down',
-                                    ): () =>
-                                        _keyboardMove(task, false),
-                                },
-                                label:
-                                    'Drag ${task['title']} to reorder. Drag within the same date and time.',
-                                child: const SizedBox(
-                                  width: 48,
-                                  height: 48,
-                                  child: Icon(Icons.drag_indicator),
-                                ),
-                              ),
-                            ),
+                            ],
                           ),
-                      ],
+                        ),
+                      ),
                     ),
-                    onTap: busy ? null : () => _edit(task),
                   );
                   return KeyedSubtree(
                     key: ValueKey('task-drop-${task['id']}'),
@@ -2939,3 +2978,14 @@ class _TaskDragLifetimeState extends State<_TaskDragLifetime>
 
 /// Owns an edit buffer independently of incoming folder updates. Only fields
 /// changed from the opening snapshot are submitted, retaining concurrent edits.
+
+class _FilterDialogRoute extends DialogRoute<void> {
+  _FilterDialogRoute({
+    required super.context,
+    required super.builder,
+    required this.dropdownOpen,
+  });
+  final bool Function() dropdownOpen;
+  @override
+  bool get barrierDismissible => !dropdownOpen();
+}
