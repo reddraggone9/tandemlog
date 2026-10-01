@@ -890,7 +890,13 @@ void main() {
     await File(
       '${profile.path}/settings.json',
     ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+    await tester.pumpWidget(
+      TandemlogApp(
+        profilePath: profile.path,
+        timeSourceFactory: (onChanged) =>
+            ViewTimeSource(onChanged: onChanged, loadZone: () async => 'UTC'),
+      ),
+    );
     await tester.pumpAndSettle();
     tester.view.devicePixelRatio = 1;
     tester.view.physicalSize = const Size(1000, 820);
@@ -910,10 +916,11 @@ void main() {
     final deadline = tester.widget<Text>(
       find.byKey(ValueKey('task-metadata-${ids[longTitle]}')),
     );
-    expect(deadline.data, contains('Due 17:30 America/Argentina/Buenos_Aires'));
+    expect(deadline.data, contains('Due 20:30'));
     expect(deadline.data, isNot(contains('2030-04-23')));
     expect(deadline.data, isNot(contains('2020-01-01')));
     expect(deadline.data, isNot(contains('Start')));
+    expect(deadline.data, isNot(contains('America/')));
     expect(deadline.maxLines, isNull);
     expect(
       tester
@@ -1772,7 +1779,7 @@ void main() {
       source.onChanged();
       await tester.pump();
       expect(tester.takeException(), isNull);
-      expect(find.text('Due 17:30 UTC'), findsOneWidget);
+      expect(find.text('Due 17:30'), findsOneWidget);
       zone.complete('UTC');
       await tester.pumpAndSettle();
       await tester.pumpWidget(const SizedBox());

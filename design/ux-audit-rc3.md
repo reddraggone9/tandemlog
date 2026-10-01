@@ -52,3 +52,7 @@ The handle's touch long-press tooltip recognizer is disabled while its mouse-hov
 ## Group-date repetition (code 15)
 
 Lee requested times-only metadata inside a day group, including when original dates differ because of overrides or bounds. The pure presenter hides all calendar-date text in those rows; role/time/zone distinctions remain. Full dates stay in the editor and no deadline or sort fact changes. Date-only fields contribute no metadata, preventing empty labels or separators. Someday has no displayed day, so the presenter can retain date details there. Light/dark wide/narrow screenshots and focused native workflows verify the resulting layout. The earlier differing-date exception was superseded before final candidate publication.
+
+## Localized list times (code 16)
+
+Lee requested local clock times without timezone labels in the list. Pinned values resolve through the same gap/fold policy as the task view, then convert to its observed device zone. Floating times stay floating; date-only values keep their precision. The successful projection's cached zone keeps rows and headings consistent during resume/reload, with no live per-row time reads. All original dates/zones remain in the editor and canonical events. Reviewed wide/narrow Light/Dark screenshots show compact Due/Scheduled clock values without calendar/zone clutter. Eight presenter regressions include midnight rollover, zone changes, DST gaps/folds and bounded-group consistency; two affected native workflows pass.
