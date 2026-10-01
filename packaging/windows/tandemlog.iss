@@ -66,7 +66,6 @@ begin
     RuntimeFileCompatible('vcruntime140.dll') and RuntimeFileCompatible('vcruntime140_1.dll');
   if not Result then
     SuppressibleMsgBox('Tandemlog needs the Microsoft Visual C++ x64 runtime (14.{#MinRuntimeMinor}.{#MinRuntimeBuild} or newer). ' +
-      'No Tandemlog files have been installed. Install or update the official Microsoft runtime, then run this installer again.' +
-      #13#10#13#10 + 'https://aka.ms/vc14/vc_redist.x64.exe' + #13#10 +
+      'No Tandemlog files have been installed. Install or update the official Microsoft runtime, then run this installer again.' + #13#10#13#10 + 'https://aka.ms/vc14/vc_redist.x64.exe' + #13#10 +
       'The Microsoft installer may require administrator permission.', mbError, MB_OK, IDOK);
 end;

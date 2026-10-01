@@ -33,7 +33,7 @@ Follow [decision 0002](decisions/0002-onboarding-and-everyday-interface.md): exp
 
 ## Completed tasks and capture grouping
 
-The compact Open/Completed switch defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and user/Everyone filtering applies to both. Capture appears in Open; switching views preserves its draft. Short-lived Undo remains a convenience, not the only recovery route.
+The Open/Completed choice in Filter defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and assignee filtering applies to both. Capture appears in Open; switching views preserves its draft. Short-lived Undo remains a convenience, not the only recovery route.
 
 Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
 

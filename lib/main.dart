@@ -997,7 +997,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       rows = origin.rows;
       if (!result.succeeded) {
         throw StateError(
-          '${result.committedIds.length} deleted; ${selectedTasks.length} remain after refresh. ${result.error}',
+          '${ids.length - selectedTasks.length} confirmed deleted after refresh; ${selectedTasks.length} remain. ${result.error}',
         );
       }
     });
@@ -1137,7 +1137,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 }
                 if (!result.succeeded) {
                   throw StateError(
-                    '${result.committedIds.length} deleted; ${bulkPending.length} remain. ${result.error}',
+                    '${ids.length - bulkPending.length} confirmed deleted after refresh; ${bulkPending.length} remain. ${result.error}',
                   );
                 }
               },
@@ -1418,7 +1418,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         rows = store!.rows;
         if (!result.succeeded) {
           throw StateError(
-            '${result.committedIds.length} moved; ${result.remainingIds.length} remain. ${result.error}',
+            '${result.committedIds.length} moves acknowledged; additional moves may have saved. The list was refreshed; review it before dragging again. ${result.error}',
           );
         }
       }

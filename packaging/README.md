@@ -65,7 +65,12 @@ Microsoft DLLs. Hosted native smoke covers a prerequisite-equipped Windows machi
 a clean-machine runtime installation has not been exercised.
 
 Inno Setup is the
-unmodified official compiler supplied by GitHub's standard Windows image.
+unmodified official compiler supplied by GitHub's standard Windows image. The
+6.7.1 hosted compiler prints `Non-commercial use only`; the
+[official licensing FAQ](https://jrsoftware.org/isorder.php) says purchasing a
+commercial license is not strictly required and does not request a purchase from
+noncommercial users. This experimental household app introduces no purchase or
+new commercial distribution claim.
 
 ## Automated evidence and limits
 
