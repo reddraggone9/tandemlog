@@ -11,6 +11,8 @@ class TaskEditor extends StatefulWidget {
     required this.save,
     this.onDelete,
     this.onClose,
+    this.selectionCount,
+    this.onClearSelection,
     this.users = const [],
     this.panel = false,
   });
@@ -19,6 +21,8 @@ class TaskEditor extends StatefulWidget {
   save;
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose;
+  final int? selectionCount;
+  final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
   @override
@@ -36,6 +40,8 @@ class TaskEditorState extends State<TaskEditor> {
     users: widget.users,
     panel: widget.panel,
     onClose: widget.onClose,
+    selectionCount: widget.selectionCount,
+    onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
     saveSingle: widget.save,
   );
@@ -48,6 +54,8 @@ class BulkTaskEditor extends StatefulWidget {
     required this.onSave,
     this.onDelete,
     this.onClose,
+    this.selectionCount,
+    this.onClearSelection,
     this.users = const [],
     this.panel = false,
   });
@@ -55,6 +63,8 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function(BulkTaskEdit) onSave;
   final Future<void> Function()? onDelete;
   final VoidCallback? onClose;
+  final int? selectionCount;
+  final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
   @override
@@ -72,6 +82,8 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     users: widget.users,
     panel: widget.panel,
     onClose: widget.onClose,
+    selectionCount: widget.selectionCount,
+    onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
     saveBulk: widget.onSave,
   );
@@ -84,6 +96,8 @@ class _EditorBody extends StatefulWidget {
     required this.users,
     required this.panel,
     this.onClose,
+    this.selectionCount,
+    this.onClearSelection,
     this.onDelete,
     this.saveSingle,
     this.saveBulk,
@@ -91,6 +105,8 @@ class _EditorBody extends StatefulWidget {
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
   final VoidCallback? onClose;
+  final int? selectionCount;
+  final Future<void> Function()? onClearSelection;
   final Future<void> Function()? onDelete;
   final Future<void> Function(Map<String, dynamic>, List<String>, List<String>)?
   saveSingle;
@@ -107,6 +123,7 @@ class _EditorBodyState extends State<_EditorBody> {
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
   String? failure, assignee;
   bool applyAssignee = false;
+  Future<bool>? closeRequest;
   bool get bulk => widget.saveBulk != null;
   Map<String, dynamic> scheduleOf(Map<String, dynamic> task) =>
       Map<String, dynamic>.from(task['schedule'] as Map? ?? {});
@@ -244,27 +261,38 @@ class _EditorBodyState extends State<_EditorBody> {
         );
   }
 
-  Future<bool> canClose() async {
-    if (busy) return false;
-    if (!dirty) return true;
-    return await showDialog<bool>(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Discard unsaved changes?'),
-            content: const Text('Your draft has not been saved.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Keep editing'),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('Discard changes'),
-              ),
-            ],
+  Future<bool> canClose() {
+    if (busy) return Future.value(false);
+    if (!dirty) return Future.value(true);
+    return closeRequest ??= askClose().whenComplete(() => closeRequest = null);
+  }
+
+  Future<bool> askClose() async {
+    final choice = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Unsaved changes'),
+        content: const Text('Save your draft before continuing?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'cancel'),
+            child: const Text('Cancel'),
           ),
-        ) ??
-        false;
+          TextButton(
+            onPressed: () => Navigator.pop(context, 'discard'),
+            child: const Text('Discard'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, 'save'),
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted) return false;
+    if (choice == 'discard') return true;
+    if (choice == 'save') return commit(closeAfter: false);
+    return false;
   }
 
   void finish() {
@@ -281,9 +309,13 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<void> submit() async {
-    if (busy) return;
+    await commit(closeAfter: true);
+  }
+
+  Future<bool> commit({required bool closeAfter}) async {
+    if (busy) return false;
     setState(() => attempted = true);
-    if (validation != null) return;
+    if (validation != null) return false;
     setState(() {
       busy = true;
       failure = null;
@@ -310,7 +342,13 @@ class _EditorBodyState extends State<_EditorBody> {
           originalTags.difference(desired).toList(),
         );
       }
-      if (mounted) finish();
+      if (!mounted) return false;
+      if (closeAfter) {
+        finish();
+      } else {
+        setState(() => busy = false);
+      }
+      return true;
     } catch (e) {
       if (mounted) {
         setState(() {
@@ -318,6 +356,7 @@ class _EditorBodyState extends State<_EditorBody> {
           busy = false;
         });
       }
+      return false;
     }
   }
 
@@ -608,6 +647,20 @@ class _EditorBodyState extends State<_EditorBody> {
           bulk ? 'Edit ${originals.length} tasks' : 'Edit task',
           style: Theme.of(context).textTheme.titleLarge,
         ),
+        if (widget.selectionCount != null)
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text('${widget.selectionCount} selected'),
+              if (widget.onClearSelection != null)
+                TextButton(
+                  onPressed: busy ? null : widget.onClearSelection,
+                  child: const Text('Clear'),
+                ),
+            ],
+          ),
         for (final message in [error, failure])
           if (message != null)
             Padding(

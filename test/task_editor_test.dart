@@ -45,7 +45,7 @@ void main() {
       await edit(tester, 'title', 'Draft');
       final closing = key.currentState!.canClose();
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Keep editing'));
+      await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
       await tester.pumpAndSettle();
       expect(await closing, false);
       expect(find.text('Draft'), findsOneWidget);
@@ -282,7 +282,7 @@ void main() {
     expect(find.text('Resized draft'), findsOneWidget);
     final closing = key.currentState!.canClose();
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Discard changes'));
+    await tester.tap(find.text('Discard'));
     await tester.pumpAndSettle();
     expect(await closing, true);
   });
@@ -427,18 +427,174 @@ void main() {
     await edit(tester, 'title', 'Back draft');
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.text('Discard unsaved changes?'), findsOneWidget);
+    expect(find.text('Unsaved changes'), findsOneWidget);
     expect(guardCalls, 1);
-    await tester.tap(find.text('Keep editing'));
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel').last);
     await tester.pumpAndSettle();
     expect(closes, 0);
     expect(find.text('Back draft'), findsOneWidget);
     await tester.binding.handlePopRoute();
     await tester.pumpAndSettle();
-    expect(find.text('Discard unsaved changes?'), findsOneWidget);
-    await tester.tap(find.text('Discard changes'));
+    expect(find.text('Unsaved changes'), findsOneWidget);
+    await tester.tap(find.text('Discard'));
     await tester.pumpAndSettle();
     expect(guardCalls, 2);
     expect(closes, 1);
+  });
+  testWidgets('guard Save commits frozen single draft without closing', (
+    tester,
+  ) async {
+    final key = GlobalKey<TaskEditorState>();
+    final source = task();
+    Map<String, dynamic>? saved;
+    var closed = 0;
+    await mount(
+      tester,
+      TaskEditor(
+        key: key,
+        panel: true,
+        task: source,
+        onClose: () {
+          closed++;
+        },
+        save: (fields, a, r) async {
+          saved = fields;
+        },
+      ),
+    );
+    await edit(tester, 'title', 'Current draft');
+    source['description'] = 'Incoming notes';
+    final closing = key.currentState!.canClose();
+    final duplicate = key.currentState!.canClose();
+    await tester.pumpAndSettle();
+    expect(find.text('Unsaved changes'), findsOneWidget);
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(await closing, true);
+    expect(await duplicate, true);
+    expect(saved, {'title': 'Current draft'});
+    expect(closed, 0);
+    expect(find.text('Current draft'), findsOneWidget);
+  });
+  testWidgets(
+    'guard Save validation and write failure retain draft and selection',
+    (tester) async {
+      final key = GlobalKey<TaskEditorState>();
+      var calls = 0, clears = 0;
+      final pending = Completer<void>();
+      await mount(
+        tester,
+        TaskEditor(
+          key: key,
+          panel: true,
+          task: task(),
+          selectionCount: 1,
+          onClearSelection: () async {
+            clears++;
+          },
+          onClose: () {},
+          save: (_, a, r) {
+            calls++;
+            return pending.future;
+          },
+        ),
+      );
+      await edit(tester, 'title', '');
+      final invalid = key.currentState!.canClose();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(await invalid, false);
+      expect(calls, 0);
+      expect(find.text('1 selected'), findsOneWidget);
+      await edit(tester, 'title', 'Failed draft');
+      final failing = key.currentState!.canClose();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pump();
+      expect(
+        tester
+            .widget<TextButton>(find.widgetWithText(TextButton, 'Clear'))
+            .onPressed,
+        isNull,
+      );
+      expect(await key.currentState!.canClose(), false);
+      pending.completeError(StateError('Storage failure'));
+      await tester.pumpAndSettle();
+      expect(await failing, false);
+      expect(find.text('Failed draft'), findsOneWidget);
+      expect(find.textContaining('Storage failure'), findsOneWidget);
+      expect(find.text('1 selected'), findsOneWidget);
+      expect(clears, 0);
+      await tester.tap(find.text('Clear'));
+      await tester.pump();
+      expect(clears, 1);
+    },
+  );
+  testWidgets(
+    'bulk guard Save applies patch against frozen tasks without closing',
+    (tester) async {
+      final key = GlobalKey<BulkTaskEditorState>();
+      final source = task({'dueDate': '2026-10-05'});
+      BulkTaskEdit? saved;
+      var closed = 0, clears = 0;
+      await mount(
+        tester,
+        BulkTaskEditor(
+          key: key,
+          panel: true,
+          tasks: [
+            source,
+            task({'dueDate': '2026-10-06'}),
+          ],
+          selectionCount: 2,
+          onClearSelection: () async {
+            clears++;
+          },
+          onClose: () {
+            closed++;
+          },
+          onSave: (edit) async {
+            saved = edit;
+          },
+        ),
+      );
+      await tester.tap(find.text('Clear'));
+      expect(clears, 1);
+      await edit(tester, 'startDate', '2026-10-04');
+      source['schedule'] = {'dueDate': '2026-10-01'};
+      final closing = key.currentState!.canClose();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(await closing, true);
+      expect(saved!.schedulePatch, {'startDate': '2026-10-04'});
+      expect(closed, 0);
+      expect(find.text('2 selected'), findsOneWidget);
+    },
+  );
+  testWidgets('selection header wraps at narrow large text', (tester) async {
+    await tester.binding.setSurfaceSize(const Size(360, 900));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: MediaQuery(
+          data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+          child: Scaffold(
+            body: TaskEditor(
+              panel: true,
+              task: task(),
+              selectionCount: 1,
+              onClearSelection: () async {},
+              save: (_, a, r) async {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('1 selected'), findsOneWidget);
+    expect(find.text('Clear'), findsOneWidget);
+    expect(tester.takeException(), isNull);
   });
 }
