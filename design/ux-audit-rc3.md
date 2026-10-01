@@ -19,7 +19,7 @@ The list remains flat and dense, with full title wrapping and one ellipsized met
 
 ## Deliberate limits
 
-The complete three-date editor is long at 200% text, and 37 recurrence examples form a long menu. These are subjective follow-ups rather than observed failures; seek actual use feedback before another redesign. Manual ordering keeps accessible move-up/down actions and adds dragging only within an equal effective date/time bucket. No pure manual-sort mode is approved. Tags can be edited; a general filter builder is outside this candidate.
+The complete three-date editor is long at 200% text, and 37 recurrence examples form a long menu. These are subjective follow-ups rather than observed failures; seek actual use feedback before another redesign. Manual ordering keeps accessible move-up/down actions and adds dragging only within an equal effective date/time bucket. No pure manual-sort mode is approved. Tags can be edited and filtered one exact ordinary tag at a time; a general filter builder is outside this candidate.
 
 Android keyboard, SAF/lifecycle, native text scaling and exact signed-artifact smoke remain separate gates. Linux screenshots cannot replace them. Private source import acceptance is separate from synthetic UI fixtures.
 
@@ -31,4 +31,4 @@ Independent review found and verified the fix for a late-ingestion race between 
 
 Show upcoming is off by default and session-only. Native focused coverage verifies finding/editing a future task, preserving capture text through filtering, and resetting to off on app restart. Final screenshots include the enlarged-text scheduled warning with Save available and responsive upcoming controls in both themes.
 
-Drag destinations must be rendered: edge auto-scrolling is not implemented in this preview. Accessible Move up/down remains available for incremental movement. Seek hands-on feedback before adding that gesture behavior.
+Code 12 adds edge auto-scroll only during a drag, retaining the same-bucket restriction. A stationary-pointer regression reaches an initially unmounted destination; release resolves current row geometry rather than Flutter’s cached target. Cancellation appends no move. Only the actively dragged source stays alive offscreen, and per-frame feedback rebuilds mounted rows rather than the whole page. Native screenshots verify the exact-tag filter and reachable clear action at 390px/200% in both themes. Exact Android touch acceptance remains required.

@@ -112,7 +112,14 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
-  String? user, error;
+  String? user, error, selectedTag;
+  final taskScroll = ScrollController();
+  final taskViewport = GlobalKey();
+  Timer? dragScrollTimer;
+  Offset? dragPointer;
+  bool dragReleased = false;
+  final dragScrollTick = ValueNotifier<int>(0);
+  final dropKeys = <String, GlobalKey>{};
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   String? privateRoot;
   LocalSettings? settings;
@@ -146,6 +153,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bool everyone,
     bool upcoming,
     String? user,
+    String? tag,
   })?
   taskDrag;
   bool startupReported = false, startupReportPending = false;
@@ -208,6 +216,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             time,
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
+            tag: selectedTag,
           );
         } catch (failure) {
           viewError = 'Cannot update the task view: $failure';
@@ -582,6 +591,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (foreground) {
       timeSource.start();
     } else {
+      _stopDragScroll();
+      taskDrag = null;
       timeSource.stop();
       viewClock.stop();
     }
@@ -824,7 +835,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         completed = showCompleted,
         everyone = all,
         upcoming = showUpcoming,
-        selected = user;
+        selected = user,
+        tag = selectedTag;
     final entries = (completed ? taskView?.completed : taskView?.open) ?? [];
     final expected = entries
         .where((entry) => entry.task['id'] == source)
@@ -839,6 +851,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           everyone != all ||
           upcoming != showUpcoming ||
           selected != user ||
+          tag != selectedTag ||
           !timeSource.ready) {
         return false;
       }
@@ -850,6 +863,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           timeSource.readTime(),
           assignee: everyone ? null : selected,
           includeUpcoming: upcoming,
+          tag: tag,
         ).value;
         final visible = completed ? current.completed : current.open;
         final from = visible
@@ -871,13 +885,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool _dragIsCurrent() {
     final drag = taskDrag;
     return drag != null &&
+        foreground &&
         !busy &&
         identical(drag.store, store) &&
         drag.revision == viewRevision &&
         drag.completed == showCompleted &&
         drag.everyone == all &&
         drag.upcoming == showUpcoming &&
-        drag.user == user;
+        drag.user == user &&
+        drag.tag == selectedTag;
   }
 
   bool _canDropTask(String source, String target) {
@@ -921,7 +937,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           drag.completed != showCompleted ||
           drag.everyone != all ||
           drag.upcoming != showUpcoming ||
-          drag.user != user) {
+          drag.user != user ||
+          drag.tag != selectedTag) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('The task list changed. Try dragging again.'),
@@ -948,70 +965,147 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
+  void _stopDragScroll() {
+    dragScrollTimer?.cancel();
+    dragScrollTimer = null;
+    dragPointer = null;
+  }
+
+  void _updateDragScroll(Offset pointer) {
+    dragPointer = pointer;
+    dragScrollTimer ??= Timer.periodic(const Duration(milliseconds: 16), (_) {
+      if (!_dragIsCurrent() || !taskScroll.hasClients) {
+        _stopDragScroll();
+        return;
+      }
+      final box = taskViewport.currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || dragPointer == null) return;
+      final y = box.globalToLocal(dragPointer!).dy;
+      const edge = 72.0;
+      final speed = y < edge
+          ? -((edge - y) / edge).clamp(0.0, 1.0) * 12
+          : y > box.size.height - edge
+          ? ((y - box.size.height + edge) / edge).clamp(0.0, 1.0) * 12
+          : 0.0;
+      if (speed == 0) return;
+      final position = taskScroll.position;
+      dragScrollTick.value++;
+      taskScroll.jumpTo(
+        (position.pixels + speed).clamp(
+          position.minScrollExtent,
+          position.maxScrollExtent,
+        ),
+      );
+    });
+  }
+
+  void _dropAtPointer(String source, Offset pointer) {
+    final viewport =
+        taskViewport.currentContext?.findRenderObject() as RenderBox?;
+    if (viewport == null ||
+        !(Offset.zero & viewport.size).contains(
+          viewport.globalToLocal(pointer),
+        )) {
+      _cancelDrag();
+      return;
+    }
+    for (final entry in dropKeys.entries) {
+      if (entry.key == source) continue;
+      final box = entry.value.currentContext?.findRenderObject() as RenderBox?;
+      if (box == null || !box.attached || !box.hasSize) continue;
+      final local = box.globalToLocal(pointer);
+      if ((Offset.zero & box.size).contains(local)) {
+        _dropTask(source, entry.key, local.dy >= box.size.height / 2);
+        return;
+      }
+    }
+    _cancelDrag();
+  }
+
   Widget _reorderableTask(Map<String, dynamic> task, Widget tile) {
     var after = false;
-    return StatefulBuilder(
-      builder: (context, updateHover) => DragTarget<String>(
-        key: ValueKey('task-drop-${task['id']}'),
-        onWillAcceptWithDetails: (details) =>
-            _canDropTask(details.data, task['id']),
-        onMove: (details) {
-          final box = context.findRenderObject() as RenderBox;
-          final next =
-              box.globalToLocal(details.offset).dy >= box.size.height / 2;
-          if (next != after) updateHover(() => after = next);
-        },
-        onAcceptWithDetails: (details) =>
-            _dropTask(details.data, task['id'], after),
-        builder: (context, candidates, rejected) {
-          final invalid =
-              rejected.isNotEmpty ||
-              candidates.whereType<String>().any(
-                (source) => !_canDropTask(source, task['id']),
-              );
-          return MouseRegion(
-            cursor: invalid
-                ? SystemMouseCursors.forbidden
-                : SystemMouseCursors.basic,
-            child: Semantics(
-              liveRegion: invalid,
-              label: invalid
-                  ? 'Cannot reorder here: different date or time, or the list changed.'
-                  : null,
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: invalid
-                      ? Theme.of(
-                          context,
-                        ).colorScheme.errorContainer.withValues(alpha: 0.4)
-                      : null,
-                  border: invalid
-                      ? Border.all(
-                          color: Theme.of(context).colorScheme.error,
-                          width: 2,
-                        )
-                      : candidates.isEmpty
-                      ? null
-                      : Border(
-                          top: after
-                              ? BorderSide.none
-                              : BorderSide(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
-                                ),
-                          bottom: after
-                              ? BorderSide(
-                                  color: Theme.of(context).colorScheme.primary,
-                                  width: 2,
-                                )
-                              : BorderSide.none,
-                        ),
+    return ValueListenableBuilder<int>(
+      valueListenable: dragScrollTick,
+      builder: (_, _, _) => StatefulBuilder(
+        builder: (context, updateHover) => DragTarget<String>(
+          key: dropKeys.putIfAbsent(task['id'] as String, GlobalKey.new),
+          onWillAcceptWithDetails: (details) =>
+              _canDropTask(details.data, task['id']),
+          onMove: (details) {
+            final box = context.findRenderObject() as RenderBox;
+            final next =
+                box.globalToLocal(details.offset).dy >= box.size.height / 2;
+            if (next != after) updateHover(() => after = next);
+          },
+          // Draggable resolves the release geometry below: cached targets can
+          // scroll away while the pointer remains stationary at an edge.
+          onAcceptWithDetails: (_) {},
+          builder: (context, candidates, rejected) {
+            final box = context.findRenderObject() as RenderBox?;
+            final localPointer =
+                dragPointer == null || box == null || !box.hasSize
+                ? null
+                : box.globalToLocal(dragPointer!);
+            final hovering =
+                localPointer != null &&
+                (Offset.zero & box!.size).contains(localPointer);
+            if (hovering) after = localPointer.dy >= box.size.height / 2;
+            final invalid = dragPointer != null
+                ? hovering && !_canDropTask(taskDrag!.id, task['id'])
+                : rejected.isNotEmpty ||
+                      candidates.whereType<String>().any(
+                        (source) => !_canDropTask(source, task['id']),
+                      );
+            return MouseRegion(
+              cursor: invalid
+                  ? SystemMouseCursors.forbidden
+                  : SystemMouseCursors.basic,
+              child: Semantics(
+                liveRegion: invalid,
+                label: invalid
+                    ? 'Cannot reorder here: different date or time, or the list changed.'
+                    : null,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: invalid
+                        ? Theme.of(
+                            context,
+                          ).colorScheme.errorContainer.withValues(alpha: 0.4)
+                        : null,
+                    border: invalid
+                        ? Border.all(
+                            color: Theme.of(context).colorScheme.error,
+                            width: 2,
+                          )
+                        : !(dragPointer != null
+                              ? hovering
+                              : candidates.isNotEmpty)
+                        ? null
+                        : Border(
+                            top: after
+                                ? BorderSide.none
+                                : BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    width: 2,
+                                  ),
+                            bottom: after
+                                ? BorderSide(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.primary,
+                                    width: 2,
+                                  )
+                                : BorderSide.none,
+                          ),
+                  ),
+                  child: Material(type: MaterialType.transparency, child: tile),
                 ),
-                child: Material(type: MaterialType.transparency, child: tile),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -1091,6 +1185,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   @override
   void dispose() {
+    _stopDragScroll();
+    taskScroll.dispose();
+    dragScrollTick.dispose();
     importer?.dispose();
     viewClock.dispose();
     timeSource.dispose();
@@ -1461,6 +1558,48 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             _invalidateView();
           },
         ),
+        PopupMenuButton<String>(
+          tooltip: 'Filter by tag',
+          onSelected: (tag) {
+            setState(() => selectedTag = tag);
+            _invalidateView();
+          },
+          itemBuilder: (_) => [
+            for (final tag
+                in (rows
+                    .where((row) => row['kind'] == 'task')
+                    .expand(
+                      (row) => (row['tags'] as List? ?? []).cast<String>(),
+                    )
+                    .toSet()
+                    .toList()
+                  ..sort((a, b) {
+                    final order = a.toLowerCase().compareTo(b.toLowerCase());
+                    return order == 0 ? a.compareTo(b) : order;
+                  })))
+              PopupMenuItem(value: tag, child: Text('#$tag')),
+          ],
+          child: Chip(
+            avatar: const Icon(Icons.label_outline, size: 18),
+            label: Tooltip(
+              message: selectedTag == null ? 'All tags' : '#$selectedTag',
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 140),
+                child: Text(
+                  selectedTag == null ? 'Tags' : '#$selectedTag',
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            onDeleted: selectedTag == null
+                ? null
+                : () {
+                    setState(() => selectedTag = null);
+                    _invalidateView();
+                  },
+            deleteButtonTooltipMessage: 'Clear tag filter',
+          ),
+        ),
         FilterChip(
           label: const Text('Show upcoming'),
           selected: showUpcoming,
@@ -1494,6 +1633,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) {
     final entries = groups.expand((group) => group.entries).toList();
+    final visibleIds = entries.map((entry) => entry.task['id']).toSet();
+    dropKeys.removeWhere((id, _) => !visibleIds.contains(id));
     final tasks = entries.map((entry) => entry.task).toList();
     final hasDeferredTasks =
         !showCompleted &&
@@ -1501,7 +1642,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           (row) =>
               row['kind'] == 'task' &&
               row['completed'] != true &&
-              (all || row['assignee'] == user),
+              (all || row['assignee'] == user) &&
+              (selectedTag == null ||
+                  (row['tags'] as List? ?? []).contains(selectedTag)),
         );
     bool movable(Map<String, dynamic> task, bool up) {
       final index = entries.indexWhere(
@@ -1529,291 +1672,348 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : '${weekdays[group.weekday! - 1]} · ${group.date}';
     }
 
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      children: [
-        _taskHeader(users),
-        const SizedBox(height: 8),
-        LayoutBuilder(
-          builder: (context, constraints) {
-            const labels = ['Open', 'Completed'];
-            const horizontalPadding = 12.0;
-            final labelStyle = Theme.of(context).textTheme.labelLarge;
-            var longestLabel = 0.0;
-            for (final label in labels) {
-              final painter = TextPainter(
-                text: TextSpan(text: label, style: labelStyle),
-                textDirection: Directionality.of(context),
-                textScaler: MediaQuery.textScalerOf(context),
-              )..layout();
-              if (painter.width > longestLabel) longestLabel = painter.width;
-              painter.dispose();
-            }
-            // Select the layout from measured text, never selection state. The
-            // checkmark would otherwise steal width only from the selected label.
-            final horizontalFits =
-                constraints.maxWidth >=
-                2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
-            return SegmentedButton<bool>(
-              direction: horizontalFits ? Axis.horizontal : Axis.vertical,
-              showSelectedIcon: false,
-              style: SegmentedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: horizontalPadding,
-                  vertical: 8,
+    return Listener(
+      onPointerUp: (_) {
+        if (taskDrag != null) dragReleased = true;
+      },
+      onPointerCancel: (_) {
+        dragReleased = false;
+        _stopDragScroll();
+        taskDrag = null;
+      },
+      child: ListView(
+        key: taskViewport,
+        controller: taskScroll,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        children: [
+          _taskHeader(users),
+          const SizedBox(height: 8),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              const labels = ['Open', 'Completed'];
+              const horizontalPadding = 12.0;
+              final labelStyle = Theme.of(context).textTheme.labelLarge;
+              var longestLabel = 0.0;
+              for (final label in labels) {
+                final painter = TextPainter(
+                  text: TextSpan(text: label, style: labelStyle),
+                  textDirection: Directionality.of(context),
+                  textScaler: MediaQuery.textScalerOf(context),
+                )..layout();
+                if (painter.width > longestLabel) longestLabel = painter.width;
+                painter.dispose();
+              }
+              // Select the layout from measured text, never selection state. The
+              // checkmark would otherwise steal width only from the selected label.
+              final horizontalFits =
+                  constraints.maxWidth >=
+                  2 * (longestLabel.ceilToDouble() + 2 * horizontalPadding);
+              return SegmentedButton<bool>(
+                direction: horizontalFits ? Axis.horizontal : Axis.vertical,
+                showSelectedIcon: false,
+                style: SegmentedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: horizontalPadding,
+                    vertical: 8,
+                  ),
                 ),
-              ),
-              segments: const [
-                ButtonSegment(value: false, label: Text('Open')),
-                ButtonSegment(value: true, label: Text('Completed')),
-              ],
-              selected: {showCompleted},
-              onSelectionChanged: (values) =>
-                  setState(() => showCompleted = values.first),
-            );
-          },
-        ),
-        const SizedBox(height: 16),
-        if (!showCompleted)
-          Focus(
-            onKeyEvent: (_, event) {
-              final enter =
-                  event.logicalKey == LogicalKeyboardKey.enter ||
-                  event.logicalKey == LogicalKeyboardKey.numpadEnter;
-              if (widget.folderActions.requiresPicker ||
-                  !enter ||
-                  (capture.value.composing.isValid &&
-                      !capture.value.composing.isCollapsed)) {
-                return KeyEventResult.ignored;
-              }
-              if (event is KeyDownEvent) {
-                if (HardwareKeyboard.instance.isShiftPressed) {
-                  if (!busy && pendingCapture.isEmpty) {
-                    final value = capture.value;
-                    final selection = value.selection.isValid
-                        ? value.selection
-                        : TextSelection.collapsed(offset: value.text.length);
-                    // Use the editor's user-input path so it reveals the caret
-                    // after layout, including a newly inserted blank last line.
-                    final editor = captureFocus.context!
-                        .findAncestorStateOfType<EditableTextState>()!;
-                    editor.userUpdateTextEditingValue(
-                      TextEditingValue(
-                        text: value.text.replaceRange(
-                          selection.start,
-                          selection.end,
-                          '\n',
-                        ),
-                        selection: TextSelection.collapsed(
-                          offset: selection.start + 1,
-                        ),
-                      ),
-                      SelectionChangedCause.keyboard,
-                    );
-                  }
-                } else {
-                  unawaited(_capture());
-                }
-                return KeyEventResult.handled;
-              }
-              if (event is KeyRepeatEvent) return KeyEventResult.handled;
-              return KeyEventResult.ignored;
+                segments: const [
+                  ButtonSegment(value: false, label: Text('Open')),
+                  ButtonSegment(value: true, label: Text('Completed')),
+                ],
+                selected: {showCompleted},
+                onSelectionChanged: (values) =>
+                    setState(() => showCompleted = values.first),
+              );
             },
-            child: TextField(
-              controller: capture,
-              focusNode: captureFocus,
-              readOnly: pendingCapture.isNotEmpty,
-              keyboardType: TextInputType.multiline,
-              textInputAction: TextInputAction.newline,
-              minLines: 1,
-              maxLines: 4,
-              enabled: !busy,
-              decoration: InputDecoration(
-                labelText: 'What needs doing?',
-                hintText: 'One task per line',
-                helperText: captureFailure && pendingCapture.isNotEmpty
-                    ? 'Retry to check these tasks before editing.'
-                    : widget.folderActions.requiresPicker
-                    ? null
-                    : 'Enter to add · Shift+Enter for another task',
-                suffixIcon: IconButton(
-                  tooltip: 'Add tasks',
-                  onPressed: busy ? null : _capture,
-                  icon: const Icon(Icons.arrow_upward),
-                ),
-              ),
-              onSubmitted: (_) => _capture(),
-            ),
           ),
-        const SizedBox(height: 12),
-        if (tasks.isEmpty)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 56),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.done_all,
-                  size: 48,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                SizedBox(height: 12),
-                Text(
-                  showCompleted
-                      ? 'No completed tasks'
-                      : hasDeferredTasks
-                      ? 'Nothing available yet'
-                      : 'No open tasks',
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  showCompleted
-                      ? 'Completed tasks will appear here.'
-                      : hasDeferredTasks
-                      ? 'Tasks with a future start will appear when they become available.'
-                      : 'Add a task above.',
-                ),
-              ],
-            ),
-          ),
-        for (final group in groups) ...[
-          Padding(
-            padding: const EdgeInsets.only(top: 16, bottom: 4),
-            child: Semantics(
-              header: true,
-              child: Text(
-                groupTitle(group),
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-            ),
-          ),
-          for (final entry in group.entries) ...[
-            Builder(
-              key: ValueKey('task-row-${entry.task['id']}'),
-              builder: (context) {
-                final task = entry.task;
-                final tile = ListTile(
-                  contentPadding: EdgeInsets.zero,
-                  minVerticalPadding: 6,
-                  horizontalTitleGap: 8,
-                  leading: Tooltip(
-                    message:
-                        '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
-                    child: Checkbox(
-                      materialTapTargetSize: MaterialTapTargetSize.padded,
-                      value: showCompleted,
-                      onChanged: busy
-                          ? null
-                          : (_) =>
-                                showCompleted ? _reopen(task) : _complete(task),
-                    ),
-                  ),
-                  title: Text(
-                    task['title'],
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                  subtitle: _taskPreview(task, users).isEmpty
-                      ? null
-                      : Text(
-                          _taskPreview(task, users),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+          const SizedBox(height: 16),
+          if (!showCompleted)
+            Focus(
+              onKeyEvent: (_, event) {
+                final enter =
+                    event.logicalKey == LogicalKeyboardKey.enter ||
+                    event.logicalKey == LogicalKeyboardKey.numpadEnter;
+                if (widget.folderActions.requiresPicker ||
+                    !enter ||
+                    (capture.value.composing.isValid &&
+                        !capture.value.composing.isCollapsed)) {
+                  return KeyEventResult.ignored;
+                }
+                if (event is KeyDownEvent) {
+                  if (HardwareKeyboard.instance.isShiftPressed) {
+                    if (!busy && pendingCapture.isEmpty) {
+                      final value = capture.value;
+                      final selection = value.selection.isValid
+                          ? value.selection
+                          : TextSelection.collapsed(offset: value.text.length);
+                      // Use the editor's user-input path so it reveals the caret
+                      // after layout, including a newly inserted blank last line.
+                      final editor = captureFocus.context!
+                          .findAncestorStateOfType<EditableTextState>()!;
+                      editor.userUpdateTextEditingValue(
+                        TextEditingValue(
+                          text: value.text.replaceRange(
+                            selection.start,
+                            selection.end,
+                            '\n',
+                          ),
+                          selection: TextSelection.collapsed(
+                            offset: selection.start + 1,
+                          ),
                         ),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (movable(task, true) || movable(task, false))
-                        Draggable<String>(
-                          data: task['id'],
-                          maxSimultaneousDrags: busy ? 0 : 1,
-                          dragAnchorStrategy: pointerDragAnchorStrategy,
-                          onDragStarted: () {
-                            taskDrag = (
-                              id: task['id'] as String,
-                              store: store,
-                              revision: viewRevision,
-                              snapshot: store!.taskSnapshot,
-                              completed: showCompleted,
-                              everyone: all,
-                              upcoming: showUpcoming,
-                              user: user,
-                            );
-                          },
-                          onDraggableCanceled: (_, _) {
-                            _cancelDrag();
-                            taskDrag = null;
-                          },
-                          onDragEnd: (details) {
-                            if (details.wasAccepted) taskDrag = null;
-                          },
-                          feedback: Material(
-                            elevation: 4,
-                            borderRadius: BorderRadius.circular(8),
-                            child: Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: SizedBox(
-                                width: 220,
-                                child: Text(
-                                  task['title'],
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                        SelectionChangedCause.keyboard,
+                      );
+                    }
+                  } else {
+                    unawaited(_capture());
+                  }
+                  return KeyEventResult.handled;
+                }
+                if (event is KeyRepeatEvent) return KeyEventResult.handled;
+                return KeyEventResult.ignored;
+              },
+              child: TextField(
+                controller: capture,
+                focusNode: captureFocus,
+                readOnly: pendingCapture.isNotEmpty,
+                keyboardType: TextInputType.multiline,
+                textInputAction: TextInputAction.newline,
+                minLines: 1,
+                maxLines: 4,
+                enabled: !busy,
+                decoration: InputDecoration(
+                  labelText: 'What needs doing?',
+                  hintText: 'One task per line',
+                  helperText: captureFailure && pendingCapture.isNotEmpty
+                      ? 'Retry to check these tasks before editing.'
+                      : widget.folderActions.requiresPicker
+                      ? null
+                      : 'Enter to add · Shift+Enter for another task',
+                  suffixIcon: IconButton(
+                    tooltip: 'Add tasks',
+                    onPressed: busy ? null : _capture,
+                    icon: const Icon(Icons.arrow_upward),
+                  ),
+                ),
+                onSubmitted: (_) => _capture(),
+              ),
+            ),
+          const SizedBox(height: 12),
+          if (tasks.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 56),
+              child: Column(
+                children: [
+                  Icon(
+                    Icons.done_all,
+                    size: 48,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    selectedTag != null
+                        ? 'No tasks match #$selectedTag'
+                        : showCompleted
+                        ? 'No completed tasks'
+                        : hasDeferredTasks
+                        ? 'Nothing available yet'
+                        : 'No open tasks',
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    selectedTag != null
+                        ? 'Clear the tag filter to see other tasks.'
+                        : showCompleted
+                        ? 'Completed tasks will appear here.'
+                        : hasDeferredTasks
+                        ? 'Tasks with a future start will appear when they become available.'
+                        : 'Add a task above.',
+                  ),
+                ],
+              ),
+            ),
+          for (final group in groups) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 16, bottom: 4),
+              child: Semantics(
+                header: true,
+                child: Text(
+                  groupTitle(group),
+                  style: Theme.of(context).textTheme.titleSmall,
+                ),
+              ),
+            ),
+            for (final entry in group.entries) ...[
+              Builder(
+                key: ValueKey('task-row-${entry.task['id']}'),
+                builder: (context) {
+                  final task = entry.task;
+                  final tile = ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    minVerticalPadding: 6,
+                    horizontalTitleGap: 8,
+                    leading: Tooltip(
+                      message:
+                          '${showCompleted ? 'Reopen' : 'Complete'} ${task['title']}',
+                      child: Checkbox(
+                        materialTapTargetSize: MaterialTapTargetSize.padded,
+                        value: showCompleted,
+                        onChanged: busy
+                            ? null
+                            : (_) => showCompleted
+                                  ? _reopen(task)
+                                  : _complete(task),
+                      ),
+                    ),
+                    title: Text(
+                      task['title'],
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    subtitle: _taskPreview(task, users).isEmpty
+                        ? null
+                        : Text(
+                            _taskPreview(task, users),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (movable(task, true) || movable(task, false))
+                          Draggable<String>(
+                            data: task['id'],
+                            maxSimultaneousDrags: busy ? 0 : 1,
+                            dragAnchorStrategy: pointerDragAnchorStrategy,
+                            onDragStarted: () {
+                              dragReleased = false;
+                              setState(
+                                () => taskDrag = (
+                                  id: task['id'] as String,
+                                  store: store,
+                                  revision: viewRevision,
+                                  snapshot: store!.taskSnapshot,
+                                  completed: showCompleted,
+                                  everyone: all,
+                                  upcoming: showUpcoming,
+                                  user: user,
+                                  tag: selectedTag,
+                                ),
+                              );
+                            },
+                            onDragUpdate: (details) =>
+                                _updateDragScroll(details.globalPosition),
+                            onDragEnd: (details) {
+                              if (dragReleased && taskDrag != null) {
+                                _dropAtPointer(
+                                  task['id'] as String,
+                                  details.offset,
+                                );
+                              }
+                              _stopDragScroll();
+                              setState(() => taskDrag = null);
+                            },
+                            feedback: Material(
+                              elevation: 4,
+                              borderRadius: BorderRadius.circular(8),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: SizedBox(
+                                  width: 220,
+                                  child: Text(
+                                    task['title'],
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            child: Tooltip(
+                              message:
+                                  'Drag to reorder within this date and time',
+                              child: Semantics(
+                                label:
+                                    'Drag ${task['title']} to reorder. Move up and down are also in Task actions.',
+                                child: const SizedBox(
+                                  width: 48,
+                                  height: 48,
+                                  child: Icon(Icons.drag_indicator),
                                 ),
                               ),
                             ),
                           ),
-                          child: Tooltip(
-                            message:
-                                'Drag to reorder within this date and time',
-                            child: Semantics(
-                              label:
-                                  'Drag ${task['title']} to reorder. Move up and down are also in Task actions.',
-                              child: const SizedBox(
-                                width: 48,
-                                height: 48,
-                                child: Icon(Icons.drag_indicator),
-                              ),
+                        PopupMenuButton<String>(
+                          tooltip: 'Task actions',
+                          enabled: !busy,
+                          onSelected: (action) {
+                            if (action == 'edit') {
+                              _edit(task);
+                            } else {
+                              _moveTask(task, action == 'up');
+                            }
+                          },
+                          itemBuilder: (_) => [
+                            const PopupMenuItem(
+                              value: 'edit',
+                              child: Text('Edit task'),
                             ),
-                          ),
+                            PopupMenuItem(
+                              value: 'up',
+                              enabled: movable(task, true),
+                              child: const Text('Move up'),
+                            ),
+                            PopupMenuItem(
+                              value: 'down',
+                              enabled: movable(task, false),
+                              child: const Text('Move down'),
+                            ),
+                          ],
                         ),
-                      PopupMenuButton<String>(
-                        tooltip: 'Task actions',
-                        enabled: !busy,
-                        onSelected: (action) {
-                          if (action == 'edit') {
-                            _edit(task);
-                          } else {
-                            _moveTask(task, action == 'up');
-                          }
-                        },
-                        itemBuilder: (_) => [
-                          const PopupMenuItem(
-                            value: 'edit',
-                            child: Text('Edit task'),
-                          ),
-                          PopupMenuItem(
-                            value: 'up',
-                            enabled: movable(task, true),
-                            child: const Text('Move up'),
-                          ),
-                          PopupMenuItem(
-                            value: 'down',
-                            enabled: movable(task, false),
-                            child: const Text('Move down'),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  onTap: busy ? null : () => _edit(task),
-                );
-                return _reorderableTask(task, tile);
-              },
-            ),
-            const Divider(height: 1),
+                      ],
+                    ),
+                    onTap: busy ? null : () => _edit(task),
+                  );
+                  return KeyedSubtree(
+                    key: ValueKey('task-drop-${task['id']}'),
+                    child: _TaskDragLifetime(
+                      active: taskDrag?.id == task['id'],
+                      child: _reorderableTask(task, tile),
+                    ),
+                  );
+                },
+              ),
+              const Divider(height: 1),
+            ],
           ],
         ],
-      ],
+      ),
     );
+  }
+}
+
+class _TaskDragLifetime extends StatefulWidget {
+  const _TaskDragLifetime({required this.active, required this.child});
+  final bool active;
+  final Widget child;
+  @override
+  State<_TaskDragLifetime> createState() => _TaskDragLifetimeState();
+}
+
+class _TaskDragLifetimeState extends State<_TaskDragLifetime>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.active;
+  @override
+  void didUpdateWidget(_TaskDragLifetime oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.active != widget.active) updateKeepAlive();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }
 

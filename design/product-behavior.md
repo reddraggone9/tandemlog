@@ -64,3 +64,7 @@ Lee approved an off-by-default Show upcoming filter so future-start tasks remain
 Scheduled dates are intended as overrides for a repeating occurrence. Existing nonrecurring scheduled values remain valid and preserved; the editor shows a concise warning instead of rejecting or silently clearing them. Recurrence continues to anchor due-first, so a scheduled override does not shift the underlying cadence when a due date exists.
 
 Date-sorted drag-and-drop is constrained to an exact effective date/time bucket, matching the accessible move actions. Invalid destinations must be apparent during dragging; no drag may silently change schedule fields or pretend to override automatic ordering. Revalidate source/target after concurrent updates and preserve hidden/filtered tasks in the shared manual sequence.
+
+Ordinary-tag filtering selects one exact spelling-preserving tag at a time and combines with the selected user, completion view and upcoming visibility. The active tag is visible and has a clear/reset action; a fresh session starts unfiltered. Options include ordinary tags across the current space, not scheduling-bound fields. Filtering never changes task data or manual order.
+
+Dragging near the list viewport edge scrolls during the active gesture so off-screen peers are reachable. Eligibility remains restricted to equal effective date/time, including after scrolling, clock changes and incoming updates; invalid targets remain visible during the gesture. Stop scroll work when the drag ends/cancels, the app suspends or the workspace/view changes.

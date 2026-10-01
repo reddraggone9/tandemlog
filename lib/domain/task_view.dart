@@ -201,6 +201,7 @@ TimedView<TaskView> projectTaskView(
   ViewTime time, {
   String? assignee,
   bool includeUpcoming = false,
+  String? tag,
 }) {
   final context = _TaskTimingContext(time);
   DateTime? nextChange;
@@ -209,7 +210,8 @@ TimedView<TaskView> projectTaskView(
   for (var index = 0; index < rows.length; index++) {
     final row = rows[index];
     if (row['kind'] != 'task' ||
-        (assignee != null && row['assignee'] != assignee)) {
+        (assignee != null && row['assignee'] != assignee) ||
+        (tag != null && !(row['tags'] as List? ?? []).contains(tag))) {
       continue;
     }
     final schedule = TaskSchedule.fromJson(

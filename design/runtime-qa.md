@@ -257,7 +257,7 @@ The independent private actual-renderer comparison passed all 7,812 task/instant
 
 The authorized local worker reported successful build-10 native Android tests for idle start-time appearance with capture draft preservation; intraday ordering of precise and bounded times; midnight bound advancement retaining task time/draft; floating visibility after Los Angeles/Chicago zone changes and resume; and multiline keyboard behavior. Canonical hashes were unchanged for view-only clock/zone operations. These are build-10 results, before drag/Show upcoming and the cache recovery fix.
 
-A retained build-7 fixture exposed a cache-version-4 versus current-version-7 opening failure. Both the fixture and cache were preserved for exact code-11 upgrade testing. Tags have an editor field but no tag-filter UI; final native QA must not infer a filter from model support.
+A retained build-7 fixture exposed a cache-version-4 versus current-version-7 opening failure. Both the fixture and cache were preserved for exact code-11 upgrade testing. Build 10 had a tag editor but no tag-filter UI; its native evidence does not establish filter behavior.
 
 ### Code 11 final local acceptance
 
@@ -278,3 +278,9 @@ The refreshed 90-second native Linux demonstration shows accepted and rejected d
 [Signed candidate 36793617099](https://github.com/reddraggone9/tandemlog/actions/runs/36793617099) passed all platform gates for source `4d255e2b06187d6d6ad383d9142bfb2b3454c6b4`. Android version `0.1.0-rc.3`, code 11, is nondebuggable and includes arm64-v8a, armeabi-v7a and x86_64. Its owner certificate matches the pinned fingerprint. Exact APK SHA256: `957bcb065c7d7dbfcf2351fd691994fcc23045c73c58b9c50abfddbe7bbfc74c`. Retained-cache upgrade and the final drag/upcoming/lifecycle checks are handed to the native Android worker; no release is published from compilation alone.
 
 The Windows unsigned x64 ZIP hash is `ffbecd2a2a91f3af17fcc1e2637e3121636785f0f94dffb823681b3ceecd3ed9`; Linux x64 tar.gz is `241755e0899b49f8b45ebb6dff9c1a64680059ed497d3cab5b924fd063c5c2b7`. Hosted Linux startup smoke measured 427 ms rebuild and 322 ms warm for its ten-task workload, with zero warm log reads. These hosted values are separate samples from the local software-graphics VM measurements above. Subsequent documentation-only commits do not change the accepted production/artifact source.
+
+### Code 12 tag and long-list drag acceptance
+
+Formatting and analysis are clean. All 103 generic app tests, six release-gate tests and 13 native Linux workflows pass (176 seconds). The new flow combines exact-tag filtering with user/Everyone, Open/Completed and Show upcoming, preserves capture drafts, clears the tag explicitly and resets on restart. A stationary edge drag reaches an initially unmounted peer and preserves the relative global ranks of hidden tagged tasks and completed history. Canceling over a valid target writes no move. Existing cross-bucket/time/concurrent-change guards still pass.
+
+Native screenshots at 1000px/100% and 390px/200%, Light/Dark, show a bounded tag label and reachable clear action. The reviewed 90-second Linux demo shows tag selection/reset and earlier task/drag/theme flows; its recording ends before the long-list edge segment, which has separate native regression evidence. The demo uses sanitized fixtures and an explicitly controlled advancing UTC clock in a native debug build. Exact code-12 Android affected regression remains required; these Linux results do not establish touch behavior.

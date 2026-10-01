@@ -839,6 +839,130 @@ void main() {
     await remote.close();
     await root.delete(recursive: true);
   });
+  testWidgets(
+    'native tag filters preserve drafts and long drag scrolls offscreen',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('tag-scroll-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Example'});
+      await writer.command(other, 'user.created', {'name': 'Other'});
+      final ids = <String>[];
+      for (var i = 0; i < 35; i++) {
+        final id = const Uuid().v4();
+        ids.add(id);
+        await writer.command(id, 'task.created', {
+          'title': 'Task $i',
+          'description': '',
+          'assignee': i == 1 ? other : user,
+          'schedule': i == 2 ? {'startDate': '2099-11-01'} : {},
+        });
+        await writer.edit(
+          id,
+          {},
+          tags: [i == 3 ? 'OtherTag' : 'Home'],
+          observedTagRefs: {},
+        );
+      }
+      await writer.command(ids[4], 'task.completed', {});
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.enterText(capture, 'Keep this draft');
+      await tester.tap(find.byTooltip('Filter by tag'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('#Home').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Task 3'), findsNothing);
+      expect(find.text('Task 1'), findsNothing);
+      expect(find.text('Task 2'), findsNothing);
+      await tester.tap(find.text('Everyone'));
+      await tester.pumpAndSettle();
+      expect(find.text('Task 1'), findsOneWidget);
+      await tester.tap(find.text('Show upcoming'));
+      await tester.pumpAndSettle();
+      expect(find.text('Task 2'), findsOneWidget);
+      await tester.tap(find.text('Completed'));
+      await tester.pumpAndSettle();
+      expect(find.text('Task 4'), findsOneWidget);
+      await tester.tap(find.text('Open').first);
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Keep this draft',
+      );
+      await tester.tap(find.byTooltip('Clear tag filter'));
+      await tester.pumpAndSettle();
+      expect(find.text('Task 3'), findsOneWidget);
+      await tester.tap(find.byTooltip('Filter by tag'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('#Home').last);
+      await tester.pumpAndSettle();
+      final handle = find.descendant(
+        of: find.byKey(ValueKey('task-drop-${ids[0]}')),
+        matching: find.byType(Draggable<String>),
+      );
+      await tester.ensureVisible(handle);
+      await tester.pumpAndSettle();
+      final beforeCancel = writer.taskSnapshot;
+      final cancelGesture = await tester.startGesture(tester.getCenter(handle));
+      await cancelGesture.moveBy(const Offset(-20, 0));
+      await tester.pump();
+      final peer = tester.getRect(find.byKey(ValueKey('task-drop-${ids[5]}')));
+      await cancelGesture.moveTo(peer.center);
+      await tester.pump();
+      await cancelGesture.cancel();
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(writer.taskSnapshot, beforeCancel);
+      final gesture = await tester.startGesture(tester.getCenter(handle));
+      await gesture.moveBy(const Offset(-20, 0));
+      await tester.pump();
+      final list = find.byType(ListView).first;
+      final viewport = tester.getRect(list);
+      expect(find.byKey(ValueKey('task-drop-${ids.last}')), findsNothing);
+      await gesture.moveTo(Offset(viewport.center.dx, viewport.bottom - 12));
+      for (var i = 0; i < 250; i++) {
+        await tester.pump(const Duration(milliseconds: 16));
+      }
+      final last = find.byKey(ValueKey('task-drop-${ids.last}'));
+      expect(
+        tester.getRect(last).bottom,
+        lessThanOrEqualTo(viewport.bottom + 1),
+      );
+      await gesture.up();
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.where((row) => row['kind'] == 'task').last['id'],
+        ids.first,
+      );
+      expect(
+        writer.rows
+            .where((row) => row['kind'] == 'task')
+            .map((row) => row['id'])
+            .toList(),
+        [...ids.skip(1), ids.first],
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Clear tag filter'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets('native drag preserves hidden order and rejects other time buckets', (
     tester,
   ) async {

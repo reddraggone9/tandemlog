@@ -27,6 +27,36 @@ List<String> ids(List<TaskViewEntry> rows) =>
     rows.map((row) => row.task['id'] as String).toList();
 
 void main() {
+  test('ordinary tag intersects assignee, upcoming and completed views', () {
+    final rows = [
+      row('ready')..['tags'] = ['Home'],
+      row('other', user: 'b')..['tags'] = ['Home'],
+      row('future', schedule: TaskSchedule(startDate: '2026-11-01'))
+        ..['tags'] = ['Home'],
+      row('done', completed: true)..['tags'] = ['Home'],
+      row('different')..['tags'] = ['home'],
+    ];
+    final before = jsonEncode(rows);
+    final time = at('2026-10-01T12:00:00Z');
+    TaskView view({
+      String? user = 'a',
+      bool upcoming = false,
+      String? tag = 'Home',
+    }) => projectTaskView(
+      rows,
+      time,
+      assignee: user,
+      includeUpcoming: upcoming,
+      tag: tag,
+    ).value;
+    expect(ids(view().open), ['ready']);
+    expect(ids(view().completed), ['done']);
+    expect(ids(view(user: null).open), ['ready', 'other']);
+    expect(ids(view(upcoming: true).open), ['ready', 'future']);
+    expect(ids(view(tag: null).open), ['ready', 'different']);
+    expect(ids(view(tag: 'missing').open), isEmpty);
+    expect(jsonEncode(rows), before);
+  });
   test('upcoming is opt-in and does not change stored rows', () {
     final rows = [
       row('future', schedule: TaskSchedule(startDate: '2026-11-01')),
