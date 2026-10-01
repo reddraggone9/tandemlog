@@ -143,7 +143,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   late final ViewTimeSource timeSource;
   late final ViewClock<TaskView> viewClock;
   TaskView? taskView;
-  String? taskViewZoneId;
   String? viewError;
   int viewRevision = 0;
   ({
@@ -213,15 +212,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       project: (time) {
         try {
           viewError = null;
-          final projected = projectTaskView(
+          return projectTaskView(
             rows,
             time,
             assignee: all ? null : user,
             includeUpcoming: showUpcoming,
             tag: selectedTag,
           );
-          taskViewZoneId = time.localZoneId;
-          return projected;
         } catch (failure) {
           viewError = 'Cannot update the task view: $failure';
           return TimedView(taskView ?? TaskView([], []));
@@ -1127,11 +1124,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 .map((u) => u['name'])
                 .firstOrNull ??
             'Unknown user',
-      if (scheduleMetadata(
-            schedule,
-            groupDate: groupDate,
-            localZoneId: taskViewZoneId!,
-          )
+      if (scheduleMetadata(schedule, groupDate: groupDate)
           case final String details when details.isNotEmpty)
         details,
       for (final tag in task['tags'] as List? ?? []) '#$tag',

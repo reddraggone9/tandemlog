@@ -867,6 +867,7 @@ void main() {
       schedule: {
         'dueDate': '2030-04-23',
         'dueTime': '17:30',
+        'startDate': '2020-01-01',
         'timeZone': 'America/Argentina/Buenos_Aires',
       },
     );
@@ -910,6 +911,9 @@ void main() {
       find.byKey(ValueKey('task-metadata-${ids[longTitle]}')),
     );
     expect(deadline.data, contains('Due 17:30 America/Argentina/Buenos_Aires'));
+    expect(deadline.data, isNot(contains('2030-04-23')));
+    expect(deadline.data, isNot(contains('2020-01-01')));
+    expect(deadline.data, isNot(contains('Start')));
     expect(deadline.maxLines, isNull);
     expect(
       tester
