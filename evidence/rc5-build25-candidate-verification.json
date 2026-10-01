@@ -1,0 +1,97 @@
+{
+  "candidate_run": 36932940961,
+  "source_commit": "134c8b9e8006abaa07e596f4e91d32b0f2b8edd6",
+  "version": "0.1.0-rc.5",
+  "version_code": 25,
+  "candidate_gates": "success",
+  "dispatch_workflow_ci_run": 36933481048,
+  "dispatch_workflow_ci_source": "e53dd41042cf131988fef95660a0ec9488000eab",
+  "dispatch_workflow_ci_gates": "success",
+  "android": {
+    "metadata": {
+      "source_commit": "134c8b9e8006abaa07e596f4e91d32b0f2b8edd6",
+      "version": "0.1.0-rc.5",
+      "version_code": 25,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "4e45cd58a3a6ea11bc3a3c65abd4d4431590d8f15dd41ae07a88747060c27334"
+    },
+    "package": "com.reddraggone9.tandemlog",
+    "non_debuggable": true,
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "archive_sha256": "1260548506bda172821268404359013ceb3255d6eafcaac549941c11301097c2"
+  },
+  "desktop": {
+    "linux": {
+      "asset_sha256": {
+        "linux-startup.json": "de893be332ae4d0bedcf0bf72c36e13932fd8cf99f1858a6a1cef4edfef1d4b7",
+        "linux-install-smoke.json": "2f562df132f407ffe7c83ac36f4226dbd814117ee00fca572c2316fae75b84a9",
+        "tandemlog-linux-x64.flatpak": "932556eee01f614035b7bfe4b10fc13928f816e651068a3fe0b8a6222ad9d4b4",
+        "linux-SHA256SUMS.txt": "575fcc7782c47141ecc1cede042357a5ecdb1d485660e2f6bb2fb968cb308099"
+      },
+      "install_lifecycle_verified": true
+    },
+    "windows": {
+      "asset_sha256": {
+        "windows-install-smoke.json": "7f0f7f14b46f16f51d459877a8fe95b5f1671e864b218eef76b37d6fa75c3801",
+        "windows-SHA256SUMS.txt": "60ab85167f39c8dcdabd334501736c22bc1e45de522a202c00a5531773d6ffa4",
+        "tandemlog-windows-x64-unsigned-setup.exe": "7d9a6d6fa735b982dc3fcdfe39756e9980b52435351f0d5bde69410c7341ed0f"
+      },
+      "install_lifecycle_verified": true
+    }
+  },
+  "linux_release_startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 624,
+        "marker": "TANDEMLOG_READY_MS=355 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=67",
+          "TANDEMLOG_PHASE identity_lock=60",
+          "TANDEMLOG_PHASE sqlite_open_schema=4",
+          "TANDEMLOG_PHASE manifest=131",
+          "TANDEMLOG_PHASE ingest=40",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=355 FILES_READ=1"
+        ],
+        "external_main_ms": 264,
+        "external_first_frame_ms": 335
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 436,
+        "marker": "TANDEMLOG_READY_MS=213 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=75",
+          "TANDEMLOG_PHASE identity_lock=10",
+          "TANDEMLOG_PHASE sqlite_open_schema=1",
+          "TANDEMLOG_PHASE manifest=51",
+          "TANDEMLOG_PHASE ingest=23",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=213 FILES_READ=0"
+        ],
+        "external_main_ms": 218,
+        "external_first_frame_ms": 299
+      }
+    ]
+  },
+  "native_android_acceptance": "pending exact APK",
+  "publication": "withheld",
+  "limits": [
+    "Linux debug visual evidence is not native Android/Windows manual QA",
+    "Startup ten synthetic tasks; OS page cache not flushed",
+    "Current events identify writer device/workspace profile; no acting-user field"
+  ]
+}
