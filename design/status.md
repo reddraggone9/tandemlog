@@ -74,8 +74,10 @@ Owner: next implementation session, reviewed with Lee at M1 acceptance. Keep dom
 - All undo references are revalidated on ingestion. Exit: measure real histories, then index/restrict to newly resolved references without weakening correctness.
 - Failed appends can be uncertain. In-session task capture retries retain identity, but drafts are not durable across termination. Exit: explicit recovery/draft UX before claiming interruption-safe drafts.
 - RC4's hosted startup report includes D-Bus service output before its valid measurement JSON. The exact candidate measurements were independently parsed without changing the artifact. Impact: direct JSON consumers must reject or explicitly strip the known preamble. Owner: next CI maintenance session; exit: redirect only the measured child stdout, validate the complete report as JSON before upload, and retain daemon logs in CI output. No app behavior or performance gate is weakened.
-- rc1 SAF restart and atomic-replacement behavior passed on an accelerated API 30 emulator. Actual phone/BasicSync behavior and revised rc2 UI still need live checks. Exit: runtime matrix plus real-device provider test. No broad-storage permission workaround.
-- No recurrence, dates, deletion, private spaces, games, food or LLM ingestion implemented. Their contracts stay separate from v1 tasks.
+- Exact RC3 SAF/restart and task workflows passed on accelerated API 30; real cross-device sync success is user-reported. Revised RC4 native acceptance and broader phone/provider coverage remain separate gates. Exit: runtime matrix plus real-device provider test. No broad-storage permission workaround.
+- Private spaces, games, food and LLM ingestion remain deferred; do not couple their proposed contracts to current task implementation.
+
+### Historical first-slice QA
 
 Latest checks: 23 domain/storage tests passed after three independent review rounds; static analysis clean; native Linux debug integration and release build passed. [Startup measurements](runtime-qa.md#recorded-release-measurements) now include a controlled minimal-app comparison and a verified D-Bus session fix: 2,000-task loaded-frame startup is 908–1,091 ms with emulator paused. Target-device performance is still pending. Final native Linux demo is recorded/reviewed. Video and emulator ANR evidence were delivered through Library; private artifact identifiers are excluded from the public repository.
 

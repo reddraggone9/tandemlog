@@ -12,7 +12,7 @@
 
 The [Android emulator acceleration guide](https://developer.android.com/studio/run/emulator-acceleration) describes KVM requirements. Here `emulator -accel-check` reports KVM requires vmx/svm; `/dev/kvm` is absent. Software emulation was actually attempted, not dismissed from this probe alone.
 
-## Linux workflow evidence
+## Historical first-slice Linux workflow evidence
 
 `flutter test integration_test/task_flow_test.dart -d linux` exercises real native Flutter: create/select user, capture, edit title/notes, complete, immediate undo, retain a typed draft through periodic refresh, recreate the app with the same profile, encounter a complete unknown-version record, remove the bad test fixture and recover. The folder chooser was separately operated in the native GTK UI; integration preselects a test folder. App recreation verifies persisted state; process restart is also exercised by release measurement/manual workflow.
 
