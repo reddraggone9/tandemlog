@@ -1,0 +1,2131 @@
+{
+  "mode": "Dart AOT native executable; dart compile exe; LD_PRELOAD=.dart_tool/lib/libsqlite3.so supplies the same package native SQLite asset used by local app; three fresh process runs each before and after; Linux LocalLogFolder and fresh temporary SQLite WAL synchronous FULL per n; original sequential growing-history fixture; no live profiles, no UI frame rendering.",
+  "source_files": [
+    "perf_aot_before.dart",
+    "perf_aot_after.dart",
+    "baseline/lib/storage/task_store.dart"
+  ],
+  "summary": [
+    {
+      "operation": "capture",
+      "n": 1,
+      "before_median_ms": 2.639,
+      "after_median_ms": 2.4
+    },
+    {
+      "operation": "move",
+      "n": 1,
+      "before_median_ms": 3.599,
+      "after_median_ms": 2.999
+    },
+    {
+      "operation": "edit",
+      "n": 1,
+      "before_median_ms": 4.593,
+      "after_median_ms": 4.125
+    },
+    {
+      "operation": "undo-edit",
+      "n": 1,
+      "before_median_ms": 3.707,
+      "after_median_ms": 4.416
+    },
+    {
+      "operation": "tag",
+      "n": 1,
+      "before_median_ms": 3.41,
+      "after_median_ms": 2.739
+    },
+    {
+      "operation": "undo-tag",
+      "n": 1,
+      "before_median_ms": 3.206,
+      "after_median_ms": 2.65
+    },
+    {
+      "operation": "delete",
+      "n": 1,
+      "before_median_ms": 4.211,
+      "after_median_ms": 2.467
+    },
+    {
+      "operation": "undo-delete",
+      "n": 1,
+      "before_median_ms": 3.971,
+      "after_median_ms": 3.296
+    },
+    {
+      "operation": "capture",
+      "n": 30,
+      "before_median_ms": 95.43,
+      "after_median_ms": 11.531
+    },
+    {
+      "operation": "move",
+      "n": 30,
+      "before_median_ms": 172.846,
+      "after_median_ms": 19.345
+    },
+    {
+      "operation": "edit",
+      "n": 30,
+      "before_median_ms": 227.678,
+      "after_median_ms": 18.962
+    },
+    {
+      "operation": "undo-edit",
+      "n": 30,
+      "before_median_ms": 205.799,
+      "after_median_ms": 23.427
+    },
+    {
+      "operation": "tag",
+      "n": 30,
+      "before_median_ms": 273.477,
+      "after_median_ms": 26.701
+    },
+    {
+      "operation": "undo-tag",
+      "n": 30,
+      "before_median_ms": 272.462,
+      "after_median_ms": 33.232
+    },
+    {
+      "operation": "delete",
+      "n": 30,
+      "before_median_ms": 288.393,
+      "after_median_ms": 32.115
+    },
+    {
+      "operation": "undo-delete",
+      "n": 30,
+      "before_median_ms": 299.23,
+      "after_median_ms": 38.299
+    },
+    {
+      "operation": "capture",
+      "n": 100,
+      "before_median_ms": 407.19,
+      "after_median_ms": 31.717
+    },
+    {
+      "operation": "move",
+      "n": 100,
+      "before_median_ms": 1301.524,
+      "after_median_ms": 57.015
+    },
+    {
+      "operation": "edit",
+      "n": 100,
+      "before_median_ms": 1808.892,
+      "after_median_ms": 78.401
+    },
+    {
+      "operation": "undo-edit",
+      "n": 100,
+      "before_median_ms": 1663.504,
+      "after_median_ms": 106.589
+    },
+    {
+      "operation": "tag",
+      "n": 100,
+      "before_median_ms": 2152.683,
+      "after_median_ms": 127.805
+    },
+    {
+      "operation": "undo-tag",
+      "n": 100,
+      "before_median_ms": 2136.568,
+      "after_median_ms": 172.311
+    },
+    {
+      "operation": "delete",
+      "n": 100,
+      "before_median_ms": 2376.782,
+      "after_median_ms": 187.307
+    },
+    {
+      "operation": "undo-delete",
+      "n": 100,
+      "before_median_ms": 2404.092,
+      "after_median_ms": 229.652
+    }
+  ],
+  "raw_samples": {
+    "before": [
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 2324,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 691,
+          "appendUs": 159
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 2936,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1261,
+          "appendUs": 176
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 5066,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1765,
+          "appendUs": 213
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 3525,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2046,
+          "appendUs": 172
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 3668,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2309,
+          "appendUs": 163
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 3666,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2590,
+          "appendUs": 724
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 3483,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2812,
+          "appendUs": 216
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 3971,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 3095,
+          "appendUs": 202
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 87023,
+          "lists": 90,
+          "reads": 120,
+          "appends": 30,
+          "readBytes": 153433,
+          "appendUs": 6909
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 165316,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 418296,
+          "appendUs": 7459
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 227678,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 667071,
+          "appendUs": 6767
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 199439,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 916416,
+          "appendUs": 7923
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 246721,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1163166,
+          "appendUs": 7758
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 240088,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1410966,
+          "appendUs": 6397
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 288393,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1638636,
+          "appendUs": 9675
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 277311,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1868166,
+          "appendUs": 7956
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 330130,
+          "lists": 300,
+          "reads": 400,
+          "appends": 100,
+          "readBytes": 1582276,
+          "appendUs": 18961
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 1273119,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 4476051,
+          "appendUs": 29955
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 1767813,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 7194901,
+          "appendUs": 29098
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 1529484,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 9975601,
+          "appendUs": 32618
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 1974140,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 12724601,
+          "appendUs": 35279
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 2013317,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 15475601,
+          "appendUs": 28225
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 2290788,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 18012501,
+          "appendUs": 28066
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 2212942,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 20555601,
+          "appendUs": 26945
+        }
+      ],
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 2639,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 691,
+          "appendUs": 205
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 3599,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1261,
+          "appendUs": 269
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 4291,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1765,
+          "appendUs": 224
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 3717,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2046,
+          "appendUs": 303
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 3339,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2309,
+          "appendUs": 168
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 3138,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2590,
+          "appendUs": 242
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 4211,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2812,
+          "appendUs": 245
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 3782,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 3095,
+          "appendUs": 232
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 95430,
+          "lists": 90,
+          "reads": 120,
+          "appends": 30,
+          "readBytes": 153433,
+          "appendUs": 6902
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 172846,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 418296,
+          "appendUs": 7442
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 243290,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 667071,
+          "appendUs": 8871
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 224422,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 916416,
+          "appendUs": 10194
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 295950,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1163166,
+          "appendUs": 10823
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 272462,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1410966,
+          "appendUs": 8938
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 346046,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1638636,
+          "appendUs": 10043
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 299230,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1868166,
+          "appendUs": 9496
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 407190,
+          "lists": 300,
+          "reads": 400,
+          "appends": 100,
+          "readBytes": 1582276,
+          "appendUs": 23509
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 1329517,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 4476051,
+          "appendUs": 31429
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 2002478,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 7194901,
+          "appendUs": 36217
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 2060988,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 9975601,
+          "appendUs": 39690
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 2152683,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 12724601,
+          "appendUs": 34600
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 2136568,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 15475601,
+          "appendUs": 32665
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 2378924,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 18012501,
+          "appendUs": 30663
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 2404092,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 20555601,
+          "appendUs": 34899
+        }
+      ],
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 4664,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 691,
+          "appendUs": 524
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 4171,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1261,
+          "appendUs": 217
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 4593,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 1765,
+          "appendUs": 233
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 3707,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2046,
+          "appendUs": 281
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 3410,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2309,
+          "appendUs": 187
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 3206,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2590,
+          "appendUs": 267
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 5825,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 2812,
+          "appendUs": 187
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 4821,
+          "lists": 3,
+          "reads": 4,
+          "appends": 1,
+          "readBytes": 3095,
+          "appendUs": 226
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 107837,
+          "lists": 90,
+          "reads": 120,
+          "appends": 30,
+          "readBytes": 153433,
+          "appendUs": 6118
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 183247,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 418296,
+          "appendUs": 9032
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 225041,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 667071,
+          "appendUs": 7884
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 205799,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 916416,
+          "appendUs": 9117
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 273477,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1163166,
+          "appendUs": 9277
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 299853,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1410966,
+          "appendUs": 15587
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 285719,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1638636,
+          "appendUs": 8045
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 299769,
+          "lists": 61,
+          "reads": 91,
+          "appends": 30,
+          "readBytes": 1868166,
+          "appendUs": 7986
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 438009,
+          "lists": 300,
+          "reads": 400,
+          "appends": 100,
+          "readBytes": 1582276,
+          "appendUs": 26986
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 1301524,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 4476051,
+          "appendUs": 29384
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 1808892,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 7194901,
+          "appendUs": 34213
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 1663504,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 9975601,
+          "appendUs": 35017
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 2195650,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 12724601,
+          "appendUs": 34721
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 2175076,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 15475601,
+          "appendUs": 36601
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 2376782,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 18012501,
+          "appendUs": 33154
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 2458583,
+          "lists": 201,
+          "reads": 301,
+          "appends": 100,
+          "readBytes": 20555601,
+          "appendUs": 33135
+        }
+      ]
+    ],
+    "after": [
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 2814,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 640,
+          "appendUs": 174,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 445,
+            "append_us": 176,
+            "cache_transactions": 1,
+            "reconcile_us": 1576
+          }
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 4719,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1210,
+          "appendUs": 246,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 604,
+            "append_us": 247,
+            "cache_transactions": 1,
+            "reconcile_us": 2554
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 4358,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1714,
+          "appendUs": 300,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 505,
+            "append_us": 301,
+            "cache_transactions": 1,
+            "reconcile_us": 2134
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 4416,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1995,
+          "appendUs": 236,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 629,
+            "append_us": 237,
+            "cache_transactions": 1,
+            "reconcile_us": 1754
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 2763,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2258,
+          "appendUs": 215,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 474,
+            "append_us": 216,
+            "cache_transactions": 1,
+            "reconcile_us": 1189
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 2467,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2539,
+          "appendUs": 166,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 362,
+            "append_us": 166,
+            "cache_transactions": 1,
+            "reconcile_us": 1327
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 2467,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2761,
+          "appendUs": 223,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 322,
+            "append_us": 224,
+            "cache_transactions": 1,
+            "reconcile_us": 1312
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 3701,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 3044,
+          "appendUs": 157,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 327,
+            "append_us": 158,
+            "cache_transactions": 1,
+            "reconcile_us": 2461
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 17143,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 9498,
+          "appendUs": 223,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 6334,
+            "append_us": 226,
+            "cache_transactions": 1,
+            "reconcile_us": 8429
+          }
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 23403,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 17813,
+          "appendUs": 994,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 13335,
+            "append_us": 997,
+            "cache_transactions": 1,
+            "reconcile_us": 7550
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 19726,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 26149,
+          "appendUs": 413,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 9498,
+            "append_us": 1035,
+            "cache_transactions": 1,
+            "reconcile_us": 7380
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 24125,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 34663,
+          "appendUs": 311,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 11265,
+            "append_us": 314,
+            "cache_transactions": 1,
+            "reconcile_us": 8499
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 26701,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 42613,
+          "appendUs": 321,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 15013,
+            "append_us": 324,
+            "cache_transactions": 1,
+            "reconcile_us": 9716
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 33232,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 51163,
+          "appendUs": 259,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 16238,
+            "append_us": 262,
+            "cache_transactions": 1,
+            "reconcile_us": 10471
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 29331,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 57853,
+          "appendUs": 330,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 17552,
+            "append_us": 333,
+            "cache_transactions": 1,
+            "reconcile_us": 10225
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 38136,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 66403,
+          "appendUs": 259,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 20266,
+            "append_us": 263,
+            "cache_transactions": 1,
+            "reconcile_us": 10823
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 32349,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 30920,
+          "appendUs": 280,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 17364,
+            "append_us": 287,
+            "cache_transactions": 1,
+            "reconcile_us": 12858
+          }
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 54499,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 58026,
+          "appendUs": 284,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 32160,
+            "append_us": 691,
+            "cache_transactions": 1,
+            "reconcile_us": 17621
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 67578,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 85363,
+          "appendUs": 586,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 45150,
+            "append_us": 618,
+            "cache_transactions": 1,
+            "reconcile_us": 17759
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 87195,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 113863,
+          "appendUs": 316,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 54105,
+            "append_us": 323,
+            "cache_transactions": 1,
+            "reconcile_us": 20902
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 127805,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 140363,
+          "appendUs": 481,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 92410,
+            "append_us": 490,
+            "cache_transactions": 1,
+            "reconcile_us": 30905
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 182217,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 168863,
+          "appendUs": 430,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 125437,
+            "append_us": 443,
+            "cache_transactions": 1,
+            "reconcile_us": 33294
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 187307,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 191163,
+          "appendUs": 339,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 148363,
+            "append_us": 349,
+            "cache_transactions": 1,
+            "reconcile_us": 35347
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 240991,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 219663,
+          "appendUs": 361,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 171817,
+            "append_us": 373,
+            "cache_transactions": 1,
+            "reconcile_us": 32892
+          }
+        }
+      ],
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 2342,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 640,
+          "appendUs": 163,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 307,
+            "append_us": 166,
+            "cache_transactions": 1,
+            "reconcile_us": 1237
+          }
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 2979,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1210,
+          "appendUs": 169,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 466,
+            "append_us": 170,
+            "cache_transactions": 1,
+            "reconcile_us": 1673
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 4125,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1714,
+          "appendUs": 497,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 1406,
+            "append_us": 498,
+            "cache_transactions": 1,
+            "reconcile_us": 1439
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 5262,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1995,
+          "appendUs": 618,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 469,
+            "append_us": 619,
+            "cache_transactions": 1,
+            "reconcile_us": 2437
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 2599,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2258,
+          "appendUs": 308,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 356,
+            "append_us": 309,
+            "cache_transactions": 1,
+            "reconcile_us": 1039
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 2650,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2539,
+          "appendUs": 272,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 308,
+            "append_us": 273,
+            "cache_transactions": 1,
+            "reconcile_us": 1198
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 2315,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2761,
+          "appendUs": 171,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 441,
+            "append_us": 172,
+            "cache_transactions": 1,
+            "reconcile_us": 1120
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 3203,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 3044,
+          "appendUs": 196,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 360,
+            "append_us": 197,
+            "cache_transactions": 1,
+            "reconcile_us": 1927
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 9426,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 9498,
+          "appendUs": 254,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 4414,
+            "append_us": 257,
+            "cache_transactions": 1,
+            "reconcile_us": 3675
+          }
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 17305,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 17813,
+          "appendUs": 260,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 8355,
+            "append_us": 262,
+            "cache_transactions": 1,
+            "reconcile_us": 6793
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 18192,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 26149,
+          "appendUs": 214,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 8339,
+            "append_us": 394,
+            "cache_transactions": 1,
+            "reconcile_us": 7524
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 23427,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 34663,
+          "appendUs": 258,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 10066,
+            "append_us": 261,
+            "cache_transactions": 1,
+            "reconcile_us": 8843
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 22498,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 42613,
+          "appendUs": 262,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 11765,
+            "append_us": 265,
+            "cache_transactions": 1,
+            "reconcile_us": 8598
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 30560,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 51163,
+          "appendUs": 364,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 14747,
+            "append_us": 368,
+            "cache_transactions": 1,
+            "reconcile_us": 9763
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 32115,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 57853,
+          "appendUs": 475,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 15676,
+            "append_us": 478,
+            "cache_transactions": 1,
+            "reconcile_us": 14537
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 38299,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 66403,
+          "appendUs": 275,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 20061,
+            "append_us": 278,
+            "cache_transactions": 1,
+            "reconcile_us": 10840
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 31717,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 30920,
+          "appendUs": 844,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 16239,
+            "append_us": 851,
+            "cache_transactions": 1,
+            "reconcile_us": 12836
+          }
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 57015,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 58026,
+          "appendUs": 264,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 35898,
+            "append_us": 543,
+            "cache_transactions": 1,
+            "reconcile_us": 16846
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 79875,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 85363,
+          "appendUs": 419,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 54369,
+            "append_us": 431,
+            "cache_transactions": 1,
+            "reconcile_us": 21949
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 119879,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 113863,
+          "appendUs": 467,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 61836,
+            "append_us": 476,
+            "cache_transactions": 1,
+            "reconcile_us": 43282
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 142196,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 140363,
+          "appendUs": 327,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 104908,
+            "append_us": 337,
+            "cache_transactions": 1,
+            "reconcile_us": 29289
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 172311,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 168863,
+          "appendUs": 834,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 119064,
+            "append_us": 846,
+            "cache_transactions": 1,
+            "reconcile_us": 31096
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 234691,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 191163,
+          "appendUs": 399,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 185650,
+            "append_us": 442,
+            "cache_transactions": 1,
+            "reconcile_us": 45149
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 211302,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 219663,
+          "appendUs": 451,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 144291,
+            "append_us": 463,
+            "cache_transactions": 1,
+            "reconcile_us": 33915
+          }
+        }
+      ],
+      [
+        {
+          "operation": "capture",
+          "n": 1,
+          "us": 2400,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 640,
+          "appendUs": 165,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 316,
+            "append_us": 168,
+            "cache_transactions": 1,
+            "reconcile_us": 1281
+          }
+        },
+        {
+          "operation": "move",
+          "n": 1,
+          "us": 2999,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1210,
+          "appendUs": 185,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 651,
+            "append_us": 186,
+            "cache_transactions": 1,
+            "reconcile_us": 1200
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 1,
+          "us": 3071,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1714,
+          "appendUs": 266,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 328,
+            "append_us": 267,
+            "cache_transactions": 1,
+            "reconcile_us": 1676
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 1,
+          "us": 3385,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 1995,
+          "appendUs": 256,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 442,
+            "append_us": 257,
+            "cache_transactions": 1,
+            "reconcile_us": 1429
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 1,
+          "us": 2739,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2258,
+          "appendUs": 239,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 349,
+            "append_us": 240,
+            "cache_transactions": 1,
+            "reconcile_us": 1237
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 1,
+          "us": 3082,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2539,
+          "appendUs": 198,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 398,
+            "append_us": 199,
+            "cache_transactions": 1,
+            "reconcile_us": 1183
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 1,
+          "us": 2802,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 2761,
+          "appendUs": 242,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 379,
+            "append_us": 243,
+            "cache_transactions": 1,
+            "reconcile_us": 1378
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 1,
+          "us": 3296,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 3044,
+          "appendUs": 214,
+          "lastBatchTiming": {
+            "tasks": 1,
+            "prepare_us": 399,
+            "append_us": 215,
+            "cache_transactions": 1,
+            "reconcile_us": 1828
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 30,
+          "us": 11531,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 9498,
+          "appendUs": 253,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 5756,
+            "append_us": 255,
+            "cache_transactions": 1,
+            "reconcile_us": 4015
+          }
+        },
+        {
+          "operation": "move",
+          "n": 30,
+          "us": 19345,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 17813,
+          "appendUs": 532,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 8570,
+            "append_us": 535,
+            "cache_transactions": 1,
+            "reconcile_us": 7680
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 30,
+          "us": 18962,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 26149,
+          "appendUs": 220,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 9533,
+            "append_us": 395,
+            "cache_transactions": 1,
+            "reconcile_us": 7559
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 30,
+          "us": 22268,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 34663,
+          "appendUs": 595,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 10586,
+            "append_us": 597,
+            "cache_transactions": 1,
+            "reconcile_us": 7120
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 30,
+          "us": 29443,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 42613,
+          "appendUs": 252,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 17428,
+            "append_us": 255,
+            "cache_transactions": 1,
+            "reconcile_us": 10248
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 30,
+          "us": 41234,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 51163,
+          "appendUs": 558,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 19567,
+            "append_us": 561,
+            "cache_transactions": 1,
+            "reconcile_us": 14442
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 30,
+          "us": 35579,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 57853,
+          "appendUs": 431,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 23001,
+            "append_us": 434,
+            "cache_transactions": 1,
+            "reconcile_us": 10029
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 30,
+          "us": 42397,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 66403,
+          "appendUs": 360,
+          "lastBatchTiming": {
+            "tasks": 30,
+            "prepare_us": 22107,
+            "append_us": 363,
+            "cache_transactions": 1,
+            "reconcile_us": 12299
+          }
+        },
+        {
+          "operation": "capture",
+          "n": 100,
+          "us": 31064,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 30920,
+          "appendUs": 310,
+          "cacheTransactions": 1,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 17208,
+            "append_us": 316,
+            "cache_transactions": 1,
+            "reconcile_us": 11508
+          }
+        },
+        {
+          "operation": "move",
+          "n": 100,
+          "us": 57037,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 58026,
+          "appendUs": 227,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 33379,
+            "append_us": 539,
+            "cache_transactions": 1,
+            "reconcile_us": 18664
+          }
+        },
+        {
+          "operation": "edit",
+          "n": 100,
+          "us": 78401,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 85363,
+          "appendUs": 320,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 54497,
+            "append_us": 332,
+            "cache_transactions": 1,
+            "reconcile_us": 20303
+          }
+        },
+        {
+          "operation": "undo-edit",
+          "n": 100,
+          "us": 106589,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 113863,
+          "appendUs": 561,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 69663,
+            "append_us": 569,
+            "cache_transactions": 1,
+            "reconcile_us": 22688
+          }
+        },
+        {
+          "operation": "tag",
+          "n": 100,
+          "us": 117071,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 140363,
+          "appendUs": 335,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 87958,
+            "append_us": 343,
+            "cache_transactions": 1,
+            "reconcile_us": 24535
+          }
+        },
+        {
+          "operation": "undo-tag",
+          "n": 100,
+          "us": 153740,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 168863,
+          "appendUs": 483,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 102467,
+            "append_us": 491,
+            "cache_transactions": 1,
+            "reconcile_us": 29837
+          }
+        },
+        {
+          "operation": "delete",
+          "n": 100,
+          "us": 168976,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 191163,
+          "appendUs": 672,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 132616,
+            "append_us": 682,
+            "cache_transactions": 1,
+            "reconcile_us": 32688
+          }
+        },
+        {
+          "operation": "undo-delete",
+          "n": 100,
+          "us": 229652,
+          "lists": 2,
+          "reads": 3,
+          "appends": 1,
+          "readBytes": 219663,
+          "appendUs": 409,
+          "lastBatchTiming": {
+            "tasks": 100,
+            "prepare_us": 160115,
+            "append_us": 422,
+            "cache_transactions": 1,
+            "reconcile_us": 39715
+          }
+        }
+      ]
+    ]
+  },
+  "source_sha256": {
+    "perf_aot_before.dart": "aa1511bb1a6a1caaaf14920fc2bafb862cd7237755cca8a5636b44d1f66d5758",
+    "perf_aot_after.dart": "402e2c058fc8ee8d7138ac7af4c4347831c6a357bdd9d574cd9e254c422b1148",
+    "baseline/lib/storage/task_store.dart": "2b1305c8d2cb24e8dab7845d774e4563152f2a43d4c5a69cb86df1371d7201bc"
+  },
+  "sqlite_asset_sha256": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace"
+}

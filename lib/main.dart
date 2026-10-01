@@ -9,6 +9,8 @@ import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
+import 'domain/event.dart' show LogEvent;
+import 'presentation/unavailable_completion.dart';
 import 'presentation/task_toolbar.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
@@ -263,14 +265,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       onView: (view) {
         if (mounted) {
           setState(() {
-            final previousOrder = visibleEntries
-                .map((entry) => entry.task['id'])
-                .toList();
             taskView = view.value;
             final visibleOrder = visibleEntries
                 .map((entry) => entry.task['id'])
                 .toList();
-            if (!listEquals(previousOrder, visibleOrder)) {
+            if (selectionAnchor != null &&
+                !visibleOrder.contains(selectionAnchor)) {
               selectionAnchor = null;
             }
             if (editingTask == null && editingBulk == null) {
@@ -587,6 +587,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     bool notice = false,
   }) async {
     final prepared = <OperationReceipt>[];
+    final moveEditor = bulkEditorKey, moveBaseline = bulkSnapshot;
     var failed = true;
     try {
       final result = await action(prepared.add);
@@ -602,6 +603,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         } catch (_) {}
       }
       if (mounted && identical(store, origin) && prepared.isNotEmpty) {
+        if (verb == 'moving' && moveBaseline != null) {
+          _advanceBulkForOwnMoves(origin, moveEditor, moveBaseline, prepared);
+        }
         final previous = undoHistory.latest;
         undoHistory.record(verb, prepared, group: group);
         undoHistory.reconcile(origin.confirmedOperations);
@@ -643,10 +647,60 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
+  // Rebase only this editor's order token across exact confirmed local moves.
+  // Content changes or an unexpected external order remain conflicts. Keeping
+  // its key/baseline content retains draft controllers, focus and scroll.
+  void _advanceBulkForOwnMoves(
+    TaskStore origin,
+    GlobalKey<BulkTaskEditorState> session,
+    String baseline,
+    List<OperationReceipt> receipts,
+  ) {
+    if (!identical(store, origin) ||
+        !identical(bulkEditorKey, session) ||
+        editingBulk == null ||
+        bulkConflict ||
+        bulkSnapshot != baseline) {
+      return;
+    }
+    final expected = List<Map<String, dynamic>>.from(
+      (jsonDecode(baseline) as List).map(
+        (row) => Map<String, dynamic>.from(row),
+      ),
+    );
+    final confirmed = origin.confirmedOperations(receipts);
+    for (final receipt in receipts.where((r) => confirmed.contains(r.id))) {
+      final event = LogEvent.decode(receipt.raw);
+      if (event.type != 'task.moved') return;
+      final index = expected.indexWhere((row) => row['id'] == event.entity);
+      if (index < 0) return;
+      final task = expected.removeAt(index);
+      final before = event.data['before'];
+      final target = before == null
+          ? expected.length
+          : expected.indexWhere((row) => row['id'] == before);
+      if (target < 0) return;
+      expected.insert(target, task);
+    }
+    if (jsonEncode(expected) == origin.taskSnapshot) {
+      bulkSnapshot = origin.taskSnapshot;
+    }
+  }
+
+  bool _sameTaskContent(String before, String after) {
+    Map<String, String> content(String snapshot) => {
+      for (final row in jsonDecode(snapshot) as List)
+        row['id'] as String: jsonEncode(row),
+    };
+    return mapEquals(content(before), content(after));
+  }
+
   Future<void> _undoLatest() async {
     if (busy || closingEditor || undoHistory.latest == null) return;
     final origin = store!, requested = undoHistory.latest;
-    if (!await _closeEditor() || !mounted || !identical(store, origin)) return;
+    final preserveEditor = requested?.verb == 'moving';
+    if (!preserveEditor && !await _closeEditor()) return;
+    if (!mounted || !identical(store, origin)) return;
     await _act(() async {
       await origin.refresh();
       if (!mounted || !identical(store, origin)) return;
@@ -660,11 +714,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return;
       }
       final entry = requested!, label = entry.label;
+      final beforeUndo = origin.taskSnapshot;
+      final rebaseBulk =
+          preserveEditor &&
+          !bulkConflict &&
+          editingBulk != null &&
+          bulkSnapshot == beforeUndo;
       final result = await origin.undoOperations(entry.operations.toList());
       undoHistory.acknowledge(entry, result.undone);
       if (!mounted || !identical(store, origin)) return;
       setState(() {
-        _clearSelection();
+        if (!preserveEditor) _clearSelection();
+        if (rebaseBulk && _sameTaskContent(beforeUndo, origin.taskSnapshot)) {
+          bulkSnapshot = origin.taskSnapshot;
+        }
         rows = origin.rows;
       });
       _invalidateView();
@@ -902,20 +965,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           .toList();
     }
     await _act(() async {
-      while (pendingCapture.isNotEmpty) {
-        final entry = pendingCapture.first;
-        await store!.refresh();
-        // A prior append may have committed even when its cache update failed.
-        // Reuse this capture's entity identity instead of creating a duplicate.
-        if (!store!.hasEntity(entry.id)) {
-          await store!.command(entry.id, 'task.created', {
-            'title': entry.title,
-            'description': '',
-            'assignee': user,
-          });
-        }
-        pendingCapture.removeAt(0);
+      final result = await store!.createTasks({
+        for (final entry in pendingCapture) entry.id: entry.title,
+      }, user!);
+      pendingCapture.removeWhere(
+        (entry) => result.committedIds.contains(entry.id),
+      );
+      if (result.committedIds.isNotEmpty || result.error == null) {
         capture.text = pendingCapture.map((entry) => entry.title).join('\n');
+      }
+      if (result.error != null) {
+        throw StateError(
+          '${result.committedIds.length} tasks confirmed saved; '
+          '${pendingCapture.length} remain. ${result.error}',
+        );
       }
     });
     captureFailure = pendingCapture.isNotEmpty;
@@ -1645,7 +1708,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       _cancelDrag();
       return;
     }
-    if (!await _closeEditor() || !mounted) return;
+    if (!mounted) return;
     await _act(() async {
       if (drag == null ||
           !identical(drag.store, store) ||
@@ -1733,9 +1796,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         }
       }
     });
-    if (mounted && selectedTasks.isNotEmpty && wideLayout) {
-      setState(_openSelectionSession);
-    }
   }
 
   void _stopDragScroll() {
@@ -1976,13 +2036,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _complete(Map<String, dynamic> task) async {
     final origin = store!;
+    final time = timeSource.readTime();
     await _act(
       () => _recordAction(
         origin,
         'completing',
         (prepared) => origin.complete(
           task['id'],
-          completionInstant: DateTime.now(),
+          completionInstant: time.instant,
+          localZoneId: time.localZoneId,
           onPrepared: prepared,
         ),
         notice: true,
@@ -2095,7 +2157,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                               : null,
                         ),
                       ),
-                      if (busy) const LinearProgressIndicator(minHeight: 2),
+                      SizedBox(
+                        height: 2,
+                        child: busy
+                            ? const LinearProgressIndicator(minHeight: 2)
+                            : null,
+                      ),
                       if (error != null)
                         Padding(
                           padding: const EdgeInsets.symmetric(
@@ -2843,7 +2910,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   final completed = searching
                       ? task['completed'] == true
                       : showCompleted;
+                  final recurrence =
+                      (task['schedule'] as Map)['recurrence'] as String?;
                   final tile = Semantics(
+                    label: recurrence == null ? null : 'Repeats $recurrence',
                     selected: selectedTasks.contains(task['id']),
                     customSemanticsActions: {
                       const CustomSemanticsAction(label: 'Select task'): () =>
@@ -2895,20 +2965,38 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           leading: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Tooltip(
-                                message:
-                                    '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                                child: Checkbox(
-                                  materialTapTargetSize:
-                                      MaterialTapTargetSize.padded,
-                                  value: completed,
-                                  onChanged: busy
-                                      ? null
-                                      : (_) => completed
-                                            ? _reopen(task)
-                                            : _complete(task),
+                              if (!completed &&
+                                  entry.completionUnavailableReason != null)
+                                UnavailableCompletion(
+                                  key: ValueKey(
+                                    'completion-unavailable-${task['id']}',
+                                  ),
+                                  title: task['title'] as String,
+                                  reason: entry.completionUnavailableReason!,
+                                  onExplain: () => ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                        SnackBar(
+                                          content: Text(
+                                            entry.completionUnavailableReason!,
+                                          ),
+                                        ),
+                                      ),
+                                )
+                              else
+                                Tooltip(
+                                  message:
+                                      '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
+                                  child: Checkbox(
+                                    materialTapTargetSize:
+                                        MaterialTapTargetSize.padded,
+                                    value: completed,
+                                    onChanged: busy
+                                        ? null
+                                        : (_) => completed
+                                              ? _reopen(task)
+                                              : _complete(task),
+                                  ),
                                 ),
-                              ),
                             ],
                           ),
                           selected: selectedTasks.contains(task['id']),

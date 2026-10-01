@@ -54,8 +54,8 @@ void main() {
     expect(render(schedule, day: '2030-04-24'), 'Due 02:30');
     expect(render({...schedule, 'dueTime': '17:30'}), 'Due 20:30');
   });
-  test('recurrence survives omission without orphan separators', () {
-    expect(render({'dueDate': '2030-04-23', 'recurrence': 'daily'}), '↻ daily');
+  test('repeating rows use a compact marker without the verbose rule', () {
+    expect(render({'dueDate': '2030-04-23', 'recurrence': 'daily'}), '↻');
   });
   test('local zone changes alter only pinned presentation', () {
     final schedule = {

@@ -1960,6 +1960,11 @@ void main() {
     expect(find.byType(InputChip), findsNothing);
     await tester.enterText(search, 'home');
     await tester.pumpAndSettle();
+    // Below-first suggestions are an overlay: dismiss them before using the
+    // underlying footer, as selection/Escape/Tab/collapse do in normal use.
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    expect(find.text('Reset').hitTestable(), findsOneWidget);
     await tester.tap(find.text('Reset'));
     await tester.pumpAndSettle();
     expect(tester.widget<TextField>(search).controller!.text, isEmpty);
@@ -3160,6 +3165,385 @@ void main() {
         () => find.text('Newer synced review').evaluate().isNotEmpty,
       );
       expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
+  testWidgets(
+    'unchanged recurring completion explains and enables at idle midnight',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc5-native-repeat-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), id = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      await writer.command(id, 'task.created', {
+        'title': 'Plan tomorrow',
+        'description': '',
+        'assignee': user,
+        'schedule': {
+          'dueDate': '2026-10-02',
+          'recurrence': 'every day when done',
+        },
+      });
+      await File('${profile.path}/settings.json').writeAsString(
+        jsonEncode({'folder': folder.path, 'user': user, 'appearance': 'dark'}),
+      );
+      var base = DateTime.utc(2026, 10, 1, 23, 59, 55);
+      final elapsed = Stopwatch()..start();
+      late ViewTimeSource source;
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => source = ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () async => 'UTC',
+            now: () => base.add(elapsed.elapsed),
+          ),
+        ),
+      );
+      await waitForUi(
+        tester,
+        () => find
+            .byKey(ValueKey('completion-unavailable-$id'))
+            .evaluate()
+            .isNotEmpty,
+      );
+      final before = await File(
+        '${folder.path}/${writer.writer}.jsonl',
+      ).readAsString();
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.tap(capture);
+      await tester.enterText(capture, 'Keep this draft');
+      await tester.tap(find.byKey(ValueKey('completion-unavailable-$id')));
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('The next occurrence would have the same dates.'),
+        findsOneWidget,
+      );
+      expect(find.byType(TaskEditor), findsNothing);
+      expect(
+        await File('${folder.path}/${writer.writer}.jsonl').readAsString(),
+        before,
+      );
+      // Native timer, without another edit or invalidation, must enable at midnight.
+      base = DateTime.utc(2026, 10, 1, 23, 59, 59);
+      elapsed.reset();
+      source.onChanged();
+      await tester.pumpAndSettle();
+      await Future<void>.delayed(const Duration(milliseconds: 1200));
+      await tester.pumpAndSettle();
+      expect(find.byKey(ValueKey('completion-unavailable-$id')), findsNothing);
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Keep this draft',
+      );
+      final checkbox = find.descendant(
+        of: find.byKey(ValueKey('task-row-$id')),
+        matching: find.byType(Checkbox),
+      );
+      await tester.tap(checkbox);
+      await waitForUi(
+        tester,
+        () =>
+            find.text('Plan tomorrow').evaluate().length == 1 &&
+            find.textContaining('Completed 1 task').evaluate().isNotEmpty,
+      );
+      await writer.refresh();
+      expect(writer.rows.where((r) => r['kind'] == 'task').length, 2);
+      final successor = writer.rows.firstWhere(
+        (r) => r['id'] == const Uuid().v5(id, 'successor'),
+      );
+      expect((successor['schedule'] as Map)['dueDate'], '2026-10-03');
+      await tester.tap(find.byKey(const ValueKey('undo-task-action')));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere((r) => r['id'] == id)['completed'],
+        isFalse,
+      );
+      expect(writer.rows.where((r) => r['kind'] == 'task').length, 2);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
+  testWidgets(
+    'single and bulk dirty panes stay mounted through drag and reorder Undo',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc5-native-pane-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Alex Example'});
+      await writer.command(other, 'user.created', {'name': 'Blair Example'});
+      final ids = <String, String>{};
+      for (final title in [
+        'First',
+        'Hidden',
+        'Second',
+        'Third',
+        'Fourth',
+        'Dated',
+      ]) {
+        final id = const Uuid().v4();
+        ids[title] = id;
+        await writer.command(id, 'task.created', {
+          'title': title,
+          'description': '',
+          'assignee': title == 'Hidden' ? other : user,
+          'schedule': title == 'Dated' ? {'dueDate': '2026-10-05'} : {},
+        });
+      }
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1;
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await waitForUi(tester, () => find.text('First').evaluate().isNotEmpty);
+      await tester.tap(find.text('First'));
+      await tester.pumpAndSettle();
+      final notes = find.widgetWithText(TextField, 'Notes');
+      await tester.tap(notes);
+      await tester.enterText(notes, 'Unsaved reference notes');
+      final single = tester.state<TaskEditorState>(find.byType(TaskEditor));
+      final notesController = tester.widget<TextField>(notes).controller;
+      final notesFocus = tester.widget<TextField>(notes).focusNode;
+      final editorRect = tester.getRect(find.byType(TaskEditor));
+      var missingFrames = 0;
+      var monitor = true;
+      void inspect(Duration _) {
+        if (!monitor) return;
+        if (find.byType(TaskEditor).evaluate().isEmpty) missingFrames++;
+        WidgetsBinding.instance.addPostFrameCallback(inspect);
+      }
+
+      WidgetsBinding.instance.addPostFrameCallback(inspect);
+      Finder target(String title) =>
+          find.byKey(ValueKey('task-drop-${ids[title]}'));
+      Future<void> drag(String from, String to, {bool cancel = false}) async {
+        final handle = find.descendant(
+          of: target(from),
+          matching: find.byType(Draggable<String>),
+        );
+        final gesture = await tester.startGesture(tester.getCenter(handle));
+        await gesture.moveBy(const Offset(-20, 0));
+        await tester.pump();
+        final rect = tester.getRect(target(to));
+        await gesture.moveTo(Offset(rect.center.dx, rect.bottom - 8));
+        await tester.pump();
+        if (cancel) {
+          await gesture.cancel();
+        } else {
+          await gesture.up();
+        }
+        await tester.pumpAndSettle();
+      }
+
+      await drag('First', 'Third', cancel: true);
+      expect(
+        identical(
+          tester.state<TaskEditorState>(find.byType(TaskEditor)),
+          single,
+        ),
+        isTrue,
+      );
+      await drag('First', 'Dated');
+      expect(find.text('Unsaved changes'), findsNothing);
+      await drag('First', 'Third');
+      expect(
+        identical(
+          tester.state<TaskEditorState>(find.byType(TaskEditor)),
+          single,
+        ),
+        isTrue,
+      );
+      expect(
+        identical(tester.widget<TextField>(notes).controller, notesController),
+        isTrue,
+      );
+      expect(
+        identical(tester.widget<TextField>(notes).focusNode, notesFocus),
+        isTrue,
+      );
+      expect(notesController!.text, 'Unsaved reference notes');
+      expect(tester.getRect(find.byType(TaskEditor)), editorRect);
+      expect(missingFrames, 0);
+      await writer.refresh();
+      expect(
+        writer.rows.where((r) => r['kind'] == 'task').map((r) => r['title']),
+        ['Hidden', 'Second', 'Third', 'First', 'Fourth', 'Dated'],
+      );
+      await tester.tap(find.byKey(const ValueKey('undo-task-action')));
+      await tester.pumpAndSettle();
+      expect(
+        identical(
+          tester.state<TaskEditorState>(find.byType(TaskEditor)),
+          single,
+        ),
+        isTrue,
+      );
+      expect(notesController.text, 'Unsaved reference notes');
+      expect(find.text('Unsaved changes'), findsNothing);
+      monitor = false;
+      await tester.drag(find.byType(SnackBar), const Offset(0, 150));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere((r) => r['id'] == ids['First'])['description'],
+        'Unsaved reference notes',
+      );
+      await selectTask(tester, ids['First']!, control: false);
+      await drag('First', 'Third');
+      // The anchor survives by ID. Shift uses its new visible position and
+      // excludes the hidden assignee rather than reverting to a plain click.
+      await selectTask(tester, ids['Second']!, control: false, shift: true);
+      expect(find.text('Edit 3 tasks'), findsOneWidget);
+      final bulk = tester.state<BulkTaskEditorState>(
+        find.byType(BulkTaskEditor),
+      );
+      final addTags = find.widgetWithText(TextField, 'Add tags');
+      await tester.ensureVisible(addTags);
+      await tester.tap(addTags);
+      await tester.enterText(addTags, 'Reviewed');
+      final bulkController = tester.widget<TextField>(addTags).controller;
+      final bulkRect = tester.getRect(find.byType(BulkTaskEditor));
+      await drag('First', 'Fourth');
+      expect(
+        identical(
+          tester.state<BulkTaskEditorState>(find.byType(BulkTaskEditor)),
+          bulk,
+        ),
+        isTrue,
+      );
+      expect(
+        tester.widget<TextField>(addTags).controller,
+        same(bulkController),
+      );
+      expect(bulkController!.text, 'Reviewed');
+      expect(tester.getRect(find.byType(BulkTaskEditor)), bulkRect);
+      await tester.tap(find.byKey(const ValueKey('undo-task-action')));
+      await tester.pumpAndSettle();
+      expect(
+        identical(
+          tester.state<BulkTaskEditorState>(find.byType(BulkTaskEditor)),
+          bulk,
+        ),
+        isTrue,
+      );
+      expect(bulkController.text, 'Reviewed');
+      await tester.drag(find.byType(SnackBar), const Offset(0, 150));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Save changes'));
+      await waitForUi(
+        tester,
+        () => find.byType(BulkTaskEditor).evaluate().isEmpty,
+      );
+      await writer.refresh();
+      for (final title in ['First', 'Second', 'Third']) {
+        expect(
+          writer.rows.firstWhere((r) => r['id'] == ids[title])['tags'],
+          contains('Reviewed'),
+        );
+      }
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
+  testWidgets(
+    'capture batches update draft once and retain responsive native frames',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc5-native-batch-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Example'});
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      tester.view.physicalSize = const Size(1200, 800);
+      tester.view.devicePixelRatio = 1;
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await waitForUi(
+        tester,
+        () => find
+            .widgetWithText(TextField, 'What needs doing?')
+            .evaluate()
+            .isNotEmpty,
+      );
+      var total = 0;
+      for (final count in [1, 30, 100]) {
+        final capture = find.widgetWithText(TextField, 'What needs doing?');
+        await tester.ensureVisible(capture);
+        await tester.tap(capture);
+        final lines = List.generate(
+          count,
+          (i) => 'Synthetic $total batch task $i',
+        ).join('\n');
+        await tester.enterText(capture, lines);
+        await tester.pumpAndSettle();
+        final controller = tester.widget<TextField>(capture).controller!;
+        final changes = <String>[];
+        var lastText = controller.text;
+        void changed() {
+          if (controller.text != lastText) {
+            lastText = controller.text;
+            changes.add(lastText);
+          }
+        }
+
+        controller.addListener(changed);
+        final elapsed = Stopwatch()..start();
+        await tester.tap(find.byTooltip('Add tasks'));
+        var frames = 0;
+        while (controller.text.isNotEmpty && frames++ < 300) {
+          await tester.pump(const Duration(milliseconds: 10));
+        }
+        elapsed.stop();
+        final clearedMs = elapsed.elapsedMilliseconds;
+        final settled = Stopwatch()..start();
+        await tester.pumpAndSettle();
+        settled.stop();
+        controller.removeListener(changed);
+        expect(controller.text, isEmpty);
+        expect(changes, [''], reason: 'No progressive line-by-line clearing.');
+        total += count;
+        await writer.refresh();
+        expect(writer.rows.where((r) => r['kind'] == 'task').length, total);
+        debugPrint(
+          'TANDEMLOG_NATIVE_BATCH count=$count input_clear_ms=$clearedMs settle_ms=${settled.elapsedMilliseconds} frames=$frames input_updates=${changes.length}',
+        );
+      }
+      expect(tester.takeException(), isNull);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       tester.view.resetPhysicalSize();

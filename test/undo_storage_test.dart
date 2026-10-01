@@ -239,11 +239,11 @@ void main() {
         final faulty = _FailFolder(folder, failAfter);
         a = await TaskStore.open(faulty, '${root.path}/a');
         closedA = false;
-        faulty.countdown = 2;
+        faulty.countdown = 1;
         final partial = await a.undoOperations(edits.map((r) => r.id).toList());
         expect(partial.error, isA<StateError>());
-        expect(partial.undone.length, failAfter ? 2 : 1);
-        expect(partial.remaining.length, failAfter ? 0 : 1);
+        expect(partial.undone.length, failAfter ? 2 : 0);
+        expect(partial.remaining.length, failAfter ? 0 : 2);
         if (partial.remaining.isNotEmpty) {
           final retry = await a.undoOperations(partial.remaining);
           expect(retry.error, isNull);

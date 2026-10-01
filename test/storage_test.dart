@@ -174,31 +174,18 @@ void main() {
         transport.failNext = true;
         final partial = await run([first, second]);
         expect(partial.error, isA<StateError>());
-        expect(partial.committedIds, isEmpty);
-        expect(partial.remainingIds, [first, second]);
-        // Append succeeded but the disposable cache did not acknowledge it.
+        // The same call reconciles a complete durable batch after a transient
+        // cache failure. Every acknowledged task has an exact raw receipt.
+        expect(partial.committedIds, [first, second]);
+        expect(partial.remainingIds, isEmpty);
         expect(
           a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
-          count,
+          count + 2,
         );
-        await a!.refresh();
-        expect(
-          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
-          count + 1,
-        );
-        final appended = LogEvent.decode(
-          a!.db
-                  .select('SELECT raw FROM events ORDER BY seq DESC LIMIT 1')
-                  .single['raw']
-              as String,
-        );
-        expect(appended.entity, first);
-        // Reconcile the uncertain first task from canonical history before retry.
-        final retryIds = partial.remainingIds
-            .where((id) => id != appended.entity)
-            .toList();
-        final retry = await run(retryIds);
-        expect(retry.succeeded, isTrue);
+        if (partial.remainingIds.isNotEmpty) {
+          final retry = await run(partial.remainingIds);
+          expect(retry.succeeded, isTrue);
+        }
         expect(
           a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
           count + 2,
@@ -289,7 +276,7 @@ void main() {
   );
 
   test(
-    'bulk guard reports partial progress and retry; block uses global order',
+    'bulk guard rechecks before the batch append; retry block uses global order',
     () async {
       final first = await task();
       final ids = [first];
@@ -307,10 +294,10 @@ void main() {
         ids,
         BulkTaskEdit(addTags: ['bulk']),
         expectedTaskSnapshot: a!.taskSnapshot,
-        canCommit: () => ++checks <= 2,
+        canCommit: () => ++checks <= 1,
       );
-      expect(partial.committedIds, [first]);
-      expect(partial.remainingIds, ids.sublist(1));
+      expect(partial.committedIds, isEmpty);
+      expect(partial.remainingIds, ids);
       expect(partial.error, isA<StaleTaskSnapshot>());
       final retry = await a!.bulkEdit(
         partial.remainingIds,
@@ -1377,6 +1364,115 @@ void main() {
       await File('${root.path}/private-a/cache.sqlite').delete();
       a = await TaskStore.open(aFolder, '${root.path}/private-a');
       expect(a!.rows, expected);
+    },
+  );
+  test(
+    'unchanged repeating completion rejects before append and refreshes remote schedule',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {
+          'dueDate': '2026-10-01',
+          'recurrence': 'every day when done',
+        },
+      });
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await b!.command(id, 'task.edited', {
+        'schedule': {
+          'dueDate': '2026-10-02',
+          'recurrence': 'every day when done',
+        },
+      });
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      final before = await aFolder.read('${a!.writer}.jsonl');
+      var prepared = false;
+      await expectLater(
+        a!.complete(
+          id,
+          completionInstant: DateTime.utc(2026, 10, 2, 2),
+          localZoneId: 'America/Chicago',
+          onPrepared: (_) => prepared = true,
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(prepared, isFalse);
+      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(state(a!, id)['completed'], isFalse);
+      expect(a!.rows.where((r) => r['kind'] == 'task').length, 1);
+      await expectLater(
+        a!.command(id, 'task.completed', {
+          'successor': {
+            'id': const Uuid().v5(id, 'successor'),
+            'title': 'Groceries',
+            'description': '',
+            'assignee': state(a!, id)['assignee'],
+            'tags': [],
+            'schedule': state(a!, id)['schedule'],
+          },
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(
+        a!.command(id, 'task.completed', {}),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      final event = await a!.complete(
+        id,
+        completionInstant: DateTime.utc(2026, 10, 2, 5),
+        localZoneId: 'America/Chicago',
+      );
+      expect(
+        (event.data['successor'] as Map)['schedule']['dueDate'],
+        '2026-10-03',
+      );
+      await a!.reopen(id, a!.activeCompletionIds(id));
+      expect(state(a!, id)['completed'], isFalse);
+      expect(a!.rows.where((r) => r['kind'] == 'task').length, 2);
+    },
+  );
+  test(
+    'accepted historic unchanged recurrence is replayed without retroactive rejection',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {
+          'dueDate': '2026-10-02',
+          'recurrence': 'every day when done',
+        },
+      });
+      final remote = const Uuid().v4();
+      final event = LogEvent(
+        a!.space,
+        remote,
+        1,
+        testClock(testNow.millisecondsSinceEpoch + 1, 0),
+        id,
+        'task.completed',
+        {
+          'completedAt': '2026-10-01',
+          'successor': {
+            'id': const Uuid().v5(id, 'successor'),
+            'title': 'Groceries',
+            'description': '',
+            'assignee': state(a!, id)['assignee'],
+            'tags': [],
+            'schedule': state(a!, id)['schedule'],
+          },
+        },
+      );
+      await aFolder.create(
+        '$remote.jsonl',
+        Uint8List.fromList(utf8.encode('${event.encode()}\n')),
+      );
+      await a!.refresh();
+      expect(state(a!, id)['completed'], isTrue);
+      expect(a!.rows.where((r) => r['kind'] == 'task').length, 2);
+      await a!.reopen(id, a!.activeCompletionIds(id));
+      expect(state(a!, id)['completed'], isFalse);
     },
   );
   test(

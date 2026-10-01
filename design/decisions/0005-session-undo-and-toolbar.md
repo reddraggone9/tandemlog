@@ -17,3 +17,11 @@ Remove “Tandemlog” from the everyday chrome, retaining the checkmark as the 
 Current events identify a writer device and task assignee, not the acting user for each change. Lee chose device-only event attribution: any advisory device-to-person association/display may come later. Historic people cannot safely be inferred from writer/assignee. Acting-user fields, audit UI, rollback of other people's history, redo and cross-restart Undo are outside this candidate. Device-signed logs remain a future idea requiring a separate key/integrity design.
 
 Rejected: popup-only recovery, inverse snapshot writes that overwrite newer synced work, persistent arbitrary name truncation and a general history framework. Revisit the 50-action/session boundary or conflict wording if hands-on use shows concrete friction.
+
+## Accepted follow-up: completion, selection and batches
+
+Lee reported identical scheduled successors on early completion-relative completion, dirty side editors closing/reopening during drag, and a lost Shift anchor after reorder. Compare actual successor dates and explain unavailable completion; retain editor keys/controllers during moves, and preserve anchors by visible task ID. Reopening/Undo and recurrence computation remain unchanged. Move Undo also retains the editor because it does not touch its content; content-changing Undo still resolves the draft first.
+
+Small local batches should feel immediate. Measurements found repeated read/hash/cache/order work dominating flush time, plus progressive capture-field clearing. Shared validated JSONL appends remove repeated scans and acknowledge one coherent input update without weakening flushes, inventing whole-batch crash atomicity or changing the protocol. Incoming deferred references and exact receipt recovery remain admission gates. AOT measurements and fault tests substantiate this choice; Android provider/visual acceptance stays independent. Revisit chunk sizing if real selections substantially exceed the tested 100-task envelope.
+
+The tag dropdown prefers usable space below and uses actual content/keyboard bounds before flipping; footer proximity alone was an incorrect placement heuristic. Its overlay does not resize the dialog and is dismissed before accessing covered footer actions.

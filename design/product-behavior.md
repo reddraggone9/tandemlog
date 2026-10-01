@@ -90,3 +90,19 @@ Bulk edits exclude title/notes, retain untouched mixed values and apply only exp
 ## Session Undo and toolbar fit
 
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions and recurrence successors. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
+
+
+## Completion eligibility and reorder continuity — RC5 follow-up
+
+An open repeating task cannot be completed when its computed successor preserves all three stored dates (start, due and this-occurrence override). A cleared override counts as a change. Sorting bounds/group labels are not inputs to this rule, and recurrence calculation itself is unchanged. The unavailable checkbox explains on tap, hover and keyboard focus. This prevents another identical scheduled occurrence; recording repeated same-period work is not a current requirement. Advancing, overdue and nonrepeating tasks remain completable. History reopening and Undo remain available. The store checks after ingestion and before append; accepted older history is never retroactively rejected.
+
+Eligibility follows the completion day in the task's explicit zone or current local zone and refreshes at that zone's civil midnight, including DST, and on existing resume/clock/zone invalidation. A clock-only view change writes no event. Recurrence beyond the supported calendar range explains the need to edit the schedule instead of crashing the list.
+
+Valid reorders retain the mounted single/bulk editor session, selection, draft controllers, focus and scroll. They do not ask to save/discard unrelated content. Bulk order tokens advance only across exact confirmed local moves that reproduce the observed snapshot; other changes retain the conflict guard. Undo of a move also keeps the editor, while Undo of content-changing operations retains the existing dirty-draft guard. Selection anchors are task identities: a subsequent Shift selection uses the anchor's current visible position after own or external order changes. Only an anchor that becomes unavailable/hidden/removed is invalidated.
+
+The tag popup prefers below when enough usable rows fit, including one-row/empty results. It flips above only when needed by the actual safe viewport/keyboard bounds, not because the dialog footer happens to be close or the space above is larger. The bounded overlay may temporarily cover a footer; selection, Escape/Tab, outside dismissal or collapse exposes it without resizing the dialog.
+
+Multiline capture presents one acknowledged update, not progressive line clearing. On failure it retains unconfirmed lines, using the original task identities for safe retry. Bulk creation, edits/tags, moves, deletion and operation Undo share validated multi-record appends; their crash semantics remain per-record rather than whole-batch atomic.
+
+
+Task rows show a compact repeating marker, with the full rule retained in accessible semantics and the editor. A proposed custom repeating-checkbox outline is pending Lee's mockup approval and is not shipped; the ordinary checkbox plus compact marker remains the fallback. Eligibility explanation and normal completion/reopening targets remain unchanged.

@@ -2,6 +2,53 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/domain/schedule.dart';
 
 void main() {
+  test(
+    'completion guard compares actual occurrence dates, not rendered bounds',
+    () {
+      final day = DateTime.utc(2026, 10, 1);
+      for (final schedule in [
+        TaskSchedule(dueDate: '2026-10-02', recurrence: 'every day when done'),
+        TaskSchedule(
+          startDate: '2026-09-30',
+          dueDate: '2026-10-02',
+          startTime: '09:00',
+          dueTime: '17:00',
+          timeZone: 'America/Chicago',
+          dueMinDays: 9,
+          recurrence: 'every day when done',
+        ),
+        TaskSchedule(
+          startDate: '2026-10-02',
+          recurrence: 'every day when done',
+        ),
+        TaskSchedule(
+          scheduledDate: '2026-10-02',
+          recurrence: 'every day when done',
+        ),
+      ]) {
+        expect(schedule.hasSameOccurrenceDates(schedule.next(day)), isTrue);
+      }
+      for (final schedule in [
+        TaskSchedule(dueDate: '2026-10-02', recurrence: 'every day'),
+        TaskSchedule(dueDate: '2026-09-29', recurrence: 'every day when done'),
+        TaskSchedule(
+          dueDate: '2026-10-02',
+          scheduledDate: '2026-10-02',
+          recurrence: 'every day when done',
+        ),
+      ]) {
+        expect(schedule.hasSameOccurrenceDates(schedule.next(day)), isFalse);
+      }
+      final monday = TaskSchedule(
+        dueDate: '2026-10-05',
+        recurrence: 'every weekday when done',
+      );
+      expect(
+        monday.hasSameOccurrenceDates(monday.next(DateTime.utc(2026, 10, 4))),
+        isTrue,
+      );
+    },
+  );
   test('all 37 observed expressions match pinned upstream oracle', () {
     expect(observedRecurrences.length, 37);
     for (final row in oracleCases) {

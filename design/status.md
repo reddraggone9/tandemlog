@@ -2,7 +2,13 @@
 
 Current published preview: [v0.1.0-rc.4](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.4), Android build 24, source `ded2eebc10eb1670658995cbc0c06b4676a5c583`. Public experimental prerelease, not Latest; stable and production cutover remain deferred. Publication reused the exact native-accepted artifacts without rebuilding. All 11 public asset downloads/checksums, public APK signing identity and tag/source were independently verified. RC3 remains intact.
 
-## Unreleased RC5 — session Undo and toolbar
+## RC5 replacement build 26 — in validation
+
+Build 25 remains superseded/unpublished following user feedback. The replacement adds below-first tag suggestions, guarded identical-date recurring completion, continuous single/bulk editing through drag, identity-stable Shift anchors and shared bulk persistence batching. No actor fields, history rewrite, canonical protocol or cache projection change. Exact new signed Android acceptance is required; build-25 evidence does not cover these changes.
+
+All 170 app tests, 12 Python gates, analysis/formatting and the complete 23-flow native Linux suite pass locally. Ten both-theme desktop/actual-narrow screenshots and the 17.45-second pointer-visible delta demo were inspected; Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version17. Compact recurrence markers replace full list wording; the custom checkbox remains a separate unapproved proposal. Domain/storage/reference/fault, visual methodology and limitations are recorded in [runtime QA](runtime-qa.md). [AOT batch measurements](../evidence/rc5-batch-performance.json) show one append/cache commit per successful batch; native/frame/provider timing remains a separate measurement. Hosted candidate gates and exact Android acceptance remain pending. Latest published RC4 and all real source/canonical folders remain untouched.
+
+## Superseded unpublished RC5 build 25 — session Undo and toolbar
 
 Lee approved persistent top-bar Undo, bounded repeated session recovery, quiet editing/reorder, shared completion/deletion notices and fit-based full-name/avatar identity. The header-only change `4c8a013a24701a17c066dbcd4a315ab718dd7f85` passed hosted CI [36928124738](https://github.com/reddraggone9/tandemlog/actions/runs/36928124738). The broader candidate is build 25, not published. [Decision 0005](decisions/0005-session-undo-and-toolbar.md) records named-operation conflict semantics and cache 8 compatibility. Actor attribution remains unimplemented; [stable readiness](stable-readiness.md) requires its deliberate review before 0.1.0.
 

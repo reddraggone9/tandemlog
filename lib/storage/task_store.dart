@@ -30,7 +30,8 @@ class TaskStore {
   static const materialClockSkew = Duration(minutes: 5);
   String? clockWarning;
   late final String space;
-  int readFiles = 0;
+  int readFiles = 0, cacheTransactions = 0;
+  Map<String, int>? lastBatchTiming;
   Future<void> _queue = Future<void>.value();
   bool _closed = false;
   Future<void>? _closing;
@@ -421,6 +422,7 @@ class TaskStore {
       }
       db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       db.execute('COMMIT');
+      cacheTransactions++;
       _updateClockWarning(_maximumClock(), _nowNs());
       return newEvents.isNotEmpty;
     } catch (_) {
@@ -519,14 +521,12 @@ class TaskStore {
   }) {
     final targets = observedCompletions.toSet();
     return _serialize(() async {
-      for (final target in targets) {
-        await _refresh();
-        if (activeCompletionIds(entity).contains(target)) {
-          await _command(entity, 'task.completionUndone', {
-            'completion': target,
-          }, onPrepared: onPrepared);
-        }
-      }
+      await _refresh();
+      final active = activeCompletionIds(entity).toSet();
+      await _appendCommandBatch('task.completionUndone', [
+        for (final target in targets.where(active.contains))
+          (entity, {'completion': target}),
+      ], onPrepared: onPrepared);
     });
   }
 
@@ -560,6 +560,26 @@ class TaskStore {
     final maximum = _maximumClock();
     _updateClockWarning(maximum, writeTime);
     final clock = EventClock.next(writeTime, maximum);
+    final e = _prepareCommand(entity, type, data, seq, clock);
+    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    final raw = e.encode();
+    onPrepared?.call(OperationReceipt(e.id, raw, e.entity));
+    await folder.append(
+      '$writer.jsonl',
+      Uint8List.fromList(utf8.encode('$raw\n')),
+    );
+    // Durable log append is the commit point. A cache failure is recoverable.
+    await _refresh();
+    return e;
+  }
+
+  LogEvent _prepareCommand(
+    String entity,
+    String type,
+    Map<String, dynamic> data,
+    int seq,
+    EventClock clock,
+  ) {
     final e = LogEvent.decode(
       LogEvent(space, writer, seq, clock, entity, type, data).encode(),
     );
@@ -591,7 +611,27 @@ class TaskStore {
     _validateUndoReferences(e);
     _validateMoves(e);
     _validateTagReferences(e);
+    if (type == 'task.completed' &&
+        data['successor'] == null &&
+        TaskSchedule.fromJson(
+              Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
+            ).recurrence !=
+            null) {
+      throw FormatFailure('Repeating completion requires a next occurrence.');
+    }
     if (type == 'task.completed' && data['successor'] != null) {
+      final current = TaskSchedule.fromJson(
+        Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
+      );
+      final successor = TaskSchedule.fromJson(
+        Map<String, dynamic>.from(
+          (data['successor'] as Map)['schedule'] as Map,
+        ),
+      );
+      if (current.recurrence != null &&
+          current.hasSameOccurrenceDates(successor)) {
+        throw FormatFailure(unchangedRecurrenceMessage);
+      }
       final successorId = (data['successor'] as Map)['id'];
       if (db.select(
         "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','user.created')",
@@ -602,17 +642,120 @@ class TaskStore {
         );
       }
     }
-    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    final raw = e.encode();
-    onPrepared?.call(OperationReceipt(e.id, raw, e.entity));
-    await folder.append(
-      '$writer.jsonl',
-      Uint8List.fromList(utf8.encode('$raw\n')),
-    );
-    // Durable log append is the commit point. A cache failure is recoverable.
-    await _refresh();
     return e;
   }
+
+  /// Unchanged per-event JSONL protocol, one flushed append and cache commit.
+  /// This is not a crash-atomic multi-event transaction. On failure exact raw
+  /// receipts establish acknowledged progress; an incomplete owned tail blocks
+  /// writes and is retained by the existing integrity/recovery policy.
+  Future<List<OperationReceipt>> _appendCommandBatch(
+    String type,
+    List<(String, Map<String, dynamic>)> commands, {
+    bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
+  }) async {
+    if (commands.isEmpty) return [];
+    final phase = Stopwatch()..start();
+    final transactions = cacheTransactions;
+    var seq =
+        (db.select(
+              'SELECT COALESCE(MAX(seq),0) AS n FROM events WHERE writer=?',
+              [writer],
+            ).first['n']
+            as int) +
+        1;
+    var maximum = _maximumClock();
+    final receipts = <OperationReceipt>[];
+    final bytes = BytesBuilder(copy: false);
+    for (final (entity, data) in commands) {
+      final wall = _nowNs();
+      _updateClockWarning(maximum, wall);
+      final clock = EventClock.next(wall, maximum);
+      final event = _prepareCommand(entity, type, data, seq++, clock);
+      final raw = event.encode();
+      receipts.add(OperationReceipt(event.id, raw, entity));
+      bytes.add(utf8.encode('$raw\n'));
+      maximum = clock;
+    }
+    final preparedUs = phase.elapsedMicroseconds;
+    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    for (final receipt in receipts) {
+      onPrepared?.call(receipt);
+    }
+    if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    phase.reset();
+    try {
+      await folder.append('$writer.jsonl', bytes.takeBytes());
+    } finally {
+      lastBatchTiming = {
+        'tasks': commands.length,
+        'prepare_us': preparedUs,
+        'append_us': phase.elapsedMicroseconds,
+        'cache_transactions': 0,
+      };
+    }
+    phase.reset();
+    try {
+      await _refresh();
+    } finally {
+      lastBatchTiming!['reconcile_us'] = phase.elapsedMicroseconds;
+      lastBatchTiming!['cache_transactions'] = cacheTransactions - transactions;
+    }
+    return receipts;
+  }
+
+  /// Retry identities belong to the same capture; already present tasks are
+  /// acknowledged without recreating them. UI updates happen after this batch.
+  Future<BulkTaskResult> createTasks(
+    Map<String, String> titles,
+    String assignee,
+  ) => _serialize(() async {
+    await _refresh();
+    final present = <String>[];
+    final commands = <(String, Map<String, dynamic>)>[];
+    for (final entry in titles.entries) {
+      if (hasEntity(entry.key)) {
+        final current = project(_entityEvents(entry.key));
+        if (current?['kind'] != 'task') {
+          throw FormatFailure('Capture identity is not a task.');
+        }
+        present.add(entry.key);
+      } else {
+        commands.add((
+          entry.key,
+          {'title': entry.value, 'description': '', 'assignee': assignee},
+        ));
+      }
+    }
+    final prepared = <OperationReceipt>[];
+    Object? error;
+    try {
+      await _appendCommandBatch(
+        'task.created',
+        commands,
+        onPrepared: prepared.add,
+      );
+    } catch (failure) {
+      error = failure;
+      try {
+        await _refresh();
+      } catch (_) {
+        /* Preserve uncertain draft and logs. */
+      }
+    }
+    final confirmed = confirmedOperations(prepared);
+    final committed = {
+      ...present,
+      for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
+        receipt.entity,
+    };
+    return BulkTaskResult(
+      titles.keys.where(committed.contains),
+      titles.keys.where((id) => !committed.contains(id)),
+      error,
+    );
+  });
 
   void _validateUndoReferences([LogEvent? pending]) {
     // A join revalidates resolved references, including newly imported targets.
@@ -656,7 +799,10 @@ class TaskStore {
   void _validateMoves([LogEvent? pending]) {
     final moves = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved'",
+          pending == null
+              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved'"
+              : "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+          pending == null ? [] : [pending.entity],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
@@ -677,9 +823,19 @@ class TaskStore {
   }
 
   void _validateTagReferences([LogEvent? pending]) {
+    // Full ingestion validates all newly joined references. Local preparation
+    // only needs mutations referencing this new event (or its derived seed),
+    // plus the new mutation itself. Do not repeatedly decode unrelated history.
+    final successor =
+        pending?.type == 'task.completed' && pending?.data['successor'] is Map
+        ? (pending!.data['successor'] as Map)['id']
+        : null;
     final mutations = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.tagsChanged' OR json_extract(raw,'\$.data.tagChanges') IS NOT NULL",
+          pending == null
+              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.tagsChanged' OR json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
+              : "SELECT raw FROM events e WHERE EXISTS (SELECT 1 FROM json_each(CASE WHEN json_extract(e.raw,'\$.type')='task.tagsChanged' THEN json_extract(e.raw,'\$.data.remove') ELSE json_extract(e.raw,'\$.data.tagChanges.remove') END) r WHERE r.value LIKE ?) OR e.entity=?",
+          pending == null ? [] : ['${pending.id}:%', successor],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
@@ -787,6 +943,7 @@ class TaskStore {
     String entity, {
     DateTime? completionDay,
     DateTime? completionInstant,
+    String? localZoneId,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
@@ -801,13 +958,17 @@ class TaskStore {
       throw ArgumentError('Supply exactly one completion day or instant.');
     }
     final day =
-        completionDay ?? civilDayAt(completionInstant!, schedule.timeZone);
+        completionDay ??
+        civilDayAt(completionInstant!, schedule.timeZone ?? localZoneId);
     final data = <String, dynamic>{
       'completedAt':
           '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
     };
     if (schedule.recurrence != null) {
       final next = schedule.next(day);
+      if (schedule.hasSameOccurrenceDates(next)) {
+        throw FormatFailure(unchangedRecurrenceMessage);
+      }
       data['successor'] = {
         'id': const Uuid().v5(entity, 'successor'),
         'title': state['title'],
@@ -817,7 +978,13 @@ class TaskStore {
         'schedule': next.toJson(),
       };
     }
-    return _command(entity, 'task.completed', data, onPrepared: onPrepared);
+    return _command(
+      entity,
+      'task.completed',
+      data,
+      expectedTaskSnapshot: taskSnapshot,
+      onPrepared: onPrepared,
+    );
   });
 
   /// Immutable comparison token for current task content and global order.
@@ -930,48 +1097,36 @@ class TaskStore {
     }
     final selected = _selection(ids);
     final commands = prepare(selected);
-    // Decode every command and validate assignees before the first append.
-    for (final entry in commands.entries) {
-      LogEvent.decode(
-        LogEvent(
-          space,
-          writer,
-          1,
-          EventClock.next(_nowNs(), _maximumClock()),
-          entry.key,
-          type,
-          entry.value,
-        ).encode(),
+    final prepared = <OperationReceipt>[];
+    Object? error;
+    try {
+      await _appendCommandBatch(
+        type,
+        [for (final entry in commands.entries) (entry.key, entry.value)],
+        canCommit: canCommit,
+        onPrepared: (receipt) {
+          prepared.add(receipt);
+          onPrepared?.call(receipt);
+        },
       );
-      if (entry.value.containsKey('assignee') &&
-          !rows.any(
-            (r) => r['kind'] == 'user' && r['id'] == entry.value['assignee'],
-          )) {
-        throw FormatFailure('Choose an existing user.');
-      }
-    }
-    final pending = commands.keys.toList();
-    final committed = <String>[];
-    var expected = taskSnapshot;
-    while (pending.isNotEmpty) {
-      final id = pending.first;
+    } catch (failure) {
+      error = failure;
       try {
-        await _command(
-          id,
-          type,
-          commands[id]!,
-          expectedTaskSnapshot: expected,
-          canCommit: canCommit,
-          onPrepared: onPrepared,
-        );
-        committed.add(id);
-        pending.removeAt(0);
-        expected = taskSnapshot;
-      } catch (error) {
-        return BulkTaskResult(committed, pending, error);
+        await _refresh();
+      } catch (_) {
+        /* No false acknowledgement. */
       }
     }
-    return BulkTaskResult(committed, const []);
+    final confirmed = confirmedOperations(prepared);
+    final committed = {
+      for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
+        receipt.entity,
+    };
+    return BulkTaskResult(
+      commands.keys.where(committed.contains),
+      commands.keys.where((id) => !committed.contains(id)),
+      error,
+    );
   });
 
   Future<BulkTaskResult> bulkEdit(
@@ -1009,58 +1164,67 @@ class TaskStore {
     [id],
   ).isNotEmpty;
 
-  Future<TaskUndoResult> undoOperations(List<String> operations) =>
-      _serialize(() async {
+  Future<TaskUndoResult> undoOperations(
+    List<String> operations,
+  ) => _serialize(() async {
+    await _refresh();
+    if (operations.isEmpty || operations.toSet().length != operations.length) {
+      throw FormatFailure('Choose distinct saved operations.');
+    }
+    final targets = <String, LogEvent>{};
+    for (final id in operations) {
+      final found = db.select('SELECT raw FROM events WHERE id=?', [id]);
+      if (found.isEmpty) {
+        throw FormatFailure('The saved operation is unavailable.');
+      }
+      final event = LogEvent.decode(found.single['raw'] as String);
+      if (!reversibleTaskEvents.contains(event.type)) {
+        throw FormatFailure('This operation cannot be undone.');
+      }
+      targets[id] = event;
+    }
+    var newer = false;
+    final alreadyUndone = <String>{};
+    for (final id in operations) {
+      final target = targets[id]!;
+      final history = _entityEvents(target.entity);
+      final inactive = retractedOperationIds(history);
+      newer |= history.any(
+        (e) =>
+            reversibleTaskEvents.contains(e.type) &&
+            compareEvents(e, target) > 0 &&
+            !inactive.contains(e.id),
+      );
+      if (_operationUndone(id)) alreadyUndone.add(id);
+    }
+    final prepared = <OperationReceipt>[];
+    Object? error;
+    try {
+      await _appendCommandBatch('task.operationUndone', [
+        for (final id in operations.where((id) => !alreadyUndone.contains(id)))
+          (targets[id]!.entity, {'operation': id}),
+      ], onPrepared: prepared.add);
+    } catch (failure) {
+      error = failure;
+      try {
         await _refresh();
-        if (operations.isEmpty ||
-            operations.toSet().length != operations.length) {
-          throw FormatFailure('Choose distinct saved operations.');
-        }
-        final targets = <String, LogEvent>{};
-        for (final id in operations) {
-          final found = db.select('SELECT raw FROM events WHERE id=?', [id]);
-          if (found.isEmpty) {
-            throw FormatFailure('The saved operation is unavailable.');
-          }
-          final event = LogEvent.decode(found.single['raw'] as String);
-          if (!reversibleTaskEvents.contains(event.type)) {
-            throw FormatFailure('This operation cannot be undone.');
-          }
-          targets[id] = event;
-        }
-        final pending = List<String>.of(operations), undone = <String>[];
-        var newer = false;
-        while (pending.isNotEmpty) {
-          final id = pending.first, target = targets[id]!;
-          final history = _entityEvents(target.entity);
-          final inactive = retractedOperationIds(history);
-          newer |= history.any(
-            (e) =>
-                reversibleTaskEvents.contains(e.type) &&
-                compareEvents(e, target) > 0 &&
-                !inactive.contains(e.id),
-          );
-          try {
-            if (!_operationUndone(id)) {
-              await _command(target.entity, 'task.operationUndone', {
-                'operation': id,
-              });
-            }
-            undone.add(id);
-            pending.removeAt(0);
-          } catch (error) {
-            try {
-              await _refresh();
-              if (_operationUndone(id)) {
-                undone.add(id);
-                pending.removeAt(0);
-              }
-            } catch (_) {}
-            return TaskUndoResult(undone, pending, newer, error);
-          }
-        }
-        return TaskUndoResult(undone, const [], newer);
-      });
+      } catch (_) {
+        /* Preserve uncertain history. */
+      }
+    }
+    final confirmed = confirmedOperations(prepared);
+    final undone = {
+      ...alreadyUndone,
+      for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
+        LogEvent.decode(receipt.raw).data['operation'] as String,
+    };
+    return TaskUndoResult(
+      operations.where(undone.contains),
+      operations.where((id) => !undone.contains(id)),
+      newer,
+      error,
+    );
+  });
 
   Future<BulkTaskResult> deleteTasks(
     List<String> ids, {

@@ -27,6 +27,77 @@ List<String> ids(List<TaskViewEntry> rows) =>
     rows.map((row) => row.task['id'] as String).toList();
 
 void main() {
+  test(
+    'recurring completion eligibility changes at civil midnight and on zone changes',
+    () {
+      final floating = row(
+        'floating',
+        schedule: TaskSchedule(
+          dueDate: '2026-03-09',
+          recurrence: 'every day when done',
+        ),
+      );
+      final pinned = row(
+        'pinned',
+        schedule: TaskSchedule(
+          dueDate: '2026-03-09',
+          recurrence: 'every day when done',
+          timeZone: 'America/Chicago',
+        ),
+      );
+      final before = jsonEncode([floating, pinned]);
+      final late = at('2026-03-09T04:59:59Z', 'America/Chicago', -5);
+      final view = projectTaskView([floating, pinned], late);
+      expect(
+        view.value.open.every((e) => e.completionUnavailableReason != null),
+        isTrue,
+      );
+      expect(view.nextChange, DateTime.parse('2026-03-09T05:00:00Z'));
+      final next = projectTaskView([
+        floating,
+        pinned,
+      ], at('2026-03-09T05:00:00Z', 'America/Chicago', -5));
+      expect(
+        next.value.open.every((e) => e.completionUnavailableReason == null),
+        isTrue,
+      );
+      expect(next.nextChange, DateTime.parse('2026-03-10T05:00:00Z'));
+      final traveled = projectTaskView([
+        floating,
+        pinned,
+      ], at('2026-03-09T04:59:59Z'));
+      expect(traveled.value.open.first.completionUnavailableReason, isNull);
+      expect(traveled.value.open.last.completionUnavailableReason, isNotNull);
+      expect(traveled.nextChange, DateTime.parse('2026-03-09T05:00:00Z'));
+      final history = projectTaskView([
+        Map<String, dynamic>.from(floating)..['completed'] = true,
+      ], late);
+      expect(
+        history.value.completed.single.completionUnavailableReason,
+        isNull,
+      );
+      expect(history.nextChange, isNull);
+      expect(jsonEncode([floating, pinned]), before);
+    },
+  );
+  test('completion boundary follows 23-hour and 25-hour named-zone days', () {
+    final task = row(
+      'repeat',
+      schedule: TaskSchedule(
+        dueDate: '2026-12-01',
+        recurrence: 'every day when done',
+        timeZone: 'America/Chicago',
+      ),
+    );
+    expect(
+      projectTaskView([task], at('2026-03-08T06:00:00Z')).nextChange,
+      DateTime.parse('2026-03-09T05:00:00Z'),
+    );
+    expect(
+      projectTaskView([task], at('2026-11-01T05:00:00Z')).nextChange,
+      DateTime.parse('2026-11-02T06:00:00Z'),
+    );
+  });
   test('ordinary tag intersects assignee, upcoming and completed views', () {
     final rows = [
       row('ready')..['tags'] = ['Home'],

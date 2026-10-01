@@ -151,29 +151,44 @@ class TagFilterPickerState extends State<TagFilterPicker>
         8;
     final below = math.max(0.0, bottom - rect.bottom - 4);
     final above = math.max(0.0, rect.top - top - 4);
-    final viewport = Scrollable.maybeOf(
-      this.context,
-    )?.context.findRenderObject();
-    final scrollBottom = viewport is RenderBox && viewport.hasSize
-        ? viewport.localToGlobal(Offset.zero).dy + viewport.size.height
-        : bottom;
-    // Keep the filter's footer actions reachable rather than covering them.
-    final belowControls = math.max(
-      0.0,
-      math.min(bottom, scrollBottom) - rect.bottom - 4,
+    final width = math.min(rect.width, media.size.width - 16);
+    final matches = _matches;
+    double rowHeight(String text) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: media.textScaler,
+        maxLines: 2,
+      )..layout(maxWidth: math.max(1, width - 72));
+      final height = math.max(56.0, painter.height + 16);
+      painter.dispose();
+      return height;
+    }
+
+    final resultHeights = matches.isEmpty
+        ? [rowHeight(widget.tags.isEmpty ? 'No tags yet' : 'No matching tags')]
+        : matches.take(4).map((tag) => rowHeight('#$tag')).toList();
+    final desired = math.min(200.0, resultHeights.reduce((a, b) => a + b));
+    // Prefer below even when above has more space. One result needs one row;
+    // longer lists need two usable rows and scroll within the remaining space.
+    // The overlay may extend past the dialog footer, which is not a viewport.
+    final usable = math.min(
+      desired,
+      resultHeights.take(2).reduce((a, b) => a + b),
     );
-    final upward = belowControls < 160 && above > belowControls;
+    final upward = below < usable && above > below;
     final height = math.min(
-      math.min(200.0, math.max(0.0, bottom - top)),
+      math.min(desired, math.max(0.0, bottom - top)),
       upward ? above : below,
     );
     final y = (upward ? rect.top - height - 4 : rect.bottom + 4).clamp(
       top,
       math.max(top, bottom - height),
     );
-    final width = math.min(rect.width, media.size.width - 16);
     final x = rect.left.clamp(8.0, math.max(8.0, media.size.width - width - 8));
-    final matches = _matches;
     return SizedBox.expand(
       child: Stack(
         children: [

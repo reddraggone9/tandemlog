@@ -1,5 +1,8 @@
 import 'wall_time.dart';
 
+const unchangedRecurrenceMessage =
+    'The next occurrence would have the same dates. Complete this task later or edit its schedule.';
+
 /// Civil task dates. These values are not device-local DateTime instants.
 ///
 /// Recurrence semantics match the observed Obsidian Tasks 7.20.0 subset:
@@ -183,6 +186,13 @@ class TaskSchedule {
   };
 
   String? get referenceDate => dueDate ?? scheduledDate ?? startDate;
+
+  /// Compare persisted occurrence dates, independently of sort bounds or
+  /// display precision. Clearing an occurrence override counts as a change.
+  bool hasSameOccurrenceDates(TaskSchedule other) =>
+      startDate == other.startDate &&
+      scheduledDate == other.scheduledDate &&
+      dueDate == other.dueDate;
 
   TaskSchedule next(DateTime completionDay) {
     if (recurrence == null || referenceDate == null) {

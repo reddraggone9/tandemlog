@@ -8,10 +8,16 @@ import 'wall_time.dart';
 /// Null is Someday, not a fabricated distant deadline. Dates at midnight may
 /// be date-only; original precision remains in [task]'s schedule.
 class TaskViewEntry {
-  const TaskViewEntry(this.task, this.effectiveDate, {this.available = true});
+  const TaskViewEntry(
+    this.task,
+    this.effectiveDate, {
+    this.available = true,
+    this.completionUnavailableReason,
+  });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
   final bool available;
+  final String? completionUnavailableReason;
 }
 
 class TaskViewGroup {
@@ -94,6 +100,7 @@ class _TaskTimingContext {
   late final DateTime today;
   DateTime? _nextMidnight;
   DateTime? _todayMidnight;
+  final _recurrenceMidnights = <String, DateTime>{};
 
   DateTime localCivil(DateTime instant) {
     final local = tz.TZDateTime.from(instant, localZone);
@@ -107,6 +114,38 @@ class _TaskTimingContext {
       local.millisecond,
       local.microsecond,
     );
+  }
+
+  DateTime completionDay(TaskSchedule schedule) {
+    final zone = timeZoneLocation(schedule.timeZone ?? time.localZoneId);
+    final local = tz.TZDateTime.from(time.instant, zone);
+    return DateTime.utc(local.year, local.month, local.day);
+  }
+
+  DateTime nextCompletionDay(TaskSchedule schedule) {
+    final zone = schedule.timeZone ?? time.localZoneId;
+    return _recurrenceMidnights.putIfAbsent(zone, () {
+      final day = completionDay(schedule);
+      return resolveCivilWallTime(
+        DateTime.utc(day.year, day.month, day.day + 1),
+        zone,
+      ).instant;
+    });
+  }
+
+  String? completionUnavailableReason(TaskSchedule schedule) {
+    if (schedule.recurrence == null) return null;
+    try {
+      return schedule.hasSameOccurrenceDates(
+            schedule.next(completionDay(schedule)),
+          )
+          ? unchangedRecurrenceMessage
+          : null;
+    } on FormatException {
+      return 'The next occurrence is outside the supported calendar range. Edit this task’s schedule.';
+    } on StateError {
+      return 'The next occurrence could not be calculated. Edit this task’s schedule.';
+    }
   }
 
   DateTime civil(String date, String? time) {
@@ -236,7 +275,11 @@ TimedView<TaskView> projectTaskView(
     );
     final timing = context.evaluate(schedule);
     final done = row['completed'] == true;
-    final next = done ? timing._nextSortChange : timing.nextChange;
+    var next = done ? timing._nextSortChange : timing.nextChange;
+    if (!done && schedule.recurrence != null) {
+      final midnight = context.nextCompletionDay(schedule);
+      if (next == null || midnight.isBefore(next)) next = midnight;
+    }
     if (next != null && (nextChange == null || next.isBefore(nextChange))) {
       nextChange = next;
     }
@@ -245,7 +288,14 @@ TimedView<TaskView> projectTaskView(
     }
     (done ? completed : open).add((
       index,
-      TaskViewEntry(row, timing.effectiveDate, available: timing.available),
+      TaskViewEntry(
+        row,
+        timing.effectiveDate,
+        available: timing.available,
+        completionUnavailableReason: done
+            ? null
+            : context.completionUnavailableReason(schedule),
+      ),
     ));
   }
   List<TaskViewEntry> sorted(List<(int, TaskViewEntry)> values) {

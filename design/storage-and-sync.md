@@ -22,7 +22,7 @@ Syncthing [replaces destinations via temporary files](https://docs.syncthing.net
 
 Same validated event set plus the same projection version must produce identical state, regardless of arrival order or batching. Missing referenced events may arrive later: retain pending dependencies and rerun; do not permanently reject based only on arrival order. Per-field last-writer-wins is acceptable for independent task text fields, with a stable logical tie-break; it is not appropriate for inventory consumption or coupled date fields.
 
-Undo must target an operation and be repeat-safe. For M1 completion, preserve completion IDs so undoing one's own completion does not erase another user's independent completion. Deletion/restore are deferred; decide identity-preserving tombstones versus intentional copy semantics before implementing them. Do not generate new authoritative events as a side effect of replay.
+Undo must target an operation and be repeat-safe. For M1 completion, preserve completion IDs so undoing one's own completion does not erase another user's independent completion. Task deletion uses an identity-preserving canonical tombstone, recoverable through named session Undo while preserving independent newer writes; broader restore/copy workflows remain deferred. Do not generate new authoritative events as a side effect of replay.
 
 ## Compatibility and recovery
 
@@ -35,3 +35,14 @@ Retain canonical history for M1; backup separately from sync and test restore wi
 ## Alternatives to evaluate only if needed
 
 Sealed immutable event batches avoid repeatedly replacing growing logs and may fit document providers better, at the cost of file counts, publishing/recovery rules and more scanning. Benchmark/prove providers before changing format. A private durable outbox exported to a shared folder can improve availability when permissions vanish, but changes which data is authoritative; it needs an ADR. A service-based outbox sync can simplify setup but changes the no-server premise. No change to the canonical log foundation is implicitly approved here.
+
+
+## Validated local batches
+
+Capture and bulk edit/tag/move/delete/Undo/reopen commands validate their complete event set against one reconciled cache before append. Sequence numbers and approved wall-clock causal values increase for every unchanged JSONL record. The serialized store queue prevents another local writer command from entering between preparation and append. Reference checks include delayed incoming dependencies on later prepared IDs. Caller snapshot/context guards run at the batch commit boundary, rather than suggesting a separate user permission check between every line.
+
+One transport append still flushes; then one ingestion/cache transaction materializes all complete records. A batch is not crash atomic: complete prefix records can persist, an acknowledgement can fail after the full write, or an owned tail can be incomplete. Exact `(event ID, raw bytes)` receipts acknowledge only confirmed records. Retry preserves capture identities and skips already materialized creations/retractions. A complete-prefix failure can reconcile immediately; an incomplete owned tail remains preserved and blocks writing under the existing recovery policy. Do not truncate it or claim success. Cache failure never makes SQLite authoritative. No protocol/cache projection version change is needed for grouping unchanged records into one append.
+
+Local event preparation checks only historical references affected by that proposed event; canonical ingestion still validates the full joined reference set. This removes repeated decoding of unrelated history without weakening late-dependency admission.
+
+See [batch performance evidence](../evidence/rc5-batch-performance.json) and the reusable synthetic `tool/measure_batches.dart`. Its storage phases/counters are separate from perceived UI latency and Android document-provider behavior.
