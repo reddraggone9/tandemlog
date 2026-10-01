@@ -207,8 +207,42 @@
       }
     }
   },
-  "native_android_acceptance": "pending; build23 tag/core passes do not establish the corrected build24 editor gate",
-  "publication": "held; RC4 not published",
+  "native_android_acceptance": {
+    "status": "passed",
+    "reported_by": "coordinating native device worker; exact owner-signed APK identity verified",
+    "platform": "Android 11/API30 accelerated KVM, 540x960 density240",
+    "text_scales_through_percent": 200,
+    "workflows": [
+      "single/bulk editor IME visibility",
+      "mixed Due focus leaves canonical data unchanged",
+      "explicit mixed clearing",
+      "draft guards",
+      "retained data/restart",
+      "filters/upcoming",
+      "constrained drag",
+      "bulk tags",
+      "delete cancellation",
+      "completion/Undo"
+    ],
+    "separate_build23_evidence": [
+      "tablet layouts",
+      "stale-update guards",
+      "block dragging",
+      "confirmed deletion",
+      "themes"
+    ],
+    "unperformed": [
+      "physical-phone/provider matrix",
+      "Android hardware Ctrl/Shift"
+    ]
+  },
+  "publication": {
+    "status": "published experimental prerelease, not Latest",
+    "tag": "v0.1.0-rc.4",
+    "run_id": 36915456832,
+    "reused_exact_candidate_without_rebuild": true,
+    "verification": "rc4-public-release-verification.json"
+  },
   "local_geometry": {
     "platform": "native Linux debug/Xvfb with simulated phone and IME metrics",
     "physical_pixels": [

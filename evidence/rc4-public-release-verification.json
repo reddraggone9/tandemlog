@@ -1,0 +1,161 @@
+{
+  "tag": "v0.1.0-rc.4",
+  "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.4",
+  "source_commit": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+  "candidate_run_id": 36906871648,
+  "publication_run_id": 36915456832,
+  "prerelease": true,
+  "latest": false,
+  "draft": false,
+  "download_method": "gh release download from public release; each byte hash equals original candidate",
+  "asset_count": 11,
+  "assets": [
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 291,
+      "sha256": "0c7ef95d0f744a02c0250409664494d6dfd3fd2b8aa16df9344057b4d7589c14",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/android-release-metadata.json"
+    },
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "52c8b14098de49f8e50f30f6d10b1085f72f3ab4329c4c5bfbc2d4840aeb9f5a",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/android-SHA256SUMS.txt"
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/android-signature.txt"
+    },
+    {
+      "name": "linux-install-smoke.json",
+      "bytes": 2024,
+      "sha256": "432c5652cf026f7611467912ac804858501e082bdfb2835a9606d602e3511c8b",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/linux-install-smoke.json"
+    },
+    {
+      "name": "linux-SHA256SUMS.txt",
+      "bytes": 94,
+      "sha256": "c2e9ea75e0850b70f36b5cee52697083a9d2e16510fbdff85c39e89b85f3746e",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/linux-SHA256SUMS.txt"
+    },
+    {
+      "name": "linux-startup.json",
+      "bytes": 6141,
+      "sha256": "8491f8e861092d69d233fcafeeefcbf561f7c36bc4248ccd59b598b5f31f21f5",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/linux-startup.json"
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 59281040,
+      "sha256": "eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/tandemlog-android.apk"
+    },
+    {
+      "name": "tandemlog-linux-x64.flatpak",
+      "bytes": 8259592,
+      "sha256": "f9c4f883b596498a650d35be892e14e29a97038d19622b6d37ff856dae487ec9",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/tandemlog-linux-x64.flatpak"
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 11524972,
+      "sha256": "b7fab39b4eb98565f31d42f13706c6c2b1eb9ddd3687f9bbe9dd19122f37f875",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/tandemlog-windows-x64-unsigned-setup.exe"
+    },
+    {
+      "name": "windows-install-smoke.json",
+      "bytes": 1403,
+      "sha256": "e6ad2c9b51870abbdb59094a3b41ba40b5d16c5be376d8546739555b76c11902",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/windows-install-smoke.json"
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "bytes": 108,
+      "sha256": "61c3b85c60aaec6e8fb685565f5a9eed4a233691af4fbcdfe86afc7e7c496416",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.4/windows-SHA256SUMS.txt"
+    }
+  ],
+  "apk": {
+    "source_commit": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+    "version": "0.1.0-rc.4",
+    "version_code": 24,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda"
+  },
+  "notes_match_reviewed_text": true,
+  "rc3_preserved_source": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+  "anonymous_public_downloads": {
+    "assets": [
+      {
+        "name": "android-SHA256SUMS.txt",
+        "sha256": "52c8b14098de49f8e50f30f6d10b1085f72f3ab4329c4c5bfbc2d4840aeb9f5a",
+        "bytes": 88,
+        "anonymous_download": true
+      },
+      {
+        "name": "android-release-metadata.json",
+        "sha256": "0c7ef95d0f744a02c0250409664494d6dfd3fd2b8aa16df9344057b4d7589c14",
+        "bytes": 291,
+        "anonymous_download": true
+      },
+      {
+        "name": "android-signature.txt",
+        "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "bytes": 942,
+        "anonymous_download": true
+      },
+      {
+        "name": "linux-SHA256SUMS.txt",
+        "sha256": "c2e9ea75e0850b70f36b5cee52697083a9d2e16510fbdff85c39e89b85f3746e",
+        "bytes": 94,
+        "anonymous_download": true
+      },
+      {
+        "name": "linux-install-smoke.json",
+        "sha256": "432c5652cf026f7611467912ac804858501e082bdfb2835a9606d602e3511c8b",
+        "bytes": 2024,
+        "anonymous_download": true
+      },
+      {
+        "name": "linux-startup.json",
+        "sha256": "8491f8e861092d69d233fcafeeefcbf561f7c36bc4248ccd59b598b5f31f21f5",
+        "bytes": 6141,
+        "anonymous_download": true
+      },
+      {
+        "name": "tandemlog-android.apk",
+        "sha256": "eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda",
+        "bytes": 59281040,
+        "anonymous_download": true
+      },
+      {
+        "name": "tandemlog-linux-x64.flatpak",
+        "sha256": "f9c4f883b596498a650d35be892e14e29a97038d19622b6d37ff856dae487ec9",
+        "bytes": 8259592,
+        "anonymous_download": true
+      },
+      {
+        "name": "tandemlog-windows-x64-unsigned-setup.exe",
+        "sha256": "b7fab39b4eb98565f31d42f13706c6c2b1eb9ddd3687f9bbe9dd19122f37f875",
+        "bytes": 11524972,
+        "anonymous_download": true
+      },
+      {
+        "name": "windows-SHA256SUMS.txt",
+        "sha256": "61c3b85c60aaec6e8fb685565f5a9eed4a233691af4fbcdfe86afc7e7c496416",
+        "bytes": 108,
+        "anonymous_download": true
+      },
+      {
+        "name": "windows-install-smoke.json",
+        "sha256": "e6ad2c9b51870abbdb59094a3b41ba40b5d16c5be376d8546739555b76c11902",
+        "bytes": 1403,
+        "anonymous_download": true
+      }
+    ],
+    "errors": [],
+    "all_passed": true
+  }
+}
