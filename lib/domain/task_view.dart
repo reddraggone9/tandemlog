@@ -206,10 +206,12 @@ TimedView<TaskView> projectTaskView(
   String? assignee,
   bool includeUpcoming = false,
   String? tag,
+  Set<String>? tags,
   String? searchQuery,
 }) {
   final query = (searchQuery ?? '').trim().toLowerCase();
   final searchActive = query.isNotEmpty;
+  final selectedTags = tags ?? (tag == null ? <String>{} : {tag});
   final context = _TaskTimingContext(time);
   DateTime? nextChange;
   final open = <(int, TaskViewEntry)>[];
@@ -217,10 +219,11 @@ TimedView<TaskView> projectTaskView(
   for (var index = 0; index < rows.length; index++) {
     final row = rows[index];
     if (row['kind'] != 'task' ||
+        row['deleted'] == true ||
         (!searchActive && assignee != null && row['assignee'] != assignee) ||
         (!searchActive &&
-            tag != null &&
-            !(row['tags'] as List? ?? []).contains(tag))) {
+            selectedTags.isNotEmpty &&
+            !(row['tags'] as List? ?? []).any(selectedTags.contains))) {
       continue;
     }
     if (searchActive &&

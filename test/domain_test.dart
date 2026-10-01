@@ -6,6 +6,42 @@ import 'package:uuid/uuid.dart';
 
 void main() {
   test(
+    'deletion is a validated permanent tombstone in every arrival order',
+    () {
+      final space = const Uuid().v4(),
+          writer = const Uuid().v4(),
+          id = const Uuid().v4();
+      final events = [
+        LogEvent(space, writer, 1, testClock(1, 0), id, 'task.created', {
+          'title': 'Old',
+          'description': '',
+          'assignee': writer,
+        }),
+        LogEvent(space, writer, 2, testClock(2, 0), id, 'task.deleted', {}),
+        LogEvent(space, writer, 3, testClock(3, 0), id, 'task.edited', {
+          'title': 'Later',
+          'assignee': space,
+        }),
+        LogEvent(space, writer, 4, testClock(4, 0), id, 'task.completed', {}),
+      ].map((e) => LogEvent.decode(e.encode())).toList();
+      final expected = project([...events]);
+      for (var i = 0; i < 20; i++) {
+        final reordered = [...events]..shuffle(Random(i));
+        expect(project(reordered), expected);
+        expect(project(reordered)!['deleted'], isTrue);
+      }
+      expect(events[1].toJson()['v'], 2);
+      expect(
+        () => LogEvent.decode(
+          LogEvent(space, writer, 5, testClock(5, 0), id, 'task.deleted', {
+            'restore': true,
+          }).encode(),
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+    },
+  );
+  test(
     'canonical UUID admission matches namespace validation and rejects aliases',
     () {
       final good = const Uuid().v4();

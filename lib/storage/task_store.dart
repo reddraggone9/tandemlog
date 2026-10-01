@@ -6,6 +6,8 @@ import 'package:sqlite3/sqlite3.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import '../domain/projection.dart';
+import '../domain/bulk_task_edit.dart';
+export '../domain/bulk_task_edit.dart';
 import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
 import 'log_folder.dart';
@@ -13,7 +15,7 @@ import 'log_folder.dart';
 /// The task state observed by a caller changed before a guarded command.
 class StaleTaskSnapshot implements Exception {
   @override
-  String toString() => 'Tasks changed while moving. Try again.';
+  String toString() => 'Tasks changed. Review the selection and try again.';
 }
 
 /// Owns durable log ingestion and one disposable SQLite materialization.
@@ -444,7 +446,7 @@ class TaskStore {
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(
-      'SELECT views.raw FROM views JOIN positions ON positions.id=views.id ORDER BY positions.rank',
+      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 ORDER BY positions.rank",
     );
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
@@ -551,7 +553,13 @@ class TaskStore {
     if (projected == null) {
       throw FormatFailure('Local command requires an existing entity.');
     }
-    if (type == 'task.created' &&
+    if (type.startsWith('task.') &&
+        type != 'task.created' &&
+        project(prior)?['deleted'] == true) {
+      throw FormatFailure('This task was deleted.');
+    }
+    if ((type == 'task.created' ||
+            (type == 'task.edited' && data.containsKey('assignee'))) &&
         db.select(
           "SELECT id FROM views WHERE id=? AND json_extract(raw,'\$.kind')='user'",
           [data['assignee']],
@@ -741,7 +749,7 @@ class TaskStore {
   }) => _serialize(() async {
     await _refresh();
     final state = project(_entityEvents(entity));
-    if (state == null || state['kind'] != 'task') {
+    if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
       throw FormatFailure('Unknown task.');
     }
     final schedule = TaskSchedule.fromJson(
@@ -798,6 +806,8 @@ class TaskStore {
     Map<String, dynamic> fields, {
     required List<String> tags,
     required Map<String, String> observedTagRefs,
+    String? expectedTaskSnapshot,
+    bool Function()? canCommit,
   }) => _serialize(() async {
     final wanted = tags.toSet();
     final removed = observedTagRefs.entries
@@ -806,11 +816,17 @@ class TaskStore {
         .toList();
     final added = wanted.difference(observedTagRefs.values.toSet()).toList()
       ..sort();
-    return _command(entity, 'task.edited', {
-      ...fields,
-      if (added.isNotEmpty || removed.isNotEmpty)
-        'tagChanges': {'add': added, 'remove': removed},
-    });
+    return _command(
+      entity,
+      'task.edited',
+      {
+        ...fields,
+        if (added.isNotEmpty || removed.isNotEmpty)
+          'tagChanges': {'add': added, 'remove': removed},
+      },
+      expectedTaskSnapshot: expectedTaskSnapshot,
+      canCommit: canCommit,
+    );
   });
 
   Future<void> setTags(
@@ -820,7 +836,7 @@ class TaskStore {
   }) => _serialize(() async {
     await _refresh();
     final state = project(_entityEvents(entity));
-    if (state == null || state['kind'] != 'task') {
+    if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
       throw FormatFailure('Unknown task.');
     }
     final refs =
@@ -838,6 +854,148 @@ class TaskStore {
       });
     }
   });
+
+  List<Map<String, dynamic>> _selection(List<String> ids) {
+    if (ids.isEmpty || ids.toSet().length != ids.length) {
+      throw FormatFailure('Choose distinct tasks.');
+    }
+    final tasks = rows
+        .where((r) => r['kind'] == 'task' && ids.contains(r['id']))
+        .toList();
+    if (tasks.length != ids.length) {
+      throw FormatFailure('Selection contains a missing or deleted task.');
+    }
+    return tasks;
+  }
+
+  Future<BulkTaskResult> _bulk(
+    List<String> ids,
+    String type,
+    Map<String, Map<String, dynamic>> Function(List<Map<String, dynamic>>)
+    prepare, {
+    required String expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) => _serialize(() async {
+    await _refresh();
+    if (taskSnapshot != expectedTaskSnapshot ||
+        (canCommit != null && !canCommit())) {
+      throw StaleTaskSnapshot();
+    }
+    final selected = _selection(ids);
+    final commands = prepare(selected);
+    // Decode every command and validate assignees before the first append.
+    for (final entry in commands.entries) {
+      LogEvent.decode(
+        LogEvent(
+          space,
+          writer,
+          1,
+          EventClock.next(_nowNs(), _maximumClock()),
+          entry.key,
+          type,
+          entry.value,
+        ).encode(),
+      );
+      if (entry.value.containsKey('assignee') &&
+          !rows.any(
+            (r) => r['kind'] == 'user' && r['id'] == entry.value['assignee'],
+          )) {
+        throw FormatFailure('Choose an existing user.');
+      }
+    }
+    final pending = commands.keys.toList();
+    final committed = <String>[];
+    var expected = taskSnapshot;
+    while (pending.isNotEmpty) {
+      final id = pending.first;
+      try {
+        await _command(
+          id,
+          type,
+          commands[id]!,
+          expectedTaskSnapshot: expected,
+          canCommit: canCommit,
+        );
+        committed.add(id);
+        pending.removeAt(0);
+        expected = taskSnapshot;
+      } catch (error) {
+        return BulkTaskResult(committed, pending, error);
+      }
+    }
+    return BulkTaskResult(committed, const []);
+  });
+
+  Future<BulkTaskResult> bulkEdit(
+    List<String> ids,
+    BulkTaskEdit edit, {
+    required String expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) => _bulk(
+    ids,
+    'task.edited',
+    (tasks) => {
+      for (final task in tasks)
+        if (edit.fieldsFor(task).isNotEmpty)
+          task['id'] as String: edit.fieldsFor(task),
+    },
+    expectedTaskSnapshot: expectedTaskSnapshot,
+    canCommit: canCommit,
+  );
+
+  Future<BulkTaskResult> deleteTasks(
+    List<String> ids, {
+    required String expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) => _bulk(
+    ids,
+    'task.deleted',
+    (tasks) => {
+      for (final task in tasks) task['id'] as String: <String, dynamic>{},
+    },
+    expectedTaskSnapshot: expectedTaskSnapshot,
+    canCommit: canCommit,
+  );
+
+  Future<LogEvent> deleteTask(
+    String id, {
+    required String expectedTaskSnapshot,
+    bool Function()? canCommit,
+  }) => _serialize(
+    () => _command(
+      id,
+      'task.deleted',
+      {},
+      expectedTaskSnapshot: expectedTaskSnapshot,
+      canCommit: canCommit,
+    ),
+  );
+
+  /// Input order is ignored: preserve selected tasks' current global order.
+  /// Caller guard checks the effective date/filter key immediately before commits.
+  Future<BulkTaskResult> moveBlockBefore(
+    List<String> ids,
+    String? before, {
+    required String expectedTaskSnapshot,
+    required bool Function() canCommit,
+  }) => _bulk(
+    ids,
+    'task.moved',
+    (tasks) {
+      if (ids.contains(before)) {
+        throw FormatFailure('Order anchor is selected.');
+      }
+      if (before != null &&
+          !rows.any((r) => r['id'] == before && r['kind'] == 'task')) {
+        throw FormatFailure('Order anchor is missing.');
+      }
+      return {
+        for (final task in tasks) task['id'] as String: {'before': before},
+      };
+    },
+    expectedTaskSnapshot: expectedTaskSnapshot,
+    canCommit: canCommit,
+  );
 
   Future<void> close() {
     _closed = true;

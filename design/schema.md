@@ -12,7 +12,8 @@ Each event has exactly `v`, `space`, `writer`, positive contiguous `seq`, `clock
 | --- | --- |
 | `user.created` | name |
 | `task.created` | title, description, assignee; optional schedule, tags |
-| `task.edited` | changed title/description/schedule; optional observed tagChanges |
+| `task.edited` | changed title/description/schedule/assignee; optional observed tagChanges |
+| `task.deleted` | empty payload; permanent task tombstone |
 | `task.tagsChanged` | add tag strings, remove observed add tokens |
 | `task.moved` | before task ID, or null for end |
 | `task.completed` | optional completedAt ISO date/time; optional complete successor snapshot |
@@ -35,6 +36,8 @@ A wrong forward clock can therefore influence later conflict ordering, including
 The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 7 rebuilds known older local layouts from canonical logs after retaining an obsolete-cache backup; unknown future layouts remain explicit errors. Current closed-schema validation still rejects source-map rehearsal events, invalid UUIDs and opaque reserved schedule tags in canonical history; a cache rebuild never makes incompatible logs acceptable. Published v1 folders remain untouched and unsupported by this prerelease.
 
 ## Fields, dates and tags
+
+RC4 adds `task.deleted` and assignee edits within protocol v2; every participating app must be updated before using them because older readers reject unknown active types/fields. A tombstone permanently hides its task regardless of later edit/completion delivery; the canonical record and independent successor remain. Assignee uses an independent last-writer-wins register and local commands require an existing user. Bulk patches merge only explicit fields into each task's full validated schedule, use observed tag deltas and prevalidate the whole selection. Per-task appends are independently durable: report partial progress and reconcile uncertain acknowledgement failures before retry. No cache-layout change or history rewrite is needed.
 
 Title and description use independent last-writer-wins registers. Schedule is one atomic register: `startDate`, `scheduledDate`, `dueDate`, `startTime`, `scheduledTime`, `dueTime`, `timeZone`, `recurrence`, and optional integer `dueMinDays`/`dueMaxDays`. Bounds are integer calendar-day offsets from 0 through 365000 (a finite supported horizon) with minimum no greater than maximum; they affect only derived sort/group dates and are inherited by recurring successors. Dates are strict civil YYYY-MM-DD values; time is HH:mm and requires its corresponding date. Start cannot be later than due; a date-only due date includes the whole civil day. Null zone means floating local time; named zones must exist in the pinned timezone database. No absent date is invented. Recurrence date arithmetic is separate from resolving a wall time into an instant.
 

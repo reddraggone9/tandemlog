@@ -59,6 +59,345 @@ void main() {
       store.rows.firstWhere((r) => r['id'] == id);
 
   test(
+    'local task deletion targeting user rejects before canonical append',
+    () async {
+      final id = await task();
+      final user = state(a!, id)['assignee'] as String;
+      final before = await aFolder.read('${a!.writer}.jsonl');
+      final snapshot = a!.taskSnapshot;
+      await expectLater(
+        a!.deleteTask(user, expectedTaskSnapshot: snapshot),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(await aFolder.read('${a!.writer}.jsonl'), before);
+      expect(a!.taskSnapshot, snapshot);
+      expect(state(a!, user)['kind'], 'user');
+    },
+  );
+
+  test(
+    'delayed remote user creation resolves pending task deletion as transactional error',
+    () async {
+      final remote = const Uuid().v4(), user = const Uuid().v4();
+      final deletion = LogEvent(
+        a!.space,
+        remote,
+        1,
+        testClock(1, 0),
+        user,
+        'task.deleted',
+        {},
+      );
+      await aFolder.create(
+        '$remote.jsonl',
+        Uint8List.fromList(utf8.encode('${deletion.encode()}\n')),
+      );
+      await a!.refresh();
+      expect(a!.hasEntity(user), isFalse);
+      expect(
+        a!.db.select('SELECT id FROM events WHERE id=?', [deletion.id]).length,
+        1,
+      );
+      final checkpoint = Map<String, Object?>.from(
+        a!.db.select('SELECT * FROM streams WHERE name=?', [
+          '$remote.jsonl',
+        ]).single,
+      );
+      final creation = LogEvent(
+        a!.space,
+        remote,
+        2,
+        testClock(2, 0),
+        user,
+        'user.created',
+        {'name': 'Delayed user'},
+      );
+      await aFolder.append(
+        '$remote.jsonl',
+        Uint8List.fromList(utf8.encode('${creation.encode()}\n')),
+      );
+      final canonical = await aFolder.read('$remote.jsonl');
+      await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
+      expect(a!.hasEntity(user), isFalse);
+      expect(
+        a!.db.select('SELECT id FROM events WHERE id=?', [creation.id]),
+        isEmpty,
+      );
+      expect(
+        a!.db.select('SELECT * FROM streams WHERE name=?', [
+          '$remote.jsonl',
+        ]).single,
+        checkpoint,
+      );
+      expect(await aFolder.read('$remote.jsonl'), canonical);
+      await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
+    },
+  );
+
+  for (final operation in ['edit', 'delete', 'move']) {
+    test(
+      'bulk $operation reconciles durable append after refresh failure before retry',
+      () async {
+        final first = await task();
+        final second = const Uuid().v4(), anchor = const Uuid().v4();
+        for (final id in [second, anchor]) {
+          await a!.command(id, 'task.created', {
+            'title': id,
+            'description': '',
+            'assignee': state(a!, first)['assignee'],
+          });
+        }
+        await a!.close();
+        a = null;
+        final transport = _FailRefreshAfterAppendFolder(aFolder);
+        a = await TaskStore.open(transport, '${root.path}/private-a');
+        Future<BulkTaskResult> run(List<String> ids) {
+          final snapshot = a!.taskSnapshot;
+          return switch (operation) {
+            'edit' => a!.bulkEdit(
+              ids,
+              BulkTaskEdit(addTags: ['bulk']),
+              expectedTaskSnapshot: snapshot,
+            ),
+            'delete' => a!.deleteTasks(ids, expectedTaskSnapshot: snapshot),
+            _ => a!.moveBlockBefore(
+              ids,
+              null,
+              expectedTaskSnapshot: snapshot,
+              canCommit: () => true,
+            ),
+          };
+        }
+
+        final count =
+            a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'] as int;
+        transport.failNext = true;
+        final partial = await run([first, second]);
+        expect(partial.error, isA<StateError>());
+        expect(partial.committedIds, isEmpty);
+        expect(partial.remainingIds, [first, second]);
+        // Append succeeded but the disposable cache did not acknowledge it.
+        expect(
+          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          count,
+        );
+        await a!.refresh();
+        expect(
+          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          count + 1,
+        );
+        final appended = LogEvent.decode(
+          a!.db
+                  .select('SELECT raw FROM events ORDER BY seq DESC LIMIT 1')
+                  .single['raw']
+              as String,
+        );
+        expect(appended.entity, first);
+        // Reconcile the uncertain first task from canonical history before retry.
+        final retryIds = partial.remainingIds
+            .where((id) => id != appended.entity)
+            .toList();
+        final retry = await run(retryIds);
+        expect(retry.succeeded, isTrue);
+        expect(
+          a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+          count + 2,
+        );
+        if (operation == 'edit') {
+          for (final id in [first, second]) {
+            expect(state(a!, id)['tags'], ['bulk']);
+            expect((state(a!, id)['tagRefs'] as Map).length, 1);
+          }
+          final repeat = await run([first, second]);
+          expect(repeat.succeeded, isTrue);
+          expect(
+            a!.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
+            count + 2,
+          );
+        } else if (operation == 'delete') {
+          expect(
+            a!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']),
+            [anchor],
+          );
+          await expectLater(
+            a!.command(first, 'task.edited', {'title': 'Revive'}),
+            throwsA(isA<FormatFailure>()),
+          );
+        } else {
+          expect(
+            a!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']),
+            [anchor, first, second],
+          );
+          expect(
+            a!.db
+                .select(
+                  "SELECT COUNT(*) AS n FROM events WHERE json_extract(raw,'\$.type')='task.moved'",
+                )
+                .single['n'],
+            2,
+          );
+        }
+        final finalSnapshot = a!.taskSnapshot;
+        await a!.close();
+        a = await TaskStore.open(aFolder, '${root.path}/private-a');
+        expect(a!.taskSnapshot, finalSnapshot);
+      },
+    );
+  }
+
+  test(
+    'bulk patch preserves mixed fields and observed tags; invalid patch writes nothing',
+    () async {
+      final first = await task();
+      final second = const Uuid().v4();
+      await a!.command(second, 'task.created', {
+        'title': 'Second',
+        'description': 'Keep',
+        'assignee': state(a!, first)['assignee'],
+        'schedule': {'dueDate': '2026-10-10', 'dueMinDays': 5},
+        'tags': ['keep', 'remove'],
+      });
+      await a!.command(first, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-05', 'dueMinDays': 1},
+      });
+      final snapshot = a!.taskSnapshot;
+      await expectLater(
+        a!.bulkEdit(
+          [first, second],
+          BulkTaskEdit(schedulePatch: {'dueMaxDays': 2}),
+          expectedTaskSnapshot: snapshot,
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(a!.taskSnapshot, snapshot);
+      final result = await a!.bulkEdit(
+        [first, second],
+        BulkTaskEdit(
+          schedulePatch: {'dueMaxDays': 8},
+          addTags: ['new'],
+          removeTags: ['remove'],
+        ),
+        expectedTaskSnapshot: snapshot,
+      );
+      expect(result.succeeded, isTrue);
+      expect((state(a!, first)['schedule'] as Map)['dueDate'], '2026-10-05');
+      expect((state(a!, second)['schedule'] as Map)['dueDate'], '2026-10-10');
+      expect((state(a!, second)['schedule'] as Map)['dueMinDays'], 5);
+      expect(state(a!, second)['description'], 'Keep');
+      expect(state(a!, second)['tags'], ['keep', 'new']);
+    },
+  );
+
+  test(
+    'bulk guard reports partial progress and retry; block uses global order',
+    () async {
+      final first = await task();
+      final ids = [first];
+      for (var i = 0; i < 3; i++) {
+        final id = const Uuid().v4();
+        ids.add(id);
+        await a!.command(id, 'task.created', {
+          'title': '$i',
+          'description': '',
+          'assignee': state(a!, first)['assignee'],
+        });
+      }
+      var checks = 0;
+      final partial = await a!.bulkEdit(
+        ids,
+        BulkTaskEdit(addTags: ['bulk']),
+        expectedTaskSnapshot: a!.taskSnapshot,
+        canCommit: () => ++checks <= 2,
+      );
+      expect(partial.committedIds, [first]);
+      expect(partial.remainingIds, ids.sublist(1));
+      expect(partial.error, isA<StaleTaskSnapshot>());
+      final retry = await a!.bulkEdit(
+        partial.remainingIds,
+        BulkTaskEdit(addTags: ['bulk']),
+        expectedTaskSnapshot: a!.taskSnapshot,
+      );
+      expect(retry.succeeded, isTrue);
+      final moved = await a!.moveBlockBefore(
+        [ids[2], first],
+        null,
+        expectedTaskSnapshot: a!.taskSnapshot,
+        canCommit: () => true,
+      );
+      expect(moved.succeeded, isTrue);
+      expect(a!.rows.where((r) => r['kind'] == 'task').map((r) => r['id']), [
+        ids[1],
+        ids[3],
+        first,
+        ids[2],
+      ]);
+    },
+  );
+
+  test(
+    'offline edits and completions cannot resurrect deletion; successor survives restart',
+    () async {
+      final id = await task();
+      await a!.command(id, 'task.edited', {
+        'schedule': {'dueDate': '2026-10-01', 'recurrence': 'every day'},
+      });
+      await a!.complete(id, completionDay: DateTime.utc(2026, 10, 1));
+      final successor = const Uuid().v5(id, 'successor');
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      await a!.deleteTask(id, expectedTaskSnapshot: a!.taskSnapshot);
+      await b!.command(id, 'task.edited', {'title': 'Remote later'});
+      await b!.complete(id, completionDay: DateTime.utc(2026, 10, 2));
+      await File(
+        '${bFolder.location}/${b!.writer}.jsonl',
+      ).copy('${aFolder.location}/${b!.writer}.jsonl');
+      await a!.refresh();
+      await copy(aFolder, bFolder);
+      await b!.refresh();
+      expect(a!.rows.any((r) => r['id'] == id), isFalse);
+      expect(a!.hasEntity(id), isTrue);
+      expect(state(a!, successor)['title'], state(b!, successor)['title']);
+      await expectLater(
+        a!.command(id, 'task.edited', {'title': 'Resurrect'}),
+        throwsA(isA<FormatFailure>()),
+      );
+      final before = a!.taskSnapshot;
+      await a!.close();
+      a = await TaskStore.open(aFolder, '${root.path}/private-a');
+      expect(a!.taskSnapshot, before);
+      expect(a!.rows.any((r) => r['id'] == successor), isTrue);
+    },
+  );
+
+  test(
+    'stale bulk and invalid selections fail before any durable command',
+    () async {
+      final id = await task();
+      final old = a!.taskSnapshot;
+      await a!.command(id, 'task.edited', {'description': 'changed'});
+      await expectLater(
+        a!.deleteTasks([id], expectedTaskSnapshot: old),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      final snapshot = a!.taskSnapshot;
+      await expectLater(
+        a!.deleteTasks([id, const Uuid().v4()], expectedTaskSnapshot: snapshot),
+        throwsA(isA<FormatFailure>()),
+      );
+      await expectLater(
+        a!.moveBlockBefore(
+          [id],
+          id,
+          expectedTaskSnapshot: snapshot,
+          canCommit: () => true,
+        ),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(a!.taskSnapshot, snapshot);
+    },
+  );
+
+  test(
     'guarded move rejects changes arriving inside its refresh without append',
     () async {
       final id = await task();
@@ -1718,4 +2057,35 @@ class _OnNextListFolder implements LogFolder {
   @override
   Future<void> append(String name, Uint8List bytes) =>
       delegate.append(name, bytes);
+}
+
+/// Real append succeeds; the subsequent ingestion fails before its transaction.
+class _FailRefreshAfterAppendFolder implements LogFolder {
+  _FailRefreshAfterAppendFolder(this.delegate);
+  final LogFolder delegate;
+  bool failNext = false, failList = false;
+  @override
+  String get location => delegate.location;
+  @override
+  Future<List<LogFileInfo>> list() async {
+    if (failList) {
+      failList = false;
+      throw StateError('Injected refresh failure after durable append');
+    }
+    return delegate.list();
+  }
+
+  @override
+  Future<Uint8List> read(String name) => delegate.read(name);
+  @override
+  Future<void> create(String name, Uint8List bytes) =>
+      delegate.create(name, bytes);
+  @override
+  Future<void> append(String name, Uint8List bytes) async {
+    await delegate.append(name, bytes);
+    if (failNext) {
+      failNext = false;
+      failList = true;
+    }
+  }
 }

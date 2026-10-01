@@ -106,13 +106,19 @@ class LogEvent {
           if (!d.containsKey('title') &&
               !d.containsKey('description') &&
               !d.containsKey('schedule') &&
-              !d.containsKey('tagChanges')) {
+              !d.containsKey('tagChanges') &&
+              !d.containsKey('assignee')) {
             throw FormatFailure('Empty edit.');
+          }
+          if (d.containsKey('assignee') && !isCanonicalId(d['assignee'])) {
+            throw FormatFailure('Invalid assignee.');
           }
           if (d.containsKey('title')) text('title', 500);
           if (d.containsKey('description')) {
             text('description', 10000, empty: true);
           }
+        case 'task.deleted':
+          break;
         case 'task.tagsChanged':
           validateTagChanges(d);
         case 'task.moved':
@@ -172,7 +178,14 @@ class LogEvent {
           'schedule',
           'tags',
         },
-        'task.edited' => {'title', 'description', 'schedule', 'tagChanges'},
+        'task.edited' => {
+          'title',
+          'description',
+          'schedule',
+          'tagChanges',
+          'assignee',
+        },
+        'task.deleted' => <String>{},
         'task.tagsChanged' => {'add', 'remove'},
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
@@ -279,6 +292,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       undone.add(e.data['completion'] as String);
     }
   }
+  state['deleted'] = events.any((e) => e.type == 'task.deleted');
   state.remove('tagOrigin');
   state['tagRefs'] = Map.fromEntries(
     tagAdds.entries.where((e) => !tagRemoves.contains(e.key)),

@@ -454,4 +454,73 @@ void main() {
     ).value;
     expect(later.open.single.available, isTrue);
   });
+  test('multiple tags match any then combine with visibility and assignee', () {
+    final rows = [
+      {
+        ...row('first'),
+        'tags': ['work'],
+        'title': 'Find sample',
+      },
+      {
+        ...row('second'),
+        'tags': ['home'],
+        'title': 'Find sample',
+      },
+      {
+        ...row('both'),
+        'tags': ['work', 'home'],
+      },
+      {
+        ...row('other', user: 'b'),
+        'tags': ['home'],
+        'title': 'Find sample',
+      },
+      {
+        ...row('deleted'),
+        'tags': ['work'],
+        'deleted': true,
+        'title': 'Find sample',
+      },
+      {
+        ...row('future', schedule: TaskSchedule(startDate: '2026-10-03')),
+        'tags': ['home'],
+        'title': 'Find sample',
+      },
+      {
+        ...row('history', completed: true),
+        'tags': ['home'],
+        'title': 'Find sample',
+      },
+    ];
+    final selected = {'work', 'home'};
+    final view = projectTaskView(
+      rows,
+      at('2026-10-02T12:00:00Z'),
+      assignee: 'a',
+      tags: selected,
+    ).value;
+    expect(ids(view.open), ['first', 'second', 'both']);
+    expect(ids(view.completed), ['history']);
+    expect(selected, {'work', 'home'});
+    final search = projectTaskView(
+      rows,
+      at('2026-10-02T12:00:00Z'),
+      assignee: 'a',
+      tags: {'missing'},
+      searchQuery: 'find sample',
+    ).value;
+    expect(ids(search.open), ['first', 'second', 'other', 'future']);
+    expect(ids(search.completed), ['history']);
+    expect(
+      ids(
+        projectTaskView(
+          rows,
+          at('2026-10-02T12:00:00Z'),
+          assignee: 'a',
+          tags: {},
+        ).value.open,
+      ),
+      ['first', 'second', 'both'],
+    );
+  });
 }
