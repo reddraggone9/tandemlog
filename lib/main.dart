@@ -2489,8 +2489,9 @@ class _TaskEditorState extends State<_TaskEditor> {
     decoration: InputDecoration(
       labelText: '$label time',
       hintText: 'HH:mm',
-      helperText:
-          'Optional; uses the ${kind == 'scheduled' ? 'this occurrence' : kind} date.',
+      helperText: kind == 'scheduled'
+          ? 'Optional; uses this occurrence date.'
+          : 'Optional; uses the $kind date.',
       helperMaxLines: 3,
     ),
   );
