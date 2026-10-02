@@ -1,0 +1,47 @@
+{
+  "source_commit": "5f615f536ad89eef835c828b77cdd200c08d4541",
+  "candidate_run": 36966612040,
+  "candidate_conclusion": "success",
+  "push_ci_run": 36966616831,
+  "push_ci_conclusion": "success",
+  "version": "0.1.0-rc.6",
+  "version_code": 30,
+  "android": {
+    "source_commit": "5f615f536ad89eef835c828b77cdd200c08d4541",
+    "version": "0.1.0-rc.6",
+    "version_code": 30,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5",
+    "passed": true,
+    "apk_bytes": 59395796,
+    "archive_sha256": "b5e96a056c0029e0c8a35c6b7fa0c7b69612762dd895683b287c3a40a8a003ef",
+    "asset_hashes": {
+      "android-SHA256SUMS.txt": "255a360d0d6ecf7c58d89d02d80b927fcbd074e77f13865b7d72f1d2d8645f38",
+      "android-release-metadata.json": "4a5a64f2a8c77e6f8518cfe28e1a117a458219c24f153d34b114baafce260385",
+      "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "tandemlog-android.apk": "1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5"
+    },
+    "native_android_acceptance": "pending"
+  },
+  "windows": {
+    "platform": "windows",
+    "passed": true,
+    "asset_hashes": {
+      "windows-install-smoke.json": "fe0d7c938bbf3f6aee52be1be2004769b470916baf24abc90b1bfea86412b248",
+      "windows-SHA256SUMS.txt": "81a64d7de6604bfb4bf1e8ee57bc0b1a666d1066513257317e3e8a967407db98",
+      "tandemlog-windows-x64-unsigned-setup.exe": "c2be01d8566f48a6fcdde1d2656e8d984e1e2bff1e09bfb07f95a6990121d6c0"
+    }
+  },
+  "linux": {
+    "platform": "linux",
+    "passed": true,
+    "asset_hashes": {
+      "linux-startup.json": "4c7dbe82412e94c4fcaae446ea900b8b8243edd3cae230288ac9acc0287bde32",
+      "linux-install-smoke.json": "83a8342e7c8c648481a3382327bb6308a3db091021e9416c1bdaae39549bf041",
+      "tandemlog-linux-x64.flatpak": "e548db2e23a7cb7a6e1d5eed94d2def0fc33cf182ada009e452268097a9bb053",
+      "linux-SHA256SUMS.txt": "c409c6749abc1bdcee16e4bf2a85d4a3c827271e6d068387ada4c4ddaf48b1c2"
+    }
+  },
+  "native_android_acceptance": "pending; approved repeat checkbox targeted acceptance required",
+  "publication": "held; RC5 preserved; stable deferred"
+}
