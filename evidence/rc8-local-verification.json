@@ -46,7 +46,12 @@
     "native_linux_aggregate_source": "9cb10d027fe05ccbc21059b2a8656459965191c5",
     "native_linux_build34_affected_flow": "pass; completion/Reopen/Undo/error outcomes, 12 seconds excluding build",
     "checkbox_focus_regression": "red at build33; passes build34 with same native focus node and semantics",
-    "native_linux_build34_visual": "pass; 34 seconds, 12 Light/Dark wide/narrow/200% screenshots inspected"
+    "native_linux_build34_visual": "pass; 34 seconds, 12 Light/Dark wide/narrow/200% screenshots inspected",
+    "native_linux_build34_hosted_aggregate": {
+      "flows": 29,
+      "seconds_including_build_and_launch": 535,
+      "status": "pass"
+    }
   },
   "semantics": {
     "checkbox_reopen": "retains successor",
@@ -99,11 +104,13 @@
   "candidate": {
     "run_id": 37027539131,
     "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37027539131",
-    "status": "running"
+    "status": "success",
+    "platform_checks": "all success; signed APK verified",
+    "receipt": "rc8-build34-candidate-verification.json"
   },
   "push_ci": {
     "run_id": 37027506551,
     "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37027506551",
-    "status": "running"
+    "status": "success"
   }
 }
