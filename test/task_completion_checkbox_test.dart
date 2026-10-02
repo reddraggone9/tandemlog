@@ -28,6 +28,13 @@ void main() {
       ),
     );
     final checkbox = find.byType(Checkbox);
+    final nativePaint = find
+        .descendant(of: checkbox, matching: find.byType(CustomPaint))
+        .first;
+    final focus = Focus.of(tester.element(nativePaint));
+    focus.requestFocus();
+    await tester.pumpAndSettle();
+    expect(FocusManager.instance.primaryFocus, same(focus));
     expect(tester.getSize(checkbox), const Size(48, 48));
     final vector = find.byWidgetPredicate(
       (widget) => widget is CustomPaint && widget.size == const Size(18, 26),
@@ -41,6 +48,7 @@ void main() {
         hasEnabledState: true,
         isEnabled: true,
         isFocusable: true,
+        isFocused: true,
         hasTapAction: true,
         hasFocusAction: true,
       ),
@@ -50,6 +58,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(changes, 1);
     expect(tester.widget<Checkbox>(checkbox).value, isTrue);
+    expect(FocusManager.instance.primaryFocus, same(focus));
     expect(vector, findsNothing);
     expect(tester.widget<Checkbox>(checkbox).side, isNull);
     expect(tester.getSize(checkbox), const Size(48, 48));
@@ -61,6 +70,7 @@ void main() {
         hasEnabledState: true,
         isEnabled: true,
         isFocusable: true,
+        isFocused: true,
         hasTapAction: true,
         hasFocusAction: true,
       ),

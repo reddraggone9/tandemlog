@@ -24,7 +24,6 @@ class TaskCompletionCheckbox extends StatelessWidget {
       onChanged: onChanged,
       side: showRepeat ? BorderSide.none : null,
     );
-    if (!showRepeat) return checkbox;
     final colors = Theme.of(context).colorScheme;
     final color = onChanged == null
         ? colors.onSurface.withValues(alpha: 0.38)
@@ -33,14 +32,15 @@ class TaskCompletionCheckbox extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         checkbox,
-        IgnorePointer(
-          child: ExcludeSemantics(
-            child: CustomPaint(
-              size: const Size(18, 26),
-              painter: _RepeatPerimeter(color),
+        if (showRepeat)
+          IgnorePointer(
+            child: ExcludeSemantics(
+              child: CustomPaint(
+                size: const Size(18, 26),
+                painter: _RepeatPerimeter(color),
+              ),
             ),
           ),
-        ),
       ],
     );
   }
