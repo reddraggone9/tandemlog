@@ -127,7 +127,10 @@
   "protocol": 2,
   "cache": 9,
   "all_peers_update_before_new_undo_event": true,
-  "public_release_created": false,
+  "public_release_created": true,
   "stable_or_real_data_cutover": false,
-  "private_migration_audit": "v11 pin0547f4c remains applicable: core runtime/dependency bytes unchanged"
+  "private_migration_audit": "v11 pin0547f4c remains applicable: core runtime/dependency bytes unchanged",
+  "public_release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.8",
+  "promotion_run": 37047766068,
+  "public_verification_receipt": "rc8-public-verification.json"
 }
