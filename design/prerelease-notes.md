@@ -5,4 +5,4 @@ Experimental RC8 task preview.
 - Failed reopening no longer shows a success notice, and another concurrent completion is explained when it keeps the task completed.
 - Keyboard completion/reopening keeps checkbox focus when the task remains visible in Search; pending writes reject overlapping commands.
 
-Compatibility: same app identity and Android signer, protocol2 with a new closed-schema Undo event, and cache9. Update every peer before using the new recurring-completion Undo; earlier apps fail explicitly on that event. Known older local caches rebuild automatically without changing canonical history or writer identity. Historical Undo records retain their previous meaning.
+**Upgrade every device sharing a data folder before using the new recurring-completion Undo.** Older versions reject its new event; canonical history is retained. App identity and Android signing are unchanged. Supported older local caches rebuild automatically, and historical Undo records keep their previous meaning.

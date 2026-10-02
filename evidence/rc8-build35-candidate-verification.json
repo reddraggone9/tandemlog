@@ -26,7 +26,25 @@
     "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
     "library_version": 3,
     "library_file_name": "tandemlog-rc8-build35-android.zip",
-    "native_acceptance": "pending targeted Search focus recheck; prior build34 core evidence retained separately"
+    "native_acceptance": {
+      "status": "passed",
+      "platform": "Farnsworth hardware-KVM Android11/API30",
+      "exact_apk_sha256": "47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15",
+      "cases": [
+        "regular and recurring checkbox focus through complete/Reopen",
+        "three rapid Space activations produce exactly one completion",
+        "deliberate Tab not stolen",
+        "Reopen retains successor; true Undo suppresses untouched successor",
+        "removed-row focus falls back to a visible previous checkbox; Space never reopens hidden task"
+      ],
+      "synthetic_rows_restored_exactly": 226,
+      "writer_settings_unchanged": true,
+      "no_oom": true,
+      "cleanup": "emulator and ADB stopped",
+      "evidence_library_file_id": "libfile_ce42af8e727c8191a48c0e3cf8ad2c2b",
+      "evidence_library_version": 0,
+      "physical_phone_api36_provider_matrix": "separate/unrun"
+    }
   },
   "desktop_artifacts": {
     "windows": {
@@ -110,5 +128,6 @@
   "cache": 9,
   "all_peers_update_before_new_undo_event": true,
   "public_release_created": false,
-  "stable_or_real_data_cutover": false
+  "stable_or_real_data_cutover": false,
+  "private_migration_audit": "v11 pin0547f4c remains applicable: core runtime/dependency bytes unchanged"
 }

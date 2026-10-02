@@ -73,7 +73,7 @@
     "copied_tasks": 217,
     "live_data_changed": false
   },
-  "native_android_build35_acceptance": "pending",
+  "native_android_build35_acceptance": "passed exact APK on API30; all affected focus/Undo checks and restored fixture verified",
   "rc8_published": false,
   "stable_or_real_data_cutover": false,
   "source_commit": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
