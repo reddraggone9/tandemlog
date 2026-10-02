@@ -15,6 +15,7 @@ void main() {
               title: 'Example recurring task',
               reason: 'Next dates are unchanged.',
               onExplain: () => explanations++,
+              repeating: true,
             ),
           ),
         ),

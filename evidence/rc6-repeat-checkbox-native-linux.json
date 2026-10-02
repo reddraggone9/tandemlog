@@ -1,0 +1,54 @@
+{
+  "scope": "approved repeat-checkbox v4 only",
+  "platform": "native Linux debug, Xvfb/Openbox",
+  "app_tests": 184,
+  "python_tests": 12,
+  "native_suite": {
+    "flows": 25,
+    "duration_seconds": 421,
+    "passed": true
+  },
+  "visual": {
+    "duration_seconds": 83,
+    "screenshots": 26,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "windows": [
+      "1200x800",
+      "390x800"
+    ],
+    "text_scale": [
+      1,
+      2
+    ],
+    "states": [
+      "ordinary",
+      "repeating open",
+      "checked",
+      "unavailable",
+      "hover",
+      "focus",
+      "explanation",
+      "reopened"
+    ],
+    "inspected": true,
+    "vector_size": [
+      18,
+      22
+    ],
+    "square_size": 18,
+    "hit_target": [
+      48,
+      48
+    ]
+  },
+  "functional_observations": [
+    "completion preserved independent selection",
+    "guard explanation wrote no canonical event",
+    "checked history reopened while retaining successor"
+  ],
+  "changes_to_domain_or_storage": false,
+  "android_exact_acceptance": "pending"
+}

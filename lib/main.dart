@@ -11,6 +11,7 @@ import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
+import 'presentation/task_completion_checkbox.dart';
 import 'presentation/compact_selection_actions.dart';
 import 'presentation/task_toolbar.dart';
 import 'domain/task_view.dart';
@@ -2974,6 +2975,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     'completion-unavailable-${task['id']}',
                                   ),
                                   title: task['title'] as String,
+                                  repeating: recurrence != null,
                                   reason: entry.completionUnavailableReason!,
                                   onExplain: () => ScaffoldMessenger.of(context)
                                       .showSnackBar(
@@ -2988,9 +2990,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                 Tooltip(
                                   message:
                                       '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                                  child: Checkbox(
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.padded,
+                                  child: TaskCompletionCheckbox(
+                                    repeating: recurrence != null,
                                     value: completed,
                                     onChanged: busy
                                         ? null

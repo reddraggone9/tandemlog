@@ -29,6 +29,5 @@ String scheduleMetadata(
     if (schedule['scheduledDate'] == null) detail('Due', 'dueDate', 'dueTime'),
     detail('Scheduled', 'scheduledDate', 'scheduledTime'),
     detail('Start', 'startDate', 'startTime'),
-    if (schedule['recurrence'] != null) '↻',
   ].where((part) => part.isNotEmpty).join(' · ');
 }

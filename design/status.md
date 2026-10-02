@@ -1,5 +1,10 @@
 # Current status — 2026-10-02
 
+## Current work — RC6 repeat-checkbox v4, build30
+
+Lee approved shipping the v4 shape. The exact vector is centered over the native padded completion checkbox for repeating tasks in open, checked and unavailable states; separate repeat metadata is removed. This is a presentation-only change with the same protocol2/cache8/package and owner signer. RC5 remains the published preview. Local184 app tests,12 Python gates and analysis pass; all25 native Linux flows pass in7m01s. A separate83-second actual native visual pass captured26 Light/Dark screenshots at1200/390px and100/200% text, including hovered/focused, open/checked/unavailable and reopened controls. Inspected representative pixels show matched18px squares and unclipped tips; completion preserves selection, the guard writes no event, and history reopening retains the successor. Full hosted candidate gates are next. Exact signed build30 affected Android acceptance is required before public RC6 promotion; no rebuild after acceptance. No real source/data or stable cutover changes.
+
+
 Current published preview: [v0.1.0-rc.5](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.5), Android build29, source `b6bc029c4d5e30ccb791f0502173b16810811d68`. Public experimental prerelease, not Latest; stable0.1.0 and production cutover remain deferred. [Promotion36963075812](https://github.com/reddraggone9/tandemlog/actions/runs/36963075812) reused the exact native-accepted candidate36958983160 artifacts without rebuilding. Public tag and all11 uploaded downloads/checksums/signing identity verify; RC4 remains unchanged. [Public evidence](../evidence/rc5-public-verification.json). **Upgrade every device sharing a folder before using Undo**: older readers reject `task.operationUndone`; preserve canonical history rather than deleting it.
 
 ## Published RC5 build29 — focused UX regressions

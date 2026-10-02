@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'task_completion_checkbox.dart';
+
 /// An unavailable-looking checkbox whose reason remains reachable by touch,
 /// hover, keyboard focus and assistive technology. It never completes a task.
 class UnavailableCompletion extends StatefulWidget {
@@ -8,10 +10,12 @@ class UnavailableCompletion extends StatefulWidget {
     required this.reason,
     required this.title,
     required this.onExplain,
+    this.repeating = false,
   });
   final String reason;
   final String title;
   final VoidCallback onExplain;
+  final bool repeating;
 
   @override
   State<UnavailableCompletion> createState() => _UnavailableCompletionState();
@@ -34,10 +38,10 @@ class _UnavailableCompletionState extends State<UnavailableCompletion> {
           if (focused) tooltip.currentState?.ensureTooltipVisible();
         },
         customBorder: const CircleBorder(),
-        child: const ExcludeSemantics(
+        child: ExcludeSemantics(
           child: IgnorePointer(
-            child: Checkbox(
-              materialTapTargetSize: MaterialTapTargetSize.padded,
+            child: TaskCompletionCheckbox(
+              repeating: widget.repeating,
               value: false,
               onChanged: null,
             ),
