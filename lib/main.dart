@@ -14,6 +14,7 @@ import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
 import 'presentation/compact_selection_actions.dart';
 import 'presentation/task_toolbar.dart';
+import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
 import 'presentation/view_clock.dart';
@@ -155,6 +156,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool dragReleased = false;
   final dragScrollTick = ValueNotifier<int>(0);
   final dropKeys = <String, GlobalKey>{};
+  final groupHeadingKeys = <String, GlobalKey>{};
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   String? privateRoot;
   LocalSettings? settings;
@@ -178,6 +180,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   late final ViewClock<TaskView> viewClock;
   TaskView? taskView;
   String? taskViewZoneId;
+  DateTime? taskViewInstant;
   String? viewError;
   int viewRevision = 0;
   ({
@@ -259,6 +262,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             searchQuery: searchQuery,
           );
           taskViewZoneId = time.localZoneId;
+          taskViewInstant = time.instant;
           return projected;
         } catch (failure) {
           viewError = 'Cannot update the task view: $failure';
@@ -1851,10 +1855,24 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
   }
 
+  bool _pointerOverGroupHeading(Offset pointer) {
+    for (final key in groupHeadingKeys.values) {
+      final box = key.currentContext?.findRenderObject() as RenderBox?;
+      if (box != null &&
+          box.attached &&
+          box.hasSize &&
+          (Offset.zero & box.size).contains(box.globalToLocal(pointer))) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   void _dropAtPointer(String source, Offset pointer) {
     final viewport =
         taskViewport.currentContext?.findRenderObject() as RenderBox?;
     if (viewport == null ||
+        _pointerOverGroupHeading(pointer) ||
         !(Offset.zero & viewport.size).contains(
           viewport.globalToLocal(pointer),
         )) {
@@ -1900,6 +1918,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 : box.globalToLocal(dragPointer!);
             final hovering =
                 localPointer != null &&
+                !_pointerOverGroupHeading(dragPointer!) &&
                 (Offset.zero & box!.size).contains(localPointer);
             if (hovering) after = localPointer.dy >= box.size.height / 2;
             final invalid = dragPointer != null
@@ -1966,6 +1985,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     Map<String, dynamic> task,
     List<Map<String, dynamic>> users,
     String? groupDate,
+    TaskViewEntry entry,
   ) {
     final schedule = task['schedule'] as Map<String, dynamic>? ?? {};
     return [
@@ -1979,6 +1999,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             schedule,
             groupDate: groupDate,
             localZoneId: taskViewZoneId!,
+            viewInstant: taskViewInstant!,
+            unavailableStart: !entry.available && task['completed'] != true
+                ? entry.availabilityStart
+                : null,
           )
           case final String details when details.isNotEmpty)
         details,
@@ -1990,8 +2014,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     Map<String, dynamic> task,
     List<Map<String, dynamic>> users,
     String? groupDate,
+    TaskViewEntry entry,
   ) {
-    final metadata = _taskMetadata(task, users, groupDate);
+    final metadata = _taskMetadata(task, users, groupDate, entry);
     final title = Text(
       task['title'] as String,
       key: ValueKey('task-title-${task['id']}'),
@@ -2753,6 +2778,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : '${weekdays[group.weekday! - 1]} · ${group.date}';
     }
 
+    String groupId(TaskViewGroup group) =>
+        '${group.entries.firstOrNull?.task['completed'] == true}-${group.date}';
+    final groupIds = groups
+        .where((group) => group.entries.isNotEmpty)
+        .map(groupId)
+        .toSet();
+    groupHeadingKeys.removeWhere((id, _) => !groupIds.contains(id));
+
     final list = Listener(
       onPointerUp: (_) {
         if (taskDrag != null) dragReleased = true;
@@ -2762,428 +2795,510 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         _stopDragScroll();
         taskDrag = null;
       },
-      child: ListView(
+      child: CustomScrollView(
         key: taskViewport,
         controller: taskScroll,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        children: [
-          _taskHeader(),
-          const SizedBox(height: 8),
-          if (!showCompleted || searching)
-            Focus(
-              onKeyEvent: (_, event) {
-                final enter =
-                    event.logicalKey == LogicalKeyboardKey.enter ||
-                    event.logicalKey == LogicalKeyboardKey.numpadEnter;
-                if (widget.folderActions.requiresPicker ||
-                    !enter ||
-                    (capture.value.composing.isValid &&
-                        !capture.value.composing.isCollapsed)) {
-                  return KeyEventResult.ignored;
-                }
-                if (event is KeyDownEvent) {
-                  if (HardwareKeyboard.instance.isShiftPressed) {
-                    if (!busy && pendingCapture.isEmpty) {
-                      final value = capture.value;
-                      final selection = value.selection.isValid
-                          ? value.selection
-                          : TextSelection.collapsed(offset: value.text.length);
-                      // Use the editor's user-input path so it reveals the caret
-                      // after layout, including a newly inserted blank last line.
-                      final editor = captureFocus.context!
-                          .findAncestorStateOfType<EditableTextState>()!;
-                      editor.userUpdateTextEditingValue(
-                        TextEditingValue(
-                          text: value.text.replaceRange(
-                            selection.start,
-                            selection.end,
-                            '\n',
-                          ),
-                          selection: TextSelection.collapsed(
-                            offset: selection.start + 1,
+        slivers: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            sliver: SliverList.list(
+              children: [
+                _taskHeader(),
+                const SizedBox(height: 8),
+                if (!showCompleted || searching)
+                  Focus(
+                    onKeyEvent: (_, event) {
+                      final enter =
+                          event.logicalKey == LogicalKeyboardKey.enter ||
+                          event.logicalKey == LogicalKeyboardKey.numpadEnter;
+                      if (widget.folderActions.requiresPicker ||
+                          !enter ||
+                          (capture.value.composing.isValid &&
+                              !capture.value.composing.isCollapsed)) {
+                        return KeyEventResult.ignored;
+                      }
+                      if (event is KeyDownEvent) {
+                        if (HardwareKeyboard.instance.isShiftPressed) {
+                          if (!busy && pendingCapture.isEmpty) {
+                            final value = capture.value;
+                            final selection = value.selection.isValid
+                                ? value.selection
+                                : TextSelection.collapsed(
+                                    offset: value.text.length,
+                                  );
+                            // Use the editor's user-input path so it reveals the caret
+                            // after layout, including a newly inserted blank last line.
+                            final editor = captureFocus.context!
+                                .findAncestorStateOfType<EditableTextState>()!;
+                            editor.userUpdateTextEditingValue(
+                              TextEditingValue(
+                                text: value.text.replaceRange(
+                                  selection.start,
+                                  selection.end,
+                                  '\n',
+                                ),
+                                selection: TextSelection.collapsed(
+                                  offset: selection.start + 1,
+                                ),
+                              ),
+                              SelectionChangedCause.keyboard,
+                            );
+                          }
+                        } else {
+                          unawaited(_capture());
+                        }
+                        return KeyEventResult.handled;
+                      }
+                      if (event is KeyRepeatEvent) {
+                        return KeyEventResult.handled;
+                      }
+                      return KeyEventResult.ignored;
+                    },
+                    child: TextField(
+                      controller: capture,
+                      focusNode: captureFocus,
+                      readOnly: pendingCapture.isNotEmpty,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
+                      minLines: 1,
+                      maxLines: 4,
+                      enabled: !busy,
+                      decoration: InputDecoration(
+                        labelText: 'What needs doing?',
+                        hintText: 'One task per line',
+                        helperText: captureFailure && pendingCapture.isNotEmpty
+                            ? 'Retry to check these tasks before editing.'
+                            : widget.folderActions.requiresPicker
+                            ? null
+                            : 'Enter to add · Shift+Enter for another task',
+                        suffixIcon: IconButton(
+                          tooltip: 'Add tasks',
+                          onPressed: busy ? null : _submitCaptureButton,
+                          icon: const Icon(Icons.arrow_upward),
+                        ),
+                      ),
+                      onSubmitted: (_) => _capture(),
+                    ),
+                  ),
+                const SizedBox(height: 12),
+                if (tasks.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 56),
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.done_all,
+                          size: 48,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                        SizedBox(height: 12),
+                        Text(
+                          searching
+                              ? 'No tasks match your search'
+                              : selectedTags.isNotEmpty
+                              ? 'No tasks match the selected tags'
+                              : showCompleted
+                              ? 'No completed tasks'
+                              : hasDeferredTasks
+                              ? 'Nothing available yet'
+                              : 'No open tasks',
+                          style: TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SelectionChangedCause.keyboard,
-                      );
-                    }
-                  } else {
-                    unawaited(_capture());
-                  }
-                  return KeyEventResult.handled;
-                }
-                if (event is KeyRepeatEvent) return KeyEventResult.handled;
-                return KeyEventResult.ignored;
-              },
-              child: TextField(
-                controller: capture,
-                focusNode: captureFocus,
-                readOnly: pendingCapture.isNotEmpty,
-                keyboardType: TextInputType.multiline,
-                textInputAction: TextInputAction.newline,
-                minLines: 1,
-                maxLines: 4,
-                enabled: !busy,
-                decoration: InputDecoration(
-                  labelText: 'What needs doing?',
-                  hintText: 'One task per line',
-                  helperText: captureFailure && pendingCapture.isNotEmpty
-                      ? 'Retry to check these tasks before editing.'
-                      : widget.folderActions.requiresPicker
-                      ? null
-                      : 'Enter to add · Shift+Enter for another task',
-                  suffixIcon: IconButton(
-                    tooltip: 'Add tasks',
-                    onPressed: busy ? null : _submitCaptureButton,
-                    icon: const Icon(Icons.arrow_upward),
+                        SizedBox(height: 8),
+                        Text(
+                          searching
+                              ? 'Search titles and descriptions in this workspace.'
+                              : selectedTags.isNotEmpty
+                              ? 'Clear the tag filter to see other tasks.'
+                              : showCompleted
+                              ? 'Completed tasks will appear here.'
+                              : hasDeferredTasks
+                              ? 'Tasks with a future start will appear when they become available.'
+                              : 'Add a task above.',
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                onSubmitted: (_) => _capture(),
-              ),
+              ],
             ),
-          const SizedBox(height: 12),
-          if (tasks.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 56),
-              child: Column(
-                children: [
-                  Icon(
-                    Icons.done_all,
-                    size: 48,
-                    color: Theme.of(context).colorScheme.primary,
+          ),
+          for (final group in groups.where((group) => group.entries.isNotEmpty))
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverMainAxisGroup(
+                key: ValueKey('task-group-${groupId(group)}'),
+                slivers: [
+                  if (searching &&
+                      (identical(group, taskView!.openGroups.firstOrNull) ||
+                          identical(
+                            group,
+                            taskView!.completedGroups.firstOrNull,
+                          )))
+                    SliverToBoxAdapter(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16),
+                        child: Semantics(
+                          header: true,
+                          child: Text(
+                            group.entries.first.task['completed'] == true
+                                ? 'Completed'
+                                : 'Open',
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ),
+                      ),
+                    ),
+                  StickyTaskGroupHeading(
+                    headingKey: groupHeadingKeys.putIfAbsent(
+                      groupId(group),
+                      GlobalKey.new,
+                    ),
+                    title: groupTitle(group),
                   ),
-                  SizedBox(height: 12),
-                  Text(
-                    searching
-                        ? 'No tasks match your search'
-                        : selectedTags.isNotEmpty
-                        ? 'No tasks match the selected tags'
-                        : showCompleted
-                        ? 'No completed tasks'
-                        : hasDeferredTasks
-                        ? 'Nothing available yet'
-                        : 'No open tasks',
-                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    searching
-                        ? 'Search titles and descriptions in this workspace.'
-                        : selectedTags.isNotEmpty
-                        ? 'Clear the tag filter to see other tasks.'
-                        : showCompleted
-                        ? 'Completed tasks will appear here.'
-                        : hasDeferredTasks
-                        ? 'Tasks with a future start will appear when they become available.'
-                        : 'Add a task above.',
+                  SliverList.list(
+                    children: [
+                      for (final entry in group.entries) ...[
+                        Builder(
+                          key: ValueKey('task-row-${entry.task['id']}'),
+                          builder: (context) {
+                            final task = entry.task;
+                            final completed = searching
+                                ? task['completed'] == true
+                                : showCompleted;
+                            final recurrence =
+                                (task['schedule'] as Map)['recurrence']
+                                    as String?;
+                            final tile = Semantics(
+                              label: recurrence == null
+                                  ? null
+                                  : 'Repeats $recurrence',
+                              selected: selectedTasks.contains(task['id']),
+                              customSemanticsActions: {
+                                const CustomSemanticsAction(
+                                  label: 'Select task',
+                                ): () => _selectTask(
+                                  task,
+                                  explicit: true,
+                                  longPress: true,
+                                ),
+                              },
+                              child: Focus(
+                                focusNode: rowFocus.putIfAbsent(
+                                  task['id'] as String,
+                                  () => FocusNode(debugLabel: task['title']),
+                                ),
+                                onFocusChange: (_) {
+                                  if (mounted) setState(() {});
+                                },
+                                onKeyEvent: (_, event) {
+                                  if (!rowFocus[task['id']]!.hasPrimaryFocus ||
+                                      event is! KeyDownEvent) {
+                                    return KeyEventResult.ignored;
+                                  }
+                                  if (event.logicalKey ==
+                                      LogicalKeyboardKey.space) {
+                                    _selectTask(
+                                      task,
+                                      explicit: true,
+                                      longPress: true,
+                                    );
+                                    return KeyEventResult.handled;
+                                  }
+                                  if (event.logicalKey ==
+                                          LogicalKeyboardKey.arrowUp ||
+                                      event.logicalKey ==
+                                          LogicalKeyboardKey.arrowDown) {
+                                    _focusRelativeTask(
+                                      task,
+                                      event.logicalKey ==
+                                              LogicalKeyboardKey.arrowUp
+                                          ? -1
+                                          : 1,
+                                      HardwareKeyboard.instance.isShiftPressed,
+                                    );
+                                    return KeyEventResult.handled;
+                                  }
+                                  return KeyEventResult.ignored;
+                                },
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color:
+                                          rowFocus[task['id']]!.hasPrimaryFocus
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.outline
+                                          : Colors.transparent,
+                                    ),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    minVerticalPadding: 0,
+                                    minTileHeight: 48,
+                                    horizontalTitleGap: 8,
+                                    leading: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (!completed &&
+                                            entry.completionUnavailableReason !=
+                                                null)
+                                          UnavailableCompletion(
+                                            key: ValueKey(
+                                              'completion-unavailable-${task['id']}',
+                                            ),
+                                            title: task['title'] as String,
+                                            repeating: recurrence != null,
+                                            reason: entry
+                                                .completionUnavailableReason!,
+                                            onExplain: () =>
+                                                ScaffoldMessenger.of(
+                                                  context,
+                                                ).showSnackBar(
+                                                  SnackBar(
+                                                    content: Text(
+                                                      entry
+                                                          .completionUnavailableReason!,
+                                                    ),
+                                                  ),
+                                                ),
+                                          )
+                                        else
+                                          Tooltip(
+                                            message:
+                                                '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
+                                            child: TaskCompletionCheckbox(
+                                              repeating: recurrence != null,
+                                              value: completed,
+                                              onChanged: busy
+                                                  ? null
+                                                  : (_) => completed
+                                                        ? _reopen(task)
+                                                        : _complete(task),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                    selected: selectedTasks.contains(
+                                      task['id'],
+                                    ),
+                                    selectedTileColor: Theme.of(
+                                      context,
+                                    ).colorScheme.primaryContainer,
+                                    title: GestureDetector(
+                                      key: ValueKey('task-body-${task['id']}'),
+                                      behavior: HitTestBehavior.opaque,
+                                      onTap: busy
+                                          ? null
+                                          : () => _selectTask(
+                                              task,
+                                              explicit:
+                                                  HardwareKeyboard
+                                                      .instance
+                                                      .isControlPressed ||
+                                                  HardwareKeyboard
+                                                      .instance
+                                                      .isMetaPressed,
+                                              range: HardwareKeyboard
+                                                  .instance
+                                                  .isShiftPressed,
+                                            ),
+                                      onLongPress: busy
+                                          ? null
+                                          : () => _selectTask(
+                                              task,
+                                              explicit: true,
+                                              longPress: true,
+                                            ),
+                                      child: ConstrainedBox(
+                                        constraints: const BoxConstraints(
+                                          minHeight: 48,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            vertical: 6,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              _taskTitle(
+                                                task,
+                                                users,
+                                                group.date,
+                                                entry,
+                                              ),
+
+                                              if ((task['description']
+                                                      as String)
+                                                  .trim()
+                                                  .isNotEmpty)
+                                                Text(
+                                                  (task['description']
+                                                          as String)
+                                                      .replaceAll(
+                                                        RegExp(r'\s+'),
+                                                        ' ',
+                                                      )
+                                                      .trim(),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyMedium
+                                                      ?.copyWith(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurfaceVariant,
+                                                      ),
+                                                ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    trailing: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (movable(task, true) ||
+                                            movable(task, false))
+                                          Draggable<String>(
+                                            data: task['id'],
+                                            maxSimultaneousDrags:
+                                                busy ||
+                                                    (selecting &&
+                                                        !selectedTasks.contains(
+                                                          task['id'],
+                                                        ))
+                                                ? 0
+                                                : 1,
+                                            dragAnchorStrategy:
+                                                pointerDragAnchorStrategy,
+                                            onDragStarted: () {
+                                              dragReleased = false;
+                                              setState(
+                                                () => taskDrag = (
+                                                  id: task['id'] as String,
+                                                  store: store,
+                                                  revision: viewRevision,
+                                                  snapshot: store!.taskSnapshot,
+                                                  completed:
+                                                      task['completed'] == true,
+                                                  everyone: all,
+                                                  upcoming: showUpcoming,
+                                                  user: user,
+                                                  tags: Set.of(selectedTags),
+                                                  selected:
+                                                      selecting &&
+                                                          selectedTasks
+                                                              .contains(
+                                                                task['id'],
+                                                              )
+                                                      ? Set.of(selectedTasks)
+                                                      : {task['id'] as String},
+                                                  query: searchQuery,
+                                                ),
+                                              );
+                                            },
+                                            onDragUpdate: (details) =>
+                                                _updateDragScroll(
+                                                  details.globalPosition,
+                                                ),
+                                            onDragEnd: (details) {
+                                              if (dragReleased &&
+                                                  taskDrag != null) {
+                                                _dropAtPointer(
+                                                  task['id'] as String,
+                                                  details.offset,
+                                                );
+                                              }
+                                              _stopDragScroll();
+                                              setState(() => taskDrag = null);
+                                            },
+                                            feedback: Material(
+                                              elevation: 4,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(
+                                                  12,
+                                                ),
+                                                child: SizedBox(
+                                                  width: 220,
+                                                  child: Text(
+                                                    task['title'],
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            child: Tooltip(
+                                              triggerMode:
+                                                  TooltipTriggerMode.manual,
+                                              message:
+                                                  'Drag to reorder within this date and time',
+                                              child: Semantics(
+                                                customSemanticsActions: {
+                                                  if (!selecting &&
+                                                      movable(task, true))
+                                                    const CustomSemanticsAction(
+                                                      label: 'Move up',
+                                                    ): () => _keyboardMove(
+                                                      task,
+                                                      true,
+                                                    ),
+                                                  if (!selecting &&
+                                                      movable(task, false))
+                                                    const CustomSemanticsAction(
+                                                      label: 'Move down',
+                                                    ): () => _keyboardMove(
+                                                      task,
+                                                      false,
+                                                    ),
+                                                },
+                                                label:
+                                                    'Drag ${task['title']} to reorder. Drag within the same date and time.',
+                                                child: const SizedBox(
+                                                  width: 48,
+                                                  height: 48,
+                                                  child: Icon(
+                                                    Icons.drag_indicator,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                            return KeyedSubtree(
+                              key: ValueKey('task-drop-${task['id']}'),
+                              child: _TaskDragLifetime(
+                                active: taskDrag?.id == task['id'],
+                                child: _reorderableTask(task, tile),
+                              ),
+                            );
+                          },
+                        ),
+                        const Divider(height: 1),
+                      ],
+                    ],
                   ),
                 ],
               ),
             ),
-          for (final group in groups) ...[
-            if (searching &&
-                (identical(group, taskView!.openGroups.firstOrNull) ||
-                    identical(group, taskView!.completedGroups.firstOrNull)))
-              Padding(
-                padding: const EdgeInsets.only(top: 16),
-                child: Semantics(
-                  header: true,
-                  child: Text(
-                    group.entries.first.task['completed'] == true
-                        ? 'Completed'
-                        : 'Open',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.only(top: 16, bottom: 4),
-              child: Semantics(
-                header: true,
-                child: Text(
-                  groupTitle(group),
-                  style: Theme.of(context).textTheme.titleSmall,
-                ),
-              ),
-            ),
-            for (final entry in group.entries) ...[
-              Builder(
-                key: ValueKey('task-row-${entry.task['id']}'),
-                builder: (context) {
-                  final task = entry.task;
-                  final completed = searching
-                      ? task['completed'] == true
-                      : showCompleted;
-                  final recurrence =
-                      (task['schedule'] as Map)['recurrence'] as String?;
-                  final tile = Semantics(
-                    label: recurrence == null ? null : 'Repeats $recurrence',
-                    selected: selectedTasks.contains(task['id']),
-                    customSemanticsActions: {
-                      const CustomSemanticsAction(label: 'Select task'): () =>
-                          _selectTask(task, explicit: true, longPress: true),
-                    },
-                    child: Focus(
-                      focusNode: rowFocus.putIfAbsent(
-                        task['id'] as String,
-                        () => FocusNode(debugLabel: task['title']),
-                      ),
-                      onFocusChange: (_) {
-                        if (mounted) setState(() {});
-                      },
-                      onKeyEvent: (_, event) {
-                        if (!rowFocus[task['id']]!.hasPrimaryFocus ||
-                            event is! KeyDownEvent) {
-                          return KeyEventResult.ignored;
-                        }
-                        if (event.logicalKey == LogicalKeyboardKey.space) {
-                          _selectTask(task, explicit: true, longPress: true);
-                          return KeyEventResult.handled;
-                        }
-                        if (event.logicalKey == LogicalKeyboardKey.arrowUp ||
-                            event.logicalKey == LogicalKeyboardKey.arrowDown) {
-                          _focusRelativeTask(
-                            task,
-                            event.logicalKey == LogicalKeyboardKey.arrowUp
-                                ? -1
-                                : 1,
-                            HardwareKeyboard.instance.isShiftPressed,
-                          );
-                          return KeyEventResult.handled;
-                        }
-                        return KeyEventResult.ignored;
-                      },
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: rowFocus[task['id']]!.hasPrimaryFocus
-                                ? Theme.of(context).colorScheme.outline
-                                : Colors.transparent,
-                          ),
-                        ),
-                        child: ListTile(
-                          contentPadding: EdgeInsets.zero,
-                          minVerticalPadding: 0,
-                          minTileHeight: 48,
-                          horizontalTitleGap: 8,
-                          leading: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (!completed &&
-                                  entry.completionUnavailableReason != null)
-                                UnavailableCompletion(
-                                  key: ValueKey(
-                                    'completion-unavailable-${task['id']}',
-                                  ),
-                                  title: task['title'] as String,
-                                  repeating: recurrence != null,
-                                  reason: entry.completionUnavailableReason!,
-                                  onExplain: () => ScaffoldMessenger.of(context)
-                                      .showSnackBar(
-                                        SnackBar(
-                                          content: Text(
-                                            entry.completionUnavailableReason!,
-                                          ),
-                                        ),
-                                      ),
-                                )
-                              else
-                                Tooltip(
-                                  message:
-                                      '${completed ? 'Reopen' : 'Complete'} ${task['title']}',
-                                  child: TaskCompletionCheckbox(
-                                    repeating: recurrence != null,
-                                    value: completed,
-                                    onChanged: busy
-                                        ? null
-                                        : (_) => completed
-                                              ? _reopen(task)
-                                              : _complete(task),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          selected: selectedTasks.contains(task['id']),
-                          selectedTileColor: Theme.of(
-                            context,
-                          ).colorScheme.primaryContainer,
-                          title: GestureDetector(
-                            key: ValueKey('task-body-${task['id']}'),
-                            behavior: HitTestBehavior.opaque,
-                            onTap: busy
-                                ? null
-                                : () => _selectTask(
-                                    task,
-                                    explicit:
-                                        HardwareKeyboard
-                                            .instance
-                                            .isControlPressed ||
-                                        HardwareKeyboard.instance.isMetaPressed,
-                                    range: HardwareKeyboard
-                                        .instance
-                                        .isShiftPressed,
-                                  ),
-                            onLongPress: busy
-                                ? null
-                                : () => _selectTask(
-                                    task,
-                                    explicit: true,
-                                    longPress: true,
-                                  ),
-                            child: ConstrainedBox(
-                              constraints: const BoxConstraints(minHeight: 48),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 6,
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    _taskTitle(task, users, group.date),
-                                    if (searching &&
-                                        !entry.available &&
-                                        !completed)
-                                      Text(
-                                        'Upcoming',
-                                        style: Theme.of(
-                                          context,
-                                        ).textTheme.labelSmall,
-                                      ),
-                                    if ((task['description'] as String)
-                                        .trim()
-                                        .isNotEmpty)
-                                      Text(
-                                        (task['description'] as String)
-                                            .replaceAll(RegExp(r'\s+'), ' ')
-                                            .trim(),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: Theme.of(
-                                                context,
-                                              ).colorScheme.onSurfaceVariant,
-                                            ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              if (movable(task, true) || movable(task, false))
-                                Draggable<String>(
-                                  data: task['id'],
-                                  maxSimultaneousDrags:
-                                      busy ||
-                                          (selecting &&
-                                              !selectedTasks.contains(
-                                                task['id'],
-                                              ))
-                                      ? 0
-                                      : 1,
-                                  dragAnchorStrategy: pointerDragAnchorStrategy,
-                                  onDragStarted: () {
-                                    dragReleased = false;
-                                    setState(
-                                      () => taskDrag = (
-                                        id: task['id'] as String,
-                                        store: store,
-                                        revision: viewRevision,
-                                        snapshot: store!.taskSnapshot,
-                                        completed: task['completed'] == true,
-                                        everyone: all,
-                                        upcoming: showUpcoming,
-                                        user: user,
-                                        tags: Set.of(selectedTags),
-                                        selected:
-                                            selecting &&
-                                                selectedTasks.contains(
-                                                  task['id'],
-                                                )
-                                            ? Set.of(selectedTasks)
-                                            : {task['id'] as String},
-                                        query: searchQuery,
-                                      ),
-                                    );
-                                  },
-                                  onDragUpdate: (details) =>
-                                      _updateDragScroll(details.globalPosition),
-                                  onDragEnd: (details) {
-                                    if (dragReleased && taskDrag != null) {
-                                      _dropAtPointer(
-                                        task['id'] as String,
-                                        details.offset,
-                                      );
-                                    }
-                                    _stopDragScroll();
-                                    setState(() => taskDrag = null);
-                                  },
-                                  feedback: Material(
-                                    elevation: 4,
-                                    borderRadius: BorderRadius.circular(8),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12),
-                                      child: SizedBox(
-                                        width: 220,
-                                        child: Text(
-                                          task['title'],
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  child: Tooltip(
-                                    triggerMode: TooltipTriggerMode.manual,
-                                    message:
-                                        'Drag to reorder within this date and time',
-                                    child: Semantics(
-                                      customSemanticsActions: {
-                                        if (!selecting && movable(task, true))
-                                          const CustomSemanticsAction(
-                                            label: 'Move up',
-                                          ): () =>
-                                              _keyboardMove(task, true),
-                                        if (!selecting && movable(task, false))
-                                          const CustomSemanticsAction(
-                                            label: 'Move down',
-                                          ): () =>
-                                              _keyboardMove(task, false),
-                                      },
-                                      label:
-                                          'Drag ${task['title']} to reorder. Drag within the same date and time.',
-                                      child: const SizedBox(
-                                        width: 48,
-                                        height: 48,
-                                        child: Icon(Icons.drag_indicator),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                  return KeyedSubtree(
-                    key: ValueKey('task-drop-${task['id']}'),
-                    child: _TaskDragLifetime(
-                      active: taskDrag?.id == task['id'],
-                      child: _reorderableTask(task, tile),
-                    ),
-                  );
-                },
-              ),
-              const Divider(height: 1),
-            ],
-          ],
+          const SliverToBoxAdapter(child: SizedBox(height: 8)),
         ],
       ),
     );

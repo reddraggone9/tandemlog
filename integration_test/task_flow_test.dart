@@ -13,6 +13,8 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
+import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
+import 'start_hints_test.dart' show registerStartHintTests;
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
@@ -130,6 +132,8 @@ Future<void> waitForUi(WidgetTester tester, bool Function() ready) async {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  registerStickyTaskGroupTests();
+  registerStartHintTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -956,7 +960,7 @@ void main() {
         expect(find.text(title), findsOneWidget);
       }
       expect(find.text('Unrelated task'), findsNothing);
-      expect(find.text('Upcoming'), findsOneWidget);
+      expect(find.textContaining('Starts Jan 1 2099'), findsOneWidget);
       expect(
         tester.getTopLeft(find.text('Planning finished')).dy,
         greaterThan(tester.getTopLeft(find.text('Planning available')).dy),
@@ -2430,7 +2434,7 @@ void main() {
       expect((state['schedule'] as Map)['timeZone'], 'UTC');
       expect((state['schedule'] as Map)['dueTime'], '17:00');
       expect((state['schedule'] as Map)['scheduledTime'], '08:00');
-      expect(find.textContaining('Start 09:30'), findsOneWidget);
+      expect(find.textContaining('Start 09:30'), findsNothing);
       expect(find.textContaining('09:30 UTC'), findsNothing);
       expect(find.byTooltip('Task actions'), findsNothing);
       final reorder = find
@@ -2602,7 +2606,7 @@ void main() {
           .state<ScrollableState>(
             find
                 .descendant(
-                  of: find.byType(ListView).first,
+                  of: find.byType(CustomScrollView).first,
                   matching: find.byType(Scrollable),
                 )
                 .first,
@@ -2636,7 +2640,7 @@ void main() {
       );
       await gesture.moveBy(const Offset(-20, 0));
       await tester.pump();
-      final list = find.byType(ListView).first;
+      final list = find.byType(CustomScrollView).first;
       final viewport = tester.getRect(list);
       expect(find.byKey(ValueKey('task-drop-${ids.last}')), findsNothing);
       await gesture.moveTo(Offset(viewport.center.dx, viewport.bottom - 12));
@@ -3860,7 +3864,7 @@ void main() {
           if (e is File) e.path: base64Encode(await e.readAsBytes()),
       };
       final before = await contents();
-      final viewport = find.byType(ListView).first;
+      final viewport = find.byType(CustomScrollView).first;
       ScrollPosition position() => tester
           .state<ScrollableState>(
             find

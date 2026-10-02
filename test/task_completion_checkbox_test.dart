@@ -30,7 +30,7 @@ void main() {
     final checkbox = find.byType(Checkbox);
     expect(tester.getSize(checkbox), const Size(48, 48));
     final vector = find.byWidgetPredicate(
-      (widget) => widget is CustomPaint && widget.size == const Size(18, 22),
+      (widget) => widget is CustomPaint && widget.size == const Size(18, 26),
     );
     expect(vector, findsOneWidget);
     expect(tester.getCenter(vector), tester.getCenter(checkbox));

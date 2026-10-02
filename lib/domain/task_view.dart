@@ -12,11 +12,13 @@ class TaskViewEntry {
     this.task,
     this.effectiveDate, {
     this.available = true,
+    this.availabilityStart,
     this.completionUnavailableReason,
   });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
   final bool available;
+  final DateTime? availabilityStart;
   final String? completionUnavailableReason;
 }
 
@@ -133,6 +135,11 @@ class _TaskTimingContext {
     });
   }
 
+  DateTime nextLocalDay() => _nextMidnight ??= resolveCivilWallTime(
+    DateTime.utc(today.year, today.month, today.day + 1),
+    time.localZoneId,
+  ).instant;
+
   String? completionUnavailableReason(TaskSchedule schedule) {
     if (schedule.recurrence == null) return null;
     try {
@@ -200,10 +207,7 @@ class _TaskTimingContext {
     );
     DateTime? sortChange;
     if (schedule.dueMinDays != null || schedule.dueMaxDays != null) {
-      sortChange = _nextMidnight ??= resolveCivilWallTime(
-        DateTime.utc(today.year, today.month, today.day + 1),
-        time.localZoneId,
-      ).instant;
+      sortChange = nextLocalDay();
       if (schedule.dueMinDays != null && effective != null) {
         final min = boundDay(schedule.dueMinDays!);
         final effectiveDay = DateTime.utc(
@@ -276,6 +280,12 @@ TimedView<TaskView> projectTaskView(
     final timing = context.evaluate(schedule);
     final done = row['completed'] == true;
     var next = done ? timing._nextSortChange : timing.nextChange;
+    // Visible future-start hints switch from a calendar date to today's time
+    // at local midnight, even when the start itself is later that day.
+    if (!done && !timing.available && (includeUpcoming || searchActive)) {
+      final midnight = context.nextLocalDay();
+      if (next == null || midnight.isBefore(next)) next = midnight;
+    }
     if (!done && schedule.recurrence != null) {
       final midnight = context.nextCompletionDay(schedule);
       if (next == null || midnight.isBefore(next)) next = midnight;
@@ -292,6 +302,7 @@ TimedView<TaskView> projectTaskView(
         row,
         timing.effectiveDate,
         available: timing.available,
+        availabilityStart: timing.availabilityStart,
         completionUnavailableReason: done
             ? null
             : context.completionUnavailableReason(schedule),

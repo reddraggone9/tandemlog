@@ -27,6 +27,36 @@ List<String> ids(List<TaskViewEntry> rows) =>
     rows.map((row) => row.task['id'] as String).toList();
 
 void main() {
+  test('visible future hints refresh at viewer midnight before the start', () {
+    final task = row(
+      'future',
+      schedule: TaskSchedule(startDate: '2026-03-09', startTime: '17:00'),
+    );
+    final before = at('2026-03-08T06:00:00Z', 'America/Chicago', -6);
+    final hidden = projectTaskView([task], before);
+    expect(hidden.value.open, isEmpty);
+    expect(hidden.nextChange, DateTime.parse('2026-03-09T22:00:00Z'));
+    for (final search in [false, true]) {
+      final rows = [
+        {...task, 'title': 'Reference'},
+      ];
+      final view = projectTaskView(
+        rows,
+        before,
+        includeUpcoming: !search,
+        searchQuery: search ? 'Reference' : null,
+      );
+      expect(view.value.open.single.available, isFalse);
+      expect(view.nextChange, DateTime.parse('2026-03-09T05:00:00Z'));
+      final next = projectTaskView(
+        rows,
+        at('2026-03-09T05:00:00Z', 'America/Chicago', -5),
+        includeUpcoming: !search,
+        searchQuery: search ? 'Reference' : null,
+      );
+      expect(next.nextChange, DateTime.parse('2026-03-09T22:00:00Z'));
+    }
+  });
   test(
     'recurring completion eligibility changes at civil midnight and on zone changes',
     () {

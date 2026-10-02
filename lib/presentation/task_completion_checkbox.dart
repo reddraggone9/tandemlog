@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Keeps the native checkbox's hit target, focus, reaction and semantics. Only
-/// its repeating-task perimeter is replaced by Lee's approved 18 × 22 vector.
+/// its repeating-task perimeter is replaced by Lee's approved 18 × 26 vector.
 class TaskCompletionCheckbox extends StatelessWidget {
   const TaskCompletionCheckbox({
     super.key,
@@ -36,7 +36,7 @@ class TaskCompletionCheckbox extends StatelessWidget {
         IgnorePointer(
           child: ExcludeSemantics(
             child: CustomPaint(
-              size: const Size(18, 22),
+              size: const Size(18, 26),
               painter: _RepeatPerimeter(color),
             ),
           ),
@@ -52,20 +52,22 @@ class _RepeatPerimeter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // SVG viewBox="0 -2 18 22": retain the 18px square and intentional tip
+    // SVG viewBox="0 -4 18 26": retain the 18px square and intentional tip
     // bleed, rather than scaling its full height down to an 18px icon slot.
-    canvas.translate(0, 2);
+    canvas.translate(0, 4);
     final perimeter = Path()
-      ..moveTo(1.5, 16.866)
+      ..moveTo(3, 17)
+      ..lineTo(2, 17)
       ..arcToPoint(const Offset(1, 16), radius: const Radius.circular(1))
       ..lineTo(1, 2)
       ..arcToPoint(const Offset(2, 1), radius: const Radius.circular(1))
-      ..lineTo(11.8, 1)
-      ..moveTo(16.5, 1.134)
+      ..lineTo(7.2, 1)
+      ..moveTo(15, 1)
+      ..lineTo(16, 1)
       ..arcToPoint(const Offset(17, 2), radius: const Radius.circular(1))
       ..lineTo(17, 16)
       ..arcToPoint(const Offset(16, 17), radius: const Radius.circular(1))
-      ..lineTo(6.2, 17);
+      ..lineTo(10.8, 17);
     canvas.drawPath(
       perimeter,
       Paint()
@@ -75,13 +77,13 @@ class _RepeatPerimeter extends CustomPainter {
         ..strokeCap = StrokeCap.round,
     );
     final tips = Path()
-      ..moveTo(11.4, -1.3)
-      ..lineTo(14, 1)
-      ..lineTo(11.4, 3.3)
+      ..moveTo(6.8, -3.4)
+      ..lineTo(12, 1)
+      ..lineTo(6.8, 5.4)
       ..close()
-      ..moveTo(6.6, 14.7)
-      ..lineTo(4, 17)
-      ..lineTo(6.6, 19.3)
+      ..moveTo(11.2, 12.6)
+      ..lineTo(6, 17)
+      ..lineTo(11.2, 21.4)
       ..close();
     canvas.drawPath(tips, Paint()..color = color);
   }
