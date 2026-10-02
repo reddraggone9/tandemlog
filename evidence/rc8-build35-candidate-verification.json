@@ -1,0 +1,114 @@
+{
+  "source_commit": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+  "version": "0.1.0-rc.8+35",
+  "candidate_run": 37041309886,
+  "push_ci_run": 37041218115,
+  "all_candidate_jobs": "success",
+  "push_ci": "success",
+  "native_linux_suite": {
+    "registered_flows": 32,
+    "step_conclusion": "success",
+    "step_seconds_including_build_and_launch": 506
+  },
+  "android": {
+    "artifact_id": 11243016190,
+    "archive_sha256": "d9e81c574775ae6b69c5b8b271a06d9adea3553586d83ddce5c586a863280573",
+    "archive_bytes": 27577069,
+    "apk_sha256": "47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15",
+    "apk_bytes": 59592404,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
+    "library_version": 3,
+    "library_file_name": "tandemlog-rc8-build35-android.zip",
+    "native_acceptance": "pending targeted Search focus recheck; prior build34 core evidence retained separately"
+  },
+  "desktop_artifacts": {
+    "windows": {
+      "id": 11242178910,
+      "archive_sha256": "d608fb930b0aab23649004f390619396a6b89465f153af66136921837dd88cca"
+    },
+    "linux": {
+      "id": 11242049654,
+      "archive_sha256": "c85381b7252f624bba2d047e58f373c149f89fad352b1d5fad72159a669ea814"
+    }
+  },
+  "archives_crc_digest_checksums": "pass",
+  "desktop_installed_lifecycle": "pass",
+  "original_internal_asset_hashes": {
+    "android-release-metadata.json": "68317de48f00801aa496ed4e403aa57b6377fe879a4d6d13852d5b336160375d",
+    "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "tandemlog-android.apk": "47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15",
+    "android-SHA256SUMS.txt": "dab3695e3a6871401a95724db21fc43bc8210788817ada95bd36da6a3eea0435",
+    "linux-startup.json": "352be52b2bc6e468fe19d68a66dbdd9c54a9d90375fa5907ff223dd031cd7ca7",
+    "linux-install-smoke.json": "de260e9605f0e501328209aa80a4e41741b338e70c6ff1cb9f1c849e03e3a243",
+    "tandemlog-linux-x64.flatpak": "93158432629567221f7245e496000fddfa23f9e947f509eff8938bf10f582bc8",
+    "linux-SHA256SUMS.txt": "8308d5052a17a204bae7fe019feff0154f066a50daf3906a211f98992dbf0af2",
+    "windows-install-smoke.json": "0f4a41442240b77e0339cb5dc2e4154f8ded4be93a450876568a5d6160b5f5db",
+    "windows-SHA256SUMS.txt": "f8f93f7c2601be47ffa1379e2be927e67766d04c4d4b13650c8823d2a0ac30d3",
+    "tandemlog-windows-x64-unsigned-setup.exe": "dbb376002c121274808670b6617f0c800f97a935299cb3b22292b86f10707e11"
+  },
+  "versioned_public_staging_hashes": {
+    "tandemlog-0.1.0-rc.8-android.apk": "47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15",
+    "tandemlog-0.1.0-rc.8-windows-x64-setup.exe": "dbb376002c121274808670b6617f0c800f97a935299cb3b22292b86f10707e11",
+    "tandemlog-0.1.0-rc.8-linux-x64.flatpak": "93158432629567221f7245e496000fddfa23f9e947f509eff8938bf10f582bc8"
+  },
+  "staged_copy_bytes_identical": true,
+  "linux_startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 422,
+        "marker": "TANDEMLOG_READY_MS=198 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=52",
+          "TANDEMLOG_PHASE identity_lock=50",
+          "TANDEMLOG_PHASE sqlite_open_schema=4",
+          "TANDEMLOG_PHASE manifest=18",
+          "TANDEMLOG_PHASE ingest=26",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=198 FILES_READ=1"
+        ],
+        "external_main_ms": 220,
+        "external_first_frame_ms": 276
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 329,
+        "marker": "TANDEMLOG_READY_MS=162 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=52",
+          "TANDEMLOG_PHASE identity_lock=9",
+          "TANDEMLOG_PHASE sqlite_open_schema=1",
+          "TANDEMLOG_PHASE manifest=40",
+          "TANDEMLOG_PHASE ingest=26",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=162 FILES_READ=0"
+        ],
+        "external_main_ms": 163,
+        "external_first_frame_ms": 219
+      }
+    ]
+  },
+  "private_runtime_pin": "0547f4cf3182fb0381c9b31425b205dee320250f",
+  "runtime_bytes_unchanged": true,
+  "only_changed_application_file": "lib/main.dart",
+  "protocol": 2,
+  "cache": 9,
+  "all_peers_update_before_new_undo_event": true,
+  "public_release_created": false,
+  "stable_or_real_data_cutover": false
+}

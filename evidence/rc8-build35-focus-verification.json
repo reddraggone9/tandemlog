@@ -57,7 +57,8 @@
       ]
     },
     "full_hosted_native_suite_registered_flows": 32,
-    "full_hosted_candidate": "pending"
+    "full_hosted_candidate": "all jobs pass; exact signed APK verified",
+    "hosted_native_seconds_including_build_and_launch": 506
   },
   "android_build34_acceptance": {
     "core": "passed per parent; ordinary visuals, Reopen/trueUndo, successor protection, themes/text scale/cache rebuild",
@@ -88,5 +89,6 @@
     "sha256": "c2ee3ddb558eacb0423eb20343f4a1064c69b1cf354d86b53e53fc93bc4e2996",
     "native_platform": "Linux GTK; scripted keyboard input identified; desktop pointer verified",
     "auto_focus_scrolling_claimed": false
-  }
+  },
+  "candidate_receipt": "rc8-build35-candidate-verification.json"
 }
