@@ -50,6 +50,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(changes, 1);
     expect(tester.widget<Checkbox>(checkbox).value, isTrue);
+    expect(vector, findsNothing);
+    expect(tester.widget<Checkbox>(checkbox).side, isNull);
+    expect(tester.getSize(checkbox), const Size(48, 48));
     expect(
       tester.getSemantics(checkbox),
       matchesSemantics(
@@ -68,6 +71,8 @@ void main() {
     await tester.pumpAndSettle();
     expect(changes, 2);
     expect(checked, isFalse);
+    expect(vector, findsOneWidget);
+    expect(tester.getCenter(vector), tester.getCenter(checkbox));
     semantics.dispose();
   });
 
@@ -100,5 +105,47 @@ void main() {
     expect(tester.widget<Checkbox>(checkbox).value, isFalse);
     expect(tester.takeException(), isNull);
     semantics.dispose();
+  });
+
+  testWidgets('completed controls share native appearance in both themes', (
+    tester,
+  ) async {
+    for (final brightness in Brightness.values) {
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(brightness: brightness),
+          home: MediaQuery(
+            data: const MediaQueryData(textScaler: TextScaler.linear(2)),
+            child: Scaffold(
+              body: Row(
+                children: [
+                  for (final repeating in [false, true])
+                    TaskCompletionCheckbox(
+                      value: true,
+                      repeating: repeating,
+                      onChanged: repeating ? null : (_) {},
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final controls = find.byType(Checkbox);
+      expect(controls, findsNWidgets(2));
+      for (final element in controls.evaluate()) {
+        final checkbox = element.widget as Checkbox;
+        expect(checkbox.value, true);
+        expect(checkbox.side, isNull);
+        expect(tester.getSize(find.byWidget(checkbox)), const Size(48, 48));
+      }
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.size == const Size(18, 26),
+        ),
+        findsNothing,
+      );
+      expect(tester.takeException(), isNull);
+    }
   });
 }

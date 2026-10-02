@@ -739,9 +739,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       });
       _invalidateView();
       final newer = result.keptNewerChanges ? ' Newer changes were kept.' : '';
+      final retained = result.retainedSuccessorCount == 0
+          ? ''
+          : result.retainedSuccessorCount == 1
+          ? ' Next occurrence kept to preserve other changes.'
+          : ' Next occurrences kept to preserve other changes.';
+      final removed = result.removedSuccessorCount == 0
+          ? ''
+          : result.removedSuccessorCount == 1
+          ? ' Untouched next occurrence retracted.'
+          : ' Untouched next occurrences retracted.';
       final text = result.error == null
-          ? 'Undid $label.$newer'
-          : '${result.undone.length} confirmed undone; ${result.remaining.length} remain. ${failureMessage(result.error!)}$newer';
+          ? 'Undid $label.$removed$retained$newer'
+          : '${result.undone.length} confirmed undone; ${result.remaining.length} remain. ${failureMessage(result.error!)}$removed$retained$newer';
       final messenger = ScaffoldMessenger.of(context);
       messenger.clearSnackBars();
       messenger.showSnackBar(
@@ -2062,16 +2072,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _reopen(Map<String, dynamic> task) async {
     final origin = store!, observed = store!.activeCompletionIds(task['id']);
-    await _act(
-      () => _recordAction(
+    var confirmed = false;
+    await _act(() async {
+      await _recordAction(
         origin,
         'reopening',
         (prepared) => origin.reopen(task['id'], observed, onPrepared: prepared),
-      ),
-    );
-    if (mounted &&
-        identical(store, origin) &&
-        origin.hasEntity(const Uuid().v5(task['id'], 'successor'))) {
+      );
+      confirmed = true;
+    });
+    if (!confirmed || !mounted || !identical(store, origin)) return;
+    if (origin.activeCompletionIds(task['id']).isNotEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Another completion keeps this task completed.'),
+        ),
+      );
+    } else if (origin.hasEntity(const Uuid().v5(task['id'], 'successor'))) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Task reopened; next occurrence kept.')),
       );

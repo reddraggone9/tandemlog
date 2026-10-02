@@ -1,0 +1,83 @@
+{
+  "version": "0.1.0-rc.8",
+  "android_code": 33,
+  "source_base": "d01231f4ab1c06ff15389481c442207a2160b5e4",
+  "application_file_sha256": {
+    "lib/application/task_clock.dart": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e",
+    "lib/application/undo_history.dart": "52f0016fd42c4ceb5ee599ee406ad9da760390e796923432a585382e0a6132b8",
+    "lib/domain/bulk_task_edit.dart": "c2546015c74090673f47a5cbf51d42b21815713040b3a3009e713f4306522dac",
+    "lib/domain/event.dart": "bf1f4a4f72dc89d4bbca7f7f6f49b3f178e54d9bd82e672499423e50465c879b",
+    "lib/domain/event_clock.dart": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f",
+    "lib/domain/projection.dart": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4",
+    "lib/domain/schedule.dart": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13",
+    "lib/domain/task_view.dart": "7e334ebd7717b2cbcec4decaea81e11373927586304235a41766f878580a24f6",
+    "lib/domain/timed_view.dart": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6",
+    "lib/domain/undo.dart": "31cd1d1f0ada8edbbd13bd145bf92aa1fefe84462a20eaf1b459ae0c9f1efe3c",
+    "lib/domain/wall_time.dart": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0",
+    "lib/main.dart": "2188a44c9ce766ede201e9cb172a29f0645c8ad2556e4dce88ff0f43aa5aa813",
+    "lib/platform/folder_actions.dart": "5e8aad2152e63b41e9e97fbb885cc8dfd41cd8bd34cacf986d49d7a3fcc15451",
+    "lib/platform/foreground_importer.dart": "203c1513a774b5d330b69ec1fcbd98ce784e7dc43b2f7401f55cdc445fa12316",
+    "lib/platform/log_folder.dart": "a84ea8f79278811c96a866a6ef402148fc555b672d6d0745e04e96450837957c",
+    "lib/platform/view_time_source.dart": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54",
+    "lib/presentation/compact_selection_actions.dart": "022895dad16cfd223e94dc9d075f5bf9133dbd16b798cd98c55ff53f8ba2cfe1",
+    "lib/presentation/failure_message.dart": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303",
+    "lib/presentation/sticky_task_group.dart": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77",
+    "lib/presentation/tag_filter_picker.dart": "73b2bf14d0d1bd2ac1325c8f2b5fe5ebcd4a4cc3117fb26c438bda6287bb01b5",
+    "lib/presentation/task_completion_checkbox.dart": "191da4661e353fc389a0b53678d4595da25345892ad8ee09eac771752ab74df0",
+    "lib/presentation/task_editor.dart": "c969fb579ee6e70358d1500d216e5c3d96c7bfb103b6a12e5b43a22b73210102",
+    "lib/presentation/task_metadata.dart": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4",
+    "lib/presentation/task_toolbar.dart": "87423cb0ca1dcf6b754fdcddb7684f1570fdf3262fe89fb9d42c5b8eb10207c1",
+    "lib/presentation/unavailable_completion.dart": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b",
+    "lib/presentation/view_clock.dart": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e",
+    "lib/storage/local_settings.dart": "aa9199afac8268e759e346b92ab3bb32f05db6e8f5c0b9a30c621c550600c617",
+    "lib/storage/log_folder.dart": "52387db08c4b2bcfb879da4c7b5248bc6ab5d654b16a6c0818127cb5138213ff",
+    "lib/storage/task_store.dart": "17d9f412b9a7bbd4376370d97d84bcdb3e1195de2338aec4e6f03689993d7053"
+  },
+  "validation": {
+    "flutter_tests": 225,
+    "recurring_undo_new_tests": 21,
+    "native_linux_aggregate_flows": 29,
+    "native_linux_aggregate_duration": "7m46s",
+    "python_release_tool_tests": 13,
+    "analyze": "pass",
+    "format": "pass",
+    "actionlint": "pass",
+    "independent_domain_review": "GO; read-only, new diff only"
+  },
+  "semantics": {
+    "checkbox_reopen": "retains successor",
+    "true_undo_untouched_successor": "suppressed from rows; canonical identity/history retained",
+    "independent_successor_work_or_dependency": "preserved; late delivery restores protection",
+    "historical_undo_meaning": "unchanged",
+    "mixed_batch_acknowledgement": "exact receipts; partial prefix only"
+  },
+  "compatibility": {
+    "protocol": 2,
+    "cache": 9,
+    "old_cache_rebuild": "backup plus existing identity/space/prefix guards",
+    "all_peers_update_before_new_event": true,
+    "old_rc7_decoder": "historical fixture accepted; new event explicitly rejected"
+  },
+  "ui": {
+    "runtime": "native Linux GTK debug under Xvfb",
+    "synthetic_tasks_and_injected_view_clock": true,
+    "viewports": [
+      "1200x800",
+      "390x800"
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "text_scales": [
+      1,
+      2
+    ],
+    "completed_checkboxes": "native ordinary controls, 48x48; repeat overlay only open",
+    "observed_failure": "removed/restored synthetic manifest; no false success or canonical mutation; Retry recovers",
+    "demo_delivery": "pending"
+  },
+  "native_android_exact_candidate": "pending",
+  "rc7_modified": false,
+  "stable_or_real_data_cutover": false
+}

@@ -17,11 +17,14 @@ class TaskUndoResult {
   final List<String> undone, remaining;
   final bool keptNewerChanges;
   final Object? error;
+  final int retainedSuccessorCount, removedSuccessorCount;
   TaskUndoResult(
     Iterable<String> undone,
     Iterable<String> remaining,
-    this.keptNewerChanges, [
+    this.keptNewerChanges, {
     this.error,
-  ]) : undone = List.unmodifiable(undone),
+    this.retainedSuccessorCount = 0,
+    this.removedSuccessorCount = 0,
+  }) : undone = List.unmodifiable(undone),
        remaining = List.unmodifiable(remaining);
 }

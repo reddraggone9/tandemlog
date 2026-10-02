@@ -155,6 +155,7 @@ class LogEvent {
           }
           break;
         case 'task.completionUndone':
+        case 'task.recurringCompletionUndone':
           text('completion', 80);
           if (!_validReference(d['completion'])) {
             throw FormatFailure('Invalid completion reference.');
@@ -322,8 +323,18 @@ Map<String, dynamic>? project(List<LogEvent> events) {
 /// Retractions are idempotent, name earlier original operations, and are never
 /// themselves Undo targets. Known reference validity is checked by ingestion.
 Set<String> retractedOperationIds(Iterable<LogEvent> events) => events
-    .where((e) => e.type == 'task.operationUndone')
-    .map((e) => e.data['operation'] as String)
+    .where(
+      (e) =>
+          e.type == 'task.operationUndone' ||
+          e.type == 'task.recurringCompletionUndone',
+    )
+    .map(
+      (e) =>
+          (e.type == 'task.operationUndone'
+                  ? e.data['operation']
+                  : e.data['completion'])
+              as String,
+    )
     .toSet();
 
 void validateTags(dynamic value) {

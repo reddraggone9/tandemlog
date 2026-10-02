@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// Keeps the native checkbox's hit target, focus, reaction and semantics. Only
-/// its repeating-task perimeter is replaced by Lee's approved 18 × 26 vector.
+/// open repeating-task perimeter uses Lee's approved 18 × 26 vector. Completed
+/// tasks share the native checked appearance, regardless of recurrence.
 class TaskCompletionCheckbox extends StatelessWidget {
   const TaskCompletionCheckbox({
     super.key,
@@ -16,18 +17,17 @@ class TaskCompletionCheckbox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final showRepeat = repeating && !value;
     final checkbox = Checkbox(
       materialTapTargetSize: MaterialTapTargetSize.padded,
       value: value,
       onChanged: onChanged,
-      side: repeating ? BorderSide.none : null,
+      side: showRepeat ? BorderSide.none : null,
     );
-    if (!repeating) return checkbox;
+    if (!showRepeat) return checkbox;
     final colors = Theme.of(context).colorScheme;
     final color = onChanged == null
         ? colors.onSurface.withValues(alpha: 0.38)
-        : value
-        ? colors.primary
         : colors.onSurfaceVariant;
     return Stack(
       alignment: Alignment.center,

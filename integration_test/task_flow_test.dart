@@ -16,6 +16,7 @@ import 'package:tandemlog/platform/view_time_source.dart';
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
+import 'completion_actions_test.dart' show registerCompletionActionTests;
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
@@ -136,6 +137,7 @@ void main() {
   registerStickyTaskGroupTests();
   registerStartHintTests();
   registerSaveAcknowledgementTests();
+  registerCompletionActionTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -3551,7 +3553,7 @@ void main() {
         writer.rows.firstWhere((r) => r['id'] == id)['completed'],
         isFalse,
       );
-      expect(writer.rows.where((r) => r['kind'] == 'task').length, 2);
+      expect(writer.rows.where((r) => r['kind'] == 'task').length, 1);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       tester.view.resetPhysicalSize();

@@ -1,8 +1,7 @@
-Experimental RC7 task preview.
+Experimental RC8 task preview.
 
-- Date and Someday headings stay visible while scrolling, with the next group pushing the heading aside.
-- Repeating tasks have clearer checkbox arrows while retaining the normal checkbox size and touch target.
-- Future tasks show when they become available; the hint updates as time passes and disappears once they can start.
-- Saves and partial batches now verify their exact records after folder reconciliation, preventing a false success if an incoming replacement drops newly appended records. An affected edit retains its draft for retry.
+- Completed tasks use ordinary checked boxes. Reopening a repeating task restores its arrow outline.
+- True Undo of recurring completion retracts an untouched next occurrence. Independent successor changes or dependencies are preserved and explained; checkbox Reopen still retains the next occurrence.
+- Failed reopening no longer shows a success notice, and another concurrent completion is explained when it keeps the task completed.
 
-Compatibility: updates RC6 with the same app identity, Android signer, protocol2 and cache8. No shared-history conversion is required.
+Compatibility: same app identity and Android signer, protocol2 with a new closed-schema Undo event, and cache9. Update every peer before using the new recurring-completion Undo; earlier apps fail explicitly on that event. Known older local caches rebuild automatically without changing canonical history or writer identity. Historical Undo records retain their previous meaning.

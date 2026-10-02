@@ -46,3 +46,8 @@ One transport append still flushes; then one ingestion/cache transaction materia
 Local event preparation checks only historical references affected by that proposed event; canonical ingestion still validates the full joined reference set. This removes repeated decoding of unrelated history without weakening late-dependency admission.
 
 See [batch performance evidence](../evidence/rc5-batch-performance.json) and the reusable synthetic `tool/measure_batches.dart`. Its storage phases/counters are separate from perceived UI latency and Android document-provider behavior.
+
+
+## Conditional recurring-completion Undo
+
+RC8 adds one explicit cleanup-retraction meaning; existing completion retraction and checkbox Reopen retain their meanings. The [schema](schema.md#rc8-conditional-recurring-completion-undo) defines untouched-successor suppression, conservative independent-work/dependency protection, late-arrival restoration, surviving-seed selection and peer upgrades. Suppression is derived from immutable canonical records, not a deletion tombstone or canonical rewrite. Cache 9 rebuilds supported older materializations while retaining the established backup and integrity guards. A mixed Undo action still uses one flushed append, per-record exact confirmation and one cache transaction; complete-prefix and interruption behavior is unchanged.

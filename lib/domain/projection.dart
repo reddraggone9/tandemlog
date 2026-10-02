@@ -82,3 +82,28 @@ List<String> projectOrder(
   settlePending();
   return ordered;
 }
+
+/// Cleanup only retracts an untouched proposal. Any independent history or
+/// anchor dependency preserves its original seed, including late arrivals.
+class SuccessorSelection {
+  final LogEvent seed;
+  final bool suppressed;
+  const SuccessorSelection(this.seed, this.suppressed);
+}
+
+SuccessorSelection selectSuccessor(
+  List<LogEvent> seeds,
+  Iterable<LogEvent> parentHistory, {
+  required bool protected,
+}) {
+  seeds.sort(compareEvents);
+  if (protected) return SuccessorSelection(seeds.first, false);
+  final cancelled = parentHistory
+      .where((e) => e.type == 'task.recurringCompletionUndone')
+      .map((e) => e.data['completion'])
+      .toSet();
+  final surviving = seeds.where((e) => !cancelled.contains(e.id));
+  return surviving.isEmpty
+      ? SuccessorSelection(seeds.first, true)
+      : SuccessorSelection(surviving.first, false);
+}

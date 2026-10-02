@@ -1,5 +1,13 @@
 # Current status — 2026-10-02
 
+## RC8 build33 — conditional completion Undo and completed controls, preparing
+
+Lee clarified the intended distinction: checkbox Reopen retains a recurring successor, while true Undo of accidental completion retracts an untouched next-occurrence proposal. Independent successor history, supporting completion seeds and order dependencies conservatively preserve or restore it, including late arrival. New closed-schema `task.recurringCompletionUndone` records explicit intent; legacy Undo records retain their meaning. Protocol2 remains, but every peer must update before using this new type. Cache9 rebuilds supported older local projections without rewriting canonical bytes or replacing writer identity. [Schema](schema.md#rc8-conditional-recurring-completion-undo).
+
+Completed tasks now share the native ordinary checked checkbox; v6 arrows remain for open repeating tasks. Reopen no longer claims success after a failed command, and a surviving concurrent completion is explained. True Undo reports whether the next occurrence was retracted or protected. The independent broad Undo review found no other concrete persistence defect; capture Undo remains intentionally excluded.
+
+Local final225 application tests and13 release-tool tests pass.21 new recurring-Undo tests cover cleanup, independent work/dependencies, late arrival/convergence, recompletion dates/position, exact partial receipts, cache8→9 and historical fixtures. The exact RC7 decoder accepts the historical fixture and explicitly rejects the new event. All29 native Linux workflows pass in7m46s, including failed-Reopen/retry, both Undo outcomes, completed checkbox appearance and preserved drafts. The final pointer-visible recording is being packaged. Signed all-platform candidate and exact native Android acceptance remain pending. No RC8 publication, stable release or real-data cutover has occurred.
+
 ## Published RC7 — sticky headings, future-start cues and confirmed saves, build32
 
 Approved UI scope: sticky date/Someday headings, clearer v6 repeat-checkbox geometry and future-only start hints. Stored task data, protocol2/cache8 and visibility rules remain unchanged. Intermediate build31 at `6d9726b6a68fd8e91a639216ac33d923ad619273` passed full hosted27-flow/platform gates; it is superseded because an independent review confirmed a false-save acknowledgment race.

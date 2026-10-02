@@ -106,14 +106,14 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 8) {
+      if (version < 0 || version > 9) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
       }
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
-      if (version > 0 && version < 8) {
+      if (version > 0 && version < 9) {
         await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
@@ -138,7 +138,7 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=8');
+      db.execute('PRAGMA user_version=9');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -240,7 +240,7 @@ class TaskStore {
       db.execute(
         "INSERT OR REPLACE INTO metadata VALUES ('replay_pending','1')",
       );
-      db.execute('PRAGMA user_version=8');
+      db.execute('PRAGMA user_version=9');
       db.execute('COMMIT');
     } catch (_) {
       db.execute('ROLLBACK');
@@ -392,8 +392,16 @@ class TaskStore {
           affected.add((e.data['successor'] as Map)['id'] as String);
         }
       }
+      for (final e in newEvents) {
+        if (e.type == 'task.recurringCompletionUndone') {
+          affected.add(const Uuid().v5(e.entity, 'successor'));
+        }
+        if (e.type == 'task.moved' && e.data['before'] is String) {
+          affected.add(e.data['before'] as String);
+        }
+      }
       for (final entity in affected) {
-        final state = project(_entityEvents(entity));
+        final state = _projectEntity(entity);
         if (state != null) {
           db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
             entity,
@@ -401,20 +409,26 @@ class TaskStore {
           ]);
         }
       }
-      if (newEvents.any(
-        (e) =>
-            {
-              'task.created',
-              'user.created',
-              'task.completed',
-              'task.moved',
-            }.contains(e.type) ||
-            (e.type == 'task.operationUndone' &&
-                db.select(
-                  "SELECT 1 FROM events WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
-                  [e.data['operation']],
-                ).isNotEmpty),
-      )) {
+      if (affected.any(
+            (entity) => db.select(
+              "SELECT 1 FROM events WHERE json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+              [entity],
+            ).isNotEmpty,
+          ) ||
+          newEvents.any(
+            (e) =>
+                {
+                  'task.created',
+                  'user.created',
+                  'task.completed',
+                  'task.moved',
+                }.contains(e.type) ||
+                (e.type == 'task.operationUndone' &&
+                    db.select(
+                      "SELECT 1 FROM events WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
+                      [e.data['operation']],
+                    ).isNotEmpty),
+          )) {
         _rebuildOrder();
       }
       for (final c in checkpoints) {
@@ -438,7 +452,7 @@ class TaskStore {
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(
-      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 ORDER BY positions.rank",
+      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
     );
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
@@ -463,14 +477,27 @@ class TaskStore {
           )
           .map((r) => LogEvent.decode(r['raw'] as String)),
     );
+    final selectedSeedIds = <String, String>{};
     final actions = db
         .select(
           "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.completed','task.moved') ORDER BY clock,writer,seq",
         )
-        .where(
-          (row) =>
-              row['type'] != 'task.moved' || !retracted.contains(row['id']),
-        )
+        .where((row) {
+          if (row['type'] == 'task.moved') {
+            return !retracted.contains(row['id']);
+          }
+          final successor = row['successor'] as String?;
+          if (row['type'] == 'task.completed' && successor != null) {
+            final selected = selectedSeedIds.putIfAbsent(
+              successor,
+              () => _entityEvents(
+                successor,
+              ).where((event) => event.type == 'task.created').single.id,
+            );
+            return selected == row['id'];
+          }
+          return true;
+        })
         .map(
           (row) => OrderAction(
             row['entity'] as String,
@@ -594,6 +621,7 @@ class TaskStore {
     if (type.startsWith('task.') &&
         type != 'task.created' &&
         type != 'task.operationUndone' &&
+        type != 'task.recurringCompletionUndone' &&
         project(prior)?['deleted'] == true) {
       throw FormatFailure('This task was deleted.');
     }
@@ -605,7 +633,9 @@ class TaskStore {
         ).isEmpty) {
       throw FormatFailure('Choose an existing user before creating a task.');
     }
-    if (type == 'task.completionUndone' || type == 'task.operationUndone') {
+    if (type == 'task.completionUndone' ||
+        type == 'task.operationUndone' ||
+        type == 'task.recurringCompletionUndone') {
       final field = type == 'task.operationUndone' ? 'operation' : 'completion';
       if (!prior.any((target) => target.id == data[field])) {
         throw FormatFailure('Undo requires an earlier operation of this task.');
@@ -657,6 +687,16 @@ class TaskStore {
     List<(String, Map<String, dynamic>)> commands, {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
+  }) => _appendCommands(
+    [for (final (entity, data) in commands) (entity, type, data)],
+    canCommit: canCommit,
+    onPrepared: onPrepared,
+  );
+
+  Future<List<OperationReceipt>> _appendCommands(
+    List<(String, String, Map<String, dynamic>)> commands, {
+    bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
   }) async {
     if (commands.isEmpty) return [];
     final phase = Stopwatch()..start();
@@ -671,7 +711,7 @@ class TaskStore {
     var maximum = _maximumClock();
     final receipts = <OperationReceipt>[];
     final bytes = BytesBuilder(copy: false);
-    for (final (entity, data) in commands) {
+    for (final (entity, type, data) in commands) {
       final wall = _nowNs();
       _updateClockWarning(maximum, wall);
       final clock = EventClock.next(wall, maximum);
@@ -764,7 +804,7 @@ class TaskStore {
   void _validateUndoReferences([LogEvent? pending]) {
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone'))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type')<>'task.completed' OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone'))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -776,13 +816,16 @@ class TaskStore {
           target.clock >= undo.clock ||
           (operation
               ? !reversibleTaskEvents.contains(target.type)
-              : target.type != 'task.completed')) {
+              : target.type != 'task.completed') ||
+          (undo.type == 'task.recurringCompletionUndone' &&
+              target.data['successor'] == null)) {
         throw FormatFailure('Invalid undo reference in ${undo.id}.');
       }
     }
 
     if (pending.type == 'task.operationUndone' ||
-        pending.type == 'task.completionUndone') {
+        pending.type == 'task.completionUndone' ||
+        pending.type == 'task.recurringCompletionUndone') {
       final ref =
           pending.data[pending.type == 'task.operationUndone'
               ? 'operation'
@@ -793,7 +836,7 @@ class TaskStore {
       }
     }
     for (final row in db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.completionUndone','task.operationUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
       [pending.id],
     )) {
       validate(LogEvent.decode(row['raw'] as String), pending);
@@ -937,10 +980,53 @@ class TaskStore {
           'Successor identifier collides with existing entity.',
         );
       }
-      final seed = LogEvent.decode(seeds.first['raw'] as String);
-      own.add(successorCreation(seed));
+      own.add(successorCreation(_successorSelection(entity, seeds, own).seed));
     }
     return own;
+  }
+
+  SuccessorSelection _successorSelection(
+    String entity,
+    ResultSet seeds,
+    List<LogEvent> own,
+  ) {
+    final decoded = seeds
+        .map((r) => LogEvent.decode(r['raw'] as String))
+        .toList();
+    final parent = decoded.first.entity;
+    final parentHistory = db
+        .select('SELECT raw FROM events WHERE entity=?', [parent])
+        .map((r) => LogEvent.decode(r['raw'] as String));
+    final anchored = db.select(
+      "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+      [entity],
+    ).isNotEmpty;
+    return selectSuccessor(
+      decoded,
+      parentHistory,
+      protected: own.isNotEmpty || anchored,
+    );
+  }
+
+  Map<String, dynamic>? _projectEntity(String entity) {
+    final state = project(_entityEvents(entity));
+    if (state == null) return null;
+    final seeds = db.select(
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      [entity],
+    );
+    if (seeds.isNotEmpty) {
+      final own = db
+          .select('SELECT raw FROM events WHERE entity=?', [entity])
+          .map((r) => LogEvent.decode(r['raw'] as String))
+          .toList();
+      state['successorSuppressed'] = _successorSelection(
+        entity,
+        seeds,
+        own,
+      ).suppressed;
+    }
+    return state;
   }
 
   Future<LogEvent> complete(
@@ -1172,8 +1258,8 @@ class TaskStore {
   }
 
   bool _operationUndone(String id) => db.select(
-    "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone' AND json_extract(raw,'\$.data.operation')=?",
-    [id],
+    "SELECT 1 FROM events WHERE (json_extract(raw,'\$.type')='task.operationUndone' AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
+    [id, id],
   ).isNotEmpty;
 
   Future<TaskUndoResult> undoOperations(
@@ -1212,9 +1298,20 @@ class TaskStore {
     final prepared = <OperationReceipt>[];
     Object? error;
     try {
-      await _appendCommandBatch('task.operationUndone', [
+      await _appendCommands([
         for (final id in operations.where((id) => !alreadyUndone.contains(id)))
-          (targets[id]!.entity, {'operation': id}),
+          targets[id]!.type == 'task.completed' &&
+                  targets[id]!.data['successor'] != null
+              ? (
+                  targets[id]!.entity,
+                  'task.recurringCompletionUndone',
+                  {'completion': id},
+                )
+              : (
+                  targets[id]!.entity,
+                  'task.operationUndone',
+                  {'operation': id},
+                ),
       ], onPrepared: prepared.add);
     } catch (failure) {
       error = failure;
@@ -1228,13 +1325,26 @@ class TaskStore {
     final undone = {
       ...alreadyUndone,
       for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
-        LogEvent.decode(receipt.raw).data['operation'] as String,
+        (LogEvent.decode(receipt.raw).data['operation'] ??
+                LogEvent.decode(receipt.raw).data['completion'])
+            as String,
     };
+    final successors = {
+      for (final id in operations.where(undone.contains))
+        if (targets[id]!.type == 'task.completed' &&
+            targets[id]!.data['successor'] != null)
+          (targets[id]!.data['successor'] as Map)['id'] as String,
+    };
+    final suppressed = successors
+        .where((id) => _projectEntity(id)?['successorSuppressed'] == true)
+        .length;
     return TaskUndoResult(
       operations.where(undone.contains),
       operations.where((id) => !undone.contains(id)),
       newer,
-      error,
+      error: error,
+      retainedSuccessorCount: successors.length - suppressed,
+      removedSuccessorCount: suppressed,
     );
   });
 
