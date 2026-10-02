@@ -129,6 +129,17 @@
     ]
   },
   "linux_startup_limit": "Two fresh processes, 10 synthetic tasks, OS page cache unflushed; launch to loaded-frame marker, not first accepted input or phone/Windows latency.",
-  "public_promotion": "authorized; exact candidate, no rebuild",
+  "public_promotion": {
+    "status": "published and verified",
+    "run_id": 37018242305,
+    "release_id": 401876291,
+    "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.7",
+    "tag_source": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+    "prerelease": true,
+    "latest": false,
+    "uploaded_installers": 3,
+    "public_download_hashes_match": true,
+    "rc6_unchanged": true
+  },
   "real_data_modified": false
 }
