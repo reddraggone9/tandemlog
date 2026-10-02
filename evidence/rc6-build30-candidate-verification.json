@@ -72,5 +72,12 @@
     "real_data_untouched": true,
     "evidence_source": "parent native worker acceptance"
   },
-  "publication": "authorized exact promotion pending"
+  "publication": {
+    "status": "published exact accepted artifacts without rebuild",
+    "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.6",
+    "workflow_run": 36972030651,
+    "prerelease": true,
+    "latest": false,
+    "rc5_preserved": true
+  }
 }
