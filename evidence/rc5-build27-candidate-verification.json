@@ -1,0 +1,89 @@
+{
+  "candidate_run_id": 36942561444,
+  "app_source": "d7dd98124f2bab09b05c39ca7df4c8506fa37f08",
+  "version": "0.1.0-rc.5+27",
+  "hosted_candidate_conclusion": "success",
+  "push_ci_run_id": 36942516952,
+  "push_ci_conclusion": "success",
+  "android": {
+    "metadata": {
+      "source_commit": "d7dd98124f2bab09b05c39ca7df4c8506fa37f08",
+      "version": "0.1.0-rc.5",
+      "version_code": 27,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "f7dd093e894d064c1d524c2abe5d99c7b218a216ffcad55c397f7f3e829174a6"
+    },
+    "package": "com.reddraggone9.tandemlog",
+    "non_debuggable": true,
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "archive_sha256": "e054858a8dafd5fe0c62ca14592715fee216204a2dd0cfc3cf086681c3e640cc"
+  },
+  "linux": {
+    "platform": "linux",
+    "passed": true,
+    "asset_hashes": {
+      "linux-startup.json": "5a3f4d33e3230f5312bdcdabd77e278ee367182d8b44cc75ddaa3f75dd3ce718",
+      "linux-install-smoke.json": "ef498f373eb64a0576942797c462d5201768e3252a2c7a16727e47642d7bbe66",
+      "tandemlog-linux-x64.flatpak": "4f3bebc221865249a78163207717f9ed6e09f419acc61a9ffe4881cf606b9618",
+      "linux-SHA256SUMS.txt": "1dbcac222572f04ad70c866b92928ad9e5acc55669ffcb7ae5271c1203e02021"
+    }
+  },
+  "windows": {
+    "verified": true,
+    "artifact_id": 11201260852,
+    "archive_sha256": "79ac8f269c22271ece988b380d5e5db39a912e17541927b92a7f55135af85813",
+    "installer_sha256": "d8cc41a4672023ded33da69ff32a0b384b21b8a004914c4ab26d29ca94807c94"
+  },
+  "startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 514,
+        "marker": "TANDEMLOG_READY_MS=257 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=65",
+          "TANDEMLOG_PHASE identity_lock=66",
+          "TANDEMLOG_PHASE sqlite_open_schema=6",
+          "TANDEMLOG_PHASE manifest=30",
+          "TANDEMLOG_PHASE ingest=28",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=257 FILES_READ=1"
+        ],
+        "external_main_ms": 253,
+        "external_first_frame_ms": 322
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 393,
+        "marker": "TANDEMLOG_READY_MS=197 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=66",
+          "TANDEMLOG_PHASE identity_lock=9",
+          "TANDEMLOG_PHASE sqlite_open_schema=1",
+          "TANDEMLOG_PHASE manifest=53",
+          "TANDEMLOG_PHASE ingest=29",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=197 FILES_READ=0"
+        ],
+        "external_main_ms": 192,
+        "external_first_frame_ms": 263
+      }
+    ]
+  },
+  "startup_original_sha256": "5a3f4d33e3230f5312bdcdabd77e278ee367182d8b44cc75ddaa3f75dd3ce718",
+  "startup_extraction": "Parsed final JSON after known portal/daemon diagnostic prefix; original artifact unchanged.",
+  "android_native_acceptance": "pending",
+  "publication": "not published"
+}
