@@ -1,0 +1,120 @@
+{
+  "release_id": 401533006,
+  "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.5",
+  "tag": "v0.1.0-rc.5",
+  "source": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+  "prerelease": true,
+  "draft": false,
+  "latest_endpoint": "404; no stable/latest release",
+  "publish_run_id": 36963075812,
+  "candidate_run_id": 36958983160,
+  "warning_present": true,
+  "assets": [
+    {
+      "name": "android-release-metadata.json",
+      "asset_id": 604768288,
+      "bytes": 291,
+      "sha256": "59a2aa710d42e761d7807832f140c47cbffdb4c2d98781c6e0f191941fed8a7e",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/android-release-metadata.json",
+      "passed": true
+    },
+    {
+      "name": "android-SHA256SUMS.txt",
+      "asset_id": 604768287,
+      "bytes": 88,
+      "sha256": "76dc95e91aad3b5f291d29d6f1e60da1fc4a540d14b64bb8c8ec21893bf107eb",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/android-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "name": "android-signature.txt",
+      "asset_id": 604768292,
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/android-signature.txt",
+      "passed": true
+    },
+    {
+      "name": "linux-install-smoke.json",
+      "asset_id": 604768284,
+      "bytes": 2023,
+      "sha256": "89b6a4fae9c6dd4bc21dde3011a6ed447513ce1a9e37ef5ed7a2259aa8d254f1",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/linux-install-smoke.json",
+      "passed": true
+    },
+    {
+      "name": "linux-SHA256SUMS.txt",
+      "asset_id": 604768286,
+      "bytes": 94,
+      "sha256": "3e22b63a4a34c7825bccef7d87afcc7a31d2fcd4a3f08a001a56b04223b7b49b",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/linux-SHA256SUMS.txt",
+      "passed": true
+    },
+    {
+      "name": "linux-startup.json",
+      "asset_id": 604768303,
+      "bytes": 6141,
+      "sha256": "36719fd53a02ec6aac9169bd7b3b05feeefee5aa75ea8342e6c1e9dc57079e0a",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/linux-startup.json",
+      "passed": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "asset_id": 604768304,
+      "bytes": 59330260,
+      "sha256": "16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/tandemlog-android.apk",
+      "passed": true
+    },
+    {
+      "name": "tandemlog-linux-x64.flatpak",
+      "asset_id": 604768309,
+      "bytes": 8277568,
+      "sha256": "1418368c05242d138b83375c6515e53ff784e20a418479008219f5aa8266ad9b",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/tandemlog-linux-x64.flatpak",
+      "passed": true
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "asset_id": 604768311,
+      "bytes": 11541369,
+      "sha256": "b7459bdb00fcd7fd1b2e212a0b996b7c99c77b6bd34da184fd694ec60c80c7f4",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/tandemlog-windows-x64-unsigned-setup.exe",
+      "passed": true
+    },
+    {
+      "name": "windows-install-smoke.json",
+      "asset_id": 604768315,
+      "bytes": 1403,
+      "sha256": "768e9de037f974f2b359c58d93e6fde60f7807297c9bfd75536f861717c2f866",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/windows-install-smoke.json",
+      "passed": true
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "asset_id": 604768312,
+      "bytes": 108,
+      "sha256": "2d10d7094b5cd7c53347af9dc80d42d11b6029016cc7b38dc695006fb285eb80",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.5/windows-SHA256SUMS.txt",
+      "passed": true
+    }
+  ],
+  "android_signer_verified": true,
+  "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "version_code": 29,
+  "rc4_preserved": {
+    "release_id": 401290180,
+    "asset_ids_unchanged": true
+  },
+  "native_android_acceptance": {
+    "status": "passed",
+    "source": "parent-reported exact API30 Android acceptance",
+    "apk_sha256": "16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b",
+    "flows": [
+      "Gboard initial dropdown opening at100/200% text and enlarged tag selection",
+      "readable storage errors, retained drafts and retry",
+      "Gboard capture, Undo189 entities and SAF restart"
+    ],
+    "unchanged_core_coverage": "exact build28 core acceptance applies to unchanged production paths"
+  }
+}

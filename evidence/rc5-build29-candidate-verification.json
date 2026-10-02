@@ -98,7 +98,7 @@
     "version": 0,
     "file_id": "file_00000000a17881f5b771a7ea9d1665de"
   },
-  "android_native_acceptance": "pending exact build29 initial Gboard opening/enlarged tag selection/missing-file retry; unpublished",
+  "android_native_acceptance": "passed exact APK via parent-reported API30 native QA; published v0.1.0-rc.5 without rebuild",
   "superseded_failed_runs": {
     "source": "dae82daa7cbe14270413b657bf06285968ff0c96",
     "push_ci": 36957862262,
@@ -110,6 +110,6 @@
     "Original startup asset has diagnostic prefix; complete final JSON extracted without altering original.",
     "Desktop archive/lifecycle verification is not full manual Windows visual QA.",
     "Native Linux keyboard/folder-adapter simulations do not prove real Gboard or provider behavior.",
-    "No icon change, RC5 publication, stable release or user-source/live import."
+    "No icon change, stable release or user-source/live cutover; public experimental v0.1.0-rc.5 now published."
   ]
 }
