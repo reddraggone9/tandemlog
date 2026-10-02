@@ -26,7 +26,12 @@
     "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
     "library_version": 2,
     "library_file_name": "tandemlog-rc8-build34-android.zip",
-    "native_acceptance": "pending"
+    "native_acceptance": {
+      "status": "partial pass; release blocked on Global Search ordinary-task keyboard focus",
+      "core": "ordinary visuals, conditional Undo versus Reopen, successor protection, themes/text scale, cache rebuilding passed per parent",
+      "settled_recurring_focus": "unverified",
+      "replacement": "build35"
+    }
   },
   "desktop_artifacts": {
     "windows": {

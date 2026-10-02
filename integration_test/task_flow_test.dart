@@ -17,6 +17,7 @@ import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
+import 'completion_focus_test.dart' show registerCompletionFocusTests;
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
@@ -138,6 +139,7 @@ void main() {
   registerStartHintTests();
   registerSaveAcknowledgementTests();
   registerCompletionActionTests();
+  registerCompletionFocusTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {

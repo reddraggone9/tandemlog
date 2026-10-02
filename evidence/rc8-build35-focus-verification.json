@@ -1,0 +1,78 @@
+{
+  "version": "0.1.0-rc.8+35",
+  "source_base": "0547f4cf3182fb0381c9b31425b205dee320250f",
+  "root_cause": "temporary onChanged:null during busy makes native checkbox relinquish primary focus; its node and same visible task survive regrouping",
+  "fix": "keep native completion callback focusable; synchronous busy guard rejects overlapping commands; no focus restoration timer",
+  "changed_application_files": [
+    "lib/main.dart"
+  ],
+  "unchanged_private_runtime_pin": "0547f4cf3182fb0381c9b31425b205dee320250f",
+  "unchanged_runtime_file_sha256": {
+    "lib/application/task_clock.dart": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e",
+    "lib/application/undo_history.dart": "52f0016fd42c4ceb5ee599ee406ad9da760390e796923432a585382e0a6132b8",
+    "lib/domain/bulk_task_edit.dart": "c2546015c74090673f47a5cbf51d42b21815713040b3a3009e713f4306522dac",
+    "lib/domain/event.dart": "bf1f4a4f72dc89d4bbca7f7f6f49b3f178e54d9bd82e672499423e50465c879b",
+    "lib/domain/event_clock.dart": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f",
+    "lib/domain/projection.dart": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4",
+    "lib/domain/schedule.dart": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13",
+    "lib/domain/task_view.dart": "7e334ebd7717b2cbcec4decaea81e11373927586304235a41766f878580a24f6",
+    "lib/domain/timed_view.dart": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6",
+    "lib/domain/undo.dart": "31cd1d1f0ada8edbbd13bd145bf92aa1fefe84462a20eaf1b459ae0c9f1efe3c",
+    "lib/domain/wall_time.dart": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0",
+    "lib/storage/local_settings.dart": "aa9199afac8268e759e346b92ab3bb32f05db6e8f5c0b9a30c621c550600c617",
+    "lib/storage/log_folder.dart": "52387db08c4b2bcfb879da4c7b5248bc6ab5d654b16a6c0818127cb5138213ff",
+    "lib/storage/task_store.dart": "17d9f412b9a7bbd4376370d97d84bcdb3e1195de2338aec4e6f03689993d7053",
+    "pubspec.lock": "ed1c8b878b439e596c78fe5c09d5199246c1c98cb882c987f57b1550fb7db26a"
+  },
+  "validation": {
+    "flutter_tests": 225,
+    "python_release_tool_tests": 13,
+    "analyze": "pass",
+    "format": "pass",
+    "actionlint": "pass",
+    "native_focus_regression": {
+      "cases": 3,
+      "duration_seconds_excluding_build": 20,
+      "states": [
+        "Space completes and reopens same Search task",
+        "remote date regroup",
+        "overlapping callbacks exactly one completion",
+        "Tab remains elsewhere",
+        "removed Open row releases focus without hidden reopen"
+      ],
+      "variants": [
+        "regular Light1200x800100%",
+        "regular Dark390x800100%",
+        "recurring Dark390x800200%"
+      ]
+    },
+    "native_focus_visual": {
+      "cases": 3,
+      "seconds_excluding_build": 42,
+      "screenshots": 15,
+      "inspected": [
+        "Light checked native halo",
+        "Dark regular checked halo",
+        "Dark200% recurring regrouped halo"
+      ]
+    },
+    "full_hosted_native_suite_registered_flows": 32,
+    "full_hosted_candidate": "pending"
+  },
+  "android_build34_acceptance": {
+    "core": "passed per parent; ordinary visuals, Reopen/trueUndo, successor protection, themes/text scale/cache rebuild",
+    "release_gate": "blocked by settled Global Search ordinary-task checkbox focus; recurring settled focus not verified"
+  },
+  "private_runtime_audit_build34": {
+    "status": "passed per parent",
+    "dart_tests": 47,
+    "link_tests": 15,
+    "recurrence_comparisons": 285,
+    "restore_checks": 12,
+    "copied_tasks": 217,
+    "live_data_changed": false
+  },
+  "native_android_build35_acceptance": "pending",
+  "rc8_published": false,
+  "stable_or_real_data_cutover": false
+}

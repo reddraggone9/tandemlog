@@ -3089,11 +3089,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                             child: TaskCompletionCheckbox(
                                               repeating: recurrence != null,
                                               value: completed,
-                                              onChanged: busy
-                                                  ? null
-                                                  : (_) => completed
-                                                        ? _reopen(task)
-                                                        : _complete(task),
+                                              // Disabling a native checkbox
+                                              // releases its keyboard focus.
+                                              // Keep it focusable while a save
+                                              // is pending; _act's busy guard
+                                              // rejects overlapping commands.
+                                              onChanged: (_) {
+                                                if (busy) return;
+                                                if (completed) {
+                                                  _reopen(task);
+                                                } else {
+                                                  _complete(task);
+                                                }
+                                              },
                                             ),
                                           ),
                                       ],
