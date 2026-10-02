@@ -1,17 +1,8 @@
-Experimental RC6 task preview. Public prerelease, not Latest; stable 0.1.0 remains deferred.
+Experimental RC7 task preview.
 
-New:
-- Repeating tasks use the approved repeat-checkbox outline, at the same 18px square size as an ordinary checkbox. Curled tails and filled tips retain their intentional vertical bleed. The redundant repeat marker is removed; full recurrence wording remains in the editor and accessible labels.
-- The padded touch target, keyboard focus, hover feedback, checked history/reopening and unavailable-completion explanation remain native. Completion, selection and drag remain independent. No recurrence, canonical data or cache behavior changes in this release.
+- Date and Someday headings stay visible while scrolling, with the next group pushing the heading aside.
+- Repeating tasks have clearer checkbox arrows while retaining the normal checkbox size and touch target.
+- Future tasks show when they become available; the hint updates as time passes and disappears once they can start.
+- Saves and partial batches now verify their exact records after folder reconciliation, preventing a false success if an incoming replacement drops newly appended records. An affected edit retains its draft for retry.
 
-Compatibility: same application ID, owner Android signer and protocol v2. Cache format8 automatically rebuilds known older disposable caches with backups and preserved identity/integrity guards. Upgrade EVERY participating app before using Undo: older readers explicitly reject the additive `task.operationUndone` type. Do not delete shared logs to accommodate an old reader. RC2 protocol-v1 folders remain unsupported and preserved.
-
-Linux: install the unsigned `tandemlog-linux-x64.flatpak` with `flatpak install --user ./tandemlog-linux-x64.flatpak`; run `flatpak run com.reddraggone9.tandemlog`. GNOME50 runtime resolves from Flathub, so this is not an offline-only bundle. Native default profile/data location is retained. Custom sync folders may require portal selection or a scoped folder grant; do not relocate a permanent share or grant whole-home access. See repository packaging/README.md.
-
-Windows: run `tandemlog-windows-x64-unsigned-setup.exe`. Installs per-user without elevation; unsigned warnings are possible. Setup checks Microsoft C++ x64 runtime against the compiler version. If absent/old, setup stops with Microsoft's official download link; runtime installation/terms are not automated. Uninstall preserves profiles/shared data. Hosted native lifecycle smoke complements Linux visual QA, not full manual Windows acceptance.
-
-Android: universal non-debuggable APK signed by the retained owner identity, with increasing build30 and same package. Picker controls retain query/keyboard focus while opening or collapsing tag results. Phone editor fields remain scrollable above the keyboard, including enlarged text; focusing mixed bulk fields alone does not clear them. The exact code30 APK passed native Android11/API30 acceptance in both themes at100/200% text: padded targets, guarded completion explanation, completion/reopen/Undo, selection/drag independence and restart. The193 baseline entities remained identical, with one documented successor added by the test. Published from that exact accepted candidate without rebuilding. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.
-
-Bulk writes are independently durable per task. A failed operation can partially apply: the app refreshes/reconciles before retry and reports remaining tasks; it is not one all-or-nothing transaction. Dirty drafts are protected during this session, not persisted through process termination. Deletion recovery is bounded session Undo, not a persistent history browser. No notifications, private spaces or future modules are included. Events identify the writer device, not the acting person; device attribution is advisory, not authentication.
-
-Markdown remains authoritative throughout prereleases. App tests use copies; stable cutover requires a coordinated fresh import and separate acceptance. No migration tooling or source formatting metadata ships in the app. Preserve full canonical manifests and every writer log; never delete history to fix cache/signature/access errors. Unknown/invalid history fails explicitly.
+Compatibility: updates RC6 with the same app identity, Android signer, protocol2 and cache8. No shared-history conversion is required.

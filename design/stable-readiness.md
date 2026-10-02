@@ -12,3 +12,5 @@ Before promising stable compatibility, review these hard-to-change data decision
 - Validation: exact installed candidates, native Android lifecycle/SAF/provider and desktop coverage, task-based UX review, retained tests for convergence and crash/recovery, documented limits and Lee's acceptance.
 
 Record each accepted compatibility promise and unresolved gap before stable gates. Do not turn this checklist into speculative implementation or change prerelease data without an explicit action.
+
+The [2026-10-02 independent review](stable-readiness-review-2026-10-02.md) records concrete durable-creation and conditional SAF-name findings, remaining provider/restore evidence, the actual review mechanism and the conditional version-only stable promotion path. RC7 remains an experimental candidate pending its exact gates; the review does not authorize a cutover.

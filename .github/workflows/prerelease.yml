@@ -69,5 +69,7 @@ jobs:
           # Copy may be corrected in a later approved docs-only main commit;
           # pin it to this dispatch commit, not a moving branch at publish time.
           git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
-          printf '\nSource commit: `%s`\n' "$CANDIDATE_SHA" >> release-notes.md
-          gh release create "$CANDIDATE" dist/* --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
+          # Evidence/checksums stay in the gated candidate; users see installers.
+          python3 tool/release_assets.py
+          gh release create "$CANDIDATE" public-assets/* \
+            --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md

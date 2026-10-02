@@ -1,17 +1,17 @@
 # Desktop experimental installers
 
-Release assets are a genuine single-file Flatpak bundle and an unsigned per-user
+Release assets are a genuine single-file Flatpak bundle and a per-user
 Windows installer. The exact candidate assets are installed and smoke-tested in
 the reusable validation workflow, retained for five days, and consumed by the
 publication job without rebuilding. APK acceptance/signing gates remain unchanged.
 No stable release, signing service, credentials, paid runner, or Flathub submission
 is introduced.
 
-The Flatpak app bundle is also unsigned; checksums verify bytes, not publisher identity. Runtime downloads use the official Flathub repository metadata. Android remains signed by the retained owner certificate.
+Public filenames include the release version. Runtime downloads use the official Flathub repository metadata.
 
 ## Linux
 
-Install the downloaded bundle with `flatpak install --user ./tandemlog-linux-x64.flatpak`
+Install the downloaded bundle with `flatpak install --user ./tandemlog-<version>-linux-x64.flatpak` (replace `<version>` with the downloaded release version)
 and launch `flatpak run com.reddraggone9.tandemlog`. The GNOME 50 runtime is
 resolved from Flathub; the bundle alone is not a fully offline distribution.
 Install an updated bundle with the same `flatpak install --user ./new-bundle.flatpak`
@@ -52,10 +52,10 @@ These overrides are optional only when using custom locations.
 
 ## Windows
 
-Run `tandemlog-windows-x64-unsigned-setup.exe`. It requires no administrator
+Run `tandemlog-<version>-windows-x64-setup.exe` for the downloaded release version. It requires no administrator
 permission, installs the full Flutter bundle under `%LOCALAPPDATA%\Programs\Tandemlog`,
 and creates a Start Menu shortcut. The final wizard can launch the app. Windows
-may warn about the unsigned installer. Stable `AppId=com.reddraggone9.tandemlog`
+uses the same installer identity across versions. Stable `AppId=com.reddraggone9.tandemlog`
 preserves replacement/uninstall registration across versions. The uninstall
 routine removes installed program files and shortcuts, with no user-data deletion
 rules. Existing profile and canonical folders are kept. The installer checks all three required system MSVC DLLs and the x64 runtime
@@ -74,6 +74,10 @@ unmodified official compiler supplied by GitHub's standard Windows image. The
 commercial license is not strictly required and does not request a purchase from
 noncommercial users. This experimental household app introduces no purchase or
 new commercial distribution claim.
+
+## Installation-warning troubleshooting
+
+If an installation warning appears, retain its exact wording and confirm the download came from the intended GitHub release. The Windows installer and standalone Flatpak bundle currently have no publisher signature; Android uses the retained owner certificate. A checksum confirms bytes, not publisher identity. A normal Android permission prompt for installing from the chosen source differs from a harmful-app detection; report the latter before continuing. Do not disable security protections to suppress warnings. Trusted Windows signing or a signed Linux distribution repository is a later distribution decision, not introduced by these previews.
 
 ## Automated evidence and limits
 

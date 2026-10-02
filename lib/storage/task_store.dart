@@ -563,13 +563,16 @@ class TaskStore {
     final e = _prepareCommand(entity, type, data, seq, clock);
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
     final raw = e.encode();
-    onPrepared?.call(OperationReceipt(e.id, raw, e.entity));
+    final receipt = OperationReceipt(e.id, raw, e.entity);
+    onPrepared?.call(receipt);
     await folder.append(
       '$writer.jsonl',
       Uint8List.fromList(utf8.encode('$raw\n')),
     );
-    // Durable log append is the commit point. A cache failure is recoverable.
+    // Append alone cannot acknowledge a save: a provider replacement can keep
+    // the old committed prefix while dropping this new suffix before ingestion.
     await _refresh();
+    _requireConfirmed([receipt]);
     return e;
   }
 
@@ -702,6 +705,7 @@ class TaskStore {
       lastBatchTiming!['reconcile_us'] = phase.elapsedMicroseconds;
       lastBatchTiming!['cache_transactions'] = cacheTransactions - transactions;
     }
+    _requireConfirmed(receipts);
     return receipts;
   }
 
@@ -1158,6 +1162,14 @@ class TaskStore {
       ]).isNotEmpty)
         r.id,
   };
+
+  void _requireConfirmed(List<OperationReceipt> receipts) {
+    if (confirmedOperations(receipts).length != receipts.length) {
+      throw FolderAccessFailure(
+        'The folder changed before the new records could be confirmed. Review the current tasks and retry.',
+      );
+    }
+  }
 
   bool _operationUndone(String id) => db.select(
     "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone' AND json_extract(raw,'\$.data.operation')=?",

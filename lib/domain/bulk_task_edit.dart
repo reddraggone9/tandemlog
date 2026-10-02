@@ -71,5 +71,5 @@ class BulkTaskResult {
     this.error,
   ]) : committedIds = List.unmodifiable(committed),
        remainingIds = List.unmodifiable(remaining);
-  bool get succeeded => error == null;
+  bool get succeeded => error == null && remainingIds.isEmpty;
 }

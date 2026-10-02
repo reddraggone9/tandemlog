@@ -1,8 +1,12 @@
 # Current status — 2026-10-02
 
-## RC7 build31 — local UI checks passed; candidate gates pending
+## RC7 build32 — confirmed save race fixed; final candidate pending
 
-Approved scope: sticky date/Someday headings, clearer v6 repeat-checkbox geometry and future-only start hints. Stored task data and visibility rules remain unchanged. Local190 app tests,12 Python gates and analysis pass. Full26 native Linux flows passed before the later start-hint approval; three final affected flows pass in37 seconds, including idle start/midnight updates, search/resume/timezone, draft preservation and unchanged canonical files. Separate Light/Dark1200/390px100/200% visual runs inspected sticky headers and v6/hints. [Evidence](../evidence/rc7-native-ui-verification.json). Reviewed33.35-second pointer-visible desktop clip is ready locally. The full hosted signed candidate and exact affected Android QA remain required; RC7 is not published.
+Approved UI scope: sticky date/Someday headings, clearer v6 repeat-checkbox geometry and future-only start hints. Stored task data, protocol2/cache8 and visibility rules remain unchanged. Intermediate build31 at `6d9726b6a68fd8e91a639216ac33d923ad619273` passed full hosted27-flow/platform gates; it is superseded because an independent review confirmed a false-save acknowledgment race.
+
+Final build32 verifies exact event receipts after reconciliation. All13 new regressions failed before the fix and pass afterward, covering single edits, same-ID/different bytes, partial create/edit/delete/reopen/Undo and retries. All203 app tests,13 Python gates, analysis/format and workflow lint pass. A3-second actual native Linux production-editor/store regression retains title/notes after replacement and confirms exactly one edit on retry; a separate9-second Light wide100%/Dark narrow200% visual pass is readable and preserves the draft. The final full hosted28-flow candidate and exact Android acceptance remain required.
+
+The33.35-second reviewed Linux sticky/v6/start-hints demo is in Library `libfile_ed918c8cdf5c81918f597466be0e92ab` version22. [UI evidence](../evidence/rc7-native-ui-verification.json). Publication will expose only three versioned installers while retaining all internal checksum/signature/lifecycle gates; prior release assets remain untouched. RC7 is not published. [Independent readiness findings and conditional stable path](stable-readiness-review-2026-10-02.md) remain separate from RC7 and app-authoritative cutover approval. No real source/data changes.
 
 ## Published RC6 — approved repeat-checkbox v4, build30
 

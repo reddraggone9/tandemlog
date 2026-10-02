@@ -1,10 +1,35 @@
 import unittest
+import tempfile
+from pathlib import Path
 from android_release import check_candidate_codes, fingerprint, verify_apk, version
 from candidate_source import validate_run
 from publish_gate import verify_install_smoke, verify_metadata
+from release_assets import public_asset_names, stage_public_assets
 
 
 class ReleaseGates(unittest.TestCase):
+    def test_public_installers_are_versioned_and_byte_identical(self):
+        for version in ('0.1.0-rc.7', '0.1.0'):
+            names = public_asset_names(version)
+            self.assertEqual(len(names), 3)
+            self.assertTrue(all(name.startswith(f'tandemlog-{version}-') for name in names.values()))
+        for invalid in ('../other', '0.1.0/extra', '0.1.0-rc.7+32', ''):
+            with self.assertRaises(ValueError): public_asset_names(invalid)
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            source = root / 'dist'
+            source.mkdir()
+            names = public_asset_names('0.1.0-rc.7')
+            for name in names: (source / name).write_bytes(name.encode())
+            (source / 'android-signature.txt').write_text('Internal evidence')
+            destination = root / 'public-assets'
+            stage_public_assets('0.1.0-rc.7', source, destination)
+            self.assertEqual({p.name for p in destination.iterdir()}, set(names.values()))
+            for original, public in names.items():
+                self.assertEqual((source / original).read_bytes(), (destination / public).read_bytes())
+            with self.assertRaises(FileExistsError):
+                stage_public_assets('0.1.0-rc.7', source, destination)
+
     def test_pin_requires_real_public_fingerprint(self):
         for value in ('', '# pending', 'a'*63, 'g'*64):
             with self.assertRaises(ValueError): fingerprint(value)

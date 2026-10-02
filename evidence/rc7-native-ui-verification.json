@@ -2,12 +2,13 @@
   "scope": [
     "sticky date/Someday headings",
     "approved v6 repeating completion perimeter",
-    "approved future-only start hints"
+    "approved future-only start hints",
+    "exact save acknowledgment after provider replacement"
   ],
   "platform": "native Linux debug, Xvfb/Openbox; synthetic fixtures and injected clocks",
-  "version": "0.1.0-rc.7+31",
-  "app_tests": 190,
-  "python_tests": 12,
+  "version": "0.1.0-rc.7+32",
+  "app_tests": 203,
+  "python_tests": 13,
   "analysis": "pass",
   "format": "pass",
   "baseline_native_suite": {
@@ -208,12 +209,39 @@
     "seconds": 33.35,
     "bytes": 734787,
     "sha256": "f6e0bf6cd4af29fc433f3fd9cc15c673ec8f1eb7ed041aa8ea5100b3d9e5b9f1",
-    "pointer_visible": true
+    "pointer_visible": true,
+    "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+    "library_version": 22
   },
   "protocol": 2,
   "cache_schema": 8,
-  "storage_or_visibility_rules_changed": false,
   "exact_signed_android_acceptance": "pending",
   "full_hosted_candidate": "pending",
-  "real_user_data_modified": false
+  "real_user_data_modified": false,
+  "workflow_lint": "pass",
+  "visibility_or_format_changed": false,
+  "command_acknowledgment_changed": true,
+  "acknowledgment_regressions": {
+    "cases": 13,
+    "original_failures": 13,
+    "fixed_passes": 13,
+    "combined_storage_batch_undo_tests": 88,
+    "native_editor_seconds": 3,
+    "native_editor_passed": true,
+    "native_visual_seconds": 9,
+    "native_visual_cases": [
+      "Light1000x800100%",
+      "Dark390x800200%"
+    ],
+    "draft_preserved": true,
+    "retry_edit_count": 1
+  },
+  "intermediate_build31_hosted": {
+    "run_id": 37006704032,
+    "source": "6d9726b6a68fd8e91a639216ac33d923ad619273",
+    "flows": 27,
+    "passed": true,
+    "final_build32_evidence": false
+  },
+  "final_aggregate_native_flows": 28
 }
