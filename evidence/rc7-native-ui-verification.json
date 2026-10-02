@@ -216,7 +216,13 @@
   "protocol": 2,
   "cache_schema": 8,
   "exact_signed_android_acceptance": "pending",
-  "full_hosted_candidate": "pending",
+  "full_hosted_candidate": {
+    "run_id": 37009157582,
+    "source": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+    "all_jobs": "success",
+    "native_registered_flows": 28,
+    "native_step_seconds_including_build_and_launch": 473
+  },
   "real_user_data_modified": false,
   "workflow_lint": "pass",
   "visibility_or_format_changed": false,

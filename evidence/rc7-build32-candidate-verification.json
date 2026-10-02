@@ -1,0 +1,108 @@
+{
+  "source_commit": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+  "version": "0.1.0-rc.7+32",
+  "candidate_run": 37009157582,
+  "push_ci_run": 37009157078,
+  "all_candidate_jobs": "success",
+  "push_ci": "success",
+  "native_linux_suite": {
+    "registered_flows": 28,
+    "step_conclusion": "success",
+    "step_seconds_including_build_and_launch": 473
+  },
+  "android": {
+    "artifact_id": 11227354492,
+    "archive_sha256": "e9b50457376ab59aadc87547be8eca18cb05b75f85c398eb92287db501ca1fde",
+    "apk_sha256": "1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+    "apk_bytes": 59576020,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
+    "library_version": 1,
+    "library_file_name": "tandemlog-rc7-build32-android.zip",
+    "native_acceptance": "pending"
+  },
+  "desktop_artifacts": {
+    "windows": {
+      "id": 11226949249,
+      "archive_sha256": "c961e623358e1f5334aee87ba7978b00169c533f2d80af69ec29282179a141bb"
+    },
+    "linux": {
+      "id": 11226684855,
+      "archive_sha256": "73589e6360b36158b52cc459e40a90657ba1353f569a5495f949fb6c1f0da5d7"
+    }
+  },
+  "archives_crc_digest_checksums": "pass",
+  "desktop_installed_lifecycle": "pass",
+  "original_internal_asset_hashes": {
+    "android-release-metadata.json": "73924d5147de66991c90f53c84b0bf8aa7b5abddccd62ecea1bda185996970c8",
+    "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "tandemlog-android.apk": "1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+    "android-SHA256SUMS.txt": "ec891a07af1a0c85ab4c8571da33fd8d90ae272dc94a2f3fa7cf68e85a0f8095",
+    "windows-install-smoke.json": "7e2f9378168ef563a42a6382c9d78695888e5881d0c3fc6fbbc4b092169ebb00",
+    "windows-SHA256SUMS.txt": "6cd00a0ef3ffb5142e63cbfa509c1ad0fc209f70df007e3fa12f850cd73d9724",
+    "tandemlog-windows-x64-unsigned-setup.exe": "ddab8a8a8ba58cdae39ed31b10472bc0e0ced833623f7bf2b010a3945ca9b231",
+    "linux-startup.json": "561a31630f0cae72e4902c65136ceaa38c88e8fc7a05071794d4f2b2b4febf04",
+    "linux-install-smoke.json": "d0cffdaa28822e0108d1c8ff8196db641301b51a8f05da1dc301446b838b3927",
+    "tandemlog-linux-x64.flatpak": "01ef0f4a1458c4337bc592ad764266c23be59cc60897e05c45dd3f528a33cdb1",
+    "linux-SHA256SUMS.txt": "25206af934b5a56f43aa083044701ddf1a2893b82e69928f056be2184ecf8284"
+  },
+  "versioned_public_staging_hashes": {
+    "tandemlog-0.1.0-rc.7-android.apk": "1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+    "tandemlog-0.1.0-rc.7-windows-x64-setup.exe": "ddab8a8a8ba58cdae39ed31b10472bc0e0ced833623f7bf2b010a3945ca9b231",
+    "tandemlog-0.1.0-rc.7-linux-x64.flatpak": "01ef0f4a1458c4337bc592ad764266c23be59cc60897e05c45dd3f528a33cdb1"
+  },
+  "staged_copy_bytes_identical": true,
+  "linux_startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 502,
+        "marker": "TANDEMLOG_READY_MS=248 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=65",
+          "TANDEMLOG_PHASE identity_lock=67",
+          "TANDEMLOG_PHASE sqlite_open_schema=5",
+          "TANDEMLOG_PHASE manifest=21",
+          "TANDEMLOG_PHASE ingest=39",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=248 FILES_READ=1"
+        ],
+        "external_main_ms": 251,
+        "external_first_frame_ms": 320
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 394,
+        "marker": "TANDEMLOG_READY_MS=198 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=65",
+          "TANDEMLOG_PHASE identity_lock=9",
+          "TANDEMLOG_PHASE sqlite_open_schema=1",
+          "TANDEMLOG_PHASE manifest=53",
+          "TANDEMLOG_PHASE ingest=30",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=198 FILES_READ=0"
+        ],
+        "external_main_ms": 191,
+        "external_first_frame_ms": 260
+      }
+    ]
+  },
+  "linux_startup_limit": "Two fresh processes, 10 synthetic tasks, OS page cache unflushed; launch to loaded-frame marker, not first accepted input or phone/Windows latency.",
+  "public_promotion": "held for exact native Android acceptance",
+  "real_data_modified": false
+}

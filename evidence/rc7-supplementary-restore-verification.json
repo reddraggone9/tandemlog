@@ -1,0 +1,63 @@
+{
+  "kind": "supplementary-current-production-runtime-synthetic-rehearsal",
+  "source_commit": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+  "source_version": "0.1.0-rc.7+32",
+  "protocol_version": 2,
+  "cache_user_version": 8,
+  "dart": "3.13.4 (stable) (Tue Sep 15 01:01:15 2026 -0700) on \"linux_x64\"",
+  "platform": "linux",
+  "root": "/workspace/toolchains/restore-rehearsal/relocated-run-1",
+  "fixture": "generated synthetic history, no source/live data",
+  "requested_library_archive": {
+    "library_file_id": "libfile_fb5732dfc0d881918282bf3105b71ea1",
+    "expected_sha256": "118009704e262f66da3a59605044ce39eda93b83b97cc553d51e8d06e94519b5",
+    "verified": false,
+    "adapter_compiled": false,
+    "blockers": [
+      "library file transfer failed: download failed",
+      "library download request failed: hosted apps tools/list request failed with HTTP status 401"
+    ]
+  },
+  "passed": [
+    "two_byte_identical_canonical_copies_and_empty_private_profiles",
+    "production_replay_and_fresh_distinct_writer_identities",
+    "new_writes_contiguous_sequences_and_historical_byte_preservation",
+    "peer_convergence_independent_offline_edits_new_task_and_completion_reopen",
+    "close_reopen_durable_identity_and_state",
+    "disposable_cache_replay_recovers_writer_sequence_and_peer_convergence",
+    "production_move_undo_restores_global_order",
+    "production_edit_undo_preserves_newer_peer_field",
+    "production_delete_undo_restores_same_identity_and_converges",
+    "rejection_preserves_bytes_missing-manifest",
+    "rejection_preserves_bytes_unsupported-version",
+    "rejection_preserves_bytes_invalid-complete-record"
+  ],
+  "fixture_sha256_by_filename": {
+    "2d53b41c-8473-4cbd-8f73-b5c14edc6106.jsonl": "4c8be2cc658c8de1b2086476fa2be457493f37fb85b1f7f5024e273100b32ac3",
+    "tandemlog-space.json": "2ca3d4a5a1247a528b3ce3180a20c755c25b33fe42a55953fb9d26f64a8b2e23"
+  },
+  "sqlite_runtime_version": "3.53.4",
+  "writers": {
+    "fixture": "2d53b41c-8473-4cbd-8f73-b5c14edc6106",
+    "restore_a": "6a44a5a3-1fd7-4bad-983d-b0071101c041",
+    "restore_b": "0ff3c5dd-c6a7-4065-a355-b68dcf292ad9"
+  },
+  "space": "eaeac559-f3a6-4c10-a9f9-dc66505f9ec5",
+  "converged_projection_sha256": "952cc072f392f4210011b75d9f39deb8bc1704a468efb891317723eef851a85a",
+  "final_canonical_sha256_by_filename": {
+    "0ff3c5dd-c6a7-4065-a355-b68dcf292ad9.jsonl": "67b212635b477591e18cc7512f264e66adde65f2cf65f274ed5425d6fc463a31",
+    "6a44a5a3-1fd7-4bad-983d-b0071101c041.jsonl": "d5c7f1bc2c1c7faae5b547867174e989c862d0c18675339f957d557f216e3169",
+    "2d53b41c-8473-4cbd-8f73-b5c14edc6106.jsonl": "4c8be2cc658c8de1b2086476fa2be457493f37fb85b1f7f5024e273100b32ac3",
+    "tandemlog-space.json": "2ca3d4a5a1247a528b3ce3180a20c755c25b33fe42a55953fb9d26f64a8b2e23"
+  },
+  "status": "passed_supplementary_only",
+  "bundle": {
+    "library_file_id": "libfile_fd266408bdd08191a0b0018846ab8b0c",
+    "version": 0,
+    "sha256": "ee27386554a17f0cfdf3de7e492558648fd2c806d00c3955822e0ca3da1a7c49",
+    "bytes": 3984130,
+    "platform": "Linux x64 glibc>=2.34",
+    "official_cli_native_asset_bundle": true,
+    "relocation_and_26_checksum_entries": "pass"
+  }
+}
