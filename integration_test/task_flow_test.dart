@@ -1282,6 +1282,147 @@ void main() {
   );
 
   testWidgets(
+    'explicit Add finalizes composing drafts once while Enter leaves IME candidates alone',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('rc5-ime-submit-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Example'});
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      // The production mobile capture branch, hosted by native Linux here.
+      // Real Gboard acceptance must also pass on the exact Android APK.
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          folderActions: TestFolders(android: true),
+        ),
+      );
+      await waitForUi(
+        tester,
+        () => find.byTooltip('Add tasks').evaluate().isNotEmpty,
+      );
+      final input = find.widgetWithText(TextField, 'What needs doing?');
+      final controller = tester.widget<TextField>(input).controller!;
+      Future<void> composing(String text) async {
+        await tester.tap(input);
+        await tester.pumpAndSettle();
+        tester.testTextInput.updateEditingValue(
+          TextEditingValue(
+            text: text,
+            selection: TextSelection.collapsed(offset: text.length),
+            composing: TextRange(start: 0, end: text.length),
+          ),
+        );
+        await tester.pumpAndSettle();
+      }
+
+      Future<List<String>> titles() async {
+        await writer.refresh();
+        return writer.rows
+            .where((row) => row['kind'] == 'task')
+            .map((row) => row['title'] as String)
+            .toList();
+      }
+
+      await composing('Compose');
+      expect(controller.value.composing.isCollapsed, isFalse);
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect(await titles(), ['Compose']);
+      expect(controller.text, isEmpty);
+      expect(controller.value.composing.isValid, isFalse);
+      expect(tester.widget<TextField>(input).focusNode!.hasFocus, isTrue);
+
+      await composing('買い物');
+      final candidate = controller.value;
+      await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+      await tester.pumpAndSettle();
+      expect(controller.value, candidate);
+      expect(await titles(), ['Compose']);
+      // Multiple deliberate callbacks in one frame cannot start two writes.
+      final add = tester.widget<IconButton>(
+        find.byWidgetPredicate(
+          (widget) => widget is IconButton && widget.tooltip == 'Add tasks',
+        ),
+      );
+      add.onPressed!();
+      add.onPressed!();
+      await tester.pumpAndSettle();
+      expect((await titles()).where((title) => title == '買い物').length, 1);
+      expect(controller.text, isEmpty);
+
+      // A mobile newline action only edits the buffer. Explicit Add submits
+      // all nonblank lines, including a composition ending after pasted text.
+      await composing('Line one\nLine two\n  ');
+      await tester.testTextInput.receiveAction(TextInputAction.newline);
+      await tester.pumpAndSettle();
+      expect(controller.text, 'Line one\nLine two\n  ');
+      expect((await titles()).length, 2);
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect((await titles()).toSet(), {
+        'Compose',
+        '買い物',
+        'Line one',
+        'Line two',
+      });
+
+      await composing('IME submit');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(
+        (await titles()).where((title) => title == 'IME submit').length,
+        1,
+      );
+
+      await composing(' ' * 3);
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect(controller.text, ' ' * 3);
+      expect((await titles()).length, 5);
+      await composing('x' * 501);
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect(controller.text, 'x' * 501);
+      expect(
+        find.text('Keep each task title under 500 characters.'),
+        findsOneWidget,
+      );
+      expect((await titles()).length, 5);
+
+      // Failed canonical ingestion never consumes the accepted visible draft;
+      // retry after recovery commits that same pending ID exactly once.
+      await composing('Retry composition');
+      final broken = File('${folder.path}/${const Uuid().v4()}.jsonl');
+      await broken.writeAsString('{"version":999}\n', flush: true);
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect(controller.text, 'Retry composition');
+      expect(controller.value.composing.isValid, isFalse);
+      await broken.delete();
+      await tester.tap(find.byTooltip('Add tasks'));
+      await tester.pumpAndSettle();
+      expect(
+        (await titles()).where((title) => title == 'Retry composition').length,
+        1,
+      );
+      expect(controller.text, isEmpty);
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
+
+  testWidgets(
     'automatic imports preserve edit/capture buffers and keyboard submission',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('tandemlog-input');

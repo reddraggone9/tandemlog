@@ -26,7 +26,7 @@ class TagFilterPickerState extends State<TagFilterPicker>
     with WidgetsBindingObserver {
   final _query = TextEditingController();
   final _focus = FocusNode();
-  final _portal = OverlayPortalController();
+  OverlayEntry? _overlayEntry;
   final _link = LayerLink();
   final _anchor = GlobalKey();
   final _tapGroup = Object();
@@ -98,27 +98,43 @@ class TagFilterPickerState extends State<TagFilterPicker>
           return;
         }
       }
-      setState(() {});
+      _overlayEntry?.markNeedsBuild();
     });
   }
 
   void _show() {
     if (_open) return;
     setState(() => _open = true);
-    _portal.show();
+    // Keep painted results outside the query's clipped semantic scroll viewport.
+    // The portal painted visible Android labels that were missing from its
+    // accessibility hierarchy; the entry gives them their actual overlay bounds.
+    _overlayEntry = OverlayEntry(
+      builder: (_) => MediaQuery(
+        data: MediaQuery.of(context),
+        child: InheritedTheme.captureAll(context, _suggestions(context)),
+      ),
+    );
+    Overlay.of(context, rootOverlay: true).insert(_overlayEntry!);
     widget.onDropdownChanged(true);
   }
 
   bool dismissDropdown() {
     if (!_open) return false;
-    _portal.hide();
+    _removeOverlay();
     setState(() => _open = false);
     widget.onDropdownChanged(false);
     return true;
   }
 
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry?.dispose();
+    _overlayEntry = null;
+  }
+
   void clearQuery() {
     _query.clear();
+    _overlayEntry?.markNeedsBuild();
     widget.onQueryChanged();
     if (mounted) setState(() {});
   }
@@ -256,140 +272,135 @@ class TagFilterPickerState extends State<TagFilterPicker>
   Widget build(BuildContext context) => TextFieldTapRegion(
     // Picker controls belong to the query field. Otherwise a control tap can
     // unfocus/dismiss the field before the same tap processes its toggle.
-    child: OverlayPortal(
-      controller: _portal,
-      overlayChildBuilder: _suggestions,
-      child: CompositedTransformTarget(
-        link: _link,
-        child: TapRegion(
-          groupId: _tapGroup,
-          onTapOutside: (_) => dismissDropdown(),
+    child: CompositedTransformTarget(
+      link: _link,
+      child: TapRegion(
+        groupId: _tapGroup,
+        onTapOutside: (_) => dismissDropdown(),
+        child: Container(
+          key: _anchor,
           child: Container(
-            key: _anchor,
-            child: Container(
-              key: const ValueKey('tag-autocomplete'),
-              decoration: BoxDecoration(
-                border: Border(
-                  bottom: BorderSide(
-                    color: Theme.of(context).colorScheme.outline,
-                  ),
+            key: const ValueKey('tag-autocomplete'),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).colorScheme.outline,
                 ),
               ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: LayoutBuilder(
-                      builder: (context, constraints) => Wrap(
-                        spacing: 6,
-                        runSpacing: 4,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        children: [
-                          for (final tag in widget.selected.toList()..sort())
-                            Tooltip(
-                              message: '#$tag',
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  maxWidth: constraints.maxWidth,
-                                ),
-                                child: InputChip(
-                                  key: ValueKey('selected-tag-$tag'),
-                                  label: ConstrainedBox(
-                                    constraints: BoxConstraints(
-                                      maxWidth: math.max(
-                                        0,
-                                        constraints.maxWidth - 64,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '#$tag',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
+            ),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => Wrap(
+                      spacing: 6,
+                      runSpacing: 4,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        for (final tag in widget.selected.toList()..sort())
+                          Tooltip(
+                            message: '#$tag',
+                            child: ConstrainedBox(
+                              constraints: BoxConstraints(
+                                maxWidth: constraints.maxWidth,
+                              ),
+                              child: InputChip(
+                                key: ValueKey('selected-tag-$tag'),
+                                label: ConstrainedBox(
+                                  constraints: BoxConstraints(
+                                    maxWidth: math.max(
+                                      0,
+                                      constraints.maxWidth - 64,
                                     ),
                                   ),
-                                  onDeleted: () => _toggle(tag),
+                                  child: Text(
+                                    '#$tag',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
-                              ),
-                            ),
-                          SizedBox(
-                            key: const ValueKey('tag-query-slot'),
-                            width: math.min(160, constraints.maxWidth),
-                            child: Focus(
-                              onKeyEvent: (_, event) {
-                                if (event is KeyDownEvent &&
-                                    event.logicalKey ==
-                                        LogicalKeyboardKey.escape &&
-                                    dismissDropdown()) {
-                                  return KeyEventResult.handled;
-                                }
-                                if (event is KeyDownEvent &&
-                                    event.logicalKey ==
-                                        LogicalKeyboardKey.tab) {
-                                  dismissDropdown();
-                                }
-                                return KeyEventResult.ignored;
-                              },
-                              child: TextField(
-                                key: const ValueKey('tag-search'),
-                                controller: _query,
-                                focusNode: _focus,
-                                decoration: const InputDecoration(
-                                  hintText: 'Find tags',
-                                  filled: false,
-                                  isDense: true,
-                                  border: InputBorder.none,
-                                ),
-                                onTap: _show,
-                                onChanged: (_) {
-                                  _show();
-                                  setState(() {});
-                                  widget.onQueryChanged();
-                                },
-                                onSubmitted: (_) {
-                                  final tag = _matches.firstOrNull;
-                                  if (tag != null &&
-                                      !widget.selected.contains(tag)) {
-                                    _toggle(tag);
-                                  }
-                                  dismissDropdown();
-                                },
+                                onDeleted: () => _toggle(tag),
                               ),
                             ),
                           ),
-                        ],
-                      ),
+                        SizedBox(
+                          key: const ValueKey('tag-query-slot'),
+                          width: math.min(160, constraints.maxWidth),
+                          child: Focus(
+                            onKeyEvent: (_, event) {
+                              if (event is KeyDownEvent &&
+                                  event.logicalKey ==
+                                      LogicalKeyboardKey.escape &&
+                                  dismissDropdown()) {
+                                return KeyEventResult.handled;
+                              }
+                              if (event is KeyDownEvent &&
+                                  event.logicalKey == LogicalKeyboardKey.tab) {
+                                dismissDropdown();
+                              }
+                              return KeyEventResult.ignored;
+                            },
+                            child: TextField(
+                              key: const ValueKey('tag-search'),
+                              controller: _query,
+                              focusNode: _focus,
+                              decoration: const InputDecoration(
+                                hintText: 'Find tags',
+                                filled: false,
+                                isDense: true,
+                                border: InputBorder.none,
+                              ),
+                              onTap: _show,
+                              onChanged: (_) {
+                                _show();
+                                _overlayEntry?.markNeedsBuild();
+                                widget.onQueryChanged();
+                              },
+                              onSubmitted: (_) {
+                                final tag = _matches.firstOrNull;
+                                if (tag != null &&
+                                    !widget.selected.contains(tag)) {
+                                  _toggle(tag);
+                                }
+                                dismissDropdown();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  IconButton(
-                    tooltip: 'Clear tag filters',
-                    onPressed: widget.selected.isEmpty && !hasQuery
-                        ? null
-                        : () {
-                            dismissDropdown();
-                            widget.onChanged({});
-                            clearQuery();
-                          },
-                    icon: const Icon(Icons.close),
+                ),
+                IconButton(
+                  tooltip: 'Clear tag filters',
+                  onPressed: widget.selected.isEmpty && !hasQuery
+                      ? null
+                      : () {
+                          dismissDropdown();
+                          widget.onChanged({});
+                          clearQuery();
+                        },
+                  icon: const Icon(Icons.close),
+                ),
+                IconButton(
+                  tooltip: _open
+                      ? 'Collapse tag options'
+                      : 'Expand tag options',
+                  onPressed: () {
+                    if (!dismissDropdown()) _show();
+                    if (!_focus.hasFocus) {
+                      // Keep typing/the IME available without reopening a
+                      // dropdown the user just deliberately collapsed.
+                      _ignoreNextFocus = true;
+                      _focus.requestFocus();
+                    }
+                  },
+                  icon: Icon(
+                    _open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
                   ),
-                  IconButton(
-                    tooltip: _open
-                        ? 'Collapse tag options'
-                        : 'Expand tag options',
-                    onPressed: () {
-                      if (!dismissDropdown()) _show();
-                      if (!_focus.hasFocus) {
-                        // Keep typing/the IME available without reopening a
-                        // dropdown the user just deliberately collapsed.
-                        _ignoreNextFocus = true;
-                        _focus.requestFocus();
-                      }
-                    },
-                    icon: Icon(
-                      _open ? Icons.arrow_drop_up : Icons.arrow_drop_down,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -399,6 +410,7 @@ class TagFilterPickerState extends State<TagFilterPicker>
 
   @override
   void dispose() {
+    _removeOverlay();
     WidgetsBinding.instance.removeObserver(this);
     _scroll?.removeListener(_reposition);
     _focus.removeListener(_focusChanged);

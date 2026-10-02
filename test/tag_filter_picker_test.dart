@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/tag_filter_picker.dart';
 
@@ -8,6 +9,9 @@ void main() {
     (tester) async {
       tester.view.physicalSize = const Size(1000, 900);
       tester.view.devicePixelRatio = 1;
+      final semanticsHandle = tester.ensureSemantics();
+
+      final selections = <Set<String>>[];
       final tags = ['home', ...List.generate(30, (i) => 'label-$i')];
       await tester.pumpWidget(
         MaterialApp(
@@ -24,7 +28,7 @@ void main() {
                         child: TagFilterPicker(
                           tags: tags,
                           selected: const {},
-                          onChanged: (_) {},
+                          onChanged: selections.add,
                           onQueryChanged: () {},
                           onDropdownChanged: (_) {},
                         ),
@@ -52,6 +56,26 @@ void main() {
           anchor = find.byKey(const ValueKey('tag-autocomplete'));
       await tester.tap(search);
       await tester.pumpAndSettle();
+      final option = tester.getSemantics(
+        find.byKey(const ValueKey('tag-option-home')),
+      );
+      final optionData = option.getSemanticsData();
+      expect(optionData.label, '#home');
+      expect(optionData.hasAction(SemanticsAction.tap), isTrue);
+      // The result paints outside the dialog scroll viewport: its semantics
+      // must not remain beneath that clipping ancestor on Android.
+      final ancestors = <SemanticsNode>[];
+      SemanticsNode? parent = option.parent;
+      while (parent != null) {
+        ancestors.add(parent);
+        parent = parent.parent;
+      }
+      expect(
+        ancestors
+            .where((node) => node.flagsCollection.hasImplicitScrolling)
+            .length,
+        1,
+      );
       for (final query in ['', 'home', 'not-a-tag']) {
         await tester.enterText(search, query);
         await tester.pumpAndSettle();
@@ -93,6 +117,28 @@ void main() {
         greaterThanOrEqualTo(tester.getRect(anchor).bottom),
       );
       expect(tester.takeException(), isNull);
+      // Accessibility activation uses the same exact selection callback.
+      await tester.enterText(search, 'home');
+      await tester.pumpAndSettle();
+      final activeOption = tester.getSemantics(
+        find.byKey(const ValueKey('tag-option-home')),
+      );
+      activeOption.owner!.performAction(activeOption.id, SemanticsAction.tap);
+      await tester.pumpAndSettle();
+      expect(selections, [
+        {'home'},
+      ]);
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(tester.widget<TextField>(search).focusNode!.hasFocus, isTrue);
+      // Removing an open picker removes its overlay and semantic actions too.
+      await tester.tap(search);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(tester.takeException(), isNull);
+      semanticsHandle.dispose();
       tester.view.resetPhysicalSize();
       tester.view.resetDevicePixelRatio();
     },

@@ -944,6 +944,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return result;
   }
 
+  void _submitCaptureButton() {
+    if (busy) return;
+    if (capture.value.composing.isValid &&
+        !capture.value.composing.isCollapsed) {
+      // Deliberate Add accepts the visible draft. Use Flutter's normal editor
+      // finalization to clear composition and finish the IME connection before
+      // onSubmitted invokes the one capture path. Hardware Enter still leaves
+      // active composition to the IME, including candidate selection.
+      captureFocus.context!
+          .findAncestorStateOfType<EditableTextState>()!
+          .performAction(TextInputAction.done);
+      return;
+    }
+    unawaited(_capture());
+  }
+
   Future<void> _capture() async {
     if (busy ||
         (capture.value.composing.isValid &&
@@ -2815,7 +2831,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       : 'Enter to add · Shift+Enter for another task',
                   suffixIcon: IconButton(
                     tooltip: 'Add tasks',
-                    onPressed: busy ? null : _capture,
+                    onPressed: busy ? null : _submitCaptureButton,
                     icon: const Icon(Icons.arrow_upward),
                   ),
                 ),
