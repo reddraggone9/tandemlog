@@ -1,0 +1,115 @@
+{
+  "candidate_run_id": 36958983160,
+  "app_source": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+  "version": "0.1.0-rc.5+29",
+  "hosted_candidate_conclusion": "success",
+  "push_ci_run_id": 36958982363,
+  "push_ci_conclusion": "success",
+  "android": {
+    "metadata": {
+      "source_commit": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+      "version": "0.1.0-rc.5",
+      "version_code": 29,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b"
+    },
+    "package": "com.reddraggone9.tandemlog",
+    "non_debuggable": true,
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "archive_sha256": "dd2849022390185aec894fd3489077f1c6ce0f6f79dc5d9bee7bf3dc0d164cf9"
+  },
+  "linux": {
+    "platform": "linux",
+    "passed": true,
+    "asset_hashes": {
+      "linux-startup.json": "36719fd53a02ec6aac9169bd7b3b05feeefee5aa75ea8342e6c1e9dc57079e0a",
+      "linux-install-smoke.json": "89b6a4fae9c6dd4bc21dde3011a6ed447513ce1a9e37ef5ed7a2259aa8d254f1",
+      "tandemlog-linux-x64.flatpak": "1418368c05242d138b83375c6515e53ff784e20a418479008219f5aa8266ad9b",
+      "linux-SHA256SUMS.txt": "3e22b63a4a34c7825bccef7d87afcc7a31d2fcd4a3f08a001a56b04223b7b49b"
+    }
+  },
+  "windows": {
+    "platform": "windows",
+    "passed": true,
+    "asset_hashes": {
+      "windows-install-smoke.json": "768e9de037f974f2b359c58d93e6fde60f7807297c9bfd75536f861717c2f866",
+      "windows-SHA256SUMS.txt": "2d10d7094b5cd7c53347af9dc80d42d11b6029016cc7b38dc695006fb285eb80",
+      "tandemlog-windows-x64-unsigned-setup.exe": "b7459bdb00fcd7fd1b2e212a0b996b7c99c77b6bd34da184fd694ec60c80c7f4"
+    }
+  },
+  "startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 516,
+        "marker": "TANDEMLOG_READY_MS=245 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=66",
+          "TANDEMLOG_PHASE identity_lock=66",
+          "TANDEMLOG_PHASE sqlite_open_schema=6",
+          "TANDEMLOG_PHASE manifest=22",
+          "TANDEMLOG_PHASE ingest=32",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=245 FILES_READ=1"
+        ],
+        "external_main_ms": 267,
+        "external_first_frame_ms": 338
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 431,
+        "marker": "TANDEMLOG_READY_MS=224 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=67",
+          "TANDEMLOG_PHASE identity_lock=9",
+          "TANDEMLOG_PHASE sqlite_open_schema=2",
+          "TANDEMLOG_PHASE manifest=59",
+          "TANDEMLOG_PHASE ingest=33",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=224 FILES_READ=0"
+        ],
+        "external_main_ms": 202,
+        "external_first_frame_ms": 273
+      }
+    ]
+  },
+  "android_artifact_id": 11207378670,
+  "linux_artifact_id": 11207163001,
+  "windows_artifact_id": 11206564637,
+  "archive_sha256": {
+    "android": "dd2849022390185aec894fd3489077f1c6ce0f6f79dc5d9bee7bf3dc0d164cf9",
+    "linux": "90716cb855d8626248c0292fecd7eec6c78b77ba2451b6d77806f5c863821629",
+    "windows": "611b0b5df3022d9b6996b22cadf03f4fbba6c5eec857bbe721ea2700e59e3186"
+  },
+  "android_library": {
+    "id": "libfile_60352131ee848191b695a64af079ccda",
+    "version": 0,
+    "file_id": "file_00000000a17881f5b771a7ea9d1665de"
+  },
+  "android_native_acceptance": "pending exact build29 initial Gboard opening/enlarged tag selection/missing-file retry; unpublished",
+  "superseded_failed_runs": {
+    "source": "dae82daa7cbe14270413b657bf06285968ff0c96",
+    "push_ci": 36957862262,
+    "candidate": 36958161592,
+    "reason": "Post-Done mock IME/readiness assertion; failed test leaked metrics into later cases. Test-only lifecycle correction, no app changes. Signing skipped."
+  },
+  "limitations": [
+    "Linux startup: two fresh native release processes with10 tasks/Xvfb, OS page caches retained; loaded frame is not first accepted input.",
+    "Original startup asset has diagnostic prefix; complete final JSON extracted without altering original.",
+    "Desktop archive/lifecycle verification is not full manual Windows visual QA.",
+    "Native Linux keyboard/folder-adapter simulations do not prove real Gboard or provider behavior.",
+    "No icon change, RC5 publication, stable release or user-source/live import."
+  ]
+}
