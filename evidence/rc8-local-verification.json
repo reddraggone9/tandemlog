@@ -1,6 +1,6 @@
 {
   "version": "0.1.0-rc.8",
-  "android_code": 33,
+  "android_code": 34,
   "source_base": "d01231f4ab1c06ff15389481c442207a2160b5e4",
   "application_file_sha256": {
     "lib/application/task_clock.dart": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e",
@@ -23,7 +23,7 @@
     "lib/presentation/failure_message.dart": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303",
     "lib/presentation/sticky_task_group.dart": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77",
     "lib/presentation/tag_filter_picker.dart": "73b2bf14d0d1bd2ac1325c8f2b5fe5ebcd4a4cc3117fb26c438bda6287bb01b5",
-    "lib/presentation/task_completion_checkbox.dart": "191da4661e353fc389a0b53678d4595da25345892ad8ee09eac771752ab74df0",
+    "lib/presentation/task_completion_checkbox.dart": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
     "lib/presentation/task_editor.dart": "c969fb579ee6e70358d1500d216e5c3d96c7bfb103b6a12e5b43a22b73210102",
     "lib/presentation/task_metadata.dart": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4",
     "lib/presentation/task_toolbar.dart": "87423cb0ca1dcf6b754fdcddb7684f1570fdf3262fe89fb9d42c5b8eb10207c1",
@@ -42,7 +42,11 @@
     "analyze": "pass",
     "format": "pass",
     "actionlint": "pass",
-    "independent_domain_review": "GO; read-only, new diff only"
+    "independent_domain_review": "GO; read-only, new diff only",
+    "native_linux_aggregate_source": "9cb10d027fe05ccbc21059b2a8656459965191c5",
+    "native_linux_build34_affected_flow": "pass; completion/Reopen/Undo/error outcomes, 12 seconds excluding build",
+    "checkbox_focus_regression": "red at build33; passes build34 with same native focus node and semantics",
+    "native_linux_build34_visual": "pass; 34 seconds, 12 Light/Dark wide/narrow/200% screenshots inspected"
   },
   "semantics": {
     "checkbox_reopen": "retains successor",
@@ -75,9 +79,31 @@
     ],
     "completed_checkboxes": "native ordinary controls, 48x48; repeat overlay only open",
     "observed_failure": "removed/restored synthetic manifest; no false success or canonical mutation; Retry recovers",
-    "demo_delivery": "pending"
+    "demo_delivery": {
+      "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+      "version": 24,
+      "file_name": "tandemlog-rc8-completion-undo-demo.mp4",
+      "duration_seconds": 32.05,
+      "bytes": 416336,
+      "sha256": "c5e75e48467c3a51e8291afbe9998d1f9ab1e812ea461ac57e3f98ebedd85ceb",
+      "inputs_visible": "desktop pointer and scripted tap feedback verified",
+      "local_path": "/workspace/toolchains/tandemlog-rc8-completion-undo-demo.mp4",
+      "status": "delivered; exact build34 app code",
+      "file_id": "file_00000000fe608230b37bd7cce793cb0c"
+    }
   },
   "native_android_exact_candidate": "pending",
   "rc7_modified": false,
-  "stable_or_real_data_cutover": false
+  "stable_or_real_data_cutover": false,
+  "source_commit": "0547f4cf3182fb0381c9b31425b205dee320250f",
+  "candidate": {
+    "run_id": 37027539131,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37027539131",
+    "status": "running"
+  },
+  "push_ci": {
+    "run_id": 37027506551,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37027506551",
+    "status": "running"
+  }
 }
