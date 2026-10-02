@@ -33,6 +33,8 @@ class TagFilterPickerState extends State<TagFilterPicker>
   ScrollPosition? _scroll;
   bool _open = false;
   bool _positionPending = false;
+  bool _revealAfterMetrics = false;
+  Size? _viewportSize;
   bool _ignoreNextFocus = false;
 
   bool get dropdownOpen => _open;
@@ -49,7 +51,13 @@ class TagFilterPickerState extends State<TagFilterPicker>
   }
 
   @override
-  void didChangeMetrics() => _reposition();
+  void didChangeMetrics() {
+    // The old anchor may be clipped for one layout frame before the focused
+    // editor reveals its caret. Keep an intentional open popup through that
+    // transition; ordinary user scrolling away still dismisses it.
+    if (_open && _focus.hasFocus) _revealAfterMetrics = true;
+    _reposition();
+  }
 
   @override
   void didChangeDependencies() {
@@ -85,12 +93,25 @@ class TagFilterPickerState extends State<TagFilterPicker>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _positionPending = false;
       if (!mounted || !_open) return;
-      final box = _anchor.currentContext?.findRenderObject();
+      final anchor = _anchor.currentContext;
+      final box = anchor?.findRenderObject();
       final viewport = Scrollable.maybeOf(context)?.context.findRenderObject();
       if (box is RenderBox &&
           box.hasSize &&
           viewport is RenderBox &&
           viewport.hasSize) {
+        // Dialog padding can finish shrinking the scroll viewport after the
+        // first keyboard metrics frame. Reveal against each changed extent,
+        // then check geometry after layout; do not close on that stale frame.
+        final resized = _revealAfterMetrics || _viewportSize != viewport.size;
+        _revealAfterMetrics = false;
+        _viewportSize = viewport.size;
+        if (resized && _focus.hasFocus) {
+          Scrollable.ensureVisible(anchor!);
+          _overlayEntry?.markNeedsBuild();
+          _reposition();
+          return;
+        }
         final field = box.localToGlobal(Offset.zero) & box.size;
         final visible = viewport.localToGlobal(Offset.zero) & viewport.size;
         if (!field.overlaps(visible)) {
@@ -120,6 +141,7 @@ class TagFilterPickerState extends State<TagFilterPicker>
 
   bool dismissDropdown() {
     if (!_open) return false;
+    _revealAfterMetrics = false;
     _removeOverlay();
     setState(() => _open = false);
     widget.onDropdownChanged(false);
@@ -355,6 +377,7 @@ class TagFilterPickerState extends State<TagFilterPicker>
                               onChanged: (_) {
                                 _show();
                                 _overlayEntry?.markNeedsBuild();
+                                setState(() {});
                                 widget.onQueryChanged();
                               },
                               onSubmitted: (_) {

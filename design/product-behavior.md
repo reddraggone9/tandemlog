@@ -106,3 +106,8 @@ Multiline capture presents one acknowledged update, not progressive line clearin
 
 
 Task rows show a compact repeating marker, with the full rule retained in accessible semantics and the editor. A proposed custom repeating-checkbox outline is pending Lee's mockup approval and is not shipped; the ordinary checkbox plus compact marker remains the fallback. Eligibility explanation and normal completion/reopening targets remain unchanged.
+
+
+Keyboard metrics and the dialog's later viewport animation must not collapse an intentionally opened tag dropdown. Reveal the focused query against changed viewport extents, retain its text/selection and keep suggestions actionable. Deliberately scrolling the query out of view still dismisses the popup. Enlarged-text users can scroll partially visible options fully into view and select them; clipping alone is not reported as a crash.
+
+Folder failures explain recovery in ordinary language. A missing file names the canonical file and suggests restoring it or waiting for folder sync; only actually denied access suggests selecting the folder again. Generic read/write failures report availability rather than assuming a revoked grant. Preserve independently confirmed partial progress, unconfirmed drafts and normal retry/integrity checks; human error formatting does not repair or discard canonical data. Framework/provider exception wrappers remain diagnostic causes, not task UI copy.

@@ -19,6 +19,7 @@ import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
+import 'presentation/failure_message.dart';
 import 'platform/view_time_source.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
@@ -305,7 +306,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       user = settings!.user;
       if (settings!.folder != null) await _open(settings!.folder!);
     } catch (e) {
-      error = '$e';
+      error = failureMessage(e);
     }
     if (!mounted) return;
     setState(() => busy = false);
@@ -557,7 +558,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } catch (e) {
       if (mounted) {
         setState(() {
-          error = '$e';
+          error = failureMessage(e);
           errorFromRefresh = false;
         });
       }
@@ -735,7 +736,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       final newer = result.keptNewerChanges ? ' Newer changes were kept.' : '';
       final text = result.error == null
           ? 'Undid $label.$newer'
-          : '${result.undone.length} confirmed undone; ${result.remaining.length} remain. ${result.error}$newer';
+          : '${result.undone.length} confirmed undone; ${result.remaining.length} remain. ${failureMessage(result.error!)}$newer';
       final messenger = ScaffoldMessenger.of(context);
       messenger.clearSnackBars();
       messenger.showSnackBar(
@@ -814,7 +815,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       } catch (e) {
         if (mounted && identical(store, origin)) {
           setState(() {
-            error = '$e';
+            error = failureMessage(e);
             errorFromRefresh = true;
           });
         }
@@ -994,7 +995,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (result.error != null) {
         throw StateError(
           '${result.committedIds.length} tasks confirmed saved; '
-          '${pendingCapture.length} remain. ${result.error}',
+          '${pendingCapture.length} remain. ${failureMessage(result.error!)}',
         );
       }
     });
@@ -1316,7 +1317,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ..clear()
           ..addAll(bulkPending);
         throw StateError(
-          '${result.committedIds.length + result.remainingIds.length - bulkPending.length} confirmed saved after refresh; ${bulkPending.length} remain. ${result.error}',
+          '${result.committedIds.length + result.remainingIds.length - bulkPending.length} confirmed saved after refresh; ${bulkPending.length} remain. ${failureMessage(result.error!)}',
         );
       }
       selectedTasks.clear();
@@ -1508,7 +1509,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 }
                 if (!result.succeeded) {
                   throw StateError(
-                    '${ids.length - bulkPending.length} confirmed deleted after refresh; ${bulkPending.length} remain. ${result.error}',
+                    '${ids.length - bulkPending.length} confirmed deleted after refresh; ${bulkPending.length} remain. ${failureMessage(result.error!)}',
                   );
                 }
               },
@@ -1808,7 +1809,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         rows = store!.rows;
         if (!result.succeeded) {
           throw StateError(
-            '${result.committedIds.length} moves acknowledged; additional moves may have saved. The list was refreshed; review it before dragging again. ${result.error}',
+            '${result.committedIds.length} moves acknowledged; additional moves may have saved. The list was refreshed; review it before dragging again. ${failureMessage(result.error!)}',
           );
         }
       }

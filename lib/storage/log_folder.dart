@@ -6,6 +6,16 @@ class LogFileInfo {
   LogFileInfo(this.name, this.stamp);
 }
 
+/// Human-readable transport failure. Retain the original platform cause for
+/// diagnosis without exposing framework wrappers or provider internals in UI.
+class FolderAccessFailure implements Exception {
+  FolderAccessFailure(this.message, {this.cause});
+  final String message;
+  final Object? cause;
+  @override
+  String toString() => message;
+}
+
 abstract class LogFolder {
   String get location;
   Future<List<LogFileInfo>> list();

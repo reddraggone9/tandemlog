@@ -4,6 +4,76 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/tag_filter_picker.dart';
 
 void main() {
+  for (final scale in [1.0, 2.0]) {
+    testWidgets('initial suggestions survive IME relayout at $scale text scale', (
+      tester,
+    ) async {
+      tester.view.physicalSize = const Size(390, 800);
+      tester.view.devicePixelRatio = 1;
+      tester.platformDispatcher.textScaleFactorTestValue = scale;
+      final changes = <bool>[];
+      final selections = <Set<String>>[];
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const SizedBox(height: 580),
+                  TagFilterPicker(
+                    tags: const ['home'],
+                    selected: const {},
+                    onChanged: selections.add,
+                    onQueryChanged: () {},
+                    onDropdownChanged: changes.add,
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+      final search = find.byKey(const ValueKey('tag-search'));
+      await tester.ensureVisible(search);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('Expand tag options'));
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      // No typing/reopening/explicit ensureVisible after the IME begins. The
+      // first metrics frame can clip the old anchor before EditableText scrolls.
+      tester.view.viewInsets = const FakeViewPadding(bottom: 380);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      expect(changes, [
+        true,
+      ], reason: 'No silent collapse/reopen during resize.');
+      final option = find.byKey(const ValueKey('tag-option-home'));
+      expect(option.hitTestable(), findsOneWidget);
+      expect(tester.getRect(option).bottom, lessThanOrEqualTo(420));
+      expect(tester.widget<TextField>(search).focusNode!.hasFocus, isTrue);
+      await tester.tap(option);
+      await tester.pumpAndSettle();
+      expect(selections, [
+        {'home'},
+      ]);
+      await tester.tap(find.byTooltip('Expand tag options'));
+      await tester.pumpAndSettle();
+      // Deliberate user scrolling away still dismisses an orphaned popup.
+      tester
+          .state<ScrollableState>(find.byType(Scrollable).first)
+          .position
+          .jumpTo(0);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      tester.view.resetViewInsets();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    });
+  }
   testWidgets(
     'below-first dialog overlay uses content size and stays stable through queries and metrics',
     (tester) async {

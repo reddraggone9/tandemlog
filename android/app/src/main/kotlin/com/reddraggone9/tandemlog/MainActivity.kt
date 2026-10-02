@@ -16,6 +16,8 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.FileOutputStream
 import java.util.concurrent.Executors
 
+private class MissingFolderFile(val fileName: String) : java.io.IOException("Missing $fileName")
+
 /** Folder capabilities, never guessed filesystem paths. Resolve children anew. */
 class MainActivity : FlutterActivity() {
     private var timeChannel: MethodChannel? = null
@@ -78,7 +80,7 @@ class MainActivity : FlutterActivity() {
                     if (name != null && !Regex("^[a-zA-Z0-9._-]+$").matches(name)) error("Unsafe filename")
                     val value: Any? = when (call.method) {
                         "list" -> children(tree).map { mapOf("name" to it.first) }
-                        "read" -> contentResolver.openInputStream(child(tree, name!!) ?: error("Missing $name"))!!.use { stream ->
+                        "read" -> contentResolver.openInputStream(child(tree, name!!) ?: throw MissingFolderFile(name))!!.use { stream ->
                             val bytes = stream.readBytes()
                             bytes
                         }
@@ -102,7 +104,13 @@ class MainActivity : FlutterActivity() {
                     }
                     main.post { result.success(value) }
                 } catch (e: Exception) {
-                    main.post { result.error("folder", "Folder access failed: ${e.message}. Re-select the folder if permission was revoked.", null) }
+                    val code = when (e) {
+                        is MissingFolderFile -> "missing_file"
+                        is SecurityException -> "permission"
+                        else -> "folder"
+                    }
+                    val details = if (e is MissingFolderFile) mapOf("name" to e.fileName) else null
+                    main.post { result.error(code, "Folder access failed: ${e.message}", details) }
                 }
             }
         }

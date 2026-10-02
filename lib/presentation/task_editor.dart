@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
+import 'failure_message.dart';
 
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
@@ -358,7 +359,7 @@ class _EditorBodyState extends State<_EditorBody> {
     } catch (e) {
       if (mounted) {
         setState(() {
-          failure = '$e';
+          failure = failureMessage(e);
           busy = false;
         });
       }
@@ -401,7 +402,7 @@ class _EditorBodyState extends State<_EditorBody> {
       if (mounted) {
         setState(() {
           busy = false;
-          failure = '$e';
+          failure = failureMessage(e);
         });
       }
     }

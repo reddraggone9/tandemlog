@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/domain/bulk_task_edit.dart';
+import 'package:tandemlog/platform/log_folder.dart';
 
 Map<String, dynamic> task([Map<String, dynamic> schedule = const {}]) => {
   'id': 'test',
@@ -521,6 +522,47 @@ void main() {
     expect(closed, 0);
     expect(find.text('Current draft'), findsOneWidget);
   });
+  testWidgets('folder failure is readable and retains the draft for retry', (
+    tester,
+  ) async {
+    var failing = true, attempts = 0, closed = 0;
+    final saved = <Map<String, dynamic>>[];
+    const message =
+        'The data folder is missing tandemlog-space.json. Restore this file or wait for folder sync, then retry.';
+    await mount(
+      tester,
+      TaskEditor(
+        task: task(),
+        panel: true,
+        onClose: () => closed++,
+        save: (changes, added, removed) async {
+          attempts++;
+          if (failing) throw FolderAccessFailure(message);
+          saved.add(Map.of(changes));
+        },
+      ),
+    );
+    await edit(tester, 'title', 'Retained draft');
+    final draft = tester.widget<TextField>(input('title')).controller!.value;
+    await tester.ensureVisible(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(find.text(message), findsOneWidget);
+    expect(find.textContaining('PlatformException'), findsNothing);
+    expect(find.textContaining('Bad state:'), findsNothing);
+    expect(tester.widget<TextField>(input('title')).controller!.value, draft);
+    expect(attempts, 1);
+    expect(closed, 0);
+    expect(saved, isEmpty);
+    failing = false;
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(attempts, 2);
+    expect(closed, 1);
+    expect(saved.single['title'], 'Retained draft');
+  });
+
   testWidgets(
     'guard Save validation and write failure retain draft and selection',
     (tester) async {
