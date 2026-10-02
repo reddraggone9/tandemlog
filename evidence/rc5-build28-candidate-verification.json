@@ -1,0 +1,103 @@
+{
+  "candidate_run_id": 36949182910,
+  "app_source": "b501dc64766be078d327ae778c09952995acd84e",
+  "version": "0.1.0-rc.5+28",
+  "hosted_candidate_conclusion": "success",
+  "push_ci_run_id": 36949158719,
+  "push_ci_conclusion": "success",
+  "android": {
+    "metadata": {
+      "source_commit": "b501dc64766be078d327ae778c09952995acd84e",
+      "version": "0.1.0-rc.5",
+      "version_code": 28,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "551e60c00811a6668c28f73ce2ffc59d37b980540b0022441c1274354f08112c"
+    },
+    "package": "com.reddraggone9.tandemlog",
+    "non_debuggable": true,
+    "native_abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "archive_sha256": "9771ac2bbd5eb4ce6af4376d4007bdb119b2ead82c21361c8a71d1dbbede644d"
+  },
+  "linux": {
+    "platform": "linux",
+    "passed": true,
+    "asset_hashes": {
+      "linux-startup.json": "d1dffe2647e69f64d015e4ec3007bdf8e5c2c372ebb94537bd39b059d8db1c38",
+      "linux-install-smoke.json": "026b157c570d0ad61c90892f85410035c96ba52d75e1ef0f36293350d16f25eb",
+      "tandemlog-linux-x64.flatpak": "59e23ed4c9b04aac020b7f3a3eaae26ab363178e428abfa6750dc1b0c3d52b6e",
+      "linux-SHA256SUMS.txt": "9fe33174b4f70d9a6c2f866ddbd25224486987bd725b25187bb99d156eb7fe90"
+    }
+  },
+  "windows": {
+    "platform": "windows",
+    "passed": true,
+    "asset_hashes": {
+      "windows-install-smoke.json": "e215708e1dd39f49b9c9073aead51d8a4f3a811a601180db8e71286c5375a131",
+      "windows-SHA256SUMS.txt": "732d9bd3fe9f04244336e8a6612fcdf7cca22b9d0a4e4e75be4cb1918b0bb09e",
+      "tandemlog-windows-x64-unsigned-setup.exe": "a179674c0fd331ff8ce0c876b799afdf5043d590d68c46cc6b85dd9aa9265eed"
+    }
+  },
+  "startup": {
+    "target": "Linux x86_64 native release / Xvfb",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 431,
+        "marker": "TANDEMLOG_READY_MS=223 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=62",
+          "TANDEMLOG_PHASE identity_lock=60",
+          "TANDEMLOG_PHASE sqlite_open_schema=6",
+          "TANDEMLOG_PHASE manifest=26",
+          "TANDEMLOG_PHASE ingest=25",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=223 FILES_READ=1"
+        ],
+        "external_main_ms": 204,
+        "external_first_frame_ms": 270
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 331,
+        "marker": "TANDEMLOG_READY_MS=172 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=61",
+          "TANDEMLOG_PHASE identity_lock=9",
+          "TANDEMLOG_PHASE sqlite_open_schema=1",
+          "TANDEMLOG_PHASE manifest=37",
+          "TANDEMLOG_PHASE ingest=18",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=172 FILES_READ=0"
+        ],
+        "external_main_ms": 155,
+        "external_first_frame_ms": 220
+      }
+    ]
+  },
+  "android_artifact_id": 11204325644,
+  "linux_artifact_id": 11203790408,
+  "windows_artifact_id": 11202234648,
+  "archive_sha256": {
+    "android": "9771ac2bbd5eb4ce6af4376d4007bdb119b2ead82c21361c8a71d1dbbede644d",
+    "linux": "611add4f6429b83b0d6c3ce7a275661c13d427aacd3b68f485aadf2b86be59e2",
+    "windows": "65984b62f9eeaf676f39d47ac530fc8d206fa4d5a2a8d579d34afe0b399ff9fb"
+  },
+  "android_native_acceptance": "pending exact build28 Gboard, accessibility and affected regression; unpublished",
+  "limitations": [
+    "Linux startup is two fresh processes with 10 tasks/Xvfb and unflushed OS page caches; loaded-frame marker is not first accepted input.",
+    "Downloaded original startup asset includes runner/portal diagnostic prefix; final complete JSON extracted for this record without altering original.",
+    "Desktop archive/lifecycle verification does not imply full manual Windows visual QA.",
+    "Icon remains unapproved/unadopted; no RC5 publication."
+  ]
+}
