@@ -74,5 +74,19 @@
   },
   "native_android_build35_acceptance": "pending",
   "rc8_published": false,
-  "stable_or_real_data_cutover": false
+  "stable_or_real_data_cutover": false,
+  "source_commit": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+  "candidate_run": 37041309886,
+  "push_ci_run": 37041218115,
+  "demo": {
+    "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+    "version": 25,
+    "file_id": "file_000000005ffc820cb49f9c267c5526ee",
+    "filename": "tandemlog-rc8-keyboard-focus-demo.mp4",
+    "seconds": 18.65,
+    "bytes": 119190,
+    "sha256": "c2ee3ddb558eacb0423eb20343f4a1064c69b1cf354d86b53e53fc93bc4e2996",
+    "native_platform": "Linux GTK; scripted keyboard input identified; desktop pointer verified",
+    "auto_focus_scrolling_claimed": false
+  }
 }
