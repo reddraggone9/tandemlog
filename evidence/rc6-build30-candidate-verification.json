@@ -21,7 +21,7 @@
       "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
       "tandemlog-android.apk": "1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5"
     },
-    "native_android_acceptance": "pending"
+    "native_android_acceptance": "passed exact owner-signed APK"
   },
   "windows": {
     "platform": "windows",
@@ -42,6 +42,35 @@
       "linux-SHA256SUMS.txt": "c409c6749abc1bdcee16e4bf2a85d4a3c827271e6d068387ada4c4ddaf48b1c2"
     }
   },
-  "native_android_acceptance": "pending; approved repeat checkbox targeted acceptance required",
-  "publication": "held; RC5 preserved; stable deferred"
+  "native_android_acceptance": {
+    "passed": true,
+    "exact_apk_sha256": "1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5",
+    "source_commit": "5f615f536ad89eef835c828b77cdd200c08d4541",
+    "platform": "Farnsworth hardware KVM Android11/API30",
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "text_scale": [
+      1,
+      2
+    ],
+    "checks": [
+      "48dp padded target",
+      "guard explanation writes zero events",
+      "completion/reopening/Undo",
+      "selection and drag independence",
+      "restart"
+    ],
+    "baseline_entities": 193,
+    "baseline_entities_unchanged": true,
+    "documented_new_successors": 1,
+    "demo_library_file_id": "libfile_7b44e8dfa588819199a6228c4af94f7b",
+    "demo_seconds": 66.7,
+    "touches_verified": true,
+    "services_stopped": true,
+    "real_data_untouched": true,
+    "evidence_source": "parent native worker acceptance"
+  },
+  "publication": "authorized exact promotion pending"
 }
