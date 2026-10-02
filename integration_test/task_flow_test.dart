@@ -293,6 +293,18 @@ void main() {
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
+    addTearDown(() async {
+      // Failed expectations must not leave phone metrics, overlay routes or
+      // a scaled font active for the rest of the native integration suite.
+      tester.view.resetViewInsets();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      if (await root.exists()) await root.delete(recursive: true);
+    });
     final user = const Uuid().v4(), task = const Uuid().v4();
     await writer.command(user, 'user.created', {'name': 'Alex Example'});
     await writer.command(task, 'task.created', {
@@ -390,8 +402,18 @@ void main() {
       await tester.ensureVisible(done);
       await tester.pumpAndSettle();
       await tester.tap(done);
-      await tester.pumpAndSettle();
-      expect(find.text('Review synthetic supplies'), findsOneWidget);
+      await waitForUi(
+        tester,
+        () => find.byType(AlertDialog).evaluate().isEmpty,
+      );
+      // Mock keyboard metrics are not removed by disposing the real query.
+      // Dismiss the simulated IME before inspecting the enlarged-text list;
+      // awaiting the rendered rows also handles asynchronous platform frames.
+      tester.view.resetViewInsets();
+      await waitForUi(
+        tester,
+        () => find.text('Review synthetic supplies').evaluate().isNotEmpty,
+      );
       await openFilters(tester);
       expect(
         find.byKey(const ValueKey('selected-tag-size-tag-8')),
