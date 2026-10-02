@@ -215,7 +215,15 @@
   },
   "protocol": 2,
   "cache_schema": 8,
-  "exact_signed_android_acceptance": "pending",
+  "exact_signed_android_acceptance": {
+    "passed": true,
+    "source": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+    "code": 32,
+    "apk_sha256": "1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+    "platform": "native Android11/API30 hardware-KVM",
+    "retained_rows_unchanged": 194,
+    "demo_library_file_id": "libfile_9af720403ba88191af387bb607bf2010"
+  },
   "full_hosted_candidate": {
     "run_id": 37009157582,
     "source": "5d62b93f8154d71b9998683d9053e104dce16ae7",

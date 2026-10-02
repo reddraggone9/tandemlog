@@ -25,7 +25,33 @@
     "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
     "library_version": 1,
     "library_file_name": "tandemlog-rc7-build32-android.zip",
-    "native_acceptance": "pending"
+    "native_acceptance": {
+      "status": "passed",
+      "platform": "Farnsworth hardware-KVM Android11/API30",
+      "exact_apk_sha256": "1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "text_scale": [
+        1,
+        2
+      ],
+      "cases": [
+        "v6 controls",
+        "sticky headings",
+        "pinned selection",
+        "editing and drag Undo",
+        "future visibility and idle capture draft with zero events",
+        "keyboard and process restart"
+      ],
+      "retained_rows_unchanged": 194,
+      "video_library_file_id": "libfile_9af720403ba88191af387bb607bf2010",
+      "video_seconds": 121.3,
+      "touches_verified": true,
+      "intended_physical_phone_provider_matrix": "separate/unrun",
+      "cleanup": "Emulator/QEMU/ADB stopped, settings restored, no OOM; leftover ADB child removed after cleanup timeout"
+    }
   },
   "desktop_artifacts": {
     "windows": {
@@ -103,6 +129,6 @@
     ]
   },
   "linux_startup_limit": "Two fresh processes, 10 synthetic tasks, OS page cache unflushed; launch to loaded-frame marker, not first accepted input or phone/Windows latency.",
-  "public_promotion": "held for exact native Android acceptance",
+  "public_promotion": "authorized; exact candidate, no rebuild",
   "real_data_modified": false
 }
