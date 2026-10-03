@@ -18,14 +18,19 @@ import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
 import 'completion_focus_test.dart' show registerCompletionFocusTests;
+import 'header_selection_test.dart' show registerHeaderSelectionTests;
+
+Finder taskScrollable() => find
+    .descendant(
+      of: find.byType(CustomScrollView).first,
+      matching: find.byType(Scrollable),
+    )
+    .first;
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
   if (button.evaluate().isEmpty) {
-    tester
-        .state<ScrollableState>(find.byType(Scrollable).first)
-        .position
-        .jumpTo(0);
+    tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
     await tester.pumpAndSettle();
   }
   await tester.ensureVisible(button);
@@ -113,7 +118,10 @@ Future<void> selectTask(
   await tester.pumpAndSettle();
 }
 
-Finder clearSelection() => find.text('Clear Selection');
+Finder clearSelection() =>
+    find.byKey(const ValueKey('clear-selected-tasks')).evaluate().isNotEmpty
+    ? find.byKey(const ValueKey('clear-selected-tasks'))
+    : find.text('Clear Selection');
 Finder selectionSummary(int count) => find.text(
   find.byType(BulkTaskEditor).evaluate().isNotEmpty
       ? 'Edit $count tasks'
@@ -140,6 +148,7 @@ void main() {
   registerSaveAcknowledgementTests();
   registerCompletionActionTests();
   registerCompletionFocusTests();
+  registerHeaderSelectionTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -188,10 +197,7 @@ void main() {
           await selectTask(tester, ids[0], control: false, longPress: true);
           await selectTask(tester, ids[1], control: false);
           // The selection commands remain outside the scrolling task viewport.
-          tester
-              .state<ScrollableState>(find.byType(Scrollable).first)
-              .position
-              .jumpTo(0);
+          tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
           await tester.pumpAndSettle();
           await tester.ensureVisible(
             find.byKey(const ValueKey('edit-selected-tasks')),
@@ -633,10 +639,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 100));
       }
       expect(find.byType(TaskEditor), findsNothing);
-      tester
-          .state<ScrollableState>(find.byType(Scrollable).first)
-          .position
-          .jumpTo(0);
+      tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
       await tester.pumpAndSettle();
 
       expect(find.byKey(const ValueKey('select-tasks')), findsNothing);
@@ -953,7 +956,9 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester
-            .widget<OutlinedButton>(find.byKey(const ValueKey('task-filter')))
+            .widget<ButtonStyleButton>(
+              find.byKey(const ValueKey('task-filter')),
+            )
             .onPressed,
         isNull,
       );
@@ -1016,10 +1021,7 @@ void main() {
       await drag(ids[0], ids[3]);
       await writer.refresh();
       expect(writer.taskSnapshot, beforeRejected);
-      tester
-          .state<ScrollableState>(find.byType(Scrollable).first)
-          .position
-          .jumpTo(0);
+      tester.state<ScrollableState>(taskScrollable()).position.jumpTo(0);
       await tester.pumpAndSettle();
       await tester.tap(searchField);
       await tester.enterText(searchField, 'no matching task');
@@ -2918,7 +2920,7 @@ void main() {
       await tester.scrollUntilVisible(
         find.text('Hidden future'),
         150,
-        scrollable: find.byType(Scrollable).first,
+        scrollable: taskScrollable(),
       );
       await tester.tap(find.text('Hidden future'));
       await tester.pumpAndSettle();

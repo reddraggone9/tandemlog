@@ -12,7 +12,7 @@ import 'application/undo_history.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
-import 'presentation/compact_selection_actions.dart';
+import 'presentation/task_entry_area.dart';
 import 'presentation/task_toolbar.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
@@ -1126,7 +1126,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       nextIntent = false;
       anchor = id;
     }
-    if (before.length >= 2 && next.length == 1) nextIntent = false;
+    if (wideLayout && before.length >= 2 && next.length == 1) {
+      nextIntent = false;
+    }
     if (next.isEmpty) nextIntent = false;
     final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
     if (!next.every(visible.contains)) {
@@ -1225,7 +1227,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await Scrollable.ensureVisible(
         targetContext,
         duration: const Duration(milliseconds: 120),
+        alignmentPolicy: direction > 0
+            ? ScrollPositionAlignmentPolicy.keepVisibleAtEnd
+            : ScrollPositionAlignmentPolicy.keepVisibleAtStart,
       );
+      if (!targetContext.mounted) return;
+      final box = targetContext.findRenderObject() as RenderBox?;
+      if (box != null &&
+          box.hasSize &&
+          _pointerOverGroupHeading(
+            box.localToGlobal(box.size.center(Offset.zero)),
+          )) {
+        await Scrollable.ensureVisible(
+          targetContext,
+          alignment: .5,
+          duration: const Duration(milliseconds: 120),
+        );
+      }
     }
     rowFocus[id]?.requestFocus();
   }
@@ -2173,6 +2191,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       .where((entry) => entry['id'] == user)
                                       .firstOrNull?['name']
                                   as String?,
+                          count: taskView == null || user == null
+                              ? null
+                              : _taskCount(showCompleted),
+                          countLabels: [_taskCount(false), _taskCount(true)],
+                          filter: taskView == null || user == null
+                              ? null
+                              : _taskFilter,
                           identityMenu: (child) =>
                               _identityMenu(users, child: child),
                           undo: IconButton(
@@ -2703,52 +2728,120 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
-  Widget _taskHeader() {
-    Widget heading(bool completed) => Visibility(
-      visible: showCompleted == completed,
-      maintainState: true,
-      maintainAnimation: true,
-      maintainSize: true,
-      child: Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(
-              text: 'Tasks',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+  String _taskCount(bool completed) => searching
+      ? '${visibleEntries.length} matches'
+      : '${(completed ? taskView?.completed : taskView?.open)?.length ?? 0} ${completed ? 'completed' : 'open'}';
+
+  Widget _taskFilter(bool compact) {
+    final tooltip = searching
+        ? 'Filters paused while searching all tasks'
+        : _filtersActive
+        ? 'Filter tasks · active filters'
+        : 'Filter tasks';
+    final icon = Badge(
+      isLabelVisible: !searching && _filtersActive,
+      child: const Icon(Icons.filter_list, size: 20),
+    );
+    return compact
+        ? IconButton(
+            key: const ValueKey('task-filter'),
+            tooltip: tooltip,
+            onPressed: searching ? null : _showFilters,
+            icon: icon,
+          )
+        : Tooltip(
+            message: tooltip,
+            child: OutlinedButton.icon(
+              key: const ValueKey('task-filter'),
+              style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
+              onPressed: searching ? null : _showFilters,
+              icon: icon,
+              label: const Text('Filter'),
             ),
-            TextSpan(
-              text: searching
-                  ? ' · ${visibleEntries.length} matches'
-                  : ' · ${(completed ? taskView?.completed : taskView?.open)?.length ?? 0} ${completed ? 'completed' : 'open'}',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ],
+          );
+  }
+
+  Widget _captureField() => Focus(
+    onKeyEvent: (_, event) {
+      final enter =
+          event.logicalKey == LogicalKeyboardKey.enter ||
+          event.logicalKey == LogicalKeyboardKey.numpadEnter;
+      if (widget.folderActions.requiresPicker ||
+          !enter ||
+          (capture.value.composing.isValid &&
+              !capture.value.composing.isCollapsed)) {
+        return KeyEventResult.ignored;
+      }
+      if (event is KeyDownEvent) {
+        if (HardwareKeyboard.instance.isShiftPressed) {
+          if (!busy && pendingCapture.isEmpty) {
+            final value = capture.value;
+            final selection = value.selection.isValid
+                ? value.selection
+                : TextSelection.collapsed(offset: value.text.length);
+            // Use the editor's user-input path so it reveals the caret
+            // after layout, including a newly inserted blank last line.
+            final editor = captureFocus.context!
+                .findAncestorStateOfType<EditableTextState>()!;
+            editor.userUpdateTextEditingValue(
+              TextEditingValue(
+                text: value.text.replaceRange(
+                  selection.start,
+                  selection.end,
+                  '\n',
+                ),
+                selection: TextSelection.collapsed(offset: selection.start + 1),
+              ),
+              SelectionChangedCause.keyboard,
+            );
+          }
+        } else {
+          unawaited(_capture());
+        }
+        return KeyEventResult.handled;
+      }
+      if (event is KeyRepeatEvent) {
+        return KeyEventResult.handled;
+      }
+      return KeyEventResult.ignored;
+    },
+    child: TextField(
+      controller: capture,
+      focusNode: captureFocus,
+      readOnly: pendingCapture.isNotEmpty,
+      keyboardType: TextInputType.multiline,
+      textInputAction: TextInputAction.newline,
+      minLines: 1,
+      maxLines: 4,
+      enabled: !busy,
+      decoration: InputDecoration(
+        labelText: 'What needs doing?',
+        hintText: 'One task per line',
+        helperText: captureFailure && pendingCapture.isNotEmpty
+            ? 'Retry to check these tasks before editing.'
+            : widget.folderActions.requiresPicker
+            ? null
+            : 'Enter to add · Shift+Enter for another task',
+        suffixIcon: IconButton(
+          tooltip: 'Add tasks',
+          onPressed: busy ? null : _submitCaptureButton,
+          icon: const Icon(Icons.arrow_upward),
         ),
       ),
-    );
-    return Row(
-      key: const ValueKey('task-header'),
-      children: [
-        Expanded(child: Stack(children: [heading(false), heading(true)])),
-        Tooltip(
-          message: searching
-              ? 'Filters paused while searching all tasks'
-              : _filtersActive
-              ? 'Filter tasks · active filters'
-              : 'Filter tasks',
-          child: OutlinedButton.icon(
-            key: const ValueKey('task-filter'),
-            onPressed: searching ? null : _showFilters,
-            icon: Badge(
-              isLabelVisible: !searching && _filtersActive,
-              child: const Icon(Icons.filter_list, size: 20),
-            ),
-            label: const Text('Filter'),
-          ),
-        ),
-      ],
-    );
-  }
+      onSubmitted: (_) => _capture(),
+    ),
+  );
+
+  Widget _entryArea() => TaskEntryArea(
+    key: const ValueKey('task-entry-area'),
+    selecting: selecting && !wideLayout && !mobileEditorOpen,
+    captureVisible: !showCompleted || searching,
+    selectionCount: selectedTasks.length,
+    maximumSelectionCount: visibleEntries.length,
+    onClear: busy ? null : _clearTaskSelection,
+    onEdit: busy ? null : _editSelected,
+    capture: _captureField(),
+  );
 
   Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) {
     final entries = groups.expand((group) => group.entries).toList();
@@ -2820,84 +2913,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
             sliver: SliverList.list(
               children: [
-                _taskHeader(),
-                const SizedBox(height: 8),
-                if (!showCompleted || searching)
-                  Focus(
-                    onKeyEvent: (_, event) {
-                      final enter =
-                          event.logicalKey == LogicalKeyboardKey.enter ||
-                          event.logicalKey == LogicalKeyboardKey.numpadEnter;
-                      if (widget.folderActions.requiresPicker ||
-                          !enter ||
-                          (capture.value.composing.isValid &&
-                              !capture.value.composing.isCollapsed)) {
-                        return KeyEventResult.ignored;
-                      }
-                      if (event is KeyDownEvent) {
-                        if (HardwareKeyboard.instance.isShiftPressed) {
-                          if (!busy && pendingCapture.isEmpty) {
-                            final value = capture.value;
-                            final selection = value.selection.isValid
-                                ? value.selection
-                                : TextSelection.collapsed(
-                                    offset: value.text.length,
-                                  );
-                            // Use the editor's user-input path so it reveals the caret
-                            // after layout, including a newly inserted blank last line.
-                            final editor = captureFocus.context!
-                                .findAncestorStateOfType<EditableTextState>()!;
-                            editor.userUpdateTextEditingValue(
-                              TextEditingValue(
-                                text: value.text.replaceRange(
-                                  selection.start,
-                                  selection.end,
-                                  '\n',
-                                ),
-                                selection: TextSelection.collapsed(
-                                  offset: selection.start + 1,
-                                ),
-                              ),
-                              SelectionChangedCause.keyboard,
-                            );
-                          }
-                        } else {
-                          unawaited(_capture());
-                        }
-                        return KeyEventResult.handled;
-                      }
-                      if (event is KeyRepeatEvent) {
-                        return KeyEventResult.handled;
-                      }
-                      return KeyEventResult.ignored;
-                    },
-                    child: TextField(
-                      controller: capture,
-                      focusNode: captureFocus,
-                      readOnly: pendingCapture.isNotEmpty,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      minLines: 1,
-                      maxLines: 4,
-                      enabled: !busy,
-                      decoration: InputDecoration(
-                        labelText: 'What needs doing?',
-                        hintText: 'One task per line',
-                        helperText: captureFailure && pendingCapture.isNotEmpty
-                            ? 'Retry to check these tasks before editing.'
-                            : widget.folderActions.requiresPicker
-                            ? null
-                            : 'Enter to add · Shift+Enter for another task',
-                        suffixIcon: IconButton(
-                          tooltip: 'Add tasks',
-                          onPressed: busy ? null : _submitCaptureButton,
-                          icon: const Icon(Icons.arrow_upward),
-                        ),
-                      ),
-                      onSubmitted: (_) => _capture(),
-                    ),
-                  ),
-                const SizedBox(height: 12),
                 if (tasks.isEmpty)
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 56),
@@ -3330,13 +3345,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return LayoutBuilder(
       builder: (context, constraints) => Column(
         children: [
-          if (selecting && !wideLayout && !mobileEditorOpen)
-            CompactSelectionActions(
-              key: const ValueKey('compact-selection-actions'),
-              count: selectedTasks.length,
-              onClear: busy ? null : _clearTaskSelection,
-              onEdit: busy ? null : _editSelected,
-            ),
+          _entryArea(),
           Expanded(child: list),
         ],
       ),

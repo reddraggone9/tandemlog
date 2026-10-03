@@ -1,4 +1,10 @@
-# Current status — 2026-10-02
+# Current status — 2026-10-03
+
+## RC9 build36 — combined header and stationary selection
+
+Lee approved one compact everyday header and replacing task entry with compact selection actions, rather than inserting another row. Wide layouts combine icon/title/count and Undo/Search/Filter/identity. Narrow layouts use icon Filter and an account avatar; omit counts that cannot fit, with enlarged/search layouts allowed a second row. Both status counts are measured so Open/Completed does not move controls. Task entry remains mounted above the scroll viewport, preserving a multiline draft; selection swaps into its same area. Narrow two-to-one selection remains selected until Edit or clear. The wide side editor remains available. Keyboard navigation now respects pinned headings, and the assignee field bounds long names. No domain, storage, clock, Undo, cache/protocol or signing change. [Rationale](decisions/0005-session-undo-and-toolbar.md#combined-header-and-stationary-compact-selection--rc9).
+
+227 application tests,13 Python gates, analysis and formatting pass. Two new actual Linux workflows pass in30 seconds excluding build at390px/100% and320px/200%, proving exact pressed-row/header/viewport/entry geometry, four-line draft/cursor preservation, keyboard metrics, range/last selection, Filter/Search/Settings, sticky headings/resize and unchanged canonical files. The first34-case aggregate exposed two tight-height defects in an intermediate enlarged header; both corrected error/editor cases subsequently pass. The final hosted aggregate is required rather than labeling the intermediate run green. Four native GTK visual flows pass with Light/Dark,1200/390px and200% text; actual pixels and stationary selected rows were inspected. [Local receipt](../evidence/rc9-header-local-verification.json). Final candidate/Android layout acceptance and updated demo delivery are pending; RC8 is unchanged, with no stable publication or real-data cutover.
 
 ## Published RC8 build35 — conditional Undo and native checkbox focus
 

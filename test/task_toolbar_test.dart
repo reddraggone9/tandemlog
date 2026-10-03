@@ -26,6 +26,21 @@ void main() {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TaskToolbar(
                           userName: name,
+                          count: '165 open',
+                          countLabels: const ['165 open', '10000 completed'],
+                          filter: (compact) => compact
+                              ? IconButton(
+                                  key: const ValueKey('filter'),
+                                  tooltip: 'Filter tasks',
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.filter_list),
+                                )
+                              : OutlinedButton.icon(
+                                  key: const ValueKey('filter'),
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.filter_list),
+                                  label: const Text('Filter'),
+                                ),
                           undo: IconButton(
                             onPressed: () {},
                             tooltip: 'Undo',
@@ -72,7 +87,12 @@ void main() {
               expect(menu.width, greaterThanOrEqualTo(48));
               expect(menu.height, greaterThanOrEqualTo(48));
               expect(menu.right, lessThanOrEqualTo(width));
-              if (width == 1450 && !searching) {
+              final filter = tester.getRect(
+                find.byKey(const ValueKey('filter')),
+              );
+              expect(filter.width, greaterThanOrEqualTo(48));
+              expect(filter.right, lessThanOrEqualTo(width));
+              if (width == 1450 && !searching && scale == 1) {
                 expect(find.text(name), findsOneWidget);
               }
               if (width == 320) expect(find.text('A'), findsOneWidget);
@@ -84,4 +104,61 @@ void main() {
       tester.view.resetDevicePixelRatio();
     },
   );
+  testWidgets('status changes reserve count and control geometry', (
+    tester,
+  ) async {
+    for (final width in [320.0, 390.0, 1200.0]) {
+      for (final scale in [1.0, 2.5]) {
+        tester.view.physicalSize = Size(width, 600);
+        tester.view.devicePixelRatio = 1;
+        Widget header(String count) => MaterialApp(
+          home: Scaffold(
+            body: MediaQuery(
+              data: MediaQueryData(textScaler: TextScaler.linear(scale)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TaskToolbar(
+                  userName: 'Alex Example',
+                  count: count,
+                  countLabels: const ['10000 open', '1 completed'],
+                  undo: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.undo),
+                  ),
+                  search: () {},
+                  filter: (compact) => IconButton(
+                    key: const ValueKey('filter'),
+                    onPressed: () {},
+                    icon: const Icon(Icons.filter_list),
+                  ),
+                  identityMenu: (child) => PopupMenuButton(
+                    key: const ValueKey('identity'),
+                    itemBuilder: (_) => [
+                      const PopupMenuItem(child: Text('Settings')),
+                    ],
+                    child: child,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpWidget(header('10000 open'));
+        await tester.pumpAndSettle();
+        final before = [
+          for (final key in ['task-header', 'filter', 'identity'])
+            tester.getRect(find.byKey(ValueKey(key))),
+        ];
+        await tester.pumpWidget(header('1 completed'));
+        await tester.pumpAndSettle();
+        expect([
+          for (final key in ['task-header', 'filter', 'identity'])
+            tester.getRect(find.byKey(ValueKey(key))),
+        ], before);
+        expect(tester.takeException(), isNull);
+      }
+    }
+    tester.view.resetPhysicalSize();
+    tester.view.resetDevicePixelRatio();
+  });
 }

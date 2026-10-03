@@ -1,11 +1,12 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/// Fit is measured using the actual name and current text scale, rather than
-/// truncating a capped label or selecting an avatar at a screen breakpoint.
+/// Reserve both status counts. Selection never affects header geometry.
 class TaskToolbar extends StatelessWidget {
-  final String? userName;
+  final String? userName, count;
+  final List<String> countLabels;
   final Widget Function(Widget?) identityMenu;
+  final Widget Function(bool compact)? filter;
   final Widget undo;
   final Widget? searchField;
   final VoidCallback? search;
@@ -16,16 +17,20 @@ class TaskToolbar extends StatelessWidget {
     required this.undo,
     this.searchField,
     this.search,
+    this.count,
+    this.countLabels = const [],
+    this.filter,
   });
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final theme = Theme.of(context),
           scaler = MediaQuery.textScalerOf(context);
       final style = theme.textTheme.bodyMedium!;
-      Size measure(String text) {
+      Size measure(String text, [TextStyle? textStyle]) {
         final painter = TextPainter(
-          text: TextSpan(text: text, style: style),
+          text: TextSpan(text: text, style: textStyle ?? style),
           textDirection: Directionality.of(context),
           textScaler: scaler,
           maxLines: 1,
@@ -35,6 +40,7 @@ class TaskToolbar extends StatelessWidget {
         return size;
       }
 
+      final compact = constraints.maxWidth < 600;
       final name = userName;
       final initial = name == null
           ? ''
@@ -46,21 +52,61 @@ class TaskToolbar extends StatelessWidget {
       );
       final avatarWidth = math.max(48.0, diameter + 16);
       final namedWidth = name == null ? 48.0 : measure(name).width + 62;
-      final searchMinimum = searchField == null
+      final countWidth = count == null
           ? 0.0
-          : measure('Search').width + 64;
-      final available =
-          constraints.maxWidth -
-          32 -
-          48 -
-          (searchField == null && search != null ? 48 : 0) -
-          searchMinimum;
-      final fullName = name != null && namedWidth <= available;
+          : [
+              count!,
+              ...countLabels,
+            ].map((label) => measure(label).width).reduce(math.max);
+      final titleStyle = theme.textTheme.titleLarge!.copyWith(
+        fontWeight: FontWeight.w700,
+      );
+      final titleWidth = compact || count == null
+          ? 0.0
+          : measure('Tasks', titleStyle).width + 8;
+      final filterWidth = filter == null
+          ? 0.0
+          : compact
+          ? 48.0
+          : measure('Filter', theme.textTheme.labelLarge).width + 64;
+      final actionsWidth =
+          48.0 +
+          (search != null && searchField == null ? 48.0 : 0) +
+          filterWidth;
+      final headingWidth =
+          24.0 + titleWidth + (count == null ? 0 : countWidth + 8);
+      final searchMinimum = measure('Search').width + 64;
+      final fullName =
+          !compact &&
+          name != null &&
+          (searchField == null ? headingWidth : 32 + searchMinimum) +
+                  actionsWidth +
+                  namedWidth <=
+              constraints.maxWidth;
+      final identityWidth = fullName ? namedWidth : avatarWidth;
+      // Enlarged text can use two rows; normal narrow layouts omit a count that
+      // cannot fit rather than shrinking text or comfortable targets.
+      final enlarged = scaler.scale(14) > 20;
+      final secondRow = searchField != null
+          ? 32 + actionsWidth + identityWidth + searchMinimum >
+                constraints.maxWidth
+          : count != null &&
+                !compact &&
+                headingWidth <= constraints.maxWidth &&
+                enlarged &&
+                headingWidth + actionsWidth + identityWidth >
+                    constraints.maxWidth;
+      final showCount =
+          count != null &&
+          headingWidth <= constraints.maxWidth &&
+          (secondRow ||
+              headingWidth + actionsWidth + identityWidth <=
+                  constraints.maxWidth);
       final identity = name == null
           ? null
           : ConstrainedBox(
               constraints: BoxConstraints(
-                minWidth: fullName ? namedWidth : avatarWidth,
+                minWidth: identityWidth,
                 minHeight: 48,
               ),
               child: Padding(
@@ -94,21 +140,37 @@ class TaskToolbar extends StatelessWidget {
                       ),
               ),
             );
-      return Row(
+      Widget heading({bool withCount = true}) => Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Semantics(
             label: 'Tasks',
+            excludeSemantics: true,
             child: Icon(
               Icons.check_circle_outline,
               size: 24,
               color: theme.colorScheme.primary,
             ),
           ),
-          const SizedBox(width: 8),
-          if (searchField != null)
-            Expanded(child: searchField!)
-          else
-            const Spacer(),
+          if (withCount &&
+              !compact &&
+              count != null &&
+              (searchField == null || secondRow)) ...[
+            const SizedBox(width: 8),
+            Text('Tasks', style: titleStyle),
+          ],
+          if (withCount && showCount && (searchField == null || secondRow)) ...[
+            const SizedBox(width: 8),
+            SizedBox(
+              width: countWidth,
+              child: Text(count!, style: style),
+            ),
+          ],
+        ],
+      );
+      Widget actions() => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           undo,
           if (searchField == null && search != null)
             IconButton(
@@ -117,7 +179,42 @@ class TaskToolbar extends StatelessWidget {
               onPressed: search,
               icon: const Icon(Icons.search),
             ),
+          if (filter != null) filter!(compact),
           identityMenu(identity),
+        ],
+      );
+      return Column(
+        key: const ValueKey('task-header'),
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (secondRow) ...[
+            if (searchField != null) ...[
+              Row(
+                children: [
+                  heading(withCount: false),
+                  const Spacer(),
+                  actions(),
+                ],
+              ),
+              searchField!,
+            ] else ...[
+              Row(children: [Expanded(child: heading())]),
+              Row(children: [const Spacer(), actions()]),
+            ],
+          ] else
+            Row(
+              children: [
+                if (searchField != null) ...[
+                  heading(),
+                  const SizedBox(width: 8),
+                  Expanded(child: searchField!),
+                ] else ...[
+                  heading(),
+                  const Spacer(),
+                ],
+                actions(),
+              ],
+            ),
         ],
       );
     },

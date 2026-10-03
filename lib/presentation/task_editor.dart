@@ -529,6 +529,19 @@ class _EditorBodyState extends State<_EditorBody> {
                   ),
                 Expanded(
                   child: DropdownButtonFormField<String>(
+                    isExpanded: true,
+                    itemHeight: null,
+                    selectedItemBuilder: (_) => [
+                      for (final user in widget.users)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            user['name'] as String? ?? user['id'] as String,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
                     initialValue: widget.users.any((u) => u['id'] == assignee)
                         ? assignee
                         : null,

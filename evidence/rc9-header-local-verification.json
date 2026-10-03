@@ -1,0 +1,104 @@
+{
+  "version": "0.1.0-rc.9+36",
+  "base_commit": "965710ea34e988dbc80671e84f9daac3bf332930",
+  "local_unit_tests": 227,
+  "python_release_tests": 13,
+  "analysis": "clean",
+  "format": "pass",
+  "new_native_header_selection_flows": {
+    "cases": 2,
+    "elapsed_seconds_excluding_build": 30,
+    "result": "pass",
+    "widths": [
+      390,
+      320
+    ],
+    "text_scales": [
+      1,
+      2
+    ],
+    "checks": [
+      "stationary pressed row/viewport/header/entry slot/scroll offset",
+      "four-line draft and selection preserved",
+      "keyboard metrics up/down retain draft",
+      "Shift+Arrow selection and last-item toggle",
+      "Filter/Search/Settings access",
+      "sticky heading position",
+      "wide side editor and resize",
+      "canonical files byte-identical"
+    ]
+  },
+  "earlier_full_native_suite": {
+    "cases": 34,
+    "passed": 32,
+    "superseded_failures": [
+      "18px vertical overflow on error case with enlarged two-row narrow header",
+      "editor caret bottom 9px below viewport with enlarged two-row narrow header"
+    ],
+    "subsequent_corrected_cases": "both pass in affected run; final header/search pair passes separately",
+    "final_hosted_full_suite": "pending"
+  },
+  "native_visual": {
+    "platform": "Linux GTK debug / Xvfb; synthetic data; controlled UTC view clock",
+    "cases": 4,
+    "result": "pass",
+    "screenshots": 33,
+    "widths": [
+      1200,
+      390
+    ],
+    "scales": [
+      1,
+      2
+    ],
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "geometry": [
+      {
+        "theme": "light",
+        "width": 1200.0,
+        "scale": 1.0,
+        "rowBefore": "Rect.fromLTRB(68.0, 242.0, 1132.0, 290.0)",
+        "rowAfter": "Rect.fromLTRB(68.0, 242.0, 711.0, 290.0)",
+        "header": "Rect.fromLTRB(16.0, 12.0, 1192.0, 60.0)",
+        "narrowStationary": false
+      },
+      {
+        "theme": "dark",
+        "width": 390.0,
+        "scale": 1.0,
+        "rowBefore": "Rect.fromLTRB(68.0, 242.0, 322.0, 298.0)",
+        "rowAfter": "Rect.fromLTRB(68.0, 242.0, 322.0, 298.0)",
+        "header": "Rect.fromLTRB(16.0, 12.0, 382.0, 60.0)",
+        "narrowStationary": true
+      },
+      {
+        "theme": "dark",
+        "width": 390.0,
+        "scale": 2.0,
+        "rowBefore": "Rect.fromLTRB(68.0, 358.0, 322.0, 506.0)",
+        "rowAfter": "Rect.fromLTRB(68.0, 358.0, 322.0, 506.0)",
+        "header": "Rect.fromLTRB(16.0, 12.0, 382.0, 60.0)",
+        "narrowStationary": true
+      },
+      {
+        "theme": "light",
+        "width": 390.0,
+        "scale": 1.0,
+        "rowBefore": "Rect.fromLTRB(68.0, 242.0, 322.0, 298.0)",
+        "rowAfter": "Rect.fromLTRB(68.0, 242.0, 322.0, 298.0)",
+        "header": "Rect.fromLTRB(16.0, 12.0, 382.0, 60.0)",
+        "narrowStationary": true
+      }
+    ]
+  },
+  "canonical_domain_storage_application_changes": false,
+  "protocol": 2,
+  "cache": 9,
+  "android_exact_runtime": "pending signed candidate",
+  "reference_pixels": "Library materialization failed; implementation follows approved text requirements and directly inspected running app",
+  "public_release_created": false,
+  "stable_or_data_cutover": false
+}
