@@ -36,7 +36,13 @@
       "editor caret bottom 9px below viewport with enlarged two-row narrow header"
     ],
     "subsequent_corrected_cases": "both pass in affected run; final header/search pair passes separately",
-    "final_hosted_full_suite": "pending"
+    "final_hosted_full_suite": {
+      "result": "pass",
+      "cases": 34,
+      "candidate_run": 37087766510,
+      "job_id": 111101521215,
+      "elapsed_seconds_including_build_and_launch": 527
+    }
   },
   "native_visual": {
     "platform": "Linux GTK debug / Xvfb; synthetic data; controlled UTC view clock",
@@ -97,7 +103,7 @@
   "canonical_domain_storage_application_changes": false,
   "protocol": 2,
   "cache": 9,
-  "android_exact_runtime": "pending signed candidate",
+  "android_exact_runtime": "pending exact owner-signed build36; delivered in Library version4",
   "reference_pixels": "Library materialization failed; implementation follows approved text requirements and directly inspected running app",
   "public_release_created": false,
   "stable_or_data_cutover": false,

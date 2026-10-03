@@ -1,0 +1,344 @@
+{
+  "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+  "version": "0.1.0-rc.9",
+  "android_version_code": 36,
+  "candidate_run": 37087766510,
+  "push_ci_run": 37087750325,
+  "workflow_results": {
+    "candidate": {
+      "status": "completed",
+      "conclusion": "success",
+      "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "jobs": [
+        {
+          "name": "candidate",
+          "conclusion": "success"
+        },
+        {
+          "name": "checks / android",
+          "conclusion": "success"
+        },
+        {
+          "name": "checks / windows",
+          "conclusion": "success"
+        },
+        {
+          "name": "checks / linux",
+          "conclusion": "success"
+        },
+        {
+          "name": "signed-android",
+          "conclusion": "success"
+        }
+      ]
+    },
+    "push_ci": {
+      "status": "completed",
+      "conclusion": "success",
+      "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "jobs": [
+        {
+          "name": "checks / android",
+          "conclusion": "success"
+        },
+        {
+          "name": "checks / linux",
+          "conclusion": "success"
+        },
+        {
+          "name": "checks / windows",
+          "conclusion": "success"
+        }
+      ]
+    }
+  },
+  "hosted_tests": {
+    "application": 227,
+    "release_tools": 13,
+    "native_linux_flows": 34,
+    "native_linux_elapsed_seconds_including_build_and_launch": 527,
+    "analysis": "clean",
+    "format": "pass",
+    "job_id": 111101521215,
+    "completion_markers": [
+      "2026-10-03T01:55:07.7353212Z: 227 tests passed",
+      "2026-10-03T02:03:54.5549431Z: 34 tests passed"
+    ]
+  },
+  "artifacts": {
+    "android": {
+      "artifact_id": 11260984653,
+      "archive_sha256": "7134861c9e7721b7110dbb5719d454662c625b8a6893604914c4e67a288a7fe0",
+      "archive_bytes": 27585114,
+      "crc": "pass",
+      "checksums": "pass",
+      "files": {
+        "android-release-metadata.json": "38154927038fe66b815e995604454a27240d18e1ec7b8ac62d4c8bd1619510ab",
+        "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "tandemlog-android.apk": "b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+        "android-SHA256SUMS.txt": "7ffc913e09eaf164e107716aba32ebb2da86a04ef2acdd44a4602b0856548f74"
+      },
+      "metadata": {
+        "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+        "version": "0.1.0-rc.9",
+        "version_code": 36,
+        "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+        "apk_sha256": "b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2"
+      },
+      "apk_bytes": 59674320,
+      "local_official_signature_version_nondebuggable_abi_verification": "pass",
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "native_acceptance": "pending"
+    },
+    "windows": {
+      "artifact_id": 11260898286,
+      "archive_sha256": "36835b853e3569833b03820bf57b4d4a240c9a062eafa12029c99dbde07da080",
+      "archive_bytes": 11013447,
+      "crc": "pass",
+      "checksums": "pass",
+      "files": {
+        "windows-install-smoke.json": "e55eb533e0e191b929cc94cce15495d67ac5c54fbb93a76516ca5a960c1712ce",
+        "windows-SHA256SUMS.txt": "62caedd5b1bcd5f127f6e81430ca9868ac9480bfe977b74d16c23750f180fbc1",
+        "tandemlog-windows-x64-unsigned-setup.exe": "6efde2dd511c0664a4e5cad40c49de79470e172e0c8904320a2f70d4b3867e21"
+      },
+      "hosted_smoke": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=42",
+              "TANDEMLOG_PHASE identity_lock=3",
+              "TANDEMLOG_PHASE sqlite_open_schema=9",
+              "TANDEMLOG_PHASE manifest=3"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=2",
+              "TANDEMLOG_PHASE sqlite_open_schema=18",
+              "TANDEMLOG_PHASE manifest=5",
+              "TANDEMLOG_PHASE ingest=3",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=69 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=17",
+              "TANDEMLOG_PHASE manifest=3",
+              "TANDEMLOG_PHASE ingest=4",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=69 FILES_READ=1"
+            ]
+          }
+        ]
+      }
+    },
+    "linux": {
+      "artifact_id": 11261790943,
+      "archive_sha256": "57aad844be1434ba5c865a811b280e489df10e813fee7b3fe6f0e7071eed37d4",
+      "archive_bytes": 8301607,
+      "crc": "pass",
+      "checksums": "pass",
+      "files": {
+        "linux-startup.json": "1e9a2d79bec9735e83dc3a246e8c0812609ea63d9b18731a3589d3bcbc763ca7",
+        "linux-install-smoke.json": "9bda91398b0e02d68d522ba6d17435f4a3ffd595db639e7f94cbc032cc679289",
+        "tandemlog-linux-x64.flatpak": "0783b8f796f68d0fa85acea755c912467d0d52dd53a314ebc7ae06ff0c2d28e8",
+        "linux-SHA256SUMS.txt": "bbccb27dcc0b895f0ca88cb8dbbcc4f75a88ebd1206292d895b77025ee5e2bb5"
+      },
+      "hosted_smoke": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=73",
+              "TANDEMLOG_PHASE identity_lock=19",
+              "TANDEMLOG_PHASE sqlite_open_schema=6",
+              "TANDEMLOG_PHASE manifest=11",
+              "TANDEMLOG_PHASE ingest=15",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=1336 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=73",
+              "TANDEMLOG_PHASE identity_lock=9",
+              "TANDEMLOG_PHASE sqlite_open_schema=8",
+              "TANDEMLOG_PHASE manifest=47",
+              "TANDEMLOG_PHASE ingest=40",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=225 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=72",
+              "TANDEMLOG_PHASE identity_lock=9",
+              "TANDEMLOG_PHASE sqlite_open_schema=8",
+              "TANDEMLOG_PHASE manifest=46",
+              "TANDEMLOG_PHASE ingest=39",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=223 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "c6b6cd6b51aa97e90a7d669d1d1d709b346b4dcfd1a367e4bf77dcc36df09b7f",
+          "baseline_commit": "5c3eb6270f197915c20e9940e158f824d75051adc9eae42e79d810c84536833c",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      },
+      "hosted_release_startup": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 536,
+            "marker": "TANDEMLOG_READY_MS=274 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=67",
+              "TANDEMLOG_PHASE identity_lock=59",
+              "TANDEMLOG_PHASE sqlite_open_schema=6",
+              "TANDEMLOG_PHASE manifest=21",
+              "TANDEMLOG_PHASE ingest=52",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=274 FILES_READ=1"
+            ],
+            "external_main_ms": 257,
+            "external_first_frame_ms": 328
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 411,
+            "marker": "TANDEMLOG_READY_MS=212 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=65",
+              "TANDEMLOG_PHASE identity_lock=9",
+              "TANDEMLOG_PHASE sqlite_open_schema=2",
+              "TANDEMLOG_PHASE manifest=56",
+              "TANDEMLOG_PHASE ingest=29",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=212 FILES_READ=0"
+            ],
+            "external_main_ms": 196,
+            "external_first_frame_ms": 265
+          }
+        ]
+      }
+    }
+  },
+  "android_handoff": {
+    "library_file_id": "libfile_4f031fe77e0c8191ae04e39f3fb6f2dc",
+    "library_version": 4,
+    "file_id": "file_000000008e1881f792197f7490358d67",
+    "filename": "tandemlog-rc9-build36-android.zip",
+    "bytes": 27585114,
+    "native_acceptance": "pending exact build36"
+  },
+  "desktop_demo": {
+    "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+    "library_version": 26,
+    "filename": "tandemlog-rc9-header-selection-demo.mp4",
+    "duration_seconds": 49.15,
+    "bytes": 731309,
+    "sha256": "dc62c8f676f24c52f229f0ca96123b5efe73d77e0399265116fd5f0c202b742c",
+    "actual_native_linux": true,
+    "pointer_and_context_caption_verified": true,
+    "synthetic_data": true,
+    "android_evidence": false
+  },
+  "startup_method": {
+    "target": "hosted Linux x86_64 native release / Xvfb",
+    "fixture_tasks": 10,
+    "fresh_processes": 2,
+    "cache_states": [
+      "rebuild",
+      "warm"
+    ],
+    "os_page_cache": "not flushed",
+    "external_loaded_frame_ms": [
+      536,
+      411
+    ],
+    "external_first_frame_ms": [
+      328,
+      265
+    ],
+    "app_ready_ms": [
+      274,
+      212
+    ],
+    "warm_canonical_log_contents_read": 0,
+    "limitations": "Loaded-frame marker, not first-input readiness, physical target cold start or Android measurement. Installed Flatpak lifecycle timings are separate."
+  },
+  "runtime_limits": [
+    "exact build36 native Android header/selection acceptance pending",
+    "Linux visual evidence does not verify native Android/Windows UI",
+    "Windows native hosted installer lifecycle passed; interactive Windows task UI not newly inspected",
+    "physical-phone/API36/provider matrix remains pending"
+  ],
+  "canonical_domain_storage_clock_protocol_changed": false,
+  "protocol": 2,
+  "cache": 9,
+  "public_release_created": false,
+  "stable_or_real_data_cutover": false
+}
