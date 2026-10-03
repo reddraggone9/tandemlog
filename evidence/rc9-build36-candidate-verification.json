@@ -92,7 +92,7 @@
         "arm64-v8a",
         "x86_64"
       ],
-      "native_acceptance": "pending"
+      "native_acceptance": "pass exact build36 hardware-KVM Android11/API30, parent-reported"
     },
     "windows": {
       "artifact_id": 11260898286,
@@ -292,7 +292,7 @@
     "file_id": "file_000000008e1881f792197f7490358d67",
     "filename": "tandemlog-rc9-build36-android.zip",
     "bytes": 27585114,
-    "native_acceptance": "pending exact build36"
+    "native_acceptance": "pass exact build36 Android11/API30"
   },
   "desktop_demo": {
     "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
@@ -331,7 +331,6 @@
     "limitations": "Loaded-frame marker, not first-input readiness, physical target cold start or Android measurement. Installed Flatpak lifecycle timings are separate."
   },
   "runtime_limits": [
-    "exact build36 native Android header/selection acceptance pending",
     "Linux visual evidence does not verify native Android/Windows UI",
     "Windows native hosted installer lifecycle passed; interactive Windows task UI not newly inspected",
     "physical-phone/API36/provider matrix remains pending"
@@ -339,6 +338,52 @@
   "canonical_domain_storage_clock_protocol_changed": false,
   "protocol": 2,
   "cache": 9,
-  "public_release_created": false,
-  "stable_or_real_data_cutover": false
+  "public_release_created": true,
+  "stable_or_real_data_cutover": false,
+  "android_native_acceptance": {
+    "platform": "hardware-KVM Android11/API30",
+    "source": "parent local-worker result",
+    "exact_apk_sha256": "b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+    "header_geometry_cases": 11,
+    "themes": [
+      "light",
+      "dark"
+    ],
+    "text_scales": [
+      1,
+      2
+    ],
+    "covered": [
+      "narrow/wide scrolled sticky layout and keyboard",
+      "stationary held row and heading through selection/clear",
+      "final deselection restores multiline draft and caret24",
+      "Search/Filter/identity interactions"
+    ],
+    "header_interaction_cases": 6,
+    "canonical_writer_preferences_unchanged": true,
+    "canonical_events_written": 0,
+    "no_oom": true,
+    "temporary_processes_stopped": true,
+    "settings_restored": true,
+    "demo": {
+      "library_file_id": "libfile_1d48f49b84bc8191af829bb6b69e552f",
+      "library_version": 0,
+      "seconds": 50,
+      "touches_verified": true
+    },
+    "limits": [
+      "physical phone/API36/provider matrix not newly verified"
+    ]
+  },
+  "canonical_core_byte_identical_to_rc8": [
+    "lib/domain",
+    "lib/storage",
+    "lib/application",
+    "pubspec.lock",
+    "android/signing-certificate.sha256",
+    "design/schema.md",
+    "design/storage-and-sync.md"
+  ],
+  "publication_gate": "pass exact accepted candidate; promotion37091940925 success; public downloads/tag/notes/signature verified",
+  "public_verification": "rc9-public-verification.json"
 }

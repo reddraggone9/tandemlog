@@ -1,0 +1,81 @@
+{
+  "verified_at_utc": "2026-10-03T03:06:05.813619+00:00",
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.9",
+  "release_id": 402295941,
+  "tag": "v0.1.0-rc.9",
+  "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+  "version": "0.1.0-rc.9+36",
+  "candidate_run": 37087766510,
+  "promotion_run": 37091940925,
+  "dispatch_commit": "4ae00f967c6453263147365f90b17176e2895a7b",
+  "rebuild": false,
+  "prerelease": true,
+  "draft": false,
+  "latest_requested": false,
+  "latest_endpoint_status": 404,
+  "no_stable_latest_release": true,
+  "tag_points_to_accepted_source": true,
+  "public_installer_count": 3,
+  "assets": [
+    {
+      "name": "tandemlog-0.1.0-rc.9-android.apk",
+      "sha256": "b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+      "bytes": 59674320,
+      "asset_id": 607023873,
+      "github_digest": "sha256:b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.9/tandemlog-0.1.0-rc.9-android.apk",
+      "unauthenticated_public_download": true,
+      "identical_to_accepted_candidate": true
+    },
+    {
+      "name": "tandemlog-0.1.0-rc.9-linux-x64.flatpak",
+      "sha256": "0783b8f796f68d0fa85acea755c912467d0d52dd53a314ebc7ae06ff0c2d28e8",
+      "bytes": 8297048,
+      "asset_id": 607023874,
+      "github_digest": "sha256:0783b8f796f68d0fa85acea755c912467d0d52dd53a314ebc7ae06ff0c2d28e8",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.9/tandemlog-0.1.0-rc.9-linux-x64.flatpak",
+      "unauthenticated_public_download": true,
+      "identical_to_accepted_candidate": true
+    },
+    {
+      "name": "tandemlog-0.1.0-rc.9-windows-x64-setup.exe",
+      "sha256": "6efde2dd511c0664a4e5cad40c49de79470e172e0c8904320a2f70d4b3867e21",
+      "bytes": 11562430,
+      "asset_id": 607023872,
+      "github_digest": "sha256:6efde2dd511c0664a4e5cad40c49de79470e172e0c8904320a2f70d4b3867e21",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v0.1.0-rc.9/tandemlog-0.1.0-rc.9-windows-x64-setup.exe",
+      "unauthenticated_public_download": true,
+      "identical_to_accepted_candidate": true
+    }
+  ],
+  "notes_exactly_match_approved_dispatch_copy": true,
+  "notes_sha256": "4f65ac4813020df0b8b0daa99b75a30c2af71919f2443d386dc4db3f0b86b993",
+  "public_apk_verification": {
+    "method": "official Android build-tools36.0.0 apksigner and aapt",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version_name": "0.1.0-rc.9",
+    "version_code": 36,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "result": "pass"
+  },
+  "rc8_release_body_and_metadata_unchanged": true,
+  "rc8_asset_ids_hashes_names_sizes_unchanged": true,
+  "native_android_accepted_before_promotion": {
+    "platform": "hardware-KVM Android11/API30",
+    "exact_apk_sha256": "b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+    "evidence_library_id": "libfile_1d48f49b84bc8191af829bb6b69e552f",
+    "evidence_library_version": 0
+  },
+  "domain_storage_application_clock_schema_lock_signing_byte_identical_to_rc8": true,
+  "protocol": 2,
+  "cache": 9,
+  "windows_installer_signed": false,
+  "stable_or_real_data_cutover": false,
+  "physical_phone_api36_provider_matrix": "separate/unrun"
+}

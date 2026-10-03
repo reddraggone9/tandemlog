@@ -78,3 +78,8 @@ One-off Markdown rehearsal/import/export tooling and its dedicated tests live on
 ## Published experimental RC7
 
 [v0.1.0-rc.7](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.7) uses exact accepted source `5d62b93f8154d71b9998683d9053e104dce16ae7`, candidate37009157582 and Android code32. Promotion37018242305 uploads three versioned installers with no rebuild after native API30 acceptance. Public bytes, signer, tag, prerelease/not-Latest behavior and compact notes are verified; RC6 remains unchanged. [Receipt](../evidence/rc7-public-verification.json). Internal candidate diagnostics/checksums/install gates are retained. Stable publication and real-data cutover remain separately conditional.
+
+
+## Published experimental RC9
+
+[v0.1.0-rc.9](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.9) uses exact accepted source `cf44c463ab632b6594f8114bdc0caee81feb2db2`, signed candidate 37087766510 and Android code 36. Promotion37091940925 reuses the three versioned installers without rebuilding after exact native API30 header/selection acceptance. Public bytes, signer, tag and exact notes verify; prerelease=true/latest=false, RC8 unchanged. [Receipt](../evidence/rc9-public-verification.json). Protocol2/cache9 and core/storage/clock/schema/signing bytes are unchanged from RC8. Stable publication and real-data cutover remain separate.
