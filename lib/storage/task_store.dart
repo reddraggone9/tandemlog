@@ -539,6 +539,104 @@ class TaskStore {
     return _VerifiedWriterRecords(lastSeq, lastClock, chainHead, records);
   }
 
+  String? _ownedRecordHash(int sequence, List<LogEvent> importedEvents) {
+    if (sequence == 0) return eventGenesisHash(space, writer);
+    for (final event in importedEvents) {
+      if (event.writer == writer && event.sequence == sequence) {
+        return event.hash;
+      }
+    }
+    final cached = db.select(
+      'SELECT raw FROM events WHERE writer=? AND seq=?',
+      [writer, sequence],
+    );
+    return cached.isEmpty
+        ? null
+        : LogEvent.decode(cached.single['raw'] as String).hash;
+  }
+
+  void _validateOwnedWriterGuard(
+    WriterGuardState? guardState,
+    int ownedSequence,
+    List<LogEvent> importedEvents,
+  ) {
+    if (guardState == null) return;
+    if (ownedSequence < guardState.sequence ||
+        _ownedRecordHash(guardState.sequence, importedEvents) !=
+            guardState.hash) {
+      throw WriterGuardFailure(
+        'The owned writer history is behind or differs from its acknowledged safety checkpoint. Restore the acknowledged history before writing.',
+      );
+    }
+    if (guardState.pending.isEmpty) return;
+    if (ownedSequence > guardState.pending.last.sequence) {
+      throw WriterGuardFailure(
+        'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
+      );
+    }
+    for (final record in guardState.pending) {
+      if (record.sequence <= ownedSequence &&
+          _ownedRecordHash(record.sequence, importedEvents) != record.hash) {
+        throw WriterGuardFailure(
+          'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
+        );
+      }
+    }
+  }
+
+  Future<void> _acknowledgeWriterHead(
+    WriterGuardState? guardState,
+    int ownedSequence,
+    String ownedHash,
+  ) async {
+    await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
+    _acknowledgedOwnedSequence = ownedSequence;
+    _writerHasPendingAppend =
+        guardState != null &&
+        guardState.pending.isNotEmpty &&
+        guardState.pending.last.sequence > ownedSequence;
+  }
+
+  HistoryVerificationFailure _locatedHistoryFailure(
+    FormatFailure failure,
+    Map<String, HistoryVerificationFailure> eventLocations,
+    HistoryVerificationFailure fallback,
+  ) {
+    var location = fallback;
+    for (final entry in eventLocations.entries) {
+      if (failure.message.contains(entry.key)) {
+        location = entry.value;
+        break;
+      }
+    }
+    return HistoryVerificationFailure(
+      location.fileName,
+      location.recordNumber,
+      location.byteOffset,
+      failure.message,
+    );
+  }
+
+  void _validateAuditedSemantics(
+    Set<String> auditedEntities,
+    Map<String, HistoryVerificationFailure> eventLocations,
+  ) {
+    try {
+      _validateUndoReferences();
+      _validateMoves();
+      _validateTagReferences();
+      for (final entity in auditedEntities) {
+        _projectEntity(entity);
+      }
+    } on FormatFailure catch (failure) {
+      throw _locatedHistoryFailure(
+        failure,
+        eventLocations,
+        eventLocations.values.last,
+      );
+    }
+  }
+
   Future<bool> _refresh({bool verify = false}) async {
     if (await _readSpace(folder) != space) {
       throw FormatFailure('Workspace identity changed at this location.');
@@ -790,73 +888,7 @@ class TaskStore {
         : savedOwned.isEmpty
         ? eventGenesisHash(space, writer)
         : savedOwned.single['chain_head'] as String;
-    String? ownedRecordHash(int sequence) {
-      if (sequence == 0) return eventGenesisHash(space, writer);
-      final imported = newEvents.where(
-        (event) => event.writer == writer && event.sequence == sequence,
-      );
-      if (imported.isNotEmpty) return imported.single.hash;
-      final cached = db.select(
-        'SELECT raw FROM events WHERE writer=? AND seq=?',
-        [writer, sequence],
-      );
-      return cached.isEmpty
-          ? null
-          : LogEvent.decode(cached.single['raw'] as String).hash;
-    }
-
-    if (guardState != null) {
-      if (ownedSequence < guardState.sequence ||
-          ownedRecordHash(guardState.sequence) != guardState.hash) {
-        throw WriterGuardFailure(
-          'The owned writer history is behind or differs from its acknowledged safety checkpoint. Restore the acknowledged history before writing.',
-        );
-      }
-      if (guardState.pending.isNotEmpty) {
-        if (ownedSequence > guardState.pending.last.sequence ||
-            guardState.pending.any(
-              (record) =>
-                  record.sequence <= ownedSequence &&
-                  ownedRecordHash(record.sequence) != record.hash,
-            )) {
-          throw WriterGuardFailure(
-            'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
-          );
-        }
-      }
-    }
-    Future<void> acknowledgeWriter() async {
-      await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
-      _acknowledgedOwnedSequence = ownedSequence;
-      _writerHasPendingAppend =
-          guardState != null &&
-          guardState.pending.any((record) => record.sequence > ownedSequence);
-    }
-
-    void validateAuditedSemantics() {
-      if (!verify) return;
-      try {
-        _validateUndoReferences();
-        _validateMoves();
-        _validateTagReferences();
-        for (final entity in auditedEntities) {
-          _projectEntity(entity);
-        }
-      } on FormatFailure catch (failure) {
-        final matching = eventLocations.entries.where(
-          (entry) => failure.message.contains(entry.key),
-        );
-        final location = matching.isNotEmpty
-            ? matching.first.value
-            : eventLocations.values.last;
-        throw HistoryVerificationFailure(
-          location.fileName,
-          location.recordNumber,
-          location.byteOffset,
-          failure.message,
-        );
-      }
-    }
+    _validateOwnedWriterGuard(guardState, ownedSequence, newEvents);
 
     HistoryVerificationReport? verificationReport;
     if (verify) {
@@ -868,8 +900,8 @@ class TaskStore {
       );
     }
     if (checkpoints.isEmpty) {
-      validateAuditedSemantics();
-      await acknowledgeWriter();
+      if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
+      await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
       if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       if (verify) _lastHistoryVerification = verificationReport;
       return false;
@@ -891,7 +923,7 @@ class TaskStore {
         _validateMoves();
         _validateTagReferences();
       }
-      validateAuditedSemantics();
+      if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
       final affected = newEvents.map((e) => e.entity).toSet();
       for (final e in newEvents) {
         if (e.type == 'task.completed' && e.data['successor'] != null) {
@@ -950,7 +982,7 @@ class TaskStore {
         db.execute('INSERT INTO stream_ranges VALUES (?,?,?,?)', range);
       }
       db.execute("DELETE FROM metadata WHERE key='replay_pending'");
-      await acknowledgeWriter();
+      await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
       db.execute('COMMIT');
       cacheTransactions++;
       _updateClockWarning(_maximumClock(), _nowNs());
@@ -962,17 +994,10 @@ class TaskStore {
       if (failure is FormatFailure &&
           failure is! HistoryVerificationFailure &&
           newEvents.isNotEmpty) {
-        final implicated = eventLocations.entries.where(
-          (entry) => failure.message.contains(entry.key),
-        );
-        final location = implicated.isNotEmpty
-            ? implicated.first.value
-            : eventLocations[newEvents.last.id]!;
-        throw HistoryVerificationFailure(
-          location.fileName,
-          location.recordNumber,
-          location.byteOffset,
-          failure.message,
+        throw _locatedHistoryFailure(
+          failure,
+          eventLocations,
+          eventLocations[newEvents.last.id]!,
         );
       }
       rethrow;
