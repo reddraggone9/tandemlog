@@ -83,7 +83,8 @@ def main():
             record['hash'] = hashlib.sha256(('tandemlog:event:v3\n'+unsigned).encode()).hexdigest()
             previous = record['hash']
             events.append(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
-        (folder/f'{writer}.jsonl').write_text('\n'.join(events)+'\n')
+        # Canonical LF framing must survive Windows text-mode CRLF translation.
+        (folder/f'{writer}.jsonl').write_bytes(('\n'.join(events)+'\n').encode('utf-8'))
         # Lifecycle replacement tests start with current preferences. Legacy
         # settings legitimately gain a writer during their separately tested
         # migration; arbitrary preference changes must still fail this gate.
