@@ -1,15 +1,8 @@
 Experimental 2026.10.0-rc.1 task preview.
 
-- New desktop setup uses a clearly named shared-data folder. Existing folder selections stay unchanged.
-- Raw captures group in Inbox until a saved edit. Canceling keeps Inbox; Undo restores it.
-- Search and Add fit the compact header while preserving drafts and Undo access.
-- A profile-wide instance lock protects preferences and writing. The installation keeps one local writer identity across data folders.
-- Android imports use directory notifications and persisted byte checkpoints to avoid rereading unchanged seekable logs on ordinary launch/resume. Providers without size/seek support retain a conservative fallback.
-- Task titles and quieter details now share a line when they fit and wrap naturally when they do not, including narrow screens and larger text.
-- Settings includes **Check data integrity**, with a full canonical-chain check and a copyable diagnostic report. Checks do not repair or rewrite data.
+- Raw captures stay in Inbox until a saved edit; Undo restores the classification.
+- Desktop setup uses a clearly named shared-data folder. Search/Add and task titles/metadata fit the compact interface; existing folder selections stay unchanged.
+- A profile lock and installation writer guard protect local writing. Android imports use notifications and retained byte checkpoints, with a conservative fallback; Linux file creation gains directory durability barriers.
+- Settings adds **Check data integrity**, with a full v3 record-chain check and copyable diagnostics. Ambiguous Android canonical filenames are refused.
 
-**Prerelease format break:** canonical JSONL now uses v3 with embedded per-record SHA-256 predecessor/current hashes. Existing v1/v2 folders are rejected and preserved; no automatic conversion, folder reset or deletion occurs. Coordinate test-folder backups/reset separately or use a separate v3 test folder. Markdown remains authoritative until the separately agreed stable cutover.
-
-**Writer safety:** the installation retains acknowledged writer heads and unresolved append reservations. Restoring an older owned log at another folder path, or an interrupted append whose exact bytes are missing, can block further writes pending coordinated recovery. Preserve both the private profile and canonical folder; the app does not silently skip sequence numbers or reset the writer.
-
-Ordinary startup remains incremental; checking the old prefix requires the Settings action or a fresh full rebuild. Hashes check consistency, not authenticity: a fully recomputed chain or removed final records can pass a fresh scan without a trusted prior head. Sync is not backup. Windows installer is unsigned; Android uses the retained owner signing identity. This is an experimental prerelease, not a stable release.
+**Test-data format break:** existing v1/v2 canonical folders are preserved but cannot open in this build. Back them up and use a separate v3 test folder, or coordinate fresh test contents across all participating apps/devices. There is no automatic conversion, reset or deletion. Markdown remains authoritative until a separately agreed cutover.

@@ -40,7 +40,7 @@
       ],
       "zip_and_apk_crc": "pass",
       "metadata_and_checksums": "pass",
-      "native_android_acceptance": "pending"
+      "native_android_acceptance": "pass; exact executor report"
     },
     "linux": {
       "candidate_run": 37151096841,
@@ -241,10 +241,33 @@
     "separate task.tagsChanged/setTags removed",
     "generic task.operationUndone of recurring completion with successor rejected; explicit recurring Undo and checkbox Reopen retained"
   ],
-  "native_android_acceptance": "pending",
-  "private_v3_rehearsal": "pending coordinator confirmation",
+  "native_android_acceptance": {
+    "result": "pass",
+    "reported_by": "coordinating executor",
+    "exact_apk_sha256": "ab841c340193dbd42a84c3266e440ffa16ce2ae54cb04c271b034e9a7adf9036",
+    "scope": [
+      "owner signature/install/launch; preserved v2 refusal",
+      "fresh v3 SAF access, persisted restart and own writes",
+      "remote arrival/growth/atomic replacement retains draft; subsequent capture appends one contiguous own event",
+      "natural wrapping and integrity refusal/recovery",
+      "time/DST, recurring Undo with edited successor, upcoming and filtered relative order"
+    ],
+    "broader_physical_phone_api36_provider_matrix": "not claimed"
+  },
+  "private_v3_rehearsal": {
+    "result": "pass; approved external-tool contract",
+    "scope": "independent217-task and full linked-note content comparison; canonical domain retention and restoration checks; semantic mutation rejected",
+    "generic_notes_export": "refuses nonempty notes; not claimed as generic notes export support",
+    "tooling_shipped_with_application": false,
+    "private_source_details": "retained outside repository"
+  },
   "public_release": false,
   "stable_promotion": false,
   "actual_data_cutover": false,
-  "oneoff_migration_tools_in_app_repo": false
+  "oneoff_migration_tools_in_app_repo": false,
+  "installation_guard_acceptance": {
+    "result": "pass",
+    "mechanism": "production-store harness, same37-file application closure",
+    "scope": "older owned backup at new folder/empty cache rejected with both histories/checkpoint unchanged; restored current history permits next write"
+  }
 }
