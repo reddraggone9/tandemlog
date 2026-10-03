@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart' show FormatFailure, isCanonicalId;
+import 'local_durability.dart';
 
 enum Appearance { system, light, dark }
 
 /// Device preferences only. Canonical workspace records never live here.
 class LocalSettings {
-  LocalSettings(this.root);
+  LocalSettings(this.root, {LocalDurability? durability})
+    : _durability = durability ?? LocalDurability.shared;
+  final LocalDurability _durability;
   final String root;
   String? folder, user;
   Appearance appearance = Appearance.system;
@@ -59,6 +62,9 @@ class LocalSettings {
       }
     }
     await _ensureWriter();
+    // Also complete a prior process's interrupted replacement of either local
+    // authority file. This reads no canonical history.
+    await _durability.syncParentAfterCreate(file);
   }
 
   Future<void> _ensureWriter() async {
@@ -79,9 +85,10 @@ class LocalSettings {
       }
     }
     if (!migrated) {
-      final temporary = File('${_migrationMarker.path}.tmp');
-      await temporary.writeAsString('{"v":1}', flush: true);
-      await temporary.rename(_migrationMarker.path);
+      await _durability.writeAtomicDurable(
+        _migrationMarker,
+        utf8.encode('{"v":1}'),
+      );
     }
   }
 
@@ -118,24 +125,23 @@ class LocalSettings {
   }
 
   Future<void> save() async {
-    await Directory(root).create(recursive: true);
+    await _durability.ensureDirectoryDurable(Directory(root));
     await _ensureWriter();
     await _writeSettings();
   }
 
   Future<void> _writeSettings() async {
-    await Directory(root).create(recursive: true);
     final file = File('$root/settings.json');
-    final temporary = File('${file.path}.tmp');
-    await temporary.writeAsString(
-      jsonEncode({
-        'folder': folder,
-        'user': user,
-        'appearance': appearance.name,
-        'writer': writer,
-      }),
-      flush: true,
+    await _durability.writeAtomicDurable(
+      file,
+      utf8.encode(
+        jsonEncode({
+          'folder': folder,
+          'user': user,
+          'appearance': appearance.name,
+          'writer': writer,
+        }),
+      ),
     );
-    await temporary.rename(file.path);
   }
 }

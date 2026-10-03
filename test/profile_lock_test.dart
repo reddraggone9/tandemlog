@@ -68,6 +68,7 @@ Future<void> main(List<String> args) async {
         ? executable
         : '${executable.substring(0, cache)}/bin/cache/dart-sdk/bin/dart${Platform.isWindows ? '.exe' : ''}';
     final child = await Process.start(dart, [
+      '--packages=${File('.dart_tool/package_config.json').absolute.path}',
       source.path,
       '${root.path}/profile',
     ]);

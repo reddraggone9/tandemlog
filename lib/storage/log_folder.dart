@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'local_durability.dart';
+
 class LogFileInfo {
   final String name, stamp;
 
@@ -37,7 +39,9 @@ abstract class RangeLogFolder {
 class LocalLogFolder implements LogFolder, RangeLogFolder {
   @override
   final String location;
-  LocalLogFolder(this.location);
+  LocalLogFolder(this.location, {LocalDurability? durability})
+    : _durability = durability ?? LocalDurability.shared;
+  final LocalDurability _durability;
   File file(String name) {
     if (!RegExp(r'^[a-zA-Z0-9._-]+$').hasMatch(name)) {
       throw ArgumentError('Unsafe filename');
@@ -90,20 +94,11 @@ class LocalLogFolder implements LogFolder, RangeLogFolder {
 
   @override
   Future<void> create(String name, Uint8List bytes) async {
-    if (await file(name).exists()) {
-      throw StateError('File already exists: $name');
-    }
-    await file(name).writeAsBytes(bytes, flush: true);
+    await _durability.createFileDurable(file(name), bytes);
   }
 
   @override
   Future<void> append(String name, Uint8List bytes) async {
-    final f = await file(name).open(mode: FileMode.append);
-    try {
-      await f.writeFrom(bytes);
-      await f.flush();
-    } finally {
-      await f.close();
-    }
+    await _durability.appendFileDurable(file(name), bytes);
   }
 }

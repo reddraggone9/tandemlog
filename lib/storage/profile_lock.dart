@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'local_durability.dart';
+
 class ProfileInUse implements Exception {
   const ProfileInUse(this.message);
   final String message;
@@ -19,10 +21,12 @@ class ProfileLock {
   static Future<ProfileLock> acquire(
     String root, {
     String fileName = 'profile.lock',
+    LocalDurability? durability,
     String message =
         'This profile is already open in another TandemLog instance. Close that instance, then try again.',
   }) async {
-    final directory = await Directory(root).create(recursive: true);
+    final directory = await (durability ?? LocalDurability.shared)
+        .ensureDirectoryDurable(Directory(root));
     final canonicalRoot = await directory.resolveSymbolicLinks();
     final key = '$canonicalRoot/$fileName';
     if (!_held.add(key)) throw ProfileInUse(message);
