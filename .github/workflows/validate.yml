@@ -42,6 +42,7 @@ jobs:
       - uses: ./.github/actions/setup-flutter
       - run: flutter pub get
       - run: flutter test
+      - run: python tool/app_version.py
       - run: flutter build windows --release
       - name: Build per-user installer and verify native installation lifecycle
         shell: pwsh

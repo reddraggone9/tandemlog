@@ -6,13 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-
-
-def version(text):
-    match = re.search(r'^version: ([0-9]+\.[0-9]+\.[0-9]+-[a-z]+\.[0-9]+)\+([0-9]+)$', text, re.M)
-    if not match:
-        raise ValueError('Expected explicit prerelease version and integer build number')
-    return match[1], int(match[2])
+from app_version import historical_version, version
 
 
 def fingerprint(text):
@@ -43,7 +37,7 @@ def check_version():
     floor = 4
     for tag in subprocess.check_output(['git', 'tag', '--list', 'v*'], text=True).splitlines():
         text = subprocess.check_output(['git', 'show', f'{tag}:pubspec.yaml'], text=True)
-        floor = max(floor, version(text)[1])
+        floor = max(floor, historical_version(text)[1])
     if current[1] <= floor:
         raise ValueError('Android build number must exceed the test-build floor and published tags')
     return current
@@ -67,7 +61,7 @@ def check_candidate_history():
         if not re.fullmatch(r'[0-9a-f]{40}', old_sha):
             raise ValueError('Invalid candidate source SHA')
         old = subprocess.check_output(['git', 'show', f'{old_sha}:pubspec.yaml'], text=True)
-        codes.append(version(old)[1])
+        codes.append(historical_version(old)[1])
     check_candidate_codes(current[1], codes)
 
 

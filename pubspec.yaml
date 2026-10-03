@@ -1,13 +1,14 @@
 name: tandemlog
 description: Offline household tasks with portable canonical logs.
 publish_to: none
-version: 0.1.0-rc.10+37
+version: 2026.10.0-rc.1+38
 environment:
   sdk: '>=3.9.0 <4.0.0'
 dependencies:
   flutter:
     sdk: flutter
   sqlite3: ^3.7.0
+  ffi: ^2.2.0
   path_provider: ^2.1.5
   file_selector: ^1.0.4
   crypto: ^3.0.6

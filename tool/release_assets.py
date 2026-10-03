@@ -1,13 +1,12 @@
 """Stage versioned public installers after the full candidate integrity gates."""
 from pathlib import Path
-import re
 import shutil
 from android_release import version
+from app_version import release_components
 
 
 def public_asset_names(release_version):
-    if not re.fullmatch(r'\d+\.\d+\.\d+(?:-[a-z]+\.\d+)?', release_version):
-        raise ValueError('Invalid release version for installer filenames')
+    release_components(release_version)
     return {
         'tandemlog-android.apk': f'tandemlog-{release_version}-android.apk',
         'tandemlog-windows-x64-unsigned-setup.exe': f'tandemlog-{release_version}-windows-x64-setup.exe',

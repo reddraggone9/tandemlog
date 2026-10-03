@@ -1,24 +1,29 @@
-name: Experimental prerelease
+name: Publish accepted stable release
 on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Candidate tag, e.g. v2026.10.0-rc.1'
+        description: 'Stable CalVer tag, e.g. v2026.10.0 (no RC suffix)'
         required: true
         type: string
       candidate_run_id:
-        description: 'Successful Build signed candidate run with all platform gates green'
+        description: 'Successful signed stable-version candidate with all platform gates green'
         required: true
         type: string
       android_verified_sha256:
-        description: 'SHA-256 of that exact APK after native installation/launch and required QA passed'
+        description: 'Exact stable APK SHA-256 after required native acceptance'
         required: true
         type: string
+      lee_accepted:
+        description: 'Lee explicitly approved this stable release and its required QA'
+        required: true
+        default: false
+        type: boolean
 permissions:
   contents: read
   actions: read
 concurrency:
-  group: prerelease-${{ inputs.tag }}
+  group: release-${{ inputs.tag }}
   cancel-in-progress: false
 jobs:
   candidate:
@@ -31,8 +36,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          LEE_ACCEPTED_STABLE: ${{ inputs.lee_accepted }}
         run: |
           test "$GITHUB_REF" = refs/heads/main
+          test "$LEE_ACCEPTED_STABLE" = true
           python3 tool/candidate_source.py
   publish:
     needs: candidate
@@ -52,13 +59,14 @@ jobs:
           pattern: '{linux,windows,android-release}'
           path: dist
           merge-multiple: true
-      - name: Verify accepted APK and installed desktop gates; publish experimental preview
+      - name: Verify exact accepted stable artifacts and publish without rebuilding
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE: ${{ inputs.tag }}
           CANDIDATE_SHA: ${{ needs.candidate.outputs.sha }}
           ANDROID_VERIFIED_SHA256: ${{ inputs.android_verified_sha256 }}
-          RELEASE_KIND: prerelease
+          RELEASE_KIND: stable
+          LEE_ACCEPTED_STABLE: ${{ inputs.lee_accepted }}
         run: |
           python3 tool/publish_gate.py
           cd dist
@@ -66,11 +74,7 @@ jobs:
           sha256sum --check windows-SHA256SUMS.txt
           sha256sum --check android-SHA256SUMS.txt
           cd ..
-          # Artifact/source gates remain pinned to the accepted candidate.
-          # Copy may be corrected in a later approved docs-only main commit;
-          # pin it to this dispatch commit, not a moving branch at publish time.
-          git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
-          # Evidence/checksums stay in the gated candidate; users see installers.
+          git show "$GITHUB_SHA:design/stable-notes.md" > release-notes.md
           python3 tool/release_assets.py
           gh release create "$CANDIDATE" public-assets/* \
-            --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
+            --target "$CANDIDATE_SHA" --title "$CANDIDATE" --latest=true --notes-file release-notes.md

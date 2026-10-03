@@ -6,6 +6,7 @@ from pathlib import Path
 import re
 import subprocess
 from android_release import check_version, fingerprint
+from app_version import verify_release_kind
 
 
 def verify_metadata(metadata, sha, accepted, actual, expected_version, pin):
@@ -42,6 +43,8 @@ def verify_install_smoke(report, require_changed_commit=False):
 
 if __name__ == '__main__':
     expected = check_version()
+    verify_release_kind(expected[0], os.environ['RELEASE_KIND'],
+                        os.environ.get('LEE_ACCEPTED_STABLE') == 'true')
     tag = os.environ['CANDIDATE']
     if tag != 'v' + expected[0]:
         raise ValueError('Tag must match candidate source version')

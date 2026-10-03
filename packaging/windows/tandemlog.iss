@@ -5,6 +5,9 @@
 #ifndef BundleDir
   #error BundleDir must contain the complete Flutter release bundle
 #endif
+#ifndef AppResourceVersion
+  #error AppResourceVersion must be the validated four-part Windows version
+#endif
 #ifndef OutputDir
   #error OutputDir must be supplied
 #endif
@@ -18,6 +21,7 @@
 AppId=com.reddraggone9.tandemlog
 AppName=Tandemlog
 AppVersion={#AppVersion}
+VersionInfoVersion={#AppResourceVersion}
 AppPublisher=reddraggone9
 DefaultDirName={localappdata}\Programs\Tandemlog
 DefaultGroupName=Tandemlog

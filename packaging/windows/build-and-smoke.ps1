@@ -1,4 +1,8 @@
 $ErrorActionPreference = 'Stop'
+python tool/app_version.py
+if ($LASTEXITCODE -ne 0) { throw 'CalVer/Windows version resource bounds failed' }
+$resourceVersion = python tool/app_version.py --windows-resource
+if ($LASTEXITCODE -ne 0) { throw 'Cannot derive exact Windows resource version' }
 $bundle = (Resolve-Path 'build/windows/x64/runner/Release').Path
 $dist = New-Item -ItemType Directory -Force dist
 $version = (Select-String -Path pubspec.yaml -Pattern '^version: ([^+]+)\+').Matches[0].Groups[1].Value
@@ -12,7 +16,7 @@ $runtimeMinor = $compilerVersion.Groups[1].Value
 $runtimeBuild = $compilerVersion.Groups[2].Value
 $compiler = Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6/ISCC.exe'
 if (!(Test-Path $compiler)) { throw 'Official Inno Setup 6 compiler absent on hosted runner' }
-& $compiler "/DMinRuntimeMinor=$runtimeMinor" "/DMinRuntimeBuild=$runtimeBuild" "/DAppVersion=$version" "/DBundleDir=$bundle" "/DOutputDir=$($dist.FullName)" packaging/windows/tandemlog.iss
+& $compiler "/DMinRuntimeMinor=$runtimeMinor" "/DMinRuntimeBuild=$runtimeBuild" "/DAppVersion=$version" "/DAppResourceVersion=$resourceVersion" "/DBundleDir=$bundle" "/DOutputDir=$($dist.FullName)" packaging/windows/tandemlog.iss
 if ($LASTEXITCODE -ne 0) { throw 'Installer compilation failed' }
 $installer = (Resolve-Path dist/tandemlog-windows-x64-unsigned-setup.exe).Path
 $installDir = Join-Path $env:LOCALAPPDATA 'Programs/Tandemlog'
