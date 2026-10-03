@@ -10,4 +10,6 @@ Experimental 2026.10.0-rc.1 task preview.
 
 **Prerelease format break:** canonical JSONL now uses v3 with embedded per-record SHA-256 predecessor/current hashes. Existing v1/v2 folders are rejected and preserved; no automatic conversion, folder reset or deletion occurs. Coordinate test-folder backups/reset separately or use a separate v3 test folder. Markdown remains authoritative until the separately agreed stable cutover.
 
+**Writer safety:** the installation retains acknowledged writer heads and unresolved append reservations. Restoring an older owned log at another folder path, or an interrupted append whose exact bytes are missing, can block further writes pending coordinated recovery. Preserve both the private profile and canonical folder; the app does not silently skip sequence numbers or reset the writer.
+
 Ordinary startup remains incremental; checking the old prefix requires the Settings action or a fresh full rebuild. Hashes check consistency, not authenticity: a fully recomputed chain or removed final records can pass a fresh scan without a trusted prior head. Sync is not backup. Windows installer is unsigned; Android uses the retained owner signing identity. This is an experimental prerelease, not a stable release.
