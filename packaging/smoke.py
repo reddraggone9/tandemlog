@@ -66,15 +66,23 @@ def main():
         profile.mkdir(parents=True)
         folder.mkdir()
         space, writer, user, task = (str(uuid.uuid4()) for _ in range(4))
-        (folder/'tandemlog-space.json').write_text(json.dumps({'v': 2, 'id': space}))
+        (folder/'tandemlog-space.json').write_text(json.dumps({'v': 3, 'id': space}))
         events = []
+        previous = hashlib.sha256(f'tandemlog:genesis:v3\n{space}\n{writer}\n'.encode()).hexdigest()
+        created_ns = time.time_ns()
         for seq, entity, kind, data in (
                 (1, user, 'user.created', {'name': 'Installer QA user'}),
                 (2, task, 'task.created', {'title': 'Installer retained task',
                                          'description': 'Synthetic state only', 'assignee': user})):
-            events.append(json.dumps(dict(v=2, space=space, writer=writer, seq=seq,
-                                          clock=str(time.time_ns()+seq), entity=entity,
-                                          type=kind, data=data)))
+            # Fixed v3 envelope order and scalar-sorted ASCII payload keys.
+            # Validate through the production app below, not just this generator.
+            record = dict(v=3, space=space, writer=writer, seq=seq,
+                          clock=str(created_ns+seq), entity=entity,
+                          type=kind, data=dict(sorted(data.items())), previousHash=previous)
+            unsigned = json.dumps(record, ensure_ascii=False, separators=(',', ':'))
+            record['hash'] = hashlib.sha256(('tandemlog:event:v3\n'+unsigned).encode()).hexdigest()
+            previous = record['hash']
+            events.append(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
         (folder/f'{writer}.jsonl').write_text('\n'.join(events)+'\n')
         # Lifecycle replacement tests start with current preferences. Legacy
         # settings legitimately gain a writer during their separately tested
