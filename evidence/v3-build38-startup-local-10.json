@@ -1,0 +1,46 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 10,
+  "label": "v3-final-d30-10",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 675,
+      "marker": "TANDEMLOG_READY_MS=508 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=149",
+        "TANDEMLOG_PHASE identity_lock=36",
+        "TANDEMLOG_PHASE sqlite_open_schema=40",
+        "TANDEMLOG_PHASE manifest=33",
+        "TANDEMLOG_PHASE ingest=111",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=508 FILES_READ=1"
+      ],
+      "external_main_ms": 163,
+      "external_first_frame_ms": 316
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 580,
+      "marker": "TANDEMLOG_READY_MS=418 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=144",
+        "TANDEMLOG_PHASE identity_lock=33",
+        "TANDEMLOG_PHASE sqlite_open_schema=23",
+        "TANDEMLOG_PHASE manifest=46",
+        "TANDEMLOG_PHASE ingest=88",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=418 FILES_READ=0"
+      ],
+      "external_main_ms": 157,
+      "external_first_frame_ms": 306
+    }
+  ],
+  "application_source": "d30dd58727c8a795e3a06995f2e2dc4c1a0275c7",
+  "methodology": "Two sequential native Linux x64 release processes per synthetic workload under Xvfb; fresh cache first, retained cache second; OS page caches not flushed. No Linux build, emulator or recorder ran concurrently. External process launch to post-model loaded-frame marker, not physical presentation or input latency."
+}

@@ -1,4 +1,4 @@
-# Runtime and visual QA — updated 2026-10-01
+# Runtime and visual QA — updated 2026-10-03
 
 ## Actual environment and target matrix
 
@@ -645,3 +645,16 @@ That source's hosted Windows gate exposed selected-cache UUID migration comparin
 
 
 The Windows native installer check at corrected app source `a2b5910` passed app tests/build, then rejected the approved writer addition to a legacy preferences fixture at its next replacement phase. Installer fixtures now seed current folder/user/System/writer preferences, retaining byte-exact settings and canonical comparisons instead of allowing arbitrary migration differences. The existing legacy-migration tests remain separate and enabled. All four phases of the same lifecycle checker pass against the production native Linux release on an isolated synthetic profile; no actual Linux install/uninstall is claimed from this local checker run. Fresh hosted installed Windows/Flatpak gates remain required.
+
+
+## CalVer build38/v3 final local validation — 2026-10-03
+
+Production source `d30dd58727c8a795e3a06995f2e2dc4c1a0275c7` passes all354 app tests, formatting of77 files and clean analysis. The unchanged release policy passes18 Python tests and actionlint. Storage safeguards pass172 focused regressions; Linux durability passes23 tests and Android adapter duplicate-name handling passes25 mock tests. The actual Kotlin debug build succeeds, but that compilation is not Android provider runtime evidence.
+
+The earlier complete native Linux suite passed44 flows before the final writer safeguards. The later aggregate passed43 and failed an obsolete retry fixture; the corrected exact-provider-replacement case passes natively at `7e2b869`, preserving the draft, issuing no second append while unresolved, restoring the exact originally attempted suffix and confirming one edit. Full hosted native aggregation remains required on the final candidate. Linux integration and release builds must run sequentially in one checkout: they share `linux/flutter/ephemeral` generated CMake configuration. Do not infer application failures from concurrently overwritten build targets.
+
+Separately, the optimized Dart audit reproduced an actual `_refresh` captured-context SIGSEGV. Extracting its named helpers into typed instance methods fixes both read-only and recurrence-copy AOT audits and the freshly rebuilt production native release; chain/guard validation remains enabled. The final compiled audits confirm unchanged canonical files, identical cache reopen and zero warm log reads. No debug-only or optimizer-disabling workaround ships.
+
+Two sequential Linux x64 release processes per synthetic workload under Xvfb measured external loaded-frame startup675/580ms for10 tasks (fresh/warm cache), and1069/606ms for2000 tasks. External first-frame markers were316/306ms and305/309ms respectively. Every cached row is checked and warm runs read zero canonical log contents. OS page caches were not flushed; no emulator, recorder, Linux build or native test ran concurrently during these samples. The loaded-frame callback is not physical display presentation, first input acceptance or phone cold boot. [10-task raw phases](../evidence/v3-build38-startup-local-10.json), [2000-task raw phases](../evidence/v3-build38-startup-local-2000.json).
+
+The reviewed native Linux integrity/metadata demo covers wide and390px Light/Dark with200% text, natural wrapping, successful checks and copyable scrollable errors; its UI source is `2d54bbf`, before backend guard changes. Exact final signed Android acceptance, hosted installed Linux/Windows gates and the private v11 adapter rehearsal remain separate. No public release or actual data cutover follows from these local checks alone.
