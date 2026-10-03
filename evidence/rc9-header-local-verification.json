@@ -100,5 +100,20 @@
   "android_exact_runtime": "pending signed candidate",
   "reference_pixels": "Library materialization failed; implementation follows approved text requirements and directly inspected running app",
   "public_release_created": false,
-  "stable_or_data_cutover": false
+  "stable_or_data_cutover": false,
+  "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+  "candidate_run": 37087766510,
+  "push_ci_run": 37087750325,
+  "desktop_demo": {
+    "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+    "library_version": 26,
+    "filename": "tandemlog-rc9-header-selection-demo.mp4",
+    "duration_seconds": 49.15,
+    "bytes": 731309,
+    "sha256": "dc62c8f676f24c52f229f0ca96123b5efe73d77e0399265116fd5f0c202b742c",
+    "actual_native_linux": true,
+    "pointer_and_context_caption_verified": true,
+    "synthetic_data": true,
+    "android_evidence": false
+  }
 }
