@@ -57,6 +57,7 @@ class TaskStore {
   final ProfileLock lock;
   final WriterGuard writerGuard;
   int _acknowledgedOwnedSequence = 0;
+  bool _writerHasPendingAppend = false;
   final DateTime Function() now;
   static const materialClockSkew = Duration(minutes: 5);
   String? clockWarning;
@@ -545,6 +546,7 @@ class TaskStore {
     _updateClockWarning(_maximumClock(), _nowNs());
     final guardState = await writerGuard.load(space, writer);
     _acknowledgedOwnedSequence = guardState?.sequence ?? 0;
+    _writerHasPendingAppend = guardState?.pending.isNotEmpty ?? false;
     final files = await folder.list();
     if (guardState != null &&
         guardState.sequence > 0 &&
@@ -826,6 +828,9 @@ class TaskStore {
     Future<void> acknowledgeWriter() async {
       await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
       _acknowledgedOwnedSequence = ownedSequence;
+      _writerHasPendingAppend =
+          guardState != null &&
+          guardState.pending.any((record) => record.sequence > ownedSequence);
     }
 
     void validateAuditedSemantics() {
@@ -1102,6 +1107,7 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) async {
     await _refresh();
+    _requireWriterAppendReady();
     if (expectedTaskSnapshot != null && expectedTaskSnapshot != taskSnapshot) {
       throw StaleTaskSnapshot();
     }
@@ -1131,6 +1137,12 @@ class TaskStore {
     await _refresh();
     _requireConfirmed([receipt]);
     return e;
+  }
+
+  void _requireWriterAppendReady() {
+    if (_writerHasPendingAppend) {
+      throw WriterGuardFailure.unresolvedAppend();
+    }
   }
 
   Future<void> _prepareWriterAppend(List<OperationReceipt> receipts) async {
@@ -1264,6 +1276,7 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) async {
     if (commands.isEmpty) return [];
+    _requireWriterAppendReady();
     final phase = Stopwatch()..start();
     final transactions = cacheTransactions;
     var seq =

@@ -6,6 +6,10 @@ import 'local_durability.dart';
 
 class WriterGuardFailure extends FormatFailure {
   WriterGuardFailure(super.message);
+  WriterGuardFailure.unresolvedAppend()
+    : super(
+        'An earlier append is unresolved. Unobserved prepared records remain reserved. Restore the exact prepared history before writing; preserve this profile and workspace before recovery.',
+      );
 }
 
 /// Exact candidate records durably recorded before their canonical append.
@@ -165,9 +169,7 @@ class FileWriterGuard implements WriterGuard {
       );
     }
     if (current != null && current.pending.isNotEmpty) {
-      throw WriterGuardFailure(
-        'An earlier append is unresolved. Unobserved prepared records remain reserved. Restore the exact prepared history before writing; preserve this profile and workspace before recovery.',
-      );
+      throw WriterGuardFailure.unresolvedAppend();
     }
     var next = sequence;
     for (final record in records) {

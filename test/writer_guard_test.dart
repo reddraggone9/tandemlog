@@ -322,9 +322,25 @@ void main() {
       for (var i = 0; i < 3; i++) {
         await store!.refresh();
       }
+      final blockedReceipts = <OperationReceipt>[];
       await expectLater(
-        store!.command(task, 'task.edited', {'title': 'Different'}),
+        store!.command(task, 'task.edited', {
+          'title': 'Different',
+        }, onPrepared: blockedReceipts.add),
         throwsA(isA<WriterGuardFailure>()),
+      );
+      final blockedBatch = await store!.bulkEdit(
+        [task],
+        BulkTaskEdit(addTags: ['Different']),
+        expectedTaskSnapshot: store!.taskSnapshot,
+        onPrepared: blockedReceipts.add,
+      );
+      expect(blockedBatch.error, isA<WriterGuardFailure>());
+      expect(
+        blockedReceipts,
+        isEmpty,
+        reason:
+            'Blocked attempts must not emit duplicate reserved IDs to Undo callbacks.',
       );
       expect(folder.appends, 3);
       await folder.inner.append('$owner.jsonl', folder.attempted!);
@@ -333,7 +349,8 @@ void main() {
       expect((await state()).pending, isEmpty);
       final retry = await store!.command(task, 'task.edited', {
         'title': 'Retry',
-      });
+      }, onPrepared: blockedReceipts.add);
+      expect(blockedReceipts, hasLength(1));
       expect(retry.sequence, 4);
       expect(title(), 'Retry');
     },
