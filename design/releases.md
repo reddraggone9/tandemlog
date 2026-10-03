@@ -30,6 +30,8 @@ From RC7, publish only versioned installers: `tandemlog-<version>-android.apk`, 
 
 No app updater or current known integration consumes the diagnostic JSON/checksum assets as public release metadata. Obtainium selects the APK via GitHub's assets/prerelease API; no Tandemlog-specific public JSON manifest is configured. The audit covers repository consumers and known setup, not unknown third-party tools. Internal candidate filenames remain stable so checksum/install gates and native handoffs keep using the original accepted artifacts; only the final public copies gain the validated version. Preserve complete gate results in CI and repository evidence. Do not remove checks or historical downloads to reduce the public list.
 
+Rewrite `design/prerelease-notes.md` for each candidate around that release's changes. Include compatibility guidance only when the release introduces a new concern and explain the required user action. Do not carry forward older release warnings or add unchanged history, identity or signing boilerplate; omit compatibility copy when there is no new concern. Keep enduring requirements in the installation and compatibility documentation. Editing this draft or guidance does not change already published release notes.
+
 ## Documentation-only pushes
 
 Push CI skips commits changing only Markdown or recorded evidence, avoiding three full platform builds for QA notes. Any code, dependency, tooling or workflow change still runs the full matrix. Pull requests and manual CI retain full checks; the signed candidate build always invokes the full reusable validation workflow regardless of paths, and publication requires that successful run’s exact artifacts. This filter does not alter branch protections or release gates.
