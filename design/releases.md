@@ -85,3 +85,8 @@ One-off Markdown rehearsal/import/export tooling and its dedicated tests live on
 ## Published experimental RC9
 
 [v0.1.0-rc.9](https://github.com/reddraggone9/tandemlog/releases/tag/v0.1.0-rc.9) uses exact accepted source `cf44c463ab632b6594f8114bdc0caee81feb2db2`, signed candidate 37087766510 and Android code 36. Promotion37091940925 reuses the three versioned installers without rebuilding after exact native API30 header/selection acceptance. Public bytes, signer, tag and exact notes verify; prerelease=true/latest=false, RC8 unchanged. [Receipt](../evidence/rc9-public-verification.json). Protocol2/cache9 and core/storage/clock/schema/signing bytes are unchanged from RC8. Stable publication and real-data cutover remain separate.
+
+
+## Published experimental 2026.10.0-rc.1
+
+[v2026.10.0-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0-rc.1) uses accepted source `c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e`, candidate37151096841 and Android code38. Promotion37163085342 reused the three installers without rebuilding after exact native API30 acceptance. Anonymous public downloads match accepted hashes/digests/sizes; official APK verification matches the owner certificate, package, code and nondebuggable flag. Tag and approved notes verify, prerelease=true/latest=false, and RC9 remains unchanged. [Receipt](../evidence/calver-build38-public-verification.json). The exceptional v3 test-data format break is disclosed; old canonical folders are preserved and refused. Stable publication and real-data cutover remain separately authorized.

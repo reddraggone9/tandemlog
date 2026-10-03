@@ -261,7 +261,7 @@
     "tooling_shipped_with_application": false,
     "private_source_details": "retained outside repository"
   },
-  "public_release": false,
+  "public_release": true,
   "stable_promotion": false,
   "actual_data_cutover": false,
   "oneoff_migration_tools_in_app_repo": false,
@@ -269,5 +269,8 @@
     "result": "pass",
     "mechanism": "production-store harness, same37-file application closure",
     "scope": "older owned backup at new folder/empty cache rejected with both histories/checkpoint unchanged; restored current history permits next write"
-  }
+  },
+  "public_release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0-rc.1",
+  "promotion_run": 37163085342,
+  "public_verification_receipt": "calver-build38-public-verification.json"
 }

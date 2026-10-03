@@ -1,0 +1,70 @@
+{
+  "tag": "v2026.10.0-rc.1",
+  "source_commit": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0-rc.1",
+  "release_id": 402738893,
+  "version": "2026.10.0-rc.1+38",
+  "candidate_run": 37151096841,
+  "promotion_run": 37163085342,
+  "promotion_dispatch_commit": "c4d780fc11b08f397ab29049a1c0b16ae3f3416b",
+  "rebuilt": false,
+  "prerelease": true,
+  "draft": false,
+  "latest": false,
+  "latest_endpoint": {
+    "status": 404,
+    "meaning": "no stable/latest release"
+  },
+  "tag_source": "pass",
+  "notes_equal_approved_dispatch": "pass",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.0-rc.1-android.apk",
+      "id": 608748885,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0-rc.1/tandemlog-2026.10.0-rc.1-android.apk",
+      "sha256": "ab841c340193dbd42a84c3266e440ffa16ce2ae54cb04c271b034e9a7adf9036",
+      "bytes": 59920200,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.0-rc.1-linux-x64.flatpak",
+      "id": 608748887,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0-rc.1/tandemlog-2026.10.0-rc.1-linux-x64.flatpak",
+      "sha256": "fd9d331149bf1f3801230ed0d2c987fd6da01c9707908d10bd45028b0487db4b",
+      "bytes": 8330216,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.0-rc.1-windows-x64-setup.exe",
+      "id": 608748886,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0-rc.1/tandemlog-2026.10.0-rc.1-windows-x64-setup.exe",
+      "sha256": "7a33f85c5e341dd23027dc772eacd09e6313007611342886486d96e676b7e3d7",
+      "bytes": 11593609,
+      "anonymous_public_download": "pass"
+    }
+  ],
+  "previous_release": {
+    "tag": "v0.1.0-rc.9",
+    "id": 402295941,
+    "notes_metadata_assets_unchanged": "pass",
+    "source_commit": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+    "tag_source_unchanged": "pass"
+  },
+  "native_android_acceptance": "pass; exact APK executor acceptance before promotion",
+  "windows_installer_signed": false,
+  "stable_published": false,
+  "live_data_cutover": false,
+  "public_apk_verification": {
+    "official_apksigner": "pass",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version_name": "2026.10.0-rc.1",
+    "version_code": 38,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ]
+  }
+}
