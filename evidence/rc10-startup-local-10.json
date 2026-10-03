@@ -1,0 +1,46 @@
+{
+  "target": "Linux x86_64 native release / Xvfb",
+  "tasks": 10,
+  "label": "tasks",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 664,
+      "marker": "TANDEMLOG_READY_MS=485 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=182",
+        "TANDEMLOG_PHASE identity_lock=12",
+        "TANDEMLOG_PHASE sqlite_open_schema=14",
+        "TANDEMLOG_PHASE manifest=59",
+        "TANDEMLOG_PHASE ingest=84",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=485 FILES_READ=1"
+      ],
+      "external_main_ms": 175,
+      "external_first_frame_ms": 361
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 540,
+      "marker": "TANDEMLOG_READY_MS=346 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=154",
+        "TANDEMLOG_PHASE identity_lock=9",
+        "TANDEMLOG_PHASE sqlite_open_schema=1",
+        "TANDEMLOG_PHASE manifest=50",
+        "TANDEMLOG_PHASE ingest=47",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=346 FILES_READ=0"
+      ],
+      "external_main_ms": 190,
+      "external_first_frame_ms": 347
+    }
+  ],
+  "source_commit": "b091af59a80e6be9745bc3a48ad6fa5c0445f599",
+  "methodology": "Two separate native Linux release processes; persisted-cache second launch; unflushed OS caches; measured external loaded frame, not first-input readiness"
+}

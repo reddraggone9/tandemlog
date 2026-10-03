@@ -6,7 +6,7 @@
     "lib/main.dart": "79cf21ac9368076f5ca18c0f129a1c300cde71accc38188ceff234773c425904",
     "lib/domain/event.dart": "89592b84d37ceb4558a133a8cb3e7412bcc3aee062c8f593ee9b17bd3ae3c4e4",
     "lib/domain/task_view.dart": "d4db54b9a2626aa1b474e3ea309e3496308953f40460f7332eac5c0fd1265808",
-    "lib/storage/local_settings.dart": "24051c94c6628069871870263d52ea8f484156a2ce3041db9e3fb0f19883adf2",
+    "lib/storage/local_settings.dart": "9f33336836684b7e6ccd420bf77fd1a498f695cb51bdd9524d155bfa4447be5a",
     "lib/storage/profile_lock.dart": "b00a48448b720149b60313f857632e2ca5acb6d36aebf3079763bae87c688934",
     "lib/storage/task_store.dart": "3a1fb3d4f2cd2384bc9dd8a4d6d34a3004f98c08c06e1d42f80fa6b5d0288dd2",
     "lib/storage/log_folder.dart": "d3b47520edd3e4b302efeb531b4976327cc33871160543c2ebcc5bdb8dcc6390",
@@ -28,12 +28,14 @@
       "seconds": 47
     },
     "extra_native_inbox_profile": 3,
-    "native_tag_layout_comparison": 9
+    "native_tag_layout_comparison": 9,
+    "selected_writer_path_fix_targeted_tests": 15
   },
   "limits": [
     "New hosted target gates and exact Android acceptance pending",
     "Tag alternatives remain comparison only",
     "No canonical chain/crypto algorithm/event-clock change",
-    "No stable publication or real-data cutover"
+    "No stable publication or real-data cutover",
+    "First hosted Windows failure identified/fixed selected-cache path separator lookup; exact Windows rerun pending"
   ]
 }

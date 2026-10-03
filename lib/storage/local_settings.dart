@@ -99,12 +99,17 @@ class LocalSettings {
           'Invalid legacy writer identity at ${identity.path}.',
         );
       }
-      identities[entry.path] = value;
+      // Match the cache key, not textual paths: Windows directory listings
+      // use backslashes while callers can construct equivalent slash paths.
+      final cacheKey = entry.uri.pathSegments.lastWhere(
+        (segment) => segment.isNotEmpty,
+      );
+      identities[cacheKey] = value;
     }
     if (identities.isEmpty) return null;
     if (folder != null) {
       final key = sha256.convert(utf8.encode(folder!)).toString();
-      final selected = identities['${spaces.path}/$key'];
+      final selected = identities[key];
       if (selected != null) return selected;
     }
     // No selected identity: deterministic first cache directory, never mtime.
