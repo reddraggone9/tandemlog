@@ -74,9 +74,11 @@ void main() {
             'task.completionUndone',
             {'completion': '$bad:1'},
           ),
-          LogEvent(good, good, 1, testClock(1, 0), good, 'task.tagsChanged', {
-            'add': <String>[],
-            'remove': ['$bad:1:0'],
+          LogEvent(good, good, 1, testClock(1, 0), good, 'task.edited', {
+            'tagChanges': {
+              'add': <String>[],
+              'remove': ['$bad:1:0'],
+            },
           }),
         ]) {
           expect(
@@ -165,9 +167,11 @@ void main() {
           'completedAt': '2026-02-30',
         }),
         LogEvent(id, id, 1, testClock(1, 0), id, 'task.moved', {'before': id}),
-        LogEvent(id, id, 1, testClock(1, 0), id, 'task.tagsChanged', {
-          'add': ['tag'],
-          'remove': ['not-observed-token'],
+        LogEvent(id, id, 1, testClock(1, 0), id, 'task.edited', {
+          'tagChanges': {
+            'add': ['tag'],
+            'remove': ['not-observed-token'],
+          },
         }),
       ]) {
         expect(

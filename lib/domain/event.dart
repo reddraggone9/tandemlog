@@ -87,7 +87,9 @@ class LogEvent {
       canonicalEventJson(toJson(previousHash: previousHash));
   factory LogEvent.decode(String raw) {
     try {
-      if (raw.length > 1024 * 1024) throw FormatFailure('Oversized event.');
+      if (raw.length > 1024 * 1024 || utf8.encode(raw).length > 1024 * 1024) {
+        throw FormatFailure('Oversized event.');
+      }
       final j = jsonDecode(raw) as Map<String, dynamic>;
       if (j['v'] == 1 || j['v'] == 2) {
         throw FormatFailure(
@@ -144,8 +146,6 @@ class LogEvent {
           }
         case 'task.deleted':
           break;
-        case 'task.tagsChanged':
-          validateTagChanges(d);
         case 'task.moved':
           if (d['before'] != null &&
               (d['before'] is! String ||
@@ -217,7 +217,6 @@ class LogEvent {
           'assignee',
         },
         'task.deleted' => <String>{},
-        'task.tagsChanged' => {'add', 'remove'},
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
         'task.operationUndone' => {'operation'},
@@ -332,11 +331,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       state.addAll(Map<String, dynamic>.from(e.data)..remove('tagChanges'));
       state['inbox'] = false;
     }
-    if (e.type == 'task.tagsChanged' || e.data.containsKey('tagChanges')) {
+    if (e.data.containsKey('tagChanges')) {
       state['inbox'] = false;
-      final changes = e.type == 'task.tagsChanged'
-          ? e.data
-          : e.data['tagChanges'] as Map;
+      final changes = e.data['tagChanges'] as Map;
       final added = changes['add'] as List;
       for (var i = 0; i < added.length; i++) {
         tagAdds['${e.id}:$i'] = added[i] as String;

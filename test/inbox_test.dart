@@ -46,13 +46,17 @@ void main() {
     expect(project([creation, edit])!['inbox'], isFalse);
     final undo = event(3, 'task.operationUndone', {'operation': edit.id});
     expect(project([creation, edit, undo])!['inbox'], isTrue);
-    final tagEdit = event(2, 'task.tagsChanged', {
-      'add': ['home'],
-      'remove': <String>[],
+    final tagEdit = event(2, 'task.edited', {
+      'tagChanges': {
+        'add': ['home'],
+        'remove': <String>[],
+      },
     });
-    final removeTag = event(3, 'task.tagsChanged', {
-      'add': <String>[],
-      'remove': ['${tagEdit.id}:0'],
+    final removeTag = event(3, 'task.edited', {
+      'tagChanges': {
+        'add': <String>[],
+        'remove': ['${tagEdit.id}:0'],
+      },
     });
     expect(project([creation, tagEdit, removeTag])!['inbox'], isFalse);
     expect(

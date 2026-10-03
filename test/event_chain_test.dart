@@ -219,6 +219,86 @@ void main() {
     }
   });
 
+  test(
+    'obsolete separate tag events are rejected rather than reinterpreted',
+    () {
+      final obsolete = LogEvent(
+        space,
+        writer,
+        1,
+        EventClock(BigInt.one),
+        entity,
+        'task.tagsChanged',
+        {
+          'add': ['home'],
+          'remove': <String>[],
+        },
+      );
+      expect(
+        () => LogEvent.decode(obsolete.encode()),
+        throwsA(
+          isA<FormatFailure>().having(
+            (error) => error.message,
+            'message',
+            allOf(
+              contains('Unknown event task.tagsChanged'),
+              contains('preserved'),
+            ),
+          ),
+        ),
+      );
+      final supported = LogEvent(
+        space,
+        writer,
+        1,
+        EventClock(BigInt.one),
+        entity,
+        'task.edited',
+        {
+          'tagChanges': {
+            'add': ['home'],
+            'remove': <String>[],
+          },
+        },
+      );
+      expect(LogEvent.decode(supported.encode()).data, supported.data);
+    },
+  );
+
+  test(
+    'event size admission counts UTF-8 bytes with an inclusive 1 MiB limit',
+    () {
+      const maximum = 1024 * 1024;
+      final canonical = example().encode();
+      final atLimit =
+          '${' ' * (maximum - utf8.encode(canonical).length)}$canonical';
+      expect(utf8.encode(atLimit), hasLength(maximum));
+      expect(
+        () => LogEvent.decode(atLimit),
+        throwsA(
+          isA<FormatFailure>().having(
+            (error) => error.message,
+            'message',
+            contains('Noncanonical event JSON'),
+          ),
+        ),
+      );
+      final oversized = canonical.replaceFirst('Example', 'é' * (maximum ~/ 2));
+      expect(oversized.length, lessThan(maximum));
+      expect(utf8.encode(oversized).length, greaterThan(maximum));
+      expect(
+        () => LogEvent.decode(oversized),
+        throwsA(
+          isA<FormatFailure>().having(
+            (error) => error.message,
+            'message',
+            'Oversized event.',
+          ),
+        ),
+      );
+    },
+  );
+
   test('v1 and v2 prerelease histories remain explicit preserved failures', () {
     for (final version in [1, 2]) {
       expect(
