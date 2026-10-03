@@ -76,7 +76,13 @@ def main():
                                           clock=str(time.time_ns()+seq), entity=entity,
                                           type=kind, data=data)))
         (folder/f'{writer}.jsonl').write_text('\n'.join(events)+'\n')
-        (profile/'settings.json').write_text(json.dumps({'folder': str(folder), 'user': user}))
+        # Lifecycle replacement tests start with current preferences. Legacy
+        # settings legitimately gain a writer during their separately tested
+        # migration; arbitrary preference changes must still fail this gate.
+        installation_writer = str(uuid.uuid4())
+        (profile/'settings.json').write_text(json.dumps({
+            'folder': str(folder), 'user': user, 'appearance': 'system',
+            'writer': installation_writer}))
         (root/'expected.json').write_text(json.dumps({'canonical': hashes(folder),
                                                     'settings': hashes(profile)['settings.json']}))
     expected = json.loads((root/'expected.json').read_text())

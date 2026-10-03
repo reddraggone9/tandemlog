@@ -29,13 +29,15 @@
     },
     "extra_native_inbox_profile": 3,
     "native_tag_layout_comparison": 9,
-    "selected_writer_path_fix_targeted_tests": 15
+    "selected_writer_path_fix_targeted_tests": 15,
+    "current_preferences_lifecycle_checker_phases": 4
   },
   "limits": [
     "New hosted target gates and exact Android acceptance pending",
     "Tag alternatives remain comparison only",
     "No canonical chain/crypto algorithm/event-clock change",
     "No stable publication or real-data cutover",
-    "First hosted Windows failure identified/fixed selected-cache path separator lookup; exact Windows rerun pending"
+    "First hosted Windows failure identified/fixed selected-cache path separator lookup; exact Windows rerun pending",
+    "Native Linux checker phases are separate from hosted installed Windows/Flatpak lifecycle gates"
   ]
 }
