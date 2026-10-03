@@ -21,6 +21,31 @@ class StaleTaskSnapshot implements Exception {
   String toString() => 'Tasks changed. Review the selection and try again.';
 }
 
+/// A canonical history failure, with the first offending record location.
+class HistoryVerificationFailure extends FormatFailure {
+  final String fileName, reason;
+  final int recordNumber, byteOffset;
+  HistoryVerificationFailure(
+    this.fileName,
+    this.recordNumber,
+    this.byteOffset,
+    this.reason,
+  ) : super(
+        '$fileName: record $recordNumber, byte offset $byteOffset: $reason',
+      );
+}
+
+class HistoryVerificationReport {
+  final int checkedLogCount, checkedRecordCount, checkedByteCount;
+  final int importedEventCount;
+  const HistoryVerificationReport({
+    required this.checkedLogCount,
+    required this.checkedRecordCount,
+    required this.checkedByteCount,
+    required this.importedEventCount,
+  });
+}
+
 /// Owns durable log ingestion and one disposable SQLite materialization.
 class TaskStore {
   final LogFolder folder;
@@ -33,6 +58,9 @@ class TaskStore {
   late final String space;
   int readFiles = 0, cacheTransactions = 0;
   Map<String, int>? lastBatchTiming;
+  HistoryVerificationReport? _lastHistoryVerification;
+  HistoryVerificationReport? get lastHistoryVerification =>
+      _lastHistoryVerification;
   Future<void> _queue = Future<void>.value();
   bool _closed = false;
   Future<void>? _closing;
@@ -50,12 +78,12 @@ class TaskStore {
     if (raw.length > 4096) throw FormatFailure('Oversized workspace manifest.');
     final manifest = jsonDecode(utf8.decode(raw));
     if (manifest is Map<String, dynamic> &&
-        manifest['v'] == 1 &&
+        (manifest['v'] == 1 || manifest['v'] == 2) &&
         manifest['id'] is String &&
         isCanonicalId(manifest['id']) &&
         manifest.keys.every((key) => {'v', 'id'}.contains(key))) {
       throw FormatFailure(
-        'This folder uses an older prerelease format (v1). Preserve this folder and choose a new data folder for this prerelease.',
+        'This folder uses an older prerelease format (v${manifest['v']}). Preserve this folder and choose a new data folder for this prerelease.',
       );
     }
     if (manifest is! Map<String, dynamic> ||
@@ -104,10 +132,14 @@ class TaskStore {
         throw FormatFailure('Invalid local writer identity.');
       }
       mark('identity_lock');
+      // Reject old canonical protocols before opening or migrating their cache.
+      if ((await folder.list()).any((f) => f.name == 'tandemlog-space.json')) {
+        await _readSpace(folder);
+      }
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 11) {
+      if (version < 0 || version > 12) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
@@ -155,7 +187,20 @@ class TaskStore {
         db.execute(
           'CREATE TABLE IF NOT EXISTS stream_ranges (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
         );
-        db.execute('PRAGMA user_version=11');
+        for (final definition in [
+          'chain_head TEXT',
+          'last_seq INTEGER NOT NULL DEFAULT 0',
+          'last_clock INTEGER',
+        ]) {
+          final name = definition.split(' ').first;
+          if (!columns.any((r) => r['name'] == name)) {
+            db.execute('ALTER TABLE streams ADD COLUMN $definition');
+          }
+        }
+        db.execute(
+          "UPDATE streams SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)), last_clock=(SELECT MAX(clock) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)) WHERE chain_head IS NULL",
+        );
+        db.execute('PRAGMA user_version=12');
         db.execute('COMMIT');
       } catch (_) {
         db.execute('ROLLBACK');
@@ -302,7 +347,58 @@ class TaskStore {
   /// Explicitly check all previously observed canonical bytes against their
   /// cached baseline/range hashes, then admit any valid new complete records.
   /// Ordinary startup, polling, resume and commands do not run this audit.
-  Future<bool> verifyHistory() => _serialize(() => _refresh(verify: true));
+  Future<bool> verifyHistory() => _serialize(() async {
+    _lastHistoryVerification = null;
+    return _refresh(verify: true);
+  });
+
+  HistoryVerificationFailure _historyFailure(
+    String name,
+    Uint8List bytes,
+    int byteOffset,
+    String reason,
+  ) {
+    var record = 1;
+    for (var i = 0; i < byteOffset && i < bytes.length; i++) {
+      if (bytes[i] == 10) record++;
+    }
+    return HistoryVerificationFailure(name, record, byteOffset, reason);
+  }
+
+  HistoryVerificationFailure _baselineFailure(String name, Uint8List bytes) {
+    final writerId = name.substring(0, name.length - 6);
+    var offset = 0;
+    for (final row in db.select(
+      'SELECT seq,raw FROM events WHERE writer=? ORDER BY seq',
+      [writerId],
+    )) {
+      final expected = utf8.encode('${row['raw']}\n');
+      var matches = offset + expected.length <= bytes.length;
+      if (matches) {
+        for (var i = 0; i < expected.length; i++) {
+          if (bytes[offset + i] != expected[i]) {
+            matches = false;
+            break;
+          }
+        }
+      }
+      if (!matches) {
+        return HistoryVerificationFailure(
+          name,
+          row['seq'] as int,
+          offset,
+          'Previously imported history changed. Restore the original log before writing.',
+        );
+      }
+      offset += expected.length;
+    }
+    return _historyFailure(
+      name,
+      bytes,
+      offset,
+      'Previously imported history checkpoints changed. Preserve the cache and log before recovery.',
+    );
+  }
 
   void _verifyHistoryBytes(String name, Uint8List bytes, Row row) {
     final offset = row['offset'] as int;
@@ -312,9 +408,7 @@ class TaskStore {
         baseline > offset ||
         sha256.convert(Uint8List.sublistView(bytes, 0, baseline)).toString() !=
             row['hash']) {
-      throw FormatFailure(
-        'Previously imported history changed in $name. Restore the original log before writing.',
-      );
+      throw _baselineFailure(name, bytes);
     }
     var covered = baseline;
     for (final range in db.select(
@@ -328,15 +422,16 @@ class TaskStore {
           end <= start ||
           sha256.convert(Uint8List.sublistView(bytes, start, end)).toString() !=
               range['hash']) {
-        throw FormatFailure(
-          'Previously imported history changed in $name. Restore the original log before writing.',
-        );
+        throw _baselineFailure(name, bytes);
       }
       covered = end;
     }
     if (covered != offset) {
-      throw FormatFailure(
-        'Cached history checkpoints are incomplete in $name. Preserve the cache and log before recovery.',
+      throw _historyFailure(
+        name,
+        bytes,
+        covered,
+        'Cached history checkpoints are incomplete. Preserve the cache and log before recovery.',
       );
     }
   }
@@ -356,14 +451,20 @@ class TaskStore {
     final names = logs.map((f) => f.name).toSet();
     for (final row in db.select('SELECT name FROM streams')) {
       if (!names.contains(row['name'])) {
-        throw FormatFailure(
-          'Previously imported log ${row['name']} is missing. Restore it; do not rebuild away this warning.',
+        throw HistoryVerificationFailure(
+          row['name'] as String,
+          1,
+          0,
+          'Previously imported log is missing. Restore it; do not rebuild away this warning.',
         );
       }
     }
     final replay = db
         .select("SELECT value FROM metadata WHERE key='replay_pending'")
         .isNotEmpty;
+    var checkedRecords = 0, checkedBytes = 0;
+    final eventLocations = <String, HistoryVerificationFailure>{};
+    final auditedEntities = <String>{};
     final newEvents = <LogEvent>[];
     final newEventRaws = <String>[];
     final checkpoints = <List<Object?>>[];
@@ -372,7 +473,12 @@ class TaskStore {
     for (final info in logs) {
       final writerName = info.name.substring(0, info.name.length - 6);
       if (!isCanonicalId(writerName)) {
-        throw FormatFailure('Unrecognized log filename ${info.name}.');
+        throw HistoryVerificationFailure(
+          info.name,
+          1,
+          0,
+          'Unrecognized log filename.',
+        );
       }
       final saved = db.select('SELECT * FROM streams WHERE name=?', [
         info.name,
@@ -382,21 +488,30 @@ class TaskStore {
       final observedSize = info.size != null && info.size! >= 0
           ? info.size
           : null;
-      if (observedSize != null && observedSize < offset) {
-        throw FormatFailure(
-          'Previously imported history changed in ${info.name}. Restore the original log before writing.',
+      if (!verify && observedSize != null && observedSize < offset) {
+        throw HistoryVerificationFailure(
+          info.name,
+          (row?['last_seq'] as int? ?? 0) + 1,
+          offset,
+          'Previously imported history was truncated. Restore the original log before writing.',
         );
+      }
+      final hasHead = row != null && row['chain_head'] != null;
+      if (!verify &&
+          !replay &&
+          hasHead &&
+          folder is RangeLogFolder &&
+          row['range_capable'] == 1 &&
+          observedSize != null &&
+          observedSize == offset) {
+        continue;
       }
       Uint8List? suffix;
       if (!verify &&
           !replay &&
+          (hasHead || row == null) &&
           observedSize != null &&
           folder is RangeLogFolder) {
-        if (row != null &&
-            row['range_capable'] == 1 &&
-            observedSize == offset) {
-          continue;
-        }
         suffix = await (folder as RangeLogFolder).readFrom(info.name, offset);
       }
       final rangeCapable = suffix != null;
@@ -404,64 +519,132 @@ class TaskStore {
       final bytes = suffix ?? await folder.read(info.name);
       readFiles++;
       final start = full ? 0 : offset;
+      if (full && row != null) _verifyHistoryBytes(info.name, bytes, row);
       if (bytes.length + start < offset ||
           (observedSize != null && bytes.length + start < observedSize)) {
-        throw FormatFailure(
-          'Previously imported history changed in ${info.name}. Restore the original log before writing.',
+        throw HistoryVerificationFailure(
+          info.name,
+          (row?['last_seq'] as int? ?? 0) + 1,
+          offset,
+          'Previously imported history was truncated. Restore the original log before writing.',
         );
       }
-      if (full && row != null) _verifyHistoryBytes(info.name, bytes, row);
       final completeLength = bytes.lastIndexOf(10) + 1;
       final end = start + completeLength;
       if (end < offset) {
-        throw FormatFailure(
-          'Previously imported history changed in ${info.name}. Restore the original log before writing.',
+        throw _historyFailure(
+          info.name,
+          bytes,
+          completeLength,
+          'Previously imported history was truncated. Restore the original log before writing.',
         );
       }
+      final completeRecords = bytes
+          .take(completeLength)
+          .where((byte) => byte == 10)
+          .length;
       if (bytes.length - completeLength > 1024 * 1024) {
-        throw FormatFailure('Oversized incomplete record in ${info.name}.');
+        throw HistoryVerificationFailure(
+          info.name,
+          (full ? 0 : row['last_seq'] as int) + completeRecords + 1,
+          end,
+          'Oversized incomplete record.',
+        );
       }
       if (info.name == '$writer.jsonl' && completeLength != bytes.length) {
-        throw FormatFailure(
+        throw HistoryVerificationFailure(
+          info.name,
+          (full ? 0 : row['last_seq'] as int) + completeRecords + 1,
+          end,
           'Interrupted local append detected. Preserve the file and recover its incomplete tail before writing.',
         );
       }
-      var lastSeq =
-          db.select(
-                'SELECT COALESCE(MAX(seq),0) AS n FROM events WHERE writer=?',
-                [writerName],
-              ).first['n']
-              as int;
-      var lastClock = _maximumClock(writerName);
-      final appended = utf8.decode(
-        Uint8List.sublistView(
-          bytes,
-          replay ? 0 : offset - start,
-          completeLength,
-        ),
-      );
-      final lines = appended.isEmpty
-          ? <String>[]
-          : (appended.split('\n')..removeLast());
-      for (final raw in lines) {
-        if (raw.isEmpty) {
-          throw FormatFailure('Blank canonical record in ${info.name}.');
-        }
-        if (raw.length > 1024 * 1024) throw FormatFailure('Oversized event.');
-        final e = LogEvent.decode(raw);
-        if (e.space != space ||
-            e.writer != writerName ||
-            e.sequence != lastSeq + 1 ||
-            (lastClock != null && e.clock <= lastClock)) {
-          throw FormatFailure(
-            'Invalid space, writer, sequence or clock in ${info.name}.',
+      var lastSeq = full ? 0 : row['last_seq'] as int;
+      EventClock? lastClock = full || row['last_clock'] == null
+          ? null
+          : EventClock(BigInt.from(row['last_clock'] as int));
+      var chainHead = full
+          ? eventGenesisHash(space, writerName)
+          : row['chain_head'] as String;
+      var lineStart = 0;
+      for (var i = 0; i < completeLength; i++) {
+        if (bytes[i] != 10) continue;
+        final recordOffset = start + lineStart;
+        final recordNumber = lastSeq + 1;
+        LogEvent e;
+        String raw;
+        try {
+          if (i == lineStart) throw FormatFailure('Blank canonical record.');
+          if (i - lineStart > 1024 * 1024) {
+            throw FormatFailure('Oversized event.');
+          }
+          raw = utf8.decode(Uint8List.sublistView(bytes, lineStart, i));
+          e = LogEvent.decode(raw);
+          if (e.space != space ||
+              e.writer != writerName ||
+              e.sequence != lastSeq + 1 ||
+              (lastClock != null && e.clock <= lastClock)) {
+            throw FormatFailure('Invalid space, writer, sequence or clock.');
+          }
+          if (e.previousHash != chainHead) {
+            throw FormatFailure(
+              'Previous record hash does not match the writer chain.',
+            );
+          }
+        } catch (failure) {
+          throw HistoryVerificationFailure(
+            info.name,
+            recordNumber,
+            recordOffset,
+            failure is FormatFailure
+                ? failure.message
+                : 'Malformed canonical record.',
           );
         }
         lastSeq = e.sequence;
         lastClock = e.clock;
-        newEvents.add(e);
-        newEventRaws.add(raw);
+        chainHead = e.hash!;
+        if (full &&
+            hasHead &&
+            i + 1 == offset &&
+            (chainHead != row['chain_head'] ||
+                lastSeq != row['last_seq'] ||
+                lastClock.value.toInt() != row['last_clock'])) {
+          throw HistoryVerificationFailure(
+            info.name,
+            recordNumber,
+            recordOffset,
+            'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
+          );
+        }
+        checkedRecords++;
+        eventLocations[e.id] = HistoryVerificationFailure(
+          info.name,
+          recordNumber,
+          recordOffset,
+          'Invalid semantic history.',
+        );
+        auditedEntities.add(e.entity);
+        if (replay || recordOffset >= offset) {
+          newEvents.add(e);
+          newEventRaws.add(raw);
+        }
+        lineStart = i + 1;
       }
+      if (full &&
+          hasHead &&
+          offset == 0 &&
+          (row['chain_head'] != eventGenesisHash(space, writerName) ||
+              row['last_seq'] != 0 ||
+              row['last_clock'] != null)) {
+        throw HistoryVerificationFailure(
+          info.name,
+          1,
+          0,
+          'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
+        );
+      }
+      checkedBytes += bytes.length;
       final checkpoint = <Object?>[
         info.name,
         end,
@@ -475,6 +658,9 @@ class TaskStore {
         rangeCapable
             ? 1
             : ((verify || replay) && row != null ? row['range_capable'] : 0),
+        chainHead,
+        lastSeq,
+        lastClock?.value.toInt(),
       ];
       if (!replay &&
           row != null &&
@@ -482,7 +668,10 @@ class TaskStore {
           row['hash'] == checkpoint[2] &&
           row['stamp'] == checkpoint[3] &&
           row['hash_offset'] == checkpoint[4] &&
-          row['range_capable'] == checkpoint[5]) {
+          row['range_capable'] == checkpoint[5] &&
+          row['chain_head'] == checkpoint[6] &&
+          row['last_seq'] == checkpoint[7] &&
+          row['last_clock'] == checkpoint[8]) {
         continue;
       }
       checkpoints.add(checkpoint);
@@ -499,8 +688,44 @@ class TaskStore {
         ]);
       }
     }
+    void validateAuditedSemantics() {
+      if (!verify) return;
+      try {
+        _validateUndoReferences();
+        _validateMoves();
+        _validateTagReferences();
+        for (final entity in auditedEntities) {
+          _projectEntity(entity);
+        }
+      } on FormatFailure catch (failure) {
+        final matching = eventLocations.entries.where(
+          (entry) => failure.message.contains(entry.key),
+        );
+        final location = matching.isNotEmpty
+            ? matching.first.value
+            : eventLocations.values.last;
+        throw HistoryVerificationFailure(
+          location.fileName,
+          location.recordNumber,
+          location.byteOffset,
+          failure.message,
+        );
+      }
+    }
+
+    HistoryVerificationReport? verificationReport;
+    if (verify) {
+      verificationReport = HistoryVerificationReport(
+        checkedLogCount: logs.length,
+        checkedRecordCount: checkedRecords,
+        checkedByteCount: checkedBytes,
+        importedEventCount: newEvents.length,
+      );
+    }
     if (checkpoints.isEmpty) {
+      validateAuditedSemantics();
       if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
+      if (verify) _lastHistoryVerification = verificationReport;
       return false;
     }
     db.execute('BEGIN IMMEDIATE');
@@ -520,6 +745,7 @@ class TaskStore {
         _validateMoves();
         _validateTagReferences();
       }
+      validateAuditedSemantics();
       final affected = newEvents.map((e) => e.entity).toSet();
       for (final e in newEvents) {
         if (e.type == 'task.completed' && e.data['successor'] != null) {
@@ -567,7 +793,7 @@ class TaskStore {
       }
       for (final c in checkpoints) {
         db.execute(
-          'INSERT OR REPLACE INTO streams (name,offset,hash,stamp,hash_offset,range_capable) VALUES (?,?,?,?,?,?)',
+          'INSERT OR REPLACE INTO streams (name,offset,hash,stamp,hash_offset,range_capable,chain_head,last_seq,last_clock) VALUES (?,?,?,?,?,?,?,?,?)',
           c,
         );
       }
@@ -581,9 +807,27 @@ class TaskStore {
       db.execute('COMMIT');
       cacheTransactions++;
       _updateClockWarning(_maximumClock(), _nowNs());
+      if (verify) _lastHistoryVerification = verificationReport;
       return newEvents.isNotEmpty;
-    } catch (_) {
+    } catch (failure) {
       db.execute('ROLLBACK');
+      if (verify) _lastHistoryVerification = null;
+      if (failure is FormatFailure &&
+          failure is! HistoryVerificationFailure &&
+          newEvents.isNotEmpty) {
+        final implicated = eventLocations.entries.where(
+          (entry) => failure.message.contains(entry.key),
+        );
+        final location = implicated.isNotEmpty
+            ? implicated.first.value
+            : eventLocations[newEvents.last.id]!;
+        throw HistoryVerificationFailure(
+          location.fileName,
+          location.recordNumber,
+          location.byteOffset,
+          failure.message,
+        );
+      }
       rethrow;
     }
   }
@@ -732,7 +976,7 @@ class TaskStore {
     final clock = EventClock.next(writeTime, maximum);
     final e = _prepareCommand(entity, type, data, seq, clock);
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    final raw = e.encode();
+    final raw = e.canonicalRaw!;
     final receipt = OperationReceipt(e.id, raw, e.entity);
     onPrepared?.call(receipt);
     await folder.append(
@@ -746,15 +990,33 @@ class TaskStore {
     return e;
   }
 
+  String get _writerChainHead {
+    final rows = db.select('SELECT chain_head FROM streams WHERE name=?', [
+      '$writer.jsonl',
+    ]);
+    return rows.isEmpty
+        ? eventGenesisHash(space, writer)
+        : rows.single['chain_head'] as String;
+  }
+
   LogEvent _prepareCommand(
     String entity,
     String type,
     Map<String, dynamic> data,
     int seq,
-    EventClock clock,
-  ) {
+    EventClock clock, {
+    String? previousHash,
+  }) {
     final e = LogEvent.decode(
-      LogEvent(space, writer, seq, clock, entity, type, data).encode(),
+      LogEvent(
+        space,
+        writer,
+        seq,
+        clock,
+        entity,
+        type,
+        data,
+      ).encode(previousHash: previousHash ?? _writerChainHead),
     );
     final prior = _entityEvents(entity);
     final projected = project([...prior, e]);
@@ -854,12 +1116,21 @@ class TaskStore {
     var maximum = _maximumClock();
     final receipts = <OperationReceipt>[];
     final bytes = BytesBuilder(copy: false);
+    var chainHead = _writerChainHead;
     for (final (entity, type, data) in commands) {
       final wall = _nowNs();
       _updateClockWarning(maximum, wall);
       final clock = EventClock.next(wall, maximum);
-      final event = _prepareCommand(entity, type, data, seq++, clock);
-      final raw = event.encode();
+      final event = _prepareCommand(
+        entity,
+        type,
+        data,
+        seq++,
+        clock,
+        previousHash: chainHead,
+      );
+      final raw = event.canonicalRaw!;
+      chainHead = event.hash!;
       receipts.add(OperationReceipt(event.id, raw, entity));
       bytes.add(utf8.encode('$raw\n'));
       maximum = clock;
@@ -1004,10 +1275,10 @@ class TaskStore {
       if (pending?.entity == anchor) events.add(pending!);
       final target = project(events);
       if (target != null && target['kind'] != 'task') {
-        throw FormatFailure('Task order anchor is not a task.');
+        throw FormatFailure('Task order anchor is not a task in ${move.id}.');
       }
       if (move == pending && target == null) {
-        throw FormatFailure('Task order anchor is missing.');
+        throw FormatFailure('Task order anchor is missing in ${move.id}.');
       }
     }
   }
@@ -1076,7 +1347,9 @@ class TaskStore {
           }
           if (matches.isNotEmpty &&
               matches.every((seed) => seed.clock >= mutation.clock)) {
-            throw FormatFailure('Invalid future derived tag reference.');
+            throw FormatFailure(
+              'Invalid future derived tag reference in ${mutation.id}.',
+            );
           }
           continue; // delayed dependency or stable derived seed tag
         }
@@ -1119,8 +1392,16 @@ class TaskStore {
       if (own.any(
         (e) => e.type == 'task.created' || e.type == 'user.created',
       )) {
+        final creations = own
+            .where(
+              (event) =>
+                  event.type == 'task.created' || event.type == 'user.created',
+            )
+            .toList();
+        creations.add(LogEvent.decode(seeds.first['raw'] as String));
+        creations.sort(compareEvents);
         throw FormatFailure(
-          'Successor identifier collides with existing entity.',
+          'Successor identifier collides with existing entity in ${creations.last.id}.',
         );
       }
       own.add(successorCreation(_successorSelection(entity, seeds, own).seed));
@@ -1152,7 +1433,24 @@ class TaskStore {
   }
 
   Map<String, dynamic>? _projectEntity(String entity) {
-    final state = project(_entityEvents(entity));
+    final history = _entityEvents(entity);
+    Map<String, dynamic>? state;
+    try {
+      state = project(history);
+    } on FormatFailure catch (failure) {
+      final ordered = history.toList()..sort(compareEvents);
+      final candidates = failure.message.startsWith('Duplicate entity creation')
+          ? ordered
+                .where(
+                  (event) =>
+                      event.type == 'task.created' ||
+                      event.type == 'user.created',
+                )
+                .skip(1)
+          : ordered.where((event) => event.type.startsWith('task.'));
+      if (candidates.isEmpty) rethrow;
+      throw FormatFailure('${failure.message} In ${candidates.first.id}.');
+    }
     if (state == null) return null;
     final seeds = db.select(
       "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",

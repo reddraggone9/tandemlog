@@ -58,6 +58,25 @@ void main() {
   Map<String, dynamic> state(TaskStore store, String id) =>
       store.rows.firstWhere((r) => r['id'] == id);
 
+  String encodeEvent(LogEvent event) {
+    if (event.sequence == 1) return event.encode();
+    for (final store in [a, b]) {
+      if (store == null) continue;
+      final prior = store.db.select(
+        'SELECT raw FROM events WHERE writer=? AND seq=?',
+        [event.writer, event.sequence - 1],
+      );
+      if (prior.isNotEmpty) {
+        return event.encode(
+          previousHash: LogEvent.decode(prior.single['raw'] as String).hash,
+        );
+      }
+    }
+    return event.encode(
+      previousHash: eventGenesisHash(event.space, event.writer),
+    );
+  }
+
   test(
     'local task deletion targeting user rejects before canonical append',
     () async {
@@ -90,7 +109,7 @@ void main() {
       );
       await aFolder.create(
         '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${deletion.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(deletion)}\n')),
       );
       await a!.refresh();
       expect(a!.hasEntity(user), isFalse);
@@ -114,7 +133,7 @@ void main() {
       );
       await aFolder.append(
         '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${creation.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(creation)}\n')),
       );
       final canonical = await aFolder.read('$remote.jsonl');
       await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
@@ -554,7 +573,7 @@ void main() {
         {},
       );
       final file = File('${aFolder.location}/$foreign.jsonl');
-      await file.writeAsString('${unknown.encode()}\n');
+      await file.writeAsString('${encodeEvent(unknown)}\n');
       final unknownBytes = await file.readAsBytes();
       await expectLater(
         TaskStore.open(aFolder, '${root.path}/private-a'),
@@ -562,9 +581,9 @@ void main() {
       );
       expect(await file.readAsBytes(), unknownBytes);
       expect(await aFolder.read('$writer.jsonl'), original);
-      await File(
-        '${aFolder.location}/tandemlog-space.json',
-      ).writeAsString(jsonEncode({'v': 2, 'id': const Uuid().v4()}));
+      await File('${aFolder.location}/tandemlog-space.json').writeAsString(
+        jsonEncode({'v': protocolVersion, 'id': const Uuid().v4()}),
+      );
       await expectLater(
         TaskStore.open(aFolder, '${root.path}/private-a'),
         throwsA(
@@ -971,7 +990,7 @@ void main() {
       );
       await aFolder.append(
         '${a!.writer}.jsonl',
-        Uint8List.fromList(utf8.encode('${e.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(e)}\n')),
       );
       await a!.close();
       a = null;
@@ -1134,7 +1153,7 @@ void main() {
       );
       await aFolder.create(
         '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
       );
       await a!.refresh();
       final completed = LogEvent(
@@ -1148,7 +1167,7 @@ void main() {
       );
       await aFolder.create(
         '$other.jsonl',
-        Uint8List.fromList(utf8.encode('${completed.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(completed)}\n')),
       );
       await a!.refresh();
       expect(state(a!, id)['completed'], false);
@@ -1168,7 +1187,7 @@ void main() {
     );
     await aFolder.create(
       '$remote.jsonl',
-      Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
+      Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
     );
     await a!.refresh();
     final completed = LogEvent(
@@ -1182,7 +1201,7 @@ void main() {
     );
     await aFolder.create(
       '$other.jsonl',
-      Uint8List.fromList(utf8.encode('${completed.encode()}\n')),
+      Uint8List.fromList(utf8.encode('${encodeEvent(completed)}\n')),
     );
     await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
   });
@@ -1246,7 +1265,7 @@ void main() {
       );
       await aFolder.create(
         '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(undo)}\n')),
       );
       await a!.refresh();
       final before = await aFolder.read('${a!.writer}.jsonl');
@@ -1469,7 +1488,7 @@ void main() {
       );
       await aFolder.create(
         '$remote.jsonl',
-        Uint8List.fromList(utf8.encode('${event.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(event)}\n')),
       );
       await a!.refresh();
       expect(state(a!, id)['completed'], isTrue);
@@ -1763,7 +1782,7 @@ void main() {
     );
     await aFolder.append(
       '${b!.writer}.jsonl',
-      Uint8List.fromList(utf8.encode('${remote.encode()}\n')),
+      Uint8List.fromList(utf8.encode('${encodeEvent(remote)}\n')),
     );
     await a!.refresh();
     final bytes = await aFolder.read('${a!.writer}.jsonl');
@@ -1843,7 +1862,7 @@ void main() {
         'task.edited',
         {'title': 'Future record'},
       );
-      final bytes = Uint8List.fromList(utf8.encode('${future.encode()}\n'));
+      final bytes = Uint8List.fromList(utf8.encode('${encodeEvent(future)}\n'));
       await aFolder.append('${b!.writer}.jsonl', bytes);
       await a!.refresh();
       expect(state(a!, id)['title'], 'Future record');
@@ -1917,7 +1936,7 @@ void main() {
       );
       await aFolder.append(
         '${b!.writer}.jsonl',
-        Uint8List.fromList(utf8.encode('${remote.encode()}\n')),
+        Uint8List.fromList(utf8.encode('${encodeEvent(remote)}\n')),
       );
       await a!.refresh();
       expect(
@@ -1935,7 +1954,7 @@ void main() {
       });
       expect(changed.clock.value, exact.value + BigInt.one);
       expect(
-        jsonDecode(changed.encode())['clock'],
+        jsonDecode(encodeEvent(changed))['clock'],
         (exact.value + BigInt.one).toString(),
       );
       await a!.close();

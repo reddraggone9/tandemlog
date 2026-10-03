@@ -146,7 +146,7 @@ void main() {
       closed = true;
       a = await TaskStore.open(transport, '${root.path}/a');
       closed = false;
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 11);
+      expect(a.db.select('PRAGMA user_version').single['user_version'], 12);
       expect(visible(a, next), isFalse);
       expect(await folder.read('${a.writer}.jsonl'), after);
       expect(
@@ -331,10 +331,10 @@ void main() {
   );
 
   test(
-    'historical v2 fixture retains old retraction meaning without rewriting',
+    'v3 fixture retains operation retraction meaning without rewriting',
     () async {
       final bytes = await File(
-        'test/fixtures/recurring_operation_undone_v2.jsonl',
+        'test/fixtures/recurring_operation_undone_v3.jsonl',
       ).readAsBytes();
       final records = (utf8.decode(bytes).trim().split('\n'))
           .map(LogEvent.decode)
@@ -345,7 +345,9 @@ void main() {
       await fixtureFolder.create(
         'tandemlog-space.json',
         Uint8List.fromList(
-          utf8.encode(jsonEncode({'v': 2, 'id': records.first.space})),
+          utf8.encode(
+            jsonEncode({'v': protocolVersion, 'id': records.first.space}),
+          ),
         ),
       );
       await fixtureFolder.create('${records.first.writer}.jsonl', bytes);

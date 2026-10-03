@@ -209,7 +209,7 @@ void main() {
       closedA = false;
       expect(a.writer, writer);
       expect(a.rows, expected);
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 11);
+      expect(a.db.select('PRAGMA user_version').single['user_version'], 12);
       expect({
         for (final f in await folder.list())
           f.name: base64Encode(await folder.read(f.name)),

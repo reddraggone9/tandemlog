@@ -131,7 +131,7 @@ void main() {
         }, onPrepared: receipts.add),
         throwsA(anything),
       );
-      expect(row(id)['title'], 'Transport replacement');
+      expect(row(id)['title'], 'Original');
       expect(store.confirmedOperations(receipts), isEmpty);
     },
   );

@@ -68,19 +68,27 @@ void main() {
   late String space, remote, user, task, owner;
   late String cache;
   int sequence = 0;
+  String? chainHead;
   Uint8List record(String type, Map<String, dynamic> data, {String? entity}) {
     sequence++;
-    return Uint8List.fromList(
-      utf8.encode(
-        '${LogEvent(space, remote, sequence, EventClock(BigInt.from(sequence)), entity ?? task, type, data).encode()}\n',
-      ),
+    final event = LogEvent(
+      space,
+      remote,
+      sequence,
+      EventClock(BigInt.from(sequence)),
+      entity ?? task,
+      type,
+      data,
     );
+    final raw = event.encode(previousHash: chainHead);
+    chainHead = LogEvent.decode(raw).hash;
+    return Uint8List.fromList(utf8.encode('$raw\n'));
   }
 
   File log() => folder.inner.file('$remote.jsonl');
   Future<void> seed([int minimumBytes = 0]) async {
     final builder = BytesBuilder(copy: false);
-    builder.add(record('user.created', {'name': 'Lee'}, entity: user));
+    builder.add(record('user.created', {'name': '李 👩🏽‍💻'}, entity: user));
     builder.add(
       record('task.created', {
         'title': 'Original',
@@ -130,9 +138,12 @@ void main() {
     task = const Uuid().v4();
     owner = const Uuid().v4();
     sequence = 0;
+    chainHead = null;
     await folder.create(
       'tandemlog-space.json',
-      Uint8List.fromList(utf8.encode(jsonEncode({'v': 2, 'id': space}))),
+      Uint8List.fromList(
+        utf8.encode(jsonEncode({'v': protocolVersion, 'id': space})),
+      ),
     );
   });
   tearDown(() async {
@@ -179,7 +190,7 @@ void main() {
   }
 
   test(
-    'same-length historical rewrite stays cached until explicit verification; fresh cache sees replacement',
+    'same-length historical rewrite stays cached until explicit verification; fresh cache rejects invalid selfhash',
     () async {
       await seed();
       await open();
@@ -194,19 +205,14 @@ void main() {
       expect(folder.fullBytes + folder.suffixBytes, 0);
       await expectLater(store!.verifyHistory(), throwsA(isA<FormatFailure>()));
       expect(title(), 'Original');
-      final fresh = await TaskStore.open(
-        folder,
-        '${root.path}/fresh',
-        writerIdentity: const Uuid().v4(),
+      await expectLater(
+        TaskStore.open(
+          folder,
+          '${root.path}/fresh',
+          writerIdentity: const Uuid().v4(),
+        ),
+        throwsA(isA<HistoryVerificationFailure>()),
       );
-      try {
-        expect(
-          fresh.rows.firstWhere((r) => r['id'] == task)['title'],
-          'Replaced',
-        );
-      } finally {
-        await fresh.close();
-      }
     },
   );
 
@@ -430,10 +436,13 @@ void main() {
             event['type'] = 'task.moved';
             event['data'] = {'before': user};
         }
+        event['hash'] = eventRecordHash(event);
         await folder.inner.append(
           '$remote.jsonl',
           Uint8List.fromList(
-            utf8.encode(invalid == 'blank' ? '\n' : '${jsonEncode(event)}\n'),
+            utf8.encode(
+              invalid == 'blank' ? '\n' : '${canonicalEventJson(event)}\n',
+            ),
           ),
         );
         folder.reset();
@@ -526,7 +535,7 @@ void main() {
       expect(row['hash_offset'], checkpoint);
       expect(
         store!.db.select('PRAGMA user_version').single['user_version'],
-        11,
+        12,
       );
       await log().writeAsString(
         (await log().readAsString()).replaceFirst('Original', 'Replaced'),
@@ -610,15 +619,15 @@ void main() {
         store!.command(task, 'task.edited', {
           'title': 'Intended',
         }, onPrepared: receipt.add),
-        throwsA(isA<FolderAccessFailure>()),
+        throwsA(isA<HistoryVerificationFailure>()),
       );
-      expect(title(), 'Intended');
+      expect(title(), 'Owned');
       expect(store!.confirmedOperations(receipt), isEmpty);
       expect(
         store!.db.select('SELECT raw FROM events WHERE id=?', [
           receipt.single.id,
-        ]).single['raw'],
-        ' ${receipt.single.raw} ',
+        ]),
+        isEmpty,
       );
     },
   );
@@ -646,10 +655,24 @@ void main() {
         store!.command(task, 'task.edited', {
           'title': 'Intended',
         }, onPrepared: receipt.add),
-        throwsA(isA<FolderAccessFailure>()),
+        throwsA(isA<HistoryVerificationFailure>()),
       );
       expect(store!.confirmedOperations(receipt), isEmpty);
-      expect(title(), 'Replaced');
+      expect(title(), 'Owned');
+      // Recovery restores the exact submitted bytes; no automatic repair occurs.
+      final owned = folder.inner.file('$owner.jsonl');
+      final previous = await owned.readAsBytes();
+      final checkpoint =
+          store!.db.select('SELECT offset FROM streams WHERE name=?', [
+                '$owner.jsonl',
+              ]).single['offset']
+              as int;
+      await owned.writeAsBytes([
+        ...previous.sublist(0, checkpoint),
+        ...utf8.encode('${receipt.single.raw}\n'),
+      ]);
+      await store!.refresh();
+      expect(title(), 'Intended');
       final created = const Uuid().v4();
       expect(
         (await store!.createTasks({created: 'Capture'}, user)).succeeded,
@@ -668,6 +691,351 @@ void main() {
         count,
       );
       expect(folder.fullBytes + folder.suffixBytes, 0);
+    },
+  );
+
+  for (final defect in ['selfhash', 'previousHash']) {
+    test(
+      'new suffix $defect has exact diagnostic and never advances cache',
+      () async {
+        await seed();
+        await open();
+        final checkpoint = offset();
+        final event =
+            jsonDecode(
+                  utf8.decode(record('task.edited', {'title': 'Rejected'})),
+                )
+                as Map<String, dynamic>;
+        if (defect == 'selfhash') {
+          event['data']['title'] = 'Changed';
+        } else {
+          event['previousHash'] = '0' * 64;
+          event['hash'] = eventRecordHash(event);
+        }
+        final invalid = Uint8List.fromList(
+          utf8.encode('${canonicalEventJson(event)}\n'),
+        );
+        await folder.inner.append('$remote.jsonl', invalid);
+        await expectLater(
+          store!.refresh(),
+          throwsA(
+            isA<HistoryVerificationFailure>()
+                .having((f) => f.fileName, 'file', '$remote.jsonl')
+                .having((f) => f.recordNumber, 'record', 3)
+                .having((f) => f.byteOffset, 'offset', checkpoint)
+                .having(
+                  (f) => f.reason,
+                  'reason',
+                  contains(
+                    defect == 'selfhash'
+                        ? 'hash mismatch'
+                        : 'Previous record hash',
+                  ),
+                ),
+          ),
+        );
+        expect(offset(), checkpoint);
+        expect(title(), 'Original');
+        expect(
+          store!.db
+              .select('SELECT chain_head,last_seq FROM streams')
+              .single['last_seq'],
+          2,
+        );
+        expect((await log().readAsBytes()).sublist(checkpoint), invalid);
+      },
+    );
+  }
+
+  test(
+    'fresh replay checks genesis even when every selfhash is valid',
+    () async {
+      final event = LogEvent(
+        space,
+        remote,
+        1,
+        EventClock(BigInt.one),
+        user,
+        'user.created',
+        {'name': 'Lee'},
+      );
+      final wrong = event.encode(previousHash: '0' * 64);
+      expect(LogEvent.decode(wrong).hash, isNotNull);
+      await folder.create(
+        '$remote.jsonl',
+        Uint8List.fromList(utf8.encode('$wrong\n')),
+      );
+      await expectLater(
+        open(),
+        throwsA(
+          isA<HistoryVerificationFailure>()
+              .having((f) => f.recordNumber, 'record', 1)
+              .having((f) => f.byteOffset, 'offset', 0)
+              .having(
+                (f) => f.reason,
+                'reason',
+                contains('Previous record hash'),
+              ),
+        ),
+      );
+    },
+  );
+
+  test(
+    'full verification reports exact changed record with UTF8 byte offset',
+    () async {
+      await seed();
+      await open();
+      final original = await log().readAsBytes();
+      final secondRecord = original.indexOf(10) + 1;
+      await replace(
+        Uint8List.fromList(
+          utf8.encode(
+            utf8.decode(original).replaceFirst('Original', 'Replaced'),
+          ),
+        ),
+      );
+      await expectLater(
+        store!.verifyHistory(),
+        throwsA(
+          isA<HistoryVerificationFailure>()
+              .having((f) => f.fileName, 'file', '$remote.jsonl')
+              .having((f) => f.recordNumber, 'record', 2)
+              .having((f) => f.byteOffset, 'offset', secondRecord),
+        ),
+      );
+      expect(store!.lastHistoryVerification, isNull);
+      expect(title(), 'Original');
+    },
+  );
+
+  test(
+    'successful full verification counts records and bytes without appending an event',
+    () async {
+      await seed();
+      await open();
+      final bytes = await log().readAsBytes();
+      expect(await store!.verifyHistory(), isFalse);
+      final report = store!.lastHistoryVerification!;
+      expect(report.checkedLogCount, 1);
+      expect(report.checkedRecordCount, 2);
+      expect(report.checkedByteCount, bytes.length);
+      expect(report.importedEventCount, 0);
+      expect(await log().readAsBytes(), bytes);
+      final tail = record('task.edited', {'title': 'Verified growth'});
+      await folder.inner.append('$remote.jsonl', tail);
+      expect(await store!.verifyHistory(), isTrue);
+      expect(store!.lastHistoryVerification!.checkedRecordCount, 3);
+      expect(store!.lastHistoryVerification!.importedEventCount, 1);
+      expect(
+        store!.db
+            .select('SELECT chain_head,last_seq FROM streams')
+            .single['chain_head'],
+        chainHead,
+      );
+    },
+  );
+
+  test(
+    'retained baseline detects recomputed chain while a fresh cache cannot authenticate it',
+    () async {
+      await seed();
+      await open();
+      final prior = (await log().readAsString())
+          .trim()
+          .split('\n')
+          .map((line) => jsonDecode(line) as Map<String, dynamic>)
+          .toList();
+      prior[1]['data']['title'] = 'Replaced';
+      var head = eventGenesisHash(space, remote);
+      final changed = <String>[];
+      for (final event in prior) {
+        event['previousHash'] = head;
+        event['hash'] = eventRecordHash(event);
+        head = event['hash'] as String;
+        changed.add(canonicalEventJson(event));
+      }
+      await replace(Uint8List.fromList(utf8.encode('${changed.join('\n')}\n')));
+      await expectLater(
+        store!.verifyHistory(),
+        throwsA(isA<HistoryVerificationFailure>()),
+      );
+      final fresh = await TaskStore.open(
+        folder,
+        '${root.path}/fresh',
+        writerIdentity: const Uuid().v4(),
+      );
+      try {
+        expect(
+          fresh.rows.firstWhere((r) => r['id'] == task)['title'],
+          'Replaced',
+        );
+      } finally {
+        await fresh.close();
+      }
+    },
+  );
+
+  test(
+    'known final-record removal fails verification while fresh valid prefix remains admissible',
+    () async {
+      await seed();
+      final tail = record('task.edited', {'title': 'Removed'});
+      await folder.inner.append('$remote.jsonl', tail);
+      await open();
+      final all = await log().readAsBytes();
+      final prefix = Uint8List.fromList(
+        all.sublist(0, all.length - tail.length),
+      );
+      await replace(prefix);
+      await expectLater(
+        store!.verifyHistory(),
+        throwsA(
+          isA<HistoryVerificationFailure>()
+              .having((f) => f.recordNumber, 'removed record', 3)
+              .having((f) => f.byteOffset, 'offset', prefix.length),
+        ),
+      );
+      final fresh = await TaskStore.open(
+        folder,
+        '${root.path}/fresh',
+        writerIdentity: const Uuid().v4(),
+      );
+      try {
+        expect(
+          fresh.rows.firstWhere((r) => r['id'] == task)['title'],
+          'Original',
+        );
+      } finally {
+        await fresh.close();
+      }
+    },
+  );
+
+  test(
+    'old v2 canonical history and cache are retained without migration',
+    () async {
+      await seed();
+      await open();
+      store!.db.execute('PRAGMA user_version=11');
+      await store!.close();
+      store = null;
+      final cacheFile = File('$cache/cache.sqlite');
+      final cacheBefore = await cacheFile.readAsBytes();
+      final manifest = Uint8List.fromList(
+        utf8.encode(jsonEncode({'v': 2, 'id': space})),
+      );
+      await folder.inner.file('tandemlog-space.json').writeAsBytes(manifest);
+      final oldFixture = await File(
+        'test/fixtures/recurring_operation_undone_v2.jsonl',
+      ).readAsBytes();
+      await log().writeAsBytes(oldFixture);
+      await expectLater(
+        open(),
+        throwsA(
+          isA<FormatFailure>().having(
+            (f) => f.message,
+            'old protocol',
+            contains('older prerelease format (v2)'),
+          ),
+        ),
+      );
+      expect(await cacheFile.readAsBytes(), cacheBefore);
+      expect(await log().readAsBytes(), oldFixture);
+      expect(
+        await folder.inner.file('tandemlog-space.json').readAsBytes(),
+        manifest,
+      );
+    },
+  );
+
+  for (final field in ['chain_head', 'last_seq', 'last_clock']) {
+    test(
+      'full verification retains and rejects inconsistent cached $field',
+      () async {
+        await seed();
+        await open();
+        final canonical = await log().readAsBytes();
+        final replacement = field == 'chain_head' ? '0' * 64 : 99;
+        store!.db.execute('UPDATE streams SET $field=? WHERE name=?', [
+          replacement,
+          '$remote.jsonl',
+        ]);
+        await expectLater(
+          store!.verifyHistory(),
+          throwsA(
+            isA<HistoryVerificationFailure>().having(
+              (f) => f.reason,
+              'checkpoint',
+              contains('Cached chain checkpoint is inconsistent'),
+            ),
+          ),
+        );
+        expect(
+          store!.db.select('SELECT $field FROM streams').single[field],
+          replacement,
+        );
+        expect(await log().readAsBytes(), canonical);
+        expect(store!.lastHistoryVerification, isNull);
+      },
+    );
+  }
+
+  test(
+    'oversized partial suffix identifies exact absolute record and offset',
+    () async {
+      await seed();
+      await open();
+      final checkpoint = offset();
+      final complete = record('task.edited', {'title': 'Uncommitted'});
+      await folder.inner.append(
+        '$remote.jsonl',
+        Uint8List.fromList([...complete, ...Uint8List(1024 * 1024 + 1)]),
+      );
+      await expectLater(
+        store!.refresh(),
+        throwsA(
+          isA<HistoryVerificationFailure>()
+              .having((f) => f.recordNumber, 'record', 4)
+              .having(
+                (f) => f.byteOffset,
+                'offset',
+                checkpoint + complete.length,
+              ),
+        ),
+      );
+      expect(offset(), checkpoint);
+      expect(title(), 'Original');
+    },
+  );
+
+  test(
+    'semantic failure identifies invalid move before later unrelated event',
+    () async {
+      await seed();
+      await open();
+      final checkpoint = offset();
+      final invalid = record('task.moved', {'before': user});
+      final later = record('task.edited', {'title': 'Later'});
+      await folder.inner.append(
+        '$remote.jsonl',
+        Uint8List.fromList([...invalid, ...later]),
+      );
+      await expectLater(
+        store!.refresh(),
+        throwsA(
+          isA<HistoryVerificationFailure>()
+              .having((f) => f.recordNumber, 'record', 3)
+              .having((f) => f.byteOffset, 'offset', checkpoint)
+              .having(
+                (f) => f.reason,
+                'reason',
+                contains('Task order anchor is not a task'),
+              ),
+        ),
+      );
+      expect(offset(), checkpoint);
+      expect(title(), 'Original');
     },
   );
 }
