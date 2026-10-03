@@ -11,7 +11,7 @@ void main() {
       final space = const Uuid().v4(),
           writer = const Uuid().v4(),
           id = const Uuid().v4();
-      final events = [
+      final events = roundTripChain([
         LogEvent(space, writer, 1, testClock(1, 0), id, 'task.created', {
           'title': 'Old',
           'description': '',
@@ -23,19 +23,19 @@ void main() {
           'assignee': space,
         }),
         LogEvent(space, writer, 4, testClock(4, 0), id, 'task.completed', {}),
-      ].map((e) => LogEvent.decode(e.encode())).toList();
+      ]);
       final expected = project([...events]);
       for (var i = 0; i < 20; i++) {
         final reordered = [...events]..shuffle(Random(i));
         expect(project(reordered), expected);
         expect(project(reordered)!['deleted'], isTrue);
       }
-      expect(events[1].toJson()['v'], 2);
+      expect(events[1].toJson()['v'], 3);
       expect(
         () => LogEvent.decode(
           LogEvent(space, writer, 5, testClock(5, 0), id, 'task.deleted', {
             'restore': true,
-          }).encode(),
+          }).encode(previousHash: events.last.hash),
         ),
         throwsA(isA<FormatFailure>()),
       );
@@ -182,3 +182,12 @@ void main() {
 EventClock testClock(int wallMs, int increment) => EventClock(
   BigInt.from(wallMs) * BigInt.from(1000000) + BigInt.from(increment),
 );
+
+List<LogEvent> roundTripChain(List<LogEvent> events) {
+  String? head;
+  return events.map((event) {
+    final decoded = LogEvent.decode(event.encode(previousHash: head));
+    head = decoded.hash;
+    return decoded;
+  }).toList();
+}

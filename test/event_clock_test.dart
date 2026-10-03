@@ -49,21 +49,36 @@ void main() {
       }
     },
   );
-  test('numeric legacy and tuple draft event clocks are rejected explicitly', () {
-    const id = '12345678-1234-4234-8234-123456789abc';
-    for (final clock in ['5', '{"wallMs":5,"logical":0}']) {
-      final raw =
-          '{"v":2,"space":"$id","writer":"$id","seq":1,"clock":$clock,"entity":"$id","type":"user.created","data":{"name":"Example"}}';
-      expect(
-        () => LogEvent.decode(raw),
-        throwsA(
-          isA<FormatFailure>().having(
-            (e) => e.message,
-            'message',
-            contains('decimal string'),
+  test(
+    'numeric legacy and tuple draft event clocks are rejected explicitly',
+    () {
+      const id = '12345678-1234-4234-8234-123456789abc';
+      for (final clock in [
+        5,
+        {'wallMs': 5, 'logical': 0},
+      ]) {
+        final record = LogEvent(
+          id,
+          id,
+          1,
+          EventClock(BigInt.one),
+          id,
+          'user.created',
+          {'name': 'Example'},
+        ).toJson()..['clock'] = clock;
+        record['hash'] = eventRecordHash(record);
+        final raw = canonicalEventJson(record);
+        expect(
+          () => LogEvent.decode(raw),
+          throwsA(
+            isA<FormatFailure>().having(
+              (e) => e.message,
+              'message',
+              contains('decimal string'),
+            ),
           ),
-        ),
-      );
-    }
-  });
+        );
+      }
+    },
+  );
 }

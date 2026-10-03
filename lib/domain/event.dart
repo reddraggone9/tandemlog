@@ -1,11 +1,13 @@
 import 'dart:convert';
+import 'event_chain.dart';
+export 'event_chain.dart';
 import 'event_clock.dart';
 export 'event_clock.dart';
 import 'package:uuid/uuid.dart';
 import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
 
-const protocolVersion = 2;
+const protocolVersion = 3;
 final _idShape = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
 );
@@ -39,6 +41,8 @@ class LogEvent {
   final int sequence;
   final EventClock clock;
   final Map<String, dynamic> data;
+  final String? previousHash, hash;
+  final String? canonicalRaw;
   LogEvent(
     this.space,
     this.writer,
@@ -46,27 +50,48 @@ class LogEvent {
     this.clock,
     this.entity,
     this.type,
-    this.data,
-  );
+    this.data, {
+    this.previousHash,
+    this.hash,
+    this.canonicalRaw,
+  });
   String get id => '$writer:$sequence';
-  Map<String, dynamic> toJson() => {
-    'v': protocolVersion,
-    'space': space,
-    'writer': writer,
-    'seq': sequence,
-    'clock': clock.toJson(),
-    'entity': entity,
-    'type': type,
-    'data': data,
-  };
-  String encode() => jsonEncode(toJson());
+  Map<String, dynamic> toJson({String? previousHash}) {
+    final predecessor =
+        previousHash ??
+        this.previousHash ??
+        (sequence == 1 ? eventGenesisHash(space, writer) : null);
+    if (!isEventHash(predecessor)) {
+      throw FormatFailure('A valid previous hash is required for this event.');
+    }
+    final record = <String, dynamic>{
+      'v': protocolVersion,
+      'space': space,
+      'writer': writer,
+      'seq': sequence,
+      'clock': clock.toJson(),
+      'entity': entity,
+      'type': type,
+      'data': data,
+      'previousHash': predecessor,
+    };
+    try {
+      record['hash'] = eventRecordHash(record);
+      return record;
+    } on FormatException catch (error) {
+      throw FormatFailure(error.message);
+    }
+  }
+
+  String encode({String? previousHash}) =>
+      canonicalEventJson(toJson(previousHash: previousHash));
   factory LogEvent.decode(String raw) {
     try {
       if (raw.length > 1024 * 1024) throw FormatFailure('Oversized event.');
       final j = jsonDecode(raw) as Map<String, dynamic>;
-      if (j['v'] == 1) {
+      if (j['v'] == 1 || j['v'] == 2) {
         throw FormatFailure(
-          'This history uses an older prerelease format (v1). Preserve it and choose a new data folder for this prerelease.',
+          'This history uses an older prerelease format (v${j['v']}). Preserve it and choose a new data folder for this prerelease.',
         );
       }
       if (j['v'] != protocolVersion) {
@@ -209,9 +234,20 @@ class LogEvent {
               'entity',
               'type',
               'data',
+              'previousHash',
+              'hash',
             }.contains(k),
           )) {
         throw FormatFailure('Unknown fields require a newer format version.');
+      }
+      if (!isEventHash(j['previousHash']) || !isEventHash(j['hash'])) {
+        throw FormatFailure('Invalid event chain hash.');
+      }
+      if (canonicalEventJson(j) != raw) {
+        throw FormatFailure('Noncanonical event JSON. History was preserved.');
+      }
+      if (eventRecordHash(j) != j['hash']) {
+        throw FormatFailure('Event hash mismatch. History was preserved.');
       }
       return LogEvent(
         j['space'],
@@ -220,7 +256,10 @@ class LogEvent {
         EventClock.fromJson(j['clock']),
         j['entity'],
         j['type'],
-        d,
+        _freezeJson(d) as Map<String, dynamic>,
+        previousHash: j['previousHash'],
+        hash: j['hash'],
+        canonicalRaw: raw,
       );
     } on FormatFailure {
       rethrow;
@@ -409,4 +448,15 @@ void validateTagChanges(dynamic changes) {
       )) {
     throw FormatFailure('Invalid tag removal references.');
   }
+}
+
+// Keep a decoded record's retained hash consistent with its admitted payload.
+dynamic _freezeJson(dynamic value) {
+  if (value is Map<String, dynamic>) {
+    return Map<String, dynamic>.unmodifiable(
+      value.map((key, item) => MapEntry(key, _freezeJson(item))),
+    );
+  }
+  if (value is List) return List<dynamic>.unmodifiable(value.map(_freezeJson));
+  return value;
 }
