@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import re
 import subprocess
-from android_release import check_version, fingerprint
+from android_release import check_candidate_history, check_version, fingerprint
 from app_version import verify_release_kind
 
 
@@ -57,6 +57,7 @@ if __name__ == '__main__':
     sha = os.environ['CANDIDATE_SHA']
     if subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip() != sha:
         raise ValueError('Checkout is not the validated source')
+    check_candidate_history(expected, sha)
     dist = Path('dist')
     expected_files = {'tandemlog-linux-x64.flatpak', 'linux-SHA256SUMS.txt', 'linux-startup.json', 'linux-install-smoke.json',
                       'tandemlog-windows-x64-unsigned-setup.exe', 'windows-SHA256SUMS.txt', 'windows-install-smoke.json',

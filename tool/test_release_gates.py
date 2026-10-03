@@ -1,8 +1,10 @@
 import unittest
 import tempfile
+import os
+from unittest.mock import patch
 from pathlib import Path
-from android_release import check_candidate_codes, fingerprint, verify_apk, version
-from candidate_source import validate_run
+from android_release import check_candidate_codes, check_candidate_history, fingerprint, verify_apk, version
+from candidate_source import validate_candidate_version, validate_run
 from publish_gate import verify_install_smoke, verify_metadata
 from release_assets import public_asset_names, stage_public_assets
 from app_version import historical_version, release_components, verify_release_kind
@@ -51,6 +53,17 @@ class ReleaseGates(unittest.TestCase):
         for code in (4, 5):
             with self.assertRaises(ValueError): check_candidate_codes(code, [5])
 
+    def test_publication_floor_excludes_accepted_source_not_dispatch_commit(self):
+        accepted, newer, dispatch = 'a'*40, 'b'*40, 'c'*40
+        with patch.dict(os.environ, GITHUB_REPOSITORY='owner/repo', GITHUB_SHA=dispatch):
+            with patch('android_release.subprocess.check_output', return_value=accepted+'\n') as command:
+                check_candidate_history(('2026.10.0-rc.1', 38), accepted)
+                self.assertEqual(command.call_count, 1)
+            with patch('android_release.subprocess.check_output', side_effect=[
+                    accepted+'\n'+newer+'\n', 'version: 2026.10.0-rc.2+39']):
+                with self.assertRaises(ValueError):
+                    check_candidate_history(('2026.10.0-rc.1', 38), accepted)
+
     def test_version_requires_explicit_build(self):
         self.assertEqual(version('version: 2026.10.0-rc.1+38'), ('2026.10.0-rc.1', 38))
         self.assertEqual(version('version: 2026.10.0+39'), ('2026.10.0', 39))
@@ -90,6 +103,20 @@ class ReleaseGates(unittest.TestCase):
                            ('path','.github/workflows/ci.yml'), ('head_sha','invalid'),
                            ('head_repository',{'full_name':'other/repo'})]:
             with self.assertRaises(ValueError): validate_run(dict(run, **{key:value}), 'owner/repo')
+
+    def test_trusted_dispatch_rejects_older_rc_or_wrong_channel_candidate(self):
+        preview = 'version: 2026.10.0-rc.1+38'
+        stable = 'version: 2026.10.0+39'
+        validate_candidate_version(preview, 'v2026.10.0-rc.1', 'prerelease')
+        validate_candidate_version(stable, 'v2026.10.0', 'stable', True)
+        for spec, tag, kind, accepted in [
+                ('version: 0.1.0-rc.10+37', 'v0.1.0-rc.10', 'stable', True),
+                (preview, 'v2026.10.0-rc.1', 'stable', True),
+                (stable, 'v2026.10.0', 'prerelease', True),
+                (stable, 'v2026.10.0', 'stable', False),
+                (preview, 'v2026.10.0-rc.2', 'prerelease', False)]:
+            with self.assertRaises(ValueError):
+                validate_candidate_version(spec, tag, kind, accepted)
 
     def test_installed_desktop_lifecycle_gate(self):
         phases = [dict(phase=name, passed=True, loaded_projection=name != 'after-uninstall',

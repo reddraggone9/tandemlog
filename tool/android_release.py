@@ -48,9 +48,10 @@ def check_candidate_codes(current_code, previous_codes):
         raise ValueError('Increase Android build number beyond previous signed candidates')
 
 
-def check_candidate_history():
-    current = check_version()
-    repo, sha = os.environ['GITHUB_REPOSITORY'], os.environ['GITHUB_SHA']
+def check_candidate_history(current=None, source_sha=None):
+    current = current or check_version()
+    repo = os.environ['GITHUB_REPOSITORY']
+    sha = source_sha or os.environ['GITHUB_SHA']
     previous = subprocess.check_output([
         'gh', 'api', '--paginate',
         f'repos/{repo}/actions/workflows/android-candidate.yml/runs?event=workflow_dispatch&per_page=100',

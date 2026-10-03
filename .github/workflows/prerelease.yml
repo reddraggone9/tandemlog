@@ -27,10 +27,14 @@ jobs:
       sha: ${{ steps.source.outputs.sha }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
       - id: source
         env:
           GH_TOKEN: ${{ github.token }}
           CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
+          CANDIDATE: ${{ inputs.tag }}
+          RELEASE_KIND: prerelease
         run: |
           test "$GITHUB_REF" = refs/heads/main
           python3 tool/candidate_source.py
@@ -60,7 +64,13 @@ jobs:
           ANDROID_VERIFIED_SHA256: ${{ inputs.android_verified_sha256 }}
           RELEASE_KIND: prerelease
         run: |
-          python3 tool/publish_gate.py
+          # Always use the trusted dispatch policy even when selecting an older
+          # candidate. Cwd/source/artifacts remain that exact candidate.
+          mkdir .release-policy
+          for policy in app_version.py android_release.py publish_gate.py release_assets.py; do
+            git show "$GITHUB_SHA:tool/$policy" > ".release-policy/$policy"
+          done
+          python3 .release-policy/publish_gate.py
           cd dist
           sha256sum --check linux-SHA256SUMS.txt
           sha256sum --check windows-SHA256SUMS.txt
@@ -71,6 +81,6 @@ jobs:
           # pin it to this dispatch commit, not a moving branch at publish time.
           git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
           # Evidence/checksums stay in the gated candidate; users see installers.
-          python3 tool/release_assets.py
+          python3 .release-policy/release_assets.py
           gh release create "$CANDIDATE" public-assets/* \
             --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
