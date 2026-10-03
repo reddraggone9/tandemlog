@@ -166,7 +166,7 @@ void main() {
       try {
         expect(
           replayed.db.select('PRAGMA user_version').single['user_version'],
-          11,
+          13,
         );
         expect(
           replayed.rows.firstWhere((row) => row['id'] == task)['inbox'],

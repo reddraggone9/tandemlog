@@ -27,6 +27,7 @@ import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
 import 'storage/local_settings.dart';
+import 'storage/local_durability.dart';
 import 'storage/profile_lock.dart';
 import 'storage/task_store.dart';
 
@@ -308,7 +309,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           widget.profilePath ??
           Platform.environment['TANDEMLOG_PROFILE'] ??
           (await getApplicationSupportDirectory()).path;
-      await Directory(privateRoot!).create(recursive: true);
       profileLock ??= await ProfileLock.acquire(privateRoot!);
       if (!mounted) return;
       settings = LocalSettings(privateRoot!);
@@ -348,6 +348,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       folder,
       '$privateRoot/spaces/$cacheKey',
       writerIdentity: settings!.writer,
+      writerGuard: FileWriterGuard(privateRoot!),
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
     if (!mounted) {
@@ -388,7 +389,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _startDefault() => _act(() async {
     if (!settingsLoaded || settings!.folder != null) return;
     final location = await settings!.desktopDefaultFolder();
-    await Directory(location).create(recursive: true);
+    await ensureDirectoryDurable(Directory(location));
     await _open(location);
     if (!mounted) return;
     await _saveSettings();

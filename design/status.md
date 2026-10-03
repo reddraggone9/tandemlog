@@ -1,5 +1,13 @@
 # Current status — 2026-10-03
 
+## 2026.10.0-rc.1 build38 — final safeguards in validation
+
+Lee approved canonical v3 predecessor/self-hashes, Settings **Check data integrity**, natural title/metadata wrapping, an installation-level exact writer-head guard, Linux file/directory barriers and Android duplicate canonical-name rejection. Separate tag-only events and legacy generic recurring Undo were removed before stable compatibility begins. The cache advances to 13 so previous projections cannot bypass the tightened admission rules. Existing v1/v2 canonical data is preserved and explicitly rejected; no in-place protocol conversion or reset occurs.
+
+CalVer and separate stable promotion tooling are accepted and implemented. Publication policy comes from the trusted dispatch commit, and rejects wrong-channel or stale lower-build candidates. Stable publication still requires a separately accepted stable-version candidate. All 18 Python release tests and workflow lint pass. The earlier full native Linux aggregate passed 44 flows before the final safeguards. Focused Linux durability passes 23 tests and Android adapter defense passes 25 mocks; actual Android provider validation remains pending. Final aggregate, release performance and hosted platform/signing gates are not yet claimed.
+
+A standalone optimized store-audit crash exposed the large async ingestion loop; extracting pure record validation fixed the reproduced AOT failure while retaining chain/domain checks. The corrected native Linux release build also passes its small fresh/warm startup smoke. Exact final performance and source-pin evidence follow the complete guard/cache regression. The private migration adapter still needs the latest independently tested v11 notes/link source before a cutover-ready v3 package can be claimed. No actual source or shared folder was touched by cloud probes.
+
 ## RC10 build37 in validation — not released
 
 Desktop explicit Start selects `shared-data/` for new setup; saved selections stay exact and a populated legacy `data/` is recovered after settings reset. Search/Add refinements preserve drafts and Undo geometry. All assignee/status/upcoming/tag filters remain in one compact Filter dialog with active indicator/reset; active identity and Settings use the top-bar account menu. Raw captures now group in Inbox until a first saved edit/tag change; cancel, move and completion do not count as editing. Populated creations and recurrence successors start outside Inbox. Undo restores classification; drag cannot cross Inbox/date/time buckets. Tag-layout alternatives are comparison-only pending Lee's choice.

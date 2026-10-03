@@ -29,7 +29,9 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Session Undo and toolbar fit](decisions/0005-session-undo-and-toolbar.md): RC5 rationale and conflict boundaries.
 
-- [Stable readiness review](stable-readiness.md): required durable-data decisions before 0.1.0.
+- [Stable readiness review](stable-readiness.md): required durable-data decisions before the first stable release.
 
 - [Installation identity and locking](decisions/0006-installation-identity-and-instance-lock.md): one preferences-root lease, settings-owned writer UUID and local migration/reset.
 - [Android reconciliation review](android-reconciliation-review.md): accepted checkpoint policy, SAF notification capabilities, measurements and limits.
+- [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
+- [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.

@@ -16,13 +16,21 @@ root.mkdir(exist_ok=True)
 folder=root/'shared';folder.mkdir(exist_ok=True)
 profile=root/'profile';profile.mkdir(exist_ok=True)
 space,writer,user=(str(uuid.uuid4()) for _ in range(3))
-(folder/'tandemlog-space.json').write_text(json.dumps({'v':2,'id':space}))
+(folder/'tandemlog-space.json').write_text(json.dumps({'v':3,'id':space}))
 for f in folder.glob('*.jsonl'):f.unlink()
 events=[]
 batch_ns=time.time_ns()
+previous=hashlib.sha256(f'tandemlog:genesis:v3\n{space}\n{writer}\n'.encode()).hexdigest()
 for n in range(args.tasks+1):
  entity=user if n==0 else str(uuid.uuid4())
- events.append(json.dumps({'v':2,'space':space,'writer':writer,'seq':n+1,'clock':str(batch_ns+n),'entity':entity,'type':'user.created' if n==0 else 'task.created','data':{'name':'Benchmark user'} if n==0 else {'title':f'Task {n:04d}','description':'Synthetic startup workload','assignee':user}}))
+ data={'name':'Benchmark user'} if n==0 else {'title':f'Task {n:04d}','description':'Synthetic startup workload','assignee':user}
+ # Protocol-v3 envelope order is fixed; this synthetic payload contains only
+ # ASCII strings and one object whose keys use canonical scalar ordering.
+ record={'v':3,'space':space,'writer':writer,'seq':n+1,'clock':str(batch_ns+n),'entity':entity,'type':'user.created' if n==0 else 'task.created','data':dict(sorted(data.items())),'previousHash':previous}
+ unsigned=json.dumps(record,ensure_ascii=False,separators=(',',':'))
+ record['hash']=hashlib.sha256(('tandemlog:event:v3\n'+unsigned).encode()).hexdigest()
+ previous=record['hash']
+ events.append(json.dumps(record,ensure_ascii=False,separators=(',',':')))
 (folder/f'{writer}.jsonl').write_text('\n'.join(events)+'\n')
 (profile/'settings.json').write_text(json.dumps({'folder':str(folder),'user':user}))
 cache=profile/'spaces'/hashlib.sha256(str(folder).encode()).hexdigest()

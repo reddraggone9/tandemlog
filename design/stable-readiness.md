@@ -1,4 +1,4 @@
-# Review before stable 0.1.0
+# Review before the first stable release
 
 Status: required review, not authorization for stable publication, source cutover, deletion or history repair. Markdown remains authoritative through prereleases. Test contents are disposable; the sync path/share remains permanent. Coordinate the latest source freeze, backups, device/app handling, fresh import and independent validation before a final handoff.
 
@@ -13,6 +13,6 @@ Before promising stable compatibility, review these hard-to-change data decision
 
 Record each accepted compatibility promise and unresolved gap before stable gates. Do not turn this checklist into speculative implementation or change prerelease data without an explicit action.
 
-The [Android reconciliation review](android-reconciliation-review.md) distinguishes notifications, incremental parsing and historical integrity checks. Lee approved cached incremental admission without full historical reads on ordinary startup/resume. The implementation retains local baseline/range hashes for explicit verification; real-provider behavior/performance and the accepted historical-mutation blind spot remain part of stable review.
+The [Android reconciliation review](android-reconciliation-review.md) distinguishes notifications, incremental parsing and historical integrity checks. Lee approved cached incremental admission without full historical reads on ordinary startup/resume, then explicitly required hashes in canonical records and a Settings integrity action. [ADR 0007](decisions/0007-canonical-history-integrity.md) supersedes private-checkpoint-only integrity. Real-provider behavior/performance, the cached old-prefix blind spot, fresh-device limits without a trusted head, and coordinated prerelease test-folder handling remain part of stable review. V2 compatibility alone does not override the approved canonical integrity requirement.
 
 The [2026-10-02 independent review](stable-readiness-review-2026-10-02.md) records concrete durable-creation and conditional SAF-name findings, remaining provider/restore evidence, the actual review mechanism and the conditional version-only stable promotion path. RC7 remains an experimental candidate pending its exact gates; the review does not authorize a cutover.
