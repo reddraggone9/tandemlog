@@ -427,10 +427,12 @@ void main() {
             event['type'] = 'task.completionUndone';
             event['data'] = {'completion': '$remote:1'};
           case 'tag reference':
-            event['type'] = 'task.tagsChanged';
+            event['type'] = 'task.edited';
             event['data'] = {
-              'add': <String>[],
-              'remove': ['$remote:1:0'],
+              'tagChanges': {
+                'add': <String>[],
+                'remove': ['$remote:1:0'],
+              },
             };
           case 'move reference':
             event['type'] = 'task.moved';
@@ -507,7 +509,7 @@ void main() {
   }
 
   test(
-    'cache 10 migration keeps materializations/baseline and reads no historical bytes',
+    'cache 10 upgrade replays once with retained baseline and then reads no historical bytes',
     () async {
       await seed(1024 * 1024);
       await open();
@@ -528,15 +530,18 @@ void main() {
       store!.db.execute('PRAGMA user_version=10');
       await reopen();
       expect(folder.offsets, [checkpoint]);
-      expect(folder.fullBytes + folder.suffixBytes, 0);
+      expect(folder.fullBytes, checkpoint);
+      expect(folder.suffixBytes, 0);
       expect(store!.taskSnapshot, snapshot);
       final row = store!.db.select('SELECT * FROM streams').single;
       expect(row['hash'], baseline);
       expect(row['hash_offset'], checkpoint);
       expect(
         store!.db.select('PRAGMA user_version').single['user_version'],
-        12,
+        13,
       );
+      await reopen();
+      expect(folder.fullBytes + folder.suffixBytes, 0);
       await log().writeAsString(
         (await log().readAsString()).replaceFirst('Original', 'Replaced'),
       );

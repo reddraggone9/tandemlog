@@ -14,6 +14,14 @@ class _ReplacingFolder implements LogFolder {
   final LocalLogFolder inner;
   int? keepNewRecords;
   bool replaceNewTitle = false;
+  String? delayedName;
+  Uint8List? delayedSuffix;
+  Future<void> revealPending() async {
+    await inner.append(delayedName!, delayedSuffix!);
+    delayedName = null;
+    delayedSuffix = null;
+  }
+
   @override
   String get location => inner.location;
   @override
@@ -43,6 +51,10 @@ class _ReplacingFolder implements LogFolder {
       suffix = '${jsonEncode(event)}\n';
     } else {
       suffix = lines.take(keep!).map((line) => '$line\n').join();
+      delayedName = name;
+      delayedSuffix = Uint8List.fromList(
+        utf8.encode(lines.skip(keep).map((line) => '$line\n').join()),
+      );
     }
     final temporary = File('$location/replacement.tmp');
     await temporary.writeAsBytes([
@@ -104,7 +116,13 @@ void main() {
       );
       expect(row(id)['title'], 'Original');
       expect(store.confirmedOperations(receipts), isEmpty);
-      // A deliberate retry can reuse the sequence, but only its own raw receipt confirms.
+      await expectLater(
+        store.command(id, 'task.edited', {'title': 'Different'}),
+        throwsA(isA<WriterGuardFailure>()),
+      );
+      await folder.revealPending();
+      await store.refresh();
+      expect(store.confirmedOperations(receipts), {receipts.single.id});
       final retry = <OperationReceipt>[];
       await store.edit(
         id,
@@ -113,8 +131,7 @@ void main() {
         observedTagRefs: {},
         onPrepared: retry.add,
       );
-      expect(retry.single.id, receipts.single.id);
-      expect(store.confirmedOperations(receipts), isEmpty);
+      expect(retry.single.id, isNot(receipts.single.id));
       expect(store.confirmedOperations(retry), {retry.single.id});
     },
   );
@@ -179,6 +196,15 @@ void main() {
               ids.take(keep),
             );
           }
+          await folder.revealPending();
+          await store.refresh();
+          if (action == 'delete') {
+            expect(
+              ids.every((id) => !store.rows.any((task) => task['id'] == id)),
+              isTrue,
+            );
+            return;
+          }
           final BulkTaskResult retry;
           if (action == 'create') {
             retry = await store.createTasks({
@@ -191,10 +217,7 @@ void main() {
               expectedTaskSnapshot: store.taskSnapshot,
             );
           } else {
-            retry = await store.deleteTasks(
-              result.remainingIds,
-              expectedTaskSnapshot: store.taskSnapshot,
-            );
+            throw StateError('Unexpected action');
           }
           expect(retry.succeeded, isTrue);
           expect(retry.remainingIds, isEmpty);
@@ -212,6 +235,12 @@ void main() {
         folder.keepNewRecords = keep;
         await expectLater(store.reopen(id, targets), throwsA(anything));
         expect(store.activeCompletionIds(id), targets.skip(keep));
+        await expectLater(
+          store.reopen(id, targets),
+          throwsA(isA<WriterGuardFailure>()),
+        );
+        await folder.revealPending();
+        await store.refresh();
         await store.reopen(id, targets);
         expect(row(id)['completed'], isFalse);
       },
@@ -238,6 +267,10 @@ void main() {
           ids.where((id) => (row(id)['tags'] as List).isEmpty),
           ids.take(keep),
         );
+        final blocked = await store.undoOperations(result.remaining);
+        expect(blocked.error, isA<WriterGuardFailure>());
+        await folder.revealPending();
+        await store.refresh();
         final retry = await store.undoOperations(result.remaining);
         expect(retry.error, isNull);
         expect(retry.remaining, isEmpty);

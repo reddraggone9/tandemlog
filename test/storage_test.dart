@@ -8,6 +8,16 @@ import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+Future<void> editTags(TaskStore store, String entity, List<String> tags) async {
+  final state = store.rows.firstWhere((row) => row['id'] == entity);
+  await store.edit(
+    entity,
+    {},
+    tags: tags,
+    observedTagRefs: Map<String, String>.from(state['tagRefs'] as Map),
+  );
+}
+
 void main() {
   late Directory root;
   late LocalLogFolder aFolder, bFolder;
@@ -530,17 +540,21 @@ void main() {
         'start-time-0930',
       ]) {
         await expectLater(
-          a!.command(id, 'task.tagsChanged', {
-            'add': [tag],
-            'remove': <String>[],
+          a!.command(id, 'task.edited', {
+            'tagChanges': {
+              'add': [tag],
+              'remove': <String>[],
+            },
           }),
           throwsA(isA<FormatFailure>()),
         );
       }
       expect(await aFolder.read('${a!.writer}.jsonl'), before);
-      await a!.command(id, 'task.tagsChanged', {
-        'add': ['Due-min-2-days', 'ordinary'],
-        'remove': <String>[],
+      await a!.command(id, 'task.edited', {
+        'tagChanges': {
+          'add': ['Due-min-2-days', 'ordinary'],
+          'remove': <String>[],
+        },
       });
       final expected = a!.rows;
       await a!.close();
@@ -1329,15 +1343,17 @@ void main() {
     'offline tag removal preserves unseen same-name additions and atomic edits',
     () async {
       final id = await task();
-      await a!.setTags(id, ['home']);
+      await editTags(a!, id, ['home']);
       await copy(aFolder, bFolder);
       await b!.refresh();
       final observed = Map<String, String>.from(
         state(a!, id)['tagRefs'] as Map,
       );
-      await b!.command(id, 'task.tagsChanged', {
-        'add': ['home', 'other'],
-        'remove': <String>[],
+      await b!.command(id, 'task.edited', {
+        'tagChanges': {
+          'add': ['home', 'other'],
+          'remove': <String>[],
+        },
       });
       await a!.edit(
         id,
@@ -1576,7 +1592,7 @@ void main() {
     'late winning recurrence seed cannot resurrect removed successor tags',
     () async {
       final id = await task();
-      await a!.setTags(id, ['seed']);
+      await editTags(a!, id, ['seed']);
       await a!.command(id, 'task.edited', {
         'schedule': {'dueDate': '2026-10-03', 'recurrence': 'every week'},
       });
@@ -1587,7 +1603,7 @@ void main() {
       await early.complete(id, completionDay: DateTime.utc(2026, 10, 20));
       await late.complete(id, completionDay: DateTime.utc(2026, 10, 20));
       final next = const Uuid().v5(id, 'successor');
-      await late.setTags(next, []);
+      await editTags(late, next, []);
       expect(state(late, next)['tags'], isEmpty);
       await File(
         '${early.folder.location}/${early.writer}.jsonl',
@@ -1603,7 +1619,7 @@ void main() {
     'successor collision and invalid tag/move references fail before append',
     () async {
       final id = await task();
-      await a!.setTags(id, ['tag']);
+      await editTags(a!, id, ['tag']);
       final user = state(a!, id)['assignee'] as String;
       final next = const Uuid().v5(id, 'successor');
       await a!.command(next, 'task.created', {
@@ -1621,9 +1637,11 @@ void main() {
       );
       final ref = (state(a!, id)['tagRefs'] as Map).keys.single as String;
       await expectLater(
-        a!.command(next, 'task.tagsChanged', {
-          'add': [],
-          'remove': [ref],
+        a!.command(next, 'task.edited', {
+          'tagChanges': {
+            'add': [],
+            'remove': [ref],
+          },
         }),
         throwsA(isA<FormatFailure>()),
       );
@@ -1774,10 +1792,12 @@ void main() {
       1,
       testClock(100, 0),
       id,
-      'task.tagsChanged',
+      'task.edited',
       {
-        'add': [],
-        'remove': ['${a!.writer}:$seq:0'],
+        'tagChanges': {
+          'add': [],
+          'remove': ['${a!.writer}:$seq:0'],
+        },
       },
     );
     await aFolder.append(
@@ -1786,7 +1806,10 @@ void main() {
     );
     await a!.refresh();
     final bytes = await aFolder.read('${a!.writer}.jsonl');
-    await expectLater(a!.setTags(id, ['later']), throwsA(isA<FormatFailure>()));
+    await expectLater(
+      editTags(a!, id, ['later']),
+      throwsA(isA<FormatFailure>()),
+    );
     expect(await aFolder.read('${a!.writer}.jsonl'), bytes);
     await a!.refresh();
   });

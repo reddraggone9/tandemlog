@@ -168,6 +168,12 @@ void main() {
                 : 2;
             expect(result.committedIds.length, acknowledged);
             expect(result.remainingIds.length, 2 - acknowledged);
+            if (fault == 'before' || fault == 'prefix') {
+              final blocked = await store.createTasks(titles, user);
+              expect(blocked.error, isA<WriterGuardFailure>());
+              await folder.revealPending();
+              await store.refresh();
+            }
             final retry = await store.createTasks(titles, user);
             expect(retry.succeeded, isTrue);
             expect(store.rows.where((r) => r['kind'] == 'task').length, 2);
@@ -264,10 +270,12 @@ void main() {
           1,
           EventClock(BigInt.one),
           second,
-          'task.tagsChanged',
+          'task.edited',
           {
-            'add': [],
-            'remove': ['${store.writer}:$next:0'],
+            'tagChanges': {
+              'add': [],
+              'remove': ['${store.writer}:$next:0'],
+            },
           },
         );
         await folder.create(
@@ -298,6 +306,14 @@ class CountingFolder implements LogFolder, RangeLogFolder {
   int appends = 0, lists = 0, reads = 0;
   String? fault;
   bool failList = false;
+  String? delayedName;
+  Uint8List? delayedSuffix;
+  Future<void> revealPending() async {
+    await delegate.append(delayedName!, delayedSuffix!);
+    delayedName = null;
+    delayedSuffix = null;
+  }
+
   void reset() {
     appends = lists = reads = 0;
   }
@@ -334,9 +350,17 @@ class CountingFolder implements LogFolder, RangeLogFolder {
     appends++;
     final current = fault;
     fault = null;
-    if (current == 'before') throw StateError('Injected before write');
+    if (current == 'before') {
+      delayedName = name;
+      delayedSuffix = bytes;
+      throw StateError('Injected before write');
+    }
     if (current == 'prefix' || current == 'tail') {
       final end = bytes.indexOf(10) + 1;
+      if (current == 'prefix') {
+        delayedName = name;
+        delayedSuffix = Uint8List.sublistView(bytes, end);
+      }
       await delegate.append(
         name,
         Uint8List.sublistView(

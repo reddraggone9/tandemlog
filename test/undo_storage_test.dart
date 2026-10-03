@@ -104,9 +104,11 @@ void main() {
         'schedule': {'dueDate': '2030-06-01', 'dueTime': '15:00'},
       });
       // Re-add the same label independently: Undo must not erase unseen work.
-      await b.command(first, 'task.tagsChanged', {
-        'add': ['bulk'],
-        'remove': <String>[],
+      await b.command(first, 'task.edited', {
+        'tagChanges': {
+          'add': ['bulk'],
+          'remove': <String>[],
+        },
       });
       await converge();
       final originalRaw = receipts.map((r) => r.raw).toList();
@@ -209,7 +211,7 @@ void main() {
       closedA = false;
       expect(a.writer, writer);
       expect(a.rows, expected);
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 12);
+      expect(a.db.select('PRAGMA user_version').single['user_version'], 13);
       expect({
         for (final f in await folder.list())
           f.name: base64Encode(await folder.read(f.name)),
@@ -245,6 +247,10 @@ void main() {
         expect(partial.undone.length, failAfter ? 2 : 0);
         expect(partial.remaining.length, failAfter ? 0 : 2);
         if (partial.remaining.isNotEmpty) {
+          final blocked = await a.undoOperations(partial.remaining);
+          expect(blocked.error, isA<WriterGuardFailure>());
+          await faulty.revealPending();
+          await a.refresh();
           final retry = await a.undoOperations(partial.remaining);
           expect(retry.error, isNull);
         }
@@ -262,7 +268,7 @@ void main() {
     );
   }
   test(
-    'failed write receipt never confirms different raw bytes reusing its ID',
+    'unresolved write blocks new payload until exact delayed record appears',
     () async {
       final id = await create();
       await a.close();
@@ -278,12 +284,19 @@ void main() {
         }, onPrepared: failed.add),
         throwsStateError,
       );
+      await expectLater(
+        a.command(id, 'task.edited', {'title': 'Different'}),
+        throwsA(isA<WriterGuardFailure>()),
+      );
+      await faulty.revealPending();
+      await a.refresh();
+      expect(a.confirmedOperations(failed), {failed.single.id});
       final saved = <OperationReceipt>[];
       await a.command(id, 'task.edited', {
         'title': 'Saved',
       }, onPrepared: saved.add);
-      expect(failed.single.id, saved.single.id);
-      expect(a.confirmedOperations(failed), isEmpty);
+      expect(failed.single.id, isNot(saved.single.id));
+      expect(a.confirmedOperations(failed), {failed.single.id});
       expect(a.confirmedOperations(saved), {saved.single.id});
     },
   );
@@ -336,6 +349,14 @@ class _FailFolder implements LogFolder {
   final LogFolder delegate;
   final bool after;
   int countdown = 0;
+  String? delayedName;
+  Uint8List? delayedSuffix;
+  Future<void> revealPending() async {
+    await delegate.append(delayedName!, delayedSuffix!);
+    delayedName = null;
+    delayedSuffix = null;
+  }
+
   _FailFolder(this.delegate, this.after);
   @override
   String get location => delegate.location;
@@ -348,7 +369,11 @@ class _FailFolder implements LogFolder {
   @override
   Future<void> append(String n, Uint8List b) async {
     final fail = countdown > 0 && --countdown == 0;
-    if (fail && !after) throw StateError('Injected append failure');
+    if (fail && !after) {
+      delayedName = n;
+      delayedSuffix = b;
+      throw StateError('Injected append failure');
+    }
     await delegate.append(n, b);
     if (fail) throw StateError('Injected acknowledgement failure');
   }

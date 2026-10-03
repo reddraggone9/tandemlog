@@ -13,6 +13,14 @@ class _PrefixReplacement implements LogFolder {
   _PrefixReplacement(this.inner);
   final LocalLogFolder inner;
   int? keep;
+  String? delayedName;
+  Uint8List? delayedSuffix;
+  Future<void> revealPending() async {
+    await inner.append(delayedName!, delayedSuffix!);
+    delayedName = null;
+    delayedSuffix = null;
+  }
+
   @override
   String get location => inner.location;
   @override
@@ -32,6 +40,10 @@ class _PrefixReplacement implements LogFolder {
     final previous = await inner.read(name);
     await inner.append(name, bytes);
     final lines = utf8.decode(bytes).split('\n')..removeLast();
+    delayedName = name;
+    delayedSuffix = Uint8List.fromList(
+      utf8.encode(lines.skip(count).map((line) => '$line\n').join()),
+    );
     final temporary = File('$location/replacement.tmp');
     await temporary.writeAsBytes([
       ...previous,
@@ -39,6 +51,16 @@ class _PrefixReplacement implements LogFolder {
     ], flush: true);
     await temporary.rename('$location/$name');
   }
+}
+
+Future<void> editTags(TaskStore store, String entity, List<String> tags) async {
+  final state = store.rows.firstWhere((row) => row['id'] == entity);
+  await store.edit(
+    entity,
+    {},
+    tags: tags,
+    observedTagRefs: Map<String, String>.from(state['tagRefs'] as Map),
+  );
 }
 
 void main() {
@@ -146,7 +168,7 @@ void main() {
       closed = true;
       a = await TaskStore.open(transport, '${root.path}/a');
       closed = false;
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 12);
+      expect(a.db.select('PRAGMA user_version').single['user_version'], 13);
       expect(visible(a, next), isFalse);
       expect(await folder.read('${a.writer}.jsonl'), after);
       expect(
@@ -159,17 +181,20 @@ void main() {
   );
 
   test(
-    'ordinary Reopen and historical operationUndone still retain untouched successor',
+    'ordinary Reopen retains successor and generic recurring Undo rejects',
     () async {
       final reopened = await task();
       await complete(reopened);
       await a.reopen(reopened, a.activeCompletionIds(reopened));
       expect(visible(a, const Uuid().v5(reopened, 'successor')), isTrue);
       final historical = await task(), completion = await complete(historical);
-      await a.command(historical, 'task.operationUndone', {
-        'operation': completion.id,
-      });
-      expect(row(a, historical)['completed'], isFalse);
+      await expectLater(
+        a.command(historical, 'task.operationUndone', {
+          'operation': completion.id,
+        }),
+        throwsA(isA<FormatFailure>()),
+      );
+      expect(row(a, historical)['completed'], isTrue);
       expect(visible(a, const Uuid().v5(historical, 'successor')), isTrue);
     },
   );
@@ -192,7 +217,7 @@ void main() {
         });
         if (activity == 'undoneEdit') await a.undoOperations([edit.id]);
       } else if (activity == 'tags') {
-        await a.setTags(next, ['Independent']);
+        await editTags(a, next, ['Independent']);
       } else if (activity == 'move') {
         await a.moveBefore(next, null);
       } else if (activity == 'complete') {
@@ -303,6 +328,10 @@ void main() {
         expect(result.remaining, [completion.id, edit.id].skip(keep));
         expect(result.removedSuccessorCount, keep);
         expect(visible(a, const Uuid().v5(id, 'successor')), keep == 0);
+        final blocked = await a.undoOperations(result.remaining);
+        expect(blocked.error, isA<WriterGuardFailure>());
+        await transport.revealPending();
+        await a.refresh();
         final retry = await a.undoOperations(result.remaining);
         expect(retry.error, isNull);
         expect(visible(a, const Uuid().v5(id, 'successor')), isFalse);
@@ -327,45 +356,6 @@ void main() {
         );
       }
       expect(await folder.read('${a.writer}.jsonl'), before);
-    },
-  );
-
-  test(
-    'v3 fixture retains operation retraction meaning without rewriting',
-    () async {
-      final bytes = await File(
-        'test/fixtures/recurring_operation_undone_v3.jsonl',
-      ).readAsBytes();
-      final records = (utf8.decode(bytes).trim().split('\n'))
-          .map(LogEvent.decode)
-          .toList();
-      final fixtureFolder = LocalLogFolder(
-        (await Directory('${root.path}/fixture').create()).path,
-      );
-      await fixtureFolder.create(
-        'tandemlog-space.json',
-        Uint8List.fromList(
-          utf8.encode(
-            jsonEncode({'v': protocolVersion, 'id': records.first.space}),
-          ),
-        ),
-      );
-      await fixtureFolder.create('${records.first.writer}.jsonl', bytes);
-      final fixture = await TaskStore.open(
-        fixtureFolder,
-        '${root.path}/fixture-private',
-      );
-      try {
-        final id = records[1].entity;
-        expect(row(fixture, id)['completed'], isFalse);
-        expect(visible(fixture, const Uuid().v5(id, 'successor')), isTrue);
-        expect(
-          await fixtureFolder.read('${records.first.writer}.jsonl'),
-          bytes,
-        );
-      } finally {
-        await fixture.close();
-      }
     },
   );
 
@@ -483,6 +473,68 @@ void main() {
   );
 
   test(
+    'generic recurring Undo rejects transactionally when completion arrives late',
+    () async {
+      final id = await task();
+      final completionWriter = const Uuid().v4(),
+          undoWriter = const Uuid().v4();
+      final completion = LogEvent(
+        a.space,
+        completionWriter,
+        1,
+        EventClock(BigInt.from(10)),
+        id,
+        'task.completed',
+        {
+          'successor': {
+            'id': const Uuid().v5(id, 'successor'),
+            'title': 'Next',
+            'description': '',
+            'assignee': user,
+            'tags': <String>[],
+            'schedule': {'dueDate': '2030-05-02', 'recurrence': 'every day'},
+          },
+        },
+      );
+      final undo = LogEvent(
+        a.space,
+        undoWriter,
+        1,
+        EventClock(BigInt.from(20)),
+        id,
+        'task.operationUndone',
+        {'operation': completion.id},
+      );
+      await folder.create(
+        '$undoWriter.jsonl',
+        Uint8List.fromList(utf8.encode('${undo.encode()}\n')),
+      );
+      await a.refresh();
+      final before = a.rows;
+      final canonical = Uint8List.fromList(
+        utf8.encode('${completion.encode()}\n'),
+      );
+      await folder.create('$completionWriter.jsonl', canonical);
+      await expectLater(
+        a.refresh(),
+        throwsA(
+          isA<HistoryVerificationFailure>().having(
+            (error) => error.reason,
+            'reference',
+            contains('Invalid undo reference'),
+          ),
+        ),
+      );
+      expect(a.rows, before);
+      expect(
+        a.db.select('SELECT raw FROM events WHERE id=?', [completion.id]),
+        isEmpty,
+      );
+      expect(await folder.read('$completionWriter.jsonl'), canonical);
+    },
+  );
+
+  test(
     'new cleanup wire schema rejects extra fields and malformed references',
     () async {
       final id = await task(), completion = await complete(id);
@@ -537,19 +589,6 @@ void main() {
           first.id,
         );
       }
-      final historical = LogEvent(
-        a.space,
-        a.writer,
-        101,
-        cleanup.clock,
-        id,
-        'task.operationUndone',
-        {'operation': first.id},
-      );
-      expect(
-        selectSuccessor([first], [historical], protected: false).suppressed,
-        isFalse,
-      );
     },
   );
 }

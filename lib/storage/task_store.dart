@@ -14,6 +14,9 @@ import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
 import 'log_folder.dart';
 import 'profile_lock.dart';
+import 'writer_guard.dart';
+import 'local_durability.dart';
+export 'writer_guard.dart';
 
 /// The task state observed by a caller changed before a guarded command.
 class StaleTaskSnapshot implements Exception {
@@ -52,6 +55,8 @@ class TaskStore {
   final Database db;
   final String writer;
   final ProfileLock lock;
+  final WriterGuard writerGuard;
+  int _acknowledgedOwnedSequence = 0;
   final DateTime Function() now;
   static const materialClockSkew = Duration(minutes: 5);
   String? clockWarning;
@@ -96,13 +101,21 @@ class TaskStore {
     return manifest['id'] as String;
   }
 
-  TaskStore._(this.folder, this.db, this.writer, this.lock, this.now);
+  TaskStore._(
+    this.folder,
+    this.db,
+    this.writer,
+    this.lock,
+    this.now,
+    this.writerGuard,
+  );
   static Future<TaskStore> open(
     LogFolder folder,
     String privatePath, {
     void Function(String, int)? onTiming,
     DateTime Function()? now,
     String? writerIdentity,
+    WriterGuard? writerGuard,
   }) async {
     final phase = Stopwatch()..start();
     void mark(String name) {
@@ -110,7 +123,7 @@ class TaskStore {
       phase.reset();
     }
 
-    await Directory(privatePath).create(recursive: true);
+    await ensureDirectoryDurable(Directory(privatePath));
     final lock = await ProfileLock.acquire(
       privatePath,
       fileName: 'session.lock',
@@ -124,8 +137,9 @@ class TaskStore {
       if (writer == null) {
         final identity = File('$privatePath/writer-id');
         if (!await identity.exists()) {
-          await identity.writeAsString(const Uuid().v4(), flush: true);
+          await createFileDurable(identity, utf8.encode(const Uuid().v4()));
         }
+        await syncParentAfterCreate(identity);
         writer = (await identity.readAsString()).trim();
       }
       if (!isCanonicalId(writer)) {
@@ -139,14 +153,14 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 12) {
+      if (version < 0 || version > 13) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
       }
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
-      if (version > 0 && version < 10) {
+      if (version > 0 && version < 13) {
         await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
@@ -168,8 +182,8 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS streams (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL)',
       );
-      // v10 materializations remain valid. The old hash is a whole-prefix
-      // baseline at its original offset, never a resumable SHA state.
+      // Retain older whole-prefix baselines as integrity evidence at their
+      // original offsets; they are never resumable SHA state.
       db.execute('BEGIN IMMEDIATE');
       try {
         final columns = db.select('PRAGMA table_info(streams)');
@@ -200,7 +214,7 @@ class TaskStore {
         db.execute(
           "UPDATE streams SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)), last_clock=(SELECT MAX(clock) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)) WHERE chain_head IS NULL",
         );
-        db.execute('PRAGMA user_version=12');
+        db.execute('PRAGMA user_version=13');
         db.execute('COMMIT');
       } catch (_) {
         db.execute('ROLLBACK');
@@ -210,7 +224,14 @@ class TaskStore {
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
       mark('sqlite_open_schema');
-      final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
+      final store = TaskStore._(
+        folder,
+        db,
+        writer,
+        lock,
+        now ?? DateTime.now,
+        writerGuard ?? FileWriterGuard(privatePath),
+      );
       db.execute(
         'CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
       );
@@ -304,6 +325,7 @@ class TaskStore {
     // even if replay later finds invalid or unsupported canonical records.
     final backup = '$privatePath/cache-v$version-${const Uuid().v4()}.sqlite';
     db.execute('VACUUM INTO ?', [backup]);
+    await syncParentAfterCreate(File(backup));
     db.execute('BEGIN IMMEDIATE');
     try {
       for (final table in ['events', 'views', 'positions']) {
@@ -436,12 +458,101 @@ class TaskStore {
     }
   }
 
+  _VerifiedWriterRecords _decodeWriterRecords(
+    String name,
+    Uint8List bytes,
+    int completeLength,
+    int start,
+    int lastSeq,
+    EventClock? lastClock,
+    String chainHead,
+    Row? checkpoint,
+  ) {
+    final writerName = name.substring(0, name.length - 6);
+    final checkpointOffset = checkpoint?['offset'] as int?;
+    final records = <_LocatedWriterRecord>[];
+    var lineStart = 0;
+    for (var i = 0; i < completeLength; i++) {
+      if (bytes[i] != 10) continue;
+      final recordOffset = start + lineStart;
+      final recordNumber = lastSeq + 1;
+      LogEvent event;
+      String raw;
+      try {
+        if (i == lineStart) throw FormatFailure('Blank canonical record.');
+        if (i - lineStart > 1024 * 1024) {
+          throw FormatFailure('Oversized event.');
+        }
+        raw = utf8.decode(Uint8List.sublistView(bytes, lineStart, i));
+        event = LogEvent.decode(raw);
+        if (event.space != space ||
+            event.writer != writerName ||
+            event.sequence != lastSeq + 1 ||
+            (lastClock != null && event.clock <= lastClock)) {
+          throw FormatFailure('Invalid space, writer, sequence or clock.');
+        }
+        if (event.previousHash != chainHead) {
+          throw FormatFailure(
+            'Previous record hash does not match the writer chain.',
+          );
+        }
+      } catch (failure) {
+        throw HistoryVerificationFailure(
+          name,
+          recordNumber,
+          recordOffset,
+          failure is FormatFailure
+              ? failure.message
+              : 'Malformed canonical record.',
+        );
+      }
+      lastSeq = event.sequence;
+      lastClock = event.clock;
+      chainHead = event.hash!;
+      if (checkpoint != null &&
+          i + 1 == checkpointOffset &&
+          (chainHead != checkpoint['chain_head'] ||
+              lastSeq != checkpoint['last_seq'] ||
+              lastClock.value.toInt() != checkpoint['last_clock'])) {
+        throw HistoryVerificationFailure(
+          name,
+          recordNumber,
+          recordOffset,
+          'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
+        );
+      }
+      records.add(_LocatedWriterRecord(event, raw, recordOffset));
+      lineStart = i + 1;
+    }
+    if (checkpointOffset == 0 &&
+        (checkpoint!['chain_head'] != eventGenesisHash(space, writerName) ||
+            checkpoint['last_seq'] != 0 ||
+            checkpoint['last_clock'] != null)) {
+      throw HistoryVerificationFailure(
+        name,
+        1,
+        0,
+        'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
+      );
+    }
+    return _VerifiedWriterRecords(lastSeq, lastClock, chainHead, records);
+  }
+
   Future<bool> _refresh({bool verify = false}) async {
     if (await _readSpace(folder) != space) {
       throw FormatFailure('Workspace identity changed at this location.');
     }
     _updateClockWarning(_maximumClock(), _nowNs());
+    final guardState = await writerGuard.load(space, writer);
+    _acknowledgedOwnedSequence = guardState?.sequence ?? 0;
     final files = await folder.list();
+    if (guardState != null &&
+        guardState.sequence > 0 &&
+        !files.any((file) => file.name == '$writer.jsonl')) {
+      throw WriterGuardFailure(
+        'Previously imported log for the acknowledged owned writer is missing. Restore the workspace history before writing.',
+      );
+    }
     if (files.any((f) => f.name.contains('sync-conflict'))) {
       throw FormatFailure(
         'A folder-sync conflict copy needs recovery. No history was discarded.',
@@ -497,8 +608,12 @@ class TaskStore {
         );
       }
       final hasHead = row != null && row['chain_head'] != null;
+      final reconcileOwned =
+          info.name == '$writer.jsonl' &&
+          (guardState == null || guardState.pending.isNotEmpty);
       if (!verify &&
           !replay &&
+          !reconcileOwned &&
           hasHead &&
           folder is RangeLogFolder &&
           row['range_capable'] == 1 &&
@@ -507,14 +622,20 @@ class TaskStore {
         continue;
       }
       Uint8List? suffix;
+      final forceOwnedFull =
+          info.name == '$writer.jsonl' &&
+          row != null &&
+          (guardState == null ||
+              (guardState.pending.isNotEmpty && observedSize == offset));
       if (!verify &&
           !replay &&
+          !forceOwnedFull &&
           (hasHead || row == null) &&
           observedSize != null &&
           folder is RangeLogFolder) {
         suffix = await (folder as RangeLogFolder).readFrom(info.name, offset);
       }
-      final rangeCapable = suffix != null;
+      var rangeCapable = suffix != null;
       final full = suffix == null || row == null;
       final bytes = suffix ?? await folder.read(info.name);
       readFiles++;
@@ -559,90 +680,48 @@ class TaskStore {
           'Interrupted local append detected. Preserve the file and recover its incomplete tail before writing.',
         );
       }
-      var lastSeq = full ? 0 : row['last_seq'] as int;
-      EventClock? lastClock = full || row['last_clock'] == null
-          ? null
-          : EventClock(BigInt.from(row['last_clock'] as int));
-      var chainHead = full
-          ? eventGenesisHash(space, writerName)
-          : row['chain_head'] as String;
-      var lineStart = 0;
-      for (var i = 0; i < completeLength; i++) {
-        if (bytes[i] != 10) continue;
-        final recordOffset = start + lineStart;
-        final recordNumber = lastSeq + 1;
-        LogEvent e;
-        String raw;
-        try {
-          if (i == lineStart) throw FormatFailure('Blank canonical record.');
-          if (i - lineStart > 1024 * 1024) {
-            throw FormatFailure('Oversized event.');
-          }
-          raw = utf8.decode(Uint8List.sublistView(bytes, lineStart, i));
-          e = LogEvent.decode(raw);
-          if (e.space != space ||
-              e.writer != writerName ||
-              e.sequence != lastSeq + 1 ||
-              (lastClock != null && e.clock <= lastClock)) {
-            throw FormatFailure('Invalid space, writer, sequence or clock.');
-          }
-          if (e.previousHash != chainHead) {
-            throw FormatFailure(
-              'Previous record hash does not match the writer chain.',
-            );
-          }
-        } catch (failure) {
-          throw HistoryVerificationFailure(
-            info.name,
-            recordNumber,
-            recordOffset,
-            failure is FormatFailure
-                ? failure.message
-                : 'Malformed canonical record.',
-          );
-        }
-        lastSeq = e.sequence;
-        lastClock = e.clock;
-        chainHead = e.hash!;
-        if (full &&
-            hasHead &&
-            i + 1 == offset &&
-            (chainHead != row['chain_head'] ||
-                lastSeq != row['last_seq'] ||
-                lastClock.value.toInt() != row['last_clock'])) {
-          throw HistoryVerificationFailure(
-            info.name,
-            recordNumber,
-            recordOffset,
-            'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
-          );
-        }
-        checkedRecords++;
-        eventLocations[e.id] = HistoryVerificationFailure(
+      final verified = _decodeWriterRecords(
+        info.name,
+        bytes,
+        completeLength,
+        start,
+        full ? 0 : row['last_seq'] as int,
+        full || row['last_clock'] == null
+            ? null
+            : EventClock(BigInt.from(row['last_clock'] as int)),
+        full
+            ? eventGenesisHash(space, writerName)
+            : row['chain_head'] as String,
+        full && hasHead ? row : null,
+      );
+      final lastSeq = verified.sequence;
+      final lastClock = verified.clock;
+      final chainHead = verified.hash;
+      checkedRecords += verified.records.length;
+      for (final record in verified.records) {
+        final event = record.event;
+        eventLocations[event.id] = HistoryVerificationFailure(
           info.name,
-          recordNumber,
-          recordOffset,
+          event.sequence,
+          record.byteOffset,
           'Invalid semantic history.',
         );
-        auditedEntities.add(e.entity);
-        if (replay || recordOffset >= offset) {
-          newEvents.add(e);
-          newEventRaws.add(raw);
+        auditedEntities.add(event.entity);
+        if (replay || record.byteOffset >= offset) {
+          newEvents.add(event);
+          newEventRaws.add(record.raw);
         }
-        lineStart = i + 1;
       }
-      if (full &&
-          hasHead &&
-          offset == 0 &&
-          (row['chain_head'] != eventGenesisHash(space, writerName) ||
-              row['last_seq'] != 0 ||
-              row['last_clock'] != null)) {
-        throw HistoryVerificationFailure(
+      if (!rangeCapable &&
+          (replay || verify || forceOwnedFull) &&
+          observedSize != null &&
+          bytes.length == observedSize &&
+          folder is RangeLogFolder) {
+        final probe = await (folder as RangeLogFolder).readFrom(
           info.name,
-          1,
-          0,
-          'Cached chain checkpoint is inconsistent with canonical history. Preserve the cache and log before recovery.',
+          bytes.length,
         );
+        if (probe != null && probe.isEmpty) rangeCapable = true;
       }
       checkedBytes += bytes.length;
       final checkpoint = <Object?>[
@@ -657,7 +736,9 @@ class TaskStore {
         full ? end : row['hash_offset'],
         rangeCapable
             ? 1
-            : ((verify || replay) && row != null ? row['range_capable'] : 0),
+            : ((verify || replay || forceOwnedFull) && row != null
+                  ? row['range_capable']
+                  : 0),
         chainHead,
         lastSeq,
         lastClock?.value.toInt(),
@@ -688,6 +769,65 @@ class TaskStore {
         ]);
       }
     }
+    // The private checkpoint survives data-folder aliases and cache replacement.
+    // Pending attempts read actual canonical suffixes (or the full unchanged log).
+    final ownedCheckpoint = checkpoints.where(
+      (checkpoint) => checkpoint[0] == '$writer.jsonl',
+    );
+    final savedOwned = db.select(
+      'SELECT last_seq,chain_head FROM streams WHERE name=?',
+      ['$writer.jsonl'],
+    );
+    final ownedSequence = ownedCheckpoint.isNotEmpty
+        ? ownedCheckpoint.single[7] as int
+        : savedOwned.isEmpty
+        ? 0
+        : savedOwned.single['last_seq'] as int;
+    final ownedHash = ownedCheckpoint.isNotEmpty
+        ? ownedCheckpoint.single[6] as String
+        : savedOwned.isEmpty
+        ? eventGenesisHash(space, writer)
+        : savedOwned.single['chain_head'] as String;
+    String? ownedRecordHash(int sequence) {
+      if (sequence == 0) return eventGenesisHash(space, writer);
+      final imported = newEvents.where(
+        (event) => event.writer == writer && event.sequence == sequence,
+      );
+      if (imported.isNotEmpty) return imported.single.hash;
+      final cached = db.select(
+        'SELECT raw FROM events WHERE writer=? AND seq=?',
+        [writer, sequence],
+      );
+      return cached.isEmpty
+          ? null
+          : LogEvent.decode(cached.single['raw'] as String).hash;
+    }
+
+    if (guardState != null) {
+      if (ownedSequence < guardState.sequence ||
+          ownedRecordHash(guardState.sequence) != guardState.hash) {
+        throw WriterGuardFailure(
+          'The owned writer history is behind or differs from its acknowledged safety checkpoint. Restore the acknowledged history before writing.',
+        );
+      }
+      if (guardState.pending.isNotEmpty) {
+        if (ownedSequence > guardState.pending.last.sequence ||
+            guardState.pending.any(
+              (record) =>
+                  record.sequence <= ownedSequence &&
+                  ownedRecordHash(record.sequence) != record.hash,
+            )) {
+          throw WriterGuardFailure(
+            'The owned writer history differs from its unresolved prepared append. Preserve the profile and workspace before recovery.',
+          );
+        }
+      }
+    }
+    Future<void> acknowledgeWriter() async {
+      await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
+      _acknowledgedOwnedSequence = ownedSequence;
+    }
+
     void validateAuditedSemantics() {
       if (!verify) return;
       try {
@@ -724,6 +864,7 @@ class TaskStore {
     }
     if (checkpoints.isEmpty) {
       validateAuditedSemantics();
+      await acknowledgeWriter();
       if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       if (verify) _lastHistoryVerification = verificationReport;
       return false;
@@ -804,6 +945,7 @@ class TaskStore {
         db.execute('INSERT INTO stream_ranges VALUES (?,?,?,?)', range);
       }
       db.execute("DELETE FROM metadata WHERE key='replay_pending'");
+      await acknowledgeWriter();
       db.execute('COMMIT');
       cacheTransactions++;
       _updateClockWarning(_maximumClock(), _nowNs());
@@ -979,6 +1121,7 @@ class TaskStore {
     final raw = e.canonicalRaw!;
     final receipt = OperationReceipt(e.id, raw, e.entity);
     onPrepared?.call(receipt);
+    await _prepareWriterAppend([receipt]);
     await folder.append(
       '$writer.jsonl',
       Uint8List.fromList(utf8.encode('$raw\n')),
@@ -988,6 +1131,23 @@ class TaskStore {
     await _refresh();
     _requireConfirmed([receipt]);
     return e;
+  }
+
+  Future<void> _prepareWriterAppend(List<OperationReceipt> receipts) async {
+    final records = receipts
+        .map((receipt) => LogEvent.decode(receipt.raw))
+        .toList();
+    final base = records.first.sequence - 1;
+    await writerGuard.prepare(
+      space,
+      writer,
+      base,
+      records.first.previousHash!,
+      [
+        for (final event in records)
+          PreparedWriterRecord(event.sequence, event.hash!),
+      ],
+    );
   }
 
   String get _writerChainHead {
@@ -1141,6 +1301,7 @@ class TaskStore {
       onPrepared?.call(receipt);
     }
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    await _prepareWriterAppend(receipts);
     phase.reset();
     try {
       await folder.append('$writer.jsonl', bytes.takeBytes());
@@ -1218,7 +1379,7 @@ class TaskStore {
   void _validateUndoReferences([LogEvent? pending]) {
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type')<>'task.completed' OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone'))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type')<>'task.completed' OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone') OR (json_extract(t.raw,'\$.type')='task.completed' AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -1229,7 +1390,9 @@ class TaskStore {
       if (target.entity != undo.entity ||
           target.clock >= undo.clock ||
           (operation
-              ? !reversibleTaskEvents.contains(target.type)
+              ? (!reversibleTaskEvents.contains(target.type) ||
+                    (target.type == 'task.completed' &&
+                        target.data['successor'] != null))
               : target.type != 'task.completed') ||
           (undo.type == 'task.recurringCompletionUndone' &&
               target.data['successor'] == null)) {
@@ -1294,17 +1457,15 @@ class TaskStore {
     final mutations = db
         .select(
           pending == null
-              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.tagsChanged' OR json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
-              : "SELECT raw FROM events e WHERE EXISTS (SELECT 1 FROM json_each(CASE WHEN json_extract(e.raw,'\$.type')='task.tagsChanged' THEN json_extract(e.raw,'\$.data.remove') ELSE json_extract(e.raw,'\$.data.tagChanges.remove') END) r WHERE r.value LIKE ?) OR e.entity=?",
+              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
+              : "SELECT raw FROM events e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.raw,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
           pending == null ? [] : ['${pending.id}:%', successor],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
     if (pending != null) mutations.add(pending);
     for (final mutation in mutations) {
-      final changes = mutation.type == 'task.tagsChanged'
-          ? mutation.data
-          : mutation.data['tagChanges'];
+      final changes = mutation.data['tagChanges'];
       if (changes == null) continue;
       for (final token in (changes['remove'] as List).cast<String>()) {
         final pieces = token.split(':');
@@ -1357,9 +1518,6 @@ class TaskStore {
         final owner = target.entity;
         if (target.type == 'task.created') {
           additions = target.data['tags'] as List? ?? [];
-        }
-        if (target.type == 'task.tagsChanged') {
-          additions = target.data['add'] as List;
         }
         if (target.type == 'task.edited' && target.data['tagChanges'] != null) {
           additions = (target.data['tagChanges'] as Map)['add'] as List;
@@ -1573,32 +1731,6 @@ class TaskStore {
     );
   });
 
-  Future<void> setTags(
-    String entity,
-    List<String> desired, {
-    Map<String, String>? observedTagRefs,
-  }) => _serialize(() async {
-    await _refresh();
-    final state = project(_entityEvents(entity));
-    if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
-      throw FormatFailure('Unknown task.');
-    }
-    final refs =
-        observedTagRefs ?? Map<String, String>.from(state['tagRefs'] as Map);
-    final wanted = desired.toSet();
-    final removed = refs.entries
-        .where((e) => !wanted.contains(e.value))
-        .map((e) => e.key)
-        .toList();
-    final added = wanted.difference(refs.values.toSet()).toList()..sort();
-    if (removed.isNotEmpty || added.isNotEmpty) {
-      await _command(entity, 'task.tagsChanged', {
-        'add': added,
-        'remove': removed,
-      });
-    }
-  });
-
   List<Map<String, dynamic>> _selection(List<String> ids) {
     if (ids.isEmpty || ids.toSet().length != ids.length) {
       throw FormatFailure('Choose distinct tasks.');
@@ -1679,14 +1811,18 @@ class TaskStore {
     onPrepared: onPrepared,
   );
 
-  /// An ID alone cannot confirm an uncertain append: the next command can
-  /// reuse its sequence after a failed write. Match its complete canonical raw.
+  /// A receipt requires its exact canonical bytes and a durable private
+  /// acknowledgment. Unobserved prepared records retain their reserved sequence.
   Set<String> confirmedOperations(Iterable<OperationReceipt> receipts) => {
     for (final r in receipts)
-      if (db.select('SELECT 1 FROM events WHERE id=? AND raw=?', [
-        r.id,
-        r.raw,
-      ]).isNotEmpty)
+      if (r.id.startsWith('$writer:') &&
+          (int.tryParse(r.id.substring(writer.length + 1)) ??
+                  9007199254740991) <=
+              _acknowledgedOwnedSequence &&
+          db.select('SELECT 1 FROM events WHERE id=? AND raw=?', [
+            r.id,
+            r.raw,
+          ]).isNotEmpty)
         r.id,
   };
 
@@ -1859,4 +1995,24 @@ class TaskStore {
       }
     });
   }
+}
+
+class _LocatedWriterRecord {
+  final LogEvent event;
+  final String raw;
+  final int byteOffset;
+  const _LocatedWriterRecord(this.event, this.raw, this.byteOffset);
+}
+
+class _VerifiedWriterRecords {
+  final int sequence;
+  final EventClock? clock;
+  final String hash;
+  final List<_LocatedWriterRecord> records;
+  const _VerifiedWriterRecords(
+    this.sequence,
+    this.clock,
+    this.hash,
+    this.records,
+  );
 }
