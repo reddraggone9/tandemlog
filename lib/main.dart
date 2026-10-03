@@ -533,6 +533,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                             : 'Use a different folder',
                       ),
                     ),
+                    OutlinedButton.icon(
+                      key: const ValueKey('check-data-integrity'),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size(64, 48),
+                        visualDensity: VisualDensity.standard,
+                      ),
+                      onPressed: store != null && !busy
+                          ? () => Navigator.pop(ctx, 'verify')
+                          : null,
+                      icon: const Icon(Icons.fact_check_outlined),
+                      label: const Text('Check data integrity'),
+                    ),
                   ],
                 ),
                 if (location != null &&
@@ -561,9 +573,86 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await _chooseFolder();
     } else if (action == 'open') {
       await _act(() => widget.folderActions.open(location!));
+    } else if (action == 'verify') {
+      await _checkDataIntegrity();
     } else {
       await _setAppearance(Appearance.values.byName(action));
     }
+  }
+
+  Future<void> _checkDataIntegrity() async {
+    final origin = store;
+    if (!mounted || busy || origin == null) return;
+    String? report;
+    var passed = false;
+    await _act(() async {
+      if (!mounted || !identical(store, origin)) return;
+      try {
+        await origin.verifyHistory();
+        if (!mounted || !identical(store, origin)) return;
+        undoHistory.reconcile(origin.confirmedOperations);
+        passed = true;
+        final summary = origin.lastHistoryVerification!;
+        report =
+            'Data integrity check passed.\n\n'
+            'Data folder: ${origin.folder.location}\n\n'
+            'Checked ${summary.checkedLogCount} '
+            '${summary.checkedLogCount == 1 ? 'log' : 'logs'}, '
+            '${summary.checkedRecordCount} complete records and '
+            '${summary.checkedByteCount} bytes.\n\n'
+            'Checked the full current canonical history and compared it with '
+            'the previously cached history baseline. '
+            '${summary.importedEventCount > 0 ? 'New valid complete events were imported (${summary.importedEventCount}).' : 'No new events were imported.'}\n\n'
+            'This checks consistency, not authenticity or remote sync. '
+            'Without a previous baseline, a wholly rewritten valid chain or '
+            'a deleted final tail may be undetectable. No repair was performed.';
+      } catch (failure) {
+        report =
+            'Data integrity check failed.\n\n'
+            'Data folder: ${origin.folder.location}\n\n'
+            '${failureMessage(failure)}\n\n'
+            'No repair was performed. Keep the data folder intact while '
+            'reviewing the affected log and record.';
+        rethrow;
+      }
+    });
+    if (!mounted || !identical(store, origin) || report == null) return;
+    final result = report!;
+    await showDialog<void>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(
+          passed ? 'Data integrity checked' : 'Integrity check failed',
+        ),
+        content: SizedBox(
+          width: 520,
+          child: SingleChildScrollView(
+            child: SelectableText(
+              result,
+              key: const ValueKey('data-integrity-report'),
+            ),
+          ),
+        ),
+        actions: [
+          TextButton.icon(
+            key: const ValueKey('copy-integrity-report'),
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: result));
+              if (!ctx.mounted) return;
+              ScaffoldMessenger.of(ctx).showSnackBar(
+                const SnackBar(content: Text('Integrity report copied')),
+              );
+            },
+            icon: const Icon(Icons.copy_outlined),
+            label: const Text('Copy report'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Done'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _act(Future<void> Function() action) async {
@@ -2079,32 +2168,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       key: ValueKey('task-metadata-${task['id']}'),
       style: style,
     );
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
-        if (constraints.maxWidth < 620 * scale) {
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [title, details],
-          );
-        }
-        final painter = TextPainter(
-          text: TextSpan(text: metadata, style: style),
-          textDirection: Directionality.of(context),
-          textScaler: MediaQuery.textScalerOf(context),
-        )..layout();
-        final width = painter.width.clamp(0.0, constraints.maxWidth * .42);
-        painter.dispose();
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flexible(child: title),
-            const SizedBox(width: 12),
-            SizedBox(width: width, child: details),
-          ],
-        );
-      },
+    return Wrap(
+      spacing: 12,
+      runSpacing: 2,
+      crossAxisAlignment: WrapCrossAlignment.start,
+      children: [title, details],
     );
   }
 

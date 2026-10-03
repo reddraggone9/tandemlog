@@ -21,6 +21,7 @@ import 'completion_focus_test.dart' show registerCompletionFocusTests;
 import 'header_selection_test.dart' show registerHeaderSelectionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
+import 'data_integrity_test.dart' show registerDataIntegrityTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -153,6 +154,7 @@ void main() {
   registerHeaderSelectionTests();
   registerHeaderSearchTests();
   registerInboxFlowTests();
+  registerDataIntegrityTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -2274,8 +2276,13 @@ void main() {
       await tester.pumpAndSettle();
       expect(
         tester.getRect(shortMeta).top,
-        greaterThanOrEqualTo(tester.getRect(shortTitle).bottom),
+        scale == 1
+            ? tester.getRect(shortTitle).top
+            : greaterThanOrEqualTo(tester.getRect(shortTitle).bottom),
       );
+      final checkbox = find.byType(Checkbox).first;
+      expect(tester.getSize(checkbox).width, greaterThanOrEqualTo(48));
+      expect(tester.getSize(checkbox).height, greaterThanOrEqualTo(48));
       expect(tester.takeException(), isNull);
     }
     await openFilters(tester);
