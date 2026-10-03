@@ -166,6 +166,120 @@ void main() {
     },
   );
 
+  for (final name in ['tandemlog-space.json', 'writer.jsonl']) {
+    for (final repeatedIdentity in [false, true]) {
+      test(
+        'list rejects duplicate $name before returning observations (same identity: $repeatedIdentity)',
+        () async {
+          final calls = <String>[];
+          messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+            call,
+          ) async {
+            calls.add(call.method);
+            return [
+              {'name': name, 'documentId': 'first', 'size': 42},
+              {
+                'name': name,
+                'documentId': repeatedIdentity ? 'first' : 'second',
+                'size': 42,
+              },
+            ];
+          });
+          await expectLater(
+            folder.list(),
+            throwsA(
+              isA<FolderAccessFailure>()
+                  .having((e) => e.message, 'affected name', contains(name))
+                  .having((e) => e.message, 'ambiguity', contains('duplicate'))
+                  .having(
+                    (e) => e.message,
+                    'fail closed',
+                    contains('No file was selected'),
+                  ),
+            ),
+          );
+          expect(calls, ['list']);
+        },
+      );
+    }
+  }
+
+  test('unrelated duplicate names do not reject the folder', () async {
+    messenger.setMockMethodCallHandler(
+      AndroidLogFolder.channel,
+      (_) async => [
+        {'name': 'notes.txt', 'documentId': 'note-one'},
+        {'name': 'notes.txt', 'documentId': 'note-two'},
+        {'name': 'writer.JSONL', 'documentId': 'unrelated-one'},
+        {'name': 'writer.JSONL', 'documentId': 'unrelated-two'},
+        {'name': 'tandemlog-space.json', 'documentId': 'manifest'},
+        {'name': 'writer.jsonl', 'documentId': 'log'},
+      ],
+    );
+    final entries = await folder.list();
+    expect(entries, hasLength(6));
+    expect(entries.where((entry) => entry.name == 'notes.txt'), hasLength(2));
+  });
+
+  for (final method in ['list', 'read', 'readFrom', 'append', 'create']) {
+    test(
+      '$method preserves native duplicate-name diagnostics and fails closed',
+      () async {
+        final calls = <String>[];
+        messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+          call,
+        ) async {
+          calls.add(call.method);
+          throw PlatformException(
+            code: 'duplicate_file',
+            message:
+                'Folder access failed: Duplicate canonical filename writer.jsonl',
+            details: {'name': 'writer.jsonl'},
+          );
+        });
+        final operation = switch (method) {
+          'list' => folder.list(),
+          'read' => folder.read('writer.jsonl'),
+          'readFrom' => folder.readFrom('writer.jsonl', 10),
+          'append' => folder.append('writer.jsonl', Uint8List.fromList([1])),
+          _ => folder.create('writer.jsonl', Uint8List.fromList([1])),
+        };
+        await expectLater(
+          operation,
+          throwsA(
+            isA<FolderAccessFailure>()
+                .having(
+                  (e) => e.message,
+                  'affected name',
+                  contains('writer.jsonl'),
+                )
+                .having(
+                  (e) => e.message,
+                  'action',
+                  contains('Resolve the duplicate names'),
+                )
+                .having(
+                  (e) => e.message,
+                  'fail closed',
+                  contains('No file was selected'),
+                )
+                .having(
+                  (e) => e.message,
+                  'not a grant error',
+                  isNot(contains('permission')),
+                )
+                .having(
+                  (e) => e.cause,
+                  'native diagnostic cause',
+                  isA<PlatformException>(),
+                ),
+          ),
+        );
+        expect(calls, [method]);
+      },
+    );
+  }
+
   test(
     'watch cancellation and old callbacks cannot trigger the new folder',
     () async {

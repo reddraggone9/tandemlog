@@ -24,6 +24,7 @@ import android.os.ParcelFileDescriptor
 import java.util.concurrent.Executors
 
 private class MissingFolderFile(val fileName: String) : java.io.IOException("Missing $fileName")
+private class DuplicateCanonicalFile(val fileName: String) : java.io.IOException("Duplicate canonical filename $fileName")
 
 /** Folder capabilities, never guessed filesystem paths. Resolve children anew. */
 class MainActivity : FlutterActivity() {
@@ -212,10 +213,15 @@ class MainActivity : FlutterActivity() {
                 } catch (e: Exception) {
                     val code = when (e) {
                         is MissingFolderFile -> "missing_file"
+                        is DuplicateCanonicalFile -> "duplicate_file"
                         is SecurityException -> "permission"
                         else -> "folder"
                     }
-                    val details = if (e is MissingFolderFile) mapOf("name" to e.fileName) else null
+                    val details = when (e) {
+                        is MissingFolderFile -> mapOf("name" to e.fileName)
+                        is DuplicateCanonicalFile -> mapOf("name" to e.fileName)
+                        else -> null
+                    }
                     main.post { result.error(code, "Folder access failed: ${e.message}", details) }
                 }
             }
@@ -237,6 +243,7 @@ class MainActivity : FlutterActivity() {
     }
     private fun cursorChildren(tree: Uri, cursor: Cursor): List<FolderChild> {
         val result = mutableListOf<FolderChild>()
+        val canonicalNames = mutableSetOf<String>()
         val idIndex = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
         val nameIndex = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
         fun optionalLong(column: String): Long? {
@@ -247,6 +254,12 @@ class MainActivity : FlutterActivity() {
         while (cursor.moveToNext()) {
             val id = cursor.getString(idIndex) ?: error("Missing document identity")
             val name = cursor.getString(nameIndex) ?: error("Missing document name")
+            // A provider can expose multiple documents with the same display
+            // name. Validate the whole query before child() chooses a URI or
+            // any caller opens a read/write descriptor for canonical data.
+            if ((name == "tandemlog-space.json" || name.endsWith(".jsonl")) && !canonicalNames.add(name)) {
+                throw DuplicateCanonicalFile(name)
+            }
             result.add(FolderChild(name, id, DocumentsContract.buildDocumentUriUsingTree(tree, id),
                 optionalLong(DocumentsContract.Document.COLUMN_SIZE), optionalLong(DocumentsContract.Document.COLUMN_LAST_MODIFIED)))
         }

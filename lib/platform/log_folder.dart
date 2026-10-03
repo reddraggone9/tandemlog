@@ -24,6 +24,10 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder {
   @override
   final String location;
   AndroidLogFolder(this.location);
+  static String _duplicateFileMessage(Object? name) =>
+      name is String && RegExp(r'^[a-zA-Z0-9._-]+$').hasMatch(name)
+      ? 'The data folder contains duplicate files named $name. Resolve the duplicate names before retrying. No file was selected.'
+      : 'The data folder contains duplicate names for its task data files. Resolve the duplicate names before retrying. No file was selected.';
   static Future<T?> _invoke<T>(
     String method, [
     Map<String, Object?>? args,
@@ -32,7 +36,12 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder {
       return await channel.invokeMethod<T>(method, args);
     } on PlatformException catch (failure, stack) {
       final String message;
-      if (failure.code == 'missing_file') {
+      if (failure.code == 'duplicate_file') {
+        final details = failure.details;
+        message = _duplicateFileMessage(
+          details is Map ? details['name'] : null,
+        );
+      } else if (failure.code == 'missing_file') {
         final details = failure.details;
         final name = details is Map ? details['name'] : null;
         final knownName =
@@ -65,10 +74,21 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder {
   @override
   Future<List<LogFileInfo>> list() async {
     final entries = await _invoke<List<dynamic>>('list', {'tree': location});
+    // Do not let cached ingestion collapse ambiguous provider entries into a
+    // set of names and skip them. Native lookups also reject these duplicates
+    // before choosing a document for a direct read, append or create.
+    final canonicalNames = <String>{};
+    for (final entry in entries!) {
+      final name = entry['name'] as String;
+      if ((name == 'tandemlog-space.json' || name.endsWith('.jsonl')) &&
+          !canonicalNames.add(name)) {
+        throw FolderAccessFailure(_duplicateFileMessage(name));
+      }
+    }
     // Provider metadata is an observation, never a trusted content stamp.
     int? knownNumber(Object? value) =>
         value is int && value >= 0 ? value : null;
-    return entries!
+    return entries
         .map(
           (e) => AndroidLogFileInfo(
             e['name'] as String,
