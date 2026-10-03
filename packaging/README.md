@@ -22,8 +22,10 @@ without removing its data. Reinstalling the identical deployed commit can report
 or canonical folder. The package asks for desktop rendering/IPC and the two
 specific native profile paths, with no network, whole-home or whole-host grant.
 
-The launcher preserves `~/.local/share/com.reddraggone9.tandemlog` and its `data`
-default canonical folder. Existing legacy `~/.local/share/tandemlog/settings.json`
+The launcher preserves `~/.local/share/com.reddraggone9.tandemlog`; new desktop
+setup uses its `shared-data` canonical folder. Previously selected `data` folders
+remain selected, and no files are moved. After a settings reset, a populated old
+default is reopened if `shared-data` is absent or empty. Existing legacy `~/.local/share/tandemlog/settings.json`
 is honored if the ID directory lacks settings, including an empty ID directory
 created by Flatpak's permission grant. It never copies, migrates or rewrites
 canonical history. The app's private cache/settings remain at their existing
@@ -100,7 +102,7 @@ identities, equal baseline payload/permissions and restored candidate commit; ev
 recorded launch uses the public candidate. The private baseline is excluded from
 release artifacts and involves no app recompile. This does not establish old-app-
 version compatibility or manual Windows interaction acceptance. Windows uses an isolated synthetic profile override. Linux seeds the actual
-native default profile/data paths on the disposable hosted runner, then launches
+native default profile/shared-data paths on the disposable hosted runner, then launches
 without an override or extra filesystem grant to verify the production wrapper
 and default-folder permissions. Seeding refuses an existing directory; no test
 reinstalls or modifies real data.

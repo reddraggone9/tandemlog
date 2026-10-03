@@ -368,7 +368,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _startDefault() => _act(() async {
     if (!settingsLoaded || settings!.folder != null) return;
-    final location = '$privateRoot/data';
+    final location = await settings!.desktopDefaultFolder();
     await Directory(location).create(recursive: true);
     await _open(location);
     if (!mounted) return;
@@ -2222,9 +2222,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   controller: search,
                                   focusNode: searchFocus,
                                   maxLines: 1,
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                  textAlignVertical: TextAlignVertical.center,
                                   decoration: InputDecoration(
                                     hintText: 'Search all tasks',
                                     isDense: true,
+                                    contentPadding: EdgeInsets.zero,
                                     border: InputBorder.none,
                                     suffixIcon: IconButton(
                                       tooltip: 'Clear search',
@@ -2805,30 +2808,52 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
       return KeyEventResult.ignored;
     },
-    child: TextField(
-      controller: capture,
-      focusNode: captureFocus,
-      readOnly: pendingCapture.isNotEmpty,
-      keyboardType: TextInputType.multiline,
-      textInputAction: TextInputAction.newline,
-      minLines: 1,
-      maxLines: 4,
-      enabled: !busy,
-      decoration: InputDecoration(
-        labelText: 'What needs doing?',
-        hintText: 'One task per line',
-        helperText: captureFailure && pendingCapture.isNotEmpty
-            ? 'Retry to check these tasks before editing.'
-            : widget.folderActions.requiresPicker
-            ? null
-            : 'Enter to add · Shift+Enter for another task',
-        suffixIcon: IconButton(
-          tooltip: 'Add tasks',
-          onPressed: busy ? null : _submitCaptureButton,
-          icon: const Icon(Icons.arrow_upward),
+    child: LayoutBuilder(
+      builder: (context, constraints) => TextField(
+        controller: capture,
+        focusNode: captureFocus,
+        readOnly: pendingCapture.isNotEmpty,
+        keyboardType: TextInputType.multiline,
+        textInputAction: TextInputAction.newline,
+        minLines: 1,
+        maxLines: 4,
+        enabled: !busy,
+        decoration: InputDecoration(
+          labelText: 'What needs doing?',
+          hintText: 'One task per line',
+          helperText: captureFailure && pendingCapture.isNotEmpty
+              ? 'Retry to check these tasks before editing.'
+              : widget.folderActions.requiresPicker
+              ? null
+              : 'Enter to add · Shift+Enter for another task',
+          suffixIcon:
+              constraints.maxWidth <
+                  480 * (MediaQuery.textScalerOf(context).scale(14) / 14)
+              ? IconButton(
+                  key: const ValueKey('capture-add'),
+                  tooltip: 'Add tasks',
+                  onPressed: busy ? null : _submitCaptureButton,
+                  icon: const Icon(Icons.add),
+                )
+              : Tooltip(
+                  message: 'Add tasks',
+                  child: TextButton.icon(
+                    key: const ValueKey('capture-add'),
+                    style: TextButton.styleFrom(
+                      minimumSize: const Size(72, 48),
+                      visualDensity: VisualDensity.standard,
+                    ),
+                    onPressed: busy ? null : _submitCaptureButton,
+                    icon: const Icon(Icons.add),
+                    label: Semantics(
+                      label: 'Add tasks',
+                      child: const ExcludeSemantics(child: Text('Add')),
+                    ),
+                  ),
+                ),
         ),
+        onSubmitted: (_) => _capture(),
       ),
-      onSubmitted: (_) => _capture(),
     ),
   );
 

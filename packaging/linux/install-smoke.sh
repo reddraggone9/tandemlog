@@ -4,9 +4,9 @@ app=com.reddraggone9.tandemlog
 fixture="$RUNNER_TEMP/tandemlog-flatpak-qa"
 report=dist/linux-install-smoke.json
 profile="$HOME/.local/share/$app"
-folder="$profile/data"
+folder="$profile/shared-data"
 bundle=dist/tandemlog-linux-x64.flatpak
-# Native default profile/data path is synthetic on this disposable hosted runner.
+# Native default profile/shared-data path is synthetic on this disposable hosted runner.
 # The launcher and production package grants themselves must permit this flow.
 install_app() { flatpak install --user --noninteractive "$bundle"; }
 launch() {

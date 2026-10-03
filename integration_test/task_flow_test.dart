@@ -19,6 +19,7 @@ import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
 import 'completion_focus_test.dart' show registerCompletionFocusTests;
 import 'header_selection_test.dart' show registerHeaderSelectionTests;
+import 'header_search_test.dart' show registerHeaderSearchTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -149,6 +150,7 @@ void main() {
   registerCompletionActionTests();
   registerCompletionFocusTests();
   registerHeaderSelectionTests();
+  registerHeaderSearchTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -1225,7 +1227,7 @@ void main() {
       tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
       await launch();
       expect(brightness(), Brightness.dark);
-      expect(await Directory('${profile.path}/data').exists(), isFalse);
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       await settings();
       await tester.tap(find.text('Theme'));
       await tester.pumpAndSettle();
@@ -1237,7 +1239,7 @@ void main() {
       await tester.pumpAndSettle();
       await theme('Light');
       expect(brightness(), Brightness.light);
-      expect(await Directory('${profile.path}/data').exists(), isFalse);
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await launch();
@@ -1251,7 +1253,7 @@ void main() {
       await tester.tap(find.text('Choose an existing folder'));
       await tester.pumpAndSettle();
       expect(actions.picks, 1);
-      expect(await Directory('${profile.path}/data').exists(), isFalse);
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       final start = tester
           .widget<FilledButton>(find.widgetWithText(FilledButton, 'Start'))
           .onPressed!;
@@ -1278,7 +1280,7 @@ void main() {
         isNull,
       );
       await tester.enterText(find.byType(TextField), 'Lee');
-      final manifest = File('${profile.path}/data/tandemlog-space.json');
+      final manifest = File('${profile.path}/shared-data/tandemlog-space.json');
       final originalManifest = await manifest.readAsString();
       await manifest.rename('${manifest.path}.removed');
       await tester.testTextInput.receiveAction(TextInputAction.done);
@@ -1312,7 +1314,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('No open tasks'), findsOneWidget);
       final records = <dynamic>[];
-      await for (final f in Directory('${profile.path}/data').list()) {
+      await for (final f in Directory('${profile.path}/shared-data').list()) {
         if (f.path.endsWith('.jsonl')) {
           records.addAll((await File(f.path).readAsLines()).map(jsonDecode));
         }
@@ -1348,7 +1350,7 @@ void main() {
       final saved = jsonDecode(
         await File('${profile.path}/settings.json').readAsString(),
       );
-      expect(saved['folder'], '${profile.path}/data');
+      expect(saved['folder'], '${profile.path}/shared-data');
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await launch();
@@ -1428,13 +1430,14 @@ void main() {
       expect(controller.value, candidate);
       expect(await titles(), ['Compose']);
       // Multiple deliberate callbacks in one frame cannot start two writes.
-      final add = tester.widget<IconButton>(
-        find.byWidgetPredicate(
-          (widget) => widget is IconButton && widget.tooltip == 'Add tasks',
-        ),
+      final addButton = tester.widget(
+        find.byKey(const ValueKey('capture-add')),
       );
-      add.onPressed!();
-      add.onPressed!();
+      final add = addButton is IconButton
+          ? addButton.onPressed!
+          : (addButton as TextButton).onPressed!;
+      add();
+      add();
       await tester.pumpAndSettle();
       expect((await titles()).where((title) => title == '買い物').length, 1);
       expect(controller.text, isEmpty);
@@ -1525,7 +1528,7 @@ void main() {
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
-      expect(await Directory('${profile.path}/data').exists(), isFalse);
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       expect(find.byTooltip('Refresh folder'), findsNothing);
       expect(find.textContaining('Saved on this device'), findsNothing);
       await tester.enterText(find.byType(TextField), 'Enter task');
@@ -1675,6 +1678,70 @@ void main() {
     },
   );
 
+  testWidgets(
+    'desktop Start retains legacy default data after settings reset',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp(
+        'tandemlog-legacy-default',
+      );
+      final profile = await Directory('${root.path}/profile').create();
+      final legacy = await Directory('${profile.path}/data').create();
+      final seed = await TaskStore.open(
+        LocalLogFolder(legacy.path),
+        '${root.path}/seed',
+      );
+      final user = const Uuid().v4();
+      await seed.command(user, 'user.created', {'name': 'Legacy example'});
+      await seed.command(const Uuid().v4(), 'task.created', {
+        'title': 'Retained example task',
+        'description': '',
+        'assignee': user,
+      });
+      await seed.close();
+      final original = <String, List<int>>{};
+      await for (final entry in legacy.list()) {
+        original[entry.path] = await File(entry.path).readAsBytes();
+      }
+      Future<void> launch() async {
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await tester.pumpAndSettle();
+      }
+
+      await launch();
+      expect(find.text('Start'), findsOneWidget);
+      await tester.tap(find.text('Start'));
+      await waitForUi(
+        tester,
+        () => find.text('Legacy example').evaluate().isNotEmpty,
+      );
+      await tester.tap(find.text('Legacy example'));
+      await waitForUi(
+        tester,
+        () => find.text('Retained example task').evaluate().isNotEmpty,
+      );
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+      expect(
+        jsonDecode(
+          await File('${profile.path}/settings.json').readAsString(),
+        )['folder'],
+        legacy.path,
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await launch();
+      expect(find.text('Start'), findsNothing);
+      expect(find.text('Retained example task'), findsOneWidget);
+      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+      for (final entry in original.entries) {
+        expect(await File(entry.key).readAsBytes(), entry.value);
+      }
+      expect(await legacy.list().length, original.length);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await root.delete(recursive: true);
+    },
+  );
+
   testWidgets('missing saved workspace does not silently create a default', (
     tester,
   ) async {
@@ -1688,7 +1755,7 @@ void main() {
     expect(find.text('Try again'), findsOneWidget);
     await tester.tap(find.text('Try again'));
     await tester.pumpAndSettle();
-    expect(await Directory('${root.path}/data').exists(), isFalse);
+    expect(await Directory('${root.path}/shared-data').exists(), isFalse);
     expect(
       jsonDecode(
         await File('${root.path}/settings.json').readAsString(),
@@ -1712,7 +1779,7 @@ void main() {
       await tester.tap(find.text('Start'));
       await tester.pumpAndSettle();
       expect(actions.picks, 1);
-      expect(await Directory('${root.path}/data').exists(), isFalse);
+      expect(await Directory('${root.path}/shared-data').exists(), isFalse);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await root.delete(recursive: true);

@@ -189,8 +189,15 @@ void registerHeaderSelectionTests() {
           await tester.tap(find.text('Done').last);
           await tester.pumpAndSettle();
           expect(find.text('1 selected'), findsOneWidget);
+          final undoBeforeSearch = tester.getRect(
+            find.byKey(const ValueKey('undo-task-action')),
+          );
           await tester.tap(find.byKey(const ValueKey('open-search')));
           await tester.pumpAndSettle();
+          expect(
+            tester.getRect(find.byKey(const ValueKey('undo-task-action'))),
+            undoBeforeSearch,
+          );
           expect(
             find.byKey(const ValueKey('compact-selection-actions')),
             findsOneWidget,
@@ -209,6 +216,10 @@ void registerHeaderSelectionTests() {
           expect(tester.getRect(viewport), searchingGeometry);
           await tester.tap(find.byTooltip('Clear search'));
           await tester.pumpAndSettle();
+          expect(
+            tester.getRect(find.byKey(const ValueKey('undo-task-action'))),
+            undoBeforeSearch,
+          );
           // Breakpoint changes retain the draft; wide selection uses its existing
           // side editor and the top toolbar remains the same height.
           tester.view.physicalSize = const Size(1200, 820);
