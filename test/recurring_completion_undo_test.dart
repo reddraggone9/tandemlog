@@ -146,7 +146,7 @@ void main() {
       closed = true;
       a = await TaskStore.open(transport, '${root.path}/a');
       closed = false;
-      expect(a.db.select('PRAGMA user_version').single['user_version'], 9);
+      expect(a.db.select('PRAGMA user_version').single['user_version'], 11);
       expect(visible(a, next), isFalse);
       expect(await folder.read('${a.writer}.jsonl'), after);
       expect(

@@ -13,6 +13,7 @@ export '../domain/bulk_task_edit.dart';
 import '../application/task_clock.dart';
 import '../domain/schedule.dart' hide validateSchedule;
 import 'log_folder.dart';
+import 'profile_lock.dart';
 
 /// The task state observed by a caller changed before a guarded command.
 class StaleTaskSnapshot implements Exception {
@@ -25,7 +26,7 @@ class TaskStore {
   final LogFolder folder;
   final Database db;
   final String writer;
-  final RandomAccessFile lock;
+  final ProfileLock lock;
   final DateTime Function() now;
   static const materialClockSkew = Duration(minutes: 5);
   String? clockWarning;
@@ -73,6 +74,7 @@ class TaskStore {
     String privatePath, {
     void Function(String, int)? onTiming,
     DateTime Function()? now,
+    String? writerIdentity,
   }) async {
     final phase = Stopwatch()..start();
     void mark(String name) {
@@ -81,24 +83,23 @@ class TaskStore {
     }
 
     await Directory(privatePath).create(recursive: true);
-    final lock = await File(
-      '$privatePath/session.lock',
-    ).open(mode: FileMode.append);
-    try {
-      await lock.lock(FileLock.exclusive);
-    } catch (_) {
-      await lock.close();
-      throw StateError(
-        'This workspace is already open in another app instance.',
-      );
-    }
+    final lock = await ProfileLock.acquire(
+      privatePath,
+      fileName: 'session.lock',
+      message: 'This workspace is already open in another app instance.',
+    );
     Database? db;
     try {
-      final identity = File('$privatePath/writer-id');
-      if (!await identity.exists()) {
-        await identity.writeAsString(const Uuid().v4(), flush: true);
+      // The application supplies its settings-owned installation identity.
+      // Omitted identity retains compatibility for standalone store clients.
+      var writer = writerIdentity;
+      if (writer == null) {
+        final identity = File('$privatePath/writer-id');
+        if (!await identity.exists()) {
+          await identity.writeAsString(const Uuid().v4(), flush: true);
+        }
+        writer = (await identity.readAsString()).trim();
       }
-      final writer = (await identity.readAsString()).trim();
       if (!isCanonicalId(writer)) {
         throw FormatFailure('Invalid local writer identity.');
       }
@@ -106,14 +107,14 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 9) {
+      if (version < 0 || version > 11) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
       }
       db.execute('PRAGMA journal_mode=WAL');
       db.execute('PRAGMA synchronous=FULL');
-      if (version > 0 && version < 9) {
+      if (version > 0 && version < 10) {
         await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
@@ -135,10 +136,34 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS streams (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL)',
       );
+      // v10 materializations remain valid. The old hash is a whole-prefix
+      // baseline at its original offset, never a resumable SHA state.
+      db.execute('BEGIN IMMEDIATE');
+      try {
+        final columns = db.select('PRAGMA table_info(streams)');
+        if (!columns.any((r) => r['name'] == 'hash_offset')) {
+          db.execute(
+            'ALTER TABLE streams ADD COLUMN hash_offset INTEGER NOT NULL DEFAULT 0',
+          );
+          db.execute('UPDATE streams SET hash_offset=offset');
+        }
+        if (!columns.any((r) => r['name'] == 'range_capable')) {
+          db.execute(
+            'ALTER TABLE streams ADD COLUMN range_capable INTEGER NOT NULL DEFAULT 0',
+          );
+        }
+        db.execute(
+          'CREATE TABLE IF NOT EXISTS stream_ranges (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
+        );
+        db.execute('PRAGMA user_version=11');
+        db.execute('COMMIT');
+      } catch (_) {
+        db.execute('ROLLBACK');
+        rethrow;
+      }
       db.execute(
         'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
-      db.execute('PRAGMA user_version=9');
       mark('sqlite_open_schema');
       final store = TaskStore._(folder, db, writer, lock, now ?? DateTime.now);
       db.execute(
@@ -195,8 +220,11 @@ class TaskStore {
       mark('ingest');
       return store;
     } catch (_) {
-      db?.close();
-      await lock.close();
+      try {
+        db?.close();
+      } finally {
+        await lock.close();
+      }
       rethrow;
     }
   }
@@ -240,7 +268,7 @@ class TaskStore {
       db.execute(
         "INSERT OR REPLACE INTO metadata VALUES ('replay_pending','1')",
       );
-      db.execute('PRAGMA user_version=9');
+      db.execute('PRAGMA user_version=10');
       db.execute('COMMIT');
     } catch (_) {
       db.execute('ROLLBACK');
@@ -270,7 +298,50 @@ class TaskStore {
   }
 
   Future<bool> refresh() => _serialize(_refresh);
-  Future<bool> _refresh() async {
+
+  /// Explicitly check all previously observed canonical bytes against their
+  /// cached baseline/range hashes, then admit any valid new complete records.
+  /// Ordinary startup, polling, resume and commands do not run this audit.
+  Future<bool> verifyHistory() => _serialize(() => _refresh(verify: true));
+
+  void _verifyHistoryBytes(String name, Uint8List bytes, Row row) {
+    final offset = row['offset'] as int;
+    final baseline = row['hash_offset'] as int;
+    if (bytes.length < offset ||
+        baseline < 0 ||
+        baseline > offset ||
+        sha256.convert(Uint8List.sublistView(bytes, 0, baseline)).toString() !=
+            row['hash']) {
+      throw FormatFailure(
+        'Previously imported history changed in $name. Restore the original log before writing.',
+      );
+    }
+    var covered = baseline;
+    for (final range in db.select(
+      'SELECT * FROM stream_ranges WHERE name=? ORDER BY start_offset',
+      [name],
+    )) {
+      final start = range['start_offset'] as int;
+      final end = range['end_offset'] as int;
+      if (start != covered ||
+          end > offset ||
+          end <= start ||
+          sha256.convert(Uint8List.sublistView(bytes, start, end)).toString() !=
+              range['hash']) {
+        throw FormatFailure(
+          'Previously imported history changed in $name. Restore the original log before writing.',
+        );
+      }
+      covered = end;
+    }
+    if (covered != offset) {
+      throw FormatFailure(
+        'Cached history checkpoints are incomplete in $name. Preserve the cache and log before recovery.',
+      );
+    }
+  }
+
+  Future<bool> _refresh({bool verify = false}) async {
     if (await _readSpace(folder) != space) {
       throw FormatFailure('Workspace identity changed at this location.');
     }
@@ -294,7 +365,10 @@ class TaskStore {
         .select("SELECT value FROM metadata WHERE key='replay_pending'")
         .isNotEmpty;
     final newEvents = <LogEvent>[];
+    final newEventRaws = <String>[];
     final checkpoints = <List<Object?>>[];
+    final rangeCheckpoints = <List<Object?>>[];
+    final fullCheckpoints = <String>[];
     for (final info in logs) {
       final writerName = info.name.substring(0, info.name.length - 6);
       if (!isCanonicalId(writerName)) {
@@ -304,29 +378,50 @@ class TaskStore {
         info.name,
       ]);
       final row = saved.isEmpty ? null : saved.first;
-      if (!replay &&
-          row != null &&
-          info.stamp.isNotEmpty &&
-          row['stamp'] == info.stamp) {
-        continue;
-      }
-      final bytes = await folder.read(info.name);
-      readFiles++;
       final offset = row == null ? 0 : row['offset'] as int;
-      if (bytes.length < offset ||
-          (row != null &&
-              sha256.convert(bytes.sublist(0, offset)).toString() !=
-                  row['hash'])) {
+      final observedSize = info.size != null && info.size! >= 0
+          ? info.size
+          : null;
+      if (observedSize != null && observedSize < offset) {
         throw FormatFailure(
           'Previously imported history changed in ${info.name}. Restore the original log before writing.',
         );
       }
-      var end = bytes.lastIndexOf(10) + 1;
-      if (end < offset) end = offset;
-      if (bytes.length - end > 1024 * 1024) {
+      Uint8List? suffix;
+      if (!verify &&
+          !replay &&
+          observedSize != null &&
+          folder is RangeLogFolder) {
+        if (row != null &&
+            row['range_capable'] == 1 &&
+            observedSize == offset) {
+          continue;
+        }
+        suffix = await (folder as RangeLogFolder).readFrom(info.name, offset);
+      }
+      final rangeCapable = suffix != null;
+      final full = suffix == null || row == null;
+      final bytes = suffix ?? await folder.read(info.name);
+      readFiles++;
+      final start = full ? 0 : offset;
+      if (bytes.length + start < offset ||
+          (observedSize != null && bytes.length + start < observedSize)) {
+        throw FormatFailure(
+          'Previously imported history changed in ${info.name}. Restore the original log before writing.',
+        );
+      }
+      if (full && row != null) _verifyHistoryBytes(info.name, bytes, row);
+      final completeLength = bytes.lastIndexOf(10) + 1;
+      final end = start + completeLength;
+      if (end < offset) {
+        throw FormatFailure(
+          'Previously imported history changed in ${info.name}. Restore the original log before writing.',
+        );
+      }
+      if (bytes.length - completeLength > 1024 * 1024) {
         throw FormatFailure('Oversized incomplete record in ${info.name}.');
       }
-      if (info.name == '$writer.jsonl' && end != bytes.length) {
+      if (info.name == '$writer.jsonl' && completeLength != bytes.length) {
         throw FormatFailure(
           'Interrupted local append detected. Preserve the file and recover its incomplete tail before writing.',
         );
@@ -338,7 +433,13 @@ class TaskStore {
               ).first['n']
               as int;
       var lastClock = _maximumClock(writerName);
-      final appended = utf8.decode(bytes.sublist(replay ? 0 : offset, end));
+      final appended = utf8.decode(
+        Uint8List.sublistView(
+          bytes,
+          replay ? 0 : offset - start,
+          completeLength,
+        ),
+      );
       final lines = appended.isEmpty
           ? <String>[]
           : (appended.split('\n')..removeLast());
@@ -359,13 +460,44 @@ class TaskStore {
         lastSeq = e.sequence;
         lastClock = e.clock;
         newEvents.add(e);
+        newEventRaws.add(raw);
       }
-      checkpoints.add([
+      final checkpoint = <Object?>[
         info.name,
         end,
-        sha256.convert(bytes.sublist(0, end)).toString(),
-        end == bytes.length ? info.stamp : '',
-      ]);
+        full
+            ? sha256
+                  .convert(Uint8List.sublistView(bytes, 0, completeLength))
+                  .toString()
+            : row['hash'],
+        completeLength == bytes.length ? info.stamp : '',
+        full ? end : row['hash_offset'],
+        rangeCapable
+            ? 1
+            : ((verify || replay) && row != null ? row['range_capable'] : 0),
+      ];
+      if (!replay &&
+          row != null &&
+          row['offset'] == checkpoint[1] &&
+          row['hash'] == checkpoint[2] &&
+          row['stamp'] == checkpoint[3] &&
+          row['hash_offset'] == checkpoint[4] &&
+          row['range_capable'] == checkpoint[5]) {
+        continue;
+      }
+      checkpoints.add(checkpoint);
+      if (full) {
+        fullCheckpoints.add(info.name);
+      } else if (end > offset) {
+        rangeCheckpoints.add([
+          info.name,
+          offset,
+          end,
+          sha256
+              .convert(Uint8List.sublistView(bytes, 0, completeLength))
+              .toString(),
+        ]);
+      }
     }
     if (checkpoints.isEmpty) {
       if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
@@ -373,19 +505,21 @@ class TaskStore {
     }
     db.execute('BEGIN IMMEDIATE');
     try {
-      for (final e in newEvents) {
+      for (final (index, e) in newEvents.indexed) {
         db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
           e.id,
           e.entity,
           e.writer,
           e.sequence,
           e.clock.value.toInt(),
-          e.encode(),
+          newEventRaws[index],
         ]);
       }
-      _validateUndoReferences();
-      _validateMoves();
-      _validateTagReferences();
+      if (newEvents.isNotEmpty) {
+        _validateUndoReferences();
+        _validateMoves();
+        _validateTagReferences();
+      }
       final affected = newEvents.map((e) => e.entity).toSet();
       for (final e in newEvents) {
         if (e.type == 'task.completed' && e.data['successor'] != null) {
@@ -432,7 +566,16 @@ class TaskStore {
         _rebuildOrder();
       }
       for (final c in checkpoints) {
-        db.execute('INSERT OR REPLACE INTO streams VALUES (?,?,?,?)', c);
+        db.execute(
+          'INSERT OR REPLACE INTO streams (name,offset,hash,stamp,hash_offset,range_capable) VALUES (?,?,?,?,?,?)',
+          c,
+        );
+      }
+      for (final name in fullCheckpoints) {
+        db.execute('DELETE FROM stream_ranges WHERE name=?', [name]);
+      }
+      for (final range in rangeCheckpoints) {
+        db.execute('INSERT INTO stream_ranges VALUES (?,?,?,?)', range);
       }
       db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       db.execute('COMMIT');
@@ -1411,8 +1554,11 @@ class TaskStore {
   Future<void> close() {
     _closed = true;
     return _closing ??= _queue.then((_) async {
-      db.close();
-      await lock.close();
+      try {
+        db.close();
+      } finally {
+        await lock.close();
+      }
     });
   }
 }

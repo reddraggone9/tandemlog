@@ -5,21 +5,51 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.database.ContentObserver
+import android.database.Cursor
 import java.util.TimeZone
 import android.net.Uri
 import android.provider.DocumentsContract
 import android.os.Handler
 import android.os.Looper
+import android.os.Build
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import io.flutter.plugin.common.EventChannel
+import io.flutter.plugin.common.StandardMethodCodec
 import java.io.FileOutputStream
+import java.io.IOException
+import android.os.ParcelFileDescriptor
 import java.util.concurrent.Executors
 
 private class MissingFolderFile(val fileName: String) : java.io.IOException("Missing $fileName")
 
 /** Folder capabilities, never guessed filesystem paths. Resolve children anew. */
 class MainActivity : FlutterActivity() {
+    private var folderEvents: MethodChannel? = null
+    private var folderChannel: MethodChannel? = null
+    @Volatile private var folderWatch: FolderWatch? = null
+    @Volatile private var foldersPaused = false
+    private class FolderWatch(val tree: Uri, val token: Long, val sink: EventChannel.EventSink) {
+        @Volatile var active = true
+        // These resources are accessed only by the single IO executor.
+        var cursor: Cursor? = null
+        var observer: ContentObserver? = null
+    }
+    private data class FolderChild(val name: String, val id: String, val uri: Uri, val size: Long?, val modified: Long?) {
+        fun observation(): Map<String, Any?> = mapOf("name" to name, "documentId" to id, "size" to size, "modifiedMillis" to modified)
+    }
+    override fun onPause() {
+        foldersPaused = true
+        folderWatch?.let { watch -> io.execute { releaseFolderCursor(watch) } }
+        super.onPause()
+    }
+    override fun onResume() {
+        super.onResume()
+        foldersPaused = false
+        folderWatch?.let { watch -> io.execute { refreshFolderWatch(watch) } }
+    }
     private var timeChannel: MethodChannel? = null
     private var observingTime = false
     private val timeReceiver = object : BroadcastReceiver() {
@@ -31,10 +61,24 @@ class MainActivity : FlutterActivity() {
     private fun stopTimeObservation() {
         if (observingTime) { unregisterReceiver(timeReceiver); observingTime = false }
     }
+    override fun cleanUpFlutterEngine(engine: FlutterEngine) {
+        stopFolderWatch()
+        folderEvents?.setMethodCallHandler(null)
+        folderEvents = null
+        folderChannel?.setMethodCallHandler(null)
+        folderChannel = null
+        super.cleanUpFlutterEngine(engine)
+    }
     override fun onDestroy() {
+        stopFolderWatch()
+        folderEvents?.setMethodCallHandler(null)
+        folderEvents = null
+        folderChannel?.setMethodCallHandler(null)
+        folderChannel = null
         stopTimeObservation()
         timeChannel?.setMethodCallHandler(null)
         timeChannel = null
+        io.shutdown() // Drain queued cursor/observer cleanup; never retain a service.
         super.onDestroy()
     }
     private var picker: MethodChannel.Result? = null
@@ -64,7 +108,44 @@ class MainActivity : FlutterActivity() {
                 }
             }
         }
-        MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/folders").setMethodCallHandler { call, result ->
+        // EventChannel wire protocol with token-aware cancellation. Stock
+        // EventChannel tears down its current sink before calling onCancel,
+        // even when that cancellation belongs to an older subscription.
+        val messenger = engine.dartExecutor.binaryMessenger
+        folderEvents = MethodChannel(messenger, "tandemlog/folder-events").also { channel ->
+            channel.setMethodCallHandler { call, result ->
+                when (call.method) {
+                "listen" -> {
+                    val sink = object : EventChannel.EventSink {
+                        override fun success(event: Any?) { messenger.send("tandemlog/folder-events", StandardMethodCodec.INSTANCE.encodeSuccessEnvelope(event)) }
+                        override fun error(code: String, message: String?, details: Any?) { messenger.send("tandemlog/folder-events", StandardMethodCodec.INSTANCE.encodeErrorEnvelope(code, message, details)) }
+                        override fun endOfStream() { messenger.send("tandemlog/folder-events", null) }
+                    }
+                    stopFolderWatch()
+                    try {
+                        val args = call.arguments as? Map<*, *> ?: error("Missing watch arguments")
+                        val tree = Uri.parse(args["tree"] as? String ?: error("Missing tree"))
+                        val token = (args["token"] as? Number)?.toLong() ?: error("Missing watch token")
+                        val watch = FolderWatch(tree, token, sink)
+                        folderWatch = watch
+                        io.execute { refreshFolderWatch(watch) }
+                    } catch (e: Exception) {
+                        sink.error("watch_unavailable", "Folder notifications unavailable; polling remains active.", null)
+                    }
+                    result.success(null)
+                }
+                "cancel" -> {
+                    val token = ((call.arguments as? Map<*, *>)?.get("token") as? Number)?.toLong()
+                    // A delayed cancellation from an old Dart subscription must
+                    // not tear down the newly selected folder's observer.
+                    if (token == folderWatch?.token) stopFolderWatch()
+                    result.success(null)
+                }
+                else -> result.notImplemented()
+                }
+            }
+        }
+        folderChannel = MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/folders").also { channel -> channel.setMethodCallHandler { call, result ->
             if (call.method == "pick") {
                 if (picker != null) { result.error("busy", "Folder picker is already open", null); return@setMethodCallHandler }
                 picker = result
@@ -79,10 +160,35 @@ class MainActivity : FlutterActivity() {
                     val name = call.argument<String>("name")
                     if (name != null && !Regex("^[a-zA-Z0-9._-]+$").matches(name)) error("Unsafe filename")
                     val value: Any? = when (call.method) {
-                        "list" -> children(tree).map { mapOf("name" to it.first) }
+                        "list" -> children(tree).map { it.observation() }
                         "read" -> contentResolver.openInputStream(child(tree, name!!) ?: throw MissingFolderFile(name))!!.use { stream ->
                             val bytes = stream.readBytes()
                             bytes
+                        }
+                        "readFrom" -> {
+                            val offset = (call.argument<Number>("offset") ?: error("Missing offset")).toLong()
+                            require(offset >= 0) { "Invalid offset" }
+                            // Resolve the selected pathname anew; a retained
+                            // watcher cursor/old file handle is not its content.
+                            val uri = child(tree, name!!) ?: throw MissingFolderFile(name)
+                            val descriptor = contentResolver.openFileDescriptor(uri, "r") ?: error("Provider returned no read descriptor")
+                            val size = descriptor.statSize
+                            if (size < 0) {
+                                descriptor.close()
+                                null // Pipes/unknown seekability: explicit store fallback.
+                            } else if (size < offset) {
+                                descriptor.close()
+                                error("Log was truncated before the requested offset")
+                            } else {
+                                ParcelFileDescriptor.AutoCloseInputStream(descriptor).use { input ->
+                                    try {
+                                        input.channel.position(offset)
+                                    } catch (e: IOException) {
+                                        return@use null // Never read/skip the prefix silently.
+                                    }
+                                    input.readBytes()
+                                }
+                            }
                         }
                         "append", "create" -> {
                             val existing = child(tree, name!!)
@@ -113,17 +219,97 @@ class MainActivity : FlutterActivity() {
                     main.post { result.error(code, "Folder access failed: ${e.message}", details) }
                 }
             }
+        } }
+    }
+    private fun queryChildren(tree: Uri): Cursor {
+        val uri = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
+        val identity = arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+        val projection = identity + arrayOf(DocumentsContract.Document.COLUMN_SIZE, DocumentsContract.Document.COLUMN_LAST_MODIFIED)
+        return try {
+            contentResolver.query(uri, projection, null, null, null) ?: error("Provider returned no folder cursor")
+        } catch (e: IllegalArgumentException) {
+            // Older/custom providers may reject optional columns. Identity and
+            // names remain required; unknown metadata never becomes a stamp.
+            contentResolver.query(uri, identity, null, null, null) ?: error("Provider returned no folder cursor")
+        } catch (e: UnsupportedOperationException) {
+            contentResolver.query(uri, identity, null, null, null) ?: error("Provider returned no folder cursor")
         }
     }
-    private fun children(tree: Uri): List<Pair<String, Uri>> {
-        val uri = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree))
-        val result = mutableListOf<Pair<String, Uri>>()
-        contentResolver.query(uri, arrayOf(DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME), null, null, null)!!.use { cursor ->
-            while (cursor.moveToNext()) result.add(cursor.getString(1) to DocumentsContract.buildDocumentUriUsingTree(tree, cursor.getString(0)))
+    private fun cursorChildren(tree: Uri, cursor: Cursor): List<FolderChild> {
+        val result = mutableListOf<FolderChild>()
+        val idIndex = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DOCUMENT_ID)
+        val nameIndex = cursor.getColumnIndexOrThrow(DocumentsContract.Document.COLUMN_DISPLAY_NAME)
+        fun optionalLong(column: String): Long? {
+            val index = cursor.getColumnIndex(column)
+            return if (index < 0 || cursor.isNull(index) || cursor.getType(index) != Cursor.FIELD_TYPE_INTEGER) null
+                else cursor.getLong(index).takeIf { it >= 0 }
+        }
+        while (cursor.moveToNext()) {
+            val id = cursor.getString(idIndex) ?: error("Missing document identity")
+            val name = cursor.getString(nameIndex) ?: error("Missing document name")
+            result.add(FolderChild(name, id, DocumentsContract.buildDocumentUriUsingTree(tree, id),
+                optionalLong(DocumentsContract.Document.COLUMN_SIZE), optionalLong(DocumentsContract.Document.COLUMN_LAST_MODIFIED)))
         }
         return result
     }
-    private fun child(tree: Uri, name: String): Uri? = children(tree).firstOrNull { it.first == name }?.second
+    private fun children(tree: Uri): List<FolderChild> = queryChildren(tree).use { cursor -> cursorChildren(tree, cursor) }
+    private fun child(tree: Uri, name: String): Uri? = children(tree).firstOrNull { it.name == name }?.uri
+
+    private fun stopFolderWatch() {
+        val watch = folderWatch ?: return
+        folderWatch = null
+        watch.active = false
+        io.execute { releaseFolderCursor(watch) }
+    }
+    private fun releaseFolderCursor(watch: FolderWatch) {
+        val observer = watch.observer
+        watch.observer = null
+        val cursor = watch.cursor
+        watch.cursor = null
+        if (observer != null) runCatching { contentResolver.unregisterContentObserver(observer) }
+        runCatching { cursor?.close() }
+    }
+    private fun refreshFolderWatch(watch: FolderWatch) {
+        if (!watch.active || folderWatch !== watch || foldersPaused) return
+        var next: Cursor? = null
+        var observer: ContentObserver? = null
+        try {
+            next = queryChildren(watch.tree)
+            val snapshot = cursorChildren(watch.tree, next).map { it.observation() }
+            val notifications = if (Build.VERSION.SDK_INT >= 29) next.notificationUris.orEmpty() else listOfNotNull(next.notificationUri)
+            if (notifications.isEmpty()) error("Provider has no folder notification URI")
+            observer = object : ContentObserver(main) {
+                override fun onChange(selfChange: Boolean) {
+                    if (watch.active && folderWatch === watch && !foldersPaused) io.execute { refreshFolderWatch(watch) }
+                }
+            }
+            notifications.distinct().forEach { contentResolver.registerContentObserver(it, true, observer) }
+            if (!watch.active || folderWatch !== watch || foldersPaused) return
+            // Open/register the replacement before closing the old cursor: AOSP
+            // FileSystemProvider's directory observer lives with its cursors.
+            releaseFolderCursor(watch)
+            watch.cursor = next
+            watch.observer = observer
+            next = null
+            observer = null
+            main.post {
+                if (watch.active && folderWatch === watch && !foldersPaused) watch.sink.success(mapOf(
+                    "tree" to watch.tree.toString(), "token" to watch.token, "files" to snapshot))
+            }
+        } catch (e: Exception) {
+            releaseFolderCursor(watch)
+            main.post {
+                if (watch.active && folderWatch === watch && !foldersPaused) watch.sink.error(
+                    "watch_unavailable", "Folder notifications unavailable; polling remains active.", null)
+            }
+        } finally {
+            try {
+                if (observer != null) contentResolver.unregisterContentObserver(observer)
+            } finally {
+                next?.close()
+            }
+        }
+    }
     @Deprecated("Legacy activity result bridge")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

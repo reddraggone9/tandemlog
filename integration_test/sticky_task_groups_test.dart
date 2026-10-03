@@ -43,6 +43,13 @@ void registerStickyTaskGroupTests() {
             ? {'dueDate': '2026-10-02'}
             : {},
       });
+      // These undated fixtures are organized Someday tasks. Raw captures now
+      // precede dated groups in Inbox, which is covered by inbox_flow_test.
+      if (i >= 32) {
+        await writer.command(id, 'task.edited', {
+          'title': 'Reference task ${i + 1}',
+        });
+      }
     }
     await writer.command(ids.last, 'task.completed', {});
     await File(

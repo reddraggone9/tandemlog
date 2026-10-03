@@ -35,7 +35,7 @@ If the maximum event clock is more than five minutes ahead of this device, `cloc
 
 A wrong forward clock can therefore influence later conflict ordering, including other devices that observe it. This availability-first tradeoff is explicitly accepted; recovery tooling is deferred. No timestamp clamping, silent record omission, background repair or history rewrite is implemented. Malformed values, unsupported formats and signed-64-bit exhaustion still fail explicitly; these are format/range errors, not skew admission gates.
 
-The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. SQLite cache format 9 rebuilds known older local layouts from canonical logs after retaining an obsolete-cache backup; unknown future layouts remain explicit errors. Current closed-schema validation still rejects source-map rehearsal events, invalid UUIDs and opaque reserved schedule tags in canonical history; a cache rebuild never makes incompatible logs acceptable. Published v1 folders remain untouched and unsupported by this prerelease.
+The unpublished v2 scalar-number and HLC tuple drafts are not accepted by the final decimal-string wire contract. The current SQLite cache is format 11; its replay/in-place upgrade rules are described below. Unknown future layouts remain explicit errors. Current closed-schema validation still rejects source-map rehearsal events, invalid UUIDs and opaque reserved schedule tags in canonical history; a cache rebuild never makes incompatible logs acceptable. Published v1 folders remain untouched and unsupported by this prerelease.
 
 ## Fields, dates and tags
 
@@ -83,3 +83,12 @@ Conservatively, any direct canonical history on the successor or any incoming re
 Mixed Undo batches append unchanged per-record envelopes together. Exact confirmed receipts determine undone/remaining operations and retained/removed successor counts; a partial prefix does not claim tail success. One recurring cleanup record couples its completion reversal with its derived suppression, avoiding a separately durable unconditional successor deletion.
 
 Update **every peer before using RC8 recurring-completion Undo**: RC7 and older readers reject this additive closed-schema type. The workspace/envelope remains v2; cache 9 rebuilds caches 1–8 with a private backup and retained workspace/writer/committed-prefix guards. Older apps reject cache 9 rather than reading its projections. The historical-format fixture `test/fixtures/recurring_operation_undone_v2.jsonl` verifies legacy retention; `test/recurring_completion_undo_test.dart` covers cleanup, protection, recompletion, delayed references, convergence and partial retries.
+
+
+## Unreleased cache 11 and installation identity
+
+Canonical workspace/event protocol remains v2. The accepted Inbox classification is derived from existing functional task fields and surviving edits/tags, not a new event or stored `neverEdited` flag. Supported caches 1–9 rebuild with a private backup and existing identity/committed-history guards; caches newer than 11 remain untouched with an explicit compatible-app error. Cache 10 upgrades to 11 in one SQLite schema transaction without historical rereads.
+
+`streams` retains complete byte `offset`, prior-prefix `hash` and its `hash_offset`, adapter observation `stamp`, and cached `range_capable`. `stream_ranges(name,start_offset,end_offset,hash)` records exact SHA256 digests of subsequently admitted complete byte ranges. Explicit full verification requires contiguous coverage through `offset` and compares the current bytes. SHA digest concatenation is not used as resumable hash state. Checkpoints, newly admitted literal event lines and affected projections commit together; receipts compare exact admitted raw bytes rather than reserialized JSON. Ordinary cache reopen and size/seek-capable reconciliation skip historical bytes. See [accepted admission policy](android-reconciliation-review.md).
+
+Production stores receive the installation writer from settings under the profile-wide lease; per-workspace sequence/clock and stream identity semantics remain unchanged. See [ADR 0006](decisions/0006-installation-identity-and-instance-lock.md). Low-level standalone store clients may still omit that optional argument and retain their existing local writer file.

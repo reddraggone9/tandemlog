@@ -1,5 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
+import '../domain/event.dart' show FormatFailure, isCanonicalId;
 
 enum Appearance { system, light, dark }
 
@@ -9,6 +12,14 @@ class LocalSettings {
   final String root;
   String? folder, user;
   Appearance appearance = Appearance.system;
+  String? _writer;
+  String get writer =>
+      _writer ??
+      (throw StateError('Load settings before opening a workspace.'));
+
+  // Contains no UUID: a settings reset must create a new installation writer,
+  // rather than resurrecting one of the retained legacy per-space identities.
+  File get _migrationMarker => File('$root/writer-migration.json');
 
   /// Resolve only for explicit desktop Start without a saved folder selection.
   /// Retain an earlier default after a settings reset instead of hiding its data
@@ -25,19 +36,90 @@ class LocalSettings {
   }
 
   Future<void> load() async {
+    folder = user = _writer = null;
+    appearance = Appearance.system;
     final file = File('$root/settings.json');
-    if (!await file.exists()) return;
-    final value = jsonDecode(await file.readAsString()) as Map<String, dynamic>;
-    // Existing installations stored only folder and user.
-    folder = value['folder'] as String?;
-    user = value['user'] as String?;
-    final theme = value['appearance'] as String?;
-    appearance = theme == null
-        ? Appearance.system
-        : Appearance.values.byName(theme);
+    if (await file.exists()) {
+      final value =
+          jsonDecode(await file.readAsString()) as Map<String, dynamic>;
+      // Existing installations stored only folder and user.
+      folder = value['folder'] as String?;
+      user = value['user'] as String?;
+      final theme = value['appearance'] as String?;
+      appearance = theme == null
+          ? Appearance.system
+          : Appearance.values.byName(theme);
+      if (value.containsKey('writer')) {
+        if (!isCanonicalId(value['writer'])) {
+          throw FormatFailure(
+            'Invalid installation writer identity in settings.',
+          );
+        }
+        _writer = value['writer'] as String;
+      }
+    }
+    await _ensureWriter();
+  }
+
+  Future<void> _ensureWriter() async {
+    final migrated = await _migrationMarker.exists();
+    if (migrated && await _migrationMarker.readAsString() != '{"v":1}') {
+      throw FormatFailure('Invalid local writer migration marker.');
+    }
+    if (_writer == null) {
+      _writer = migrated ? const Uuid().v4() : await _legacyWriter();
+      _writer ??= const Uuid().v4();
+      // Settings are the authority. Complete their atomic replacement first;
+      // if interrupted before the marker, the saved UUID still wins on retry.
+      try {
+        await _writeSettings();
+      } catch (_) {
+        _writer = null;
+        rethrow;
+      }
+    }
+    if (!migrated) {
+      final temporary = File('${_migrationMarker.path}.tmp');
+      await temporary.writeAsString('{"v":1}', flush: true);
+      await temporary.rename(_migrationMarker.path);
+    }
+  }
+
+  Future<String?> _legacyWriter() async {
+    final spaces = Directory('$root/spaces');
+    if (!await spaces.exists()) return null;
+    final identities = <String, String>{};
+    await for (final entry in spaces.list(followLinks: false)) {
+      if (entry is! Directory) continue;
+      final identity = File('${entry.path}/writer-id');
+      if (!await identity.exists()) continue;
+      final value = (await identity.readAsString()).trim();
+      if (!isCanonicalId(value)) {
+        throw FormatFailure(
+          'Invalid legacy writer identity at ${identity.path}.',
+        );
+      }
+      identities[entry.path] = value;
+    }
+    if (identities.isEmpty) return null;
+    if (folder != null) {
+      final key = sha256.convert(utf8.encode(folder!)).toString();
+      final selected = identities['${spaces.path}/$key'];
+      if (selected != null) return selected;
+    }
+    // No selected identity: deterministic first cache directory, never mtime.
+    final paths = identities.keys.toList()..sort();
+    return identities[paths.first];
   }
 
   Future<void> save() async {
+    await Directory(root).create(recursive: true);
+    await _ensureWriter();
+    await _writeSettings();
+  }
+
+  Future<void> _writeSettings() async {
+    await Directory(root).create(recursive: true);
     final file = File('$root/settings.json');
     final temporary = File('${file.path}.tmp');
     await temporary.writeAsString(
@@ -45,6 +127,7 @@ class LocalSettings {
         'folder': folder,
         'user': user,
         'appearance': appearance.name,
+        'writer': writer,
       }),
       flush: true,
     );

@@ -1,0 +1,158 @@
+{
+  "candidate": "0.1.0-rc.10+37 (unpublished)",
+  "methodology": {
+    "platform": "native Linux Dart JIT / production TaskStore and SQLite; new OS process for each mode",
+    "histories_bytes": [
+      10240,
+      1048576
+    ],
+    "sample_count_each": 1,
+    "cache": "persisted SQLite checkpoints; warm OS filesystem and package caches",
+    "timer": "inside TaskStore.open; excludes process creation/JIT/first frame/input readiness",
+    "limitations": "not Android SAF/provider measurements or universal startup claim"
+  },
+  "source_sha256": {
+    "lib/storage/task_store.dart": "3a1fb3d4f2cd2384bc9dd8a4d6d34a3004f98c08c06e1d42f80fa6b5d0288dd2",
+    "lib/storage/log_folder.dart": "d3b47520edd3e4b302efeb531b4976327cc33871160543c2ebcc5bdb8dcc6390",
+    "lib/platform/log_folder.dart": "3542d3f5c46f0aca959992294928bdea26caf916c2ac01d6d21a0fc4667bebc9",
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": "bcf7d08f62c4bcb5a11106888a3bac874ad5228bde04a064de5d3554a912c1c8"
+  },
+  "measurements": [
+    {
+      "mode": "seed",
+      "pid": 59685,
+      "canonical_bytes": 10240,
+      "open_us": 73093,
+      "phase_ms": {
+        "identity_lock": 3,
+        "sqlite_open_schema": 19,
+        "manifest": 16,
+        "ingest": 31
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 10240,
+      "open_offsets": [
+        0
+      ],
+      "twelve_refresh_us": 11805,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 0,
+      "refresh_offsets": [],
+      "appended_bytes": 0
+    },
+    {
+      "mode": "reopen",
+      "pid": 59716,
+      "canonical_bytes": 10240,
+      "open_us": 61103,
+      "phase_ms": {
+        "identity_lock": 12,
+        "sqlite_open_schema": 21,
+        "manifest": 19,
+        "ingest": 5
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 0,
+      "open_offsets": [],
+      "twelve_refresh_us": 10757,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 0,
+      "refresh_offsets": [],
+      "appended_bytes": 0
+    },
+    {
+      "mode": "append",
+      "pid": 59747,
+      "canonical_bytes": 10460,
+      "open_us": 62335,
+      "phase_ms": {
+        "identity_lock": 17,
+        "sqlite_open_schema": 19,
+        "manifest": 17,
+        "ingest": 5
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 0,
+      "open_offsets": [],
+      "twelve_refresh_us": 32585,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 220,
+      "refresh_offsets": [
+        10240
+      ],
+      "appended_bytes": 220
+    },
+    {
+      "mode": "seed",
+      "pid": 59778,
+      "canonical_bytes": 1048576,
+      "open_us": 118168,
+      "phase_ms": {
+        "identity_lock": 2,
+        "sqlite_open_schema": 18,
+        "manifest": 16,
+        "ingest": 79
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 1048576,
+      "open_offsets": [
+        0
+      ],
+      "twelve_refresh_us": 9553,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 0,
+      "refresh_offsets": [],
+      "appended_bytes": 0
+    },
+    {
+      "mode": "reopen",
+      "pid": 59809,
+      "canonical_bytes": 1048576,
+      "open_us": 60334,
+      "phase_ms": {
+        "identity_lock": 12,
+        "sqlite_open_schema": 19,
+        "manifest": 20,
+        "ingest": 7
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 0,
+      "open_offsets": [],
+      "twelve_refresh_us": 12260,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 0,
+      "refresh_offsets": [],
+      "appended_bytes": 0
+    },
+    {
+      "mode": "append",
+      "pid": 59839,
+      "canonical_bytes": 1048800,
+      "open_us": 63398,
+      "phase_ms": {
+        "identity_lock": 16,
+        "sqlite_open_schema": 21,
+        "manifest": 18,
+        "ingest": 5
+      },
+      "open_log_full_bytes": 0,
+      "open_log_suffix_bytes": 0,
+      "open_offsets": [],
+      "twelve_refresh_us": 43800,
+      "refresh_log_full_bytes": 0,
+      "refresh_log_suffix_bytes": 224,
+      "refresh_offsets": [
+        1048576
+      ],
+      "appended_bytes": 224
+    }
+  ],
+  "canonical_protocol": 2,
+  "cache_schema": 11,
+  "normal_operation": "no implicit full historical verification on startup/resume/polling/commands",
+  "integrity_limit": "same-length/old-prefix rewrites may remain unseen until explicit verifyHistory; cache loss discards prior baseline",
+  "validation": {
+    "focused_tests": 167,
+    "native_android": "pending exact candidate"
+  }
+}

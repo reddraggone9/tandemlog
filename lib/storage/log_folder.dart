@@ -3,7 +3,11 @@ import 'dart:typed_data';
 
 class LogFileInfo {
   final String name, stamp;
-  LogFileInfo(this.name, this.stamp);
+
+  /// Current observed length, when the provider exposes it. This is an append
+  /// hint, not proof that previously admitted bytes remain unchanged.
+  final int? size;
+  LogFileInfo(this.name, this.stamp, {this.size});
 }
 
 /// Human-readable transport failure. Retain the original platform cause for
@@ -24,7 +28,13 @@ abstract class LogFolder {
   Future<void> create(String name, Uint8List bytes);
 }
 
-class LocalLogFolder implements LogFolder {
+/// Optional actual seek capability. A null result requests a conservative full
+/// read; implementations must not read/skip the old prefix to produce a suffix.
+abstract class RangeLogFolder {
+  Future<Uint8List?> readFrom(String name, int offset);
+}
+
+class LocalLogFolder implements LogFolder, RangeLogFolder {
   @override
   final String location;
   LocalLogFolder(this.location);
@@ -45,6 +55,7 @@ class LocalLogFolder implements LogFolder {
           LogFileInfo(
             entry.uri.pathSegments.last,
             '${s.size}:${s.modified.microsecondsSinceEpoch}:${s.changed.microsecondsSinceEpoch}',
+            size: s.size,
           ),
         );
       }
@@ -54,6 +65,29 @@ class LocalLogFolder implements LogFolder {
 
   @override
   Future<Uint8List> read(String name) => file(name).readAsBytes();
+  @override
+  Future<Uint8List> readFrom(String name, int offset) async {
+    final handle = await file(name).open();
+    try {
+      final length = await handle.length();
+      if (offset < 0 || length < offset) {
+        throw FolderAccessFailure(
+          'Previously imported log $name was truncated. Restore it before writing.',
+        );
+      }
+      await handle.setPosition(offset);
+      final builder = BytesBuilder(copy: false);
+      while (true) {
+        final chunk = await handle.read(64 * 1024);
+        if (chunk.isEmpty) break;
+        builder.add(chunk);
+      }
+      return builder.takeBytes();
+    } finally {
+      await handle.close();
+    }
+  }
+
   @override
   Future<void> create(String name, Uint8List bytes) async {
     if (await file(name).exists()) {

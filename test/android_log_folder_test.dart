@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:fake_async/fake_async.dart';
+import 'package:tandemlog/platform/foreground_importer.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/presentation/failure_message.dart';
 import 'package:tandemlog/domain/event.dart' show FormatFailure;
@@ -9,8 +12,265 @@ void main() {
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
   final folder = AndroidLogFolder('content://synthetic/tree/test');
-  tearDown(
-    () => messenger.setMockMethodCallHandler(AndroidLogFolder.channel, null),
+  const watchMethods = MethodChannel('tandemlog/folder-events');
+  tearDown(() {
+    messenger.setMockMethodCallHandler(AndroidLogFolder.channel, null);
+    messenger.setMockMethodCallHandler(watchMethods, null);
+  });
+  Future<void> event(Object? value) async {
+    await messenger.handlePlatformMessage(
+      AndroidLogFolder.eventsChannel.name,
+      AndroidLogFolder.eventsChannel.codec.encodeSuccessEnvelope(value),
+      (_) {},
+    );
+  }
+
+  Future<void> watchError() async {
+    await messenger.handlePlatformMessage(
+      AndroidLogFolder.eventsChannel.name,
+      AndroidLogFolder.eventsChannel.codec.encodeErrorEnvelope(
+        code: 'watch_unavailable',
+        message: 'Polling remains active',
+      ),
+      (_) {},
+    );
+  }
+
+  test(
+    'range bridge returns suffix and exposes nonseekable fallback explicitly',
+    () async {
+      final calls = <MethodCall>[];
+      var seekable = true;
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+        call,
+      ) async {
+        calls.add(call);
+        expect(call.method, 'readFrom');
+        return seekable ? Uint8List.fromList([4, 5]) : null;
+      });
+      expect(await folder.readFrom('writer.jsonl', 3), [4, 5]);
+      expect(calls.single.arguments, {
+        'tree': folder.location,
+        'name': 'writer.jsonl',
+        'offset': 3,
+      });
+      seekable = false;
+      expect(await folder.readFrom('writer.jsonl', 3), isNull);
+      expect(calls, hasLength(2));
+      await expectLater(
+        folder.readFrom('writer.jsonl', -1),
+        throwsArgumentError,
+      );
+      expect(calls, hasLength(2));
+    },
+  );
+
+  test(
+    'range truncation/provider errors remain failures rather than fallback',
+    () async {
+      messenger.setMockMethodCallHandler(
+        AndroidLogFolder.channel,
+        (_) async => throw PlatformException(
+          code: 'folder',
+          message: 'Log was truncated',
+        ),
+      );
+      await expectLater(
+        folder.readFrom('writer.jsonl', 3),
+        throwsA(isA<FolderAccessFailure>()),
+      );
+    },
+  );
+
+  test(
+    'unsupported watch retains 15-second foreground fallback and retries',
+    () {
+      var attempts = 0, reconciliations = 0;
+      messenger.setMockMethodCallHandler(watchMethods, (call) async {
+        if (call.method == 'listen') {
+          attempts++;
+          throw PlatformException(code: 'watch_unavailable');
+        }
+        return null;
+      });
+      fakeAsync((clock) {
+        final importer = ForegroundImporter(
+          events: folder.watch,
+          reconcile: () async {
+            reconciliations++;
+          },
+        );
+        importer.start();
+        clock.flushMicrotasks();
+        expect(attempts, 1);
+        final initial = reconciliations;
+        clock.elapse(const Duration(seconds: 14));
+        clock.flushMicrotasks();
+        expect(attempts, 1);
+        clock.elapse(const Duration(seconds: 1));
+        clock.flushMicrotasks();
+        expect(attempts, 2);
+        expect(reconciliations, greaterThan(initial));
+        importer.dispose();
+        clock.flushMicrotasks();
+        expect(clock.periodicTimerCount, 0);
+      });
+    },
+  );
+
+  test(
+    'metadata remains optional observations and never creates trusted stamps',
+    () async {
+      var identity = 'before-replacement';
+      messenger.setMockMethodCallHandler(
+        AndroidLogFolder.channel,
+        (_) async => [
+          {
+            'name': 'writer.jsonl',
+            'documentId': identity,
+            'size': 42,
+            'modifiedMillis': 1000,
+          },
+          {
+            'name': 'unknown.jsonl',
+            'documentId': '',
+            'size': null,
+            'modifiedMillis': null,
+          },
+          {
+            'name': 'invalid.jsonl',
+            'size': -1,
+            'modifiedMillis': 'unavailable',
+          },
+        ],
+      );
+      final before = await folder.list();
+      final observation = before.first as AndroidLogFileInfo;
+      expect(observation.documentId, 'before-replacement');
+      expect(observation.size, 42);
+      expect(observation.modifiedMillis, 1000);
+      for (final entry in before.skip(1).cast<AndroidLogFileInfo>()) {
+        expect(entry.documentId, isNull);
+        expect(entry.size, isNull);
+        expect(entry.modifiedMillis, isNull);
+      }
+      expect(before.every((entry) => entry.stamp.isEmpty), isTrue);
+      identity = 'after-replacement';
+      final after = await folder.list();
+      expect(
+        (after.first as AndroidLogFileInfo).documentId,
+        'after-replacement',
+      );
+      expect(after.first.stamp, '');
+      expect(observation.documentId, 'before-replacement');
+    },
+  );
+
+  test(
+    'watch cancellation and old callbacks cannot trigger the new folder',
+    () async {
+      final calls = <MethodCall>[];
+      final cancelled = Completer<void>();
+      messenger.setMockMethodCallHandler(watchMethods, (call) async {
+        calls.add(call);
+        if (call.method == 'cancel' &&
+            call.arguments['tree'] == folder.location) {
+          await cancelled.future;
+        }
+        return null;
+      });
+      final oldEvents = <Object?>[], newEvents = <Object?>[];
+      final old = folder.watch().listen(oldEvents.add);
+      await Future<void>.delayed(Duration.zero);
+      final oldToken = calls.first.arguments['token'];
+      await event({'tree': folder.location, 'token': oldToken});
+      await Future<void>.delayed(Duration.zero);
+      expect(oldEvents, hasLength(1));
+      final oldCancellation = old.cancel();
+      final nextFolder = AndroidLogFolder('content://synthetic/tree/next');
+      final next = nextFolder.watch().listen(newEvents.add);
+      try {
+        await Future<void>.delayed(Duration.zero);
+        final nextToken = calls
+            .lastWhere((call) => call.method == 'listen')
+            .arguments['token'];
+        expect(nextToken, isNot(oldToken));
+        await event({'tree': folder.location, 'token': oldToken});
+        await event({'tree': nextFolder.location, 'token': oldToken});
+        await event({'tree': folder.location, 'token': nextToken});
+        await event({'tree': nextFolder.location, 'token': nextToken});
+        cancelled.complete();
+        await oldCancellation;
+        await event({'tree': nextFolder.location, 'token': nextToken});
+        await Future<void>.delayed(Duration.zero);
+        expect(oldEvents, hasLength(1));
+        expect(newEvents, hasLength(2));
+      } finally {
+        if (!cancelled.isCompleted) cancelled.complete();
+        await oldCancellation;
+        await next.cancel();
+      }
+      expect(calls.where((call) => call.method == 'cancel'), hasLength(2));
+    },
+  );
+
+  test(
+    'unsupported watch activation becomes a stream error for polling fallback',
+    () async {
+      messenger.setMockMethodCallHandler(watchMethods, (call) async {
+        if (call.method == 'listen') {
+          throw MissingPluginException('Unsupported observer');
+        }
+        return null;
+      });
+      final error = Completer<Object>();
+      final subscription = folder.watch().listen(
+        (_) {},
+        onError: error.complete,
+      );
+      try {
+        expect(await error.future, isA<MissingPluginException>());
+      } finally {
+        await subscription.cancel();
+      }
+    },
+  );
+
+  test(
+    'observer error is delivered and a resumed watch uses fresh token',
+    () async {
+      final calls = <MethodCall>[];
+      messenger.setMockMethodCallHandler(watchMethods, (call) async {
+        calls.add(call);
+        return null;
+      });
+      final error = Completer<Object>();
+      final first = folder.watch().listen((_) {}, onError: error.complete);
+      await Future<void>.delayed(Duration.zero);
+      final oldToken = calls.first.arguments['token'];
+      await watchError();
+      expect(
+        await error.future,
+        isA<PlatformException>().having(
+          (error) => error.code,
+          'fallback',
+          'watch_unavailable',
+        ),
+      );
+      await first.cancel();
+      final observed = <Object?>[];
+      final resumed = folder.watch().listen(observed.add);
+      try {
+        await Future<void>.delayed(Duration.zero);
+        final token = calls.last.arguments['token'];
+        await event({'tree': folder.location, 'token': oldToken});
+        await event({'tree': folder.location, 'token': token});
+        await Future<void>.delayed(Duration.zero);
+        expect(observed, hasLength(1));
+      } finally {
+        await resumed.cancel();
+      }
+    },
   );
 
   test(

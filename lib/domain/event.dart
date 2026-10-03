@@ -260,7 +260,14 @@ Map<String, dynamic>? project(List<LogEvent> events) {
         'kind': e.type == 'user.created' ? 'user' : 'task',
         ...e.data,
         'order': '${e.clock.sortKey}:${e.writer}',
-        'inbox': true,
+        // Raw captures need triage. Populated creations and derived recurring
+        // occurrences have already been organized, even before their first edit.
+        'inbox':
+            e.type == 'task.created' &&
+            e.data['tagOrigin'] == null &&
+            (e.data['description'] as String? ?? '').trim().isEmpty &&
+            (e.data['tags'] as List? ?? []).isEmpty &&
+            (e.data['schedule'] as Map? ?? {}).values.every((v) => v == null),
         'schedule': TaskSchedule().toJson(),
         'tags': <String>[],
         ...e.data,
@@ -287,6 +294,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       state['inbox'] = false;
     }
     if (e.type == 'task.tagsChanged' || e.data.containsKey('tagChanges')) {
+      state['inbox'] = false;
       final changes = e.type == 'task.tagsChanged'
           ? e.data
           : e.data['tagChanges'] as Map;

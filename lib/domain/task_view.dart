@@ -14,19 +14,33 @@ class TaskViewEntry {
     this.available = true,
     this.availabilityStart,
     this.completionUnavailableReason,
+    this.inbox = false,
   });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
   final bool available;
   final DateTime? availabilityStart;
   final String? completionUnavailableReason;
+  final bool inbox;
+
+  /// Manual movement cannot cross Inbox/date groups, exact times, or history.
+  bool sharesOrderBucket(TaskViewEntry other) =>
+      inbox == other.inbox &&
+      effectiveDate == other.effectiveDate &&
+      (task['completed'] == true) == (other.task['completed'] == true);
 }
 
 class TaskViewGroup {
-  const TaskViewGroup(this.date, this.weekday, this.entries);
+  const TaskViewGroup(
+    this.date,
+    this.weekday,
+    this.entries, {
+    this.inbox = false,
+  });
   final String? date;
   final int? weekday;
   final List<TaskViewEntry> entries;
+  final bool inbox;
 }
 
 class TaskView {
@@ -51,8 +65,14 @@ List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
     final date = entry.effectiveDate == null
         ? null
         : _groupDate(entry.effectiveDate!);
-    if (groups.isEmpty || groups.last.date != date) {
-      groups.add(TaskViewGroup(date, entry.effectiveDate?.weekday, [entry]));
+    if (groups.isEmpty ||
+        groups.last.date != date ||
+        groups.last.inbox != entry.inbox) {
+      groups.add(
+        TaskViewGroup(date, entry.effectiveDate?.weekday, [
+          entry,
+        ], inbox: entry.inbox),
+      );
     } else {
       groups.last.entries.add(entry);
     }
@@ -63,6 +83,7 @@ List<TaskViewGroup> _groups(List<TaskViewEntry> entries) {
         group.date,
         group.weekday,
         List.unmodifiable(group.entries),
+        inbox: group.inbox,
       ),
     ),
   );
@@ -306,11 +327,13 @@ TimedView<TaskView> projectTaskView(
         completionUnavailableReason: done
             ? null
             : context.completionUnavailableReason(schedule),
+        inbox: !done && row['inbox'] == true,
       ),
     ));
   }
   List<TaskViewEntry> sorted(List<(int, TaskViewEntry)> values) {
     values.sort((a, b) {
+      if (a.$2.inbox != b.$2.inbox) return a.$2.inbox ? -1 : 1;
       final x = a.$2.effectiveDate, y = b.$2.effectiveDate;
       final order = x == null
           ? (y == null ? 0 : 1)

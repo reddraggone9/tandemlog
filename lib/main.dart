@@ -27,6 +27,7 @@ import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
 import 'storage/local_settings.dart';
+import 'storage/profile_lock.dart';
 import 'storage/task_store.dart';
 
 void main() {
@@ -160,6 +161,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   String? privateRoot;
   LocalSettings? settings;
+  ProfileLock? profileLock;
+  Future<void>? starting;
+  Completer<void>? activeActionDone;
   bool settingsLoaded = false;
   final firstName = TextEditingController();
   final firstNameFocus = FocusNode();
@@ -296,13 +300,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _start();
   }
 
-  Future<void> _start() async {
+  Future<void> _start() => starting ??= _startLocked();
+
+  Future<void> _startLocked() async {
     try {
       privateRoot =
           widget.profilePath ??
           Platform.environment['TANDEMLOG_PROFILE'] ??
           (await getApplicationSupportDirectory()).path;
       await Directory(privateRoot!).create(recursive: true);
+      profileLock ??= await ProfileLock.acquire(privateRoot!);
+      if (!mounted) return;
       settings = LocalSettings(privateRoot!);
       await settings!.load();
       settingsLoaded = true;
@@ -319,16 +327,27 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _reportStartupAfterFrame();
   }
 
+  Future<void> _retryStartup() async {
+    if (!mounted || busy || settingsLoaded) return;
+    setState(() {
+      busy = true;
+      error = null;
+    });
+    starting = null;
+    await _start();
+  }
+
   Future<void> _open(String location) async {
     if (!await _closeEditor()) return;
     _clearSelection();
-    final folder = Platform.isAndroid
+    final LogFolder folder = Platform.isAndroid
         ? AndroidLogFolder(location)
         : LocalLogFolder(location);
     final cacheKey = sha256.convert(utf8.encode(location)).toString();
     final opened = await TaskStore.open(
       folder,
       '$privateRoot/spaces/$cacheKey',
+      writerIdentity: settings!.writer,
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
     if (!mounted) {
@@ -548,7 +567,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _act(Future<void> Function() action) async {
-    if (busy) return;
+    if (!mounted || busy) return;
+    final completion = activeActionDone = Completer<void>();
     setState(() => busy = true);
     try {
       await syncing;
@@ -568,6 +588,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         });
       }
     } finally {
+      completion.complete();
+      if (identical(activeActionDone, completion)) activeActionDone = null;
       if (mounted) {
         setState(() => busy = false);
         _configureImporter();
@@ -780,9 +802,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       importer = origin == null
           ? null
           : ForegroundImporter(
-              events: origin.folder is LocalLogFolder
-                  ? () => Directory(origin.folder.location).watch()
-                  : null,
+              events: switch (origin.folder) {
+                LocalLogFolder folder => () => Directory(
+                  folder.location,
+                ).watch(),
+                AndroidLogFolder folder => folder.watch,
+                _ => null,
+              },
               reconcile: _refresh,
             );
     }
@@ -1583,9 +1609,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (index < 0 ||
             neighbor < 0 ||
             neighbor >= entries.length ||
-            entries[index].effectiveDate != entries[neighbor].effectiveDate ||
-            entries[index].task['completed'] !=
-                entries[neighbor].task['completed']) {
+            !entries[index].sharesOrderBucket(entries[neighbor])) {
           return;
         }
         final global = rows
@@ -1690,8 +1714,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             to != null &&
             (from.task['completed'] == true) == completed &&
             (to.task['completed'] == true) == completed &&
-            from.effectiveDate == expected.effectiveDate &&
-            to.effectiveDate == expected.effectiveDate;
+            from.sharesOrderBucket(expected) &&
+            to.sharesOrderBucket(expected);
       } catch (_) {
         return false;
       }
@@ -1732,9 +1756,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           final from = entries
               .where((entry) => entry.task['id'] == id)
               .firstOrNull;
-          return from != null &&
-              from.task['completed'] == to.task['completed'] &&
-              from.effectiveDate == to.effectiveDate;
+          return from != null && from.sharesOrderBucket(to);
         });
   }
 
@@ -1744,7 +1766,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       SnackBar(
         content: Text(
           _dragIsCurrent()
-              ? 'Reorder canceled. Drop beside a task with the same date and time.'
+              ? 'Reorder canceled. Drop beside a task with the same group, date and time.'
               : 'The task list changed. Try dragging again.',
         ),
       ),
@@ -1820,9 +1842,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             final entry = entries
                 .where((entry) => entry.task['id'] == id)
                 .firstOrNull;
-            return entry != null &&
-                entry.effectiveDate == expected.effectiveDate &&
-                entry.task['completed'] == expected.task['completed'];
+            return entry != null && entry.sharesOrderBucket(expected);
           });
         }
 
@@ -1962,7 +1982,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               child: Semantics(
                 liveRegion: invalid,
                 label: invalid
-                    ? 'Cannot reorder here: different date or time, or the list changed.'
+                    ? 'Cannot reorder here: different group, date or time, or the list changed.'
                     : null,
                 child: DecoratedBox(
                   decoration: BoxDecoration(
@@ -2150,8 +2170,21 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     captureFocus.dispose();
     firstName.dispose();
     firstNameFocus.dispose();
-    unawaited(store?.close());
+    unawaited(_shutdown());
     super.dispose();
+  }
+
+  Future<void> _shutdown() async {
+    // Never release the installation lease while a startup, preference write,
+    // command or ingestion can still complete against the old instance.
+    await starting;
+    await activeActionDone?.future;
+    await syncing;
+    try {
+      await store?.close();
+    } finally {
+      await profileLock?.close();
+    }
   }
 
   @override
@@ -2272,6 +2305,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   if (errorFromRefresh && store != null)
                                     TextButton(
                                       onPressed: busy ? null : _refresh,
+                                      child: const Text('Retry'),
+                                    ),
+                                  if (!settingsLoaded)
+                                    TextButton(
+                                      onPressed: busy ? null : _retryStartup,
                                       child: const Text('Retry'),
                                     ),
                                 ],
@@ -2893,12 +2931,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return index >= 0 &&
           neighbor >= 0 &&
           neighbor < entries.length &&
-          entries[index].effectiveDate == entries[neighbor].effectiveDate &&
-          entries[index].task['completed'] ==
-              entries[neighbor].task['completed'];
+          entries[index].sharesOrderBucket(entries[neighbor]);
     }
 
     String groupTitle(TaskViewGroup group) {
+      if (group.inbox) return 'Inbox';
       const weekdays = [
         'Monday',
         'Tuesday',
@@ -2914,7 +2951,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
 
     String groupId(TaskViewGroup group) =>
-        '${group.entries.firstOrNull?.task['completed'] == true}-${group.date}';
+        '${group.entries.firstOrNull?.task['completed'] == true}-${group.inbox ? 'inbox' : group.date}';
     final groupIds = groups
         .where((group) => group.entries.isNotEmpty)
         .map(groupId)
@@ -3309,7 +3346,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                               triggerMode:
                                                   TooltipTriggerMode.manual,
                                               message:
-                                                  'Drag to reorder within this date and time',
+                                                  'Drag to reorder within this group, date and time',
                                               child: Semantics(
                                                 customSemanticsActions: {
                                                   if (!selecting &&
@@ -3330,7 +3367,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                                     ),
                                                 },
                                                 label:
-                                                    'Drag ${task['title']} to reorder. Drag within the same date and time.',
+                                                    'Drag ${task['title']} to reorder. Drag within the same group, date and time.',
                                                 child: const SizedBox(
                                                   width: 48,
                                                   height: 48,

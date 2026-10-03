@@ -13,4 +13,6 @@ Before promising stable compatibility, review these hard-to-change data decision
 
 Record each accepted compatibility promise and unresolved gap before stable gates. Do not turn this checklist into speculative implementation or change prerelease data without an explicit action.
 
+The [Android reconciliation review](android-reconciliation-review.md) distinguishes notifications, incremental parsing and historical integrity checks. Lee approved cached incremental admission without full historical reads on ordinary startup/resume. The implementation retains local baseline/range hashes for explicit verification; real-provider behavior/performance and the accepted historical-mutation blind spot remain part of stable review.
+
 The [2026-10-02 independent review](stable-readiness-review-2026-10-02.md) records concrete durable-creation and conditional SAF-name findings, remaining provider/restore evidence, the actual review mechanism and the conditional version-only stable promotion path. RC7 remains an experimental candidate pending its exact gates; the review does not authorize a cutover.

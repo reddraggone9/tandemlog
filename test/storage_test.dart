@@ -916,15 +916,18 @@ void main() {
     await a!.refresh();
     expect(state(a!, id)['name'], 'Lee');
   });
-  test('changed same-length committed prefix fails closed', () async {
-    await task();
-    final f = File('${aFolder.location}/${a!.writer}.jsonl');
-    await f.writeAsString(
-      (await f.readAsString()).replaceFirst('Groceries', 'Xroceries'),
-      flush: true,
-    );
-    await expectLater(a!.refresh(), throwsA(isA<FormatFailure>()));
-  });
+  test(
+    'explicit integrity check rejects changed same-length committed prefix',
+    () async {
+      await task();
+      final f = File('${aFolder.location}/${a!.writer}.jsonl');
+      await f.writeAsString(
+        (await f.readAsString()).replaceFirst('Groceries', 'Xroceries'),
+        flush: true,
+      );
+      await expectLater(a!.verifyHistory(), throwsA(isA<FormatFailure>()));
+    },
+  );
   test('missing previously seen stream blocks writes', () async {
     await task();
     await File('${aFolder.location}/${a!.writer}.jsonl').delete();

@@ -1,7 +1,8 @@
 import 'dart:async';
 
 /// Foreground import scheduling, not a file transport or background service.
-/// Notifications are hints: every callback revalidates canonical history.
+/// Notifications are hints: reconciliation checks stream observations and
+/// admits validated new records under the persisted-checkpoint policy.
 class ForegroundImporter {
   ForegroundImporter({
     required this.reconcile,
