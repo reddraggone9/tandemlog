@@ -38,7 +38,7 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: ./.github/actions/setup-flutter
-      - run: flutter pub get
+      - run: flutter pub get --enforce-lockfile
       - name: Build with owner signing identity
         env:
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}

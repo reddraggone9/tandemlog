@@ -10,8 +10,16 @@ pass locally. Two new production-app native Linux flows cover release-name
 clipboard access and date/time precision, clearing, Cancel/Save, zone and draft
 retention at 1200/390/320px and 100/200% text. A 16-shot actual native Linux pass
 covers both themes, optional midnight and simulated keyboard geometry. The
-final full native aggregate passes all 47 flows in 10m36s. Hosted builds and
-exact Android acceptance are pending.
+final full native aggregate passes all 47 flows in 10m36s. Hosted candidate
+[37208066354](https://github.com/reddraggone9/tandemlog/actions/runs/37208066354)
+and push CI pass at exact app source `147a876d799e5832527177fa76c5fdf77c1827a6`:
+374 Linux tests, 372 Windows tests/two platform skips, 18 policy tests, 47 native
+Linux flows, and installed Windows/Flatpak lifecycle gates. The three downloaded
+archives pass API hashes, CRC and internal checksums. The owner-signed APK is
+nondebuggable, code43, with the retained package/certificate/three ABIs; exact
+SHA256 `c4310d05da3d803782f94c0c99ca08b5e28d16af6a270fb103b70aa13996c14c`.
+[Candidate receipt](../evidence/2026.10.2-rc1-build43-candidate-verification.json).
+Exact Android acceptance is pending; this preview is not published.
 The reviewed 65-second desktop demo is delivered separately.
 
 The proposed one-level checklist is not in this candidate. Its unpublished

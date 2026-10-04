@@ -18,6 +18,7 @@ The [initial review](review.md) is historical rationale; later accepted decision
 Each subject has one source of truth. Keep status/evidence current; link rather than duplicate specifications. New consequential choices receive an ADR and explicit accepted/proposed status.
 
 - [Builds and releases](releases.md): CI gates, test installation and signing limitations.
+- [Dependency inventory and review](dependencies.md): resolved versions, native/build provenance and bounded update PRs.
 
 ## Current milestone and supporting research
 
@@ -36,4 +37,4 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
 - [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
-- [Collaborative text investigation](text-merge-investigation.md): current loss scenarios and a proposed engine spike; no adopted protocol.
+- [Collaborative text investigation](text-merge-investigation.md) and [test-first prototype](text-merge-prototype.md): approved isolated evaluation; no adopted protocol.

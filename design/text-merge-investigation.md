@@ -1,7 +1,8 @@
 # Collaborative text — investigation, not an adopted protocol
 
-Status: Lee requested a recommendation on 2026-10-04. No CRDT engine, bridge,
-canonical format or Undo change is approved by this investigation. Settings
+Status: Lee approved a bounded isolated Yrs prototype on 2026-10-04, with tests
+written before implementation. [Matrix and evidence](text-merge-prototype.md).
+No production CRDT engine, bridge, canonical format or Undo change is adopted. Settings
 version/date-row presentation proceeds independently; the unpublished checklist
 model is held outside the repository pending this decision.
 
@@ -38,8 +39,8 @@ layer adds complexity beyond today's plain-string model.
 Evaluate maintained Yrs first for a narrow native interface and selective Undo;
 Rust Automerge is an alternative for historical draft branches and future rich
 text. Neither is an established official Dart drop-in identified by this review.
-A Rust/native bridge needs a concrete cross-platform spike and approval before
-adoption; no speculative bridge enters the application now.
+A Rust/native bridge must pass the isolated cross-platform spike and receive
+an adoption decision before entering the application.
 
 The bounded spike must prove:
 

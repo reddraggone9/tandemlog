@@ -10,7 +10,20 @@ Then dispatch **Experimental prerelease** with the candidate tag, successful sig
 
 Versions follow the approved [CalVer decision](decisions/0008-calver-and-release-promotion.md): year.month.patch, unpadded month, optional -rc.N, and a separate monotonic build. Tags must match the candidate's display version. The parser accepts stable names and previews separately, retains old prerelease build floors, and rejects Windows resource components above 65535 before compilation. Build 5 is the first owner-signing candidate, beyond the previously handed-out debug builds 1–4. Version checks cover that floor, published tags and prior successful signed-candidate runs from different commits; same-source retries are allowed before publication. Candidate runs are serialized to avoid version-check races. Increment the build number before handing out a changed candidate. Ordinary local/push/PR debug QA remains possible without signing secrets and is never selected as the public Android release asset. Installation/runtime guidance is in [packaging](../packaging/README.md).
 
-A separately gated manual **Publish accepted stable release** workflow is prepared; it must not run without Lee's explicit stable acceptance. Build a stable-name candidate with a new monotonic build number, pass the full matrix and native acceptance, then promote those exact artifacts with the Lee-accepted attestation. Do not relabel or rebuild accepted RC artifacts inside publication. Required gates: full integrity/recovery/convergence suite; all target builds; native install/launch and workflow acceptance on Windows and Android; persisted SAF grant and remote replacement/provider tests; measured target startup; Lee's acceptance. Stable signing/distribution and any credentials need action-time authorization. Do not claim native runtime coverage from a cross-build or browser preview.
+A separately gated manual **Publish accepted stable release** workflow requires Lee's authorization. On 2026-10-04 he granted standing approval for reviewed stable updates that do not change user-facing behavior, after every existing gate; behavior-changing stable releases still require his explicit acceptance. Record the applicable authorization and why behavior is unchanged in the candidate receipt before setting the existing `lee_accepted` attestation. This is not automatic merging or permission to publish unreviewed dependencies. Build a stable-name candidate with a new monotonic build number, pass the full matrix and native acceptance, then promote those exact artifacts. Do not relabel or rebuild accepted RC artifacts inside publication. Required gates remain: full integrity/recovery/convergence suite; all target builds; native install/launch and workflow acceptance on Windows and Android; persisted SAF grant and remote replacement/provider tests; measured target startup; applicable Lee authorization. New signing credentials need action-time authorization. Do not claim native runtime coverage from a cross-build or browser preview.
+
+## Dependency maintenance
+
+[Current inventory and per-version review](dependencies.md) separates app/dev,
+native/build and Actions dependencies. Dependabot proposes at most three pub,
+two Actions and two Gradle PRs (weekly pub/Actions, monthly Gradle). It does not
+merge. The custom Flutter source pin, hosted images, inherited SDK/NDK defaults,
+Java patches, apt tools and Flathub revisions need periodic manual review.
+Review every changed direct and transitive version's actual source, hashes,
+native payload selection and install/build hooks before evaluation; choose
+manual native coverage from its application impact. Preserve the full release
+gates. Record first-bot-run coverage rather than assume all dynamic Gradle or
+custom toolchain declarations are recognized.
 
 Before publishing, review architecture boundaries, duplication, stale code/data, docs drift, unresolved debt and migration/recovery behavior; record concrete fixes and remaining risks in status. Test public downloads and verify release metadata/assets after publication.
 

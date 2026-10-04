@@ -1,7 +1,9 @@
 # 0008 — Calendar versions and explicit stable promotion
 
-Status: accepted by Lee, 2026-10-03. Tooling is implemented for validation;
-stable publication requires separate explicit acceptance.
+Status: accepted by Lee, 2026-10-03; authorization refinement accepted
+2026-10-04. Reviewed stable updates without user-facing behavior changes have
+standing publication approval after all gates. Behavior-changing stable releases
+require separate explicit acceptance.
 
 Use `year.month.patch`, unpadded month, optional dotted `-rc.N`, and a separate
 monotonically increasing integer build: `2026.10.0-rc.1+38`. Patch and RC counters
@@ -23,9 +25,11 @@ RC promotion consumes the exact successful all-platform candidate and native
 accepted APK without rebuilding, marked prerelease and not Latest. Stable
 promotion requires a separately built stable-name candidate, the same integrity,
 installer and exact-artifact gates, required target acceptance, and an explicit
-Lee-accepted operator attestation. It never relabels an RC APK as stable. The
-stable workflow exists to make an eventual authorized promotion reviewable;
-adding it does not authorize dispatch. [Release policy](../releases.md) owns
+Lee-authorized operator attestation. The attestation must record either his
+specific acceptance or the applicable standing approval for a reviewed update
+with no user-facing behavior change. It never relabels an RC APK as stable.
+Standing approval does not permit automatic merges, skipped gates or unreviewed
+dependency updates. [Release policy](../releases.md) owns
 commands and gates; [schema](../schema.md) owns permanent-data compatibility.
 
 Calendar naming makes the release date visible without claiming semantic-version

@@ -1,0 +1,248 @@
+{
+  "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+  "version_name": "2026.10.2-rc.1",
+  "version_code": 43,
+  "scope": "Settings release-version copy and compact Start/Due optional-time rows",
+  "baseline_stable_source": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+  "changed_production_files": [
+    "lib/main.dart",
+    "lib/presentation/release_version_tile.dart",
+    "lib/presentation/task_editor.dart"
+  ],
+  "unchanged_domain_storage_platform_application_dependencies_workflows": true,
+  "frozen_v3_fixtures": "byte-identical git objects",
+  "protocol_version": 3,
+  "cache_version": 13,
+  "local_app_tests": 374,
+  "local_policy_tests": 18,
+  "local_analyzer": "pass",
+  "local_native_final_aggregate": {
+    "result": "pass",
+    "flows": 47,
+    "elapsed_seconds": 636
+  },
+  "hosted_candidate": {
+    "run_id": 37208066354,
+    "conclusion": "success",
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37208066354",
+    "push_run_id": 37208051961,
+    "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+    "linux_app_tests": 374,
+    "windows_app_tests": 372,
+    "windows_skips": 2,
+    "policy_tests": 18,
+    "linux_native_flows": 47,
+    "installed_windows_and_flatpak_lifecycle": "pass"
+  },
+  "native_android_acceptance": "pending exact artifact acceptance via Farnsworth",
+  "public_release": "not published",
+  "checklist": "not in source; standalone draft held pending text policy",
+  "artifacts": {
+    "android": {
+      "artifact_id": 11305928619,
+      "archive_sha256": "ee6912a1ce91ff05aeb73fb805de4f9edee7d1433892b94331e430976683177a",
+      "archive_bytes": 27762265,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "apk_sha256": "c4310d05da3d803782f94c0c99ca08b5e28d16af6a270fb103b70aa13996c14c",
+      "apk_bytes": 60002120,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "package": "com.reddraggone9.tandemlog",
+      "version_name": "2026.10.2-rc.1",
+      "version_code": 43,
+      "nondebuggable": true,
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "official_apk_verification": "pass",
+      "native_preview_acceptance": "pending"
+    },
+    "windows": {
+      "artifact_id": 11305333746,
+      "archive_sha256": "f7c8caf221ba748ff8ffa6375d804c2ea78b7a4806b8588369ef597f7df71872",
+      "archive_bytes": 11049815,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "installer_sha256": "c081d0ecf7462c234301e1f31ebeb53a0c3ee3270cc1761064d95b1e9b069853",
+      "installer_bytes": 11599053,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=64",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=7",
+              "TANDEMLOG_PHASE manifest=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=5",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=7"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=5",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=12",
+              "TANDEMLOG_PHASE manifest=1",
+              "TANDEMLOG_PHASE ingest=4",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=64 FILES_READ=1"
+            ]
+          }
+        ]
+      },
+      "installer_signed": false
+    },
+    "linux": {
+      "artifact_id": 11305068483,
+      "archive_sha256": "853ee3ae517adfced2cf2c305052c87658118c7dc7043d7182dde509a0c3e4fd",
+      "archive_bytes": 8342236,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "installer_sha256": "bd403e56b730f1a6b9df22b37b25a43053ce4959ebd60019cd2d50fbd1f031e8",
+      "installer_bytes": 8337656,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=56",
+              "TANDEMLOG_PHASE identity_lock=10",
+              "TANDEMLOG_PHASE sqlite_open_schema=14",
+              "TANDEMLOG_PHASE manifest=9",
+              "TANDEMLOG_PHASE ingest=30",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=955 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=56",
+              "TANDEMLOG_PHASE identity_lock=25",
+              "TANDEMLOG_PHASE sqlite_open_schema=24",
+              "TANDEMLOG_PHASE manifest=17",
+              "TANDEMLOG_PHASE ingest=57",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=246 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=56",
+              "TANDEMLOG_PHASE identity_lock=19",
+              "TANDEMLOG_PHASE sqlite_open_schema=31",
+              "TANDEMLOG_PHASE manifest=53",
+              "TANDEMLOG_PHASE ingest=65",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=313 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "b1c99fe54c546fba73404f6f753ff936ea2d6fe2b9fe952c3ac374fe7503f882",
+          "baseline_commit": "d6a0e400e8813c71bceeee506cde0e908197304f34394e43a47289e7a28412eb",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      },
+      "startup": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 536,
+            "marker": "TANDEMLOG_READY_MS=314 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=53",
+              "TANDEMLOG_PHASE identity_lock=27",
+              "TANDEMLOG_PHASE sqlite_open_schema=22",
+              "TANDEMLOG_PHASE manifest=18",
+              "TANDEMLOG_PHASE ingest=77",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=314 FILES_READ=1"
+            ],
+            "external_main_ms": 218,
+            "external_first_frame_ms": 275
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 420,
+            "marker": "TANDEMLOG_READY_MS=246 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=53",
+              "TANDEMLOG_PHASE identity_lock=18",
+              "TANDEMLOG_PHASE sqlite_open_schema=18",
+              "TANDEMLOG_PHASE manifest=24",
+              "TANDEMLOG_PHASE ingest=38",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=246 FILES_READ=0"
+            ],
+            "external_main_ms": 170,
+            "external_first_frame_ms": 226
+          }
+        ]
+      },
+      "startup_artifact_note": "Raw artifact also contains desktop portal diagnostic preamble; extracted the single structured measurement report."
+    }
+  }
+}

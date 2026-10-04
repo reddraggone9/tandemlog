@@ -15,7 +15,7 @@ on:
         required: true
         type: string
       lee_accepted:
-        description: 'Lee explicitly approved this stable release and its required QA'
+        description: 'Applicable Lee authorization and all gates recorded (specific or standing non-behavior approval)'
         required: true
         default: false
         type: boolean
