@@ -678,10 +678,21 @@
     "diff_check": "pass"
   },
   "native_android_acceptance": {
-    "status": "pending",
-    "scope": "bounded exact version-only stable upgrade from accepted RC41; prior feature/visual evidence retained"
+    "status": "pass",
+    "reported_by": "coordinator/native executor",
+    "platform": "Android 11/API30 x86_64",
+    "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "apk_sha256": "bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908",
+    "checks": [
+      "owner/package/nondebuggable/stable version",
+      "in-place upgrade retains 52 synthetic tasks/logs/settings/writer/checkpoints/SAF grant",
+      "native edit/Undo emits only two expected receipts",
+      "process restart and integrity check"
+    ],
+    "cleanup": "temporary services stopped; profile restored; live data untouched",
+    "scope": "bounded exact stable-name rebuild; accepted RC41 feature/visual evidence retained"
   },
-  "publication": "not published; stable2026.10.0 remains Latest",
+  "publication": "authorized stable2026.10.1 promotion pending; no rebuild",
   "artifacts": {
     "windows": {
       "artifact_id": 11303313479,
@@ -891,7 +902,7 @@
         "x86_64"
       ],
       "official_apk_verification": "pass",
-      "native_stable_acceptance": "pending"
+      "native_stable_acceptance": "pass: exact bounded version-only native upgrade acceptance"
     }
   },
   "hosted_checks": {
