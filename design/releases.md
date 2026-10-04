@@ -14,6 +14,8 @@ A separately gated manual **Publish accepted stable release** workflow is prepar
 
 Before publishing, review architecture boundaries, duplication, stale code/data, docs drift, unresolved debt and migration/recovery behavior; record concrete fixes and remaining risks in status. Test public downloads and verify release metadata/assets after publication.
 
+At each stable publication, review the README against the released user workflows. Update it for meaningful immediately user-visible capabilities or workflow changes, rather than every minor change. Keep its overview focused on what the app does, with a short accurate folder-sync explanation and installation links; avoid framework/storage internals, future-feature promises or universal provider/conflict-free claims. Review rendered links and keep technical detail in the linked documentation. This is part of the release checklist, not scheduled automation.
+
 RC4 replaces loose desktop archives with a Linux x64 Flatpak bundle and per-user Windows setup EXE, each with checksum and required installed lifecycle report. The exact candidate must install, launch, replace, uninstall without data loss, and reinstall before publication. Native Linux remains the primary shared desktop visual QA target; Windows-specific packaging/path/dialog/startup checks remain necessary. [Packaging commands and prerequisites](../packaging/README.md) explain runtime/folder access, including the separately installed C++ runtime. See [runtime QA](runtime-qa.md) for the split.
 
 ## Public downloads and internal evidence
