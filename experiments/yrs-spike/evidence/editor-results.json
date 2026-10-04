@@ -74,7 +74,7 @@
   "first_hosted_editor_run": {
     "run": 37221919598,
     "result": "failed strict lockfile admission before editor tests/APK; incomplete five-package JSON lock accidentally committed",
-    "fix": "Restore complete frozen test-first SDK/test lockfile byte-identical to e1afed4; enforce-lockfile remains enabled. No dependency update or frozen assertion change."
+    "fix": "Restore complete 33-package SDK/test graph resolved and tested with the pinned SDK; enforce-lockfile remains enabled. Frozen test assertions/hashes unchanged. The complete graph pins meta1.18.3/vector_math2.4.0 rather than freeze-time1.19.0/2.4.3; these were the cached versions actually used by the successful local APK and tests."
   },
   "native_visual_inspection": {
     "platform": "Linux GTK debug native, 1280x720 and 390x820",
@@ -85,5 +85,6 @@
       "Narrow controls wrap and editor accessible, no render overflow"
     ],
     "composition": "No real OS IME; injected native integration scope only"
-  }
+  },
+  "locked_graph_sha256": "c9a518555fcea53dbb393a04a5212bac10f2091be255efffd691c5653eafa282"
 }
