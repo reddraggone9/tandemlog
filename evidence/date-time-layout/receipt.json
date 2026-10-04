@@ -1,0 +1,238 @@
+{
+  "status": "isolated candidate; parent review and Lee visual acceptance pending",
+  "base_commit": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+  "branch": "experiment/date-time-layout",
+  "platform": "native Linux GTK Flutter 3.47.5 debug under Xvfb/Openbox",
+  "viewport_height": 1000,
+  "row_limits": {
+    "single100": 304,
+    "bulk100": 432,
+    "single200": 443,
+    "bulk200": 541
+  },
+  "previous_limits": {
+    "single100": 300,
+    "bulk100": 400,
+    "single200": 600,
+    "bulk200": 800
+  },
+  "checks": {
+    "widget_editor_tests": 32,
+    "analysis": "No issues found",
+    "native_boundary_flow": "pass",
+    "native_existing_app_flow": "pass",
+    "before_after_native_comparison": "pass",
+    "selected_screenshots_inspected": 16,
+    "pointer_visible_video_seconds": 25.2,
+    "pointer_visible_video_frame_inspected_seconds": 9
+  },
+  "limits": [
+    "Original Library reference pixels unavailable; no original-pixel comparison.",
+    "Focused composing tests inject Flutter controller values; not real Android IME.",
+    "Focused capture theme is standard Material; existing app flow tests cover light/dark app themes.",
+    "Android and Windows affected-workflow visual acceptance remain pending.",
+    "No main push, prerelease publication or stable promotion."
+  ],
+  "files": [
+    {
+      "path": "after-bulk-500.0-1.0.png",
+      "sha256": "73122bdbaf9d09aeee3344d22c01b0103fd2a1eb8466c6035681812fe37a4c06",
+      "bytes": 36337,
+      "pixels": [
+        500,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "after-bulk-640.0-2.0.png",
+      "sha256": "031a4158b167f77592bdaf5b5d6499ad80e78b3b4c3dc9a2fe6b79a030112864",
+      "bytes": 72212,
+      "pixels": [
+        640,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "after-single-360.0-1.0.png",
+      "sha256": "2c617759ae9a61dfbe73626f3e350e6a927b61e697e197f2e6000a6486660428",
+      "bytes": 34684,
+      "pixels": [
+        360,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "after-single-520.0-2.0.png",
+      "sha256": "7c2b890035fa616906168f88bd0ba401e9eeb5d966879c6fae8a4d7b92f84b6e",
+      "bytes": 66618,
+      "pixels": [
+        520,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "analysis.log",
+      "sha256": "a7d2f908c1a9f1e5a766959ef8fc076f0485e8ac109c91e6bf7161015bf9b792",
+      "bytes": 645
+    },
+    {
+      "path": "before-bulk-500.0-1.0.png",
+      "sha256": "0c93325285566ce9a9dc3da5f8e9849cd3723e0debf0952aab63afd1d38739be",
+      "bytes": 36346,
+      "pixels": [
+        500,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "before-bulk-640.0-2.0.png",
+      "sha256": "f5ca8468eab73cb18fe0607f940ccdbf03c8301bb900da4260f265bf55588978",
+      "bytes": 66041,
+      "pixels": [
+        640,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "before-single-360.0-1.0.png",
+      "sha256": "2d07ae8e4b0684a476cc133964a117c14579d9cef2d36fc0c7993daf29ab52b0",
+      "bytes": 34685,
+      "pixels": [
+        360,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "before-single-520.0-2.0.png",
+      "sha256": "79ef92154186629196c84b2fa61ed229188fddd9b978508f586abecb007f0830",
+      "bytes": 57946,
+      "pixels": [
+        520,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-bulk-1.0-above.png",
+      "sha256": "8f91e6a524918bd5df9f3b16229b3074d0f2ad5916febb63426c0454ef112c5d",
+      "bytes": 38345,
+      "pixels": [
+        473,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-bulk-1.0-below.png",
+      "sha256": "95d7ef49ade56cd8701a16d6d160f88d57f02cc1d3fe8415a6b2eea22aa93017",
+      "bytes": 37004,
+      "pixels": [
+        471,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-bulk-2.0-above.png",
+      "sha256": "3ff4603cb6d71bc2afa5c61be5930b704a413e255eb2bca6621f4c658db73aa0",
+      "bytes": 74094,
+      "pixels": [
+        582,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-bulk-2.0-below.png",
+      "sha256": "0f8906d81a0f3e1c17876a22c059e94b0e088c90d4bc39b45386e829a0354c95",
+      "bytes": 68290,
+      "pixels": [
+        580,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-single-1.0-above.png",
+      "sha256": "922134cdb6bf2d5a3f0d046ecb090eb552dc8572e21c970798d0459dfdd30da8",
+      "bytes": 35403,
+      "pixels": [
+        345,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-single-1.0-below.png",
+      "sha256": "c6f59d49c17afadb0a96ae7b2206bc768d1142631b809312879813825e41eedb",
+      "bytes": 34265,
+      "pixels": [
+        343,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-single-2.0-above.png",
+      "sha256": "56fe0adaf783c3f2b8deee48528cd8f91a92db5f1637414674fdb491584f9e4c",
+      "bytes": 67362,
+      "pixels": [
+        484,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "boundary-single-2.0-below.png",
+      "sha256": "b0c40212deb03169b96fadfbd121be436ac1f6b948bd381c9ff63f1831b265b4",
+      "bytes": 61510,
+      "pixels": [
+        482,
+        980
+      ],
+      "visually_inspected": true
+    },
+    {
+      "path": "comparison-harness.dart.txt",
+      "sha256": "ff9169a8a0f62ce1900a504aba4318107a4b2d908d7bfea1920f66f58996b8c6",
+      "bytes": 2502
+    },
+    {
+      "path": "native-app-flow.log",
+      "sha256": "be50706b76053764d2562b857db83eee892e2efa6c9f80904835d7eb09796f8e",
+      "bytes": 1186
+    },
+    {
+      "path": "native-boundaries.log",
+      "sha256": "b17b3b33060bf327286303d7eebd99cd812ab32c9217d27f30046b2f53c3925d",
+      "bytes": 1070
+    },
+    {
+      "path": "native-comparison-after.log",
+      "sha256": "c524de2b4efeea394233273ccb7b16c0c2fc97ed3ea422ec1db26d27ee54994d",
+      "bytes": 1593
+    },
+    {
+      "path": "native-comparison-before.log",
+      "sha256": "293694c3d852a0b07298b4f7a342713cab5ad4cd225df1ee56986bce8c328dd7",
+      "bytes": 1593
+    },
+    {
+      "path": "native-linux.mp4",
+      "sha256": "789cdff0626de02c03536de994f94705526c1a77e31d21dff8ab6075ad11ce5c",
+      "bytes": 469240
+    },
+    {
+      "path": "widget-tests.log",
+      "sha256": "fe799d55d1ab7d9455b6790016d525c25865e78b66ebf7a8ae8228edfd9a062f",
+      "bytes": 5202
+    }
+  ]
+}

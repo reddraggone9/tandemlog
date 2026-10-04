@@ -498,6 +498,12 @@ class _EditorBodyState extends State<_EditorBody> {
     String? clearLabel,
     int lines = 1,
   }) {
+    final dateTimeField = const {
+      'startDate',
+      'startTime',
+      'dueDate',
+      'dueTime',
+    }.contains(key);
     final input = TextField(
       key: ValueKey(key),
       controller: controllers[key],
@@ -510,9 +516,20 @@ class _EditorBodyState extends State<_EditorBody> {
       textInputAction: key == 'title' ? TextInputAction.next : null,
       decoration: InputDecoration(
         labelText: label,
+        suffixIconConstraints: dateTimeField
+            ? const BoxConstraints(minWidth: 48, minHeight: 48)
+            : null,
+        contentPadding: dateTimeField
+            ? const EdgeInsets.fromLTRB(8, 16, 0, 16)
+            : null,
         suffixIcon: key.endsWith('Date')
             ? IconButton(
                 tooltip: 'Choose $label',
+                visualDensity: dateTimeField ? VisualDensity.standard : null,
+                padding: dateTimeField ? EdgeInsets.zero : null,
+                constraints: dateTimeField
+                    ? const BoxConstraints(minWidth: 48, minHeight: 48)
+                    : null,
                 icon: const Icon(Icons.calendar_today_outlined),
                 onPressed: busy
                     ? null
@@ -540,6 +557,9 @@ class _EditorBodyState extends State<_EditorBody> {
                   controllers[key]!.text.isNotEmpty
             ? IconButton(
                 tooltip: 'Clear ${clearLabel ?? label}',
+                visualDensity: VisualDensity.standard,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
                 icon: const Icon(Icons.close),
                 onPressed: busy
                     ? null
@@ -604,8 +624,39 @@ class _EditorBodyState extends State<_EditorBody> {
     );
     // Use the editor's outer constraints: AlertDialog asks its content for
     // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
-    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
-    if (scheduleWidth < (bulk ? 400 : 300) * scale) {
+    // Measure supported ISO date / 24-hour time content. Fixed icon targets and
+    // padding do not grow with text scale; multiplying the whole row width made
+    // enlarged-text rows stack substantially before their contents required it.
+    final style = Theme.of(context).textTheme.bodyLarge!;
+    double textWidth(String text) {
+      final painter = TextPainter(
+        text: TextSpan(text: text, style: style),
+        textDirection: Directionality.of(context),
+        textScaler: MediaQuery.textScalerOf(context),
+      )..layout();
+      final width = painter.width;
+      painter.dispose();
+      return width;
+    }
+
+    // 8px leading padding + 48px suffix target + 8px decoration spacing
+    // + 2px caret clearance, including compact desktop themes.
+    // A blank Time hint has no clear button, so it uses only padding.
+    final dateValueWidth = textWidth('2026-10-04');
+    final dateHintWidth = textWidth('YYYY-MM-DD');
+    final dateWidth =
+        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 66;
+    final populatedTimeWidth = textWidth('23:59') + 66;
+    final blankTimeWidth = textWidth('HH:mm') + 18;
+    final timeWidth = populatedTimeWidth > blankTimeWidth
+        ? populatedTimeWidth
+        : blankTimeWidth;
+    final applyWidth = bulk ? 48.0 : 0.0;
+    final dateRowWidth = (dateWidth + applyWidth) * 8 / 5;
+    final timeRowWidth = (timeWidth + applyWidth) * 8 / 3;
+    final minimumWidth =
+        12 + (dateRowWidth > timeRowWidth ? dateRowWidth : timeRowWidth);
+    if (scheduleWidth < minimumWidth.ceilToDouble()) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [date, time],
