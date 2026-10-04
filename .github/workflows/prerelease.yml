@@ -14,6 +14,11 @@ on:
         description: 'SHA-256 of that exact APK after native installation/launch and required QA passed'
         required: true
         type: string
+      draft_release_id:
+        description: 'Optional exact owner-authorized private draft; attach assets only, then finalize through authorized connection'
+        required: false
+        default: ''
+        type: string
 permissions:
   contents: read
   actions: read
@@ -63,11 +68,12 @@ jobs:
           CANDIDATE_SHA: ${{ needs.candidate.outputs.sha }}
           ANDROID_VERIFIED_SHA256: ${{ inputs.android_verified_sha256 }}
           RELEASE_KIND: prerelease
+          DRAFT_RELEASE_ID: ${{ inputs.draft_release_id }}
         run: |
           # Always use the trusted dispatch policy even when selecting an older
           # candidate. Cwd/source/artifacts remain that exact candidate.
           mkdir .release-policy
-          for policy in app_version.py android_release.py publish_gate.py release_assets.py; do
+          for policy in app_version.py android_release.py publish_gate.py release_assets.py attach_preview_assets.py; do
             git show "$GITHUB_SHA:tool/$policy" > ".release-policy/$policy"
           done
           python3 .release-policy/publish_gate.py
@@ -82,5 +88,9 @@ jobs:
           git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
           # Evidence/checksums stay in the gated candidate; users see installers.
           python3 .release-policy/release_assets.py
-          gh release create "$CANDIDATE" public-assets/* \
-            --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
+          if [[ -n "$DRAFT_RELEASE_ID" ]]; then
+            python3 .release-policy/attach_preview_assets.py
+          else
+            gh release create "$CANDIDATE" public-assets/* \
+              --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
+          fi
