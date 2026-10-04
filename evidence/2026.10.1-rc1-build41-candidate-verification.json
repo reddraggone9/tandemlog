@@ -1,0 +1,434 @@
+{
+  "baseline_source": "aacabf942122283731b5ea448a3800fe73ab63a2",
+  "candidate_source": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+  "candidate_run": 37179994243,
+  "version": "2026.10.1-rc.1+41",
+  "production_changes": [
+    {
+      "path": "lib/domain/task_view.dart",
+      "baseline_sha256": "d4db54b9a2626aa1b474e3ea309e3496308953f40460f7332eac5c0fd1265808",
+      "sha256": "365d1351e48f2aff529c2d6fd576f18fd33ea57eb22c723264b214cb8fca28b9"
+    },
+    {
+      "path": "lib/presentation/task_editor.dart",
+      "baseline_sha256": "641646115a1456adde530299507850f674eccfc51987454e48c7e6255e3a9d0c",
+      "sha256": "adcff4331a286d2c47da69bd2fc5ca21059c391c6de3fd403fcba152b8e6a7a5"
+    }
+  ],
+  "unchanged_compatibility_closure": [
+    {
+      "path": "android/signing-certificate.sha256",
+      "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3"
+    },
+    {
+      "path": "lib/application/task_clock.dart",
+      "sha256": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e"
+    },
+    {
+      "path": "lib/application/undo_history.dart",
+      "sha256": "52f0016fd42c4ceb5ee599ee406ad9da760390e796923432a585382e0a6132b8"
+    },
+    {
+      "path": "lib/domain/bulk_task_edit.dart",
+      "sha256": "c2546015c74090673f47a5cbf51d42b21815713040b3a3009e713f4306522dac"
+    },
+    {
+      "path": "lib/domain/event.dart",
+      "sha256": "16de7d402144fe86d5a6ea5e258cd071d526bada650303008a7e7632f636b498"
+    },
+    {
+      "path": "lib/domain/event_chain.dart",
+      "sha256": "5e4855d888354be7f35deb5f4dc27d602b878c6b15fe93b93671ec58cbdc51a5"
+    },
+    {
+      "path": "lib/domain/event_clock.dart",
+      "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f"
+    },
+    {
+      "path": "lib/domain/projection.dart",
+      "sha256": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4"
+    },
+    {
+      "path": "lib/domain/schedule.dart",
+      "sha256": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13"
+    },
+    {
+      "path": "lib/domain/timed_view.dart",
+      "sha256": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6"
+    },
+    {
+      "path": "lib/domain/undo.dart",
+      "sha256": "31cd1d1f0ada8edbbd13bd145bf92aa1fefe84462a20eaf1b459ae0c9f1efe3c"
+    },
+    {
+      "path": "lib/domain/wall_time.dart",
+      "sha256": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "c796023289f6f1aaf1c425d21b401b0a8097205964b494e64b52267f6ddcfd33"
+    },
+    {
+      "path": "lib/platform/folder_actions.dart",
+      "sha256": "5e8aad2152e63b41e9e97fbb885cc8dfd41cd8bd34cacf986d49d7a3fcc15451"
+    },
+    {
+      "path": "lib/platform/foreground_importer.dart",
+      "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc"
+    },
+    {
+      "path": "lib/platform/log_folder.dart",
+      "sha256": "ef621a907e827bc257b188de0449051c0a1f5de064fd01dd263ccc1bad88d750"
+    },
+    {
+      "path": "lib/platform/view_time_source.dart",
+      "sha256": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54"
+    },
+    {
+      "path": "lib/presentation/compact_selection_actions.dart",
+      "sha256": "a9f3ad737eefbb48221aa36f506b2bc4bffc3ddc4953c13d88029857c2da9bbd"
+    },
+    {
+      "path": "lib/presentation/failure_message.dart",
+      "sha256": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303"
+    },
+    {
+      "path": "lib/presentation/sticky_task_group.dart",
+      "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77"
+    },
+    {
+      "path": "lib/presentation/tag_filter_picker.dart",
+      "sha256": "73b2bf14d0d1bd2ac1325c8f2b5fe5ebcd4a4cc3117fb26c438bda6287bb01b5"
+    },
+    {
+      "path": "lib/presentation/task_completion_checkbox.dart",
+      "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161"
+    },
+    {
+      "path": "lib/presentation/task_entry_area.dart",
+      "sha256": "afa2b669425555d53eb281a103db237a66e44ab240fcb3874df8b511b599c2e3"
+    },
+    {
+      "path": "lib/presentation/task_metadata.dart",
+      "sha256": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4"
+    },
+    {
+      "path": "lib/presentation/task_toolbar.dart",
+      "sha256": "cd567839e66f4a96715f232c8216213f701f433bc0935d99bc33f7f01899caab"
+    },
+    {
+      "path": "lib/presentation/unavailable_completion.dart",
+      "sha256": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b"
+    },
+    {
+      "path": "lib/presentation/view_clock.dart",
+      "sha256": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e"
+    },
+    {
+      "path": "lib/storage/local_durability.dart",
+      "sha256": "fc3f6811d9c956c78f4fa64737fa1f4a9da88ce4590eadef74b4785e16d9d6ef"
+    },
+    {
+      "path": "lib/storage/local_settings.dart",
+      "sha256": "84fc42139be08773005b6d3f341e6fc6a0a539e291d63bf6ae93278410bfe9eb"
+    },
+    {
+      "path": "lib/storage/log_folder.dart",
+      "sha256": "3b7ba2cefa03ad2e9c221780dbcbafce0912a9e931bfc2ed0eed6b41266b13af"
+    },
+    {
+      "path": "lib/storage/profile_lock.dart",
+      "sha256": "8517fa29e81770cb1cca6bb23b9d68c4b32d53147e199fff84c36aae5938fbc6"
+    },
+    {
+      "path": "lib/storage/task_store.dart",
+      "sha256": "b498004e9a7bce6ffb7c95b11d0cd67575e3757929d5ca43382307902cafa19f"
+    },
+    {
+      "path": "lib/storage/writer_guard.dart",
+      "sha256": "ffa8292568c7275300340578fe3edce8fdfad18a5f0f62b00950d738b4fcb32d"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    },
+    {
+      "path": "test/fixtures/event_chain_v3.jsonl",
+      "sha256": "3d07e0f95329f77fed3320c241bb6021f7f49c50c2a2dd5cfbfcc343d97431a5"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/22222222-2222-4222-8222-222222222222.jsonl",
+      "sha256": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/33333333-3333-4333-8333-333333333333.jsonl",
+      "sha256": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/README.md",
+      "sha256": "ca81165c474bf7d81800484e138b546dbf45b1ef4610302f799b9261e97db7db"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/expected-rows.json",
+      "sha256": "bfd2eb917d586a56ade7b66a13ad6052561c1457be22f0cfb100a77dc0b2c38b"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/fixture-metadata.json",
+      "sha256": "f8fb504c16aef3bd7af5365102fe3c622f4225169225040e3b5d9bd7283f7539"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/tandemlog-space.json",
+      "sha256": "e2bbcbc4e7ea85b2a4b10e727dd762615e1de721ae03c9b89b5a6a81cd48e420"
+    }
+  ],
+  "local_checks": {
+    "app_tests": 368,
+    "release_policy_tests": 18,
+    "format": "pass",
+    "analyze": "pass",
+    "native_precision_regression": "pass on preceding production ordering source",
+    "native_visual_demo": "pass including fixed caret after scale2+keyboard reflow,36sec",
+    "editor_widget_tests": 27,
+    "previously_failing_resize_probe": "pass"
+  },
+  "native_android_acceptance": "pending on exact final code41; no inference from Linux or predecessor40",
+  "publication": "not published; exact final Android acceptance required; stable2026.10.0 unchanged",
+  "demo": {
+    "platform": "native Linux GTK debug, Xvfb",
+    "synthetic_data": true,
+    "duration_seconds": 33.6,
+    "width": 1200,
+    "height": 886,
+    "bytes": 416498,
+    "sha256": "0867f618d6357e78b16b0f79af972f2d32b75b8efa9e7e68f6ad0bcd31de1f24",
+    "narrow_view": "390x820,200%text,300px simulated keyboard",
+    "android_runtime_claim": false
+  },
+  "artifacts": {
+    "windows": {
+      "artifact_id": 11294288740,
+      "archive_sha256": "dece735844b441ec2655cb1f6a64e38357362f3dd514ce99a8b405a01a79a960",
+      "archive_bytes": 11047400,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "installer_sha256": "e34f52a83bf15b7051e99ef2ded94cbe35afae54fb482d19cd80a609aeded15a",
+      "installer_bytes": 11596349,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=61",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=13",
+              "TANDEMLOG_PHASE manifest=2"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=12",
+              "TANDEMLOG_PHASE manifest=2",
+              "TANDEMLOG_PHASE ingest=6",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=84 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=13",
+              "TANDEMLOG_PHASE manifest=2",
+              "TANDEMLOG_PHASE ingest=5",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=71 FILES_READ=1"
+            ]
+          }
+        ]
+      },
+      "installer_signed": false
+    },
+    "linux": {
+      "artifact_id": 11294527819,
+      "archive_sha256": "f330f42e74850aae648b56a9d35be9517900f0e04e86de460a71e5593b74a5f1",
+      "archive_bytes": 8340427,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "installer_sha256": "849af067b5af32fb57cc7d8c1ff7960d866966bfa00f7486a7dbc868062b78d7",
+      "installer_bytes": 8335848,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=49",
+              "TANDEMLOG_PHASE identity_lock=10",
+              "TANDEMLOG_PHASE sqlite_open_schema=15",
+              "TANDEMLOG_PHASE manifest=10",
+              "TANDEMLOG_PHASE ingest=31",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=794 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=50",
+              "TANDEMLOG_PHASE identity_lock=17",
+              "TANDEMLOG_PHASE sqlite_open_schema=23",
+              "TANDEMLOG_PHASE manifest=25",
+              "TANDEMLOG_PHASE ingest=64",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=255 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=49",
+              "TANDEMLOG_PHASE identity_lock=24",
+              "TANDEMLOG_PHASE sqlite_open_schema=22",
+              "TANDEMLOG_PHASE manifest=18",
+              "TANDEMLOG_PHASE ingest=63",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=239 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "9f22e7582595c3c32e21c1d7375d93b2fa223ddd1053b918eb3907fc9ae159f6",
+          "baseline_commit": "4afb8c94fa0f95742c38e1518ac3aaf033c01284367db776ee3519529de4c1a9",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      },
+      "startup": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 477,
+            "marker": "TANDEMLOG_READY_MS=292 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=46",
+              "TANDEMLOG_PHASE identity_lock=29",
+              "TANDEMLOG_PHASE sqlite_open_schema=21",
+              "TANDEMLOG_PHASE manifest=26",
+              "TANDEMLOG_PHASE ingest=68",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=292 FILES_READ=1"
+            ],
+            "external_main_ms": 181,
+            "external_first_frame_ms": 231
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 362,
+            "marker": "TANDEMLOG_READY_MS=221 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=47",
+              "TANDEMLOG_PHASE identity_lock=25",
+              "TANDEMLOG_PHASE sqlite_open_schema=20",
+              "TANDEMLOG_PHASE manifest=17",
+              "TANDEMLOG_PHASE ingest=45",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=221 FILES_READ=0"
+            ],
+            "external_main_ms": 137,
+            "external_first_frame_ms": 188
+          }
+        ]
+      },
+      "startup_artifact_note": "Raw artifact also contains desktop portal diagnostic preamble; extracted the single structured measurement report."
+    },
+    "android": {
+      "artifact_id": 11294269917,
+      "archive_sha256": "9f9fdc5a3b807d95717b5befbee3a34a134e8a3b9cc40dabf5fdd0f20f029267",
+      "archive_bytes": 27759793,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "apk_sha256": "b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658",
+      "apk_bytes": 59936584,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "package": "com.reddraggone9.tandemlog",
+      "version_name": "2026.10.1-rc.1",
+      "version_code": 41,
+      "nondebuggable": true,
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "official_apk_verification": "pass",
+      "native_preview_acceptance": "pending"
+    }
+  },
+  "hosted_checks": {
+    "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+    "push_ci": 37179970796,
+    "push_ci_conclusion": "success",
+    "linux_app_tests": 368,
+    "windows_app_tests": 366,
+    "windows_skips": 2,
+    "release_policy_tests": 18,
+    "native_linux_flows": 45,
+    "all_target_builds": "pass",
+    "installed_windows_lifecycle": "pass",
+    "installed_flatpak_lifecycle": "pass",
+    "owner_signing": "pass",
+    "candidate_conclusion": "success"
+  }
+}

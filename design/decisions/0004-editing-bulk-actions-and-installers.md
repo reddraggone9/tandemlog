@@ -42,4 +42,6 @@ Timed effective values sort before date-only tasks on their shared calendar day.
 
 The editor starts titles at one visual line, grows to two and scrolls beyond that. Input line breaks normalize to spaces with selection preserved; active IME candidates are left alone and changed composing titles cannot be saved. Notes grow from three lines, then scroll within a cap derived from available editor height, including the keyboard. Existing fixed three-line notes wasted room while requiring unnecessary scrolling; unbounded notes could push other fields and actions out of reach.
 
+After an editor geometry change, reveal the focused caret once after layout without changing text, selection or composition. Native inspection found that a runtime text-size increase could otherwise leave it outside the notes viewport. Do not reveal on every rebuild: theme changes or incoming task updates must preserve the user's deliberate scroll position.
+
 These are view/input changes. Decoders and v3 canonical bytes remain unchanged. Historical multiline titles stay readable, opening/focus is clean, and notes-only saves omit title entirely. Deliberately editing a historical title uses the current one-line input rule, without rewriting older records. No source import, live data modification or stable binary replacement is part of this follow-up.
