@@ -5,8 +5,8 @@ import 'timed_view.dart';
 import 'wall_time.dart';
 
 /// An unchanged persisted task plus its derived local civil sorting value.
-/// Null is Someday, not a fabricated distant deadline. Dates at midnight may
-/// be date-only; original precision remains in [task]'s schedule.
+/// Null is Someday, not a fabricated distant deadline. Date-only values keep
+/// their civil day; [hasEffectiveTime] distinguishes them from exact midnight.
 class TaskViewEntry {
   const TaskViewEntry(
     this.task,
@@ -15,6 +15,7 @@ class TaskViewEntry {
     this.availabilityStart,
     this.completionUnavailableReason,
     this.inbox = false,
+    this.hasEffectiveTime = false,
   });
   final Map<String, dynamic> task;
   final DateTime? effectiveDate;
@@ -22,11 +23,13 @@ class TaskViewEntry {
   final DateTime? availabilityStart;
   final String? completionUnavailableReason;
   final bool inbox;
+  final bool hasEffectiveTime;
 
   /// Manual movement cannot cross Inbox/date groups, exact times, or history.
   bool sharesOrderBucket(TaskViewEntry other) =>
       inbox == other.inbox &&
       effectiveDate == other.effectiveDate &&
+      hasEffectiveTime == other.hasEffectiveTime &&
       (task['completed'] == true) == (other.task['completed'] == true);
 }
 
@@ -98,11 +101,13 @@ class TaskTiming {
     required this.available,
     required this.effectiveDate,
     required this.nextChange,
+    this.hasEffectiveTime = false,
     DateTime? nextSortChange,
   }) : _nextSortChange = nextSortChange;
   final DateTime availabilityStart;
   final bool available;
   final DateTime? effectiveDate;
+  final bool hasEffectiveTime;
   final DateTime? nextChange;
   final DateTime? _nextSortChange;
 }
@@ -254,6 +259,7 @@ class _TaskTimingContext {
       availabilityStart: start,
       available: available,
       effectiveDate: effective,
+      hasEffectiveTime: preciseTime != null,
       nextChange: next,
       nextSortChange: sortChange,
     );
@@ -328,6 +334,7 @@ TimedView<TaskView> projectTaskView(
             ? null
             : context.completionUnavailableReason(schedule),
         inbox: !done && row['inbox'] == true,
+        hasEffectiveTime: timing.hasEffectiveTime,
       ),
     ));
   }
@@ -335,11 +342,25 @@ TimedView<TaskView> projectTaskView(
     values.sort((a, b) {
       if (a.$2.inbox != b.$2.inbox) return a.$2.inbox ? -1 : 1;
       final x = a.$2.effectiveDate, y = b.$2.effectiveDate;
-      final order = x == null
+      var order = x == null
           ? (y == null ? 0 : 1)
           : y == null
           ? -1
           : x.compareTo(y);
+      if (x != null &&
+          y != null &&
+          x.year == y.year &&
+          x.month == y.month &&
+          x.day == y.day) {
+        // Within a civil day, exact times come first. Date-only intent is a
+        // separate sort bucket, not a fabricated last millisecond of the day.
+        final exactA = a.$2.hasEffectiveTime, exactB = b.$2.hasEffectiveTime;
+        order = exactA != exactB
+            ? (exactA ? -1 : 1)
+            : exactA
+            ? x.compareTo(y)
+            : 0;
+      }
       return order == 0 ? a.$1.compareTo(b.$1) : order;
     });
     return List.unmodifiable(values.map((value) => value.$2));

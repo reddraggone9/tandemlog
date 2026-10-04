@@ -27,6 +27,129 @@ List<String> ids(List<TaskViewEntry> rows) =>
     rows.map((row) => row.task['id'] as String).toList();
 
 void main() {
+  test(
+    'exact times precede date-only on the same day without invented time',
+    () {
+      final rows = [
+        row('day-a', schedule: TaskSchedule(dueDate: '2026-10-04')),
+        row(
+          'end',
+          schedule: TaskSchedule(dueDate: '2026-10-04', dueTime: '23:59'),
+        ),
+        row('day-b', schedule: TaskSchedule(dueDate: '2026-10-04')),
+        row(
+          'midnight-a',
+          schedule: TaskSchedule(dueDate: '2026-10-04', dueTime: '00:00'),
+        ),
+        row(
+          'tomorrow',
+          schedule: TaskSchedule(dueDate: '2026-10-05', dueTime: '00:00'),
+        ),
+        row(
+          'midnight-b',
+          schedule: TaskSchedule(dueDate: '2026-10-04', dueTime: '00:00'),
+        ),
+        row('someday'),
+      ];
+      final before = jsonEncode(rows);
+      final view = projectTaskView(rows, at('2026-10-04T12:00:00Z')).value;
+      expect(ids(view.open), [
+        'midnight-a',
+        'midnight-b',
+        'end',
+        'day-a',
+        'day-b',
+        'tomorrow',
+        'someday',
+      ]);
+      final entries = {for (final entry in view.open) entry.task['id']: entry};
+      expect(
+        entries['day-a']!.effectiveDate,
+        entries['midnight-a']!.effectiveDate,
+      );
+      expect(entries['day-a']!.sharesOrderBucket(entries['day-b']!), isTrue);
+      expect(
+        entries['midnight-a']!.sharesOrderBucket(entries['midnight-b']!),
+        isTrue,
+      );
+      expect(
+        entries['day-a']!.sharesOrderBucket(entries['midnight-a']!),
+        isFalse,
+      );
+      expect(
+        entries['day-a']!.sharesOrderBucket(entries['tomorrow']!),
+        isFalse,
+      );
+      expect(view.openGroups.map((group) => group.date), [
+        '2026-10-04',
+        '2026-10-05',
+        null,
+      ]);
+      expect(jsonEncode(rows), before);
+    },
+  );
+
+  test('scheduled override supplies both date and precision for sorting', () {
+    final view = projectTaskView([
+      row(
+        'override-day',
+        schedule: TaskSchedule(
+          dueDate: '2026-10-03',
+          dueTime: '01:00',
+          scheduledDate: '2026-10-04',
+        ),
+      ),
+      row(
+        'due-time',
+        schedule: TaskSchedule(dueDate: '2026-10-04', dueTime: '09:00'),
+      ),
+      row(
+        'override-time',
+        schedule: TaskSchedule(
+          dueDate: '2026-10-05',
+          scheduledDate: '2026-10-04',
+          scheduledTime: '08:00',
+        ),
+      ),
+      row('due-day', schedule: TaskSchedule(dueDate: '2026-10-04')),
+    ], at('2026-10-04T12:00:00Z')).value;
+    expect(ids(view.open), [
+      'override-time',
+      'due-time',
+      'override-day',
+      'due-day',
+    ]);
+    expect(view.open[2].hasEffectiveTime, isFalse);
+    expect(view.open[2].sharesOrderBucket(view.open[3]), isTrue);
+  });
+
+  test('calendar bounds retain precision over viewer midnight and DST', () {
+    final rows = [
+      row('day', schedule: TaskSchedule(dueMaxDays: 0)),
+      row(
+        'exact',
+        schedule: TaskSchedule(
+          dueDate: '2026-11-05',
+          dueTime: '00:00',
+          dueMaxDays: 0,
+        ),
+      ),
+    ];
+    final before = jsonEncode(rows);
+    for (final instant in [
+      '2026-11-01T04:59:59Z',
+      '2026-11-01T05:00:00Z',
+      '2026-11-01T07:00:00Z',
+      '2026-11-02T06:00:00Z',
+    ]) {
+      final view = projectTaskView(rows, at(instant, 'America/Chicago')).value;
+      expect(ids(view.open), ['exact', 'day']);
+      expect(view.open[0].sharesOrderBucket(view.open[1]), isFalse);
+      expect(view.open[0].effectiveDate, view.open[1].effectiveDate);
+    }
+    expect(jsonEncode(rows), before);
+  });
+
   test('visible future hints refresh at viewer midnight before the start', () {
     final task = row(
       'future',
@@ -331,8 +454,9 @@ void main() {
         row('dateOnly', schedule: TaskSchedule(dueDate: '2026-10-02')),
       ];
       final view = projectTaskView(rows, at('2026-10-02T12:00:00Z')).value;
-      expect(ids(view.open), ['dateOnly', 'early', 'same', 'late']);
-      expect(view.open.last.effectiveDate, DateTime.utc(2026, 10, 2, 17));
+      expect(ids(view.open), ['early', 'same', 'late', 'dateOnly']);
+      expect(view.open[2].effectiveDate, DateTime.utc(2026, 10, 2, 17));
+      expect(view.open.last.effectiveDate, DateTime.utc(2026, 10, 2));
       expect(view.openGroups.length, 1);
     },
   );
@@ -363,8 +487,9 @@ void main() {
         at('2026-10-02T12:00:00Z', 'America/Chicago', -5),
       ).value;
       expect(view.open[0].effectiveDate, DateTime.utc(2026, 10, 1, 20));
-      expect(view.open[1].effectiveDate, DateTime.utc(2026, 10, 2));
-      expect(view.open[2].effectiveDate, DateTime.utc(2026, 10, 2, 1));
+      expect(ids(view.open), ['pinnedExact', 'floatingExact', 'pinnedDate']);
+      expect(view.open[1].effectiveDate, DateTime.utc(2026, 10, 2, 1));
+      expect(view.open[2].effectiveDate, DateTime.utc(2026, 10, 2));
     },
   );
 

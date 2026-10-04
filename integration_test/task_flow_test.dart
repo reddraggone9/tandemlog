@@ -22,6 +22,7 @@ import 'header_selection_test.dart' show registerHeaderSelectionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
 import 'data_integrity_test.dart' show registerDataIntegrityTests;
+import 'task_precision_test.dart' show registerTaskPrecisionTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -155,6 +156,7 @@ void main() {
   registerHeaderSearchTests();
   registerInboxFlowTests();
   registerDataIntegrityTests();
+  registerTaskPrecisionTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
