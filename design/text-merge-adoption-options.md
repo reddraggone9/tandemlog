@@ -8,7 +8,7 @@ unchanged. [Prototype evidence](text-merge-prototype.md) records what was run.
 
 | Boundary | Alternatives | Recommendation | Decision owner |
 |---|---|---|---|
-| Legacy scalar writes | Convert whole strings; retain manual conflicts; let uncovered writes lose after activation | **Approved:** uncovered legacy text writes lose in the visible projection; retain original records, no reconciliation UI | Lee decided; implementation and compatibility gates pending |
+| Legacy scalar writes | Convert whole strings; retain manual conflicts; let uncovered writes lose after activation | **Approved:** uncovered legacy text writes lose in the visible projection; retain original records, no reconciliation UI | Lee decided; bounded Linux prototype passes, production integration pending |
 | First activation | Independent snapshot seeds; common bootstrap basis; automatic rebasing | **Proposed:** one shared immutable baseline, issued once on a chosen device; derive field seeds lazily from that basis | Lee: accept one-time baseline sync before another upgraded device can Save |
 | Field/seed routing | Rely on equal seed text/client IDs; bind every packet to its document and shared seed | Validate space UUID, entity UUID, field, epoch UUID, exact seed SHA256 and codec/adapter version before native decode | Engineering detail implementing an approved protocol |
 | Actor allocation | Active-process counter; hash writer UUID; distinct immutable edit-batch identity with collision checking | Derive a nonreserved 53-bit actor from field/epoch/writer UUID/edit-batch UUID; persist the prepared batch and bind each actor to its origin. Detect collisions explicitly; never reuse a cancelled or retried batch for different content | Engineering detail; no new user preference |
@@ -128,14 +128,23 @@ mechanism remains a design gate, not an implemented protocol claim.
   concurrent text edits. This remains preferable to silently losing upgraded
   edits behind an unproven migration.
 
-Recommendation: approve the legacy loser policy as specified; prefer the one
+Recommendation: implement the approved legacy loser policy; prefer the one
 shared baseline and one-time sync limitation for a first adoption. No production
 activation or recovery operation is implemented. The separately frozen
 [activation-policy matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
 extends acceptance requirements without changing earlier frozen assertions. Its
 separate [four-case draft extension](../experiments/yrs-spike/evidence/activation-draft-policy-matrix.json)
-adds editing gates and explicit captured-base handling; all22 new policy cases are not-run.
-Actual Android lab/runtime/OS-IME acceptance is still pending.
+adds editing gates and explicit captured-base handling. These frozen documents
+retain their pre-implementation `not-run` entries. The isolated
+[activation coordinator](../experiments/yrs-spike/activation_lab/README.md) now
+passes all22 policy cases plus four native-preparation and four stronger recovery
+cases on Linux. [Results](../experiments/yrs-spike/evidence/activation-results.json)
+record actual TaskStore compatibility, native pending-state restore,
+fresh-process replay, draft/controller handling and the five reproduced fixes.
+This validates the bounded behavior with an explicitly configured issuer; it
+does not establish production bootstrap agreement, crash-safe Undo or the new
+coordinator's Windows/Android acceptance. The separate Android editor lab has
+partial parent-reported runtime/OS-IME acceptance; remaining checks are pending.
 
 ## Field and actor bindings
 

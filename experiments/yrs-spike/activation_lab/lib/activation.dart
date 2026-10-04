@@ -141,7 +141,9 @@ class ActivationLab {
       final journal = File('${directory!.path}/records.jsonl');
       if (journal.existsSync()) {
         // Complete-line only; do not truncate interrupted evidence.
-        final lines = journal.readAsStringSync().split('\n')..removeLast();
+        final lines = journal.readAsStringSync().split('\n');
+        final tail = lines.removeLast();
+        if (tail.isNotEmpty) isBlocked = true;
         for (final raw in lines) {
           if (raw.isNotEmpty) {
             try {
@@ -215,9 +217,17 @@ class ActivationLab {
 
   void _append(String raw) {
     if (directory == null) return;
-    final f = File(
-      '${directory!.path}/records.jsonl',
-    ).openSync(mode: FileMode.append);
+    final file = File('${directory!.path}/records.jsonl');
+    if (file.existsSync()) {
+      final bytes = file.readAsBytesSync();
+      if (bytes.isNotEmpty && bytes.last != 10) {
+        isBlocked = true;
+        throw StateError(
+          'Incomplete owned journal tail; original bytes retained',
+        );
+      }
+    }
+    final f = file.openSync(mode: FileMode.append);
     try {
       f.writeStringSync('$raw\n');
       f.flushSync();
@@ -356,12 +366,57 @@ class ActivationLab {
     return result;
   }
 
+  bool _dependenciesComplete(List<LogEvent> events) {
+    final ids = {for (final e in events) e.id: e};
+    final created = {
+      for (final e in events.where(
+        (e) => e.type == 'task.created' || e.type == 'user.created',
+      ))
+        e.entity: e.type,
+    };
+    for (final e in events.where(
+      (e) => e.type == 'task.completed' && e.data['successor'] != null,
+    )) {
+      created[(e.data['successor'] as Map)['id'] as String] = 'task.created';
+    }
+    for (final e in events) {
+      if (e.type != 'task.created' &&
+          e.type != 'user.created' &&
+          !created.containsKey(e.entity)) {
+        return false;
+      }
+      if (e.data['assignee'] != null) {
+        final kind = created[e.data['assignee']];
+        if (kind == null) return false;
+        if (kind != 'user.created') {
+          throw StateError('Invalid assignee dependency');
+        }
+      }
+      final reference = e.type == 'task.operationUndone'
+          ? e.data['operation']
+          : e.data['completion'];
+      if (reference != null) {
+        final target = ids[reference];
+        if (target == null) return false;
+        if (target.entity != e.entity || target.clock.compareTo(e.clock) >= 0) {
+          throw StateError('Invalid historical dependency');
+        }
+      }
+    }
+    return true;
+  }
+
   String prepareActivation() {
     if (config == null || writer != config!.issuer) {
       throw StateError('Explicit issuer required');
     }
     if (_activation != null) return _records[config!.activationRef]!;
     final events = _verifiedLegacy();
+    if (!_dependenciesComplete(events)) {
+      throw StateError(
+        'Missing historical dependency; activation not prepared',
+      );
+    }
     final frontiers = <String, dynamic>{};
     for (final e in events) {
       frontiers[e.writer] = {'seq': e.sequence, 'hash': e.hash};
@@ -408,6 +463,7 @@ class ActivationLab {
       if (e.hash != head['hash']) throw StateError('Baseline head mismatch');
     }
     final basis = verified.where(_included).toList();
+    if (!_dependenciesComplete(basis)) return;
     final seeds = _deriveSeeds(basis);
     if (_digest(seeds) != _activation!['seedDigest']) {
       throw StateError('Historical seed mismatch');
@@ -606,6 +662,7 @@ class ActivationLab {
 
   String retryPrepared(String raw, {bool failAfterAppend = false}) {
     _ensureWritable();
+    _refreshJournal();
     final id = _packetId(raw);
     if (_records[id] == raw) {
       _finishOutbox(id);
@@ -618,6 +675,27 @@ class ActivationLab {
     if (_records[id] != raw) throw StateError('Missing exact receipt');
     _finishOutbox(id);
     return raw;
+  }
+
+  void _refreshJournal() {
+    if (directory == null) return;
+    final f = File('${directory!.path}/records.jsonl');
+    if (!f.existsSync()) return;
+    final lines = f.readAsStringSync().split('\n');
+    final tail = lines.removeLast();
+    for (final raw in lines.where((line) => line.isNotEmpty)) {
+      _ingest(
+        raw,
+        persist: false,
+        localReceipt: _outbox[_packetId(raw)] == raw,
+      );
+    }
+    if (tail.isNotEmpty) {
+      isBlocked = true;
+      throw StateError(
+        'Incomplete owned journal tail; original bytes retained',
+      );
+    }
   }
 
   void _finishOutbox(String id) {

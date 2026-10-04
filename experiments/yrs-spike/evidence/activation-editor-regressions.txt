@@ -1,0 +1,12 @@
+00:00 +0: loading /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart
+00:00 +0: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H01 native library initializes two Unicode replicas
+00:00 +1: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H02 typing modifies private captured draft until Save
+00:00 +2: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H03 Save merges captured changes after remote prefix
+00:00 +3: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H04 composing guard rejects Save without mutation
+00:00 +4: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H05 composition commit saves once
+00:00 +5: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H06 Cancel retains arriving remote work and publishes none
+00:00 +6: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H08 selective Undo/Redo retain remote prefix
+00:00 +7: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_session_test.dart: H09 emoji replacements never split UTF16 pairs
+00:00 +8: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_widget_test.dart: H07 remote arrival preserves private selection and composition
+00:01 +9: /workspace/tandemlog/experiments/yrs-spike/editor_lab/test/editor_widget_test.dart: H10 editor cancel and reopen use latest captured baseline
+00:01 +10: All tests passed!

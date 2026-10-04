@@ -28,7 +28,7 @@ clarification is a separate explained revision.
 | C26–C30 | Malformed/oversized updates, invalid offsets/base64, active actor collision, text limits, atomic rejection | Pass for sampled cases; sampled malformed updates rejected; pinned plain-text admission added below |
 | C31–C34 | Exact JSON update bytes, checkpoint/tail equivalence, native memory cycles and measured edit/restore/storage cost | Pass, synthetic scope |
 | O01–O04 | Source-bound one-shot Save, reject remote draft import, failure retains draft/prior Undo | Three failures reproduced before fixes; four pass after fixes |
-| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; late legacy loser policy approved; activation/bootstrap implementation remains untested |
+| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Original compatibility regressions pass; new bounded Linux activation suite passes; production bootstrap/integration remains open |
 | A04 | Pending structs retained through full checkpoint, excluded by ordinary diff | Pass: full restore yields xAB; diff restore yields xA |
 | R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass afterward on native hosted Linux/Windows |
 | A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
@@ -165,12 +165,31 @@ explicitly, including Linux native integration and Android APK packaging.
 policy needing Lee's decision from engineering recommendations for routing,
 actors, checkpoints and measured budgets. None is an adopted production protocol.
 
-## Activation-policy extension (pre-implementation)
+## Activation-policy extension
 
 Lee approved late legacy scalar text writes losing after activation, with original
 records retained and no reconciliation UI. That does not permit upgraded native
 edits to lose. The separate [18-case matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
-is written before any activation-policy implementation; all18 are not-run. Earlier
-frozen matrices/assertions remain unchanged. The proposed common-baseline bootstrap
-and one-time initial-sync limitation are in [adoption choices](text-merge-adoption-options.md).
-Actual Android lab/runtime and real OS-IME acceptance remain pending.
+was written before any activation-policy implementation; its historical `not-run`
+entries remain unchanged, as do earlier frozen matrices/assertions. A separately
+frozen four-case draft extension adds captured-base/controller handling.
+
+The [isolated coordinator](../experiments/yrs-spike/activation_lab/README.md) now
+passes30 Linux tests:22 policy/draft, four native-preparation and four stronger
+recovery cases. Test-first commit `bc43c9b` precedes implementation; `2330222`
+freezes the stronger checks before their fixes. Five reproduced implementation
+defects were fixed without changing frozen expectations. The existing52 native,
+ten editor session/widget, Linux Dart FFI and eight production clock/warning
+checks also pass. [Separate results and logs](../experiments/yrs-spike/evidence/activation-results.json)
+include actual frozen-v3 TaskStore replay, old-reader rejection without checkpoint
+advancement, a real pending native restore and fresh-process journal-only replay.
+
+Explicit configured common-baseline behavior is validated within that scope.
+The proposed bootstrap/one-time initial sync remains in
+[adoption choices](text-merge-adoption-options.md); agreeing on its issuer and UX
+is not solved by the tests. Production protocol/SQLite integration, interrupted
+Undo durability, durable actor ownership, resource/parser boundaries and new
+Windows/Android coordinator coverage remain open. Synthetic JSON checkpoint files
+are test stand-ins, not an architecture change. The separate older Android editor
+APK has partial parent-reported IME/runtime acceptance, with lifecycle/clipboard
+checks still pending; it does not cover the new coordinator commands.
