@@ -125,9 +125,13 @@ during a peer update, merged Save/selective Undo, explicit legacy setup, narrow
 dark 200% text, and restart persistence. Its composition/insets are injected;
 it is not Android OS-IME evidence. See the [production checkpoint](../../evidence/production-text/README.md).
 
+The current source also cross-builds for arm64-v8a, x86_64 and armeabi-v7a with
+NDK 28.2/API 24; required exports and 16 KiB ELF segment alignment pass. This
+verifies library payloads, not APK packaging, installation or Android execution.
+
 Before any preview: resolve successor text, adapt and run the complete existing
 native workflow matrix, make real-library CI checks mandatory, verify native
-Windows packaged lifecycle, rebuild all Android ABIs/page alignment, and accept
+Windows packaged lifecycle, verify Android APK packaging, and accept
 the exact signed APK on Android. Release-mode startup/resource measurements and
 independent final UI/release review remain pending. Stable promotion requires
 separate behavior acceptance. [Prototype evidence](../text-merge-prototype.md)

@@ -25,6 +25,13 @@ Verified locally with Flutter 3.47.5/Dart 3.13.4 and locked Yrs 0.28.0/Rust 1.99
   admission/resource measurements, original failures and corrected fixture
   assumptions are retained in the nested HANDOFF files. Those subprocess
   measurements are not UI frame, Android-memory or end-to-end startup evidence.
+- Current native Android arm64-v8a, x86_64 and armeabi-v7a release libraries
+  cross-build offline with locked Cargo, Rust 1.99.0 and NDK 28.2/API 24;
+  required exports and 16 KiB ELF alignment pass. Exact digests are in
+  `android-engine-build.json`. Official standard-library targets were installed
+  after an empty/stale target directory caused an explicit compiler failure;
+  no alternate repository or network-policy workaround was used. This is not
+  an APK packaging, installation or native Android runtime check.
 
 The first native UI finder failure assumed Save leaves the editor open; the
 assertion was corrected to the existing close-on-Save behavior. The first
@@ -34,7 +41,7 @@ unchanged; later measurements live in this directory.
 
 Pending: successor text agreement for concurrent recurring completion, complete
 existing native workflow adaptation/aggregate, mandatory real-engine hosted CI,
-fresh all-ABI Android payload/page verification, installed native Windows and
+Android APK packaging, installed native Windows and
 exact signed Android acceptance, release performance and independent final
 notes/media review. The current local recurrence guard rejects before receipt or
 append and changes no historical replay. No new production release or main push

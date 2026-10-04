@@ -17,8 +17,9 @@ the real app flow from synthetic native benchmarks and injected IME state.
 
 Concurrent recurring successor text still needs Lee's decision. The branch
 rejects that local command before append while retaining historical replay.
-Current Windows/Android production payloads, complete existing native workflow
-matrix, mandatory native CI and release-mode performance remain unverified. No
+All three current Android engine ABIs cross-build with verified exports and
+16 KiB alignment. APK packaging/runtime, native Windows, the complete existing
+native workflow matrix, mandatory CI and release performance remain unverified. No
 production text candidate is signed or released, and no main push is made.
 The separate date/time layout work is paused for ordinary-width reconciliation;
 its earlier enlarged-text-only proposal is not release-ready.
