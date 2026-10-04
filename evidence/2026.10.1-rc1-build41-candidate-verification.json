@@ -191,8 +191,29 @@
     "editor_widget_tests": 27,
     "previously_failing_resize_probe": "pass"
   },
-  "native_android_acceptance": "pending on exact final code41; no inference from Linux or predecessor40",
-  "publication": "not published; exact final Android acceptance required; stable2026.10.0 unchanged",
+  "native_android_acceptance": {
+    "status": "pass",
+    "reported_by": "coordinator/native executor",
+    "platform": "Android 11/API 30 x86_64",
+    "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+    "apk_sha256": "b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658",
+    "exact_affected_scope": [
+      "native clipboard line-break normalization and caret",
+      "notes growth and internal scroll",
+      "200% text with actual keyboard; Save/Cancel reachable",
+      "save and process restart",
+      "Cancel/Discard with no writes",
+      "final integrity check"
+    ],
+    "retained_prior_scope": [
+      "in-place upgrade",
+      "precision ordering and constrained drag/Undo",
+      "historical multiline title preservation"
+    ],
+    "cleanup": "temporary services stopped; settings restored; no defects/blockers reported",
+    "wider_device_provider_coverage": "not inferred"
+  },
+  "publication": "authorized experimental promotion pending; stable2026.10.0 remains Latest",
   "demo": {
     "platform": "native Linux GTK debug, Xvfb",
     "synthetic_data": true,
@@ -413,7 +434,7 @@
         "x86_64"
       ],
       "official_apk_verification": "pass",
-      "native_preview_acceptance": "pending"
+      "native_preview_acceptance": "pass: exact affected-scope API30 acceptance plus accepted unchanged prior flows"
     }
   },
   "hosted_checks": {
