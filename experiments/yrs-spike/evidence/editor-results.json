@@ -70,5 +70,20 @@
   "native_engine_source": "5470384080f56e03a209f991af6745a941d3b559",
   "composition_focus_fix": "TextFieldTapRegion around remote button prevents editor unfocus; original frozen assertion unchanged. First native integration reproduced composing range loss, then passed after source fix.",
   "android": "APK built API24+ ARM64/x86_64 debug-only, packaging verified; actual Android runtime not run",
-  "library_delivery": "Prepared upload authentication discovery failed HTTP401 before upload; local ZIP preserved, hosted Actions handoff pending."
+  "library_delivery": "Prepared upload authentication discovery failed HTTP401 before upload; local ZIP preserved, hosted Actions handoff pending.",
+  "first_hosted_editor_run": {
+    "run": 37221919598,
+    "result": "failed strict lockfile admission before editor tests/APK; incomplete five-package JSON lock accidentally committed",
+    "fix": "Restore complete frozen test-first SDK/test lockfile byte-identical to e1afed4; enforce-lockfile remains enabled. No dependency update or frozen assertion change."
+  },
+  "native_visual_inspection": {
+    "platform": "Linux GTK debug native, 1280x720 and 390x820",
+    "observations": [
+      "Keystrokes private, committed replicas updated only on received remote/Save",
+      "Save converged both replicas; one local batch",
+      "Undo retained remote prefixes",
+      "Narrow controls wrap and editor accessible, no render overflow"
+    ],
+    "composition": "No real OS IME; injected native integration scope only"
+  }
 }
