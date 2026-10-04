@@ -1,0 +1,92 @@
+{
+  "frozen_utc": "2026-10-04T16:42:24.613643+00:00",
+  "implementation_present": false,
+  "synthetic_only": true,
+  "production_adoption": false,
+  "cases": [
+    {
+      "id": "H01",
+      "case": "Actual shared library opens and Unicode replicas match",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H02",
+      "case": "Editor keystrokes stay private until Save",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H03",
+      "case": "Captured draft Save preserves concurrent remote prefix",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H04",
+      "case": "Composing Save rejected atomically with draft retained",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H05",
+      "case": "Commit final composition once, repeated Save rejected",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H06",
+      "case": "Cancel publishes no draft; arriving remote preserved",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H07",
+      "case": "Flutter private selection and composing range preserved on remote arrival",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H08",
+      "case": "Selective Undo/Redo preserve remote work and converge",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H09",
+      "case": "UTF16 emoji replacement does not split surrogate pairs",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H10",
+      "case": "Cancel/reopen captures latest committed baseline",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H11",
+      "case": "Native Flutter integration SaveCancelUndo; injected composition labeled",
+      "status": "not-run",
+      "evidence_requirement": "Frozen automated test on actual engine; runtime scope recorded separately"
+    },
+    {
+      "id": "H12",
+      "case": "Manual real Android OS-IME produces composing updates; Save disabled until commit, selection retained, Cancel/Undo pass",
+      "status": "not-run",
+      "evidence_requirement": "Actual OS-generated IME plus native Android runtime, not injected/test flags"
+    }
+  ],
+  "tests_sha256": {
+    "editor_lab/integration_test/editor_flow_test.dart": "c870d14919f12485a13274b3e186ff6988130b13e48d0644daa067eb41ed5a27",
+    "editor_lab/test/editor_session_test.dart": "49915992d5aa611cb963bef5dfd8f3f74fd6e519bc2643435a81cfc7c8716b64",
+    "editor_lab/test/editor_widget_test.dart": "ee368e9808f47016ce9c4575e04d18532d57d609e227c29d21bb56bee17cd2a9"
+  },
+  "initial_hashes": {
+    "editor_lab/integration_test/editor_flow_test.dart": "95fb5f9b0b28795becf0232e0994ebaaba4f1d20cee59e69703efac3f2565d5f",
+    "editor_lab/test/editor_session_test.dart": "49915992d5aa611cb963bef5dfd8f3f74fd6e519bc2643435a81cfc7c8716b64",
+    "editor_lab/test/editor_widget_test.dart": "2390edeb4f5c985f7e72b5cbb70f51d19740753f74c0bd66cb9c7bc7eddb59a3"
+  },
+  "preimplementation_setup_revision": "Register injected TestTextInput explicitly because SDK IntegrationTestWidgetsFlutterBinding.registerTestTextInput=false; original assertions unchanged. Format before final freeze.",
+  "red_result": "flutter test failed loading both test files: editor_session.dart/main.dart absent; no implementation yet."
+}
