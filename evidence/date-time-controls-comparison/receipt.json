@@ -1,0 +1,205 @@
+{
+  "primary": "primary-build43-to-build44.png",
+  "secondary": "secondary-build44-to-candidate.png",
+  "pixel_review": "Both labeled artifacts inspected, including all displayed dates, blank Time fields and Add time buttons. No application pixels fabricated.",
+  "platform": "Actual native Linux GTK/Flutter3.47.5 debug; not Windows/Android.",
+  "fixtures_match": true,
+  "time_targets": {
+    "build43": "48px high Add time target",
+    "build44": "48px high blank Time input",
+    "candidate": "48px high blank Time input"
+  },
+  "provenance": "source-closure.json identifies the complete historical source archives and candidate commit. Phase-specific harness snapshots preserve exact recipes; scroll handling was adjusted to keep floating labels clear of the sticky heading.",
+  "native_runs": "All three source runs passed.",
+  "release_note_scope": "Primary is the already-shipped build43\u219244 presentation change; secondary is only the unpublished stacking investigation.",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 2154,
+      "sha256": "982c998a57bfcf500c3977f51c46d8f2cb1007c9e1d5945166f53931481b5b49"
+    },
+    {
+      "file": "candidate-390-1x-geometry.json",
+      "bytes": 112,
+      "sha256": "9bf60197dea29f591ecef60b008719f15c8fba3909305c62e7cc1d0a4ab54b63"
+    },
+    {
+      "file": "candidate-390-1x-raw.png",
+      "bytes": 36034,
+      "sha256": "3e5b7f157138db14932b678c11b9f430b312f567f3a79142ee0768706b42f7af",
+      "pixels": [
+        390,
+        980
+      ]
+    },
+    {
+      "file": "candidate-520-2x-crop.png",
+      "bytes": 16019,
+      "sha256": "25f8b2fd7f741fd8917d95790f7cec97cf88ff0d6babd5e4b1925e961f32afa8",
+      "pixels": [
+        496,
+        180
+      ]
+    },
+    {
+      "file": "candidate-520-2x-geometry.json",
+      "bytes": 111,
+      "sha256": "18738ff3bb1eab4f27928ad84fed19086266f47f8ae1b551b647b623a6489a95"
+    },
+    {
+      "file": "candidate-520-2x-raw.png",
+      "bytes": 62975,
+      "sha256": "9770db146edf71cf7889d39a5f348ca364ca65aec0121245436cf470362155a7",
+      "pixels": [
+        520,
+        980
+      ]
+    },
+    {
+      "file": "candidate-capture-harness.dart.txt",
+      "bytes": 3155,
+      "sha256": "bb4d36e4f89c9d2d5011076ee81e89672fcf8d69770c0dd4a5c151261fab84ec"
+    },
+    {
+      "file": "capture-harness.dart.txt",
+      "bytes": 3472,
+      "sha256": "63b525ae61a078ac02ee9e7b4606ebedaa681166ddbb2bf6931087bb1f724f4f"
+    },
+    {
+      "file": "make_comparison.py",
+      "bytes": 2017,
+      "sha256": "299bc55b4acc4d62d45a1a8b1779573e1164e9bd332ee43e95d1cad38b7fe4a8"
+    },
+    {
+      "file": "native-build43.log",
+      "bytes": 875,
+      "sha256": "be09f53406c4c5b7385f66f3267ac3abb240c293f18087cfb98aafbf89aaeb77"
+    },
+    {
+      "file": "native-build44.log",
+      "bytes": 875,
+      "sha256": "be09f53406c4c5b7385f66f3267ac3abb240c293f18087cfb98aafbf89aaeb77"
+    },
+    {
+      "file": "native-candidate.log",
+      "bytes": 877,
+      "sha256": "6c05ca2d828d790df26932c93e5a82484aeb51dcec7973acd994533565e80b86"
+    },
+    {
+      "file": "primary-build43-to-build44.png",
+      "bytes": 24235,
+      "sha256": "657911db633142c6427654b68b74491f4641165510705412f8b7b61d8db6ef3e",
+      "pixels": [
+        796,
+        243
+      ]
+    },
+    {
+      "file": "rc43-390-1x-crop.png",
+      "bytes": 11383,
+      "sha256": "3f40b8191b3f92f14c2db810ff654635aae145b28c1c3c6651b68095ea6c4bbf",
+      "pixels": [
+        366,
+        132
+      ]
+    },
+    {
+      "file": "rc43-390-1x-geometry.json",
+      "bytes": 111,
+      "sha256": "53b1beacdccdfa388e13244364799cfc9a3990e4180bd1ec7e68550e1f2cabf7"
+    },
+    {
+      "file": "rc43-390-1x-raw.png",
+      "bytes": 39298,
+      "sha256": "737a152fd253be35e0a5de234c4b4f78cf089380670a25e96068578f7a9c937b",
+      "pixels": [
+        390,
+        980
+      ]
+    },
+    {
+      "file": "rc43-520-2x-geometry.json",
+      "bytes": 110,
+      "sha256": "8fa929f5ea420511da6d7e32cf3d08c94792377dfce8c23643e242008feebd65"
+    },
+    {
+      "file": "rc43-520-2x-raw.png",
+      "bytes": 67287,
+      "sha256": "2cc8a2c929f5fa1e6eaddca11d1685d41cd91ac4bd46651b3e0d1659425806e7",
+      "pixels": [
+        520,
+        980
+      ]
+    },
+    {
+      "file": "rc43-capture-harness.dart.txt",
+      "bytes": 3051,
+      "sha256": "06d04c0a4baf97b5eefdf090a51a8b3f5c1625d527ebb5e31ef202c8807bef6c"
+    },
+    {
+      "file": "rc44-390-1x-crop.png",
+      "bytes": 8315,
+      "sha256": "9a8b8ffc771b6a2f965aea6ad404ed2d13e6f12c4f3e09e27b58e7a4c2eb9667",
+      "pixels": [
+        366,
+        132
+      ]
+    },
+    {
+      "file": "rc44-390-1x-geometry.json",
+      "bytes": 112,
+      "sha256": "9bf60197dea29f591ecef60b008719f15c8fba3909305c62e7cc1d0a4ab54b63"
+    },
+    {
+      "file": "rc44-390-1x-raw.png",
+      "bytes": 36041,
+      "sha256": "b12e0375d12502dde78e5c0e9af1e14e7c937270a0f6839c775933f8fbaf56d6",
+      "pixels": [
+        390,
+        980
+      ]
+    },
+    {
+      "file": "rc44-520-2x-crop.png",
+      "bytes": 16936,
+      "sha256": "d03b20f729b51baafe8bfe6de6cc9a18ec3e397ec9b369932bb4b887594374bc",
+      "pixels": [
+        496,
+        348
+      ]
+    },
+    {
+      "file": "rc44-520-2x-geometry.json",
+      "bytes": 111,
+      "sha256": "2b07ed55f49d6c4e7ac8ce12c859e5bea8efc10b9a0dac8e98cc928a61ab93ab"
+    },
+    {
+      "file": "rc44-520-2x-raw.png",
+      "bytes": 61423,
+      "sha256": "3a38c5848fcbd8e253a14f8f6c48bbe9d72ad1d60c9b5610ee12f68b790905fb",
+      "pixels": [
+        520,
+        980
+      ]
+    },
+    {
+      "file": "rc44-capture-harness.dart.txt",
+      "bytes": 3472,
+      "sha256": "63b525ae61a078ac02ee9e7b4606ebedaa681166ddbb2bf6931087bb1f724f4f"
+    },
+    {
+      "file": "secondary-build44-to-candidate.png",
+      "bytes": 39572,
+      "sha256": "8d33ffa3344c631a3bec326acce723d7d305a56558aeebd5d28f2ef769883029",
+      "pixels": [
+        1056,
+        459
+      ]
+    },
+    {
+      "file": "source-closure.json",
+      "bytes": 1879,
+      "sha256": "52a2d335c82efde53ab3019aa4d7104b9e76155fc5639843da4b3a3294e87ead"
+    }
+  ]
+}
