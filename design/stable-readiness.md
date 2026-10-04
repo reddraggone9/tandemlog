@@ -1,6 +1,6 @@
 # Review before the first stable release
 
-Status: required review, not authorization for stable publication, source cutover, deletion or history repair. Markdown remains authoritative through prereleases. Test contents are disposable; the sync path/share remains permanent. Coordinate the latest source freeze, backups, device/app handling, fresh import and independent validation before a final handoff.
+Status: Lee explicitly authorized first stable 2026.10.0 publication on 2026-10-04, from accepted RC build38 with only version/release changes. The exact stable rebuild still requires full candidate gates and native Android acceptance. Lee now uses Tandemlog as authoritative; preserve all live canonical data. This publication authorizes no deletion, reset, history repair or further import. Durable v3 backward readability begins with this release; retained limits and prior review findings remain recorded below.
 
 Before promising stable compatibility, review these hard-to-change data decisions with Lee against real workflows and test evidence:
 

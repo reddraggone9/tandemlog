@@ -58,9 +58,9 @@ Public rc1 used a fresh hosted debug identity that was not retained. Local debug
 
 ## Markdown authority and final cutover
 
-Throughout prereleases, Lee continues editing the Markdown todo list as the authoritative record. Every app rehearsal uses a clearly identified COPY. The default canonical folder path and Syncthing share are permanent; only their test contents are disposable. A passing snapshot is not the final import; do not treat test-app changes as authoritative or silently merge them back. Private source text, hashes, backups and diffs stay outside the public repository.
+Historical migration policy: Lee kept editing the Markdown todo list as the authoritative record throughout the early prereleases. On 2026-10-04 the coordinator confirmed Tandemlog is now authoritative. Stable publication does not authorize another cutover, source change or canonical cleanup. The following runbook governs any separately requested future import. Every rehearsal must use a clearly identified COPY. The default canonical folder path and Syncthing share are permanent; only their test contents are disposable. A passing snapshot is not the final import; do not treat test-app changes as authoritative or silently merge them back. Private source text, hashes, backups and diffs stay outside the public repository.
 
-Immediately before the first stable release, coordinate a separate cutover with Lee:
+For any separately requested future source cutover, coordinate with Lee:
 
 1. Obtain explicit agreement to pause Markdown edits and relevant app/sync writes for the chosen window, and confirm the existing permanent destination and every participating device. Keep its path and share configuration.
 2. Snapshot and back up the latest Markdown source AND the existing test destination before any separately authorized cleanup. Verify the copies; retain recovery paths. Disposable does not authorize deletion by itself.
@@ -90,3 +90,8 @@ One-off Markdown rehearsal/import/export tooling and its dedicated tests live on
 ## Published experimental 2026.10.0-rc.1
 
 [v2026.10.0-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0-rc.1) uses accepted source `c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e`, candidate37151096841 and Android code38. Promotion37163085342 reused the three installers without rebuilding after exact native API30 acceptance. Anonymous public downloads match accepted hashes/digests/sizes; official APK verification matches the owner certificate, package, code and nondebuggable flag. Tag and approved notes verify, prerelease=true/latest=false, and RC9 remains unchanged. [Receipt](../evidence/calver-build38-public-verification.json). The exceptional v3 test-data format break is disclosed; old canonical folders are preserved and refused. Stable publication and real-data cutover remain separately authorized.
+
+
+## First stable 2026.10.0 candidate
+
+Lee explicitly accepted first stable publication on 2026-10-04. Build39 changes the accepted RC38 production closure only through `pubspec.yaml` display version/build metadata; package, owner signer, protocol3, cache13, hashes, event meanings and all `lib/` files stay unchanged. Freeze synthetic v3 compatibility bytes and expected projections before publishing. The full signed-candidate matrix and exact stable APK install/launch/retained-v3 checks must pass, then `stable.yml` promotes the same three installers as stable Latest without rebuilding. From this boundary future readers preserve durable v3 logs and meanings; no disposable data-reset promise applies. Live source/canonical data is untouched.

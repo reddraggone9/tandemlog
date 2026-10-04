@@ -44,7 +44,7 @@ For canonical Markdown export, Lee authorized `🏁 delete` on every open recurr
 
 Use `com.reddraggone9.tandemlog` for the next candidate. Android's package changes, Linux's application identity changes, and Windows's company metadata becomes `com.reddraggone9`; these affect fresh settings locations and installation identity. Retain the existing owner signing key. Public prerelease notes must disclose the separate installation and protocol break.
 
-Lee considers prereleases disposable; the durable versioned compatibility promise starts at stable 0.1.0. Protocol v2 uses an explicitly new workspace. Do not silently accept old protocol data, migrate folders in place, delete history, or reset an existing chosen workspace. Existing sources/canonical folders remain backups, regardless of installation disposability. Avoid elaborate rc-to-rc compatibility machinery that would delay real workflow parity.
+Lee considered early prereleases disposable; the durable versioned compatibility promise starts at the first stable CalVer release, 2026.10.0 (formerly planned as 0.1.0). Existing v3 histories and meaning must remain backward readable from this boundary. Protocol v2 uses an explicitly new workspace. Do not silently accept old protocol data, migrate folders in place, delete history, or reset an existing chosen workspace. Existing sources/canonical folders remain backups, regardless of installation disposability. Avoid elaborate rc-to-rc compatibility machinery that would delay real workflow parity.
 
 ## Migration and acceptance
 

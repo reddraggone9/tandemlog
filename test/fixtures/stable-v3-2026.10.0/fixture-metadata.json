@@ -1,0 +1,9 @@
+{
+  "accepted_source_commit": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+  "protocol": 3,
+  "event_count": 22,
+  "protected_successor": "dba417bc-410a-5e4f-b0ea-b1af8a767a5d",
+  "suppressed_successor": "9c21a640-c10a-53b9-8e40-fec2ee99de0b",
+  "original_writer": "22222222-2222-4222-8222-222222222222",
+  "peer_writer": "33333333-3333-4333-8333-333333333333"
+}

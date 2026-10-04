@@ -28,7 +28,7 @@ Undo must target an operation and be repeat-safe. For M1 completion, preserve co
 
 ## Compatibility and recovery
 
-Version the workspace protocol/envelope and each event meaning. New meaning gets a new version/type; never reinterpret old payloads in place. Use deterministic decoders/upcasters and fixtures spanning versions. Cache migrations are disposable: rebuild when incompatible. A changed projection algorithm still needs a compatibility decision to prevent two app versions producing different outcomes.
+From stable 2026.10.0 onward, future versions must read existing durable v3 histories with their original meaning. Preserve record bytes/hash canonicalization, workspace/writer/entity identities, immutable clocks and Undo semantics. Version the workspace protocol/envelope and each event meaning. New meaning gets a new version/type; never reinterpret old payloads in place. Use deterministic decoders/upcasters and frozen fixtures spanning versions. Cache migrations are disposable: rebuild when incompatible. A changed projection algorithm still needs a compatibility decision to prevent two app versions producing different outcomes.
 
 Preserve unknown records. Fail closed for unknown required semantics; independently versioned optional modules may remain unavailable while compatible tasks work only if dependency isolation is proven. Otherwise open safe read-only diagnostics and explain upgrade needs. Do not silently skip an unknown event and report a complete view.
 
