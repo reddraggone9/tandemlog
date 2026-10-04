@@ -2120,7 +2120,7 @@ void main() {
         a!.db
             .select("SELECT value FROM metadata WHERE key='order_projection'")
             .single['value'],
-        '2',
+        '3',
       );
     },
   );
