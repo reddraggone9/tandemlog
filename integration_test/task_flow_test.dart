@@ -23,6 +23,8 @@ import 'header_search_test.dart' show registerHeaderSearchTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
 import 'data_integrity_test.dart' show registerDataIntegrityTests;
 import 'task_precision_test.dart' show registerTaskPrecisionTests;
+import 'release_version_test.dart' show registerReleaseVersionTests;
+import 'date_time_rows_test.dart' show registerDateTimeRowTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -157,6 +159,8 @@ void main() {
   registerInboxFlowTests();
   registerDataIntegrityTests();
   registerTaskPrecisionTests();
+  registerReleaseVersionTests();
+  registerDateTimeRowTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -2475,6 +2479,15 @@ void main() {
       await tester.tap(find.text('Monthly review'));
       await tester.pumpAndSettle();
       Future<void> fill(String label, String value) async {
+        if ((label == 'Start time' || label == 'Due time') &&
+            find.widgetWithText(TextField, label).evaluate().isEmpty) {
+          final add = find.byKey(
+            ValueKey(label == 'Start time' ? 'startAddTime' : 'dueAddTime'),
+          );
+          await tester.ensureVisible(add);
+          await tester.tap(add);
+          await tester.pumpAndSettle();
+        }
         if (label.startsWith('This occurrence') &&
             find.widgetWithText(TextField, label).evaluate().isEmpty) {
           await tester.tap(find.text('Edit existing override'));

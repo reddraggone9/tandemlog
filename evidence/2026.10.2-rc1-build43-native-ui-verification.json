@@ -1,0 +1,114 @@
+{
+  "version": "2026.10.2-rc.1",
+  "build_code": 43,
+  "platform": "native Linux GTK/Flutter debug",
+  "fixtures": "synthetic only",
+  "viewports": [
+    1200,
+    390,
+    320
+  ],
+  "text_scales": [
+    1,
+    2
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "checks": {
+    "running_release_name_copy": "pass",
+    "platform_counter_hidden": "pass",
+    "clipboard_failure_and_retry": "headless pass",
+    "contextual_unavailable": "headless pass",
+    "date_time_row_fit": "pass",
+    "add_time_focus": "pass",
+    "explicit_midnight": "pass",
+    "clear_preserves_date": "pass",
+    "zone_precision_cancel_save": "pass",
+    "draft_and_canonical_preservation": "pass",
+    "keyboard_geometry": "simulated Linux only",
+    "full_native_aggregate": "pending",
+    "exact_android_acceptance": "pending"
+  },
+  "observed_fix": "Desktop compact visual density shrank Add time below 48px; explicit standard density restores target.",
+  "reference_image": "Supported Library download failed; row layout follows approved written direction. No reference pixel comparison.",
+  "screenshots": [
+    {
+      "file": "01-light-list.png",
+      "sha256": "1003b542c2756202ce5930f6792c3fb6b4a4db40eda57a8a28ccdb969d374815"
+    },
+    {
+      "file": "02-light-settings-version.png",
+      "sha256": "efcca0de080349cb2f330fabb024e4234acbc61d6788ec9dd236ce07a4266cf3"
+    },
+    {
+      "file": "03-copy-confirmed.png",
+      "sha256": "721de9fe1aca851614c6368067638b7845db0f0ede068036687cd626dcdab1a4"
+    },
+    {
+      "file": "04-light-date-time-rows.png",
+      "sha256": "6d4a06707733645dba529bff80415cf4c5ffa66af740e13679f7971880c42ea9"
+    },
+    {
+      "file": "05-explicit-midnight.png",
+      "sha256": "37e520269a9f05f4cd3bdd79d126665bee34616c549e32d317bb404c25101f8b"
+    },
+    {
+      "file": "06-clear-preserves-date.png",
+      "sha256": "fde119c9a643dea5bd1927ac59b50cda00584dd67c6f9b0e740b7dad7d1f5723"
+    },
+    {
+      "file": "07-dark-settings-version.png",
+      "sha256": "2ba4d45900957aca329074199d6ee6d75955b7e0b4ac876fca0e380407931e35"
+    },
+    {
+      "file": "08-dark-date-time-rows.png",
+      "sha256": "bff398c96be3d1bf511657729bc592b197dfcf389c75aa9eaa693b55c8ebe599"
+    },
+    {
+      "file": "09-narrow-dark-date-rows.png",
+      "sha256": "ce1015c17f9b7545b021c5e4e15e77cb346120c78e911676efb322ad24859f94"
+    },
+    {
+      "file": "10-narrow-time-input.png",
+      "sha256": "d0b326721da06508bbee68d0b6ed34418e5d2ad2c690ed745c20ad090eb1df4d"
+    },
+    {
+      "file": "11-narrow-large-text.png",
+      "sha256": "04b209faf4f9338d6ff477ca68d5e9765ccd82b25ae06a08e74cc08a09a30c61"
+    },
+    {
+      "file": "12-narrow-simulated-ime.png",
+      "sha256": "d750c6360a293591f33949244a6c6db49689dac10853644628dc8ad2c5bde96e"
+    },
+    {
+      "file": "13-narrow-saved-list.png",
+      "sha256": "0fd3684476e39004705051881b09b7cab3226e5308c53a4a0cd8760aae0d96e3"
+    },
+    {
+      "file": "14-narrow-light-date-rows.png",
+      "sha256": "b3d7c71e98d3307c6f49365ae71c083d2b209778dd3dfd8362e4365a3f6e1e2c"
+    },
+    {
+      "file": "15-narrow-light-large-text.png",
+      "sha256": "748202d8de3e0c9da89fd438caf8102ee9017275e7fba140dfb3e603567db113"
+    },
+    {
+      "file": "16-narrow-light-large-settings.png",
+      "sha256": "a9affdc9d62d020e9e62789a5cadf0b2129dedab142795fda64f602d7e0da059"
+    }
+  ],
+  "demo": {
+    "filename": "tandemlog-2026.10.2-rc1-settings-date-demo43.mp4",
+    "seconds": 65.133333,
+    "bytes": 774436,
+    "sha256": "9f69b26622de2d3c263ba4e34b774f35306b19164c2f56c628175c52dfefec53",
+    "pointer_visible": true,
+    "label": "Native Linux; narrow/simulated keyboard not Android"
+  },
+  "schema_change": false,
+  "cache_version": 13,
+  "protocol_version": 3,
+  "checklist_model": "excluded; preserved outside repository pending text policy"
+}

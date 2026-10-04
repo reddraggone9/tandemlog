@@ -1,5 +1,23 @@
 # Current status — 2026-10-04
 
+## Next preview 2026.10.2-rc.1 build43 — presentation changes in validation
+
+Settings displays/copies only the running release name from the pinned Flutter
+SDK's compiled `appBuildName`; no dependency or startup metadata query is added.
+Start/Due date controls pair with compact optional-time controls, retaining the
+separate editor keys/validation. All 374 app tests, 18 policy tests and analysis
+pass locally. Two new production-app native Linux flows cover release-name
+clipboard access and date/time precision, clearing, Cancel/Save, zone and draft
+retention at 1200/390/320px and 100/200% text. A 16-shot actual native Linux pass
+covers both themes, optional midnight and simulated keyboard geometry. The
+full native aggregate, hosted builds and exact Android acceptance are pending.
+The reviewed 65-second desktop demo is delivered separately.
+
+The proposed one-level checklist is not in this candidate. Its unpublished
+model draft is preserved outside the repository while Lee considers plain-text
+collaborative merging for titles/notes, including Markdown source. This
+investigation changes no protocol/history. Stable2026.10.1 remains Latest.
+
 ## Published stable 2026.10.1 build 42 — Latest
 
 Lee explicitly approved promoting the latest RC as stable. Build 42 changes only the display version/build metadata from accepted RC41; production code, dependencies, package/signing identity and frozen v3 histories remain unchanged. Stable notes list only the three user-facing improvements since 2026.10.0; expected interactions and QA assurances are omitted. Full candidate gates and bounded exact Android upgrade acceptance remain required before stable Latest promotion. No new features, live-data operations or future stable versions are authorized by this acceptance.

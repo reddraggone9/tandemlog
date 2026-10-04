@@ -35,3 +35,5 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Android reconciliation review](android-reconciliation-review.md): accepted checkpoint policy, SAF notification capabilities, measurements and limits.
 - [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
+- [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
+- [Collaborative text investigation](text-merge-investigation.md): current loss scenarios and a proposed engine spike; no adopted protocol.

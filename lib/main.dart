@@ -22,6 +22,7 @@ import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
 import 'presentation/failure_message.dart';
+import 'presentation/release_version_tile.dart';
 import 'platform/view_time_source.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
@@ -557,6 +558,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       'No file manager is available to open this folder.',
                     ),
                   ),
+                const Divider(height: 32),
+                const ReleaseVersionTile(),
               ],
             ),
           ),

@@ -23,12 +23,120 @@ Future<void> mount(WidgetTester tester, Widget child) async {
 
 Finder input(String key) => find.byKey(ValueKey(key));
 Future<void> edit(WidgetTester tester, String key, String value) async {
+  if (input(key).evaluate().isEmpty && key.endsWith('Time')) {
+    final add = find.byKey(
+      ValueKey('${key.substring(0, key.length - 4)}AddTime'),
+    );
+    await tester.ensureVisible(add);
+    await tester.tap(add);
+    await tester.pump();
+  }
   await tester.ensureVisible(input(key));
   await tester.enterText(input(key), value);
   await tester.pump();
 }
 
 void main() {
+  testWidgets(
+    'date and optional time share rows and clear time independently',
+    (tester) async {
+      Map<String, dynamic>? saved;
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task({'dueDate': '2026-10-04', 'dueTime': '00:00'}),
+          save: (fields, _, _) async => saved = fields,
+          onClose: () {},
+        ),
+      );
+      await tester.ensureVisible(input('dueDate'));
+      expect(
+        tester.getTopLeft(input('dueDate')).dy,
+        tester.getTopLeft(input('dueTime')).dy,
+      );
+      expect(
+        tester.getSize(input('dueDate')).width,
+        greaterThan(tester.getSize(input('dueTime')).width),
+      );
+      expect(find.byKey(const ValueKey('startAddTime')), findsOneWidget);
+      final semantics = tester.ensureSemantics();
+      try {
+        await tester.ensureVisible(find.byKey(const ValueKey('startAddTime')));
+        await tester.pumpAndSettle();
+        expect(
+          tester.getSemantics(find.byKey(const ValueKey('startAddTime'))).label,
+          'Add Start time',
+        );
+      } finally {
+        semantics.dispose();
+      }
+      await tester.tap(find.byTooltip('Clear Due time'));
+      await tester.pump();
+      expect(
+        tester.widget<TextField>(input('dueDate')).controller!.text,
+        '2026-10-04',
+      );
+      expect(input('dueTime'), findsNothing);
+      final addTime = find.byKey(const ValueKey('dueAddTime'));
+      expect(addTime, findsOneWidget);
+      await tester.tap(addTime);
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(input('dueTime')).focusNode!.hasFocus,
+        isTrue,
+      );
+      expect(tester.widget<TextField>(input('dueTime')).controller!.text, '');
+      await tester.enterText(input('dueTime'), '00:00');
+      await tester.pump();
+      await tester.tap(find.byTooltip('Clear Due time'));
+      await tester.pump();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect((saved!['schedule'] as Map)['dueTime'], isNull);
+      expect((saved!['schedule'] as Map)['dueDate'], '2026-10-04');
+    },
+  );
+
+  testWidgets('date rows stack at narrow widths and enlarged text', (
+    tester,
+  ) async {
+    for (final configuration in [(390.0, 1.0), (290.0, 1.0), (600.0, 2.0)]) {
+      await tester.binding.setSurfaceSize(Size(configuration.$1, 1000));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(
+              textScaler: TextScaler.linear(configuration.$2),
+            ),
+            child: Scaffold(
+              body: TaskEditor(
+                panel: true,
+                task: task({'dueDate': '2026-10-04', 'dueTime': '00:00'}),
+                save: (_, _, _) async {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.ensureVisible(input('dueTime'));
+      if (configuration.$1 == 390) {
+        expect(
+          tester.getTopLeft(input('dueTime')).dy,
+          tester.getTopLeft(input('dueDate')).dy,
+        );
+      } else {
+        expect(
+          tester.getTopLeft(input('dueTime')).dy,
+          greaterThan(tester.getTopLeft(input('dueDate')).dy),
+        );
+      }
+      expect(tester.takeException(), isNull);
+    }
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+  });
+
   for (final fieldKey in ['title', 'description']) {
     testWidgets(
       '$fieldKey caret survives viewport and text scale changes without unrelated jumps',

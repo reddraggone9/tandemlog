@@ -155,13 +155,19 @@ class _EditorBodyState extends State<_EditorBody> {
   late final List<Map<String, dynamic>> originals;
   final controllers = <String, TextEditingController>{};
   final touched = <String>{}, applied = <String>{}, mixed = <String>{};
+  final editingTimes = <String>{};
   final scroll = ScrollController();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
   String? failure, assignee;
   bool applyAssignee = false;
   Future<bool>? closeRequest;
-  double notesMaxHeight = 360;
-  final textFocus = {'title': FocusNode(), 'description': FocusNode()};
+  double notesMaxHeight = 360, scheduleWidth = 480;
+  final textFocus = {
+    'title': FocusNode(),
+    'description': FocusNode(),
+    'startTime': FocusNode(),
+    'dueTime': FocusNode(),
+  };
   (BoxConstraints, Size, EdgeInsets, double, bool)? textViewport;
 
   void revealFocusedCaret() {
@@ -525,6 +531,19 @@ class _EditorBodyState extends State<_EditorBody> {
                         }
                       },
               )
+            : (key == 'startTime' || key == 'dueTime') &&
+                  controllers[key]!.text.isNotEmpty
+            ? IconButton(
+                tooltip: 'Clear $label',
+                icon: const Icon(Icons.close),
+                onPressed: busy
+                    ? null
+                    : () {
+                        textFocus[key]?.unfocus();
+                        editingTimes.remove(key);
+                        controllers[key]!.clear();
+                      },
+              )
             : key == 'recurrence'
             ? PopupMenuButton<String>(
                 tooltip: 'Repeat examples',
@@ -572,10 +591,60 @@ class _EditorBodyState extends State<_EditorBody> {
     );
   }
 
+  Widget dateTimeRow(String prefix, String label) {
+    final date = field('${prefix}Date', '$label date', hint: 'YYYY-MM-DD');
+    final timeKey = '${prefix}Time';
+    final time =
+        controllers[timeKey]!.text.isNotEmpty ||
+            editingTimes.contains(timeKey) ||
+            mixed.contains(timeKey)
+        ? field(timeKey, '$label time', hint: 'HH:mm')
+        : Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: OutlinedButton(
+              key: ValueKey('${prefix}AddTime'),
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(0, 48),
+                visualDensity: VisualDensity.standard,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+              ),
+              onPressed: busy
+                  ? null
+                  : () {
+                      setState(() => editingTimes.add(timeKey));
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        if (mounted) textFocus[timeKey]!.requestFocus();
+                      });
+                    },
+              child: Text('Add time', semanticsLabel: 'Add $label time'),
+            ),
+          );
+    // Use the editor's outer constraints: AlertDialog asks its content for
+    // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
+    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+    if (scheduleWidth < (bulk ? 400 : 300) * scale) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [date, time],
+      );
+    }
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(flex: 5, child: date),
+        const SizedBox(width: 12),
+        Expanded(flex: 3, child: time),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final media = MediaQuery.of(context);
+      scheduleWidth = widget.panel
+          ? (constraints.maxWidth - 40).clamp(0.0, double.infinity)
+          : (media.size.width - 64).clamp(0.0, 480.0);
       final viewport = (
         constraints,
         media.size,
@@ -684,10 +753,8 @@ class _EditorBodyState extends State<_EditorBody> {
               ],
             ),
           const SizedBox(height: 12),
-          field('startDate', 'Start date', hint: 'YYYY-MM-DD'),
-          field('startTime', 'Start time', hint: 'HH:mm'),
-          field('dueDate', 'Due date', hint: 'YYYY-MM-DD'),
-          field('dueTime', 'Due time', hint: 'HH:mm'),
+          dateTimeRow('start', 'Start'),
+          dateTimeRow('due', 'Due'),
           field('recurrence', 'Repeat', hint: 'every week when done'),
           if (repeating)
             const Padding(

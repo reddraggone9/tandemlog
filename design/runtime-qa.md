@@ -1,4 +1,24 @@
-# Runtime and visual QA — updated 2026-10-03
+# Runtime and visual QA — updated 2026-10-04
+
+## 2026.10.2-rc.1 build43 — Settings/version and date-row presentation
+
+Native Linux GTK/Flutter debug inspection uses synthetic tasks, 1200px desktop,
+390/320px narrow viewports, both themes and 100/200% text. Settings displays and
+copies the running compiled release name, with no platform counter. Date/time
+rows fit at normal phone width, stack at enlarged text, focus on Add time,
+retain explicit midnight, and clear only time. A desktop visual-density override
+was needed to retain a 48px Add time target. The native Save/Cancel flow retains
+zone/precision and canonical contents as asserted; simulated keyboard insets
+prove Linux layout only. The inaccessible Library reference image was not
+inspected; the implemented layout follows Lee's approved written direction.
+
+Sixteen screenshots and the 65-second pointer-visible desktop demonstration
+were inspected. [UI receipt](../evidence/2026.10.2-rc1-build43-native-ui-verification.json).
+The first full aggregate passed 46 flows; one older test assumed a permanently
+visible empty time field. Its updated Add time interaction passes along with
+the two new flows. The final aggregate rerun, hosted builds/install lifecycle
+and exact Android acceptance remain separate gates. No runtime Windows visual
+claim, real-phone claim, protocol/schema or cache change follows from Linux.
 
 ## Actual environment and target matrix
 
