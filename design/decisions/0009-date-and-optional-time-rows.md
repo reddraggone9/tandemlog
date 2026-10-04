@@ -41,3 +41,13 @@ An [isolated follow-up investigation](../date-time-layout-investigation.md)
 measures populated fields before tightening enlarged-text stacking. It remains
 a separately reviewed presentation candidate; its native evidence does not
 promote Android or release acceptance.
+
+The revised follow-up removes redundant horizontal field padding and assigns
+the 5:3 bulk ratio to the inputs themselves, with fixed apply checkboxes beside
+them. Stable full-value and placeholder measurement keeps entering/clearing Time
+from changing the layout. Native Linux measured limits improve at ordinary and
+enlarged text; controls use explicit 48px targets. Lee approved the enlarged-text
+improvement and simplified Before/After media; the ordinary-width correction
+has separate native and independent review evidence. See the
+[reconciliation record](../../evidence/date-time-width-reconciliation/README.md).
+Exact signed Android affected-flow acceptance remains required before release.

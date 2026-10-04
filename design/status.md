@@ -1,5 +1,26 @@
 # Current status — 2026-10-04
 
+## Prepared preview 2026.10.2-rc.3 build45 — narrower date/time layout
+
+The corrected isolated branch reduces ordinary native Linux side-by-side limits
+from 300 to 288px for single editing and 400 to 384px for bulk at 100% text.
+At 130%, limits improve from 390 to 322px and 520 to 418px. This supersedes the
+earlier enlarged-text-only proposal that raised ordinary limits. Values and ISO
+hints remain readable; actual input proportions are 5:3 and targets are 48px.
+No date-picker redesign, protocol/cache, dependency or signing change is included.
+
+All 377 unit/widget tests pass; analysis and formatting are clean. Focused native
+geometry and the production-app date/time workflow pass. Both themes/narrow and
+enlarged-text evidence remain separate from Android acceptance. The final matched
+images contain only centered Before/After labels; independent actual notes/media
+review passes with verified immutable public image bytes. Historical direct-Time
+media describes build43→44 and is excluded from the new build45 change narrative.
+See the [reconciliation evidence](../evidence/date-time-width-reconciliation/README.md).
+
+The branch is prepared for all-platform/signed candidate checks after coordinator
+handoff. It is not signed or published; exact Android affected-flow acceptance
+and all release gates remain pending. Stable 2026.10.1 is unchanged.
+
 ## Next preview2026.10.2-rc.2 build44 — editor refinement
 
 Approved scope: always-visible blank Time inputs with the existing clear X,

@@ -1,10 +1,10 @@
 {
   "checks": {
-    "focused_widget_editor": "32 passed; logs/date-width-reconciliation-aligned-widget.log",
-    "native_boundaries": "6 single/bulk scale variants passed; logs/date-width-final-native.log",
-    "production_app_flow": "integration_test/date_time_rows_test.dart passed; logs/date-width-final-app-native.log",
-    "native_final_capsules": "5 matched normal single/bulk/blank populated cases passed; logs/date-width-final-capsules.log",
-    "native_faded_media": "published and working cases passed; logs/date-width-faded-before.log and date-width-faded-after.log",
+    "focused_widget_editor": "32 passed; logs/date-width-reconciliation-aligned-widget.txt",
+    "native_boundaries": "6 single/bulk scale variants passed; logs/date-width-final-native.txt",
+    "production_app_flow": "integration_test/date_time_rows_test.dart passed; logs/date-width-final-app-native.txt",
+    "native_final_capsules": "5 matched normal single/bulk/blank populated cases passed; logs/date-width-final-capsules.txt",
+    "native_faded_media": "published and working cases passed; logs/date-width-faded-before.txt and date-width-faded-after.txt",
     "analyze": "No issues found",
     "format": "3 relevant Dart files formatted",
     "diff_check": "clean"
