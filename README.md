@@ -9,7 +9,7 @@ Shared household tasks for Android, Windows and Linux. Work offline and keep you
 
 ## Sync your way
 
-Sync between devices using tools like Syncthing or Dropbox. File sync conflicts are avoided because each device only writes its own log in the synced folder. Choose a folder that Tandemlog and your sync tool can both read and write.
+Sync between devices using tools like Syncthing or Dropbox. Each device writes its own log in the synced folder, avoiding file sync conflicts. Tandemlog combines those logs so every device sees the same data once synced.
 
 ## Get started
 
