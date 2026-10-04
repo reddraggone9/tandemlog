@@ -1,4 +1,4 @@
-Preview draft; version assigned only after candidate acceptance.
+Experimental 2026.10.2-rc.3 preview.
 
 - Start and Due stay side by side at more widths when text is enlarged.
 
