@@ -1,0 +1,28 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-date-layout/integration_test/date_layout_comparison_test.dart
+Building Linux application...                                   
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: measure populated schedule content
+MEASURE scale=1.0 key=dueDate text=88.52020263671875 editable=128.5 field=192.5 chrome=64.0
+MEASURE scale=1.0 key=dueTime text=43.39610290527344 editable=51.5 field=115.5 chrome=64.0
+MEASURE scale=2.0 key=dueDate text=172.040283203125 editable=228.5 field=292.5 chrome=64.0
+MEASURE scale=2.0 key=dueTime text=84.29214477539062 editable=111.5 field=175.5 chrome=64.0
+MEASURE scale=1.0 key=dueDate text=88.52020263671875 editable=176.0 field=240.0 chrome=64.0
+MEASURE scale=1.0 key=dueTime text=43.39610290527344 editable=64.0 field=128.0 chrome=64.0
+MEASURE scale=2.0 key=dueDate text=172.040283203125 editable=263.5 field=327.5 chrome=64.0
+MEASURE scale=2.0 key=dueTime text=84.29214477539062 editable=116.5 field=180.5 chrome=64.0
+00:04 +1: (tearDownAll)
+00:04 +1: All tests passed!

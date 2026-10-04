@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+import 'dart:io';
+import 'package:integration_test/integration_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/presentation/task_editor.dart';
+void main() {
+ IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+ Directory(Platform.environment['DATE_LAYOUT_EVIDENCE']!).createSync(recursive:true);
+ testWidgets('measure populated schedule content', (tester) async {
+  for(final config in [(false,360.0,1.0),(false,520.0,2.0),(true,500.0,1.0),(true,640.0,2.0)]) {
+ final bulk=config.$1,width=config.$2,scale=config.$3;
+   tester.view.devicePixelRatio=1; await tester.binding.setSurfaceSize(Size(width,1000));
+   await tester.pumpWidget(MaterialApp(theme: ThemeData(inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder(),filled:true)),home: MediaQuery(data: MediaQueryData(textScaler: TextScaler.linear(scale)),child: Scaffold(body: bulk ? BulkTaskEditor(panel:true,tasks:const [{'id':'test','title':'Original','description':'','schedule':{'dueDate':'2026-10-04','dueTime':'23:59'}},{'id':'other','title':'Other','schedule':{'dueDate':'2026-10-04','dueTime':'23:59'}}],onSave:(_)async{}) : TaskEditor(panel:true,task:const {'id':'test','title':'Original','description':'','schedule':{'dueDate':'2026-10-04','dueTime':'23:59'}},save: (_,__,___) async {})))));
+   await tester.pumpAndSettle();
+   for(final key in ['dueDate','dueTime']) {
+    final f=find.byKey(ValueKey(key));
+    final e=find.descendant(of:f,matching:find.byType(EditableText));
+    final editable=tester.widget<EditableText>(e);
+    final painter=TextPainter(text:TextSpan(text:editable.controller.text,style:editable.style),textDirection:TextDirection.ltr,textScaler:TextScaler.linear(scale))..layout();
+    final render=tester.state<EditableTextState>(e).renderEditable;
+    print('MEASURE scale=$scale key=$key text=${painter.width} editable=${render.size.width} field=${tester.getSize(f).width} chrome=${tester.getSize(f).width-render.size.width}');
+   }
+   final win=(await Process.run('xdotool',['search','--onlyvisible','--name',r'^tandemlog$'])).stdout.toString().trim().split('\n').last;
+   await Process.run('xdotool',['windowsize',win,width.round().toString(),'1000']);
+   await tester.pumpAndSettle();
+   await Future<void>.delayed(const Duration(milliseconds:500));
+   await Process.run('import',['-window',win,'${Platform.environment['DATE_LAYOUT_EVIDENCE']}/${bulk?'bulk':'single'}-$width-$scale.png']);
+  }
+ });
+}

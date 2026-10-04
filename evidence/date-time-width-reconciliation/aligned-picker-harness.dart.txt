@@ -1,0 +1,30 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:tandemlog/presentation/task_editor.dart';
+void main(){
+ IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+ testWidgets('record native baseline calendar bounds and overflow', (tester)async{
+  final out=Directory(Platform.environment['PICKER_OUT']!);await out.create(recursive:true);
+  for(final config in [(329.0,1.0),(401.0,1.3)]) {
+   final winBefore=(await Process.run('xdotool',['search','--onlyvisible','--name',r'^tandemlog$'])).stdout.toString().trim().split('\n').last;
+   await Process.run('xdotool',['windowsize',winBefore,config.$1.round().toString(),'1000']);await tester.pumpAndSettle();
+   await tester.binding.setSurfaceSize(Size(config.$1,1000));tester.view.devicePixelRatio=1;
+   final colors=ColorScheme.fromSeed(seedColor:const Color(0xff267461),brightness:Brightness.dark);
+   final errors=<FlutterErrorDetails>[];final oldHandler=FlutterError.onError;
+   FlutterError.onError=(details){errors.add(details);oldHandler?.call(details);};
+   try{
+    await tester.pumpWidget(MaterialApp(debugShowCheckedModeBanner:false,builder:(context,child)=>MediaQuery(data:MediaQueryData(size:Size(config.$1,1000),textScaler:TextScaler.linear(config.$2)),child:child!),theme:ThemeData(useMaterial3:true,colorScheme:colors,scaffoldBackgroundColor:colors.surface,inputDecorationTheme:InputDecorationTheme(border:const OutlineInputBorder(),filled:true,fillColor:colors.surfaceContainerLowest)),home:MediaQuery(data:MediaQueryData(size:Size(config.$1,1000),textScaler:TextScaler.linear(config.$2)),child:Scaffold(body:TaskEditor(panel:true,task:const{'id':'synthetic','title':'Review weekend plan','description':'','schedule':{'dueDate':'2026-10-04','dueTime':'23:59'}},save:(_,_,_)async{})))));
+    await tester.pumpAndSettle();await tester.ensureVisible(find.byTooltip('Choose Due date'));await tester.tap(find.byTooltip('Choose Due date'));await tester.pumpAndSettle();
+    final name='${config.$1}-${config.$2}';final dialog=find.byType(DatePickerDialog),calendar=find.byType(CalendarDatePicker);
+    final report={'viewport':[config.$1,1000],'scale':config.$2,'dialog_rect':tester.getRect(dialog).toString(),'visible_material_rect':tester.getRect(find.descendant(of:dialog,matching:find.byType(Material)).first).toString(),'calendar_rect':tester.getRect(calendar).toString(),'errors':errors.map((e)=>e.toDiagnosticsNode().toStringDeep()).toList(),'exception':tester.takeException()?.toString()};
+    final win=(await Process.run('xdotool',['search','--onlyvisible','--name',r'^tandemlog$'])).stdout.toString().trim().split('\n').last;
+    await Process.run('xdotool',['windowsize',win,config.$1.round().toString(),'1000']);await tester.pumpAndSettle();await Future<void>.delayed(const Duration(milliseconds:500));
+    await Process.run('import',['-window',win,'${out.path}/$name.png']);await File('${out.path}/$name.json').writeAsString(jsonEncode(report));
+    await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();while(tester.takeException()!=null){}
+   }finally{FlutterError.onError=oldHandler;}
+  }
+ });
+}

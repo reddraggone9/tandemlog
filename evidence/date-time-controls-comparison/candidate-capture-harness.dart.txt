@@ -1,0 +1,39 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:tandemlog/presentation/task_editor.dart';
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('capture matching native blank time controls', (tester) async {
+    final out=Directory(Platform.environment['DATE_CONTROLS_OUT']!);await out.create(recursive:true);
+    final old=Platform.environment['DATE_CONTROLS_OLD']=='1';
+    for(final config in [(390.0,1.0),(520.0,2.0)]) {
+      final width=config.$1,scale=config.$2;
+      tester.view.devicePixelRatio=1;
+      await tester.binding.setSurfaceSize(Size(width,1000));
+      final colors=ColorScheme.fromSeed(seedColor:const Color(0xff267461),brightness:Brightness.light);
+      await tester.pumpWidget(MaterialApp(debugShowCheckedModeBanner:false,theme:ThemeData(useMaterial3:true,colorScheme:colors,scaffoldBackgroundColor:const Color(0xfff6f7f2),inputDecorationTheme:InputDecorationTheme(border:const OutlineInputBorder(),filled:true,fillColor:colors.surfaceContainerLowest)),home:MediaQuery(data:MediaQueryData(size:Size(width,1000),textScaler:TextScaler.linear(scale)),child:Scaffold(body:TaskEditor(panel:true,task:const{'id':'synthetic','title':'Review weekend plan','description':'Check the outline.','schedule':{'startDate':'2026-10-03','dueDate':'2026-10-04','timeZone':'UTC'}},save:(_,_,_)async{})))));
+      await tester.pumpAndSettle();
+      final date=find.byKey(const ValueKey('dueDate'));
+      final time=find.byKey(ValueKey(old?'dueAddTime':'dueTime'));
+      await tester.ensureVisible(time);await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const ValueKey('startDate')));await tester.pumpAndSettle();
+      expect(time,findsOneWidget);expect(tester.getSize(time).height,greaterThanOrEqualTo(48));
+      final result=await Process.run('xdotool',['search','--onlyvisible','--name',r'^tandemlog$']);expect(result.exitCode,0);
+      final window=result.stdout.toString().trim().split('\n').last;
+      await Process.run('xdotool',['windowmove',window,'0','0']);
+      await Process.run('xdotool',['windowsize',window,width.round().toString(),'1000']);
+      await tester.pumpAndSettle();await Future<void>.delayed(const Duration(milliseconds:500));
+      final start=tester.getRect(find.byKey(const ValueKey('startDate')));
+      final dateRect=tester.getRect(date),timeRect=tester.getRect(time);
+      final name='${width.round()}-${scale.toInt()}x';
+      expect((await Process.run('import',['-window',window,'${out.path}/$name-raw.png'])).exitCode,0);
+      await File('${out.path}/$name-geometry.json').writeAsString(jsonEncode({'viewport':[width,1000],'scale':scale,'crop':[12,(start.top-12).floor(),width-12,((dateRect.bottom>timeRect.bottom?dateRect.bottom:timeRect.bottom)+12).ceil()],'time_target':[tester.getSize(time).width,tester.getSize(time).height],'old_add_time':old}));
+      expect(tester.takeException(),isNull);
+      await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();
+    }
+  });
+}

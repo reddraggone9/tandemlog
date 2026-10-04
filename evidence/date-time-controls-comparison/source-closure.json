@@ -1,0 +1,39 @@
+{
+  "sources": {
+    "rc43": {
+      "git_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "git_archive_sha256": "a5cd954954aff8fbc1a1263cd11cad25c0dbc8e0567a8d920cbb2a639ad7fac9",
+      "task_editor_sha256": "5bdec39f453288eacabd50cabd6d8cf61ec337bfc9b05470370242e8d3689dd5",
+      "source_pubspec_version": "2026.10.2-rc.1+43",
+      "runtime": "actual native Linux GTK/Flutter debug targeted editor harness",
+      "release_status": "historical published preview"
+    },
+    "rc44": {
+      "git_commit": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+      "git_archive_sha256": "61e71a045df57538389d2b0e1ea203e9af2db07aec512e8c2e7e335186132af1",
+      "task_editor_sha256": "59ca001b6c711e5e41b34dd93a933ae677c659d2ca7ff546e1b54604f5a1e737",
+      "source_pubspec_version": "2026.10.2-rc.2+44",
+      "runtime": "actual native Linux GTK/Flutter debug targeted editor harness",
+      "release_status": "historical published preview"
+    },
+    "candidate": {
+      "git_commit": "2a251aa2c67430584c66cb7c27ee53b5eb0c158a",
+      "git_archive_sha256": "8dc47b4c32cb03fee254bd4edde93cb3f878f9382fd06d1984c7beec3560fb00",
+      "task_editor_sha256": "70961d5e843ca6fc552ff13bc15a9686b581a7389cbea4775e2cf5ebe31ad582",
+      "source_pubspec_version": "2026.10.2-rc.2+44",
+      "runtime": "actual native Linux GTK/Flutter debug targeted editor harness",
+      "release_status": "isolated unpublished experiment; retained build44 version"
+    }
+  },
+  "harness_data": {
+    "title": "Review weekend plan",
+    "description": "Check the outline.",
+    "startDate": "2026-10-03",
+    "dueDate": "2026-10-04",
+    "timeZone": "UTC",
+    "times": "blank"
+  },
+  "theme": "same green seed0xff267461 light app theme",
+  "primary": "build43 Add time versus build44 direct Time (already shipped change)",
+  "secondary": "build44 versus experiment content-measured stacking only"
+}

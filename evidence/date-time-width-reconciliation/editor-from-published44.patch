@@ -1,0 +1,462 @@
+diff --git a/lib/presentation/task_editor.dart b/lib/presentation/task_editor.dart
+index 98df03f..5988950 100644
+--- a/lib/presentation/task_editor.dart
++++ b/lib/presentation/task_editor.dart
+@@ -497,7 +497,14 @@ class _EditorBodyState extends State<_EditorBody> {
+     String? hint,
+     String? clearLabel,
+     int lines = 1,
++    bool withApplyControl = true,
+   }) {
++    final dateTimeField = const {
++      'startDate',
++      'startTime',
++      'dueDate',
++      'dueTime',
++    }.contains(key);
+     final input = TextField(
+       key: ValueKey(key),
+       controller: controllers[key],
+@@ -510,9 +517,21 @@ class _EditorBodyState extends State<_EditorBody> {
+       textInputAction: key == 'title' ? TextInputAction.next : null,
+       decoration: InputDecoration(
+         labelText: label,
++        border: dateTimeField ? const OutlineInputBorder(gapPadding: 2) : null,
++        suffixIconConstraints: dateTimeField
++            ? const BoxConstraints(minWidth: 48, minHeight: 48)
++            : null,
++        contentPadding: dateTimeField
++            ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
++            : null,
+         suffixIcon: key.endsWith('Date')
+             ? IconButton(
+                 tooltip: 'Choose $label',
++                visualDensity: dateTimeField ? VisualDensity.standard : null,
++                padding: dateTimeField ? EdgeInsets.zero : null,
++                constraints: dateTimeField
++                    ? const BoxConstraints(minWidth: 48, minHeight: 48)
++                    : null,
+                 icon: const Icon(Icons.calendar_today_outlined),
+                 onPressed: busy
+                     ? null
+@@ -540,6 +559,9 @@ class _EditorBodyState extends State<_EditorBody> {
+                   controllers[key]!.text.isNotEmpty
+             ? IconButton(
+                 tooltip: 'Clear ${clearLabel ?? label}',
++                visualDensity: VisualDensity.standard,
++                padding: EdgeInsets.zero,
++                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+                 icon: const Icon(Icons.close),
+                 onPressed: busy
+                     ? null
+@@ -567,22 +589,11 @@ class _EditorBodyState extends State<_EditorBody> {
+     );
+     return Padding(
+       padding: const EdgeInsets.only(bottom: 12),
+-      child: bulk && TaskSchedule.keys.contains(key)
++      child: bulk && withApplyControl && TaskSchedule.keys.contains(key)
+           ? Row(
+               crossAxisAlignment: CrossAxisAlignment.start,
+               children: [
+-                Checkbox(
+-                  value: applied.contains(key),
+-                  onChanged: busy
+-                      ? null
+-                      : (v) => setState(() {
+-                          if (v!) {
+-                            applied.add(key);
+-                          } else {
+-                            applied.remove(key);
+-                          }
+-                        }),
+-                ),
++                scheduleApply(key, fullTarget: dateTimeField),
+                 Expanded(child: input),
+               ],
+             )
+@@ -595,17 +606,81 @@ class _EditorBodyState extends State<_EditorBody> {
+     );
+   }
+ 
++  Widget scheduleApply(String key, {bool fullTarget = false}) => Checkbox(
++    visualDensity: fullTarget ? VisualDensity.standard : null,
++    materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
++    key: ValueKey('${key}Apply'),
++    value: applied.contains(key),
++    onChanged: busy
++        ? null
++        : (value) => setState(() {
++            if (value!) {
++              applied.add(key);
++            } else {
++              applied.remove(key);
++            }
++          }),
++  );
++
+   Widget dateTimeRow(String prefix, String label) {
+-    final date = field('${prefix}Date', '$label date', hint: 'YYYY-MM-DD');
++    // Use the editor's outer constraints: AlertDialog asks its content for
++    // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
++    // Measure supported ISO date / 24-hour time content. Fixed icon targets and
++    // padding do not grow with text scale; multiplying the whole row width made
++    // enlarged-text rows stack substantially before their contents required it.
++    final style = Theme.of(context).textTheme.bodyLarge!;
++    double textWidth(String text) {
++      final painter = TextPainter(
++        text: TextSpan(text: text, style: style),
++        textDirection: Directionality.of(context),
++        textScaler: MediaQuery.textScalerOf(context),
++      )..layout();
++      final width = painter.width;
++      painter.dispose();
++      return width;
++    }
++
++    // 4px leading padding + 2px outline gap + 48px suffix target
++    // + 4px Material text-to-suffix gap + 2px caret clearance.
++    // A blank Time hint has no clear button, so it uses only padding.
++    final dateValueWidth = textWidth('2026-10-04');
++    final dateHintWidth = textWidth('YYYY-MM-DD');
++    final dateWidth =
++        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 60;
++    final populatedTimeWidth = textWidth('23:59') + 60;
++    final blankTimeWidth = textWidth('HH:mm') + 10;
++    final timeWidth = populatedTimeWidth > blankTimeWidth
++        ? populatedTimeWidth
++        : blankTimeWidth;
++    // Allocate the 5:3 ratio to the inputs themselves. Fixed apply checkboxes
++    // sit beside each input instead of consuming the narrower time flex cell.
++    final applyWidth = bulk ? 96.0 : 0.0;
++    final dateRowWidth = dateWidth * 8 / 5;
++    final timeRowWidth = timeWidth * 8 / 3;
++    final minimumWidth =
++        12 +
++        applyWidth +
++        (dateRowWidth > timeRowWidth ? dateRowWidth : timeRowWidth);
++    final stacked = scheduleWidth < minimumWidth.ceilToDouble();
++    final dateKey = '${prefix}Date';
+     final timeKey = '${prefix}Time';
++    final date = field(
++      dateKey,
++      '$label date',
++      hint: 'YYYY-MM-DD',
++      withApplyControl: stacked,
++    );
+     final time = Semantics(
+       label: label,
+-      child: field(timeKey, 'Time', hint: 'HH:mm', clearLabel: '$label time'),
++      child: field(
++        timeKey,
++        'Time',
++        hint: 'HH:mm',
++        clearLabel: '$label time',
++        withApplyControl: stacked,
++      ),
+     );
+-    // Use the editor's outer constraints: AlertDialog asks its content for
+-    // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
+-    final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
+-    if (scheduleWidth < (bulk ? 400 : 300) * scale) {
++    if (stacked) {
+       return Column(
+         crossAxisAlignment: CrossAxisAlignment.stretch,
+         children: [date, time],
+@@ -614,8 +689,10 @@ class _EditorBodyState extends State<_EditorBody> {
+     return Row(
+       crossAxisAlignment: CrossAxisAlignment.start,
+       children: [
++        if (bulk) scheduleApply(dateKey, fullTarget: true),
+         Expanded(flex: 5, child: date),
+         const SizedBox(width: 12),
++        if (bulk) scheduleApply(timeKey, fullTarget: true),
+         Expanded(flex: 3, child: time),
+       ],
+     );
+diff --git a/test/date_time_layout_test.dart b/test/date_time_layout_test.dart
+new file mode 100644
+index 0000000..56c9a0b
+--- /dev/null
++++ b/test/date_time_layout_test.dart
+@@ -0,0 +1,244 @@
++import 'package:flutter/material.dart';
++import 'package:flutter_test/flutter_test.dart';
++import 'package:tandemlog/presentation/task_editor.dart';
++
++void main() => registerDateTimeLayoutTests();
++void registerDateTimeLayoutTests({
++  Future<void> Function(WidgetTester, String)? capture,
++}) {
++  testWidgets(
++    'populated rows fit at measured boundary and retain composing drafts',
++    (tester) async {
++      addTearDown(() => tester.binding.setSurfaceSize(null));
++      const source = {
++        'id': 'test',
++        'title': 'Original',
++        'description': '',
++        'schedule': {'dueDate': '2026-10-04', 'dueTime': '23:59'},
++      };
++      for (final bulk in [false, true]) {
++        for (final scale in [1.0, 1.3, 2.0]) {
++          final key = GlobalKey();
++          var viewportSize = const Size(1100, 1000);
++          Widget host() => MaterialApp(
++            builder: (context, child) => MediaQuery(
++              data: MediaQueryData(
++                size: viewportSize,
++                textScaler: TextScaler.linear(scale),
++              ),
++              child: child!,
++            ),
++            theme: ThemeData(
++              inputDecorationTheme: const InputDecorationTheme(
++                border: OutlineInputBorder(),
++                filled: true,
++              ),
++            ),
++            home: MediaQuery(
++              data: MediaQueryData(
++                size: viewportSize,
++                textScaler: TextScaler.linear(scale),
++              ),
++              child: Scaffold(
++                body: bulk
++                    ? BulkTaskEditor(
++                        key: key,
++                        panel: true,
++                        tasks: const [source, source],
++                        onSave: (_) async {},
++                      )
++                    : TaskEditor(
++                        key: key,
++                        panel: true,
++                        task: source,
++                        save: (_, _, _) async {},
++                      ),
++              ),
++            ),
++          );
++          await tester.binding.setSurfaceSize(const Size(1100, 1000));
++          await tester.pumpWidget(host());
++          await tester.pumpAndSettle();
++          final date = find.byKey(const ValueKey('dueDate')),
++              time = find.byKey(const ValueKey('dueTime'));
++          final editable = tester.widget<EditableText>(
++            find.descendant(of: time, matching: find.byType(EditableText)),
++          );
++          double measure(String text) {
++            final p = TextPainter(
++              text: TextSpan(text: text, style: editable.style),
++              textDirection: TextDirection.ltr,
++              textScaler: TextScaler.linear(scale),
++            )..layout();
++            final w = p.width;
++            p.dispose();
++            return w;
++          }
++
++          final timeWidth = (measure('23:59') + 60 > measure('HH:mm') + 10
++              ? measure('23:59') + 60
++              : measure('HH:mm') + 10);
++          final dateWidth =
++              (measure('2026-10-04') > measure('YYYY-MM-DD')
++                  ? measure('2026-10-04')
++                  : measure('YYYY-MM-DD')) +
++              60;
++          final boundary =
++              (12 +
++                      (bulk ? 96 : 0) +
++                      (timeWidth * 8 / 3 > dateWidth * 8 / 5
++                          ? timeWidth * 8 / 3
++                          : dateWidth * 8 / 5))
++                  .ceilToDouble();
++          debugPrint('LAYOUT bulk=$bulk scale=$scale rowBoundary=$boundary');
++          var focused = false;
++          for (final delta in [1.0, -1.0, 1.0]) {
++            viewportSize = Size(boundary + 40 + delta, 1000);
++            await tester.binding.setSurfaceSize(viewportSize);
++            await tester.pumpWidget(host());
++            await tester.pumpAndSettle();
++            if (focused) {
++              expect(
++                tester.widget<TextField>(time).focusNode!.hasFocus,
++                isTrue,
++              );
++              expect(
++                tester.widget<TextField>(time).controller!.value.composing,
++                const TextRange(start: 0, end: 2),
++              );
++            }
++            await tester.ensureVisible(time);
++            await tester.pumpAndSettle();
++            expect(
++              tester.getTopLeft(time).dy,
++              delta > 0
++                  ? closeTo(tester.getTopLeft(date).dy, .5)
++                  : greaterThan(tester.getTopLeft(date).dy),
++            );
++            if (delta > 0) {
++              for (final f in [date, time]) {
++                final e = find.descendant(
++                  of: f,
++                  matching: find.byType(EditableText),
++                );
++                final state = tester.state<EditableTextState>(e);
++                final p = TextPainter(
++                  text: TextSpan(
++                    text: state.widget.controller.text,
++                    style: state.widget.style,
++                  ),
++                  textDirection: TextDirection.ltr,
++                  textScaler: TextScaler.linear(scale),
++                )..layout();
++                expect(
++                  state.renderEditable.size.width,
++                  greaterThanOrEqualTo(p.width + 1),
++                );
++                p.dispose();
++              }
++              expect(
++                tester.getSize(date).width / tester.getSize(time).width,
++                closeTo(5 / 3, .01),
++              );
++              expect(
++                tester.getSize(find.byTooltip('Choose Due date')).shortestSide,
++                greaterThanOrEqualTo(48),
++              );
++              if (bulk) {
++                expect(
++                  tester
++                      .getSize(find.byKey(const ValueKey('dueTimeApply')))
++                      .shortestSide,
++                  greaterThanOrEqualTo(48),
++                );
++              }
++              if (!focused) {
++                final blankDate = find.byKey(const ValueKey('startDate'));
++                await tester.ensureVisible(blankDate);
++                await tester.tap(blankDate);
++                await tester.pumpAndSettle();
++                final blankEditable = find.descendant(
++                  of: blankDate,
++                  matching: find.byType(EditableText),
++                );
++                expect(
++                  tester
++                      .state<EditableTextState>(blankEditable)
++                      .renderEditable
++                      .size
++                      .width,
++                  greaterThanOrEqualTo(measure('YYYY-MM-DD') + 1),
++                );
++                await tester.ensureVisible(date);
++                if (scale <= 1.3) {
++                  await tester.tap(find.byTooltip('Choose Due date'));
++                  await tester.pumpAndSettle();
++                  expect(find.byType(DatePickerDialog), findsOneWidget);
++                  await tester.tap(
++                    find.descendant(
++                      of: find.byType(DatePickerDialog),
++                      matching: find.text('Cancel'),
++                    ),
++                  );
++                  await tester.pumpAndSettle();
++                }
++              }
++              expect(
++                tester.getSize(find.byTooltip('Clear Due time')).shortestSide,
++                greaterThanOrEqualTo(48),
++              );
++            }
++            await capture?.call(
++              tester,
++              '${bulk ? 'bulk' : 'single'}-$scale-${delta > 0 ? 'above' : 'below'}',
++            );
++            await tester.tap(time);
++            await tester.pumpAndSettle();
++            tester
++                .widget<TextField>(time)
++                .controller!
++                .value = const TextEditingValue(
++              text: '23:59',
++              selection: TextSelection.collapsed(offset: 3),
++              composing: TextRange(start: 0, end: 2),
++            );
++            await tester.pump();
++            focused = true;
++          }
++          expect(tester.widget<TextField>(time).focusNode!.hasFocus, isTrue);
++          expect(
++            tester.widget<TextField>(time).controller!.value.composing,
++            const TextRange(start: 0, end: 2),
++          );
++          await tester.tap(find.byTooltip('Clear Due time'));
++          await tester.pumpAndSettle();
++          expect(tester.widget<TextField>(date).controller!.text, '2026-10-04');
++          await tester.enterText(date, '');
++          await tester.pumpAndSettle();
++          expect(tester.widget<TextField>(time).controller!.text, isEmpty);
++          await tester.enterText(date, '2026-10-04');
++          await tester.pumpAndSettle();
++
++          expect(tester.widget<TextField>(time).controller!.text, isEmpty);
++          await tester.tap(time);
++          await tester.enterText(time, '25:00');
++          await tester.pumpAndSettle();
++          expect(find.text('Due time must be HH:mm.'), findsOneWidget);
++          viewportSize = Size(boundary + 39, 1000);
++          await tester.binding.setSurfaceSize(viewportSize);
++          await tester.pumpWidget(host());
++          await tester.pumpAndSettle();
++          expect(tester.widget<TextField>(time).focusNode!.hasFocus, isTrue);
++          expect(tester.widget<TextField>(time).controller!.text, '25:00');
++          await tester.enterText(time, '00:00');
++          await tester.pumpAndSettle();
++          expect(find.text('Due time must be HH:mm.'), findsNothing);
++          expect(tester.widget<TextField>(date).controller!.text, '2026-10-04');
++
++          expect(tester.takeException(), isNull);
++          await tester.pumpWidget(const SizedBox());
++        }
++      }
++    },
++  );
++}
+diff --git a/test/task_editor_test.dart b/test/task_editor_test.dart
+index 0e2a095..a740286 100644
+--- a/test/task_editor_test.dart
++++ b/test/task_editor_test.dart
+@@ -172,7 +172,8 @@ void main() {
+   testWidgets('date rows stack at narrow widths and enlarged text', (
+     tester,
+   ) async {
+-    for (final configuration in [(390.0, 1.0), (290.0, 1.0), (600.0, 2.0)]) {
++    // Widget tests use the wider Ahem font; native tests retain 390px coverage.
++    for (final configuration in [(500.0, 1.0), (290.0, 1.0), (600.0, 2.0)]) {
+       await tester.binding.setSurfaceSize(Size(configuration.$1, 1000));
+       await tester.pumpWidget(
+         MaterialApp(
+@@ -192,7 +193,7 @@ void main() {
+       );
+       await tester.pumpAndSettle();
+       await tester.ensureVisible(input('dueTime'));
+-      if (configuration.$1 == 390) {
++      if (configuration.$1 == 500) {
+         expect(
+           tester.getTopLeft(input('dueTime')).dy,
+           tester.getTopLeft(input('dueDate')).dy,
+@@ -750,12 +751,7 @@ void main() {
+         ),
+       );
+       await tester.ensureVisible(input('dueTime'));
+-      final row = find
+-          .ancestor(of: input('dueTime'), matching: find.byType(Row))
+-          .first;
+-      await tester.tap(
+-        find.descendant(of: row, matching: find.byType(Checkbox)),
+-      );
++      await tester.tap(find.byKey(const ValueKey('dueTimeApply')));
+       await tester.pump();
+       await tester.tap(find.text('Save changes'));
+       await tester.pumpAndSettle();

@@ -1,0 +1,54 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-date-layout/test/date_time_layout_test.dart
+00:00 +0: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:01 +1: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+00:02 +2: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:02 +3: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:02 +4: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+00:03 +5: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+00:03 +6: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+00:04 +7: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:04 +8: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:04 +9: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+00:05 +10: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:05 +11: /workspace/tandemlog-date-layout/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:05 +12: /workspace/tandemlog-date-layout/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:05 +13: /workspace/tandemlog-date-layout/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:05 +14: /workspace/tandemlog-date-layout/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:05 +15: /workspace/tandemlog-date-layout/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:06 +16: /workspace/tandemlog-date-layout/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:06 +17: /workspace/tandemlog-date-layout/test/task_editor_test.dart: bulk coupled validation checks every task
+00:06 +18: /workspace/tandemlog-date-layout/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:06 +19: /workspace/tandemlog-date-layout/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:06 +20: /workspace/tandemlog-date-layout/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:07 +21: /workspace/tandemlog-date-layout/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:07 +22: /workspace/tandemlog-date-layout/test/task_editor_test.dart: title and notes wire limits validate before save
+00:07 +23: /workspace/tandemlog-date-layout/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:07 +24: /workspace/tandemlog-date-layout/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:08 +25: /workspace/tandemlog-date-layout/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:08 +26: /workspace/tandemlog-date-layout/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:08 +27: /workspace/tandemlog-date-layout/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:08 +28: /workspace/tandemlog-date-layout/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:08 +29: /workspace/tandemlog-date-layout/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:09 +30: /workspace/tandemlog-date-layout/test/task_editor_test.dart: selection header wraps at narrow large text
+00:09 +31: /workspace/tandemlog-date-layout/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:09 +32: All tests passed!

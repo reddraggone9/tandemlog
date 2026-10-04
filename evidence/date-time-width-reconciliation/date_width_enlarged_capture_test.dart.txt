@@ -1,0 +1,38 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:tandemlog/presentation/task_editor.dart';
+void main() {
+ IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+ testWidgets('native ordinary date time geometry capsules', (tester) async {
+  final out=Directory(Platform.environment['DATE_WIDTH_OUT']!);await out.create(recursive:true);
+  for(final config in [(520.0,2.0,false,true),(640.0,2.0,true,true)]) {
+   final width=config.$1,scale=config.$2,bulk=config.$3,populated=config.$4;
+   tester.view.devicePixelRatio=1;await tester.binding.setSurfaceSize(Size(width,1000));
+   final colors=ColorScheme.fromSeed(seedColor:const Color(0xff267461),brightness:Brightness.dark);
+   final source={'id':'synthetic','title':'Review weekend plan','description':'Check the outline.','schedule':{'startDate':'2026-10-04','dueDate':'2026-10-04',if(populated)'startTime':'23:59',if(populated)'dueTime':'23:59','timeZone':'UTC'}};
+   await tester.pumpWidget(MaterialApp(debugShowCheckedModeBanner:false,theme:ThemeData(useMaterial3:true,colorScheme:colors,scaffoldBackgroundColor:colors.surface,inputDecorationTheme:InputDecorationTheme(border:const OutlineInputBorder(),filled:true,fillColor:colors.surfaceContainerLowest)),home:MediaQuery(data:MediaQueryData(size:Size(width,1000),textScaler:TextScaler.linear(scale)),child:Scaffold(body:bulk?BulkTaskEditor(panel:true,tasks:[source,{...source,'id':'other'}],onSave:(_)async{}):TaskEditor(panel:true,task:source,save:(_,_,_)async{})))));
+   await tester.pumpAndSettle();
+   final first=find.byKey(const ValueKey('startDate')),last=find.byKey(const ValueKey('dueTime'));
+   await tester.ensureVisible(last);await tester.pumpAndSettle();await tester.ensureVisible(first);await tester.pumpAndSettle();
+   final scroll=tester.state<ScrollableState>(find.ancestor(of:first,matching:find.byType(Scrollable)).first);
+   scroll.position.jumpTo((scroll.position.pixels-24).clamp(scroll.position.minScrollExtent,scroll.position.maxScrollExtent));await tester.pumpAndSettle();
+   final result=await Process.run('xdotool',['search','--onlyvisible','--name',r'^tandemlog$']);expect(result.exitCode,0);final window=result.stdout.toString().trim().split('\n').last;
+   await Process.run('xdotool',['windowmove',window,'0','0']);await Process.run('xdotool',['windowsize',window,width.round().toString(),'1000']);await tester.pumpAndSettle();await Future<void>.delayed(const Duration(milliseconds:500));
+   final name='${bulk?'bulk':'single'}-${width.round()}-${scale}-${populated?'populated':'blank'}';
+   final a=tester.getRect(first),b=tester.getRect(last),date=tester.getRect(find.byKey(const ValueKey('dueDate')));
+   final metrics=<String,dynamic>{'viewport':[width,1000],'row_width':width-40,'scale':scale,'crop':[bulk?12:12,(a.top-12).floor(),width-12,(b.bottom+12).ceil()],'side_by_side':(date.top-b.top).abs()<.5,'fields':{}};
+   for(final key in ['dueDate','dueTime']) {
+    final f=find.byKey(ValueKey(key)),e=find.descendant(of:f,matching:find.byType(EditableText));final state=tester.state<EditableTextState>(e);
+    final p=TextPainter(text:TextSpan(text:state.widget.controller.text,style:state.widget.style),textDirection:TextDirection.ltr,textScaler:TextScaler.linear(scale))..layout();
+    metrics['fields'][key]={'field_width':tester.getSize(f).width,'field_height':tester.getSize(f).height,'editable_width':state.renderEditable.size.width,'text_width':p.width,'chrome':tester.getSize(f).width-state.renderEditable.size.width};p.dispose();
+   }
+   if(populated)metrics['clear_target']=[tester.getSize(find.byTooltip('Clear Due time')).width,tester.getSize(find.byTooltip('Clear Due time')).height];
+   metrics['calendar_target']=[tester.getSize(find.byTooltip('Choose Due date')).width,tester.getSize(find.byTooltip('Choose Due date')).height];
+   expect((await Process.run('import',['-window',window,'${out.path}/$name-raw.png'])).exitCode,0);await File('${out.path}/$name-geometry.json').writeAsString(jsonEncode(metrics));expect(tester.takeException(),isNull);
+   await tester.pumpWidget(const SizedBox());await tester.pumpAndSettle();
+  }
+ });
+}

@@ -253,7 +253,8 @@ void main() {
   testWidgets('date rows stack at narrow widths and enlarged text', (
     tester,
   ) async {
-    for (final configuration in [(390.0, 1.0), (290.0, 1.0), (600.0, 2.0)]) {
+    // Widget tests use the wider Ahem font; native tests retain 390px coverage.
+    for (final configuration in [(500.0, 1.0), (290.0, 1.0), (600.0, 2.0)]) {
       await tester.binding.setSurfaceSize(Size(configuration.$1, 1000));
       await tester.pumpWidget(
         MaterialApp(
@@ -273,7 +274,7 @@ void main() {
       );
       await tester.pumpAndSettle();
       await tester.ensureVisible(input('dueTime'));
-      if (configuration.$1 == 390) {
+      if (configuration.$1 == 500) {
         expect(
           tester.getTopLeft(input('dueTime')).dy,
           tester.getTopLeft(input('dueDate')).dy,
@@ -831,12 +832,7 @@ void main() {
         ),
       );
       await tester.ensureVisible(input('dueTime'));
-      final row = find
-          .ancestor(of: input('dueTime'), matching: find.byType(Row))
-          .first;
-      await tester.tap(
-        find.descendant(of: row, matching: find.byType(Checkbox)),
-      );
+      await tester.tap(find.byKey(const ValueKey('dueTimeApply')));
       await tester.pump();
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
