@@ -120,13 +120,26 @@ Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://do
 
 ## Complete resolved Dart graph and archive provenance
 
-The isolated [Yrs experiment](text-merge-prototype.md) has a separate Rust1.99.0
-toolchain and crate lockfile. Its direct crates are Yrs0.28.0 (text engine),
-serde_json1.0.151 (lab request encoding) and base640.22.1 (opaque update transport).
-Its46 resolved registry packages/asset provenance are recorded in the prototype
-package. They are **not application dependencies**, are not linked/shipped in
-Tandemlog, and are not covered by the app's pub/Gradle updater. The experiment is
-manually reviewed and dispatched; no Rust bridge adoption is implied.
+The [isolated Yrs experiment](text-merge-prototype.md) preceded the authorized,
+unreleased [production text bridge](decisions/0010-collaborative-text-adoption.md).
+One implementation now lives in `native/text_engine`; experiment wrappers include
+it rather than maintain a second engine. Rust1.99.0, Yrs0.28.0, serde_json1.0.151
+and base640.22.1 are pinned by the canonical Cargo.lock. Its46 registry pins,
+checksums and dependency notices are recorded in
+[`THIRD_PARTY_NOTICES.txt`](../native/text_engine/THIRD_PARTY_NOTICES.txt). The
+review inspected actual native-target graphs and enabled build hooks, recovered
+Yrs's omitted MIT text from its exact upstream source commit, and retained the
+Unicode/parking and supplied Rust standard-library notices. Four offline tests
+check the locked notices graph; source and target-feature review remains required.
+
+The build helper requires preinstalled official Rust/std targets, reviewed Cargo
+inputs and NDK28.2.13676358. App builds use locked offline Cargo and do not fetch
+dependencies, tools or notices. Every app target bundles the notices as a Flutter
+asset, loaded on demand from Settings → Licenses. The pub/Gradle updater does not
+cover Cargo; manually review exact Rust graph/toolchain changes under the same
+policy before execution. New-platform/feature enablement requires another graph
+and notice review. Production Windows/Android and final package gates remain
+pending; historical prototype builds do not establish their acceptance.
 
 All hosted entries below are `https://pub.dev` package archives with their committed SHA-256. SDK entries come from the pinned Flutter SDK. This appendix distinguishes direct/dev/transitive without presenting transitive packages as direct app requirements.
 

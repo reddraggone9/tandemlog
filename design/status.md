@@ -1,5 +1,28 @@
 # Current status — 2026-10-04
 
+## Authorized text integration — isolated, unreleased
+
+`experiment/text-activation-policy` contains production captured title/notes,
+receipt-gated Save/selective Undo, private uncertain-command recovery, shared
+legacy setup and offline new-task editing. The actual native Linux integration
+passes at 1200px Light/100% and 390px Dark/200%, including received text while a
+private draft remains open, Save/Undo and restart. Five screenshots were inspected;
+one clipped setup instruction was corrected to wrapping text.
+
+All 447 unit/widget tests pass with the real production SO, including the two
+new preappend recurring guard cases; analysis and formatting are clean.
+Notice/packaging checks pass. The focused native storage/recurrence suite passes
+41 tests. [Evidence and limits](../evidence/production-text/README.md) distinguish
+the real app flow from synthetic native benchmarks and injected IME state.
+
+Concurrent recurring successor text still needs Lee's decision. The branch
+rejects that local command before append while retaining historical replay.
+Current Windows/Android production payloads, complete existing native workflow
+matrix, mandatory native CI and release-mode performance remain unverified. No
+production text candidate is signed or released, and no main push is made.
+The separate date/time layout work is paused for ordinary-width reconciliation;
+its earlier enlarged-text-only proposal is not release-ready.
+
 ## Next preview2026.10.2-rc.2 build44 — editor refinement
 
 Approved scope: always-visible blank Time inputs with the existing clear X,

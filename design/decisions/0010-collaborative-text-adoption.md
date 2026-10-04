@@ -1,7 +1,8 @@
 # Collaborative task text
 
-Status: implementation authorized on 2026-10-04; unreleased. Native Linux
-layer checks pass; integrated app and platform gates remain pending.
+Status: implementation authorized on 2026-10-04; unreleased on
+`experiment/text-activation-policy`. Integrated native Linux editing checks pass;
+full platform and release gates remain pending.
 
 ## Accepted behavior
 
@@ -78,7 +79,10 @@ effects. Native replay still includes both original and compensation packets.
 Old `task.operationUndone` cannot target a native text command. Session Undo
 remains process-local, clears on workspace change/restart, and needs an owned
 single-operation native basis so skipping an ineffective entry cannot undo an
-earlier command. This integration is still being verified.
+earlier command. Closing an editor releases its live source owners; retained
+session Undo entries own separate documents and release them on eviction.
+Actual-library regressions cover remote edits, exact receipt retries, cache loss
+and an ineffective most-recent edit without retracting an earlier command.
 
 ## Bounds and measured limits
 
@@ -110,11 +114,21 @@ old-draft rebasing cannot recover character intent from full strings.
 Concurrent recurring completions still need an immutable successor text basis.
 The proposed union of text observed by either completion is a pending product
 decision; do not silently adopt it or change old completion snapshots. No native
-recurrence release proceeds while this is unresolved.
+recurrence release proceeds while this is unresolved. Local recurring completion
+of a native-text occurrence currently fails before preparation or append. This
+temporary guard does not alter historical replay or old scalar completion
+semantics; it must be replaced by the agreed successor contract before release.
 
-Before any preview: complete production controller/Undo wiring, actual Linux
-light/dark/narrow/IME/error/restart inspection, mandatory real-library CI checks,
-native Windows packaged lifecycle, rebuilt Android ABI/page verification and
-exact signed-APK native acceptance. Stable promotion requires separate behavior
-acceptance. [Prototype evidence](../text-merge-prototype.md) remains historical;
-passing it alone is not production acceptance.
+The production controller, captured editor and session Undo are wired. The
+native Linux flow covers offline creation before setup, private draft retention
+during a peer update, merged Save/selective Undo, explicit legacy setup, narrow
+dark 200% text, and restart persistence. Its composition/insets are injected;
+it is not Android OS-IME evidence. See the [production checkpoint](../../evidence/production-text/README.md).
+
+Before any preview: resolve successor text, adapt and run the complete existing
+native workflow matrix, make real-library CI checks mandatory, verify native
+Windows packaged lifecycle, rebuild all Android ABIs/page alignment, and accept
+the exact signed APK on Android. Release-mode startup/resource measurements and
+independent final UI/release review remain pending. Stable promotion requires
+separate behavior acceptance. [Prototype evidence](../text-merge-prototype.md)
+remains historical; passing it alone is not production acceptance.

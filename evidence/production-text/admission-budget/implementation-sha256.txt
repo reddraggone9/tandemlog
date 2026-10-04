@@ -1,0 +1,3 @@
+4630c87110a72e9247bdf8ccaf83a1b3b1c2955210f9152fb6fe868f057030e5  native/text_engine/src/lib.rs
+84b23b6bb04027a0cb6be50a223ae3a0de54f8d4fa757fbf2b4c364568981496  native/text_engine/src/admission.rs
+892d5048fc30c615fd672a6d6e9a8000ca8fdf6723271e54317356debf9bc6b3  /tmp/tandemlog-production-text-libs/linux/libtandemlog_text.so

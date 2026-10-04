@@ -1,0 +1,144 @@
+test_B01_struct_actor_inspection_is_sorted_unique_and_readonly (test_resource_limits.NativeBudgets.test_B01_struct_actor_inspection_is_sorted_unique_and_readonly) ... FAIL
+test_B02_delete_references_and_skip_holes_are_not_struct_authors (test_resource_limits.NativeBudgets.test_B02_delete_references_and_skip_holes_are_not_struct_authors) ... FAIL
+test_B03_inspector_validates_binary_base64_and_plaintext_before_metadata (test_resource_limits.NativeBudgets.test_B03_inspector_validates_binary_base64_and_plaintext_before_metadata) ... ok
+test_B04_visible_utf16_limit_rejects_atomically_with_prior_undo (test_resource_limits.NativeBudgets.test_B04_visible_utf16_limit_rejects_atomically_with_prior_undo) ... FAIL
+test_B05_generated_update_budget_is_distinct_from_visible_and_state (test_resource_limits.NativeBudgets.test_B05_generated_update_budget_is_distinct_from_visible_and_state) ... FAIL
+test_B06_large_checkpoint_and_existing_history_do_not_use_operation_limit (test_resource_limits.NativeBudgets.test_B06_large_checkpoint_and_existing_history_do_not_use_operation_limit) ... ok
+test_B07_state_limit_growth_rejection_retains_exact_live_state (test_resource_limits.NativeBudgets.test_B07_state_limit_growth_rejection_retains_exact_live_state) ... FAIL
+test_B08_session_replay_limit_is_explicit_and_rejection_keeps_undo (test_resource_limits.NativeBudgets.test_B08_session_replay_limit_is_explicit_and_rejection_keeps_undo) ... FAIL
+test_B09_prepared_clone_budget_rejection_keeps_original_session_undo (test_resource_limits.NativeBudgets.test_B09_prepared_clone_budget_rejection_keeps_original_session_undo) ... FAIL
+test_B10_usage_documents_serialized_weights_and_actual_owner_guid (test_resource_limits.NativeBudgets.test_B10_usage_documents_serialized_weights_and_actual_owner_guid) ... FAIL
+test_B11_retained_receipt_history_is_bounded_without_pruning (test_resource_limits.NativeBudgets.test_B11_retained_receipt_history_is_bounded_without_pruning) ... FAIL
+test_B12_restore_limit_failure_does_not_replace_existing_owner (test_resource_limits.NativeBudgets.test_B12_restore_limit_failure_does_not_replace_existing_owner) ... FAIL
+test_B13_private_draft_inherits_limits_and_rejection_preserves_draft (test_resource_limits.NativeBudgets.test_B13_private_draft_inherits_limits_and_rejection_preserves_draft) ... FAIL
+test_B14_limit_configuration_rejects_unknown_zero_boolean_and_overflow (test_resource_limits.NativeBudgets.test_B14_limit_configuration_rejects_unknown_zero_boolean_and_overflow) ... FAIL
+test_B15_large_bounded_checkpoint_frame_and_input_allocator (test_resource_limits.NativeBudgets.test_B15_large_bounded_checkpoint_frame_and_input_allocator) ... FAIL
+
+======================================================================
+FAIL: test_B01_struct_actor_inspection_is_sorted_unique_and_readonly (test_resource_limits.NativeBudgets.test_B01_struct_actor_inspection_is_sorted_unique_and_readonly)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 33, in test_B01_struct_actor_inspection_is_sorted_unique_and_readonly
+    self.assertEqual(self.b.ok('inspect', update=ua)['structActors'], [10])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: missing string name
+
+======================================================================
+FAIL: test_B02_delete_references_and_skip_holes_are_not_struct_authors (test_resource_limits.NativeBudgets.test_B02_delete_references_and_skip_holes_are_not_struct_authors)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 40, in test_B02_delete_references_and_skip_holes_are_not_struct_authors
+    self.assertEqual(self.b.ok('inspect', update=deleted)['structActors'], [])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: missing string name
+
+======================================================================
+FAIL: test_B04_visible_utf16_limit_rejects_atomically_with_prior_undo (test_resource_limits.NativeBudgets.test_B04_visible_utf16_limit_rejects_atomically_with_prior_undo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 54, in test_B04_visible_utf16_limit_rejects_atomically_with_prior_undo
+    self.assertIn('error', result); self.assertEqual(self.full('a'), before)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'text': 'A😀BC', 'update': 'AQEKAYQKAAFDAA=='}
+
+======================================================================
+FAIL: test_B05_generated_update_budget_is_distinct_from_visible_and_state (test_resource_limits.NativeBudgets.test_B05_generated_update_budget_is_distinct_from_visible_and_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 60, in test_B05_generated_update_budget_is_distinct_from_visible_and_state
+    self.assertIn('error', result); self.assertEqual(self.full('a'), before)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'text': 'xLZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ', 'update': 'AQEKAYQKAFBaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWlpaWgA='}
+
+======================================================================
+FAIL: test_B07_state_limit_growth_rejection_retains_exact_live_state (test_resource_limits.NativeBudgets.test_B07_state_limit_growth_rejection_retains_exact_live_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 84, in test_B07_state_limit_growth_rejection_retains_exact_live_state
+    self.assertTrue(rejected, 'encoded retained state must have a separate enforced cap')
+AssertionError: False is not true : encoded retained state must have a separate enforced cap
+
+======================================================================
+FAIL: test_B08_session_replay_limit_is_explicit_and_rejection_keeps_undo (test_resource_limits.NativeBudgets.test_B08_session_replay_limit_is_explicit_and_rejection_keeps_undo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 94, in test_B08_session_replay_limit_is_explicit_and_rejection_keeps_undo
+    self.assertTrue(rejected)
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_B09_prepared_clone_budget_rejection_keeps_original_session_undo (test_resource_limits.NativeBudgets.test_B09_prepared_clone_budget_rejection_keeps_original_session_undo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 100, in test_B09_prepared_clone_budget_rejection_keeps_original_session_undo
+    self.assertIn('error', result); self.assertIn('budget', result['error']); self.assertEqual(self.full('a'), before)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'changed': True, 'token': '07ad700d-c89d-4757-96a7-a4dc2d0ffa5d:1', 'update': 'AAEKAQAB'}
+
+======================================================================
+FAIL: test_B10_usage_documents_serialized_weights_and_actual_owner_guid (test_resource_limits.NativeBudgets.test_B10_usage_documents_serialized_weights_and_actual_owner_guid)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 104, in test_B10_usage_documents_serialized_weights_and_actual_owner_guid
+    created = self.new(); read = self.b.ok('read', name='a'); usage = self.usage()
+                                                                      ^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 28, in usage
+    def usage(self, name='a'): return self.b.ok('usage', name=name)
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_B11_retained_receipt_history_is_bounded_without_pruning (test_resource_limits.NativeBudgets.test_B11_retained_receipt_history_is_bounded_without_pruning)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 124, in test_B11_retained_receipt_history_is_bounded_without_pruning
+    self.assertTrue(rejected); self.assertLessEqual(self.usage()['retainedBytes'], 600)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_B12_restore_limit_failure_does_not_replace_existing_owner (test_resource_limits.NativeBudgets.test_B12_restore_limit_failure_does_not_replace_existing_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 132, in test_B12_restore_limit_failure_does_not_replace_existing_owner
+    self.assertIn('error', result); self.assertIn('error', self.b.request(op='read', name='missing'))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'ok': True}
+
+======================================================================
+FAIL: test_B13_private_draft_inherits_limits_and_rejection_preserves_draft (test_resource_limits.NativeBudgets.test_B13_private_draft_inherits_limits_and_rejection_preserves_draft)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 137, in test_B13_private_draft_inherits_limits_and_rejection_preserves_draft
+    self.assertIn('error', result); self.assertEqual(self.full('draft'), before); self.assertEqual(self.text('a'), 'x')
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'text': 'xLZZ', 'update': 'AQEeAYQeAAJaWgA='}
+
+======================================================================
+FAIL: test_B14_limit_configuration_rejects_unknown_zero_boolean_and_overflow (test_resource_limits.NativeBudgets.test_B14_limit_configuration_rejects_unknown_zero_boolean_and_overflow)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 143, in test_B14_limit_configuration_rejects_unknown_zero_boolean_and_overflow
+    self.assertIn('error', result); self.assertIn('error', self.b.request(op='read', name='bad'))
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'error' not found in {'ok': True}
+
+======================================================================
+FAIL: test_B15_large_bounded_checkpoint_frame_and_input_allocator (test_resource_limits.NativeBudgets.test_B15_large_bounded_checkpoint_frame_and_input_allocator)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_resource_limits.py", line 152, in test_B15_large_bounded_checkpoint_frame_and_input_allocator
+    ptr = lib.tandemlog_text_alloc(len(request)); self.assertTrue(ptr)
+                                                  ^^^^^^^^^^^^^^^^^^^^
+AssertionError: None is not true
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.022s
+
+FAILED (failures=13)

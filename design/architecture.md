@@ -18,6 +18,16 @@ Inject time, IDs, storage and platform services at boundaries. Commands produce 
 
 RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. `presentation/tag_filter_picker.dart` owns its query, focus and anchored overlay geometry, while the host owns filter values. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. Per-task partial durability is explicit; do not hide it behind an apparent multi-task transaction. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
 
+The authorized, unreleased text integration adds `application/task_text_session.dart`
+for captured private drafts and `application/text_save_command.dart` for exact
+canonical receipt/commit orchestration. `storage/text_cache.dart` validates and
+materializes native field checkpoints in the same disposable SQLite cache.
+`text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;
+the single Rust implementation owns character identity and selective Undo only.
+Domain context/actor claims and required event validation stay in Dart. See
+[ADR 0010](decisions/0010-collaborative-text-adoption.md) for the legacy baseline,
+offline new-task exception and remaining release gates.
+
 Future games, nutrition and inventory are separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
 
 ## Trust and privacy

@@ -60,6 +60,26 @@ Completion accepts an explicitly captured instant and computes its civil day fro
 
 The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. Private one-off migration tooling lives outside this repository and is not shipped or supported as an application feature. Generic domain validation, ordering and persistence remain app responsibilities.
 
+## Unreleased required text extension
+
+The authorized branch adds `task.createdWithText`, `text.baselineInitialized`,
+`task.textEdited` and `task.textEditUndone` within the unchanged v3 envelope.
+These are required meanings: older readers fail explicitly instead of ignoring
+the packets or treating them as scalar edits. Creation seeds and field context,
+exact shared baseline frontiers, actor admission, receipt-gated native Save and
+compensation are specified in [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+Original v3 scalar records, canonical hashes, clocks and historical Undo retain
+their original meaning. Frozen stable histories remain unchanged.
+
+Branch cache 14 adds verified native field checkpoints, actor claims and pending
+receipt indexing to SQLite. Existing current cache 13 upgrades additively without
+full-log replay; older supported cache rebuild and integrity guards still apply.
+Installation-private exact text intent files survive disposable cache loss and
+are retired only after matching canonical acknowledgement. They are never shared
+or treated as accepted task state. Missing native engine support fails explicitly
+if required native records are present. The extension is not released; native
+recurring successor semantics and platform acceptance remain gates.
+
 ## Durability and recovery
 
 Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.

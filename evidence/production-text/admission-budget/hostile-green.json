@@ -1,0 +1,90 @@
+[
+  {
+    "mode": "hostile500",
+    "soSha256": "fae830bbbf9c0d425fb57c3e6ebc22370fe96f9e27832c541d9f646e00456aee",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11248,
+    "finalRssKiB": 16992,
+    "peakRssKiB": 18328,
+    "peakMinusBaselineKiB": 7380,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.378833,
+        "meanMs": 0.378833,
+        "p95Ms": 0.378833
+      },
+      "new": {
+        "count": 1,
+        "maxMs": 0.185841,
+        "meanMs": 0.185841,
+        "p95Ms": 0.185841
+      },
+      "state": {
+        "count": 2,
+        "maxMs": 0.096035,
+        "meanMs": 0.07727149999999999,
+        "p95Ms": 0.096035
+      },
+      "apply": {
+        "count": 1,
+        "maxMs": 2.483612,
+        "meanMs": 2.483612,
+        "p95Ms": 2.483612
+      }
+    },
+    "outcome": {
+      "preApplyPayloadRssKiB": 15992,
+      "decodedUpdateBytes": 1048576,
+      "rejection": {
+        "error": "admission identity budget"
+      },
+      "stateUnchanged": true,
+      "initializedRssKiB": 12260
+    }
+  },
+  {
+    "mode": "hostile10000",
+    "soSha256": "fae830bbbf9c0d425fb57c3e6ebc22370fe96f9e27832c541d9f646e00456aee",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11252,
+    "finalRssKiB": 16132,
+    "peakRssKiB": 20708,
+    "peakMinusBaselineKiB": 9760,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.377,
+        "meanMs": 0.377,
+        "p95Ms": 0.377
+      },
+      "new": {
+        "count": 1,
+        "maxMs": 1.667128,
+        "meanMs": 1.667128,
+        "p95Ms": 1.667128
+      },
+      "state": {
+        "count": 2,
+        "maxMs": 0.147082,
+        "meanMs": 0.1287245,
+        "p95Ms": 0.147082
+      },
+      "apply": {
+        "count": 1,
+        "maxMs": 2.896966,
+        "meanMs": 2.896966,
+        "p95Ms": 2.896966
+      }
+    },
+    "outcome": {
+      "preApplyPayloadRssKiB": 16104,
+      "decodedUpdateBytes": 1048576,
+      "rejection": {
+        "error": "admission identity budget"
+      },
+      "stateUnchanged": true,
+      "initializedRssKiB": 12344
+    }
+  }
+]

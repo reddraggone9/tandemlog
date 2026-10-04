@@ -22,7 +22,7 @@ Syncthing [replaces destinations via temporary files](https://docs.syncthing.net
 
 ## Convergence semantics
 
-Same validated event set plus the same projection version must produce identical state, regardless of arrival order or batching. Missing referenced events may arrive later: retain pending dependencies and rerun; do not permanently reject based only on arrival order. Per-field last-writer-wins is acceptable for independent task text fields, with a stable logical tie-break; it is not appropriate for inventory consumption or coupled date fields.
+Same validated event set plus the same projection version must produce identical state, regardless of arrival order or batching. Missing referenced events may arrive later: retain pending dependencies and rerun; do not permanently reject based only on arrival order. Released scalar task text uses per-field last-writer-wins with a stable causal tie-break. The authorized, unreleased [text extension](decisions/0010-collaborative-text-adoption.md) adds captured character operations without changing those historical scalar meanings. Neither scalar LWW nor text merging is suitable for inventory consumption or coupled date fields.
 
 Undo must target an operation and be repeat-safe. For M1 completion, preserve completion IDs so undoing one's own completion does not erase another user's independent completion. Task deletion uses an identity-preserving canonical tombstone, recoverable through named session Undo while preserving independent newer writes; broader restore/copy workflows remain deferred. Do not generate new authoritative events as a side effect of replay.
 

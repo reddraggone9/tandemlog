@@ -1,0 +1,10 @@
+   Compiling tandemlog-text v0.0.0 (/workspace/tandemlog/native/text_engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s
+     Running unittests src/lib.rs (/tmp/tandemlog-production-text-target/x86_64-unknown-linux-gnu/debug/deps/tandemlog_text-5e60e15f9c5627fe)
+
+running 2 tests
+test worker_failure_tests::disconnected_worker_is_explicit_unknown_outcome ... ok
+test worker_failure_tests::worker_panic_quarantines_without_implicit_reset ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

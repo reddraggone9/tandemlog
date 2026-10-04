@@ -1,0 +1,45 @@
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling libc v0.2.190
+   Compiling serde_core v1.0.229
+   Compiling pin-project-lite v0.2.17
+   Compiling zmij v1.0.23
+   Compiling parking v2.2.1
+   Compiling parking_lot_core v0.9.12
+   Compiling smallvec v1.16.2
+   Compiling rustversion v1.0.23
+   Compiling crossbeam-utils v0.8.23
+   Compiling event-listener v5.4.2
+   Compiling syn v3.0.6
+   Compiling cfg-if v1.0.5
+   Compiling scopeguard v1.2.0
+   Compiling thiserror v2.0.21
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling lock_api v0.4.14
+   Compiling event-listener-strategy v0.5.4
+   Compiling hashbrown v0.14.5
+   Compiling once_cell v1.21.4
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling dashmap v6.2.1
+   Compiling arc-swap v1.9.2
+   Compiling async-lock v3.4.2
+   Compiling smallstr v0.3.1
+   Compiling fastrand v2.5.0
+   Compiling base64 v0.22.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling async-trait v0.1.92
+   Compiling yrs v0.28.0
+   Compiling tandemlog-text v0.0.0 (/workspace/tandemlog/native/text_engine)
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 8.18s
+     Running unittests src/lib.rs (/tmp/tandemlog-production-text-target/x86_64-unknown-linux-gnu/debug/deps/tandemlog_text-5e60e15f9c5627fe)
+
+running 2 tests
+test worker_failure_tests::disconnected_worker_is_explicit_unknown_outcome ... ok
+test worker_failure_tests::worker_panic_quarantines_without_implicit_reset ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
