@@ -10,7 +10,8 @@ pass locally. Two new production-app native Linux flows cover release-name
 clipboard access and date/time precision, clearing, Cancel/Save, zone and draft
 retention at 1200/390/320px and 100/200% text. A 16-shot actual native Linux pass
 covers both themes, optional midnight and simulated keyboard geometry. The
-full native aggregate, hosted builds and exact Android acceptance are pending.
+final full native aggregate passes all 47 flows in 10m36s. Hosted builds and
+exact Android acceptance are pending.
 The reviewed 65-second desktop demo is delivered separately.
 
 The proposed one-level checklist is not in this candidate. Its unpublished

@@ -16,8 +16,8 @@ Sixteen screenshots and the 65-second pointer-visible desktop demonstration
 were inspected. [UI receipt](../evidence/2026.10.2-rc1-build43-native-ui-verification.json).
 The first full aggregate passed 46 flows; one older test assumed a permanently
 visible empty time field. Its updated Add time interaction passes along with
-the two new flows. The final aggregate rerun, hosted builds/install lifecycle
-and exact Android acceptance remain separate gates. No runtime Windows visual
+the two new flows. The final aggregate passes all 47 flows in 10m36s. Hosted
+builds/install lifecycle and exact Android acceptance remain separate gates. No runtime Windows visual
 claim, real-phone claim, protocol/schema or cache change follows from Linux.
 
 ## Actual environment and target matrix

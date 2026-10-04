@@ -28,8 +28,9 @@
     "zone_precision_cancel_save": "pass",
     "draft_and_canonical_preservation": "pass",
     "keyboard_geometry": "simulated Linux only",
-    "full_native_aggregate": "pending",
-    "exact_android_acceptance": "pending"
+    "full_native_aggregate": "pass:47 flows,10m36s",
+    "exact_android_acceptance": "pending",
+    "accessible_add_time_labels": "widget semantics pass"
   },
   "observed_fix": "Desktop compact visual density shrank Add time below 48px; explicit standard density restores target.",
   "reference_image": "Supported Library download failed; row layout follows approved written direction. No reference pixel comparison.",
@@ -110,5 +111,7 @@
   "schema_change": false,
   "cache_version": 13,
   "protocol_version": 3,
-  "checklist_model": "excluded; preserved outside repository pending text policy"
+  "checklist_model": "excluded; preserved outside repository pending text policy",
+  "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+  "initial_aggregate": "46 passed; one outdated empty-time finder corrected; all original assertions retained; focused3passed before final47flow rerun"
 }
