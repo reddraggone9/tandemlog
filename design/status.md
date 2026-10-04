@@ -2,7 +2,7 @@
 
 ## First stable 2026.10.0 build39 — preparing exact candidate
 
-Lee approved first stable publication from accepted RC38 source `c3c1bd87`, with only necessary version/release changes. Build39 uses the stable embedded version and unchanged production code, protocol3/cache13/package/owner signer. Full target gates and exact native Android acceptance remain required before stable Latest promotion. Frozen synthetic histories guard backward readability, hash bytes and task/Undo/order semantics from this release onward. Tandemlog is now authoritative according to Lee; no live data reset, deletion, repair or import is authorized by this release.
+Lee approved first stable publication from accepted RC38 source `c3c1bd87`, with only necessary version/release changes. Build39 uses the stable embedded version and unchanged production code, protocol3/cache13/package/owner signer. Full target gates and exact native Android acceptance remain required before stable Latest promotion. Frozen synthetic histories guard backward readability, hash bytes and task/Undo/order semantics from this release onward. The initial Windows gate correctly rejected Git-converted CRLF fixture bytes; byte-preserving attributes fix checkout, with production code and the frozen hashes unchanged. The replacement candidate must rerun all gates. Tandemlog is now authoritative according to Lee; no live data reset, deletion, repair or import is authorized by this release.
 
 
 ## Published 2026.10.0-rc.1 build38 — canonical v3 preview

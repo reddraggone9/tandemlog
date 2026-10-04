@@ -1,0 +1,3 @@
+# Canonical history fixtures are literal bytes, including LF record framing.
+# Never apply platform text conversion to compatibility evidence.
+test/fixtures/**/*.jsonl -text
