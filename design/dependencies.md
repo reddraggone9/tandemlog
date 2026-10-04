@@ -1,6 +1,6 @@
 # Dependency inventory — 2026-10-04
 
-Observed source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921` (HEAD when read). App version `2026.10.2-rc.1+43`. Report only: no dependency resolution, build, test suite, repository update or publication performed for this inventory.
+Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
 
 ## Direct application dependencies
 
@@ -100,6 +100,11 @@ updates:
 
 Keep individual PRs initially: no automatic merge and no cross-package grouping that conceals a hook/native payload change. Existing CI validates candidates; a bot suggestion is not release acceptance. Verify the first pub PR resolves using the pinned Flutter SDK and updates the checked-in app lockfile deterministically. Verify the Gradle updater actually recognizes `settings.gradle.kts` plugin declarations and handles wrapper updates; documented support is broader than proof for this project's dynamic Flutter include-build. Wrapper updates can execute Gradle and need the same untrusted-PR boundary as other build code.
 
+The first scans completed successfully and opened separate PRs for AGP and the
+Gradle wrapper, verifying those two declaration paths are recognized. They remain
+unmerged. Read-only synthetic PR CI is evaluation, not source-review acceptance;
+review every new version before merging or giving it signing/publication access.
+
 Dependabot documents `pub`, `github-actions`, and `gradle` support. It understands SHA-pinned repository actions and ignores local action references; therefore it will **not** update the custom shell-cloned Flutter tag/commit. It also does not cover this repository's apt selections, hosted runner image patch inventory, Java major-only patch selection, SDK/NDK values inherited inside Flutter, Flathub branch revisions, or native SQLite payloads independently of their parent pub package. Track those via a compact periodic manual tooling/native review, not invented Dependabot ecosystems. Flutter SDK changes need a coordinated tag+verified commit change plus review of inherited Android defaults.
 
 ## Required per-version review
@@ -114,6 +119,14 @@ Dependabot documents `pub`, `github-actions`, and `gradle` support. It understan
 Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://docs.github.com/en/code-security/reference/supply-chain-security/supported-ecosystems-and-repositories), [Dependabot configuration](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference), [Dart lockfiles and enforced content hashes](https://dart.dev/tools/pub/packages), [Dart hooks](https://dart.dev/tools/hooks). Source inspection establishes current project versions; docs establish automation and execution semantics.
 
 ## Complete resolved Dart graph and archive provenance
+
+The isolated [Yrs experiment](text-merge-prototype.md) has a separate Rust1.99.0
+toolchain and crate lockfile. Its direct crates are Yrs0.28.0 (text engine),
+serde_json1.0.151 (lab request encoding) and base640.22.1 (opaque update transport).
+Its46 resolved registry packages/asset provenance are recorded in the prototype
+package. They are **not application dependencies**, are not linked/shipped in
+Tandemlog, and are not covered by the app's pub/Gradle updater. The experiment is
+manually reviewed and dispatched; no Rust bridge adoption is implied.
 
 All hosted entries below are `https://pub.dev` package archives with their committed SHA-256. SDK entries come from the pinned Flutter SDK. This appendix distinguishes direct/dev/transitive without presenting transitive packages as direct app requirements.
 

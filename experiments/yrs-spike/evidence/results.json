@@ -1,0 +1,281 @@
+{
+  "date_utc": "2026-10-04T15:53:37.124452+00:00",
+  "source_commit": "29827ebadc97eed96d3e0f542c2f579cb7106b2e",
+  "hosted_run_id": 37213304140,
+  "hosted_conclusion": "success",
+  "tests_frozen_before_code": true,
+  "baseline_tests_sha256": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
+  "original_assertions_unchanged": true,
+  "native_tests": {
+    "linux": 38,
+    "windows": 38
+  },
+  "cases": [
+    {
+      "id": "C01",
+      "case": "shared_seed_does_not_duplicate_historical_text",
+      "status": "pass"
+    },
+    {
+      "id": "C02",
+      "case": "save_publishes_only_draft_changes",
+      "status": "pass"
+    },
+    {
+      "id": "C03",
+      "case": "cancel_has_no_published_change",
+      "status": "pass"
+    },
+    {
+      "id": "C04",
+      "case": "save_captured_baseline_preserves_remote_insert",
+      "status": "pass"
+    },
+    {
+      "id": "C05",
+      "case": "draft_delete_does_not_delete_concurrent_insert",
+      "status": "pass"
+    },
+    {
+      "id": "C06",
+      "case": "offline_disjoint_insertions_merge",
+      "status": "pass"
+    },
+    {
+      "id": "C07",
+      "case": "same_location_insertions_converge_without_lost_text",
+      "status": "pass"
+    },
+    {
+      "id": "C08",
+      "case": "concurrent_overlapping_deletes_converge",
+      "status": "pass"
+    },
+    {
+      "id": "C09",
+      "case": "duplicate_delivery_is_idempotent",
+      "status": "pass"
+    },
+    {
+      "id": "C10",
+      "case": "out_of_order_missing_dependency_eventually_integrates",
+      "status": "pass"
+    },
+    {
+      "id": "C11",
+      "case": "pending_dependency_survives_checkpoint_restart",
+      "status": "pass"
+    },
+    {
+      "id": "C12",
+      "case": "all_delivery_permutations_converge",
+      "status": "pass"
+    },
+    {
+      "id": "C13",
+      "case": "random_duplicate_out_of_order_delivery",
+      "status": "pass"
+    },
+    {
+      "id": "C14",
+      "case": "independent_fields_remain_independent",
+      "status": "pass"
+    },
+    {
+      "id": "C15",
+      "case": "recurrence_successor_text_is_independent",
+      "status": "pass"
+    },
+    {
+      "id": "C16",
+      "case": "unicode_utf16_offsets_and_emoji",
+      "status": "pass"
+    },
+    {
+      "id": "C17",
+      "case": "split_surrogate_offsets_rejected_without_mutation",
+      "status": "pass"
+    },
+    {
+      "id": "C18",
+      "case": "combining_zwj_and_markdown_remain_source_text",
+      "status": "pass"
+    },
+    {
+      "id": "C19",
+      "case": "composition_blocks_save_and_cancel_discards",
+      "status": "pass"
+    },
+    {
+      "id": "C20",
+      "case": "composition_commit_publishes_final_text_once",
+      "status": "pass"
+    },
+    {
+      "id": "C21",
+      "case": "sticky_selection_moves_with_remote_prefix",
+      "status": "pass"
+    },
+    {
+      "id": "C22",
+      "case": "selective_undo_preserves_remote_insert",
+      "status": "pass"
+    },
+    {
+      "id": "C23",
+      "case": "selective_undo_save_batch_retains_remote",
+      "status": "pass"
+    },
+    {
+      "id": "C24",
+      "case": "redo_is_compensation_not_history_removal",
+      "status": "pass"
+    },
+    {
+      "id": "C25",
+      "case": "undo_after_remote_delete_does_not_resurrect_remote_work",
+      "status": "pass"
+    },
+    {
+      "id": "C26",
+      "case": "invalid_binary_rejected_atomically",
+      "status": "pass"
+    },
+    {
+      "id": "C27",
+      "case": "oversized_update_rejected_before_decode",
+      "status": "pass"
+    },
+    {
+      "id": "C28",
+      "case": "out_of_range_edit_and_invalid_base64_are_atomic",
+      "status": "pass"
+    },
+    {
+      "id": "C29",
+      "case": "actor_collision_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "C30",
+      "case": "text_limit_rejected_without_partial_commit",
+      "status": "pass"
+    },
+    {
+      "id": "C31",
+      "case": "exact_update_bytes_survive_json_roundtrip_and_replay",
+      "status": "pass"
+    },
+    {
+      "id": "C32",
+      "case": "full_checkpoint_and_tail_equal_full_replay",
+      "status": "pass"
+    },
+    {
+      "id": "C33",
+      "case": "bridge_utf8_memory_cycles",
+      "status": "pass"
+    },
+    {
+      "id": "C34",
+      "case": "performance_and_storage_measurements",
+      "status": "pass"
+    },
+    {
+      "id": "O01",
+      "case": "draft_cannot_save_to_different_source",
+      "status": "pass"
+    },
+    {
+      "id": "O02",
+      "case": "incoming_update_cannot_be_attributed_to_draft",
+      "status": "pass"
+    },
+    {
+      "id": "O03",
+      "case": "successful_save_consumes_draft_once",
+      "status": "pass"
+    },
+    {
+      "id": "O04",
+      "case": "failed_save_preserves_prior_undo_and_draft",
+      "status": "pass"
+    }
+  ],
+  "additional_gates": [
+    {
+      "id": "A01",
+      "case": "Production stable-v3 frozen fixture bytes/hash/UUID/clocks/Undo/projection unchanged; actual TaskStore replay/reopen",
+      "status": "pass",
+      "evidence_scope": "Nine actual production v3 compatibility/domain tests pass, immutable fixture bytes retained."
+    },
+    {
+      "id": "A02",
+      "case": "Old production decoder rejects required unknown CRDT event/fields explicitly; no checkpoint advancement",
+      "status": "pass",
+      "evidence_scope": "Actual production unknown-version no-checkpoint-advance regression passes; no new text wire protocol is adopted."
+    },
+    {
+      "id": "A03",
+      "case": "Legacy whole-field replacement by an old writer after shared seed: policy decision needed; cannot silently accept both",
+      "status": "not-run",
+      "evidence_scope": "Legacy scalar/new text epoch admission requires decision; no old operation reinterpreted."
+    },
+    {
+      "id": "A04",
+      "case": "Checkpoint excludes missing causal struct unless raw pending update retained; prove diagnostic and recovery",
+      "status": "pass",
+      "evidence_scope": "Measured full encoding retains pending, ordinary diff excludes it."
+    },
+    {
+      "id": "A05",
+      "case": "Malicious rich-text embed/root/type payload rejected by plain-text admission layer without hidden data",
+      "status": "fail",
+      "evidence_scope": "Foreign root and conflicting shared-seed admission fail; wrapper not production ready."
+    },
+    {
+      "id": "A06",
+      "case": "Fresh process replay and truncated/corrupted/checkpoint hash rejection preserve original files",
+      "status": "not-run",
+      "evidence_scope": "New text log/checkpoint protocol not implemented; Python JSON replay is not a production checkpoint integrity proof."
+    },
+    {
+      "id": "N01",
+      "case": "Native Linux shared-library Dart FFI ABI and Unicode/update/Undo smoke",
+      "status": "pass",
+      "evidence_scope": "actual Linux native FFI pass"
+    },
+    {
+      "id": "N02",
+      "case": "Android arm64 and x86_64 official NDK packaging, native runtime FFI smoke on real emulator",
+      "status": "not-run",
+      "evidence_scope": "Official NDK arm64/x86_64 SO cross-builds pass; no Android runtime/Flutter package test."
+    },
+    {
+      "id": "N03",
+      "case": "Windows MSVC native DLL packaging and Dart FFI runtime smoke",
+      "status": "pass",
+      "evidence_scope": "Actual Windows hosted Python38 and Dart FFI pass."
+    },
+    {
+      "id": "N04",
+      "case": "Actual Flutter editor IME composition/selection/SaveCancel interaction; synthetic bridge test is insufficient",
+      "status": "not-run",
+      "evidence_scope": "Composition flags/sticky anchor engine tests pass; native Flutter IME/editor integration not implemented."
+    },
+    {
+      "id": "P01",
+      "case": "Release binary size/init and cold/warm checkpoint latency; compare same-host baseline, distinguish engine vs app startup",
+      "status": "pass",
+      "evidence_scope": "In-memory Linux release library5fresh-process samples; OS caches not flushed; no app UI/startup or comparison to empty Flutter."
+    },
+    {
+      "id": "P02",
+      "case": "Long-lived delete/tombstone growth and document count (2000 fields), cache invalidation/peak RSS/native parser isolation",
+      "status": "pass",
+      "evidence_scope": "2000fields and2500replace-edit measurements pass as bounded sample; unbounded history/resource/security acceptance not established."
+    }
+  ],
+  "production_adoption": "blocked pending admission/identity/legacy policy/state budgets/native Android+Flutter editor tests",
+  "app_dependencies_protocol_data_unchanged": true
+}

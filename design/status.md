@@ -27,6 +27,16 @@ model draft is preserved outside the repository while Lee considers plain-text
 collaborative merging for titles/notes, including Markdown source. This
 investigation changes no protocol/history. Stable2026.10.1 remains Latest.
 
+The bounded [test-first Yrs experiment](text-merge-prototype.md) is isolated from
+the app. Native Windows/Linux38-case and Dart FFI checks plus Android SO
+cross-builds pass in37213304140; adversarial field/seed admission fails, so no
+production adoption. Native Android/Flutter editor tests and legacy-writer policy
+remain unresolved. Bounded dependency PR automation and per-version review are
+implemented; maintenance CI37211247207 and current app CI37213304051 pass all
+targets. No dependency update is merged. Lee's standing non-behavior stable
+approval is recorded without removing release gates; it does not authorize a
+stable publication of the changed date/version UI without his acceptance.
+
 ## Published stable 2026.10.1 build 42 — Latest
 
 Lee explicitly approved promoting the latest RC as stable. Build 42 changes only the display version/build metadata from accepted RC41; production code, dependencies, package/signing identity and frozen v3 histories remain unchanged. Stable notes list only the three user-facing improvements since 2026.10.0; expected interactions and QA assurances are omitted. Full candidate gates and bounded exact Android upgrade acceptance remain required before stable Latest promotion. No new features, live-data operations or future stable versions are authorized by this acceptance.
