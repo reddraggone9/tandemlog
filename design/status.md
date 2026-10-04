@@ -2,7 +2,7 @@
 
 ## Next preview 2026.10.1-rc.1 build40 — in local validation
 
-Separate approved follow-up after stable publication: timed tasks precede date-only tasks within the same effective day, while scheduled override precedence/manual ties remain. Explicit midnight and date-only have separate reorder buckets. Title input grows from one visual line to two and normalizes new line breaks after composition; notes grow beyond three lines to a bounded scrolling area. Historical titles and canonical v3 data remain unchanged on unrelated edits. Actual native Linux and exact Android acceptance remain required before preview publication; stable2026.10.0 remains immutable.
+Separate approved follow-up after stable publication: timed tasks precede date-only tasks within the same effective day, while scheduled override precedence/manual ties remain. Explicit midnight and date-only have separate reorder buckets. Title input grows from one visual line to two and normalizes new line breaks after composition; notes grow beyond three lines to a bounded scrolling area. Historical titles and canonical v3 data remain unchanged on unrelated edits. Local366 app/18 policy checks pass. The45-flow native aggregate passed44 with one offscreen fixture lookup corrected and passing its native recheck; the running editor/demo is visually inspected. Replacement all-platform candidate and exact Android acceptance remain required before preview publication; stable2026.10.0 remains immutable.
 
 ## Published first stable 2026.10.0 build39 — Latest
 

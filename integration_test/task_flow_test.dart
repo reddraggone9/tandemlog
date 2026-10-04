@@ -2274,6 +2274,13 @@ void main() {
       tester.view.physicalSize = const Size(390, 820);
       tester.platformDispatcher.textScaleFactorTestValue = scale;
       await tester.pumpAndSettle();
+      // Same-day timed rows precede this date-only row. At enlarged text the
+      // long timed title may push it beyond the lazy viewport's built range.
+      await tester.scrollUntilVisible(
+        shortTitle,
+        200,
+        scrollable: taskScrollable(),
+      );
       await tester.ensureVisible(shortTitle);
       await tester.pumpAndSettle();
       expect(
