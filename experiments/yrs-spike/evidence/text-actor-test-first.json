@@ -1,0 +1,10 @@
+{
+  "frozen_utc": "2026-10-04T21:04:48.291105+00:00",
+  "implementation_present": false,
+  "test_path": "test/text_actor_registry_test.dart",
+  "test_sha256": "e81f59b643fc64d1d82421cbdc2d5e594157f4732518876c54ff30097eeb6a44",
+  "red_log_sha256": "ebb70ac43bdf4b5293e996abb6a7b571d03a18ea7154e461ccaa55d28dc4dd8b",
+  "red_result": "Missing domain module gives test-loading failure, not eight executed assertion failures.",
+  "case_count": 8,
+  "scope": "Durable context/writer/allocation mapping, reserved/unsafe actor rejection, injected actual allocator collision, atomic binding, canonical replay, actualstruct-author declaration check; native inspection/store integration tested separately."
+}
