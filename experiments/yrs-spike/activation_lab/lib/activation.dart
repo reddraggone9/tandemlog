@@ -68,7 +68,7 @@ class LabDraft {
       throw StateError('Draft is closed or prepared');
     }
     if (nativeName != null) {
-      owner._ensureWritable();
+      owner._ensureWritable(entity, field);
       final old = value.text;
       var prefix = 0;
       while (prefix < old.length &&
@@ -122,6 +122,11 @@ class _Field {
   final Set<String> applied = {};
 }
 
+class _PreparedUndo {
+  const _PreparedUndo(this.name, this.token, this.update);
+  final String name, token, update;
+}
+
 class ActivationLab {
   ActivationLab({
     required this.name,
@@ -162,8 +167,11 @@ class ActivationLab {
   final BigInt Function() nowNs;
   final _bridge = NativeBridge();
   final Map<String, String> _records = {}, _outbox = {};
+  final Map<String, _PreparedUndo> _preparedUndos = {};
   final List<String> evidence = [];
   final Map<String, LogEvent> _legacy = {};
+  final Map<String, LogEvent> _nativeCreations = {};
+  String? _spaceId;
   final Map<String, Map<String, dynamic>> _updates = {};
   final Map<String, _Field> _fields = {};
   final List<LabDraft> _drafts = [];
@@ -257,16 +265,33 @@ class ActivationLab {
         if (config != null && e.space != config!.space) {
           throw StateError('Wrong space');
         }
+        if (_spaceId != null && e.space != _spaceId) {
+          throw StateError('Wrong space');
+        }
+        _spaceId = e.space;
         _legacy[id] = e;
       } else {
         final body = Map<String, dynamic>.from(p)..remove('checksum');
         if (p['checksum'] != _digest(body) || _json(p) != raw) {
           throw StateError('Bad lab checksum/encoding');
         }
-        if (config == null ||
-            p['space'] != config!.space ||
-            p['activation'] != config!.activationRef) {
-          throw StateError('Unknown bootstrap context');
+        final nativeCreationUpdate =
+            p['kind'] == 'lab.update' &&
+            p['activation'] is String &&
+            (p['activation'] as String).startsWith('creation:');
+        if (nativeCreationUpdate) {
+          if (!isCanonicalId(p['space']) ||
+              (config != null && p['space'] != config!.space) ||
+              (_spaceId != null && p['space'] != _spaceId)) {
+            throw StateError('Wrong native creation space');
+          }
+          _spaceId = p['space'] as String;
+        } else {
+          if (config == null ||
+              p['space'] != config!.space ||
+              p['activation'] != config!.activationRef) {
+            throw StateError('Unknown bootstrap context');
+          }
         }
         EventClock.fromJson(p['clock']);
         if (p['kind'] == 'lab.activation') {
@@ -370,7 +395,10 @@ class ActivationLab {
     final ids = {for (final e in events) e.id: e};
     final created = {
       for (final e in events.where(
-        (e) => e.type == 'task.created' || e.type == 'user.created',
+        (e) =>
+            e.type == 'task.created' ||
+            e.type == 'task.createdWithText' ||
+            e.type == 'user.created',
       ))
         e.entity: e.type,
     };
@@ -452,6 +480,70 @@ class ActivationLab {
 
   void _reconcile({String? localId}) {
     final verified = _verifiedLegacy();
+    _reconcileLegacy(verified);
+    for (final creation in verified.where(
+      (e) => e.type == 'task.createdWithText',
+    )) {
+      final user = verified
+          .where(
+            (e) =>
+                e.entity == creation.data['assignee'] &&
+                e.type == 'user.created',
+          )
+          .firstOrNull;
+      if (user == null) continue;
+      final previous = _nativeCreations[creation.entity];
+      if (previous != null && previous.id != creation.id) {
+        throw StateError('Duplicate native entity creation');
+      }
+      for (final field in ['title', 'description']) {
+        final seed =
+            _bridge.call('seed', {'text': creation.data[field]})['update']
+                as String;
+        final hash = sha256.convert(base64Decode(seed)).toString();
+        if (((creation.data['text'] as Map)['seeds'] as Map)[field] != hash) {
+          throw StateError('Native seed mismatch; original record retained');
+        }
+        _seeds[_key(creation.entity, field)] = creation.data[field] as String;
+      }
+      _nativeCreations[creation.entity] = creation;
+    }
+    final updates = _updates.values.toList()
+      ..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
+    for (final p in updates) {
+      final entity = p['entity'] as String, field = p['field'] as String;
+      final key = _key(entity, field);
+      if (!_seeds.containsKey(key)) continue;
+      if (p['context'] != context(entity, field) ||
+          p['activation'] != _basis(entity)) {
+        throw StateError('Wrong field/seed routing');
+      }
+      final native = _field(entity, field);
+      if (native.applied.contains(p['id'])) continue;
+      final owned = localId == p['id'] || _outbox[p['id']] == _records[p['id']];
+      final undo = _preparedUndos[p['id']];
+      if (owned && undo != null) {
+        if (undo.name != native.name || undo.update != p['update']) {
+          throw StateError('Prepared Undo ownership mismatch');
+        }
+        _bridge.call('commit_undo', {
+          'name': native.name,
+          'token': undo.token,
+          'receipt': {'update': undo.update},
+        });
+      } else {
+        // A compensation after restart replays as immutable remote history;
+        // session Undo ownership is intentionally not reconstructed there.
+        _bridge.call(owned && p['intent'] != 'undo' ? 'apply_local' : 'apply', {
+          'name': native.name,
+          'update': p['update'],
+        });
+      }
+      native.applied.add(p['id'] as String);
+    }
+  }
+
+  void _reconcileLegacy(List<LogEvent> verified) {
     if (_activation == null) return;
     final prefixes = _activation!['frontiers'] as Map;
     for (final entry in prefixes.entries) {
@@ -486,35 +578,21 @@ class ActivationLab {
       }
     }
     isActive = true;
-    final updates = _updates.values.toList()
-      ..sort((a, b) => (a['id'] as String).compareTo(b['id'] as String));
-    for (final p in updates) {
-      final entity = p['entity'] as String, field = p['field'] as String;
-      final key = _key(entity, field);
-      if (!_seeds.containsKey(key)) continue;
-      if (p['context'] != context(entity, field)) {
-        throw StateError('Wrong field/seed routing');
-      }
-      final native = _field(entity, field);
-      if (native.applied.contains(p['id'])) continue;
-      final owned = localId == p['id'] || _outbox[p['id']] == _records[p['id']];
-      _bridge.call(owned ? 'apply_local' : 'apply', {
-        'name': native.name,
-        'update': p['update'],
-      });
-      native.applied.add(p['id'] as String);
-    }
   }
 
+  String _basis(String entity) => _nativeCreations.containsKey(entity)
+      ? 'creation:${_nativeCreations[entity]!.id}'
+      : config!.activationRef;
+
   String context(String entity, String field) {
-    if (!isActive || !_seeds.containsKey(_key(entity, field))) {
+    if (!_seeds.containsKey(_key(entity, field))) {
       throw StateError('Field baseline unavailable');
     }
     return _digest({
-      'space': config!.space,
+      'space': config?.space ?? _spaceId,
       'entity': entity,
       'field': field,
-      'activation': config!.activationRef,
+      'activation': _basis(entity),
       'codec': 'yrs-v1',
       'seed': _seeds[_key(entity, field)],
     });
@@ -539,7 +617,7 @@ class ActivationLab {
     final row = _rows(_verifiedLegacy())[entity];
     if (row == null) throw StateError('Missing entity');
     final result = Map<String, dynamic>.from(row);
-    if (isActive && row['kind'] == 'task') {
+    if (_seeds.containsKey(_key(entity, 'title')) && row['kind'] == 'task') {
       for (final f in ['title', 'description']) {
         result[f] = text(entity, f);
       }
@@ -548,7 +626,7 @@ class ActivationLab {
   }
 
   String text(String entity, String field) {
-    if (!isActive) {
+    if (!_seeds.containsKey(_key(entity, field))) {
       return _rows(_verifiedLegacy())[entity]?[field] as String? ?? '';
     }
     return _bridge.call('read', {'name': _field(entity, field).name})['text']
@@ -558,14 +636,17 @@ class ActivationLab {
   bool fieldPending(String entity, String field) =>
       _bridge.call('read', {'name': _field(entity, field).name})['pending'] ==
       true;
-  void _ensureWritable() {
-    if (!isActive || isBlocked || _closed) {
+  void _ensureWritable([String? entity, String? field]) {
+    final available = entity == null
+        ? isActive
+        : _seeds.containsKey(_key(entity, field!));
+    if (!available || isBlocked || _closed) {
       throw StateError('Verified shared baseline required');
     }
   }
 
   LabDraft begin(String entity, String field, {required String batch}) {
-    _ensureWritable();
+    _ensureWritable(entity, field);
     final native = _field(entity, field);
     final actor =
         (int.parse(
@@ -611,20 +692,27 @@ class ActivationLab {
     return d;
   }
 
-  String _wrap(String id, String entity, String field, String update) => seal({
+  String _wrap(
+    String id,
+    String entity,
+    String field,
+    String update, {
+    String? intent,
+  }) => seal({
     'kind': 'lab.update',
     'id': '$writer:$id',
     'writer': writer,
-    'space': config!.space,
-    'activation': config!.activationRef,
+    'space': config?.space ?? _spaceId,
+    'activation': _basis(entity),
     'entity': entity,
     'field': field,
     'context': context(entity, field),
     'clock': EventClock.next(nowNs(), EventClock(maximumObserved)).toJson(),
     'update': update,
+    if (intent != null) 'intent': intent,
   });
   String prepareSave(LabDraft d) {
-    _ensureWritable();
+    _ensureWritable(d.entity, d.field);
     if (d.owner != this ||
         d.nativeContext == null ||
         d.nativeContext != context(d.entity, d.field) ||
@@ -661,7 +749,8 @@ class ActivationLab {
   }
 
   String retryPrepared(String raw, {bool failAfterAppend = false}) {
-    _ensureWritable();
+    final packet = jsonDecode(raw) as Map<String, dynamic>;
+    _ensureWritable(packet['entity'] as String, packet['field'] as String);
     _refreshJournal();
     final id = _packetId(raw);
     if (_records[id] == raw) {
@@ -700,21 +789,45 @@ class ActivationLab {
 
   void _finishOutbox(String id) {
     _outbox.remove(id);
+    _preparedUndos.remove(id);
     if (directory != null) {
       final file = File('${directory!.path}/${_digest(id)}.prepared');
       if (file.existsSync()) file.deleteSync();
     }
   }
 
-  String undo(String entity, String field) {
-    _ensureWritable();
-    final update =
-        _bridge.call('undo', {'name': _field(entity, field).name})['update']
-            as String;
-    final raw = _wrap('undo-${_serial++}', entity, field, update);
-    ingest(raw);
+  String prepareUndo(String entity, String field) {
+    _ensureWritable(entity, field);
+    final native = _field(entity, field);
+    for (final entry in _preparedUndos.entries) {
+      if (entry.value.name == native.name) return _outbox[entry.key]!;
+    }
+    final prepared = _bridge.call('prepare_undo', {'name': native.name});
+    final update = prepared['update'] as String;
+    final raw = _wrap(
+      'undo-${_serial++}',
+      entity,
+      field,
+      update,
+      intent: 'undo',
+    );
+    final id = _packetId(raw);
+    _outbox[id] = raw;
+    _preparedUndos[id] = _PreparedUndo(
+      native.name,
+      prepared['token'] as String,
+      update,
+    );
+    if (directory != null) {
+      File(
+        '${directory!.path}/${_digest(id)}.prepared',
+      ).writeAsStringSync(raw, flush: true);
+    }
     return raw;
   }
+
+  String undo(String entity, String field) =>
+      retryPrepared(prepareUndo(entity, field));
 
   void writeCache() {
     if (directory == null) throw StateError('No private journal');
