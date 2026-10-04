@@ -7,6 +7,7 @@ on:
     paths-ignore:
       - "**/*.md"
       - "evidence/**"
+      - "experiments/yrs-spike/evidence/**"
   pull_request:
   workflow_dispatch:
 permissions:

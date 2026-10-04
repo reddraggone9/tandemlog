@@ -1,0 +1,35 @@
+{
+  "method": "Linux release SO; Python ctypes wall times; fresh processes, OS page caches not flushed; in-memory engine/JSON, not disk/SQLite/Flutter first frame",
+  "fresh_process_samples": [
+    {
+      "load_ms": 0.6026400078553706,
+      "first_document_ms": 0.2080349950119853
+    },
+    {
+      "load_ms": 0.3321819822303951,
+      "first_document_ms": 0.19136900664307177
+    },
+    {
+      "load_ms": 0.3445209877099842,
+      "first_document_ms": 0.18394802464172244
+    },
+    {
+      "load_ms": 0.3352169878780842,
+      "first_document_ms": 0.1958860084414482
+    },
+    {
+      "load_ms": 0.35499699879437685,
+      "first_document_ms": 0.18944600014947355
+    }
+  ],
+  "fields": 2000,
+  "fields_create_and_ffi_ms": 61.74607601133175,
+  "peak_rss_before_kib": 16568,
+  "peak_rss_after_fields_kib": 22716,
+  "replacement_edits": 2500,
+  "replacement_edit_and_ffi_ms": 20.884998986730352,
+  "checkpoint_json_bytes": 3433,
+  "restore_result": {
+    "ok": true
+  }
+}

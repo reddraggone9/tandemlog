@@ -25,16 +25,16 @@ clarification is a separate explained revision.
 | C14–C15 | Independent fields and recurring-successor text | Pass for correctly routed fields; misrouting not safe yet |
 | C16–C21 | UTF-16, emoji/surrogate boundaries, combining/ZWJ/Markdown, composition commit/cancel and sticky selection | Pass, engine/bridge scope only |
 | C22–C25 | Selective Undo/Redo as appended compensation preserving remote work | Pass, session Undo only |
-| C26–C30 | Malformed/oversized updates, invalid offsets/base64, active actor collision, text limits, atomic rejection | Pass for sampled cases; full malicious update admission remains blocked |
+| C26–C30 | Malformed/oversized updates, invalid offsets/base64, active actor collision, text limits, atomic rejection | Pass for sampled cases; sampled malformed updates rejected; pinned plain-text admission added below |
 | C31–C34 | Exact JSON update bytes, checkpoint/tail equivalence, native memory cycles and measured edit/restore/storage cost | Pass, synthetic scope |
 | O01–O04 | Source-bound one-shot Save, reject remote draft import, failure retains draft/prior Undo | Three failures reproduced before fixes; four pass after fixes |
 | A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; old scalar admission remains undecided |
 | A04 | Pending structs retained through full checkpoint, excluded by ordinary diff | Pass: full restore yields xAB; diff restore yields xA |
-| A05 | Wrong-root/embed/type admission | **Fail**: foreign root/text accepted invisibly into state; seed conflict also reproduced |
+| R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass locally afterward; hosted rerun pending |
 | A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
 | N01 | Linux/Dart native ABI | Pass, actual Dart3.13.4 native FFI |
 | N02 | Android two-ABI packaging/runtime | ARM64/x86_64 SO cross-builds pass; runtime/Flutter packaging not run |
-| N03 | Windows native ABI/runtime | Pass: 38 Python cases and actual Dart FFI on hosted Windows2022 |
+| N03 | Windows native ABI/runtime | Prior revision38 and Dart FFI pass; hardened revision awaiting hosted rerun |
 | N04 | Actual Flutter IME/editor integration | Not run; engine composition flags do not prove UI behavior |
 | P01–P02 | Release library load/checkpoint, deletion churn and document/RSS cost | Bounded Linux measurements pass; app cold start/unbounded-state acceptance not run |
 
@@ -58,7 +58,7 @@ within512MiB/10CPU-second bounds. This is sampling, not a native-parser security
 proof. Foreign-root data is reproduced as retained invisibly in full state;
 conflicting historical seed IDs produce mixed text instead of rejection. Those
 are **adapter admission failures**, not claims that Yrs rejects unsupported app
-semantics on the caller's behalf. The prototype remains unsuitable for real data.
+semantics on the caller's behalf. These historical failures are retained as evidence; the scoped hardening below addresses them. The prototype remains unsuitable for real data until the remaining adoption gates pass.
 
 Local Linux release measurement, with OS page caches unflushed: 2000 one-character
 edits take23.41ms including Python/JSON/FFI; in-memory checkpoint restore takes
@@ -70,14 +70,50 @@ synthetic fields takes51.83ms and increases process peak RSS from16680 to22740Ki
 Hosted libraries are926544B Linux,864256B Windows,842784B ARM64 Android and953048B
 x86_64 Android, before application packaging.
 
-Recommendation: continue only the narrow text adapter after field/seed/actor
-identity, strict ingress, separate state budgets, legacy-scalar admission and
+Recommendation: continue only the narrow text adapter after durable field/actor
+identity, separate state budgets, legacy-scalar admission and
 real Android/editor tests are resolved. Keep ordinary tags, relative-anchor
 ordering, validated schedules and domain commands. Y.Map replacement does not
 supply observed-remove set, additive counter or coupled-schedule invariants;
 Y.Array insertion/deletion does not by itself enforce logical item uniqueness
 through concurrent moves. Checklist title/notes could reuse a hardened text
 adapter; checklist identity/deletion/recurrence should remain domain rules.
+
+## Admission hardening (isolated, 2026-10-04)
+
+Fourteen new regressions were recorded before source changes in standalone
+commit `cac56d3` at16:15:02UTC, SHA256
+`b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed`.
+Thirteen failed; the duplicate-full-state case already passed. Original34 and
+ownership4 assertions/hashes remain unchanged. All52 pass on the hardened local
+Linux release library; native hosted Windows/Linux and Android cross-builds
+are being rerun against this exact revision. No application source changes.
+
+The adapter uses Yrs's pinned V1 primitive decoder to inspect every incoming
+struct before integration, including pending/deleted content. It permits only
+unformatted string items rooted in `text`, causal skips and bounded delete
+ranges. It rejects foreign roots, nested ID parents, map slots, embeds, format,
+shared types, erased/GC structs, reserved flags and trailing bytes. It checks
+normalized UTF-16 identity/origins for overlapping actor/clock spans and forbids
+extending the reserved historical seed frontier after initialization. New,
+restore and Save/import share that admission boundary; rejected inputs leave
+committed state unchanged. Integration/order/Undo remain owned by Yrs.
+
+`skip_gc=true` retains original deleted strings for identity comparisons after
+checkpoint restore. This is a deliberate bounded prototype cost, not an adopted
+compaction policy; old experimental checkpoints with erased identities reject
+explicitly. A production field/document-bound envelope, durable actor allocation,
+separate visible/update/history budgets, malicious-native-parser isolation,
+legacy scalar policy and actual Android/Flutter editor coverage remain open.
+Same-seed updates routed to the wrong independent field are not prevented by
+this wire allow-list. No durable v3 data is reinterpreted or modified.
+
+The hardened bounded Linux rerun creates2000 fields in61.75ms (process peak
+RSS16568→22716KiB), performs2500 replacement edits in20.88ms and restores the
+3433B JSON checkpoint. Five fresh-process library loads take0.332–0.603ms and
+first-document initialization0.184–0.208ms; OS caches were not flushed. These
+are engine/Python/FFI measurements, not app cold-start evidence. The isolated
+1003-input malformed sample again rejects all inputs without state change.
 
 Evaluate Yrs [0.28.0 API](https://docs.rs/yrs/0.28.0/yrs/) with pinned crate bytes
 and reviewed build hooks. It provides a text CRDT, state/update encodings,

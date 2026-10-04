@@ -1,4 +1,5 @@
 //! Disposable investigation only; not a production protocol or security boundary.
+mod admission;
 use base64::{engine::general_purpose::STANDARD, Engine as _};
 use serde_json::{json, Value};
 use std::cell::RefCell;
@@ -29,9 +30,13 @@ impl Replica {
         let doc = make_doc(client);
         let text = doc.get_or_insert_text("text");
         if let Some(bytes) = seed {
+            admission::Admission::parse(bytes)?.check_initial()?;
             doc.transact_mut_with("remote")
                 .apply_update(decode(bytes)?)
                 .map_err(|e| e.to_string())?;
+        }
+        if text.get_string(&doc.transact()).encode_utf16().count() > MAX {
+            return Err("text size limit".into());
         }
         let mut opts = yrs::undo::Options::default();
         opts.tracked_origins.insert("local".into());
@@ -65,6 +70,10 @@ fn make_doc(client: u64) -> Doc {
     let mut o = Options::default();
     o.client_id = ClientID::new(client);
     o.offset_kind = OffsetKind::Utf16;
+    // Preserve deleted content so admission can compare immutable actor/clock
+    // identity after checkpoint/restart. This has an explicit bounded-history
+    // cost; production compaction/admission policy remains unadopted.
+    o.skip_gc = true;
     Doc::with_options(o)
 }
 fn decode(bytes: &[u8]) -> Result<Update, String> {
@@ -136,11 +145,14 @@ impl Engine {
         if r.baseline.is_some() {
             return Err("remote updates cannot enter a private captured draft".into());
         }
+        let previous = r.full();
+        admission::Admission::parse(data)?
+            .check_against(&admission::Admission::parse(&previous)?)?;
         let check = make_doc((1 << 53) - 1);
         let text = check.get_or_insert_text("text");
         check
             .transact_mut()
-            .apply_update(decode(&r.full())?)
+            .apply_update(decode(&previous)?)
             .map_err(|e| e.to_string())?;
         check
             .transact_mut()
@@ -149,8 +161,6 @@ impl Engine {
         if text.get_string(&check.transact()).encode_utf16().count() > MAX {
             return Err("text size limit".into());
         }
-        // This bounded spike does NOT yet admit/reject all rich-text/foreign-root
-        // encodings. That is a separately recorded production adoption gate.
         r.doc
             .transact_mut_with(origin)
             .apply_update(decode(data)?)

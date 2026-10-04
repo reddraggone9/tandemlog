@@ -1,14 +1,17 @@
 {
-  "date_utc": "2026-10-04T15:53:37.124452+00:00",
-  "source_commit": "29827ebadc97eed96d3e0f542c2f579cb7106b2e",
-  "hosted_run_id": 37213304140,
-  "hosted_conclusion": "success",
+  "date_utc": "2026-10-04T16:19:43.414007+00:00",
+  "source_commit": "pending hardened-adapter commit",
+  "hosted_run_id": null,
+  "hosted_conclusion": "pending",
   "tests_frozen_before_code": true,
   "baseline_tests_sha256": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
   "original_assertions_unchanged": true,
   "native_tests": {
-    "linux": 38,
-    "windows": 38
+    "linux": 52,
+    "windows": {
+      "current_revision": "not-run",
+      "prior_revision": 38
+    }
   },
   "cases": [
     {
@@ -200,6 +203,76 @@
       "id": "O04",
       "case": "failed_save_preserves_prior_undo_and_draft",
       "status": "pass"
+    },
+    {
+      "id": "R01",
+      "case": "foreign_root_apply_is_atomic",
+      "status": "pass"
+    },
+    {
+      "id": "R02",
+      "case": "foreign_root_cannot_enter_new",
+      "status": "pass"
+    },
+    {
+      "id": "R03",
+      "case": "foreign_root_cannot_enter_restore",
+      "status": "pass"
+    },
+    {
+      "id": "R04",
+      "case": "embed_rejected_even_when_get_string_hides_it",
+      "status": "pass"
+    },
+    {
+      "id": "R05",
+      "case": "format_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "R06",
+      "case": "nested_shared_type_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "R07",
+      "case": "map_slot_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "R08",
+      "case": "missing_nested_parent_rejected_before_pending_storage",
+      "status": "pass"
+    },
+    {
+      "id": "R09",
+      "case": "conflicting_reserved_seed_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "R10",
+      "case": "deleted_seed_identity_survives_checkpoint",
+      "status": "pass"
+    },
+    {
+      "id": "R11",
+      "case": "duplicate_full_state_with_split_seed_is_allowed",
+      "status": "pass"
+    },
+    {
+      "id": "R12",
+      "case": "conflicting_nonseed_actor_overlap_rejected",
+      "status": "pass"
+    },
+    {
+      "id": "R13",
+      "case": "trailing_bytes_rejected_without_mutation",
+      "status": "pass"
+    },
+    {
+      "id": "R14",
+      "case": "reserved_seed_cannot_extend_its_original_identity",
+      "status": "pass"
     }
   ],
   "additional_gates": [
@@ -230,8 +303,8 @@
     {
       "id": "A05",
       "case": "Malicious rich-text embed/root/type payload rejected by plain-text admission layer without hidden data",
-      "status": "fail",
-      "evidence_scope": "Foreign root and conflicting shared-seed admission fail; wrapper not production ready."
+      "status": "pass",
+      "evidence_scope": "14 red-before-fix admission regressions now pass; one text root/string-only structs, atomic ingress, conflicting seed/actor identity and deleted-seed checkpoint tests. Pinned-wire allow-list is not a parser security proof or field-routing envelope."
     },
     {
       "id": "A06",
@@ -254,8 +327,8 @@
     {
       "id": "N03",
       "case": "Windows MSVC native DLL packaging and Dart FFI runtime smoke",
-      "status": "pass",
-      "evidence_scope": "Actual Windows hosted Python38 and Dart FFI pass."
+      "status": "not-run",
+      "evidence_scope": "Prior adapter Windows38+Dart passed; hardened adapter awaiting hosted Windows rerun."
     },
     {
       "id": "N04",
@@ -267,15 +340,31 @@
       "id": "P01",
       "case": "Release binary size/init and cold/warm checkpoint latency; compare same-host baseline, distinguish engine vs app startup",
       "status": "pass",
-      "evidence_scope": "In-memory Linux release library5fresh-process samples; OS caches not flushed; no app UI/startup or comparison to empty Flutter."
+      "evidence_scope": "Hardened adapter bounded Linux measurement rerun passes; see admission-resource-measurement.json. Not unbounded growth, native parser proof or application startup."
     },
     {
       "id": "P02",
       "case": "Long-lived delete/tombstone growth and document count (2000 fields), cache invalidation/peak RSS/native parser isolation",
       "status": "pass",
-      "evidence_scope": "2000fields and2500replace-edit measurements pass as bounded sample; unbounded history/resource/security acceptance not established."
+      "evidence_scope": "Hardened adapter bounded Linux measurement rerun passes; see admission-resource-measurement.json. Not unbounded growth, native parser proof or application startup."
     }
   ],
-  "production_adoption": "blocked pending admission/identity/legacy policy/state budgets/native Android+Flutter editor tests",
-  "app_dependencies_protocol_data_unchanged": true
+  "production_adoption": "blocked pending field/actor identity, legacy policy/state budgets/native Android+Flutter editor tests",
+  "app_dependencies_protocol_data_unchanged": true,
+  "baseline_before_admission": {
+    "source_commit": "29827ebadc97eed96d3e0f542c2f579cb7106b2e",
+    "hosted_run_id": 37213304140,
+    "main_cases": 38,
+    "additional_pass": 7,
+    "additional_fail": 1,
+    "additional_not_run": 4
+  },
+  "admission_test_first": {
+    "recorded_utc": "2026-10-04T16:15:02.369267+00:00",
+    "source_unchanged": true,
+    "tests": 14,
+    "test_sha256": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed",
+    "log": "admission-before-fix.log",
+    "test_only_commit": "cac56d3"
+  }
 }

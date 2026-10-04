@@ -28,3 +28,11 @@ Gate results and scope limitations are in the linked design prototype report.
 
 Status/report files belong under evidence/. Real user task text, credentials and
 private Markdown sources are excluded.
+
+Admission hardening: tests/test_admission.py was recorded red before the narrow
+pinned-Yrs-v1 allow-list in src/admission.rs. It rejects generic shared/rich-text
+payloads and actor/seed identity conflicts before apply/new/restore. Deleted
+strings are retained with skip_gc for comparison; this is bounded prototype
+policy, not production compaction. Field routing/actor allocation and Android
+runtime/editor gates remain open. See evidence/admission-test-first.json and
+results.json for exact current versus baseline coverage.

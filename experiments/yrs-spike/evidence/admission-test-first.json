@@ -1,0 +1,7 @@
+{
+  "recorded_utc": "2026-10-04T16:15:02.369267+00:00",
+  "source_unchanged": true,
+  "tests": 14,
+  "test_sha256": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed",
+  "log": "admission-before-fix.log"
+}
