@@ -25,3 +25,7 @@ After author pushed the exact capture commit on experiment/date-time-layout, rev
 Remove provisional “version assigned only after candidate acceptance” draft header when assembling published notes; assigning the final actual version then suffices. This is draft bookkeeping, not a defect in the actual change description.
 
 No author notes/media/app source edited by reviewer. No publication or commits performed. Material revisions require recheck.
+
+## Final versioned draft recheck
+
+PASS,2026-10-04. Covered candidate range now e2df9f1de036077d4db7b91fb359f42d204e3d83..c192f012167b88e521b8c5a51e24ebaad8a4659f. Both actual design/prerelease-notes.md and design/date-layout-preview-notes.md are byte-identical, headed “Experimental 2026.10.2-rc.3 preview.” and agree with pubspec2026.10.2-rc.3+45. The sole enlarged-text bullet, alt text and exact previously checked3611 media URL remain unchanged. Provisional header removed; optional finding resolved. Production task_editor bytes match reviewed2a251; intervening changes are version/editorial/evidence metadata, with no native text-merge feature in this candidate. Historical build44 notes omitted only from the next-candidate draft; no published notes edited. No remaining blocking editorial/media findings. Platform and release authorization gates remain separate.
