@@ -1,0 +1,86 @@
+{
+  "tag": "v2026.10.1",
+  "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+  "version": "2026.10.1+42",
+  "candidate_run": 37202648731,
+  "promotion_run": 37205170375,
+  "promotion_dispatch_commit": "6c2cff9fdab367788b06f91465017a61d6ca4ba8",
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.1",
+  "release_id": 403030558,
+  "rebuilt": false,
+  "prerelease": false,
+  "draft": false,
+  "latest": true,
+  "tag_source": "pass",
+  "notes_equal_approved_dispatch": "pass",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.1-android.apk",
+      "id": 609886738,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1/tandemlog-2026.10.1-android.apk",
+      "sha256": "bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908",
+      "bytes": 59936576,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.1-linux-x64.flatpak",
+      "id": 609886737,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1/tandemlog-2026.10.1-linux-x64.flatpak",
+      "sha256": "0a6d6fcfcad1e6ca6a5cbd37981e8e3b2625aae1596db8127d37fd9067b69377",
+      "bytes": 8336768,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.1-windows-x64-setup.exe",
+      "id": 609886736,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1/tandemlog-2026.10.1-windows-x64-setup.exe",
+      "sha256": "3e66fe9f5a5b2970e54fdc6979bbf1827a60d39d90c91745bbeae118100a37ad",
+      "bytes": 11596320,
+      "anonymous_public_download": "pass"
+    }
+  ],
+  "all_prior_releases_unchanged": [
+    "v2026.10.1-rc.1",
+    "v2026.10.0",
+    "v2026.10.0-rc.1",
+    "v0.1.0-rc.9",
+    "v0.1.0-rc.8",
+    "v0.1.0-rc.7",
+    "v0.1.0-rc.6",
+    "v0.1.0-rc.5",
+    "v0.1.0-rc.4",
+    "v0.1.0-rc.3",
+    "v0.1.0-rc.2",
+    "v0.1.0-rc.1"
+  ],
+  "public_apk_verification": {
+    "official_apksigner": "pass",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version_name": "2026.10.1",
+    "version_code": 42,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ]
+  },
+  "native_android_acceptance": {
+    "status": "pass",
+    "reported_by": "coordinator/native executor",
+    "platform": "Android 11/API30 x86_64",
+    "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "apk_sha256": "bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908",
+    "checks": [
+      "owner/package/nondebuggable/stable version",
+      "in-place upgrade retains 52 synthetic tasks/logs/settings/writer/checkpoints/SAF grant",
+      "native edit/Undo emits only two expected receipts",
+      "process restart and integrity check"
+    ],
+    "cleanup": "temporary services stopped; profile restored; live data untouched",
+    "scope": "bounded exact stable-name rebuild; accepted RC41 feature/visual evidence retained"
+  },
+  "windows_installer_signed": false,
+  "live_data_reset_or_import": false
+}

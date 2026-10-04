@@ -692,7 +692,14 @@
     "cleanup": "temporary services stopped; profile restored; live data untouched",
     "scope": "bounded exact stable-name rebuild; accepted RC41 feature/visual evidence retained"
   },
-  "publication": "authorized stable2026.10.1 promotion pending; no rebuild",
+  "publication": {
+    "status": "published stable without rebuilding",
+    "tag": "v2026.10.1",
+    "promotion_run": 37205170375,
+    "latest": true,
+    "prerelease": false,
+    "public_verification": "evidence/stable-2026.10.1-build42-public-verification.json"
+  },
   "artifacts": {
     "windows": {
       "artifact_id": 11303313479,
