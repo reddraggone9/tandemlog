@@ -124,6 +124,7 @@ class LogEvent {
         case 'user.created':
           text('name', 100);
         case 'task.created':
+        case 'task.createdWithText':
           text('title', 500);
           text('description', 10000, empty: true);
           if (d['assignee'] is! String || !isCanonicalId(d['assignee'])) {
@@ -144,6 +145,26 @@ class LogEvent {
           if (d.containsKey('description')) {
             text('description', 10000, empty: true);
           }
+        case 'task.textEdited':
+          validateTextChanges(d['changes']);
+          if (d.containsKey('intent') && d['intent'] != 'undo') {
+            throw FormatFailure('Unsupported native text intent.');
+          }
+          if (d.containsKey('assignee') && !isCanonicalId(d['assignee'])) {
+            throw FormatFailure('Invalid assignee.');
+          }
+        case 'task.textEditUndone':
+          if (!_validReference(d['operation'])) {
+            throw FormatFailure('Invalid native text operation reference.');
+          }
+          validateTextChanges(d['changes'], empty: true);
+        case 'text.baselineInitialized':
+          if (j['entity'] != j['space']) {
+            throw FormatFailure(
+              'Text initialization must reference its workspace.',
+            );
+          }
+          validateTextBaseline(d);
         case 'task.deleted':
           break;
         case 'task.moved':
@@ -195,8 +216,14 @@ class LogEvent {
             'Unknown event ${j['type']}. Update the app; history was preserved.',
           );
       }
-      if (j['type'] == 'task.created') validateTask(d);
-      if (j['type'] == 'task.edited' && d.containsKey('schedule')) {
+      if (j['type'] == 'task.created' || j['type'] == 'task.createdWithText') {
+        validateTask(d);
+      }
+      if (j['type'] == 'task.createdWithText') {
+        validateTextSeedDescriptor(d['text']);
+      }
+      if ((j['type'] == 'task.edited' || j['type'] == 'task.textEdited') &&
+          d.containsKey('schedule')) {
         validateSchedule(d['schedule']);
       }
       if (d.containsKey('tagChanges')) validateTagChanges(d['tagChanges']);
@@ -209,12 +236,34 @@ class LogEvent {
           'schedule',
           'tags',
         },
+        'task.createdWithText' => {
+          'title',
+          'description',
+          'assignee',
+          'schedule',
+          'tags',
+          'text',
+        },
         'task.edited' => {
           'title',
           'description',
           'schedule',
           'tagChanges',
           'assignee',
+        },
+        'task.textEdited' => {
+          'changes',
+          'intent',
+          'schedule',
+          'tagChanges',
+          'assignee',
+        },
+        'task.textEditUndone' => {'operation', 'changes'},
+        'text.baselineInitialized' => {
+          'codec',
+          'adapter',
+          'frontiers',
+          'seedDigest',
         },
         'task.deleted' => <String>{},
         'task.moved' => {'before'},
@@ -289,7 +338,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final tagRemoves = <String>{};
   final retracted = retractedOperationIds(events);
   for (final e in events) {
-    if (e.type == 'user.created' || e.type == 'task.created') {
+    if (e.type == 'user.created' ||
+        e.type == 'task.created' ||
+        e.type == 'task.createdWithText') {
       if (state != null) {
         throw FormatFailure('Duplicate entity creation: ${e.entity}');
       }
@@ -301,7 +352,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
         // Raw captures need triage. Populated creations and derived recurring
         // occurrences have already been organized, even before their first edit.
         'inbox':
-            e.type == 'task.created' &&
+            (e.type == 'task.created' || e.type == 'task.createdWithText') &&
             e.data['tagOrigin'] == null &&
             (e.data['description'] as String? ?? '').trim().isEmpty &&
             (e.data['tags'] as List? ?? []).isEmpty &&
@@ -327,8 +378,13 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   }
   for (final e in events) {
     if (retracted.contains(e.id)) continue;
-    if (e.type == 'task.edited') {
-      state.addAll(Map<String, dynamic>.from(e.data)..remove('tagChanges'));
+    if (e.type == 'task.edited' || e.type == 'task.textEdited') {
+      state.addAll(
+        Map<String, dynamic>.from(e.data)
+          ..remove('tagChanges')
+          ..remove('changes')
+          ..remove('intent'),
+      );
       state['inbox'] = false;
     }
     if (e.data.containsKey('tagChanges')) {
@@ -349,6 +405,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     (e) => e.type == 'task.deleted' && !retracted.contains(e.id),
   );
   state.remove('tagOrigin');
+  state.remove(
+    'text',
+  ); // Native initialization metadata belongs to canonical context.
   state['tagRefs'] = Map.fromEntries(
     tagAdds.entries.where((e) => !tagRemoves.contains(e.key)),
   );
@@ -370,11 +429,12 @@ Set<String> retractedOperationIds(Iterable<LogEvent> events) => events
     .where(
       (e) =>
           e.type == 'task.operationUndone' ||
+          e.type == 'task.textEditUndone' ||
           e.type == 'task.recurringCompletionUndone',
     )
     .map(
       (e) =>
-          (e.type == 'task.operationUndone'
+          (e.type == 'task.operationUndone' || e.type == 'task.textEditUndone'
                   ? e.data['operation']
                   : e.data['completion'])
               as String,
@@ -394,6 +454,83 @@ void validateTags(dynamic value) {
     throw FormatFailure(
       'Reserved scheduling tag. Use task schedule fields; existing history was preserved and requires a compatible fresh import.',
     );
+  }
+}
+
+/// Additive required creation meaning. Old task.created records remain unchanged.
+/// Native seed/content agreement is checked by the text adapter before admission.
+void validateTextSeedDescriptor(dynamic value) {
+  if (value is! Map<String, dynamic> ||
+      value.keys.toSet().difference({'codec', 'adapter', 'seeds'}).isNotEmpty ||
+      value['codec'] != 'yrs-v1' ||
+      value['adapter'] != 1 ||
+      value['seeds'] is! Map<String, dynamic>) {
+    throw FormatFailure('Unsupported native text seed descriptor.');
+  }
+  final seeds = value['seeds'] as Map<String, dynamic>;
+  if (seeds.length != 2 ||
+      !seeds.containsKey('title') ||
+      !seeds.containsKey('description') ||
+      seeds.values.any((seed) => !isEventHash(seed))) {
+    throw FormatFailure('Invalid native text seed hashes.');
+  }
+}
+
+/// Wire admission is separate from native codec and ownership validation.
+/// Exact decoded bytes are retained; permissive base64 aliases are rejected.
+void validateTextChanges(dynamic value, {bool empty = false}) {
+  if (value is! Map<String, dynamic> ||
+      (!empty && value.isEmpty) ||
+      value.keys.any((key) => key != 'title' && key != 'description')) {
+    throw FormatFailure('Invalid native text changes.');
+  }
+  for (final change in value.values) {
+    if (change is! Map<String, dynamic> ||
+        change.length != 4 ||
+        !isEventHash(change['context']) ||
+        !isCanonicalId(change['allocation']) ||
+        change['actor'] is! int ||
+        change['actor'] < 2 ||
+        change['actor'] > 9007199254740991 ||
+        change['update'] is! String) {
+      throw FormatFailure('Invalid native text change descriptor.');
+    }
+    final encoded = change['update'] as String;
+    // Limit before decoding, independently of the whole canonical event cap.
+    if (encoded.isEmpty || encoded.length > 1398104) {
+      throw FormatFailure('Oversized or empty native text update.');
+    }
+    try {
+      final bytes = base64Decode(encoded);
+      if (bytes.isEmpty ||
+          bytes.length > 1024 * 1024 ||
+          base64Encode(bytes) != encoded) {
+        throw FormatFailure('Noncanonical native text update.');
+      }
+    } on FormatException {
+      throw FormatFailure('Malformed native text update.');
+    }
+  }
+}
+
+void validateTextBaseline(Map<String, dynamic> data) {
+  if (data['codec'] != 'yrs-v1' ||
+      data['adapter'] != 1 ||
+      data['frontiers'] is! Map<String, dynamic> ||
+      !isEventHash(data['seedDigest'])) {
+    throw FormatFailure('Unsupported text initialization descriptor.');
+  }
+  for (final entry in (data['frontiers'] as Map<String, dynamic>).entries) {
+    final head = entry.value;
+    if (!isCanonicalId(entry.key) ||
+        head is! Map<String, dynamic> ||
+        head.length != 2 ||
+        head['seq'] is! int ||
+        head['seq'] < 0 ||
+        head['seq'] > 9007199254740991 ||
+        !isEventHash(head['hash'])) {
+      throw FormatFailure('Invalid text initialization frontier.');
+    }
   }
 }
 

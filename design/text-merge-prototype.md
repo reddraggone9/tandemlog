@@ -1,5 +1,8 @@
 # Test-first isolated Yrs prototype — 2026-10-04
 
+Historical test-first evaluation. Current authorized, unreleased integration and
+remaining gates are in [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+
 Status: Lee authorized a bounded cross-platform investigation, not production
 adoption. No application dependency, event meaning, durable history, schema,
 signing identity or checklist changes are part of this experiment. The isolated

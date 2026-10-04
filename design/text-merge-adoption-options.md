@@ -1,5 +1,10 @@
 # Text merge adoption choices — proposal, 2026-10-04
 
+Historical proposal and isolated evidence. Lee subsequently authorized production
+implementation and the shared baseline with an offline new-task exception;
+[ADR 0010](decisions/0010-collaborative-text-adoption.md) supersedes the decision
+status below. Its remaining native/platform gates are not marked complete.
+
 Status: Lee approved late legacy text writes losing after activation on 2026-10-04
 (Sentinel_17d7070781648191be317081ef30c28e). Bootstrap is still a proposal.
 The isolated lab is authorized; production adoption and new durable meanings are not. Existing stable-v3 logs,
