@@ -28,7 +28,7 @@ clarification is a separate explained revision.
 | C26–C30 | Malformed/oversized updates, invalid offsets/base64, active actor collision, text limits, atomic rejection | Pass for sampled cases; sampled malformed updates rejected; pinned plain-text admission added below |
 | C31–C34 | Exact JSON update bytes, checkpoint/tail equivalence, native memory cycles and measured edit/restore/storage cost | Pass, synthetic scope |
 | O01–O04 | Source-bound one-shot Save, reject remote draft import, failure retains draft/prior Undo | Three failures reproduced before fixes; four pass after fixes |
-| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; old scalar admission remains undecided |
+| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; late legacy loser policy approved; activation/bootstrap implementation remains untested |
 | A04 | Pending structs retained through full checkpoint, excluded by ordinary diff | Pass: full restore yields xAB; diff restore yields xA |
 | R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass afterward on native hosted Linux/Windows |
 | A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
@@ -71,8 +71,8 @@ Hosted libraries are926544B Linux,864256B Windows,842784B ARM64 Android and95304
 x86_64 Android, before application packaging.
 
 Recommendation: continue only the narrow text adapter after durable field/actor
-identity, separate state budgets, legacy-scalar admission and
-real Android/editor tests are resolved. Keep ordinary tags, relative-anchor
+identity, separate state budgets, approved legacy-scalar loser behavior, shared activation bootstrap and
+real Android/editor tests are validated. Keep ordinary tags, relative-anchor
 ordering, validated schedules and domain commands. Y.Map replacement does not
 supply observed-remove set, additive counter or coupled-schedule invariants;
 Y.Array insertion/deletion does not by itself enforce logical item uniqueness
@@ -126,7 +126,8 @@ sticky indices and selective Undo; these features still require an application
 boundary. The experiment cannot silently replace the approved wall-clock causal
 event order or drop original operations when undoing a causal update.
 
-Before adoption, decide legacy scalar admission and a versioned reader boundary,
+Before adoption, implement/test the approved legacy scalar loser policy and decide
+shared activation bootstrap with a versioned reader boundary,
 client identity allocation, resource limits/native parser isolation, restartable
 Undo and materialized checkpoints. Consider other Yrs shared types only as
 recommendations; no generic domain/store rewrite is authorized.
@@ -163,3 +164,13 @@ explicitly, including Linux native integration and Android APK packaging.
 [Adoption options](text-merge-adoption-options.md) distinguish the writer upgrade
 policy needing Lee's decision from engineering recommendations for routing,
 actors, checkpoints and measured budgets. None is an adopted production protocol.
+
+## Activation-policy extension (pre-implementation)
+
+Lee approved late legacy scalar text writes losing after activation, with original
+records retained and no reconciliation UI. That does not permit upgraded native
+edits to lose. The separate [18-case matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
+is written before any activation-policy implementation; all18 are not-run. Earlier
+frozen matrices/assertions remain unchanged. The proposed common-baseline bootstrap
+and one-time initial-sync limitation are in [adoption choices](text-merge-adoption-options.md).
+Actual Android lab/runtime and real OS-IME acceptance remain pending.

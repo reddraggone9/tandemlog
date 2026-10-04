@@ -1,0 +1,40 @@
+{
+  "frozen_utc": "2026-10-04 19:34:16 UTC",
+  "written_before_policy_implementation": true,
+  "policy_implementation_present": false,
+  "production_adoption": false,
+  "synthetic_only": true,
+  "extends": "activation-policy-matrix.json",
+  "base_matrix_sha256": "a43c7b10dc4bd3e359f69ba39069272660318238c5e2a32b7408f07ab37646c2",
+  "revision_reason": "Independent review: receive-before-Save is insufficient for a draft typed against a different scalar base. Gate new text editing until verified native context; preserve existing drafts for explicit handling. Original18-case matrix unchanged.",
+  "cases": [
+    {
+      "id": "B19",
+      "case": "Gate text editing, not only Save",
+      "expected": "Before the common activation and exact seed history are verified, do not start a new writable title/notes CRDT session. Cover designated issuer during seed preparation and nonissuer awaiting sync. No scalar fallback/native events or successful Save acknowledgement; non-text behavior follows separately proven isolation.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression frozen before policy implementation; real captured-controller/native-state behavior, not whole-string equality only"
+    },
+    {
+      "id": "B20",
+      "case": "Different scalar draft base survives activation without replacement",
+      "expected": "Capture old scalar base Buy oats; type a private draft. Receive a verified seed Buy fruit and milk plus remote native edits before pressing Save. Retain original draft text, captured base, selection and composition as applicable; no auto publish/reset/reattachment, whole-draft live Y.Text replacement or successful Save using that mismatched base.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression frozen before policy implementation; real captured-controller/native-state behavior, not whole-string equality only"
+    },
+    {
+      "id": "B21",
+      "case": "A matching string does not supply a captured native base",
+      "expected": "An earlier scalar draft whose visible string happens to match the new seed is not silently relabeled as a native captured draft. Minimal behavior gates it until explicit handling/reopening on verified context. Any future conversion optimization requires separately frozen proofs for exact seed/epoch/state identity, intent and remote preservation.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression frozen before policy implementation; real captured-controller/native-state behavior, not whole-string equality only"
+    },
+    {
+      "id": "B22",
+      "case": "Explicit transition to verified editing preserves remote work",
+      "expected": "After preserving/copying or explicitly discarding the earlier draft under user control, begin a new session from verified native field/epoch/state. Edits use that captured baseline; received remote work survives granular Save/Undo. Receiving activation or changing focus never submits the old draft, finishes a Save during composition or silently deletes unsaved content. Process-death persistence is not claimed without an implemented durability contract.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression frozen before policy implementation; real captured-controller/native-state behavior, not whole-string equality only"
+    }
+  ]
+}

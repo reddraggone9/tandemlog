@@ -1,0 +1,13 @@
+{
+  "frozen_utc": "2026-10-04T20:03:41.337976+00:00",
+  "implementation_present": false,
+  "production_adoption": false,
+  "tests_sha256": {
+    "experiments/yrs-spike/activation_lab/test/activation_test.dart": "d2bf867966c0eca8f0d4b289a7b7d5b918f1798a082d252864c0603b43565cee",
+    "experiments/yrs-spike/activation_lab/test/native_prepare_test.dart": "0cfaf8829d1e72db4991ebcd74d6bb159146d1a77cf5ab69b5bc9006db29d761",
+    "experiments/yrs-spike/evidence/activation-policy-matrix.json": "a43c7b10dc4bd3e359f69ba39069272660318238c5e2a32b7408f07ab37646c2",
+    "experiments/yrs-spike/evidence/activation-draft-policy-matrix.json": "1aeb611ef8b521fd9dec859b6500a64dc8348d6d710f41851f1351e88cddd9eb"
+  },
+  "initial_red": "Coordinator/draft adapter absent: policy test loading fails (not22 executed failures). Four native preparation cases fail against unchanged old library: unknown prototype command. Pre-freeze rejection matchers tightened to specific composition/source errors, so unknown-command errors do not falsely satisfy them. One duplicate-user-ID fixture corrected before freeze.",
+  "red_log_sha256": "8a56c2ffae740dcf35e8d94ada38471add812adab764990e4dcd6cdf5963d654"
+}
