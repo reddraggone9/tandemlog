@@ -1,6 +1,15 @@
 name: Isolated text merge prototype
 on:
   workflow_dispatch:
+    inputs:
+      inspect_artifact_id:
+        description: Existing synthetic lab artifact ID (inspection only, no rebuild)
+        type: string
+        default: ''
+      inspect_archive_sha256:
+        description: Expected artifact ZIP SHA256
+        type: string
+        default: ''
 permissions:
   contents: read
 concurrency:
@@ -8,6 +17,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   native:
+    if: inputs.inspect_artifact_id == ''
     strategy:
       fail-fast: false
       matrix:
@@ -60,6 +70,7 @@ jobs:
             experiments/yrs-spike/target/release/*.dll
             experiments/yrs-spike/target/release/*.so
   android-cross-build:
+    if: inputs.inspect_artifact_id == ''
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
@@ -104,3 +115,24 @@ jobs:
             experiments/yrs-spike/editor_lab/build/app/outputs/flutter-apk/app-debug.apk
             experiments/yrs-spike/target/aarch64-linux-android/release/*.so
             experiments/yrs-spike/target/x86_64-linux-android/release/*.so
+
+  inspect-existing-android-lab:
+    if: inputs.inspect_artifact_id != ''
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - name: Verify existing APK identity, signer and exact native payloads
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LAB_ARTIFACT_ID: ${{ inputs.inspect_artifact_id }}
+          LAB_ARTIFACT_SHA256: ${{ inputs.inspect_archive_sha256 }}
+        run: python3 experiments/yrs-spike/bin/inspect_android_artifact.py
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: isolated-lab-apk-verification
+          retention-days: 5
+          if-no-files-found: error
+          path: lab-inspection/verification.json
