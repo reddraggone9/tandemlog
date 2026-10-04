@@ -1,9 +1,44 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
 import 'failure_message.dart';
+
+// Input-only normalization keeps historical canonical titles untouched until
+// the user edits them. Do not interfere with the platform's IME candidates.
+class _TitleLineFormatter extends TextInputFormatter {
+  static final breaks = RegExp(r'\r\n|[\r\n\u2028\u2029]');
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.composing.isValid && !newValue.composing.isCollapsed) {
+      return newValue;
+    }
+    if (oldValue.text == newValue.text &&
+        !(oldValue.composing.isValid && !oldValue.composing.isCollapsed)) {
+      return newValue;
+    }
+    if (!breaks.hasMatch(newValue.text)) return newValue;
+    int offset(int value) => value < 0
+        ? value
+        : newValue.text.substring(0, value).replaceAll(breaks, ' ').length;
+    return newValue.copyWith(
+      text: newValue.text.replaceAll(breaks, ' '),
+      selection: TextSelection(
+        baseOffset: offset(newValue.selection.baseOffset),
+        extentOffset: offset(newValue.selection.extentOffset),
+        affinity: newValue.selection.affinity,
+        isDirectional: newValue.selection.isDirectional,
+      ),
+      composing: TextRange.empty,
+    );
+  }
+}
 
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
@@ -125,6 +160,7 @@ class _EditorBodyState extends State<_EditorBody> {
   String? failure, assignee;
   bool applyAssignee = false;
   Future<bool>? closeRequest;
+  double notesMaxHeight = 360;
   bool get bulk => widget.saveBulk != null;
   Map<String, dynamic> scheduleOf(Map<String, dynamic> task) =>
       Map<String, dynamic>.from(task['schedule'] as Map? ?? {});
@@ -160,10 +196,17 @@ class _EditorBodyState extends State<_EditorBody> {
       );
       final controller = controllers[key]!;
       var previousText = controller.text;
+      var previousComposing = controller.value.composing;
       controller.addListener(() {
         // Focus/caret changes notify too. They must not apply a blank mixed
         // schedule field or mark an otherwise untouched draft as dirty.
-        if (controller.text == previousText) return;
+        final compositionChanged =
+            previousComposing != controller.value.composing;
+        previousComposing = controller.value.composing;
+        if (controller.text == previousText) {
+          if (key == 'title' && compositionChanged && mounted) setState(() {});
+          return;
+        }
         previousText = controller.text;
         if (mounted) {
           setState(() {
@@ -218,6 +261,12 @@ class _EditorBodyState extends State<_EditorBody> {
   };
   String? get validation {
     try {
+      if (!bulk &&
+          controllers['title']!.text != originals.first['title'] &&
+          controllers['title']!.value.composing.isValid &&
+          !controllers['title']!.value.composing.isCollapsed) {
+        return 'Finish entering the title before saving.';
+      }
       if (!bulk && controllers['title']!.text.trim().isEmpty) {
         return 'Enter a task title.';
       }
@@ -323,6 +372,15 @@ class _EditorBodyState extends State<_EditorBody> {
     if (busy) return false;
     setState(() => attempted = true);
     if (validation != null) return false;
+    if (!bulk && controllers['title']!.text != originals.first['title']) {
+      // Focus loss can finalize composition through the controller without
+      // running input formatters. Normalize only this changed, committed title.
+      final title = controllers['title']!;
+      title.value = _TitleLineFormatter().formatEditUpdate(
+        TextEditingValue.empty,
+        title.value,
+      );
+    }
     setState(() {
       busy = true;
       failure = null;
@@ -337,7 +395,7 @@ class _EditorBodyState extends State<_EditorBody> {
             desired = tags('tags').toSet();
         await widget.saveSingle!(
           {
-            if (controllers['title']!.text.trim() != first['title'])
+            if (controllers['title']!.text != first['title'])
               'title': controllers['title']!.text.trim(),
             if (controllers['description']!.text != first['description'])
               'description': controllers['description']!.text,
@@ -413,7 +471,11 @@ class _EditorBodyState extends State<_EditorBody> {
       key: ValueKey(key),
       controller: controllers[key],
       enabled: !busy,
-      maxLines: lines,
+      minLines: key == 'description' ? 3 : 1,
+      maxLines: key == 'description' ? null : lines,
+      inputFormatters: key == 'title' ? [_TitleLineFormatter()] : null,
+      keyboardType: key == 'title' ? TextInputType.text : null,
+      textInputAction: key == 'title' ? TextInputAction.next : null,
       decoration: InputDecoration(
         labelText: label,
         suffixIcon: key.endsWith('Date')
@@ -480,12 +542,29 @@ class _EditorBodyState extends State<_EditorBody> {
                 Expanded(child: input),
               ],
             )
+          : key == 'description'
+          ? ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: notesMaxHeight),
+              child: input,
+            )
           : input,
     );
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, constraints) {
+      final media = MediaQuery.of(context);
+      final visibleHeight = media.size.height - media.viewInsets.bottom;
+      final availableHeight = constraints.maxHeight < visibleHeight
+          ? constraints.maxHeight
+          : visibleHeight;
+      notesMaxHeight = (availableHeight * .4).clamp(100.0, 360.0);
+      return buildEditor(context);
+    },
+  );
+
+  Widget buildEditor(BuildContext context) {
     final repeating =
         controllers['recurrence']!.text.trim().isNotEmpty ||
         (bulk &&

@@ -29,6 +29,284 @@ Future<void> edit(WidgetTester tester, String key, String value) async {
 }
 
 void main() {
+  testWidgets('changed composing title cannot save until normalized commit', (
+    tester,
+  ) async {
+    Map<String, dynamic>? saved;
+    final key = GlobalKey<TaskEditorState>();
+    await mount(
+      tester,
+      TaskEditor(
+        key: key,
+        panel: true,
+        task: task(),
+        onClose: () {},
+        save: (fields, a, r) async {
+          saved = fields;
+        },
+      ),
+    );
+    await tester.tap(input('title'));
+    await tester.pump();
+    final field = tester.widget<TextField>(input('title'));
+    expect(field.keyboardType, TextInputType.text);
+    expect(field.textInputAction, TextInputAction.next);
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: 'candidate',
+        selection: TextSelection.collapsed(offset: 9),
+        composing: TextRange(start: 0, end: 9),
+      ),
+    );
+    await tester.pump();
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.widgetWithText(FilledButton, 'Save changes'),
+          )
+          .onPressed,
+      isNull,
+    );
+    tester.testTextInput.updateEditingValue(
+      field.controller!.value.copyWith(composing: TextRange.empty),
+    );
+    await tester.pump();
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.widgetWithText(FilledButton, 'Save changes'),
+          )
+          .onPressed,
+      isNotNull,
+    );
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: 'new\ntitle',
+        selection: TextSelection.collapsed(offset: 9),
+        composing: TextRange(start: 0, end: 9),
+      ),
+    );
+    await tester.pump();
+    expect(
+      find.text('Finish entering the title before saving.'),
+      findsOneWidget,
+    );
+    expect(
+      tester
+          .widget<FilledButton>(
+            find.widgetWithText(FilledButton, 'Save changes'),
+          )
+          .onPressed,
+      isNull,
+    );
+    final closing = key.currentState!.canClose();
+    await tester.pumpAndSettle();
+    // Opening a dialog can finalize composition on focus loss. Restore the
+    // active candidate to exercise the guard against a still-composing IME.
+    field.controller!.value = const TextEditingValue(
+      text: 'new\ntitle',
+      selection: TextSelection.collapsed(offset: 9),
+      composing: TextRange(start: 0, end: 9),
+    );
+    await tester.pump();
+    await tester.tap(find.text('Save'));
+    await tester.pumpAndSettle();
+    expect(await closing, false);
+    expect(saved, isNull);
+    expect(field.controller!.text, 'new\ntitle');
+    tester.testTextInput.updateEditingValue(
+      field.controller!.value.copyWith(composing: TextRange.empty),
+    );
+    await tester.pump();
+    expect(field.controller!.text, 'new title');
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(saved, {'title': 'new title'});
+  });
+
+  testWidgets('title input normalizes paste selection after IME commits', (
+    tester,
+  ) async {
+    await mount(
+      tester,
+      TaskEditor(panel: true, task: task(), save: (_, a, r) async {}),
+    );
+    await tester.tap(input('title'));
+    await tester.pump();
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: 'ab\r\ncd\nef',
+        selection: TextSelection(
+          baseOffset: 4,
+          extentOffset: 7,
+          isDirectional: true,
+        ),
+      ),
+    );
+    await tester.pump();
+    final controller = tester.widget<TextField>(input('title')).controller!;
+    expect(controller.text, 'ab cd ef');
+    expect(
+      controller.selection,
+      const TextSelection(baseOffset: 3, extentOffset: 6, isDirectional: true),
+    );
+    tester.testTextInput.updateEditingValue(
+      const TextEditingValue(
+        text: '候補\n文字',
+        selection: TextSelection.collapsed(offset: 5),
+        composing: TextRange(start: 0, end: 5),
+      ),
+    );
+    await tester.pump();
+    expect(controller.text, '候補\n文字');
+    expect(controller.value.composing, const TextRange(start: 0, end: 5));
+    tester.testTextInput.updateEditingValue(
+      controller.value.copyWith(composing: TextRange.empty),
+    );
+    await tester.pump();
+    expect(controller.text, '候補 文字');
+    expect(controller.selection.baseOffset, 5);
+  });
+
+  testWidgets(
+    'historical multiline title opens clean and notes save preserves title',
+    (tester) async {
+      final source = task()..['title'] = '  historical\nsecond\r\nthird  ';
+      final key = GlobalKey<TaskEditorState>();
+      Map<String, dynamic>? saved;
+      await mount(
+        tester,
+        TaskEditor(
+          key: key,
+          panel: true,
+          task: source,
+          onClose: () {},
+          save: (fields, a, r) async {
+            saved = fields;
+          },
+        ),
+      );
+      final controller = tester.widget<TextField>(input('title')).controller!;
+      expect(controller.text, source['title']);
+      await tester.tap(input('title'));
+      controller.selection = const TextSelection.collapsed(offset: 4);
+      await tester.pump();
+      expect(await key.currentState!.canClose(), true);
+      controller.value = controller.value.copyWith(
+        composing: const TextRange(start: 0, end: 4),
+      );
+      await tester.pump();
+      await edit(tester, 'description', 'new notes');
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(saved, {'description': 'new notes'});
+      expect(controller.text, source['title']);
+    },
+  );
+
+  testWidgets(
+    'title grows from one to two lines and notes grow then scroll with caret',
+    (tester) async {
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task(),
+          onClose: () {},
+          save: (_, a, r) async {},
+        ),
+      );
+      final shortTitle = tester.getSize(input('title')).height;
+      await edit(tester, 'title', List.filled(40, 'wrapped').join(' '));
+      final longTitle = tester.getSize(input('title')).height;
+      expect(longTitle, greaterThan(shortTitle));
+      await edit(tester, 'title', List.filled(60, 'wrapped').join(' '));
+      expect(tester.getSize(input('title')).height, longTitle);
+      final initialNotes = tester.getSize(input('description')).height;
+      await edit(
+        tester,
+        'description',
+        List.generate(8, (i) => 'line $i').join('\n'),
+      );
+      final grownNotes = tester.getSize(input('description')).height;
+      expect(grownNotes, greaterThan(initialNotes));
+      await edit(
+        tester,
+        'description',
+        List.generate(80, (i) => 'line $i').join('\n'),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSize(input('description')).height,
+        greaterThanOrEqualTo(grownNotes),
+      );
+      expect(
+        tester.getSize(input('description')).height,
+        lessThanOrEqualTo(360),
+      );
+      final editable = tester.state<EditableTextState>(
+        find.descendant(
+          of: input('description'),
+          matching: find.byType(EditableText),
+        ),
+      );
+      expect(
+        (editable.renderEditable.offset as ScrollPosition).maxScrollExtent,
+        greaterThan(0),
+      );
+      expect(editable.renderEditable.offset.pixels, greaterThan(0));
+      expect(
+        tester.getRect(find.text('Save changes')).bottom,
+        lessThanOrEqualTo(1400),
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'keyboard and large text bound notes and keep modal actions reachable',
+    (tester) async {
+      await tester.binding.setSurfaceSize(const Size(360, 800));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      var saved = false;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(
+              size: Size(360, 800),
+              viewInsets: EdgeInsets.only(bottom: 300),
+              textScaler: TextScaler.linear(2),
+            ),
+            child: Scaffold(
+              body: TaskEditor(
+                task: task()
+                  ..['description'] = List.filled(60, 'notes').join('\n'),
+                onClose: () {},
+                save: (_, a, r) async {
+                  saved = true;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSize(input('description')).height,
+        lessThanOrEqualTo(200),
+      );
+      await tester.ensureVisible(find.text('Save changes'));
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(saved, true);
+      expect(
+        find.widgetWithText(TextButton, 'Cancel').hitTestable(),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets(
     'close guards dirty draft and preserves text after keep editing',
     (tester) async {

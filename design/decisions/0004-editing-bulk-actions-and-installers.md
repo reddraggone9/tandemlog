@@ -33,3 +33,13 @@ Use Linux Flatpak and an unsigned per-user Windows installer instead of loose ar
 Hosted gates install/launch/replace/uninstall/reinstall exact candidates with synthetic data. They complement Linux visual QA and exact-APK Android acceptance; manual Windows and provider coverage remain separate. [Packaging commands/limits](../../packaging/README.md) disclose prerequisites. No Store/Flathub publication, paid runner or new credentials.
 
 Rejected for now: universal filtering, unrestricted date drag, replacing untouched mixed fields, deleting a recurrence series through one occurrence, and automatically discarding drafts. Revisit after concrete hands-on friction.
+
+## First stable follow-up — title/notes sizing and due precision
+
+Status: approved by Lee after first stable 2026.10.0; implemented for the next preview.
+
+Timed effective values sort before date-only tasks on their shared calendar day. This matches the useful distinction between a specific appointment/deadline and a task due sometime that day. Keep scheduled-over-due precedence and pinned conversion, bound-day clamping, group keys and shared manual ranks. Derive ordering from explicit precision rather than storing a fake end-of-day timestamp. Exact midnight cannot share a drag/move bucket with date-only intent. A date-only scheduled override stays date-only even if the underlying due schedule has a time; reversing override precedence was not requested.
+
+The editor starts titles at one visual line, grows to two and scrolls beyond that. Input line breaks normalize to spaces with selection preserved; active IME candidates are left alone and changed composing titles cannot be saved. Notes grow from three lines, then scroll within a cap derived from available editor height, including the keyboard. Existing fixed three-line notes wasted room while requiring unnecessary scrolling; unbounded notes could push other fields and actions out of reach.
+
+These are view/input changes. Decoders and v3 canonical bytes remain unchanged. Historical multiline titles stay readable, opening/focus is clean, and notes-only saves omit title entirely. Deliberately editing a historical title uses the current one-line input rule, without rewriting older records. No source import, live data modification or stable binary replacement is part of this follow-up.
