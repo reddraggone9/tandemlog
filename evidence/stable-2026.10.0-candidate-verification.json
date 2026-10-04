@@ -1,0 +1,389 @@
+{
+  "baseline_source": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+  "stable_candidate_source": "aacabf942122283731b5ea448a3800fe73ab63a2",
+  "candidate_run": 37174502075,
+  "version": "2026.10.0+39",
+  "production_files": [
+    {
+      "path": "analysis_options.yaml",
+      "sha256": "5cac4571d6ab15b6e304c30ba600e40c76b90599ab8c9b88dcdd99256f146a84"
+    },
+    {
+      "path": "lib/application/task_clock.dart",
+      "sha256": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e"
+    },
+    {
+      "path": "lib/application/undo_history.dart",
+      "sha256": "52f0016fd42c4ceb5ee599ee406ad9da760390e796923432a585382e0a6132b8"
+    },
+    {
+      "path": "lib/domain/bulk_task_edit.dart",
+      "sha256": "c2546015c74090673f47a5cbf51d42b21815713040b3a3009e713f4306522dac"
+    },
+    {
+      "path": "lib/domain/event.dart",
+      "sha256": "16de7d402144fe86d5a6ea5e258cd071d526bada650303008a7e7632f636b498"
+    },
+    {
+      "path": "lib/domain/event_chain.dart",
+      "sha256": "5e4855d888354be7f35deb5f4dc27d602b878c6b15fe93b93671ec58cbdc51a5"
+    },
+    {
+      "path": "lib/domain/event_clock.dart",
+      "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f"
+    },
+    {
+      "path": "lib/domain/projection.dart",
+      "sha256": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4"
+    },
+    {
+      "path": "lib/domain/schedule.dart",
+      "sha256": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13"
+    },
+    {
+      "path": "lib/domain/task_view.dart",
+      "sha256": "d4db54b9a2626aa1b474e3ea309e3496308953f40460f7332eac5c0fd1265808"
+    },
+    {
+      "path": "lib/domain/timed_view.dart",
+      "sha256": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6"
+    },
+    {
+      "path": "lib/domain/undo.dart",
+      "sha256": "31cd1d1f0ada8edbbd13bd145bf92aa1fefe84462a20eaf1b459ae0c9f1efe3c"
+    },
+    {
+      "path": "lib/domain/wall_time.dart",
+      "sha256": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "c796023289f6f1aaf1c425d21b401b0a8097205964b494e64b52267f6ddcfd33"
+    },
+    {
+      "path": "lib/platform/folder_actions.dart",
+      "sha256": "5e8aad2152e63b41e9e97fbb885cc8dfd41cd8bd34cacf986d49d7a3fcc15451"
+    },
+    {
+      "path": "lib/platform/foreground_importer.dart",
+      "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc"
+    },
+    {
+      "path": "lib/platform/log_folder.dart",
+      "sha256": "ef621a907e827bc257b188de0449051c0a1f5de064fd01dd263ccc1bad88d750"
+    },
+    {
+      "path": "lib/platform/view_time_source.dart",
+      "sha256": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54"
+    },
+    {
+      "path": "lib/presentation/compact_selection_actions.dart",
+      "sha256": "a9f3ad737eefbb48221aa36f506b2bc4bffc3ddc4953c13d88029857c2da9bbd"
+    },
+    {
+      "path": "lib/presentation/failure_message.dart",
+      "sha256": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303"
+    },
+    {
+      "path": "lib/presentation/sticky_task_group.dart",
+      "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77"
+    },
+    {
+      "path": "lib/presentation/tag_filter_picker.dart",
+      "sha256": "73b2bf14d0d1bd2ac1325c8f2b5fe5ebcd4a4cc3117fb26c438bda6287bb01b5"
+    },
+    {
+      "path": "lib/presentation/task_completion_checkbox.dart",
+      "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161"
+    },
+    {
+      "path": "lib/presentation/task_editor.dart",
+      "sha256": "641646115a1456adde530299507850f674eccfc51987454e48c7e6255e3a9d0c"
+    },
+    {
+      "path": "lib/presentation/task_entry_area.dart",
+      "sha256": "afa2b669425555d53eb281a103db237a66e44ab240fcb3874df8b511b599c2e3"
+    },
+    {
+      "path": "lib/presentation/task_metadata.dart",
+      "sha256": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4"
+    },
+    {
+      "path": "lib/presentation/task_toolbar.dart",
+      "sha256": "cd567839e66f4a96715f232c8216213f701f433bc0935d99bc33f7f01899caab"
+    },
+    {
+      "path": "lib/presentation/unavailable_completion.dart",
+      "sha256": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b"
+    },
+    {
+      "path": "lib/presentation/view_clock.dart",
+      "sha256": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e"
+    },
+    {
+      "path": "lib/storage/local_durability.dart",
+      "sha256": "fc3f6811d9c956c78f4fa64737fa1f4a9da88ce4590eadef74b4785e16d9d6ef"
+    },
+    {
+      "path": "lib/storage/local_settings.dart",
+      "sha256": "84fc42139be08773005b6d3f341e6fc6a0a539e291d63bf6ae93278410bfe9eb"
+    },
+    {
+      "path": "lib/storage/log_folder.dart",
+      "sha256": "3b7ba2cefa03ad2e9c221780dbcbafce0912a9e931bfc2ed0eed6b41266b13af"
+    },
+    {
+      "path": "lib/storage/profile_lock.dart",
+      "sha256": "8517fa29e81770cb1cca6bb23b9d68c4b32d53147e199fff84c36aae5938fbc6"
+    },
+    {
+      "path": "lib/storage/task_store.dart",
+      "sha256": "b498004e9a7bce6ffb7c95b11d0cd67575e3757929d5ca43382307902cafa19f"
+    },
+    {
+      "path": "lib/storage/writer_guard.dart",
+      "sha256": "ffa8292568c7275300340578fe3edce8fdfad18a5f0f62b00950d738b4fcb32d"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    }
+  ],
+  "production_unchanged": true,
+  "pubspec_change": "version line only",
+  "local_app_tests": 358,
+  "local_release_policy_tests": 18,
+  "local_format": "pass",
+  "local_analysis": "pass",
+  "stable_published": false,
+  "native_android_stable_acceptance": "pending exact APK coordinator acceptance",
+  "superseded_candidate_run": 37174161811,
+  "push_ci_run": 37174488229,
+  "windows_fixture_checkout": "initial Windows gate rejected Git CRLF conversion; .gitattributes preserves exact fixture bytes; core.autocrlf=true probe matches fixed SHA256",
+  "artifacts": {
+    "windows": {
+      "artifact_id": 11292940674,
+      "archive_sha256": "a0dbf639c249a211d596560ff68852929171ef9dac26c6bb0f8fb605f690ffb2",
+      "archive_bytes": 11043964,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "installer_sha256": "86af5e6d470df06b0a77bc880586b196bb653d558493be1937a69c2338b334ce",
+      "installer_bytes": 11592934,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=57",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=10"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=39"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=6",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=9",
+              "TANDEMLOG_PHASE manifest=1",
+              "TANDEMLOG_PHASE ingest=5",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=75 FILES_READ=1"
+            ]
+          }
+        ]
+      },
+      "installer_signed": false
+    },
+    "linux": {
+      "artifact_id": 11293261189,
+      "archive_sha256": "7042c2ccd9203a86601d27fc18339eff3c9fd1d74ffdca0368dcf5ac3bea05d3",
+      "archive_bytes": 8336070,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "installer_sha256": "e1275cf8ec026470b958c744880792f27a5453b4d69cab9747badfbac920bf9f",
+      "installer_bytes": 8331480,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=75",
+              "TANDEMLOG_PHASE identity_lock=10",
+              "TANDEMLOG_PHASE sqlite_open_schema=18",
+              "TANDEMLOG_PHASE manifest=10",
+              "TANDEMLOG_PHASE ingest=32",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=1392 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=76",
+              "TANDEMLOG_PHASE identity_lock=47",
+              "TANDEMLOG_PHASE sqlite_open_schema=26",
+              "TANDEMLOG_PHASE manifest=44",
+              "TANDEMLOG_PHASE ingest=67",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=328 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=74",
+              "TANDEMLOG_PHASE identity_lock=47",
+              "TANDEMLOG_PHASE sqlite_open_schema=52",
+              "TANDEMLOG_PHASE manifest=22",
+              "TANDEMLOG_PHASE ingest=88",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=372 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "52c37b8dcede09ab47dafc8015d799d3b7253a092be8cf22ad8cfecd70e3d549",
+          "baseline_commit": "18832740279cf992e2ae9a9b0288a9c913e8ed0016b28597729f04ccdf23d7e5",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      },
+      "startup": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 674,
+            "marker": "TANDEMLOG_READY_MS=392 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=68",
+              "TANDEMLOG_PHASE identity_lock=44",
+              "TANDEMLOG_PHASE sqlite_open_schema=27",
+              "TANDEMLOG_PHASE manifest=43",
+              "TANDEMLOG_PHASE ingest=93",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=392 FILES_READ=1"
+            ],
+            "external_main_ms": 278,
+            "external_first_frame_ms": 350
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 530,
+            "marker": "TANDEMLOG_READY_MS=320 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=67",
+              "TANDEMLOG_PHASE identity_lock=56",
+              "TANDEMLOG_PHASE sqlite_open_schema=12",
+              "TANDEMLOG_PHASE manifest=31",
+              "TANDEMLOG_PHASE ingest=69",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=320 FILES_READ=0"
+            ],
+            "external_main_ms": 201,
+            "external_first_frame_ms": 273
+          }
+        ]
+      },
+      "startup_artifact_note": "Raw artifact also contains desktop portal diagnostic preamble; extracted the single structured measurement report."
+    },
+    "android": {
+      "artifact_id": 11293360995,
+      "archive_sha256": "602756722e7a3af92fc13947c997e5b5cb7b9372539d04cabb51cc1f509af53c",
+      "archive_bytes": 27744641,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "apk_sha256": "86b9edadc37915b5e1deafb262b608e5a4bb8b21345d1a5ff428e2aa127fe3b4",
+      "apk_bytes": 59920192,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "package": "com.reddraggone9.tandemlog",
+      "version_name": "2026.10.0",
+      "version_code": 39,
+      "nondebuggable": true,
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "official_apk_verification": "pass",
+      "native_stable_acceptance": "pending"
+    }
+  },
+  "candidate_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37174502075",
+  "candidate_conclusion": "success",
+  "push_ci_conclusion": "success",
+  "canonical_protocol": 3,
+  "cache_version": 13,
+  "hosted_checks": {
+    "linux_app_tests": 358,
+    "windows_app_tests_passed": 356,
+    "windows_platform_skips": 2,
+    "release_policy_tests": 18,
+    "native_linux_flows": 44,
+    "linux_installed_lifecycle": "pass",
+    "windows_installed_lifecycle": "pass",
+    "format": "pass",
+    "analysis": "pass"
+  },
+  "frozen_compatibility_fixture": "test/fixtures/stable-v3-2026.10.0",
+  "frozen_fixture_checks": "both writer arrival orders, cache reopen/fresh replay, exact bytes/clocks/identities/projection/Undo/order, new writer preserves prior bytes",
+  "live_data_reset_or_import": false
+}
