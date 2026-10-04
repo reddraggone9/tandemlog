@@ -9,7 +9,7 @@ Shared household tasks for Android, Windows and Linux. Work offline and keep you
 
 ## Sync your way
 
-Use a folder-sync tool such as Syncthing or a desktop Dropbox folder. Choose a folder that Tandemlog and your sync tool can both read and write. Each device keeps its changes in separate files, avoiding competing writes to one shared file. Tandemlog combines arriving changes; simultaneous edits to the same task can still require review.
+Sync between devices using tools like Syncthing or Dropbox. Each device writes its own log, avoiding sync conflicts caused by devices editing the same file. Choose a folder that Tandemlog and your sync tool can both read and write.
 
 ## Get started
 
