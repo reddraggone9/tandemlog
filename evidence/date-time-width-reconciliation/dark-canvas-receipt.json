@@ -1,0 +1,61 @@
+{
+  "canvas": "#151e1a",
+  "label": "#e0e9e3",
+  "boundary": "#35443c",
+  "labels": "centered Before/After only",
+  "ui_pixels": "unaltered native raw crops",
+  "historical_theme": "Unchanged previously reviewed light43\u219244 composite; excluded current45 release/gallery. Dark-canvas trial preserved privately under history only.",
+  "current45_theme": "dark green native capsules, seed267461",
+  "verification": {
+    "normal-width": {
+      "normal-before": {
+        "crop": [
+          12,
+          267,
+          389.0,
+          547
+        ],
+        "pixels_exact_match": true
+      },
+      "normal-after": {
+        "crop": [
+          12,
+          274,
+          389.0,
+          420
+        ],
+        "pixels_exact_match": true
+      }
+    },
+    "enlarged-width": {
+      "enlarged-before": {
+        "crop": [
+          12,
+          104,
+          508.0,
+          452
+        ],
+        "pixels_exact_match": true
+      },
+      "enlarged-after": {
+        "crop": [
+          12,
+          232,
+          508.0,
+          412
+        ],
+        "pixels_exact_match": true
+      }
+    }
+  },
+  "hashes": {
+    "normal-width.png": "0ed1cf3d5d05e34de240e8b85fb2566ba036fa3b93bb6a1a54516ba13956eec6",
+    "historical-time-fields.png": "043b47da67bc2dd068c1b73bc91073c33e8e37047c96a49421d51e86ab91c779",
+    "enlarged-width.png": "84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f"
+  },
+  "review_status": "pending independent dark-canvas review",
+  "current45_scope": [
+    "normal-width.png",
+    "enlarged-width.png"
+  ]
+}

@@ -2,15 +2,17 @@
   "historical_before": "147a876d799e5832527177fa76c5fdf77c1827a6",
   "published44_before": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
   "prior_proposal": "2a251aa2c67430584c66cb7c27ee53b5eb0c158a",
-  "working_parent": "9c02c8609c592d1cc9cf51347b25e9c065e1d43f",
   "working_editor_sha256": "5018f154041154f22046454647b58754e211407d482078d02f791389a4a71767",
   "published44_editor_sha256": "59ca001b6c711e5e41b34dd93a933ae677c659d2ca7ff546e1b54604f5a1e737",
-  "candidate_status": "uncommitted working source; root review pending; no release or publication",
+  "candidate_status": "Build45 app source reviewed and pushed; push CI37242660649 passed all3targets. Coordinator owns signing/Android/promotion; dark-canvas media-only follow-up independent review pending.",
   "media": {
-    "normal-width.png": "cd6f94bd587800d711672f62827d4278c70d80e849c8326e0185e3d40df84f5f",
+    "normal-width.png": "0ed1cf3d5d05e34de240e8b85fb2566ba036fa3b93bb6a1a54516ba13956eec6",
     "historical-time-fields.png": "043b47da67bc2dd068c1b73bc91073c33e8e37047c96a49421d51e86ab91c779",
-    "enlarged-width.png": "c294fcd447f3e1b02a493dafa16f3883cfa1e5f1c421a111c239ecf00e5c6089"
+    "enlarged-width.png": "84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f"
   },
   "platform": "Flutter3.47.5 native Linux GTK Xvfb :99",
-  "recipe": "Native matching TaskEditor capsules from published44 full source and working source; synthetic ISO dates 2026-10-04, 23:59; dark seed267461; normal401px viewport/361px row at130%, enlarged520px/480px at200%; wait2200ms naturally fades scrollbar. Harnesses and raw geometry retained. render_proposed_media.py crops recorded bounds and adds only centered Before/After labels. Historical full source43 and44 matching light390px/100% blank Time capture retained separately; historical comparison is already-shipped43\u219244 context."
+  "recipe": "Native matching TaskEditor capsules from published44 full source and working source; synthetic ISO dates 2026-10-04, 23:59; dark seed267461; normal401px viewport/361px row at130%, enlarged520px/480px at200%; wait2200ms naturally fades scrollbar. Harnesses and raw geometry retained. render_proposed_media.py crops recorded bounds and adds only centered Before/After labels. Historical full source43 and44 matching light390px/100% blank Time capture retained separately; historical comparison is already-shipped43\u219244 context.",
+  "canvas_revision": "Only normal/enlarged current45 composites use dark canvas; historical light composite restored unchanged and excluded current45 release. Receipt:dark-canvas-receipt.json",
+  "capture_working_parent": "9c02c8609c592d1cc9cf51347b25e9c065e1d43f",
+  "candidate_source": "5ac35da50acca69ab196a54312efc8ccef1452da"
 }
