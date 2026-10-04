@@ -95,3 +95,8 @@ One-off Markdown rehearsal/import/export tooling and its dedicated tests live on
 ## First stable 2026.10.0 candidate
 
 Lee explicitly accepted first stable publication on 2026-10-04. Build39 changes the accepted RC38 production closure only through `pubspec.yaml` display version/build metadata; package, owner signer, protocol3, cache13, hashes, event meanings and all `lib/` files stay unchanged. Freeze synthetic v3 compatibility bytes and expected projections before publishing. The full signed-candidate matrix and exact stable APK install/launch/retained-v3 checks must pass, then `stable.yml` promotes the same three installers as stable Latest without rebuilding. From this boundary future readers preserve durable v3 logs and meanings; no disposable data-reset promise applies. Live source/canonical data is untouched.
+
+
+## Published first stable 2026.10.0
+
+[2026.10.0](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0) is stable Latest, prerelease=false/draft=false, from exact source `aacabf942122283731b5ea448a3800fe73ab63a2` and candidate37174502075/build39. Promotion37176968099 reused those three native-accepted installers without rebuilding. All anonymous public bytes/digests/sizes, APK owner signer/package/stable version/code39 and tag/approved notes verify; every previous RC remains unchanged. [Receipt](../evidence/stable-2026.10.0-public-verification.json). Durable v3 backward readability now applies. No live reset, import or history rewrite accompanied publication.

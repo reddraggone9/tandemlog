@@ -1,0 +1,75 @@
+{
+  "tag": "v2026.10.0",
+  "source_commit": "aacabf942122283731b5ea448a3800fe73ab63a2",
+  "version": "2026.10.0+39",
+  "candidate_run": 37174502075,
+  "promotion_run": 37176968099,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.0",
+  "release_id": 402839527,
+  "rebuilt": false,
+  "prerelease": false,
+  "draft": false,
+  "latest": true,
+  "tag_source": "pass",
+  "notes_equal_approved": "pass",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.0-android.apk",
+      "id": 609115510,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0/tandemlog-2026.10.0-android.apk",
+      "sha256": "86b9edadc37915b5e1deafb262b608e5a4bb8b21345d1a5ff428e2aa127fe3b4",
+      "bytes": 59920192,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.0-linux-x64.flatpak",
+      "id": 609115508,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0/tandemlog-2026.10.0-linux-x64.flatpak",
+      "sha256": "e1275cf8ec026470b958c744880792f27a5453b4d69cab9747badfbac920bf9f",
+      "bytes": 8331480,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.0-windows-x64-setup.exe",
+      "id": 609115509,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.0/tandemlog-2026.10.0-windows-x64-setup.exe",
+      "sha256": "86af5e6d470df06b0a77bc880586b196bb653d558493be1937a69c2338b334ce",
+      "bytes": 11592934,
+      "anonymous_public_download": "pass"
+    }
+  ],
+  "all_prior_releases_unchanged": [
+    "v2026.10.0-rc.1",
+    "v0.1.0-rc.9",
+    "v0.1.0-rc.8",
+    "v0.1.0-rc.7",
+    "v0.1.0-rc.6",
+    "v0.1.0-rc.5",
+    "v0.1.0-rc.4",
+    "v0.1.0-rc.3",
+    "v0.1.0-rc.2",
+    "v0.1.0-rc.1"
+  ],
+  "public_apk_verification": {
+    "official_apksigner": "pass",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version_name": "2026.10.0",
+    "version_code": 39,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ]
+  },
+  "windows_installer_signed": false,
+  "live_data_reset_or_import": false,
+  "native_android_acceptance": {
+    "result": "pass; coordinator executor report",
+    "scope": "in-place RC upgrade preserves SAF grant, settings, writer and guards; synthetic tasks/history retained; native append, completion Undo, integrity check and restart",
+    "synthetic_baseline_tasks": 43,
+    "synthetic_baseline_events": 60,
+    "live_data_untouched": true
+  }
+}

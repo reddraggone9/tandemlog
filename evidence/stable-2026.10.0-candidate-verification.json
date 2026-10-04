@@ -155,8 +155,8 @@
   "local_release_policy_tests": 18,
   "local_format": "pass",
   "local_analysis": "pass",
-  "stable_published": false,
-  "native_android_stable_acceptance": "pending exact APK coordinator acceptance",
+  "stable_published": true,
+  "native_android_stable_acceptance": "pass; exact signed APK coordinator executor report",
   "superseded_candidate_run": 37174161811,
   "push_ci_run": 37174488229,
   "windows_fixture_checkout": "initial Windows gate rejected Git CRLF conversion; .gitattributes preserves exact fixture bytes; core.autocrlf=true probe matches fixed SHA256",
@@ -364,7 +364,7 @@
         "x86_64"
       ],
       "official_apk_verification": "pass",
-      "native_stable_acceptance": "pending"
+      "native_stable_acceptance": "pass; retained-v3 in-place upgrade, write/Undo/integrity/restart"
     }
   },
   "candidate_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37174502075",
@@ -385,5 +385,7 @@
   },
   "frozen_compatibility_fixture": "test/fixtures/stable-v3-2026.10.0",
   "frozen_fixture_checks": "both writer arrival orders, cache reopen/fresh replay, exact bytes/clocks/identities/projection/Undo/order, new writer preserves prior bytes",
-  "live_data_reset_or_import": false
+  "live_data_reset_or_import": false,
+  "promotion_run": 37176968099,
+  "public_verification_receipt": "stable-2026.10.0-public-verification.json"
 }
