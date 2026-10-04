@@ -1,8 +1,10 @@
 # Current status — 2026-10-04
 
-## Approved stable 2026.10.1 build 42 — candidate preparation
+## Approved stable 2026.10.1 build 42 — exact Android upgrade acceptance pending
 
 Lee explicitly approved promoting the latest RC as stable. Build 42 changes only the display version/build metadata from accepted RC41; production code, dependencies, package/signing identity and frozen v3 histories remain unchanged. Stable notes list only the three user-facing improvements since 2026.10.0; expected interactions and QA assurances are omitted. Full candidate gates and bounded exact Android upgrade acceptance remain required before stable Latest promotion. No new features, live-data operations or future stable versions are authorized by this acceptance.
+
+[Candidate 37202648731](https://github.com/reddraggone9/tandemlog/actions/runs/37202648731) and push CI 37202635308 pass all gates at exact source `da4859ea82f8b066ed701740c57cb9bcff1083ff`: 368 Linux tests, 366 Windows tests/2 skips, 18 policy tests, 45 native Linux flows and installed Windows/Flatpak lifecycle. All three downloaded archives pass API hashes/CRC/internal checksums. The owner-signed nondebuggable APK is stable 2026.10.1/code 42 with unchanged package/certificate/three ABIs; exact SHA256 `bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908`. The source comparison confirms 165 tracked production/platform/tool/test files unchanged from RC41, including the frozen v3 fixtures. [Candidate receipt](../evidence/stable-2026.10.1-build42-candidate-verification.json). The README is reviewed for current released workflows, with Lee's concise sync explanation; future stable checklist reviews it for meaningful workflow changes. Exact bounded native Android acceptance remains pending before publishing these same artifacts as stable Latest without rebuilding.
 
 ## Published experimental 2026.10.1-rc.1 build 41 — not Latest
 

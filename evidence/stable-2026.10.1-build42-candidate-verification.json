@@ -1,0 +1,912 @@
+{
+  "approved_rc_source": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+  "candidate_source": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+  "candidate_run": 37202648731,
+  "version": "2026.10.1+42",
+  "production_changes": "pubspec.yaml version/build metadata only",
+  "pubspec": {
+    "baseline_sha256": "b4a00030ad597889648c7f3f4a3b86de383f68b53f8bfa3d35bc683bc398381d",
+    "sha256": "c14be7db08b0830ce031afc4401a8e408bef74614576ca8aac04614301983fe6"
+  },
+  "unchanged_rc_compatibility_closure": [
+    {
+      "path": ".gitattributes",
+      "sha256": "757ca7a76781f06a9d46823c51f30c6a8673479d1fbde698ead99d627ed6cf0e"
+    },
+    {
+      "path": ".github/actions/setup-flutter/action.yml",
+      "sha256": "d0b94d3f1eea9e4cc260eeabe008df39ef2aab9290fd29fb895481dca5896c22"
+    },
+    {
+      "path": ".github/workflows/android-candidate.yml",
+      "sha256": "0ab2c5a442b5bc9694640b3043885b4ed2a6dc08ed0d4d072c7565b9434582bb"
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "sha256": "cd405cc563b5c3107feff5676c6b265c440faecbc416ebf54571db14347bbe19"
+    },
+    {
+      "path": ".github/workflows/prerelease.yml",
+      "sha256": "8a99059b104b4622ec6f886aea70768a6479cdd603f367a8792ac32b8d226e72"
+    },
+    {
+      "path": ".github/workflows/stable.yml",
+      "sha256": "dfe90f0b34cb099783f2ed6a2ef521d0730c4ee97f0c12903797a9bc0fa9ffc7"
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "sha256": "45141bf9e64ae68aab7248a5a12e69a1f47b9a4883bf5e940eb01543093b9854"
+    },
+    {
+      "path": "android/.gitignore",
+      "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1"
+    },
+    {
+      "path": "android/app/build.gradle.kts",
+      "sha256": "ba430b5f3164f4bac51936bb10ae2ec2f82b2de7e3253cd5adc40da14f43bea8"
+    },
+    {
+      "path": "android/app/src/debug/AndroidManifest.xml",
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    {
+      "path": "android/app/src/main/AndroidManifest.xml",
+      "sha256": "51020f2c78aa1758e2736c991e3350b5db9174053669422f847c55eb51a234f7"
+    },
+    {
+      "path": "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt",
+      "sha256": "5fe0238b436beb904769af6028121d35595dfa39e91b7733738a00a38aa91e97"
+    },
+    {
+      "path": "android/app/src/main/res/drawable-v21/launch_background.xml",
+      "sha256": "7ca6d5cec2169c5a98661a119db23a6f3399c8fef2256ff04f3a642831282478"
+    },
+    {
+      "path": "android/app/src/main/res/drawable/launch_background.xml",
+      "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-hdpi/ic_launcher.png",
+      "sha256": "6a7c8f0d703e3682108f9662f813302236240d3f8f638bb391e32bfb96055fef"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-mdpi/ic_launcher.png",
+      "sha256": "c7c0c0189145e4e32a401c61c9bdc615754b0264e7afae24e834bb81049eaf81"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png",
+      "sha256": "e14aa40904929bf313fded22cf7e7ffcbf1d1aac4263b5ef1be8bfce650397aa"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png",
+      "sha256": "4d470bf22d5c17d84edc5f82516d1ba8a1c09559cd761cefb792f86d9f52b540"
+    },
+    {
+      "path": "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png",
+      "sha256": "3c34e1f298d0c9ea3455d46db6b7759c8211a49e9ec6e44b635fc5c87dfb4180"
+    },
+    {
+      "path": "android/app/src/main/res/values-night/styles.xml",
+      "sha256": "8c5bad5152f217e837519f9c15211d19f39bd45f5f67faf6dd81cb4b299e518f"
+    },
+    {
+      "path": "android/app/src/main/res/values/styles.xml",
+      "sha256": "937d7c82f539c72eb94fd3a3773f29b3d3fef1997213c92cb632298cedf4bda9"
+    },
+    {
+      "path": "android/app/src/profile/AndroidManifest.xml",
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    {
+      "path": "android/build.gradle.kts",
+      "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba"
+    },
+    {
+      "path": "android/gradle.properties",
+      "sha256": "0f82b18017fba6bb5ce3aa4b2d1a00c9382fc8aae7b1d9326e44b18abd66d80b"
+    },
+    {
+      "path": "android/gradle/wrapper/gradle-wrapper.properties",
+      "sha256": "b690d26223576fe4e63889fad9a00df81945cb870b9476cc5a563152a1a88a74"
+    },
+    {
+      "path": "android/settings.gradle.kts",
+      "sha256": "016759283e88ade6eba92910583feeef88b962839b957aa414296afd2952d122"
+    },
+    {
+      "path": "android/signing-certificate.sha256",
+      "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3"
+    },
+    {
+      "path": "integration_test/completion_actions_test.dart",
+      "sha256": "b1ab5743badc0064738e7eba9a4470ce0f3c3c93cd9473421f50f064e550c9a5"
+    },
+    {
+      "path": "integration_test/completion_focus_test.dart",
+      "sha256": "99a649a2627f9b4dc6bb3275973cee8995cb6c3842c1bd7f9f5bbc077d316f68"
+    },
+    {
+      "path": "integration_test/data_integrity_test.dart",
+      "sha256": "da25fdcefd91b492a25c106a4b1ed82eba167685644b34dd49b0aa68828d1eb2"
+    },
+    {
+      "path": "integration_test/header_search_test.dart",
+      "sha256": "bf9f444643d934701bafd00f22201f49110c0ad16d3a8fc8cdba7a79422205ec"
+    },
+    {
+      "path": "integration_test/header_selection_test.dart",
+      "sha256": "c1fa25fb55cfa71b642c75e89a16b4bd8bbb96267f71dd9d4c9a84f64e835706"
+    },
+    {
+      "path": "integration_test/inbox_flow_test.dart",
+      "sha256": "ee8a5d32def59d9a90c930a321479f090efa3a5b3aa833fe69c924951f2f1bbe"
+    },
+    {
+      "path": "integration_test/save_acknowledgement_test.dart",
+      "sha256": "901f740cf978490aac3688f2118b5afa4b9f10c73feef723c8ab1dc015f7f68b"
+    },
+    {
+      "path": "integration_test/start_hints_test.dart",
+      "sha256": "6eef9eafabd1ac66b2fce34c5f8a4ff6164b2de1e3b710f6871b08ad19fa93e8"
+    },
+    {
+      "path": "integration_test/sticky_task_groups_test.dart",
+      "sha256": "9c03695c1426e80f2d80828f5d53c2612753dde94a4d0f2b316e8fcb48a3c426"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "c7fed4d573ea8c7f47f6d1cf2cd23af218f41b9f26fdd457f3498ab54322e4c4"
+    },
+    {
+      "path": "integration_test/task_precision_test.dart",
+      "sha256": "11681f4b87f39448b452d1ca16de4074f4823ff1af1784ef2715f3fcae9e8eb9"
+    },
+    {
+      "path": "lib/application/task_clock.dart",
+      "sha256": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e"
+    },
+    {
+      "path": "lib/application/undo_history.dart",
+      "sha256": "52f0016fd42c4ceb5ee599ee406ad9da760390e796923432a585382e0a6132b8"
+    },
+    {
+      "path": "lib/domain/bulk_task_edit.dart",
+      "sha256": "c2546015c74090673f47a5cbf51d42b21815713040b3a3009e713f4306522dac"
+    },
+    {
+      "path": "lib/domain/event.dart",
+      "sha256": "16de7d402144fe86d5a6ea5e258cd071d526bada650303008a7e7632f636b498"
+    },
+    {
+      "path": "lib/domain/event_chain.dart",
+      "sha256": "5e4855d888354be7f35deb5f4dc27d602b878c6b15fe93b93671ec58cbdc51a5"
+    },
+    {
+      "path": "lib/domain/event_clock.dart",
+      "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f"
+    },
+    {
+      "path": "lib/domain/projection.dart",
+      "sha256": "17648c797d6b0d9c344f1738f72a506c9547efb6c78867399d77252e85182bf4"
+    },
+    {
+      "path": "lib/domain/schedule.dart",
+      "sha256": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13"
+    },
+    {
+      "path": "lib/domain/task_view.dart",
+      "sha256": "365d1351e48f2aff529c2d6fd576f18fd33ea57eb22c723264b214cb8fca28b9"
+    },
+    {
+      "path": "lib/domain/timed_view.dart",
+      "sha256": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6"
+    },
+    {
+      "path": "lib/domain/undo.dart",
+      "sha256": "31cd1d1f0ada8edbbd13bd145bf92aa1fefe84462a20eaf1b459ae0c9f1efe3c"
+    },
+    {
+      "path": "lib/domain/wall_time.dart",
+      "sha256": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "c796023289f6f1aaf1c425d21b401b0a8097205964b494e64b52267f6ddcfd33"
+    },
+    {
+      "path": "lib/platform/folder_actions.dart",
+      "sha256": "5e8aad2152e63b41e9e97fbb885cc8dfd41cd8bd34cacf986d49d7a3fcc15451"
+    },
+    {
+      "path": "lib/platform/foreground_importer.dart",
+      "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc"
+    },
+    {
+      "path": "lib/platform/log_folder.dart",
+      "sha256": "ef621a907e827bc257b188de0449051c0a1f5de064fd01dd263ccc1bad88d750"
+    },
+    {
+      "path": "lib/platform/view_time_source.dart",
+      "sha256": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54"
+    },
+    {
+      "path": "lib/presentation/compact_selection_actions.dart",
+      "sha256": "a9f3ad737eefbb48221aa36f506b2bc4bffc3ddc4953c13d88029857c2da9bbd"
+    },
+    {
+      "path": "lib/presentation/failure_message.dart",
+      "sha256": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303"
+    },
+    {
+      "path": "lib/presentation/sticky_task_group.dart",
+      "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77"
+    },
+    {
+      "path": "lib/presentation/tag_filter_picker.dart",
+      "sha256": "73b2bf14d0d1bd2ac1325c8f2b5fe5ebcd4a4cc3117fb26c438bda6287bb01b5"
+    },
+    {
+      "path": "lib/presentation/task_completion_checkbox.dart",
+      "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161"
+    },
+    {
+      "path": "lib/presentation/task_editor.dart",
+      "sha256": "adcff4331a286d2c47da69bd2fc5ca21059c391c6de3fd403fcba152b8e6a7a5"
+    },
+    {
+      "path": "lib/presentation/task_entry_area.dart",
+      "sha256": "afa2b669425555d53eb281a103db237a66e44ab240fcb3874df8b511b599c2e3"
+    },
+    {
+      "path": "lib/presentation/task_metadata.dart",
+      "sha256": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4"
+    },
+    {
+      "path": "lib/presentation/task_toolbar.dart",
+      "sha256": "cd567839e66f4a96715f232c8216213f701f433bc0935d99bc33f7f01899caab"
+    },
+    {
+      "path": "lib/presentation/unavailable_completion.dart",
+      "sha256": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b"
+    },
+    {
+      "path": "lib/presentation/view_clock.dart",
+      "sha256": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e"
+    },
+    {
+      "path": "lib/storage/local_durability.dart",
+      "sha256": "fc3f6811d9c956c78f4fa64737fa1f4a9da88ce4590eadef74b4785e16d9d6ef"
+    },
+    {
+      "path": "lib/storage/local_settings.dart",
+      "sha256": "84fc42139be08773005b6d3f341e6fc6a0a539e291d63bf6ae93278410bfe9eb"
+    },
+    {
+      "path": "lib/storage/log_folder.dart",
+      "sha256": "3b7ba2cefa03ad2e9c221780dbcbafce0912a9e931bfc2ed0eed6b41266b13af"
+    },
+    {
+      "path": "lib/storage/profile_lock.dart",
+      "sha256": "8517fa29e81770cb1cca6bb23b9d68c4b32d53147e199fff84c36aae5938fbc6"
+    },
+    {
+      "path": "lib/storage/task_store.dart",
+      "sha256": "b498004e9a7bce6ffb7c95b11d0cd67575e3757929d5ca43382307902cafa19f"
+    },
+    {
+      "path": "lib/storage/writer_guard.dart",
+      "sha256": "ffa8292568c7275300340578fe3edce8fdfad18a5f0f62b00950d738b4fcb32d"
+    },
+    {
+      "path": "linux/.gitignore",
+      "sha256": "5ded4f1a9d10d34bf6ee5beb0711d88ee2ef07b0f07ace9ed77935a246e8eb82"
+    },
+    {
+      "path": "linux/CMakeLists.txt",
+      "sha256": "537d01e998fae5e7b9624b378cc6bee85a09067452d0b7556c3871ac19bc04cb"
+    },
+    {
+      "path": "linux/flutter/CMakeLists.txt",
+      "sha256": "787189e2623313cfee590a0b553338eb9fc68b3af922ddd77c5d39c75f989aeb"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.cc",
+      "sha256": "be4702057f167b6f2c3fedb9a5d36cde7870c7370867018dcbc6e28cc9c6622c"
+    },
+    {
+      "path": "linux/flutter/generated_plugin_registrant.h",
+      "sha256": "00f93bb5b1faefdede8f6065df327522900fb0b8efee86bacf424fd947ed14bb"
+    },
+    {
+      "path": "linux/flutter/generated_plugins.cmake",
+      "sha256": "58c7d076efeef8b3277ff06907891f13a01dfdb5f4042b7f71fdc9cafa994acf"
+    },
+    {
+      "path": "linux/runner/CMakeLists.txt",
+      "sha256": "b59fb2bb4641bd00dbd8f94a95094c5388a8e7ea0aa39fca64ac82c19c561fc7"
+    },
+    {
+      "path": "linux/runner/main.cc",
+      "sha256": "ea23f7cdf74091d63bba29ef60486370b766157b848f0cfe62bd8b1c1695a0c1"
+    },
+    {
+      "path": "linux/runner/my_application.cc",
+      "sha256": "08f96c48daa243f57fd6314f92a495b231fff7f7b1a8bd1efe97a5efad42dc28"
+    },
+    {
+      "path": "linux/runner/my_application.h",
+      "sha256": "a4218d7ac0db8a9a6716daf216b2d4fc6bdc7ac647e3183078b2c962ebdfcf70"
+    },
+    {
+      "path": "linux/runner/time_observer.cc",
+      "sha256": "032aa7f6923bbdaf5bbaa3cc04c2652d925e8d50b5777d35c4a8bab80cc13e4b"
+    },
+    {
+      "path": "linux/runner/time_observer.h",
+      "sha256": "cb8a0f823a50d8ea3127841367f1733fd357a72d073a355eae7c9d50351961b7"
+    },
+    {
+      "path": "packaging/README.md",
+      "sha256": "105685773897d56633ed3fb9fc429c682c81cc96d9fb343698adaa18ae25448c"
+    },
+    {
+      "path": "packaging/linux/build-flatpak.sh",
+      "sha256": "04d5ba77db130b38d073a7223500ef40c55b73207c216d0be947ee391817f682"
+    },
+    {
+      "path": "packaging/linux/com.reddraggone9.tandemlog.desktop",
+      "sha256": "ee98f5cac88bf43f2637e23948b944bbf9d7d21a5f5d6c12fa5aa9a1a298c7ab"
+    },
+    {
+      "path": "packaging/linux/com.reddraggone9.tandemlog.svg",
+      "sha256": "eb70e3d64e7a401396d5d324bc2e971d66b505bf6670decac719f745dc9f1070"
+    },
+    {
+      "path": "packaging/linux/install-smoke.sh",
+      "sha256": "5205a2e073fad992f8abb743e296dd5d881bb63453000f68678eb16e47017677"
+    },
+    {
+      "path": "packaging/linux/tandemlog",
+      "sha256": "9c22456c327f49b3d7d9d198832d7b6739a4bc21cae0b90b76a7e42334657d79"
+    },
+    {
+      "path": "packaging/smoke.py",
+      "sha256": "4717f998f6ba267fa7d911ca34a8e43e6133f33d276bb1aaa3fd84ab9dc3ac34"
+    },
+    {
+      "path": "packaging/windows/build-and-smoke.ps1",
+      "sha256": "b0442ee1541b30e67180343c73a73c19870c757f02724c065bbc18b13c1bb451"
+    },
+    {
+      "path": "packaging/windows/tandemlog.iss",
+      "sha256": "c556931b1de31c549509c9b4853fabe7dba0c86f146fbc84b8000f0bbb39d7b0"
+    },
+    {
+      "path": "pubspec.lock",
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    },
+    {
+      "path": "test/android_log_folder_test.dart",
+      "sha256": "e7b640914fc8b4e551031e254f60d436235a321e21715081dba99c461a6c35ef"
+    },
+    {
+      "path": "test/batch_storage_test.dart",
+      "sha256": "0b3d7ef4fa962d871b3faec88588679fed45fb8afbd4494fd84229c2182aaaae"
+    },
+    {
+      "path": "test/command_acknowledgement_test.dart",
+      "sha256": "dfac13b36774b1ba71e7a2b293a20dbcc44a2f9b259bedcd9bdc897f1b91c1b3"
+    },
+    {
+      "path": "test/compact_selection_actions_test.dart",
+      "sha256": "513f860984a7d7980e4663b4bed93c245feb35a772b6024b733fcd29e2bd33f6"
+    },
+    {
+      "path": "test/domain_test.dart",
+      "sha256": "9969c34ff2560ab84c4a4cc342c033013510896f29b31388537cef9faf3df625"
+    },
+    {
+      "path": "test/event_chain_test.dart",
+      "sha256": "cb6ad0f9b707abe2c326b0c6d50b23ab892afd6f69fb104d92c085ac68d5edf1"
+    },
+    {
+      "path": "test/event_clock_test.dart",
+      "sha256": "e8521c570c48ad7ae1da97466780e817ad9537817e227c0debf99d410d8a4f40"
+    },
+    {
+      "path": "test/fixtures/event_chain_v3.jsonl",
+      "sha256": "3d07e0f95329f77fed3320c241bb6021f7f49c50c2a2dd5cfbfcc343d97431a5"
+    },
+    {
+      "path": "test/fixtures/recurring_operation_undone_v2.jsonl",
+      "sha256": "f942f2142ac06ae8c9061535223b00574b8fc2dabc326448f8a435aa2dd70bf6"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/22222222-2222-4222-8222-222222222222.jsonl",
+      "sha256": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/33333333-3333-4333-8333-333333333333.jsonl",
+      "sha256": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/README.md",
+      "sha256": "ca81165c474bf7d81800484e138b546dbf45b1ef4610302f799b9261e97db7db"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/expected-rows.json",
+      "sha256": "bfd2eb917d586a56ade7b66a13ad6052561c1457be22f0cfb100a77dc0b2c38b"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/fixture-metadata.json",
+      "sha256": "f8fb504c16aef3bd7af5365102fe3c622f4225169225040e3b5d9bd7283f7539"
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/tandemlog-space.json",
+      "sha256": "e2bbcbc4e7ea85b2a4b10e727dd762615e1de721ae03c9b89b5a6a81cd48e420"
+    },
+    {
+      "path": "test/foreground_importer_test.dart",
+      "sha256": "d961f8b70bf38242dcc2740e50b107552975f0b942ae9616c70babae19088681"
+    },
+    {
+      "path": "test/inbox_test.dart",
+      "sha256": "7fc929d6ce48d26d30fc3139da00f37f08de062574eced5c6995e409c6413ba0"
+    },
+    {
+      "path": "test/incremental_history_test.dart",
+      "sha256": "2a83b0d0462500e44361d6ddf7a1a6f2a78c3a1b4819f1448534b617c80d0d60"
+    },
+    {
+      "path": "test/local_durability_test.dart",
+      "sha256": "292e262173928cd290d198ab15b04c9763ff4cfb0a948aab04b925f778644d1d"
+    },
+    {
+      "path": "test/local_settings_test.dart",
+      "sha256": "815361065438c895c49fb45d3119772cf3763344e081cace75957f65a087cea8"
+    },
+    {
+      "path": "test/profile_lock_test.dart",
+      "sha256": "9df7894637f6a971c7d057ddc2156d9b92bd181a9335374be8ee7c2b4338f510"
+    },
+    {
+      "path": "test/recurring_completion_undo_test.dart",
+      "sha256": "ccfa5543bbbd84cf75efeb445c3da8e05f6f40dbca776031be77e7f8a78e7184"
+    },
+    {
+      "path": "test/schedule_test.dart",
+      "sha256": "22a4ff38b07cb2a970390bd58a7257b528a01f1b4fda220ba14d3f9491db8861"
+    },
+    {
+      "path": "test/stable_v3_compatibility_test.dart",
+      "sha256": "cccef78e3fd5cd6c7360d3336054c5b7b08be7041fc0670d093304bb7a3dbdbb"
+    },
+    {
+      "path": "test/sticky_task_group_test.dart",
+      "sha256": "6a13f1d61f86e38427d55eebbad198e46f3e7e176f3198b703e616f79e7507d8"
+    },
+    {
+      "path": "test/storage_test.dart",
+      "sha256": "4b4a8997c18dc56b36c810c576911d4f67710e81d7768ed420ee9a10db283f7d"
+    },
+    {
+      "path": "test/tag_filter_picker_test.dart",
+      "sha256": "fd744081811a004030e85db4ce1c8fb8d2ad0a9e1761555f6a810c4326da7e8e"
+    },
+    {
+      "path": "test/task_clock_test.dart",
+      "sha256": "7b86673fee78643ca268ace883e76fdf92078de0c60006610aa9323d70760080"
+    },
+    {
+      "path": "test/task_completion_checkbox_test.dart",
+      "sha256": "b2dcbcacbbbbe5ca16a3f8f0569cec94dfea1bbe4b6d93af64d7b14108be6e03"
+    },
+    {
+      "path": "test/task_editor_test.dart",
+      "sha256": "073d11e64809eab828cf64901dcec76c8e49eab6fd72040e7c9998419ac21a92"
+    },
+    {
+      "path": "test/task_entry_area_test.dart",
+      "sha256": "321c8782b1f86186371be123bc34f0dbb95df1fc9042edeb273fbc5193a8337a"
+    },
+    {
+      "path": "test/task_metadata_test.dart",
+      "sha256": "8bcca00f2655acc73672a54206e99375dcaebb1b1ebc8927f724b502a42975f6"
+    },
+    {
+      "path": "test/task_toolbar_test.dart",
+      "sha256": "474a2546ce6c0079722de21cd429d8888a7f9d3a970fdb9e192271ccb6ca0c83"
+    },
+    {
+      "path": "test/task_view_test.dart",
+      "sha256": "6839d9ca7ab224e9a8535f62a6a520a2170058e459231334962680fab778b27b"
+    },
+    {
+      "path": "test/unavailable_completion_test.dart",
+      "sha256": "6b4840a4251b7d081dfddc4d2140f2edec5ab097b02607e29c104669bb25c78f"
+    },
+    {
+      "path": "test/undo_history_test.dart",
+      "sha256": "52995251e66e3636e78a97fc0d63c47f2019b750d012d076e43917b973e75908"
+    },
+    {
+      "path": "test/undo_storage_test.dart",
+      "sha256": "eb30276d4a1de5ad1025119d477e3b0ae21a2d13a2d4a31c4043c1610bb6f647"
+    },
+    {
+      "path": "test/view_clock_test.dart",
+      "sha256": "4373baab28f9b6b9b90ac8cbac98f542000a565aab48b1ac5f8df18dc7db106e"
+    },
+    {
+      "path": "test/view_time_source_test.dart",
+      "sha256": "b11fec8d668755308d3f73add71b66cc4e45b0437a886e12565c0f5675b7ed56"
+    },
+    {
+      "path": "test/wall_time_test.dart",
+      "sha256": "ba2e962b28af14f4d7e1a97994085823e3fc93e7e66f83427e8676ed7e7b2ec7"
+    },
+    {
+      "path": "test/writer_guard_test.dart",
+      "sha256": "17e7cf9a9cd1867c40d130be497124cf1d52cc59fb76a6a5c7a6c9f8b190110a"
+    },
+    {
+      "path": "test/writer_identity_test.dart",
+      "sha256": "75c8fc274487478541320ae5eb6c8ec99f28f230830382746431d6c5206d61c6"
+    },
+    {
+      "path": "tool/android_release.py",
+      "sha256": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7"
+    },
+    {
+      "path": "tool/app_version.py",
+      "sha256": "03a321a8168d76aa915440e58a2720b9d941d95f510cff8c0448a81503b34ccd"
+    },
+    {
+      "path": "tool/build_android_release.sh",
+      "sha256": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6"
+    },
+    {
+      "path": "tool/candidate_source.py",
+      "sha256": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab"
+    },
+    {
+      "path": "tool/measure_batches.dart",
+      "sha256": "2a1439126ef212b0026b9d8dec0ad527a7bc8865d7a824c84e00e19b32174867"
+    },
+    {
+      "path": "tool/measure_startup.py",
+      "sha256": "29e21134149f90198d96cd90026026480005892604bc9b459b5a917a0e0f1d1f"
+    },
+    {
+      "path": "tool/minimal_startup.dart",
+      "sha256": "6f484b05166631172a49b79fc48365c9c5b3f94dc2eb813121bcf292ecef67b4"
+    },
+    {
+      "path": "tool/publish_gate.py",
+      "sha256": "271d6971f77b0eefaad3c0e8a96348883ed7c6dd49371e4aea17290a8620336f"
+    },
+    {
+      "path": "tool/release_assets.py",
+      "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95"
+    },
+    {
+      "path": "tool/test_installer_smoke.py",
+      "sha256": "0cdc129dff56831d0d956862245ea368fd9d83cb6c2fc5ec116cfe115dc5398f"
+    },
+    {
+      "path": "tool/test_release_gates.py",
+      "sha256": "9433095e7d0912c5ba4b7c9934a9a11f13da95148e2d3ccb71923729bd05d6d7"
+    },
+    {
+      "path": "windows/.gitignore",
+      "sha256": "96345475f1a3c66bd32d28178fba151ab1506b35b1f7857b8f7651863093ea11"
+    },
+    {
+      "path": "windows/CMakeLists.txt",
+      "sha256": "e292c15fd69643a5c568533ec1ef5aa2c916542f210ab7bc600abe68cded4da2"
+    },
+    {
+      "path": "windows/flutter/CMakeLists.txt",
+      "sha256": "1fe418971b6f41bb35ceb3d64113a835f3f6f171ecaa707bf232492b57a588d6"
+    },
+    {
+      "path": "windows/flutter/generated_plugin_registrant.cc",
+      "sha256": "3b262051d01edd1f2635dff9236a7a25d8a1e80d644aa589637053b43c9fbd31"
+    },
+    {
+      "path": "windows/flutter/generated_plugin_registrant.h",
+      "sha256": "dbc11635d7b1ba1887adf40df5b83d634e9c3ab0bee34510c71528bb4d73602a"
+    },
+    {
+      "path": "windows/flutter/generated_plugins.cmake",
+      "sha256": "d7716f3bcafd6b18d7de8cac5c47184c06b9d2cba61cad5cd18eb1df55515f69"
+    },
+    {
+      "path": "windows/runner/CMakeLists.txt",
+      "sha256": "34119ec122e36940235ef4bc245fcfb43b6960ed443e28af1a8d833a81209b9e"
+    },
+    {
+      "path": "windows/runner/Runner.rc",
+      "sha256": "8121be8e09783285d4bb95b00f58ef0d19fa9dc46e14541d8a1a55a7a656e68c"
+    },
+    {
+      "path": "windows/runner/flutter_window.cpp",
+      "sha256": "2c16f969ab4c3348c20a63a63187036ce03812ff6c9814c1516fcb6e4e990190"
+    },
+    {
+      "path": "windows/runner/flutter_window.h",
+      "sha256": "72e35a2e3fbde9ca355997dbcbff677deda8bd7dfdf07808dbd00638a2f60563"
+    },
+    {
+      "path": "windows/runner/main.cpp",
+      "sha256": "003efe74c5cf35c1367f5d436322dc6232a26546ac9ce54882eb09c163aae266"
+    },
+    {
+      "path": "windows/runner/resource.h",
+      "sha256": "1fa98588b04561590ba1cf0521ab86a9db4a878312f21c9d5861d965ddd8d1ae"
+    },
+    {
+      "path": "windows/runner/resources/app_icon.ico",
+      "sha256": "c098d3fc85cacff98b8e69811b48e9f0d852fcee278132d794411d978869cbf8"
+    },
+    {
+      "path": "windows/runner/runner.exe.manifest",
+      "sha256": "825d243e9fa1542619909c1b72d09b3ed7c1f3b225bb8367c125835e5dc3f8aa"
+    },
+    {
+      "path": "windows/runner/utils.cpp",
+      "sha256": "6c2c87106b4b29d534c7edcafb3b7f7b9079caa3cdafa7e56671ad2adf5a2543"
+    },
+    {
+      "path": "windows/runner/utils.h",
+      "sha256": "95a7f7dddb832997cefa937a96f89472332277e75734a5de553610760b744b03"
+    },
+    {
+      "path": "windows/runner/win32_window.cpp",
+      "sha256": "9065f31ccf746cf8b390121f958f9e959033af864aed779597066625ed56bc36"
+    },
+    {
+      "path": "windows/runner/win32_window.h",
+      "sha256": "7dd03746b19dcf3542829b2f6e8ed40a2714ce5f2cb3b0e23f0118a2fcf62d62"
+    }
+  ],
+  "local_checks": {
+    "frozen_stable_v3_tests": 4,
+    "frozen_stable_v3_convergence_cache_rebuild_extension": "pass",
+    "release_policy_tests": 18,
+    "preflight": "pass",
+    "diff_check": "pass"
+  },
+  "native_android_acceptance": {
+    "status": "pending",
+    "scope": "bounded exact version-only stable upgrade from accepted RC41; prior feature/visual evidence retained"
+  },
+  "publication": "not published; stable2026.10.0 remains Latest",
+  "artifacts": {
+    "windows": {
+      "artifact_id": 11303313479,
+      "archive_sha256": "97344fc344b9bf723b30196a591bc41b629df9f15a94e351e6a55d376f1f5428",
+      "archive_bytes": 11047345,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "installer_sha256": "3e66fe9f5a5b2970e54fdc6979bbf1827a60d39d90c91745bbeae118100a37ad",
+      "installer_bytes": 11596320,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=51",
+              "TANDEMLOG_PHASE identity_lock=1",
+              "TANDEMLOG_PHASE sqlite_open_schema=11",
+              "TANDEMLOG_PHASE manifest=2"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=7",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=11",
+              "TANDEMLOG_PHASE manifest=1",
+              "TANDEMLOG_PHASE ingest=5",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=74 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": false,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=6",
+              "TANDEMLOG_PHASE identity_lock=0",
+              "TANDEMLOG_PHASE sqlite_open_schema=17",
+              "TANDEMLOG_PHASE manifest=2",
+              "TANDEMLOG_PHASE ingest=5",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=71 FILES_READ=1"
+            ]
+          }
+        ]
+      },
+      "installer_signed": false
+    },
+    "linux": {
+      "artifact_id": 11304280042,
+      "archive_sha256": "bb3ff95fd5d268f0d6697aa65ffe856ae46f9967af7fc0c926caadc6887cbb22",
+      "archive_bytes": 8341361,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "installer_sha256": "0a6d6fcfcad1e6ca6a5cbd37981e8e3b2625aae1596db8127d37fd9067b69377",
+      "installer_bytes": 8336768,
+      "installed_lifecycle": {
+        "phases": [
+          {
+            "phase": "after-install",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=74",
+              "TANDEMLOG_PHASE identity_lock=10",
+              "TANDEMLOG_PHASE sqlite_open_schema=16",
+              "TANDEMLOG_PHASE manifest=10",
+              "TANDEMLOG_PHASE ingest=32",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=1345 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-upgrade",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=75",
+              "TANDEMLOG_PHASE identity_lock=46",
+              "TANDEMLOG_PHASE sqlite_open_schema=50",
+              "TANDEMLOG_PHASE manifest=34",
+              "TANDEMLOG_PHASE ingest=78",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=372 FILES_READ=1"
+            ]
+          },
+          {
+            "phase": "after-uninstall",
+            "passed": true,
+            "loaded_projection": false,
+            "sandbox_stopped": false,
+            "markers": []
+          },
+          {
+            "phase": "after-reinstall",
+            "passed": true,
+            "loaded_projection": true,
+            "sandbox_stopped": true,
+            "markers": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=74",
+              "TANDEMLOG_PHASE identity_lock=34",
+              "TANDEMLOG_PHASE sqlite_open_schema=40",
+              "TANDEMLOG_PHASE manifest=46",
+              "TANDEMLOG_PHASE ingest=63",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=324 FILES_READ=1"
+            ]
+          }
+        ],
+        "upgrade": {
+          "candidate_commit": "0a027b9306ee2d2cc2c648f3dfe483d3612187248cb842933085d18f6d580980",
+          "baseline_commit": "eac19316a1b12b24ac22ad287c7e45efd77395453d15074cc459fe5317e8c808",
+          "baseline_payload_equal": true,
+          "baseline_permissions_equal": true,
+          "final_candidate_restored": true
+        }
+      },
+      "startup": {
+        "target": "Linux x86_64 native release / Xvfb",
+        "tasks": 10,
+        "label": "tasks",
+        "os_page_cache": "not flushed",
+        "results": [
+          {
+            "run": 1,
+            "cache": "rebuild",
+            "external_ms": 691,
+            "marker": "TANDEMLOG_READY_MS=424 FILES_READ=1",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=66",
+              "TANDEMLOG_PHASE identity_lock=37",
+              "TANDEMLOG_PHASE sqlite_open_schema=42",
+              "TANDEMLOG_PHASE manifest=20",
+              "TANDEMLOG_PHASE ingest=114",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=424 FILES_READ=1"
+            ],
+            "external_main_ms": 262,
+            "external_first_frame_ms": 333
+          },
+          {
+            "run": 2,
+            "cache": "warm",
+            "external_ms": 508,
+            "marker": "TANDEMLOG_READY_MS=307 FILES_READ=0",
+            "phases": [
+              "TANDEMLOG_MAIN",
+              "TANDEMLOG_FIRST_FRAME_MS=68",
+              "TANDEMLOG_PHASE identity_lock=43",
+              "TANDEMLOG_PHASE sqlite_open_schema=32",
+              "TANDEMLOG_PHASE manifest=21",
+              "TANDEMLOG_PHASE ingest=62",
+              "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+              "TANDEMLOG_READY_MS=307 FILES_READ=0"
+            ],
+            "external_main_ms": 197,
+            "external_first_frame_ms": 269
+          }
+        ]
+      },
+      "startup_artifact_note": "Raw artifact also contains desktop portal diagnostic preamble; extracted the single structured measurement report."
+    },
+    "android": {
+      "artifact_id": 11304170998,
+      "archive_sha256": "109bbb256d453e510e87df17cfa0f1b8fca79b669e1213621991c0674fa2b3ab",
+      "archive_bytes": 27759799,
+      "archive_crc": "pass",
+      "internal_checksums": "pass",
+      "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "apk_sha256": "bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908",
+      "apk_bytes": 59936576,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "package": "com.reddraggone9.tandemlog",
+      "version_name": "2026.10.1",
+      "version_code": 42,
+      "nondebuggable": true,
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "official_apk_verification": "pass",
+      "native_stable_acceptance": "pending"
+    }
+  },
+  "hosted_checks": {
+    "source_commit": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "push_ci": 37202635308,
+    "push_ci_conclusion": "success",
+    "linux_app_tests": 368,
+    "windows_app_tests": 366,
+    "windows_skips": 2,
+    "release_policy_tests": 18,
+    "native_linux_flows": 45,
+    "all_target_builds": "pass",
+    "installed_windows_lifecycle": "pass",
+    "installed_flatpak_lifecycle": "pass",
+    "owner_signing": "pass",
+    "candidate_conclusion": "success"
+  }
+}
