@@ -57,6 +57,17 @@ pkg_check_modules(GTK REQUIRED IMPORTED_TARGET gtk+-3.0)
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
+# Build one canonical, locked Rust engine. Cargo caches stay in OS temp storage
+# (TANDEMLOG_TEXT_TARGET_DIR may override); only the shared library is staged.
+find_package(Python3 3.11 REQUIRED COMPONENTS Interpreter)
+set(TEXT_ENGINE_STAGE "${CMAKE_BINARY_DIR}/text_engine")
+add_custom_target(tandemlog_text_build
+  COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/../tool/build_text_engine.py"
+    --platform linux --output-dir "${TEXT_ENGINE_STAGE}"
+  BYPRODUCTS "${TEXT_ENGINE_STAGE}/libtandemlog_text.so"
+  VERBATIM)
+add_dependencies(${BINARY_NAME} tandemlog_text_build)
+
 # Run the Flutter tool portions of the build. This must not be removed.
 add_dependencies(${BINARY_NAME} flutter_assemble)
 
@@ -90,6 +101,9 @@ install(CODE "
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}/lib")
+
+install(FILES "${TEXT_ENGINE_STAGE}/libtandemlog_text.so"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)

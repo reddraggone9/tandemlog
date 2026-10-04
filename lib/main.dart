@@ -9,6 +9,10 @@ import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
+import 'application/task_text_session.dart';
+import 'application/text_save_command.dart';
+import 'text/native_text_engine.dart';
+import 'text/native_text_licenses.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
@@ -35,6 +39,7 @@ import 'storage/task_store.dart';
 void main() {
   debugPrint('TANDEMLOG_MAIN');
   WidgetsFlutterBinding.ensureInitialized();
+  registerNativeTextLicenses();
   runApp(const TandemlogApp());
 }
 
@@ -126,6 +131,10 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
+  NativeTextEngine? textEngine;
+  TaskTextSession? editingText;
+  TextSaveCommand? textSaveCommand;
+  String? editingTextStatus;
   final undoHistory = SessionUndoHistory();
   String? user, error;
   final selectedTags = <String>{};
@@ -350,6 +359,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       '$privateRoot/spaces/$cacheKey',
       writerIdentity: settings!.writer,
       writerGuard: FileWriterGuard(privateRoot!),
+      textEngine: textEngine ??= NativeTextEngine(),
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
     if (!mounted) {
@@ -359,6 +369,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     undoHistory.clear();
     store = opened;
     rows = store!.rows;
+    if (store!.pendingTextOperations.isNotEmpty) {
+      error =
+          'An earlier saved operation needs confirmation. Retry to finish it.';
+      errorFromRefresh = true;
+    }
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
     if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) user = null;
   }
@@ -559,6 +574,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     ),
                   ),
                 const Divider(height: 32),
+                if (store != null && !store!.sharedTextInitialized)
+                  ListTile(
+                    key: const ValueKey('initialize-shared-text'),
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Set up shared text editing'),
+                    trailing: const Icon(Icons.chevron_right),
+                    enabled: !busy,
+                    onTap: !busy
+                        ? () => Navigator.pop(ctx, 'initialize-text')
+                        : null,
+                  ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Licenses'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pop(ctx, 'licenses'),
+                ),
                 const ReleaseVersionTile(),
               ],
             ),
@@ -579,9 +611,47 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await _act(() => widget.folderActions.open(location!));
     } else if (action == 'verify') {
       await _checkDataIntegrity();
+    } else if (action == 'initialize-text') {
+      await _initializeSharedText();
+    } else if (action == 'licenses') {
+      if (mounted) {
+        showLicensePage(context: context, applicationName: 'Tandemlog');
+      }
     } else {
       await _setAppearance(Appearance.values.byName(action));
     }
+  }
+
+  Future<void> _initializeSharedText() async {
+    final origin = store;
+    if (origin == null || busy || !await _closeEditor() || !mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Set up shared text editing'),
+        content: const Text(
+          'Do this once on one device after its folder has received the tasks '
+          'you want to include. Your sync app will share this setup with your '
+          'other devices. Later text edits from an older app remain in the '
+          'folder but do not replace shared text. Newly created tasks can '
+          'already be edited offline.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Set up'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted || !identical(store, origin)) return;
+    await _act(() async {
+      await origin.initializeSharedText();
+    });
   }
 
   Future<void> _checkDataIntegrity() async {
@@ -729,8 +799,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           _advanceBulkForOwnMoves(origin, moveEditor, moveBaseline, prepared);
         }
         final previous = undoHistory.latest;
+        final retainedBefore = undoHistory.retainedOperationIds;
         undoHistory.record(verb, prepared, group: group);
         undoHistory.reconcile(origin.confirmedOperations);
+        origin.releaseTextOperations(
+          retainedBefore.difference(undoHistory.retainedOperationIds),
+        );
         final latest = undoHistory.latest;
         final confirmed = origin.confirmedOperations(prepared);
         final confirmedLatest =
@@ -941,8 +1015,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 reconcileCapture)) {
           setState(() {
             rows = origin.rows;
-            if (errorFromRefresh) error = null;
-            errorFromRefresh = false;
+            if (origin.pendingTextOperations.isNotEmpty) {
+              error =
+                  'An earlier saved operation needs confirmation. Retry to finish it.';
+              errorFromRefresh = true;
+            } else {
+              if (errorFromRefresh) error = null;
+              errorFromRefresh = false;
+            }
           });
           _invalidateView();
         }
@@ -957,6 +1037,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }();
     await syncing;
     syncing = null;
+  }
+
+  Future<void> _retryFolderRead() async {
+    final origin = store;
+    if (origin == null || busy) return;
+    if (origin.pendingTextOperations.isEmpty) {
+      await _refresh();
+      return;
+    }
+    await _act(() async {
+      for (final receipt in origin.pendingTextOperations) {
+        await origin.retryTextOperation(receipt);
+      }
+    });
   }
 
   @override
@@ -1150,10 +1244,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : bulkEditorKey.currentState?.canClose()) ??
               Future.value(true));
       if (okay && mounted) {
+        editingText?.cancel();
+        if (editingText != null) {
+          editorStore?.releaseTextCapture(editingText!.capture);
+        }
         setState(() {
           editingTask = null;
           editingBulk = null;
           editorStore = null;
+          editingText = null;
+          textSaveCommand = null;
+          editingTextStatus = null;
         });
       }
       return okay;
@@ -1177,9 +1278,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     setState(_clearSelection);
   }
 
-  void _openSelectionSession() {
+  Future<void> _openSelectionSession() async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    editorStore = store;
+    final origin = store;
+    if (origin == null) return;
     final tasks = rows
         .where(
           (row) => row['kind'] == 'task' && selectedTasks.contains(row['id']),
@@ -1187,18 +1289,64 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         .toList();
     if (tasks.length != selectedTasks.length) return;
     if (tasks.length == 1) {
-      editorKey = GlobalKey<TaskEditorState>();
-      editingTask = Map<String, dynamic>.from(tasks.single);
-      editingBulk = null;
+      final id = tasks.single['id'] as String;
+      TaskTextSession? session;
+      TaskTextCapture? openedCapture;
+      String? status;
+      try {
+        final captured = await origin.captureTaskText(id);
+        openedCapture = captured;
+        session = TaskTextSession(
+          captured,
+          registerDraftActor: (field, allocation, actor) =>
+              origin.registerTextDraftActor(captured, field, allocation, actor),
+        );
+      } catch (e) {
+        if (openedCapture != null) origin.releaseTextCapture(openedCapture);
+        status = origin.sharedTextInitialized
+            ? failureMessage(e)
+            : 'Set up shared text editing in Settings to edit this task’s title and notes.';
+      }
+      if (!mounted ||
+          !identical(store, origin) ||
+          selectedTasks.length != 1 ||
+          !selectedTasks.contains(id)) {
+        session?.cancel();
+        if (session != null) origin.releaseTextCapture(session.capture);
+        return;
+      }
+      final current = origin.rows
+          .where((row) => row['id'] == id && row['kind'] == 'task')
+          .firstOrNull;
+      if (current == null) {
+        session?.cancel();
+        if (session != null) origin.releaseTextCapture(session.capture);
+        return;
+      }
+      setState(() {
+        editorStore = origin;
+        editorKey = GlobalKey<TaskEditorState>();
+        editingTask = _displayTask(current);
+        editingText = session;
+        textSaveCommand = session == null
+            ? null
+            : TextSaveCommand(origin, session);
+        editingTextStatus = status;
+        editingBulk = null;
+        rows = origin.rows;
+      });
     } else if (tasks.isNotEmpty) {
-      bulkSnapshot = store!.taskSnapshot;
-      bulkConflict = false;
-      bulkEditorKey = GlobalKey<BulkTaskEditorState>();
-      editingBulk = tasks
-          .map((task) => Map<String, dynamic>.from(task))
-          .toList();
-      editingTask = null;
-      bulkPending = tasks.map((task) => task['id'] as String).toList();
+      setState(() {
+        editorStore = origin;
+        bulkSnapshot = origin.taskSnapshot;
+        bulkConflict = false;
+        bulkEditorKey = GlobalKey<BulkTaskEditorState>();
+        editingBulk = tasks
+            .map((task) => Map<String, dynamic>.from(task))
+            .toList();
+        editingTask = null;
+        bulkPending = tasks.map((task) => task['id'] as String).toList();
+      });
     }
   }
 
@@ -1300,8 +1448,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       selecting = nextIntent;
       selectionAnchor = next.isEmpty ? null : anchor;
       mobileEditorOpen = !nextIntent;
-      if (next.isNotEmpty) _openSelectionSession();
     });
+    if (next.isNotEmpty) await _openSelectionSession();
     return true;
   }
 
@@ -1311,8 +1459,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!selectedTasks.every(visible.contains)) return;
     setState(() {
       mobileEditorOpen = true;
-      _openSelectionSession();
     });
+    await _openSelectionSession();
   }
 
   Future<void> _focusRelativeTask(
@@ -1496,6 +1644,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     ])
       key: task[key],
   });
+  String _nonTextBaseline(Map<String, dynamic> task) => jsonEncode({
+    for (final key in ['id', 'schedule', 'assignee', 'tagRefs', 'completed'])
+      key: task[key],
+  });
+  bool _nonTextUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
+    final current = origin.rows
+        .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
+        .firstOrNull;
+    return identical(store, origin) &&
+        current != null &&
+        _nonTextBaseline(current) == _nonTextBaseline(frozen);
+  }
+
+  Map<String, dynamic> _displayTask(Map<String, dynamic> task) =>
+      task['textUnavailable'] == null
+      ? Map<String, dynamic>.from(task)
+      : {...task, 'title': 'Text unavailable', 'description': ''};
   bool _targetUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
     final current = origin.rows
         .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
@@ -1528,6 +1693,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ? TaskEditor(
               key: editorKey,
               task: task,
+              textSession: editingText,
+              textStatus: editingTextStatus,
+              disableTextFields: editingText == null,
               users: users,
               panel: panel,
               selectionCount: selectedTasks.isEmpty
@@ -1535,8 +1703,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : selectedTasks.length,
               onClearSelection: _clearTaskSelection,
               onClose: () {
+                editingText?.cancel();
+                if (editingText != null) {
+                  editorStore?.releaseTextCapture(editingText!.capture);
+                }
                 setState(() {
                   editingTask = null;
+                  editingText = null;
+                  textSaveCommand = null;
+                  editingTextStatus = null;
                   _clearSelection();
                 });
               },
@@ -1572,15 +1747,45 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   throw StateError('The data folder changed. Reopen the task.');
                 }
                 await origin.refresh();
-                if (!_targetUnchanged(origin, task)) {
+                if (!_nonTextUnchanged(origin, task) &&
+                    !(editingText?.hasPendingReceipt ?? false)) {
                   throw StateError(
-                    'This task changed. Your draft is kept; close and reopen it to review before saving.',
+                    'This task’s other details changed. Your draft is kept; close and reopen it to review before saving.',
                   );
                 }
                 final tags = Set<String>.from(task['tags'] as List? ?? [])
                   ..addAll(addedTags)
                   ..removeAll(removedTags);
-                if (fields.isNotEmpty ||
+                if (textSaveCommand != null) {
+                  final result = await _recordAction(
+                    origin,
+                    'editing',
+                    (prepared) => textSaveCommand!.save(
+                      fields: fields,
+                      tags: tags.toList(),
+                      observedTagRefs: Map<String, String>.from(
+                        task['tagRefs'] as Map? ?? {},
+                      ),
+                      expectedSnapshot: origin.taskSnapshot,
+                      canCommit: () => _nonTextUnchanged(origin, task),
+                      onPrepared: prepared,
+                    ),
+                  );
+                  if (result.sessionError != null) {
+                    throw StateError(
+                      'Saved to the folder. Use Retry Save to finish opening the next editor draft.',
+                    );
+                  }
+                  if (result.undoError != null && mounted && context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Saved. Undo is unavailable for this change.',
+                        ),
+                      ),
+                    );
+                  }
+                } else if (fields.isNotEmpty ||
                     addedTags.isNotEmpty ||
                     removedTags.isNotEmpty) {
                   await _recordAction(
@@ -1594,13 +1799,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         task['tagRefs'] as Map? ?? {},
                       ),
                       expectedTaskSnapshot: origin.taskSnapshot,
-                      canCommit: () => _targetUnchanged(origin, task),
+                      canCommit: () => _nonTextUnchanged(origin, task),
                       onPrepared: prepared,
                     ),
                   );
                 }
                 if (mounted) {
-                  setState(() => rows = origin.rows);
+                  setState(() {
+                    rows = origin.rows;
+                    final saved = rows
+                        .where(
+                          (row) =>
+                              row['id'] == task['id'] && row['kind'] == 'task',
+                        )
+                        .firstOrNull;
+                    if (saved != null) editingTask = _displayTask(saved);
+                  });
                   _invalidateView();
                 }
               },
@@ -2255,7 +2469,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     try {
       await store?.close();
     } finally {
-      await profileLock?.close();
+      try {
+        textEngine?.dispose();
+      } finally {
+        await profileLock?.close();
+      }
     }
   }
 
@@ -2376,7 +2594,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   Expanded(child: Text(error!)),
                                   if (errorFromRefresh && store != null)
                                     TextButton(
-                                      onPressed: busy ? null : _refresh,
+                                      onPressed: busy ? null : _retryFolderRead,
                                       child: const Text('Retry'),
                                     ),
                                   if (!settingsLoaded)
@@ -3130,7 +3348,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         Builder(
                           key: ValueKey('task-row-${entry.task['id']}'),
                           builder: (context) {
-                            final task = entry.task;
+                            final task = _displayTask(entry.task);
                             final completed = searching
                                 ? task['completed'] == true
                                 : showCompleted;

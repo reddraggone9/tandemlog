@@ -5,6 +5,7 @@ import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
 import 'failure_message.dart';
+import '../application/task_text_session.dart';
 
 // Input-only normalization keeps historical canonical titles untouched until
 // the user edits them. Do not interfere with the platform's IME candidates.
@@ -51,7 +52,13 @@ class TaskEditor extends StatefulWidget {
     this.onClearSelection,
     this.users = const [],
     this.panel = false,
+    this.textSession,
+    this.textStatus,
+    this.disableTextFields = false,
   });
+  final TaskTextSession? textSession;
+  final String? textStatus;
+  final bool disableTextFields;
   final Map<String, dynamic> task;
   final Future<void> Function(Map<String, dynamic>, List<String>, List<String>)
   save;
@@ -80,6 +87,9 @@ class TaskEditorState extends State<TaskEditor> {
     onClearSelection: widget.onClearSelection,
     onDelete: widget.onDelete,
     saveSingle: widget.save,
+    textSession: widget.textSession,
+    textStatus: widget.textStatus,
+    disableTextFields: widget.disableTextFields,
   );
 }
 
@@ -137,7 +147,13 @@ class _EditorBody extends StatefulWidget {
     this.onDelete,
     this.saveSingle,
     this.saveBulk,
+    this.textSession,
+    this.textStatus,
+    this.disableTextFields = false,
   });
+  final TaskTextSession? textSession;
+  final String? textStatus;
+  final bool disableTextFields;
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
   final VoidCallback? onClose;
@@ -183,6 +199,8 @@ class _EditorBodyState extends State<_EditorBody> {
     }
   }
 
+  bool get editingFrozen =>
+      busy || widget.textSession?.hasPendingReceipt == true;
   bool get bulk => widget.saveBulk != null;
   Map<String, dynamic> scheduleOf(Map<String, dynamic> task) =>
       Map<String, dynamic>.from(task['schedule'] as Map? ?? {});
@@ -216,12 +234,28 @@ class _EditorBodyState extends State<_EditorBody> {
             ? ''
             : value?.toString() ?? '',
       );
+      if (widget.textSession != null &&
+          {'title', 'description'}.contains(key)) {
+        controllers[key]!.text = widget.textSession!.text(key);
+      }
       final controller = controllers[key]!;
       var previousText = controller.text;
       var previousComposing = controller.value.composing;
       controller.addListener(() {
         // Focus/caret changes notify too. They must not apply a blank mixed
         // schedule field or mark an otherwise untouched draft as dirty.
+        if (widget.textSession != null &&
+            !widget.textSession!.frozen &&
+            {'title', 'description'}.contains(key) &&
+            (controller.text != previousText ||
+                previousComposing != controller.value.composing)) {
+          final composing = controller.value.composing;
+          widget.textSession!.replace(
+            key,
+            controller.text,
+            composing: composing.isValid && !composing.isCollapsed,
+          );
+        }
         final compositionChanged =
             previousComposing != controller.value.composing;
         previousComposing = controller.value.composing;
@@ -343,7 +377,7 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> canClose() {
-    if (busy) return Future.value(false);
+    if (editingFrozen) return Future.value(false);
     if (!dirty) return Future.value(true);
     return closeRequest ??= askClose().whenComplete(() => closeRequest = null);
   }
@@ -420,9 +454,13 @@ class _EditorBodyState extends State<_EditorBody> {
             desired = tags('tags').toSet();
         await widget.saveSingle!(
           {
-            if (controllers['title']!.text != first['title'])
+            if (widget.textSession == null &&
+                !widget.disableTextFields &&
+                controllers['title']!.text != first['title'])
               'title': controllers['title']!.text.trim(),
-            if (controllers['description']!.text != first['description'])
+            if (widget.textSession == null &&
+                !widget.disableTextFields &&
+                controllers['description']!.text != first['description'])
               'description': controllers['description']!.text,
             if (assignee != first['assignee']) 'assignee': assignee,
             if (parsed.entries.any((e) => scheduleOf(first)[e.key] != e.value))
@@ -433,6 +471,31 @@ class _EditorBodyState extends State<_EditorBody> {
         );
       }
       if (!mounted) return false;
+      if (widget.textSession != null && !widget.textSession!.frozen) {
+        for (final field in ['title', 'description']) {
+          final controller = controllers[field]!;
+          final text = widget.textSession!.text(field);
+          if (controller.text != text) {
+            final selection = controller.selection;
+            controller.value = TextEditingValue(
+              text: text,
+              selection: TextSelection(
+                baseOffset: selection.baseOffset.clamp(0, text.length),
+                extentOffset: selection.extentOffset.clamp(0, text.length),
+              ),
+            );
+          }
+        }
+      }
+      if (widget.textSession != null && !widget.textSession!.frozen) {
+        final saved = originals.first;
+        saved['title'] = controllers['title']!.text;
+        saved['description'] = controllers['description']!.text;
+        saved['assignee'] = assignee;
+        saved['tags'] = tags('tags');
+        saved['schedule'] = TaskSchedule.fromJson(patch).toJson();
+        touched.clear();
+      }
       if (closeAfter) {
         finish();
       } else {
@@ -451,7 +514,7 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<void> delete() async {
-    if (busy) return;
+    if (editingFrozen) return;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -502,7 +565,12 @@ class _EditorBodyState extends State<_EditorBody> {
       key: ValueKey(key),
       controller: controllers[key],
       focusNode: textFocus[key],
-      enabled: !busy,
+      enabled:
+          !editingFrozen &&
+          !(widget.disableTextFields &&
+              {'title', 'description'}.contains(key)) &&
+          !(widget.textSession?.frozen == true &&
+              {'title', 'description'}.contains(key)),
       minLines: key == 'description' ? 3 : 1,
       maxLines: key == 'description' ? null : lines,
       inputFormatters: key == 'title' ? [_TitleLineFormatter()] : null,
@@ -514,7 +582,7 @@ class _EditorBodyState extends State<_EditorBody> {
             ? IconButton(
                 tooltip: 'Choose $label',
                 icon: const Icon(Icons.calendar_today_outlined),
-                onPressed: busy
+                onPressed: editingFrozen
                     ? null
                     : () async {
                         final parsed = DateTime.tryParse(
@@ -541,7 +609,7 @@ class _EditorBodyState extends State<_EditorBody> {
             ? IconButton(
                 tooltip: 'Clear ${clearLabel ?? label}',
                 icon: const Icon(Icons.close),
-                onPressed: busy
+                onPressed: editingFrozen
                     ? null
                     : () {
                         textFocus[key]?.unfocus();
@@ -551,7 +619,7 @@ class _EditorBodyState extends State<_EditorBody> {
             : key == 'recurrence'
             ? PopupMenuButton<String>(
                 tooltip: 'Repeat examples',
-                enabled: !busy,
+                enabled: !editingFrozen,
                 icon: const Icon(Icons.expand_more),
                 onSelected: (rule) => controllers[key]!.text = rule,
                 itemBuilder: (_) => [
@@ -573,7 +641,7 @@ class _EditorBodyState extends State<_EditorBody> {
               children: [
                 Checkbox(
                   value: applied.contains(key),
-                  onChanged: busy
+                  onChanged: editingFrozen
                       ? null
                       : (v) => setState(() {
                           if (v!) {
@@ -675,6 +743,17 @@ class _EditorBodyState extends State<_EditorBody> {
           if (!bulk) ...[
             field('title', 'Title', lines: 2),
             field('description', 'Notes', lines: 3),
+            if (widget.disableTextFields && widget.textStatus != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: Text(
+                  widget.textStatus!,
+                  softWrap: true,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
           ],
           const SizedBox(height: 12),
           dateTimeRow('start', 'Start'),
@@ -694,13 +773,13 @@ class _EditorBodyState extends State<_EditorBody> {
               runSpacing: 4,
               children: [
                 TextButton(
-                  onPressed: busy
+                  onPressed: editingFrozen
                       ? null
                       : () => setState(() => showOverride = !showOverride),
                   child: const Text('Edit existing override'),
                 ),
                 TextButton(
-                  onPressed: busy
+                  onPressed: editingFrozen
                       ? null
                       : () {
                           controllers['scheduledDate']!.clear();
@@ -742,7 +821,7 @@ class _EditorBodyState extends State<_EditorBody> {
                 if (bulk)
                   Checkbox(
                     value: applyAssignee,
-                    onChanged: busy
+                    onChanged: editingFrozen
                         ? null
                         : (v) => setState(() => applyAssignee = v!),
                   ),
@@ -777,7 +856,7 @@ class _EditorBodyState extends State<_EditorBody> {
                           ),
                         ),
                     ],
-                    onChanged: busy
+                    onChanged: editingFrozen
                         ? null
                         : (v) => setState(() {
                             assignee = v;
@@ -795,7 +874,7 @@ class _EditorBodyState extends State<_EditorBody> {
       children: [
         if (widget.onDelete != null)
           TextButton(
-            onPressed: busy ? null : delete,
+            onPressed: editingFrozen ? null : delete,
             child: const Text('Delete'),
           ),
         Expanded(
@@ -805,12 +884,18 @@ class _EditorBodyState extends State<_EditorBody> {
             runSpacing: 4,
             children: [
               TextButton(
-                onPressed: busy ? null : close,
+                onPressed: editingFrozen ? null : close,
                 child: const Text('Cancel'),
               ),
               FilledButton(
                 onPressed: busy || error != null ? null : submit,
-                child: Text(busy ? 'Saving…' : 'Save changes'),
+                child: Text(
+                  busy
+                      ? 'Saving…'
+                      : widget.textSession?.hasPendingReceipt == true
+                      ? 'Retry Save'
+                      : 'Save changes',
+                ),
               ),
             ],
           ),
@@ -836,7 +921,7 @@ class _EditorBodyState extends State<_EditorBody> {
               ),
             if (widget.onClearSelection != null)
               TextButton(
-                onPressed: busy ? null : widget.onClearSelection,
+                onPressed: editingFrozen ? null : widget.onClearSelection,
                 child: const Text('Clear Selection'),
               ),
           ],

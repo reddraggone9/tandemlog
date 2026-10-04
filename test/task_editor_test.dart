@@ -30,6 +30,87 @@ Future<void> edit(WidgetTester tester, String key, String value) async {
 
 void main() {
   testWidgets(
+    'blocked text instruction wraps with full semantics at narrow 200 percent',
+    (tester) async {
+      const instruction =
+          'Set up shared text editing in Settings to edit this task’s title and notes.';
+      final semantics = tester.ensureSemantics();
+      await tester.binding.setSurfaceSize(const Size(360, 900));
+      addTearDown(() => tester.binding.setSurfaceSize(null));
+      await tester.pumpWidget(
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(
+              size: Size(360, 900),
+              textScaler: TextScaler.linear(2),
+            ),
+            child: Scaffold(
+              body: TaskEditor(
+                panel: true,
+                task: task(),
+                disableTextFields: true,
+                textStatus: instruction,
+                onClose: () {},
+                save: (_, _, _) async {},
+              ),
+            ),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final status = find.text(instruction);
+      expect(status, findsOneWidget);
+      final text = tester.widget<Text>(status);
+      expect(text.maxLines, isNull);
+      expect(text.overflow, isNull);
+      expect(text.softWrap, isTrue);
+      expect(
+        tester.widget<TextField>(input('title')).decoration!.helperText,
+        isNull,
+      );
+      expect(find.bySemanticsLabel(instruction), findsOneWidget);
+      expect(tester.getSize(status).height, greaterThan(50));
+      expect(tester.takeException(), isNull);
+      semantics.dispose();
+    },
+  );
+
+  testWidgets(
+    'unactivated text stays visible and disabled while scheduling saves',
+    (tester) async {
+      Map<String, dynamic>? saved;
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task(),
+          disableTextFields: true,
+          textStatus: 'Initialize collaborative text in Settings.',
+          onClose: () {},
+          save: (fields, _, _) async => saved = fields,
+        ),
+      );
+      expect(tester.widget<TextField>(input('title')).enabled, isFalse);
+      expect(tester.widget<TextField>(input('description')).enabled, isFalse);
+      expect(
+        tester.widget<TextField>(input('title')).controller!.text,
+        'Original',
+      );
+      expect(
+        find.text('Initialize collaborative text in Settings.'),
+        findsOneWidget,
+      );
+      await edit(tester, 'dueDate', '2026-10-05');
+      await tester.ensureVisible(find.text('Save changes'));
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(saved!.containsKey('title'), isFalse);
+      expect(saved!.containsKey('description'), isFalse);
+      expect((saved!['schedule'] as Map)['dueDate'], '2026-10-05');
+    },
+  );
+
+  testWidgets(
     'blank Time focus preserves date precision and midnight is explicit',
     (tester) async {
       for (final zone in [null, 'UTC', 'America/Chicago']) {

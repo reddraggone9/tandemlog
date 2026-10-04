@@ -19,6 +19,10 @@ class UndoEntry {
 class SessionUndoHistory {
   static const capacity = 50;
   final List<UndoEntry> _entries = [];
+  Set<String> get retainedOperationIds => Set.unmodifiable({
+    for (final entry in _entries) ...entry.operations,
+    for (final entry in _entries) ...entry.pending.map((receipt) => receipt.id),
+  });
   UndoEntry? get latest =>
       _entries.where((e) => e.operations.isNotEmpty).lastOrNull;
   void record(

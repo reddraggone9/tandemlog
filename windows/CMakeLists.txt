@@ -52,6 +52,17 @@ add_subdirectory(${FLUTTER_MANAGED_DIR})
 # Application build; see runner/CMakeLists.txt.
 add_subdirectory("runner")
 
+# Same Rust source and release ABI for all Flutter configurations. The DLL is
+# staged beside the executable; no Rust shared runtime is shipped separately.
+find_package(Python3 3.11 REQUIRED COMPONENTS Interpreter)
+set(TEXT_ENGINE_STAGE "${CMAKE_BINARY_DIR}/text_engine")
+add_custom_target(tandemlog_text_build
+  COMMAND "${Python3_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/../tool/build_text_engine.py"
+    --platform windows --output-dir "${TEXT_ENGINE_STAGE}"
+  BYPRODUCTS "${TEXT_ENGINE_STAGE}/tandemlog_text.dll"
+  VERBATIM)
+add_dependencies(${BINARY_NAME} tandemlog_text_build)
+
 
 # Generated plugin build rules, which manage building the plugins and adding
 # them to the application.
@@ -71,6 +82,9 @@ endif()
 
 set(INSTALL_BUNDLE_DATA_DIR "${CMAKE_INSTALL_PREFIX}/data")
 set(INSTALL_BUNDLE_LIB_DIR "${CMAKE_INSTALL_PREFIX}")
+
+install(FILES "${TEXT_ENGINE_STAGE}/tandemlog_text.dll"
+  DESTINATION "${INSTALL_BUNDLE_LIB_DIR}" COMPONENT Runtime)
 
 install(TARGETS ${BINARY_NAME} RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
   COMPONENT Runtime)

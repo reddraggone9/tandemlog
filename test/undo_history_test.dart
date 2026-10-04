@@ -43,6 +43,7 @@ void main() {
       history.record('editing', [
         const OperationReceipt('w:2', 'two', 'b'),
       ], group: group);
+      expect(history.retainedOperationIds, {'w:1', 'w:2'});
       history.reconcile((rs) => {for (final r in rs) r.id});
       expect(identical(entry, history.latest), isTrue);
       expect(entry.label, 'editing 2 tasks');
@@ -58,6 +59,9 @@ void main() {
         history.record('editing', [OperationReceipt('w:$i', '$i', 'a')]);
         history.reconcile((rs) => {for (final r in rs) r.id});
       }
+      expect(history.retainedOperationIds, {
+        for (var i = 5; i < 55; i++) 'w:$i',
+      });
       var retained = 0;
       while (history.latest != null) {
         final e = history.latest!;
@@ -69,6 +73,7 @@ void main() {
       history.clear();
       history.reconcile((rs) => {for (final r in rs) r.id});
       expect(history.latest, isNull);
+      expect(history.retainedOperationIds, isEmpty);
     },
   );
 }
