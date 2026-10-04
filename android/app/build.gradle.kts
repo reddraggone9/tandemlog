@@ -42,9 +42,11 @@ gradle.taskGraph.whenReady {
 android {
     namespace = "com.reddraggone9.tandemlog"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "28.2.13676358"
 
-    sourceSets.getByName("main").jniLibs.srcDir(textEngineJni)
+    // AGP 9.1 SourceSet accepts a concrete File, not a Directory Provider.
+    // preBuild above explicitly depends on the producer before native merging.
+    sourceSets.getByName("main").jniLibs.srcDir(textEngineJni.get().asFile)
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17

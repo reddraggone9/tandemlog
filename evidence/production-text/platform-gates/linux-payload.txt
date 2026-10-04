@@ -1,0 +1,2 @@
+Required production native ABI loaded: build/linux/x64/release/bundle/lib/libtandemlog_text.so
+Packaged native library and exact notices verified: build/linux/x64/release/bundle

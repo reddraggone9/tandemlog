@@ -81,7 +81,15 @@ def verify_elf(library, machine, android=False):
     load_segments = 0
     for index in range(count):
         position = offset + index * stride
-        if struct.unpack_from('<I', data, position)[0] == 1:
+        segment_type = struct.unpack_from('<I', data, position)[0]
+        # Android 16 KiB devices/requirement cover 64-bit ABIs. ARMv7 keeps
+        # its existing LOAD check without imposing a 64-bit RELRO contract.
+        if segment_type == 0x6474e552 and data[4] == 2:  # PT_GNU_RELRO
+            virtual_address = struct.unpack_from('<Q', data, position + 16)[0]
+            memory_size = struct.unpack_from('<Q', data, position + 40)[0]
+            if (virtual_address + memory_size) % 16384:
+                raise BuildError('Android RELRO end must support 16 KiB page alignment')
+        if segment_type == 1:
             load_segments += 1
             alignment = struct.unpack_from(alignment_format, data, position + alignment_offset)[0]
             if alignment < 16384:
