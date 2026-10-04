@@ -30,11 +30,11 @@ clarification is a separate explained revision.
 | O01–O04 | Source-bound one-shot Save, reject remote draft import, failure retains draft/prior Undo | Three failures reproduced before fixes; four pass after fixes |
 | A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; old scalar admission remains undecided |
 | A04 | Pending structs retained through full checkpoint, excluded by ordinary diff | Pass: full restore yields xAB; diff restore yields xA |
-| R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass locally afterward; hosted rerun pending |
+| R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass afterward on native hosted Linux/Windows |
 | A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
 | N01 | Linux/Dart native ABI | Pass, actual Dart3.13.4 native FFI |
 | N02 | Android two-ABI packaging/runtime | ARM64/x86_64 SO cross-builds pass; runtime/Flutter packaging not run |
-| N03 | Windows native ABI/runtime | Prior revision38 and Dart FFI pass; hardened revision awaiting hosted rerun |
+| N03 | Windows native ABI/runtime | Hardened revision52 and Dart FFI pass on actual hosted Windows2022 |
 | N04 | Actual Flutter IME/editor integration | Not run; engine composition flags do not prove UI behavior |
 | P01–P02 | Release library load/checkpoint, deletion churn and document/RSS cost | Bounded Linux measurements pass; app cold start/unbounded-state acceptance not run |
 
@@ -86,8 +86,13 @@ commit `cac56d3` at16:15:02UTC, SHA256
 `b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed`.
 Thirteen failed; the duplicate-full-state case already passed. Original34 and
 ownership4 assertions/hashes remain unchanged. All52 pass on the hardened local
-Linux release library; native hosted Windows/Linux and Android cross-builds
-are being rerun against this exact revision. No application source changes.
+Linux release library and native hosted Windows/Linux release libraries at
+`5470384080f56e03a209f991af6745a941d3b559`,
+[run37216546987](https://github.com/reddraggone9/tandemlog/actions/runs/37216546987).
+Actual Dart FFI passes on each OS. Official Android ARM64/x86_64 cross-builds
+also pass; downloaded ZIP API hashes/CRC and all four native library hashes
+verify. Additional gates:8 pass,0 fail,4 not run (A03/A06/N02/N04).
+No application source changes.
 
 The adapter uses Yrs's pinned V1 primitive decoder to inspect every incoming
 struct before integration, including pending/deleted content. It permits only
@@ -125,3 +130,9 @@ Before adoption, decide legacy scalar admission and a versioned reader boundary,
 client identity allocation, resource limits/native parser isolation, restartable
 Undo and materialized checkpoints. Consider other Yrs shared types only as
 recommendations; no generic domain/store rewrite is authorized.
+
+The evidence-only full app run37214941997 also completed successfully on
+Linux/Windows/Android. Nested experiment evidence is now excluded from push-only
+app builds; executable source changes, PR/manual runs and release candidates
+still retain their checks. The hardened source push started full app
+run37216546961; this experiment does not authorize application publication.

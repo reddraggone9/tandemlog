@@ -1,17 +1,14 @@
 {
-  "date_utc": "2026-10-04T16:19:43.414007+00:00",
-  "source_commit": "pending hardened-adapter commit",
-  "hosted_run_id": null,
-  "hosted_conclusion": "pending",
+  "date_utc": "2026-10-04T16:28:24.847151+00:00",
+  "source_commit": "5470384080f56e03a209f991af6745a941d3b559",
+  "hosted_run_id": 37216546987,
+  "hosted_conclusion": "success",
   "tests_frozen_before_code": true,
   "baseline_tests_sha256": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
   "original_assertions_unchanged": true,
   "native_tests": {
     "linux": 52,
-    "windows": {
-      "current_revision": "not-run",
-      "prior_revision": 38
-    }
+    "windows": 52
   },
   "cases": [
     {
@@ -322,13 +319,13 @@
       "id": "N02",
       "case": "Android arm64 and x86_64 official NDK packaging, native runtime FFI smoke on real emulator",
       "status": "not-run",
-      "evidence_scope": "Official NDK arm64/x86_64 SO cross-builds pass; no Android runtime/Flutter package test."
+      "evidence_scope": "Hardened adapter official NDK arm64/x86_64 SO cross-builds pass at5470384/run37216546987; no Android runtime/Flutter packaging test."
     },
     {
       "id": "N03",
       "case": "Windows MSVC native DLL packaging and Dart FFI runtime smoke",
-      "status": "not-run",
-      "evidence_scope": "Prior adapter Windows38+Dart passed; hardened adapter awaiting hosted Windows rerun."
+      "status": "pass",
+      "evidence_scope": "Hardened adapter actual hosted Windows52 tests plus native Dart FFI pass at5470384/run37216546987."
     },
     {
       "id": "N04",
@@ -366,5 +363,10 @@
     "test_sha256": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed",
     "log": "admission-before-fix.log",
     "test_only_commit": "cac56d3"
+  },
+  "additional_gate_counts": {
+    "pass": 8,
+    "fail": 0,
+    "not-run": 4
   }
 }

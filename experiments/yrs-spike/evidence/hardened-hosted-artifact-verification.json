@@ -1,0 +1,51 @@
+{
+  "source_commit": "5470384080f56e03a209f991af6745a941d3b559",
+  "run_id": 37216546987,
+  "conclusion": "success",
+  "artifacts": [
+    {
+      "os": "linux",
+      "artifact_id": 11308157893,
+      "archive_sha256": "b733dbe11b88382da17ddba38609ccb8a95ca1a82128cd1bf658af206f073f8c",
+      "zip_crc": "pass",
+      "libraries": [
+        {
+          "path": "target/release/libtandemlog_yrs_spike.so",
+          "bytes": 942104,
+          "sha256": "c1b09e033f80fad1e05f03856b50d0a82a02d77344541240d3698b0bccb66b54"
+        }
+      ]
+    },
+    {
+      "os": "windows",
+      "artifact_id": 11309080507,
+      "archive_sha256": "aaf75659c2c3c8450122d9f5df8e2b8c44e7d3889367bcca9def5360fb35352e",
+      "zip_crc": "pass",
+      "libraries": [
+        {
+          "path": "target/release/tandemlog_yrs_spike.dll",
+          "bytes": 879104,
+          "sha256": "459d5d21edf43a47573e607c3144095698cf164f6fdc633ecf0c4b91674c2caa"
+        }
+      ]
+    },
+    {
+      "os": "android",
+      "artifact_id": 11307614884,
+      "archive_sha256": "f2379931cd053f58776465c14c000de955c2c2ad28215dff2ef6ab83a71419c0",
+      "zip_crc": "pass",
+      "libraries": [
+        {
+          "path": "target/aarch64-linux-android/release/libtandemlog_yrs_spike.so",
+          "bytes": 856216,
+          "sha256": "83c844eaadb18564651248a639ae2f3eeb240a89686639a9c0cbc23aeb635aaa"
+        },
+        {
+          "path": "target/x86_64-linux-android/release/libtandemlog_yrs_spike.so",
+          "bytes": 968624,
+          "sha256": "e7479307cca0fc91e0d015ee7d591bd50f9acda23804d9302f0f2db3d0bc11ac"
+        }
+      ]
+    }
+  ]
+}

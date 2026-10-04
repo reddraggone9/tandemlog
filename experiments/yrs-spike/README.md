@@ -36,3 +36,9 @@ strings are retained with skip_gc for comparison; this is bounded prototype
 policy, not production compaction. Field routing/actor allocation and Android
 runtime/editor gates remain open. See evidence/admission-test-first.json and
 results.json for exact current versus baseline coverage.
+
+Verified hardened source5470384080f56e03a209f991af6745a941d3b559:
+run37216546987 passes52 tests + Dart FFI on native Linux/Windows and cross-builds
+Android ARM64/x86_64. Additional gates8pass/0fail/4not-run remain separately
+reported. Test-first commit cac56d3 precedes src/admission.rs (16:15:02 vs
+16:17:29UTC). All original assertion hashes are unchanged.

@@ -1,0 +1,16 @@
+{
+  "recorded_utc": "2026-10-04T16:25:14.557046+00:00",
+  "repository_source": "5470384080f56e03a209f991af6745a941d3b559",
+  "native_run": 37216546987,
+  "test_only_commit": "cac56d38191ba3ecb46a0ff857c8fbe9f8eb4633",
+  "test_only_commit_utc": "2026-10-04T16:15:02Z",
+  "new_admission_source_first_written_utc": "2026-10-04T16:17:29Z",
+  "sha256": {
+    "src/lib.rs": "7aaac8ecc91591132bc9fa973bb82f09862d20a6977c5042e5b642990da9fa81",
+    "src/admission.rs": "542042bae1182cc97ec1de375b1276f82424f9861699dbcdf22f49ba3b9516d6",
+    "tests/test_contract.py": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
+    "tests/test_ownership.py": "73c07f8dd9b313d4deeb76936d2a2c35e9155dd8a55f2365521c52cc3f7c0885",
+    "tests/test_admission.py": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed",
+    "tests/cases.json": "ca8e98d43691820308f3327104c171da29e56723d6c31253a92008c79731e524"
+  }
+}
