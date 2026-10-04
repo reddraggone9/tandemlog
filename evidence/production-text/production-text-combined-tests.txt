@@ -1,0 +1,77 @@
+00:00 +0: loading /workspace/tandemlog/test/text_context_test.dart
+00:00 +0: /workspace/tandemlog/test/text_context_test.dart: context hashes the precise canonical domain descriptor
+00:00 +1: /workspace/tandemlog/test/text_event_test.dart: new text packets retain exact bytes and closed metadata
+00:00 +2: /workspace/tandemlog/test/text_event_test.dart: new text packets retain exact bytes and closed metadata
+00:00 +3: /workspace/tandemlog/test/text_event_test.dart: new text packets retain exact bytes and closed metadata
+00:00 +4: /workspace/tandemlog/test/text_event_test.dart: new text packets retain exact bytes and closed metadata
+00:00 +5: /workspace/tandemlog/test/text_context_test.dart: baseline digest is independent of object insertion order
+00:00 +6: /workspace/tandemlog/test/text_event_test.dart: text packet fields, ownership and canonical base64 fail closed
+00:00 +7: /workspace/tandemlog/test/text_event_test.dart: text packet fields, ownership and canonical base64 fail closed
+00:00 +8: /workspace/tandemlog/test/text_event_test.dart: one text command can carry atomic existing nontext edits
+00:00 +9: /workspace/tandemlog/test/text_event_test.dart: pure projection applies nontext without leaking native packet metadata
+00:00 +10: /workspace/tandemlog/test/text_event_test.dart: baseline root declares closed exact prefix and genesis frontiers
+00:00 +11: /workspace/tandemlog/test/text_event_test.dart: baseline unknown versions and invalid scope or frontiers fail closed
+00:00 +12: /workspace/tandemlog/test/text_undo_event_test.dart: native Undo preserves compensation bytes and names original command
+00:00 +13: /workspace/tandemlog/test/text_undo_event_test.dart: Undo nontext effects remains possible when native compensation is empty
+00:00 +14: /workspace/tandemlog/test/text_undo_event_test.dart: Undo retracts only the original nontext effects in pure projection
+00:00 +15: /workspace/tandemlog/test/text_actor_registry_test.dart: TA01 durable actor derivation is exact, stable and context scoped
+00:00 +16: /workspace/tandemlog/test/text_actor_registry_test.dart: TA02 reserved, unsafe, malformed and mismatched owners reject
+00:00 +17: /workspace/tandemlog/test/text_actor_registry_test.dart: TA03 actual allocator collision retains first owner and rejects second
+00:00 +18: /workspace/tandemlog/test/text_actor_registry_test.dart: TA04 multi-field admission is atomic when a later owner conflicts
+00:00 +19: /workspace/tandemlog/test/text_actor_registry_test.dart: TA05 canonical-only ownership replay is duplicate/order independent
+00:00 +20: /workspace/tandemlog/test/text_actor_registry_test.dart: TA06 operation struct authors must be the declared owner
+00:00 +21: /workspace/tandemlog/test/text_actor_registry_test.dart: TA07 separate documents do not conflate equal actor numbers
+00:00 +22: /workspace/tandemlog/test/text_actor_registry_test.dart: TA08 unknown ownership metadata fails explicitly
+00:00 +23: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:01 +24: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:01 +25: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:01 +26: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:01 +27: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:01 +28: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:01 +29: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:01 +30: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+00:01 +31: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:01 +32: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:01 +33: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:02 +34: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:02 +35: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:02 +36: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:02 +37: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:02 +38: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:02 +39: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:02 +40: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore bulk capture with native engine creates independently editable native tasks
+00:02 +41: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:02 +42: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:02 +43: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +44: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +45: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +46: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +47: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +48: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +49: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +50: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +51: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +52: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +53: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +54: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:02 +55: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI foreign handles, disposed generations and actor collisions fail explicitly
+00:02 +56: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:02 +57: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:03 +58: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:03 +59: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:03 +60: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=true
+00:03 +61: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:03 +62: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:03 +63: /workspace/tandemlog/test/task_text_session_test.dart: private UTF16 edits survive remote arrival; composition blocks preparation; cancel retains live owner
+00:03 +64: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:03 +65: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:03 +66: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:03 +67: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:04 +68: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:04 +69: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:04 +70: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:04 +71: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:04 +72: /workspace/tandemlog/test/task_text_session_test.dart: later-field preparation failure retains earlier packet for retry
+00:05 +73: /workspace/tandemlog/test/task_clock_test.dart: Chicago completion day follows local midnight across DST
+00:05 +74: /workspace/tandemlog/test/task_clock_test.dart: unknown timezone never silently falls back
+00:05 +75: All tests passed!

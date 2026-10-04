@@ -1,0 +1,20 @@
+00:00 +0: loading /workspace/tandemlog/integration_test/text_workflow_test.dart
+Building Linux application...                                   
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: offline new text, remote draft Save, Undo and explicit legacy setup
+TANDEMLOG_FIRST_FRAME_MS=389
+TANDEMLOG_PHASE identity_lock=14
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=39
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=899 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=21
+TANDEMLOG_PHASE identity_lock=6
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=40
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=196 FILES_READ=0
+00:14 +1: (tearDownAll)
+00:14 +1: All tests passed!
