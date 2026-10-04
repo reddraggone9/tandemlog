@@ -1,0 +1,35 @@
+{
+  "artifact_id": 11311130442,
+  "artifact_run": 37222225866,
+  "source": "6022b7535392669ce2db2d764ec12396a71adf2c",
+  "archive_sha256": "1d8a92658bba9deef0a94d0b0a61f0b67583ea96e11bca0aedabc82d0d5bb988",
+  "archive_size": 59820129,
+  "apk_sha256": "f7960123aa93563a06788eec0eacd30886905d55b7ae2a0bcfb102fdf9133b4c",
+  "apk_size": 120390300,
+  "certificate_sha256": "c22319073079072770bd35502dc6df6b0e46b037298135e4cf235ad9c6128e2b",
+  "package": "com.reddraggone9.tandemlog.yrs_editor_lab",
+  "version_name": "0.0.0",
+  "version_code": 1,
+  "debuggable": true,
+  "min_sdk": 24,
+  "target_sdk": 36,
+  "libraries": {
+    "arm64-v8a": {
+      "unstripped_sha256": "83c844eaadb18564651248a639ae2f3eeb240a89686639a9c0cbc23aeb635aaa",
+      "packaged_sha256": "c8bf05142c3cc07251368cf32742633a7a184b4bd8ee7129f71cd6d2c0ff362e",
+      "packaged_size": 856208
+    },
+    "x86_64": {
+      "unstripped_sha256": "e7479307cca0fc91e0d015ee7d591bd50f9acda23804d9302f0f2db3d0bc11ac",
+      "packaged_sha256": "30dce50c1447a89860510ee9d45f7e404c623b0566cd06f4b42553bfd68089bb",
+      "packaged_size": 968616
+    }
+  },
+  "runtime": "not-run",
+  "real_os_ime": "not-run",
+  "synthetic_only": true,
+  "production_adoption": false,
+  "inspection_run": 37223995522,
+  "inspection_source": "32a04a5250d6a62fa5eef33ec69927397aa65b77",
+  "verification_archive_sha256": "21e08f9dd6e4d8caf9b9a1a874ceb94fb83c486d953614be92c4341b684df7d0"
+}

@@ -60,5 +60,20 @@
   "raw_video": {
     "size": 658167,
     "sha256": "b530e26e38bfdee2a04b0f7ad263b7d0ff9107aabe405509d5e88a74ddf7efd6"
+  },
+  "final_parity_native": "pass15seconds excluding build; original datetime/tag/order/recurrence assertions retained, input locator updated to stable keys",
+  "initial_full_hosted": {
+    "candidate": 37223553877,
+    "ci": 37223553582,
+    "result": "46 native flows pass; one older native helper searches removed Add time/control label, corrected only locator; signing skipped"
+  },
+  "demo": {
+    "duration_seconds": 52.6,
+    "size": 607645,
+    "sha256": "ecb432a6dc434fed565e5ababd711f3fb056e367348832e1a22a70b728418b86",
+    "library_file_id": "libfile_ed918c8cdf5c81918f597466be0e92ab",
+    "version": 30,
+    "file_id": "file_00000000234c81f598bd2723c1cf79a6",
+    "scope": "Actual LinuxGTK; narrowed viewport and keyboard simulation explicitly labelled; pointer visible; desktop background masked outside narrow window"
   }
 }

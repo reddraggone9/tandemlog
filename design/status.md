@@ -7,7 +7,8 @@ and Tags/Assignee after scheduling in both editors. No domain, protocol3/cache13
 dependencies, signing/package or durable-data meaning changes. All376 app tests,
 22 policy tests and analysis pass locally. The focused native precision/draft
 flow passes across desktop/narrow/large-text geometry;16 native Linux screenshots
-and a54-second recording were inspected. Signed hosted candidate/all-platform
+and a52.6-second demo were inspected. An older native helper was updated to
+stable Time field keys; the original domain assertions pass in15s. Signed hosted candidate/all-platform
 checks and exact affected Android acceptance are pending. Published43 and stable
 2026.10.1 stay unchanged.
 
@@ -52,11 +53,14 @@ The separate synthetic [Flutter editor lab](../experiments/yrs-spike/editor_lab/
 passes ten local session/widget cases and one actual native Linux integration.
 Composition is injected there; real Android OS-IME/runtime acceptance is pending.
 The local debug APK packages both verified engine ABIs with a separate app
-identity and no Tandemlog folder/storage access. Hosted lab37222225866 and
-full-app37222226067 are currently running; the prior strict-lock failure and
-corrected complete dependency graph are documented in its results. Current
-Library upload authentication is blocked (HTTP401 before transfer); exact hosted
-Android artifact handoff is pending. [Adoption options](text-merge-adoption-options.md)
+identity and no Tandemlog folder/storage access. Hosted lab37222225866 and full-app37222226067 pass all targets. The prior
+strict-lock failure and corrected complete dependency graph are documented in
+its results. Hosted read-only inspection37223995522 verifies the exact existing
+APK hash, temporary debug signer, package/version and stripped native payloads.
+[Android receipt](../experiments/yrs-spike/evidence/editor-android-hosted-verification.json).
+The exact lab artifact is handed off for real Android OS-IME/runtime tests;
+these remain pending. Library large-package upload is blocked (HTTP401 before
+transfer); the authorized GitHub artifact route is available. [Adoption options](text-merge-adoption-options.md)
 separate Lee's legacy-writer upgrade decision from engineering policies. No
 production Rust bridge or protocol change is adopted.
 

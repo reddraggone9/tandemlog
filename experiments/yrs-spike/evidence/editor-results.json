@@ -86,5 +86,13 @@
     ],
     "composition": "No real OS IME; injected native integration scope only"
   },
-  "locked_graph_sha256": "c9a518555fcea53dbb393a04a5212bac10f2091be255efffd691c5653eafa282"
+  "locked_graph_sha256": "c9a518555fcea53dbb393a04a5212bac10f2091be255efffd691c5653eafa282",
+  "hosted_editor_run": {
+    "run": 37222225866,
+    "source": "6022b7535392669ce2db2d764ec12396a71adf2c",
+    "status": "success",
+    "linux": "52 engine +10 editor +1 native rendered integration; composition injected",
+    "windows": "52 engine +10 editor +actual Dart FFI",
+    "android": "APK two-ABI packaging, immutable existing artifact verification37223995522; runtime/OS-IME pending"
+  }
 }

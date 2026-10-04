@@ -3,7 +3,7 @@
 ## Next preview2026.10.2-rc.2 build44 — direct Time fields and editor order
 
 Actual native Linux GTK/Flutter debug inspection uses synthetic tasks at1200px,
-390/320px, both themes and100/200% text. Sixteen screenshots and a54-second
+390/320px, both themes and100/200% text. Sixteen screenshots and a52.6-second
 pointer-visible recording cover blank Time focus, explicit midnight, X clearing
 without losing the date/input, single/bulk Tags/Assignee after sort bounds,
 stacking, scrolling and simulated260px keyboard insets. The narrow enlarged
