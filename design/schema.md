@@ -104,7 +104,7 @@ Mixed Undo batches append unchanged per-record envelopes together. Exact confirm
 The RC8 v2 transition is historical: older peers rejected its additive cleanup type. Current v3 rejects all v2 envelopes without converting them. The historical fixture `test/fixtures/recurring_operation_undone_v2.jsonl` verifies explicit unsupported-version preservation; `test/recurring_completion_undo_test.dart` covers current cleanup, protection, recompletion, delayed references, convergence and partial retries.
 
 
-## Cache 13 and installation identity
+## Released cache 13 and installation identity
 
 Canonical workspace/event protocol is v3. The accepted Inbox classification is derived from existing functional task fields and surviving edits/tags, not a new event or stored `neverEdited` flag. Supported old projection caches rebuild only against supported v3 canonical logs with a private backup and existing identity/committed-history guards; caches newer than 13 remain untouched with an explicit compatible-app error. A real v2 folder is rejected before private cache migration. Supported prior caches replay v3 records after preserving a private backup and integrity guards, so retired draft meanings cannot survive a cached fast path. This never converts canonical files; warmed current caches retain incremental reads.
 
