@@ -213,7 +213,15 @@
     "cleanup": "temporary services stopped; settings restored; no defects/blockers reported",
     "wider_device_provider_coverage": "not inferred"
   },
-  "publication": "authorized experimental promotion pending; stable2026.10.0 remains Latest",
+  "publication": {
+    "status": "published experimental prerelease without rebuilding",
+    "tag": "v2026.10.1-rc.1",
+    "promotion_run": 37185384722,
+    "prerelease": true,
+    "latest": false,
+    "stable_latest": "v2026.10.0",
+    "public_verification": "evidence/2026.10.1-rc1-build41-public-verification.json"
+  },
   "demo": {
     "platform": "native Linux GTK debug, Xvfb",
     "synthetic_data": true,

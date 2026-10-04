@@ -1,0 +1,99 @@
+{
+  "tag": "v2026.10.1-rc.1",
+  "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+  "version": "2026.10.1-rc.1+41",
+  "candidate_run": 37179994243,
+  "promotion_run": 37185384722,
+  "promotion_dispatch_commit": "cde172930a7b4b4f42e850a37676fc4ae3e972d3",
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.1-rc.1",
+  "release_id": 402895497,
+  "rebuilt": false,
+  "prerelease": true,
+  "draft": false,
+  "latest": false,
+  "stable_latest": {
+    "id": 402839527,
+    "tag": "v2026.10.0",
+    "source_commit": "aacabf942122283731b5ea448a3800fe73ab63a2",
+    "unchanged": true
+  },
+  "tag_source": "pass",
+  "notes_equal_approved_dispatch": "pass",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.1-rc.1-android.apk",
+      "id": 609348551,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1-rc.1/tandemlog-2026.10.1-rc.1-android.apk",
+      "sha256": "b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658",
+      "bytes": 59936584,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.1-rc.1-linux-x64.flatpak",
+      "id": 609348552,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1-rc.1/tandemlog-2026.10.1-rc.1-linux-x64.flatpak",
+      "sha256": "849af067b5af32fb57cc7d8c1ff7960d866966bfa00f7486a7dbc868062b78d7",
+      "bytes": 8335848,
+      "anonymous_public_download": "pass"
+    },
+    {
+      "name": "tandemlog-2026.10.1-rc.1-windows-x64-setup.exe",
+      "id": 609348550,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.1-rc.1/tandemlog-2026.10.1-rc.1-windows-x64-setup.exe",
+      "sha256": "e34f52a83bf15b7051e99ef2ded94cbe35afae54fb482d19cd80a609aeded15a",
+      "bytes": 11596349,
+      "anonymous_public_download": "pass"
+    }
+  ],
+  "all_prior_releases_unchanged": [
+    "v2026.10.0",
+    "v2026.10.0-rc.1",
+    "v0.1.0-rc.9",
+    "v0.1.0-rc.8",
+    "v0.1.0-rc.7",
+    "v0.1.0-rc.6",
+    "v0.1.0-rc.5",
+    "v0.1.0-rc.4",
+    "v0.1.0-rc.3",
+    "v0.1.0-rc.2",
+    "v0.1.0-rc.1"
+  ],
+  "public_apk_verification": {
+    "official_apksigner": "pass",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version_name": "2026.10.1-rc.1",
+    "version_code": 41,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ]
+  },
+  "native_android_acceptance": {
+    "status": "pass",
+    "reported_by": "coordinator/native executor",
+    "platform": "Android 11/API 30 x86_64",
+    "source_commit": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+    "apk_sha256": "b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658",
+    "exact_affected_scope": [
+      "native clipboard line-break normalization and caret",
+      "notes growth and internal scroll",
+      "200% text with actual keyboard; Save/Cancel reachable",
+      "save and process restart",
+      "Cancel/Discard with no writes",
+      "final integrity check"
+    ],
+    "retained_prior_scope": [
+      "in-place upgrade",
+      "precision ordering and constrained drag/Undo",
+      "historical multiline title preservation"
+    ],
+    "cleanup": "temporary services stopped; settings restored; no defects/blockers reported",
+    "wider_device_provider_coverage": "not inferred"
+  },
+  "windows_installer_signed": false,
+  "live_data_reset_or_import": false,
+  "new_stable_patch_published": false
+}
