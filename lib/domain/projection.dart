@@ -69,6 +69,7 @@ List<String> projectOrder(
         pending.add((action.entity, action.before));
       }
     } else if ((action.type == 'task.created' ||
+            action.type == 'task.createdWithText' ||
             action.type == 'user.created') &&
         available.contains(action.entity) &&
         !ordered.contains(action.entity)) {

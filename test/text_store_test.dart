@@ -16,6 +16,91 @@ void main() {
   group(
     'actual native TaskStore',
     () {
+      test(
+        'mixed native ordering survives warm reopen and canonical rebuild',
+        () async {
+          final root = await Directory.systemTemp.createTemp('text-order-');
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? store;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            final folder = LocalLogFolder(shared.path);
+            final profile = '${root.path}/profile';
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            final user = const Uuid().v4(),
+                legacy = const Uuid().v4(),
+                native = const Uuid().v4(),
+                later = const Uuid().v4();
+            await store.command(user, 'user.created', {'name': 'Synthetic'});
+            await store.command(legacy, 'task.created', {
+              'title': 'Legacy',
+              'description': '',
+              'assignee': user,
+            });
+            await store.command(
+              native,
+              'task.createdWithText',
+              _creationData(engine, user, 'Native'),
+            );
+            await store.moveBefore(legacy, null);
+            await store.command(
+              later,
+              'task.createdWithText',
+              _creationData(engine, user, 'Later'),
+            );
+            List<String> order() => store!.rows
+                .where((row) => row['kind'] == 'task')
+                .map((row) => row['id'] as String)
+                .toList();
+            expect(order(), [native, legacy, later]);
+            final canonical = await File(
+              '${shared.path}/${store.writer}.jsonl',
+            ).readAsBytes();
+            // Simulate the prior isolated projection: native creations were
+            // appended after moves. Repair only disposable positions, using
+            // cached canonical events, without replaying shared log contents.
+            store.db.execute('UPDATE positions SET rank=1 WHERE id=?', [
+              legacy,
+            ]);
+            store.db.execute('UPDATE positions SET rank=2 WHERE id=?', [
+              native,
+            ]);
+            store.db.execute('UPDATE positions SET rank=3 WHERE id=?', [later]);
+            store.db.execute(
+              "UPDATE metadata SET value='2' WHERE key='order_projection'",
+            );
+            await store.close();
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            expect(order(), [native, legacy, later]);
+            expect(store.readFiles, 0);
+            expect(
+              store.db
+                  .select(
+                    "SELECT value FROM metadata WHERE key='order_projection'",
+                  )
+                  .single['value'],
+              '3',
+            );
+            await store.close();
+            store = await TaskStore.open(
+              folder,
+              '${root.path}/rebuild',
+              textEngine: engine,
+            );
+            expect(order(), [native, legacy, later]);
+            final logs = await shared
+                .list()
+                .where((entity) => entity.path.endsWith('.jsonl'))
+                .toList();
+            expect(logs, hasLength(1));
+            expect(await File(logs.single.path).readAsBytes(), canonical);
+          } finally {
+            await store?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
       for (final nativeCreation in [true, false]) {
         test(
           'native recurring completion refuses before receipt (native creation: $nativeCreation)',

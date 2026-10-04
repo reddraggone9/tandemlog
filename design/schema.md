@@ -72,7 +72,10 @@ Original v3 scalar records, canonical hashes, clocks and historical Undo retain
 their original meaning. Frozen stable histories remain unchanged.
 
 Branch cache 14 adds verified native field checkpoints, actor claims and pending
-receipt indexing to SQLite. Existing current cache 13 upgrades additively without
+receipt indexing to SQLite. Order-projection revision3 recognizes native creations
+in the chronological move sequence. A prior revision2 positions cache rebuilds
+from its cached canonical events on open, atomically and without shared-log
+replay or history changes; this does not change the SQLite layout or v3 wire. Existing current cache 13 upgrades additively without
 full-log replay; older supported cache rebuild and integrity guards still apply.
 Installation-private exact text intent files survive disposable cache loss and
 are retired only after matching canonical acknowledgement. They are never shared

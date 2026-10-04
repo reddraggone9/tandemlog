@@ -373,7 +373,7 @@ class TaskStore {
         "SELECT value FROM metadata WHERE key='order_projection'",
       );
       if (orderVersion.isEmpty ||
-          orderVersion.single['value'] != '2' ||
+          orderVersion.single['value'] != '3' ||
           db.select('SELECT COUNT(*) AS n FROM positions').first['n'] !=
               db.select('SELECT COUNT(*) AS n FROM views').first['n']) {
         db.execute('BEGIN IMMEDIATE');
@@ -1579,7 +1579,7 @@ class TaskStore {
       db.execute('INSERT INTO positions VALUES (?,?)', [ordered[i], i]);
     }
     db.execute(
-      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','2')",
+      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','3')",
     );
   }
 
