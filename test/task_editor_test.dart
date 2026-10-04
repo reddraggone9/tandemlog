@@ -29,6 +29,117 @@ Future<void> edit(WidgetTester tester, String key, String value) async {
 }
 
 void main() {
+  for (final fieldKey in ['title', 'description']) {
+    testWidgets(
+      '$fieldKey caret survives viewport and text scale changes without unrelated jumps',
+      (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(390, 820);
+        addTearDown(() {
+          tester.view.resetDevicePixelRatio();
+          tester.view.resetPhysicalSize();
+          tester.view.resetViewInsets();
+          tester.platformDispatcher.clearTextScaleFactorTestValue();
+        });
+        final text = fieldKey == 'description'
+            ? List.generate(
+                40,
+                (i) => 'Reference note ${i + 1} with full detail.',
+              ).join('\n')
+            : List.filled(35, 'reference').join(' ');
+        final source = task()..[fieldKey] = text;
+        final key = GlobalKey<TaskEditorState>();
+        Widget host({bool dark = false}) => MaterialApp(
+          theme: ThemeData(
+            brightness: dark ? Brightness.dark : Brightness.light,
+          ),
+          home: Scaffold(
+            body: TaskEditor(
+              key: key,
+              panel: true,
+              task: source,
+              save: (_, a, r) async {},
+            ),
+          ),
+        );
+        await tester.pumpWidget(host());
+        await tester.pumpAndSettle();
+        final field = input(fieldKey);
+        await tester.ensureVisible(field);
+        await tester.tap(field);
+        await tester.enterText(field, text);
+        await tester.pumpAndSettle();
+        final controller = tester.widget<TextField>(field).controller!;
+        // A resize must preserve the selection and unconfirmed IME candidate.
+        controller.value = controller.value.copyWith(
+          selection: TextSelection(
+            baseOffset: text.length - 2,
+            extentOffset: text.length,
+          ),
+          composing: TextRange(start: text.length - 2, end: text.length),
+        );
+        await tester.pumpAndSettle();
+        final draft = controller.value;
+        EditableTextState editable() => tester.state<EditableTextState>(
+          find.descendant(of: field, matching: find.byType(EditableText)),
+        );
+        void check(String label) {
+          final state = editable();
+          final render = state.renderEditable;
+          final caret = render
+              .getLocalRectForCaret(controller.selection.extent)
+              .shift(render.localToGlobal(Offset.zero));
+          final viewport = tester.getRect(
+            find.descendant(of: field, matching: find.byType(EditableText)),
+          );
+          expect(
+            caret.top,
+            greaterThanOrEqualTo(viewport.top - 1),
+            reason: label,
+          );
+          expect(
+            caret.bottom,
+            lessThanOrEqualTo(viewport.bottom + 1),
+            reason: label,
+          );
+          expect(controller.value, draft, reason: label);
+          expect(find.text('Save changes').hitTestable(), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        }
+
+        check('initial');
+        tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+        await tester.pumpAndSettle();
+        check('keyboard');
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        await tester.pumpAndSettle();
+        check('large text');
+        tester.view.physicalSize = const Size(360, 740);
+        await tester.pumpAndSettle();
+        check('shrink pane');
+        tester.view.physicalSize = const Size(900, 1000);
+        await tester.pumpAndSettle();
+        check('expand pane');
+        tester.platformDispatcher.textScaleFactorTestValue = 1;
+        tester.view.viewInsets = const FakeViewPadding();
+        await tester.pumpAndSettle();
+        check('restore');
+        (editable().renderEditable.offset as ScrollPosition).jumpTo(0);
+        await tester.pumpAndSettle();
+        final offset = editable().renderEditable.offset.pixels;
+        await tester.pumpWidget(host(dark: true));
+        await tester.pumpAndSettle();
+        expect(editable().renderEditable.offset.pixels, offset);
+        expect(controller.value, draft);
+        source[fieldKey] = 'Incoming content';
+        await tester.pumpWidget(host(dark: true));
+        await tester.pumpAndSettle();
+        expect(editable().renderEditable.offset.pixels, offset);
+        expect(controller.value, draft);
+      },
+    );
+  }
+
   testWidgets('changed composing title cannot save until normalized commit', (
     tester,
   ) async {

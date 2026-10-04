@@ -161,6 +161,23 @@ class _EditorBodyState extends State<_EditorBody> {
   bool applyAssignee = false;
   Future<bool>? closeRequest;
   double notesMaxHeight = 360;
+  final textFocus = {'title': FocusNode(), 'description': FocusNode()};
+  (BoxConstraints, Size, EdgeInsets, double, bool)? textViewport;
+
+  void revealFocusedCaret() {
+    if (!mounted) return;
+    for (final entry in textFocus.entries) {
+      final focus = entry.value;
+      final selection = controllers[entry.key]!.selection;
+      if (!focus.hasFocus || !selection.isValid || focus.context == null) {
+        continue;
+      }
+      final editable = focus.context!
+          .findAncestorStateOfType<EditableTextState>();
+      editable?.bringIntoView(selection.extent);
+    }
+  }
+
   bool get bulk => widget.saveBulk != null;
   Map<String, dynamic> scheduleOf(Map<String, dynamic> task) =>
       Map<String, dynamic>.from(task['schedule'] as Map? ?? {});
@@ -227,6 +244,9 @@ class _EditorBodyState extends State<_EditorBody> {
   void dispose() {
     for (final c in controllers.values) {
       c.dispose();
+    }
+    for (final focus in textFocus.values) {
+      focus.dispose();
     }
     scroll.dispose();
     super.dispose();
@@ -470,6 +490,7 @@ class _EditorBodyState extends State<_EditorBody> {
     final input = TextField(
       key: ValueKey(key),
       controller: controllers[key],
+      focusNode: textFocus[key],
       enabled: !busy,
       minLines: key == 'description' ? 3 : 1,
       maxLines: key == 'description' ? null : lines,
@@ -555,6 +576,21 @@ class _EditorBodyState extends State<_EditorBody> {
   Widget build(BuildContext context) => LayoutBuilder(
     builder: (context, constraints) {
       final media = MediaQuery.of(context);
+      final viewport = (
+        constraints,
+        media.size,
+        media.viewInsets,
+        media.textScaler.scale(14),
+        widget.panel,
+      );
+      // Only geometry changes need a reveal. Ordinary validation, incoming
+      // task data and theme rebuilds must preserve the user's scroll position.
+      if (textViewport != null && textViewport != viewport) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => revealFocusedCaret(),
+        );
+      }
+      textViewport = viewport;
       final visibleHeight = media.size.height - media.viewInsets.bottom;
       final availableHeight = constraints.maxHeight < visibleHeight
           ? constraints.maxHeight
