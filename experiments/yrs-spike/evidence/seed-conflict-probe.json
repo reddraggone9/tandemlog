@@ -1,0 +1,10 @@
+{
+  "gate": "durable field/seed identity",
+  "expected": "reject conflicting seed",
+  "actual": {
+    "pending": false,
+    "text": "safeerent"
+  },
+  "status": "fail",
+  "production_adoption": "blocked"
+}

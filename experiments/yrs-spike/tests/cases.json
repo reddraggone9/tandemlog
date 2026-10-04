@@ -1,0 +1,14 @@
+{"written_before_implementation":true,"date":"2026-10-04","scope":"isolated synthetic Yrs prototype; not an adopted app protocol","additional_gates":[
+ {"id":"A01","case":"Production stable-v3 frozen fixture bytes/hash/UUID/clocks/Undo/projection unchanged; actual TaskStore replay/reopen","status":"not-run"},
+ {"id":"A02","case":"Old production decoder rejects required unknown CRDT event/fields explicitly; no checkpoint advancement","status":"not-run"},
+ {"id":"A03","case":"Legacy whole-field replacement by an old writer after shared seed: policy decision needed; cannot silently accept both","status":"not-run"},
+ {"id":"A04","case":"Checkpoint excludes missing causal struct unless raw pending update retained; prove diagnostic and recovery","status":"not-run"},
+ {"id":"A05","case":"Malicious rich-text embed/root/type payload rejected by plain-text admission layer without hidden data","status":"not-run"},
+ {"id":"A06","case":"Fresh process replay and truncated/corrupted/checkpoint hash rejection preserve original files","status":"not-run"},
+ {"id":"N01","case":"Native Linux shared-library Dart FFI ABI and Unicode/update/Undo smoke","status":"not-run"},
+ {"id":"N02","case":"Android arm64 and x86_64 official NDK packaging, native runtime FFI smoke on real emulator","status":"not-run"},
+ {"id":"N03","case":"Windows MSVC native DLL packaging and Dart FFI runtime smoke","status":"not-run"},
+ {"id":"N04","case":"Actual Flutter editor IME composition/selection/SaveCancel interaction; synthetic bridge test is insufficient","status":"not-run"},
+ {"id":"P01","case":"Release binary size/init and cold/warm checkpoint latency; compare same-host baseline, distinguish engine vs app startup","status":"not-run"},
+ {"id":"P02","case":"Long-lived delete/tombstone growth and document count (2000 fields), cache invalidation/peak RSS/native parser isolation","status":"not-run"}
+]}

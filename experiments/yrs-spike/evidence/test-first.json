@@ -1,0 +1,7 @@
+{
+  "date_utc": "2026-10-04T14:54:33.973376+00:00",
+  "implementation_present": false,
+  "test_case_count": 34,
+  "expected_red_reason": "native library not implemented",
+  "last_line": "FAILED (errors=34)"
+}

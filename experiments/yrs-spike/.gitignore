@@ -1,0 +1,5 @@
+/target/
+__pycache__/
+/evidence/*.log
+/evidence/test-first-red.log
+/evidence/ownership-before.log

@@ -3,8 +3,11 @@
 Status: Lee authorized a bounded cross-platform investigation, not production
 adoption. No application dependency, event meaning, durable history, schema,
 signing identity or checklist changes are part of this experiment. The isolated
-working package is outside the repository; only its decision/evidence summary
-is maintained here.
+working package was first created outside the repository, then mirrored under
+[experiments/yrs-spike](../experiments/yrs-spike/README.md) to obtain repeatable
+hosted native Windows/Linux checks. It is a separate crate with a separate
+lockfile; no production app imports or packages it. Its manually dispatched
+read-only workflow has no signing secrets or publication capability.
 
 The acceptance tests were frozen before implementation in standalone commit
 `5727ff4725e9ed740cc89ae68ef2f3c233aaf895`. The 34 executable cases failed with
@@ -17,16 +20,20 @@ clarification is a separate explained revision.
 
 | Cases | Required behavior | Current result |
 |---|---|---|
-| C01–C05 | One historical seed; Save/Cancel; captured-baseline changes preserve concurrent inserts/deletes | Not run after implementation |
-| C06–C13 | Offline concurrency, same-location edits, duplicates, all arrival permutations, delayed causal dependencies and checkpoint recovery | Not run |
-| C14–C15 | Independent fields and recurring-successor text | Not run |
-| C16–C21 | UTF-16, emoji/surrogate boundaries, combining/ZWJ/Markdown, composition commit/cancel and sticky selection | Not run |
-| C22–C25 | Selective Undo/Redo as appended compensation preserving remote work | Not run |
-| C26–C30 | Malformed/oversized updates, invalid offsets/base64, actor collision, text limits, atomic rejection | Not run |
-| C31–C34 | Exact JSON update bytes, checkpoint/tail equivalence, native memory cycles and measured edit/restore/storage cost | Not run |
-| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Not run |
-| A04–A06 | Pending-struct retention, wrong root/embed/type admission, fresh-process/truncated/hash recovery | Not run |
-| N01–N04 | Linux/Dart native ABI; Android two-ABI packaging/runtime; Windows native runtime; actual Flutter IME/editor integration | Not run |
+| C01–C05 | One historical seed; Save/Cancel; captured-baseline changes preserve concurrent inserts/deletes | Pass, native Linux release bridge |
+| C06–C13 | Offline concurrency, same-location edits, duplicates, all arrival permutations, delayed causal dependencies and checkpoint recovery | Pass |
+| C14–C15 | Independent fields and recurring-successor text | Pass for correctly routed fields; misrouting not safe yet |
+| C16–C21 | UTF-16, emoji/surrogate boundaries, combining/ZWJ/Markdown, composition commit/cancel and sticky selection | Pass, engine/bridge scope only |
+| C22–C25 | Selective Undo/Redo as appended compensation preserving remote work | Pass, session Undo only |
+| C26–C30 | Malformed/oversized updates, invalid offsets/base64, active actor collision, text limits, atomic rejection | Pass for sampled cases; full malicious update admission remains blocked |
+| C31–C34 | Exact JSON update bytes, checkpoint/tail equivalence, native memory cycles and measured edit/restore/storage cost | Pass, synthetic scope |
+| O01–O04 | Source-bound one-shot Save, reject remote draft import, failure retains draft/prior Undo | Three failures reproduced before fixes; four pass after fixes |
+| A01–A03 | Actual frozen-v3 TaskStore replay; old-reader rejection; explicit old scalar writer admission policy | Nine production compatibility tests pass; old scalar admission remains undecided |
+| A04 | Pending structs retained through full checkpoint, excluded by ordinary diff | Pass: full restore yields xAB; diff restore yields xA |
+| A05 | Wrong-root/embed/type admission | **Fail**: foreign root/text accepted invisibly into state; seed conflict also reproduced |
+| A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
+| N01 | Linux/Dart native ABI | Pass, actual Dart3.13.4 native FFI |
+| N02–N04 | Android two-ABI packaging/runtime; Windows native runtime; actual Flutter IME/editor integration | Android SO cross-builds pass; hosted Windows and actual Android/editor runtime pending |
 | P01–P02 | Release size/init/cold/warm engine comparison and long-lived tombstone/document/RSS cost | Not run |
 
 Engine-level composition/Save tests do not prove native Flutter IME behavior.

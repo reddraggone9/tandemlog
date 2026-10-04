@@ -1,0 +1,12 @@
+{
+  "gate": "A05",
+  "expected": "reject unauthorized root",
+  "actual": {
+    "pending": false,
+    "text": "safe"
+  },
+  "foreign_root_retained": true,
+  "foreign_text_retained": true,
+  "status": "fail",
+  "production_adoption": "blocked"
+}
