@@ -53,9 +53,45 @@
     "historical-time-fields.png": "043b47da67bc2dd068c1b73bc91073c33e8e37047c96a49421d51e86ab91c779",
     "enlarged-width.png": "84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f"
   },
-  "review_status": "pending independent dark-canvas review",
+  "review_status": "PASS: independent final dark-canvas/editorial review by /root/datetime_rows on 2026-10-04; actual immutable notes and media verified anonymously",
   "current45_scope": [
     "normal-width.png",
     "enlarged-width.png"
+  ],
+  "reviewed_candidate_source": "5ac35da50acca69ab196a54312efc8ccef1452da",
+  "reviewed_media_commit": "648d159014c0adb5b4927d44caad70b47c5ef25f",
+  "reviewed_notes_commit": "eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3",
+  "notes_sha256": "856742924cfb8b51168f71a9ecae2963b6453fc086810a4b16ff189970ffc8b6",
+  "anonymous_remote_media": [
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/648d159014c0adb5b4927d44caad70b47c5ef25f/evidence/date-time-width-reconciliation/proposed/normal-width.png",
+      "final_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/648d159014c0adb5b4927d44caad70b47c5ef25f/evidence/date-time-width-reconciliation/proposed/normal-width.png",
+      "status": 200,
+      "sha256": "0ed1cf3d5d05e34de240e8b85fb2566ba036fa3b93bb6a1a54516ba13956eec6",
+      "bytes": 24562,
+      "exact_local_match": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/648d159014c0adb5b4927d44caad70b47c5ef25f/evidence/date-time-width-reconciliation/proposed/enlarged-width.png",
+      "final_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/648d159014c0adb5b4927d44caad70b47c5ef25f/evidence/date-time-width-reconciliation/proposed/enlarged-width.png",
+      "status": 200,
+      "sha256": "84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f",
+      "bytes": 36065,
+      "exact_local_match": true
+    }
+  ],
+  "anonymous_remote_notes": [
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3/design/prerelease-notes.md",
+      "status": 200,
+      "sha256": "856742924cfb8b51168f71a9ecae2963b6453fc086810a4b16ff189970ffc8b6",
+      "exact_local_match": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3/design/date-layout-preview-notes.md",
+      "status": 200,
+      "sha256": "856742924cfb8b51168f71a9ecae2963b6453fc086810a4b16ff189970ffc8b6",
+      "exact_local_match": true
+    }
   ]
 }
