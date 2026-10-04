@@ -1,0 +1,64 @@
+{
+  "build": 44,
+  "release_name": "2026.10.2-rc.2",
+  "scope": "Approved presentation-only always-visible Time and Tags/Assignee-last; no protocol/domain change",
+  "local_checks": {
+    "app_tests": 376,
+    "policy_tests": 22,
+    "analysis": "pass",
+    "native_focused": "pass17seconds excluding build",
+    "native_visual": "pass54seconds excluding build;16 screenshots inspected; actual LinuxGTK debug"
+  },
+  "viewports": [
+    {
+      "width": 1200,
+      "text_scale": 1
+    },
+    {
+      "width": 390,
+      "text_scale": 1
+    },
+    {
+      "width": 390,
+      "text_scale": 2
+    },
+    {
+      "width": 320,
+      "text_scale": 2
+    }
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "simulated_keyboard_inset": 260,
+  "actual_android": "pending",
+  "observations": [
+    "Empty Time stays visible and focus alone preserves date-only/clean Cancel",
+    "Midnight entry retains explicit precision; X clears only time and keeps input/date",
+    "Tags then Assignee follow bounds in single/bulk editor",
+    "390100% rows side-by-side; enlarged narrow layouts stack and scroll;320200% action labels may wrap"
+  ],
+  "screenshots": {
+    "01-light-date-time.png": "3e54425295ae7645256260847b7dbc755fef0505216e67382117a7f8d35992ae",
+    "02-blank-focus.png": "f350055f5b6325e6bbb7fd62b6d30ef60fcc0286ef66d8b8b8e266a7122e143f",
+    "03-midnight.png": "b433d83c3becc20596700c67c18980f03662f8008534f40c204e3c0f425216c0",
+    "04-clear-retains-input.png": "0e19cfaefa06471d10e2ba5f7804e23d0c0687d7195f5f56ee265f54f33c07ac",
+    "05-tags-and-assignee-last.png": "0e19cfaefa06471d10e2ba5f7804e23d0c0687d7195f5f56ee265f54f33c07ac",
+    "06-dark-date-time.png": "ef1aff4f0baf53418e6d5d6e90d1eadb2ab502bd89320b3caf69ed4f4c908d9b",
+    "07-narrow-dark-blank.png": "15a46499c8ce02e422565dabac0bb725ce04ac126cde34ba1bf6854df04dd1a0",
+    "08-narrow-time.png": "3b05c2c33520e1b704b942a0f33a8f1a8cbc847eb02666f3cfd5d768bddc2ef4",
+    "09-narrow-large-text.png": "cf1163ca4697e37f082d042c96976243f4739c0139211e30c0927c9c86eaaaa5",
+    "10-simulated-keyboard.png": "a2efe2403707a0b3b0fff96e8724e866c855b7c14fc90da1f5260464134d0da5",
+    "11-narrow-light.png": "19b4f95c0ea2b9ef0196b298868008edd6aa3345d862b23c3befa2f37e28e903",
+    "12-narrow-end-fields.png": "bab6154ad48f5a916d8998d28bc918fc5fa7d71f22bdb89fa85e36a92881b297",
+    "13-320-large-time.png": "14d12b46b239fa1a0f4cfb77e0740153884ed17c9b1524d02a3b8bb70eecd632",
+    "14-320-large-end.png": "31fffabc9a7f4ce11b5677adc77c24bbab383e16561fe515a804cae1908541b3",
+    "15-bulk-time.png": "2464ae6c622eda43967826951ddac23db6196611b0ea43b7cc9cd4e4d7c9a86a",
+    "16-bulk-end.png": "eb590ebc5f8d0f06ac45ab5f3d1fe0bf4416adaf6c251d363dd17a2a574ed5c1"
+  },
+  "raw_video": {
+    "size": 658167,
+    "sha256": "b530e26e38bfdee2a04b0f7ad263b7d0ff9107aabe405509d5e88a74ddf7efd6"
+  }
+}

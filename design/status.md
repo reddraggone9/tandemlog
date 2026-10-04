@@ -1,6 +1,17 @@
 # Current status — 2026-10-04
 
-## Next preview 2026.10.2-rc.1 build43 — presentation changes in validation
+## Next preview2026.10.2-rc.2 build44 — editor refinement
+
+Approved scope: always-visible blank Time inputs with the existing clear X,
+and Tags/Assignee after scheduling in both editors. No domain, protocol3/cache13,
+dependencies, signing/package or durable-data meaning changes. All376 app tests,
+22 policy tests and analysis pass locally. The focused native precision/draft
+flow passes across desktop/narrow/large-text geometry;16 native Linux screenshots
+and a54-second recording were inspected. Signed hosted candidate/all-platform
+checks and exact affected Android acceptance are pending. Published43 and stable
+2026.10.1 stay unchanged.
+
+## Published preview 2026.10.2-rc.1 build43 — not Latest
 
 Settings displays/copies only the running release name from the pinned Flutter
 SDK's compiled `appBuildName`; no dependency or startup metadata query is added.
@@ -19,7 +30,10 @@ archives pass API hashes, CRC and internal checksums. The owner-signed APK is
 nondebuggable, code43, with the retained package/certificate/three ABIs; exact
 SHA256 `c4310d05da3d803782f94c0c99ca08b5e28d16af6a270fb103b70aa13996c14c`.
 [Candidate receipt](../evidence/2026.10.2-rc1-build43-candidate-verification.json).
-Exact Android acceptance is pending; this preview is not published.
+Exact native Android affected-workflow acceptance passes. The exact accepted
+artifacts are now published as [experimental2026.10.2-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.1),
+prerelease=true and not Latest. Public downloads, all three asset digests,
+tag/source, owner APK signer/package/code43 verify; stable2026.10.1 remains Latest.
 The reviewed 65-second desktop demo is delivered separately.
 
 The proposed one-level checklist is not in this candidate. Its unpublished
@@ -27,15 +41,28 @@ model draft is preserved outside the repository while Lee considers plain-text
 collaborative merging for titles/notes, including Markdown source. This
 investigation changes no protocol/history. Stable2026.10.1 remains Latest.
 
-The bounded [test-first Yrs experiment](text-merge-prototype.md) is isolated from
-the app. Native Windows/Linux38-case and Dart FFI checks plus Android SO
-cross-builds pass in37213304140; adversarial field/seed admission fails, so no
-production adoption. Native Android/Flutter editor tests and legacy-writer policy
-remain unresolved. Bounded dependency PR automation and per-version review are
-implemented; maintenance CI37211247207 and current app CI37213304051 pass all
-targets. No dependency update is merged. Lee's standing non-behavior stable
-approval is recorded without removing release gates; it does not authorize a
-stable publication of the changed date/version UI without his acceptance.
+The bounded [test-first Yrs experiment](text-merge-prototype.md) remains isolated
+from the app. Hardened native Linux/Windows each pass52 unique frozen/review-added
+cases plus actual Dart FFI in37216546987. ARM64/x86_64 libraries cross-build;
+the narrow plain-text admission issues reproduced earlier are fixed in the
+adapter. Durable field routing, actors, legacy-writer admission and new-protocol
+recovery remain proposals, not production behavior.
+
+The separate synthetic [Flutter editor lab](../experiments/yrs-spike/editor_lab/README.md)
+passes ten local session/widget cases and one actual native Linux integration.
+Composition is injected there; real Android OS-IME/runtime acceptance is pending.
+The local debug APK packages both verified engine ABIs with a separate app
+identity and no Tandemlog folder/storage access. Hosted lab37222225866 and
+full-app37222226067 are currently running; the prior strict-lock failure and
+corrected complete dependency graph are documented in its results. Current
+Library upload authentication is blocked (HTTP401 before transfer); exact hosted
+Android artifact handoff is pending. [Adoption options](text-merge-adoption-options.md)
+separate Lee's legacy-writer upgrade decision from engineering policies. No
+production Rust bridge or protocol change is adopted.
+
+Dependency PR automation/per-version review are implemented; no dependency
+update is merged. Standing non-behavior stable approval retains every gate and
+does not authorize stable publication of the changed date/version UI.
 
 ## Published stable 2026.10.1 build 42 — Latest
 

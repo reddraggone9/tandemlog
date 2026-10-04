@@ -155,7 +155,6 @@ class _EditorBodyState extends State<_EditorBody> {
   late final List<Map<String, dynamic>> originals;
   final controllers = <String, TextEditingController>{};
   final touched = <String>{}, applied = <String>{}, mixed = <String>{};
-  final editingTimes = <String>{};
   final scroll = ScrollController();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
   String? failure, assignee;
@@ -492,7 +491,13 @@ class _EditorBodyState extends State<_EditorBody> {
     }
   }
 
-  Widget field(String key, String label, {String? hint, int lines = 1}) {
+  Widget field(
+    String key,
+    String label, {
+    String? hint,
+    String? clearLabel,
+    int lines = 1,
+  }) {
     final input = TextField(
       key: ValueKey(key),
       controller: controllers[key],
@@ -534,13 +539,12 @@ class _EditorBodyState extends State<_EditorBody> {
             : (key == 'startTime' || key == 'dueTime') &&
                   controllers[key]!.text.isNotEmpty
             ? IconButton(
-                tooltip: 'Clear $label',
+                tooltip: 'Clear ${clearLabel ?? label}',
                 icon: const Icon(Icons.close),
                 onPressed: busy
                     ? null
                     : () {
                         textFocus[key]?.unfocus();
-                        editingTimes.remove(key);
                         controllers[key]!.clear();
                       },
               )
@@ -594,31 +598,10 @@ class _EditorBodyState extends State<_EditorBody> {
   Widget dateTimeRow(String prefix, String label) {
     final date = field('${prefix}Date', '$label date', hint: 'YYYY-MM-DD');
     final timeKey = '${prefix}Time';
-    final time =
-        controllers[timeKey]!.text.isNotEmpty ||
-            editingTimes.contains(timeKey) ||
-            mixed.contains(timeKey)
-        ? field(timeKey, '$label time', hint: 'HH:mm')
-        : Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: OutlinedButton(
-              key: ValueKey('${prefix}AddTime'),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(0, 48),
-                visualDensity: VisualDensity.standard,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-              ),
-              onPressed: busy
-                  ? null
-                  : () {
-                      setState(() => editingTimes.add(timeKey));
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        if (mounted) textFocus[timeKey]!.requestFocus();
-                      });
-                    },
-              child: Text('Add time', semanticsLabel: 'Add $label time'),
-            ),
-          );
+    final time = Semantics(
+      label: label,
+      child: field(timeKey, 'Time', hint: 'HH:mm', clearLabel: '$label time'),
+    );
     // Use the editor's outer constraints: AlertDialog asks its content for
     // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
     final scale = MediaQuery.textScalerOf(context).scale(14) / 14;
@@ -692,8 +675,60 @@ class _EditorBodyState extends State<_EditorBody> {
           if (!bulk) ...[
             field('title', 'Title', lines: 2),
             field('description', 'Notes', lines: 3),
-            field('tags', 'Tags', hint: 'Separate tags with spaces'),
-          ] else ...[
+          ],
+          const SizedBox(height: 12),
+          dateTimeRow('start', 'Start'),
+          dateTimeRow('due', 'Due'),
+          field('recurrence', 'Repeat', hint: 'every week when done'),
+          if (repeating)
+            const Padding(
+              padding: EdgeInsets.only(bottom: 8),
+              child: Text(
+                'This occurrence changes the planned date; the base due date and repeat cadence remain.',
+              ),
+            ),
+          if (!repeating && overrides) ...[
+            const Text('Existing occurrence override is preserved.'),
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                TextButton(
+                  onPressed: busy
+                      ? null
+                      : () => setState(() => showOverride = !showOverride),
+                  child: const Text('Edit existing override'),
+                ),
+                TextButton(
+                  onPressed: busy
+                      ? null
+                      : () {
+                          controllers['scheduledDate']!.clear();
+                          controllers['scheduledTime']!.clear();
+                        },
+                  child: const Text('Clear override'),
+                ),
+              ],
+            ),
+          ],
+          if (repeating || showOverride) ...[
+            field('scheduledDate', 'This occurrence date', hint: 'YYYY-MM-DD'),
+            field('scheduledTime', 'This occurrence time', hint: 'HH:mm'),
+          ],
+          field(
+            'timeZone',
+            'Time zone',
+            hint: 'Blank: Local; UTC; America/Chicago',
+          ),
+          const Text('Sort-date bounds'),
+          const Text(
+            'Days from today; affects listing order, not the deadline.',
+          ),
+          field('dueMinDays', 'Minimum days', hint: 'No bound'),
+          field('dueMaxDays', 'Maximum days', hint: 'No bound'),
+          if (!bulk)
+            field('tags', 'Tags', hint: 'Separate tags with spaces')
+          else ...[
             field('addTags', 'Add tags', hint: 'Separate tags with spaces'),
             field(
               'removeTags',
@@ -753,55 +788,6 @@ class _EditorBodyState extends State<_EditorBody> {
               ],
             ),
           const SizedBox(height: 12),
-          dateTimeRow('start', 'Start'),
-          dateTimeRow('due', 'Due'),
-          field('recurrence', 'Repeat', hint: 'every week when done'),
-          if (repeating)
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text(
-                'This occurrence changes the planned date; the base due date and repeat cadence remain.',
-              ),
-            ),
-          if (!repeating && overrides) ...[
-            const Text('Existing occurrence override is preserved.'),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                TextButton(
-                  onPressed: busy
-                      ? null
-                      : () => setState(() => showOverride = !showOverride),
-                  child: const Text('Edit existing override'),
-                ),
-                TextButton(
-                  onPressed: busy
-                      ? null
-                      : () {
-                          controllers['scheduledDate']!.clear();
-                          controllers['scheduledTime']!.clear();
-                        },
-                  child: const Text('Clear override'),
-                ),
-              ],
-            ),
-          ],
-          if (repeating || showOverride) ...[
-            field('scheduledDate', 'This occurrence date', hint: 'YYYY-MM-DD'),
-            field('scheduledTime', 'This occurrence time', hint: 'HH:mm'),
-          ],
-          field(
-            'timeZone',
-            'Time zone',
-            hint: 'Blank: Local; UTC; America/Chicago',
-          ),
-          const Text('Sort-date bounds'),
-          const Text(
-            'Days from today; affects listing order, not the deadline.',
-          ),
-          field('dueMinDays', 'Minimum days', hint: 'No bound'),
-          field('dueMaxDays', 'Maximum days', hint: 'No bound'),
         ],
       ),
     );

@@ -7,10 +7,11 @@ action. Display/copy excludes the platform build counter. The row sits near the
 bottom of Settings rather than occupying the task list; missing metadata or a
 clipboard failure receives a contextual response. This is presentation-only.
 
-Start and Due each pair a wider date control with a smaller optional time. An
-absent time offers **Add time** rather than a persistent empty field; opening it
-does not invent a value. Clearing time retains its date. Controls stack when
-width or larger text requires it. [Layout rationale](decisions/0009-date-and-optional-time-rows.md).
+Start and Due each pair a wider date control with a smaller always-visible
+input labeled **Time**. A blank time retains date-only precision; focusing it
+does not invent a value. The existing X clears time and retains its date.
+Controls stack when width or larger text requires it. Tags and Assignee follow
+all scheduling content, before actions, in single and bulk editors. [Layout rationale](decisions/0009-date-and-optional-time-rows.md).
 
 Offline household task management first. Windows and Android are the first intended user platforms. Future modules include games, food logging, inventory, and assisted input. Time tracking is undecided and excluded.
 

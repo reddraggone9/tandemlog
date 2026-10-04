@@ -1,4 +1,4 @@
-Experimental 2026.10.2-rc.1 preview.
+Experimental 2026.10.2-rc.2 preview.
 
-- Settings shows the current release version with a copy action.
-- Start and Due use compact date/time rows with optional “Add time” controls.
+- Start and Due show Time inputs directly, retaining the existing clear controls.
+- Tags and Assignee follow scheduling fields in single and bulk editors.

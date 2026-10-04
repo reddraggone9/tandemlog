@@ -1,5 +1,22 @@
 # Runtime and visual QA — updated 2026-10-04
 
+## Next preview2026.10.2-rc.2 build44 — direct Time fields and editor order
+
+Actual native Linux GTK/Flutter debug inspection uses synthetic tasks at1200px,
+390/320px, both themes and100/200% text. Sixteen screenshots and a54-second
+pointer-visible recording cover blank Time focus, explicit midnight, X clearing
+without losing the date/input, single/bulk Tags/Assignee after sort bounds,
+stacking, scrolling and simulated260px keyboard insets. The narrow enlarged
+layouts remain operable; action labels can wrap at320px/200%. This is native
+Linux evidence, not Android or Windows visual acceptance.
+
+All376 application tests,22 Python policy tests and analysis pass. The focused
+native precision/zone/clean-Cancel/save flow passes across four geometries in17s
+excluding build. Bulk field order and unchanged mixed/apply behavior have31
+focused widget regressions. The recording/source and hashes remain in the
+candidate receipt. Exact signed Android affected-flow acceptance is pending;
+no publication or stable promotion is authorized by desktop inspection alone.
+
 ## 2026.10.2-rc.1 build43 — Settings/version and date-row presentation
 
 Native Linux GTK/Flutter debug inspection uses synthetic tasks, 1200px desktop,

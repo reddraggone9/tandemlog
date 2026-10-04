@@ -23,20 +23,95 @@ Future<void> mount(WidgetTester tester, Widget child) async {
 
 Finder input(String key) => find.byKey(ValueKey(key));
 Future<void> edit(WidgetTester tester, String key, String value) async {
-  if (input(key).evaluate().isEmpty && key.endsWith('Time')) {
-    final add = find.byKey(
-      ValueKey('${key.substring(0, key.length - 4)}AddTime'),
-    );
-    await tester.ensureVisible(add);
-    await tester.tap(add);
-    await tester.pump();
-  }
   await tester.ensureVisible(input(key));
   await tester.enterText(input(key), value);
   await tester.pump();
 }
 
 void main() {
+  testWidgets(
+    'blank Time focus preserves date precision and midnight is explicit',
+    (tester) async {
+      for (final zone in [null, 'UTC', 'America/Chicago']) {
+        Map<String, dynamic>? saved;
+        final key = GlobalKey<TaskEditorState>();
+        await mount(
+          tester,
+          TaskEditor(
+            key: key,
+            panel: true,
+            task: task({'dueDate': '2026-10-04', 'timeZone': ?zone}),
+            onClose: () {},
+            save: (fields, _, _) async => saved = fields,
+          ),
+        );
+        await tester.ensureVisible(input('dueTime'));
+        await tester.tap(input('dueTime'));
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(input('dueTime')).controller!.text, '');
+        expect(await key.currentState!.canClose(), isTrue);
+        await edit(tester, 'dueTime', '00:00');
+        await tester.tap(find.text('Save changes'));
+        await tester.pumpAndSettle();
+        final schedule = saved!['schedule'] as Map;
+        expect(schedule['dueDate'], '2026-10-04');
+        expect(schedule['dueTime'], '00:00');
+        expect(schedule['timeZone'], zone);
+      }
+    },
+  );
+
+  testWidgets(
+    'single and bulk editors put tags and assignee after scheduling',
+    (tester) async {
+      const users = [
+        {'id': 'a', 'name': 'Alex'},
+      ];
+      for (final bulk in [false, true]) {
+        await mount(
+          tester,
+          bulk
+              ? BulkTaskEditor(
+                  panel: true,
+                  tasks: [task(), task()],
+                  users: users,
+                  onSave: (_) async {},
+                )
+              : TaskEditor(
+                  panel: true,
+                  task: task(),
+                  users: users,
+                  save: (_, _, _) async {},
+                ),
+        );
+        final keys = tester
+            .widgetList<TextField>(find.byType(TextField))
+            .map((field) => (field.key! as ValueKey<String>).value)
+            .toList();
+        expect(keys, [
+          if (!bulk) ...['title', 'description'],
+          'startDate',
+          'startTime',
+          'dueDate',
+          'dueTime',
+          'recurrence',
+          'timeZone',
+          'dueMinDays',
+          'dueMaxDays',
+          if (bulk) ...['addTags', 'removeTags'] else 'tags',
+        ]);
+        final lastTags = input(bulk ? 'removeTags' : 'tags');
+        final assignee = find.byType(DropdownButtonFormField<String>);
+        await tester.ensureVisible(assignee);
+        expect(
+          tester.getTopLeft(assignee).dy,
+          greaterThan(tester.getTopLeft(lastTags).dy),
+        );
+        expect(tester.takeException(), isNull);
+      }
+    },
+  );
+
   testWidgets(
     'date and optional time share rows and clear time independently',
     (tester) async {
@@ -59,28 +134,24 @@ void main() {
         tester.getSize(input('dueDate')).width,
         greaterThan(tester.getSize(input('dueTime')).width),
       );
-      expect(find.byKey(const ValueKey('startAddTime')), findsOneWidget);
-      final semantics = tester.ensureSemantics();
-      try {
-        await tester.ensureVisible(find.byKey(const ValueKey('startAddTime')));
-        await tester.pumpAndSettle();
-        expect(
-          tester.getSemantics(find.byKey(const ValueKey('startAddTime'))).label,
-          'Add Start time',
-        );
-      } finally {
-        semantics.dispose();
-      }
+      expect(input('startTime'), findsOneWidget);
+      expect(tester.widget<TextField>(input('startTime')).controller!.text, '');
+      expect(
+        tester.widget<TextField>(input('startTime')).decoration!.labelText,
+        'Time',
+      );
+      expect(
+        tester.widget<TextField>(input('dueTime')).decoration!.labelText,
+        'Time',
+      );
       await tester.tap(find.byTooltip('Clear Due time'));
       await tester.pump();
       expect(
         tester.widget<TextField>(input('dueDate')).controller!.text,
         '2026-10-04',
       );
-      expect(input('dueTime'), findsNothing);
-      final addTime = find.byKey(const ValueKey('dueAddTime'));
-      expect(addTime, findsOneWidget);
-      await tester.tap(addTime);
+      expect(input('dueTime'), findsOneWidget);
+      await tester.tap(input('dueTime'));
       await tester.pumpAndSettle();
       expect(
         tester.widget<TextField>(input('dueTime')).focusNode!.hasFocus,

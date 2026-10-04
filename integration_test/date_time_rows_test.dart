@@ -78,21 +78,21 @@ void registerDateTimeRowTests() {
         await tester.pumpAndSettle();
         await flows.selectTask(tester, id, control: false);
         final dueDate = find.byKey(const ValueKey('dueDate'));
-        final add = find.byKey(const ValueKey('dueAddTime'));
-        await tester.ensureVisible(add);
+        final dueTime = find.byKey(const ValueKey('dueTime'));
+        await tester.ensureVisible(dueTime);
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('dueTime')), findsNothing);
-        expect(tester.getSize(add).height, greaterThanOrEqualTo(48));
+        expect(dueTime, findsOneWidget);
+        expect(tester.widget<TextField>(dueTime).controller!.text, isEmpty);
+        expect(tester.getSize(dueTime).height, greaterThanOrEqualTo(48));
         final sideBySide = variant.scale == 1;
         expect(
-          tester.getTopLeft(add).dy,
+          tester.getTopLeft(dueTime).dy,
           sideBySide
               ? closeTo(tester.getTopLeft(dueDate).dy, .5)
               : greaterThan(tester.getTopLeft(dueDate).dy),
         );
-        await tester.tap(add);
+        await tester.tap(dueTime);
         await tester.pumpAndSettle();
-        final dueTime = find.byKey(const ValueKey('dueTime'));
         expect(tester.widget<TextField>(dueTime).focusNode!.hasFocus, isTrue);
         await tester.enterText(dueTime, '00:00');
         await tester.pumpAndSettle();
@@ -109,7 +109,8 @@ void registerDateTimeRowTests() {
         }
         await tester.tap(find.byTooltip('Clear Due time'));
         await tester.pumpAndSettle();
-        expect(find.byKey(const ValueKey('dueTime')), findsNothing);
+        expect(dueTime, findsOneWidget);
+        expect(tester.widget<TextField>(dueTime).controller!.text, isEmpty);
         expect(
           tester.widget<TextField>(dueDate).controller!.text,
           '2026-10-04',
@@ -132,9 +133,9 @@ void registerDateTimeRowTests() {
         expect(tester.takeException(), isNull);
       }
       await flows.selectTask(tester, id, control: false);
-      final add = find.byKey(const ValueKey('dueAddTime'));
-      await tester.ensureVisible(add);
-      await tester.tap(add);
+      final dueTime = find.byKey(const ValueKey('dueTime'));
+      await tester.ensureVisible(dueTime);
+      await tester.tap(dueTime);
       await tester.pumpAndSettle();
       await tester.enterText(find.byKey(const ValueKey('dueTime')), '00:00');
       await tester.pumpAndSettle();

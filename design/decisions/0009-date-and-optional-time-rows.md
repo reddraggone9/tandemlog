@@ -1,30 +1,38 @@
-# 0009 — Start and Due with separate optional time
+# 0009 — Separate Start/Due date and time controls
 
-Status: layout approved by Lee for the next preview, 2026-10-04. Implemented
-locally; native visual inspection and release acceptance remain separate gates.
+Status: approved presentation revision for the next preview, 2026-10-04.
+Native visual/release acceptance are separate gates. Published build43 keeps its
+original Add time behavior; build44 supersedes that presentation.
 
-The editor previously gave Start date, Start time, Due date and Due time four
-full-width fields even when times were absent. Lee requested one Start row and
-one Due row, with a wider date control and smaller independent optional time.
+Lee requested Start and Due rows with a wider date and smaller independent time.
+After reviewing build43, he approved an always-visible blank input labeled
+**Time**, replacing Add time. The existing X clears a set time and retains the
+date; the blank input remains available. No optional suffix is needed: most
+editor fields are optional, and clearing makes the interaction discoverable.
+This avoids an extra activation click and keeps the controls stable.
 
-Empty time uses a compact **Add time** button. It opens and focuses the existing
-time text input without inventing a value. A set time has a clear control that
-returns to Add time while retaining the date. Date and time retain separate
-controllers and keyboard editing; the existing calendar picker stays attached
-to the date. Rows stack when available width or enlarged text cannot comfortably
-fit both controls. Bulk mixed values retain their independent apply controls.
+Date/time retain separate controllers, contextual Start/Due accessibility labels,
+keyboard editing and the existing date picker. Rows stack when available width
+or enlarged text cannot comfortably fit both. Bulk mixed values retain their
+independent apply controls. Focusing a blank time does not change date-only
+precision; explicit midnight stays different from no time.
 
-This changes presentation only. Date precision, explicit midnight, time zone,
-coupled validation, recurrence and occurrence overrides follow
-[product behavior](../product-behavior.md); canonical logs and draft guards are
-unchanged. Activating Add time alone does not dirty the stored schedule.
+Tags and Assignee follow all scheduling content immediately before actions,
+in single and bulk editors. Lee edits title/notes/dates more frequently. Reading
+and keyboard order follow the visual order: Start, Due, Repeat, Timezone, sort
+bounds, then tags/assignee, with existing conditional occurrence controls in
+context. These moves preserve field keys/controllers, drafts and semantics.
 
-Rejected alternatives: a combined timestamp control would obscure date-only
-precision; four persistent full-width inputs would retain the unnecessary empty
-time space; a new time-picker workflow exceeds this bounded layout change.
+This changes presentation only. Validation, recurrence/occurrence overrides,
+precision, zones, canonical logs and draft guards follow
+[product behavior](../product-behavior.md). No protocol or durable-data change.
 
-Revisit after native desktop and Android use if time entry, clearing, touch
-targets or enlarged text make the separate controls awkward. Widget tests cover
-row proportions, 390px fit, narrow/200% stacking, focus on Add time, midnight
-entry and clearing without losing the date. The reference Library image could
-not be downloaded, so implementation follows Lee's explicit layout description.
+Rejected alternatives: combined timestamp obscures precision; four full-width
+controls consume unnecessary space; Add time reduces emptiness but adds an
+unwanted click; a new time-picker workflow exceeds this bounded revision.
+
+Revisit after native use if time entry/clearing, touch targets or enlarged text
+make separate controls awkward. Tests cover blank focus/clean Cancel, explicit
+midnight, zone retention, clear without losing date, row proportions, 390px fit,
+320px/200% stacking and single/bulk field order. Every UI revision still needs
+actual native desktop inspection and exact Android affected-workflow acceptance.
