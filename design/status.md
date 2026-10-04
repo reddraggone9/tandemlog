@@ -1,5 +1,9 @@
 # Current status — 2026-10-04
 
+## Approved stable 2026.10.1 build 42 — candidate preparation
+
+Lee explicitly approved promoting the latest RC as stable. Build 42 changes only the display version/build metadata from accepted RC41; production code, dependencies, package/signing identity and frozen v3 histories remain unchanged. Stable notes list only the three user-facing improvements since 2026.10.0; expected interactions and QA assurances are omitted. Full candidate gates and bounded exact Android upgrade acceptance remain required before stable Latest promotion. No new features, live-data operations or future stable versions are authorized by this acceptance.
+
 ## Published experimental 2026.10.1-rc.1 build 41 — not Latest
 
 Separate approved follow-up after stable publication: timed tasks precede date-only tasks within the same effective day, while scheduled override precedence/manual ties remain. Explicit midnight and date-only have separate reorder buckets. Title input grows from one visual line to two and normalizes new line breaks after composition; notes grow beyond three lines to a bounded scrolling area. Historical titles and canonical v3 data remain unchanged on unrelated edits. Intermediate build 40 passed all hosted gates but is held from publication because native visual review exposed a caret hidden after increasing text scale while editing long notes. The bounded correction preserves drafts, selection and IME composition; unrelated rebuilds preserve manual scrolling. Final build 41 local checks — 368 app tests, 18 policy tests, formatting/analysis and the native visual/caret rerun pass.

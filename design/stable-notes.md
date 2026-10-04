@@ -1,5 +1,3 @@
-First stable Tandemlog release.
-
-Capture and organize shared tasks with dates and times, tags, recurring tasks, completion history and Undo. Work offline and synchronize through a shared folder. Android, Windows and Linux installers are available.
-
-From this release onward, existing v3 task histories remain supported by future versions.
+- Tasks with specific times sort before date-only tasks on the same day.
+- Editor titles grow from one visual line to two; line breaks become spaces.
+- Notes grow with their content before scrolling.
