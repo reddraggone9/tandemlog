@@ -11,6 +11,8 @@ include: package:flutter_lints/flutter.yaml
 
 analyzer:
   exclude:
+    # Separate experimental packages run their own pinned analysis/test gates.
+    - experiments/**
     - build/**
     - android/**
     - windows/**

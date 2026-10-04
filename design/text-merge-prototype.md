@@ -33,9 +33,9 @@ clarification is a separate explained revision.
 | R01–R14 / A05 | Root/type/seed/actor admission, hidden/pending content, startup/restore and trailing bytes | 13 failures reproduced before hardening; all14 pass afterward on native hosted Linux/Windows |
 | A06 | Fresh-process/truncated/checkpoint-hash recovery | Not run for a new text protocol; existing v3 app checks remain unchanged |
 | N01 | Linux/Dart native ABI | Pass, actual Dart3.13.4 native FFI |
-| N02 | Android two-ABI packaging/runtime | ARM64/x86_64 SO cross-builds pass; runtime/Flutter packaging not run |
+| N02 | Android two-ABI packaging/runtime | Synthetic Flutter APK packages both verified native libraries; actual Android runtime pending |
 | N03 | Windows native ABI/runtime | Hardened revision52 and Dart FFI pass on actual hosted Windows2022 |
-| N04 | Actual Flutter IME/editor integration | Not run; engine composition flags do not prove UI behavior |
+| N04 | Actual Flutter IME/editor integration | 10 session/widget cases and native Linux integration pass; composition injected, real Android OS-IME pending |
 | P01–P02 | Release library load/checkpoint, deletion churn and document/RSS cost | Bounded Linux measurements pass; app cold start/unbounded-state acceptance not run |
 
 Engine-level composition/Save tests do not prove native Flutter IME behavior.
@@ -136,3 +136,30 @@ Linux/Windows/Android. Nested experiment evidence is now excluded from push-only
 app builds; executable source changes, PR/manual runs and release candidates
 still retain their checks. The hardened source push started full app
 run37216546961; this experiment does not authorize application publication.
+
+
+## Isolated Flutter editor harness
+
+The separate [editor lab](../experiments/yrs-spike/editor_lab/README.md) uses only
+synthetic in-memory replicas and an independent Android package. Its 12-case
+matrix and assertions were frozen at16:42:24UTC before implementation, repository
+commit `e1afed4`. Ten automated session/widget cases and the native Linux Flutter
+integration pass; their frozen hashes remain unchanged. A first native run
+reproduced loss of the composing range when the remote button stole focus.
+Wrapping that control in Flutter's TextFieldTapRegion fixed the source; the
+original assertion then passed. This is injected TestTextInput composition,
+not actual OS-IME evidence. Actual Android runtime/keyboard checks remain pending.
+
+The API24+ debug lab APK packages ARM64 and x86_64 engine libraries from the
+verified hosted hardened revision. Official NDK28.2 `llvm-strip --strip-unneeded`
+reproduces each APK-contained native payload exactly. It has a separate temporary
+debug signer, contains no app protocol/storage imports and cannot access any
+Tandemlog shared folder. Restart intentionally resets its synthetic data.
+[Results](../experiments/yrs-spike/evidence/editor-results.json) are separate from
+the immutable acceptance matrix. Main app analysis excludes independent
+experimental packages; the manual isolated workflow analyzes/tests this one
+explicitly, including Linux native integration and Android APK packaging.
+
+[Adoption options](text-merge-adoption-options.md) distinguish the writer upgrade
+policy needing Lee's decision from engineering recommendations for routing,
+actors, checkpoints and measured budgets. None is an adopted production protocol.

@@ -34,8 +34,27 @@
     "linux_native_flows": 47,
     "installed_windows_and_flatpak_lifecycle": "pass"
   },
-  "native_android_acceptance": "pending exact artifact acceptance via Farnsworth",
-  "public_release": "not published",
+  "native_android_acceptance": {
+    "status": "pass",
+    "parent_reported_turn": "01a107aa-5d29-7026-b818-125623738afb",
+    "scope": "ExactAPK upgrade SAF/version-only copy,Addtime/clear,dateonly/midnight persistence,validation draft,200% keyboard/cancel,restart integrity;temporary services stopped/live untouched",
+    "source_commit": "147a876d799e5832527177fa76c5fdf77c1827a6",
+    "apk_sha256": "c4310d05da3d803782f94c0c99ca08b5e28d16af6a270fb103b70aa13996c14c"
+  },
+  "public_release": {
+    "status": "published",
+    "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.1",
+    "id": 403122064,
+    "prerelease": true,
+    "latest": false,
+    "tag_source": "147a876d799e5832527177fa76c5fdf77c1827a6",
+    "asset_attach_run_id": 37219723541,
+    "public_downloads_all_three": "sha256 identical to accepted artifacts",
+    "public_downloaded_apk_signer_package_version_abis": "verified",
+    "stable_latest_preserved": "v2026.10.1",
+    "initial_publisher_failure": "Actions GITHUB_TOKEN cannot authorize historical workflow differences;403;no permission changes",
+    "resolved_method": "existing authorized connection created/finalized private draft;hosted runner attached exact gated assets;verified before publication"
+  },
   "checklist": "not in source; standalone draft held pending text policy",
   "artifacts": {
     "android": {
@@ -58,7 +77,7 @@
         "x86_64"
       ],
       "official_apk_verification": "pass",
-      "native_preview_acceptance": "pending"
+      "native_preview_acceptance": "pass"
     },
     "windows": {
       "artifact_id": 11305333746,

@@ -31,6 +31,24 @@ jobs:
           fi
           python -m unittest discover -s tests -v 2>&1 | tee evidence/native-tests.log
           dart bin/ffi_smoke.dart | tee evidence/dart-ffi.json
+      - name: Install official Linux editor build/runtime tools
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11
+      - name: Analyze and test isolated Flutter editor against native library
+        shell: bash
+        working-directory: experiments/yrs-spike/editor_lab
+        run: |
+          flutter pub get --enforce-lockfile
+          flutter analyze
+          if [[ "$RUNNER_OS" == Windows ]]; then
+            export SPIKE_LIBRARY="$(cygpath -w "$PWD/../target/release/tandemlog_yrs_spike.dll")"
+          else
+            export SPIKE_LIBRARY="$PWD/../target/release/libtandemlog_yrs_spike.so"
+          fi
+          flutter test 2>&1 | tee ../evidence/editor-tests.log
+          if [[ "$RUNNER_OS" == Linux ]]; then
+            xvfb-run -a dbus-run-session -- flutter test integration_test/editor_flow_test.dart -d linux 2>&1 | tee ../evidence/editor-native-linux.log
+          fi
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         if: always()
         with:
@@ -45,6 +63,11 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: ./.github/actions/setup-flutter
       - name: Install exact official toolchain and existing approved NDK
         shell: bash
         run: |
@@ -60,12 +83,24 @@ jobs:
           cargo +1.99.0 build --release --locked --target aarch64-linux-android
           cargo +1.99.0 build --release --locked --target x86_64-linux-android
           sha256sum target/{aarch64-linux-android,x86_64-linux-android}/release/*.so > evidence/android-cross-build-sha256.txt
+      - name: Package synthetic editor lab APK (test-only debug signature)
+        shell: bash
+        working-directory: experiments/yrs-spike/editor_lab
+        run: |
+          mkdir -p android/app/src/main/jniLibs/{arm64-v8a,x86_64}
+          cp ../target/aarch64-linux-android/release/libtandemlog_yrs_spike.so android/app/src/main/jniLibs/arm64-v8a/
+          cp ../target/x86_64-linux-android/release/libtandemlog_yrs_spike.so android/app/src/main/jniLibs/x86_64/
+          flutter pub get --enforce-lockfile
+          flutter build apk --debug --target-platform android-arm64,android-x64
+          sha256sum build/app/outputs/flutter-apk/app-debug.apk > ../evidence/editor-android-apk-sha256.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
-          name: isolated-text-android-cross-build-only
+          name: isolated-text-android-lab-runtime-pending
           retention-days: 5
           if-no-files-found: error
           path: |
             experiments/yrs-spike/evidence/android-cross-build-sha256.txt
+            experiments/yrs-spike/evidence/editor-android-apk-sha256.txt
+            experiments/yrs-spike/editor_lab/build/app/outputs/flutter-apk/app-debug.apk
             experiments/yrs-spike/target/aarch64-linux-android/release/*.so
             experiments/yrs-spike/target/x86_64-linux-android/release/*.so

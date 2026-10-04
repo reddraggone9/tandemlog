@@ -1,0 +1,74 @@
+{
+  "synthetic_only": true,
+  "production_adoption": false,
+  "test_first_commit": "e1afed4",
+  "frozen_matrix_utc": "2026-10-04T16:42:24.613643+00:00",
+  "frozen_test_hashes_verified": true,
+  "cases": [
+    {
+      "id": "H01",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H02",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H03",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H04",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H05",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H06",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H07",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H08",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H09",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H10",
+      "status": "pass",
+      "scope": "Linux Flutter session/widget against native engine"
+    },
+    {
+      "id": "H11",
+      "status": "pass",
+      "scope": "Linux native Flutter integration; injected composition"
+    },
+    {
+      "id": "H12",
+      "status": "not-run",
+      "scope": "Actual Android OS-generated IME pending"
+    }
+  ],
+  "automated_unique_cases": 11,
+  "native_engine_source": "5470384080f56e03a209f991af6745a941d3b559",
+  "composition_focus_fix": "TextFieldTapRegion around remote button prevents editor unfocus; original frozen assertion unchanged. First native integration reproduced composing range loss, then passed after source fix.",
+  "android": "APK built API24+ ARM64/x86_64 debug-only, packaging verified; actual Android runtime not run",
+  "library_delivery": "Prepared upload authentication discovery failed HTTP401 before upload; local ZIP preserved, hosted Actions handoff pending."
+}
