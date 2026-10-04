@@ -751,12 +751,7 @@ void main() {
         ),
       );
       await tester.ensureVisible(input('dueTime'));
-      final row = find
-          .ancestor(of: input('dueTime'), matching: find.byType(Row))
-          .first;
-      await tester.tap(
-        find.descendant(of: row, matching: find.byType(Checkbox)),
-      );
+      await tester.tap(find.byKey(const ValueKey('dueTimeApply')));
       await tester.pump();
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();

@@ -497,6 +497,7 @@ class _EditorBodyState extends State<_EditorBody> {
     String? hint,
     String? clearLabel,
     int lines = 1,
+    bool withApplyControl = true,
   }) {
     final dateTimeField = const {
       'startDate',
@@ -516,11 +517,12 @@ class _EditorBodyState extends State<_EditorBody> {
       textInputAction: key == 'title' ? TextInputAction.next : null,
       decoration: InputDecoration(
         labelText: label,
+        border: dateTimeField ? const OutlineInputBorder(gapPadding: 2) : null,
         suffixIconConstraints: dateTimeField
             ? const BoxConstraints(minWidth: 48, minHeight: 48)
             : null,
         contentPadding: dateTimeField
-            ? const EdgeInsets.fromLTRB(8, 16, 0, 16)
+            ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
             : null,
         suffixIcon: key.endsWith('Date')
             ? IconButton(
@@ -587,22 +589,11 @@ class _EditorBodyState extends State<_EditorBody> {
     );
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: bulk && TaskSchedule.keys.contains(key)
+      child: bulk && withApplyControl && TaskSchedule.keys.contains(key)
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Checkbox(
-                  value: applied.contains(key),
-                  onChanged: busy
-                      ? null
-                      : (v) => setState(() {
-                          if (v!) {
-                            applied.add(key);
-                          } else {
-                            applied.remove(key);
-                          }
-                        }),
-                ),
+                scheduleApply(key, fullTarget: dateTimeField),
                 Expanded(child: input),
               ],
             )
@@ -615,13 +606,23 @@ class _EditorBodyState extends State<_EditorBody> {
     );
   }
 
+  Widget scheduleApply(String key, {bool fullTarget = false}) => Checkbox(
+    visualDensity: fullTarget ? VisualDensity.standard : null,
+    materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
+    key: ValueKey('${key}Apply'),
+    value: applied.contains(key),
+    onChanged: busy
+        ? null
+        : (value) => setState(() {
+            if (value!) {
+              applied.add(key);
+            } else {
+              applied.remove(key);
+            }
+          }),
+  );
+
   Widget dateTimeRow(String prefix, String label) {
-    final date = field('${prefix}Date', '$label date', hint: 'YYYY-MM-DD');
-    final timeKey = '${prefix}Time';
-    final time = Semantics(
-      label: label,
-      child: field(timeKey, 'Time', hint: 'HH:mm', clearLabel: '$label time'),
-    );
     // Use the editor's outer constraints: AlertDialog asks its content for
     // intrinsic dimensions, which an inner LayoutBuilder cannot provide.
     // Measure supported ISO date / 24-hour time content. Fixed icon targets and
@@ -639,24 +640,47 @@ class _EditorBodyState extends State<_EditorBody> {
       return width;
     }
 
-    // 8px leading padding + 48px suffix target + 8px decoration spacing
-    // + 2px caret clearance, including compact desktop themes.
+    // 4px leading padding + 2px outline gap + 48px suffix target
+    // + 4px Material text-to-suffix gap + 2px caret clearance.
     // A blank Time hint has no clear button, so it uses only padding.
     final dateValueWidth = textWidth('2026-10-04');
     final dateHintWidth = textWidth('YYYY-MM-DD');
     final dateWidth =
-        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 66;
-    final populatedTimeWidth = textWidth('23:59') + 66;
-    final blankTimeWidth = textWidth('HH:mm') + 18;
+        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 60;
+    final populatedTimeWidth = textWidth('23:59') + 60;
+    final blankTimeWidth = textWidth('HH:mm') + 10;
     final timeWidth = populatedTimeWidth > blankTimeWidth
         ? populatedTimeWidth
         : blankTimeWidth;
-    final applyWidth = bulk ? 48.0 : 0.0;
-    final dateRowWidth = (dateWidth + applyWidth) * 8 / 5;
-    final timeRowWidth = (timeWidth + applyWidth) * 8 / 3;
+    // Allocate the 5:3 ratio to the inputs themselves. Fixed apply checkboxes
+    // sit beside each input instead of consuming the narrower time flex cell.
+    final applyWidth = bulk ? 96.0 : 0.0;
+    final dateRowWidth = dateWidth * 8 / 5;
+    final timeRowWidth = timeWidth * 8 / 3;
     final minimumWidth =
-        12 + (dateRowWidth > timeRowWidth ? dateRowWidth : timeRowWidth);
-    if (scheduleWidth < minimumWidth.ceilToDouble()) {
+        12 +
+        applyWidth +
+        (dateRowWidth > timeRowWidth ? dateRowWidth : timeRowWidth);
+    final stacked = scheduleWidth < minimumWidth.ceilToDouble();
+    final dateKey = '${prefix}Date';
+    final timeKey = '${prefix}Time';
+    final date = field(
+      dateKey,
+      '$label date',
+      hint: 'YYYY-MM-DD',
+      withApplyControl: stacked,
+    );
+    final time = Semantics(
+      label: label,
+      child: field(
+        timeKey,
+        'Time',
+        hint: 'HH:mm',
+        clearLabel: '$label time',
+        withApplyControl: stacked,
+      ),
+    );
+    if (stacked) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [date, time],
@@ -665,8 +689,10 @@ class _EditorBodyState extends State<_EditorBody> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (bulk) scheduleApply(dateKey, fullTarget: true),
         Expanded(flex: 5, child: date),
         const SizedBox(width: 12),
+        if (bulk) scheduleApply(timeKey, fullTarget: true),
         Expanded(flex: 3, child: time),
       ],
     );
