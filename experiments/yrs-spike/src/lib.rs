@@ -281,6 +281,27 @@ impl Engine {
                 let data = bytes(&v, "update")?;
                 self.apply_to(&name, &data, "remote")
             }
+            "apply_local" => {
+                // Isolated coordinator calls this only after exact durable
+                // receipt of a locally prepared packet. It is not an app API.
+                let data = bytes(&v, "update")?;
+                self.get(&name)?.undo.reset();
+                self.apply_to(&name, &data, "local")
+            }
+            "prepare" => {
+                let target = string(&v, "target")?.to_owned();
+                let target_guid = self.get(&target)?.doc.guid().to_string();
+                let r = self.get(&name)?;
+                if r.composing {
+                    return Err("composition active".into());
+                }
+                if r.source.as_ref() != Some(&(target, target_guid)) {
+                    return Err("draft source identity changed or wrong target".into());
+                }
+                let baseline = r.baseline.as_ref().ok_or("not a captured draft")?;
+                let data = r.doc.transact().encode_diff_v1(baseline);
+                Ok(json!({"update":STANDARD.encode(data)}))
+            }
             "save" => {
                 let target = string(&v, "target")?.to_owned();
                 let target_guid = self.get(&target)?.doc.guid().to_string();
