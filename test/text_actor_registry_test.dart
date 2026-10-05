@@ -171,4 +171,27 @@ void main() {
     );
     expect(registry.claims.map((entry) => entry.toJson()), [first.toJson()]);
   });
+
+  test('cached owner still rejects changed identity and unknown authors', () {
+    final a = claim(allocationA);
+    final registry = TextActorRegistry()..bindAll([a]);
+    expect(registry.hasOwner(a), isTrue);
+    final changed = TextActorClaim(
+      context: a.context,
+      writer: writerB,
+      allocation: a.allocation,
+      actor: a.actor,
+    );
+    expect(registry.hasOwner(changed), isFalse);
+    expect(() => registry.bindAll([changed]), throwsA(isA<FormatFailure>()));
+    expect(
+      () => registry.validateStructActors(changed, [a.actor]),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(
+      () => registry.validateStructActors(claim(allocationB), const []),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(registry.claims.single.toJson(), a.toJson());
+  });
 }

@@ -1025,8 +1025,16 @@ class TaskStore {
     final originalBaseline = _textBaseline;
     final originalTextBlocked = textWriteBlocked;
     var committed = false;
+    TextCache? transactionTextCache;
     db.execute('BEGIN IMMEDIATE');
     try {
+      if (textEngine != null) {
+        transactionTextCache = TextCache.forTransaction(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+        );
+      }
       for (final (index, e) in newEvents.indexed) {
         if (_textTypes.contains(e.type) && textEngine == null) {
           throw FormatFailure(
@@ -1049,11 +1057,7 @@ class TaskStore {
       final oldBaseline = _textBaseline?.id;
       if (newEvents.isNotEmpty) {
         if (textEngine != null) {
-          TextCache(
-            db,
-            textEngine!,
-            memo: _recurringTextMemo,
-          ).validatePackets(newEvents);
+          transactionTextCache!.validatePackets(newEvents);
         }
         _validateTextBaseline();
         _validateUndoReferences();
@@ -1095,7 +1099,11 @@ class TaskStore {
           ? _textResolution()
           : null;
       for (final entity in affected) {
-        final state = _projectEntity(entity, resolution: resolution);
+        final state = _projectEntity(
+          entity,
+          resolution: resolution,
+          textCache: transactionTextCache,
+        );
         if (state != null) {
           db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
             entity,
@@ -1172,6 +1180,8 @@ class TaskStore {
         );
       }
       rethrow;
+    } finally {
+      transactionTextCache?.close();
     }
   }
 
@@ -2711,6 +2721,7 @@ class TaskStore {
   Map<String, dynamic>? _projectEntity(
     String entity, {
     RecurringTextResolver? resolution,
+    TextCache? textCache,
   }) {
     final history = _entityEvents(entity);
     Map<String, dynamic>? state;
@@ -2732,7 +2743,12 @@ class TaskStore {
       throw FormatFailure('${failure.message} In ${candidates.first.id}.');
     }
     if (state == null) return null;
-    _materializeText(state, history, resolution: resolution);
+    _materializeText(
+      state,
+      history,
+      resolution: resolution,
+      textCache: textCache,
+    );
     final seeds = db.select(
       "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
@@ -2755,25 +2771,23 @@ class TaskStore {
     Map<String, dynamic> state,
     List<LogEvent> history, {
     RecurringTextResolver? resolution,
+    TextCache? textCache,
   }) {
     if (textEngine == null) return;
     final entity = state['id'] as String;
     if (_hasInheritedText(entity)) {
       try {
-        TextCache(
-          db,
-          textEngine!,
-          memo: _recurringTextMemo,
-        ).materializeResolved(
-          state,
-          resolution?.resolve(entity) ??
-              _resolvedText(
-                entity,
-                pending: history
-                    .where((event) => event.canonicalRaw != null)
-                    .toList(),
-              ),
-        );
+        (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+            .materializeResolved(
+              state,
+              resolution?.resolve(entity) ??
+                  _resolvedText(
+                    entity,
+                    pending: history
+                        .where((event) => event.canonicalRaw != null)
+                        .toList(),
+                  ),
+            );
       } on TextInheritancePending catch (pending) {
         // Retain the verified display if any; do not establish a guessed seed.
         final cached = db.select('SELECT raw FROM views WHERE id=?', [entity]);
@@ -2831,13 +2845,14 @@ class TaskStore {
         db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
           state['id'],
         ]).isNotEmpty) {
-      TextCache(db, textEngine!, memo: _recurringTextMemo).materialize(
-        state,
-        history,
-        basis: basis,
-        legacySeedText: seedText,
-        basisKind: kind,
-      );
+      (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+          .materialize(
+            state,
+            history,
+            basis: basis,
+            legacySeedText: seedText,
+            basisKind: kind,
+          );
     }
   }
 

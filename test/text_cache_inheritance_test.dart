@@ -108,6 +108,36 @@ void main() {
             view = <String, dynamic>{'id': child};
         cache.materializeResolved(view, fields);
         expect(view['title'], 'AXB');
+        // Transaction-scoped ownership cannot survive a rollback. A subsequent
+        // transaction must re-admit and persist the original claim from logs.
+        db.execute('DELETE FROM text_actors');
+        expect(() => TextCache.forTransaction(db, engine), throwsStateError);
+        db.execute('BEGIN IMMEDIATE');
+        final rolledBack = TextCache.forTransaction(db, engine);
+        rolledBack.materializeResolved(view, fields);
+        expect(db.select('SELECT * FROM text_actors'), hasLength(1));
+        db.execute('ROLLBACK');
+        expect(
+          () => rolledBack.materializeResolved(view, fields),
+          throwsStateError,
+        );
+        rolledBack.close();
+        expect(db.select('SELECT * FROM text_actors'), isEmpty);
+        db.execute('BEGIN IMMEDIATE');
+        final committed = TextCache.forTransaction(db, engine);
+        expect(
+          () => rolledBack.materializeResolved(view, fields),
+          throwsStateError,
+        );
+        committed.materializeResolved(view, fields);
+        committed.materializeResolved(view, fields);
+        expect(db.select('SELECT * FROM text_actors'), hasLength(1));
+        db.execute('COMMIT');
+        expect(
+          () => committed.materializeResolved(view, fields),
+          throwsStateError,
+        );
+        committed.close();
         expect(view['description'], 'AB');
         final actor = db.select('SELECT * FROM text_actors').single;
         expect(actor['context'], originalContext);

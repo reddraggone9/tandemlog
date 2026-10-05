@@ -12,19 +12,54 @@ import '../text/recurring_text.dart';
 /// editor documents and their captured drafts are never used for materialization.
 class TextCache {
   TextCache(this.db, this.engine, {this.memo});
+  TextCache._transaction(this.db, this.engine, this.memo) {
+    if (db.autocommit) {
+      throw StateError('Shared text actors require an active transaction.');
+    }
+    _transactionActors = _loadActors();
+  }
+  /// Share validated ownership only inside the caller's active transaction.
+  /// The caller must close this index in a finally block after commit/rollback,
+  /// before the connection can start another transaction.
+  factory TextCache.forTransaction(
+    Database db,
+    NativeTextEngine engine, {
+    RecurringTextMemo? memo,
+  }) => TextCache._transaction(db, engine, memo);
   final Database db;
   final NativeTextEngine engine;
   final RecurringTextMemo? memo;
+  TextActorRegistry? _transactionActors;
+  bool _closed = false;
+
+  /// The scoped index must never outlive its owning SQLite transaction.
+  void close() {
+    _closed = true;
+    _transactionActors = null;
+  }
+
+  TextActorRegistry _loadActors() =>
+      TextActorRegistry(deriveActor: memo?.deriveActor)..bindAll(
+        db
+            .select('SELECT context,writer,allocation,actor FROM text_actors')
+            .map(
+              (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
+            ),
+      );
+
+  TextActorRegistry _actors() {
+    _ensureUsable();
+    return _transactionActors ?? _loadActors();
+  }
+
+  void _ensureUsable() {
+    if (_closed || (_transactionActors != null && db.autocommit)) {
+      throw StateError('Text actor index used outside its transaction.');
+    }
+  }
 
   void validatePackets(Iterable<LogEvent> incoming) {
-    final registry = TextActorRegistry(deriveActor: memo?.deriveActor);
-    registry.bindAll(
-      db
-          .select('SELECT context,writer,allocation,actor FROM text_actors')
-          .map(
-            (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
-          ),
-    );
+    final registry = _actors();
     for (final event in incoming) {
       if (event.type != 'task.textEdited' &&
           event.type != 'task.textEditUndone') {
@@ -37,17 +72,20 @@ class TextCache {
           allocation: change['allocation'] as String,
           actor: change['actor'] as int,
         );
+        final present = registry.hasOwner(claim);
         registry.bindAll([claim]);
         registry.validateStructActors(
           claim,
           engine.inspect(NativeTextUpdate.parse(change['update'])),
         );
-        db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
-          claim.context,
-          claim.actor,
-          claim.writer,
-          claim.allocation,
-        ]);
+        if (!present) {
+          db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
+            claim.context,
+            claim.actor,
+            claim.writer,
+            claim.allocation,
+          ]);
+        }
       }
     }
   }
@@ -64,14 +102,7 @@ class TextCache {
         !fields.containsKey('description')) {
       throw FormatFailure('Resolved text requires both fields.');
     }
-    final registry = TextActorRegistry(deriveActor: memo?.deriveActor);
-    registry.bindAll(
-      db
-          .select('SELECT context,writer,allocation,actor FROM text_actors')
-          .map(
-            (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
-          ),
-    );
+    final registry = _actors();
     final claims = <TextActorClaim>[];
     final rows = <List<Object?>>[];
     final texts = <String, String>{};
@@ -120,14 +151,18 @@ class TextCache {
         }
         originals[event.id] = operation.update.encoded;
       }
-      registry.bindAll(ordered.map((operation) => operation.claim));
+      final newClaims = ordered
+          .map((operation) => operation.claim)
+          .where((claim) => !registry.hasOwner(claim))
+          .toList();
+      registry.bindAll(newClaims);
       for (final operation in ordered) {
         registry.validateStructActors(
           operation.claim,
           engine.inspect(operation.update),
         );
-        claims.add(operation.claim);
       }
+      claims.addAll(newClaims);
       final limits = NativeTextLimits(
         visibleUtf16: field == 'title' ? 500 : 10000,
       );
@@ -270,6 +305,7 @@ class TextCache {
     Map<String, String>? legacySeedText,
     String basisKind = 'legacy-baseline',
   }) {
+    _ensureUsable();
     final creations = history.where(
       (event) => event.type == 'task.createdWithText',
     );

@@ -86,13 +86,15 @@ class TextActorRegistry {
       return context != 0 ? context : a.actor.compareTo(b.actor);
     });
 
+  bool hasOwner(TextActorClaim claim) =>
+      _claims[_key(claim)]?.sameOwner(claim) ?? false;
+
   void bindAll(Iterable<TextActorClaim> incoming) {
     // Validate a private delta before publishing it. Copying every prior claim
     // for each packet makes long inherited lineages quadratic, while a failed
     // batch must still leave this index unchanged.
     final next = <String, TextActorClaim>{};
     for (final claim in incoming) {
-      claim.validate();
       final key = _key(claim);
       final previous = next[key] ?? _claims[key];
       if (previous != null && !previous.sameOwner(claim)) {
@@ -101,6 +103,7 @@ class TextActorRegistry {
         );
       }
       if (previous == null) {
+        claim.validate();
         if (_derive(claim.context, claim.writer, claim.allocation) !=
             claim.actor) {
           throw FormatFailure(
@@ -116,7 +119,8 @@ class TextActorRegistry {
   /// Ordinary operations may introduce only their owned structs. Deletion-set
   /// references name existing identities and are deliberately not struct authors.
   void validateStructActors(TextActorClaim claim, Iterable<int> actors) {
-    claim.validate();
+    // A matching bound owner already passed primitive shape and allocation
+    // validation. Unknown or differing claims still fail this exact comparison.
     final bound = _claims[_key(claim)];
     if (bound == null ||
         !bound.sameOwner(claim) ||

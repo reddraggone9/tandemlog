@@ -2,6 +2,22 @@
 
 ## Authorized text integration — isolated, unreleased
 
+Second performance follow-up: a transaction-scoped actor index removes repeated
+registry-table scans and duplicate inserts during edited-history reconstruction.
+The same synthetic321-task/642-event cold rebuild improves from11.83s to7.77s;
+views match the prior revision, canonical bytes are unchanged, and warm reopen
+reads zero logs (4.64ms). A separate fresh320-occurrence sample confirms190.2ms
+last completion (prior236.9ms),7.81s rebuild and4.48ms warm open. This remains a material open performance gate. The
+profile separates native apply/restore (~2.07s) from repeated canonical decode
+(~0.80s); recursive resolution and immutable proof/packet work still remain.
+[Measured breakdown and method](../evidence/production-text/recurring/README.md#transaction-scoped-actor-indexing-follow-up).
+The pushed4027d13 full Linux/Windows/Android
+[run37265261204](https://github.com/reddraggone9/tandemlog/actions/runs/37265261204)
+passed. This follow-up has478 local app tests, clean analysis/format and a passing
+bundled GTK recurring completion/edit/Save/Undo workflow; its hosted gates are
+separate. No UI, canonical/cache schema, native payload, main adoption or
+publication changed. Historical recompletion policy remains proposed.
+
 Performance follow-up on the isolated branch: bounded immutable proof/record and
 inspection reuse, verified SQLite ancestor checkpoints, atomic actor deltas and
 shared transaction resolution reduce the original unchanged80 completion from
@@ -13,7 +29,7 @@ not satisfactory UI startup. [Raw method/size/memory evidence](../evidence/produ
 separates these storage probes from the prior hosted release first-frame samples.
 Final changed-source477 app tests and three affected bundled GTK flows pass.
 Native1200×850 Dark screenshots were inspected; completion/child edit/Undo and
-historical guard remain coherent. Full hosted gates remain pending. No UI,
+historical guard remain coherent. Full hosted gates for4027d13 passed; the newer follow-up gates are separate. No UI,
 main/published release, signing or canonical/cache schema change is included.
 The [historical mixed-lineage decision](historical-recurring-text-policy.md) remains
 proposed; [Android QA instructions](android-text-preview-qa.md) identify the earlier

@@ -1,0 +1,25 @@
+{
+  "baseRevision": "4027d13c38caf8b14ebdd635ac8699e3e860b9a5",
+  "sourceLabel": "working-transaction-actors",
+  "files": {
+    "lib/domain/text_actor.dart": "fc7b0c3bdd4b1dae23e1d5dea96f682c6deee10d8c08187431946adcadead9c4",
+    "lib/storage/text_cache.dart": "46252bf9eb6c83cff48e9b5032aef9df1d3b37c885b14b44003933a83d1ac1b1",
+    "lib/storage/task_store.dart": "50a352e1c057935acb78e39e07eb5d184ff676f95c07e9bd508dff662a3fc5f8",
+    "test/text_actor_registry_test.dart": "facaa27a0bb671fac31366e04c65df7069a0a999fa6dbcc1230f41c320ed1f69",
+    "test/text_cache_inheritance_test.dart": "bbf64825055224b64fbfd7c70d8c1d196eba7a086c5cf81d87e46421c3f8dd33"
+  },
+  "profileMethod": "Private copied production sources wrap existing methods with Stopwatches and a forwarding SQLite delegate; inclusive timings overlap. Actual native RPC dispatch is measured separately from inspection memo hits. No runtime source instrumentation in application.",
+  "fixture": "Read-only retained synthetic4027d13 cache and642 canonical events for321 tasks,320 consecutive title+notes-edited occurrences. Every profile run copies into a new directory and removes only copied SQLite cache/WAL/SHM.",
+  "uninstrumented": "Fresh native engine before TaskStore.open, OS page cache not flushed, no heavy concurrent build/test. Comparison reads original synthetic cache read-only. Cold, warm and original views identical; canonical files unchanged; no UI/process-to-ready claim.",
+  "runtime": "Linux x64, Dart3.13.4 AOT, exact production pinned sqlite3-3.7.0 native asset via LD_PRELOAD; native library SHA5d0a7b1b3e0e6b906e831bed562a45f8db03a2bf4f08c80d9dc0c29a6f169153",
+  "scripts": {
+    "profile-recurring-current.py": "2d1170f4257c66e9d6bc8aebfb5e431faa083f9c44d0a9816d38c05e750f0324",
+    "finish-cold-profiler.py": "dea205415e119083cb501a7fd8bd1f5747277af6a559c2d6984886babed880c8",
+    "recurring-cold-unprofiled.dart": "1fe9fc04dff76f04334647a2704b620aea8a6f990c7133231ed70183250fb8c2"
+  },
+  "freshWorkloadDriver": "measure_lineage.dart",
+  "freshWorkloadDriverSha256": "2ef03dd7802028f56dbaaae389a4f12abc34d3d9c829fdc28c4135065706cdd1",
+  "freshWorkloadBinarySha256": "b469ceecbe9f5895c2dda77f1a02164c4530a92e66bf30c0c96740d1f84813c1",
+  "freshWorkload": "PROBE_GENERATIONS=320 PROBE_EDITS=yes; same actual production driver as prior workload, fresh UUIDs/actors.72.009s total, all320 requested occurrences completed. No concurrent heavy build/test.",
+  "sourceOnlyDifferenceAfterTiming": "Three documentation comment lines on TextCache factory; executable code unchanged."
+}

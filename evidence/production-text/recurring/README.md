@@ -210,6 +210,60 @@ historical field materialization against measured allocation/FFI costs, preservi
 original packets, concurrent successor union and Undo. Do not compact/rewrite
 canonical history to conceal the cost.
 
+### Transaction-scoped actor indexing follow-up
+
+The same retained **synthetic**321-task/642-event fixture identifies a concrete
+avoidable cost. [Prior profile](performance-profile-4027.json) measures11,924.829ms
+cold reconstruction:320 inherited cache projections repeatedly select204,800
+actor rows and issue104,000 actor insert attempts. Registry binding totals
+3,153.414ms. Method timings are inclusive and overlap; do not sum them.
+Actual native RPC application/restoration takes1,232.169/853.562ms, while3,208
+canonical decoder calls take809.049ms. Recursive resolution remains material,
+but recursive decoding alone does not explain the whole cost.
+
+The store now owns **one actor registry per SQLite ingestion transaction**. Exact
+new claims still undergo shape/allocation checks; every original operation still
+undergoes authorship inspection. Identical owners already validated in that
+registry need no repeated primitive validation or insertion. The index closes on
+commit/rollback; a fresh transaction reloads committed ownership. This is neither
+a process-global ownership cache nor a canonical format/native-library change.
+Checkpoint replay and independent native state/text comparison are unchanged.
+
+The [new profile](performance-profile-transaction.json) measures7,974.736ms on the
+same fixture. The repeated actor SELECT/INSERT series disappears; binding falls
+to974.561ms. Decoder work remains796.880ms and native apply/restore remains
+1,222.057/847.541ms. The next measured costs are repeated native state work,
+immutable proof/packet processing and the ancestor checkpoint search (640 queries,
+102,720 identifiers returned,682.990ms). A larger replay-cursor change needs
+separate safety verification; these measurements do not justify history rewriting
+or trusting a cache instead of original operations.
+
+[Uninstrumented repeated-fixture result](performance-rebuild-transaction.json):
+**7,769.320ms** rebuild, **4.642ms** warm reopen with **zero log reads**,91,860,992B
+process peak RSS. Reconstructed views equal both the prior4027d13 cache and the
+new warm cache; canonical bytes are unchanged. A preceding single sample gave
+7,608.415ms/3.717ms. These are storage-only AOT measurements with OS page caches
+unflushed, a fresh native-engine owner before cold open, and no concurrent heavy
+build/test; not UI, process-to-ready or Android timings. [Method and exact source
+fingerprints](performance-transaction-method.json) identify this follow-up.
+**A7.8-second edited-history rebuild remains an open performance gate.** A
+[fresh320-occurrence workload](performance-transaction-edited-320.json), using
+exactly the published production driver with fresh UUIDs/actors, confirms
+**190.200ms** last completion (prior236.885ms), **7,806.304ms** rebuild and
+**4.484ms** zero-log warm reopen.321tasks/642events,2,225,801B canonical data,
+12,177,408B SQLite logical size,3,408,717B native state blobs and4,413,460B
+frontier JSON; peak process RSS98,807,808B. All320 requested occurrences complete,
+replayed views match and canonical bytes remain unchanged. This is one sample,
+not a latency percentile or native Android result. The last completion remains
+material despite the improvement.
+
+Local follow-up gates:478 app tests, clean analyzer/format, and actual bundled
+Linux recurring completion→child edit→Save→Undo. [App test log](validation-transaction-unit-widget.log),
+[analysis](validation-transaction-analysis.log), [format](validation-transaction-format.log),
+[native GTK](validation-transaction-gtk.log). The first native setup probe failed
+before loading the app without the local Rust environment; the recorded rerun
+uses the established toolchain and passes. No canonical/native fixture changed.
+
 ### Reproducing this environment's storage probe
 
 Build the approved native library normally, run `flutter pub get --enforce-lockfile`,

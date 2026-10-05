@@ -1,0 +1,285 @@
+{
+  "source": "working-transaction-actors",
+  "cache_rebuild_ms": 7974.736,
+  "tasks": 321,
+  "canonical_reads": 1,
+  "rss_peak_bytes": 91000832,
+  "profile": {
+    "store": {
+      "entityEvents": {
+        "calls": 322,
+        "us": 257383
+      },
+      "project": {
+        "calls": 322,
+        "us": 7410366
+      },
+      "order": {
+        "calls": 1,
+        "us": 5536
+      },
+      "refresh": {
+        "calls": 1,
+        "us": 7964291
+      }
+    },
+    "cache": {
+      "resolvedCache": {
+        "calls": 320,
+        "us": 2534913
+      }
+    },
+    "native": {
+      "inspect": {
+        "calls": 640,
+        "us": 41016
+      },
+      "seed": {
+        "calls": 4,
+        "us": 452
+      },
+      "new": {
+        "calls": 4,
+        "us": 244
+      },
+      "apply": {
+        "calls": 1918,
+        "us": 1222057
+      },
+      "read": {
+        "calls": 1920,
+        "us": 92085
+      },
+      "state": {
+        "calls": 1920,
+        "us": 199200
+      },
+      "cancel": {
+        "calls": 1920,
+        "us": 99901
+      },
+      "restore": {
+        "calls": 1916,
+        "us": 847541
+      }
+    },
+    "decode": {
+      "decode": {
+        "calls": 3208,
+        "us": 796880
+      }
+    },
+    "actors": {
+      "bind": {
+        "calls": 2563,
+        "us": 974561
+      }
+    },
+    "resolver": {
+      "resolve": {
+        "calls": 640,
+        "us": 6347063
+      }
+    }
+  },
+  "sql": {
+    "PRAGMA user_version": {
+      "calls": 1,
+      "us": 107,
+      "rows": 1,
+      "payload_bytes": 0
+    },
+    "PRAGMA table_info(streams)": {
+      "calls": 1,
+      "us": 25,
+      "rows": 4,
+      "payload_bytes": 76
+    },
+    "SELECT value FROM metadata WHERE key='space'": {
+      "calls": 1,
+      "us": 22,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT clock FROM events  ORDER BY clock DESC LIMIT 1": {
+      "calls": 2,
+      "us": 83,
+      "rows": 1,
+      "payload_bytes": 0
+    },
+    "SELECT name FROM streams": {
+      "calls": 1,
+      "us": 18,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT value FROM metadata WHERE key='replay_pending'": {
+      "calls": 1,
+      "us": 8,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT * FROM streams WHERE name=?": {
+      "calls": 1,
+      "us": 13,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT last_seq,chain_head FROM streams WHERE name=?": {
+      "calls": 1,
+      "us": 99,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT context,writer,allocation,actor FROM text_actors": {
+      "calls": 1,
+      "us": 12,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT raw FROM events WHERE json_extract(raw,'$.type')='text.baselineInitialized'": {
+      "calls": 2,
+      "us": 64,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT u.id FROM events u JOIN events t ON t.id=json_extract(u.raw,'$.data.operation') WHERE json_extract(u.raw,'$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.raw,'$.type')<>'task.textEdited') LIMIT 1": {
+      "calls": 1,
+      "us": 30,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'$.type')='task.operationUndone' THEN json_extract(u.raw,'$.data.operation') ELSE json_extract(u.raw,'$.data.completion') END WHERE json_extract(u.raw,'$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'$.type')='task.completionUndone' AND json_extract(t.raw,'$.type') NOT IN ('task.completed','task.completedWithText')) OR (json_extract(u.raw,'$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'$.type') NOT IN ('task.completed','task.completedWithText') OR json_extract(t.raw,'$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'$.type')='task.operationUndone' AND (json_extract(t.raw,'$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completionUndone') OR (json_extract(t.raw,'$.type') IN ('task.completed','task.completedWithText') AND json_extract(t.raw,'$.data.successor') IS NOT NULL)))) LIMIT 1": {
+      "calls": 1,
+      "us": 82,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT raw FROM events WHERE json_extract(raw,'$.type')='task.moved'": {
+      "calls": 1,
+      "us": 7,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT raw FROM events WHERE json_extract(raw,'$.data.tagChanges') IS NOT NULL": {
+      "calls": 1,
+      "us": 2149,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT id FROM views WHERE json_extract(raw,'$.textInheritancePending')=1": {
+      "calls": 1,
+      "us": 34,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT 1 FROM events WHERE json_extract(raw,'$.type')='task.completedWithText' AND json_extract(raw,'$.data.successor.id')=? LIMIT 1": {
+      "calls": 325,
+      "us": 6525,
+      "rows": 321,
+      "payload_bytes": 0
+    },
+    "SELECT raw FROM events": {
+      "calls": 1,
+      "us": 1380,
+      "rows": 642,
+      "payload_bytes": 4454786
+    },
+    "SELECT raw FROM events WHERE entity=?": {
+      "calls": 1282,
+      "us": 31929,
+      "rows": 2562,
+      "payload_bytes": 17810630
+    },
+    "SELECT raw FROM events WHERE json_extract(raw,'$.data.successor.id')=? ORDER BY clock,writer,seq": {
+      "calls": 644,
+      "us": 23670,
+      "rows": 640,
+      "payload_bytes": 1928960
+    },
+    "SELECT 1 FROM text_fields WHERE entity=? LIMIT 1": {
+      "calls": 1,
+      "us": 15,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT * FROM text_fields WHERE entity=? AND field=?": {
+      "calls": 642,
+      "us": 17785,
+      "rows": 640,
+      "payload_bytes": 12474574
+    },
+    "SELECT context,writer,allocation,actor FROM text_actors WHERE context=?": {
+      "calls": 2,
+      "us": 35,
+      "rows": 2,
+      "payload_bytes": 544
+    },
+    "SELECT 1 FROM events WHERE json_extract(raw,'$.type')='task.moved' AND json_extract(raw,'$.data.before')=? LIMIT 1": {
+      "calls": 640,
+      "us": 9573,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT entity FROM text_fields WHERE field=? AND seed_hash=? AND codec='yrs-v1' AND adapter=1 ORDER BY (entity=?) DESC,length(frontier) DESC": {
+      "calls": 640,
+      "us": 682990,
+      "rows": 102720,
+      "payload_bytes": 7395840
+    },
+    "SELECT 1 FROM events WHERE json_extract(raw,'$.data.successor.id')=? LIMIT 1": {
+      "calls": 3,
+      "us": 32,
+      "rows": 1,
+      "payload_bytes": 0
+    },
+    "SELECT id FROM views ORDER BY json_extract(raw,'$.order'),id": {
+      "calls": 1,
+      "us": 398,
+      "rows": 322,
+      "payload_bytes": 23184
+    },
+    "SELECT raw FROM events WHERE json_extract(raw,'$.type')='task.operationUndone'": {
+      "calls": 1,
+      "us": 13,
+      "rows": 0,
+      "payload_bytes": 0
+    },
+    "SELECT e.id,json_extract(e.raw,'$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'$.data.successor.id') AND json_extract(v.raw,'$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'$.type') IN ('task.completed','task.completedWithText')": {
+      "calls": 1,
+      "us": 1739,
+      "rows": 320,
+      "payload_bytes": 48538
+    },
+    "SELECT id,entity,json_extract(raw,'$.type') AS type,json_extract(raw,'$.data.before') AS before_id,json_extract(raw,'$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.moved') ORDER BY clock,writer,seq": {
+      "calls": 1,
+      "us": 1194,
+      "rows": 322,
+      "payload_bytes": 86018
+    },
+    "SELECT value FROM metadata WHERE key='order_projection'": {
+      "calls": 1,
+      "us": 9,
+      "rows": 1,
+      "payload_bytes": 2
+    },
+    "SELECT COUNT(*) AS n FROM positions": {
+      "calls": 1,
+      "us": 10,
+      "rows": 1,
+      "payload_bytes": 0
+    },
+    "SELECT COUNT(*) AS n FROM views": {
+      "calls": 1,
+      "us": 10,
+      "rows": 1,
+      "payload_bytes": 0
+    },
+    "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'$.successorSuppressed'),0)=0 ORDER BY positions.rank": {
+      "calls": 1,
+      "us": 694,
+      "rows": 322,
+      "payload_bytes": 369852
+    }
+  }
+}
