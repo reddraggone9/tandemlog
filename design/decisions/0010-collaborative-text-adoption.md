@@ -1,8 +1,9 @@
 # Collaborative task text
 
 Status: implementation authorized on 2026-10-04; unreleased on
-`experiment/text-activation-policy`. Integrated native Linux editing checks pass;
-full platform and release gates remain pending.
+`experiment/text-activation-policy`. Initial native Linux editing checks pass;
+an extended Undo lifecycle regression currently blocks adoption. Full platform
+and release gates remain pending.
 
 ## Accepted behavior
 
@@ -77,12 +78,35 @@ New `task.textEditUndone` records carry native compensation and reference the
 original native edit. Their nontext part retracts only that original command's
 effects. Native replay still includes both original and compensation packets.
 Old `task.operationUndone` cannot target a native text command. Session Undo
-remains process-local, clears on workspace change/restart, and needs an owned
-single-operation native basis so skipping an ineffective entry cannot undo an
-earlier command. Closing an editor releases its live source owners; retained
-session Undo entries own separate documents and release them on eviction.
+remains process-local, clears on workspace change/restart, and restricts each
+prepared native Undo to its named acknowledged operation. A shared field/session
+owner retains Yrs's local identity and redone links across successive Saves and
+Undo receipts. Independent per-operation documents lost those links when later
+Undo restored an earlier insertion, producing duplicated text on a second Undo.
+The temporary preparation manager contains only the requested stack item; Yrs
+cannot skip an ineffective item and consume an earlier command. Closing an editor
+releases its live source owners. Retained Undo entries reference separate session
+owners, released when their last history reference is evicted.
 Actual-library regressions cover remote edits, exact receipt retries, cache loss
 and an ineffective most-recent edit without retracting an earlier command.
+
+The extended lifecycle found another limitation in the current snapshot wrapper:
+recreating a session reruns Yrs Undo. Yrs 0.28.0 visits a HashSet of items to
+restore, assigning new local character IDs in that iteration order. Recreating
+the same acknowledged Undo can consequently fail the exact native-state check.
+No check is weakened and no canonical packet is regenerated to hide this.
+The [isolated patch proposal](../../evidence/production-text/undo/README.md)
+sorts that traversal by immutable `(client, clock)` IDs and passes the observed
+regression plus the frozen native corpus. It is not adopted: maintaining a
+patch to a core dependency versus redesigning snapshot ownership needs Lee's
+decision. This evidence establishes the tested path, not general determinism of
+all Yrs features.
+
+A confirmed Save whose local Undo registration has not finished must not be
+silently absent from older Undo preparation. Matching affected fields now block
+preparation without appending compensation or changing saved task history.
+Exact registration retry remains possible with its retained open capture;
+restart clears session Undo if that capture has already closed.
 
 ## Bounds and measured limits
 
@@ -126,13 +150,39 @@ dark 200% text, and restart persistence. Its composition/insets are injected;
 it is not Android OS-IME evidence. See the [production checkpoint](../../evidence/production-text/README.md).
 
 The current source also cross-builds for arm64-v8a, x86_64 and armeabi-v7a with
-NDK 28.2/API 24; required exports and 16 KiB ELF segment alignment pass. This
-verifies library payloads, not APK packaging, installation or Android execution.
+NDK 28.2/API 24; required exports and 16 KiB ELF segment alignment pass. A local
+debug APK also passes three-ABI payload/ZIP alignment and full-notices checks.
+It is packaging evidence from the earlier branch snapshot, not the final signed
+candidate or an Android execution result.
 
-Before any preview: resolve successor text, adapt and run the complete existing
-native workflow matrix, make real-library CI checks mandatory, verify native
-Windows packaged lifecycle, verify Android APK packaging, and accept
-the exact signed APK on Android. Release-mode startup/resource measurements and
-independent final UI/release review remain pending. Stable promotion requires
+Before any preview: resolve successor text, pass the complete existing native
+workflow matrix and the now-mandatory real-library hosted CI, verify native
+Windows packaged lifecycle, and accept the exact signed APK on Android.
+Release-mode startup samples are recorded in the production checkpoint with
+their exact source and methodological limits; final UI/release review remains
+pending. Stable promotion requires
 separate behavior acceptance. [Prototype evidence](../text-merge-prototype.md)
 remains historical; passing it alone is not production acceptance.
+
+### Pending recurring-text choice: concrete impact
+
+Two offline devices start with parent title `AB`. A edits to `AXB` and completes;
+B edits to `ABY` and completes. A can already edit the deterministic successor
+before B's completion arrives. The current historical earliest-completion
+snapshot selection can then change the successor's seed, invalidating native
+character identities. The temporary preappend guard prevents that unsafe case.
+
+Recommended, not accepted: the new native completion contract contributes exactly
+its observed parent text state; the child combines states observed by either
+completion and keeps its own later edits. Subsequent parent edits do not flow
+into the child automatically. Child field context must be immutable parent
+lineage plus deterministic successor identity, with verified inheritance grants
+for parent actors. Missing canonical proof stays pending. Nontext selection,
+recurrence timing and conservative protection of successor work after Undo keep
+the existing behavior. One immutable selected snapshot is an alternative, but
+requires a shared selection gate or explicitly excluding offline contributions.
+Old scalar completion payloads and accepted v3 fixtures retain their meaning.
+
+This choice is Lee's product decision, not implicit approval of the recommended
+contract. Native Windows/Android packaging and workflow work can proceed without
+it. Startup checkpoint and exact limitations are recorded in the linked evidence.

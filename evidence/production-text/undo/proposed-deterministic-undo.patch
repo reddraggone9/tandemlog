@@ -1,0 +1,13 @@
+--- yrs-0.28.0/src/undo.rs
++++ yrs-0.28.0/src/undo.rs
+@@ -683,7 +683,9 @@
+             }
+         }
+ 
+-        for &ptr in to_redo.iter() {
++        let mut redo_order: Vec<_> = to_redo.iter().copied().collect();
++        redo_order.sort_unstable_by_key(|ptr| *ptr.id());
++        for ptr in redo_order {
+             let mut ptr = ptr;
+             change_performed |= ptr
+                 .redo(&mut txn, &to_redo, &item.insertions, stack, other)
