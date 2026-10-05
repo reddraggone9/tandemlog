@@ -186,3 +186,125 @@ Old scalar completion payloads and accepted v3 fixtures retain their meaning.
 This choice is Lee's product decision, not implicit approval of the recommended
 contract. Native Windows/Android packaging and workflow work can proceed without
 it. Startup checkpoint and exact limitations are recorded in the linked evidence.
+
+### Decision brief — 2026-10-05, not accepted
+
+There are two separate decisions. Neither is authorization to adopt the patch,
+alter recurring completion, or publish the collaborative-text branch. Build45
+publication is a separate parent/local task. The checklist prototype remains
+paused; resumption needs a fresh quota check.
+
+**1. Recommend the narrowly pinned restoration-order patch.** It affects our
+exact Yrs **0.28.0** dependency, upstream source
+`23b7f5693bbf9e7d26340c521ee8647f79bdfba2`. This investigation establishes that
+version/path, not the affected range of other versions. The
+[minimal diff](../../evidence/production-text/undo/proposed-deterministic-undo.patch)
+collects the existing restoration set, sorts by immutable `(client, clock)`, and
+visits that order. The original set remains available for recursive membership
+checks. This is needed by **our current reconstruction design**; it is not a
+general requirement for syncing Yrs updates or proof of an upstream correctness
+bug. Byte-identical ownership replay is our application assumption, not an
+established upstream guarantee.
+
+The wrapper records exact Save and Undo packets in canonical events already.
+However, its process-local `ReplayStep::UndoOperation` records an instruction to
+run Undo again. `Replica::recreate()` executes that instruction to reconstruct
+the private native ownership graph. The unordered restoration loop can assign
+fresh identities differently; our exact-state check then rejects the candidate.
+The observed failure is `session Undo replay differs from live state`, including
+a compensation that was already durably acknowledged. The check remains strict.
+
+The isolated patch passes 454 unit/widget, 50 actual application/FFI ownership,
+98 unchanged frozen native and 4 Rust cases. The
+[receipt and independent review](../../evidence/production-text/undo/README.md)
+pin official source, patch and binary hashes. This establishes the tested
+repeated-owner path; it is not a general proof of deterministic Yrs replay.
+The patched library has not undergone actual GTK/Windows/Android application
+acceptance. Current repository builds still use the unpatched dependency.
+
+Maintenance means retaining one exact, reviewed local patch and its MIT notice,
+reviewing/rebasing it for each proposed Yrs update, and keeping the frozen
+identity/lifecycle regressions mandatory on all targets. Do not stay on an old
+dependency indefinitely to avoid that review. Prefer an upstream-supported fix
+or an ownership API that lets us remove the patch. No upstream message or PR has
+been sent. The change adds no dependency, IO, permissions or unsafe block; it
+does add a temporary `Vec` and an `O(k log k)` sort of restoration items. Existing
+admission limits remain, but patched platform performance/RAM is not yet measured.
+This is a reliability repair, not a security-vulnerability fix or a wider security
+audit of Yrs.
+
+**Exact packets versus private ownership.** Durable materialization and cache
+rebuild apply the recorded packets as remote updates. They do not regenerate
+compensations. Ordinary unsaved-draft Cancel disposes its private document;
+editor reopening restores a verified checkpoint; process restart clears session
+Undo. None needs replay of a prior local Undo. Ordinary scalar completion Reopen
+also does not generate native compensation.
+
+The fragile reconstruction occurs in session-owner mutations after local Undo:
+`Engine::command` snapshots affected owners, `Replica::snapshot` also reconstructs
+prepared candidates, preparation reconstructs the owner, and commit reconstructs
+the prepared candidate. Remote arrival and cancellation of a prepared Undo pass
+through that machinery too. Moving the actual prepared document only at commit
+would fix one of those sites, not all of them.
+
+Saving more operation bytes alone cannot replace this machinery. Yrs's
+[private `Item.redone` links and item encoding](https://github.com/y-crdt/y-crdt/blob/23b7f5693bbf9e7d26340c521ee8647f79bdfba2/yrs/src/block.rs)
+show that the links are not in v1 update/checkpoint bytes. Undo stack entries
+are separately cloneable, but restoring those entries plus the content packets
+does not restore the links needed by subsequent selective Undo. Exact content
+restore is established; exact private ownership restore from only those bytes
+is not. No canonical bytes need to be rewritten to fix this local problem.
+
+**Best ownership alternative:** retain actual native ownership documents, validate
+before mutation, and transfer the exact prepared document on receipt instead of
+re-executing Undo. Ideally upstream would expose an identity-preserving deep
+clone of the document and ownership graph. With the pinned public API, a complete
+clone-free design must still prove cancellation, replenishing a speculative
+owner, queued remote arrivals, two-field Save, and budget rejection without
+consuming Undo or changing acknowledged state. Redo is not an exact rollback;
+a finite pool of mirrors is not an unlimited cancellation solution. This larger
+alternative is currently unproven, independently reviewed as such. I recommend
+the bounded patch rather than treating that alternative as a ready replacement.
+
+**2. Recommend one successor merging the text observed by completing devices.**
+For a character-level example, both devices start with parent title `AB`:
+
+- Offline A inserts `X`, sees `AXB`, and completes the occurrence.
+- Offline B appends `Y`, sees `ABY`, and completes the same occurrence.
+- A has already prefixed the single next occurrence with `Next: `.
+- After sync the recommended next title is `Next: AXBY`: merge the observed
+  native operations, not concatenate two whole title strings. Both devices
+  converge to the same one successor. Notes follow the same rule.
+
+Editing the old occurrence *after* completing it would not keep editing its
+child. Only text observed in a completion's declared canonical frontier enters
+that child's initial lineage, plus the child's own subsequent edits. Concurrent
+replacement of the same words can still yield awkward merged prose; this rule
+preserves character edits, not inferred human intent.
+
+Recommended Undo consequence for this new contract: completing an occurrence
+does not own the parent's independent text edits. An inherited text contribution
+is not silently unmerged when that completion is later undone. Existing
+completion retraction governs whether the child is needed: all creation
+proposals undone can hide an untouched child; independent child work or an anchor
+keeps it. Another surviving completion keeps the one child. Reopening historical
+completion retains the child. This is a proposed native-text rule; old scalar
+snapshot selection and accepted v3 fixtures keep their original meaning.
+
+The alternative is **one explicitly selected completion snapshot**. That avoids
+merging competing descriptions, but safe offline child editing needs an agreed
+initialization before edits refer to its character identities. First arrival
+cannot select it globally, and the earliest ordered completion is not final
+while an offline completion can still arrive. A shared selection step therefore
+delays next-occurrence editing on offline devices, or deliberately excludes their
+competing inherited text. One child per completing device would create duplicate
+occurrences and is not recommended.
+
+The failure of late scalar seed selection to provide an immutable native basis
+is established by current source/guards. The union's proposed behavior is **not
+implemented or tested**. It needs immutable parent/child context, canonical
+frontier proof and inherited-actor grants; the completing writer cannot claim
+authorship of a peer's characters. Missing proof stays pending. Before adopting
+it, test reordered/duplicate completions, early child edits, parent edits after
+completion, late Undo/protection, inherited deletion and missing dependencies.
+Nontext schedule/tag/assignee ordering remains under the existing contract.

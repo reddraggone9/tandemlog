@@ -24,3 +24,12 @@ its original failing regression and checked native binding fix are retained.
 It recommended partial registration coverage. The new acknowledged-but-untracked
 Save regression verifies that older Undo now fails before compensation append;
 exact retained registration retry succeeds without changing existing history.
+
+Follow-up ownership review: existing `text_store` worker, read-only, 2026-10-05.
+It identified four reconstruction sites, not only commit. Exact canonical
+packets omit private `Item.redone` state. Moving the prepared document is useful
+but insufficient while other sites reconstruct it. A retained-document design
+still needs a proven cancellation/budget/remote-arrival lifecycle; neither Redo
+nor a finite mirror pool supplies exact, unlimited rollback. No alternative
+prototype or source changes were made in this review. See the
+[decision brief](../../../design/decisions/0010-collaborative-text-adoption.md#decision-brief--2026-10-05-not-accepted).
