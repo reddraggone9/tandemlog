@@ -22,6 +22,9 @@ The authorized, unreleased text integration adds `application/task_text_session.
 for captured private drafts and `application/text_save_command.dart` for exact
 canonical receipt/commit orchestration. `storage/text_cache.dart` validates and
 materializes native field checkpoints in the same disposable SQLite cache.
+Bounded process-local immutable-record/proof memos belong to storage/text
+resolution, never editor/Undo ownership; every reused checkpoint must match the
+independently verified native state.
 `text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;
 the single Rust implementation owns character identity and selective Undo only.
 Domain context/actor claims and required event validation stay in Dart. See

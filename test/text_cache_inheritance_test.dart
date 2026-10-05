@@ -15,7 +15,7 @@ void main() {
   test(
     'resolved inherited cache preserves original claims and rebuilds corrupt disposable state',
     () {
-      final engine = NativeTextEngine(
+      final engine = _CountingEngine(
         libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
       );
       final db = sqlite3.openInMemory();
@@ -123,6 +123,36 @@ void main() {
           ),
           ['$writer:1'],
         );
+        final creations = engine.creations;
+        cache.materializeResolved(view, fields);
+        expect(
+          engine.creations,
+          creations,
+          reason: 'A verified checkpoint avoids full packet replay.',
+        );
+        // A hash-consistent but unrelated native state is not sufficient proof.
+        // Even a plausible frontier must match the independent resolver result.
+        final unrelated = engine.createDocument(
+          actorClientId: 2,
+          limits: const NativeTextLimits(visibleUtf16: 500),
+          seed: engine.seedText('Unrelated'),
+        );
+        try {
+          final state = unrelated.fullState.bytes;
+          db.execute(
+            "UPDATE text_fields SET state=?,state_hash=? WHERE field='title'",
+            [state, sha256.convert(state).toString()],
+          );
+        } finally {
+          unrelated.dispose();
+        }
+        cache.materializeResolved(view, fields);
+        expect(view['title'], 'AXB');
+        expect(
+          engine.creations,
+          greaterThan(creations),
+          reason: 'Wrong checkpoint falls back to exact original replay.',
+        );
         db.execute(
           "UPDATE text_fields SET state=x'0000',state_hash='bad',frontier='[]'",
         );
@@ -157,4 +187,22 @@ void main() {
         ? 'Actual native library required'
         : false,
   );
+}
+
+class _CountingEngine extends NativeTextEngine {
+  _CountingEngine({super.libraryPath});
+  int creations = 0;
+  @override
+  NativeTextDocument createDocument({
+    required int actorClientId,
+    required NativeTextLimits limits,
+    NativeTextUpdate? seed,
+  }) {
+    creations++;
+    return super.createDocument(
+      actorClientId: actorClientId,
+      limits: limits,
+      seed: seed,
+    );
+  }
 }

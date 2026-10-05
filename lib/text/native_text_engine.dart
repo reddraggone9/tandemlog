@@ -166,6 +166,10 @@ class NativeTextEngine {
   final _NativeBindings _bindings;
   final String ownerId = const Uuid().v4();
   final Set<NativeTextDocument> _documents = {};
+  final _inspectionCache = <String, List<int>>{};
+  int _inspectionPayloadBytes = 0;
+  int get cachedInspectionCount => _inspectionCache.length;
+  int get cachedInspectionPayloadBytes => _inspectionPayloadBytes;
   bool _closed = false;
   void _ensureOpen() {
     if (_closed) throw StateError('Native text engine owner is disposed');
@@ -273,8 +277,17 @@ class NativeTextEngine {
   }
 
   List<int> inspect(NativeTextUpdate update, {int admissionUnits = 100000}) {
+    _ensureOpen();
     if (admissionUnits <= 0 || admissionUnits > _stateBytes) {
       throw ArgumentError.value(admissionUnits, 'admissionUnits');
+    }
+    // Inspection is a stateless function of exact immutable bytes and budget.
+    // Contextual actor ownership is still validated separately on every use.
+    final key = '$admissionUnits:${update.encoded}';
+    final remembered = _inspectionCache.remove(key);
+    if (remembered != null) {
+      _inspectionCache[key] = remembered;
+      return remembered;
     }
     final response = _call('inspect', {
       'update': update.encoded,
@@ -301,11 +314,27 @@ class NativeTextEngine {
         'Native struct actors are not sorted and unique',
       );
     }
-    return List.unmodifiable(result);
+    final verified = List<int>.unmodifiable(result);
+    final bytes = key.length * 2 + verified.length * 8;
+    const budget = 8 * 1024 * 1024;
+    if (bytes <= budget) {
+      while (_inspectionCache.isNotEmpty &&
+          (_inspectionCache.length >= 1024 ||
+              _inspectionPayloadBytes + bytes > budget)) {
+        final oldest = _inspectionCache.keys.first;
+        final previous = _inspectionCache.remove(oldest)!;
+        _inspectionPayloadBytes -= oldest.length * 2 + previous.length * 8;
+      }
+      _inspectionCache[key] = verified;
+      _inspectionPayloadBytes += bytes;
+    }
+    return verified;
   }
 
   void dispose() {
     if (_closed) return;
+    _inspectionCache.clear();
+    _inspectionPayloadBytes = 0;
     Object? failure;
     for (final document in _documents.toList()) {
       try {

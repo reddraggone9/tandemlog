@@ -135,6 +135,7 @@ class TaskStore {
   final Map<String, Map<String, Map<String, dynamic>>> _preparedTextBases = {};
   final Map<NativeTextDocument, List<String>> _nativeUndoStacks = {};
   final Map<String, _NativeUndoField> _nativeUndoFields = {};
+  final _recurringTextMemo = RecurringTextMemo();
   static const _textTypes = {
     'task.createdWithText',
     'task.completedWithText',
@@ -1048,7 +1049,11 @@ class TaskStore {
       final oldBaseline = _textBaseline?.id;
       if (newEvents.isNotEmpty) {
         if (textEngine != null) {
-          TextCache(db, textEngine!).validatePackets(newEvents);
+          TextCache(
+            db,
+            textEngine!,
+            memo: _recurringTextMemo,
+          ).validatePackets(newEvents);
         }
         _validateTextBaseline();
         _validateUndoReferences();
@@ -1083,8 +1088,14 @@ class TaskStore {
             )
             .map((row) => row['id'] as String),
       );
+      // This transaction has one admitted canonical record set. Reuse its pure
+      // resolver across affected projections, rather than selecting/copying all
+      // original records again for every historical occurrence during rebuild.
+      final resolution = textEngine != null && affected.any(_hasInheritedText)
+          ? _textResolution()
+          : null;
       for (final entity in affected) {
-        final state = _projectEntity(entity);
+        final state = _projectEntity(entity, resolution: resolution);
         if (state != null) {
           db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
             entity,
@@ -1646,7 +1657,16 @@ class TaskStore {
           )
           .map((r) => LogEvent.decode(r['raw'] as String)),
     );
-    final selectedSeedIds = <String, String>{};
+    // Views already contain the selected derived creation's exact clock/writer
+    // stamp. Strict per-writer clocks identify that completion uniquely. Reuse
+    // this projection after affected views update, instead of replaying every
+    // successor's history again while rebuilding global manual order.
+    final selectedSeedIds = <String, String>{
+      for (final row in db.select(
+        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText')",
+      ))
+        row['successor'] as String: row['id'] as String,
+    };
     final actions = db
         .select(
           "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.moved') ORDER BY clock,writer,seq",
@@ -2192,7 +2212,11 @@ class TaskStore {
       final oldBaseline = _textBaseline;
       final oldBlocked = textWriteBlocked;
       try {
-        TextCache(db, textEngine!).validatePackets([e]);
+        TextCache(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+        ).validatePackets([e]);
         if (type == 'text.baselineInitialized') {
           db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
             e.id,
@@ -2684,7 +2708,10 @@ class TaskStore {
     );
   }
 
-  Map<String, dynamic>? _projectEntity(String entity) {
+  Map<String, dynamic>? _projectEntity(
+    String entity, {
+    RecurringTextResolver? resolution,
+  }) {
     final history = _entityEvents(entity);
     Map<String, dynamic>? state;
     try {
@@ -2705,7 +2732,7 @@ class TaskStore {
       throw FormatFailure('${failure.message} In ${candidates.first.id}.');
     }
     if (state == null) return null;
-    _materializeText(state, history);
+    _materializeText(state, history, resolution: resolution);
     final seeds = db.select(
       "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
@@ -2724,19 +2751,28 @@ class TaskStore {
     return state;
   }
 
-  void _materializeText(Map<String, dynamic> state, List<LogEvent> history) {
+  void _materializeText(
+    Map<String, dynamic> state,
+    List<LogEvent> history, {
+    RecurringTextResolver? resolution,
+  }) {
     if (textEngine == null) return;
     final entity = state['id'] as String;
     if (_hasInheritedText(entity)) {
       try {
-        TextCache(db, textEngine!).materializeResolved(
+        TextCache(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+        ).materializeResolved(
           state,
-          _resolvedText(
-            entity,
-            pending: history
-                .where((event) => event.canonicalRaw != null)
-                .toList(),
-          ),
+          resolution?.resolve(entity) ??
+              _resolvedText(
+                entity,
+                pending: history
+                    .where((event) => event.canonicalRaw != null)
+                    .toList(),
+              ),
         );
       } on TextInheritancePending catch (pending) {
         // Retain the verified display if any; do not establish a guessed seed.
@@ -2795,7 +2831,7 @@ class TaskStore {
         db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
           state['id'],
         ]).isNotEmpty) {
-      TextCache(db, textEngine!).materialize(
+      TextCache(db, textEngine!, memo: _recurringTextMemo).materialize(
         state,
         history,
         basis: basis,
@@ -2817,12 +2853,21 @@ class TaskStore {
   Map<String, ResolvedTextField> _resolvedText(
     String entity, {
     List<LogEvent> pending = const [],
-  }) => RecurringTextResolver(textEngine!, [
-    ...db
-        .select('SELECT raw FROM events')
-        .map((row) => LogEvent.decode(row['raw'] as String)),
-    ...pending,
-  ], legacyRoots: _legacyTextRoots).resolve(entity);
+  }) => _textResolution(pending: pending).resolve(entity);
+
+  RecurringTextResolver _textResolution({List<LogEvent> pending = const []}) =>
+      RecurringTextResolver.fromCanonical(
+        textEngine!,
+        [
+          ...db
+              .select('SELECT raw FROM events')
+              .map((row) => row['raw'] as String),
+          ...pending.map((event) => event.canonicalRaw!),
+        ],
+        legacyRoots: _legacyTextRoots,
+        memo: _recurringTextMemo,
+        legacyScope: '${_textBaseline?.hash ?? ''}|${textWriteBlocked ?? ''}',
+      );
 
   Map<String, TextFieldSeed>? _legacyTextRoots(
     String entity,
@@ -3490,6 +3535,7 @@ class TaskStore {
         }
         db.close();
       } finally {
+        _recurringTextMemo.clear();
         await lock.close();
       }
     });

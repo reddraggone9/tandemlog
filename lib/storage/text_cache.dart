@@ -11,12 +11,13 @@ import '../text/recurring_text.dart';
 /// Disposable full native state. Every candidate is private until SQLite commits;
 /// editor documents and their captured drafts are never used for materialization.
 class TextCache {
-  TextCache(this.db, this.engine);
+  TextCache(this.db, this.engine, {this.memo});
   final Database db;
   final NativeTextEngine engine;
+  final RecurringTextMemo? memo;
 
   void validatePackets(Iterable<LogEvent> incoming) {
-    final registry = TextActorRegistry();
+    final registry = TextActorRegistry(deriveActor: memo?.deriveActor);
     registry.bindAll(
       db
           .select('SELECT context,writer,allocation,actor FROM text_actors')
@@ -63,7 +64,7 @@ class TextCache {
         !fields.containsKey('description')) {
       throw FormatFailure('Resolved text requires both fields.');
     }
-    final registry = TextActorRegistry();
+    final registry = TextActorRegistry(deriveActor: memo?.deriveActor);
     registry.bindAll(
       db
           .select('SELECT context,writer,allocation,actor FROM text_actors')
@@ -83,73 +84,110 @@ class TextCache {
           sha256.convert(resolved.seed.bytes).toString() != context.seedHash) {
         throw FormatFailure('Resolved native context or seed mismatch.');
       }
-      final candidate = engine.createDocument(
-        actorClientId: 2,
-        limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
-        seed: resolved.seed,
+      final ordered = resolved.operations.toList()
+        ..sort((a, b) => compareEvents(a.event, b.event));
+      final originals = <String, String>{};
+      for (final operation in ordered) {
+        final event = operation.event;
+        if (event.canonicalRaw == null ||
+            event.space != context.space ||
+            operation.field != field ||
+            (event.type != 'task.textEdited' &&
+                event.type != 'task.textEditUndone')) {
+          throw FormatFailure('Invalid original inherited text packet.');
+        }
+        final canonical =
+            memo?.decodeCanonical(event.canonicalRaw!) ??
+            LogEvent.decode(event.canonicalRaw!);
+        final change = (canonical.data['changes'] as Map)[field] as Map?;
+        final claim = operation.claim;
+        if (canonical.id != event.id ||
+            canonical.space != context.space ||
+            canonical.type != event.type ||
+            change == null ||
+            claim.writer != canonical.writer ||
+            change['context'] != claim.context ||
+            change['actor'] != claim.actor ||
+            change['allocation'] != claim.allocation ||
+            change['update'] != operation.update.encoded) {
+          throw FormatFailure(
+            'Inherited packet differs from original canonical authorship.',
+          );
+        }
+        final previous = originals[event.id];
+        if (previous != null && previous != operation.update.encoded) {
+          throw FormatFailure('Conflicting inherited packet identity.');
+        }
+        originals[event.id] = operation.update.encoded;
+      }
+      registry.bindAll(ordered.map((operation) => operation.claim));
+      for (final operation in ordered) {
+        registry.validateStructActors(
+          operation.claim,
+          engine.inspect(operation.update),
+        );
+        claims.add(operation.claim);
+      }
+      final limits = NativeTextLimits(
+        visibleUtf16: field == 'title' ? 500 : 10000,
       );
-      final applied = <String, String>{};
-      try {
-        final ordered = resolved.operations.toList()
-          ..sort((a, b) => compareEvents(a.event, b.event));
-        for (final operation in ordered) {
-          final event = operation.event;
-          if (event.canonicalRaw == null ||
-              event.space != context.space ||
-              operation.field != field ||
-              (event.type != 'task.textEdited' &&
-                  event.type != 'task.textEditUndone')) {
-            throw FormatFailure('Invalid original inherited text packet.');
+      var checkpoint = _resolvedCheckpoint(
+        resolved,
+        originals.keys.toSet(),
+        limits,
+      );
+      while (true) {
+        final applied = checkpoint?.applied ?? <String>{};
+        final candidate =
+            checkpoint?.document ??
+            engine.createDocument(
+              actorClientId: 2,
+              limits: limits,
+              seed: resolved.seed,
+            );
+        try {
+          for (final operation in ordered) {
+            if (applied.add(operation.event.id)) {
+              candidate.applyRemote(operation.update);
+            }
           }
-          final canonical = LogEvent.decode(event.canonicalRaw!);
-          final change = (canonical.data['changes'] as Map)[field] as Map?;
-          final claim = operation.claim;
-          if (change == null ||
-              claim.writer != canonical.writer ||
-              change['context'] != claim.context ||
-              change['actor'] != claim.actor ||
-              change['allocation'] != claim.allocation ||
-              change['update'] != operation.update.encoded) {
+          final state = candidate.fullState.bytes;
+          final stateHash = sha256.convert(state).toString();
+          final text = candidate.read().text;
+          if (stateHash != resolved.stateHash || text != resolved.text) {
+            // A self-consistent cache is insufficient proof. Compare against the
+            // independently resolved original history, then retry from the seed.
+            if (checkpoint != null) {
+              checkpoint = null;
+              continue;
+            }
             throw FormatFailure(
-              'Inherited packet differs from original canonical authorship.',
+              'Resolved native state differs from its original packets.',
             );
           }
-          registry.bindAll([claim]);
-          registry.validateStructActors(
-            claim,
-            engine.inspect(operation.update),
-          );
-          final previous = applied[event.id];
-          if (previous != null && previous != operation.update.encoded) {
-            throw FormatFailure('Conflicting inherited packet identity.');
-          }
-          if (previous == null) candidate.applyRemote(operation.update);
-          applied[event.id] = operation.update.encoded;
-          claims.add(claim);
+          final frontier = originals.keys.toList()..sort();
+          rows.add([
+            view['id'],
+            field,
+            context.hash,
+            'yrs-v1',
+            1,
+            context.seedHash,
+            state,
+            stateHash,
+            jsonEncode(frontier),
+          ]);
+          texts[field] = text;
+          break;
+        } on NativeTextException {
+          if (checkpoint == null) rethrow;
+          checkpoint = null;
+        } on FormatException {
+          if (checkpoint == null) rethrow;
+          checkpoint = null;
+        } finally {
+          candidate.dispose();
         }
-        final state = candidate.fullState.bytes;
-        final stateHash = sha256.convert(state).toString();
-        final text = candidate.read().text;
-        if (stateHash != resolved.stateHash || text != resolved.text) {
-          throw FormatFailure(
-            'Resolved native state differs from its original packets.',
-          );
-        }
-        final frontier = applied.keys.toList()..sort();
-        rows.add([
-          view['id'],
-          field,
-          context.hash,
-          'yrs-v1',
-          1,
-          context.seedHash,
-          state,
-          stateHash,
-          jsonEncode(frontier),
-        ]);
-        texts[field] = text;
-      } finally {
-        candidate.dispose();
       }
     }
     for (final claim in claims) {
@@ -167,6 +205,62 @@ class TextCache {
       );
     }
     view.addAll(texts);
+  }
+
+  /// A cached ancestor can carry the same original identities into its child.
+  /// Frontier inclusion and self-hash admit only a candidate; the caller must
+  /// compare its final native state/text with the independent resolver result.
+  /// A mismatch or malformed checkpoint always falls back to original replay.
+  _ResolvedCheckpoint? _resolvedCheckpoint(
+    ResolvedTextField resolved,
+    Set<String> known,
+    NativeTextLimits limits,
+  ) {
+    final context = resolved.context;
+    // Sort lightweight identifiers first. Selecting every candidate BLOB and
+    // full frontier copies the whole occurrence history on each materialization.
+    // Fetch checkpoint bytes only until a usable candidate is found.
+    for (final reference in db.select(
+      "SELECT entity FROM text_fields WHERE field=? AND seed_hash=? AND codec='yrs-v1' AND adapter=1 ORDER BY (entity=?) DESC,length(frontier) DESC",
+      [context.field, context.seedHash, context.entity],
+    )) {
+      final row = db.select(
+        'SELECT * FROM text_fields WHERE entity=? AND field=?',
+        [reference['entity'], context.field],
+      ).single;
+      final bytes = row['state'];
+      if (bytes is! Uint8List ||
+          (row['entity'] == context.entity && row['context'] != context.hash) ||
+          sha256.convert(bytes).toString() != row['state_hash']) {
+        continue;
+      }
+      Object? frontier;
+      try {
+        frontier = jsonDecode(row['frontier'] as String);
+      } on FormatException {
+        continue;
+      }
+      if (frontier is! List ||
+          !frontier.every((id) => id is String && known.contains(id)) ||
+          frontier.toSet().length != frontier.length) {
+        continue;
+      }
+      try {
+        final document = engine.restoreDocument(
+          actorClientId: 2,
+          limits: limits,
+          checkpoint: NativeTextCheckpoint(
+            NativeTextState.parse(base64Encode(bytes)),
+          ),
+        );
+        return _ResolvedCheckpoint(document, frontier.cast<String>().toSet());
+      } on NativeTextException {
+        continue;
+      } on FormatException {
+        continue;
+      }
+    }
+    return null;
   }
 
   void materialize(
@@ -321,7 +415,7 @@ class TextCache {
       }
     }
     try {
-      final registry = TextActorRegistry();
+      final registry = TextActorRegistry(deriveActor: memo?.deriveActor);
       registry.bindAll(
         db
             .select(
@@ -385,4 +479,10 @@ class TextCache {
       candidate.dispose();
     }
   }
+}
+
+class _ResolvedCheckpoint {
+  _ResolvedCheckpoint(this.document, this.applied);
+  final NativeTextDocument document;
+  final Set<String> applied;
 }

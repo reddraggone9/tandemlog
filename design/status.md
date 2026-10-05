@@ -2,6 +2,24 @@
 
 ## Authorized text integration — isolated, unreleased
 
+Performance follow-up on the isolated branch: bounded immutable proof/record and
+inspection reuse, verified SQLite ancestor checkpoints, atomic actor deltas and
+shared transaction resolution reduce the original unchanged80 completion from
+306.578ms to22.542ms and rebuild from3365.063ms to197.782ms. Edited80 gives60.469ms
+last completion/932.279ms fresh-engine rebuild; edited320 gives236.885ms/11832.5ms.
+All final workloads retain identical states/canonical bytes and zero-log warm
+open (3.4–4.5ms). Long edited-history rebuild is still a material performance gate,
+not satisfactory UI startup. [Raw method/size/memory evidence](../evidence/production-text/recurring/README.md#bounded-performance-optimization)
+separates these storage probes from the prior hosted release first-frame samples.
+Final changed-source477 app tests and three affected bundled GTK flows pass.
+Native1200×850 Dark screenshots were inspected; completion/child edit/Undo and
+historical guard remain coherent. Full hosted gates remain pending. No UI,
+main/published release, signing or canonical/cache schema change is included.
+The [historical mixed-lineage decision](historical-recurring-text-policy.md) remains
+proposed; [Android QA instructions](android-text-preview-qa.md) identify the earlier
+exact intermediate artifact and require final-package verification.
+
+
 Lee approved both completion-observed successor text union and the narrow Yrs
 0.28.0 restoration patch on 2026-10-05. The branch now vendors the reviewed
 67-file official crate with only the approved traversal change, integrity gates,

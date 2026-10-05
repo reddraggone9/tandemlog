@@ -38,3 +38,6 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
 - [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
 - [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): authorized implementation, existing-field shared baseline and offline new-task exception; unreleased with remaining gates. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve the earlier research and evidence.
+
+- [Android text-preview QA](android-text-preview-qa.md): exact synthetic test package and native workflow instructions.
+- [Historical recurring-text policy](historical-recurring-text-policy.md): concrete blocked case, alternatives and recommendation requiring Lee's decision.

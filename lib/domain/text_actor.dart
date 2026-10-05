@@ -87,26 +87,30 @@ class TextActorRegistry {
     });
 
   void bindAll(Iterable<TextActorClaim> incoming) {
-    final next = Map<String, TextActorClaim>.from(_claims);
+    // Validate a private delta before publishing it. Copying every prior claim
+    // for each packet makes long inherited lineages quadratic, while a failed
+    // batch must still leave this index unchanged.
+    final next = <String, TextActorClaim>{};
     for (final claim in incoming) {
       claim.validate();
-      if (_derive(claim.context, claim.writer, claim.allocation) !=
-          claim.actor) {
-        throw FormatFailure(
-          'Text actor does not match its durable allocation.',
-        );
-      }
-      final previous = next[_key(claim)];
+      final key = _key(claim);
+      final previous = next[key] ?? _claims[key];
       if (previous != null && !previous.sameOwner(claim)) {
         throw FormatFailure(
           'Text actor ownership collision; records were retained.',
         );
       }
-      next[_key(claim)] = claim;
+      if (previous == null) {
+        if (_derive(claim.context, claim.writer, claim.allocation) !=
+            claim.actor) {
+          throw FormatFailure(
+            'Text actor does not match its durable allocation.',
+          );
+        }
+        next[key] = claim;
+      }
     }
-    _claims
-      ..clear()
-      ..addAll(next);
+    _claims.addAll(next);
   }
 
   /// Ordinary operations may introduce only their owned structs. Deletion-set

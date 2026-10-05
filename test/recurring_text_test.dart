@@ -149,6 +149,186 @@ void main() {
       });
       tearDown(() => engine.dispose());
       test(
+        'memo preserves union and rejects sparse closed prefixes after a hit',
+        () {
+          final created = h.create();
+          final ax = h.edit([created], _a, _parent, {'title': 'AXB'});
+          final head = h.append(_a, _user, 'user.created', {
+            'name': 'Synthetic',
+          });
+          final ca = h.complete([created, ax, head], _a, _parent, _child);
+          final memo = RecurringTextMemo();
+          final complete = [created, ax, head, ca];
+          final first = RecurringTextResolver(
+            engine,
+            complete,
+            memo: memo,
+          ).resolve(_child);
+          final again = RecurringTextResolver(
+            engine,
+            complete,
+            memo: memo,
+          ).resolve(_child);
+          expect(again['title']!.stateHash, first['title']!.stateHash);
+          expect(memo.hits, greaterThan(0));
+          expect(memo.recordDecodes, complete.length);
+          expect(memo.recordHits, greaterThan(0));
+          final corrupted = complete
+              .map((event) => event.canonicalRaw!)
+              .toList();
+          corrupted[1] = corrupted[1].replaceFirst(
+            '"type":"task.textEdited"',
+            '"type":"task.deleted"',
+          );
+          expect(corrupted[1], isNot(complete[1].canonicalRaw));
+          expect(
+            () => RecurringTextResolver.fromCanonical(
+              engine,
+              corrupted,
+              memo: memo,
+            ).resolve(_child),
+            throwsA(isA<FormatFailure>()),
+          );
+          // Same declared head, but one earlier immutable packet is missing.
+          expect(
+            () => RecurringTextResolver(engine, [
+              created,
+              head,
+              ca,
+            ], memo: memo).resolve(_child),
+            throwsA(isA<FormatFailure>()),
+          );
+          final by = h.edit([created], _b, _parent, {'title': 'ABY'});
+          final cb = h.complete([created, by], _b, _parent, _child);
+          final joined = [...complete, by, cb];
+          final merged = RecurringTextResolver(
+            engine,
+            joined,
+            memo: memo,
+          ).resolve(_child);
+          final cold = RecurringTextResolver(engine, joined).resolve(_child);
+          expect(merged['title']!.text, 'AXBY');
+          expect(merged['title']!.stateHash, cold['title']!.stateHash);
+          // A public resolved value cannot mutate retained memo packet metadata.
+          expect(
+            () =>
+                again['title']!
+                        .operations
+                        .first
+                        .event
+                        .data['changes']['title']['actor'] =
+                    17,
+            throwsUnsupportedError,
+          );
+        },
+      );
+      test(
+        'memo budgets evict without changing replay or requiring native checkpoints',
+        () {
+          final history = [h.create()];
+          final memo = RecurringTextMemo(
+            maxEntries: 2,
+            maxPayloadBytes: 8192,
+            maxRecords: 2,
+            maxRecordPayloadBytes: 8192,
+            maxActorDerivations: 2,
+          );
+          var parent = _parent;
+          for (var i = 0; i < 6; i++) {
+            final child = const Uuid().v5(parent, 'successor');
+            history.add(h.complete(history, _a, parent, child));
+            final value = RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(child);
+            expect(value['title']!.text, 'AB');
+            expect(memo.entryCount, lessThanOrEqualTo(2));
+            expect(memo.retainedPayloadBytes, lessThanOrEqualTo(8192));
+            expect(memo.recordCount, lessThanOrEqualTo(2));
+            expect(memo.retainedRecordPayloadBytes, lessThanOrEqualTo(8192));
+            parent = child;
+          }
+          final noRoom = RecurringTextMemo(maxPayloadBytes: 1);
+          final uncached = RecurringTextResolver(
+            engine,
+            history,
+            memo: noRoom,
+          ).resolve(parent);
+          expect(noRoom.entryCount, 0);
+          expect(
+            uncached['title']!.stateHash,
+            RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(parent)['title']!.stateHash,
+          );
+          memo.clear();
+          expect(memo.entryCount, 0);
+          expect(memo.retainedPayloadBytes, 0);
+          expect(memo.sharedPacketCount, 0);
+          expect(memo.recordCount, 0);
+          expect(memo.retainedRecordPayloadBytes, 0);
+          for (var i = 0; i < 6; i++) {
+            final context = '$i' * 64;
+            final actor = memo.deriveActor(context, _a, _parent);
+            expect(actor, deriveTextActor(context, _a, _parent));
+            expect(memo.deriveActor(context, _a, _parent), actor);
+            expect(memo.actorDerivationCount, lessThanOrEqualTo(2));
+          }
+          expect(
+            () => memo.deriveActor('invalid', _a, _parent),
+            throwsA(isA<FormatFailure>()),
+          );
+          memo.clear();
+          expect(memo.actorDerivationCount, 0);
+        },
+      );
+      test(
+        'shared originals remain bounded without evicting the latest edited proof',
+        () {
+          final history = [h.create()];
+          final memo = RecurringTextMemo(
+            maxEntries: 3,
+            maxPayloadBytes: 100000,
+          );
+          var parent = _parent;
+          for (var i = 0; i < 18; i++) {
+            history.add(h.edit(history, _a, parent, {'title': 'Plan $i'}));
+            final child = const Uuid().v5(parent, 'successor');
+            history.add(h.complete(history, _a, parent, child));
+            final fields = RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(child);
+            expect(fields['title']!.text, 'Plan $i');
+            expect(memo.entryCount, lessThanOrEqualTo(3));
+            expect(memo.retainedPayloadBytes, lessThanOrEqualTo(100000));
+            expect(memo.sharedPacketCount, i + 1);
+            final misses = memo.misses;
+            RecurringTextResolver(engine, history, memo: memo).resolve(child);
+            expect(memo.misses, misses);
+            parent = child;
+          }
+          expect(
+            RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(parent)['title']!.stateHash,
+            RecurringTextResolver(
+              engine,
+              history,
+            ).resolve(parent)['title']!.stateHash,
+          );
+          memo.clear();
+          expect(memo.sharedPacketCount, 0);
+          expect(memo.retainedPayloadBytes, 0);
+        },
+      );
+      test(
         'offline title and notes union preserves acknowledged child prefix and duplicates',
         () {
           final created = h.create();

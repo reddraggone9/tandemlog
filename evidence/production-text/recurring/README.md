@@ -139,12 +139,95 @@ executable's native-asset lookup; application packaging is not changed.
 Rebuilt/warm states are identical and canonical files remain unchanged. OS page
 caches are not flushed. These are domain/storage timings, not Flutter UI startup,
 physical presentation, first input or Android measurements. They demonstrate
-history scaling that remains an open performance gate. Inspection finds repeated
-all-event decoding and resolver construction per projection; only per-resolution
-completion-prefix memoization exists. This is a bounded diagnosis, not a profile
+the original history scaling diagnosis before the optimization below. The baseline repeatedly decodes all events and constructs resolvers per
+projection, with only per-resolution completion-prefix memoization. This is a bounded diagnosis, not a profile
 or a completed optimization, and no admission/proof validation is weakened.
 
 Exact signed Android runtime, long-history performance, historical mixed-lineage
 policy and release acceptance remain pending. There is no new publication. The historical
 isolated proposal logs elsewhere remain unchanged; current accepted ADR0010
 supersedes their former pending decision status.
+
+
+## Bounded performance optimization
+
+The [source fingerprints](performance-source-files.json), [method](performance-method.json)
+and [reproducible private-fixture driver](measure_lineage.dart) identify this
+optimization separately from the historical source inventory above. No frozen
+canonical/native fixture is regenerated. The final raw label `working-stage12`
+is the production code in those fingerprints; the commit containing this report
+provides the actual source. Baselines use exact1eb8336 and the same AOT driver
+workload. UUID/actor bytes vary between fresh synthetic runs. These are single
+sequential samples, not a statistical distribution or UI startup claim.
+
+| Workload | Last completion, baseline → final | SQLite rebuild, baseline → final | Final warm open |
+| --- | ---: | ---: | ---: |
+| 80 completions, unchanged text |306.578 →22.542ms |3365.063 →197.782ms |3.635ms /0 log reads |
+| 20 completions, title/notes edited each time |384.821 →26.732ms |856.097 →121.855ms |3.421ms /0 log reads |
+| 80 completions, title/notes edited each time |final60.469ms |final932.279ms |3.551ms /0 log reads |
+| 320 completions, unchanged text |final44.779ms |final907.881ms |4.506ms /0 log reads |
+| 320 completions, title/notes edited each time |final236.885ms |final11832.500ms |4.223ms /0 log reads |
+
+See raw [baseline unchanged80](performance-baseline-unedited-80.json),
+[baseline edited20](performance-baseline-edited-20.json), final
+[unchanged80](performance-unedited-80.json), [edited20](performance-edited-20.json),
+[edited80](performance-edited-80.json), [unchanged320](performance-unedited-320.json)
+and [edited320](performance-edited-320.json). Each final rebuild starts a fresh
+native-engine owner with an empty inspection memo, after deleting only the
+fixture SQLite/WAL/SHM. Shared canonical bytes, private writer/guards and loaded
+OS/library pages remain. Warm/rebuilt task snapshots match; all canonical files
+remain byte-identical within each run. Fresh engine creation is outside the
+rebuild stopwatch, so this is not end-to-end cold-process startup.
+
+| Final workload | Canonical files | SQLite logical pages | Native state BLOBs | Frontier JSON | Whole-process peak RSS |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Edited80 /81tasks |278816B |1380352B |222764B |279460B |35348480B |
+| Unchanged320 /321tasks |see raw report |see raw report |see raw report |see raw report |62689280B |
+| Edited320 /321tasks |2227476B |12197888B |3412375B |4413460B |96354304B |
+
+SQLite size is page_count×page_size, not a sum including every transient WAL or
+side file. RSS includes Dart, SQLite, the native engine and probe; it does not
+isolate memo overhead or model retained UI Undo owners. Baseline unchanged80
+peak RSS is48082944B and edited20 is48332800B; final edited20 is17543168B.
+The accounted memo limits are conservative payload limits, not total heap caps.
+
+The bounded memos avoid repeated canonical decoding, actor hashing, stateless
+native inspection and inherited packet replay; shared immutable packet accounting
+prevents early eviction amplification. SQLite candidates must match the
+independent resolver's exact final hash/text, otherwise original replay resumes.
+One transaction shares its admitted record set across affected projections.
+Global order uses the already-selected creation stamp. All admission, observed
+prefix, actor ownership, canonical receipt and Undo semantics remain in force;
+there is no canonical or cache-schema change. See [ADR0010](../../../design/decisions/0010-collaborative-text-adoption.md).
+
+The original unchanged80 regression is substantially reduced. **Long edited
+lineages remain a release-performance limitation:**321tasks take11.83s to rebuild
+from scratch and their last completion takes237ms. Inspection memo exhaustion
+and full affected-field/history work still preclude a constant-latency claim for
+arbitrary history. No preview/main adoption is authorized by these numbers alone.
+The next investigation should profile incremental history/proof indexing and
+historical field materialization against measured allocation/FFI costs, preserving
+original packets, concurrent successor union and Undo. Do not compact/rewrite
+canonical history to conceal the cost.
+
+### Reproducing this environment's storage probe
+
+Build the approved native library normally, run `flutter pub get --enforce-lockfile`,
+then compile the driver with the repository package configuration:
+
+```sh
+dart compile exe --packages=.dart_tool/package_config.json \
+  -DPROBE_SOURCE=reviewed-revision evidence/production-text/recurring/measure_lineage.dart \
+  -o /tmp/tandemlog-lineage-probe
+TANDEMLOG_TEXT_LIBRARY=/absolute/path/libtandemlog_text.so \
+LD_PRELOAD=/absolute/path/to/pinned/sqlite3/native-asset/libsqlite3.so \
+PROBE_EDITS=yes PROBE_GENERATIONS=80 PROBE_REPORT=/tmp/lineage-report.json \
+  /tmp/tandemlog-lineage-probe
+```
+
+LD_PRELOAD is only this standalone Linux AOT native-asset lookup workaround.
+The Flutter app packaging is unchanged. The driver always creates/deletes its own
+fresh temporary workspace; it never accepts a live workspace path. Its generation
+loop stops after90seconds or a2second individual completion, then reports the
+actual count and verifies warm/cold reconstruction. Successful final320 samples
+completed all320; earlier capped intermediate runs are retained privately.

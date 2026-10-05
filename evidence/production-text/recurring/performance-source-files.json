@@ -1,0 +1,11 @@
+{
+  "lib/domain/text_actor.dart": "bdaad3d2bcea583fd9b3006783cc3c251c4fbe5f2d1737d797ad7b97dd9804ea",
+  "lib/text/native_text_engine.dart": "7926e093b674590e059bf1c9a68cb1672f7ef490ec0b66cef49c9d3f250f6cc1",
+  "lib/text/recurring_text.dart": "3e93aeac68729dc3c95014993ec52fa6edcd2825e9bb2b54952cc9a6e2eba912",
+  "lib/storage/text_cache.dart": "d4f6b36ffdafe704eb6138ac03cd28adfcd8ffd209f983dd180267bcc7889819",
+  "lib/storage/task_store.dart": "5e03685f1891a35f3ee7aeb47e0271545a9f71a72cb883e1af9b54f6f42b8899",
+  "test/native_text_engine_test.dart": "5aadbe880704f0aedd44ad86a043e6919dbabeeb5c69f380e5c7f44b7a8cd43d",
+  "test/recurring_text_test.dart": "46ffa66e8fff25114fba07240b01b3d004d2bb72293565d5bdc38f3b57b7f3cf",
+  "test/text_actor_registry_test.dart": "aa25c78dfea638e3398c77eeadd6be543f9105cb6b0768d5ff830b9d84c5d441",
+  "test/text_cache_inheritance_test.dart": "62a5338d205defe07f28679ca3420290854ebbaaf30f9b03f24f69e5381f8b2a"
+}

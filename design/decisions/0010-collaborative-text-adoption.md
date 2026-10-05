@@ -343,10 +343,10 @@ and scoped Undo owners. Arrival retries them without a canonical write. A local
 command resolves strictly before any receipt preparation. Original canonical
 packets, clocks, hashes, historical completion and Undo meanings are untouched.
 
-The pure resolver memoizes each immutable completion's observed parent state
-within one resolution, preventing concurrent ancestor proofs from multiplying
-reconstruction. The cache independently replays original packets and checks
-resolved state before persisting disposable BLOBs/frontiers. Warm store startup
+The resolver memoizes verified immutable completion prefixes within a resolution
+and in a bounded process-local memo. SQLite checkpoint reuse must match the
+independently resolved native state hash/text; absent or incorrect checkpoints
+replay original packets before persisting disposable BLOBs/frontiers. Warm store startup
 retains its existing zero-log-read path. Affected recurring fields still verify
 their lineage on updates; long-history performance remains a measured release
 gate, not an assertion of constant-time replay.
@@ -394,3 +394,41 @@ policy, such as conservatively blocking dependent compensation; that is not
 silently introduced here. Exact packets, named operations and canonical receipt
 checks are unchanged. The current UI notice refers to preserved contributions,
 not a guarantee that every later rendered string remains verbatim.
+
+
+## Bounded lineage reuse — 2026-10-05
+
+Repeated reconstruction was measured before optimizing. The process-local memo
+keys each immutable completion by engine owner, legacy baseline scope, completion
+hash and the exact available observed record ID/hash set. Declared heads and
+closed-prefix validity are still checked before reuse; a sparse prefix cannot
+borrow a fuller proof. Exact canonical strings are decoded/deeply frozen once.
+Changed strings, unknown types/versions and malformed records still undergo the
+original decoder. Native inspection caches exact update bytes plus admission
+budget, while contextual ownership and actor collisions remain checked on use.
+Pure allocation hashes are reused separately from those ownership checks.
+
+The memo retains at most128 completion entries/16MiB accounted payload and
+2048 decoded records/16MiB accounted payload. Original packet/record payload is
+charged once across snapshots that share it; each snapshot's lists/state remain
+charged. Allocation hashing holds at most2048 fixed-length keys. Stateless
+native inspection holds at most1024 entries/8MiB accounted payload. These limits
+are not a total heap/RSS promise. Closing the store/engine clears their memos;
+no live editor document or Undo owner is memoized. Oversized entries simply replay,
+so finite budgets do not guarantee constant latency for arbitrarily large history.
+
+SQLite checkpoint selection reads lightweight identifiers before fetching state
+bytes. A same-seed inherited checkpoint with a unique frontier contained in the
+current originals is only a candidate: its final native state hash and text must
+match the independent resolver. A malformed/self-consistent-but-wrong candidate
+falls back to original seed/packet replay. Cache loss still reconstructs exactly.
+Actor binding validates a private delta before publishing it, retaining atomic
+rejection without copying the growing registry for every packet. Within one ingestion transaction, affected projections share one resolver
+over the same admitted canonical set; completion proofs keep their original
+observed prefixes. Global manual order reuses the selected creation's exact projected clock/writer stamp instead
+of decoding every successor history again.
+
+These changes introduce no canonical, clock, UUID, context, packet, Undo or cache
+schema migration. They do not rebase identities or change completion-observed
+union. See [measurements and limits](../../evidence/production-text/recurring/README.md).
+Historical mixed-lineage behavior remains [a separate decision](../historical-recurring-text-policy.md).

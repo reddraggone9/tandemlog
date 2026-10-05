@@ -42,6 +42,31 @@ void main() {
         seed: engine.seedText(text),
       );
 
+      test('inspection reuse is immutable budget-specific and bounded', () {
+        final update = engine.seedText('X' * 20);
+        final actors = engine.inspect(update);
+        expect(engine.inspect(update), actors);
+        expect(() => actors[0] = 17, throwsUnsupportedError);
+        expect(
+          () => engine.inspect(update, admissionUnits: 19),
+          throwsA(isA<NativeTextException>()),
+        );
+        expect(engine.inspect(update), actors);
+        for (var i = 0; i < 400; i++) {
+          engine.inspect(engine.seedText('$i:${'X' * 9900}'));
+          expect(
+            engine.cachedInspectionPayloadBytes,
+            lessThanOrEqualTo(8 * 1024 * 1024),
+          );
+          expect(engine.cachedInspectionCount, lessThanOrEqualTo(1024));
+        }
+        expect(engine.cachedInspectionCount, lessThan(400));
+        expect(engine.inspect(update), actors);
+        engine.dispose();
+        expect(engine.cachedInspectionPayloadBytes, 0);
+        expect(() => engine.inspect(update), throwsStateError);
+      });
+
       test(
         'pending named Undo rejects a different operation and keeps exact retry',
         () {

@@ -152,4 +152,23 @@ void main() {
       throwsA(isA<FormatFailure>()),
     );
   });
+
+  test('a failed delta preserves every previously bound owner', () {
+    final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+    final first = claim(allocationA, actor: 42);
+    registry.bindAll([first]);
+    expect(
+      () => registry.bindAll([
+        TextActorClaim(
+          context: 'b' * 64,
+          writer: writerA,
+          allocation: allocationA,
+          actor: 42,
+        ),
+        claim(allocationB, actor: 42),
+      ]),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(registry.claims.map((entry) => entry.toJson()), [first.toJson()]);
+  });
 }

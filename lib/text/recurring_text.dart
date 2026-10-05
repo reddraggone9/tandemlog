@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 
@@ -54,6 +56,231 @@ class ResolvedTextField {
   String get stateHash => sha256.convert(state.bytes).toString();
 }
 
+/// Disposable, process-local reuse of fully verified immutable completion
+/// prefixes. It contains serialized state, never a live native document/Undo
+/// owner. The byte limit accounts retained payload, not Dart heap overhead.
+class RecurringTextMemo {
+  RecurringTextMemo({
+    this.maxEntries = 128,
+    this.maxPayloadBytes = 16 * 1024 * 1024,
+    this.maxRecords = 2048,
+    this.maxRecordPayloadBytes = 16 * 1024 * 1024,
+    this.maxActorDerivations = 2048,
+  }) {
+    if (maxEntries < 1 ||
+        maxPayloadBytes < 1 ||
+        maxRecords < 1 ||
+        maxRecordPayloadBytes < 1 ||
+        maxActorDerivations < 1) {
+      throw ArgumentError('Invalid text memo budget.');
+    }
+  }
+  final int maxEntries, maxPayloadBytes, maxRecords, maxRecordPayloadBytes;
+  final int maxActorDerivations;
+  final _entries = <String, _RememberedText>{};
+  final _records = <String, LogEvent>{};
+  final _actors = <(String, String, String), int>{};
+  final _sharedPackets = <String, LineageTextOperation>{};
+  final _packetUses = Map<LineageTextOperation, int>.identity();
+  final _eventUses = Map<LogEvent, int>.identity();
+  int get sharedPacketCount => _sharedPackets.length;
+
+  String _packetKey(LineageTextOperation packet) =>
+      '${packet.event.hash}:${packet.field}';
+
+  LineageTextOperation _operation(
+    LogEvent event,
+    String field,
+    TextActorClaim claim,
+    Object? update,
+  ) =>
+      _sharedPackets['${event.hash}:$field'] ??
+      LineageTextOperation(event, field, claim, NativeTextUpdate.parse(update));
+
+  int _packetBytes(LineageTextOperation packet) =>
+      packet.update.bytes.length +
+      2 *
+          (packet.claim.context.length +
+              packet.claim.writer.length +
+              packet.claim.allocation.length);
+  int _eventBytes(LogEvent event) => event.canonicalRaw!.length * 4;
+
+  int retainedPayloadBytes = 0, hits = 0, misses = 0;
+  int retainedRecordPayloadBytes = 0, recordHits = 0, recordDecodes = 0;
+  int get entryCount => _entries.length;
+  int get recordCount => _records.length;
+  int get actorDerivationCount => _actors.length;
+
+  /// Reuse only the pure allocation hash. Registries still check contextual
+  /// ownership/collisions on every admission. Valid identities have fixed
+  /// lengths, so the entry cap also bounds retained key payload.
+  int deriveActor(String context, String writer, String allocation) {
+    final key = (context, writer, allocation);
+    final remembered = _actors.remove(key);
+    if (remembered != null) {
+      _actors[key] = remembered;
+      return remembered;
+    }
+    final actor = deriveTextActor(context, writer, allocation);
+    if (_actors.length >= maxActorDerivations) {
+      _actors.remove(_actors.keys.first);
+    }
+    _actors[key] = actor;
+    return actor;
+  }
+
+  /// An exact canonical string is decoded and deeply frozen once. Changed raw
+  /// bytes always undergo full validation; callers cannot mutate a cached event.
+  LogEvent decodeCanonical(String raw) {
+    final remembered = _records.remove(raw);
+    if (remembered != null) {
+      recordHits++;
+      _records[raw] = remembered;
+      return remembered;
+    }
+    final event = _freezeEvent(LogEvent.decode(raw));
+    recordDecodes++;
+    final bytes = raw.length * 4;
+    if (bytes <= maxRecordPayloadBytes) {
+      while (_records.isNotEmpty &&
+          (_records.length >= maxRecords ||
+              retainedRecordPayloadBytes + bytes > maxRecordPayloadBytes)) {
+        final oldest = _records.keys.first;
+        _records.remove(oldest);
+        retainedRecordPayloadBytes -= oldest.length * 4;
+      }
+      _records[raw] = event;
+      retainedRecordPayloadBytes += bytes;
+    }
+    return event;
+  }
+
+  void clear() {
+    _entries.clear();
+    _records.clear();
+    _actors.clear();
+    _sharedPackets.clear();
+    _packetUses.clear();
+    _eventUses.clear();
+    retainedPayloadBytes = 0;
+    retainedRecordPayloadBytes = 0;
+  }
+
+  Map<String, ResolvedTextField>? _get(String key) {
+    final value = _entries.remove(key);
+    if (value == null) {
+      misses++;
+      return null;
+    }
+    hits++;
+    _entries[key] = value;
+    return value.fields;
+  }
+
+  void _forget(String key) {
+    final entry = _entries.remove(key)!;
+    retainedPayloadBytes -= entry.bytes;
+    for (final packet in entry.packets) {
+      final uses = _packetUses[packet]! - 1;
+      if (uses == 0) {
+        _packetUses.remove(packet);
+        _sharedPackets.remove(_packetKey(packet));
+        retainedPayloadBytes -= _packetBytes(packet);
+      } else {
+        _packetUses[packet] = uses;
+      }
+    }
+    for (final event in entry.events) {
+      final uses = _eventUses[event]! - 1;
+      if (uses == 0) {
+        _eventUses.remove(event);
+        retainedPayloadBytes -= _eventBytes(event);
+      } else {
+        _eventUses[event] = uses;
+      }
+    }
+  }
+
+  void _put(String key, Map<String, ResolvedTextField> fields) {
+    final frozen = Map<String, ResolvedTextField>.unmodifiable(fields);
+    var bytes = key.length * 2;
+    final packets = Set<LineageTextOperation>.identity();
+    final events = Set<LogEvent>.identity();
+    for (final field in frozen.values) {
+      bytes +=
+          field.seed.bytes.length +
+          field.state.bytes.length +
+          2 *
+              (field.seed.encoded.length +
+                  field.state.encoded.length +
+                  field.text.length) +
+          8 * field.operations.length;
+      packets.addAll(field.operations);
+      events.addAll(field.operations.map((packet) => packet.event));
+    }
+    // Inherited lists share immutable originals. Charge each retained packet
+    // and canonical record once, rather than multiplying their payload by the
+    // number of occurrences that reference them. Entry lists/state remain billed.
+    int additional() =>
+        bytes +
+        packets
+            .where((packet) => !_packetUses.containsKey(packet))
+            .fold<int>(0, (n, packet) => n + _packetBytes(packet)) +
+        events
+            .where((event) => !_eventUses.containsKey(event))
+            .fold<int>(0, (n, event) => n + _eventBytes(event));
+    final alone =
+        bytes +
+        packets.fold(0, (n, packet) => n + _packetBytes(packet)) +
+        events.fold(0, (n, event) => n + _eventBytes(event));
+    if (alone > maxPayloadBytes) return;
+    if (_entries.containsKey(key)) _forget(key);
+    while (_entries.isNotEmpty &&
+        (_entries.length >= maxEntries ||
+            retainedPayloadBytes + additional() > maxPayloadBytes)) {
+      _forget(_entries.keys.first);
+    }
+    retainedPayloadBytes += additional();
+    for (final packet in packets) {
+      _packetUses[packet] = (_packetUses[packet] ?? 0) + 1;
+      _sharedPackets[_packetKey(packet)] = packet;
+    }
+    for (final event in events) {
+      _eventUses[event] = (_eventUses[event] ?? 0) + 1;
+    }
+    _entries[key] = _RememberedText(frozen, bytes, packets, events);
+  }
+}
+
+class _RememberedText {
+  _RememberedText(this.fields, this.bytes, this.packets, this.events);
+  final Map<String, ResolvedTextField> fields;
+  final int bytes;
+  final Set<LineageTextOperation> packets;
+  final Set<LogEvent> events;
+}
+
+Object? _freezeJson(Object? value) => switch (value) {
+  Map<String, dynamic>() => Map<String, dynamic>.unmodifiable(
+    value.map((key, item) => MapEntry(key, _freezeJson(item))),
+  ),
+  List() => List<Object?>.unmodifiable(value.map(_freezeJson)),
+  _ => value,
+};
+
+LogEvent _freezeEvent(LogEvent event) => LogEvent(
+  event.space,
+  event.writer,
+  event.sequence,
+  event.clock,
+  event.entity,
+  event.type,
+  _freezeJson(event.data) as Map<String, dynamic>,
+  previousHash: event.previousHash,
+  hash: event.hash,
+  canonicalRaw: event.canonicalRaw,
+);
+
 /// Resolves only immutable, admitted history. No receipt creation, writes,
 /// timestamp rewriting, Undo execution or SQLite state is involved.
 class RecurringTextResolver {
@@ -61,16 +288,42 @@ class RecurringTextResolver {
     NativeTextEngine engine,
     Iterable<LogEvent> history, {
     LegacyTextRoots? legacyRoots,
+    RecurringTextMemo? memo,
+    String? legacyScope,
   }) {
+    return RecurringTextResolver.fromCanonical(
+      engine,
+      history.map((supplied) {
+        final raw = supplied.canonicalRaw;
+        if (raw == null) {
+          throw FormatFailure(
+            'Text lineage requires admitted canonical records.',
+          );
+        }
+        return raw;
+      }),
+      legacyRoots: legacyRoots,
+      memo: memo,
+      legacyScope: legacyScope,
+    );
+  }
+
+  factory RecurringTextResolver.fromCanonical(
+    NativeTextEngine engine,
+    Iterable<String> history, {
+    LegacyTextRoots? legacyRoots,
+    RecurringTextMemo? memo,
+    String? legacyScope,
+  }) {
+    if (memo != null && legacyRoots != null && legacyScope == null) {
+      throw ArgumentError(
+        'Memoized legacy roots require an immutable baseline scope.',
+      );
+    }
     final records = <String, LogEvent>{};
-    for (final supplied in history) {
-      final raw = supplied.canonicalRaw;
-      if (raw == null) {
-        throw FormatFailure(
-          'Text lineage requires admitted canonical records.',
-        );
-      }
-      final event = LogEvent.decode(raw);
+    for (final raw in history) {
+      final event =
+          memo?.decodeCanonical(raw) ?? _freezeEvent(LogEvent.decode(raw));
       final previous = records[event.id];
       if (previous != null && previous.canonicalRaw != raw) {
         throw FormatFailure('Conflicting text lineage records.');
@@ -84,6 +337,8 @@ class RecurringTextResolver {
       legacyRoots,
       const {},
       {},
+      memo,
+      legacyScope,
     );
   }
 
@@ -93,6 +348,8 @@ class RecurringTextResolver {
     this.legacyRoots,
     this.ancestors,
     this.observedFields,
+    this.memo,
+    this.legacyScope,
   );
   final NativeTextEngine engine;
   final List<LogEvent> history;
@@ -101,6 +358,8 @@ class RecurringTextResolver {
   // One immutable completion proof has one parent snapshot. Share it across
   // recursive prefixes so concurrent ancestors do not multiply replay work.
   final Map<String, Map<String, ResolvedTextField>> observedFields;
+  final RecurringTextMemo? memo;
+  final String? legacyScope;
   final Map<String, Map<String, ResolvedTextField>> _resolved = {};
 
   Map<String, ResolvedTextField> resolve(String entity) {
@@ -120,6 +379,10 @@ class RecurringTextResolver {
         )
         .toList();
     final roots = <String, TextFieldSeed>{};
+    final inheritedStates = <String, List<ResolvedTextField>>{
+      'title': [],
+      'description': [],
+    };
     final packets = <String, Map<String, LineageTextOperation>>{
       'title': {},
       'description': {},
@@ -161,16 +424,25 @@ class RecurringTextResolver {
         }
         Map<String, ResolvedTextField> observed;
         try {
-          observed = observedFields.putIfAbsent(
-            completion.id,
-            () => RecurringTextResolver._(
+          observed = observedFields.putIfAbsent(completion.id, () {
+            // The exact record set matters even when a declared head is
+            // present: a sparse closed prefix must not reuse a fuller proof.
+            final key =
+                '${engine.ownerId}|${legacyScope ?? ''}|${completion.hash}|${sha256.convert(utf8.encode(verified.observedPrefix.map((event) => '${event.id}:${event.hash}\n').join()))}';
+            final remembered = memo?._get(key);
+            if (remembered != null) return remembered;
+            final result = RecurringTextResolver._(
               engine,
               verified.observedPrefix,
               legacyRoots,
               {...ancestors, entity},
               observedFields,
-            ).resolve(completion.entity),
-          );
+              memo,
+              legacyScope,
+            ).resolve(completion.entity);
+            memo?._put(key, result);
+            return result;
+          });
         } on TextInheritancePending {
           // Every declared head has arrived. This immutable observed prefix
           // cannot be repaired by events outside the completing writer's proof.
@@ -198,6 +470,7 @@ class RecurringTextResolver {
             throw FormatFailure('Incompatible recurring text parent lineages.');
           }
           roots[field] = TextFieldSeed(context, parent.seed);
+          inheritedStates[field]!.add(parent);
           // Contributions remain immutable even if completion is later undone.
           // Completion projection separately governs suppression of the child.
           for (final packet in parent.operations) {
@@ -241,7 +514,7 @@ class RecurringTextResolver {
         }
         _include(
           packets[field]!,
-          LineageTextOperation(
+          (memo?._operation ?? _originalOperation)(
             event,
             field,
             TextActorClaim(
@@ -250,7 +523,7 @@ class RecurringTextResolver {
               allocation: change['allocation'] as String,
               actor: change['actor'] as int,
             ),
-            NativeTextUpdate.parse(change['update']),
+            change['update'],
           ),
         );
       }
@@ -266,16 +539,71 @@ class RecurringTextResolver {
       }
       final ordered = packets[field]!.values.toList()
         ..sort((a, b) => compareEvents(a.event, b.event));
-      final registry = TextActorRegistry();
+      // Native identity is the seed plus original packets; field context only
+      // scopes ownership. When the union adds no packets, the verified native
+      // state is exactly an inherited state, including its retained deletions.
+      ResolvedTextField? unchanged;
+      for (final candidate in inheritedStates[field]!) {
+        if (candidate.seed.encoded == root.update.encoded &&
+            candidate.operations.length == ordered.length &&
+            List.generate(
+              ordered.length,
+              (index) =>
+                  candidate.operations[index].event.id ==
+                      ordered[index].event.id &&
+                  candidate.operations[index].update.encoded ==
+                      ordered[index].update.encoded &&
+                  candidate.operations[index].claim.sameOwner(
+                    ordered[index].claim,
+                  ),
+            ).every((same) => same)) {
+          unchanged = candidate;
+          break;
+        }
+      }
+      if (unchanged != null) {
+        result[field] = ResolvedTextField(
+          context: root.context,
+          seed: root.update,
+          operations: ordered,
+          state: unchanged.state,
+          text: unchanged.text,
+        );
+        continue;
+      }
+      final registry = TextActorRegistry(deriveActor: memo?.deriveActor)
+        ..bindAll(ordered.map((packet) => packet.claim));
       final authors = <int, TextActorClaim>{};
-      final document = engine.createDocument(
-        actorClientId: 2,
-        seed: root.update,
-        limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
+      // Start from a verified inherited snapshot and apply only the union's
+      // additional original packets. Cache materialization still independently
+      // replays the full packet set and checks the resulting state hash/text.
+      ResolvedTextField? carrier;
+      for (final candidate in inheritedStates[field]!) {
+        if (carrier == null ||
+            candidate.operations.length > carrier.operations.length) {
+          carrier = candidate;
+        }
+      }
+      final limits = NativeTextLimits(
+        visibleUtf16: field == 'title' ? 500 : 10000,
       );
+      final document = carrier == null
+          ? engine.createDocument(
+              actorClientId: 2,
+              seed: root.update,
+              limits: limits,
+            )
+          : engine.restoreDocument(
+              actorClientId: 2,
+              limits: limits,
+              checkpoint: NativeTextCheckpoint(carrier.state),
+            );
+      final carried = {
+        for (final packet in carrier?.operations ?? <LineageTextOperation>[])
+          packet.event.id,
+      };
       try {
         for (final packet in ordered) {
-          registry.bindAll([packet.claim]);
           registry.validateStructActors(
             packet.claim,
             engine.inspect(packet.update),
@@ -285,7 +613,9 @@ class RecurringTextResolver {
             throw FormatFailure('Inherited native text actor collision.');
           }
           authors[packet.claim.actor] = packet.claim;
-          document.applyRemote(packet.update);
+          if (!carried.contains(packet.event.id)) {
+            document.applyRemote(packet.update);
+          }
         }
         final snapshot = document.read();
         if (snapshot.pending) {
@@ -320,3 +650,10 @@ void _include(
   }
   packets[incoming.event.id] = incoming;
 }
+
+LineageTextOperation _originalOperation(
+  LogEvent event,
+  String field,
+  TextActorClaim claim,
+  Object? update,
+) => LineageTextOperation(event, field, claim, NativeTextUpdate.parse(update));
