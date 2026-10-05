@@ -18,6 +18,7 @@ class TextCache {
     }
     _transactionActors = _loadActors();
   }
+
   /// Share validated ownership only inside the caller's active transaction.
   /// The caller must close this index in a finally block after commit/rollback,
   /// before the connection can start another transaction.

@@ -3,7 +3,7 @@
   "sourceLabel": "working-transaction-actors",
   "files": {
     "lib/domain/text_actor.dart": "fc7b0c3bdd4b1dae23e1d5dea96f682c6deee10d8c08187431946adcadead9c4",
-    "lib/storage/text_cache.dart": "46252bf9eb6c83cff48e9b5032aef9df1d3b37c885b14b44003933a83d1ac1b1",
+    "lib/storage/text_cache.dart": "58c62df4127ebff1da06d39d48a8bb70387ccccb16a7c7623d70dfcd6327f594",
     "lib/storage/task_store.dart": "50a352e1c057935acb78e39e07eb5d184ff676f95c07e9bd508dff662a3fc5f8",
     "test/text_actor_registry_test.dart": "facaa27a0bb671fac31366e04c65df7069a0a999fa6dbcc1230f41c320ed1f69",
     "test/text_cache_inheritance_test.dart": "bbf64825055224b64fbfd7c70d8c1d196eba7a086c5cf81d87e46421c3f8dd33"
@@ -21,5 +21,5 @@
   "freshWorkloadDriverSha256": "2ef03dd7802028f56dbaaae389a4f12abc34d3d9c829fdc28c4135065706cdd1",
   "freshWorkloadBinarySha256": "b469ceecbe9f5895c2dda77f1a02164c4530a92e66bf30c0c96740d1f84813c1",
   "freshWorkload": "PROBE_GENERATIONS=320 PROBE_EDITS=yes; same actual production driver as prior workload, fresh UUIDs/actors.72.009s total, all320 requested occurrences completed. No concurrent heavy build/test.",
-  "sourceOnlyDifferenceAfterTiming": "Three documentation comment lines on TextCache factory; executable code unchanged."
+  "sourceOnlyDifferenceAfterTiming": "Factory ownership documentation and formatter blank line only; executable code unchanged."
 }
