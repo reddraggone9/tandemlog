@@ -167,6 +167,14 @@ pending. Stable promotion requires
 separate behavior acceptance. [Prototype evidence](../text-merge-prototype.md)
 remains historical; passing it alone is not production acceptance.
 
+## Historical proposal — superseded by the accepted sections
+
+The following proposal and decision brief record the pre-approval checkpoint.
+Their pending statuses, unpatched build and missing tests describe that earlier
+snapshot. Lee subsequently accepted both choices; the active implemented
+contract is above and under **Accepted successor inheritance** below. Original
+anchors and investigation evidence are retained for audit.
+
 ### Pending recurring-text choice: concrete impact
 
 Two offline devices start with parent title `AB`. A edits to `AXB` and completes;

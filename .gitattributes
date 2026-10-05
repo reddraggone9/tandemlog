@@ -1,3 +1,7 @@
 # Canonical history fixtures are literal bytes, including LF record framing.
 # Never apply platform text conversion to compatibility evidence.
 test/fixtures/**/*.jsonl -text
+
+# Reviewed dependency sources, provenance and patches are pinned by exact bytes.
+# Windows autocrlf must not rewrite the inventory or any approved crate file.
+native/text_engine/vendor/** -text

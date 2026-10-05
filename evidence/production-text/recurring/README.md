@@ -44,6 +44,17 @@ The [final 35-case focused suite](focused-final.txt) also passes after the
 affected-owner optimization; unrelated user arrivals no longer replay every
 open inherited field owner.
 
+## Windows checkout correction
+
+Hosted run37253307957 stopped before Windows tests with
+`Text engine packaging failed: Unapproved Yrs vendor inventory hash`. A real Git
+checkout with `core.autocrlf=true` reproduces the same failure when the vendor
+attribute is absent. The exact-byte `.gitattributes` rule fixes that checkout
+while retaining all67 strict source hashes. The regression also preserves this
+negative control; [all36 tooling cases pass](windows-checkout-tooling.txt).
+The source inventory, patch and native algorithm are unchanged. A fresh complete
+hosted run is required; the earlier partial run is not platform acceptance.
+
 ## Desktop demonstration
 
 A separate paced [actual GTK demonstration run](gtk-demonstration.txt) passes
