@@ -74,6 +74,26 @@ rather than relying on Rust target defaults. This follows the
 LOAD/RELRO gates, approved NDK/version and67 source hashes are unchanged. Full
 three-ABI packaging and native installed Android acceptance remain required.
 
+## Platform gates found during the first complete run
+
+Run37253645489 passed the Windows source-inventory gate and exposed two further
+issues. The new recurring fixtures now await store closure and dispose the
+engine before deletion. Private native-intent recovery compared literal path
+strings; a Windows directory listing and the same constructed absolute path can
+use different separators. It now compares normalized file URIs. The nine
+actual-library affected Linux cases pass, including the unchanged five restart
+retry cases and a new wrong-filename negative recovery test. That test requires
+failure before append and unchanged canonical/intent bytes; writer, space,
+required type and exact receipt checks remain intact. Actual Windows rerun is
+still required.
+
+Android failed the existing16KiB RELRO-end gate after compiling its first ABI.
+The Rust linker setup already selected16KiB maximum page size; it now also
+selects16KiB common page size explicitly. The strict ELF checks remain unchanged.
+Both flags appear in [Android's official alignment guidance](https://developer.android.com/guide/practices/page-sizes#compile-using-16kb-elf-alignment).
+The dependency source/inventory and native algorithm are unchanged. Local tool
+checks pass; actual rebuilt ABI and APK verification remain the hosted gate.
+
 ## Desktop demonstration
 
 A separate paced [actual GTK demonstration run](gtk-demonstration.txt) passes
