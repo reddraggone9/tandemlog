@@ -1,10 +1,17 @@
-# Ordinary-width reconciliation — proposed, not released
+# Ordinary-width reconciliation — build45 evidence
 
 The first content-measured candidate2a251 improved enlarged text but raised its
-normal single/bulk thresholds to304/432px. That candidate and its original media
-remain preserved as history. It did not fully resolve Lee's ordinary-width
-request. Build45 remains paused; this working proposal changes no release version,
-published notes, prior media or production branch.
+normal single/bulk thresholds to304/432px. Its evidence remains preserved as
+history. The corrected source5ac35da is reviewed and on main; push CI37242660649
+passed Linux, Windows and Android. Signing, exact Android acceptance and promotion
+are coordinator-owned. The later dark-canvas media revision changes only the
+normal/enlarged composites and release guidance, leaving all app bytes unchanged.
+
+Current45 media uses dark native UI, a matching dark canvas and subtle crop
+boundaries, with centered Before/After labels only. All four pasted crops match
+raw screenshot pixels exactly. The earlier white-canvas composites are historical
+evidence; the already-shipped light43→44 image is unchanged and excluded from the
+current45 release gallery. See [dark-canvas receipt](dark-canvas-receipt.json).
 
 The compact proposal removes redundant decoration space:4px leading padding,
 2px outline gap,48px suffix target and Flutter's4px text-to-suffix gap give58px
@@ -64,5 +71,6 @@ Navigator instead of injecting media only below it.
 
 Native Linux evidence is not Windows/Android or real IME acceptance. Controller
 composition tests cover preservation across resize; exact Android/device
-acceptance remains a separate gate. Independent media/editorial review and root
-acceptance are pending. No signing, publication or main work is authorized here.
+acceptance remains a separate gate. The source correction passed independent notes/media review and root acceptance.
+The subsequent dark-canvas revision needs a renewed final notes/link check before
+promotion; it does not require a binary rebuild.

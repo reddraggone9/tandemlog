@@ -5,6 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT=Path(__file__).resolve().parent
 FONT='/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
 CASES=[
+ ('historical-time-fields','historical-before','historical-after'),
  ('normal-width','normal-before','normal-after'),
  ('enlarged-width','enlarged-before','enlarged-after'),
 ]
@@ -18,11 +19,10 @@ for name,before,after in CASES:
  pad,gap,header=10,20,42
  width=sum(im.width for im in crops)+pad*2+gap
  height=max(im.height for im in crops)+header+10
- output=Image.new('RGB',(width,height),'#151e1a');draw=ImageDraw.Draw(output)
+ output=Image.new('RGB',(width,height),'white');draw=ImageDraw.Draw(output)
  font=ImageFont.truetype(FONT,20)
  x=pad
  for label,im in zip(['Before','After'],crops):
-  draw.text((x+im.width/2,21),label,fill='#e0e9e3',font=font,anchor='mm')
-  draw.rectangle((x-1,header-1,x+im.width,header+im.height),outline='#35443c')
+  draw.text((x+im.width/2,21),label,fill='#202020',font=font,anchor='mm')
   output.paste(im,(x,header));x+=im.width+gap
  output.save(ROOT/'proposed'/f'{name}.png')

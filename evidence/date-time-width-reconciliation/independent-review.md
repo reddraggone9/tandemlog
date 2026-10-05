@@ -35,3 +35,20 @@ Normal anonymous network reads of both actual immutable draft URLs atdbcc4ebf0d5
 - enlarged-width.png SHA256c294fcd447f3e1b02a493dafa16f3883cfa1e5f1c421a111c239ecf00e5c6089.
 
 Overall independent editorial/media gate PASS; no remaining blocking finding. Earlier pending-final-draft/alt/link conditions are resolved. Source/profile/crop evidence stays engineering-side, and nativeLinux evidence remains explicitly distinct from Windows/Android release acceptance. This is independent editorial approval only, not a main promotion/publication action or waiver of other gates. Reviewer changed only this review record; no author notes/media/app source changes, commits or publication.
+
+## Dark-theme current45 media and final notes recheck — PASS
+
+Separate reviewer: `/root/datetime_rows`, 2026-10-04. This renewed review covers Lee’s dark-theme/canvas request and materially revised media; it supersedes the prior white-canvas approval for the two current45 images only. Historical43→44 content remains unchanged engineering context.
+
+Exact covered range: `e2df9f1de036077d4db7b91fb359f42d204e3d83..eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3`. Current45 application source is `5ac35da50acca69ab196a54312efc8ccef1452da`; dark media/guidance commit is `648d159014c0adb5b4927d44caad70b47c5ef25f`; final notes commit is `eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3`. Reviewed the production editor diff and actual committed release guidance. Editor SHA256 remains `5018f154041154f22046454647b58754e211407d482078d02f791389a4a71767`, identical to the accepted correction; this media follow-up changes no application behavior. Source closure now names the actual candidate and distinguishes its earlier capture working parent.
+
+Visually inspected final normal/enlarged local PNGs and independently compared all four pasted UI regions against the recorded raw-native crop rectangles: every pixel matches. Canvas is RGB(21,30,26), approximately the dark green native theme; subtle outlined crop boundaries distinguish the controls. Only centered Before/After labels are added. Labels, complete ISO dates and times remain readable, including the 200% pair. Crops retain sufficient Start/Due context without exposing private content; fixtures are synthetic. Matched normal401px/130% and enlarged520px/200% captures faithfully show each date/time pair moving from stacked to a shared row. Historical light composite SHA256 `043b47da67bc2dd068c1b73bc91073c33e8e37047c96a49421d51e86ab91c779` is byte-for-byte unchanged from the earlier committed artifact and excluded from current45 release notes.
+
+Both actual note drafts are byte-identical with SHA256 `856742924cfb8b51168f71a9ecae2963b6453fc086810a4b16ff189970ffc8b6`. The corrected bullet, “Date and Time fields fit side by side in narrower editors, including bulk edits and larger text,” accurately describes the covered change. Descriptive normal/enlarged alt text explains stacked versus shared rows. No expected-interaction, testing, preservation or implementation assurances were added; no exceptional actionable compatibility note is needed for this presentation change.
+
+Anonymous HTTP reads of both actual immutable notes at `eeaeb8956c62e5c6e57fc566b5b0fb6a07e685f3` and their two actual image URLs at `648d159014c0adb5b4927d44caad70b47c5ef25f` returned HTTP200 without redirects. Downloaded bytes exactly match the reviewed local/committed artifacts:
+
+- normal-width.png: SHA256 `0ed1cf3d5d05e34de240e8b85fb2566ba036fa3b93bb6a1a54516ba13956eec6`, 24562 bytes.
+- enlarged-width.png: SHA256 `84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f`, 36065 bytes.
+
+Final independent editorial/media gate PASS; both initial findings are resolved and no blocking finding remains. This approves the actual revised notes and immutable media, not publication or any waiver of separate Windows/Android/platform acceptance. Reviewer changed only this appended engineering record and dark-canvas review receipt; no app, author-note, image, commit or push changes.
