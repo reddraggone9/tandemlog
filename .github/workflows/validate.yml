@@ -114,6 +114,17 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs dist/tandemlog-android-test-only.apk > dist/android-signature.txt
           cd dist
           sha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt
+      - name: Package separate recovery harness on the isolated adoption branch
+        if: github.ref == 'refs/heads/experiment/text-activation-policy'
+        run: |
+          # This immutable reviewed base excludes unrelated in-flight experiments.
+          git fetch --no-tags --depth=1 origin 926f28dd617527d168ce94236bb9f4a99d1f9708
+          python3 tool/android_recovery/build_apk.py \
+            --revision 926f28dd617527d168ce94236bb9f4a99d1f9708 \
+            --output "$GITHUB_WORKSPACE/dist/android-recovery"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs \
+            dist/android-recovery/tandemlog-TEST-ONLY-recovery-debug.apk \
+            > dist/android-recovery/signature.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: android
