@@ -1,28 +1,44 @@
-# Current status — 2026-10-04
+# Current status — 2026-10-05
 
-## Authorized text integration — isolated, unreleased
+## Authorized text integration — isolated, unreleased, blocked
 
-`experiment/text-activation-policy` contains production captured title/notes,
-receipt-gated Save/selective Undo, private uncertain-command recovery, shared
-legacy setup and offline new-task editing. The actual native Linux integration
-passes at 1200px Light/100% and 390px Dark/200%, including received text while a
-private draft remains open, Save/Undo and restart. Five screenshots were inspected;
-one clipped setup instruction was corrected to wrapping text.
+`experiment/text-activation-policy` contains captured title/notes, receipt-gated
+Save/selective Undo, private uncertain-command recovery, shared legacy setup and
+offline new-task editing. Initial native GTK flows pass, including private drafts
+during peer arrivals and two successive closed-editor Undos. The larger repeated
+save/Undo/close/new-owner regression exposes nondeterministic native identity
+reconstruction; current unpatched dependency adoption remains blocked.
 
-All 447 unit/widget tests pass with the real production SO, including the two
-new preappend recurring guard cases; analysis and formatting are clean.
-Notice/packaging checks pass. The focused native storage/recurrence suite passes
-41 tests. [Evidence and limits](../evidence/production-text/README.md) distinguish
-the real app flow from synthetic native benchmarks and injected IME state.
+An external three-line Yrs0.28.0 traversal patch passes454 unit/widget cases,
+50 actual-library application/FFI/store/session/coordinator cases,98 unchanged
+frozen native cases and4 Rust tests. Its exact source, patch and independent
+review are [recorded](../evidence/production-text/undo/README.md), but the patch is
+not adopted. Source/lock files remain pinned unchanged. Maintaining that patch
+versus redesigning snapshot ownership requires Lee's decision. Earlier green
+counts are chronological evidence, not a green current unpatched aggregate.
 
-Concurrent recurring successor text still needs Lee's decision. The branch
-rejects that local command before append while retaining historical replay.
-All three current Android engine ABIs cross-build with verified exports and
-16 KiB alignment. APK packaging/runtime, native Windows, the complete existing
-native workflow matrix, mandatory CI and release performance remain unverified. No
-production text candidate is signed or released, and no main push is made.
-The approved narrower date/time layout from main is merged into this isolated
-branch; its independent build45 signing/Android acceptance stays coordinator-owned.
+Matching acknowledged-but-unregistered Saves now block stale Undo before append.
+Native ordering participates in chronological moves; cache positions revision3
+repairs prior revision2 from cached records, with no canonical-log read/change.
+Mandatory native-engine hosted gates and three-ABI APK packaging checks are
+implemented. A local debug APK passes alignment/payload/notices checks; it is not
+owner-signed or a user candidate. Native Windows and exact signed Android CRDT
+acceptance remain pending. Hosted CRDT CI is held against the known replay failure.
+Release startup measurements and their exact source/limits are in the
+[production evidence](../evidence/production-text/README.md).
+
+Recurring successor text separately needs Lee's product decision; the current
+preappend guard preserves old history. No production-text main adoption or release
+has occurred. The approved build45 layout/media are merged into this branch;
+its accepted signed artifacts/publication remain parent/local-task owned.
+
+Checklist clarification: an unpublished domain/storage prototype was implemented
+on2026-10-04 and saved outside the repository at
+`/workspace/toolchains/checklist-draft-20261004`. It has commands and tests, but no
+current app integration, UI or release. It has not resumed under Lee's new quota
+and sequencing guard; the earlier model-draft reference must not be read as a
+claim that no coding ever began.
+
 ## Prepared preview 2026.10.2-rc.3 build45 — narrower date/time layout
 
 The corrected isolated branch reduces ordinary native Linux side-by-side limits
@@ -40,9 +56,16 @@ review passes with verified immutable public image bytes. Historical direct-Time
 media describes build43→44 and is excluded from the new build45 change narrative.
 See the [reconciliation evidence](../evidence/date-time-width-reconciliation/README.md).
 
-The branch is prepared for all-platform/signed candidate checks after coordinator
-handoff. It is not signed or published; exact Android affected-flow acceptance
-and all release gates remain pending. Stable 2026.10.1 is unchanged.
+Exact app source `5ac35da50acca69ab196a54312efc8ccef1452da` passes hosted
+push CI37242660649 and signed candidate37243170201. Parent reports exact native
+Android acceptance for APK SHA256
+`625bee0e2fd1b51cd131f10004f696ebeff711e7b61fb0168851e2cda0d1e8aa`,
+including actual Gboard editing. Rapid ADB replacement can move the focused field
+out of view; physical-keyboard replacement remains unverified. Final immutable
+Dark canvases/body/independent review are on main79a3201, with pixel-identical UI
+crops and no binary rebuild. Publication is parent/local-owned and requires a
+fresh quota check. No release was published by this production-text task.
+Stable2026.10.1 is unchanged.
 
 ## Next preview2026.10.2-rc.2 build44 — editor refinement
 
