@@ -8,9 +8,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -25,19 +25,21 @@ void registerCompletionFocusTests() {
     (appearance: 'dark', size: Size(390, 800), scale: 2.0, repeating: true),
   ]) {
     testWidgets(
-      'native checkbox focus across status groups ${variant.appearance} ${variant.size.width} x${variant.scale} repeat=${variant.repeating}',
+      'checkbox focus ${variant.appearance} ${variant.size.width} x${variant.scale}: ${variant.repeating ? 'historical v3 recurrence compatibility' : 'offline native task'}',
       (tester) async {
         final root = await Directory.systemTemp.createTemp('completion-focus-');
         final folder = await Directory('${root.path}/shared').create();
         final profile = await Directory('${root.path}/profile').create();
-        final writer = await TaskStore.open(
+        final writer = await openNativeFixtureStore(
           LocalLogFolder(folder.path),
           '${root.path}/writer',
         );
         final user = const Uuid().v4(), task = const Uuid().v4();
         try {
           await writer.command(user, 'user.created', {'name': 'Alex Example'});
-          await writer.command(task, 'task.created', {
+          await (variant.repeating
+              ? writer.createHistoricalRecurrenceFixtureTask
+              : writer.createNativeFixtureTask)(task, {
             'title': 'Focus reference task',
             'description': '',
             'assignee': user,
@@ -110,7 +112,7 @@ void registerCompletionFocusTests() {
           );
           expect(checkboxFocus(), same(focus));
           expect(FocusManager.instance.primaryFocus, same(focus));
-          await writer.command(task, 'task.edited', {
+          await writer.editNativeFixtureTask(task, {
             'schedule': {
               'dueDate': '2026-10-03',
               if (variant.repeating) 'recurrence': 'every week when done',
@@ -159,7 +161,7 @@ void registerCompletionFocusTests() {
           await tester.pumpAndSettle();
           expect(FocusManager.instance.primaryFocus, isNot(same(focus)));
           final otherFocus = FocusManager.instance.primaryFocus;
-          await writer.command(task, 'task.edited', {
+          await writer.editNativeFixtureTask(task, {
             'schedule': {
               'dueDate': '2026-10-04',
               if (variant.repeating) 'recurrence': 'every week when done',

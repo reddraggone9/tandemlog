@@ -9,8 +9,8 @@ import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/presentation/sticky_task_group.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -29,7 +29,7 @@ void registerHeaderSelectionTests() {
         final root = await Directory.systemTemp.createTemp('header-selection-');
         final folder = await Directory('${root.path}/shared').create();
         final profile = await Directory('${root.path}/profile').create();
-        final writer = await TaskStore.open(
+        final writer = await openNativeFixtureStore(
           LocalLogFolder(folder.path),
           '${root.path}/writer',
         );
@@ -40,7 +40,7 @@ void registerHeaderSelectionTests() {
             'name': 'Alexandria Example Household',
           });
           for (var i = 0; i < ids.length; i++) {
-            await writer.command(ids[i], 'task.created', {
+            await writer.createNativeFixtureTask(ids[i], {
               'title': 'Reference task ${i + 1}',
               'description': '',
               'assignee': user,

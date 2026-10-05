@@ -7,9 +7,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -19,12 +19,12 @@ void main() {
 
 void registerCompletionActionTests() {
   testWidgets(
-    'completed recurrence is ordinary checked; failed reopen never claims success',
+    'historical v3 recurrence compatibility: checked completion, failed reopen and Undo',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('completion-native-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -34,7 +34,9 @@ void registerCompletionActionTests() {
       try {
         await writer.command(user, 'user.created', {'name': 'Alex Example'});
         for (final id in [plain, repeat]) {
-          await writer.command(id, 'task.created', {
+          await (id == repeat
+              ? writer.createHistoricalRecurrenceFixtureTask
+              : writer.createNativeFixtureTask)(id, {
             'title': id == plain ? 'Buy envelopes' : 'Water plants',
             'description': '',
             'assignee': user,
@@ -159,6 +161,7 @@ void registerCompletionActionTests() {
         await tester.tap(check(repeat));
         await flows.waitForUi(tester, () => check(repeat).evaluate().isEmpty);
         final next = const Uuid().v5(repeat, 'successor');
+        // This derived successor retains its original unactivated v3 text semantics.
         await writer.command(next, 'task.edited', {
           'title': 'Water balcony plants',
         });

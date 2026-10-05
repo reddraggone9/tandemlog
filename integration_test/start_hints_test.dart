@@ -7,9 +7,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -24,7 +24,7 @@ void registerStartHintTests() {
     final root = await Directory.systemTemp.createTemp('start-hints-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -36,7 +36,7 @@ void registerStartHintTests() {
       bool done = false,
     }) async {
       final id = ids[title] = const Uuid().v4();
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': title,
         'description': '',
         'assignee': user,

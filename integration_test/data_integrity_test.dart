@@ -8,9 +8,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/profile_lock.dart';
 import 'package:uuid/uuid.dart';
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -75,13 +75,13 @@ void registerDataIntegrityTests() {
       final root = await Directory.systemTemp.createTemp('integrity-ui-');
       final shared = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(shared.path),
         '${root.path}/seed',
       );
       final user = const Uuid().v4(), task = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Alex Example'});
-      await writer.command(task, 'task.created', {
+      await writer.createNativeFixtureTask(task, {
         'title': 'Reference task',
         'description': '',
         'assignee': user,
@@ -162,7 +162,7 @@ void registerDataIntegrityTests() {
         state.importer.dispose();
         state.importer = null;
         final incoming = const Uuid().v4();
-        await writer.command(incoming, 'task.created', {
+        await writer.createNativeFixtureTask(incoming, {
           'title': 'Incoming reference',
           'description': '',
           'assignee': user,

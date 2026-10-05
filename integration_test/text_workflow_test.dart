@@ -13,9 +13,14 @@ import 'package:tandemlog/application/text_save_command.dart';
 import 'package:uuid/uuid.dart';
 
 import 'task_flow_test.dart' as flows;
+import 'native_text_fixtures.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  registerTextWorkflowTests();
+}
+
+void registerTextWorkflowTests() {
   testWidgets(
     'offline new text, remote draft Save, Undo and explicit legacy setup',
     (tester) async {
@@ -181,6 +186,73 @@ void main() {
         await peer.close();
         engine.dispose();
         // Synthetic profile remains available for a failed test's diagnosis.
+      }
+    },
+  );
+  testWidgets(
+    'native recurring completion is blocked before canonical append',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp(
+        'native-recurring-guard-ui-',
+      );
+      final shared = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final store = await openNativeFixtureStore(
+        LocalLogFolder(shared.path),
+        '${root.path}/seed',
+      );
+      final user = const Uuid().v4(), task = const Uuid().v4();
+      try {
+        await store.command(user, 'user.created', {'name': 'Synthetic'});
+        await store.createNativeFixtureTask(task, {
+          'title': 'Native recurring reference',
+          'description': '',
+          'assignee': user,
+          'schedule': {
+            'dueDate': '2026-10-01',
+            'recurrence': 'every day when done',
+          },
+        });
+        await File(
+          '${profile.path}/settings.json',
+        ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await flows.waitForUi(
+          tester,
+          () => find
+              .byTooltip('Complete Native recurring reference')
+              .evaluate()
+              .isNotEmpty,
+        );
+        Future<Map<String, String>> canonical() async => {
+          await for (final file in shared.list())
+            if (file is File) file.path: base64Encode(await file.readAsBytes()),
+        };
+        final before = await canonical();
+        await tester.tap(find.byTooltip('Complete Native recurring reference'));
+        await flows.waitForUi(
+          tester,
+          () => find
+              .textContaining(
+                'Collaborative recurring completion is not available yet',
+              )
+              .evaluate()
+              .isNotEmpty,
+        );
+        expect(await canonical(), before);
+        await store.refresh();
+        expect(
+          store.rows.singleWhere((row) => row['id'] == task)['completed'],
+          isFalse,
+        );
+        expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(1));
+        expect(store.pendingTextOperations, isEmpty);
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpAndSettle();
+        await store.close();
+        await root.delete(recursive: true);
       }
     },
   );

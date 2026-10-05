@@ -6,9 +6,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/storage/profile_lock.dart';
 import 'package:uuid/uuid.dart';
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -77,19 +77,19 @@ void registerInboxFlowTests() {
     final root = await Directory.systemTemp.createTemp('inbox-flow-');
     final shared = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(shared.path),
       '${root.path}/seed',
     );
     final user = const Uuid().v4();
     await writer.command(user, 'user.created', {'name': 'Alex Example'});
-    await writer.command(const Uuid().v4(), 'task.created', {
+    await writer.createNativeFixtureTask(const Uuid().v4(), {
       'title': 'Dated reference',
       'description': '',
       'assignee': user,
       'schedule': {'dueDate': '2026-10-03'},
     });
-    await writer.command(const Uuid().v4(), 'task.created', {
+    await writer.createNativeFixtureTask(const Uuid().v4(), {
       'title': 'Organized reference',
       'description': 'A useful note',
       'assignee': user,
