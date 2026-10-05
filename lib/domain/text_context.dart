@@ -17,24 +17,38 @@ class TextFieldContext {
   }) {
     final reference = basis.split(':');
     final sequence = reference.length == 2 ? int.tryParse(reference[1]) : null;
+    final recurring = basisKind == 'recurring-successor';
     if (!isCanonicalId(space) ||
         !isCanonicalId(entity) ||
         !const {'title', 'description'}.contains(field) ||
-        reference.length != 2 ||
-        !isCanonicalId(reference[0]) ||
-        sequence == null ||
-        sequence < 1 ||
-        sequence > 9007199254740991 ||
-        reference[1] != sequence.toString() ||
+        (recurring
+            ? !isEventHash(basis)
+            : reference.length != 2 ||
+                  !isCanonicalId(reference[0]) ||
+                  sequence == null ||
+                  sequence < 1 ||
+                  sequence > 9007199254740991 ||
+                  reference[1] != sequence.toString()) ||
         !const {
           'native-creation',
           'legacy-baseline',
           'legacy-creation',
+          'recurring-successor',
         }.contains(basisKind) ||
         !isEventHash(seedHash)) {
       throw FormatFailure('Invalid native text field context.');
     }
   }
+
+  factory TextFieldContext.successor(TextFieldContext parent, String child) =>
+      TextFieldContext(
+        space: parent.space,
+        entity: child,
+        field: parent.field,
+        basis: parent.hash,
+        basisKind: 'recurring-successor',
+        seedHash: parent.seedHash,
+      );
 
   factory TextFieldContext.fromCreation(LogEvent event, String field) {
     if (event.type != 'task.createdWithText') {

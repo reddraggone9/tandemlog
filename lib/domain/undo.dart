@@ -10,6 +10,7 @@ const reversibleTaskEvents = {
   'task.moved',
   'task.deleted',
   'task.completed',
+  'task.completedWithText',
   'task.completionUndone',
 };
 

@@ -56,7 +56,7 @@ List<String> projectOrder(
   void settlePending() =>
       pending.removeWhere((action) => move(action.$1, action.$2));
   for (final action in actions) {
-    if (action.type == 'task.completed') {
+    if (isTaskCompletion(action.type)) {
       final next = action.successor;
       if (next == null || !seeded.add(next) || !available.contains(next)) {
         continue;

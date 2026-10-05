@@ -314,7 +314,7 @@ void main() {
       );
       for (final nativeCreation in [true, false]) {
         test(
-          'native recurring completion refuses before receipt (native creation: $nativeCreation)',
+          'native recurring completion proves its immutable inheritance (native creation: $nativeCreation)',
           () async {
             final root = await Directory.systemTemp.createTemp(
               'text-recurring-gate-',
@@ -350,33 +350,29 @@ void main() {
               );
               final log = File('${shared.path}/${store.writer}.jsonl');
               final before = await log.readAsBytes();
-              final snapshot = store.taskSnapshot;
-              final eventCount = store.db
-                  .select('SELECT COUNT(*) AS n FROM events')
-                  .single['n'];
               var prepared = false;
-              await expectLater(
-                store.complete(
-                  task,
-                  completionDay: DateTime(2030, 5, 10),
-                  onPrepared: (_) => prepared = true,
-                ),
-                throwsA(
-                  isA<FormatFailure>().having(
-                    (error) => error.toString(),
-                    'reason',
-                    contains(
-                      'Collaborative recurring completion is not available yet; existing history is retained.',
-                    ),
-                  ),
-                ),
+              final completion = await store.complete(
+                task,
+                completionDay: DateTime(2030, 5, 10),
+                onPrepared: (_) => prepared = true,
               );
-              expect(prepared, isFalse);
-              expect(await log.readAsBytes(), before);
-              expect(store.taskSnapshot, snapshot);
+              expect(completion.type, 'task.completedWithText');
+              expect(completion.data['inheritance'], isA<Map>());
+              expect(prepared, isTrue);
+              final after = await log.readAsBytes();
+              expect(after.take(before.length).toList(), before);
+              final child = const Uuid().v5(task, 'successor');
+              final capture = await store.captureTaskText(child);
               expect(
-                store.db.select('SELECT COUNT(*) AS n FROM events').single['n'],
-                eventCount,
+                capture.fields['title']!.document.read().text,
+                'Recurring',
+              );
+              store.releaseTextCapture(capture);
+              expect(store.activeCompletionIds(task), [completion.id]);
+              await store.reopen(task, [completion.id]);
+              expect(
+                store.rows.singleWhere((row) => row['id'] == task)['completed'],
+                false,
               );
               expect(store.pendingTextOperations, isEmpty);
             } finally {
@@ -386,6 +382,157 @@ void main() {
           },
         );
       }
+      test(
+        'causal peer reuse retains original character ownership through selective Undo',
+        () async {
+          final root = await Directory.systemTemp.createTemp(
+            'text-undo-ownership-',
+          );
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? a, b;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            final folder = LocalLogFolder(shared.path);
+            a = await TaskStore.open(
+              folder,
+              '${root.path}/a',
+              textEngine: engine,
+            );
+            b = await TaskStore.open(
+              folder,
+              '${root.path}/b',
+              textEngine: engine,
+            );
+            final user = const Uuid().v4();
+            await a.command(user, 'user.created', {'name': 'Synthetic'});
+            Future<OperationReceipt> save(
+              TaskStore store,
+              String task,
+              String text,
+            ) async {
+              final capture = await store.captureTaskText(task);
+              final field = capture.fields['title']!;
+              final draft = field.document.captureDraft(
+                actorClientId: field.actor,
+              )..replaceText(text);
+              final prepared = draft.prepareSave();
+              OperationReceipt? receipt;
+              try {
+                await store.editNativeTask(task, {
+                  'title': {
+                    'context': field.context,
+                    'allocation': field.allocation,
+                    'actor': field.actor,
+                    'update': prepared.update.encoded,
+                  },
+                }, onPrepared: (value) => receipt = value);
+                prepared.commit(receiptUpdate: prepared.update);
+                store.registerTextOperation(receipt!, capture);
+                return receipt!;
+              } finally {
+                draft.cancel();
+                store.releaseTextCapture(capture);
+              }
+            }
+
+            for (final (seed, local, peer, expected) in [
+              ('A', 'BC', 'DC', 'AD'),
+              ('AB', 'AXB', 'AXBY', 'ABY'),
+            ]) {
+              final task = const Uuid().v4();
+              await a.command(
+                task,
+                'task.createdWithText',
+                _creationData(engine, user, seed),
+              );
+              final localReceipt = await save(a, task, local);
+              await save(b, task, peer);
+              final result = await a.undoOperations([localReceipt.id]);
+              expect(
+                result.remaining,
+                isEmpty,
+                reason: result.error?.toString(),
+              );
+              expect(result.keptNewerChanges, true);
+              await b.refresh();
+              expect(
+                a.rows.singleWhere((row) => row['id'] == task)['title'],
+                expected,
+              );
+              expect(
+                b.rows.singleWhere((row) => row['id'] == task)['title'],
+                expected,
+              );
+              a.releaseTextOperations([localReceipt.id]);
+            }
+          } finally {
+            await a?.close();
+            await b?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
+      test(
+        'mixed historical successor initialization refuses without changing history',
+        () async {
+          final root = await Directory.systemTemp.createTemp(
+            'text-legacy-child-',
+          );
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? store;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            store = await TaskStore.open(
+              LocalLogFolder(shared.path),
+              '${root.path}/profile',
+              textEngine: engine,
+            );
+            final user = const Uuid().v4(), task = const Uuid().v4();
+            await store.command(user, 'user.created', {'name': 'Synthetic'});
+            final data = _creationData(engine, user, 'Legacy recurring')
+              ..remove('text')
+              ..['schedule'] = {
+                'dueDate': '2030-05-10',
+                'recurrence': 'every day',
+              };
+            await store.command(task, 'task.created', data);
+            final old = await store.complete(
+              task,
+              completionDay: DateTime(2030, 5, 10),
+            );
+            expect(old.type, 'task.completed');
+            await store.initializeSharedText();
+            await store.reopen(task, [old.id]);
+            final file = File('${shared.path}/${store.writer}.jsonl');
+            final before = await file.readAsBytes();
+            final snapshot = store.taskSnapshot;
+            var prepared = false;
+            await expectLater(
+              store.complete(
+                task,
+                completionDay: DateTime(2030, 5, 10),
+                onPrepared: (_) => prepared = true,
+              ),
+              throwsA(
+                isA<FormatFailure>().having(
+                  (e) => e.message,
+                  'reason',
+                  contains('Mixed successor text initialization'),
+                ),
+              ),
+            );
+            expect(prepared, false);
+            expect(store.pendingTextOperations, isEmpty);
+            expect(await file.readAsBytes(), before);
+            expect(store.taskSnapshot, snapshot);
+          } finally {
+            await store?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
       test(
         'repeated cancelled editors release source documents while saved scoped Undo survives',
         () async {

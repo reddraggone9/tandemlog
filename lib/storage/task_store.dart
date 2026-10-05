@@ -17,6 +17,7 @@ import 'profile_lock.dart';
 import 'writer_guard.dart';
 import 'local_durability.dart';
 import '../text/native_text_engine.dart';
+import '../text/recurring_text.dart';
 import 'text_cache.dart';
 import '../domain/text_context.dart';
 import '../domain/text_actor.dart';
@@ -129,12 +130,14 @@ class TaskStore {
   LogEvent? _textBaseline;
   final List<TaskTextCapture> _textCaptures = [];
   final Map<NativeTextDocument, Set<int>> _capturedLocalActors = {};
+  final Map<NativeTextDocument, Set<String>> _capturedApplied = {};
   final Map<String, _NativeTextOperation> _nativeOperations = {};
   final Map<String, Map<String, Map<String, dynamic>>> _preparedTextBases = {};
   final Map<NativeTextDocument, List<String>> _nativeUndoStacks = {};
   final Map<String, _NativeUndoField> _nativeUndoFields = {};
   static const _textTypes = {
     'task.createdWithText',
+    'task.completedWithText',
     'task.textEdited',
     'task.textEditUndone',
     'text.baselineInitialized',
@@ -371,7 +374,7 @@ class TaskStore {
       if (textEngine == null &&
           db
               .select(
-                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.createdWithText','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
+                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.createdWithText','task.completedWithText','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
               )
               .isNotEmpty) {
         throw FormatFailure(
@@ -1061,7 +1064,7 @@ class TaskStore {
         );
       }
       for (final e in newEvents) {
-        if (e.type == 'task.completed' && e.data['successor'] != null) {
+        if (isTaskCompletion(e.type) && e.data['successor'] != null) {
           affected.add((e.data['successor'] as Map)['id'] as String);
         }
       }
@@ -1073,6 +1076,13 @@ class TaskStore {
           affected.add(e.data['before'] as String);
         }
       }
+      affected.addAll(
+        db
+            .select(
+              "SELECT id FROM views WHERE json_extract(raw,'\$.textInheritancePending')=1",
+            )
+            .map((row) => row['id'] as String),
+      );
       for (final entity in affected) {
         final state = _projectEntity(entity);
         if (state != null) {
@@ -1095,6 +1105,7 @@ class TaskStore {
                   'task.createdWithText',
                   'user.created',
                   'task.completed',
+                  'task.completedWithText',
                   'task.moved',
                 }.contains(e.type) ||
                 (e.type == 'task.operationUndone' &&
@@ -1122,8 +1133,8 @@ class TaskStore {
       db.execute('COMMIT');
       committed = true;
       cacheTransactions++;
-      _updateCapturedTextDocuments(newEvents);
-      _updateNativeUndoOwners(newEvents);
+      _updateCapturedTextDocuments(newEvents, affected);
+      _updateNativeUndoOwners(newEvents, affected);
       // Cleanup is dispensable: exact canonical receipts are already committed.
       // A failed deletion leaves the immutable intent available next startup.
       try {
@@ -1168,7 +1179,7 @@ class TaskStore {
     if (task == null || task['kind'] != 'task' || task['deleted'] == true) {
       throw FormatFailure('Unknown or deleted task.');
     }
-    final native = history.any((event) => event.type == 'task.createdWithText');
+    final native = _hasNativeTextRoot(entity, history);
     if (!native && (_textBaseline == null || textWriteBlocked != null)) {
       throw FormatFailure(
         textWriteBlocked ??
@@ -1189,6 +1200,9 @@ class TaskStore {
     db.execute('BEGIN IMMEDIATE');
     try {
       _materializeText(task, history);
+      if (task['textUnavailable'] != null) {
+        throw TextInheritancePending(task['textUnavailable'] as String);
+      }
       db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
         entity,
         jsonEncode(task),
@@ -1250,6 +1264,10 @@ class TaskStore {
           undoAllocation: undoAllocation,
         );
         _capturedLocalActors[document] = {actor, undoActor};
+        _capturedApplied[document] =
+            (jsonDecode(row['frontier'] as String) as List)
+                .cast<String>()
+                .toSet();
       }
       final result = TaskTextCapture(
         entity,
@@ -1460,6 +1478,7 @@ class TaskStore {
     for (final field in capture.fields.values) {
       field.document.dispose();
       _capturedLocalActors.remove(field.document);
+      _capturedApplied.remove(field.document);
       if (_nativeUndoStacks[field.document]?.isEmpty == true) {
         _nativeUndoStacks.remove(field.document);
       }
@@ -1487,8 +1506,39 @@ class TaskStore {
     _capturedLocalActors[source.document]!.add(actor);
   }
 
-  void _updateCapturedTextDocuments(List<LogEvent> events) {
+  void _updateCapturedTextDocuments(
+    List<LogEvent> events,
+    Set<String> affected,
+  ) {
     for (final capture in _textCaptures) {
+      if (_hasInheritedText(capture.entity)) {
+        if (!affected.contains(capture.entity)) continue;
+        Map<String, ResolvedTextField> resolved;
+        try {
+          resolved = _resolvedText(capture.entity);
+        } on TextInheritancePending {
+          continue;
+        }
+        for (final field in capture.fields.values) {
+          if (field.document.isClosed) continue;
+          final lineage = resolved[field.field]!;
+          if (lineage.context.hash != field.context) {
+            throw FormatFailure('Captured successor text context changed.');
+          }
+          final applied = _capturedApplied[field.document]!;
+          for (final packet in lineage.operations) {
+            if (applied.contains(packet.event.id) ||
+                _capturedLocalActors[field.document]!.contains(
+                  packet.claim.actor,
+                )) {
+              continue;
+            }
+            field.document.applyRemote(packet.update);
+            applied.add(packet.event.id);
+          }
+        }
+        continue;
+      }
       for (final event in events) {
         if (event.entity != capture.entity ||
             (event.type != 'task.textEdited' &&
@@ -1515,6 +1565,31 @@ class TaskStore {
     List<LogEvent> events, {
     String? exclude,
   }) {
+    if (_hasInheritedText(owner.entity)) {
+      Map<String, ResolvedTextField> fields;
+      try {
+        fields = _resolvedText(owner.entity);
+      } on TextInheritancePending {
+        // Missing foreign proof is ordinary transport delay. Preserve the
+        // session owner and its scoped Undo until the dependency arrives.
+        return;
+      }
+      final lineage = fields[owner.field]!;
+      if (lineage.context.hash != owner.context) {
+        throw FormatFailure('Retained successor text context changed.');
+      }
+      for (final packet in lineage.operations) {
+        if (packet.event.id == exclude ||
+            owner.applied.contains(packet.event.id) ||
+            _preparedTextBases.containsKey(packet.event.id) ||
+            packet.claim.actor == owner.actor) {
+          continue;
+        }
+        owner.document.applyRemote(packet.update);
+        owner.applied.add(packet.event.id);
+      }
+      return;
+    }
     for (final event in events) {
       if (event.entity != owner.entity ||
           event.id == exclude ||
@@ -1535,8 +1610,9 @@ class TaskStore {
     }
   }
 
-  void _updateNativeUndoOwners(List<LogEvent> events) {
+  void _updateNativeUndoOwners(List<LogEvent> events, Set<String> affected) {
     for (final owner in _nativeUndoFields.values) {
+      if (!affected.contains(owner.entity)) continue;
       _syncNativeUndoField(owner, events);
     }
   }
@@ -1573,14 +1649,14 @@ class TaskStore {
     final selectedSeedIds = <String, String>{};
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
             return !retracted.contains(row['id']);
           }
           final successor = row['successor'] as String?;
-          if (row['type'] == 'task.completed' && successor != null) {
+          if (isTaskCompletion(row['type'] as String) && successor != null) {
             final selected = selectedSeedIds.putIfAbsent(
               successor,
               () => _entityEvents(
@@ -1626,7 +1702,7 @@ class TaskStore {
     return events
         .where(
           (e) =>
-              e.type == 'task.completed' &&
+              isTaskCompletion(e.type) &&
               !undone.contains(e.id) &&
               !retracted.contains(e.id),
         )
@@ -1787,7 +1863,7 @@ class TaskStore {
     final successors = <String, List<LogEvent>>{};
     for (final event in prefix) {
       grouped.putIfAbsent(event.entity, () => []).add(event);
-      if (event.type == 'task.completed' && event.data['successor'] != null) {
+      if (isTaskCompletion(event.type) && event.data['successor'] != null) {
         final entity = (event.data['successor'] as Map)['id'] as String;
         successors.putIfAbsent(entity, () => []).add(event);
       }
@@ -1810,7 +1886,11 @@ class TaskStore {
     }
     final fields = <String, Map<String, String>>{};
     for (final entry in grouped.entries) {
-      if (entry.value.any((event) => event.type == 'task.createdWithText')) {
+      if (entry.value.any((event) => event.type == 'task.createdWithText') ||
+          successors[entry.key]?.any(
+                (event) => event.type == 'task.completedWithText',
+              ) ==
+              true) {
         continue;
       }
       final state = project(entry.value);
@@ -2056,17 +2136,13 @@ class TaskStore {
     }
     if ((legacyTextChange || textSnapshotRequired) &&
         textWriteBlocked != null &&
-        !_entityEvents(
-          entity,
-        ).any((event) => event.type == 'task.createdWithText')) {
+        !_hasNativeTextRoot(entity, _entityEvents(entity))) {
       throw FormatFailure(textWriteBlocked!);
     }
     if (_textTypes.contains(type) &&
         type != 'task.createdWithText' &&
         textWriteBlocked != null &&
-        !_entityEvents(
-          entity,
-        ).any((event) => event.type == 'task.createdWithText')) {
+        !_hasNativeTextRoot(entity, _entityEvents(entity))) {
       throw FormatFailure(textWriteBlocked!);
     }
     final e = LogEvent.decode(
@@ -2082,9 +2158,8 @@ class TaskStore {
     );
     final prior = _entityEvents(entity);
     if (type == 'task.textEdited' || type == 'task.textEditUndone') {
-      final nativeCreation = prior.any(
-        (event) => event.type == 'task.createdWithText',
-      );
+      if (_hasInheritedText(entity)) _resolvedText(entity, pending: [e]);
+      final nativeCreation = _hasNativeTextRoot(entity, prior);
       if (!nativeCreation && _textBaseline == null) {
         throw FormatFailure(
           textWriteBlocked ??
@@ -2128,6 +2203,11 @@ class TaskStore {
           ]);
           _validateTextBaseline();
           if (textWriteBlocked != null) throw FormatFailure(textWriteBlocked!);
+        } else if (type == 'task.completedWithText') {
+          _resolvedText(
+            (data['successor'] as Map)['id'] as String,
+            pending: [e],
+          );
         } else {
           _materializeText(projected, [...prior, e]);
         }
@@ -2172,7 +2252,7 @@ class TaskStore {
     _validateUndoReferences(e);
     _validateMoves(e);
     _validateTagReferences(e);
-    if (type == 'task.completed' &&
+    if (isTaskCompletion(type) &&
         data['successor'] == null &&
         TaskSchedule.fromJson(
               Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
@@ -2180,7 +2260,7 @@ class TaskStore {
             null) {
       throw FormatFailure('Repeating completion requires a next occurrence.');
     }
-    if (type == 'task.completed' && data['successor'] != null) {
+    if (isTaskCompletion(type) && data['successor'] != null) {
       final current = TaskSchedule.fromJson(
         Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
       );
@@ -2371,7 +2451,7 @@ class TaskStore {
     }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type')<>'task.completed' OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone') OR (json_extract(t.raw,'\$.type')='task.completed' AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -2391,9 +2471,9 @@ class TaskStore {
           target.clock >= undo.clock ||
           (operation
               ? (!reversibleTaskEvents.contains(target.type) ||
-                    (target.type == 'task.completed' &&
+                    (isTaskCompletion(target.type) &&
                         target.data['successor'] != null))
-              : target.type != 'task.completed') ||
+              : !isTaskCompletion(target.type)) ||
           (undo.type == 'task.recurringCompletionUndone' &&
               target.data['successor'] == null)) {
         throw FormatFailure('Invalid undo reference in ${undo.id}.');
@@ -2453,8 +2533,10 @@ class TaskStore {
     // only needs mutations referencing this new event (or its derived seed),
     // plus the new mutation itself. Do not repeatedly decode unrelated history.
     final successor =
-        pending?.type == 'task.completed' && pending?.data['successor'] is Map
-        ? (pending!.data['successor'] as Map)['id']
+        pending != null &&
+            isTaskCompletion(pending.type) &&
+            pending.data['successor'] is Map
+        ? (pending.data['successor'] as Map)['id']
         : null;
     final mutations = db
         .select(
@@ -2496,9 +2578,10 @@ class TaskStore {
               matches.add(seed);
             }
           }
-          if (pending?.type == 'task.completed' &&
-              pending?.data['successor'] != null) {
-            final successor = pending!.data['successor'] as Map;
+          if (pending != null &&
+              isTaskCompletion(pending.type) &&
+              pending.data['successor'] != null) {
+            final successor = pending.data['successor'] as Map;
             if (successor['id'] == mutation.entity &&
                 (successor['tags'] as List? ?? []).any(
                   (tag) =>
@@ -2642,6 +2725,32 @@ class TaskStore {
 
   void _materializeText(Map<String, dynamic> state, List<LogEvent> history) {
     if (textEngine == null) return;
+    final entity = state['id'] as String;
+    if (_hasInheritedText(entity)) {
+      try {
+        TextCache(db, textEngine!).materializeResolved(
+          state,
+          _resolvedText(
+            entity,
+            pending: history
+                .where((event) => event.canonicalRaw != null)
+                .toList(),
+          ),
+        );
+      } on TextInheritancePending catch (pending) {
+        // Retain the verified display if any; do not establish a guessed seed.
+        final cached = db.select('SELECT raw FROM views WHERE id=?', [entity]);
+        if (cached.isNotEmpty) {
+          final prior = jsonDecode(cached.single['raw'] as String) as Map;
+          for (final field in ['title', 'description']) {
+            state[field] = prior[field];
+          }
+        }
+        state['textUnavailable'] = pending.message;
+        state['textInheritancePending'] = true;
+      }
+      return;
+    }
     var basis = _textBaseline;
     var kind = 'legacy-baseline';
     Map<String, String>? seedText;
@@ -2695,6 +2804,100 @@ class TaskStore {
     }
   }
 
+  bool _hasInheritedText(String entity) => db.select(
+    "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.completedWithText' AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+    [entity],
+  ).isNotEmpty;
+
+  bool _hasNativeTextRoot(String entity, List<LogEvent> history) =>
+      history.any((event) => event.type == 'task.createdWithText') ||
+      _hasInheritedText(entity);
+
+  Map<String, ResolvedTextField> _resolvedText(
+    String entity, {
+    List<LogEvent> pending = const [],
+  }) => RecurringTextResolver(textEngine!, [
+    ...db
+        .select('SELECT raw FROM events')
+        .map((row) => LogEvent.decode(row['raw'] as String)),
+    ...pending,
+  ], legacyRoots: _legacyTextRoots).resolve(entity);
+
+  Map<String, TextFieldSeed>? _legacyTextRoots(
+    String entity,
+    List<LogEvent> observed,
+  ) {
+    final baseline = _textBaseline;
+    if (baseline == null || !observed.any((event) => event.id == baseline.id)) {
+      return null;
+    }
+    List<LogEvent> entityHistory(List<LogEvent> prefix) {
+      final own = prefix.where((event) => event.entity == entity).toList();
+      final seeds = prefix
+          .where(
+            (event) =>
+                isTaskCompletion(event.type) &&
+                (event.data['successor'] as Map?)?['id'] == entity,
+          )
+          .toList();
+      if (seeds.isNotEmpty) {
+        own.add(
+          successorCreation(
+            selectSuccessor(
+              seeds,
+              prefix.where((event) => event.entity == seeds.first.entity),
+              protected:
+                  own.isNotEmpty ||
+                  prefix.any(
+                    (event) =>
+                        event.type == 'task.moved' &&
+                        event.data['before'] == entity,
+                  ),
+            ).seed,
+          ),
+        );
+      }
+      return own;
+    }
+
+    var basis = baseline;
+    var kind = 'legacy-baseline';
+    var initial = project(
+      entityHistory(
+        observed.where((event) => _baselineIncludes(event, baseline)).toList(),
+      ),
+    );
+    if (initial == null) {
+      final creations = observed
+          .where(
+            (event) => event.entity == entity && event.type == 'task.created',
+          )
+          .toList();
+      if (creations.length != 1) return null;
+      basis = creations.single;
+      kind = 'legacy-creation';
+      initial = project([basis]);
+    }
+    if (initial?['kind'] != 'task') return null;
+    return {
+      for (final field in ['title', 'description'])
+        field: (() {
+          final seed = textEngine!.seedText(initial![field] as String? ?? '');
+          return TextFieldSeed(
+            TextFieldContext(
+              space: space,
+              entity: entity,
+              field: field,
+              basis: basis.id,
+              basisKind: kind,
+              seedHash: sha256.convert(seed.bytes).toString(),
+            ),
+            seed,
+          );
+        })(),
+    };
+  }
+
   List<LogEvent> _baselineEntityHistory(String entity, LogEvent baseline) {
     final own = db
         .select('SELECT raw FROM events WHERE entity=?', [entity])
@@ -2742,7 +2945,7 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
-    final state = project(_entityEvents(entity));
+    final state = _projectEntity(entity);
     if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
       throw FormatFailure('Unknown task.');
     }
@@ -2773,9 +2976,39 @@ class TaskStore {
         'schedule': next.toJson(),
       };
     }
+    var type = 'task.completed';
+    if (data['successor'] != null &&
+        textEngine != null &&
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isNotEmpty) {
+      final fields = _resolvedText(entity);
+      data['inheritance'] = {
+        'codec': 'yrs-v1',
+        'adapter': 1,
+        'frontiers': {
+          for (final row in db.select(
+            'SELECT name,last_seq,chain_head FROM streams',
+          ))
+            (row['name'] as String).replaceFirst(RegExp(r'\.jsonl$'), ''): {
+              'seq': row['last_seq'],
+              'hash': row['chain_head'],
+            },
+        },
+        'fields': {
+          for (final entry in fields.entries)
+            entry.key: {
+              'parentContext': entry.value.context.hash,
+              'seedHash': entry.value.context.seedHash,
+              'stateHash': entry.value.stateHash,
+            },
+        },
+      };
+      type = 'task.completedWithText';
+    }
     return _command(
       entity,
-      'task.completed',
+      type,
       data,
       expectedTaskSnapshot: taskSnapshot,
       onPrepared: onPrepared,
@@ -3134,7 +3367,7 @@ class TaskStore {
     try {
       await _appendCommands([
         for (final id in operations.where((id) => !alreadyUndone.contains(id)))
-          targets[id]!.type == 'task.completed' &&
+          isTaskCompletion(targets[id]!.type) &&
                   targets[id]!.data['successor'] != null
               ? (
                   targets[id]!.entity,
@@ -3165,7 +3398,7 @@ class TaskStore {
     };
     final successors = {
       for (final id in operations.where(undone.contains))
-        if (targets[id]!.type == 'task.completed' &&
+        if (isTaskCompletion(targets[id]!.type) &&
             targets[id]!.data['successor'] != null)
           (targets[id]!.data['successor'] as Map)['id'] as String,
     };

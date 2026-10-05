@@ -26,6 +26,8 @@ import 'task_precision_test.dart' show registerTaskPrecisionTests;
 import 'release_version_test.dart' show registerReleaseVersionTests;
 import 'date_time_rows_test.dart' show registerDateTimeRowTests;
 import 'text_workflow_test.dart' show registerTextWorkflowTests;
+import 'recurring_text_workflow_test.dart'
+    show registerRecurringTextWorkflowTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -163,6 +165,7 @@ void main() {
   registerReleaseVersionTests();
   registerDateTimeRowTests();
   registerTextWorkflowTests();
+  registerRecurringTextWorkflowTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -3602,16 +3605,30 @@ void main() {
         tester,
         () => find.text('Review household supplies').evaluate().isNotEmpty,
       );
-      // A remote later title must survive undoing a local full task edit.
+      // Peer-owned appended characters survive identity-scoped Undo; the
+      // separately pinned causal replacement case covers reused local IDs.
       await tester.pump(const Duration(seconds: 12));
       await tester.pumpAndSettle();
       await editTitle('Review household supplies', 'Local pending review');
-      await writer.editNativeFixtureTask(id, {'title': 'Newer synced review'});
+      await writer.editNativeFixtureTask(id, {
+        'title': 'Local pending review · peer note',
+      });
+      const afterSelectiveUndo = 'Review household supplies · peer note';
       await tester.tap(undo);
-      await waitForUi(
-        tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
-      );
+      try {
+        await waitForUi(
+          tester,
+          () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
+        );
+      } catch (_) {
+        await writer.refresh();
+        debugPrint('TANDEMLOG_NEWER_WAIT_ROWS=${jsonEncode(writer.rows)}');
+        debugPrint(
+          'TANDEMLOG_NEWER_WAIT_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        await captureNativeFixtureUi(tester, 'session-newer-wait-failure');
+        rethrow;
+      }
       try {
         expect(find.textContaining('Newer changes were kept'), findsOneWidget);
       } catch (_) {
@@ -3632,7 +3649,7 @@ void main() {
         rethrow;
       }
       // Deletion restores only our tombstone, then restart clears session history.
-      await tester.tap(find.text('Newer synced review'));
+      await tester.tap(find.text(afterSelectiveUndo));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
       await tester.pumpAndSettle();
@@ -3641,19 +3658,19 @@ void main() {
         tester,
         () =>
             find.byType(TaskEditor).evaluate().isEmpty &&
-            find.text('Newer synced review').evaluate().isEmpty,
+            find.text(afterSelectiveUndo).evaluate().isEmpty,
       );
       await tester.tap(undo);
       await waitForUi(
         tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
+        () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
       );
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await waitForUi(
         tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
+        () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
       );
       expect(tester.widget<IconButton>(undo).onPressed, isNull);
       await tester.pumpWidget(const SizedBox());

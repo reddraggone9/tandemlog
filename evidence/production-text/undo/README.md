@@ -1,7 +1,8 @@
 # Native Undo lifecycle checkpoint
 
-Status: unreleased, blocked with the unpatched dependency; an isolated repair is
-reviewed but not adopted. All fixtures, data and screenshots are synthetic.
+Status: historical unpatched investigation. Lee approved the narrow patch on
+2026-10-05; current adoption and successor evidence is [recorded separately](../recurring/README.md).
+The original isolated logs remain unchanged. All fixtures, data and screenshots are synthetic.
 
 ## Observed defects and implemented safeguards
 

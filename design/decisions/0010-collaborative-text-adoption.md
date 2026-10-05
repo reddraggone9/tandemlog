@@ -1,9 +1,9 @@
 # Collaborative task text
 
-Status: implementation authorized on 2026-10-04; unreleased on
-`experiment/text-activation-policy`. Initial native Linux editing checks pass;
-an extended Undo lifecycle regression currently blocks adoption. Full platform
-and release gates remain pending.
+Status: implementation authorized on 2026-10-04; successor union and the narrow
+Yrs patch accepted on 2026-10-05. Implemented on the unreleased
+`experiment/text-activation-policy` branch. Full platform and release gates remain
+pending; no CRDT release or stable behavior change has been published.
 
 ## Accepted behavior
 
@@ -97,10 +97,11 @@ the same acknowledged Undo can consequently fail the exact native-state check.
 No check is weakened and no canonical packet is regenerated to hide this.
 The [isolated patch proposal](../../evidence/production-text/undo/README.md)
 sorts that traversal by immutable `(client, clock)` IDs and passes the observed
-regression plus the frozen native corpus. It is not adopted: maintaining a
-patch to a core dependency versus redesigning snapshot ownership needs Lee's
-decision. This evidence establishes the tested path, not general determinism of
-all Yrs features.
+regression plus the frozen native corpus. Lee subsequently approved carrying
+this patch (Sentinel_d979d6961af481918adb9e972c57a5e6). The exact official crate
+and one-file patch are now vendored with mandatory integrity checks and retained
+MIT notices; see [dependency maintenance](../dependencies.md). This establishes
+the tested path, not general determinism of all Yrs features.
 
 A confirmed Save whose local Undo registration has not finished must not be
 silently absent from older Undo preparation. Matching affected fields now block
@@ -135,13 +136,15 @@ Independent legacy snapshot activation cannot safely pick one acknowledged root.
 Rendered-string checkpoints discard identity and pending dependencies. Automatic
 old-draft rebasing cannot recover character intent from full strings.
 
-Concurrent recurring completions still need an immutable successor text basis.
-The proposed union of text observed by either completion is a pending product
-decision; do not silently adopt it or change old completion snapshots. No native
-recurrence release proceeds while this is unresolved. Local recurring completion
-of a native-text occurrence currently fails before preparation or append. This
-temporary guard does not alter historical replay or old scalar completion
-semantics; it must be replaced by the agreed successor contract before release.
+Lee approved completion-observed text union on 2026-10-05
+(Sentinel_c7fb9a6f19ec8191960444879687d3a5). The new additive completion contract
+below replaces the temporary native-recurrence guard. Historical scalar
+completion records retain their original snapshot selection and Undo meaning.
+Mixing a historical scalar successor initialization with the new native lineage
+is explicitly rejected before local receipt preparation; neither history nor
+existing character identities are rebased. This compatibility edge remains a
+release limitation requiring a concrete policy before claiming universal
+recompletion support.
 
 The production controller, captured editor and session Undo are wired. The
 native Linux flow covers offline creation before setup, private draft retention
@@ -308,3 +311,78 @@ authorship of a peer's characters. Missing proof stays pending. Before adopting
 it, test reordered/duplicate completions, early child edits, parent edits after
 completion, late Undo/protection, inherited deletion and missing dependencies.
 Nontext schedule/tag/assignee ordering remains under the existing contract.
+
+
+## Accepted successor inheritance — 2026-10-05
+
+`task.completedWithText` retains the existing successor UUID, nontext snapshot
+and recurrence schedule. It adds verified observed stream frontiers plus title
+and notes parent-context, seed and full-native-state hashes. The child context
+is derived from its immutable parent context and child UUID, independent of
+which completion arrives first. It reuses original parent seed/operation packets
+with their original actor ownership; the completing writer cannot claim peer
+characters. Contributions from concurrent completions union with the child's own
+packets. Parent edits absent from every completion proof do not enter the child.
+A completion retraction does not unmerge independently inherited text; existing
+untouched-child suppression and protection of child work/anchors remain.
+
+Missing declared heads or a current child update awaiting another inheritance
+grant remain pending. All declared heads present establish a closed prefix:
+missing dependencies inside that immutable prefix invalidate its proof, rather
+than waiting for records the completion never observed. Pending views retain
+verified cache state, disable new capture/Save, and preserve open private drafts
+and scoped Undo owners. Arrival retries them without a canonical write. A local
+command resolves strictly before any receipt preparation. Original canonical
+packets, clocks, hashes, historical completion and Undo meanings are untouched.
+
+The pure resolver memoizes each immutable completion's observed parent state
+within one resolution, preventing concurrent ancestor proofs from multiplying
+reconstruction. The cache independently replays original packets and checks
+resolved state before persisting disposable BLOBs/frontiers. Warm store startup
+retains its existing zero-log-read path. Affected recurring fields still verify
+their lineage on updates; long-history performance remains a measured release
+gate, not an assertion of constant-time replay.
+
+## Upstream Undo contract assessment — 2026-10-05
+
+The pinned [UndoManager documentation/source](https://github.com/y-crdt/y-crdt/blob/23b7f5693bbf9e7d26340c521ee8647f79bdfba2/yrs/src/undo.rs)
+describes scoped origins, batching and Undo/Redo, but does not promise identical
+new character identities or encoded bytes when independent managers repeat an
+operation. It also does not explicitly declare this behavior undefined. Our
+assessment is **undocumented and not guaranteed**, distinct from Rust undefined
+behavior. Deterministic merging of the same transmitted updates is a different
+contract from independently generating matching compensations.
+
+There is related upstream bug precedent: [issue 380](https://github.com/y-crdt/y-crdt/issues/380#issuecomment-2005729242)
+discusses unordered traversal; its [merged repair 401](https://github.com/y-crdt/y-crdt/pull/401)
+changes item-slice handling, not our sorted traversal. [Issue 412](https://github.com/y-crdt/y-crdt/issues/412#issuecomment-3646995013)
+reports mixed Undo/Redo content loss; a contributor proposed ordered IDs and the
+[maintainer invited a PR](https://github.com/y-crdt/y-crdt/issues/412#issuecomment-3655110055).
+That is relevant precedent, not upstream approval of Tandemlog's exact patch.
+Our isolated failure establishes identity/state divergence; it does not alone
+establish different visible text or predict maintainers' judgment. No upstream
+issue, PR or contact was created. The earlier decision brief above remains the
+historical proposal; Lee's approvals and implemented behavior here supersede its
+pending status.
+
+
+## Character Undo versus whole-title preservation
+
+The approved native contract compensates owned character identities, unlike the
+historical scalar register in ADR0005. A causal peer edit may reuse characters
+originally inserted by the local command. Those reused characters still belong
+to that command: `A` → local `BC` → peer `DC` → local Undo gives `AD`, converged
+on both peers. It removes our `C`, restores our deleted `A` and retains peer `D`.
+The independent-insertion control `AB` → `AXB` → `AXBY` → Undo gives `ABY`.
+Actual native/store tests pin both; old scalar whole-field protection remains in
+historical compatibility tests.
+
+A GTK assertion assuming the peer's entire rendered replacement survived was
+stale whole-field coverage. The original diagnostic is retained in current
+evidence, and the broad flow now checks owned peer append preservation. This
+can produce awkward prose after whole-title replacements, not just concurrent
+edits. Guaranteeing the complete later rendered replacement would need a different
+policy, such as conservatively blocking dependent compensation; that is not
+silently introduced here. Exact packets, named operations and canonical receipt
+checks are unchanged. The current UI notice refers to preserved contributions,
+not a guarantee that every later rendered string remains verbatim.

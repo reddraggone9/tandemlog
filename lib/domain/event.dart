@@ -8,6 +8,8 @@ import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
 
 const protocolVersion = 3;
+bool isTaskCompletion(String type) =>
+    type == 'task.completed' || type == 'task.completedWithText';
 final _idShape = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
 );
@@ -178,6 +180,7 @@ class LogEvent {
             throw FormatFailure('Missing order anchor.');
           }
         case 'task.completed':
+        case 'task.completedWithText':
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -198,6 +201,15 @@ class LogEvent {
             if (next['id'] != const Uuid().v5(j['entity'], 'successor')) {
               throw FormatFailure('Invalid derived successor identity.');
             }
+          }
+          if (j['type'] == 'task.completedWithText') {
+            if (!d.containsKey('successor') ||
+                d['inheritance'] is! Map<String, dynamic>) {
+              throw FormatFailure(
+                'Native completion requires text inheritance.',
+              );
+            }
+            validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
           }
           break;
         case 'task.completionUndone':
@@ -268,6 +280,7 @@ class LogEvent {
         'task.deleted' => <String>{},
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
+        'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
         'task.operationUndone' => {'operation'},
         _ => {'completion'},
       };
@@ -396,7 +409,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       }
       tagRemoves.addAll((changes['remove'] as List).cast<String>());
     }
-    if (e.type == 'task.completed') completions.add(e.id);
+    if (isTaskCompletion(e.type)) completions.add(e.id);
     if (e.type == 'task.completionUndone') {
       undone.add(e.data['completion'] as String);
     }
@@ -415,7 +428,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final active = completions.difference(undone);
   state['completed'] = active.isNotEmpty;
   final activeEvents = events.where(
-    (event) => event.type == 'task.completed' && active.contains(event.id),
+    (event) => isTaskCompletion(event.type) && active.contains(event.id),
   );
   state['completedAt'] = activeEvents.isEmpty
       ? null
@@ -594,3 +607,40 @@ dynamic _freezeJson(dynamic value) {
   if (value is List) return List<dynamic>.unmodifiable(value.map(_freezeJson));
   return value;
 }
+
+/// Admission for immutable observed-parent proof metadata, independent of native
+/// state decoding and persistence. Native callers separately verify field hashes.
+void validateTextInheritance(Map<String, dynamic> data) {
+  if (!_keys(data, {'codec', 'adapter', 'frontiers', 'fields'}) ||
+      data['codec'] != 'yrs-v1' ||
+      data['adapter'] is! int ||
+      data['adapter'] != 1 ||
+      data['frontiers'] is! Map<String, dynamic> ||
+      (data['frontiers'] as Map).isEmpty ||
+      data['fields'] is! Map<String, dynamic>) {
+    throw FormatFailure('Invalid text inheritance descriptor.');
+  }
+  // Reuse baseline frontier admission, including namespace and safe integers.
+  validateTextBaseline({
+    'codec': data['codec'],
+    'adapter': data['adapter'],
+    'frontiers': data['frontiers'],
+    'seedDigest': '0' * 64,
+  });
+  final fields = data['fields'] as Map<String, dynamic>;
+  if (!_keys(fields, {'title', 'description'})) {
+    throw FormatFailure('Text inheritance requires both fields.');
+  }
+  for (final field in fields.values) {
+    if (field is! Map<String, dynamic> ||
+        !_keys(field, {'parentContext', 'seedHash', 'stateHash'}) ||
+        !isEventHash(field['parentContext']) ||
+        !isEventHash(field['seedHash']) ||
+        !isEventHash(field['stateHash'])) {
+      throw FormatFailure('Invalid inherited text field proof.');
+    }
+  }
+}
+
+bool _keys(Map<String, dynamic> value, Set<String> expected) =>
+    value.length == expected.length && value.keys.every(expected.contains);

@@ -83,6 +83,32 @@ or treated as accepted task state. Missing native engine support fails explicitl
 if required native records are present. The extension is not released; native
 recurring successor semantics and platform acceptance remain gates.
 
+## Unreleased native successor text
+
+`task.completedWithText` is additive to the existing v3 envelope and completion
+snapshot; older readers explicitly reject its required type. Its payload is
+`completedAt`, `successor`, and `inheritance`. Inheritance has exactly
+`codec: "yrs-v1"`, integer `adapter: 1`, `frontiers`, and `fields`. Frontiers map
+writer UUIDs to exact `{seq, hash}` heads, including bound genesis for seq zero.
+Both `title` and `description` declare exactly `parentContext`, `seedHash`, and
+`stateHash` SHA-256 values. Known heads must match admitted hashes, precede the
+completion clock, and never point forward in its writer's sequence.
+
+The native adapter resolves the parent at exactly those immutable prefixes,
+verifies declared context/seed/full-state hashes and snapshot strings, then
+contributes original native packets to the child's fixed lineage. Packets retain
+their original actor context, writer and allocation. Child context uses
+`basisKind: "recurring-successor"` and its parent's context hash as basis, with
+unchanged root seed hash. Child edits bind only that child context. No raw source,
+formatting provenance or new canonical checkpoint is introduced.
+
+Missing heads/current ungranted dependencies are pending; an incomplete closed
+proof is invalid. Cache flags never authorize new native capture/Save before
+proof verification. Completion Undo does not retract inherited text. Old
+`task.completed` retains its exact scalar snapshot semantics; mixed historical
+scalar/new native initialization is rejected explicitly, preserving both data
+and identities. See [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+
 ## Durability and recovery
 
 Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.

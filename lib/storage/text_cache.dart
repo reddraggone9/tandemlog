@@ -6,6 +6,7 @@ import '../domain/event.dart';
 import '../domain/text_actor.dart';
 import '../domain/text_context.dart';
 import '../text/native_text_engine.dart';
+import '../text/recurring_text.dart';
 
 /// Disposable full native state. Every candidate is private until SQLite commits;
 /// editor documents and their captured drafts are never used for materialization.
@@ -48,6 +49,124 @@ class TextCache {
         ]);
       }
     }
+  }
+
+  /// Cache a resolver-verified lineage. Original packet claims remain scoped to
+  /// their original context; the resolver supplies the inheritance grants.
+  /// The caller owns the SQLite transaction, as for ordinary materialization.
+  void materializeResolved(
+    Map<String, dynamic> view,
+    Map<String, ResolvedTextField> fields,
+  ) {
+    if (fields.length != 2 ||
+        !fields.containsKey('title') ||
+        !fields.containsKey('description')) {
+      throw FormatFailure('Resolved text requires both fields.');
+    }
+    final registry = TextActorRegistry();
+    registry.bindAll(
+      db
+          .select('SELECT context,writer,allocation,actor FROM text_actors')
+          .map(
+            (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
+          ),
+    );
+    final claims = <TextActorClaim>[];
+    final rows = <List<Object?>>[];
+    final texts = <String, String>{};
+    for (final entry in fields.entries) {
+      final field = entry.key,
+          resolved = entry.value,
+          context = resolved.context;
+      if (context.entity != view['id'] ||
+          context.field != field ||
+          sha256.convert(resolved.seed.bytes).toString() != context.seedHash) {
+        throw FormatFailure('Resolved native context or seed mismatch.');
+      }
+      final candidate = engine.createDocument(
+        actorClientId: 2,
+        limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
+        seed: resolved.seed,
+      );
+      final applied = <String, String>{};
+      try {
+        final ordered = resolved.operations.toList()
+          ..sort((a, b) => compareEvents(a.event, b.event));
+        for (final operation in ordered) {
+          final event = operation.event;
+          if (event.canonicalRaw == null ||
+              event.space != context.space ||
+              operation.field != field ||
+              (event.type != 'task.textEdited' &&
+                  event.type != 'task.textEditUndone')) {
+            throw FormatFailure('Invalid original inherited text packet.');
+          }
+          final canonical = LogEvent.decode(event.canonicalRaw!);
+          final change = (canonical.data['changes'] as Map)[field] as Map?;
+          final claim = operation.claim;
+          if (change == null ||
+              claim.writer != canonical.writer ||
+              change['context'] != claim.context ||
+              change['actor'] != claim.actor ||
+              change['allocation'] != claim.allocation ||
+              change['update'] != operation.update.encoded) {
+            throw FormatFailure(
+              'Inherited packet differs from original canonical authorship.',
+            );
+          }
+          registry.bindAll([claim]);
+          registry.validateStructActors(
+            claim,
+            engine.inspect(operation.update),
+          );
+          final previous = applied[event.id];
+          if (previous != null && previous != operation.update.encoded) {
+            throw FormatFailure('Conflicting inherited packet identity.');
+          }
+          if (previous == null) candidate.applyRemote(operation.update);
+          applied[event.id] = operation.update.encoded;
+          claims.add(claim);
+        }
+        final state = candidate.fullState.bytes;
+        final stateHash = sha256.convert(state).toString();
+        final text = candidate.read().text;
+        if (stateHash != resolved.stateHash || text != resolved.text) {
+          throw FormatFailure(
+            'Resolved native state differs from its original packets.',
+          );
+        }
+        final frontier = applied.keys.toList()..sort();
+        rows.add([
+          view['id'],
+          field,
+          context.hash,
+          'yrs-v1',
+          1,
+          context.seedHash,
+          state,
+          stateHash,
+          jsonEncode(frontier),
+        ]);
+        texts[field] = text;
+      } finally {
+        candidate.dispose();
+      }
+    }
+    for (final claim in claims) {
+      db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
+        claim.context,
+        claim.actor,
+        claim.writer,
+        claim.allocation,
+      ]);
+    }
+    for (final row in rows) {
+      db.execute(
+        'INSERT OR REPLACE INTO text_fields VALUES (?,?,?,?,?,?,?,?,?)',
+        row,
+      );
+    }
+    view.addAll(texts);
   }
 
   void materialize(

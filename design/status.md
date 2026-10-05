@@ -1,36 +1,39 @@
 # Current status — 2026-10-05
 
-## Authorized text integration — isolated, unreleased, blocked
+## Authorized text integration — isolated, unreleased
 
-`experiment/text-activation-policy` contains captured title/notes, receipt-gated
-Save/selective Undo, private uncertain-command recovery, shared legacy setup and
-offline new-task editing. Initial native GTK flows pass, including private drafts
-during peer arrivals and two successive closed-editor Undos. The larger repeated
-save/Undo/close/new-owner regression exposes nondeterministic native identity
-reconstruction; current unpatched dependency adoption remains blocked.
+Lee approved both completion-observed successor text union and the narrow Yrs
+0.28.0 restoration patch on 2026-10-05. The branch now vendors the reviewed
+67-file official crate with only the approved traversal change, integrity gates,
+exact provenance and MIT notices. Repeated closed-editor Save/Undo no longer
+blocks the tested path. No CRDT main adoption or release has occurred.
 
-An external three-line Yrs0.28.0 traversal patch passes454 unit/widget cases,
-50 actual-library application/FFI/store/session/coordinator cases,98 unchanged
-frozen native cases and4 Rust tests. Its exact source, patch and independent
-review are [recorded](../evidence/production-text/undo/README.md), but the patch is
-not adopted. Source/lock files remain pinned unchanged. Maintaining that patch
-versus redesigning snapshot ownership requires Lee's decision. Earlier green
-counts are chronological evidence, not a green current unpatched aggregate.
+The actual adopted library passes 98 frozen native cases, four Rust cases,
+35 tooling checks and four notice checks. The application aggregate passes
+470 unit/widget cases plus the new real-store identity contract regression,
+including closed-proof and three-writer delayed-head
+regressions. Production-store tests cover offline parent completions,
+child edits/private drafts before late arrivals, original actor ownership,
+selective Undo, post-completion parent isolation, warm zero-log-read reopen and
+exact cold-cache reconstruction. Bundled GTK completion → successor edit → Save
+→ Undo passes; its native library hash matches the adopted build. Independent
+review's pending/strict-command/closed-proof findings were fixed and regressed.
+See [current evidence](../evidence/production-text/recurring/README.md).
 
-Matching acknowledged-but-unregistered Saves now block stale Undo before append.
-Native ordering participates in chronological moves; cache positions revision3
-repairs prior revision2 from cached records, with no canonical-log read/change.
-Mandatory native-engine hosted gates and three-ABI APK packaging checks are
-implemented. A local debug APK passes alignment/payload/notices checks; it is not
-owner-signed or a user candidate. Native Windows and exact signed Android CRDT
-acceptance remain pending. Hosted CRDT CI is held against the known replay failure.
-Release startup measurements and their exact source/limits are in the
-[production evidence](../evidence/production-text/README.md).
-
-Recurring successor text separately needs Lee's product decision; the current
-preappend guard preserves old history. No production-text main adoption or release
-has occurred. The approved build45 layout/media are merged into this branch;
-its accepted signed artifacts/publication remain parent/local-task owned.
+Independent native/store probes confirmed that a broader GTK whole-title
+expectation was stale scalar LWW coverage: native `A → BC → DC → Undo = AD`
+retains original character ownership and converges. The original real diagnostic
+is retained; actual ownership and peer-append preservation replace that assertion,
+with awkward whole-title Undo text documented. The corrected bundled GTK
+aggregate passes all three flows; the final focused suite passes 35 cases after
+affected-owner refresh optimization.
+Full hosted Linux/Windows/Android checks, exact signed Android installation and
+new behavior acceptance remain required. Mixed historical scalar/new native
+successor initialization stays an explicit compatibility limitation; no rebasing
+or rewriting is attempted. Long-history affected-field replay/startup performance
+and final native workflow coverage remain release gates. Existing published
+build45 remains parent/local-owned; its notes now retain one ordinary-width
+comparison. The private checklist prototype stays paused.
 
 Checklist clarification: an unpublished domain/storage prototype was implemented
 on2026-10-04 and saved outside the repository at

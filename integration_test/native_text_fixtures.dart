@@ -22,9 +22,8 @@ Future<TaskStore> openNativeFixtureStore(
 }
 
 extension NativeTaskFixtures on TaskStore {
-  /// Historical v3 recurrence stays unactivated until its successor text
-  /// contract is accepted. This covers legacy compatibility, not native
-  /// recurring completion acceptance.
+  /// Historical v3 recurrence stays unactivated in this fixture to cover old
+  /// scalar compatibility independently of the additive native contract.
   Future<LogEvent> createHistoricalRecurrenceFixtureTask(
     String entity,
     Map<String, dynamic> data,
