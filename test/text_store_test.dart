@@ -17,6 +17,217 @@ void main() {
     'actual native TaskStore',
     () {
       test(
+        'successive closed-editor replacements Undo without duplicating restored identities',
+        () async {
+          final root = await Directory.systemTemp.createTemp(
+            'text-undo-replacements-',
+          );
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? store;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            final folder = LocalLogFolder(shared.path);
+            final profile = '${root.path}/profile';
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            final user = const Uuid().v4(), task = const Uuid().v4();
+            await store.command(user, 'user.created', {'name': 'Synthetic'});
+            await store.command(
+              task,
+              'task.createdWithText',
+              _creationData(engine, user, 'Review household supplies'),
+            );
+            final receipts = <OperationReceipt>[];
+            for (final title in [
+              'Check household supplies',
+              'Plan household supplies',
+            ]) {
+              final capture = await store.captureTaskText(task),
+                  field = capture.fields['title']!;
+              final draft = field.document.captureDraft(
+                actorClientId: field.actor,
+              )..replaceText(title);
+              final prepared = draft.prepareSave();
+              OperationReceipt? receipt;
+              await store.editNativeTask(task, {
+                'title': {
+                  'context': field.context,
+                  'allocation': field.allocation,
+                  'actor': field.actor,
+                  'update': prepared.update.encoded,
+                },
+              }, onPrepared: (value) => receipt = value);
+              prepared.commit(receiptUpdate: prepared.update);
+              store.registerTextOperation(receipt!, capture);
+              receipts.add(receipt!);
+              draft.cancel();
+              store.releaseTextCapture(capture);
+            }
+            for (final (receipt, expected) in [
+              (receipts.last, 'Check household supplies'),
+              (receipts.first, 'Review household supplies'),
+            ]) {
+              final result = await store.undoOperations([receipt.id]);
+              expect(
+                result.remaining,
+                isEmpty,
+                reason: result.error?.toString(),
+              );
+              expect(
+                store.rows.singleWhere((row) => row['id'] == task)['title'],
+                expected,
+              );
+              store.releaseTextOperations([receipt.id]);
+            }
+            // After all original history owners are released, new editors
+            // must still acknowledge and retain their own scoped Undo.
+            for (var cycle = 0; cycle < 8; cycle++) {
+              final capture = await store.captureTaskText(task),
+                  field = capture.fields['title']!;
+              final draft = field.document.captureDraft(
+                actorClientId: field.actor,
+              )..replaceText('Local edited supplies $cycle');
+              final prepared = draft.prepareSave();
+              OperationReceipt? receipt;
+              await store.editNativeTask(task, {
+                'title': {
+                  'context': field.context,
+                  'allocation': field.allocation,
+                  'actor': field.actor,
+                  'update': prepared.update.encoded,
+                },
+              }, onPrepared: (value) => receipt = value);
+              prepared.commit(receiptUpdate: prepared.update);
+              store.registerTextOperation(receipt!, capture);
+              draft.cancel();
+              store.releaseTextCapture(capture);
+              final undone = await store.undoOperations([receipt!.id]);
+              expect(
+                undone.remaining,
+                isEmpty,
+                reason: undone.error?.toString(),
+              );
+              store.releaseTextOperations([receipt!.id]);
+              expect(
+                store.rows.singleWhere((row) => row['id'] == task)['title'],
+                'Review household supplies',
+              );
+            }
+            final canonical = await File(
+              '${shared.path}/${store.writer}.jsonl',
+            ).readAsBytes();
+            await store.close();
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            expect(
+              store.rows.singleWhere((row) => row['id'] == task)['title'],
+              'Review household supplies',
+            );
+            expect(store.readFiles, 0);
+            expect(
+              await File('${shared.path}/${store.writer}.jsonl').readAsBytes(),
+              canonical,
+            );
+            await store.close();
+            store = await TaskStore.open(
+              folder,
+              '${root.path}/rebuilt',
+              textEngine: engine,
+            );
+            expect(
+              store.rows.singleWhere((row) => row['id'] == task)['title'],
+              'Review household supplies',
+            );
+            expect(
+              await File(
+                '${shared.path}/${receipts.first.id.split(':').first}.jsonl',
+              ).readAsBytes(),
+              canonical,
+            );
+          } finally {
+            await store?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
+      test(
+        'acknowledged unregistered Save blocks stale native Undo without appending',
+        () async {
+          final root = await Directory.systemTemp.createTemp(
+            'text-undo-registration-',
+          );
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? store;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            store = await TaskStore.open(
+              LocalLogFolder(shared.path),
+              '${root.path}/profile',
+              textEngine: engine,
+            );
+            final user = const Uuid().v4(), task = const Uuid().v4();
+            await store.command(user, 'user.created', {'name': 'Synthetic'});
+            await store.command(
+              task,
+              'task.createdWithText',
+              _creationData(engine, user, 'A'),
+            );
+            final captures = <TaskTextCapture>[];
+            final receipts = <OperationReceipt>[];
+            for (final text in ['AX', 'AXY']) {
+              final capture = await store.captureTaskText(task),
+                  field = capture.fields['title']!;
+              final draft = field.document.captureDraft(
+                actorClientId: field.actor,
+              )..replaceText(text);
+              final prepared = draft.prepareSave();
+              OperationReceipt? receipt;
+              await store.editNativeTask(task, {
+                'title': {
+                  'context': field.context,
+                  'allocation': field.allocation,
+                  'actor': field.actor,
+                  'update': prepared.update.encoded,
+                },
+              }, onPrepared: (value) => receipt = value);
+              prepared.commit(receiptUpdate: prepared.update);
+              if (receipts.isEmpty) {
+                store.registerTextOperation(receipt!, capture);
+              }
+              captures.add(capture);
+              receipts.add(receipt!);
+            }
+            final log = File('${shared.path}/${store.writer}.jsonl');
+            final before = await log.readAsBytes();
+            final blocked = await store.undoOperations([receipts.first.id]);
+            expect(blocked.remaining, [receipts.first.id]);
+            expect(blocked.error.toString(), contains('Undo registration'));
+            expect(await log.readAsBytes(), before);
+            expect(store.pendingTextOperations, isEmpty);
+            expect(
+              store.rows.singleWhere((row) => row['id'] == task)['title'],
+              'AXY',
+            );
+            store.registerTextOperation(receipts.last, captures.last);
+            for (final receipt in receipts.reversed) {
+              final undone = await store.undoOperations([receipt.id]);
+              expect(
+                undone.remaining,
+                isEmpty,
+                reason: undone.error?.toString(),
+              );
+            }
+            expect(
+              store.rows.singleWhere((row) => row['id'] == task)['title'],
+              'A',
+            );
+          } finally {
+            await store?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
+      test(
         'mixed native ordering survives warm reopen and canonical rebuild',
         () async {
           final root = await Directory.systemTemp.createTemp('text-order-');
@@ -459,6 +670,7 @@ void main() {
             );
             final result = await store.undoOperations([originals.last.id]);
             expect(result.remaining, isEmpty, reason: result.error?.toString());
+            expect(result.keptNewerChanges, isTrue);
             expect(
               store.rows.singleWhere((row) => row['id'] == task)['title'],
               'AX',

@@ -410,11 +410,30 @@ class NativeTextDocument {
     return _snapshot(_call('apply_local', {'update': update.encoded}));
   }
 
+  /// Retain this acknowledged Save as a separately named Undo item in the
+  /// session owner. Repeated exact registration is idempotent.
+  NativeTextSnapshot applyOwnedReceipt(
+    NativeTextUpdate update, {
+    required String operationId,
+  }) {
+    _ensureLocalReady();
+    if (update.bytes.length > limits.updateBytes) {
+      throw const FormatException(
+        'Operation exceeds the document update budget',
+      );
+    }
+    return _snapshot(
+      _call('apply_owned', {
+        'operation': operationId,
+        'update': update.encoded,
+      }),
+    );
+  }
+
   NativeTextDraft captureDraft({required int actorClientId}) =>
       _engine.captureDraft(this, actorClientId: actorClientId);
   NativeTextPreparedUndo prepareUndo() {
     _ensureOpen();
-    if (_preparedUndo?._pending ?? false) return _preparedUndo!;
     final result = _call('prepare_undo');
     if (result['changed'] != true) {
       throw const NativeTextException(
@@ -422,11 +441,41 @@ class NativeTextDocument {
         'Native Undo did not prepare an effective change',
       );
     }
-    return _preparedUndo = NativeTextPreparedUndo._(
-      this,
-      _string(result, 'token', 'prepare_undo'),
-      NativeTextUpdate.parse(result['update']),
-    );
+    return _retainPreparedUndo(result, 'prepare_undo');
+  }
+
+  /// Prepare only the named acknowledged operation. An ineffective item
+  /// prepares an empty compensation, preserving every other Undo item.
+  NativeTextPreparedUndo prepareOperationUndo({required String operationId}) {
+    _ensureOpen();
+    final result = _call('prepare_operation_undo', {'operation': operationId});
+    if (result['changed'] != true) {
+      throw const NativeTextException(
+        'prepare_operation_undo',
+        'Native operation Undo was not prepared',
+      );
+    }
+    return _retainPreparedUndo(result, 'prepare_operation_undo');
+  }
+
+  NativeTextPreparedUndo _retainPreparedUndo(
+    Map<String, dynamic> result,
+    String operation,
+  ) {
+    final token = _string(result, 'token', operation);
+    final update = NativeTextUpdate.parse(result['update']);
+    if (_preparedUndo?._pending ?? false) {
+      if (_preparedUndo!.token != token ||
+          _preparedUndo!.update.encoded != update.encoded) {
+        throw NativeTextException(
+          operation,
+          'Pending Undo identity or immutable bytes changed',
+          outcomeUnknown: true,
+        );
+      }
+      return _preparedUndo!;
+    }
+    return _preparedUndo = NativeTextPreparedUndo._(this, token, update);
   }
 
   void dispose() {

@@ -43,6 +43,45 @@ void main() {
       );
 
       test(
+        'pending named Undo rejects a different operation and keeps exact retry',
+        () {
+          final source = document(300, text: 'A');
+          final owner = document(301, text: 'A');
+          for (final (actor, title, operation) in [
+            (302, 'AX', 'first'),
+            (303, 'AXY', 'second'),
+          ]) {
+            final draft = source.captureDraft(actorClientId: actor)
+              ..replaceText(title);
+            final save = draft.prepareSave();
+            save.commit(receiptUpdate: save.update);
+            owner.applyOwnedReceipt(save.update, operationId: operation);
+          }
+          final before = owner.fullState.encoded;
+          final first = owner.prepareOperationUndo(operationId: 'first');
+          expect(
+            () => owner.prepareOperationUndo(operationId: 'second'),
+            throwsA(isA<NativeTextException>()),
+          );
+          expect(
+            () => owner.prepareUndo(),
+            throwsA(isA<NativeTextException>()),
+          );
+          expect(
+            identical(owner.prepareOperationUndo(operationId: 'first'), first),
+            isTrue,
+          );
+          expect(owner.fullState.encoded, before);
+          first.cancel();
+          final second = owner.prepareOperationUndo(operationId: 'second');
+          second.commit(receiptUpdate: second.update);
+          expect(owner.read().text, 'AX');
+          final retry = owner.prepareOperationUndo(operationId: 'first');
+          retry.commit(receiptUpdate: retry.update);
+          expect(owner.read().text, 'A');
+        },
+      );
+      test(
         'dedicated receipt owner never undoes an older Save after remote cancellation',
         () {
           final live = document(200, text: 'A');

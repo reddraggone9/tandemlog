@@ -101,7 +101,16 @@ class _NativeTextOperation {
 }
 
 class _NativeUndoField {
-  _NativeUndoField(this.context, this.allocation, this.actor, this.document);
+  _NativeUndoField(
+    this.entity,
+    this.field,
+    this.context,
+    this.allocation,
+    this.actor,
+    this.document,
+  );
+  final String entity, field;
+  final Set<String> applied = {};
   final String context, allocation;
   final int actor;
   final NativeTextDocument document;
@@ -123,6 +132,7 @@ class TaskStore {
   final Map<String, _NativeTextOperation> _nativeOperations = {};
   final Map<String, Map<String, Map<String, dynamic>>> _preparedTextBases = {};
   final Map<NativeTextDocument, List<String>> _nativeUndoStacks = {};
+  final Map<String, _NativeUndoField> _nativeUndoFields = {};
   static const _textTypes = {
     'task.createdWithText',
     'task.textEdited',
@@ -1332,12 +1342,13 @@ class TaskStore {
       );
     }
     final owners = <String, _NativeUndoField>{};
-    try {
-      for (final name in fields) {
-        final base = bases[name]!;
-        final context = base['context'] as String;
-        final allocation = const Uuid().v4(),
-            actor = deriveTextActor(context, writer, allocation);
+    for (final name in fields) {
+      final base = bases[name]!;
+      final context = base['context'] as String;
+      var owner = _nativeUndoFields[context];
+      if (owner == null) {
+        final allocation = const Uuid().v4();
+        final actor = deriveTextActor(context, writer, allocation);
         final document = textEngine!.restoreDocument(
           actorClientId: actor,
           limits: NativeTextLimits(visibleUtf16: name == 'title' ? 500 : 10000),
@@ -1345,33 +1356,34 @@ class TaskStore {
             NativeTextState.parse(base64Encode(base['state'] as Uint8List)),
           ),
         );
-        owners[name] = _NativeUndoField(context, allocation, actor, document);
-        document.applyLocalReceipt(
+        owner = _NativeUndoField(
+          event.entity,
+          name,
+          context,
+          allocation,
+          actor,
+          document,
+        );
+        owner.applied.addAll(
+          (jsonDecode(base['frontier'] as String) as List).cast<String>(),
+        );
+        _nativeUndoFields[context] = owner;
+      }
+      owners[name] = owner;
+      _syncNativeUndoField(
+        owner,
+        _entityEvents(event.entity),
+        exclude: event.id,
+      );
+      if (!owner.applied.contains(event.id)) {
+        owner.document.applyOwnedReceipt(
           NativeTextUpdate.parse(
             (event.data['changes'] as Map)[name]['update'],
           ),
+          operationId: event.id,
         );
-        final covered = (jsonDecode(base['frontier'] as String) as List)
-            .cast<String>()
-            .toSet();
-        for (final later in _entityEvents(event.entity)) {
-          if (later.id == event.id ||
-              covered.contains(later.id) ||
-              (later.type != 'task.textEdited' &&
-                  later.type != 'task.textEditUndone')) {
-            continue;
-          }
-          final change = (later.data['changes'] as Map)[name] as Map?;
-          if (change != null && change['context'] == context) {
-            document.applyRemote(NativeTextUpdate.parse(change['update']));
-          }
-        }
+        owner.applied.add(event.id);
       }
-    } catch (_) {
-      for (final owner in owners.values) {
-        owner.document.dispose();
-      }
-      rethrow;
     }
     _nativeOperations[event.id] = _NativeTextOperation(
       receipt,
@@ -1382,7 +1394,7 @@ class TaskStore {
     _preparedTextBases.remove(event.id);
     for (final name in fields) {
       _nativeUndoStacks
-          .putIfAbsent(capture.fields[name]!.document, () => [])
+          .putIfAbsent(owners[name]!.document, () => [])
           .add(event.id);
     }
   }
@@ -1401,14 +1413,20 @@ class TaskStore {
             in owner.prepared?.values ?? <NativeTextPreparedUndo>[]) {
           prepared.cancel();
         }
-        for (final field in owner.owners.values) {
-          field.document.dispose();
-        }
         for (final name in owner.fields) {
-          final document = owner.capture.fields[name]!.document;
+          final field = owner.owners[name]!;
+          final document = field.document;
           final stack = _nativeUndoStacks[document];
           stack?.remove(id);
           if (stack?.isEmpty == true) _nativeUndoStacks.remove(document);
+          final retained = _nativeOperations.entries.any(
+            (entry) =>
+                entry.key != id && entry.value.owners.values.contains(field),
+          );
+          if (!retained) {
+            _nativeUndoFields.remove(field.context);
+            document.dispose();
+          }
         }
         _nativeOperations.remove(id);
       }
@@ -1419,7 +1437,7 @@ class TaskStore {
   }
 
   /// Closed editors release source handles. Saved operations retain separate
-  /// single-operation Undo owners until acknowledgment or history eviction.
+  /// shared session Undo owners until history eviction.
   void releaseTextCapture(TaskTextCapture capture) {
     if (!_textCaptures.contains(capture)) return;
     for (final receipt in pendingTextOperations) {
@@ -1492,26 +1510,34 @@ class TaskStore {
     }
   }
 
-  void _updateNativeUndoOwners(List<LogEvent> events) {
-    for (final operation in _nativeOperations.values) {
-      for (final event in events) {
-        if (event.entity != operation.capture.entity ||
-            (event.type != 'task.textEdited' &&
-                event.type != 'task.textEditUndone')) {
-          continue;
-        }
-        for (final entry in (event.data['changes'] as Map).entries) {
-          final owner = operation.owners[entry.key];
-          final change = entry.value as Map;
-          if (owner == null ||
-              owner.document.isClosed ||
-              change['context'] != owner.context ||
-              change['actor'] == owner.actor) {
-            continue;
-          }
-          owner.document.applyRemote(NativeTextUpdate.parse(change['update']));
-        }
+  void _syncNativeUndoField(
+    _NativeUndoField owner,
+    List<LogEvent> events, {
+    String? exclude,
+  }) {
+    for (final event in events) {
+      if (event.entity != owner.entity ||
+          event.id == exclude ||
+          owner.applied.contains(event.id) ||
+          _preparedTextBases.containsKey(event.id) ||
+          (event.type != 'task.textEdited' &&
+              event.type != 'task.textEditUndone')) {
+        continue;
       }
+      final change = (event.data['changes'] as Map)[owner.field] as Map?;
+      if (change == null ||
+          change['context'] != owner.context ||
+          change['actor'] == owner.actor) {
+        continue;
+      }
+      owner.document.applyRemote(NativeTextUpdate.parse(change['update']));
+      owner.applied.add(event.id);
+    }
+  }
+
+  void _updateNativeUndoOwners(List<LogEvent> events) {
+    for (final owner in _nativeUndoFields.values) {
+      _syncNativeUndoField(owner, events);
     }
   }
 
@@ -2952,10 +2978,35 @@ class TaskStore {
             'Native Undo is available only in its retained editing session.',
           );
         }
+        final history = _entityEvents(owner.capture.entity);
+        if (history.any(
+          (event) =>
+              _preparedTextBases.containsKey(event.id) &&
+              !_nativeOperations.containsKey(event.id) &&
+              event.type == 'task.textEdited' &&
+              owner.fields.any(
+                (name) =>
+                    (event.data['changes'] as Map)[name]?['context'] ==
+                    owner.owners[name]!.context,
+              ),
+        )) {
+          throw FormatFailure(
+            'A newer saved edit has unfinished Undo registration. Restart Tandemlog to clear session Undo; the saved tasks remain in the folder.',
+          );
+        }
+        final inactive = retractedOperationIds(history);
+        newer |= history.any(
+          (event) =>
+              (reversibleTaskEvents.contains(event.type) ||
+                  event.type == 'task.textEdited') &&
+              compareEvents(event, targets[id]!) > 0 &&
+              !inactive.contains(event.id),
+        );
         if (owner.prepared == null) {
           for (final name in owner.fields) {
-            final field = owner.capture.fields[name]!;
-            if (owner.owners[name]!.document.isClosed ||
+            final field = owner.owners[name]!;
+            _syncNativeUndoField(field, _entityEvents(owner.capture.entity));
+            if (field.document.isClosed ||
                 _nativeUndoStacks[field.document]?.last != id) {
               throw FormatFailure(
                 'Undo the newer text save before this operation.',
@@ -2965,16 +3016,8 @@ class TaskStore {
           final prepared = <String, NativeTextPreparedUndo>{};
           try {
             for (final name in owner.fields) {
-              try {
-                prepared[name] = owner.owners[name]!.document.prepareUndo();
-              } on NativeTextException catch (error) {
-                if (error.operation != 'prepare_undo' ||
-                    !(error.message == 'no effective session Undo available' ||
-                        error.message ==
-                            'Native Undo did not prepare an effective change')) {
-                  rethrow;
-                }
-              }
+              prepared[name] = owner.owners[name]!.document
+                  .prepareOperationUndo(operationId: id);
             }
           } catch (_) {
             for (final value in prepared.values) {
@@ -3040,13 +3083,12 @@ class TaskStore {
       value.commit(receiptUpdate: value.update);
     }
     for (final name in owner.fields) {
-      final stack = _nativeUndoStacks[owner.capture.fields[name]!.document]!;
+      final field = owner.owners[name]!;
+      field.applied.add(owner.compensation!.id);
+      final stack = _nativeUndoStacks[field.document]!;
       if (stack.isNotEmpty && stack.last == id) stack.removeLast();
     }
     owner.prepared = null;
-    for (final field in owner.owners.values) {
-      field.document.dispose();
-    }
   }
 
   Future<TaskUndoResult> undoOperations(List<String> operations) =>
@@ -3209,10 +3251,8 @@ class TaskStore {
             field.document.dispose();
           }
         }
-        for (final operation in _nativeOperations.values) {
-          for (final field in operation.owners.values) {
-            field.document.dispose();
-          }
+        for (final field in _nativeUndoFields.values) {
+          field.document.dispose();
         }
         db.close();
       } finally {

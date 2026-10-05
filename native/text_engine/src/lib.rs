@@ -7,11 +7,12 @@ use std::ffi::{CStr, CString};
 use std::os::raw::c_char;
 use std::sync::mpsc::{self, Sender};
 use std::sync::{Arc, Mutex, OnceLock};
+use yrs::undo::UndoManager;
 use yrs::updates::decoder::Decode;
 use yrs::updates::encoder::Encode;
 use yrs::{
     Assoc, ClientID, Doc, GetString, IndexedSequence, OffsetKind, Options, ReadTxn, StateVector,
-    StickyIndex, Text, TextRef, Transact, UndoManager, Update,
+    StickyIndex, Text, TextRef, Transact, Update,
 };
 
 const MAX: usize = 65536;
@@ -107,11 +108,14 @@ struct Usage {
 #[derive(Clone)]
 enum ReplayStep {
     Apply(Vec<u8>, String),
+    Owned(Vec<u8>, String),
     Undo,
+    UndoOperation(String),
     Redo,
 }
 struct PreparedUndo {
     token: String,
+    operation: Option<String>,
     update: Vec<u8>,
     replica: Box<Replica>,
     remote: Vec<Vec<u8>>,
@@ -126,7 +130,7 @@ struct UndoReceipt {
 struct Replica {
     doc: Doc,
     text: TextRef,
-    undo: UndoManager,
+    undo: UndoManager<String>,
     baseline: Option<StateVector>,
     source: Option<(String, String)>,
     composing: bool,
@@ -162,7 +166,7 @@ impl Replica {
         if text.get_string(&doc.transact()).encode_utf16().count() > limits.visible {
             return Err("text size limit".into());
         }
-        let mut opts = yrs::undo::Options::default();
+        let mut opts = yrs::undo::Options::<String>::default();
         opts.tracked_origins.insert("local".into());
         opts.capture_timeout_millis = 0;
         let mut undo = UndoManager::with_options(opts);
@@ -186,6 +190,7 @@ impl Replica {
         if let Some(p) = &self.prepared_undo {
             result.prepared_undo = Some(PreparedUndo {
                 token: p.token.clone(),
+                operation: p.operation.clone(),
                 update: p.update.clone(),
                 replica: Box::new(p.replica.snapshot()?),
                 remote: p.remote.clone(),
@@ -201,6 +206,8 @@ impl Replica {
                 .iter()
                 .map(|step| match step {
                     ReplayStep::Apply(data, origin) => 1 + data.len() + origin.len(),
+                    ReplayStep::Owned(data, operation) => 1 + data.len() + operation.len(),
+                    ReplayStep::UndoOperation(operation) => 1 + operation.len(),
                     _ => 1,
                 })
                 .sum::<usize>();
@@ -224,8 +231,9 @@ impl Replica {
         let prepared = self.prepared_undo.as_ref().map_or(0, |p| {
             let nested = p.replica.usage(0, 0);
             let queued = p.remote.iter().map(|data| data.len() + 1).sum::<usize>();
-            session += p.token.len() + p.update.len() + nested.session + queued;
-            p.token.len() + p.update.len() + nested.retained + queued
+            let operation = p.operation.as_ref().map_or(0, String::len);
+            session += p.token.len() + operation + p.update.len() + nested.session + queued;
+            p.token.len() + operation + p.update.len() + nested.retained + queued
         });
         Usage {
             state,
@@ -288,6 +296,12 @@ impl Replica {
                 ReplayStep::Undo => {
                     clone.undo.undo_blocking();
                 }
+                ReplayStep::Owned(update, operation) => {
+                    clone.apply_owned(update, operation)?;
+                }
+                ReplayStep::UndoOperation(operation) => {
+                    clone.undo_operation(operation)?;
+                }
                 ReplayStep::Redo => {
                     clone.undo.redo_blocking();
                 }
@@ -302,6 +316,70 @@ impl Replica {
         clone.composing = self.composing;
         clone.anchor = self.anchor.clone();
         Ok(clone)
+    }
+    fn apply_owned(&mut self, data: &[u8], operation: &str) -> Result<(), String> {
+        if operation.is_empty() || operation.len() > 128 {
+            return Err("invalid owned operation identity".into());
+        }
+        if let Some(existing) = self.replay.iter().find_map(|step| match step {
+            ReplayStep::Owned(update, id) if id == operation => Some(update),
+            _ => None,
+        }) {
+            return if existing == data {
+                Ok(())
+            } else {
+                Err("owned operation identity reused with different bytes".into())
+            };
+        }
+        let id = operation.to_owned();
+        self.undo
+            .observe_item_added("owned-operation", move |_, event| {
+                *event.meta_mut() = id.clone();
+            });
+        let result = self.apply_recorded(data, "local");
+        self.undo.unobserve_item_added("owned-operation");
+        result?;
+        self.replay.pop();
+        self.replay
+            .push(ReplayStep::Owned(data.to_vec(), operation.into()));
+        Ok(())
+    }
+    fn install_undo_stacks(
+        &mut self,
+        undo: Vec<yrs::undo::StackItem<String>>,
+        redo: Vec<yrs::undo::StackItem<String>>,
+    ) {
+        let mut options = yrs::undo::Options::<String>::default();
+        options.tracked_origins.insert("local".into());
+        options.capture_timeout_millis = 0;
+        options.init_undo_stack = undo;
+        options.init_redo_stack = redo;
+        // Drop unregisters the old observers. Documents disable GC, so changing
+        // the manager does not discard the retained identity/redone graph.
+        self.undo = UndoManager::with_options(options);
+        self.undo.expand_scope(&self.doc, &self.text);
+    }
+    fn undo_operation(&mut self, operation: &str) -> Result<bool, String> {
+        let mut remaining = self.undo.undo_stack().to_vec();
+        let selected = remaining
+            .iter()
+            .position(|item| item.meta() == operation)
+            .ok_or("owned operation has no retained Undo item")?;
+        let item = remaining.remove(selected);
+        let redo = self.undo.redo_stack().to_vec();
+        self.install_undo_stacks(vec![item], redo);
+        let id = operation.to_owned();
+        self.undo
+            .observe_item_added("owned-operation", move |_, event| {
+                *event.meta_mut() = id.clone();
+            });
+        // Yrs may skip ineffective items. It sees only the named item here,
+        // so an ineffective latest Save cannot consume any earlier Save.
+        let changed = self.undo.undo_blocking();
+        self.undo.unobserve_item_added("owned-operation");
+        let redo = self.undo.redo_stack().to_vec();
+        self.install_undo_stacks(remaining, redo);
+        Ok(changed)
     }
     fn apply_recorded(&mut self, data: &[u8], origin: &str) -> Result<(), String> {
         let previous = self.full();
@@ -461,10 +539,12 @@ impl Engine {
             "edit",
             "apply",
             "apply_local",
+            "apply_owned",
             "save",
             "undo",
             "redo",
             "prepare_undo",
+            "prepare_operation_undo",
             "commit_undo",
             "cancel_prepared_undo",
             "composition",
@@ -512,7 +592,13 @@ impl Engine {
             // Undo; rejecting a new edit must not consume or prune that history.
             if reserve_undo_marker
                 && r.undo.can_undo()
-                && r.usage(0, name.len()).session.saturating_add(1) > r.limits.session
+                && r.usage(0, name.len()).session.saturating_add(
+                    1 + r
+                        .undo
+                        .undo_stack()
+                        .last()
+                        .map_or(0, |item| item.meta().len()),
+                ) > r.limits.session
             {
                 return Err("session replay budget needs Undo marker headroom".into());
             }
@@ -587,12 +673,15 @@ impl Engine {
         }
         Ok(json!({"text":r.string(),"pending":r.pending()}))
     }
-    fn prepare_undo(&mut self, name: &str) -> Result<Value, String> {
+    fn prepare_undo(&mut self, name: &str, operation: Option<&str>) -> Result<Value, String> {
         let r = self.get(name)?;
         if r.baseline.is_some() {
             return Err("private draft Undo is not a durable preparation".into());
         }
         if let Some(p) = &r.prepared_undo {
+            if p.operation.as_deref() != operation {
+                return Err("prepared Undo belongs to another operation".into());
+            }
             return Ok(json!({"changed":true,"token":p.token,"update":STANDARD.encode(&p.update)}));
         }
         if !r.undo.can_undo() {
@@ -609,12 +698,15 @@ impl Engine {
                 copy.lock().unwrap().push(event.update.clone());
             })
             .map_err(|e| e.to_string())?;
-        let changed = candidate.undo.undo_blocking();
+        let changed = match operation {
+            Some(id) => candidate.undo_operation(id)?,
+            None => candidate.undo.undo_blocking(),
+        };
         candidate
             .doc
             .unobserve_update_v1("prepared-compensation")
             .map_err(|e| e.to_string())?;
-        if !changed {
+        if !changed && operation.is_none() {
             return Err("no effective session Undo available".into());
         }
         let packets = captured.lock().unwrap();
@@ -622,7 +714,10 @@ impl Engine {
             yrs::merge_updates_v1(packets.iter().map(Vec::as_slice)).map_err(|e| e.to_string())?;
         drop(packets);
         decode_limit(&update, candidate.limits.update)?;
-        candidate.replay.push(ReplayStep::Undo);
+        candidate.replay.push(match operation {
+            Some(id) => ReplayStep::UndoOperation(id.to_owned()),
+            None => ReplayStep::Undo,
+        });
         let guid = r.doc.guid();
         self.next_preparation = self
             .next_preparation
@@ -632,6 +727,7 @@ impl Engine {
         let response = json!({"changed":true,"token":token,"update":STANDARD.encode(&update)});
         self.get(name)?.prepared_undo = Some(PreparedUndo {
             token,
+            operation: operation.map(str::to_owned),
             update,
             replica: Box::new(candidate),
             remote: Vec::new(),
@@ -831,6 +927,18 @@ impl Engine {
                 let data = bytes_limit(&v, "update", limit)?;
                 self.apply_to(&name, &data, "local")
             }
+            "apply_owned" => {
+                let limit = self.get(&name)?.limits.update;
+                let data = bytes_limit(&v, "update", limit)?;
+                let operation = string(&v, "operation")?;
+                let replica = self.get(&name)?;
+                replica.require_local_ready()?;
+                if replica.baseline.is_some() {
+                    return Err("owned receipts cannot enter a private captured draft".into());
+                }
+                replica.apply_owned(&data, operation)?;
+                Ok(json!({"text":replica.string(),"pending":replica.pending()}))
+            }
             "prepare" => {
                 let target = string(&v, "target")?.to_owned();
                 let target_guid = self.get(&target)?.doc.guid().to_string();
@@ -862,7 +970,11 @@ impl Engine {
                 self.docs.remove(&name);
                 Ok(json!({"update":STANDARD.encode(data),"text":self.get(&target)?.string()}))
             }
-            "prepare_undo" => self.prepare_undo(&name),
+            "prepare_undo" => self.prepare_undo(&name, None),
+            "prepare_operation_undo" => {
+                let operation = string(&v, "operation")?;
+                self.prepare_undo(&name, Some(operation))
+            }
             "commit_undo" => {
                 let token = string(&v, "token")?;
                 let limit = self.get(&name)?.limits.update;
@@ -1062,6 +1174,148 @@ pub unsafe extern "C" fn spike_alloc(size: usize) -> *mut u8 {
 #[no_mangle]
 pub unsafe extern "C" fn spike_release_input(value: *mut u8, size: usize) {
     release_input(value, size)
+}
+
+#[cfg(test)]
+mod owned_undo_tests {
+    use super::*;
+
+    fn setup(text: &str) -> Engine {
+        let mut engine = Engine::default();
+        let seed = engine.command(json!({"op":"seed", "text":text})).unwrap();
+        engine
+            .command(json!({"op":"new", "name":"owner", "client":10,
+            "seed":seed["update"]}))
+            .unwrap();
+        engine
+    }
+
+    fn replace(engine: &mut Engine, text: &str, operation: &str, actor: u64) {
+        let old = engine
+            .command(json!({"op":"read", "name":"owner"}))
+            .unwrap();
+        let old = old["text"].as_str().unwrap();
+        // Synthetic ASCII titles retain their unchanged tail, as the real
+        // captured editor does; peer text attaches to those stable identities.
+        assert!(old.is_ascii() && text.is_ascii());
+        let prefix = old
+            .bytes()
+            .zip(text.bytes())
+            .take_while(|(a, b)| a == b)
+            .count();
+        let suffix = old
+            .bytes()
+            .rev()
+            .zip(text.bytes().rev())
+            .take(old.len().min(text.len()) - prefix)
+            .take_while(|(a, b)| a == b)
+            .count();
+        engine
+            .command(json!({"op":"draft", "name":"draft", "source":"owner",
+            "client":actor}))
+            .unwrap();
+        engine
+            .command(json!({"op":"edit", "name":"draft", "index":prefix,
+            "delete":old.len() - prefix - suffix, "insert":&text[prefix..text.len()-suffix]}))
+            .unwrap();
+        let packet = engine
+            .command(json!({"op":"prepare", "name":"draft",
+            "target":"owner"}))
+            .unwrap();
+        engine
+            .command(json!({"op":"cancel", "name":"draft"}))
+            .unwrap();
+        engine
+            .command(json!({"op":"apply_owned", "name":"owner",
+            "operation":operation, "update":packet["update"]}))
+            .unwrap();
+    }
+
+    fn undo(engine: &mut Engine, operation: &str) -> Value {
+        let prepared = engine
+            .command(json!({"op":"prepare_operation_undo",
+            "name":"owner", "operation":operation}))
+            .unwrap();
+        engine
+            .command(json!({"op":"commit_undo", "name":"owner",
+            "token":prepared["token"], "receipt":{"update":prepared["update"]}}))
+            .unwrap();
+        prepared
+    }
+
+    fn text(engine: &mut Engine) -> String {
+        engine
+            .command(json!({"op":"read", "name":"owner"}))
+            .unwrap()["text"]
+            .as_str()
+            .unwrap()
+            .to_owned()
+    }
+
+    #[test]
+    fn successive_owned_replacements_follow_restored_identity_and_preserve_peer() {
+        let mut engine = setup("Review household supplies");
+        replace(&mut engine, "Check household supplies", "first", 20);
+        replace(&mut engine, "Plan household supplies", "second", 30);
+        let state = engine
+            .command(json!({"op":"state", "name":"owner"}))
+            .unwrap();
+        engine
+            .command(json!({"op":"new", "name":"peer", "client":40,
+            "seed":state["update"]}))
+            .unwrap();
+        let peer = engine
+            .command(json!({"op":"edit", "name":"peer", "index":23,
+            "delete":0, "insert":" (peer)"}))
+            .unwrap();
+        engine
+            .command(json!({"op":"apply", "name":"owner", "update":peer["update"]}))
+            .unwrap();
+        undo(&mut engine, "second");
+        assert_eq!(text(&mut engine), "Check household supplies (peer)");
+        undo(&mut engine, "first");
+        assert_eq!(text(&mut engine), "Review household supplies (peer)");
+    }
+
+    #[test]
+    fn requested_ineffective_item_never_consumes_older_owned_save() {
+        let mut engine = setup("A");
+        replace(&mut engine, "AX", "first", 20);
+        let state = engine
+            .command(json!({"op":"state", "name":"owner"}))
+            .unwrap();
+        engine
+            .command(json!({"op":"new", "name":"draft2", "client":30,
+            "seed":state["update"]}))
+            .unwrap();
+        let second = engine
+            .command(json!({"op":"edit", "name":"draft2", "index":2,
+            "delete":0, "insert":"Y"}))
+            .unwrap();
+        engine
+            .command(
+                json!({"op":"apply_owned", "name":"owner", "operation":"second",
+            "update":second["update"]}),
+            )
+            .unwrap();
+        let peer = engine
+            .command(json!({"op":"edit", "name":"draft2", "index":2,
+            "delete":1, "insert":""}))
+            .unwrap();
+        engine
+            .command(json!({"op":"apply", "name":"owner", "update":peer["update"]}))
+            .unwrap();
+        let prepared = undo(&mut engine, "second");
+        assert_eq!(
+            STANDARD
+                .decode(prepared["update"].as_str().unwrap())
+                .unwrap(),
+            vec![0, 0]
+        );
+        assert_eq!(text(&mut engine), "AX");
+        undo(&mut engine, "first");
+        assert_eq!(text(&mut engine), "A");
+    }
 }
 
 #[cfg(test)]
