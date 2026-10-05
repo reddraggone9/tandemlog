@@ -6,10 +6,10 @@
   "lib/domain/undo.dart": "83995e32a8c8c8acc5f3ef97e9b68918a5e4e4d3b6155cc76e2682c2cb6f524e",
   "lib/text/recurring_text.dart": "d457c793ff7ecc92ae29b227af031f1e48a5dc7f98a505523a23db66973fc00b",
   "lib/storage/text_cache.dart": "322e85121cdfa90fe1e8d5f1432692c11ad66ee5facdd6ae95ed2729abcddc1a",
-  "lib/storage/task_store.dart": "a3fe1aae499f3fff3b0d503f8f8cc2e7ecc4dd17536fecbc7ef09f0452c1e07c",
+  "lib/storage/task_store.dart": "e096314b08a5505aa35a4cd2c72c5aa9c9c3b08db24606ddca15d82653ffff7d",
   "test/recurring_text_test.dart": "bf381c21e6903eaee7adffe122a1c0b6e305130eae21754365da9105a1a7ebcd",
   "test/recurring_store_test.dart": "981daa8bacf53b46d31a7221fb61581913c92353b250ae414884f9a3d3b8801a",
-  "test/text_store_test.dart": "e0b8b8fefc06f6fe4838eeb7c1383df65807e7a2f669f1b7dbe43bb208709393",
+  "test/text_store_test.dart": "af5999b72c1ef5097846a77eccd8a7899ecb40155a3cd5a54a314882da14c708",
   "integration_test/recurring_text_workflow_test.dart": "55db376553d9fc6772e8dc539bb23f5b1f5197e0d549db0518d3236cc49535de",
   "integration_test/task_flow_test.dart": "5b54c0693bf3dfef693430be501316efc0f927c82a48ceec31c441bd33b7e632"
 }

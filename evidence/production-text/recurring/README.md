@@ -55,6 +55,25 @@ negative control; [all36 tooling cases pass](windows-checkout-tooling.txt).
 The source inventory, patch and native algorithm are unchanged. A fresh complete
 hosted run is required; the earlier partial run is not platform acceptance.
 
+## Follow-up platform failures
+
+Run37253645489 passed the literal vendor gate. Its Windows unit suite then
+reported462 pass/seven fail/two platform skips. Two recurrence failures were a
+fixture cleanup race (unawaited close and undisposed native engine); five exact
+retry/restart failures exposed literal slash/backslash path comparison in private
+native intent recovery. Native file URIs now compare equivalent platform paths,
+retaining writer, space, required type, writer/sequence filename and raw receipt
+checks. The [focused recovery cases](windows-recovery-focused.txt) pass on the
+adopted Linux library. A new wrong-filename case rejects before append, preserving
+canonical and private intent bytes; original restart assertions are unchanged.
+
+Android stopped at the strict64-bit RELRO16KiB gate. The linker now specifies
+both max-page-size and common-page-size16KiB, including the latter explicitly
+rather than relying on Rust target defaults. This follows the
+[official Android guidance](https://developer.android.com/guide/practices/page-sizes#compile_your_app_using_16_kb_elf_alignment).
+LOAD/RELRO gates, approved NDK/version and67 source hashes are unchanged. Full
+three-ABI packaging and native installed Android acceptance remain required.
+
 ## Desktop demonstration
 
 A separate paced [actual GTK demonstration run](gtk-demonstration.txt) passes

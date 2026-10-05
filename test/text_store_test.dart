@@ -376,7 +376,8 @@ void main() {
               );
               expect(store.pendingTextOperations, isEmpty);
             } finally {
-              store?.close();
+              await store?.close();
+              engine.dispose();
               await root.delete(recursive: true);
             }
           },
@@ -1725,6 +1726,81 @@ void main() {
         );
       }
       test(
+        'misnamed private native intent rejects recovery before append and retains evidence',
+        () async {
+          final root = await Directory.systemTemp.createTemp(
+            'text-intent-wrong-name-',
+          );
+          final engine = NativeTextEngine(libraryPath: _libraryPath);
+          TaskStore? store;
+          try {
+            final shared = await Directory('${root.path}/shared').create();
+            final folder = _UnknownAppendFolder(LocalLogFolder(shared.path));
+            final profile = '${root.path}/profile';
+            store = await TaskStore.open(folder, profile, textEngine: engine);
+            final user = const Uuid().v4(), task = const Uuid().v4();
+            await store.command(user, 'user.created', {'name': 'Synthetic'});
+            folder.failNext = true;
+            OperationReceipt? prepared;
+            await expectLater(
+              store.command(
+                task,
+                'task.createdWithText',
+                _creationData(engine, user, 'Retained intent'),
+                onPrepared: (receipt) => prepared = receipt,
+              ),
+              throwsA(isA<FolderAccessFailure>()),
+            );
+            expect(store.pendingTextOperations.single.raw, prepared!.raw);
+            final event = LogEvent.decode(prepared!.raw);
+            await store.close();
+            store = null;
+            final intentDirectory = Directory('$profile/text-intents');
+            final original =
+                (await intentDirectory.list().toList()).single as File;
+            expect(await original.readAsString(), prepared!.raw);
+            final wrongName = '${event.writer}-${event.sequence + 1}.json';
+            final misnamed = await original.rename(
+              '${intentDirectory.path}/$wrongName',
+            );
+            final evidence = await misnamed.readAsBytes();
+            final log = File('${shared.path}/${event.writer}.jsonl');
+            final canonicalBytes = await log.readAsBytes();
+            final appendCalls = folder.appendCalls;
+            await expectLater(
+              TaskStore.open(
+                folder,
+                profile,
+                textEngine: engine,
+              ).then((reopened) => store = reopened),
+              throwsA(
+                isA<FormatFailure>().having(
+                  (error) => error.toString(),
+                  'message',
+                  contains('Invalid private prepared text intent'),
+                ),
+              ),
+            );
+            expect(folder.appendCalls, appendCalls);
+            expect(await log.readAsBytes(), canonicalBytes);
+            expect(await misnamed.readAsBytes(), evidence);
+            expect(
+              (await intentDirectory.list().toList())
+                  .single
+                  .uri
+                  .pathSegments
+                  .last,
+              wrongName,
+            );
+            expect(await original.exists(), isFalse);
+          } finally {
+            await store?.close();
+            engine.dispose();
+            await root.delete(recursive: true);
+          }
+        },
+      );
+      test(
         'new native creation verifies actor1 seed and persists full native state',
         () async {
           final root = await Directory.systemTemp.createTemp(
@@ -1913,6 +1989,7 @@ class _UnknownAppendFolder implements LogFolder, RangeLogFolder {
   final LocalLogFolder inner;
   bool failNext = false;
   bool throwAfterWriting = false;
+  int appendCalls = 0;
   @override
   String get location => inner.location;
   @override
@@ -1927,6 +2004,7 @@ class _UnknownAppendFolder implements LogFolder, RangeLogFolder {
       inner.create(name, bytes);
   @override
   Future<void> append(String name, Uint8List bytes) async {
+    appendCalls++;
     if (failNext) {
       failNext = false;
       if (throwAfterWriting) await inner.append(name, bytes);

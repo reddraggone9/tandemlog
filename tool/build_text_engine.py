@@ -241,7 +241,11 @@ def build(args):
         target_env = env.copy()
         if linker is not None:
             target_env[f'CARGO_TARGET_{target.upper().replace("-", "_")}_LINKER'] = str(linker)
-            flags = '-C\x1flink-arg=-Wl,-z,max-page-size=16384'
+            # Both LOAD alignment and the RELRO rounding page are explicit.
+            # Rust target defaults can otherwise retain a 4KiB common page even
+            # with an approved r28 NDK linker and 16KiB LOAD segments.
+            flags = ('-C\x1flink-arg=-Wl,-z,max-page-size=16384'
+                     '\x1f-C\x1flink-arg=-Wl,-z,common-page-size=16384')
             prior_flags = target_env.get('CARGO_ENCODED_RUSTFLAGS')
             if prior_flags:
                 flags = prior_flags + '\x1f' + flags

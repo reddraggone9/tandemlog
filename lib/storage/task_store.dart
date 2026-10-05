@@ -1992,7 +1992,8 @@ class TaskStore {
       if (!_textTypes.contains(event.type) ||
           event.writer != writer ||
           event.space != space ||
-          file.absolute.path != _textIntentFile(event).absolute.path) {
+          file.absolute.uri.normalizePath() !=
+              _textIntentFile(event).absolute.uri.normalizePath()) {
         throw FormatFailure(
           'Invalid private prepared text intent; evidence was retained.',
         );
