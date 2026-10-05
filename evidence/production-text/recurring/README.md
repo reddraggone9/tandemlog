@@ -85,7 +85,21 @@ passes. The obsolete guard fixture now creates a real historical scalar child,
 activates its parent and verifies mixed-lineage recompletion fails before append.
 [Actual bundled GTK execution passes](gtk-mixed-historical.txt), with canonical
 bytes, empty outbox and both existing task rows preserved. No application logic
-or release gate is weakened. A complete hosted rerun is still required.
+or release gate is weakened.
+
+[Final hosted rerun37257156550](https://github.com/reddraggone9/tandemlog/actions/runs/37257156550)
+at `fd9f6678c1fcf91c9734d071f82da35fd3490ccb` passes all targets:472 Linux
+app tests,470 Windows tests/two platform skips,51 native GTK workflows,
+98 frozen native cases/four Rust cases/36 tooling cases, Android three-ABI
+debug payload/signature verification, and Windows/Flatpak installed lifecycle
+checks. No app logic changed after `cdbc56b`; the remaining diff is test/evidence.
+
+The Linux artifact11323811587 passes API SHA256, ZIP CRC and internal checksums.
+Its [unaltered startup artifact](hosted-linux-startup.json) reports ten synthetic
+tasks:642ms fresh cache/510ms warm process-to-loaded-frame, first frame330/264ms,
+zero warm canonical reads. The native release callback does not prove physical
+presentation or first-input latency; OS page caches are not flushed. This scalar
+task startup workload is distinct from the recurrence-lineage AOT probe below.
 
 The intermediate debug Android artifact is
 [11321533518](https://github.com/reddraggone9/tandemlog/actions/runs/37254495743/artifacts/11321533518)
@@ -102,11 +116,35 @@ synthetic-workspace test artifact, not an owner-signed update or publication.
 A separate paced [actual GTK demonstration run](gtk-demonstration.txt) passes
 the same completion → child edit → confirmed Save → Undo workflow with readable
 synthetic content. The inspected21.6-second,1200×850 Dark/100% recording has a
-visible pointer and is delivered in Library as
-`libfile_5eae142fd5fc81919f99b5d66c4c467e`. The video is native Linux Debug, not
+visible pointer and is delivered separately through Library. The video is native Linux Debug, not
 Android, a sync-provider demonstration or release startup measurement.
 
-Hosted full platform checks, exact signed Android runtime, long-history costs
-and release acceptance remain pending. There is no new publication. The historical
+## Bounded AOT lineage cost
+
+The [raw storage measurement](lineage-aot-cost.json) uses a private Dart AOT
+executable importing production TaskStore and the actual adopted Linux native
+library. It creates one synthetic native-text daily task, completes 80 successive
+occurrences without editing children, then opens the cache warm and rebuilds only
+its isolated SQLite database. Writer/guards and canonical files are retained.
+The exact production sqlite3 package's host library is preloaded for this private
+executable's native-asset lookup; application packaging is not changed.
+
+| Operation | Single workload result |
+| --- | ---: |
+| First completion | 17.827ms |
+| Eightieth completion | 316.287ms |
+| Warm TaskStore open | 4.063ms, zero canonical log reads |
+| Rebuild 81-task/82-event cache | 3406.699ms, one canonical log read |
+
+Rebuilt/warm states are identical and canonical files remain unchanged. OS page
+caches are not flushed. These are domain/storage timings, not Flutter UI startup,
+physical presentation, first input or Android measurements. They demonstrate
+history scaling that remains an open performance gate. Inspection finds repeated
+all-event decoding and resolver construction per projection; only per-resolution
+completion-prefix memoization exists. This is a bounded diagnosis, not a profile
+or a completed optimization, and no admission/proof validation is weakened.
+
+Exact signed Android runtime, long-history performance, historical mixed-lineage
+policy and release acceptance remain pending. There is no new publication. The historical
 isolated proposal logs elsewhere remain unchanged; current accepted ADR0010
 supersedes their former pending decision status.

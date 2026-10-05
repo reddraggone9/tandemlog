@@ -9,8 +9,9 @@ exact provenance and MIT notices. Repeated closed-editor Save/Undo no longer
 blocks the tested path. No CRDT main adoption or release has occurred.
 
 The actual adopted library passes 98 frozen native cases, four Rust cases,
-35 tooling checks and four notice checks. The application aggregate passes
-470 unit/widget cases plus the new real-store identity contract regression,
+36 tooling checks and four notice checks. The current hosted Windows suite passes
+470 app cases with two platform skips, including the new real-store identity
+contract and exact private-intent recovery regressions,
 including closed-proof and three-writer delayed-head
 regressions. Production-store tests cover offline parent completions,
 child edits/private drafts before late arrivals, original actor ownership,
@@ -27,11 +28,26 @@ is retained; actual ownership and peer-append preservation replace that assertio
 with awkward whole-title Undo text documented. The corrected bundled GTK
 aggregate passes all three flows; the final focused suite passes 35 cases after
 affected-owner refresh optimization.
-Full hosted Linux/Windows/Android checks, exact signed Android installation and
-new behavior acceptance remain required. Mixed historical scalar/new native
+[Hosted rerun37257156550](https://github.com/reddraggone9/tandemlog/actions/runs/37257156550)
+at `fd9f667` passes all targets:472 Linux app tests,470 Windows tests/two skips,
+51 native GTK workflows, frozen native/Rust/tooling gates, three-ABI Android debug
+packaging and installed Windows/Flatpak lifecycle checks.
+The prior Linux50-pass/one-failure result was an obsolete pre-approval recurrence
+guard, now replaced by a native passing historical mixed-lineage guard without
+changing app logic. Exact signed Android installation and new behavior acceptance
+remain required. Mixed historical scalar/new native
 successor initialization stays an explicit compatibility limitation; no rebasing
 or rewriting is attempted. Long-history affected-field replay/startup performance
-and final native workflow coverage remain release gates. Existing published
+and final native workflow coverage remain release gates. A bounded production
+TaskStore/Dart AOT workload measures17.827ms first completion,316.287ms eightieth,
+4.063ms warm open with zero log reads and3406.699ms full81-task cache rebuild.
+States match and canonical bytes are unchanged; these are storage costs, not
+user-perceived startup. This history scaling remains unresolved; see the linked
+evidence and methodology. Hosted ten-task release process-to-loaded-frame samples
+are642ms fresh SQLite and510ms warm, first frames330/264ms and zero warm canonical
+reads. OS page caches are not flushed; these samples neither measure physical
+presentation/first input nor resolve the recurring-lineage scaling problem.
+Existing published
 build45 remains parent/local-owned; its notes now retain one ordinary-width
 comparison. The private checklist prototype stays paused.
 
