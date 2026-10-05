@@ -52,3 +52,19 @@ Anonymous HTTP reads of both actual immutable notes at `eeaeb8956c62e5c6e57fc566
 - enlarged-width.png: SHA256 `84af89f37185b0e3687f11d8717dc97b707015fe15736c2d12403a63d58a451f`, 36065 bytes.
 
 Final independent editorial/media gate PASS; both initial findings are resolved and no blocking finding remains. This approves the actual revised notes and immutable media, not publication or any waiver of separate Windows/Android/platform acceptance. Reviewer changed only this appended engineering record and dark-canvas review receipt; no app, author-note, image, commit or push changes.
+
+## Single-comparison notes review — 2026-10-05
+
+Independent reviewer `datetime_rows`: PASS, no findings. Reviewed the actual
+byte-identical prerelease and date-layout-preview notes, SHA256
+`e2d7ca06a511208a5380c37477a1353ba89d5247d66d8410ca15ea25528ec6e6`,
+and three-document diff SHA256
+`3f7c824035efdbf782b27b9688d39095882e413a05051aa2e7c1b0076ae39c9e`
+against `79a3201798085c194fe8041fa98667298c16138b`.
+One ordinary-width comparison explains the change; concise copy and descriptive
+alt text remain. The enlarged comparison remains engineering evidence. The
+immutable normal-image URL returned HTTP200 without redirect and matched SHA256
+`0ed1cf3d5d05e34de240e8b85fb2566ba036fa3b93bb6a1a54516ba13956eec6`.
+The durable one-image default permits additional images only when needed for
+understanding. This review approves the exact documentation/body, not platform
+release gates. The parent owns any published-release body update.
