@@ -190,7 +190,7 @@ void registerTextWorkflowTests() {
     },
   );
   testWidgets(
-    'native recurring completion is blocked before canonical append',
+    'mixed historical successor recompletion rejects before canonical append',
     (tester) async {
       final root = await Directory.systemTemp.createTemp(
         'native-recurring-guard-ui-',
@@ -204,7 +204,7 @@ void registerTextWorkflowTests() {
       final user = const Uuid().v4(), task = const Uuid().v4();
       try {
         await store.command(user, 'user.created', {'name': 'Synthetic'});
-        await store.createNativeFixtureTask(task, {
+        await store.createHistoricalRecurrenceFixtureTask(task, {
           'title': 'Native recurring reference',
           'description': '',
           'assignee': user,
@@ -213,29 +213,36 @@ void registerTextWorkflowTests() {
             'recurrence': 'every day when done',
           },
         });
+        // This historical child already has scalar initialization. Activating
+        // its parent must not silently rebase the child's native identities.
+        final completion = await store.complete(
+          task,
+          completionDay: DateTime(2026, 10, 1),
+        );
+        await store.initializeSharedText();
+        await store.reopen(task, [completion.id]);
         await File(
           '${profile.path}/settings.json',
         ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        final parentCheckbox = find.descendant(
+          of: find.byKey(ValueKey('task-row-$task')),
+          matching: find.byType(Checkbox),
+        );
         await flows.waitForUi(
           tester,
-          () => find
-              .byTooltip('Complete Native recurring reference')
-              .evaluate()
-              .isNotEmpty,
+          () => parentCheckbox.evaluate().isNotEmpty,
         );
         Future<Map<String, String>> canonical() async => {
           await for (final file in shared.list())
             if (file is File) file.path: base64Encode(await file.readAsBytes()),
         };
         final before = await canonical();
-        await tester.tap(find.byTooltip('Complete Native recurring reference'));
+        await tester.tap(parentCheckbox);
         await flows.waitForUi(
           tester,
           () => find
-              .textContaining(
-                'Collaborative recurring completion is not available yet',
-              )
+              .textContaining('Mixed successor text initialization')
               .evaluate()
               .isNotEmpty,
         );
@@ -245,7 +252,7 @@ void registerTextWorkflowTests() {
           store.rows.singleWhere((row) => row['id'] == task)['completed'],
           isFalse,
         );
-        expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(1));
+        expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(2));
         expect(store.pendingTextOperations, isEmpty);
         expect(tester.takeException(), isNull);
       } finally {

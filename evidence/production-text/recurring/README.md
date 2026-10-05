@@ -38,8 +38,8 @@ identities reused by the peer. Independent actual-native probes establish approv
 Both peers converge. A new actual-store regression pins both results. The broad
 flow now tests peer-owned append retention; old whole-field LWW protection stays
 in historical fixtures. No algorithm/preservation guard is silently changed.
-This can yield awkward prose, which the ADR explicitly discloses. The corrected
-[Corrected bundled GTK aggregate](gtk-final-matrix.txt) passes all three flows.
+This can yield awkward prose, which the ADR explicitly discloses. The
+[corrected bundled GTK aggregate](gtk-final-matrix.txt) passes all three flows.
 The [final 35-case focused suite](focused-final.txt) also passes after the
 affected-owner optimization; unrelated user arrivals no longer replay every
 open inherited field owner.
@@ -74,25 +74,28 @@ rather than relying on Rust target defaults. This follows the
 LOAD/RELRO gates, approved NDK/version and67 source hashes are unchanged. Full
 three-ABI packaging and native installed Android acceptance remain required.
 
-## Platform gates found during the first complete run
+## Complete native workflow correction
 
-Run37253645489 passed the Windows source-inventory gate and exposed two further
-issues. The new recurring fixtures now await store closure and dispose the
-engine before deletion. Private native-intent recovery compared literal path
-strings; a Windows directory listing and the same constructed absolute path can
-use different separators. It now compares normalized file URIs. The nine
-actual-library affected Linux cases pass, including the unchanged five restart
-retry cases and a new wrong-filename negative recovery test. That test requires
-failure before append and unchanged canonical/intent bytes; writer, space,
-required type and exact receipt checks remain intact. Actual Windows rerun is
-still required.
+Hosted run37254495743 passes Windows unit/native/installer gates and Android
+three-ABI debug packaging. Linux passes unit, Rust and frozen native gates,
+then reports50 native workflows passing and one obsolete expectation failing.
+That old test still expected all native recurring completion to be blocked,
+before Lee approved successor union. The positive inherited-child workflow
+passes. The obsolete guard fixture now creates a real historical scalar child,
+activates its parent and verifies mixed-lineage recompletion fails before append.
+[Actual bundled GTK execution passes](gtk-mixed-historical.txt), with canonical
+bytes, empty outbox and both existing task rows preserved. No application logic
+or release gate is weakened. A complete hosted rerun is still required.
 
-Android failed the existing16KiB RELRO-end gate after compiling its first ABI.
-The Rust linker setup already selected16KiB maximum page size; it now also
-selects16KiB common page size explicitly. The strict ELF checks remain unchanged.
-Both flags appear in [Android's official alignment guidance](https://developer.android.com/guide/practices/page-sizes#compile-using-16kb-elf-alignment).
-The dependency source/inventory and native algorithm are unchanged. Local tool
-checks pass; actual rebuilt ABI and APK verification remain the hosted gate.
+The intermediate debug Android artifact is
+[11321533518](https://github.com/reddraggone9/tandemlog/actions/runs/37254495743/artifacts/11321533518)
+at application source`cdbc56b9a53412591afbe0f71c0578d220abb3b9`. ZIP CRC/API
+SHA256 and all three actual native payloads/notices pass local verification.
+APK SHA256`1a073a0f8bdf91378c20dcb5050026fd31381ed3b8292e38851939749e1983aa`.
+Its temporary Android Debug signer is
+`863fe1068327311e9befaea24c41ce19e8e2c38518570ce9cfcbbf7e5a101199`;
+package is unchanged, code45/version2026.10.2-rc.3, and it is explicitly a fresh
+synthetic-workspace test artifact, not an owner-signed update or publication.
 
 ## Desktop demonstration
 

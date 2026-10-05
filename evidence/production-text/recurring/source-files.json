@@ -11,5 +11,6 @@
   "test/recurring_store_test.dart": "981daa8bacf53b46d31a7221fb61581913c92353b250ae414884f9a3d3b8801a",
   "test/text_store_test.dart": "af5999b72c1ef5097846a77eccd8a7899ecb40155a3cd5a54a314882da14c708",
   "integration_test/recurring_text_workflow_test.dart": "55db376553d9fc6772e8dc539bb23f5b1f5197e0d549db0518d3236cc49535de",
-  "integration_test/task_flow_test.dart": "5b54c0693bf3dfef693430be501316efc0f927c82a48ceec31c441bd33b7e632"
+  "integration_test/task_flow_test.dart": "5b54c0693bf3dfef693430be501316efc0f927c82a48ceec31c441bd33b7e632",
+  "integration_test/text_workflow_test.dart": "b6c898a6014e3e735e8c9534d0d1623d387c32fed37b464497fba8125e1a0835"
 }
