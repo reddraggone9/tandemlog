@@ -37,6 +37,12 @@ whose missing package LICENSE was retrieved from its official upstream commit
 23b7f5693bbf9e7d26340c521ee8647f79bdfba2 (path_in_vcs yrs). No invented copyright
 attributions. Rust library HTML is rendered to plain text, retaining all text.
 
+TandemLog carries an approved modification to yrs 0.28.0: Undo restoration
+visits candidate items in immutable ID order. Original archive, source revision,
+per-file hashes and patch identity are in vendor/yrs-provenance.json. The MIT
+license below applies to the retained upstream source. No upstream authorship
+or copyright notice has been replaced.
+
 BEGIN AUDIT MANIFEST
 {
   "schema": 1,

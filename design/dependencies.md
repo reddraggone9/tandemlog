@@ -132,6 +132,29 @@ Yrs's omitted MIT text from its exact upstream source commit, and retained the
 Unicode/parking and supplied Rust standard-library notices. Four offline tests
 check the locked notices graph; source and target-feature review remains required.
 
+Lee approved carrying the narrowly patched Yrs0.28.0 source on 2026-10-05
+(Sentinel_d979d6961af481918adb9e972c57a5e6). The official 67-file crate is
+vendored in `native/text_engine/vendor/yrs-0.28.0`; only `src/undo.rs` changes:
+Undo restoration sorts its HashSet candidates by immutable `(client, clock)`
+IDs before allocating restored identities. This fixes repeated closed-editor
+Undo replay divergence without changing canonical events or text admission.
+The upstream archive SHA-256 is
+`52c70dc8beca8666c77612a96889106ca3cd65318609721f464624ff79685da9`, from
+upstream revision `23b7f5693bbf9e7d26340c521ee8647f79bdfba2`; the approved
+[patch](../evidence/production-text/undo/proposed-deterministic-undo.patch)
+SHA-256 is `9d502e49d1dfacbefb713658295a18997a3fbc4951932eba70c6f174f52b7532`.
+The build gate checks every shipped file against the committed provenance
+inventory and rejects missing/modified files or an absent Cargo override.
+Cargo.lock resolves this local source; all other registry versions/checksums
+remain unchanged. The original upstream MIT text remains in the bundled notices.
+
+Maintenance owner: native text engine maintainers. Review the patch at every
+Yrs update and re-run repeated save/Undo, peer-edit, exact receipt and replay
+regressions. Exit condition: a reviewed upstream version supplies deterministic
+restoration and passes those gates, allowing removal of the override. This patch
+establishes deterministic traversal for the observed path, not a claim that all
+Yrs execution is deterministic. No additional build hooks or downloads are added.
+
 The build helper requires preinstalled official Rust/std targets, reviewed Cargo
 inputs and NDK28.2.13676358. App builds use locked offline Cargo and do not fetch
 dependencies, tools or notices. Every app target bundles the notices as a Flutter

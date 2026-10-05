@@ -46,6 +46,31 @@ def validate_crate(crate):
     yrs = [entry for entry in lock.get('package', []) if entry.get('name') == 'yrs']
     if len(yrs) != 1 or yrs[0].get('version') != '0.28.0':
         raise BuildError('Canonical Cargo.lock must resolve yrs 0.28.0')
+    if manifest.get('patch', {}).get('crates-io', {}).get('yrs') != {'path': 'vendor/yrs-0.28.0'}:
+        raise BuildError('Canonical engine requires approved Yrs vendor override')
+    if 'source' in yrs[0] or 'checksum' in yrs[0]:
+        raise BuildError('Cargo.lock must resolve the approved local Yrs vendor')
+    provenance_bytes = (crate / 'vendor/yrs-provenance.json').read_bytes()
+    if hashlib.sha256(provenance_bytes).hexdigest() != '9bb7bcd022394f5a692fb9ea2192e1b5566c83a948d68eaeab2473c48b809a0e':
+        raise BuildError('Unapproved Yrs vendor inventory hash')
+    provenance = json.loads(provenance_bytes)
+    if (provenance['archiveSha256'] != '52c70dc8beca8666c77612a96889106ca3cd65318609721f464624ff79685da9'
+            or provenance['patchSha256'] != '9d502e49d1dfacbefb713658295a18997a3fbc4951932eba70c6f174f52b7532'
+            or provenance['upstreamRevision'] != '23b7f5693bbf9e7d26340c521ee8647f79bdfba2'):
+        raise BuildError('Unapproved Yrs vendor provenance')
+    vendor = crate / 'vendor/yrs-0.28.0'
+    files = provenance['files']
+    actual = {p.relative_to(vendor).as_posix() for p in vendor.rglob('*') if p.is_file()}
+    if len(files) != 67 or actual != set(files):
+        raise BuildError('Yrs vendor file inventory differs from approved 67 files')
+    changed = []
+    for name, record in files.items():
+        if hashlib.sha256((vendor / name).read_bytes()).hexdigest() != record['shippedSha256']:
+            raise BuildError(f'Yrs vendor source hash mismatch: {name}')
+        if record['upstreamSha256'] != record['shippedSha256']:
+            changed.append(name)
+    if changed != ['src/undo.rs'] or files['src/undo.rs']['shippedSha256'] != '2e37cd3f1114822a18be6fc9cebd2acc3da79786a342bd0a528e9a4e8afb14f6':
+        raise BuildError('Yrs vendor must contain only the approved Undo change')
 
 
 def validate_ndk(ndk):
@@ -209,6 +234,7 @@ def build(args):
                 'library': 'tandemlog_text', 'yrs': '0.28.0', 'exports': list(EXPORTS),
                 'cargo_lock_sha256': hashlib.sha256((crate / 'Cargo.lock').read_bytes()).hexdigest(),
                 'artifacts': []}
+    metadata['yrs_source'] = json.loads((crate / 'vendor/yrs-provenance.json').read_text())
     if args.platform == 'android':
         metadata.update(ndk=NDK_VERSION, android_min_api=24, elf_page_alignment=16384)
     for abi, target, linker, machine in targets:

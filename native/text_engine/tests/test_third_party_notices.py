@@ -24,11 +24,15 @@ class LockedNotices(unittest.TestCase):
     def test_exact_locked_graph_and_checksums_are_covered(self):
         locked = tomllib.loads((CRATE / 'Cargo.lock').read_text())
         pins = {(p['name'], p['version']): p for p in locked['package']
-                if 'source' in p}
+                if 'source' in p or p['name'] == 'yrs'}
         self.assertEqual(set(pins), set(self.packages),
                          'Dependency changes require an explicit notice audit')
         for key, pin in pins.items():
-            self.assertEqual(pin['checksum'], self.packages[key]['checksum'])
+            checksum = pin.get('checksum')
+            if key == ('yrs', '0.28.0'):
+                provenance = json.loads((CRATE / 'vendor/yrs-provenance.json').read_text())
+                checksum = provenance['archiveSha256']
+            self.assertEqual(checksum, self.packages[key]['checksum'])
             self.assertTrue(self.packages[key]['license'])
 
     def test_required_texts_are_present_and_untruncated(self):
