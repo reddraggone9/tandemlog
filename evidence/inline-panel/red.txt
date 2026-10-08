@@ -1,0 +1,114 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart
+00:00 +0: title normalization respects composition and selection-only history
+00:00 +1: panel exposes check/edit/add, relative moves and edge restrictions
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TextWidgetFinder:<Found 1 widget with text "Checklist": [
+            Text("Checklist", debugLabel: (englishLike titleSmall 2021).merge(((blackMountainView
+titleSmall).apply).apply), inherit: false, color: Color(alpha: 1.0000, red: 0.1137, green: 0.1059,
+blue: 0.1255, colorSpace: ColorSpace.sRGB), family: Roboto, size: 14.0, weight: 500, letterSpacing:
+0.1, baseline: alphabetic, height: 1.4x, leadingDistribution: even, decoration: Color(alpha: 1.0000,
+red: 0.1137, green: 0.1059, blue: 0.1255, colorSpace: ColorSpace.sRGB) TextDecoration.none,
+dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart:124:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart line 124
+The test description was:
+  panel exposes check/edit/add, relative moves and edge restrictions
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +1 -1: panel exposes check/edit/add, relative moves and edge restrictions [E]
+  Test failed. See exception logs above.
+  The test description was: panel exposes check/edit/add, relative moves and edge restrictions
+  
+00:01 +1 -1: panel disabled controls and 200 percent narrow semantics
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.getSize (package:flutter_test/src/controller.dart:2178:47)
+#2      main.<anonymous closure> (file:///workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart:176:27)
+<asynchronous suspension>
+#3      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#4      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  panel disabled controls and 200 percent narrow semantics
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +1 -2: panel disabled controls and 200 percent narrow semantics [E]
+  Test failed. See exception logs above.
+  The test description was: panel disabled controls and 200 percent narrow semantics
+  
+00:01 +1 -2: busy checkbox keeps child focus and guards repeat Space
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart:205:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart line 205
+The test description was:
+  busy checkbox keeps child focus and guards repeat Space
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +1 -3: busy checkbox keeps child focus and guards repeat Space [E]
+  Test failed. See exception logs above.
+  The test description was: busy checkbox keeps child focus and guards repeat Space
+  
+00:01 +1 -3: new item saves normalized title and multiline notes independently
+00:02 +2 -3: dirty close can be cancelled, dismissed and asked repeatedly without popping
+00:03 +3 -3: save through close guard renews dirty baseline; reopening starts clean
+00:03 +4 -3: failed save retains draft; pending receipt freezes fields and close but permits exact retry
+00:03 +5 -3: IME composition cannot save; length errors retain fields
+00:03 +6 -3: narrow enlarged editor and keyboard keep multiline input and actions reachable
+00:03 +7 -3: busy Save admits one command and freezes draft until success
+00:04 +8 -3: Cancel and route back resolve dirty item before closing host
+00:04 +9 -3: render dark desktop and narrow enlarged components
+00:04 +10 -3: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart: busy checkbox keeps child focus and guards repeat Space
+  /workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart: panel disabled controls and 200 percent narrow semantics
+  /workspace/tandemlog-inline-panel/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions

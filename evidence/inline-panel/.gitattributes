@@ -1,0 +1,2 @@
+# Raw tool output retains original recorded spacing for hash verification.
+*.txt -text whitespace=-blank-at-eol

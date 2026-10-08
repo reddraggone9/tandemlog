@@ -1,0 +1,114 @@
+{
+  "base": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "implementation_source": "e59782f7260f6364c94807de3ee79662fd41adaf",
+  "branch": "feature/inline-checklist-panel",
+  "frozen_reds": [
+    {
+      "source": "0c17842817c37baf1f579a59652078380adbb783",
+      "failed": 3,
+      "passed": 10,
+      "reason": "obsolete header/missing direct controls/native checkbox loses busy focus"
+    },
+    {
+      "source": "d791104fbc69668c802e9ae1e124c5987ad0ff18",
+      "failed": 6,
+      "passed": 10,
+      "reason": "scoped drag and inline controls absent under explicit constructor contract"
+    },
+    {
+      "source": "dce1c51c84a39c13c00869cfe50db7c98cb0fc93",
+      "failed": 1,
+      "reason": "cached Add/Edit/Delete/semantic checkbox callbacks dispatch after disabled state"
+    },
+    {
+      "source": "6676ad75ca01ad54c7f3171c7b92446767c909e0",
+      "failed": 1,
+      "reason": "handle tap selects parent in ancestor detector"
+    }
+  ],
+  "green": {
+    "passed": 17,
+    "failed": 0,
+    "command": "flutter test test/checklist_presentation_test.dart --reporter expanded"
+  },
+  "analysis": {
+    "command": "flutter analyze --no-pub lib/presentation/checklist_panel.dart test/checklist_presentation_test.dart",
+    "issues": 0
+  },
+  "renders": {
+    "source": "e59782f7260f6364c94807de3ee79662fd41adaf",
+    "renderer": "Flutter widget test renderer, not native OS workflow",
+    "viewports": [
+      {
+        "width": 900,
+        "height": 700,
+        "text_scale": 1
+      },
+      {
+        "width": 360,
+        "height": 640,
+        "text_scale": 2
+      }
+    ],
+    "theme": "dark",
+    "fonts": "Pinned Flutter Roboto-Regular and MaterialIcons fonts",
+    "observations": [
+      "All four item controls retain 48px target geometry",
+      "Notes show one line with ellipsis at narrow200%",
+      "Add item follows last child row; no inner header/count/save copy",
+      "No overflow observed"
+    ]
+  },
+  "remaining_gates": [
+    "Integrated host constructor and snapshot wiring",
+    "Actual GTK/native host workflow/video",
+    "Android/Windows and native assistive technology acceptance",
+    "Independent review of integrated feature"
+  ],
+  "files": {
+    "lib/presentation/checklist_panel.dart": {
+      "bytes": 12271,
+      "sha256": "bcfaff68d24b5e3c40a44525f76e8de3f886a9bf3ab86eccb2eecc6282bd03c9"
+    },
+    "test/checklist_presentation_test.dart": {
+      "bytes": 31837,
+      "sha256": "3d679f2bd0ef8401bc22a5af6fb697c38e8eeab1674c6a5de489cce1965988c2"
+    },
+    "evidence/inline-panel/analysis.txt": {
+      "bytes": 96,
+      "sha256": "cd1554ec4bb9f8e54b7dcee89794ad3d1a45a3eb220a1d12e9c07e42460e884c"
+    },
+    "evidence/inline-panel/drag-red.txt": {
+      "bytes": 13153,
+      "sha256": "25e01ba65a6159d6d9be8b70df66bac9e6e8376e457836b3544a419b07079b9d"
+    },
+    "evidence/inline-panel/green.txt": {
+      "bytes": 2011,
+      "sha256": "ce741fe7bf9a10d936ccfd7e0487a8ed7896353501eb4151b114535f5d668eaf"
+    },
+    "evidence/inline-panel/handle-tap-red.txt": {
+      "bytes": 2516,
+      "sha256": "9344af720c72ce39a26a23205c344b22e8aec2828c8e939a3607d550ea5e8bb4"
+    },
+    "evidence/inline-panel/late-red.txt": {
+      "bytes": 2560,
+      "sha256": "c7a01ede56c27463cfabcb3f57c3fc0296f912cd28f767b9bf4faa69d758505b"
+    },
+    "evidence/inline-panel/red.txt": {
+      "bytes": 7566,
+      "sha256": "a0b1072b9cdd51c0a95beb1a787889f877b46de38eeb54144939cbc9e4fd0d6b"
+    },
+    "evidence/inline-panel/renders.txt": {
+      "bytes": 769,
+      "sha256": "204c020e4019010c50fddb595ec74b1ce8872aaf37d092721bb1026904c5512b"
+    },
+    "evidence/inline-panel/widget-renders/dark-desktop-inline-panel.png": {
+      "bytes": 17645,
+      "sha256": "de2ce206965894e8f3588cecc3b665fe88d2e306e4953a6a84a206c1b9ac3ea9"
+    },
+    "evidence/inline-panel/widget-renders/dark-narrow-enlarged-panel.png": {
+      "bytes": 24445,
+      "sha256": "e02f9a61ed2f73e52eae4aab61f59b657d126bac8e9b03d08638085bf980e8ef"
+    }
+  }
+}
