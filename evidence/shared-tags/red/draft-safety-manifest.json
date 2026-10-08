@@ -1,0 +1,9 @@
+{
+  "outcome": "8 behavioral failures against unchanged a960 production; compile succeeds",
+  "command": "flutter test test/tag_input_test.dart test/task_editor_tags_test.dart",
+  "tests": {
+    "test/tag_input_test.dart": "bf33743eed7cd34411bdd934b64f01e94879143ff0f4c7ee09c6309e2bfe40ad",
+    "test/task_editor_tags_test.dart": "31eed60fd1805ab82690f48398b7dd724103dd64a95718c480afdca84dd80bea"
+  },
+  "log_sha256": "3b9f15a52c062ecfa82c55c93d0557c4324ee6d4982e52d220a49f6e54b1253b"
+}

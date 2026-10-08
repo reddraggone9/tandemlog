@@ -27,6 +27,114 @@ Future<void> query(WidgetTester tester, String key, String text) async {
 
 void main() {
   testWidgets(
+    'opaque original tags survive pending Save with exact case and spaces',
+    (tester) async {
+      List<String>? added, removed;
+      final original = {
+        ...task(),
+        'tags': ['Home', 'home', 'legacy tag', '#literal'],
+        'tagRefs': {
+          'a': 'Home',
+          'b': 'home',
+          'c': 'legacy tag',
+          'd': '#literal',
+        },
+      };
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: original,
+          onClose: () {},
+          save: (_, a, r) async {
+            added = a;
+            removed = r;
+          },
+        ),
+      );
+      await query(tester, 'tags', '#new');
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(added, ['new']);
+      expect(
+        removed,
+        isEmpty,
+        reason: 'original values remain opaque identities',
+      );
+      for (final tag in original['tags'] as List<String>) {
+        expect(find.byKey(ValueKey('selected-tag-$tag')), findsOneWidget);
+      }
+    },
+  );
+
+  testWidgets('failed Save retains selected chips and exact pending query', (
+    tester,
+  ) async {
+    var attempts = 0;
+    await mount(
+      tester,
+      TaskEditor(
+        panel: true,
+        task: task(),
+        onClose: () {},
+        save: (_, a, r) async {
+          attempts++;
+          throw const FormatException('Synthetic save failure');
+        },
+      ),
+    );
+    await query(tester, 'tags', '#new');
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(attempts, 1);
+    expect(find.byKey(const ValueKey('selected-tag-old')), findsOneWidget);
+    expect(
+      tester
+          .widget<TextField>(find.byKey(const ValueKey('tags')))
+          .controller!
+          .text,
+      '#new',
+    );
+  });
+
+  testWidgets('active tag composition blocks Save and canClose Save', (
+    tester,
+  ) async {
+    final key = GlobalKey<TaskEditorState>();
+    var saves = 0;
+    await mount(
+      tester,
+      TaskEditor(
+        key: key,
+        panel: true,
+        task: task(),
+        onClose: () {},
+        save: (_, a, r) async {
+          saves++;
+        },
+      ),
+    );
+    await query(tester, 'tags', 'new');
+    final field = tester.widget<TextField>(find.byKey(const ValueKey('tags')));
+    field.controller!.value = const TextEditingValue(
+      text: 'new',
+      selection: TextSelection.collapsed(offset: 3),
+      composing: TextRange(start: 0, end: 3),
+    );
+    await tester.pump();
+    await tester.tap(find.text('Save changes'));
+    await tester.pumpAndSettle();
+    expect(saves, 0);
+    final closing = key.currentState!.canClose();
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Save').last);
+    await tester.pumpAndSettle();
+    expect(await closing, isFalse);
+    expect(saves, 0);
+    expect(field.controller!.text, 'new');
+  });
+
+  testWidgets(
     'single Save adds pending query without replacing selected tags',
     (tester) async {
       List<String>? added, removed;
