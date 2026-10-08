@@ -9,8 +9,10 @@ The subsequent commits preserve a compact-viewport test failure and make the
 search workflow assert disabled controls in both responsive forms, with DPR1 and
 teardown reset; application inputs are identical. They have independent review.
 Final-source CI [37747198468](https://github.com/reddraggone9/tandemlog/actions/runs/37747198468)
-was requested after the earlier composition CI completed successfully on all three
-platforms. It is pending at this handoff. Read the [queued-fixes receipt](https://github.com/reddraggone9/tandemlog/blob/preview/checklists-queued-fixes/evidence/queued-fixes/README.md)
+completed successfully on Linux, Windows and Android, including the final native
+aggregate and packaging checks. The [final CI receipt](queued-fixes-final-ci-receipt.json)
+binds its exact source and reported archive digests; consumer byte/signature and
+Windows/Android native UI acceptance remain pending. Read the [queued-fixes receipt](https://github.com/reddraggone9/tandemlog/blob/preview/checklists-queued-fixes/evidence/queued-fixes/README.md)
 for exact final-head CI/native bindings.
 This composes reviewed rank `064cac1`, bulk Apply semantics
 `9d5a5aa` and field spacing `3b03e62` onto checklist candidate `eb68b46`.

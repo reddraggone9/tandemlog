@@ -8,7 +8,7 @@ verified both original Library archives, their hashes/manifests and the eight-fi
 index overlay. This consumer's supported Library transfer returned HTTP403.
 Cloud recovery did not delete old source files or touch synced user data.
 Coordinator correction: Lee accepted discarding the inaccessible old workspace on
-2026-10-08 at03:09UTC after being told about possible later edits; the parent
+2026-10-08 at 03:09 UTC after being told about possible later edits; the parent
 successfully archived old task `01a0f24e-662b-7053-b746-cbe1a420b0ec`. The fresh
 workspace and verified Library backups remain. No disposal permission is pending.
 

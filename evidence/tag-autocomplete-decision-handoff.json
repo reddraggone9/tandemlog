@@ -1,8 +1,8 @@
 {
   "source_commit": "5dbfbf6213104728bd2b468ad6396f4c75aa240a",
-  "status": "Both preserved unadopted; no further prototype expansion or full testing beforeLee choice.",
-  "recommendation": "Lean A:text completion. It preserves typing/paste and stays compact for task and bulk editing. B makes selected tags/removal clearer but uses more height and requires remove/re-enter to edit spelling. This is a recommendation, not adoption.",
-  "platform": "ActualLinux GTKdebug dark100%:screenshots390x820;video1000x820,19.133333s withvisiblepointer. NotAndroid/Windows acceptance.",
+  "status": "Both preserved unadopted; no further prototype expansion or full testing before Lee chooses.",
+  "recommendation": "I lean toward A (text completion): it preserves typing/paste and stays compact for task and bulk editing. B makes selected tags and removal clearer, but uses more height and requires removing/re-entering a tag to edit its spelling. This is a recommendation, not adoption.",
+  "platform": "Actual Linux GTK debug, dark theme, 100% text: screenshots 390\u00d7820; video 1000\u00d7820, 19.133333 seconds with a visible pointer. These are not Android/Windows acceptance.",
   "media": [
     {
       "path": "evidence/tag-autocomplete-trials/ui/a-390-suggestions.png",
