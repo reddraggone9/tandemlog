@@ -1,6 +1,17 @@
 # Final integration plan — 2026-10-08
 
-Status: preparation only. The current combined candidate stays frozen throughout
+Status: **BLOCKED by a parent-reported reproducible native historical-recompletion
+defect in exact source17ae5e5.** Recompletion of an old checklist parent leaks
+later text into an independently edited successor; Undo and cache rebuild retain
+the leak. This violates the approved policy. Release/native acceptance is not
+complete. Shared tags inherit the same recurrence/checklist core byte-for-byte.
+The exact synthetic sequence/fixture is awaited before a tests-first narrow fix
+on `fix/historical-checklist-recompletion`, based on frozen a960c88. Preserve the
+failed artifact/evidence; any fix requires a new exact candidate and affected
+native retest with independent correctness review. Other passing local flows
+and twelve validated recordings remain supporting evidence, not overall acceptance.
+
+Preparation only. The current combined candidate stays frozen throughout
 local Android acceptance. No merge, build or publication is performed by this
 plan. Shared tag input was subsequently approved and implemented on a separate
 branch; it does not change this frozen artifact. Lee approved a persistent 6 GiB emulator cap with
@@ -36,14 +47,17 @@ that exact hash before recording runtime acceptance. See the
 own README contains historical pending statuses; the separately updated receipts
 record terminal CI and hosted Windows results without changing the candidate.
 
-## Integration sequence after this acceptance run
+## Integration sequence after the blocking fix and native acceptance
 
-1. Finish the exact 17ae5e5 APK's Android acceptance and retain its checksum,
+1. Preserve the exact 17ae5e5 APK's failure and the minimal native sequence.
+   Freeze the corresponding regression, fix narrowly, independently review,
+   rebuild a separately identified candidate and rerun the affected acceptance.
+   Retain its checksum,
    signer, device/API/AVD, resource settings, startup/runtime ABI, workflow and
    SAF/lifecycle/IME observations. Keep every profile and canonical folder
    synthetic. Record failures before changing source; any necessary fix belongs
    on a new isolated branch and invalidates acceptance for the changed artifact.
-2. Keep the original candidate and its accepted artifact immutable. Prepare a
+2. Keep the original candidate and its verified failed artifact/evidence immutable. Prepare a
    separate integration branch after acceptance. Reviewed Kotlin head
    `1b8f0cc5c6eeb302519231d7269ee37a529e36d0` already descends directly from
    a960c88; its merge base with that candidate is exactly a960c88. Preserve this
@@ -97,24 +111,31 @@ record terminal CI and hosted Windows results without changing the candidate.
 Lee explicitly approved shared B-style tag input at 2026-10-08 13:01:08 UTC;
 the parent's supported quota read was 77% at 13:01:14 UTC. This supersedes the
 earlier unchosen A/B stage. Production is `041c06488cb2d937d38519dec8e3e3ebd69abbf3`,
-test revision `5204e276b641dd05cb5b5e648b2c6369ed11f5cf`, and the current evidence
-head is `4ab182688460d31b8e17647f0f6e8659370f28c6` on
-`feature/shared-tag-input`. Later changes are test fixtures and evidence only.
-[The accepted design and receipts](https://github.com/reddraggone9/tandemlog/blob/4ab182688460d31b8e17647f0f6e8659370f28c6/evidence/shared-tags/README.md)
+test revision `ec2309dbbdde09d5fce0a07610bc253258dd508b`, and the current QA/evidence
+head is `636587c9c7a98bcd3ea05a45fc73ceb2c0546b52` on
+`feature/shared-tag-input`. Later changes are test fixtures, synthetic QA tooling, docs and evidence; application,
+platform, native and dependency inputs remain unchanged.
+[The accepted design and receipts](https://github.com/reddraggone9/tandemlog/blob/636587c9c7a98bcd3ea05a45fc73ceb2c0546b52/evidence/shared-tags/README.md)
 cover opaque tag identity, separate Add/Remove policies, pending query safety,
 keyboard/composition behavior, controlled chips and query-row anchoring.
 
 Local 621 Flutter tests, 37 tooling tests, three actual GTK workflows and the
 17 screenshots/desktop recording pass independent review. The first full CI
-passed Android/Windows but found two legacy Linux test interactions; both were
-reproduced, corrected without production changes and passed focused native
-retests. [Fresh full CI 37792711739](https://github.com/reddraggone9/tandemlog/actions/runs/37792711739)
+found two legacy native interactions; the second found one guarded bulk Save
+tap intercepted by an open popup (68 passed, one failed). Test-only `ec2309db`
+explicitly dismisses suggestions, verifies query retention and Save hit-testing,
+and strengthens rejected-Save coverage to exact prior tags. Its actual focused
+GTK case and independent review pass. The hosted red and local original pass
+are distinguished rather than claiming a local reproduction.
+[Final full CI 37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
 is pending terminal Linux results; Android/Windows jobs pass. Separately,
 [22 hosted Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
-pass on `ff1d1f82`. The later 5204 aggregate file differs only in two excluded
-fixture blocks; selected Windows test bodies and production inputs are unchanged.
-Consumer ZIP/binary rehash and loaded-module enumeration are not claimed.
-These debug observations do not replace exact integrated release acceptance.
+pass on `ff1d1f82`. The later ec2309 aggregate file differs only in three excluded
+legacy fixture blocks; selected Windows test bodies and production inputs are
+unchanged. Consumer ZIP/binary rehash and loaded-module enumeration are not
+claimed. The [Android handoff and eight-record synthetic fixture](https://github.com/reddraggone9/tandemlog/blob/636587c9c7a98bcd3ea05a45fc73ceb2c0546b52/design/shared-tag-native-acceptance.md)
+pass independent static/hash/history-chain review. These debug observations
+and QA inputs do not replace exact integrated release acceptance.
 
 Bounded actual GTK external-write and clock-boundary investigations did not
 reproduce Lee's overnight Windows staleness. Their temporary observers remain
@@ -122,7 +143,8 @@ in [evidence only](https://github.com/reddraggone9/tandemlog/tree/866c11ff9eea1c
 no speculative redraw, polling, dependency or idle fix belongs in integration.
 Windows, overnight and physical display behavior remain unverified.
 
-Remaining external gates are the current local Android acceptance, the focused
+The historical-recompletion fix/regression/native retest is the blocking gate.
+Remaining external gates then include corrected local Android acceptance, the focused
 Kotlin/tag Android runtime follow-up, installed Windows/manual visual/assistive
 technology acceptance, and final signed-artifact/release-note/media review. The
 parent owns those decisions and device/resource configuration. Live synced user
