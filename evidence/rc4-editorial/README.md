@@ -21,8 +21,10 @@ tooling, internal performance, tests, expected interactions and preservation
 assurances are deliberately engineering-only under the established editorial policy.
 
 Media is committed at `89cec5a13900291df9f1cb841c5351277f38f4ff`; the draft now
-uses its immutable raw image URL. Final link-only review remains to close this
-editorial gate. `media-receipt.json` records exact sources, raw captures and the
+uses its immutable raw image URL. Independent final link review closed the
+editorial gate: remote HTTP200 returned the exact reviewed PNG (9566 bytes,
+SHA256 `8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90`),
+and GitHub Contents API confirms the pinned source/blob identity. `media-receipt.json` records exact sources, raw captures and the
 vector/crop layout recipe. Failed renderer attempts remain preserved separately
 under `/workspace/recovery/rc4-media-render-rejected`; they are not published media.
 
