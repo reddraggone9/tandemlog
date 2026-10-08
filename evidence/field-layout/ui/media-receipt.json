@@ -1,0 +1,108 @@
+{
+  "base": "eb68b46259f745e86ec9f41c144d473f19d0fb0f",
+  "application_source_commit": "e09d7a7616822dca76138a5e17e59ffd28d50386",
+  "platform": "Linux GTK actual main application debug,1200x850,dark100%",
+  "input": "Real X11 pointer/button/keyboard via xdotool; FFmpeg draw_mouse=1.",
+  "source_blobs": {
+    "lib/presentation/task_editor.dart": "801bcd8437017f0394901b784791e4ae6fb6880f",
+    "lib/presentation/tag_filter_picker.dart": "797ae76c58cfdb6b5b1a4e04ab68bca11d31c116"
+  },
+  "native_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "media": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1200,
+        "height": 850,
+        "r_frame_rate": "15/1"
+      }
+    ],
+    "format": {
+      "duration": "35.866666",
+      "size": "297716"
+    }
+  },
+  "files": {
+    "bounds-1200-dark-100.png": {
+      "sha256": "ffbee49b7dbd1b09770b0dfeb38fe916c87c972b6c0da6a89e60901e79371a5d",
+      "bytes": 59755
+    },
+    "bounds-390-dark-100.png": {
+      "sha256": "7c00c59eec7632442d4a5065c2e710a05a3aa23b7a997875e44c5ff1d8da4372",
+      "bytes": 38076
+    },
+    "bounds-390-light-200.png": {
+      "sha256": "cd2a2ec5edcaeba96ad2db9f7639cf06a8b0380ebad73c6d07d00dd9b537785d",
+      "bytes": 50802
+    },
+    "demo-canonical-unchanged.json": {
+      "sha256": "8faf8005f7002eab0161316724b632a84bfe264bf288fbde1fd510111d50026d",
+      "bytes": 480
+    },
+    "field-layout-linux-gtk-debug.mp4": {
+      "sha256": "a78127105d843b9643b429eef0adcc955a8fd8a1cbd7b49550a41658f18ab0e8",
+      "bytes": 297716
+    },
+    "tags-empty-1200-dark-100.png": {
+      "sha256": "8c246c4c5171a6edb70acbbcd99ffdaccbd414be83010e404b8aa89bfbcbfe56",
+      "bytes": 46267
+    },
+    "tags-empty-390-dark-100.png": {
+      "sha256": "d2ed6cc6da564a87cdddbdcda4c7a0818487ac6afa1f859c5a65bb47d65ef181",
+      "bytes": 34499
+    },
+    "tags-empty-390-light-200.png": {
+      "sha256": "cfb1a97405afb1af479bd431af46f7ad3aad135356221102e63efef5f6e47f1f",
+      "bytes": 50868
+    },
+    "tags-selected-1200-dark-100.png": {
+      "sha256": "afe1fd2bad1bc10e698942bfd357511c16a7a440ceb7015cc6e04f27401b2687",
+      "bytes": 48435
+    },
+    "tags-selected-390-dark-100.png": {
+      "sha256": "5759a91da0093fb96cb501dee2c5ecca4bf49edf32f521b89c206c5bfc50534f",
+      "bytes": 36522
+    },
+    "tags-selected-390-light-200.png": {
+      "sha256": "c318bb0a3471ce28f610918b5d438f99ddfe783110f902d8bdbe0d3c3c0db184",
+      "bytes": 51342
+    }
+  },
+  "trim": {
+    "raw_seconds": 138.666667,
+    "segments": [
+      {
+        "start": 0,
+        "end": 9
+      },
+      {
+        "start": 60.059,
+        "end": 73.059
+      },
+      {
+        "start": 124.733,
+        "end": 138.667
+      }
+    ],
+    "reason": "Removed only waits between requested action batches; actual inputs and final states preserved."
+  },
+  "bundle_identity_limit": "The debug main-app source was fixed throughout recording. Complete prelaunch bundle hashes were not captured; source-bound UI evidence does not establish exact release-artifact acceptance.",
+  "pending": [
+    "Android/Windows visual and physicalIME acceptance",
+    "native assistive technology",
+    "integrated exact candidate release gates"
+  ],
+  "independent_review": {
+    "source": "production blobs match accepted e09d7a7 source",
+    "decoded_frames_seconds": [
+      3,
+      12,
+      15,
+      30
+    ],
+    "observations": "Visible arrow, separated floating Minimum days label, Cancel closes editor, selected #backlog plus exact Find tags hint/control row. No production must-fix.",
+    "scope": "Linux source-bound native UI; no Android/Windows/IME/AT or exact release-artifact acceptance."
+  }
+}

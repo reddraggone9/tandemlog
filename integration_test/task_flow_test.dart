@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tandemlog/platform/log_folder.dart';
@@ -12,6 +13,7 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
+
 import 'native_text_fixtures.dart';
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
@@ -31,6 +33,7 @@ import 'recurring_text_workflow_test.dart'
 import 'checklist_workflow_test.dart' show registerChecklistWorkflowTests;
 import 'checklist_lifecycle_test.dart' show registerChecklistLifecycleTests;
 import 'bulk_apply_semantics_test.dart' show registerBulkApplySemanticsTests;
+import 'field_layout_test.dart' show registerFieldLayoutTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -172,6 +175,7 @@ void main() {
   registerChecklistWorkflowTests();
   registerChecklistLifecycleTests();
   registerBulkApplySemanticsTests();
+  registerFieldLayoutTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -197,9 +201,8 @@ void main() {
         },
       });
     }
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     tester.view.devicePixelRatio = 1.5;
@@ -357,9 +360,8 @@ void main() {
       tags: ['edgeqa', 'Other', ...List.generate(9, (i) => 'size-tag-$i')],
       observedTagRefs: {},
     );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     final before = {
       await for (final f in folder.list())
         if (f is File) f.path: base64Encode(await f.readAsBytes()),
@@ -513,9 +515,8 @@ void main() {
       await add('Arrange reference shelf', ['Home', 'Planning']);
       await add('Other user review', ['Home'], assigned: other);
       await add('Finished planning', ['Planning'], done: true);
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       tester.view.devicePixelRatio = 1;
@@ -968,9 +969,8 @@ void main() {
       await add('Planning future', upcoming: true);
       await add('Planning finished', done: true);
       await add('Unrelated task');
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       await filterChoice(tester, 'Completed');
@@ -1116,9 +1116,8 @@ void main() {
       final root = await Directory.systemTemp.createTemp('tandemlog-ui');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/private').create();
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
       // Interrupt startup before settling; discarded states must not retain a store/timer.
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpWidget(const SizedBox());
@@ -1158,9 +1157,8 @@ void main() {
       await tester.tap(find.byTooltip('Complete Buy oats'));
       await tester.pumpAndSettle();
       // Persistent completed browsing works even after dismissing transient Undo.
-      ScaffoldMessenger.of(
-        tester.element(find.byType(Scaffold)),
-      ).clearSnackBars();
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+          .clearSnackBars();
       await tester.pumpAndSettle();
       await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
@@ -1400,9 +1398,8 @@ void main() {
       );
       final user = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Example'});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       // The production mobile capture branch, hosted by native Linux here.
       // Real Gboard acceptance must also pass on the exact Android APK.
       await tester.pumpWidget(
@@ -1547,9 +1544,8 @@ void main() {
         'description': 'Original notes',
         'assignee': user,
       });
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
@@ -1846,9 +1842,8 @@ void main() {
     );
     await store.command(user, 'user.created', {'name': 'Test user'});
     await store.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     final field = find.byType(TextField);
@@ -1910,212 +1905,212 @@ void main() {
     await tester.pumpAndSettle();
     await root.delete(recursive: true);
   });
-  testWidgets('compact filters compose reopen reset and keep identity separate', (
-    tester,
-  ) async {
-    final root = await Directory.systemTemp.createTemp('compact-filter-');
-    final folder = await Directory('${root.path}/shared').create();
-    final profile = await Directory('${root.path}/profile').create();
-    final writer = await openNativeFixtureStore(
-      LocalLogFolder(folder.path),
-      '${root.path}/writer',
-    );
-    final user = const Uuid().v4(), other = const Uuid().v4();
-    const activeName = 'Alexandria Example Household Member';
-    await writer.command(user, 'user.created', {'name': activeName});
-    await writer.command(other, 'user.created', {'name': 'Sam Example'});
-    Future<void> add(
-      String title,
-      String assignee, {
-      bool future = false,
-      bool done = false,
-      String tag = 'Home',
-    }) async {
-      final id = const Uuid().v4();
-      await writer.createNativeFixtureTask(id, {
-        'title': title,
-        'description': '',
-        'assignee': assignee,
-        'schedule': future ? {'startDate': '2099-01-01'} : {},
-      });
-      await writer.edit(id, {}, tags: [tag], observedTagRefs: {});
-      if (done) await writer.command(id, 'task.completed', {});
-    }
+  testWidgets(
+    'compact filters compose reopen reset and keep identity separate',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('compact-filter-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await openNativeFixtureStore(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
+      );
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      const activeName = 'Alexandria Example Household Member';
+      await writer.command(user, 'user.created', {'name': activeName});
+      await writer.command(other, 'user.created', {'name': 'Sam Example'});
+      Future<void> add(
+        String title,
+        String assignee, {
+        bool future = false,
+        bool done = false,
+        String tag = 'Home',
+      }) async {
+        final id = const Uuid().v4();
+        await writer.createNativeFixtureTask(id, {
+          'title': title,
+          'description': '',
+          'assignee': assignee,
+          'schedule': future ? {'startDate': '2099-01-01'} : {},
+        });
+        await writer.edit(id, {}, tags: [tag], observedTagRefs: {});
+        if (done) await writer.command(id, 'task.completed', {});
+      }
 
-    await add('Ready household task', user);
-    await add('Future household task', user, future: true);
-    await add('Other household task', other);
-    await add('Completed household task', other, done: true);
-    await add('Different tag task', user, tag: 'home');
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-    await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-    await tester.pumpAndSettle();
-    final capture = find.widgetWithText(TextField, 'What needs doing?');
-    const draft = TextEditingValue(
-      text: 'Retain this draft',
-      selection: TextSelection(baseOffset: 3, extentOffset: 9),
-      composing: TextRange(start: 3, end: 9),
-    );
-    tester.widget<TextField>(capture).controller!.value = draft;
-    await openFilters(tester);
-    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
-    await tester.pumpAndSettle();
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-    await tester.pumpAndSettle();
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Everyone'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isTrue,
-    );
-    await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
-    await tester.pumpAndSettle();
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Everyone'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isFalse,
-    );
-    await chooseFilter(tester, 'Everyone');
-    await chooseFilter(tester, 'Show upcoming');
-    await chooseFilter(tester, '#Home');
-    await chooseFilter(tester, 'Completed');
-    await tester.tap(find.text('Done').last);
-    await tester.pumpAndSettle();
-    expect(find.text('Completed household task'), findsOneWidget);
-    expect(find.text('Different tag task'), findsNothing);
-    expect(find.byTooltip('Active user: $activeName'), findsOneWidget);
-    final badge = find.descendant(
-      of: find.byKey(const ValueKey('task-filter')),
-      matching: find.byType(Badge),
-    );
-    expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
-    await openFilters(tester);
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Everyone'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isTrue,
-    );
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Completed'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isTrue,
-    );
-    expect(find.byKey(const ValueKey('selected-tag-Home')), findsOneWidget);
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.widgetWithText(SwitchListTile, 'Show upcoming'),
-          )
-          .value,
-      isTrue,
-    );
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-    await tester.pumpAndSettle();
-    expect(find.byType(AlertDialog), findsNothing);
-    expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
-    await tester.tap(find.byKey(const ValueKey('identity-menu')));
-    await tester.pumpAndSettle();
-    expect(
-      tester
-          .widget<CheckedPopupMenuItem<String>>(
-            find.ancestor(
-              of: find.text(activeName),
-              matching: find.byType(CheckedPopupMenuItem<String>),
-            ),
-          )
-          .checked,
-      isTrue,
-    );
-    await tester.tap(
-      find.ancestor(
-        of: find.text('Sam Example').last,
-        matching: find.byType(CheckedPopupMenuItem<String>),
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
-    expect(find.text('Completed household task'), findsOneWidget);
-    await openFilters(tester);
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Everyone'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isTrue,
-    );
-    await tester.tap(find.text('Reset'));
-    await tester.pumpAndSettle();
-    expect(
-      tester
-          .widget<RadioGroup<bool>>(
-            find.ancestor(
-              of: find.text('Active user'),
-              matching: find.byType(RadioGroup<bool>),
-            ),
-          )
-          .groupValue,
-      isFalse,
-    );
-    expect(find.byType(InputChip), findsNothing);
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.widgetWithText(SwitchListTile, 'Show upcoming'),
-          )
-          .value,
-      isFalse,
-    );
-    await tester.tap(find.text('Done').last);
-    await tester.pumpAndSettle();
-    expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
-    expect(find.text('Other household task'), findsOneWidget);
-    expect(find.text('Ready household task'), findsNothing);
-    // Native IMEs may end composition when focus moves into a dialog/menu.
-    // The app must retain text/selection, without reviving a stale IME session.
-    final retained = tester.widget<TextField>(capture).controller!.value;
-    expect(retained.text, draft.text);
-    expect(retained.selection, draft.selection);
-    expect(retained.composing, anyOf(draft.composing, TextRange.empty));
-    expect(tester.widget<Badge>(badge).isLabelVisible, isFalse);
-    await openSettings(tester);
-    expect(find.text('Settings'), findsOneWidget);
-    await tester.tap(find.text('Done').last);
-    await tester.pumpAndSettle();
-    expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await writer.close();
-    await root.delete(recursive: true);
-  });
+      await add('Ready household task', user);
+      await add('Future household task', user, future: true);
+      await add('Other household task', other);
+      await add('Completed household task', other, done: true);
+      await add('Different tag task', user, tag: 'home');
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await tester.pumpAndSettle();
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      const draft = TextEditingValue(
+        text: 'Retain this draft',
+        selection: TextSelection(baseOffset: 3, extentOffset: 9),
+        composing: TextRange(start: 3, end: 9),
+      );
+      tester.widget<TextField>(capture).controller!.value = draft;
+      await openFilters(tester);
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isFalse,
+      );
+      await chooseFilter(tester, 'Everyone');
+      await chooseFilter(tester, 'Show upcoming');
+      await chooseFilter(tester, '#Home');
+      await chooseFilter(tester, 'Completed');
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Completed household task'), findsOneWidget);
+      expect(find.text('Different tag task'), findsNothing);
+      expect(find.byTooltip('Active user: $activeName'), findsOneWidget);
+      final badge = find.descendant(
+        of: find.byKey(const ValueKey('task-filter')),
+        matching: find.byType(Badge),
+      );
+      expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Completed'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      expect(find.byKey(const ValueKey('selected-tag-Home')), findsOneWidget);
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isTrue,
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byType(AlertDialog), findsNothing);
+      expect(tester.widget<Badge>(badge).isLabelVisible, isTrue);
+      await tester.tap(find.byKey(const ValueKey('identity-menu')));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<CheckedPopupMenuItem<String>>(
+              find.ancestor(
+                of: find.text(activeName),
+                matching: find.byType(CheckedPopupMenuItem<String>),
+              ),
+            )
+            .checked,
+        isTrue,
+      );
+      await tester.tap(
+        find.ancestor(
+          of: find.text('Sam Example').last,
+          matching: find.byType(CheckedPopupMenuItem<String>),
+        ),
+      );
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      expect(find.text('Completed household task'), findsOneWidget);
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Everyone'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isTrue,
+      );
+      await tester.tap(find.text('Reset'));
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<RadioGroup<bool>>(
+              find.ancestor(
+                of: find.text('Active user'),
+                matching: find.byType(RadioGroup<bool>),
+              ),
+            )
+            .groupValue,
+        isFalse,
+      );
+      expect(find.byType(InputChip), findsNothing);
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isFalse,
+      );
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      expect(find.text('Other household task'), findsOneWidget);
+      expect(find.text('Ready household task'), findsNothing);
+      // Native IMEs may end composition when focus moves into a dialog/menu.
+      // The app must retain text/selection, without reviving a stale IME session.
+      final retained = tester.widget<TextField>(capture).controller!.value;
+      expect(retained.text, draft.text);
+      expect(retained.selection, draft.selection);
+      expect(retained.composing, anyOf(draft.composing, TextRange.empty));
+      expect(tester.widget<Badge>(badge).isLabelVisible, isFalse);
+      await openSettings(tester);
+      expect(find.text('Settings'), findsOneWidget);
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.byTooltip('Active user: Sam Example'), findsOneWidget);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets('bounded tag search and responsive task metadata remain readable', (
     tester,
   ) async {
@@ -2184,9 +2179,8 @@ void main() {
             'Planning/LongOrdinaryTagForSearchAndAccessibility${i.toString().padLeft(3, '0')}',
       ),
     );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(
       TandemlogApp(
         profilePath: profile.path,
@@ -2401,9 +2395,8 @@ void main() {
       if (i == 0) await store.command(id, 'task.completed', {});
     }
     await store.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     for (final sample in [
@@ -2497,9 +2490,8 @@ void main() {
         'assignee': user,
         'schedule': {'scheduledDate': '2026-01-30', 'scheduledTime': '08:00'},
       });
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(
         TandemlogApp(
           profilePath: profile.path,
@@ -2636,9 +2628,8 @@ void main() {
         tester.getTopLeft(find.text('Second task')).dy,
         lessThan(tester.getTopLeft(find.text('Monthly review')).dy),
       );
-      ScaffoldMessenger.of(
-        tester.element(find.byType(Scaffold)),
-      ).clearSnackBars();
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+          .clearSnackBars();
       await tester.pumpAndSettle();
       await filterChoice(tester, 'Completed');
       await tester.pumpAndSettle();
@@ -2674,9 +2665,8 @@ void main() {
       now: () => DateTime.now().add(const Duration(minutes: 10)),
     );
     await remote.command(user, 'user.created', {'name': 'Example user'});
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     expect(find.textContaining('ahead of this device'), findsOneWidget);
@@ -2727,9 +2717,8 @@ void main() {
         );
       }
       await writer.command(ids[4], 'task.completed', {});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
       final capture = find.widgetWithText(TextField, 'What needs doing?');
@@ -2850,277 +2839,272 @@ void main() {
       await root.delete(recursive: true);
     },
   );
-  testWidgets('native drag preserves hidden order and rejects other time buckets', (
-    tester,
-  ) async {
-    final root = await Directory.systemTemp.createTemp('drag-order-');
-    final folder = await Directory('${root.path}/shared').create();
-    final profile = await Directory('${root.path}/profile').create();
-    final writer = await openNativeFixtureStore(
-      LocalLogFolder(folder.path),
-      '${root.path}/writer',
-    );
-    final user = const Uuid().v4(), other = const Uuid().v4();
-    await writer.command(user, 'user.created', {'name': 'Example'});
-    await writer.command(other, 'user.created', {'name': 'Other'});
-    final ids = <String, String>{};
-    Future<void> add(
-      String title, {
-      String? assignee,
-      Map<String, dynamic> schedule = const {},
-    }) async {
-      final id = ids[title] = const Uuid().v4();
-      await writer.createNativeFixtureTask(id, {
-        'title': title,
-        'description': '',
-        'assignee': assignee ?? user,
-        'schedule': schedule,
-      });
-    }
-
-    await add('First');
-    await add('Hidden assignee', assignee: other);
-    await add('Second');
-    await add('Hidden future', schedule: {'startDate': '2026-11-01'});
-    await add('Third');
-    await add('Dated', schedule: {'dueDate': '2026-10-02', 'dueMinDays': 1});
-    await add(
-      'Dated peer',
-      schedule: {'scheduledDate': '2026-10-02', 'dueMinDays': 1},
-    );
-    await add(
-      'Different time',
-      schedule: {'dueDate': '2026-10-02', 'dueTime': '10:00'},
-    );
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
-    var viewNow = DateTime.utc(2026, 10, 1);
-    late ViewTimeSource source;
-    await tester.pumpWidget(
-      TandemlogApp(
-        profilePath: profile.path,
-        timeSourceFactory: (onChanged) => source = ViewTimeSource(
-          onChanged: onChanged,
-          loadZone: () async => 'UTC',
-          now: () => viewNow,
-        ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    Finder target(String title) =>
-        find.byKey(ValueKey('task-drop-${ids[title]}'));
-    Finder handle(String title) => find.descendant(
-      of: target(title),
-      matching: find.byType(Draggable<String>),
-    );
-    Future<void> drag(
-      String from,
-      String to, {
-      bool after = true,
-      bool invalidate = false,
-      bool advanceClock = false,
-      bool invalidSelection = false,
-    }) async {
-      await tester.ensureVisible(handle(from));
-      await tester.pumpAndSettle();
-      final start = tester.getCenter(handle(from));
-      final rect = tester.getRect(target(to));
-      final point = Offset(
-        rect.center.dx,
-        after ? rect.bottom - 8 : rect.top + 8,
+  testWidgets(
+    'native drag preserves hidden order and rejects other time buckets',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('drag-order-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await openNativeFixtureStore(
+        LocalLogFolder(folder.path),
+        '${root.path}/writer',
       );
-      final gesture = await tester.startGesture(start);
-      await gesture.moveBy(const Offset(-20, 0));
-      await tester.pump();
-      await gesture.moveTo(point);
-      await tester.pump();
-      if (invalidate) {
-        source.onChanged();
-        await tester.pump();
+      final user = const Uuid().v4(), other = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Example'});
+      await writer.command(other, 'user.created', {'name': 'Other'});
+      final ids = <String, String>{};
+      Future<void> add(
+        String title, {
+        String? assignee,
+        Map<String, dynamic> schedule = const {},
+      }) async {
+        final id = ids[title] = const Uuid().v4();
+        await writer.createNativeFixtureTask(id, {
+          'title': title,
+          'description': '',
+          'assignee': assignee ?? user,
+          'schedule': schedule,
+        });
       }
-      if (invalidate || invalidSelection || to == 'Different time') {
-        expect(
-          find.byWidgetPredicate(
-            (widget) =>
-                widget is Semantics &&
-                widget.properties.label ==
-                    'Cannot reorder here: different group, date or time, or the list changed.',
-          ),
-          findsOneWidget,
-        );
-      }
-      if (advanceClock) viewNow = viewNow.add(const Duration(days: 1));
-      await gesture.up();
-      await tester.pumpAndSettle();
-    }
 
-    expect(tester.getSize(handle('First')).width, greaterThanOrEqualTo(48));
-    await drag('First', 'Third');
-    await writer.refresh();
-    List<String> order() => writer.rows
-        .where((r) => r['kind'] == 'task')
-        .map((r) => r['title'] as String)
-        .toList();
-    expect(order(), [
-      'Hidden assignee',
-      'Second',
-      'Hidden future',
-      'Third',
-      'First',
-      'Dated',
-      'Dated peer',
-      'Different time',
-    ]);
-    final before = order();
-    final bytes = await folder
-        .list()
-        .where((f) => f.path.endsWith('.jsonl'))
-        .asyncMap((f) => File(f.path).readAsString())
-        .toList();
-    await drag('Dated', 'Different time');
-    expect(
-      find.text(
-        'Reorder canceled. Drop beside a task with the same group, date and time.',
-      ),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    expect(
-      await folder
+      await add('First');
+      await add('Hidden assignee', assignee: other);
+      await add('Second');
+      await add('Hidden future', schedule: {'startDate': '2026-11-01'});
+      await add('Third');
+      await add('Dated', schedule: {'dueDate': '2026-10-02', 'dueMinDays': 1});
+      await add(
+        'Dated peer',
+        schedule: {'scheduledDate': '2026-10-02', 'dueMinDays': 1},
+      );
+      await add(
+        'Different time',
+        schedule: {'dueDate': '2026-10-02', 'dueTime': '10:00'},
+      );
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      var viewNow = DateTime.utc(2026, 10, 1);
+      late ViewTimeSource source;
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => source = ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () async => 'UTC',
+            now: () => viewNow,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      Finder target(String title) =>
+          find.byKey(ValueKey('task-drop-${ids[title]}'));
+      Finder handle(String title) => find.descendant(
+        of: target(title),
+        matching: find.byType(Draggable<String>),
+      );
+      Future<void> drag(
+        String from,
+        String to, {
+        bool after = true,
+        bool invalidate = false,
+        bool advanceClock = false,
+        bool invalidSelection = false,
+      }) async {
+        await tester.ensureVisible(handle(from));
+        await tester.pumpAndSettle();
+        final start = tester.getCenter(handle(from));
+        final rect = tester.getRect(target(to));
+        final point = Offset(
+          rect.center.dx,
+          after ? rect.bottom - 8 : rect.top + 8,
+        );
+        final gesture = await tester.startGesture(start);
+        await gesture.moveBy(const Offset(-20, 0));
+        await tester.pump();
+        await gesture.moveTo(point);
+        await tester.pump();
+        if (invalidate) {
+          source.onChanged();
+          await tester.pump();
+        }
+        if (invalidate || invalidSelection || to == 'Different time') {
+          expect(
+            find.byWidgetPredicate(
+              (widget) => widget is Semantics && widget.properties.label == 'Cannot reorder here: different group, date or time, or the list changed.',
+            ),
+            findsOneWidget,
+          );
+        }
+        if (advanceClock) viewNow = viewNow.add(const Duration(days: 1));
+        await gesture.up();
+        await tester.pumpAndSettle();
+      }
+
+      expect(tester.getSize(handle('First')).width, greaterThanOrEqualTo(48));
+      await drag('First', 'Third');
+      await writer.refresh();
+      List<String> order() => writer.rows
+          .where((r) => r['kind'] == 'task')
+          .map((r) => r['title'] as String)
+          .toList();
+      expect(order(), [
+        'Hidden assignee',
+        'Second',
+        'Hidden future',
+        'Third',
+        'First',
+        'Dated',
+        'Dated peer',
+        'Different time',
+      ]);
+      final before = order();
+      final bytes = await folder
           .list()
           .where((f) => f.path.endsWith('.jsonl'))
           .asyncMap((f) => File(f.path).readAsString())
-          .toList(),
-      bytes,
-    );
-
-    for (final title in ['Dated', 'Third']) {
-      await selectTask(tester, ids[title]!);
-    }
-    await drag('Dated', 'Dated peer', invalidSelection: true);
-    await writer.refresh();
-    expect(
-      order(),
-      before,
-      reason: 'Every selected task must share the target key.',
-    );
-    await tester.tap(clearSelection());
-    await tester.pumpAndSettle();
-
-    ScaffoldMessenger.of(
-      tester.element(find.byType(Scaffold)),
-    ).clearSnackBars();
-    await tester.pumpAndSettle();
-    await drag('Second', 'First', invalidate: true);
-    expect(
-      find.text('The task list changed. Try dragging again.'),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    ScaffoldMessenger.of(
-      tester.element(find.byType(Scaffold)),
-    ).clearSnackBars();
-    await tester.pumpAndSettle();
-    await drag('Dated', 'Dated peer', advanceClock: true);
-    expect(
-      find.text('The task list changed. Try moving the task again.'),
-      findsOneWidget,
-    );
-    await writer.refresh();
-    expect(order(), before);
-    viewNow = DateTime.utc(2026, 10, 1);
-    source.onChanged();
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Dated peer'));
-    await tester.pumpAndSettle();
-    // Existing schedule starts expanded.
-    await tester.pumpAndSettle();
-    const warning = 'Existing occurrence override is preserved.';
-    final repeat = find.widgetWithText(TextField, 'Repeat');
-    await tester.ensureVisible(repeat);
-    await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
-    await tester.enterText(repeat, 'every week');
-    await tester.pumpAndSettle();
-    expect(
-      find.textContaining('base due date and repeat cadence remain'),
-      findsOneWidget,
-    );
-    await tester.enterText(repeat, '');
-    await tester.pumpAndSettle();
-    expect(find.text(warning), findsOneWidget);
-    await tester.tap(find.text('Save changes'));
-    await tester.pumpAndSettle();
-    await writer.refresh();
-    final schedule =
-        writer.rows.firstWhere(
-              (row) => row['id'] == ids['Dated peer'],
-            )['schedule']
-            as Map;
-    expect(schedule['scheduledDate'], '2026-10-02');
-    expect(schedule['recurrence'], isNull);
-    expect(find.text('Hidden future'), findsNothing);
-    final capture = find.widgetWithText(TextField, 'What needs doing?');
-    await tester.enterText(capture, 'Keep this draft');
-    await filterChoice(tester, 'Show upcoming');
-    await tester.pumpAndSettle();
-    expect(
-      tester.widget<TextField>(capture).controller!.text,
-      'Keep this draft',
-    );
-    await tester.scrollUntilVisible(
-      find.text('Hidden future'),
-      150,
-      scrollable: taskScrollable(),
-    );
-    await tester.tap(find.text('Hidden future'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.widgetWithText(TextField, 'Notes'),
-      'Edited before availability',
-    );
-    await tester.tap(find.text('Save changes'));
-    await tester.pumpAndSettle();
-    await writer.refresh();
-    expect(
-      writer.rows.firstWhere(
-        (row) => row['id'] == ids['Hidden future'],
-      )['description'],
-      'Edited before availability',
-    );
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await tester.pumpWidget(
-      TandemlogApp(
-        profilePath: profile.path,
-        timeSourceFactory: (onChanged) => ViewTimeSource(
-          onChanged: onChanged,
-          loadZone: () async => 'UTC',
-          now: () => DateTime.utc(2026, 10, 1),
+          .toList();
+      await drag('Dated', 'Different time');
+      expect(
+        find.text(
+          'Reorder canceled. Drop beside a task with the same group, date and time.',
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await openFilters(tester);
-    expect(
-      tester
-          .widget<SwitchListTile>(
-            find.widgetWithText(SwitchListTile, 'Show upcoming'),
-          )
-          .value,
-      isFalse,
-    );
-    await tester.tap(find.text('Done').last);
-    await tester.pumpAndSettle();
-    expect(find.text('Hidden future'), findsNothing);
-    await tester.pumpWidget(const SizedBox());
-    await tester.pumpAndSettle();
-    await writer.close();
-    await root.delete(recursive: true);
-  });
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      expect(
+        await folder
+            .list()
+            .where((f) => f.path.endsWith('.jsonl'))
+            .asyncMap((f) => File(f.path).readAsString())
+            .toList(),
+        bytes,
+      );
+
+      for (final title in ['Dated', 'Third']) {
+        await selectTask(tester, ids[title]!);
+      }
+      await drag('Dated', 'Dated peer', invalidSelection: true);
+      await writer.refresh();
+      expect(
+        order(),
+        before,
+        reason: 'Every selected task must share the target key.',
+      );
+      await tester.tap(clearSelection());
+      await tester.pumpAndSettle();
+
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+          .clearSnackBars();
+      await tester.pumpAndSettle();
+      await drag('Second', 'First', invalidate: true);
+      expect(
+        find.text('The task list changed. Try dragging again.'),
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      ScaffoldMessenger.of(tester.element(find.byType(Scaffold)))
+          .clearSnackBars();
+      await tester.pumpAndSettle();
+      await drag('Dated', 'Dated peer', advanceClock: true);
+      expect(
+        find.text('The task list changed. Try moving the task again.'),
+        findsOneWidget,
+      );
+      await writer.refresh();
+      expect(order(), before);
+      viewNow = DateTime.utc(2026, 10, 1);
+      source.onChanged();
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Dated peer'));
+      await tester.pumpAndSettle();
+      // Existing schedule starts expanded.
+      await tester.pumpAndSettle();
+      const warning = 'Existing occurrence override is preserved.';
+      final repeat = find.widgetWithText(TextField, 'Repeat');
+      await tester.ensureVisible(repeat);
+      await tester.pumpAndSettle();
+      expect(find.text(warning), findsOneWidget);
+      await tester.enterText(repeat, 'every week');
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('base due date and repeat cadence remain'),
+        findsOneWidget,
+      );
+      await tester.enterText(repeat, '');
+      await tester.pumpAndSettle();
+      expect(find.text(warning), findsOneWidget);
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      final schedule =
+          writer.rows.firstWhere(
+                (row) => row['id'] == ids['Dated peer'],
+              )['schedule']
+              as Map;
+      expect(schedule['scheduledDate'], '2026-10-02');
+      expect(schedule['recurrence'], isNull);
+      expect(find.text('Hidden future'), findsNothing);
+      final capture = find.widgetWithText(TextField, 'What needs doing?');
+      await tester.enterText(capture, 'Keep this draft');
+      await filterChoice(tester, 'Show upcoming');
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<TextField>(capture).controller!.text,
+        'Keep this draft',
+      );
+      await tester.scrollUntilVisible(
+        find.text('Hidden future'),
+        150,
+        scrollable: taskScrollable(),
+      );
+      await tester.tap(find.text('Hidden future'));
+      await tester.pumpAndSettle();
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Notes'),
+        'Edited before availability',
+      );
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      await writer.refresh();
+      expect(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Hidden future'],
+        )['description'],
+        'Edited before availability',
+      );
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(
+        TandemlogApp(
+          profilePath: profile.path,
+          timeSourceFactory: (onChanged) => ViewTimeSource(
+            onChanged: onChanged,
+            loadZone: () async => 'UTC',
+            now: () => DateTime.utc(2026, 10, 1),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await openFilters(tester);
+      expect(
+        tester
+            .widget<SwitchListTile>(
+              find.widgetWithText(SwitchListTile, 'Show upcoming'),
+            )
+            .value,
+        isFalse,
+      );
+      await tester.tap(find.text('Done').last);
+      await tester.pumpAndSettle();
+      expect(find.text('Hidden future'), findsNothing);
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      await writer.close();
+      await root.delete(recursive: true);
+    },
+  );
   testWidgets('loaded startup marker waits for a rendered time projection', (
     tester,
   ) async {
@@ -3144,9 +3128,8 @@ void main() {
       },
     });
     await writer.close();
-    await File(
-      '${profile.path}/settings.json',
-    ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+    await File('${profile.path}/settings.json')
+        .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     final printed = <String>[];
     final originalPrint = debugPrint;
     debugPrint = (message, {wrapWidth}) {
@@ -3258,9 +3241,8 @@ void main() {
         ids['Completed future history']!,
         completionDay: DateTime.utc(2026, 9, 30),
       );
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       Future<Map<String, String>> logs() async => {
         for (final file
             in await folder
@@ -3733,9 +3715,8 @@ void main() {
             .evaluate()
             .isNotEmpty,
       );
-      final before = await File(
-        '${folder.path}/${writer.writer}.jsonl',
-      ).readAsString();
+      final before = await File('${folder.path}/${writer.writer}.jsonl')
+          .readAsString();
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.tap(capture);
       await tester.enterText(capture, 'Keep this draft');
@@ -3829,9 +3810,8 @@ void main() {
         // notes save. Inbox departure is covered by the dedicated flow.
         await writer.editNativeFixtureTask(id, {'title': title});
       }
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -4004,9 +3984,8 @@ void main() {
       );
       final user = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Example'});
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -4087,9 +4066,8 @@ void main() {
       await writer.createTasks({
         for (var i = 0; i < ids.length; i++) ids[i]: 'Reference task ${i + 1}',
       }, user);
-      await File(
-        '${profile.path}/settings.json',
-      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      await File('${profile.path}/settings.json')
+          .writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       tester.view.physicalSize = const Size(390, 800);
       tester.view.devicePixelRatio = 1;
       tester.view.viewPadding = const FakeViewPadding(top: 24, bottom: 24);

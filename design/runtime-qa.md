@@ -1,4 +1,12 @@
-# Runtime and visual QA — updated 2026-10-04
+# Runtime and visual QA — updated 2026-10-08
+
+## Pending field-spacing fixes
+
+[Isolated field-spacing evidence](../evidence/field-layout/README.md) records six
+frozen reds,42 affected widget tests and three actual native Linux workflows.
+The floating sort-bound label and empty/selected Find tags baseline now retain
+clear separation at normal/enlarged text. Android/Windows acceptance is pending;
+the preserved checklist candidate remains unchanged.
 
 ## Next preview2026.10.2-rc.2 build44 — direct Time fields and editor order
 

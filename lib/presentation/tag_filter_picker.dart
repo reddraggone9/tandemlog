@@ -311,7 +311,7 @@ class TagFilterPickerState extends State<TagFilterPicker>
               ),
             ),
             child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: LayoutBuilder(
@@ -371,6 +371,9 @@ class TagFilterPickerState extends State<TagFilterPicker>
                                 hintText: 'Find tags',
                                 filled: false,
                                 isDense: true,
+                                contentPadding: EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
                                 border: InputBorder.none,
                               ),
                               onTap: _show,
