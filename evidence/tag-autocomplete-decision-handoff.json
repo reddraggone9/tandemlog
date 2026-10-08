@@ -1,7 +1,7 @@
 {
   "source_commit": "5dbfbf6213104728bd2b468ad6396f4c75aa240a",
   "status": "Both preserved unadopted; no further prototype expansion or full testing before Lee chooses.",
-  "recommendation": "I lean toward A (text completion): it preserves typing/paste and stays compact for task and bulk editing. B makes selected tags and removal clearer, but uses more height and requires removing/re-entering a tag to edit its spelling. This is a recommendation, not adoption.",
+  "recommendation": "After Lee expressed a preference for B and consistency with filters, recommend one B-style chip/query control shared by task editing, bulk Add/Remove and filtering. Retain tested filter overlay/IME/accessibility behavior; vary existing-only versus create policies and parent-owned draft/save/filter semantics. This is design refinement, not adoption.",
   "platform": "Actual Linux GTK debug, dark theme, 100% text: screenshots 390\u00d7820; video 1000\u00d7820, 19.133333 seconds with a visible pointer. These are not Android/Windows acceptance.",
   "media": [
     {
@@ -40,5 +40,7 @@
       "bytes": 496283
     }
   ],
-  "comparison_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/README.md"
+  "comparison_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/README.md",
+  "previous_recommendation": "I lean toward A (text completion): it preserves typing/paste and stays compact for task and bulk editing. B makes selected tags and removal clearer, but uses more height and requires removing/re-entering a tag to edit its spelling. This is a recommendation, not adoption.",
+  "user_preference": "Leaning toward B; asks for common implementation and UX with filter tag input. Final adoption remains pending."
 }

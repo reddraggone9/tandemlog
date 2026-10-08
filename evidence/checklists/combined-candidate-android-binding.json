@@ -1,0 +1,27 @@
+{
+  "candidate_branch": "preview/checklists-queued-fixes",
+  "frozen_candidate": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "compiled_source": "17ae5e5619bbd890a9778ffe39b1c94156086bb3",
+  "ci_run": 37747198468,
+  "ci_conclusion": "success",
+  "android_artifact_id": 11536038281,
+  "archive_bytes": 80369328,
+  "archive_sha256": "be3e8c5faeb72dd5a290f7519ed398d6f7cccaa1003ace84bb5b561cd655cf4f",
+  "apk_name": "tandemlog-android-test-only.apk",
+  "apk_bytes": 164893808,
+  "apk_sha256": "ac31725fd24dae37798091b00a192d5f0d5e3ea1c991d503ddc8aa2d9b87be91",
+  "debug_signer_sha256": "ce6957a5935f04f30e1d6273e9aad82d87f58000333423c4a6bd6555e8c65677",
+  "package": "com.reddraggone9.tandemlog",
+  "version": "2026.10.2-rc.3",
+  "version_code": 45,
+  "verification": "Actual ZIP and APK hashes match API/hosted manifest. Valid debug APK signature and static packaged native checks; no Android runtime launch inferred.",
+  "source_equivalence": "17ae5e5 to frozena960 changes only evidence; protected application/test/native/dependency/platform/build paths unchanged.",
+  "local_acceptance_resources": {
+    "memory_cap_gib": 6,
+    "cpus": 2,
+    "host_swap": false,
+    "avds": 1,
+    "status": "Lee approved persistent cap; parent local task checks headroom/applies limit and runs exact artifact acceptance."
+  },
+  "runtime_acceptance": "Parent-owned local run pending; cloud did not launch APK or change caps."
+}

@@ -90,6 +90,10 @@ Use a fresh synthetic space, existing resource caps and approved native artifact
 Record actual OS/device/build and visible-input Android/Windows demos where tools
 permit. Linux screenshots/videos are already source-bound and independently
 reviewed on the separate branches; they do not replace these platform gates.
-Android cap approval, physical Android acceptance and Windows manual visual tools
-remain coordinator-owned blockers. No publication, stable promotion or resource
-cap change is performed by this handoff.
+Lee approved a persistent 6 GiB emulator cap with 2 CPU, no host swap and one AVD.
+The local task checks headroom, applies that narrow limit and resumes the exact
+combined-candidate Android acceptance. Android acceptance and Windows manual
+visual tools remain coordinator-owned gates. No resource configuration or
+publication is performed by this handoff. The
+[final integration plan](final-integration-plan.md) keeps this candidate frozen
+and treats the independently reviewed Kotlin artifact as a separate follow-up.
