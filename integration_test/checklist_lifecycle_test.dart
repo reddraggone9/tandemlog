@@ -58,6 +58,19 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.pumpAndSettle();
 }
 
+Future<void> _expandChecklist(WidgetTester tester, String parent) async {
+  final disclosure = _key('checklist-disclosure-$parent');
+  if (disclosure.evaluate().isEmpty) {
+    // An empty parent exposes Add checklist in its task menu, which creates
+    // only local disclosure state before the first independent item Save.
+    await _tap(tester, _key('task-menu-$parent'));
+    await _tap(tester, find.text('Add checklist'));
+  } else if (_key('inline-checklist-$parent').evaluate().isEmpty) {
+    await _tap(tester, disclosure);
+  }
+  expect(_key('inline-checklist-$parent'), findsOneWidget);
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerChecklistLifecycleTests();
@@ -98,7 +111,7 @@ void registerChecklistLifecycleTests() {
             tester,
             () => _key('task-row-$parent').evaluate().isNotEmpty,
           );
-          await flows.selectTask(tester, parent, control: false);
+          await _expandChecklist(tester, parent);
           await _tap(tester, _key('checklist-edit-${item.entity}'));
           final session = tester
               .widget<ChecklistItemEditor>(find.byType(ChecklistItemEditor))
@@ -149,7 +162,7 @@ void registerChecklistLifecycleTests() {
             tester,
             () => _key('task-row-$parent').evaluate().isNotEmpty,
           );
-          await flows.selectTask(tester, parent, control: false);
+          await _expandChecklist(tester, parent);
           expect(find.text('Saved at exit'), findsOneWidget);
           expect(tester.takeException(), isNull);
         } finally {
@@ -190,7 +203,7 @@ void registerChecklistLifecycleTests() {
         tester,
         () => _key('task-row-$parent').evaluate().isNotEmpty,
       );
-      await flows.selectTask(tester, parent, control: false);
+      await _expandChecklist(tester, parent);
       await _tap(tester, _key('checklist-edit-${item.entity}'));
       await tester.enterText(_key('checklist-item-title'), 'Private draft');
       final state = tester.state(find.byType(TasksPage)) as dynamic;
@@ -274,7 +287,7 @@ void registerChecklistLifecycleTests() {
             tester,
             () => _key('task-row-$parent').evaluate().isNotEmpty,
           );
-          await flows.selectTask(tester, parent, control: false);
+          await _expandChecklist(tester, parent);
           if (unknownAppend) {
             await _tap(tester, _key('checklist-add'));
             await tester.enterText(

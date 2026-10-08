@@ -39,6 +39,7 @@ import 'storage/local_settings.dart';
 import 'storage/local_durability.dart';
 import 'storage/profile_lock.dart';
 import 'storage/task_store.dart';
+import 'storage/checklist_expansion_store.dart';
 
 void main() {
   debugPrint('TANDEMLOG_MAIN');
@@ -184,6 +185,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final dragScrollTick = ValueNotifier<int>(0);
   final dropKeys = <String, GlobalKey>{};
   final groupHeadingKeys = <String, GlobalKey>{};
+  final taskMenuKeys = <String, GlobalKey>{};
+  final checklistAddFocus = <String, FocusNode>{};
+  Set<String> expandedChecklists = {};
+  bool taskMenuOpen = false;
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
   // Consent retains command admission/lifecycle ownership without displaying
   // a running operation while the user is deciding.
@@ -388,6 +393,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     undoHistory.clear();
     store = opened;
+    expandedChecklists = ChecklistExpansionStore(opened.db).load();
     rows = store!.rows;
     if (store!.pendingTextOperations.isNotEmpty) {
       error =
@@ -1728,30 +1734,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               textSession: editingText,
               textStatus: editingTextStatus,
               disableTextFields: editingText == null,
-              checklistBuilder: (enabled) => ChecklistPanel(
-                items: editorStore!.checklistItems(task['id'] as String),
-                enabled: enabled && !busy && !openingChecklistEditor,
-                onAdd: () => _editChecklistItem(task['id'] as String),
-                onEdit: (item) =>
-                    _editChecklistItem(task['id'] as String, item: item),
-                onToggle: (item, checked) => _checklistOperation(
-                  'checking',
-                  (origin, prepared) => origin.setChecklistCompleted(
-                    item['id'] as String,
-                    checked,
-                    onPrepared: prepared,
-                  ),
-                ),
-                onMove: (item, before) => _checklistOperation(
-                  'moving',
-                  (origin, prepared) => origin.moveChecklistItem(
-                    item['id'] as String,
-                    before,
-                    onPrepared: prepared,
-                  ),
-                ),
-                onDelete: (item) => _deleteChecklistItem(item),
-              ),
               users: users,
               panel: panel,
               selectionCount: selectedTasks.isEmpty
@@ -2451,6 +2433,296 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
   }
 
+  List<Map<String, dynamic>> _checklistItems(Map<String, dynamic> task) =>
+      (task['checklist'] as List? ?? []).cast<Map<String, dynamic>>();
+
+  Future<void> _setChecklistExpansion(
+    TaskStore origin,
+    Set<String> requested,
+    bool expanded, {
+    bool focusAdd = false,
+  }) async {
+    if (busy || !identical(store, origin)) return;
+    if (!expanded && !await _closeChecklistEditor()) return;
+    await syncing;
+    if (!mounted || busy || !identical(store, origin)) return;
+    final visible = visibleEntries.map((entry) => entry.task['id']).toSet();
+    final ids = requested.intersection(visible.cast<String>());
+    if (ids.isEmpty) return;
+    try {
+      ChecklistExpansionStore(origin.db).setExpanded(ids, expanded);
+    } catch (failure) {
+      // Display preferences are dispensable; a cache preference failure must
+      // not block opening items or alter canonical command/error ownership.
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Could not remember checklist display. ${failureMessage(failure)}',
+          ),
+        ),
+      );
+    }
+    setState(() {
+      if (expanded) {
+        expandedChecklists.addAll(ids);
+      } else {
+        expandedChecklists.removeAll(ids);
+      }
+    });
+    if (focusAdd && ids.length == 1) {
+      await WidgetsBinding.instance.endOfFrame;
+      if (!mounted ||
+          !identical(store, origin) ||
+          !expandedChecklists.contains(ids.single)) {
+        return;
+      }
+      final node = checklistAddFocus[ids.single];
+      final target = node?.context;
+      if (target != null && target.mounted) {
+        await Scrollable.ensureVisible(
+          target,
+          duration: const Duration(milliseconds: 120),
+          alignment: .8,
+        );
+        if (mounted && identical(store, origin)) node!.requestFocus();
+      }
+    }
+  }
+
+  Widget? _checklistDisplayMenu() {
+    final origin = store;
+    if (origin == null) return null;
+    final shown = {
+      for (final entry in visibleEntries)
+        if (_checklistItems(entry.task).isNotEmpty) entry.task['id'] as String,
+    };
+    final expandedShown = {
+      for (final entry in visibleEntries)
+        if (expandedChecklists.contains(entry.task['id']))
+          entry.task['id'] as String,
+    };
+    if (shown.isEmpty && expandedShown.isEmpty) return null;
+    return PopupMenuButton<bool>(
+      key: const ValueKey('checklist-display-menu'),
+      tooltip: 'Checklist display',
+      enabled: !busy,
+      icon: const Icon(Icons.unfold_more),
+      onSelected: (expand) => _setChecklistExpansion(
+        origin,
+        expand ? shown : expandedShown,
+        expand,
+      ),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          value: true,
+          enabled: shown.any((id) => !expandedChecklists.contains(id)),
+          child: const Text('Expand shown checklists'),
+        ),
+        PopupMenuItem(
+          value: false,
+          enabled: expandedShown.isNotEmpty,
+          child: const Text('Collapse shown checklists'),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _showTaskMenu(
+    TaskStore origin,
+    Map<String, dynamic> task, {
+    Offset? position,
+  }) async {
+    if (!identical(store, origin) || busy || taskMenuOpen) return;
+    final id = task['id'] as String;
+    final anchor = taskMenuKeys[id]?.currentContext?.findRenderObject();
+    final overlay = Navigator.of(context).overlay?.context.findRenderObject();
+    if (anchor is! RenderBox || overlay is! RenderBox || !anchor.hasSize) {
+      return;
+    }
+    final point = overlay.globalToLocal(
+      position ?? anchor.localToGlobal(Offset(0, anchor.size.height)),
+    );
+    taskMenuOpen = true;
+    try {
+      final choice = await showMenu<String>(
+        context: context,
+        position: RelativeRect.fromRect(
+          Rect.fromLTWH(point.dx, point.dy, 1, 1),
+          Offset.zero & overlay.size,
+        ),
+        requestFocus: true,
+        items: const [
+          PopupMenuItem(value: 'checklist', child: Text('Add checklist')),
+          PopupMenuItem(value: 'delete', child: Text('Delete task')),
+        ],
+      );
+      if (!mounted ||
+          busy ||
+          !identical(store, origin) ||
+          origin.currentTextRow(id)?['kind'] != 'task') {
+        return;
+      }
+      if (choice == 'checklist') {
+        await _setChecklistExpansion(origin, {id}, true, focusAdd: true);
+      } else if (choice == 'delete') {
+        await _deleteTaskFromMenu(origin, id);
+      }
+    } catch (failure) {
+      if (mounted && identical(store, origin)) {
+        setState(() => error = failureMessage(failure));
+      }
+    } finally {
+      taskMenuOpen = false;
+    }
+  }
+
+  Future<void> _deleteTaskFromMenu(TaskStore origin, String id) async {
+    if (busy ||
+        !identical(store, origin) ||
+        !await _closeEditor() ||
+        !mounted ||
+        !identical(store, origin)) {
+      return;
+    }
+    await origin.refresh();
+    if (!mounted || !identical(store, origin)) return;
+    final task = origin.currentTextRow(id);
+    if (task == null || task['kind'] != 'task') return;
+    var answered = false;
+    void decide(BuildContext dialog, bool answer) {
+      if (answered ||
+          !dialog.mounted ||
+          ModalRoute.of(dialog)?.isCurrent != true) {
+        return;
+      }
+      answered = true;
+      Navigator.pop(dialog, answer);
+    }
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete task?'),
+        content: Text(
+          'Delete “${task['title']}”? Future repeating tasks are separate entries. You can undo this change.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => decide(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => decide(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted || !identical(store, origin)) return;
+    await _act(() async {
+      if (!mounted || !identical(store, origin)) return;
+      await _recordAction(
+        origin,
+        'deleting',
+        (prepared) => origin.deleteTask(
+          id,
+          expectedTaskSnapshot: origin.taskSnapshot,
+          canCommit: () =>
+              mounted &&
+              identical(store, origin) &&
+              _targetUnchanged(origin, task),
+          onPrepared: prepared,
+        ),
+        notice: true,
+      );
+      if (mounted && identical(store, origin)) {
+        setState(() {
+          selectedTasks.remove(id);
+          if (selectedTasks.isEmpty) selecting = false;
+          if (selectionAnchor == id) selectionAnchor = null;
+        });
+      }
+    });
+  }
+
+  Widget _checklistDisclosure(TaskStore origin, Map<String, dynamic> task) {
+    final id = task['id'] as String, items = _checklistItems(task);
+    final expanded = expandedChecklists.contains(id);
+    final complete = items.where((item) => item['completed'] == true).length;
+    final label =
+        '${expanded ? 'Collapse' : 'Expand'} checklist for ${task['title']}: $complete of ${items.length} complete';
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Semantics(
+        expanded: expanded,
+        label: label,
+        child: TextButton.icon(
+          key: ValueKey('checklist-disclosure-$id'),
+          onPressed: busy
+              ? null
+              : () => _setChecklistExpansion(origin, {id}, !expanded),
+          style: TextButton.styleFrom(
+            minimumSize: const Size(48, 48),
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+          ),
+          icon: Icon(
+            expanded ? Icons.expand_more : Icons.chevron_right,
+            size: 18,
+          ),
+          label: Text(
+            items.isEmpty ? 'Checklist' : '$complete/${items.length}',
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _inlineChecklist(TaskStore origin, Map<String, dynamic> task) {
+    final id = task['id'] as String,
+        items = _checklistItems(task),
+        revision = jsonEncode(task['checklist'] ?? []);
+    return Padding(
+      key: ValueKey('inline-checklist-$id'),
+      padding: const EdgeInsets.fromLTRB(32, 0, 16, 8),
+      child: ChecklistPanel(
+        parentId: id,
+        origin: origin,
+        revision: revision,
+        items: items,
+        addFocusNode: checklistAddFocus.putIfAbsent(
+          id,
+          () => FocusNode(debugLabel: 'Add item to ${task['title']}'),
+        ),
+        enabled: !busy && !openingChecklistEditor,
+        onAdd: () => _editChecklistItem(origin, id),
+        onEdit: (item) => _editChecklistItem(origin, id, item: item),
+        onToggle: (item, checked) => _checklistOperation(
+          origin,
+          'checking',
+          (current, prepared) => current.setChecklistCompleted(
+            item['id'] as String,
+            checked,
+            onPrepared: prepared,
+          ),
+        ),
+        onMove: (item, before) => _checklistOperation(
+          origin,
+          'moving',
+          (current, prepared) => current.moveChecklistItem(
+            item['id'] as String,
+            before,
+            canCommit: () =>
+                mounted &&
+                identical(store, origin) &&
+                current.checklistSnapshot(id) == revision,
+            onPrepared: prepared,
+          ),
+        ),
+        onDelete: (item) => _deleteChecklistItem(origin, item),
+      ),
+    );
+  }
+
   Future<void> _reopen(Map<String, dynamic> task) async {
     final origin = store!, observed = store!.activeCompletionIds(task['id']);
     var confirmed = false;
@@ -2577,25 +2849,40 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _checklistOperation(
+    TaskStore origin,
     String verb,
     Future<LogEvent> Function(TaskStore, void Function(OperationReceipt))
     action,
   ) async {
-    final origin = editorStore ?? store;
-    if (origin == null || !identical(store, origin)) return;
-    await _act(
-      () => _recordAction(
+    if (!identical(store, origin)) return;
+    await _act(() async {
+      if (!mounted || !identical(store, origin)) return;
+      await _recordAction(
         origin,
         verb,
         (prepared) => action(origin, prepared),
         noun: 'checklist item',
         notice: verb == 'deleting',
-      ),
-    );
+      );
+    });
   }
 
-  Future<void> _deleteChecklistItem(Map<String, dynamic> item) async {
-    if (busy) return;
+  Future<void> _deleteChecklistItem(
+    TaskStore origin,
+    Map<String, dynamic> item,
+  ) async {
+    if (busy || !identical(store, origin)) return;
+    var answered = false;
+    void decide(BuildContext dialog, bool answer) {
+      if (answered ||
+          !dialog.mounted ||
+          ModalRoute.of(dialog)?.isCurrent != true) {
+        return;
+      }
+      answered = true;
+      Navigator.pop(dialog, answer);
+    }
+
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -2603,11 +2890,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         content: Text('Remove “${item['title']}”? You can undo this change.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
+            onPressed: () => decide(ctx, false),
             child: const Text('Cancel'),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
+            onPressed: () => decide(ctx, true),
             child: const Text('Delete'),
           ),
         ],
@@ -2615,6 +2902,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
     if (confirmed != true || !mounted) return;
     await _checklistOperation(
+      origin,
       'deleting',
       (origin, prepared) => origin.deleteChecklistItem(
         item['id'] as String,
@@ -2624,12 +2912,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _editChecklistItem(
+    TaskStore origin,
     String parent, {
     Map<String, dynamic>? item,
   }) async {
     if (busy || openingChecklistEditor || checklistEditorKey != null) return;
-    final origin = editorStore ?? store;
-    if (origin == null || !identical(store, origin)) return;
+    if (!identical(store, origin)) return;
     TaskTextCapture? captured;
     TaskTextSession? session;
     OperationReceipt? creationReceipt;
@@ -2641,6 +2929,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     try {
       await syncing;
       await origin.refresh();
+      if (origin.currentTextRow(parent)?['kind'] != 'task') {
+        throw StateError('This task is no longer available.');
+      }
       if (item != null) {
         captured = await origin.captureTaskText(id);
         final capture = captured;
@@ -2786,6 +3077,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     for (final node in rowFocus.values) {
       node.dispose();
     }
+    for (final node in checklistAddFocus.values) {
+      node.dispose();
+    }
     search.dispose();
     searchFocus.dispose();
     capture.dispose();
@@ -2846,6 +3140,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
                         child: TaskToolbar(
+                          checklistMenu: _checklistDisplayMenu(),
                           userName:
                               users
                                       .where((entry) => entry['id'] == user)
@@ -3691,6 +3986,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           key: ValueKey('task-row-${entry.task['id']}'),
                           builder: (context) {
                             final task = _displayTask(entry.task);
+                            final origin = store!;
+                            final id = task['id'] as String;
                             final completed = searching
                                 ? task['completed'] == true
                                 : showCompleted;
@@ -3720,8 +4017,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   if (mounted) setState(() {});
                                 },
                                 onKeyEvent: (_, event) {
-                                  if (!rowFocus[task['id']]!.hasPrimaryFocus ||
-                                      event is! KeyDownEvent) {
+                                  if (event is! KeyDownEvent) {
+                                    return KeyEventResult.ignored;
+                                  }
+                                  if (event.logicalKey ==
+                                          LogicalKeyboardKey.contextMenu ||
+                                      (event.logicalKey ==
+                                              LogicalKeyboardKey.f10 &&
+                                          HardwareKeyboard
+                                              .instance
+                                              .isShiftPressed)) {
+                                    _showTaskMenu(origin, task);
+                                    return KeyEventResult.handled;
+                                  }
+                                  if (!rowFocus[task['id']]!.hasPrimaryFocus) {
                                     return KeyEventResult.ignored;
                                   }
                                   if (event.logicalKey ==
@@ -3821,85 +4130,116 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     selectedTileColor: Theme.of(
                                       context,
                                     ).colorScheme.primaryContainer,
-                                    title: GestureDetector(
-                                      key: ValueKey('task-body-${task['id']}'),
-                                      behavior: HitTestBehavior.opaque,
-                                      onTap: busy
-                                          ? null
-                                          : () => _selectTask(
-                                              task,
-                                              explicit:
-                                                  HardwareKeyboard
-                                                      .instance
-                                                      .isControlPressed ||
-                                                  HardwareKeyboard
-                                                      .instance
-                                                      .isMetaPressed,
-                                              range: HardwareKeyboard
-                                                  .instance
-                                                  .isShiftPressed,
-                                            ),
-                                      onLongPress: busy
-                                          ? null
-                                          : () => _selectTask(
-                                              task,
-                                              explicit: true,
-                                              longPress: true,
-                                            ),
-                                      child: ConstrainedBox(
-                                        constraints: const BoxConstraints(
-                                          minHeight: 48,
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 6,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        GestureDetector(
+                                          key: ValueKey(
+                                            'task-body-${task['id']}',
                                           ),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              _taskTitle(
-                                                task,
-                                                users,
-                                                group.date,
-                                                entry,
-                                              ),
-
-                                              if ((task['description']
-                                                      as String)
-                                                  .trim()
-                                                  .isNotEmpty)
-                                                Text(
-                                                  (task['description']
-                                                          as String)
-                                                      .replaceAll(
-                                                        RegExp(r'\s+'),
-                                                        ' ',
-                                                      )
-                                                      .trim(),
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .bodyMedium
-                                                      ?.copyWith(
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .onSurfaceVariant,
-                                                      ),
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: busy
+                                              ? null
+                                              : () => _selectTask(
+                                                  task,
+                                                  explicit:
+                                                      HardwareKeyboard
+                                                          .instance
+                                                          .isControlPressed ||
+                                                      HardwareKeyboard
+                                                          .instance
+                                                          .isMetaPressed,
+                                                  range: HardwareKeyboard
+                                                      .instance
+                                                      .isShiftPressed,
                                                 ),
-                                            ],
+                                          onLongPress: busy
+                                              ? null
+                                              : () => _selectTask(
+                                                  task,
+                                                  explicit: true,
+                                                  longPress: true,
+                                                ),
+                                          child: ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                              minHeight: 48,
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    vertical: 6,
+                                                  ),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisSize: MainAxisSize.min,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  _taskTitle(
+                                                    task,
+                                                    users,
+                                                    group.date,
+                                                    entry,
+                                                  ),
+
+                                                  if ((task['description']
+                                                          as String)
+                                                      .trim()
+                                                      .isNotEmpty)
+                                                    Text(
+                                                      (task['description']
+                                                              as String)
+                                                          .replaceAll(
+                                                            RegExp(r'\s+'),
+                                                            ' ',
+                                                          )
+                                                          .trim(),
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: Theme.of(context)
+                                                          .textTheme
+                                                          .bodyMedium
+                                                          ?.copyWith(
+                                                            color: Theme.of(context)
+                                                                .colorScheme
+                                                                .onSurfaceVariant,
+                                                          ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        if (_checklistItems(task).isNotEmpty ||
+                                            expandedChecklists.contains(id))
+                                          _checklistDisclosure(origin, task),
+                                      ],
                                     ),
                                     trailing: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
+                                        KeyedSubtree(
+                                          key: taskMenuKeys.putIfAbsent(
+                                            id,
+                                            GlobalKey.new,
+                                          ),
+                                          child: IconButton(
+                                            key: ValueKey('task-menu-$id'),
+                                            tooltip:
+                                                'Actions for ${task['title']}',
+                                            onPressed: busy
+                                                ? null
+                                                : () => _showTaskMenu(
+                                                    origin,
+                                                    task,
+                                                  ),
+                                            icon: const Icon(Icons.more_vert),
+                                          ),
+                                        ),
                                         if (movable(task, true) ||
                                             movable(task, false))
                                           Draggable<String>(
@@ -4016,12 +4356,34 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                 ),
                               ),
                             );
-                            return KeyedSubtree(
-                              key: ValueKey('task-drop-${task['id']}'),
-                              child: _TaskDragLifetime(
-                                active: taskDrag?.id == task['id'],
-                                child: _reorderableTask(task, tile),
-                              ),
+                            return Column(
+                              key: ValueKey('task-block-$id'),
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                KeyedSubtree(
+                                  key: ValueKey('task-drop-$id'),
+                                  child: _TaskDragLifetime(
+                                    active: taskDrag?.id == id,
+                                    child: _reorderableTask(
+                                      task,
+                                      GestureDetector(
+                                        onSecondaryTapUp: busy
+                                            ? null
+                                            : (details) => _showTaskMenu(
+                                                origin,
+                                                task,
+                                                position:
+                                                    details.globalPosition,
+                                              ),
+                                        child: tile,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                if (expandedChecklists.contains(id))
+                                  _inlineChecklist(origin, task),
+                              ],
                             );
                           },
                         ),

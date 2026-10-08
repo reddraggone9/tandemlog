@@ -106,7 +106,7 @@ List schedule metadata shows this occurrence's override when present, otherwise 
 
 ## Direct and bulk editing — RC4
 
-Follow [decision 0004](decisions/0004-editing-bulk-actions-and-installers.md). Task rows open editing directly, without task overflow menus. Wide layouts show a side editor; smaller ones use a modal. Protect unsaved drafts across navigation and resizing; validate changes immediately. Delete is opposite Cancel/Save and requires confirmation. Occurrence controls appear for repeating tasks or retained override data.
+Follow [decision 0004](decisions/0004-editing-bulk-actions-and-installers.md). Task rows open editing directly. Each row also has a separate menu immediately left of its far-right drag handle; right-click and Context Menu/Shift+F10 expose the same Add checklist and Delete task actions. These actions target that row even during multi-selection. Wide layouts show a side editor; smaller ones use a modal. Protect unsaved drafts across navigation and resizing; validate changes immediately. Delete is opposite Cancel/Save and requires confirmation. Occurrence controls appear for repeating tasks or retained override data.
 
 Rows use selection highlights, with a separate completion checkbox and drag handle. Ordinary clicks edit one task; Ctrl/Cmd-click or long-press enters explicit selection and subsequent plain clicks toggle membership. Initial explicit one-item selection retains bulk intent; a later two-to-one reduction returns single editing in the wide pane, while compact selection stays active until Edit or clear; zero closes/exits. Shift ranges use current visible order, including different date groups for editing. Wide selection automatically opens a pane with count/Clear; layouts without the side pane swap selected count, Clear Selection and Edit into the fixed task-entry area above the scroll viewport. Keep the capture buffer mounted, preserve its multiline draft and reserve the same area before/during selection at the current text scale. Completed reserves the compact action area without an invisible multiline draft. Selection entry/exit does not insert/remove a row, move the pressed task or cover rows/drag targets. Search and Filter remain available while selected. No permanent selection button or second checkbox column. Dirty selection/target changes require Save/Discard/Cancel, retaining the old frozen draft and selection if validation or saving fails. Completion and drag gestures never change selection.
 
@@ -127,19 +127,24 @@ editor remains a constrained-layout limitation; see [runtime QA](runtime-qa.md).
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
 
 
-## Approved one-level checklists — isolated implementation
+## Approved one-level checklists
 
-Lee approved a title, optional notes, completion and order for each checklist
-item, one level deep. Recurrence copies fresh unchecked items; existing successor
-edits remain independent. Domain/storage and editor/warning UI are implemented
-separately from shared-history candidatec182385. Items appear within the single
-task editor with checkboxes, editable title/notes, relative movement and deletion.
-Item Save is separate from parent Save/Cancel. Unfinished items trigger a
-warn-but-allow dialog; incoming changes renew consent before bytes are prepared.
-Linux desktop/narrow/enlarged/theme workflows are verified; exact checklist
-Android/Windows acceptance remains pending. Explicit item Save/Cancel,
-parent-draft boundary, renewed warning confirmation and recurrence/Undo meanings
-are specified in [ADR0011](decisions/0011-one-level-checklists.md).
+Lee approved title, optional notes, completion and order, one level deep.
+Recurrence copies fresh unchecked items and preserves successor edits. Parents
+with items show a compact completed/total disclosure, initially collapsed.
+Expanded items appear below the parent in the list, outside its editor and drag
+area. Items have independent Save/Cancel editing, within-parent reorder and
+confirmed Delete with session Undo. Parent and item drafts remain independent.
+
+Add checklist opens an empty expanded block and focuses bottom Add item; it
+writes no canonical record until an item is saved. Expand/collapse shown
+checklists acts on the current filtered view. Expansion is a local workspace
+preference in the existing cache metadata; losing the cache resets it.
+Unfinished items trigger a warn-but-allow parent completion dialog; incoming
+changes renew consent before bytes are prepared. The operation stays guarded
+while this dialog awaits a decision, without showing pending-write progress.
+See [ADR0011](decisions/0011-one-level-checklists.md). The revised inline workflow
+is under native acceptance; publication and stable promotion remain separate.
 
 ## Completion eligibility and reorder continuity — RC5 follow-up
 

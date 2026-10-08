@@ -1,8 +1,9 @@
 # One-level task checklists
 
-Status: accepted product scope from Lee; implementation and independent/native
-acceptance in progress on a separate branch. Stable promotion remains Lee's
-decision. Shared-history candidate `c182385` is unchanged.
+Status: accepted product scope from Lee. The inline interaction revision was
+approved on 2026-10-08 and is under independent/native acceptance on a separate
+branch. Preview rc.4/build47 remains released unchanged; stable promotion remains
+Lee's decision.
 
 ## Scope and interaction
 
@@ -22,6 +23,38 @@ Refresh/reconcile before append; an incoming item/status change requires review
 and renewed confirmation. Checkbox, keyboard and any future bulk completion must
 use the same application path. Import/replay never invents a confirmation or
 revalidates history against current UI/time.
+
+## Inline interaction revision accepted 2026-10-08
+
+Lee approved moving checklist controls out of the parent editor. A parent with
+items shows completed/total plus disclosure and defaults to collapsed; its
+expanded children are below the row, outside parent selection, keyboard focus
+handling and task reorder/drop geometry. Item drag data is typed and scoped to
+one parent, workspace instance, rendered revision and observed order. The
+command refreshes and rejects a changed snapshot before preparing its receipt.
+Items retain independent native draft/IME/receipt ownership and Save/Cancel.
+Checkboxes, editable titles, optional one-line notes, confirmed direct Delete
+with Undo, and a bottom Add item control have separate accessible hit targets.
+
+The task menu is immediately left of the far-right parent drag handle. The same
+Add checklist/Delete task menu is available through right-click and Context
+Menu/Shift+F10. It always targets the invoked parent, preserving other selected
+rows. Add checklist on an empty parent opens an empty block and focuses bottom
+Add item, without creating a draft or canonical event. Deletion resolves private
+drafts and confirms the named parent, preserving existing receipt and Undo rules.
+
+Expand/collapse shown checklists uses current parent filters. Sparse expanded-ID
+entries live in the existing workspace SQLite metadata table; collapse removes
+them, no new settings file/schema/version is introduced, and cache loss resets
+the preference. Broader local-storage consolidation is queued for the next full
+release, with inventory and migration review before implementation.
+
+The earlier editor-only location hid item work behind parent editing and implied
+an unnecessary ownership relationship. Always-expanded children would reduce
+list density. A combined menu/drag hit target would make activation ambiguous;
+separate controls keep touch and keyboard intent clear. Revisit density and
+Android discoverability after bounded native use. Inline native/independent
+review gates remain pending for this revision.
 
 ## Identity, persistence and recurrence
 

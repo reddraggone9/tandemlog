@@ -1,5 +1,16 @@
 # Current status — 2026-10-08
 
+## Inline checklist follow-up — unpublished
+
+Lee approved the inline checklist/task-menu revision on 2026-10-08. It is
+isolated in `feature/inline-checklists` above the completion-confirmation progress
+fix. The list owns child controls and local sparse expansion preferences; native
+text/domain/event formats are unchanged. Focused tests, independent reviews and
+bounded native workflows are in progress. Broader local-storage consolidation
+is queued for the next full release, requiring migration review. No new release
+or stable promotion has been performed. See [ADR0011](decisions/0011-one-level-checklists.md).
+
+
 ## Isolated checklist implementation checkpoint
 
 Lee approved starting checklist implementation on a separate worktree after the

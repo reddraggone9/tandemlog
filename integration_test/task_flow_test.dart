@@ -35,6 +35,10 @@ import 'text_workflow_test.dart' show registerTextWorkflowTests;
 import 'recurring_text_workflow_test.dart'
     show registerRecurringTextWorkflowTests;
 import 'checklist_workflow_test.dart' show registerChecklistWorkflowTests;
+import 'inline_checklist_workspace_test.dart'
+    show registerInlineChecklistWorkspaceTests;
+import 'inline_checklist_workflow_test.dart'
+    show registerInlineChecklistWorkflowTests;
 import 'checklist_lifecycle_test.dart' show registerChecklistLifecycleTests;
 import 'bulk_apply_semantics_test.dart' show registerBulkApplySemanticsTests;
 import 'bulk_failure_visibility_test.dart'
@@ -183,6 +187,8 @@ void main() {
   registerTextWorkflowTests();
   registerRecurringTextWorkflowTests();
   registerChecklistWorkflowTests();
+  registerInlineChecklistWorkflowTests();
+  registerInlineChecklistWorkspaceTests();
   registerChecklistLifecycleTests();
   registerBulkApplySemanticsTests();
   registerFieldLayoutTests();

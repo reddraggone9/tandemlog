@@ -41,6 +41,13 @@ Future<void> _tap(WidgetTester tester, Finder finder) async {
   await _settle(tester);
 }
 
+Future<void> _expandChecklist(WidgetTester tester, String parent) async {
+  expect(_key('checklist-disclosure-$parent'), findsOneWidget);
+  if (_key('inline-checklist-$parent').evaluate().isEmpty) {
+    await _tap(tester, _key('checklist-disclosure-$parent'));
+  }
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerChecklistWorkflowTests();
@@ -99,9 +106,28 @@ void registerChecklistWorkflowTests() {
             tester,
             () => _key('task-row-$parent').evaluate().isNotEmpty,
           );
+          expect(_key('inline-checklist-$parent'), findsNothing);
+          await _expandChecklist(tester, parent);
           await flows.selectTask(tester, parent, control: false);
           expect(_key('checklist-add'), findsOneWidget);
           await tester.enterText(_key('title'), 'Pack for a walk locally');
+          if (narrow) {
+            // The parent modal owns narrow-screen input until its dirty draft
+            // is resolved. Cancel must retain it; Discard makes the inline
+            // children reachable without publishing parent text.
+            await _tap(tester, find.widgetWithText(TextButton, 'Cancel').last);
+            expect(find.text('Unsaved changes'), findsOneWidget);
+            await _tap(tester, find.widgetWithText(TextButton, 'Cancel').last);
+            expect(
+              tester.widget<TextField>(_key('title')).controller!.text,
+              'Pack for a walk locally',
+            );
+            await _tap(tester, find.widgetWithText(TextButton, 'Cancel').last);
+            await _tap(tester, find.text('Discard'));
+            expect(_key('title'), findsNothing);
+            await peer.refresh();
+            expect(peer.currentTextRow(parent)!['title'], 'Pack for a walk');
+          }
           await _tap(tester, _key('checklist-add'));
           await tester.enterText(_key('checklist-item-title'), 'Snacks');
           await tester.enterText(
@@ -117,10 +143,14 @@ void registerChecklistWorkflowTests() {
             tester,
             () => _key('checklist-item-title').evaluate().isEmpty,
           );
-          expect(
-            tester.widget<TextField>(_key('title')).controller!.text,
-            'Pack for a walk locally',
-          );
+          if (narrow) {
+            expect(_key('title'), findsNothing);
+          } else {
+            expect(
+              tester.widget<TextField>(_key('title')).controller!.text,
+              'Pack for a walk locally',
+            );
+          }
           await peer.refresh();
           expect(peer.checklistItems(parent), hasLength(3));
           final snack = peer
@@ -152,6 +182,12 @@ void registerChecklistWorkflowTests() {
           await _tap(tester, _key('checklist-check-${first.entity}'));
           await peer.refresh();
           expect(peer.checklistItems(parent).first['completed'], true);
+          if (narrow) {
+            // Reopen after independently saving child work and check the other
+            // direction of isolation: discarding a new parent draft retains it.
+            await flows.selectTask(tester, parent, control: false);
+            await tester.enterText(_key('title'), 'Pack for a walk locally');
+          }
           await captureNativeFixtureUi(
             tester,
             'checklist-${narrow ? 'narrow-light-200' : 'desktop-dark'}-parent-draft',
@@ -159,8 +195,19 @@ void registerChecklistWorkflowTests() {
           // Canceling the parent draft keeps separately acknowledged item work.
           await _tap(tester, find.widgetWithText(TextButton, 'Cancel').last);
           await _tap(tester, find.text('Discard'));
+          await peer.refresh();
+          expect(peer.currentTextRow(parent)!['title'], 'Pack for a walk');
+          expect(peer.checklistItems(parent), hasLength(3));
+          expect(peer.checklistItems(parent).first['completed'], true);
+          expect(peer.checklistItems(parent).last['title'], 'Snacks');
+          expect(
+            peer.checklistItems(parent).last['description'],
+            'Trail mix\nNo peanuts',
+          );
           Finder checkbox() => find.descendant(
-            of: _key('task-row-$parent'),
+            // The drop subtree contains only the parent tile; children now
+            // intentionally live below it and have their own checkboxes.
+            of: _key('task-drop-$parent'),
             matching: find.byType(Checkbox),
           );
           final before = {
@@ -216,7 +263,16 @@ void registerChecklistWorkflowTests() {
                 .every((item) => item['completed'] == false),
             true,
           );
-          await flows.selectTask(tester, child, control: false);
+          expect(_key('inline-checklist-$child'), findsNothing);
+          await _expandChecklist(tester, child);
+          for (final item in peer.checklistItems(child)) {
+            expect(
+              tester
+                  .widget<Checkbox>(_key('checklist-check-${item['id']}'))
+                  .value,
+              false,
+            );
+          }
           await captureNativeFixtureUi(
             tester,
             'checklist-${narrow ? 'narrow-light-200' : 'desktop-dark'}-fresh-successor',

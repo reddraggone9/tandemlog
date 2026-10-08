@@ -45,10 +45,17 @@ extension ChecklistStore on TaskStore {
   Future<LogEvent> moveChecklistItem(
     String item,
     String? before, {
+    bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
-  }) => command(item, 'checklist.itemMoved', {
-    'before': before,
-  }, onPrepared: onPrepared);
+  }) => _serialize(
+    () => _command(
+      item,
+      'checklist.itemMoved',
+      {'before': before},
+      canCommit: canCommit,
+      onPrepared: onPrepared,
+    ),
+  );
 
   Future<LogEvent> deleteChecklistItem(
     String item, {

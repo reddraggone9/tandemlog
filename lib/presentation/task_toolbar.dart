@@ -8,6 +8,7 @@ class TaskToolbar extends StatelessWidget {
   final Widget Function(Widget?) identityMenu;
   final Widget Function(bool compact)? filter;
   final Widget undo;
+  final Widget? checklistMenu;
   final Widget? searchField;
   final VoidCallback? search;
   const TaskToolbar({
@@ -20,6 +21,7 @@ class TaskToolbar extends StatelessWidget {
     this.count,
     this.countLabels = const [],
     this.filter,
+    this.checklistMenu,
   });
 
   @override
@@ -74,7 +76,10 @@ class TaskToolbar extends StatelessWidget {
           ? 48.0
           : measure('Filter', theme.textTheme.labelLarge).width + 64;
       final closedActionsWidth =
-          48.0 + (search != null ? 48.0 : 0) + filterWidth;
+          48.0 +
+          (search != null ? 48.0 : 0) +
+          filterWidth +
+          (checklistMenu == null ? 0 : 48);
       final actionsWidth =
           closedActionsWidth -
           (searchField != null && search != null ? 48.0 : 0);
@@ -187,6 +192,7 @@ class TaskToolbar extends StatelessWidget {
             ),
           undo,
           if (filter != null) filter!(compact),
+          ?checklistMenu,
           identityMenu(identity),
         ],
       );

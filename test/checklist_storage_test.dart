@@ -83,6 +83,44 @@ void main() {
     expect(a.rows, b.rows);
   }
 
+  test(
+    'stale inline reorder stops before receipt after peer refresh',
+    () async {
+      final first = await add('First');
+      await add('Second');
+      await copy(folder, remote);
+      await b.refresh();
+      final snapshot = a.checklistSnapshot(parent);
+      await b.addChecklistItem(parent, 'Incoming third');
+      await File(
+        '${remote.location}/${b.writer}.jsonl',
+      ).copy('${folder.location}/${b.writer}.jsonl');
+      final before = await File(
+        '${folder.location}/${a.writer}.jsonl',
+      ).readAsBytes();
+      var prepared = 0;
+      await expectLater(
+        a.moveChecklistItem(
+          first,
+          null,
+          canCommit: () => a.checklistSnapshot(parent) == snapshot,
+          onPrepared: (_) => prepared++,
+        ),
+        throwsA(isA<StaleTaskSnapshot>()),
+      );
+      expect(prepared, 0);
+      expect(
+        await File('${folder.location}/${a.writer}.jsonl').readAsBytes(),
+        before,
+      );
+      expect(items(a, parent).map((item) => item['title']), [
+        'First',
+        'Second',
+        'Incoming third',
+      ]);
+    },
+  );
+
   setUp(() async {
     closedA = closedB = false;
     root = await Directory.systemTemp.createTemp('checklist-native-');

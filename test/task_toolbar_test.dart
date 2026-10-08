@@ -25,6 +25,12 @@ void main() {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TaskToolbar(
+                          checklistMenu: IconButton(
+                            key: const ValueKey('checklist-display'),
+                            tooltip: 'Checklist display',
+                            onPressed: () {},
+                            icon: const Icon(Icons.unfold_more),
+                          ),
                           userName: name,
                           count: '165 open',
                           countLabels: const ['165 open', '10000 completed'],

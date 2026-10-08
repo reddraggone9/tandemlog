@@ -24,9 +24,7 @@ class TaskEditor extends StatefulWidget {
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
-    this.checklistBuilder,
   });
-  final Widget Function(bool enabled)? checklistBuilder;
   final TaskTextSession? textSession;
   final String? textStatus;
   final bool disableTextFields;
@@ -63,7 +61,6 @@ class TaskEditorState extends State<TaskEditor> {
     textSession: widget.textSession,
     textStatus: widget.textStatus,
     disableTextFields: widget.disableTextFields,
-    checklistBuilder: widget.checklistBuilder,
   );
 }
 
@@ -128,9 +125,7 @@ class _EditorBody extends StatefulWidget {
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
-    this.checklistBuilder,
   });
-  final Widget Function(bool enabled)? checklistBuilder;
   final TaskTextSession? textSession;
   final String? textStatus;
   final bool disableTextFields;
@@ -938,8 +933,6 @@ class _EditorBodyState extends State<_EditorBody> {
           if (!bulk) ...[
             field('title', 'Title', lines: 2),
             field('description', 'Notes', lines: 3),
-            if (widget.checklistBuilder != null)
-              widget.checklistBuilder!(!editingFrozen),
             if (widget.disableTextFields && widget.textStatus != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),
