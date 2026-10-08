@@ -145,6 +145,12 @@ void registerInboxFlowTests() {
             find.text('Edited reference').evaluate().isNotEmpty &&
             find.text('Inbox').evaluate().isEmpty,
       );
+      expect(
+        tester.getTopLeft(find.text('Edited reference')).dy,
+        lessThan(tester.getTopLeft(find.text('Organized reference')).dy),
+        reason: 'Leaving Inbox retains the initial top manual rank.',
+      );
+      await captureNativeFixtureUi(tester, 'initial-rank-after-triage');
       await tester.tap(find.byKey(const ValueKey('undo-task-action')));
       await flows.waitForUi(
         tester,
