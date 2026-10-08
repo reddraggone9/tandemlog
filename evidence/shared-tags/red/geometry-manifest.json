@@ -1,0 +1,11 @@
+{
+  "production_base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "source": "geometry-input-source.dart.txt preserves the in-progress shared control before anchor fix",
+  "source_sha256": "bf2dea342816a92990f83d3f4a428ae9c3a3200443f2f796c48ff025f939981e",
+  "test_sha256": "848301dca08bd25e6f4eb236ac7d9e2e5b17d74f10b3fb3de2399e275666cbf4",
+  "command": "flutter test test/tag_input_geometry_test.dart",
+  "outcome": "one behavioral failure: with20selectedchips at390/200%, the dropdown has only4px height before simulatedIME",
+  "exit_code": 1,
+  "log_sha256": "5b1e3e8c1e45d92385bc3b381f7849277ebe95d0842b68cb0132554ad7b950ff",
+  "runtime": "Flutter widget geometry, not native AndroidIME"
+}
