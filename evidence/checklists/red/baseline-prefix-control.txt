@@ -1,0 +1,51 @@
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart
+00:00 +0: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:00 +0 -1: shared baseline preserves earliest scalar successor protected by checked copied-item history [E]
+  Expected: 'Earliest scalar successor'
+    Actual: 'Later scalar successor'
+     Which: is different.
+            Expected: Earliest s ...
+              Actual: Later scal ...
+                      ^
+             Differ at offset 0
+  A shared-text baseline must preserve the already protected scalar seed.
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_baseline_selection_test.dart 131:11  main.<fn>
+  
+00:00 +0 -1: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+00:01 +0 -2: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history [E]
+  Expected: 'Earliest scalar successor'
+    Actual: 'Later scalar successor'
+     Which: is different.
+            Expected: Earliest s ...
+              Actual: Later scal ...
+                      ^
+             Differ at offset 0
+  A shared-text baseline must preserve the already protected scalar seed.
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_baseline_selection_test.dart 131:11  main.<fn>
+  
+00:01 +0 -2: shared baseline preserves earliest scalar successor protected by after baseline only copied-item history
+00:01 +0 -3: shared baseline preserves earliest scalar successor protected by after baseline only copied-item history [E]
+  Expected: '[{"id":"06944534-b145-4e7f-a549-a09fd6fb0de1","kind":"user","name":"Synthetic","order":"1791438546581382000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"schedule":{"startDate":null,"scheduledDate":null,"dueDate":null,"startTime":null,"scheduledTime":null,"dueTime":null,"timeZone":null,"recurrence":null,"dueMinDays":null,"dueMaxDays":null},"tags":[],"deleted":false,"tagRefs":{},"completed":false,"completedAt":null},{"id":"4f0920b3-64bf-5029-8b02-abbedb45162b","kind":"task","assignee":"06944534-b145-4e7f-a549-a09fd6fb0de1","description":"Different later notes","schedule":{"dueDate":"2030-05-11","dueMaxDays":null,"dueMinDays":null,"dueTime":null,"recurrence":"every day","scheduledDate":null,"scheduledTime":null,"startDate":null,"startTime":null,"timeZone":null},"tags":[],"title":"Later scalar successor","order":"1791438546654718000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"deleted":false,"tagRefs":{},"completed":false,"completedAt":null,"checklist":[{"id":"30a98bcb-6191-5a2d-a3a4-9ad67b7978d4","kind":"checklistItem","parent":"4f0920b3-64bf-5029-8b02-abbedb45162b","source":"83ce19fe-8eec-49de-875c-e0242648a5b1","title":"Native item","description":"","before":null,"order":"1791438546654718000:aeb48d1e-a482-4872-a093-b893a69527be","completed":true,"deleted":false}]},{"id":"f2055450-7767-4465-8239-d59bf666fe99","kind":"task","assignee":"06944534-b145-4e7f-a549-a09fd6fb0de1","description":"Different later notes","schedule":{"dueDate":"2030-05-10","recurrence":"every day"},"title":"Later scalar successor","order":"1791438546593920000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"tags":[],"deleted":false,"tagRefs":{},"completed":true,"completedAt":"2030-05-11","checklist":[{"id":"83ce19fe-8eec-49de-875c-e0242648a5b1","kind":"checklistItem","before":null,"description":"","parent":"f2055450-7767-4465-8239-d59bf666fe99","title":"Native item","order":"1791438546606779000:aeb48d1e-a482-4872-a093-b893a69527be","completed":false,"deleted":false}]}]'
+    Actual: '[{"id":"06944534-b145-4e7f-a549-a09fd6fb0de1","kind":"user","name":"Synthetic","order":"1791438546581382000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"schedule":{"startDate":null,"scheduledDate":null,"dueDate":null,"startTime":null,"scheduledTime":null,"dueTime":null,"timeZone":null,"recurrence":null,"dueMinDays":null,"dueMaxDays":null},"tags":[],"deleted":false,"tagRefs":{},"completed":false,"completedAt":null},{"id":"4f0920b3-64bf-5029-8b02-abbedb45162b","kind":"task","assignee":"06944534-b145-4e7f-a549-a09fd6fb0de1","description":"Different later notes","schedule":{"dueDate":"2030-05-11","dueMaxDays":null,"dueMinDays":null,"dueTime":null,"recurrence":"every day","scheduledDate":null,"scheduledTime":null,"startDate":null,"startTime":null,"timeZone":null},"tags":[],"title":"Later scalar successor","order":"1791438546654718000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"deleted":false,"tagRefs":{},"completed":false,"completedAt":null,"successorSuppressed":false,"checklist":[{"id":"30a98bcb-6191-5a2d-a3a4-9ad67b7978d4","kind":"checklistItem","parent":"4f0920b3-64bf-5029-8b02-abbedb45162b","source":"83ce19fe-8eec-49de-875c-e0242648a5b1","title":"Native item","description":"","before":null,"order":"1791438546654718000:aeb48d1e-a482-4872-a093-b893a69527be","completed":true,"deleted":false}]},{"id":"f2055450-7767-4465-8239-d59bf666fe99","kind":"task","assignee":"06944534-b145-4e7f-a549-a09fd6fb0de1","description":"Different later notes","schedule":{"dueDate":"2030-05-10","recurrence":"every day"},"title":"Later scalar successor","order":"1791438546593920000:aeb48d1e-a482-4872-a093-b893a69527be","inbox":false,"tags":[],"deleted":false,"tagRefs":{},"completed":true,"completedAt":"2030-05-11","checklist":[{"id":"83ce19fe-8eec-49de-875c-e0242648a5b1","kind":"checklistItem","before":null,"description":"","parent":"f2055450-7767-4465-8239-d59bf666fe99","title":"Native item","order":"1791438546606779000:aeb48d1e-a482-4872-a093-b893a69527be","completed":false,"deleted":false}]}]'
+     Which: is different.
+            Expected: ... At":null,"checklist" ...
+              Actual: ... At":null,"successorS ...
+                                    ^
+             Differ at offset 968
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_baseline_selection_test.dart 162:11  main.<fn>
+  
+00:01 +0 -3: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by after baseline only copied-item history
+  /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+  /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
