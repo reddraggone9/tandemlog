@@ -289,6 +289,56 @@ void main() {
     expect(focus.hasFocus, isTrue);
   });
 
+  testWidgets(
+    'late control callbacks cannot dispatch after panel becomes busy',
+    (tester) async {
+      final calls = <String>[];
+      Widget panel(bool enabled) => ChecklistPanel(
+        parentId: 'parent',
+        origin: panelOrigin,
+        revision: 'snapshot-1',
+        items: dragItems(),
+        enabled: enabled,
+        onAdd: () => calls.add('add'),
+        onEdit: (_) => calls.add('edit'),
+        onToggle: (_, _) => calls.add('toggle'),
+        onDelete: (_) => calls.add('delete'),
+        onMove: (_, _) => calls.add('move'),
+      );
+      await mount(tester, panel(true));
+      final add = tester
+          .widget<TextButton>(find.byKey(const Key('checklist-add')))
+          .onPressed!;
+      final edit = tester
+          .widget<TextButton>(find.byKey(const Key('checklist-edit-0')))
+          .onPressed!;
+      final delete = tester
+          .widget<IconButton>(find.byKey(const Key('checklist-delete-0')))
+          .onPressed!;
+      final check = tester
+          .widget<Checkbox>(find.byKey(const Key('checklist-check-0')))
+          .onChanged!;
+      final accessibleCheck = tester
+          .widget<Semantics>(
+            find.byWidgetPredicate(
+              (widget) =>
+                  widget is Semantics &&
+                  widget.properties.label == 'Complete checklist item: Item 0',
+            ),
+          )
+          .properties
+          .onTap!;
+      await mount(tester, panel(false));
+      add();
+      edit();
+      delete();
+      check(true);
+      accessibleCheck();
+      expect(calls, isEmpty);
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('child handle supports scoped typed drag and relative movement', (
     tester,
   ) async {
