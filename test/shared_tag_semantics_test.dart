@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:ui' show SemanticsAction;
+import 'dart:ui' show SemanticsAction, Tristate;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -14,7 +14,7 @@ Map<String, dynamic> taggedTask(String id) => {
   'tagRefs': {'reference-$id': 'retained'},
   'schedule': {
     'dueDate': '2026-10-02',
-    'dueTime': '12:30',
+    'dueTime': id == 'first' ? '12:30' : '13:45',
     'recurrence': 'every week when done',
     'timeZone': 'UTC',
   },
@@ -65,6 +65,72 @@ Future<void> activateRemove(
 }
 
 void main() {
+  testWidgets(
+    'query clear and dropdown actions identify every editing context',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      addTearDown(semantics.dispose);
+      for (final context in [
+        ('tags', 'Tags'),
+        ('addTags', 'Add tags'),
+        ('removeTags', 'Remove tags'),
+      ]) {
+        await mountTags(
+          tester,
+          context.$1 == 'tags'
+              ? TaskEditor(
+                  panel: true,
+                  task: taggedTask('first'),
+                  onClose: () {},
+                  save: (_, _, _) async {},
+                )
+              : BulkTaskEditor(
+                  panel: true,
+                  tasks: [taggedTask('first'), taggedTask('second')],
+                  onClose: () {},
+                  onSave: (_) async {},
+                ),
+        );
+        final expand = find.byTooltip('Expand ${context.$2} options');
+        expect(expand, findsOneWidget);
+        await tester.ensureVisible(expand);
+        await tester.pumpAndSettle();
+        final expandNode = tester.getSemantics(expand);
+        expect(
+          expandNode.getSemanticsData().label,
+          'Expand ${context.$2} options',
+        );
+        expect(
+          expandNode.getSemanticsData().hasAction(SemanticsAction.tap),
+          isTrue,
+        );
+        expandNode.owner!.performAction(expandNode.id, SemanticsAction.tap);
+        await tester.pumpAndSettle();
+        expect(
+          find.byTooltip('Collapse ${context.$2} options'),
+          findsOneWidget,
+        );
+        final field = await tagQuery(tester, context.$1, context.$2);
+        await tester.enterText(field, 'ret');
+        await tester.pumpAndSettle();
+        final clear = find.byTooltip('Clear ${context.$2}');
+        expect(clear, findsOneWidget);
+        final clearNode = tester.getSemantics(clear);
+        expect(clearNode.getSemanticsData().label, 'Clear ${context.$2}');
+        expect(
+          clearNode.getSemanticsData().hasAction(SemanticsAction.tap),
+          isTrue,
+        );
+        clearNode.owner!.performAction(clearNode.id, SemanticsAction.tap);
+        await tester.pumpAndSettle();
+        expect(tester.widget<TextField>(field).controller!.text, isEmpty);
+        expect(find.byType(InputChip), findsNothing);
+        expect(find.byKey(const ValueKey('tag-option-retained')), findsNothing);
+      }
+      expect(tester.takeException(), isNull);
+    },
+  );
+
   testWidgets('editor exposes named query and removable selected tags', (
     tester,
   ) async {
@@ -123,6 +189,7 @@ void main() {
         final data = node.getSemanticsData();
         expect(data.label, contains('#retained'));
         expect(data.hasAction(SemanticsAction.tap), isTrue);
+        expect(data.flagsCollection.isSelected, Tristate.isFalse);
         expect(tester.getRect(suggestion).height, greaterThanOrEqualTo(48));
         node.owner!.performAction(node.id, SemanticsAction.tap);
         await tester.pumpAndSettle();
@@ -130,6 +197,16 @@ void main() {
         expect(
           find.bySemanticsLabel('Remove #retained from ${context.$2}'),
           findsOneWidget,
+        );
+        await tester.enterText(query, 'ret');
+        await tester.pumpAndSettle();
+        expect(
+          tester
+              .getSemantics(suggestion)
+              .getSemanticsData()
+              .flagsCollection
+              .isSelected,
+          Tristate.isTrue,
         );
         // Removal activates only this context; another bulk field has its own
         // selected set even when the tag text is identical.
@@ -254,6 +331,18 @@ void main() {
           key == 'addTags' ? 'Add tags' : 'Remove tags',
         );
         expect(data.hasAction(SemanticsAction.setText), isFalse);
+        final label = key == 'addTags' ? 'Add tags' : 'Remove tags';
+        for (final tooltip in ['Clear $label', 'Expand $label options']) {
+          final named = find.byTooltip(tooltip);
+          expect(named, findsOneWidget);
+          expect(
+            tester
+                .getSemantics(named)
+                .getSemanticsData()
+                .hasAction(SemanticsAction.tap),
+            isFalse,
+          );
+        }
       }
       expect(find.byType(InputChip), findsNWidgets(2));
       for (final chip in tester.widgetList<InputChip>(find.byType(InputChip))) {
