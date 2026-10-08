@@ -1170,7 +1170,11 @@ class TaskStore {
     } catch (failure) {
       if (committed) rethrow;
       db.execute('ROLLBACK');
-      _recurringTextMemo.clear();
+      try {
+        _recurringTextMemo.clear();
+      } catch (_) {
+        /* Authority was discarded; preserve the located ingestion failure. */
+      }
       _textBaseline = originalBaseline;
       textWriteBlocked = originalTextBlocked;
       if (verify) _lastHistoryVerification = null;

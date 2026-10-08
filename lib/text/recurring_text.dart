@@ -149,11 +149,21 @@ class _RecurringHistoryRuntime {
   }
 
   void close() {
-    for (final pool in _pools.values) {
-      pool.close();
-    }
+    if (_closed) return;
+    final pools = _pools.values.toList();
     _pools.clear();
     _closed = true;
+    Object? failure;
+    StackTrace? failureStack;
+    for (final pool in pools) {
+      try {
+        pool.close();
+      } catch (error, stack) {
+        failure ??= error;
+        failureStack ??= stack;
+      }
+    }
+    if (failure != null) Error.throwWithStackTrace(failure, failureStack!);
   }
 }
 
@@ -268,9 +278,7 @@ class RecurringTextMemo {
   }
 
   void clear() {
-    for (final runtime in _histories.values) {
-      runtime.close();
-    }
+    final histories = _histories.values.toList();
     _histories.clear();
     _entries.clear();
     _records.clear();
@@ -280,6 +288,17 @@ class RecurringTextMemo {
     _eventUses.clear();
     retainedPayloadBytes = 0;
     retainedRecordPayloadBytes = 0;
+    Object? failure;
+    StackTrace? failureStack;
+    for (final runtime in histories) {
+      try {
+        runtime.close();
+      } catch (error, stack) {
+        failure ??= error;
+        failureStack ??= stack;
+      }
+    }
+    if (failure != null) Error.throwWithStackTrace(failure, failureStack!);
   }
 
   Map<String, ResolvedTextField>? _get(String key) {
@@ -497,13 +516,33 @@ class RecurringTextResolver {
   final Map<String, Map<String, ResolvedTextField>> _resolved = {};
 
   Map<String, ResolvedTextField> resolve(String entity) {
+    if (_runtime._closed) {
+      // A pending/failed entity may be followed by another entity in the same
+      // ingestion transaction. Rejoin the memo's live admission runtime before
+      // publishing observed fields; detached fields cannot authorize new owners.
+      return RecurringTextResolver.fromCanonical(
+        engine,
+        history.map((event) => event.canonicalRaw!),
+        legacyRoots: legacyRoots,
+        memo: memo,
+        legacyScope: legacyScope,
+      ).resolve(entity);
+    }
     try {
       return _resolve(entity);
     } catch (_) {
       // Failed admission cannot publish a lasting packet/claim authority graph.
       // Existing immutable fields can replay their originals after pool closure.
-      memo?.clear();
-      _runtime.close();
+      try {
+        memo?.clear();
+      } catch (_) {
+        /* Authority was discarded; preserve the original admission failure. */
+      }
+      try {
+        _runtime.close();
+      } catch (_) {
+        /* Disposal cannot replace the original admission failure. */
+      }
       _resolved.clear();
       observedFields.clear();
       rethrow;
