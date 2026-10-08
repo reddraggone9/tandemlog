@@ -1,0 +1,18 @@
+00:00 +0: loading /workspace/recovery/closed_runtime_actor_test.dart
+00:00 +0: pending then valid resolution cannot publish inherited actor proof into a different runtime
+00:00 +0 -1: pending then valid resolution cannot publish inherited actor proof into a different runtime [E]
+  Expected: throws <Instance of 'FormatFailure'> with `warm collision`: contains 'actor collision'
+    Actual: <Closure: () => Map<String, ResolvedTextField>>
+     Which: returned {
+                       'title': Instance of 'ResolvedTextField',
+                       'description': Instance of 'ResolvedTextField'
+                     }
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  ../recovery/closed_runtime_actor_test.dart 77:4     main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/recovery/closed_runtime_actor_test.dart: pending then valid resolution cannot publish inherited actor proof into a different runtime

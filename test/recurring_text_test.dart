@@ -142,78 +142,131 @@ class _History {
   }
 }
 
-void main() {
-  test(
-    'failed native admission discards rejected replay authority and recovers',
-    () {
-      final engine = NativeTextEngine(libraryPath: _library);
-      final history = _History(engine);
-      final created = history.create();
-      final context = TextFieldContext.fromCreation(created, 'description');
-      final seed = engine.seedText('ab');
-      final memo = RecurringTextMemo(
-        maxEntries: 1,
-        maxPayloadBytes: 1024,
-        maxRecords: 1,
-        maxRecordPayloadBytes: 1024,
+class _CancelFaultEngine extends NativeTextEngine {
+  _CancelFaultEngine() : super(libraryPath: _library);
+  bool failCancellation = true;
+  @override
+  NativeTextMaterializer createMaterializer({
+    required NativeTextState seed,
+    required NativeTextLimits limits,
+  }) => _CancelFaultMaterializer(
+    this,
+    super.createMaterializer(seed: seed, limits: limits),
+  );
+}
+
+class _CancelFaultMaterializer implements NativeTextMaterializer {
+  _CancelFaultMaterializer(this.engine, this.delegate);
+  final _CancelFaultEngine engine;
+  final NativeTextMaterializer delegate;
+  @override
+  NativeTextLimits get limits => delegate.limits;
+  @override
+  NativeTextState get fullState => delegate.fullState;
+  @override
+  NativeMaterializedText read() => delegate.read();
+  @override
+  NativeMaterializedText apply(NativeTextUpdate update) =>
+      delegate.apply(update);
+  @override
+  void close() {
+    delegate.close();
+    if (engine.failCancellation) {
+      throw const NativeTextException(
+        'materializer_cancel',
+        'Injected lost cancellation response',
+        outcomeUnknown: true,
       );
-      try {
-        for (var candidate = 0; candidate < 3; candidate++) {
-          final writer = const Uuid().v4(), allocation = const Uuid().v4();
-          final actor = deriveTextActor(context.hash, writer, allocation);
-          final owner = engine.createDocument(
-            actorClientId: 2,
-            seed: seed,
-            limits: const NativeTextLimits(visibleUtf16: 20000),
-          );
-          try {
-            final draft = owner.captureDraft(actorClientId: actor)
-              ..replaceText('x' * 10001);
-            final saved = draft.prepareSave();
-            final rejected = history.append(
-              writer,
-              _parent,
-              'task.textEdited',
-              {
-                'changes': {
-                  'description': {
-                    'context': context.hash,
-                    'allocation': allocation,
-                    'actor': actor,
-                    'update': saved.update.encoded,
-                  },
-                },
-              },
+    }
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+void main() {
+  for (final cancelFault in [false, true]) {
+    test(
+      'failed native admission discards rejected replay authority and recovers, cancellation fault=$cancelFault',
+      () {
+        final engine = cancelFault
+            ? _CancelFaultEngine()
+            : NativeTextEngine(libraryPath: _library);
+        final history = _History(engine);
+        final created = history.create();
+        final context = TextFieldContext.fromCreation(created, 'description');
+        final seed = engine.seedText('ab');
+        final memo = RecurringTextMemo(
+          maxEntries: 1,
+          maxPayloadBytes: 1024,
+          maxRecords: 1,
+          maxRecordPayloadBytes: 1024,
+        );
+        try {
+          for (var candidate = 0; candidate < 3; candidate++) {
+            final writer = const Uuid().v4(), allocation = const Uuid().v4();
+            final actor = deriveTextActor(context.hash, writer, allocation);
+            final owner = engine.createDocument(
+              actorClientId: 2,
+              seed: seed,
+              limits: const NativeTextLimits(visibleUtf16: 20000),
             );
             try {
-              expect(
-                () => RecurringTextResolver(engine, [
-                  created,
-                  rejected,
-                ], memo: memo).resolve(_parent),
-                throwsA(isA<NativeTextException>()),
+              final draft = owner.captureDraft(actorClientId: actor)
+                ..replaceText('x' * 10001);
+              final saved = draft.prepareSave();
+              final rejected = history.append(
+                writer,
+                _parent,
+                'task.textEdited',
+                {
+                  'changes': {
+                    'description': {
+                      'context': context.hash,
+                      'allocation': allocation,
+                      'actor': actor,
+                      'update': saved.update.encoded,
+                    },
+                  },
+                },
               );
-              expect(memo.sharedPacketCount, 0);
-              expect(memo.retainedPayloadBytes, 0);
-              expect(
-                RecurringTextResolver(engine, [
-                  created,
-                ], memo: memo).resolve(_parent)['description']!.text,
-                'ab',
-              );
+              try {
+                expect(
+                  () => RecurringTextResolver(engine, [
+                    created,
+                    rejected,
+                  ], memo: memo).resolve(_parent),
+                  throwsA(
+                    isA<NativeTextException>().having(
+                      (error) => error.operation,
+                      'original failed operation',
+                      'materializer_apply',
+                    ),
+                  ),
+                );
+                expect(memo.sharedPacketCount, 0);
+                expect(memo.retainedPayloadBytes, 0);
+                expect(
+                  RecurringTextResolver(engine, [
+                    created,
+                  ], memo: memo).resolve(_parent)['description']!.text,
+                  'ab',
+                );
+              } finally {
+                saved.cancel();
+              }
             } finally {
-              saved.cancel();
+              owner.dispose();
             }
-          } finally {
-            owner.dispose();
           }
+        } finally {
+          if (engine is _CancelFaultEngine) engine.failCancellation = false;
+          memo.clear();
+          engine.dispose();
         }
-      } finally {
-        memo.clear();
-        engine.dispose();
-      }
-    },
-  );
+      },
+    );
+  }
   group(
     'actual native recurring inherited text',
     () {
