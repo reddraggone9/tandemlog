@@ -139,6 +139,57 @@ class _CompletionFixture {
   }
 }
 
+/// Preserve the real native store while scheduling one peer append between the
+/// coordinator's last observation and the store's own receipt-preparation gate.
+class _BeforeCommitPeerStore implements TaskStore {
+  _BeforeCommitPeerStore(this.actual, this.peer, this.parent);
+  final TaskStore actual, peer;
+  final String parent;
+  int attempts = 0;
+  @override
+  Future<bool> refresh() => actual.refresh();
+  @override
+  get db => actual.db;
+  @override
+  List<Map<String, dynamic>> get rows => actual.rows;
+  @override
+  String get taskSnapshot => actual.taskSnapshot;
+  @override
+  List<String> activeCompletionIds(String entity) =>
+      actual.activeCompletionIds(entity);
+  @override
+  Map<String, dynamic>? currentTextRow(String entity) =>
+      actual.currentTextRow(entity);
+  @override
+  Future<LogEvent> complete(
+    String entity, {
+    DateTime? completionDay,
+    DateTime? completionInstant,
+    String? localZoneId,
+    String? expectedChecklistSnapshot,
+    bool requireIncomplete = false,
+    void Function(OperationReceipt)? onPrepared,
+  }) async {
+    attempts++;
+    if (attempts == 1)
+      await peer.addChecklistItem(parent, 'Arrived at preparation boundary');
+    return actual.complete(
+      entity,
+      completionDay: completionDay,
+      completionInstant: completionInstant,
+      localZoneId: localZoneId,
+      expectedChecklistSnapshot: expectedChecklistSnapshot,
+      requireIncomplete: requireIncomplete,
+      onPrepared: onPrepared,
+    );
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnsupportedError(
+    'Unexpected boundary proxy call: ${invocation.memberName}',
+  );
+}
+
 void main() {
   late _CompletionFixture f;
   setUp(() async => f = await _CompletionFixture.create());
@@ -409,6 +460,33 @@ void main() {
         private.cancel();
         f.a.releaseTextCapture(capture);
       }
+    },
+  );
+
+  test(
+    'incoming unchecked item at native preparation boundary retries confirmation before any receipt',
+    () async {
+      final proxy = _BeforeCommitPeerStore(f.a, f.b, f.parent);
+      var warnings = 0, prepared = 0;
+      final result = await ChecklistCompletionCommand(proxy).complete(
+        f.parent,
+        completionInstant: DateTime.utc(2030, 5, 10, 12),
+        localZoneId: 'UTC',
+        confirmUnfinished: (items) async {
+          warnings++;
+          expect(prepared, 0);
+          expect(items, hasLength(warnings == 1 ? 2 : 3));
+          if (warnings == 2)
+            expect(items.last['title'], 'Arrived at preparation boundary');
+          return true;
+        },
+        onPrepared: (_) => prepared++,
+      );
+      expect(result, isNotNull);
+      expect(warnings, 2);
+      expect(proxy.attempts, 2);
+      expect(prepared, 1);
+      expect(f.completions, hasLength(1));
     },
   );
 }

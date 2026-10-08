@@ -2,16 +2,17 @@ import '../domain/undo.dart';
 
 class UndoEntry {
   final String verb;
+  final String noun;
   final Map<String, String> entities = {};
   String get label {
     final n = operations.map((id) => entities[id]).toSet().length;
-    return "$verb $n ${n == 1 ? 'task' : 'tasks'}";
+    return '$verb $n $noun${n == 1 ? '' : 's'}';
   }
 
   final Object? group;
   final Set<String> operations = {};
   final List<OperationReceipt> pending = [];
-  UndoEntry(this.verb, this.group);
+  UndoEntry(this.verb, this.group, {this.noun = 'task'});
 }
 
 /// Process-local history. Transport/storage owns confirmation, and a workspace
@@ -29,12 +30,13 @@ class SessionUndoHistory {
     String label,
     Iterable<OperationReceipt> receipts, {
     Object? group,
+    String noun = 'task',
   }) {
     if (receipts.isEmpty) return;
     final entry =
         group != null && _entries.isNotEmpty && _entries.last.group == group
         ? _entries.last
-        : UndoEntry(label, group);
+        : UndoEntry(label, group, noun: noun);
     if (_entries.isEmpty || !identical(_entries.last, entry)) {
       _entries.add(entry);
     }

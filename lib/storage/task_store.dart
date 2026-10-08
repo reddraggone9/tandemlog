@@ -3197,6 +3197,7 @@ class TaskStore {
     DateTime? completionInstant,
     String? localZoneId,
     String? expectedChecklistSnapshot,
+    bool requireIncomplete = false,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
@@ -3206,6 +3207,9 @@ class TaskStore {
     }
     if (expectedChecklistSnapshot != null &&
         expectedChecklistSnapshot != jsonEncode(state['checklist'] ?? [])) {
+      throw StaleTaskSnapshot();
+    }
+    if (requireIncomplete && state['completed'] == true) {
       throw StaleTaskSnapshot();
     }
     final schedule = TaskSchedule.fromJson(
