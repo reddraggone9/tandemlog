@@ -64,7 +64,13 @@ class _Fixture {
   }
 
   Map<String, dynamic> row(String id) =>
-      store.rows.singleWhere((row) => row['id'] == id);
+      jsonDecode(
+            store.db.select('SELECT raw FROM views WHERE id=?', [
+                  id,
+                ]).single['raw']
+                as String,
+          )
+          as Map<String, dynamic>;
   Future<OperationReceipt> save(String entity, String title) async {
     final capture = await store.captureTaskText(entity);
     return _saveCapture(capture, entity, title);
