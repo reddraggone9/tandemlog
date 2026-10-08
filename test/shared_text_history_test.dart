@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:uuid/uuid.dart';
@@ -148,6 +149,81 @@ void main() {
       expect(() => graph.append(root, forged), throwsA(isA<FormatFailure>()));
       expect(graph.packetCount, 0);
       expect(graph.operations(root), isEmpty);
+    },
+  );
+
+  test('canonical packet metadata is checked before retaining a reference', () {
+    final graph = SharedTextHistoryGraph();
+    final root = graph.root(_context, packets.seed);
+    final original = packets.replace('AXB');
+    final event = original.event;
+    final forged = LogEvent(
+      event.space,
+      event.writer,
+      event.sequence,
+      event.clock,
+      const Uuid().v4(),
+      event.type,
+      event.data,
+      previousHash: event.previousHash,
+      hash: event.hash,
+      canonicalRaw: event.canonicalRaw,
+    );
+    expect(
+      () => graph.append(
+        root,
+        LineageTextOperation(
+          forged,
+          original.field,
+          original.claim,
+          original.update,
+        ),
+      ),
+      throwsA(isA<FormatFailure>()),
+    );
+    expect(graph.packetCount, 0);
+  });
+
+  test(
+    'retained original packets are deeply immutable and privately owned',
+    () {
+      final graph = SharedTextHistoryGraph();
+      final root = graph.root(_context, packets.seed);
+      final original = packets.replace('AXB');
+      final event = original.event;
+      final caller = LogEvent(
+        event.space,
+        event.writer,
+        event.sequence,
+        event.clock,
+        event.entity,
+        event.type,
+        (jsonDecode(event.canonicalRaw!) as Map)['data']
+            as Map<String, dynamic>,
+        previousHash: event.previousHash,
+        hash: event.hash,
+        canonicalRaw: event.canonicalRaw,
+      );
+      final reference = graph.append(
+        root,
+        LineageTextOperation(
+          caller,
+          original.field,
+          original.claim,
+          original.update,
+        ),
+      );
+      final retained = graph.operations(reference).single;
+      (caller.data['changes'] as Map)['title'] = {'context': 'forged'};
+      expect(
+        (retained.event.data['changes'] as Map)['title'],
+        containsPair('context', _context),
+      );
+      expect(
+        () => (retained.event.data['changes'] as Map)['title'] = {},
+        throwsUnsupportedError,
+      );
+      expect(retained.event.canonicalRaw, original.event.canonicalRaw);
     },
   );
 
