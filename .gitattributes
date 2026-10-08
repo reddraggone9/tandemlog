@@ -9,3 +9,6 @@ native/text_engine/vendor/** -text
 # Source-bound raw Kotlin CI receipts are compared with downloaded ZIP bytes.
 # Keep this evidence scope literal under Windows autocrlf.
 evidence/kotlin-remediation/hosted-evaluation/** -text
+
+# Source-bound decoded job-log receipts retain literal UTF8/CRLF bytes.
+evidence/final-preview/ci/** -text
