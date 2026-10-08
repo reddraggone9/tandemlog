@@ -60,19 +60,30 @@ close the open popup before Cancel and use the chip's contextual removal tooltip
 The [red/green receipt](green/legacy-native-controls-manifest.json) preserves
 all caret, canonical-byte, filtering and close assertions; both cases now pass
 and independent review accepted the corrections. Production remains `041c06488`.
-[Fresh full CI](https://github.com/reddraggone9/tandemlog/actions/runs/37792711739)
-is running against exact `5204e276`.
+[The second full CI](https://github.com/reddraggone9/tandemlog/actions/runs/37792711739)
+against exact `5204e276` passed Android, Windows, Linux units and contracts,
+but finished the native aggregate at 68 passed and one failed: an open tag
+popup intercepted a legacy bulk Save tap. The unchanged standalone case passed
+locally; no local red reproduction is claimed. Test-only `ec2309db` now pumps
+and dismisses the actual popup, verifies the pending query and Save hit-testing,
+and compares the exact prior tag set after rejected Save. Its focused actual GTK
+flow passed 1/0; independent review accepted the stronger checks. The
+[qualified red/green receipt](green/bulk-save-controls-manifest.json) and
+[CI receipt](green/ci-5204-receipt.json) retain the source and log bindings.
+[Final full CI 37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
+is running against exact `ec2309db`; its result remains pending.
 
 Separately, [22 actual Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
 passed on `ff1d1f82`, including the three tag workflows; decoded logs, startup,
 counts and source binding were independently reviewed. The isolated branch's
 [qualified result](https://github.com/reddraggone9/tandemlog/blob/test/shared-tags-windows-native/evidence/shared-tags-windows/result.json)
-records that later `5204e276` changes only two excluded aggregate test blocks;
+records that later `ec2309db` changes only three excluded legacy aggregate blocks;
 the seven selected test bodies and production inputs remain unchanged. Archive
 digests/sizes are reported metadata, without consumer byte verification.
 
-Exact new Android
-affected-flow acceptance remains pending. Linux inspection cannot establish
+The [focused Android handoff](../../design/shared-tag-native-acceptance.md)
+and hash-verified synthetic fixture provide known multiword/leading-marker tags
+and completed-task inventory. Exact new Android affected-flow acceptance remains pending. Linux inspection cannot establish
 Android keyboard/accessibility/provider behavior or Windows runtime acceptance.
 The frozen checklist candidate's separate parent-run Android installation is
 not acceptance of this feature.

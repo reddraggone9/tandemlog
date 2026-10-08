@@ -1,0 +1,65 @@
+{
+  "run": 37792711739,
+  "tested_source": "5204e276b641dd05cb5b5e648b2c6369ed11f5cf",
+  "overall_conclusion": "failure",
+  "jobs": {
+    "android": {
+      "id": 113364049889,
+      "conclusion": "success"
+    },
+    "windows": {
+      "id": 113364049956,
+      "conclusion": "success",
+      "unit_tests": {
+        "passed": 619,
+        "skipped": 2,
+        "failed": 0,
+        "skip_reasons": [
+          "real Linux FFI durability smoke",
+          "Linux zone-file identity"
+        ]
+      },
+      "contracts": {
+        "cargo_passed": 4,
+        "native_admission_worker_tests": 107,
+        "tool_tests": 37
+      }
+    },
+    "linux": {
+      "id": 113364050190,
+      "conclusion": "failure",
+      "unit_tests": 621,
+      "contracts": {
+        "cargo_passed": 4,
+        "native_admission_worker_tests": 107,
+        "tool_tests": 37
+      },
+      "native_aggregate": {
+        "passed": 68,
+        "failed": 1,
+        "case": "multi-tag selection bulk editing deletion and guarded editor sessions",
+        "failure": "Save tap intercepted by tag popup ListTile; changed-message assertion failed. Test interaction correction under review; no production defect established."
+      }
+    }
+  },
+  "log_representation": "GitHub app decoded UTF8 retained locally, not original job-log archive byte verification",
+  "log_sha256": {
+    "ci-android-37792711739.txt": "510937230ab22f37daba90cad27597d79376d9e6ef31b3eb46e30d6b21983992",
+    "ci-windows-37792711739.txt": "3396c9c36f94ec3b435a38f6ebb804319322a2fd214c607cd247bd99e283b7f0",
+    "ci-linux-37792711739-failed.txt": "cf8ed9e8ccef0277d7b5072c8fa654241618e7b49f4b8ebee54ac6734586f73f"
+  },
+  "api_reported_artifacts": {
+    "android": {
+      "id": 11557676883,
+      "archive_bytes": 80385083,
+      "archive_sha256": "949860f5aa8e256529ec34dcd672045a89d90ff470d9b294206e58a182f345d3"
+    },
+    "windows": {
+      "id": 11557078577,
+      "archive_bytes": 25762438,
+      "archive_sha256": "847ced9e066e6d1cd330a353060ed43f785b4168169672efedf0627a30e4b430"
+    }
+  },
+  "consumer_artifact_bytes_verified": false,
+  "runtime_acceptance_limit": "No actual Android or signed release acceptance inferred from build/static gates."
+}

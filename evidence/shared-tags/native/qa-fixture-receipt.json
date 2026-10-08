@@ -1,0 +1,20 @@
+{
+  "synthetic": true,
+  "application_source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
+  "production_source": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "generator": "native/qa_fixture_generator.dart",
+  "generator_sha256": "dc7229b38cec529f32191a3f648985bd053dc9e72e18b2d0a00688bec0380646",
+  "generation": "dart run in existing package, with existing native-asset hooks; production TaskStore commands and verifyHistory completed, exit0",
+  "native_text_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "manifest_sha256": "a01298438838a43e9d5754def7482df82a50087fa824416d61f90ff9c64a8735",
+  "generation_log_sha256": "c1153d7b4d635be4eca657140cd7da4d031caabe1c718d742c8f6234b13eb439",
+  "canonical_v3_records": 8,
+  "files": {
+    "tandemlog-space.json": "cb5eea203849655558fdd41361dcdd26ec34e824c3a4e008bf8c904fda2633bc",
+    "76afc231-b3ce-4578-98f9-92f5e36ed5d7.jsonl": "9a4ad2446418e1891ff5fea887c9cb2f7a00fb65759ac505364f4f8d195a4369"
+  },
+  "private_profiles_copied": false,
+  "scope": "Only new synthetic shared manifest/log copied. Seed private profiles stay local and are not deliverables. No APK or Android runtime acceptance claimed.",
+  "generator_path_note": "Same exact executed script bytes renamed to the Dart file-name convention after generation; no code change.",
+  "independent_review": "Accepted static/hash/generator/handoff audit. Verified all8eventhashes/previousHash/seq/clocks/space, exact fixture4export, tag/completion semantics and no private identity/cache export; no must-fix. Reviewer didnotexecute/build."
+}
