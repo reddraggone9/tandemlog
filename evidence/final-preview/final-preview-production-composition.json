@@ -1,0 +1,34 @@
+{
+  "lib/main.dart": {
+    "reviewed_source": "e816f433a7616782a69b227a2bd27fbac53f57a6",
+    "sha256": "2d6ff7145185f5edf2c0590cee4b14383ec74adb6060272796e6467823e97f63"
+  },
+  "lib/presentation/tag_input.dart": {
+    "reviewed_source": "e816f433a7616782a69b227a2bd27fbac53f57a6",
+    "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+  },
+  "lib/presentation/tag_filter_picker.dart": {
+    "reviewed_source": "e816f433a7616782a69b227a2bd27fbac53f57a6",
+    "sha256": "bc4242262a07f90a86aeb24889cef66ba4fd262a3fb1a92696b29e7a8aacba7e"
+  },
+  "lib/presentation/task_editor.dart": {
+    "reviewed_source": "e816f433a7616782a69b227a2bd27fbac53f57a6",
+    "sha256": "a23b96228fc6dc4100df5afd7989fab2df127683296beb6e0fec35b9c7ba892f"
+  },
+  "lib/domain/historical_completion.dart": {
+    "reviewed_source": "19377652d65567ddb5c725e4462fc28ef8820e95",
+    "sha256": "3f2e3f6ae5a6357d9be980ae076cb56e5881ca237d96ceed5403d6b99fd58afe"
+  },
+  "lib/storage/task_store.dart": {
+    "reviewed_source": "19377652d65567ddb5c725e4462fc28ef8820e95",
+    "sha256": "a6ba93708197b76440078ba07bce957b453cd80ffdf46f016bb26b970ab419ca"
+  },
+  "android/settings.gradle.kts": {
+    "reviewed_source": "1b8f0cc5c6eeb302519231d7269ee37a529e36d0",
+    "sha256": "4a8acd3d36d571e73d58a00c5079133dc16c6d82f476282f6c1687c064dfb758"
+  },
+  "pubspec.lock": {
+    "reviewed_source": "e816f433a7616782a69b227a2bd27fbac53f57a6",
+    "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+  }
+}

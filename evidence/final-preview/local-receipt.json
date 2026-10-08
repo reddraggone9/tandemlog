@@ -1,0 +1,87 @@
+{
+  "merge_only_source": "d99d03d3be03601d109a748b083e3fa2bdd0b578",
+  "working_tree_delta_during_checks": "pubspec version 2026.10.2-rc.4+46 and documentation only; production/test/native inputs unchanged",
+  "platform": "Linux x64 actual Flutter GTK debug under Xvfb; desktop and narrow viewports, not Android or Windows",
+  "checks": {
+    "pub_get_offline": {
+      "exit": 0,
+      "lock_unchanged": true
+    },
+    "format": {
+      "exit": 0,
+      "files": 156,
+      "changed": 0
+    },
+    "analyze": {
+      "exit": 0,
+      "issues": 0
+    },
+    "flutter_unit": {
+      "exit": 0,
+      "passed": 628,
+      "failed": 0
+    },
+    "multi_entrypoint_native": {
+      "exit": 1,
+      "historical_passed": 1,
+      "tag_entrypoint_load_failed": 1,
+      "reason": "Debugger connection/log reader failed between app launches; no tag assertion ran in this invocation"
+    },
+    "standalone_tag_native": {
+      "exit": 0,
+      "passed": 3,
+      "failed": 0
+    }
+  },
+  "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "screenshots": {
+    "tag": 17,
+    "historical": 2,
+    "startup_frame_excluded": true,
+    "tag_comparison": "Independent decoded RGBA comparison: 12 exact; remaining five differ only in 2x24px caret visible/absent regions; all other pixels identical"
+  },
+  "independent_source_reviews": [
+    "correctness",
+    "architecture",
+    "security"
+  ],
+  "remaining_gates": [
+    "Exact composed full CI",
+    "Parent isolated A16 historical native retest and consumer byte verification",
+    "Fresh quota before publication",
+    "Exact composed signed/native/manual/UX acceptance",
+    "Independent release notes/media range review"
+  ],
+  "publication": "not attempted; stable feature approval absent",
+  "file_sha256": {
+    "final-preview-analyze.txt": "1e876b4a3875189b51a3e813fe010531fdfd9cdd180cb340cb7c957976b7eb78",
+    "final-preview-format.txt": "6c983b748ca0cb25c604cd5f7ead8d4dabb96639055748bdae0a92aa2c81aa57",
+    "final-preview-full-flutter.txt": "c154f81cc597f463eca5de0139ddf1594c9df8756ea622395a7b8abd700591d9",
+    "final-preview-native-focused.txt": "b5df0eaf6f5ec47989aa261847c4eb8a90aa453dd78428902dc29ce48d6d3fc4",
+    "final-preview-production-composition.json": "39d54c7c87991acb52ed45092dc9ba897636d0298867e4f9ce08db5620bffafe",
+    "final-preview-pubget.txt": "d4cb7a3c68b4133b4f6e58c67ff5bfd13725d8021e930388cdc98da8a575919d",
+    "final-preview-tag-pixel-comparison.json": "e193f92aa5f9b8b5ee3893825e7ae37059efdf81e616d7ed49a4a795ee4561af",
+    "final-preview-tags-native-standalone.txt": "7b263efd8ec3ddb5747a5f211e5062df65406dd2accff685be8cd04ba16a54f8",
+    "final-preview-version-floor.json": "e380a2782d834bbd7e3ee54a6ba42dc18fb49a2c8c229e86ba2724f26e2b3650",
+    "historical-ui/historical-checklist-after-undo.png": "ce1869bc79bff2283c77afe231f77d61f0c58931c672e923236b1b7ac8490eec",
+    "historical-ui/historical-checklist-recompleted.png": "ecced1a1b539595eedf1fef57910f508ddbf6ed3fda0e7793946fa6c120b8564",
+    "tag-ui/bulk-draft-desktop-dark.png": "5e160261216562dfd14352c12a52a5d6b7e56dbee8b399259130a787cc89b9c4",
+    "tag-ui/bulk-draft-narrow-dark.png": "7f986085aabbff5ce5e4f5ce155c9f765f0aa354e6fd30e035e75aee21840d5e",
+    "tag-ui/bulk-draft-narrow-light-200.png": "152f6c06a5d10065076dc786d1a3f601935d096a268f6f62c6fcb06ad3a4ad61",
+    "tag-ui/editor-draft-desktop-dark.png": "debcd5db41dd06bb95df7f08f42abc40defc8b00392c68f6496359d5e673d4bf",
+    "tag-ui/editor-draft-narrow-dark.png": "66711c49eefaac43308b7a7efae0c712824c397993eb53c0a03f2c7414e37dee",
+    "tag-ui/editor-draft-narrow-light-200.png": "d2fb81a446535cfcf522a86a4e426e0d2ca0cc60e80b3f82f150ff5d0de5c4c9",
+    "tag-ui/editor-ime-narrow-dark.png": "4f2872d34a3ea68c352d40e01951255c9985cc0092f1aa502168f6a839dd8019",
+    "tag-ui/editor-ime-narrow-light-200.png": "4bb27d271f555d023882b10a65267695d9118f4ae84eabfb5d89b1a45c936c9d",
+    "tag-ui/editor-options-desktop-dark.png": "a61690f1516455d7472fe05360c16b36c45c1de53f18073bd26e973d8ba8c8e5",
+    "tag-ui/editor-options-narrow-dark.png": "529b355075f2f37a01144ef16367376676e10e6413afe0bb9fb307a1fe442c6a",
+    "tag-ui/editor-options-narrow-light-200.png": "9e96be5035d36ed1b33a5c19d9632e866513371ce9107527a5cbe6f8b39f9152",
+    "tag-ui/editor-selected-desktop-dark.png": "42773f319690f7254d1171b938b16d8b2682904ce3d1ce039ee842d204e31763",
+    "tag-ui/editor-selected-narrow-dark.png": "7b35766250e89e22cc802c73c8887fdf6f9942072cd37bcc7116287fbb8196e6",
+    "tag-ui/editor-selected-narrow-light-200.png": "6ffd589d280ab35e2a7b3848b39f3cb585073bb76bfbcd6d75914a27f671a348",
+    "tag-ui/filter-selected-desktop-dark.png": "0f4eb7e2432ccce5967aa8b7687a3a30664af595bb62bd6a8e05dd15508a5fa8",
+    "tag-ui/filter-selected-narrow-dark.png": "6e7340c05561ca837b8a698376aa78b4475831cd843c43e53c39152986791d1c",
+    "tag-ui/filter-selected-narrow-light-200.png": "420654a629cda9644810d46f38620fbb55a1c331b7d97c8ad1d5081463b50460"
+  },
+  "independent_local_receipt_visual_review": "correctness and architecture accepted; all28 copied hashes and native bundle SHA verified; historical2 and differing tag5 actual images inspected"
+}

@@ -1,9 +1,10 @@
 # Shared tag input native acceptance
 
-**Blocked by the parent-reported native historical-recompletion defect.**
-Shared tags inherit the affected core from `17ae5e5`. Await the exact native
-sequence, failing regression, narrow correction and newly identified candidate;
-this handoff describes supporting tag checks, not overall release acceptance.
+**Historical isolated component handoff; supporting evidence only.** Its tag
+artifact inherits the historical-recompletion defect from `17ae5e5`. The reviewed
+fix is now included in the separate [composed preview](final-preview-acceptance.md).
+Use that current contract for combined acceptance; this older artifact does not
+establish acceptance of the combined source or its final signed payload.
 
 Use the isolated `feature/shared-tag-input` candidate. Production is
 `041c06488cb2d937d38519dec8e3e3ebd69abbf3`; final interaction-test source is

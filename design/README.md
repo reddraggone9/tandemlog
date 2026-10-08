@@ -44,5 +44,6 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.
 - [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; isolated storage and UI implementation, with exact Windows/Android acceptance still pending.
 - [Checklist native acceptance](checklist-native-acceptance.md): exact candidate/fixture contract, platform workflow gates and current Linux evidence.
+- [Composed final preview](final-preview-acceptance.md): reviewed component/source bindings, rc.4/build46 and remaining exact-artifact/native/publication gates.
 - [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
 - [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.
