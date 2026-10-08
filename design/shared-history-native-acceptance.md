@@ -10,7 +10,14 @@ The Android artifact is a debug, test-only APK with the existing package
 is not an owner-signed release update. Run it on a dedicated synthetic lab
 device/emulator with no live profile. The Windows installer is unsigned and
 retains the normal AppId; use an isolated lab account and set `TANDEMLOG_PROFILE`
-to a fresh QA directory before launching. Both may display the unchanged
+to a fresh QA directory before launching. CI also preserves the exact verified
+Release directory as `tandemlog-windows-x64-unsigned-portable.zip`; unpack it in
+a new QA directory and verify every file against `windows-portable-provenance.json`.
+The provenance binds the complete executable/DLL/assets payload to the commit,
+CI run and archive SHA256. Portable QA does not require installer extraction or
+replace the separately required installation lifecycle gate. The manifest proves
+integrity rather than signing: bind it to the trusted GitHub run/artifact, extract
+into a fresh directory and reject extra files. Both may display the unchanged
 2026.10.2-rc.3 package version: identify this candidate by its exact revision and
 file hashes, not a newly announced release name.
 

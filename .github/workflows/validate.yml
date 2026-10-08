@@ -81,9 +81,19 @@ jobs:
       - run: python tool/app_version.py
       - run: flutter build windows --release
       - run: python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release
+      - name: Preserve exact portable Windows payload for isolated native acceptance
+        shell: pwsh
+        run: >-
+          python packaging/windows/package_portable.py
+          --bundle build/windows/x64/runner/Release
+          --output dist
+          --source-revision "$env:GITHUB_SHA"
+          --run-id "$env:GITHUB_RUN_ID"
       - name: Build per-user installer and verify native installation lifecycle
         shell: pwsh
-        run: ./packaging/windows/build-and-smoke.ps1
+        run: |
+          ./packaging/windows/build-and-smoke.ps1
+          Get-Content dist/windows-SHA256SUMS.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: windows
@@ -114,6 +124,8 @@ jobs:
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs dist/tandemlog-android-test-only.apk > dist/android-signature.txt
           cd dist
           sha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt
+          cat android-SHA256SUMS.txt
+          cat android-signature.txt
       - name: Package separate recovery harness on the isolated adoption branch
         if: github.ref == 'refs/heads/experiment/text-activation-policy'
         run: |
