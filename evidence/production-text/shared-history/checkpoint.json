@@ -1,0 +1,30 @@
+{
+  "status": "paused at parent-requested coordination checkpoint",
+  "source_commit": "7d6f299041bd507dd5ca9dd3983008e9b0bb7430",
+  "branch": "recovery/shared-history",
+  "working_tree": "source committed; no discarded work",
+  "completed_checks": {
+    "flutter": 491,
+    "native": 107,
+    "rust": 4,
+    "tooling": 36,
+    "analysis": "clean",
+    "bundled_linux_recurrence_workflow": 1
+  },
+  "active_processes": [],
+  "remaining_gates": [
+    "Independent implementation/architecture review",
+    "Remaining full-prefix/warm command scaling",
+    "Android/Windows candidate native acceptance"
+  ],
+  "queue_preserved": [
+    "Approved historical recompletion",
+    "One-level checklists",
+    "Tag autocomplete UX trials",
+    "Top initial manual rank",
+    "Android overlap and tag underline pixel review",
+    "Bulk accessibility semantics",
+    "Kotlin security and AGP/Gradle dependency audit"
+  ],
+  "recovery": "Exact committed checkpoint recovered. Parent verified both original archives and eight-file index overlay; consumer403 prevented local overlay materialization; no unadopted experiment overlays applied. No old task or files deleted; no live user data touched."
+}

@@ -101,7 +101,10 @@ match in every run. The earlier archived320-generation checkpoint measured
 The first640-request probe hit its90s wall bound at560 generations:3381.280ms
 cold rebuild,100B BLOBs,87444B reference metadata. Its raw diagnostic remains
 `edited-request640-bounded560.json`; it is not a completed640-generation result.
-A second640 probe with a180s wall bound is preserved separately. Warm costs and
-full observed-prefix work still grow; performance acceptance remains open. The
+The second640 probe completes all640 edited generations:3804.635ms cold rebuild,
+101B native BLOBs,99924B reference metadata and100970ms total probe wall time.
+Exact warm/cold projections and original canonical bytes match. See
+[raw640 result](edited-640.json). Warm costs and full observed-prefix work still
+grow; performance acceptance remains open. The
 new driver retains all generated fixtures and uses a fresh profile for cold replay,
 without deleting any files.
