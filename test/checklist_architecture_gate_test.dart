@@ -80,6 +80,59 @@ class _Fixture {
 }
 
 void main() {
+  test(
+    'genuine offline item activity arriving after cancellation restores its task',
+    () async {
+      final f = await _Fixture.create();
+      TaskStore? peer;
+      try {
+        final source = await f.store.addChecklistItem(
+          f.parent,
+          'Original item',
+        );
+        final completion = await f.store.complete(
+          f.parent,
+          completionDay: DateTime(2030, 5, 10),
+        );
+        final child = const Uuid().v5(f.parent, 'successor');
+        final copied = const Uuid().v5(child, 'checklist:${source.entity}');
+        final peerDirectory = await Directory(
+          '${f.root.path}/peer-shared',
+        ).create();
+        for (final file in await f.folder.list()) {
+          await File(
+            '${f.folder.location}/${file.name}',
+          ).copy('${peerDirectory.path}/${file.name}');
+        }
+        peer = await TaskStore.open(
+          LocalLogFolder(peerDirectory.path),
+          '${f.root.path}/peer-profile',
+          textEngine: f.engine,
+        );
+        await peer.setChecklistCompleted(copied, true);
+        expect(
+          (await f.store.undoOperations([completion.id])).removedSuccessorCount,
+          1,
+        );
+        expect(f.store.rows.any((row) => row['id'] == child), false);
+        await File(
+          '${peerDirectory.path}/${peer.writer}.jsonl',
+        ).copy('${f.folder.location}/${peer.writer}.jsonl');
+        await f.store.refresh();
+        expect(f.store.rows.any((row) => row['id'] == child), true);
+        expect(f.store.checklistItems(child).single['completed'], true);
+        final snapshot = jsonEncode(f.store.rows),
+            canonical = await f.canonical();
+        await f.store.refresh();
+        expect(jsonEncode(f.store.rows), snapshot);
+        expect(await f.canonical(), canonical);
+      } finally {
+        await peer?.close();
+        await f.close();
+      }
+    },
+  );
+
   for (final action in ['create', 'check', 'move', 'delete', 'native Save']) {
     test('local item $action cannot resurrect a canceled successor', () async {
       final f = await _Fixture.create();
