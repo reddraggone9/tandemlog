@@ -5,5 +5,10 @@
   "archiveDigest": "sha256:f9f8b5f344a4a1db542141945507f775bd42ec59168ba8c3f021fafdee4d7aa2",
   "archiveBytes": 80377709,
   "hostedAndroidJob": "success; native payload and signature/archive gates passed",
-  "localDownload": "403; no local APK re-verification claimed"
+  "localDownload": "Later supported MCP GitHub resolved-reference materialization succeeded once; archive digest and actual APK manifest/signature/native gate independently verified",
+  "initialDownloadAttempt": "CLI redirect returned403; no local payload then",
+  "actualApkSha256": "d2927d1c47fad34440851880200c0db973ca9da11b00a963c8f38249997af53c",
+  "actualApkBytes": 164893883,
+  "actualDebugSignerSha256": "1bf13179d92a363d00f1831277e3e06120a07c022410dd05dc0bf186fe60b67c",
+  "verifiedAtUtc": "2026-10-08T09:33:24.229566+00:00"
 }

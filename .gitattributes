@@ -5,3 +5,7 @@ test/fixtures/**/*.jsonl -text
 # Reviewed dependency sources, provenance and patches are pinned by exact bytes.
 # Windows autocrlf must not rewrite the inventory or any approved crate file.
 native/text_engine/vendor/** -text
+
+# Source-bound raw Kotlin CI receipts are compared with downloaded ZIP bytes.
+# Keep this evidence scope literal under Windows autocrlf.
+evidence/kotlin-remediation/hosted-evaluation/** -text

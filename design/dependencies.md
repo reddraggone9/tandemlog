@@ -4,7 +4,7 @@ Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `20
 
 ## Narrow Kotlin maintenance — 2026-10-08
 
-The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. This proposal has passed static independent review and targeted resolution; cold/warm APK builds, applicable tests and final integration review remain pending. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
+The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
 
 ## Direct application dependencies
 
