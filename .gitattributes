@@ -15,3 +15,6 @@ evidence/final-preview/ci/** -text
 
 # Scoped Windows decoded receipt keeps literal CRLF bytes.
 evidence/final-preview/windows-native/** -text
+
+# Main signed-candidate decoded logs preserve literal UTF8/CRLF receipts.
+evidence/rc4-signed-candidate/logs/** -text

@@ -52,18 +52,69 @@ signed-package acceptance.
 - [Main-only signed candidate37819214432](https://github.com/reddraggone9/tandemlog/actions/runs/37819214432)
   checks and prepares release artifacts from exact main `77a5f2d`.
 
-Both were running when this handoff was prepared. Artifact identities, host output,
-consumer byte verification and final acceptance will be recorded in the accompanying
-receipt only after the corresponding evidence exists. The established workflow
-requires its full matrix before owner signing and verifies the non-debuggable APK,
-public owner certificate pin, package/version/code, native payloads and notices.
-No keys or secret values are part of this handoff.
+Both completed successfully on exact source77. The signed candidate completed
+2026-10-08 18:13 UTC; all five jobs passed. Its Linux checks report 628 unit and
+70 actual native app flows; Windows 626 unit plus two expected Linux-only skips;
+each desktop 4 Cargo, 107 native worker and 37 tooling cases. Packaging, packaged
+native/notices and desktop installed-lifecycle gates passed. Owner job113464059496
+verified the pinned certificate, package/version/code, non-debuggable flag and
+all three universal ABIs, then verified packaged native payloads/notices. The
+[qualified receipt](../evidence/rc4-signed-candidate/receipt.json) retains public
+API metadata and exact decoded job-log hashes. No signing secrets are included.
+
+| Artifact from signed run37819214432 | ID | Outer ZIP bytes | Outer ZIP SHA256 |
+| --- | --- | --- | --- |
+| `android-release`, owner-signed package | `11569174876` | `30300888` | `08d2f8c157f27140aef448d5d33b1492b85b606f7d53a91caf39f16c42d7b58a` |
+| `windows`, release setup and portable QA | `11568777570` | `25760961` | `24fd648350c1a38aca93f1e37e362d604a4fb5ebda63f4ab6fb0efb7c346bdd0` |
+| `linux`, release Flatpak and installation receipts | `11568853640` | `9004286` | `2a182f33fa184781510b214b935b489320f42c02d128962cf9df72c9cdfa194d` |
+
+These ZIP digests are matching GitHub artifact metadata/completed runner output,
+not consumer rehashes. The separately named `android` artifact11568054116 is a
+debug package and must not be selected as the owner-signed release. The three
+release artifacts expire on Oct13 at their respective creation times.
+
+Hosted Windows setup SHA256 is
+`3c12d59c4c269002c246fd39cbb2a222c15f115e9c75aed82fb8b1a12608ab3f`;
+portable ZIP is `823fd2b5b03ea0c016d80cfc8785101da37a655fb4fe4390627e0b5ac8c9d31c`,
+EXE `b670e44ef9884c193a63a0e2df717413cd60367a7371158e73a0c3437ebb25c8`,
+native DLL `19d2028a338464d7b1e306f5f31fada1c5b3ddd55c6aed0ac370ba102de64abe`.
+Consumer Windows and owner-Android preparation succeeded, but supported local
+materialization returned403. No local archive/member/APK/signature verification
+is claimed. The existing signing workflow stores the APK hash inside
+`android-SHA256SUMS.txt` and `android-release-metadata.json`, without printing it;
+this consumer cannot supply that inner hash. The local executor must verify those
+exact files, actual APK hash and owner signature before installation/acceptance.
 
 An unintended earlier dispatch37818335528 used old main `0a16a88` because the
 operator dispatched before checking the rejected merge push. It completed with
 failed preflight; checks and signed-android were skipped. It produced no signed
 candidate. The replacement push succeeded and its remote SHA was verified before
 the valid candidate dispatch.
+
+## Reviewed publication inventory correction
+
+Windows retains three portable QA files alongside its three required installer
+files. The earlier strict eleven-file combined inventory rejected that fourteen-file
+candidate even though public staging selects only three installers. Independent
+architecture review confirmed this mismatch. Reviewed policy revision
+`3111dd94510a8f77e6978aa177e8d9b44fd7607c` was integrated with a normal main push:
+every original eleven asset and gate remains required, and only the complete
+three-file QA set is additionally allowed after source/archive/checksum/member
+validation. Partial/unknown extras and unsafe archive entries still fail. QA stays
+engineering-side; public assets remain one installer per platform plus automatic
+GitHub source archives. Notes/media bytes are unchanged.
+
+Thirteen focused and fifty tooling tests pass; baseline behavioral reds and
+independent correctness/security/architecture reviews are retained in
+[policy evidence](https://github.com/reddraggone9/tandemlog/blob/3111dd94510a8f77e6978aa177e8d9b44fd7607c/evidence/publish-portable-qa/README.md).
+[Normal policy CI37822643601](https://github.com/reddraggone9/tandemlog/actions/runs/37822643601)
+is still running. This source advances main's trusted dispatch policy only:
+application, native, dependency, producer, workflow and notes/media inputs are
+unchanged. Select successful signed run37819214432/source77 for acceptance and
+publication; do not replace it with a later debug artifact. The existing trusted
+dispatch-policy route consumes those exact built artifacts without a rebuild.
+Final native acceptance, completed dispatch-policy CI and fresh quota still gate
+publication. No new signing or release dispatch accompanied this policy push.
 
 ## Final native and promotion gates
 

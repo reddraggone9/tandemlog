@@ -1,0 +1,221 @@
+{
+  "compiled_source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+  "version": "2026.10.2-rc.4+46",
+  "main_ci": {
+    "conclusion": "success",
+    "created_at": "2026-10-08T17:46:43Z",
+    "event": "push",
+    "head_branch": "main",
+    "head_repository": "reddraggone9/tandemlog",
+    "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+    "id": 37819186249,
+    "path": ".github/workflows/ci.yml",
+    "repository": "reddraggone9/tandemlog",
+    "run_attempt": 1,
+    "status": "completed",
+    "updated_at": "2026-10-08T18:08:48Z"
+  },
+  "signed_candidate": {
+    "conclusion": "success",
+    "created_at": "2026-10-08T17:46:57Z",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_repository": "reddraggone9/tandemlog",
+    "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+    "id": 37819214432,
+    "path": ".github/workflows/android-candidate.yml",
+    "repository": "reddraggone9/tandemlog",
+    "run_attempt": 1,
+    "status": "completed",
+    "updated_at": "2026-10-08T18:13:06Z"
+  },
+  "signed_jobs": [
+    {
+      "completed_at": "2026-10-08T17:47:07Z",
+      "conclusion": "success",
+      "id": 113455616276,
+      "name": "candidate",
+      "started_at": "2026-10-08T17:47:01Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T17:54:12Z",
+      "conclusion": "success",
+      "id": 113455677045,
+      "name": "checks / android",
+      "started_at": "2026-10-08T17:47:10Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T17:56:52Z",
+      "conclusion": "success",
+      "id": 113455677076,
+      "name": "checks / windows",
+      "started_at": "2026-10-08T17:47:11Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T18:06:15Z",
+      "conclusion": "success",
+      "id": 113455677279,
+      "name": "checks / linux",
+      "started_at": "2026-10-08T17:47:10Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T18:13:06Z",
+      "conclusion": "success",
+      "id": 113464059496,
+      "name": "signed-android",
+      "started_at": "2026-10-08T18:06:18Z",
+      "status": "completed"
+    }
+  ],
+  "reported_artifacts": [
+    {
+      "created_at": "2026-10-08T18:13:03Z",
+      "digest": "sha256:08d2f8c157f27140aef448d5d33b1492b85b606f7d53a91caf39f16c42d7b58a",
+      "expired": false,
+      "expires_at": "2026-10-13T18:13:00Z",
+      "id": 11569174876,
+      "name": "android-release",
+      "size_in_bytes": 30300888,
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1204525648,
+        "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+        "id": 37819214432,
+        "repository_id": 1204525648
+      }
+    },
+    {
+      "created_at": "2026-10-08T18:06:12Z",
+      "digest": "sha256:2a182f33fa184781510b214b935b489320f42c02d128962cf9df72c9cdfa194d",
+      "expired": false,
+      "expires_at": "2026-10-13T18:06:11Z",
+      "id": 11568853640,
+      "name": "linux",
+      "size_in_bytes": 9004286,
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1204525648,
+        "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+        "id": 37819214432,
+        "repository_id": 1204525648
+      }
+    },
+    {
+      "created_at": "2026-10-08T17:56:47Z",
+      "digest": "sha256:24fd648350c1a38aca93f1e37e362d604a4fb5ebda63f4ab6fb0efb7c346bdd0",
+      "expired": false,
+      "expires_at": "2026-10-13T17:56:44Z",
+      "id": 11568777570,
+      "name": "windows",
+      "size_in_bytes": 25760961,
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1204525648,
+        "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+        "id": 37819214432,
+        "repository_id": 1204525648
+      }
+    },
+    {
+      "created_at": "2026-10-08T17:54:08Z",
+      "digest": "sha256:bc3bc03087e4b27575b802d83f13193e2f0538747d2b9913af3ec7f0688d8143",
+      "expired": false,
+      "expires_at": "2026-10-13T17:54:02Z",
+      "id": 11568054116,
+      "name": "android",
+      "size_in_bytes": 80393756,
+      "workflow_run": {
+        "head_branch": "main",
+        "head_repository_id": 1204525648,
+        "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+        "id": 37819214432,
+        "repository_id": 1204525648
+      }
+    }
+  ],
+  "counts": {
+    "linux_unit_passed": 628,
+    "linux_native_app_passed": 70,
+    "windows_unit_passed": 626,
+    "windows_expected_linux_only_skips": 2,
+    "desktop_each_cargo_passed": 4,
+    "desktop_each_native_worker_passed": 107,
+    "desktop_each_tool_passed": 37
+  },
+  "host_signed_android": {
+    "artifact_id": 11569174876,
+    "job_id": 113464059496,
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.4",
+    "version_code": 46,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "verification": "completed runner verified parsed APK certificate equals public source pin, package/version/code, nondebuggable universal3ABIs and native payload/notices",
+    "consumer_signature_verified": false,
+    "apk_sha256": null,
+    "apk_hash_limit": "inner checksum and android-release-metadata.json are inside artifact; APK hash not printed by existing workflow and not readable in this consumer"
+  },
+  "host_windows": {
+    "artifact_id": 11568777570,
+    "setup_sha256": "3c12d59c4c269002c246fd39cbb2a222c15f115e9c75aed82fb8b1a12608ab3f",
+    "portable_sha256": "823fd2b5b03ea0c016d80cfc8785101da37a655fb4fe4390627e0b5ac8c9d31c",
+    "executable_sha256": "b670e44ef9884c193a63a0e2df717413cd60367a7371158e73a0c3437ebb25c8",
+    "native_library_sha256": "19d2028a338464d7b1e306f5f31fada1c5b3ddd55c6aed0ac370ba102de64abe",
+    "scope": "completed hosted job output; not independently downloaded consumer bytes"
+  },
+  "decoded_logs": {
+    "android-checks-decoded.txt": {
+      "bytes": 186571,
+      "sha256": "3d2a187647ccc5d80fae3c7fc3f9f7c2a5b56ab4962a706ac069bbc9d663d20d",
+      "scope": "exact UTF8 bytes of decoded tool log content, not downloaded raw log archive"
+    },
+    "linux-checks-decoded.txt": {
+      "bytes": 419854,
+      "sha256": "e0f411ff4cb60b2f614ffabd29517a98def3019e7d69b515071d6b628584d5d1",
+      "scope": "exact UTF8 bytes of decoded tool log content, not downloaded raw log archive"
+    },
+    "owner-signed-android-decoded.txt": {
+      "bytes": 187976,
+      "sha256": "3e8f64962b1cfea84e29921d47b181537dbb9f9214ff22c09d01d983426abb6e",
+      "scope": "exact UTF8 bytes of decoded tool log content, not downloaded raw log archive"
+    },
+    "windows-checks-decoded.txt": {
+      "bytes": 274284,
+      "sha256": "518334f388825390e786a3846ee7c6237860af9d6f1223bbf87aea00b92a6f4a",
+      "scope": "exact UTF8 bytes of decoded tool log content, not downloaded raw log archive"
+    }
+  },
+  "consumer_materialization": {
+    "windows": "resolved artifact reference file_00000000e27081f5927fdd48fab956d8; current Library prepare succeeded, supported helper403; no local bytes",
+    "android_release": "resolved artifact reference file_00000000515081fdbebed9e70098903f; current Library prepare succeeded, supported helper403; no local bytes",
+    "raw_private_errors_exported": false,
+    "alternate_urls_used": false,
+    "consumer_byte_verification": false
+  },
+  "promotion_policy": {
+    "main_source": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
+    "scope": "reviewed policy/tests/docs/evidence only; exact application/native/dependency/workflow/producer/notes/media inputs from77 retained",
+    "new_ci_run": 37822643601,
+    "state": "in progress; final policy CI remains pending",
+    "preserved_candidate_source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+    "rebuild_required": false,
+    "public_assets": "three versioned installers only; portable QA engineering-side; automatic source archives unchanged",
+    "independent_reviews": "architecture/correctness/security accepted;13focused50tool allpass; baseline behavioral red preserved",
+    "policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147"
+  },
+  "remaining_gates": [
+    "consumer outer/inner artifact checksums and signer/package identity",
+    "exact owner-signed Android and installed Windows affected native/manual/UX acceptance",
+    "normal CI on policy dispatch revision",
+    "fresh quota before publication"
+  ],
+  "publication": "not attempted; RC4 prerelease only/latest=false; stable2026.10.1 remainsLatest; stable feature promotion unauthorized",
+  "independent_reviews": {
+    "security": "accepted; freshAPI terminalruns/all5jobs/artifacts/fourexactdecodedloghashes/ownerverifier/pin/consumer403andunknowninnerhash reviewed; no secret or consumerbyteclaims",
+    "correctness": "accepted; terminalruns/source/counts/loghashes/artifactbindings/source77vsdispatch311/gates qualified correctly",
+    "architecture": "policy integration source/gates accepted; original candidate composition and linear-tree/editorial-range review accepted"
+  }
+}
