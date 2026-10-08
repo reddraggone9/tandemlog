@@ -12,6 +12,13 @@ class ChecklistItemDrag {
     required this.itemId,
     required List<String> observedOrder,
   }) : observedOrder = List.unmodifiable(observedOrder);
+  ChecklistItemDrag._snapshot({
+    required this.parentId,
+    required this.origin,
+    required this.revision,
+    required this.itemId,
+    required this.observedOrder,
+  });
   final String parentId, itemId;
   final Object origin, revision;
   final List<String> observedOrder;
@@ -61,6 +68,10 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
 
   void _focusChanged() {
     if (mounted) setState(() {});
+  }
+
+  void _runIfEnabled(VoidCallback action) {
+    if (widget.enabled) action();
   }
 
   @override
@@ -143,35 +154,42 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
       );
 
   @override
-  Widget build(BuildContext context) => FocusTraversalGroup(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        for (var index = 0; index < widget.items.length; index++)
+  Widget build(BuildContext context) {
+    // Every handle observes the same immutable order without copying the full
+    // checklist once per row.
+    final observedOrder = List<String>.unmodifiable(_order);
+    return FocusTraversalGroup(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          for (var index = 0; index < widget.items.length; index++)
+            _dropTarget(
+              widget.items[index]['id'] as String,
+              _row(context, index, observedOrder),
+            ),
           _dropTarget(
-            widget.items[index]['id'] as String,
-            _row(context, index),
-          ),
-        _dropTarget(
-          null,
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              key: const Key('checklist-add'),
-              focusNode: widget.addFocusNode,
-              onPressed: widget.enabled ? widget.onAdd : null,
-              style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
-              icon: const Icon(Icons.add),
-              label: const Text('Add item'),
+            null,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                key: const Key('checklist-add'),
+                focusNode: widget.addFocusNode,
+                onPressed: widget.enabled
+                    ? () => _runIfEnabled(widget.onAdd)
+                    : null,
+                style: TextButton.styleFrom(minimumSize: const Size(48, 48)),
+                icon: const Icon(Icons.add),
+                label: const Text('Add item'),
+              ),
             ),
           ),
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 
-  Widget _row(BuildContext context, int index) {
+  Widget _row(BuildContext context, int index, List<String> observedOrder) {
     final item = widget.items[index];
     final id = item['id'] as String;
     final title = item['title'] as String? ?? '';
@@ -204,7 +222,7 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
             focusable: true,
             focused: checkFocus.hasFocus,
             onTap: widget.enabled
-                ? () => widget.onToggle(item, !completed)
+                ? () => _runIfEnabled(() => widget.onToggle(item, !completed))
                 : null,
             child: ExcludeSemantics(
               child: SizedBox(
@@ -229,7 +247,9 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
             child: TextButton(
               key: Key('checklist-edit-$id'),
               focusNode: _focus(id, 'edit'),
-              onPressed: widget.enabled ? () => widget.onEdit(item) : null,
+              onPressed: widget.enabled
+                  ? () => _runIfEnabled(() => widget.onEdit(item))
+                  : null,
               style: TextButton.styleFrom(
                 alignment: Alignment.centerLeft,
                 padding: const EdgeInsets.symmetric(
@@ -262,17 +282,19 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
             key: Key('checklist-delete-$id'),
             focusNode: _focus(id, 'delete'),
             tooltip: 'Delete checklist item: $title',
-            onPressed: widget.enabled ? () => widget.onDelete(item) : null,
+            onPressed: widget.enabled
+                ? () => _runIfEnabled(() => widget.onDelete(item))
+                : null,
             constraints: const BoxConstraints.tightFor(width: 48, height: 48),
             icon: const Icon(Icons.delete_outline),
           ),
           Draggable<ChecklistItemDrag>(
-            data: ChecklistItemDrag(
+            data: ChecklistItemDrag._snapshot(
               parentId: widget.parentId,
               origin: widget.origin,
               revision: widget.revision,
               itemId: id,
-              observedOrder: _order,
+              observedOrder: observedOrder,
             ),
             maxSimultaneousDrags: widget.enabled ? 1 : 0,
             feedback: ExcludeSemantics(
