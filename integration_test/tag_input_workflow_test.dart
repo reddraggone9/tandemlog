@@ -181,7 +181,14 @@ void registerTagInputWorkflowTests() {
 
         await flows.selectTask(tester, first, control: false);
         await type('tags', 'plan', recording);
-        await tap(find.byKey(const ValueKey('tag-option-Planning')), recording);
+        await pointAndPause(
+          tester,
+          find.byKey(const ValueKey('tag-option-Planning')),
+          recording,
+        );
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+        await tester.pumpAndSettle();
         expect(
           find.byKey(const ValueKey('selected-tag-Home Office')),
           findsOneWidget,
