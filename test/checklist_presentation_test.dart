@@ -363,6 +363,7 @@ void main() {
       'checklist-check-0',
       'checklist-edit-0',
       'checklist-delete-0',
+      'checklist-drag-0',
     ]) {
       await tester.tap(find.byKey(Key(key)));
       await tester.pumpAndSettle();
