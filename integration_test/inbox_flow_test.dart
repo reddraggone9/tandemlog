@@ -10,6 +10,7 @@ import 'package:tandemlog/storage/profile_lock.dart';
 import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
+import '../test/batch_storage_test.dart' show CountingFolder;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -186,4 +187,106 @@ void registerInboxFlowTests() {
       await root.delete(recursive: true);
     }
   });
+  testWidgets(
+    'creation-only prefix keeps immutable capture through background reconciliation',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('inbox-prefix-ui-');
+      final shared = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final writer = await openNativeFixtureStore(
+        LocalLogFolder(shared.path),
+        '${root.path}/seed',
+      );
+      final user = const Uuid().v4();
+      await writer.command(user, 'user.created', {'name': 'Synthetic'});
+      await writer.createNativeFixtureTask(const Uuid().v4(), {
+        'title': 'Organized anchor',
+        'description': 'Existing notes',
+        'assignee': user,
+      });
+      await writer.close();
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+      final folder = CountingFolder(LocalLogFolder(shared.path));
+      tester.view.physicalSize = const Size(1000, 820);
+      tester.view.devicePixelRatio = 1;
+      try {
+        await tester.pumpWidget(
+          TandemlogApp(profilePath: profile.path, folderFactory: (_) => folder),
+        );
+        await flows.waitForUi(
+          tester,
+          () => find.text('Organized anchor').evaluate().isNotEmpty,
+        );
+        final capture = find.widgetWithText(TextField, 'What needs doing?');
+        await tester.enterText(capture, 'New pending');
+        folder.fault = 'prefix';
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        await flows.waitForUi(tester, () => folder.delayedSuffix != null);
+        await tester.pumpAndSettle(const Duration(milliseconds: 100));
+        expect(
+          tester.widget<TextField>(capture).controller!.text,
+          'New pending',
+        );
+        expect(tester.widget<TextField>(capture).readOnly, isTrue);
+        final beforeRefresh = folder.lists;
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        await flows.waitForUi(tester, () => folder.lists > beforeRefresh);
+        await tester.pumpAndSettle(const Duration(milliseconds: 100));
+        expect(
+          tester.widget<TextField>(capture).controller!.text,
+          'New pending',
+          reason:
+              'A durable creation does not acknowledge its reserved initial move.',
+        );
+        expect(
+          tester.widget<TextField>(capture).readOnly,
+          isTrue,
+          reason:
+              'Original capture identity remains immutable until placement is confirmed.',
+        );
+        expect(
+          find.textContaining(
+            '1 tasks confirmed created; 1 remain to finish capture.',
+          ),
+          findsOneWidget,
+        );
+        await captureNativeFixtureUi(tester, 'initial-rank-prefix-pending');
+        await folder.revealPending();
+        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+        tester.binding.handleAppLifecycleStateChanged(
+          AppLifecycleState.resumed,
+        );
+        await flows.waitForUi(
+          tester,
+          () => tester.widget<TextField>(capture).controller!.text.isEmpty,
+        );
+        expect(tester.widget<TextField>(capture).readOnly, isFalse);
+        expect(find.textContaining('1 tasks confirmed created;'), findsNothing);
+        expect(
+          tester.getTopLeft(find.text('New pending')).dy,
+          lessThan(tester.getTopLeft(find.text('Organized anchor')).dy),
+        );
+        final beforeRetry = <String, List<int>>{
+          for (final file in await folder.list())
+            file.name: await folder.read(file.name),
+        };
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        for (final file in await folder.list()) {
+          expect(await folder.read(file.name), beforeRetry[file.name]);
+        }
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpAndSettle();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+        // Preserve the synthetic prefix and original reserved suffix for inspection.
+      }
+    },
+  );
 }
