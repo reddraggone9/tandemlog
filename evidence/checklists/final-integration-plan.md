@@ -1,6 +1,6 @@
 # Final integration plan — 2026-10-08
 
-## Current coordination checkpoint, 16:41 UTC
+## Current coordination checkpoint, 17:16 UTC
 
 Parent authorized separate combined preparation while its isolated A16 retest
 continues, superseding this older plan's wait-before-preparation sequence. The
@@ -16,14 +16,32 @@ source, documentation and local receipt/pixel reviews accepted. Local gates pass
 628 Flutter tests, clean format/analysis, historical GTK 1 and separate tag GTK 3;
 the earlier multi-entrypoint debugger attachment failure is retained. Exact
 [composed CI 37810677866](https://github.com/reddraggone9/tandemlog/actions/runs/37810677866)
-is running against e205e65; no hosted success is claimed yet.
+completed successfully on Linux, Windows and Android against exact e205e65.
+Linux 628 unit/70 actual native, Windows 626 unit/two expected Linux-only skips,
+and each desktop 4 Cargo/107 worker/37 tool checks pass. Independent receipt/source/
+artifact/log review accepted; artifact bytes remain consumer-unverified here.
+Supporting actual [Windows 3+1](https://github.com/reddraggone9/tandemlog/actions/runs/37813474065)
+also passed on runner a249af5 with all application inputs exact e205.
+
+[Exact debug artifacts and signing/QA contract](https://github.com/reddraggone9/tandemlog/blob/43472b13ecdbb5aa634e359d44a76a4411657df8/design/final-preview-debug-native-qa.md)
+is pushed on `docs/final-preview-ci-qa`.
+[Concise notes and matched dark media](https://github.com/reddraggone9/tandemlog/blob/f6ef0e965f826fa56e44cb9268e09816d278a19f/design/prerelease-notes.md)
+on `docs/rc4-release-notes` passed independent content/provenance/pixel/immutable-link
+review. Clean main-ready integration `preview/rc4-main-ready` is separately frozen
+at `56213cc5d781bc2e7ee96b6ba7d4f37f232d3b1b`: only docs/evidence/scoped evidence
+attributes differ from e205; application/test/native/platform/locks/version and
+workflow inputs remain exact. Independent final planned-main range review accepted
+published 5ac35da→56213cc, with the same accepted notes/media bytes. This new source
+has not run a new full matrix; its actual signed-candidate workflow will do so
+after parent gates. Main remains 0a16a88; no main push/signing/publication.
 
 Isolated fix CI 37804634954 passed all three platforms, and hosted Windows
 historical workflow 37805503087 passed 1/0. Security/correctness accepted its
 source-bound decoded-log/API artifact evidence; consumer byte verification and
 parent native A16 retest remain pending. No main merge, signing or publication;
 fresh quota, exact combined signed/native/manual/UX acceptance and independent
-release-note/media range review remain required. Stable feature approval absent.
+release-note/media range confirmation for any later executable change remain required.
+Current planned range editorial gate is complete. Stable feature approval absent.
 The older sequence below is retained as historical coordination context.
 
 Status: **BLOCKED by a parent-reported reproducible native historical-recompletion

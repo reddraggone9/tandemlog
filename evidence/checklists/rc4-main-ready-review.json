@@ -1,0 +1,14 @@
+{
+  "reviewer": "independent correctness agent",
+  "planned_release_range": [
+    "5ac35da50acca69ab196a54312efc8ccef1452da",
+    "56213cc5d781bc2e7ee96b6ba7d4f37f232d3b1b"
+  ],
+  "frozen_compiled_candidate": "e205e650b5614935a73cf5acb96ca9b36fda8e4e",
+  "executable_inputs": "exact e205; only docs/notes/evidence/scoped evidence .gitattributes since e205",
+  "notes_sha256": "1001b5556fc718e00e62e582458c6c3ce5c714941b972922ebadcd0de4853a64",
+  "media_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+  "media_commit": "89cec5a13900291df9f1cb841c5351277f38f4ff",
+  "source_and_editorial_gate": "accepted for currentplannedmain range; exact previously reviewed notes/media bytes; no additional meaningful executable changes or bullets/media needed",
+  "remaining_gates": "parent isolated A16/native/manual/consumerbytes/freshquota; exact final signed workflow reruns fullmatrix/nativeacceptance; no mainpush/signing/publication; stableapprovalabsent"
+}
