@@ -5,10 +5,19 @@ defect in exact source17ae5e5.** Recompletion of an old checklist parent leaks
 later text into an independently edited successor; Undo and cache rebuild retain
 the leak. This violates the approved policy. Release/native acceptance is not
 complete. Shared tags inherit the same recurrence/checklist core byte-for-byte.
-The exact synthetic sequence/fixture is awaited before a tests-first narrow fix
-on `fix/historical-checklist-recompletion`, based on frozen a960c88. Preserve the
+The exact ordered native sequence was received. The packet's supported Library
+consumer transfer returned403, so parent-authorized production-command fallback
+reproduced the leak before source changes. Narrow reviewed fix
+`d73662ab8479aa8076ee04a5ed5badd1542e585d` on
+`fix/historical-checklist-recompletion`, based on frozen a960c88, passes606Flutter,
+8boundary/delivery and1actualGTK checks; the same GTK regression fails on frozen
+source. [Replacement evidence](https://github.com/reddraggone9/tandemlog/blob/d73662ab8479aa8076ee04a5ed5badd1542e585d/evidence/historical-checklist-recompletion/README.md)
+preserves qualification and actual Before/After/Undo pixels. Exact replacement
+[CI37804634954](https://github.com/reddraggone9/tandemlog/actions/runs/37804634954)
+is in progress. Preserve the
 failed artifact/evidence; any fix requires a new exact candidate and affected
-native retest with independent correctness review. Other passing local flows
+native retest starting from checkpoint throughA16, before the leaked A17 proof.
+The fix does not rewrite an already leaked history. Other passing local flows
 and twelve validated recordings remain supporting evidence, not overall acceptance.
 
 Preparation only. The current combined candidate stays frozen throughout
@@ -112,10 +121,10 @@ Lee explicitly approved shared B-style tag input at 2026-10-08 13:01:08 UTC;
 the parent's supported quota read was 77% at 13:01:14 UTC. This supersedes the
 earlier unchosen A/B stage. Production is `041c06488cb2d937d38519dec8e3e3ebd69abbf3`,
 test revision `ec2309dbbdde09d5fce0a07610bc253258dd508b`, and the current QA/evidence
-head is `636587c9c7a98bcd3ea05a45fc73ceb2c0546b52` on
+head is `e816f433a7616782a69b227a2bd27fbac53f57a6` on
 `feature/shared-tag-input`. Later changes are test fixtures, synthetic QA tooling, docs and evidence; application,
 platform, native and dependency inputs remain unchanged.
-[The accepted design and receipts](https://github.com/reddraggone9/tandemlog/blob/636587c9c7a98bcd3ea05a45fc73ceb2c0546b52/evidence/shared-tags/README.md)
+[The accepted design and receipts](https://github.com/reddraggone9/tandemlog/blob/e816f433a7616782a69b227a2bd27fbac53f57a6/evidence/shared-tags/README.md)
 cover opaque tag identity, separate Add/Remove policies, pending query safety,
 keyboard/composition behavior, controlled chips and query-row anchoring.
 
@@ -128,12 +137,15 @@ and strengthens rejected-Save coverage to exact prior tags. Its actual focused
 GTK case and independent review pass. The hosted red and local original pass
 are distinguished rather than claiming a local reproduction.
 [Final full CI 37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
-is pending terminal Linux results; Android/Windows jobs pass. Separately,
+passed every platform at exact ec2309: Linux621unit/69native, Windows619unit
+plus2expectedLinux-onlyskips, desktop4Cargo/107native-worker/37tool tests,
+and Androidstaticnative/debugbuild plusdesktoppackaginggates. This success
+does not cover or resolve the separately reported blocking historical bug. Separately,
 [22 hosted Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
 pass on `ff1d1f82`. The later ec2309 aggregate file differs only in three excluded
 legacy fixture blocks; selected Windows test bodies and production inputs are
 unchanged. Consumer ZIP/binary rehash and loaded-module enumeration are not
-claimed. The [Android handoff and eight-record synthetic fixture](https://github.com/reddraggone9/tandemlog/blob/636587c9c7a98bcd3ea05a45fc73ceb2c0546b52/design/shared-tag-native-acceptance.md)
+claimed. The [Android handoff and eight-record synthetic fixture](https://github.com/reddraggone9/tandemlog/blob/e816f433a7616782a69b227a2bd27fbac53f57a6/design/shared-tag-native-acceptance.md)
 pass independent static/hash/history-chain review. These debug observations
 and QA inputs do not replace exact integrated release acceptance.
 
