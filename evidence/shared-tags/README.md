@@ -5,6 +5,13 @@ Supported quota77% at13:01:14UTC passed the feature gate. This isolated branch
 starts from frozen combined checklist acceptance heada960c882. Its APK and
 acceptance branch remain unchanged. No release or stable promotion occurred.
 
+**Release/native acceptance is blocked.** The parent reports a reproducible
+historical checklist recompletion defect in exact source `17ae5e5`: later old
+parent text leaks into an independently edited successor and survives Undo and
+cache rebuild. This branch inherits the affected core byte-for-byte. The exact
+native sequence/fixture is awaited for a tests-first narrow fix and new candidate
+retest. Passing tag CI does not resolve that core defect.
+
 [Accepted interaction and context policies](../../design/decisions/0012-shared-tag-input.md)
 describe one chips-above-query control for editing, bulk Add/Remove and Filter.
 Original tag values remain opaque; new query parsing cannot rewrite their case,
@@ -71,7 +78,12 @@ flow passed 1/0; independent review accepted the stronger checks. The
 [qualified red/green receipt](green/bulk-save-controls-manifest.json) and
 [CI receipt](green/ci-5204-receipt.json) retain the source and log bindings.
 [Final full CI 37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
-is running against exact `ec2309db`; its result remains pending.
+passed all three platforms at exact `ec2309db`: Linux 621 unit tests and
+69 actual native flows; Windows 619 unit tests plus two expected Linux-only
+skips; four Cargo, 107 native-worker and 37 tool tests on both desktop runners.
+The [final receipt](green/ci-receipt.json) binds decoded log hashes and reported
+artifact metadata. Consumer archive/APK bytes and Android runtime are unverified.
+The historical-recompletion blocker above remains unresolved.
 
 Separately, [22 actual Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
 passed on `ff1d1f82`, including the three tag workflows; decoded logs, startup,

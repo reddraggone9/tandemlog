@@ -1,11 +1,18 @@
 # Shared tag input native acceptance
 
+**Blocked by the parent-reported native historical-recompletion defect.**
+Shared tags inherit the affected core from `17ae5e5`. Await the exact native
+sequence, failing regression, narrow correction and newly identified candidate;
+this handoff describes supporting tag checks, not overall release acceptance.
+
 Use the isolated `feature/shared-tag-input` candidate. Production is
 `041c06488cb2d937d38519dec8e3e3ebd69abbf3`; final interaction-test source is
 `ec2309dbbdde09d5fce0a07610bc253258dd508b`. Full CI
 [37796892998](https://github.com/reddraggone9/tandemlog/actions/runs/37796892998)
-is pending. Its eventual receipt must bind the exact source, artifact ID,
-downloaded archive/APK hashes, signer and native payload. The displayed
+passed all platforms. Its [receipt](../evidence/shared-tags/green/ci-receipt.json)
+binds the source and reported artifact IDs/digests. Before device testing, bind
+downloaded archive/APK hashes, signer and native payload. Consumer byte verification
+and runtime acceptance remain pending, alongside the blocking core fix. The displayed
 `2026.10.2-rc.3+45` version alone does not identify this unreleased candidate.
 This branch does not include the separate Kotlin 2.4.20 remediation.
 

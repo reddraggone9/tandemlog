@@ -35,7 +35,7 @@
   "full_ci": {
     "run": 37796892998,
     "source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
-    "state": "in progress; no terminal success claim"
+    "state": "SUCCESS allLinuxWindowsAndroid; actualLinuxaggregate69/0. Separate reportednativehistoricalbug blocksreleaseacceptance."
   },
   "sha256": {
     "green/ci-linux-37792711739-failed.txt": "cf8ed9e8ccef0277d7b5072c8fa654241618e7b49f4b8ebee54ac6734586f73f",
