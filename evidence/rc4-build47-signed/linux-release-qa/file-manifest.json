@@ -1,0 +1,66 @@
+{
+  "06-draft-caret.png": {
+    "size": 39274,
+    "sha256": "0686f6378356c36e90158539f18a0ceead907cca96c33e8013a51d6f9cc4f8e7"
+  },
+  "07-rejected-visible.png": {
+    "size": 42361,
+    "sha256": "01ed7698e8e4b915616840cf812e322b9f05070a760a4bd53bd1c9e419f6b59c"
+  },
+  "08-retry-rejected.png": {
+    "size": 43396,
+    "sha256": "a31ab0c0fd841c3c52d7f00002a7b682b28272aab6da7ffa1347f476213159ed"
+  },
+  "09-current-ui.png": {
+    "size": 43958,
+    "sha256": "4ce11f1f3cd8c8c93369123b6943b5363a3acca840d5234f99f7593dd1c58dda"
+  },
+  "10-discarded.png": {
+    "size": 17523,
+    "sha256": "b58b8f94864dc0cc7aa028573b3c51358498c9dd525686890a6879f67bc4ab2b"
+  },
+  "11-cold-rebuild.png": {
+    "size": 17523,
+    "sha256": "b58b8f94864dc0cc7aa028573b3c51358498c9dd525686890a6879f67bc4ab2b"
+  },
+  "linux-release-47.mp4": {
+    "size": 556040,
+    "sha256": "a2958f6b8870e8b1b360174eed5a1b61eb0df16d3a6e7b35ea723a10d409f15a"
+  },
+  "before-rejected-save-hashes.json": {
+    "size": 329,
+    "sha256": "35011a2ebf0f4bec2bc5167b25b489c3d02268ba55c7467166462c28229f457e"
+  },
+  "verification.json": {
+    "size": 933,
+    "sha256": "50dae14c038c43faa4b830f9011b6ecb0b2cdeb1c9ab1e86e3186e807a6b22c5"
+  },
+  "peer-update-resolved.txt": {
+    "size": 145,
+    "sha256": "24dffc72fd60ecb8443a6997786235c823dd179aa3547c88c30aa23c57d87477"
+  },
+  "release-app.txt": {
+    "size": 4448,
+    "sha256": "9562d85d6164c7e7d96fbda5e4ad37210ba72cf2de52b0f3155ed451a9b0eb8d"
+  },
+  "seed.txt": {
+    "size": 44,
+    "sha256": "dd35d399349c10aa3a96d7b290940c947560d0a57270cc0c46cfa73c85128ef6"
+  },
+  "video-log.txt": {
+    "size": 37274,
+    "sha256": "7c733549d0bdb43b4a98dcd1fb14c30e4406b382339d3e12c1910ab5a43c7e53"
+  },
+  "app_session.py": {
+    "size": 2215,
+    "sha256": "20bc0762eb96c0690dc0e6e78a19e5b0c1c681a86964c7a28a5cea531d28bfd4"
+  },
+  "peer.dart": {
+    "size": 1253,
+    "sha256": "0f04e12807aa3b59dfaf75a0d764b7347f27cc2ff49092074ab3a7e4e7118ba9"
+  },
+  "release-build.txt": {
+    "size": 3919,
+    "sha256": "abd1fa625a6dc9ffa33df5dcfbe62cf988eac9161adeb91b54250f8da7630441"
+  }
+}

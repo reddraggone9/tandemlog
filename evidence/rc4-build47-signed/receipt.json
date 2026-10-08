@@ -1,0 +1,68 @@
+{
+  "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "version": "2026.10.2-rc.4+47",
+  "main_ci_run": 37835589840,
+  "signed_candidate_run": 37838800145,
+  "status": "signed replacement running after independent all3 mainCI review",
+  "source_review": {
+    "architecture": "accepted integrated five-commit diff",
+    "correctness": "accepted integrated five-commit diff",
+    "security": "accepted unchanged native/domain/dependency/signing/publication scope"
+  },
+  "editorial": {
+    "actual_range": "5ac35da50acca69ab196a54312efc8ccef1452da..44344407200b61d38d7b33f22c0ace715376fd6f",
+    "independent_reviewer": "architecture_review",
+    "accepted": true,
+    "notes_sha256": "5f42203a41067edfe769bff66df60f5580c201d7e32e03e2cd6b6f50be493ee8",
+    "tag_image_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+    "new_warning_image": "optional-image exception accepted; concise bullet explains change"
+  },
+  "lee_rc_windows_manual_waiver": {
+    "source": "latest parent cloud_threads.send_message quoting Lee",
+    "scope": "RCs only; full Windows automated tests and packaging lifecycle retained; Linux native visual substitute",
+    "date_utc": "2026-10-08",
+    "stable_waiver": false
+  },
+  "remaining_gates": [
+    "main-only signed replacement full matrix and owner Android signing",
+    "exact replacement artifact/package/native essential acceptance",
+    "local Android spoken screen-reader acceptance",
+    "independent final receipt/artifact/editorial review",
+    "fresh publication quota coordinated by parent"
+  ],
+  "superseded_build46": {
+    "run": 37819214432,
+    "source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+    "artifacts_preserved": [
+      11569174876,
+      11568777570,
+      11568853640
+    ],
+    "parent_android_acceptance_packet": "libfile_2254ff7abc188191b4075b190a0e4823",
+    "acceptance_relabelled_as_build47": false
+  },
+  "publication": "finish remaining gates before RC delivery; parent coordinates conditional preview publication; no dispatch yet; no stable promotion",
+  "main_ci": {
+    "run": 37835589840,
+    "all_three_jobs": "success",
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "Linux_units": 634,
+    "Windows_units": 632,
+    "Windows_named_Linux_only_skips": 2,
+    "Linux_native_flows": 74,
+    "frozen_worker_contract_tests_each_desktop": 107,
+    "tools_tests_each_desktop": 50,
+    "decoded_logs_qualification": "MCP redirected decoded UTF8 strings persisted literally; not original compressed log archive bytes",
+    "independent_review": "correctness accepted fresh all3 decoded logs, terminalsource/build47/native tests and installed lifecycles"
+  },
+  "linux_release_source_review": "Architecture independently viewed06-11 and actual video55s, verified current canonical/settings hashes, default native loader and synthetic private profile; accepted bounded local release runtime, not hosted Flatpak/Android package/IME/spoken proof. No claim exact caret coordinates from stills.",
+  "signed_dispatch": {
+    "ref": "main",
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "run": 37838800145,
+    "created_utc": "2026-10-08T20:21:13Z",
+    "remote_main_verified_immediately_before_dispatch": true,
+    "workflow": "android-candidate.yml",
+    "published": false
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "android-decoded-job-log.txt": {
+    "size": 185624,
+    "sha256": "6dde4ec1ae372429b24b4802ba907aca674666d48e0311da0382db8f8ea9c3dc"
+  },
+  "jobs.json": {
+    "size": 11867,
+    "sha256": "07cfb4b6abbdc410a75580fedc143ba3c84dea4f7561865eb53cbf7384b73cba"
+  },
+  "linux-decoded-job-log.txt": {
+    "size": 424844,
+    "sha256": "4122d1ef531de5500846dbf03dba6b5d73c189f1a4caa4fd88d73e459b12ea0a"
+  },
+  "windows-decoded-job-log.txt": {
+    "size": 276630,
+    "sha256": "3aa4dd7a8095c4aae44f0c65771ac06dacd88f74a93d41a1a4bcb4896a056b38"
+  }
+}

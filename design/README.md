@@ -47,3 +47,5 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Composed final preview](final-preview-acceptance.md): reviewed component/source bindings, rc.4/build46 and remaining exact-artifact/native/publication gates.
 - [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
 - [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.
+
+- [RC4 build47 replacement handoff](rc4-build47-signed-handoff.md): independently reviewed warning fix, source-bound full CI, preserved superseded build46 and Lee's RC-only manual Windows waiver; exact signed replacement gates remain pending.

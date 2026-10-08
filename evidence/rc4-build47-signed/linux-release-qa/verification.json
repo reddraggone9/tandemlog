@@ -1,0 +1,20 @@
+{
+  "canonical_hashes_unchanged_after_two_rejections_discard_cold_rebuild": {
+    "16348937-1e62-4d02-af97-01c90bfb8043.jsonl": "0d9c8d5a9be8086f52dc486f20523e7cdccca318599a6d2868c985c5d8dff771",
+    "de0964cf-703b-4292-90a6-9451f0b09a18.jsonl": "60855036f3c2aab1cd81d5a26d25047ff32c1b6f25fe854c149948349df0d50e",
+    "tandemlog-space.json": "e8c23aa8620addddacd5d261e65342a4ffbd053df9d4212bd1963bae6cf090ba"
+  },
+  "settings_writer_sha256_unchanged": "1c643610fdea31b832038455eda44160817e8eed57fe218b39d329db56a52f47",
+  "synthetic": true,
+  "cold_rebuild_preserved_cache_directory": "fixture/app-profile-2/spaces-preserved-before-cold-rebuild",
+  "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "version": "2026.10.2-rc.4+47",
+  "os": "Linux GTK native release",
+  "viewport": [
+    390,
+    820
+  ],
+  "appearance": "dark",
+  "input": "scripted real X11 pointer/keyboard",
+  "selected_hosted_artifact_acceptance": false
+}
