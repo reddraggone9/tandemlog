@@ -34,8 +34,8 @@ All original accepted APK/hash/signer/version/tag/monotonic-code, desktop lifecy
 and checksum gates remain. Public staging still copies exactly three versioned
 installers. Portable QA stays engineering-side in the original candidate artifact;
 GitHub automatic source archives are unchanged. Source candidate77 and its already
-accepted package bytes can be consumed by a later reviewed trusted dispatch policy
-without rebuilding. This branch's independent review does not authorize publication
+built package bytes can be consumed by a later reviewed trusted dispatch policy
+after exact native acceptance, without rebuilding. This branch's independent review does not authorize publication
 or final package/device acceptance.
 
 Thirteen focused inventory tests pass, including the actual unchanged portable
