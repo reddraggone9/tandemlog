@@ -98,11 +98,11 @@ void main() {
         final snapshot = jsonEncode(store.taskSnapshot);
         final canonical = <String, String>{};
         await for (final file in folder.list()) {
-        if (file is File) {
+          if (file is File) {
             canonical[file.path] = sha256
                 .convert(await file.readAsBytes())
                 .toString();
-        }
+          }
         }
         await store.close();
         store = await TaskStore.open(

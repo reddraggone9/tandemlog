@@ -25,20 +25,22 @@ class _Packets {
   final NativeTextEngine engine;
   final NativeTextUpdate seed;
   final NativeTextDocument owner;
-  LogEvent? head;
+  final heads = <String, LogEvent>{};
+  var logicalClock = 0;
 
-  LineageTextOperation replace(String value) {
+  LineageTextOperation replace(String value, {String writer = _writer}) {
     final allocation = const Uuid().v4();
-    final actor = deriveTextActor(_context, _writer, allocation);
+    final actor = deriveTextActor(_context, writer, allocation);
     final draft = owner.captureDraft(actorClientId: actor)..replaceText(value);
     final save = draft.prepareSave();
+    final head = heads[writer];
     final sequence = (head?.sequence ?? 0) + 1;
     final event = LogEvent.decode(
       LogEvent(
         _space,
-        _writer,
+        writer,
         sequence,
-        EventClock(BigInt.from(sequence)),
+        EventClock(BigInt.from(++logicalClock)),
         _entity,
         'task.textEdited',
         {
@@ -51,21 +53,21 @@ class _Packets {
             },
           },
         },
-      ).encode(previousHash: head?.hash ?? eventGenesisHash(_space, _writer)),
+      ).encode(previousHash: head?.hash ?? eventGenesisHash(_space, writer)),
     );
     final packet = LineageTextOperation(
       event,
       'title',
       TextActorClaim(
         context: _context,
-        writer: _writer,
+        writer: writer,
         allocation: allocation,
         actor: actor,
       ),
       save.update,
     );
     save.commit(receiptUpdate: save.update);
-    head = event;
+    heads[writer] = event;
     return packet;
   }
 }
@@ -80,6 +82,76 @@ void main() {
     packets = _Packets(engine);
   });
   tearDown(() => engine.dispose());
+
+  test(
+    'reordered originals bound disposable interning and retain old references',
+    () {
+      final graph = SharedTextHistoryGraph();
+      final root = graph.root(_context, packets.seed);
+      final originals = [
+        for (var index = 0; index < 128; index++)
+          packets.replace(
+            'Offline $index',
+            writer: const Uuid().v5(_space, 'offline-$index'),
+          ),
+      ];
+      final available = <LineageTextOperation>[];
+      SharedTextReference? retained;
+      var current = root;
+      for (final original in originals.reversed) {
+        available.insert(0, original);
+        current = root;
+        for (final packet in available) {
+          current = graph.append(current, packet);
+        }
+        retained ??= current;
+      }
+      expect(graph.packetCount, 128);
+      expect(graph.nodeCount, lessThanOrEqualTo(4096));
+      expect(
+        graph.operations(retained!).single.event.id,
+        originals.last.event.id,
+      );
+      expect(graph.operations(current), hasLength(128));
+      final native = SharedTextMaterializer(engine);
+      try {
+        expect(native.snapshot(current).text, 'Offline 127');
+        expect(native.state(current).encoded, packets.owner.fullState.encoded);
+      } finally {
+        native.close();
+      }
+    },
+  );
+
+  for (final checkpointRestore in [false, true]) {
+    test(
+      'reshaped branches apply originals once, checkpoint restore=$checkpointRestore',
+      () {
+        final graph = SharedTextHistoryGraph();
+        final root = graph.root(_context, packets.seed);
+        final x = packets.replace('AXB'), y = packets.replace('AXBY');
+        final a = graph.append(root, x);
+        final b = graph.append(graph.append(root, y), x);
+        final union = graph.merge([a, b]);
+        final native = SharedTextMaterializer(
+          engine,
+          checkpointInterval: 1,
+          maxActiveRoots: 1,
+        );
+        try {
+          expect(native.snapshot(a).text, 'AXB');
+          if (checkpointRestore) {
+            native.snapshot(graph.root('b' * 64, packets.seed));
+          }
+          expect(native.snapshot(union).text, 'AXBY');
+          expect(native.packetApplications, 2);
+          expect(native.state(union).encoded, packets.owner.fullState.encoded);
+        } finally {
+          native.close();
+        }
+      },
+    );
+  }
 
   test(
     'one original operation is retained across immutable recurrence references',

@@ -1,0 +1,24 @@
+test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) ... 
+  test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) (kind='implements') ... FAIL
+  test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) (kind='extends') ... FAIL
+
+======================================================================
+FAIL: test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) (kind='implements')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/tool/test_resolved_text_capability.py", line 34, in test_external_subtypes_cannot_supply_resolver_capabilities
+    self.assertNotEqual(result.returncode, 0,
+AssertionError: 0 == 0 : External implements compiled: resolver capability is forgeable
+
+======================================================================
+FAIL: test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) (kind='extends')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/tool/test_resolved_text_capability.py", line 34, in test_external_subtypes_cannot_supply_resolver_capabilities
+    self.assertNotEqual(result.returncode, 0,
+AssertionError: 0 == 0 : External extends compiled: resolver capability is forgeable
+
+----------------------------------------------------------------------
+Ran 1 test in 1.029s
+
+FAILED (failures=2)

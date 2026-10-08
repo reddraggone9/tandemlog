@@ -1,0 +1,58 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/shared_text_history_test.dart
+00:00 +0: reordered originals bound disposable interning and retain old references
+00:01 +0 -1: reordered originals bound disposable interning and retain old references [E]
+  Expected: a value less than or equal to <4096>
+    Actual: <8257>
+     Which: is not a value less than or equal to <4096>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_history_test.dart 110:7            main.<fn>
+  
+00:01 +0 -1: reshaped branches apply originals once, checkpoint restore=false
+00:01 +0 -2: reshaped branches apply originals once, checkpoint restore=false [E]
+  Expected: <2>
+    Actual: <3>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_history_test.dart 147:11           main.<fn>
+  
+00:01 +0 -2: reshaped branches apply originals once, checkpoint restore=true
+00:01 +0 -3: reshaped branches apply originals once, checkpoint restore=true [E]
+  Expected: <2>
+    Actual: <3>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_history_test.dart 147:11           main.<fn>
+  
+00:01 +0 -3: one original operation is retained across immutable recurrence references
+00:01 +1 -3: union order and duplicate arrival retain one reference to each original
+00:01 +2 -3: equal seed text cannot authorize independent roots or forged packet claims
+00:01 +3 -3: canonical packet metadata is checked before retaining a reference
+00:01 +4 -3: retained original packets are deeply immutable and privately owned
+00:01 +5 -3: incremental native replay is linear and sparse checkpoints preserve historical state
+00:01 +6 -3: reference summaries export full state only for sparse checkpoints or explicit proof
+00:01 +7 -3: evicting native roots and closing a materializer does not change references
+00:01 +8 -3: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+  /workspace/tandemlog/test/shared_text_history_test.dart: reshaped branches apply originals once, checkpoint restore=false
+  /workspace/tandemlog/test/shared_text_history_test.dart: reshaped branches apply originals once, checkpoint restore=true
