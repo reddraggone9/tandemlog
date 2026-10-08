@@ -149,6 +149,47 @@ void main() {
       });
       tearDown(() => engine.dispose());
       test(
+        'resolver shares recurrence references and advances native history once',
+        () {
+          final memo = RecurringTextMemo();
+          final history = [h.create()];
+          var entity = _parent;
+          var fields = RecurringTextResolver(
+            engine,
+            history,
+            memo: memo,
+          ).resolve(entity);
+          final originalRoot = fields['title']!.historyReference!;
+          for (var generation = 0; generation < 16; generation++) {
+            history.add(
+              h.edit(history, _a, entity, {'title': 'Task $generation'}),
+            );
+            fields = RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(entity);
+            final reference = fields['title']!.historyReference!;
+            expect(reference.rootContext, originalRoot.rootContext);
+            final child = const Uuid().v5(entity, 'successor');
+            history.add(h.complete(history, _a, entity, child));
+            final successor = RecurringTextResolver(
+              engine,
+              history,
+              memo: memo,
+            ).resolve(child);
+            expect(successor['title']!.historyReference, same(reference));
+            expect(successor['title']!.text, 'Task $generation');
+            expect(successor['title']!.stateHash, fields['title']!.stateHash);
+            entity = child;
+          }
+          expect(memo.historyPacketApplications, 16);
+          final cold = RecurringTextResolver(engine, history).resolve(entity);
+          expect(cold['title']!.state.encoded, fields['title']!.state.encoded);
+          memo.clear();
+        },
+      );
+      test(
         'memo preserves union and rejects sparse closed prefixes after a hit',
         () {
           final created = h.create();
