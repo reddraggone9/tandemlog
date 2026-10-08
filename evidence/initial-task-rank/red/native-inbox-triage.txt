@@ -1,0 +1,141 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-initial-rank/integration_test/inbox_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[49512]: [session uid=1000 pid=49512 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=49830 comm="/workspace/tandemlog-initial-rank/build/linux/x64/" label="kernel")
+
+(process:49835): dconf-CRITICAL **: 07:16:27.467: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:49835): dconf-CRITICAL **: 07:16:27.467: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:49835): dconf-CRITICAL **: 07:16:27.467: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:49835): dconf-CRITICAL **: 07:16:27.467: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[49512]: [session uid=1000 pid=49512 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:49835): dconf-CRITICAL **: 07:16:27.469: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:49835): dconf-CRITICAL **: 07:16:27.469: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[49841]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=49830 comm="/workspace/tandemlog-initial-rank/build/linux/x64/" label="kernel")
+dbus-daemon[49841]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=384
+TANDEMLOG_ONBOARDING_READY_MS=1312 FILES_READ=0
+00:02 +1: interrupted startup releases installation lease after pending work
+00:02 +1: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=29
+00:02 +2: Inbox capture cancel edit Undo and history remain coherent
+00:03 +2: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=23
+TANDEMLOG_PHASE identity_lock=17
+TANDEMLOG_PHASE sqlite_open_schema=17
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=67
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=611 FILES_READ=1
+00:06 +2: Inbox capture cancel edit Undo and history remain coherent
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value less than <293.0>
+  Actual: <356.0>
+   Which: is not a value less than <293.0>
+Leaving Inbox retains the initial top manual rank.
+
+When the exception was thrown, this was the stack:
+#4      registerInboxFlowTests.<anonymous closure> (file:///workspace/tandemlog-initial-rank/integration_test/inbox_flow_test.dart:148:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-initial-rank/integration_test/inbox_flow_test.dart line 148
+The test description was:
+  Inbox capture cancel edit Undo and history remain coherent
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +2 -1: Inbox capture cancel edit Undo and history remain coherent [E]
+  Test failed. See exception logs above.
+  The test description was: Inbox capture cancel edit Undo and history remain coherent
+  
+00:06 +2 -1: (tearDownAll)
+00:06 +2 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-initial-rank/integration_test/inbox_flow_test.dart: Inbox capture cancel edit Undo and history remain coherent

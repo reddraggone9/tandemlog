@@ -1,0 +1,63 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/recurring_text_test.dart
+test/recurring_text_test.dart:162:49: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+ - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+          final originalRoot = fields['title']!.historyReference!;
+                                                ^^^^^^^^^^^^^^^^
+test/recurring_text_test.dart:172:48: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+ - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+            final reference = fields['title']!.historyReference!;
+                                               ^^^^^^^^^^^^^^^^
+test/recurring_text_test.dart:181:40: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+ - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+            expect(successor['title']!.historyReference, same(reference));
+                                       ^^^^^^^^^^^^^^^^
+test/recurring_text_test.dart:186:23: Error: The getter 'historyPacketApplications' isn't defined for the type 'RecurringTextMemo'.
+ - 'RecurringTextMemo' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyPacketApplications'.
+          expect(memo.historyPacketApplications, 16);
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /workspace/tandemlog/test/recurring_text_test.dart [E]
+  Failed to load "/workspace/tandemlog/test/recurring_text_test.dart":
+  Compilation failed for testPath=/workspace/tandemlog/test/recurring_text_test.dart: test/recurring_text_test.dart:162:49: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+   - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+            final originalRoot = fields['title']!.historyReference!;
+                                                  ^^^^^^^^^^^^^^^^
+  test/recurring_text_test.dart:172:48: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+   - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+              final reference = fields['title']!.historyReference!;
+                                                 ^^^^^^^^^^^^^^^^
+  test/recurring_text_test.dart:181:40: Error: The getter 'historyReference' isn't defined for the type 'ResolvedTextField'.
+   - 'ResolvedTextField' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyReference'.
+              expect(successor['title']!.historyReference, same(reference));
+                                         ^^^^^^^^^^^^^^^^
+  test/recurring_text_test.dart:186:23: Error: The getter 'historyPacketApplications' isn't defined for the type 'RecurringTextMemo'.
+   - 'RecurringTextMemo' is from 'package:tandemlog/text/recurring_text.dart' ('lib/text/recurring_text.dart').
+  Try correcting the name to the name of an existing getter, or defining a getter or field named 'historyPacketApplications'.
+            expect(memo.historyPacketApplications, 16);
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/recurring_text_test.dart: loading /workspace/tandemlog/test/recurring_text_test.dart

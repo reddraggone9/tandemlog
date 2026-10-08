@@ -6,8 +6,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void registerHeaderSearchTests() {
@@ -23,7 +23,7 @@ void registerHeaderSearchTests() {
         final root = await Directory.systemTemp.createTemp('header-search-');
         final folder = await Directory('${root.path}/shared').create();
         final profile = await Directory('${root.path}/profile').create();
-        final seed = await TaskStore.open(
+        final seed = await openNativeFixtureStore(
           LocalLogFolder(folder.path),
           '${root.path}/seed',
         );

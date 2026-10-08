@@ -6,8 +6,24 @@ export 'event_clock.dart';
 import 'package:uuid/uuid.dart';
 import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
+import 'checklist.dart';
 
 const protocolVersion = 3;
+bool isTaskCompletion(String type) =>
+    type == 'task.completed' ||
+    type == 'task.completedWithText' ||
+    type == 'task.completedKeepingSuccessor' ||
+    type == 'task.completedWithChecklist';
+bool isNativeTextCreation(String type) =>
+    type == 'task.createdWithText' || type == 'checklist.itemCreated';
+bool hasNativeTaskSuccessor(LogEvent event) =>
+    event.type == 'task.completedWithText' ||
+    (event.type == 'task.completedWithChecklist' &&
+        event.data['inheritance'] != null);
+bool isScalarSuccessorInitialization(LogEvent event) =>
+    event.type == 'task.completed' ||
+    (event.type == 'task.completedWithChecklist' &&
+        !event.data.containsKey('inheritance'));
 final _idShape = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
 );
@@ -124,6 +140,7 @@ class LogEvent {
         case 'user.created':
           text('name', 100);
         case 'task.created':
+        case 'task.createdWithText':
           text('title', 500);
           text('description', 10000, empty: true);
           if (d['assignee'] is! String || !isCanonicalId(d['assignee'])) {
@@ -144,6 +161,52 @@ class LogEvent {
           if (d.containsKey('description')) {
             text('description', 10000, empty: true);
           }
+        case 'task.textEdited':
+          validateTextChanges(d['changes']);
+          if (d.containsKey('intent') && d['intent'] != 'undo') {
+            throw FormatFailure('Unsupported native text intent.');
+          }
+          if (d.containsKey('assignee') && !isCanonicalId(d['assignee'])) {
+            throw FormatFailure('Invalid assignee.');
+          }
+        case 'checklist.itemCreated':
+          text('title', 500);
+          text('description', 10000, empty: true);
+          if (!isCanonicalId(d['parent']) || d['parent'] == j['entity']) {
+            throw FormatFailure('Invalid checklist parent.');
+          }
+          validateTextSeedDescriptor(d['text']);
+          if (!d.containsKey('before') ||
+              (d['before'] != null &&
+                  (!isCanonicalId(d['before']) ||
+                      d['before'] == j['entity']))) {
+            throw FormatFailure('Invalid checklist order anchor.');
+          }
+        case 'checklist.itemEdited':
+          if (d['completed'] is! bool) {
+            throw FormatFailure('Invalid checklist completion state.');
+          }
+        case 'checklist.itemMoved':
+          if (!d.containsKey('before') ||
+              (d['before'] != null &&
+                  (!isCanonicalId(d['before']) ||
+                      d['before'] == j['entity']))) {
+            throw FormatFailure('Invalid checklist order anchor.');
+          }
+        case 'checklist.itemDeleted':
+          break;
+        case 'task.textEditUndone':
+          if (!_validReference(d['operation'])) {
+            throw FormatFailure('Invalid native text operation reference.');
+          }
+          validateTextChanges(d['changes'], empty: true);
+        case 'text.baselineInitialized':
+          if (j['entity'] != j['space']) {
+            throw FormatFailure(
+              'Text initialization must reference its workspace.',
+            );
+          }
+          validateTextBaseline(d);
         case 'task.deleted':
           break;
         case 'task.moved':
@@ -157,6 +220,9 @@ class LogEvent {
             throw FormatFailure('Missing order anchor.');
           }
         case 'task.completed':
+        case 'task.completedWithText':
+        case 'task.completedKeepingSuccessor':
+        case 'task.completedWithChecklist':
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -178,6 +244,50 @@ class LogEvent {
               throw FormatFailure('Invalid derived successor identity.');
             }
           }
+          if (j['type'] == 'task.completedWithText') {
+            if (!d.containsKey('successor') ||
+                d['inheritance'] is! Map<String, dynamic>) {
+              throw FormatFailure(
+                'Native completion requires text inheritance.',
+              );
+            }
+            validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
+          }
+          if (j['type'] == 'task.completedWithChecklist') {
+            if (d['successor'] is! Map<String, dynamic> ||
+                !d.containsKey('completedAt')) {
+              throw FormatFailure('Checklist recurrence requires a successor.');
+            }
+            validateChecklistCopy(
+              d['checklist'],
+              (d['successor'] as Map)['id'] as String,
+            );
+            if (d.containsKey('inheritance')) {
+              if (d['inheritance'] is! Map<String, dynamic>) {
+                throw FormatFailure('Invalid parent text inheritance.');
+              }
+              validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
+            }
+          }
+          if (j['type'] == 'task.completedKeepingSuccessor') {
+            final retained = d['retainedSuccessor'];
+            if (!d.containsKey('completedAt') ||
+                retained is! Map<String, dynamic> ||
+                !_keys(retained, {'id', 'completion', 'hash'}) ||
+                retained['id'] != const Uuid().v5(j['entity'], 'successor') ||
+                !_validReference(retained['completion']) ||
+                (retained['completion'] as String).length > 80 ||
+                !isEventHash(retained['hash'])) {
+              throw FormatFailure('Invalid retained historical successor.');
+            }
+            final source = (retained['completion'] as String).split(':');
+            if (source.first == j['writer'] &&
+                BigInt.parse(source.last) >= BigInt.from(j['seq'] as int)) {
+              throw FormatFailure(
+                'Historical completion cannot reference a forward operation.',
+              );
+            }
+          }
           break;
         case 'task.completionUndone':
         case 'task.recurringCompletionUndone':
@@ -195,8 +305,14 @@ class LogEvent {
             'Unknown event ${j['type']}. Update the app; history was preserved.',
           );
       }
-      if (j['type'] == 'task.created') validateTask(d);
-      if (j['type'] == 'task.edited' && d.containsKey('schedule')) {
+      if (j['type'] == 'task.created' || j['type'] == 'task.createdWithText') {
+        validateTask(d);
+      }
+      if (j['type'] == 'task.createdWithText') {
+        validateTextSeedDescriptor(d['text']);
+      }
+      if ((j['type'] == 'task.edited' || j['type'] == 'task.textEdited') &&
+          d.containsKey('schedule')) {
         validateSchedule(d['schedule']);
       }
       if (d.containsKey('tagChanges')) validateTagChanges(d['tagChanges']);
@@ -209,6 +325,14 @@ class LogEvent {
           'schedule',
           'tags',
         },
+        'task.createdWithText' => {
+          'title',
+          'description',
+          'assignee',
+          'schedule',
+          'tags',
+          'text',
+        },
         'task.edited' => {
           'title',
           'description',
@@ -216,9 +340,44 @@ class LogEvent {
           'tagChanges',
           'assignee',
         },
+        'task.textEdited' => {
+          'changes',
+          'intent',
+          'schedule',
+          'tagChanges',
+          'assignee',
+        },
+        'task.textEditUndone' => {'operation', 'changes'},
+        'checklist.itemCreated' => {
+          'parent',
+          'title',
+          'description',
+          'before',
+          'text',
+        },
+        'checklist.itemEdited' => {'completed'},
+        'checklist.itemMoved' => {'before'},
+        'checklist.itemDeleted' => <String>{},
+        'text.baselineInitialized' => {
+          'codec',
+          'adapter',
+          'frontiers',
+          'seedDigest',
+        },
         'task.deleted' => <String>{},
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
+        'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
+        'task.completedWithChecklist' => {
+          'completedAt',
+          'successor',
+          'inheritance',
+          'checklist',
+        },
+        'task.completedKeepingSuccessor' => {
+          'completedAt',
+          'retainedSuccessor',
+        },
         'task.operationUndone' => {'operation'},
         _ => {'completion'},
       };
@@ -281,6 +440,9 @@ int compareEvents(LogEvent a, LogEvent b) {
 
 /// Replay is a pure function of an event set; never emits authoritative events.
 Map<String, dynamic>? project(List<LogEvent> events) {
+  if (events.any((event) => isChecklistCreation(event.type))) {
+    return projectChecklistItem(events);
+  }
   events.sort(compareEvents);
   Map<String, dynamic>? state;
   final completions = <String>{};
@@ -289,7 +451,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final tagRemoves = <String>{};
   final retracted = retractedOperationIds(events);
   for (final e in events) {
-    if (e.type == 'user.created' || e.type == 'task.created') {
+    if (e.type == 'user.created' ||
+        e.type == 'task.created' ||
+        e.type == 'task.createdWithText') {
       if (state != null) {
         throw FormatFailure('Duplicate entity creation: ${e.entity}');
       }
@@ -301,7 +465,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
         // Raw captures need triage. Populated creations and derived recurring
         // occurrences have already been organized, even before their first edit.
         'inbox':
-            e.type == 'task.created' &&
+            (e.type == 'task.created' || e.type == 'task.createdWithText') &&
             e.data['tagOrigin'] == null &&
             (e.data['description'] as String? ?? '').trim().isEmpty &&
             (e.data['tags'] as List? ?? []).isEmpty &&
@@ -321,14 +485,22 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     }
   }
   if (state == null) return null; // dependencies may arrive later
+  if (events.any((event) => event.type.startsWith('checklist.'))) {
+    throw FormatFailure('Checklist operation references a non-item entity.');
+  }
   if (state['kind'] != 'task' &&
       events.any((e) => e.type.startsWith('task.'))) {
     throw FormatFailure('Task event references a user entity.');
   }
   for (final e in events) {
     if (retracted.contains(e.id)) continue;
-    if (e.type == 'task.edited') {
-      state.addAll(Map<String, dynamic>.from(e.data)..remove('tagChanges'));
+    if (e.type == 'task.edited' || e.type == 'task.textEdited') {
+      state.addAll(
+        Map<String, dynamic>.from(e.data)
+          ..remove('tagChanges')
+          ..remove('changes')
+          ..remove('intent'),
+      );
       state['inbox'] = false;
     }
     if (e.data.containsKey('tagChanges')) {
@@ -340,7 +512,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
       }
       tagRemoves.addAll((changes['remove'] as List).cast<String>());
     }
-    if (e.type == 'task.completed') completions.add(e.id);
+    if (isTaskCompletion(e.type)) completions.add(e.id);
     if (e.type == 'task.completionUndone') {
       undone.add(e.data['completion'] as String);
     }
@@ -349,6 +521,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     (e) => e.type == 'task.deleted' && !retracted.contains(e.id),
   );
   state.remove('tagOrigin');
+  state.remove(
+    'text',
+  ); // Native initialization metadata belongs to canonical context.
   state['tagRefs'] = Map.fromEntries(
     tagAdds.entries.where((e) => !tagRemoves.contains(e.key)),
   );
@@ -356,7 +531,7 @@ Map<String, dynamic>? project(List<LogEvent> events) {
   final active = completions.difference(undone);
   state['completed'] = active.isNotEmpty;
   final activeEvents = events.where(
-    (event) => event.type == 'task.completed' && active.contains(event.id),
+    (event) => isTaskCompletion(event.type) && active.contains(event.id),
   );
   state['completedAt'] = activeEvents.isEmpty
       ? null
@@ -370,11 +545,12 @@ Set<String> retractedOperationIds(Iterable<LogEvent> events) => events
     .where(
       (e) =>
           e.type == 'task.operationUndone' ||
+          e.type == 'task.textEditUndone' ||
           e.type == 'task.recurringCompletionUndone',
     )
     .map(
       (e) =>
-          (e.type == 'task.operationUndone'
+          (e.type == 'task.operationUndone' || e.type == 'task.textEditUndone'
                   ? e.data['operation']
                   : e.data['completion'])
               as String,
@@ -394,6 +570,83 @@ void validateTags(dynamic value) {
     throw FormatFailure(
       'Reserved scheduling tag. Use task schedule fields; existing history was preserved and requires a compatible fresh import.',
     );
+  }
+}
+
+/// Additive required creation meaning. Old task.created records remain unchanged.
+/// Native seed/content agreement is checked by the text adapter before admission.
+void validateTextSeedDescriptor(dynamic value) {
+  if (value is! Map<String, dynamic> ||
+      value.keys.toSet().difference({'codec', 'adapter', 'seeds'}).isNotEmpty ||
+      value['codec'] != 'yrs-v1' ||
+      value['adapter'] != 1 ||
+      value['seeds'] is! Map<String, dynamic>) {
+    throw FormatFailure('Unsupported native text seed descriptor.');
+  }
+  final seeds = value['seeds'] as Map<String, dynamic>;
+  if (seeds.length != 2 ||
+      !seeds.containsKey('title') ||
+      !seeds.containsKey('description') ||
+      seeds.values.any((seed) => !isEventHash(seed))) {
+    throw FormatFailure('Invalid native text seed hashes.');
+  }
+}
+
+/// Wire admission is separate from native codec and ownership validation.
+/// Exact decoded bytes are retained; permissive base64 aliases are rejected.
+void validateTextChanges(dynamic value, {bool empty = false}) {
+  if (value is! Map<String, dynamic> ||
+      (!empty && value.isEmpty) ||
+      value.keys.any((key) => key != 'title' && key != 'description')) {
+    throw FormatFailure('Invalid native text changes.');
+  }
+  for (final change in value.values) {
+    if (change is! Map<String, dynamic> ||
+        change.length != 4 ||
+        !isEventHash(change['context']) ||
+        !isCanonicalId(change['allocation']) ||
+        change['actor'] is! int ||
+        change['actor'] < 2 ||
+        change['actor'] > 9007199254740991 ||
+        change['update'] is! String) {
+      throw FormatFailure('Invalid native text change descriptor.');
+    }
+    final encoded = change['update'] as String;
+    // Limit before decoding, independently of the whole canonical event cap.
+    if (encoded.isEmpty || encoded.length > 1398104) {
+      throw FormatFailure('Oversized or empty native text update.');
+    }
+    try {
+      final bytes = base64Decode(encoded);
+      if (bytes.isEmpty ||
+          bytes.length > 1024 * 1024 ||
+          base64Encode(bytes) != encoded) {
+        throw FormatFailure('Noncanonical native text update.');
+      }
+    } on FormatException {
+      throw FormatFailure('Malformed native text update.');
+    }
+  }
+}
+
+void validateTextBaseline(Map<String, dynamic> data) {
+  if (data['codec'] != 'yrs-v1' ||
+      data['adapter'] != 1 ||
+      data['frontiers'] is! Map<String, dynamic> ||
+      !isEventHash(data['seedDigest'])) {
+    throw FormatFailure('Unsupported text initialization descriptor.');
+  }
+  for (final entry in (data['frontiers'] as Map<String, dynamic>).entries) {
+    final head = entry.value;
+    if (!isCanonicalId(entry.key) ||
+        head is! Map<String, dynamic> ||
+        head.length != 2 ||
+        head['seq'] is! int ||
+        head['seq'] < 0 ||
+        head['seq'] > 9007199254740991 ||
+        !isEventHash(head['hash'])) {
+      throw FormatFailure('Invalid text initialization frontier.');
+    }
   }
 }
 
@@ -457,3 +710,47 @@ dynamic _freezeJson(dynamic value) {
   if (value is List) return List<dynamic>.unmodifiable(value.map(_freezeJson));
   return value;
 }
+
+/// Admission for immutable observed-parent proof metadata, independent of native
+/// state decoding and persistence. Native callers separately verify field hashes.
+void validateTextInheritance(Map<String, dynamic> data) {
+  if (!_keys(data, {'codec', 'adapter', 'frontiers', 'fields'}) ||
+      data['codec'] != 'yrs-v1' ||
+      data['adapter'] is! int ||
+      !const {1, 2}.contains(data['adapter']) ||
+      data['frontiers'] is! Map<String, dynamic> ||
+      (data['frontiers'] as Map).isEmpty ||
+      data['fields'] is! Map<String, dynamic>) {
+    throw FormatFailure('Invalid text inheritance descriptor.');
+  }
+  // Reuse baseline frontier admission, including namespace and safe integers.
+  validateTextBaseline({
+    'codec': data['codec'],
+    'adapter': 1,
+    'frontiers': data['frontiers'],
+    'seedDigest': '0' * 64,
+  });
+  validateTextInheritanceFields(data['fields'], data['adapter'] as int);
+}
+
+/// Admit field proofs after the enclosing descriptor's shared frontiers.
+void validateTextInheritanceFields(Object? fields, int adapter) {
+  if (!const {1, 2}.contains(adapter) ||
+      fields is! Map<String, dynamic> ||
+      !_keys(fields, {'title', 'description'})) {
+    throw FormatFailure('Text inheritance requires both fields.');
+  }
+  for (final field in fields.values) {
+    final proofHash = adapter == 1 ? 'stateHash' : 'historyHash';
+    if (field is! Map<String, dynamic> ||
+        !_keys(field, {'parentContext', 'seedHash', proofHash}) ||
+        !isEventHash(field['parentContext']) ||
+        !isEventHash(field['seedHash']) ||
+        !isEventHash(field[proofHash])) {
+      throw FormatFailure('Invalid inherited text field proof.');
+    }
+  }
+}
+
+bool _keys(Map<String, dynamic> value, Set<String> expected) =>
+    value.length == expected.length && value.keys.every(expected.contains);

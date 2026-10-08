@@ -1,0 +1,15 @@
+..F...
+======================================================================
+FAIL: test_U03_retained_deleted_identity_budget_preserves_undo (test_admission_units.Units.test_U03_retained_deleted_identity_budget_preserves_undo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 20, in test_U03_retained_deleted_identity_budget_preserves_undo
+    self.b.ok('edit',name='a',index=0,delete=1,insert='M')
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: admission work budget
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.011s
+
+FAILED (failures=1)

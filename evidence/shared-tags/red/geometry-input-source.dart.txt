@@ -1,0 +1,624 @@
+import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+
+/// Shared controlled tag selection. Overlay geometry stays outside form layout.
+class TagInput extends StatefulWidget {
+  const TagInput({
+    super.key,
+    required this.tags,
+    required this.selected,
+    required this.onChanged,
+    required this.queryController,
+    this.onQueryChanged,
+    this.enabled = true,
+    this.allowCreate = false,
+    this.label,
+    this.queryLabel = 'Tags',
+    this.hint = 'Find tags',
+    this.clearLabel = 'Clear tag filters',
+    this.expandLabel = 'Expand tag options',
+    this.collapseLabel = 'Collapse tag options',
+    this.chipContext = 'tag filters',
+    this.queryKey = const ValueKey('tag-search'),
+    this.queryErrorText,
+    this.onSubmitQuery,
+    this.clearQueryOnSelection = false,
+    required this.onDropdownChanged,
+  });
+  final List<String> tags;
+  final Set<String> selected;
+  final ValueChanged<Set<String>> onChanged;
+  final TextEditingController queryController;
+  final VoidCallback? onQueryChanged;
+  final bool enabled, allowCreate, clearQueryOnSelection;
+  final String? label, queryErrorText;
+  final String queryLabel,
+      hint,
+      clearLabel,
+      expandLabel,
+      collapseLabel,
+      chipContext;
+  final Key queryKey;
+  final bool Function()? onSubmitQuery;
+  final ValueChanged<bool> onDropdownChanged;
+
+  @override
+  State<TagInput> createState() => TagInputState();
+}
+
+class TagInputState extends State<TagInput> with WidgetsBindingObserver {
+  TextEditingController get _query => widget.queryController;
+  final _focus = FocusNode();
+  OverlayEntry? _overlayEntry;
+  final _link = LayerLink();
+  final _anchor = GlobalKey();
+  final _tapGroup = Object();
+  ScrollPosition? _scroll;
+  bool _open = false;
+  bool _positionPending = false;
+  bool _revealAfterMetrics = false;
+  Size? _viewportSize;
+  bool _ignoreNextFocus = false;
+  int _highlighted = -1;
+  final _optionScroll = ScrollController();
+  final _optionKeys = <String, GlobalKey>{};
+  final _createKey = GlobalKey();
+  bool get _composing =>
+      _query.value.composing.isValid && !_query.value.composing.isCollapsed;
+  String get _normalizedQuery {
+    final text = _query.text.trim();
+    return text.startsWith('#') ? text.substring(1) : text;
+  }
+
+  bool get _showCreate =>
+      widget.allowCreate &&
+      _query.text.trim().isNotEmpty &&
+      !widget.tags.contains(_query.text.trim()) &&
+      !widget.tags.contains(_normalizedQuery);
+  String get _createLabel => _normalizedQuery.contains(RegExp(r'\s'))
+      ? 'Add tags'
+      : 'Add #$_normalizedQuery';
+  bool get _canCreate =>
+      widget.enabled && !_composing && widget.queryErrorText == null;
+
+  bool get dropdownOpen => _open;
+  bool get hasQuery => _query.text.isNotEmpty;
+  List<String> get _matches => widget.tags
+      .where((tag) => tag.toLowerCase().contains(_query.text.toLowerCase()))
+      .toList();
+
+  @override
+  void initState() {
+    super.initState();
+    _focus.addListener(_focusChanged);
+    _query.addListener(_queryChanged);
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeMetrics() {
+    // The old anchor may be clipped for one layout frame before the focused
+    // editor reveals its caret. Keep an intentional open popup through that
+    // transition; ordinary user scrolling away still dismisses it.
+    if (_open && _focus.hasFocus) _revealAfterMetrics = true;
+    _reposition();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final scroll = Scrollable.maybeOf(context)?.position;
+    if (_scroll != scroll) {
+      _scroll?.removeListener(_reposition);
+      _scroll = scroll;
+      _scroll?.addListener(_reposition);
+    }
+    _reposition();
+  }
+
+  @override
+  void didUpdateWidget(TagInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.queryController != _query) {
+      oldWidget.queryController.removeListener(_queryChanged);
+      _query.addListener(_queryChanged);
+    }
+    if (!widget.enabled) dismissDropdown();
+    _reposition();
+  }
+
+  void _queryChanged() {
+    if (!mounted) return;
+    _highlighted = -1;
+    _overlayEntry?.markNeedsBuild();
+    setState(() {});
+    widget.onQueryChanged?.call();
+  }
+
+  void _focusChanged() {
+    if (!_focus.hasFocus) {
+      dismissDropdown();
+    } else if (_ignoreNextFocus) {
+      _ignoreNextFocus = false;
+    } else {
+      _show();
+    }
+  }
+
+  void _reposition() {
+    if (!_open || _positionPending) return;
+    _positionPending = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _positionPending = false;
+      if (!mounted || !_open) return;
+      final anchor = _anchor.currentContext;
+      final box = anchor?.findRenderObject();
+      final viewport = Scrollable.maybeOf(context)?.context.findRenderObject();
+      if (box is RenderBox &&
+          box.hasSize &&
+          viewport is RenderBox &&
+          viewport.hasSize) {
+        // Dialog padding can finish shrinking the scroll viewport after the
+        // first keyboard metrics frame. Reveal against each changed extent,
+        // then check geometry after layout; do not close on that stale frame.
+        final resized = _revealAfterMetrics || _viewportSize != viewport.size;
+        _revealAfterMetrics = false;
+        _viewportSize = viewport.size;
+        if (resized && _focus.hasFocus) {
+          Scrollable.ensureVisible(anchor!);
+          _overlayEntry?.markNeedsBuild();
+          _reposition();
+          return;
+        }
+        final field = box.localToGlobal(Offset.zero) & box.size;
+        final visible = viewport.localToGlobal(Offset.zero) & viewport.size;
+        if (!field.overlaps(visible)) {
+          dismissDropdown();
+          return;
+        }
+      }
+      _overlayEntry?.markNeedsBuild();
+    });
+  }
+
+  void _show() {
+    if (_open || !widget.enabled) return;
+    setState(() => _open = true);
+    // Keep painted results outside the query's clipped semantic scroll viewport.
+    // The portal painted visible Android labels that were missing from its
+    // accessibility hierarchy; the entry gives them their actual overlay bounds.
+    _overlayEntry = OverlayEntry(
+      builder: (_) => MediaQuery(
+        data: MediaQuery.of(context),
+        child: InheritedTheme.captureAll(context, _suggestions(context)),
+      ),
+    );
+    Overlay.of(context, rootOverlay: true).insert(_overlayEntry!);
+    widget.onDropdownChanged(true);
+  }
+
+  bool dismissDropdown() {
+    if (!_open) return false;
+    _revealAfterMetrics = false;
+    _removeOverlay();
+    setState(() => _open = false);
+    widget.onDropdownChanged(false);
+    return true;
+  }
+
+  void _removeOverlay() {
+    _overlayEntry?.remove();
+    _overlayEntry?.dispose();
+    _overlayEntry = null;
+  }
+
+  void _toggle(String tag) {
+    if (!widget.enabled) return;
+    final next = Set<String>.of(widget.selected);
+    if (!next.add(tag)) next.remove(tag);
+    widget.onChanged(next);
+    if (widget.clearQueryOnSelection) _query.clear();
+    dismissDropdown();
+    if (!_focus.hasFocus) {
+      _ignoreNextFocus = true;
+      _focus.requestFocus();
+    }
+    _reposition();
+  }
+
+  void _submit({bool create = false}) {
+    if (!widget.enabled) return;
+    if (_composing) {
+      widget.onSubmitQuery?.call();
+      return;
+    }
+    if (!create) {
+      final matches = _matches;
+      final index = _highlighted < 0 ? 0 : _highlighted;
+      final tag = index < matches.length ? matches[index] : null;
+      if (tag != null) {
+        if (!widget.selected.contains(tag)) {
+          _toggle(tag);
+        } else {
+          if (widget.clearQueryOnSelection) _query.clear();
+          dismissDropdown();
+        }
+        return;
+      }
+    }
+    if (widget.onSubmitQuery == null || widget.onSubmitQuery!()) {
+      dismissDropdown();
+    }
+  }
+
+  void _moveHighlight(int delta) {
+    final count = _matches.length + (_showCreate ? 1 : 0);
+    if (count == 0) return;
+    _show();
+    _highlighted = (_highlighted + delta).clamp(0, count - 1);
+    _overlayEntry?.markNeedsBuild();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !_open || !_optionScroll.hasClients) return;
+      final option = _highlighted < _matches.length
+          ? _optionKeys[_matches[_highlighted]]?.currentContext
+          : _createKey.currentContext;
+      if (option != null) {
+        Scrollable.ensureVisible(
+          option,
+          alignmentPolicy: ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+        );
+      } else {
+        final position = _optionScroll.position;
+        _optionScroll.jumpTo(
+          (_highlighted == 0
+                  ? 0.0
+                  : _highlighted == count - 1
+                  ? position.maxScrollExtent
+                  : position.pixels + delta * 80.0)
+              .clamp(0.0, position.maxScrollExtent),
+        );
+      }
+    });
+  }
+
+  Widget _suggestions(BuildContext context) {
+    final box = _anchor.currentContext?.findRenderObject();
+    if (box is! RenderBox || !box.hasSize) return const SizedBox.shrink();
+    final rect = box.localToGlobal(Offset.zero) & box.size;
+    final media = MediaQuery.of(context);
+    final view = View.of(context);
+    final top = view.padding.top / view.devicePixelRatio + 8;
+    final bottom =
+        media.size.height -
+        math.max(
+          view.viewInsets.bottom / view.devicePixelRatio,
+          view.padding.bottom / view.devicePixelRatio,
+        ) -
+        8;
+    final below = math.max(0.0, bottom - rect.bottom - 4);
+    final above = math.max(0.0, rect.top - top - 4);
+    final width = math.min(rect.width, media.size.width - 16);
+    final matches = _matches;
+    double rowHeight(String text) {
+      final painter = TextPainter(
+        text: TextSpan(
+          text: text,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
+        textDirection: Directionality.of(context),
+        textScaler: media.textScaler,
+        maxLines: 2,
+      )..layout(maxWidth: math.max(1, width - 72));
+      final height = math.max(56.0, painter.height + 16);
+      painter.dispose();
+      return height;
+    }
+
+    final resultHeights = matches.isEmpty && !_showCreate
+        ? [rowHeight(widget.tags.isEmpty ? 'No tags yet' : 'No matching tags')]
+        : [
+            ...matches.take(4).map((tag) => rowHeight('#$tag')),
+            if (_showCreate) rowHeight(_createLabel),
+          ];
+    final desired = math.min(200.0, resultHeights.reduce((a, b) => a + b));
+    // Prefer below even when above has more space. One result needs one row;
+    // longer lists need two usable rows and scroll within the remaining space.
+    // The overlay may extend past the dialog footer, which is not a viewport.
+    final usable = math.min(
+      desired,
+      resultHeights.take(2).reduce((a, b) => a + b),
+    );
+    final upward = below < usable && above > below;
+    final height = math.min(
+      math.min(desired, math.max(0.0, bottom - top)),
+      upward ? above : below,
+    );
+    final y = (upward ? rect.top - height - 4 : rect.bottom + 4).clamp(
+      top,
+      math.max(top, bottom - height),
+    );
+    final x = rect.left.clamp(8.0, math.max(8.0, media.size.width - width - 8));
+    return SizedBox.expand(
+      child: Stack(
+        children: [
+          CompositedTransformFollower(
+            link: _link,
+            showWhenUnlinked: false,
+            offset: Offset(x - rect.left, y - rect.top),
+            child: TextFieldTapRegion(
+              child: TapRegion(
+                groupId: _tapGroup,
+                child: Material(
+                  elevation: 8,
+                  clipBehavior: Clip.antiAlias,
+                  borderRadius: BorderRadius.circular(8),
+                  child: SizedBox(
+                    key: const ValueKey('tag-results'),
+                    width: width,
+                    height: height,
+                    child: matches.isEmpty && !_showCreate
+                        ? Center(
+                            child: Text(
+                              widget.tags.isEmpty
+                                  ? 'No tags yet'
+                                  : 'No matching tags',
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.zero,
+                            controller: _optionScroll,
+                            itemCount: matches.length + (_showCreate ? 1 : 0),
+                            itemBuilder: (context, index) {
+                              if (index == matches.length) {
+                                return Semantics(
+                                  key: _createKey,
+                                  enabled: _canCreate,
+                                  child: ListTile(
+                                    key: const ValueKey('tag-create'),
+                                    title: Text(_createLabel),
+                                    leading: const Icon(Icons.add, size: 20),
+                                    enabled: _canCreate,
+                                    onTap: _canCreate
+                                        ? () => _submit(create: true)
+                                        : null,
+                                  ),
+                                );
+                              }
+                              final tag = matches[index];
+                              final selected = widget.selected.contains(tag);
+                              return Semantics(
+                                key: _optionKeys.putIfAbsent(
+                                  tag,
+                                  GlobalKey.new,
+                                ),
+                                selected: selected,
+                                child: ListTile(
+                                  key: ValueKey('tag-option-$tag'),
+                                  selected: selected,
+                                  tileColor: index == _highlighted
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.surfaceContainerHighest
+                                      : null,
+                                  leading: selected
+                                      ? const Icon(Icons.check, size: 20)
+                                      : const SizedBox(width: 20),
+                                  title: Tooltip(
+                                    excludeFromSemantics: true,
+                                    message: '#$tag',
+                                    child: Text(
+                                      '#$tag',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  onTap: () => _toggle(tag),
+                                ),
+                              );
+                            },
+                          ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) => TextFieldTapRegion(
+    child: CompositedTransformTarget(
+      link: _link,
+      child: TapRegion(
+        groupId: _tapGroup,
+        onTapOutside: (_) => dismissDropdown(),
+        child: Container(
+          key: _anchor,
+          child: InputDecorator(
+            decoration: InputDecoration(
+              labelText: widget.label,
+              enabled: widget.enabled,
+              filled: widget.label != null,
+              border: widget.label == null
+                  ? const UnderlineInputBorder()
+                  : null,
+              enabledBorder: widget.label == null
+                  ? const UnderlineInputBorder()
+                  : null,
+              focusedBorder: widget.label == null
+                  ? const UnderlineInputBorder()
+                  : null,
+              contentPadding: widget.label == null ? EdgeInsets.zero : null,
+              errorText: widget.queryErrorText,
+            ),
+            child: Container(
+              key: const ValueKey('tag-autocomplete'),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.selected.isNotEmpty)
+                    LayoutBuilder(
+                      builder: (context, constraints) => Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: [
+                          for (final tag in widget.selected.toList()..sort())
+                            Tooltip(
+                              excludeFromSemantics: true,
+                              message: '#$tag',
+                              child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth,
+                                ),
+                                child: InputChip(
+                                  key: ValueKey('selected-tag-$tag'),
+                                  label: ConstrainedBox(
+                                    constraints: BoxConstraints(
+                                      maxWidth: math.max(
+                                        0,
+                                        constraints.maxWidth - 64,
+                                      ),
+                                    ),
+                                    child: Text(
+                                      '#$tag',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  deleteButtonTooltipMessage:
+                                      'Remove #$tag from ${widget.chipContext}',
+                                  isEnabled: widget.enabled,
+                                  onDeleted: widget.enabled
+                                      ? () => _toggle(tag)
+                                      : null,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Expanded(
+                        child: SizedBox(
+                          key: const ValueKey('tag-query-slot'),
+                          child: Focus(
+                            onKeyEvent: (_, event) {
+                              if (event is KeyDownEvent &&
+                                  event.logicalKey ==
+                                      LogicalKeyboardKey.escape &&
+                                  dismissDropdown()) {
+                                return KeyEventResult.handled;
+                              }
+                              if (event is KeyDownEvent &&
+                                  event.logicalKey == LogicalKeyboardKey.tab) {
+                                dismissDropdown();
+                              }
+                              if (event is KeyDownEvent &&
+                                  !_composing &&
+                                  (event.logicalKey ==
+                                          LogicalKeyboardKey.arrowDown ||
+                                      event.logicalKey ==
+                                          LogicalKeyboardKey.arrowUp)) {
+                                _moveHighlight(
+                                  event.logicalKey ==
+                                          LogicalKeyboardKey.arrowDown
+                                      ? 1
+                                      : -1,
+                                );
+                                return KeyEventResult.handled;
+                              }
+                              if (event is KeyDownEvent &&
+                                  _composing &&
+                                  event.logicalKey ==
+                                      LogicalKeyboardKey.enter) {
+                                widget.onSubmitQuery?.call();
+                                return KeyEventResult.handled;
+                              }
+                              return KeyEventResult.ignored;
+                            },
+                            child: Semantics(
+                              label: widget.queryLabel,
+                              child: TextField(
+                                key: widget.queryKey,
+                                controller: _query,
+                                focusNode: _focus,
+                                enabled: widget.enabled,
+                                decoration: InputDecoration(
+                                  hintText: widget.hint,
+                                  filled: false,
+                                  isDense: true,
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 12,
+                                  ),
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  focusedBorder: InputBorder.none,
+                                  disabledBorder: InputBorder.none,
+                                ),
+                                onTap: _show,
+                                onChanged: (_) => _show(),
+                                onSubmitted: (_) => _submit(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        tooltip: widget.clearLabel,
+                        onPressed:
+                            !widget.enabled ||
+                                (widget.selected.isEmpty && !hasQuery)
+                            ? null
+                            : () {
+                                widget.onChanged({});
+                                _query.clear();
+                                dismissDropdown();
+                              },
+                        icon: const Icon(Icons.close),
+                      ),
+                      IconButton(
+                        tooltip: _open
+                            ? widget.collapseLabel
+                            : widget.expandLabel,
+                        onPressed: !widget.enabled
+                            ? null
+                            : () {
+                                if (!dismissDropdown()) _show();
+                                if (!_focus.hasFocus) {
+                                  _ignoreNextFocus = true;
+                                  _focus.requestFocus();
+                                }
+                              },
+                        icon: Icon(
+                          _open ? Icons.expand_less : Icons.expand_more,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+
+  @override
+  void dispose() {
+    _removeOverlay();
+    WidgetsBinding.instance.removeObserver(this);
+    _scroll?.removeListener(_reposition);
+    _focus.removeListener(_focusChanged);
+    _focus.dispose();
+    _optionScroll.dispose();
+    _query.removeListener(_queryChanged);
+    super.dispose();
+  }
+}

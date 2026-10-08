@@ -1,0 +1,50 @@
+{
+  "run": 37789101688,
+  "tested_source": "8b13cd0e50242b071fa1b1b2422b1138892652ea",
+  "branch_head_evidence_only": "d0349397dafb9d70c719b7fe190e11d726a3c3b7",
+  "jobs": {
+    "android": {
+      "id": 113351409303,
+      "conclusion": "success"
+    },
+    "windows": {
+      "id": 113351409369,
+      "conclusion": "success",
+      "unit_tests": {
+        "passed": 619,
+        "skipped": 2,
+        "skip_reasons": [
+          "real Linux FFI durability smoke",
+          "Linux zone-file identity"
+        ],
+        "failed": 0
+      },
+      "contracts": {
+        "cargo_passed": 4,
+        "native_admission_worker_tests": 107,
+        "tool_tests": 37
+      }
+    },
+    "linux": {
+      "id": 113351408942,
+      "conclusion": "failure",
+      "failed_stage": "Aggregate native workflow: two legacy interaction fixtures. Both reproduced and corrected at5204e276 without production changes; standalone follow-up2/0 accepted."
+    }
+  },
+  "log_representation": "GitHub app returned decoded job logs, retained as UTF8; not a rehash of original zipped job-log bytes",
+  "log_sha256": {
+    "ci-android-37789101688.txt": "7605b90b0913e0540cb4a802bb7b2a1704b600e16b691aa2be9945727492074b",
+    "ci-windows-37789101688.txt": "c70844d7b8123741a6ae0e6d2f89125cbb06728635450c104dc07eb711fa254d"
+  },
+  "android_artifact": {
+    "id": 11556151813,
+    "api_reported_archive_bytes": 80385087,
+    "api_reported_archive_sha256": "4a714724b4b70c7b45f4db2e14711bddb3394965891f99a7c1437f4e88cebb84",
+    "source": "8b13cd0e50242b071fa1b1b2422b1138892652ea",
+    "github_download_resolved_file_id": "file_000000004f94821080b03f2ccda4c48e",
+    "consumer_byte_verification": false,
+    "consumer_transfer_status": "Supported Library resolved-reference prepare succeeded; current helper download403. No APK byte/hash/signature/runtime acceptance claimed."
+  },
+  "library_demo_delivery": "Prepared batch helper failed hosted tools/list401 before upload; repository native MP4/PNG remain available",
+  "overall_conclusion": "failure, superseded by source5204e276 rerun"
+}

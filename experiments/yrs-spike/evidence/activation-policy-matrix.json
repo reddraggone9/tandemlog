@@ -1,0 +1,145 @@
+{
+  "frozen_utc": "2026-10-04 19:26:25 UTC",
+  "written_before_policy_implementation": true,
+  "policy_implementation_present": false,
+  "production_adoption": false,
+  "synthetic_only": true,
+  "legacy_policy": "approved: uncovered legacy whole-field text writes lose after activation; canonical records retained, no reconciliation UI",
+  "approval_reference": "Sentinel_17d7070781648191be317081ef30c28e",
+  "bootstrap": "proposal only: one agreed immutable shared baseline, lazily materialized fields; nonissuer first Save waits for it",
+  "production_source_unchanged": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+  "original_frozen_files_unchanged": {
+    "tests/cases.json": "ca8e98d43691820308f3327104c171da29e56723d6c31253a92008c79731e524",
+    "evidence/editor-matrix.json": "ad8b9596db4401828286069c7aa3b9e982edac6f809cef90caa8d7ad5ede79c7",
+    "tests/test_contract.py": "436c9ce892e61f85bd9af3eacf1b4ff95cddf389e88253e439c1153f4c978c79",
+    "tests/test_admission.py": "b2656efe7418de7f873749fea4169a456ac7d384763c08b4ed6b055b1a4b8fed"
+  },
+  "cases": [
+    {
+      "id": "B01",
+      "case": "Historical v3 remains unchanged",
+      "expected": "Frozen stable fixture bytes/hashes/UUIDs/clocks/Undo project identically before activation; no canonical rewrite, timestamp rebasing or generated authoritative replay events.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B02",
+      "case": "Legacy scalar loses after activation",
+      "expected": "A complete valid legacy title/notes replacement beyond declared included frontiers does not change activated text, whether its clock is older, equal-order-adjacent or future-dated. Exact original bytes remain in canonical history; no conflict/reconciliation UI.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B03",
+      "case": "Arrival-order independence",
+      "expected": "Deliver activation, baseline prefix, uncovered scalar records and CRDT updates in every sampled permutation/batch/retry order. Final text, exclusion classification and hash receipts match; temporary pre-activation v3 display is not mistaken for the final state.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B04",
+      "case": "Baseline validates original historical projection",
+      "expected": "Replay only the declared verified writer prefixes using original v3 retractions/LWW. Seed text/context/hash must match that projection. Missing prefix dependencies leave activation pending, not guessed or silently applied.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B05",
+      "case": "Scope of loser policy",
+      "expected": "Exclude only legacy scalar text effects. Preserve schedules/tags/assignee/completion effects from supported valid records where original atomic/invariant semantics allow isolation. Never turn an invalid record, unknown required meaning or chain mismatch into an ignorable loser.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B06",
+      "case": "Legacy Undo across the cut",
+      "expected": "Included original v3 Undo keeps its historical meaning in the seed. A later legacy retraction cannot delete native CRDT work. Non-text effects retain validated original semantics. No seed identity is retroactively rewritten.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B07",
+      "case": "Same shared basis, independent first field edits",
+      "expected": "Two upgraded devices with the same agreed activation reference derive identical field identity/seed bytes despite different unrelated current writer heads. Independent field initialization does not duplicate historical text; all genuine CRDT edits converge.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B08",
+      "case": "One-time baseline availability guard",
+      "expected": "Upgraded nonissuer without the common baseline or verified history retains a private draft and does not acknowledge CRDT Save, emit scalar fallback or invent a root. After valid baseline arrival, adopt verified context without silently reattaching an incompatible draft.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B09",
+      "case": "Explicit bootstrap issuer/reference",
+      "expected": "A configured/agreed single bootstrap issuer/reference is established before any upgraded Save. Current v3 manifest is not falsely treated as already providing this authority. A competing issuer/root is not admitted by receive order or an arbitrary deterministic winner.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B10",
+      "case": "Different independent snapshot seeds remain unsafe",
+      "expected": "Attempt A seed Buy oats/B seed Buy fruit, including saves referring to both roots. No branch is silently discarded as legacy, no partial native join produces duplicate baseline text, and no successful ack is issued for a root not admitted under the chosen bootstrap policy. Unexpected incompatible roots retain diagnostic evidence and block safely.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B11",
+      "case": "Every acknowledged upgraded update retained",
+      "expected": "With shared admitted basis, concurrent insert/delete/replace, duplicates, delayed causal parents and all sampled arrival permutations retain exact update bytes and converge. Highest scalar clock or losing competing metadata cannot suppress genuine native edits.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B12",
+      "case": "Save preparation/retry/crash boundary",
+      "expected": "Prepare immutable activation/field/update references before append; interruption after a complete activation but before its first update does not create another root. Cache-loss/restart and repeated Save reuse exact prepared identity/bytes where applicable; unconfirmed edits retain drafts.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B13",
+      "case": "Full native checkpoint replay",
+      "expected": "Full checkpoint including pending dependencies plus tail matches canonical-only fresh replay. Invalid/unknown disposable checkpoint rebuilds without changing canonical bytes, context, seed, actors or accepted update frontiers.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B14",
+      "case": "Old reader and backward readability",
+      "expected": "Unupgraded production reader fails explicitly on new required event/type semantics without checkpoint advancement or writes. Upgraded reader continues accepting all historical v3 bytes and meanings before the activated-field boundary.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B15",
+      "case": "Independent fields and successors",
+      "expected": "Equal title/notes strings in different entities/fields never share update identity. New task fields and recurring successors initialize from their unique canonical creation context; successor copying does not reuse parent native document state/actors.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B16",
+      "case": "Clock metadata remains original",
+      "expected": "Excluded legacy records still participate in the existing maximum-observed clock and skew-warning contract. Neither seed classification nor native merge uses a receive-time replacement clock; approved event order and task datetime semantics stay unchanged.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B17",
+      "case": "Selective native Undo remains causal compensation",
+      "expected": "Undo of an admitted upgraded edit appends compensation retaining remote work; it does not remove causal native updates from history, resurrect excluded scalar text, or change activation/epoch.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    },
+    {
+      "id": "B18",
+      "case": "One chosen device can proceed",
+      "expected": "Bootstrap creation and admitted edits on the designated device do not require every old device to stop or upgrade. Old offline scalar work may arrive and lose after activation. Another upgraded device only waits for the common baseline on its first use, then works offline normally.",
+      "status": "not-run",
+      "evidence_requirement": "Executable regression written/frozen before activation-policy implementation; actual production decoder/store and engine boundaries recorded separately"
+    }
+  ]
+}

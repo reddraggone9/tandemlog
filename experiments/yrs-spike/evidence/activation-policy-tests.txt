@@ -1,0 +1,32 @@
+00:00 +0: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart
+00:00 +0: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B01 actual production frozen-v3 replay/cache reopen remains unchanged
+00:00 +1: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B01 actual production frozen-v3 replay/cache reopen remains unchanged
+00:00 +2: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B01 actual production frozen-v3 replay/cache reopen remains unchanged
+00:00 +3: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B01 actual production frozen-v3 replay/cache reopen remains unchanged
+00:00 +4: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B01 actual production frozen-v3 replay/cache reopen remains unchanged
+00:00 +5: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B02 uncovered legacy values lose regardless of scalar clock; bytes retained
+00:00 +6: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B03 baseline/update/legacy permutations and duplicates converge
+00:00 +7: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B04 verified prefix and original Undo determine seed; missing prefix pending
+00:00 +8: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B05 only text loses; valid schedule/tag/completion survive, invalid records block
+00:00 +9: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B06 late legacy Undo changes valid nontext meaning without touching native text
+00:00 +10: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B07 unrelated writer heads do not change independent field initialization
+00:00 +11: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B08 awaiting baseline never promotes an earlier private scalar draft
+00:00 +12: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B09 authority is explicitly configured, not inferred from current writers
+00:00 +13: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B10 incompatible upgraded root is preserved as evidence, never a silent loser
+00:00 +14: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B11 acknowledged native edits and delayed parents survive duplicates/order
+00:00 +15: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B12 exact prepared bytes persist across interruption/restart/idempotent retry
+00:00 +16: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B13 full pending checkpoint and fresh-process replay preserve canonical bytes
+00:00 +17: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B13 full pending checkpoint and fresh-process replay preserve canonical bytes
+00:00 +18: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B13 full pending checkpoint and fresh-process replay preserve canonical bytes
+00:00 +19: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B13 full pending checkpoint and fresh-process replay preserve canonical bytes
+00:00 +20: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B13 full pending checkpoint and fresh-process replay preserve canonical bytes
+00:01 +21: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B14 actual old TaskStore stops on new required event without checkpoint advance
+00:01 +22: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B15 same strings in different fields/entities/successor identities do not alias
+00:01 +23: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B16 losing scalar clocks remain immutable observed event metadata
+00:01 +24: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B17 appended native Undo compensation preserves remote and original updates
+00:01 +25: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B18 designated device proceeds without all-device stop; second uses shared basis
+00:01 +26: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B19 new text editing is gated before verified issuer/nonissuer baseline
+00:01 +27: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B20 different-base draft value/selection/composition survive incoming activation
+00:01 +28: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B21 equal scalar string is not a native captured identity
+00:01 +29: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: B22 explicit new controller captures native base and composing Save cannot publish
+00:01 +30: All tests passed!

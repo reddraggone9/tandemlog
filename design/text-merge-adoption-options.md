@@ -1,41 +1,155 @@
 # Text merge adoption choices — proposal, 2026-10-04
 
-Status: options for Lee's review. The isolated lab is authorized; production
-adoption and these new durable event meanings are not. Existing stable-v3 logs,
+Historical proposal and isolated evidence. Lee subsequently authorized production
+implementation and the shared baseline with an offline new-task exception;
+[ADR 0010](decisions/0010-collaborative-text-adoption.md) supersedes the decision
+status below. Its remaining native/platform gates are not marked complete.
+
+Status: Lee approved late legacy text writes losing after activation on 2026-10-04
+(Sentinel_17d7070781648191be317081ef30c28e). Bootstrap is still a proposal.
+The isolated lab is authorized; production adoption and new durable meanings are not. Existing stable-v3 logs,
 wall-clock causal ordering, Undo meaning, task schedules and shared folders stay
 unchanged. [Prototype evidence](text-merge-prototype.md) records what was run.
 
 | Boundary | Alternatives | Recommendation | Decision owner |
 |---|---|---|---|
-| Old scalar writers | Convert arriving whole strings to delete/insert; start a replacement epoch; require upgraded writers and report incompatible late work | Explicit writer upgrade before text activation. Preserve v3 projection before activation; retain and report later unupgraded scalar edits rather than silently applying or dropping them | **Lee:** coordinated upgrade and incompatible-old-writer behavior, before adoption |
+| Legacy scalar writes | Convert whole strings; retain manual conflicts; let uncovered writes lose after activation | **Approved:** uncovered legacy text writes lose in the visible projection; retain original records, no reconciliation UI | Lee decided; bounded Linux prototype passes, production integration pending |
+| First activation | Independent snapshot seeds; common bootstrap basis; automatic rebasing | **Proposed:** one shared immutable baseline, issued once on a chosen device; derive field seeds lazily from that basis | Lee: accept one-time baseline sync before another upgraded device can Save |
 | Field/seed routing | Rely on equal seed text/client IDs; bind every packet to its document and shared seed | Validate space UUID, entity UUID, field, epoch UUID, exact seed SHA256 and codec/adapter version before native decode | Engineering detail implementing an approved protocol |
 | Actor allocation | Active-process counter; hash writer UUID; distinct immutable edit-batch identity with collision checking | Derive a nonreserved 53-bit actor from field/epoch/writer UUID/edit-batch UUID; persist the prepared batch and bind each actor to its origin. Detect collisions explicitly; never reuse a cancelled or retried batch for different content | Engineering detail; no new user preference |
 | Checkpoint | Rendered string or ordinary diff; complete native state with a verified replay frontier | Rebuildable SQLite field checkpoint: full state including pending structs/delete sets, exact context/version/hash, source chain heads/frontier. Retain original canonical update bytes | Engineering detail; accepted cache/canonical boundaries already apply |
 | Resource limits | One limit for visible text/update/history; unlimited native history; separate measured budgets | Preserve current title500/notes10000 UTF16 limits; start testing 1MiB decoded update, 8MiB field checkpoint and 64MiB active native cache with lazy loading. These are proposed test budgets, not accepted limits | Engineering tuning; **Lee** if visible limits change or history compaction/repair is proposed |
 
-## Writer upgrade and one shared activation
+## Approved legacy policy
 
-For `Buy oats`, a later old client replacing the field with `Buy oats; check
-cupboard` cannot express which characters it intended to delete. Converting that
-string against the received merged document could erase a concurrent `and fruit`.
-Choosing whole-field LWW would preserve convergence but defeat the requested
-text merge. Neither should happen silently.
+Once a field is activated, legacy whole-field writes outside its declared
+baseline lose in the visible text projection. Preserve their original canonical
+bytes, clocks, IDs and hashes. No manual reconciliation UI, converted character
+operations or receipt-time rewriting is proposed. A higher scalar clock does not
+make an excluded legacy value replace CRDT text. The clock remains ordinary event
+metadata and is still observed according to the existing clock/warning contract.
 
-Recommended cutover: synchronize and stop old writers, upgrade them, then create
-one immutable activation/seed per existing field from its actual final v3
-projection. New readers still replay every earlier v3 event with its original
-meaning. An explicit reader/writer boundary prevents an informed old client from
-writing; genuinely offline stale clients may still append old-format logs. Their
-late records remain untouched and produce an explicit incompatible-writer error
-with a recovery choice, not receive-time rewriting or silent exclusion. Activation
-records must identify the observed writer frontiers, so admission does not guess
-cutover from wall-clock timestamps. Concurrent incompatible activations fail
-explicitly instead of selecting a seed that loses another epoch's edits.
+"Outside the baseline" is defined by explicit included writer sequence/hash
+frontiers, not event arrival order or wall time. An old edit can arrive before the
+activation and appear temporarily under ordinary v3 rules; once the full event
+set is known, it must lose identically on every replica if it was not included.
+The declared historical prefix continues to use the original v3 field/retraction
+projection. A late legacy Undo cannot roll back CRDT work. Non-text effects of a
+legacy event keep their original meaning where safe field isolation is proven;
+this permission is only about its title/notes values, not schedules, tags,
+completion or canonical integrity failures.
 
-This requires Lee's approval of a coordinated upgrade and the recovery behavior.
-A concrete recovery proposal can offer the preserved old edit for manual merge;
-it must not automatically replace the CRDT document or rewrite history. No such
-migration/recovery operation is implemented by the lab.
+Old readers still stop on unknown required semantics and request an upgrade.
+An offline old device can write until it receives those records, but those
+uncovered text values now deliberately lose. A synchronized stop/upgrade is
+optional risk reduction, not mandatory. No old record or historical meaning is
+rewritten, and no old history is deleted.
+
+## First activation must share a native basis
+
+Lee's permission for old edits to lose does **not** permit upgraded CRDT edits to
+lose. Two independent activations can safely coincide only if they derive the
+same field identity and native seed from the same already agreed basis. Exact
+identical activations are idempotent; equal rendered strings alone do not prove
+identical native state or covered history.
+
+If A independently seeds `Buy oats` and B seeds `Buy fruit`, hashing the seeds
+only produces two identities. Selecting the earliest received root diverges by
+arrival order. Selecting a minimum ID converges but can hide acknowledged CRDT
+updates on the other root. Importing both independent historical seeds duplicates
+baseline text. The approved legacy loser policy cannot make any of these safe.
+Frontiers describe what each device saw; they do not establish agreement between
+those different snapshots.
+
+### Simplest proposed bootstrap
+
+Create **one immutable shared activation baseline on a chosen upgraded device**,
+then let every upgraded device derive field seeds lazily from that same record.
+The existing fields' baseline is their original v3 projection at its declared
+frontiers, verified from preserved canonical history. Native state can still be
+loaded lazily; independent first field edits no longer invent independent cuts.
+A field identity includes space/entity/field, the shared activation reference,
+codec and exact seed-state digest. New fields/recurring successors require their
+own canonical creation-based initialization, retaining their distinct identities.
+
+For the minimal implementation, **gate new title/notes editing until the common
+baseline and referenced history are verified**, rather than allowing an arbitrary
+scalar draft and only gating Save. Gating applies to the designated device too
+while its seed is being prepared/validated. After the other upgraded device has
+received the baseline, normal CRDT editing is offline-capable.
+
+An existing unsaved draft must remain available as the user's private text with
+its captured scalar base and editing value. Arrival of activation must not clear
+it, copy it into the new live Y.Text, submit it automatically, or relabel it as an
+edit captured against the native seed. Even receiving activation before Save
+proves nothing about the base used while the draft was typed. For example, a draft
+made from `Buy oats` cannot safely become a whole replacement of a live seeded
+`Buy fruit and milk` without erasing other content.
+
+A new writable CRDT editing session must explicitly capture the verified native
+field/epoch/state before interpreting edits. Preserve a stranded pre-activation
+draft for deliberate user handling (for example, copying its content before
+opening the verified editor); never imply automatic lossless rebasing. Explicit
+handling of unsaved local text is distinct from reconciliation of retained legacy
+canonical edits, which Lee has declined. Do not promise survival through process
+termination unless separate draft persistence is actually implemented.
+
+This is not an all-device stop or simultaneous upgrade: the chosen device can
+proceed once it has established its own valid baseline, while the old device's
+excluded canonical text writes lose. A device must not acknowledge a merged-text
+Save, fall back to a legacy scalar Save, or invent a replacement root while its
+shared native context is missing or incompatible.
+
+The issuer/reference must be explicitly agreed **before any CRDT Save is
+acknowledged**. The current v3 manifest has only version and space UUID; it does
+not already designate an activation authority. Do not invent an authority from
+first arrival, the currently visible writer list or an independently editable
+manifest copy. The bootstrap procedure/descriptor needs an explicit single
+issuer/reference; receiving an unsupported second root must retain evidence and
+fail safely, not elect it over acknowledged work. A user enabling two independent
+bootstrap roots while disconnected violates this proposed single-root procedure;
+handling that automatically is not proven or included in the simplest design.
+
+This is the unavoidable tradeoff of the simple design: a newly upgraded device
+cannot make its **first** CRDT Save offline without the shared baseline. Requiring
+that one-time shared basis removes the need to reconcile ordinary legacy edits
+or automatically merge incompatible upgraded roots. The exact authority/bootstrap
+mechanism remains a design gate, not an implemented protocol claim.
+
+### Alternatives
+
+- Allow fully independent snapshot activation: guarantees offline first-Save
+  availability, but differing roots need preserved branches and a reconciliation
+  design. No silently losing upgraded branch is allowed. This is more complex.
+- Use a common immutable task-creation seed everywhere: avoids seed races only if
+  the subsequent v3 scalar history is also represented consistently. Late or
+  missing historical replacements must not change character identities already
+  edited. That conversion algorithm is unproven and larger than one common cut.
+- Automatically rebase differing roots: plain full-string events do not carry
+  character intent. A deterministic diff/three-way mapping may retain insertions
+  but cannot generally recover intended deletion/anchors. Do not advertise that
+  as equivalent to native shared-basis CRDT merging without stronger policy/tests.
+- Keep LWW for now: no bootstrap dependency, with the existing visible loss of
+  concurrent text edits. This remains preferable to silently losing upgraded
+  edits behind an unproven migration.
+
+Recommendation: implement the approved legacy loser policy; prefer the one
+shared baseline and one-time sync limitation for a first adoption. No production
+activation or recovery operation is implemented. The separately frozen
+[activation-policy matrix](../experiments/yrs-spike/evidence/activation-policy-matrix.json)
+extends acceptance requirements without changing earlier frozen assertions. Its
+separate [four-case draft extension](../experiments/yrs-spike/evidence/activation-draft-policy-matrix.json)
+adds editing gates and explicit captured-base handling. These frozen documents
+retain their pre-implementation `not-run` entries. The isolated
+[activation coordinator](../experiments/yrs-spike/activation_lab/README.md) now
+passes all22 policy cases plus four native-preparation and four stronger recovery
+cases on Linux. [Results](../experiments/yrs-spike/evidence/activation-results.json)
+record actual TaskStore compatibility, native pending-state restore,
+fresh-process replay, draft/controller handling and the five reproduced fixes.
+This validates the bounded behavior with an explicitly configured issuer; it
+does not establish production bootstrap agreement, crash-safe Undo or the new
+coordinator's Windows/Android acceptance. The separate Android editor lab has
+partial parent-reported runtime/OS-IME acceptance; remaining checks are pending.
 
 ## Field and actor bindings
 

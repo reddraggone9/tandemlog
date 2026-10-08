@@ -1,0 +1,19 @@
+{
+  "reviewer": "independent correctness agent",
+  "covered_range": [
+    "5ac35da50acca69ab196a54312efc8ccef1452da",
+    "e205e650b5614935a73cf5acb96ca9b36fda8e4e"
+  ],
+  "reviewed_notes_commit": "1eda9277909deefe74ddbedb5ea196ae0ffcd4bd",
+  "notes_sha256": "1001b5556fc718e00e62e582458c6c3ce5c714941b972922ebadcd0de4853a64",
+  "media_commit": "89cec5a13900291df9f1cb841c5351277f38f4ff",
+  "image": "tag-control-before-after.png",
+  "image_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+  "remote_image_http": 200,
+  "remote_image_bytes": 9566,
+  "github_blob_sha": "d836a02a734195cd393bebe94c914f7d01f81bb0",
+  "source_and_content_review": "accepted; six concise supported topics; existing-task setup clarified; Filter control described as shared",
+  "provenance_and_pixel_review": "all9 receipt hashes verified; bothraw and finalactualPNG viewed; exactcropRGBA bytes match raw; identicalcaptureharness on exact5ac/e205 with no prod changes",
+  "link_review": "accepted; immutable URL, rawremote bytes/hash and GitHubmetadata match",
+  "acceptance": "editorial gate complete only; no CI/native/runtime/quota/publication assertion"
+}

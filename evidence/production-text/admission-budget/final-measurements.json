@@ -1,0 +1,300 @@
+[
+  {
+    "mode": "title1000",
+    "soSha256": "892d5048fc30c615fd672a6d6e9a8000ca8fdf6723271e54317356debf9bc6b3",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11252,
+    "finalRssKiB": 14420,
+    "peakRssKiB": 15232,
+    "peakMinusBaselineKiB": 4284,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.347285,
+        "meanMs": 0.347285,
+        "p95Ms": 0.347285
+      },
+      "new": {
+        "count": 2,
+        "maxMs": 0.26458,
+        "meanMs": 0.189827,
+        "p95Ms": 0.26458
+      },
+      "draft": {
+        "count": 1,
+        "maxMs": 0.183958,
+        "meanMs": 0.183958,
+        "p95Ms": 0.183958
+      },
+      "edit": {
+        "count": 1002,
+        "maxMs": 2.907714,
+        "meanMs": 1.0104744221556885,
+        "p95Ms": 1.831837
+      },
+      "read": {
+        "count": 2,
+        "maxMs": 0.063125,
+        "meanMs": 0.046615500000000004,
+        "p95Ms": 0.063125
+      },
+      "prepare": {
+        "count": 1,
+        "maxMs": 0.044057,
+        "meanMs": 0.044057,
+        "p95Ms": 0.044057
+      },
+      "apply": {
+        "count": 2,
+        "maxMs": 0.41663,
+        "meanMs": 0.2929125,
+        "p95Ms": 0.41663
+      },
+      "save": {
+        "count": 1,
+        "maxMs": 2.29612,
+        "meanMs": 2.29612,
+        "p95Ms": 2.29612
+      },
+      "prepare_undo": {
+        "count": 1,
+        "maxMs": 0.30489,
+        "meanMs": 0.30489,
+        "p95Ms": 0.30489
+      },
+      "commit_undo": {
+        "count": 1,
+        "maxMs": 0.429138,
+        "meanMs": 0.429138,
+        "p95Ms": 0.429138
+      },
+      "usage": {
+        "count": 1,
+        "maxMs": 0.055183,
+        "meanMs": 0.055183,
+        "p95Ms": 0.055183
+      }
+    },
+    "outcome": {
+      "edits": 1000,
+      "remotePreserved": true,
+      "preparedEqualsSaved": true,
+      "usage": {
+        "accounting": "serialized-payload-bytes-not-native-rss",
+        "client": 10,
+        "globalLimitBytes": 67108864,
+        "globalRetainedBytes": 5070,
+        "limits": {
+          "admissionUnits": 100000,
+          "retainedBytes": 67108864,
+          "sessionBytes": 16777216,
+          "stateBytes": 8388608,
+          "updateBytes": 1048576,
+          "visibleUtf16": 500
+        },
+        "ownerGuid": "daa8440c-8280-425b-9e5d-5c0ffd35c577",
+        "preparedBytes": 0,
+        "receiptBytes": 711,
+        "replayBytes": 1593,
+        "retainedBytes": 3918,
+        "sessionBytes": 1593,
+        "stateBytes": 1568,
+        "visibleUtf16": 498
+      },
+      "initializedRssKiB": 12276
+    }
+  },
+  {
+    "mode": "notes1000",
+    "soSha256": "892d5048fc30c615fd672a6d6e9a8000ca8fdf6723271e54317356debf9bc6b3",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11248,
+    "finalRssKiB": 17620,
+    "peakRssKiB": 17404,
+    "peakMinusBaselineKiB": 6456,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.441226,
+        "meanMs": 0.441226,
+        "p95Ms": 0.441226
+      },
+      "new": {
+        "count": 2,
+        "maxMs": 3.548653,
+        "meanMs": 2.551025,
+        "p95Ms": 3.548653
+      },
+      "draft": {
+        "count": 1,
+        "maxMs": 1.4231,
+        "meanMs": 1.4231,
+        "p95Ms": 1.4231
+      },
+      "edit": {
+        "count": 1002,
+        "maxMs": 11.46875,
+        "meanMs": 2.6177290399201594,
+        "p95Ms": 3.356582
+      },
+      "read": {
+        "count": 2,
+        "maxMs": 0.049164,
+        "meanMs": 0.0474365,
+        "p95Ms": 0.049164
+      },
+      "prepare": {
+        "count": 1,
+        "maxMs": 0.021693,
+        "meanMs": 0.021693,
+        "p95Ms": 0.021693
+      },
+      "apply": {
+        "count": 2,
+        "maxMs": 3.391464,
+        "meanMs": 2.566863,
+        "p95Ms": 3.391464
+      },
+      "save": {
+        "count": 1,
+        "maxMs": 5.099125,
+        "meanMs": 5.099125,
+        "p95Ms": 5.099125
+      },
+      "prepare_undo": {
+        "count": 1,
+        "maxMs": 2.557294,
+        "meanMs": 2.557294,
+        "p95Ms": 2.557294
+      },
+      "commit_undo": {
+        "count": 1,
+        "maxMs": 3.231153,
+        "meanMs": 3.231153,
+        "p95Ms": 3.231153
+      },
+      "usage": {
+        "count": 1,
+        "maxMs": 0.079661,
+        "meanMs": 0.079661,
+        "p95Ms": 0.079661
+      }
+    },
+    "outcome": {
+      "edits": 1000,
+      "remotePreserved": true,
+      "preparedEqualsSaved": true,
+      "usage": {
+        "accounting": "serialized-payload-bytes-not-native-rss",
+        "client": 10,
+        "globalLimitBytes": 67108864,
+        "globalRetainedBytes": 52570,
+        "limits": {
+          "admissionUnits": 100000,
+          "retainedBytes": 67108864,
+          "sessionBytes": 16777216,
+          "stateBytes": 8388608,
+          "updateBytes": 1048576,
+          "visibleUtf16": 10000
+        },
+        "ownerGuid": "89a61208-1395-4bf5-b60e-cc49696e074f",
+        "preparedBytes": 0,
+        "receiptBytes": 10211,
+        "replayBytes": 11093,
+        "retainedBytes": 32418,
+        "sessionBytes": 11093,
+        "stateBytes": 11068,
+        "visibleUtf16": 9998
+      },
+      "initializedRssKiB": 14560
+    }
+  },
+  {
+    "mode": "hostile500",
+    "soSha256": "892d5048fc30c615fd672a6d6e9a8000ca8fdf6723271e54317356debf9bc6b3",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11252,
+    "finalRssKiB": 17004,
+    "peakRssKiB": 18224,
+    "peakMinusBaselineKiB": 7276,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.297159,
+        "meanMs": 0.297159,
+        "p95Ms": 0.297159
+      },
+      "new": {
+        "count": 1,
+        "maxMs": 0.264009,
+        "meanMs": 0.264009,
+        "p95Ms": 0.264009
+      },
+      "state": {
+        "count": 2,
+        "maxMs": 0.115375,
+        "meanMs": 0.09252,
+        "p95Ms": 0.115375
+      },
+      "apply": {
+        "count": 1,
+        "maxMs": 2.18436,
+        "meanMs": 2.18436,
+        "p95Ms": 2.18436
+      }
+    },
+    "outcome": {
+      "preApplyPayloadRssKiB": 16008,
+      "decodedUpdateBytes": 1048576,
+      "rejection": {
+        "error": "admission identity budget"
+      },
+      "stateUnchanged": true,
+      "initializedRssKiB": 12276
+    }
+  },
+  {
+    "mode": "hostile10000",
+    "soSha256": "892d5048fc30c615fd672a6d6e9a8000ca8fdf6723271e54317356debf9bc6b3",
+    "baselineRssKiB": 10948,
+    "loadedRssKiB": 11252,
+    "finalRssKiB": 16148,
+    "peakRssKiB": 20876,
+    "peakMinusBaselineKiB": 9928,
+    "calls": {
+      "seed": {
+        "count": 1,
+        "maxMs": 0.378162,
+        "meanMs": 0.378162,
+        "p95Ms": 0.378162
+      },
+      "new": {
+        "count": 1,
+        "maxMs": 2.934755,
+        "meanMs": 2.934755,
+        "p95Ms": 2.934755
+      },
+      "state": {
+        "count": 2,
+        "maxMs": 0.146281,
+        "meanMs": 0.132565,
+        "p95Ms": 0.146281
+      },
+      "apply": {
+        "count": 1,
+        "maxMs": 3.098602,
+        "meanMs": 3.098602,
+        "p95Ms": 3.098602
+      }
+    },
+    "outcome": {
+      "preApplyPayloadRssKiB": 18340,
+      "decodedUpdateBytes": 1048576,
+      "rejection": {
+        "error": "admission identity budget"
+      },
+      "stateUnchanged": true,
+      "initializedRssKiB": 14580
+    }
+  }
+]

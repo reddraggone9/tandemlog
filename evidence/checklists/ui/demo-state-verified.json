@@ -1,0 +1,129 @@
+{
+  "source": "7d6a8bd8baa74e136ce26b8d75a138e47a9adf0d",
+  "synthetic": true,
+  "history_verified": true,
+  "canonical_unchanged_during_inspection": true,
+  "parent": {
+    "id": "84b20089-b9e9-4a2d-8d91-c205631e7c09",
+    "kind": "task",
+    "assignee": "952d6cce-736a-4236-af53-f1a62a2d0770",
+    "description": "Keep the route notes here.",
+    "schedule": {
+      "dueDate": "2026-10-01",
+      "recurrence": "every week when done"
+    },
+    "title": "Pack for a walk",
+    "order": "1790942400000000001:122c369c-a72c-4d39-a8cd-9182a5bdca04",
+    "inbox": false,
+    "tags": [],
+    "deleted": false,
+    "tagRefs": {},
+    "completed": true,
+    "completedAt": "2026-10-08",
+    "checklist": [
+      {
+        "id": "6acd4663-4feb-43a1-ab7f-daa636192875",
+        "kind": "checklistItem",
+        "before": null,
+        "description": "Printed route",
+        "parent": "84b20089-b9e9-4a2d-8d91-c205631e7c09",
+        "title": "Map",
+        "order": "1790942400000000003:122c369c-a72c-4d39-a8cd-9182a5bdca04",
+        "completed": false,
+        "deleted": false
+      },
+      {
+        "id": "5d828eaa-a04b-473f-9b55-e88c9c1fcf57",
+        "kind": "checklistItem",
+        "before": null,
+        "description": "",
+        "parent": "84b20089-b9e9-4a2d-8d91-c205631e7c09",
+        "title": "Water bottle",
+        "order": "1790942400000000002:122c369c-a72c-4d39-a8cd-9182a5bdca04",
+        "completed": true,
+        "deleted": false
+      },
+      {
+        "id": "a01c06c1-7fbc-4969-85df-52ad555d538f",
+        "kind": "checklistItem",
+        "before": null,
+        "description": "Trail mix\nNo peanuts",
+        "parent": "84b20089-b9e9-4a2d-8d91-c205631e7c09",
+        "title": "Trail snacks",
+        "order": "1791442454394579000:f1f24039-8d4e-4ffc-8453-aafe6d1135ed",
+        "completed": false,
+        "deleted": false
+      }
+    ]
+  },
+  "successor": {
+    "id": "a119a352-62a0-5475-ad33-0f4cd75d636a",
+    "kind": "task",
+    "assignee": "952d6cce-736a-4236-af53-f1a62a2d0770",
+    "description": "Keep the route notes here.",
+    "schedule": {
+      "dueDate": "2026-10-15",
+      "dueMaxDays": null,
+      "dueMinDays": null,
+      "dueTime": null,
+      "recurrence": "every week when done",
+      "scheduledDate": null,
+      "scheduledTime": null,
+      "startDate": null,
+      "startTime": null,
+      "timeZone": null
+    },
+    "tags": [],
+    "title": "Pack for a walk",
+    "order": "1791442634371813000:f1f24039-8d4e-4ffc-8453-aafe6d1135ed",
+    "inbox": false,
+    "deleted": false,
+    "tagRefs": {},
+    "completed": false,
+    "completedAt": null,
+    "successorSuppressed": false,
+    "checklist": [
+      {
+        "id": "826bcf71-e4eb-582a-a806-676373e8688c",
+        "kind": "checklistItem",
+        "parent": "a119a352-62a0-5475-ad33-0f4cd75d636a",
+        "source": "6acd4663-4feb-43a1-ab7f-daa636192875",
+        "title": "Map",
+        "description": "Printed route",
+        "before": null,
+        "order": "1791442634371813000:f1f24039-8d4e-4ffc-8453-aafe6d1135ed",
+        "completed": false,
+        "deleted": false
+      },
+      {
+        "id": "6dc925c0-589b-53d6-87a4-f06a7d864d6c",
+        "kind": "checklistItem",
+        "parent": "a119a352-62a0-5475-ad33-0f4cd75d636a",
+        "source": "5d828eaa-a04b-473f-9b55-e88c9c1fcf57",
+        "title": "Water bottle",
+        "description": "",
+        "before": null,
+        "order": "1791442634371813000:f1f24039-8d4e-4ffc-8453-aafe6d1135ed",
+        "completed": false,
+        "deleted": false
+      },
+      {
+        "id": "2f599605-bf99-541b-8846-796c92621116",
+        "kind": "checklistItem",
+        "parent": "a119a352-62a0-5475-ad33-0f4cd75d636a",
+        "source": "a01c06c1-7fbc-4969-85df-52ad555d538f",
+        "title": "Trail snacks",
+        "description": "Trail mix\nNo peanuts",
+        "before": null,
+        "order": "1791442634371813000:f1f24039-8d4e-4ffc-8453-aafe6d1135ed",
+        "completed": false,
+        "deleted": false
+      }
+    ]
+  },
+  "canonical_sha256": {
+    "tandemlog-space.json": "25f503da838bc7246f09313b9b9ad0c1a582087a5831ca8c8d0e4fa38f655b8f",
+    "122c369c-a72c-4d39-a8cd-9182a5bdca04.jsonl": "630be7ed9a30b63abd6d592ec83feb25ae5e49a4e5f255a55737612a93f4b8cc",
+    "f1f24039-8d4e-4ffc-8453-aafe6d1135ed.jsonl": "fdc09c313a0cb6d048e28b0b3ef5ae7c66a5fd88616047c88aea1c8035487b14"
+  }
+}

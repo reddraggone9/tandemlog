@@ -1,0 +1,19 @@
+{
+  "frozen_utc": "2026-10-04T20:43:27.819172+00:00",
+  "approval_reference": "Sentinel_906078ee71408191bb93f64b1b34d823",
+  "approval_condition": "One-time shared baseline for legacy fields must not gate newly created native tasks on upgraded devices.",
+  "implementation_present": false,
+  "test_sha256": "6a0f4d5f3964143c53ea04b7b3f2a581e74d44af5ecafc80349453310b0f87bf",
+  "red_log_sha256": "e9842e735ea19310c97005623ac2fa029216f2c88bb6cf5d25dcfe3c267c8f3d",
+  "red_result": "7 executed tests, 7 failures; new required creation type unsupported. Negative seed case requires specific seed-mismatch failure so unsupported-type rejection does not falsely pass.",
+  "cases": [
+    "N01 offline native title and notes without baseline",
+    "N02 independent creations and later cross-device edits",
+    "N03 stable separate creation/entity/field identities",
+    "N04 new native fields unaffected by pending legacy migration",
+    "N05 canonical-only cache-loss/restart identity",
+    "N06 native update before creation retained pending",
+    "N07 seed mismatch preserved and blocks safely"
+  ],
+  "scope": "Synthetic coordinator/native API plus production decoder/projection; not full platform/app acceptance."
+}

@@ -1,0 +1,37 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/text_store_test.dart
+00:00 +0: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild
+00:00 +0 -1: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild [E]
+  Expected: [
+              '8d254d18-7cae-46d5-b215-ea9fc8e50eb0',
+              '54cbb676-dd1b-46c0-b816-a88c908285f3',
+              'b9b9a898-10d7-4e93-b755-69f89d970759'
+            ]
+    Actual: [
+              '54cbb676-dd1b-46c0-b816-a88c908285f3',
+              '8d254d18-7cae-46d5-b215-ea9fc8e50eb0',
+              'b9b9a898-10d7-4e93-b755-69f89d970759'
+            ]
+     Which: at location [0] is '54cbb676-dd1b-46c0-b816-a88c908285f3' instead of '8d254d18-7cae-46d5-b215-ea9fc8e50eb0'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/text_store_test.dart 68:13                     main.<fn>.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild

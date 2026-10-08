@@ -1,0 +1,7 @@
+{
+  "frozen_red_commit": "619a6ccd03b41adfa47cfafba8115313089c3c60",
+  "production_base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "test_sha256": "69d0b8d63d7a5f47490cc5e313b4d4c3b95846cfc0f2d2fd2740082b41ec2178",
+  "outcome": "4/4 compile and fail on missing shared tag controls/accessibility behavior",
+  "log_sha256": "f54de8bd8287b549c55e75031d80d3cce794d971af25e0ee5ed3ee01fdd4e99f"
+}

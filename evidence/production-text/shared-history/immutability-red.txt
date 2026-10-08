@@ -1,0 +1,50 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/shared_text_history_test.dart
+00:00 +0: one original operation is retained across immutable recurrence references
+00:00 +1: union order and duplicate arrival retain one reference to each original
+00:00 +2: equal seed text cannot authorize independent roots or forged packet claims
+00:00 +3: canonical packet metadata is checked before retaining a reference
+00:00 +3 -1: canonical packet metadata is checked before retaining a reference [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Closure: () => SharedTextReference>
+     Which: returned <Instance of 'SharedTextReference'>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_history_test.dart 172:5            main.<fn>
+  
+00:00 +3 -1: retained original packets are deeply immutable and privately owned
+00:00 +3 -2: retained original packets are deeply immutable and privately owned [E]
+  Expected: contains pair 'context' => 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+    Actual: {'context': 'forged'}
+     Which:  contains key 'context' but with value is different.
+            Expected: aaaaaaaaaa ...
+              Actual: forged
+                      ^
+             Differ at offset 0
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_history_test.dart 218:7            main.<fn>
+  
+00:00 +3 -2: incremental native replay is linear and sparse checkpoints preserve historical state
+00:00 +4 -2: evicting native roots and closing a materializer does not change references
+00:00 +5 -2: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/shared_text_history_test.dart: canonical packet metadata is checked before retaining a reference
+  /workspace/tandemlog/test/shared_text_history_test.dart: retained original packets are deeply immutable and privately owned

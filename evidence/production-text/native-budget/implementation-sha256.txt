@@ -1,0 +1,3 @@
+4e8ddfc19ff01de23e9e3552af732a62e3348232c053368b0c4e8dbbfd4db4c4  native/text_engine/src/lib.rs
+8403a0317ea899bd3bbf5c127daaab3e3bc400ed1caf281c9c8dd4f4170d4489  native/text_engine/src/admission.rs
+945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d  /tmp/tandemlog-production-text-target/x86_64-unknown-linux-gnu/release/libtandemlog_text.so

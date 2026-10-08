@@ -1,0 +1,420 @@
+{
+    "project": ":",
+    "root": "/workspace/recovery/kotlin-remediation-flutter-sdk/packages/flutter_tools/gradle",
+    "gradleVersion": "9.3.1",
+    "plugins": [
+        {
+            "implementation": "org.jetbrains.kotlin.gradle.scripting.internal.ScriptingKotlinGradleSubplugin",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.2.21/c4379902f2048e2421f9df070f2f93e154233576/kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.jetbrains.kotlin.gradle.scripting.internal.ScriptingGradleSubplugin",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.2.21/c4379902f2048e2421f9df070f2f93e154233576/kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.jetbrains.kotlin.gradle.plugin.KotlinPluginWrapper",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.2.21/c4379902f2048e2421f9df070f2f93e154233576/kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.plugins.embedded.EmbeddedKotlinPlugin_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "implementationVersion": "9.3.0"
+        },
+        {
+            "implementation": "org.jetbrains.kotlin.samWithReceiver.gradle.SamWithReceiverGradleSubplugin",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-sam-with-receiver/2.2.21/d3f3b33755ecefc62788be645108dc1cb60c74e1/kotlin-sam-with-receiver-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.jetbrains.kotlin.assignment.plugin.gradle.AssignmentSubplugin",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-assignment/2.2.21/414860dbcdf52c9921164e10e3fb4ef9e4ea57ee/kotlin-assignment-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.plugins.dsl.KotlinDslCompilerPlugins_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "implementationVersion": "9.3.0"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.plugins.base.KotlinDslBasePlugin_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "implementationVersion": "9.3.0"
+        },
+        {
+            "implementation": "org.jetbrains.kotlin.gradle.plugin.KotlinBaseApiPlugin_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.2.21/c4379902f2048e2421f9df070f2f93e154233576/kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "implementationVersion": "2.2.21-release-469"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.plugins.precompiled.PrecompiledScriptPlugins_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "implementationVersion": "9.3.0"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.plugins.dsl.KotlinDslPlugin_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "implementationVersion": "9.3.0"
+        },
+        {
+            "implementation": "org.gradle.kotlin.dsl.provider.plugins.KotlinScriptBasePlugin_Decorated",
+            "location": "file:/workspace/recovery/kotlin-remediation-static/gradle-9.3.1/lib/plugins/gradle-kotlin-dsl-provider-plugins-9.3.1.jar",
+            "implementationVersion": "9.3.1"
+        }
+    ],
+    "selectedArtifacts": [
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.gradle.kotlin:gradle-kotlin-dsl-plugins:6.4.2",
+            "filename": "gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.gradle.kotlin/gradle-kotlin-dsl-plugins/6.4.2/7794180edeab731e80c482c2ed7c4fa45ade190e/gradle-kotlin-dsl-plugins-6.4.2.jar",
+            "sha256": "3308645f467b266e5884c264508224b6729e8edc166e6d435f5b626c14e0fd19"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:2.2.21",
+            "filename": "kotlin-stdlib-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.2.21/fa374a986e128314c3db00a20aae55f72a258511/kotlin-stdlib-2.2.21.jar",
+            "sha256": "6558a3d233da56a20934b32159f9db5f86ed5816ef098f78a2c223dc6abb79dd"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains:annotations:13.0",
+            "filename": "annotations-13.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-sam-with-receiver:2.2.21",
+            "filename": "kotlin-sam-with-receiver-2.2.21-gradle813.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-sam-with-receiver/2.2.21/d3f3b33755ecefc62788be645108dc1cb60c74e1/kotlin-sam-with-receiver-2.2.21-gradle813.jar",
+            "sha256": "b47c949b8bb80ce680723f8bc3c870f227c36477a5eb02c2b73d61118d4630a6"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-assignment:2.2.21",
+            "filename": "kotlin-assignment-2.2.21-gradle813.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-assignment/2.2.21/414860dbcdf52c9921164e10e3fb4ef9e4ea57ee/kotlin-assignment-2.2.21-gradle813.jar",
+            "sha256": "871c305479ae16b144d40c204ebdff01913005e8e98dab17b365c545a259f51d"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-model:2.2.21",
+            "filename": "kotlin-gradle-plugin-model-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-model/2.2.21/795270eb139937a85d8c1167631fdc6dffcc4403/kotlin-gradle-plugin-model-2.2.21.jar",
+            "sha256": "908e6e5c890bb49dbc9266dccf28bdb0c258c48647039aed702fe9d586640186"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:fus-statistics-gradle-plugin:2.2.21",
+            "filename": "fus-statistics-gradle-plugin-2.2.21-gradle813.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/fus-statistics-gradle-plugin/2.2.21/367f2b642ad1820d4c0daa8b620000acaf49fd93/fus-statistics-gradle-plugin-2.2.21-gradle813.jar",
+            "sha256": "27dcf4aeaa5bbb64d861bd29ed60d482f0ffd96244c81e2426b9dac5e7fdc63f"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.2.21",
+            "filename": "kotlin-gradle-plugin-api-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/2.2.21/e453118ef8a34b7b1eefd405ae205bd6ff7fc4e1/kotlin-gradle-plugin-api-2.2.21.jar",
+            "sha256": "b7bfd07f5f1e0a44af612eb48474df6328ee0f6f3a6a73642ce473f30645e1a5"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-api:2.2.21",
+            "filename": "kotlin-gradle-plugin-api-2.2.21-gradle813.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-api/2.2.21/e453118ef8a34b7b1eefd405ae205bd6ff7fc4e1/kotlin-gradle-plugin-api-2.2.21-gradle813.jar",
+            "sha256": "b7bfd07f5f1e0a44af612eb48474df6328ee0f6f3a6a73642ce473f30645e1a5"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.21",
+            "filename": "kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin/2.2.21/c4379902f2048e2421f9df070f2f93e154233576/kotlin-gradle-plugin-2.2.21-gradle813.jar",
+            "sha256": "b7a52865c6a5e160d2cf61e4d423ce44a6a20de0a6b23d03404b6d01a2811737"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-idea-proto:2.2.21",
+            "filename": "kotlin-gradle-plugin-idea-proto-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-idea-proto/2.2.21/542ed2b7cd517e84ce752173fa0c23737b1557de/kotlin-gradle-plugin-idea-proto-2.2.21.jar",
+            "sha256": "4b4be774efb9585af0fda180d33903d8272e497df7b81bb091fa9339ecda45bd"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-idea:2.2.21",
+            "filename": "kotlin-gradle-plugin-idea-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-idea/2.2.21/a07b350797aa4fe6d4bc6e1be2feecb638e94b13/kotlin-gradle-plugin-idea-2.2.21.jar",
+            "sha256": "ec969c5f0b099f823846232238f9bd64f3d3741e62ea9050ad2e432fad79d0a0"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-klib-commonizer-api:2.2.21",
+            "filename": "kotlin-klib-commonizer-api-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-klib-commonizer-api/2.2.21/ca8988005f26eb8951954c9cb00c7e36a352d3c/kotlin-klib-commonizer-api-2.2.21.jar",
+            "sha256": "58bc451ce62ed6befd077ac107ea5f133443e74dd78cf3a4a48f868e61837e8b"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-build-statistics:2.2.21",
+            "filename": "kotlin-build-statistics-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-statistics/2.2.21/ca0b6cd0a27a0b2442b37a6516fb223d50c4bf4a/kotlin-build-statistics-2.2.21.jar",
+            "sha256": "8dfdfb2b8f67fcdcc4cee3ef90a25af467ca295853b0ea019d0010acebd6f18a"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-util-klib-metadata:2.2.21",
+            "filename": "kotlin-util-klib-metadata-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-util-klib-metadata/2.2.21/5d2acad8f6ba832aa30cf50abb4f25bbe00ace34/kotlin-util-klib-metadata-2.2.21.jar",
+            "sha256": "022b95a3dfed949d7c2e47820bcd9836ee057b721513f773361e4333f6c76f8c"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:abi-tools-api:2.2.21",
+            "filename": "abi-tools-api-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/abi-tools-api/2.2.21/ed18ed85fcfa6c8ae4638feb3ebe706c5d3161af/abi-tools-api-2.2.21.jar",
+            "sha256": "239901f317c189b4b4cc8bc5e966943dc19e39259539e668baa5d7ef18eb916a"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-compiler-runner:2.2.21",
+            "filename": "kotlin-compiler-runner-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.2.21/3a0b430d2baccb16ec38b54f7c9ff190790374bf/kotlin-compiler-runner-2.2.21.jar",
+            "sha256": "a3a422e06bcd35a32a798d191ef6ebb35ea6b39c3553e941d39c01e631fc5c77"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-gradle-plugin-annotations:2.2.21",
+            "filename": "kotlin-gradle-plugin-annotations-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-gradle-plugin-annotations/2.2.21/c2a1aa72583f6fd07ca8a2909944c319f3df0c6d/kotlin-gradle-plugin-annotations-2.2.21.jar",
+            "sha256": "3594c40c7005d044952f80f704172bb6fd1844241025194fb16bee6d45da2e5b"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-native-utils:2.2.21",
+            "filename": "kotlin-native-utils-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-native-utils/2.2.21/4fe18e8ccd3bc5e8f7cafbdfb3ec8eb54882b8a/kotlin-native-utils-2.2.21.jar",
+            "sha256": "e74b14406dae0a02388187c62c1731183ba7d0d8e60675682de511a90afa6c56"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-tooling-core:2.2.21",
+            "filename": "kotlin-tooling-core-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-tooling-core/2.2.21/685151c03e638207a3b5045002411fbef78fdeb/kotlin-tooling-core-2.2.21.jar",
+            "sha256": "74014ec4f3ef78ce7da7e3e6964f2c526a3121d5c58fef8ca2979e5f344582f4"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-build-tools-api:2.2.21",
+            "filename": "kotlin-build-tools-api-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.2.21/16540f022aee144fa1f8311b2386def70c617e6e/kotlin-build-tools-api-2.2.21.jar",
+            "sha256": "31645ca52239b221ebd060a00fff8d8516ffdc88bbd9f4e4cd7ddb41a7068c70"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "com.google.code.gson:gson:2.11.0",
+            "filename": "gson-2.11.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/com.google.code.gson/gson/2.11.0/527175ca6d81050b53bdd4c457a6d6e017626b0e/gson-2.11.0.jar",
+            "sha256": "57928d6e5a6edeb2abd3770a8f95ba44dce45f3b23b7a9dc2b309c581552a78b"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-util-klib:2.2.21",
+            "filename": "kotlin-util-klib-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-util-klib/2.2.21/aa33b85baf74644feb9c5e12ac10b08f417359a/kotlin-util-klib-2.2.21.jar",
+            "sha256": "55400a917e6b984a6197eae78b5b52edbdf2cd6e0a7c3843f7954481bafb243f"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-util-io:2.2.21",
+            "filename": "kotlin-util-io-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-util-io/2.2.21/fa383bc0398a3b345940b428d53b5e0010ca07e3/kotlin-util-io-2.2.21.jar",
+            "sha256": "266aa4026a106f59fcefc3f151768870af91cef15e4011fac0aa1f1f567d49f4"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-daemon-client:2.2.21",
+            "filename": "kotlin-daemon-client-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.2.21/2efb121461157be31b601c740f6fa15cbf17c9bf/kotlin-daemon-client-2.2.21.jar",
+            "sha256": "3ce2ca3c5d7bc7c87c4149ac2c593d21a791d6776229ae123db645a3017de814"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0",
+            "filename": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+        },
+        {
+            "scope": "::buildscript.classpath",
+            "coordinate": "com.google.errorprone:error_prone_annotations:2.27.0",
+            "filename": "error_prone_annotations-2.27.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/com.google.errorprone/error_prone_annotations/2.27.0/91b2c29d8a6148b5e2e4930f070d4840e2e48e34/error_prone_annotations-2.27.0.jar",
+            "sha256": "24c923372c58e35d0b9f16a028929bb9aedc77521867c274f2bd0735df5ba1f5"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21",
+            "filename": "kotlin-compiler-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.2.21/b13aed5cf8412f9ee9d1e4db21bdcfebcc24f606/kotlin-compiler-embeddable-2.2.21.jar",
+            "sha256": "9588fa696ac5507af764fd5660df6894185e12704ec1bc3f5cb772af4987f295"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:2.2.21",
+            "filename": "kotlin-stdlib-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.2.21/fa374a986e128314c3db00a20aae55f72a258511/kotlin-stdlib-2.2.21.jar",
+            "sha256": "6558a3d233da56a20934b32159f9db5f86ed5816ef098f78a2c223dc6abb79dd"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-script-runtime:2.2.21",
+            "filename": "kotlin-script-runtime-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.2.21/e9b021c4e335e4ed7a7e3b32285249ae6bb3a6c8/kotlin-script-runtime-2.2.21.jar",
+            "sha256": "2b1519b427b514d1536c1b425674b03fe914af637924028e9959c6625442df51"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-reflect:1.6.10",
+            "filename": "kotlin-reflect-1.6.10.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-daemon-embeddable:2.2.21",
+            "filename": "kotlin-daemon-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.2.21/78fde5db1c92786448170b351d8f8868acabd2ce/kotlin-daemon-embeddable-2.2.21.jar",
+            "sha256": "91c0673c22e44b054ae0314d323860ebe1f3aff3f0ebc74fff82c4733dde09be"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0",
+            "filename": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+        },
+        {
+            "scope": "::kotlinCompilerClasspath",
+            "coordinate": "org.jetbrains:annotations:13.0",
+            "filename": "annotations-13.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-build-tools-impl:2.2.21",
+            "filename": "kotlin-build-tools-impl-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-impl/2.2.21/1b229b560a8ff5012e56e4be7d1d4a0731237e6c/kotlin-build-tools-impl-2.2.21.jar",
+            "sha256": "458b63ef8fc50a0a3180fe688ec1b995745992a05c495dac61e58d1088927a80"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-build-tools-api:2.2.21",
+            "filename": "kotlin-build-tools-api-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-build-tools-api/2.2.21/16540f022aee144fa1f8311b2386def70c617e6e/kotlin-build-tools-api-2.2.21.jar",
+            "sha256": "31645ca52239b221ebd060a00fff8d8516ffdc88bbd9f4e4cd7ddb41a7068c70"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-compiler-runner:2.2.21",
+            "filename": "kotlin-compiler-runner-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-runner/2.2.21/3a0b430d2baccb16ec38b54f7c9ff190790374bf/kotlin-compiler-runner-2.2.21.jar",
+            "sha256": "a3a422e06bcd35a32a798d191ef6ebb35ea6b39c3553e941d39c01e631fc5c77"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-compiler-embeddable:2.2.21",
+            "filename": "kotlin-compiler-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-compiler-embeddable/2.2.21/b13aed5cf8412f9ee9d1e4db21bdcfebcc24f606/kotlin-compiler-embeddable-2.2.21.jar",
+            "sha256": "9588fa696ac5507af764fd5660df6894185e12704ec1bc3f5cb772af4987f295"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:2.2.21",
+            "filename": "kotlin-scripting-compiler-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-compiler-embeddable/2.2.21/3d287b3a20b5ca9582d01f973733cfc5e5a363d6/kotlin-scripting-compiler-embeddable-2.2.21.jar",
+            "sha256": "d934b9d0c246bc09624b7068af58ad57cef11dbe2addbc7b19d250cce42de1c9"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-scripting-compiler-impl-embeddable:2.2.21",
+            "filename": "kotlin-scripting-compiler-impl-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-compiler-impl-embeddable/2.2.21/5f81790732711563152ec587631f160e9e6cb6fa/kotlin-scripting-compiler-impl-embeddable-2.2.21.jar",
+            "sha256": "788a3060c8e7997f8ae16ba5c0280d05005af0a42029f18cb10c5625b979fac3"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-daemon-client:2.2.21",
+            "filename": "kotlin-daemon-client-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-client/2.2.21/2efb121461157be31b601c740f6fa15cbf17c9bf/kotlin-daemon-client-2.2.21.jar",
+            "sha256": "3ce2ca3c5d7bc7c87c4149ac2c593d21a791d6776229ae123db645a3017de814"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-scripting-jvm:2.2.21",
+            "filename": "kotlin-scripting-jvm-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-jvm/2.2.21/144a2d8fc77a7e95ba7a7b6992091a60baf2e0dc/kotlin-scripting-jvm-2.2.21.jar",
+            "sha256": "83820c5fcc5d28f045f914ecd5900bbbcf8115b0d7007334de069fe6c70669e6"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-scripting-common:2.2.21",
+            "filename": "kotlin-scripting-common-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-scripting-common/2.2.21/9d3b00063626c0775dd91d1fc5c699d5a6e62e4e/kotlin-scripting-common-2.2.21.jar",
+            "sha256": "414ed91c3f5e4492b23cb9537842b4651038e25dad84107939f434c2203f2a92"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-stdlib:2.2.21",
+            "filename": "kotlin-stdlib-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/2.2.21/fa374a986e128314c3db00a20aae55f72a258511/kotlin-stdlib-2.2.21.jar",
+            "sha256": "6558a3d233da56a20934b32159f9db5f86ed5816ef098f78a2c223dc6abb79dd"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains:annotations:13.0",
+            "filename": "annotations-13.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains/annotations/13.0/919f0dfe192fb4e063e7dacadee7f8bb9a2672a9/annotations-13.0.jar",
+            "sha256": "ace2a10dc8e2d5fd34925ecac03e4988b2c0f851650c94b8cef49ba1bd111478"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-script-runtime:2.2.21",
+            "filename": "kotlin-script-runtime-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-script-runtime/2.2.21/e9b021c4e335e4ed7a7e3b32285249ae6bb3a6c8/kotlin-script-runtime-2.2.21.jar",
+            "sha256": "2b1519b427b514d1536c1b425674b03fe914af637924028e9959c6625442df51"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-reflect:1.6.10",
+            "filename": "kotlin-reflect-1.6.10.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-reflect/1.6.10/1cbe9c92c12a94eea200d23c2bbaedaf3daf5132/kotlin-reflect-1.6.10.jar",
+            "sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlin:kotlin-daemon-embeddable:2.2.21",
+            "filename": "kotlin-daemon-embeddable-2.2.21.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-daemon-embeddable/2.2.21/78fde5db1c92786448170b351d8f8868acabd2ce/kotlin-daemon-embeddable-2.2.21.jar",
+            "sha256": "91c0673c22e44b054ae0314d323860ebe1f3aff3f0ebc74fff82c4733dde09be"
+        },
+        {
+            "scope": "::kotlinBuildToolsApiClasspath",
+            "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0",
+            "filename": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "file": "/workspace/recovery/kotlin-remediation-gradle-home/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.8.0/ac1dc37a30a93150b704022f8d895ee1bd3a36b3/kotlinx-coroutines-core-jvm-1.8.0.jar",
+            "sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+        }
+    ],
+    "registeredPlatformOrAbiTasks": [
+        "::checkLegacyAbi",
+        "::dumpLegacyAbi"
+    ],
+    "selectedTaskGraph": [
+        ":kotlinRemediationReport"
+    ],
+    "r8VersionResource": null
+}

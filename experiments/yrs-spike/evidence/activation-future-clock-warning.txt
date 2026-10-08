@@ -1,0 +1,3 @@
+00:00 +0: loading /workspace/tandemlog/test/storage_test.dart
+00:00 +0: future records remain immutable and readable while warning permits writes
+00:00 +1: All tests passed!

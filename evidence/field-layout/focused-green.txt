@@ -1,0 +1,59 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart
+00:00 +0: /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:01 +1: /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:01 +2: /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:01 +3: /workspace/tandemlog-field-layout/test/task_editor_test.dart: blocked text instruction wraps with full semantics at narrow 200 percent
+00:01 +4: /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:01 +5: /workspace/tandemlog-field-layout/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:01 +6: /workspace/tandemlog-field-layout/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:02 +7: /workspace/tandemlog-field-layout/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:02 +8: /workspace/tandemlog-field-layout/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:02 +9: /workspace/tandemlog-field-layout/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:02 +10: /workspace/tandemlog-field-layout/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:03 +11: /workspace/tandemlog-field-layout/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:03 +12: /workspace/tandemlog-field-layout/test/task_editor_test.dart: single and bulk editors put tags and assignee after scheduling
+00:03 +13: /workspace/tandemlog-field-layout/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:04 +14: /workspace/tandemlog-field-layout/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:04 +15: /workspace/tandemlog-field-layout/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:06 +16: /workspace/tandemlog-field-layout/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:07 +17: /workspace/tandemlog-field-layout/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:08 +18: /workspace/tandemlog-field-layout/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:09 +19: /workspace/tandemlog-field-layout/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:09 +20: /workspace/tandemlog-field-layout/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:10 +21: /workspace/tandemlog-field-layout/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:10 +22: /workspace/tandemlog-field-layout/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:10 +23: /workspace/tandemlog-field-layout/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:11 +24: /workspace/tandemlog-field-layout/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:12 +25: /workspace/tandemlog-field-layout/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:12 +26: /workspace/tandemlog-field-layout/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:13 +27: /workspace/tandemlog-field-layout/test/task_editor_test.dart: bulk coupled validation checks every task
+00:14 +28: /workspace/tandemlog-field-layout/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:14 +29: /workspace/tandemlog-field-layout/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:15 +30: /workspace/tandemlog-field-layout/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:16 +31: /workspace/tandemlog-field-layout/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:16 +32: /workspace/tandemlog-field-layout/test/task_editor_test.dart: title and notes wire limits validate before save
+00:17 +33: /workspace/tandemlog-field-layout/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:17 +34: /workspace/tandemlog-field-layout/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:17 +35: /workspace/tandemlog-field-layout/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:18 +36: /workspace/tandemlog-field-layout/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:18 +37: /workspace/tandemlog-field-layout/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:19 +38: /workspace/tandemlog-field-layout/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:19 +39: /workspace/tandemlog-field-layout/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:20 +40: /workspace/tandemlog-field-layout/test/task_editor_test.dart: selection header wraps at narrow large text
+00:20 +41: /workspace/tandemlog-field-layout/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:20 +42: All tests passed!

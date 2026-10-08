@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui' show AppExitResponse;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -9,6 +10,11 @@ import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
+import 'application/task_text_session.dart';
+import 'application/text_save_command.dart';
+import 'application/checklist_completion_command.dart';
+import 'text/native_text_engine.dart';
+import 'text/native_text_licenses.dart';
 import 'domain/event.dart' show LogEvent;
 import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
@@ -21,6 +27,8 @@ import 'presentation/view_clock.dart';
 import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
+import 'presentation/checklist_panel.dart';
+import 'presentation/checklist_item_editor.dart';
 import 'presentation/failure_message.dart';
 import 'presentation/release_version_tile.dart';
 import 'platform/view_time_source.dart';
@@ -35,6 +43,7 @@ import 'storage/task_store.dart';
 void main() {
   debugPrint('TANDEMLOG_MAIN');
   WidgetsFlutterBinding.ensureInitialized();
+  registerNativeTextLicenses();
   runApp(const TandemlogApp());
 }
 
@@ -44,7 +53,9 @@ class TandemlogApp extends StatefulWidget {
     this.profilePath,
     this.folderActions,
     this.timeSourceFactory,
+    this.folderFactory,
   });
+  final LogFolder Function(String)? folderFactory;
   final String? profilePath;
   final FolderActions? folderActions;
   final ViewTimeSource Function(void Function())? timeSourceFactory;
@@ -103,6 +114,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
         appearance: appearance,
         folderActions: widget.folderActions ?? FolderActions(),
         timeSourceFactory: widget.timeSourceFactory,
+        folderFactory: widget.folderFactory,
       ),
     ),
   );
@@ -115,7 +127,9 @@ class TasksPage extends StatefulWidget {
     required this.appearance,
     required this.folderActions,
     this.timeSourceFactory,
+    this.folderFactory,
   });
+  final LogFolder Function(String)? folderFactory;
   final String? profilePath;
   final ValueNotifier<Appearance> appearance;
   final FolderActions folderActions;
@@ -126,6 +140,10 @@ class TasksPage extends StatefulWidget {
 
 class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
+  NativeTextEngine? textEngine;
+  TaskTextSession? editingText;
+  TextSaveCommand? textSaveCommand;
+  String? editingTextStatus;
   final undoHistory = SessionUndoHistory();
   String? user, error;
   final selectedTags = <String>{};
@@ -143,6 +161,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool closingEditor = false, bulkConflict = false;
   var editorKey = GlobalKey<TaskEditorState>();
   var bulkEditorKey = GlobalKey<BulkTaskEditorState>();
+  GlobalKey<ChecklistItemEditorState>? checklistEditorKey;
+  BuildContext? checklistDialogContext;
+  bool openingChecklistEditor = false;
+  bool checklistEditorClosing = false;
+  Completer<void>? checklistEditorDone;
+  Future<bool>? checklistCloseRequest;
   final search = TextEditingController();
   final searchFocus = FocusNode();
   bool searchOpen = false;
@@ -341,15 +365,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _open(String location) async {
     if (!await _closeEditor()) return;
     _clearSelection();
-    final LogFolder folder = Platform.isAndroid
-        ? AndroidLogFolder(location)
-        : LocalLogFolder(location);
+    final LogFolder folder =
+        widget.folderFactory?.call(location) ??
+        (Platform.isAndroid
+            ? AndroidLogFolder(location)
+            : LocalLogFolder(location));
     final cacheKey = sha256.convert(utf8.encode(location)).toString();
     final opened = await TaskStore.open(
       folder,
       '$privateRoot/spaces/$cacheKey',
       writerIdentity: settings!.writer,
       writerGuard: FileWriterGuard(privateRoot!),
+      textEngine: textEngine ??= NativeTextEngine(),
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
     if (!mounted) {
@@ -359,6 +386,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     undoHistory.clear();
     store = opened;
     rows = store!.rows;
+    if (store!.pendingTextOperations.isNotEmpty) {
+      error =
+          'An earlier saved operation needs confirmation. Retry to finish it.';
+      errorFromRefresh = true;
+    }
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
     if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) user = null;
   }
@@ -559,6 +591,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     ),
                   ),
                 const Divider(height: 32),
+                if (store != null && !store!.sharedTextInitialized)
+                  ListTile(
+                    key: const ValueKey('initialize-shared-text'),
+                    contentPadding: EdgeInsets.zero,
+                    title: const Text('Set up shared text editing'),
+                    trailing: const Icon(Icons.chevron_right),
+                    enabled: !busy,
+                    onTap: !busy
+                        ? () => Navigator.pop(ctx, 'initialize-text')
+                        : null,
+                  ),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: const Text('Licenses'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.pop(ctx, 'licenses'),
+                ),
                 const ReleaseVersionTile(),
               ],
             ),
@@ -579,9 +628,47 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await _act(() => widget.folderActions.open(location!));
     } else if (action == 'verify') {
       await _checkDataIntegrity();
+    } else if (action == 'initialize-text') {
+      await _initializeSharedText();
+    } else if (action == 'licenses') {
+      if (mounted) {
+        showLicensePage(context: context, applicationName: 'Tandemlog');
+      }
     } else {
       await _setAppearance(Appearance.values.byName(action));
     }
+  }
+
+  Future<void> _initializeSharedText() async {
+    final origin = store;
+    if (origin == null || busy || !await _closeEditor() || !mounted) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Set up shared text editing'),
+        content: const Text(
+          'Do this once on one device after its folder has received the tasks '
+          'you want to include. Your sync app will share this setup with your '
+          'other devices. Later text edits from an older app remain in the '
+          'folder but do not replace shared text. Newly created tasks can '
+          'already be edited offline.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Set up'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted || !identical(store, origin)) return;
+    await _act(() async {
+      await origin.initializeSharedText();
+    });
   }
 
   Future<void> _checkDataIntegrity() async {
@@ -707,6 +794,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     Future<T> Function(void Function(OperationReceipt)) action, {
     Object? group,
     bool notice = false,
+    String noun = 'task',
   }) async {
     final prepared = <OperationReceipt>[];
     final moveEditor = bulkEditorKey, moveBaseline = bulkSnapshot;
@@ -729,8 +817,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           _advanceBulkForOwnMoves(origin, moveEditor, moveBaseline, prepared);
         }
         final previous = undoHistory.latest;
-        undoHistory.record(verb, prepared, group: group);
+        final retainedBefore = undoHistory.retainedOperationIds;
+        undoHistory.record(verb, prepared, group: group, noun: noun);
         undoHistory.reconcile(origin.confirmedOperations);
+        origin.releaseTextOperations(
+          retainedBefore.difference(undoHistory.retainedOperationIds),
+        );
         final latest = undoHistory.latest;
         final confirmed = origin.confirmedOperations(prepared);
         final confirmedLatest =
@@ -756,7 +848,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             messenger.showSnackBar(
               SnackBar(
                 content: Text(
-                  '${failed ? 'Confirmed ' : ''}${past[verb] ?? verb} $n ${n == 1 ? 'task' : 'tasks'}.${successor ? ' Next occurrence kept.' : ''}',
+                  '${failed ? 'Confirmed ' : ''}${past[verb] ?? verb} $n $noun${n == 1 ? '' : 's'}.${successor ? ' Next occurrence kept.' : ''}',
                 ),
                 duration: const Duration(seconds: 10),
                 persist: false,
@@ -819,6 +911,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _undoLatest() async {
     if (busy || closingEditor || undoHistory.latest == null) return;
+    if (!await _closeChecklistEditor()) return;
     final origin = store!, requested = undoHistory.latest;
     final preserveEditor = requested?.verb == 'moving';
     if (!preserveEditor && !await _closeEditor()) return;
@@ -926,11 +1019,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
         if (mounted && identical(store, origin) && reconcileCapture) {
           final unsaved = pendingCapture
-              .where((entry) => !origin.hasEntity(entry.id))
+              .where((entry) => !origin.isCaptureConfirmed(entry.id))
               .toList();
           capture.text = unsaved.map((entry) => entry.title).join('\n');
-          pendingCapture.clear();
-          captureFailure = false;
+          pendingCapture
+            ..clear()
+            ..addAll(unsaved);
+          captureFailure = unsaved.isNotEmpty;
           if (unsaved.isEmpty) error = null;
         }
         if (mounted &&
@@ -941,8 +1036,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                 reconcileCapture)) {
           setState(() {
             rows = origin.rows;
-            if (errorFromRefresh) error = null;
-            errorFromRefresh = false;
+            if (origin.pendingTextOperations.isNotEmpty) {
+              error =
+                  'An earlier saved operation needs confirmation. Retry to finish it.';
+              errorFromRefresh = true;
+            } else {
+              if (errorFromRefresh) error = null;
+              errorFromRefresh = false;
+            }
           });
           _invalidateView();
         }
@@ -957,6 +1058,20 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }();
     await syncing;
     syncing = null;
+  }
+
+  Future<void> _retryFolderRead() async {
+    final origin = store;
+    if (origin == null || busy) return;
+    if (origin.pendingTextOperations.isEmpty) {
+      await _refresh();
+      return;
+    }
+    await _act(() async {
+      for (final receipt in origin.pendingTextOperations) {
+        await origin.retryTextOperation(receipt);
+      }
+    });
   }
 
   @override
@@ -974,6 +1089,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     _configureImporter();
     if (state == AppLifecycleState.resumed) importer?.request();
+  }
+
+  @override
+  Future<AppExitResponse> didRequestAppExit() async {
+    if (busy || !await _closeEditor()) return AppExitResponse.cancel;
+    return AppExitResponse.exit;
   }
 
   Future<void> _chooseFolder() async {
@@ -1128,8 +1249,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
       if (result.error != null) {
         throw StateError(
-          '${result.committedIds.length} tasks confirmed saved; '
-          '${pendingCapture.length} remain. ${failureMessage(result.error!)}',
+          '${result.createdIds.length} tasks confirmed created; '
+          '${pendingCapture.length} remain to finish capture. ${failureMessage(result.error!)}',
         );
       }
     });
@@ -1140,6 +1261,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<bool> _closeEditor() async {
+    if (!await _closeChecklistEditor()) return false;
     if (editingTask == null && editingBulk == null) return true;
     if (closingEditor) return false;
     closingEditor = true;
@@ -1150,10 +1272,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : bulkEditorKey.currentState?.canClose()) ??
               Future.value(true));
       if (okay && mounted) {
+        editingText?.cancel();
+        if (editingText != null) {
+          editorStore?.releaseTextCapture(editingText!.capture);
+        }
         setState(() {
           editingTask = null;
           editingBulk = null;
           editorStore = null;
+          editingText = null;
+          textSaveCommand = null;
+          editingTextStatus = null;
         });
       }
       return okay;
@@ -1177,9 +1306,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     setState(_clearSelection);
   }
 
-  void _openSelectionSession() {
+  Future<void> _openSelectionSession() async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    editorStore = store;
+    final origin = store;
+    if (origin == null) return;
     final tasks = rows
         .where(
           (row) => row['kind'] == 'task' && selectedTasks.contains(row['id']),
@@ -1187,18 +1317,64 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         .toList();
     if (tasks.length != selectedTasks.length) return;
     if (tasks.length == 1) {
-      editorKey = GlobalKey<TaskEditorState>();
-      editingTask = Map<String, dynamic>.from(tasks.single);
-      editingBulk = null;
+      final id = tasks.single['id'] as String;
+      TaskTextSession? session;
+      TaskTextCapture? openedCapture;
+      String? status;
+      try {
+        final captured = await origin.captureTaskText(id);
+        openedCapture = captured;
+        session = TaskTextSession(
+          captured,
+          registerDraftActor: (field, allocation, actor) =>
+              origin.registerTextDraftActor(captured, field, allocation, actor),
+        );
+      } catch (e) {
+        if (openedCapture != null) origin.releaseTextCapture(openedCapture);
+        status = origin.sharedTextInitialized
+            ? failureMessage(e)
+            : 'Set up shared text editing in Settings to edit this task’s title and notes.';
+      }
+      if (!mounted ||
+          !identical(store, origin) ||
+          selectedTasks.length != 1 ||
+          !selectedTasks.contains(id)) {
+        session?.cancel();
+        if (session != null) origin.releaseTextCapture(session.capture);
+        return;
+      }
+      final current = origin.rows
+          .where((row) => row['id'] == id && row['kind'] == 'task')
+          .firstOrNull;
+      if (current == null) {
+        session?.cancel();
+        if (session != null) origin.releaseTextCapture(session.capture);
+        return;
+      }
+      setState(() {
+        editorStore = origin;
+        editorKey = GlobalKey<TaskEditorState>();
+        editingTask = _displayTask(current);
+        editingText = session;
+        textSaveCommand = session == null
+            ? null
+            : TextSaveCommand(origin, session);
+        editingTextStatus = status;
+        editingBulk = null;
+        rows = origin.rows;
+      });
     } else if (tasks.isNotEmpty) {
-      bulkSnapshot = store!.taskSnapshot;
-      bulkConflict = false;
-      bulkEditorKey = GlobalKey<BulkTaskEditorState>();
-      editingBulk = tasks
-          .map((task) => Map<String, dynamic>.from(task))
-          .toList();
-      editingTask = null;
-      bulkPending = tasks.map((task) => task['id'] as String).toList();
+      setState(() {
+        editorStore = origin;
+        bulkSnapshot = origin.taskSnapshot;
+        bulkConflict = false;
+        bulkEditorKey = GlobalKey<BulkTaskEditorState>();
+        editingBulk = tasks
+            .map((task) => Map<String, dynamic>.from(task))
+            .toList();
+        editingTask = null;
+        bulkPending = tasks.map((task) => task['id'] as String).toList();
+      });
     }
   }
 
@@ -1300,8 +1476,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       selecting = nextIntent;
       selectionAnchor = next.isEmpty ? null : anchor;
       mobileEditorOpen = !nextIntent;
-      if (next.isNotEmpty) _openSelectionSession();
     });
+    if (next.isNotEmpty) await _openSelectionSession();
     return true;
   }
 
@@ -1311,8 +1487,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!selectedTasks.every(visible.contains)) return;
     setState(() {
       mobileEditorOpen = true;
-      _openSelectionSession();
     });
+    await _openSelectionSession();
   }
 
   Future<void> _focusRelativeTask(
@@ -1496,6 +1672,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     ])
       key: task[key],
   });
+  String _nonTextBaseline(Map<String, dynamic> task) => jsonEncode({
+    for (final key in ['id', 'schedule', 'assignee', 'tagRefs', 'completed'])
+      key: task[key],
+  });
+  bool _nonTextUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
+    final current = origin.rows
+        .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
+        .firstOrNull;
+    return identical(store, origin) &&
+        current != null &&
+        _nonTextBaseline(current) == _nonTextBaseline(frozen);
+  }
+
+  Map<String, dynamic> _displayTask(Map<String, dynamic> task) =>
+      task['textUnavailable'] == null
+      ? Map<String, dynamic>.from(task)
+      : {...task, 'title': 'Text unavailable', 'description': ''};
   bool _targetUnchanged(TaskStore origin, Map<String, dynamic> frozen) {
     final current = origin.rows
         .where((row) => row['id'] == frozen['id'] && row['kind'] == 'task')
@@ -1528,6 +1721,34 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ? TaskEditor(
               key: editorKey,
               task: task,
+              tagInventory: _tagInventory(),
+              textSession: editingText,
+              textStatus: editingTextStatus,
+              disableTextFields: editingText == null,
+              checklistBuilder: (enabled) => ChecklistPanel(
+                items: editorStore!.checklistItems(task['id'] as String),
+                enabled: enabled && !busy && !openingChecklistEditor,
+                onAdd: () => _editChecklistItem(task['id'] as String),
+                onEdit: (item) =>
+                    _editChecklistItem(task['id'] as String, item: item),
+                onToggle: (item, checked) => _checklistOperation(
+                  'checking',
+                  (origin, prepared) => origin.setChecklistCompleted(
+                    item['id'] as String,
+                    checked,
+                    onPrepared: prepared,
+                  ),
+                ),
+                onMove: (item, before) => _checklistOperation(
+                  'moving',
+                  (origin, prepared) => origin.moveChecklistItem(
+                    item['id'] as String,
+                    before,
+                    onPrepared: prepared,
+                  ),
+                ),
+                onDelete: (item) => _deleteChecklistItem(item),
+              ),
               users: users,
               panel: panel,
               selectionCount: selectedTasks.isEmpty
@@ -1535,8 +1756,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   : selectedTasks.length,
               onClearSelection: _clearTaskSelection,
               onClose: () {
+                editingText?.cancel();
+                if (editingText != null) {
+                  editorStore?.releaseTextCapture(editingText!.capture);
+                }
                 setState(() {
                   editingTask = null;
+                  editingText = null;
+                  textSaveCommand = null;
+                  editingTextStatus = null;
                   _clearSelection();
                 });
               },
@@ -1572,15 +1800,45 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   throw StateError('The data folder changed. Reopen the task.');
                 }
                 await origin.refresh();
-                if (!_targetUnchanged(origin, task)) {
+                if (!_nonTextUnchanged(origin, task) &&
+                    !(editingText?.hasPendingReceipt ?? false)) {
                   throw StateError(
-                    'This task changed. Your draft is kept; close and reopen it to review before saving.',
+                    'This task’s other details changed. Your draft is kept; close and reopen it to review before saving.',
                   );
                 }
                 final tags = Set<String>.from(task['tags'] as List? ?? [])
                   ..addAll(addedTags)
                   ..removeAll(removedTags);
-                if (fields.isNotEmpty ||
+                if (textSaveCommand != null) {
+                  final result = await _recordAction(
+                    origin,
+                    'editing',
+                    (prepared) => textSaveCommand!.save(
+                      fields: fields,
+                      tags: tags.toList(),
+                      observedTagRefs: Map<String, String>.from(
+                        task['tagRefs'] as Map? ?? {},
+                      ),
+                      expectedSnapshot: origin.taskSnapshot,
+                      canCommit: () => _nonTextUnchanged(origin, task),
+                      onPrepared: prepared,
+                    ),
+                  );
+                  if (result.sessionError != null) {
+                    throw StateError(
+                      'Saved to the folder. Use Retry Save to finish opening the next editor draft.',
+                    );
+                  }
+                  if (result.undoError != null && mounted && context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Saved. Undo is unavailable for this change.',
+                        ),
+                      ),
+                    );
+                  }
+                } else if (fields.isNotEmpty ||
                     addedTags.isNotEmpty ||
                     removedTags.isNotEmpty) {
                   await _recordAction(
@@ -1594,13 +1852,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         task['tagRefs'] as Map? ?? {},
                       ),
                       expectedTaskSnapshot: origin.taskSnapshot,
-                      canCommit: () => _targetUnchanged(origin, task),
+                      canCommit: () => _nonTextUnchanged(origin, task),
                       onPrepared: prepared,
                     ),
                   );
                 }
                 if (mounted) {
-                  setState(() => rows = origin.rows);
+                  setState(() {
+                    rows = origin.rows;
+                    final saved = rows
+                        .where(
+                          (row) =>
+                              row['id'] == task['id'] && row['kind'] == 'task',
+                        )
+                        .firstOrNull;
+                    if (saved != null) editingTask = _displayTask(saved);
+                  });
                   _invalidateView();
                 }
               },
@@ -1608,6 +1875,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : BulkTaskEditor(
               key: bulkEditorKey,
               tasks: editingBulk!,
+              tagInventory: _tagInventory(),
               users: users,
               panel: panel,
               selectionCount: selectedTasks.isEmpty
@@ -2212,15 +2480,276 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       () => _recordAction(
         origin,
         'completing',
-        (prepared) => origin.complete(
-          task['id'],
+        (prepared) => ChecklistCompletionCommand(origin).complete(
+          task['id'] as String,
           completionInstant: time.instant,
           localZoneId: time.localZoneId,
+          confirmUnfinished: (items) async {
+            if (!mounted || !identical(store, origin)) return false;
+            final unfinished = items
+                .where((item) => item['completed'] != true)
+                .toList();
+            return await showDialog<bool>(
+                  context: context,
+                  builder: (ctx) => AlertDialog(
+                    scrollable: true,
+                    title: const Text('Unfinished checklist items'),
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          '${unfinished.length} ${unfinished.length == 1 ? 'item is' : 'items are'} still unchecked. Complete this task anyway?',
+                        ),
+                        const SizedBox(height: 12),
+                        for (final item in unfinished)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Text('• ${item['title']}'),
+                          ),
+                      ],
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(ctx, false),
+                        child: const Text('Cancel'),
+                      ),
+                      FilledButton(
+                        onPressed: () => Navigator.pop(ctx, true),
+                        child: const Text('Complete anyway'),
+                      ),
+                    ],
+                  ),
+                ) ??
+                false;
+          },
           onPrepared: prepared,
         ),
         notice: true,
       ),
     );
+  }
+
+  Future<bool> _closeChecklistEditor() =>
+      checklistCloseRequest ??= _finishClosingChecklistEditor().whenComplete(
+        () => checklistCloseRequest = null,
+      );
+
+  Future<bool> _finishClosingChecklistEditor() async {
+    if (openingChecklistEditor) return false;
+    final key = checklistEditorKey;
+    if (key == null) return true;
+    final done = checklistEditorDone;
+    if (checklistEditorClosing) {
+      await done?.future;
+      return true;
+    }
+    final state = key.currentState;
+    if (state == null || !await state.canClose()) return false;
+    final dialog = checklistDialogContext;
+    if (dialog != null && dialog.mounted && !checklistEditorClosing) {
+      checklistEditorClosing = true;
+      Navigator.pop(dialog);
+    }
+    await done?.future;
+    return true;
+  }
+
+  Future<void> _checklistOperation(
+    String verb,
+    Future<LogEvent> Function(TaskStore, void Function(OperationReceipt))
+    action,
+  ) async {
+    final origin = editorStore ?? store;
+    if (origin == null || !identical(store, origin)) return;
+    await _act(
+      () => _recordAction(
+        origin,
+        verb,
+        (prepared) => action(origin, prepared),
+        noun: 'checklist item',
+        notice: verb == 'deleting',
+      ),
+    );
+  }
+
+  Future<void> _deleteChecklistItem(Map<String, dynamic> item) async {
+    if (busy) return;
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete checklist item?'),
+        content: Text('Remove “${item['title']}”? You can undo this change.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true || !mounted) return;
+    await _checklistOperation(
+      'deleting',
+      (origin, prepared) => origin.deleteChecklistItem(
+        item['id'] as String,
+        onPrepared: prepared,
+      ),
+    );
+  }
+
+  Future<void> _editChecklistItem(
+    String parent, {
+    Map<String, dynamic>? item,
+  }) async {
+    if (busy || openingChecklistEditor || checklistEditorKey != null) return;
+    final origin = editorStore ?? store;
+    if (origin == null || !identical(store, origin)) return;
+    TaskTextCapture? captured;
+    TaskTextSession? session;
+    OperationReceipt? creationReceipt;
+    Completer<void>? itemSaveDone;
+    final id = item?['id'] as String? ?? const Uuid().v4();
+    final key = GlobalKey<ChecklistItemEditorState>();
+    final editorDone = checklistEditorDone = Completer<void>();
+    setState(() => openingChecklistEditor = true);
+    try {
+      await syncing;
+      await origin.refresh();
+      if (item != null) {
+        captured = await origin.captureTaskText(id);
+        final capture = captured;
+        session = TaskTextSession(
+          capture,
+          registerDraftActor: (field, allocation, actor) =>
+              origin.registerTextDraftActor(capture, field, allocation, actor),
+        );
+      }
+      if (!mounted || !identical(store, origin)) return;
+      final command = session == null ? null : TextSaveCommand(origin, session);
+      checklistEditorKey = key;
+      setState(() => openingChecklistEditor = false);
+      final route = DialogRoute<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (ctx) {
+          checklistDialogContext = ctx;
+          return ChecklistItemEditor(
+            key: key,
+            item: item,
+            textSession: session,
+            hasPendingReceipt: () => creationReceipt != null,
+            onClose: () {
+              if (checklistEditorClosing) return;
+              checklistEditorClosing = true;
+              Navigator.pop(ctx);
+            },
+            save: (title, notes) async {
+              if (busy || !identical(store, origin)) {
+                throw StateError(
+                  'Wait for the current change, then retry Save.',
+                );
+              }
+              final done = activeActionDone = Completer<void>();
+              itemSaveDone = done;
+              setState(() => busy = true);
+              try {
+                await syncing;
+                if (command == null) {
+                  if (creationReceipt != null) {
+                    if (!origin
+                        .confirmedOperations([creationReceipt!])
+                        .contains(creationReceipt!.id)) {
+                      await origin.retryTextOperation(creationReceipt!);
+                    }
+                  } else {
+                    await origin.addChecklistItem(
+                      parent,
+                      title,
+                      notes: notes,
+                      id: id,
+                      onPrepared: (receipt) => creationReceipt = receipt,
+                    );
+                  }
+                } else {
+                  final result = await _recordAction(
+                    origin,
+                    'editing',
+                    (prepared) => command.save(
+                      fields: {},
+                      tags: [],
+                      observedTagRefs: {},
+                      onPrepared: prepared,
+                    ),
+                    noun: 'checklist item',
+                  );
+                  if (result.sessionError != null) {
+                    throw StateError(
+                      'Saved. Retry to finish reopening this item’s draft. ${failureMessage(result.sessionError!)}',
+                    );
+                  }
+                  if (result.undoError != null && mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Item saved. Undo is unavailable for this change.',
+                        ),
+                      ),
+                    );
+                  }
+                }
+              } finally {
+                done.complete();
+                if (identical(itemSaveDone, done)) itemSaveDone = null;
+                if (identical(activeActionDone, done)) activeActionDone = null;
+                if (mounted) {
+                  setState(() {
+                    busy = false;
+                    rows = origin.rows;
+                  });
+                  _invalidateView();
+                  _configureImporter();
+                  importer?.request();
+                }
+              }
+            },
+          );
+        },
+      );
+      // Navigator disposal need not complete its popped future. The transition
+      // completion also fires when an application shutdown disposes the route.
+      unawaited(Navigator.of(context).push(route));
+      await route.completed;
+    } catch (failure) {
+      if (mounted) setState(() => error = failureMessage(failure));
+    } finally {
+      // The route has finished disposing controllers before private leases close.
+      try {
+        await itemSaveDone?.future;
+        if (mounted || session?.hasPendingReceipt != true) {
+          session?.cancel();
+          if (captured != null) origin.releaseTextCapture(captured);
+        }
+        // A forced application exit cannot cancel unconfirmed immutable intent.
+        // The durable outbox and captured documents remain owned by TaskStore;
+        // shutdown closes its handles only after the in-flight append finishes.
+      } finally {
+        if (identical(checklistEditorKey, key)) {
+          checklistEditorKey = null;
+          checklistDialogContext = null;
+          checklistEditorClosing = false;
+        }
+        editorDone.complete();
+        if (identical(checklistEditorDone, editorDone)) {
+          checklistEditorDone = null;
+        }
+        if (mounted) setState(() => openingChecklistEditor = false);
+      }
+    }
   }
 
   @override
@@ -2252,10 +2781,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await starting;
     await activeActionDone?.future;
     await syncing;
+    await checklistEditorDone?.future;
     try {
       await store?.close();
     } finally {
-      await profileLock?.close();
+      try {
+        textEngine?.dispose();
+      } finally {
+        await profileLock?.close();
+      }
     }
   }
 
@@ -2376,7 +2910,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   Expanded(child: Text(error!)),
                                   if (errorFromRefresh && store != null)
                                     TextButton(
-                                      onPressed: busy ? null : _refresh,
+                                      onPressed: busy ? null : _retryFolderRead,
                                       child: const Text('Retry'),
                                     ),
                                   if (!settingsLoaded)
@@ -2652,19 +3186,24 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _invalidateView();
   }
 
-  Future<void> _showFilters() async {
-    if (!await _closeEditor()) return;
-    if (!mounted) return;
+  List<String> _tagInventory({Iterable<String> selected = const []}) {
     final tags = rows
         .where((row) => row['kind'] == 'task')
         .expand((row) => (row['tags'] as List? ?? []).cast<String>())
         .toSet();
-    if (selectedTags.isNotEmpty) tags.addAll(selectedTags);
+    tags.addAll(selected);
     final sortedTags = tags.toList()
       ..sort((a, b) {
         final order = a.toLowerCase().compareTo(b.toLowerCase());
         return order == 0 ? a.compareTo(b) : order;
       });
+    return sortedTags;
+  }
+
+  Future<void> _showFilters() async {
+    if (!await _closeEditor()) return;
+    if (!mounted) return;
+    final sortedTags = _tagInventory(selected: selectedTags);
     final pickerKey = GlobalKey<TagFilterPickerState>();
     late final _FilterDialogRoute route;
     route = _FilterDialogRoute(
@@ -2819,11 +3358,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       key: const ValueKey('identity-menu'),
       tooltip: 'Active user: $name',
       enabled: !busy,
-      onSelected: (value) {
+      onSelected: (value) async {
         if (value == 'settings') {
           _showSettings();
-        } else {
-          _act(() => _selectUser(value == 'new' ? null : value));
+        } else if (!busy && await _closeEditor() && mounted) {
+          await _act(() => _selectUser(value == 'new' ? null : value));
         }
       },
       itemBuilder: (_) => [
@@ -3130,7 +3669,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         Builder(
                           key: ValueKey('task-row-${entry.task['id']}'),
                           builder: (context) {
-                            final task = entry.task;
+                            final task = _displayTask(entry.task);
                             final completed = searching
                                 ? task['completed'] == true
                                 : showCompleted;

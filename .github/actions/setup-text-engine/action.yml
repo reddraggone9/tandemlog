@@ -1,0 +1,22 @@
+name: Pinned production text engine inputs
+description: Official hash-pinned rustup, exact Rust/std targets and locked fetch before offline app builds
+inputs:
+  platform:
+    required: true
+    description: linux, windows or android
+runs:
+  using: composite
+  steps:
+    - name: Select preinstalled Windows Python 3.11
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: py -3.11 -c "import pathlib, sys; print(pathlib.Path(sys.executable).parent)" >> $env:GITHUB_PATH
+    - name: Bootstrap reviewed official Rust inputs outside app builds
+      shell: bash
+      env:
+        TEXT_PLATFORM: ${{ inputs.platform }}
+      run: python tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"
+    - name: Install exact approved NDK outside app builds
+      if: inputs.platform == 'android'
+      shell: bash
+      run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358"'

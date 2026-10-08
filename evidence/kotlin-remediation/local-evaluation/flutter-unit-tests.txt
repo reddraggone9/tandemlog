@@ -1,0 +1,607 @@
+00:00 +0: loading /workspace/tandemlog-kotlin-remediation/test/historical_recompletion_test.dart
+00:00 +0: /workspace/tandemlog-kotlin-remediation/test/historical_recompletion_test.dart: offline historical recompletions converge without reseeding or suppressing the existing child
+00:00 +1: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:00 +2: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +3: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +4: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +5: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +6: /workspace/tandemlog-kotlin-remediation/test/historical_recompletion_test.dart: historical recompletion leaves deleted child unchanged through warm and cold replay
+00:01 +7: /workspace/tandemlog-kotlin-remediation/test/checklist_item_native_editor_test.dart: native caret-only edits stay clean; composition propagates; committed merged text renews before close
+00:02 +8: /workspace/tandemlog-kotlin-remediation/test/historical_completion_event_test.dart: historical completion is required, separate and hash-bound to earlier scalar initialization
+00:02 +9: /workspace/tandemlog-kotlin-remediation/test/historical_completion_event_test.dart: forward/self reference, extra retained metadata and wrong child identities fail wire admission
+00:02 +10: /workspace/tandemlog-kotlin-remediation/test/historical_completion_event_test.dart: known equal or later source clocks remain invalid after delayed arrival
+00:02 +11: /workspace/tandemlog-kotlin-remediation/test/compact_selection_actions_test.dart: selection commands wrap without losing touch targets
+00:03 +12: /workspace/tandemlog-kotlin-remediation/test/checklist_suppressed_item_capture_test.dart: copied item under canceled successor cannot open a private native editor
+00:03 +13: /workspace/tandemlog-kotlin-remediation/test/text_cache_inheritance_test.dart: resolved inherited cache preserves original claims and rebuilds corrupt disposable state
+00:03 +14: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+00:04 +15: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: cancel unfinished warning prepares nothing and preserves exact canonical bytes
+00:04 +16: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:04 +17: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:04 +18: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming new unchecked item during warning requires fresh confirmation before receipt
+00:05 +19: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming new unchecked item during warning requires fresh confirmation before receipt
+00:05 +20: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: edit protects successor from cleanup
+00:05 +21: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming completion state during warning requires fresh confirmation before receipt
+00:05 +22: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: tags protects successor from cleanup
+00:05 +23: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+00:05 +24: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+00:05 +25: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: complete protects successor from cleanup
+00:05 +26: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming notes during warning requires fresh confirmation before receipt
+00:05 +27: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming notes during warning requires fresh confirmation before receipt
+00:05 +28: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+00:05 +29: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming order during warning requires fresh confirmation before receipt
+00:06 +30: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming order during warning requires fresh confirmation before receipt
+00:06 +31: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:06 +32: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: cancel renewed warning keeps peer changes but writes no local completion
+00:06 +33: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:06 +34: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming checks clearing all unfinished work need no second warning
+00:06 +35: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+00:06 +36: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+00:06 +37: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+00:06 +38: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: task completed while warning is open stops without preparing duplicate completion
+00:06 +39: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+00:07 +40: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: already completed task returns null without warning or duplicate receipt
+00:07 +41: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:07 +42: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:07 +43: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:07 +44: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:07 +45: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:07 +46: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming unchecked item at native preparation boundary retries confirmation before any receipt
+00:07 +47: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming unchecked item at native preparation boundary retries confirmation before any receipt
+00:07 +48: /workspace/tandemlog-kotlin-remediation/test/checklist_completion_command_test.dart: incoming unchecked item at native preparation boundary retries confirmation before any receipt
+00:07 +49: /workspace/tandemlog-kotlin-remediation/test/recurring_completion_undo_test.dart: pure seed selection is independent of arrival order and preserves historical Undo
+00:08 +50: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:08 +51: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:08 +52: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:08 +53: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:08 +54: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:08 +55: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +56: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +57: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +58: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +59: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +60: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +61: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +62: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +63: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +64: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:09 +65: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +66: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +67: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +68: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +69: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +70: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+00:10 +71: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+00:11 +72: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+00:11 +73: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+00:11 +74: /workspace/tandemlog-kotlin-remediation/test/undo_storage_test.dart: move Undo retains later relative move and replays after known-cache upgrade
+00:12 +75: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: keyboard applies only Due time; tag operations stay distinct
+00:12 +76: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: keyboard applies only Due time; tag operations stay distinct
+00:12 +77: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: keyboard applies only Due time; tag operations stay distinct
+00:12 +78: /workspace/tandemlog-kotlin-remediation/test/undo_storage_test.dart: unresolved write blocks new payload until exact delayed record appears
+00:12 +79: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: saving retains field names but disables all apply actions
+00:12 +80: /workspace/tandemlog-kotlin-remediation/test/bulk_apply_semantics_test.dart: saving retains field names but disables all apply actions
+00:13 +81: /workspace/tandemlog-kotlin-remediation/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:13 +82: /workspace/tandemlog-kotlin-remediation/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:13 +83: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +84: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +85: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +86: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +87: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +88: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +89: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +90: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +91: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +92: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +93: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +94: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +95: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +96: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:14 +97: /workspace/tandemlog-kotlin-remediation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:15 +98: /workspace/tandemlog-kotlin-remediation/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:15 +99: /workspace/tandemlog-kotlin-remediation/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:15 +100: /workspace/tandemlog-kotlin-remediation/test/release_version_tile_test.dart: shows and copies only release version 2026.10.2-rc.1
+00:15 +101: /workspace/tandemlog-kotlin-remediation/test/release_version_tile_test.dart: missing metadata does not copy a guessed version
+00:15 +102: /workspace/tandemlog-kotlin-remediation/test/release_version_tile_test.dart: clipboard failure is contextual and can be retried
+00:16 +103: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: exact boundary updates without edits; watchdog avoids projection
+00:16 +104: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: resume samples current time after skipped boundaries without replay
+00:16 +105: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: native invalidation immediate; fallback detects clock and zone changes
+00:16 +106: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: delayed wake uses current instant and input invalidation rearms
+00:16 +107: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: cancelled workspace timer cannot publish and callback can dispose
+00:16 +108: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: callback disposal and invalid boundary cannot produce timer loops
+00:16 +109: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: injected calendar boundary crosses DST day 2027-03-14
+00:16 +110: /workspace/tandemlog-kotlin-remediation/test/view_clock_test.dart: injected calendar boundary crosses DST day 2027-11-07
+00:16 +111: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: completion guard compares actual occurrence dates, not rendered bounds
+00:16 +112: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: all 37 observed expressions match pinned upstream oracle
+00:16 +113: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: civil dates and schedule reject normalization and unknown fields
+00:16 +114: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: reference precedence, missing dates and configured scheduled removal
+00:16 +115: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: start bounds reject invalid edits without inventing dates
+00:16 +116: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: named-zone gap and fold obey end-of-due-day bounds
+00:16 +117: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: exact due bounds are inclusive; date-only due covers whole day
+00:16 +118: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: precise named-zone bounds compare resolved gap and fold instants
+00:16 +119: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: recurrence preserves exact times and removes scheduled time with its date
+00:16 +120: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: last supported due day accepts its internal next-year boundary
+00:16 +121: /workspace/tandemlog-kotlin-remediation/test/schedule_test.dart: clamping evolves while explicit last remains month end
+00:16 +122: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +123: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +124: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +125: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +126: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +127: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +128: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:17 +129: /workspace/tandemlog-kotlin-remediation/test/writer_identity_test.dart: cache 9 replays Inbox classification without changing canonical bytes
+00:17 +130: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 2.0x text
+00:17 +131: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: native heading pins and pushes off at 2.0x text
+00:17 +132: /workspace/tandemlog-kotlin-remediation/test/writer_identity_test.dart: invalid settings writer and migration marker fail explicitly
+00:17 +133: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: heading wraps to its measured extent and has one header node
+00:17 +134: /workspace/tandemlog-kotlin-remediation/test/sticky_task_group_test.dart: heading wraps to its measured extent and has one header node
+00:17 +135: /workspace/tandemlog-kotlin-remediation/test/writer_identity_test.dart: two spaces share installation writer and resume each stream safely
+00:17 +136: /workspace/tandemlog-kotlin-remediation/test/writer_identity_test.dart: explicit identity preserves old stream and uses a fresh stream
+00:18 +137: /workspace/tandemlog-kotlin-remediation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:19 +138: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:20 +139: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:20 +140: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:20 +141: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:20 +142: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:20 +143: /workspace/tandemlog-kotlin-remediation/test/task_toolbar_test.dart: status changes reserve count and control geometry
+00:20 +144: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: single edit must fail when transport drops newly appended event
+00:20 +145: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: remote item waits for missing task parent then attaches once without appearing as a task
+00:21 +146: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: remote item waits for missing task parent then attaches once without appearing as a task
+00:21 +147: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: remote item waits for missing task parent then attaches once without appearing as a task
+00:21 +148: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: edit batch reports 0 confirmed records after suffix replacement
+00:21 +149: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late user parent invalidates retained item transactionally
+00:21 +150: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: delete batch reports 0 confirmed records after suffix replacement
+00:21 +151: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late item parent invalidates retained item transactionally
+00:21 +152: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: reopen must fail and retain unconfirmed completion targets (0 prefix)
+00:21 +153: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: reopen must fail and retain unconfirmed completion targets (0 prefix)
+00:21 +154: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late cross-parent move anchor rolls back arrival without changing the pending source item
+00:21 +155: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: Undo reports only confirmed retractions and preserves retry (0 prefix)
+00:21 +156: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late user creation anchor rejects with transactional rollback
+00:21 +157: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: create batch reports 1 confirmed records after suffix replacement
+00:21 +158: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late task creation anchor rejects with transactional rollback
+00:21 +159: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: edit batch reports 1 confirmed records after suffix replacement
+00:21 +160: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:21 +161: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:21 +162: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: reopen must fail and retain unconfirmed completion targets (1 prefix)
+00:22 +163: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged membership copy rejects before receipt and leaves canonical history untouched
+00:22 +164: /workspace/tandemlog-kotlin-remediation/test/command_acknowledgement_test.dart: Undo reports only confirmed retractions and preserves retry (1 prefix)
+00:22 +165: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged order copy rejects before receipt and leaves canonical history untouched
+00:22 +166: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged order copy rejects before receipt and leaves canonical history untouched
+00:22 +167: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged visible text copy rejects before receipt and leaves canonical history untouched
+00:22 +168: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged history proof copy rejects before receipt and leaves canonical history untouched
+00:22 +169: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: forged source parent copy rejects before receipt and leaves canonical history untouched
+00:22 +170: /workspace/tandemlog-kotlin-remediation/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:22 +171: /workspace/tandemlog-kotlin-remediation/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:23 +172: /workspace/tandemlog-kotlin-remediation/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:23 +173: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +174: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +175: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +176: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +177: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +178: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:23 +179: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: parent recurrence preserves live item private draft and later source Save does not flow into copied notes
+00:23 +180: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +181: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +182: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +183: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +184: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +185: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:23 +186: /workspace/tandemlog-kotlin-remediation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:24 +187: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: exact times precede date-only on the same day without invented time
+00:24 +188: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: scheduled override supplies both date and precision for sorting
+00:24 +189: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: calendar bounds retain precision over viewer midnight and DST
+00:24 +190: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: visible future hints refresh at viewer midnight before the start
+00:24 +191: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: recurring completion eligibility changes at civil midnight and on zone changes
+00:24 +192: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: completion boundary follows 23-hour and 25-hour named-zone days
+00:24 +193: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: ordinary tag intersects assignee, upcoming and completed views
+00:24 +194: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: upcoming is opt-in and does not change stored rows
+00:24 +195: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: standalone timing evaluates hidden and completed rows without changing state
+00:24 +196: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: bounds accept only nullable integers and preserve recurrence anchor
+00:24 +197: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: availability includes exact boundary and completed history stays visible
+00:24 +198: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: effective scheduled precedence, bounds, Someday and manual ties
+00:24 +199: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: bounds clamp civil day while retaining exact time and manual tie order
+00:24 +200: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: pinned exact dates convert to viewer calendar but date-only remains civil
+00:24 +201: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: start midnight and DST gap/fold use calendar transitions
+00:24 +202: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: date-only start midnight uses the shared pinned task zone
+00:24 +203: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: supported bound horizon is admitted and renderable, larger values rejected
+00:24 +204: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: derived bound groups may cross the persisted date year limit
+00:24 +205: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: bounds midnight boundary follows 23 and 25 hour local days
+00:24 +206: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: filter and hidden bounds select earliest relevant clock boundary
+00:24 +207: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: search bypasses filters and availability without changing source
+00:24 +208: /workspace/tandemlog-kotlin-remediation/test/task_view_test.dart: multiple tags match any then combine with visibility and assignee
+00:24 +209: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: range bridge returns suffix and exposes nonseekable fallback explicitly
+00:24 +210: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: range truncation/provider errors remain failures rather than fallback
+00:24 +211: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: unsupported watch retains 15-second foreground fallback and retries
+00:24 +212: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: metadata remains optional observations and never creates trusted stamps
+00:24 +213: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: false)
+00:24 +214: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: true)
+00:24 +215: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: false)
+00:24 +216: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: true)
+00:24 +217: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: unrelated duplicate names do not reject the folder
+00:24 +218: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list preserves native duplicate-name diagnostics and fails closed
+00:24 +219: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: read preserves native duplicate-name diagnostics and fails closed
+00:24 +220: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: readFrom preserves native duplicate-name diagnostics and fails closed
+00:24 +221: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: append preserves native duplicate-name diagnostics and fails closed
+00:24 +222: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: create preserves native duplicate-name diagnostics and fails closed
+00:24 +223: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: watch cancellation and old callbacks cannot trigger the new folder
+00:24 +224: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: unsupported watch activation becomes a stream error for polling fallback
+00:24 +225: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: observer error is delivered and a resumed watch uses fresh token
+00:24 +226: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: successful folder calls preserve bytes, names and forced revalidation
+00:24 +227: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: missing manifest gives restoration guidance without blaming permission
+00:24 +228: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: list generic IO failure stays honest and omits provider internals
+00:24 +229: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: read generic IO failure stays honest and omits provider internals
+00:24 +230: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: append generic IO failure stays honest and omits provider internals
+00:24 +231: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: create generic IO failure stays honest and omits provider internals
+00:24 +232: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: actual denied access and picker failures have specific recovery
+00:24 +233: /workspace/tandemlog-kotlin-remediation/test/android_log_folder_test.dart: presentation retains partial progress and canonical validation messages
+00:24 +234: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:24 +235: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:24 +236: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +237: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +238: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +239: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +240: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +241: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +242: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +243: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +244: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +245: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:25 +246: /workspace/tandemlog-kotlin-remediation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:26 +247: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +248: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +249: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +250: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +251: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +252: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +253: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +254: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +255: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +256: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:26 +257: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:27 +258: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:27 +259: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:27 +260: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:27 +261: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:27 +262: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/1.0
+00:27 +263: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +264: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +265: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +266: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +267: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +268: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +269: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +270: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +271: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +272: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:27 +273: /workspace/tandemlog-kotlin-remediation/test/event_chain_test.dart: event size admission counts UTF-8 bytes with an inclusive 1 MiB limit
+00:27 +274: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:27 +275: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:27 +276: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 2.0 text scale
+00:28 +277: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +278: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +279: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +280: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +281: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +282: /workspace/tandemlog-kotlin-remediation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:28 +283: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +284: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +285: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +286: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +287: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +288: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +289: /workspace/tandemlog-kotlin-remediation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:29 +290: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:30 +291: /workspace/tandemlog-kotlin-remediation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:30 +292: /workspace/tandemlog-kotlin-remediation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:30 +293: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+00:31 +294: /workspace/tandemlog-kotlin-remediation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+00:31 +295: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:31 +296: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:32 +297: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: scalar parent can recur with native checklist without a forced parent text baseline
+00:32 +298: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+00:32 +299: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 1-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:32 +300: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+00:33 +301: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:33 +302: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:33 +303: /workspace/tandemlog-kotlin-remediation/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:34 +304: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:34 +305: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:34 +306: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:36 +307: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:36 +308: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:36 +309: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:36 +310: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+00:36 +311: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:36 +312: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:36 +313: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:36 +314: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:36 +315: /workspace/tandemlog-kotlin-remediation/test/batch_storage_test.dart: deferred tag reference to second prepared event rejects the complete batch
+00:36 +316: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild
+00:36 +317: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:36 +318: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:37 +319: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:37 +320: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:37 +321: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:37 +322: /workspace/tandemlog-kotlin-remediation/test/native_text_engine_test.dart: actual production FFI inspection reuse is immutable budget-specific and bounded
+00:37 +323: /workspace/tandemlog-kotlin-remediation/test/native_text_engine_test.dart: actual production FFI inspection reuse is immutable budget-specific and bounded
+00:37 +324: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:37 +325: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:37 +326: /workspace/tandemlog-kotlin-remediation/test/native_text_engine_test.dart: actual production FFI dedicated receipt owner never undoes an older Save after remote cancellation
+00:37 +327: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +328: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +329: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +330: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +331: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +332: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +333: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +334: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +335: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:37 +336: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:38 +337: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:38 +338: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:38 +339: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:38 +340: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:38 +341: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: local task deletion targeting user rejects before canonical append
+00:38 +342: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: local task deletion targeting user rejects before canonical append
+00:38 +343: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:38 +344: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:38 +345: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk edit reconciles durable append after refresh failure before retry
+00:38 +346: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk edit reconciles durable append after refresh failure before retry
+00:38 +347: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:39 +348: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk delete reconciles durable append after refresh failure before retry
+00:39 +349: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:39 +350: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:39 +351: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk patch preserves mixed fields and observed tags; invalid patch writes nothing
+00:39 +352: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:39 +353: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk guard rechecks before the batch append; retry block uses global order
+00:39 +354: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: bulk guard rechecks before the batch append; retry block uses global order
+00:39 +355: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:39 +356: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:39 +357: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:39 +358: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:39 +359: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:39 +360: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:39 +361: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: stale bulk and invalid selections fail before any durable command
+00:39 +362: /workspace/tandemlog-kotlin-remediation/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:39 +363: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: guarded move rejects changes arriving inside its refresh without append
+00:39 +364: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: typed due bounds are atomic across offline edits and rebuild
+00:40 +365: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: failed obsolete-cache replay preserves identity and prior stream guards on retry
+00:40 +366: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: future caches and v1 canonical protocol are retained and not auto-converted
+00:40 +367: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: known obsolete cache rebuilds canonical state and retains backup
+00:40 +368: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: known obsolete cache rebuilds canonical state and retains backup
+00:40 +369: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: known obsolete cache rebuilds canonical state and retains backup
+00:40 +370: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: reopen targets observed completions, is idempotent and survives restart
+00:40 +371: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: reopen refresh does not expand the observed target set
+00:40 +372: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: partial reopen retries without duplicating a committed undo
+00:40 +373: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: restart retains state and unchanged files avoid parsing/replay
+00:40 +374: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: cache deletion rebuilds exact projection and writer stays stable
+00:40 +375: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:40 +376: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:40 +377: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:40 +378: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +379: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +380: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +381: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +382: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +383: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +384: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +385: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +386: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +387: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +388: /workspace/tandemlog-kotlin-remediation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:41 +389: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: local undo requires an earlier completion of the same entity
+00:41 +390: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: remote undo arriving before completion is revalidated when target arrives
+00:41 +391: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: remote undo cannot suppress a future-clock completion
+00:41 +392: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: close drains accepted work, rejects new work and is idempotent
+00:41 +393: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: pending undo is validated before its local target is appended
+00:42 +394: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: missing canonical folder contents do not initialize a new manifest
+00:42 +395: /workspace/tandemlog-kotlin-remediation/test/stable_v3_compatibility_test.dart: first stable v3 bytes, identities, clocks and event meanings stay frozen
+00:42 +396: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline tag removal preserves unseen same-name additions and atomic edits
+00:42 +397: /workspace/tandemlog-kotlin-remediation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:42 +398: /workspace/tandemlog-kotlin-remediation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:42 +399: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: unchanged repeating completion rejects before append and refreshes remote schedule
+00:42 +400: /workspace/tandemlog-kotlin-remediation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [33333333-3333-4333-8333-333333333333, 22222222-2222-4222-8222-222222222222] and cache rebuild
+00:42 +401: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: accepted historic unchanged recurrence is replayed without retroactive rejection
+00:42 +402: /workspace/tandemlog-kotlin-remediation/test/stable_v3_compatibility_test.dart: new writer extends frozen v3 without rewriting prior history
+00:42 +403: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: concurrent recurrence completion has one durable successor and history reopen retains edits
+00:42 +404: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: protocol v1 remains untouched and explicitly rejected
+00:42 +405: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: late winning recurrence seed cannot resurrect removed successor tags
+00:43 +406: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: successor collision and invalid tag/move references fail before append
+00:43 +407: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline schedule edits converge atomically without mixing precise date-times
+00:43 +408: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: completion reconciles changed timezone before selecting civil day
+00:43 +409: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: scalar capture retains top rank after Inbox triage and replay
+00:43 +410: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: scalar capture retains top rank after Inbox triage and replay
+00:43 +411: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: scalar capture retains top rank after Inbox triage and replay
+00:43 +412: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:44 +413: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: native capture retains top rank after Inbox triage and replay
+00:44 +414: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:44 +415: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: legacy creations and retries retain their released append order
+00:44 +416: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: future records remain immutable and readable while warning permits writes
+00:44 +417: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: complete-prefix capture waits for initial position and retries exact suffix
+00:44 +418: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: complete-prefix capture waits for initial position and retries exact suffix
+00:44 +419: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: SQLite and canonical clock retain exact signed-64-bit nanoseconds
+00:44 +420: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: native capture never exposes creation intent before placement reservation
+00:44 +421: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: recurrence inserts at current parent position and later moves stay independent
+00:44 +422: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: recurrence inserts at current parent position and later moves stay independent
+00:44 +423: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: global first rank covers completed and other-assignee hidden tasks
+00:44 +424: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: global first rank covers completed and other-assignee hidden tasks
+00:44 +425: /workspace/tandemlog-kotlin-remediation/test/storage_test.dart: late pre-completion move converges and old order cache rebuilds without log writes
+00:44 +426: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: multiline 1-record prefix retains exact placements through peer arrival and retry
+00:44 +427: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: multiline 2-record prefix retains exact placements through peer arrival and retry
+00:44 +428: /workspace/tandemlog-kotlin-remediation/test/initial_task_rank_test.dart: multiline 3-record prefix retains exact placements through peer arrival and retry
+00:45 +429: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: same process and canonical aliases contend until release
+00:45 +430: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: failed acquisition releases the process guard for retry
+00:45 +431: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:45 +432: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:45 +433: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:45 +434: /workspace/tandemlog-kotlin-remediation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:46 +435: /workspace/tandemlog-kotlin-remediation/test/checklist_suppressed_capture_test.dart: canceled untouched checklist successor cannot open a private native editor or become visible through capture
+00:46 +436: /workspace/tandemlog-kotlin-remediation/test/checklist_suppressed_capture_test.dart: canceled untouched checklist successor cannot open a private native editor or become visible through capture
+00:46 +437: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: acknowledged head blocks old snapshot through URI alias without sequence reuse
+00:46 +438: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: acknowledged head blocks old snapshot through rebuilt cache without sequence reuse
+00:46 +439: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: missing owned log is blocked even with a new cache and data directory
+00:46 +440: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: same sequence with a fully recomputed valid chain rejects against private head
+00:46 +441: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: an explicitly different writer can use a restored snapshot without changing original guard
+00:46 +442: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: guard metadata is durable before append and normal reopen/refresh reads no old history
+00:46 +443: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: zero-record failed append reserves candidate across restart until exact late arrival
+00:47 +444: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: lost append acknowledgment reconciles exact pending head after restart without duplicate sequence
+00:47 +445: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +446: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +447: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +448: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +449: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +450: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +451: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +452: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +453: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +454: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +455: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +456: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:47 +457: /workspace/tandemlog-kotlin-remediation/test/writer_guard_test.dart: guard instances serialize candidate reservation for the same installation identity
+00:48 +458: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 2.0
+00:48 +459: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 2.0
+00:48 +460: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: blocked text instruction wraps with full semantics at narrow 200 percent
+00:48 +461: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:48 +462: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:48 +463: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:48 +464: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:48 +465: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:50 +466: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:50 +467: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:50 +468: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:50 +469: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+00:51 +470: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:52 +471: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+00:52 +472: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:53 +473: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+00:53 +474: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:53 +475: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:54 +476: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:54 +477: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+00:54 +478: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:54 +479: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:55 +480: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+00:55 +481: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:55 +482: /workspace/tandemlog-kotlin-remediation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:56 +483: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:56 +484: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:56 +485: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +486: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +487: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +488: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +489: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +490: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +491: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:56 +492: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:56 +493: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: title and notes wire limits validate before save
+00:57 +494: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 10240 bytes
+00:57 +495: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:57 +496: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:57 +497: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:57 +498: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:57 +499: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: same-length historical rewrite stays cached until explicit verification; fresh cache rejects invalid selfhash
+00:57 +500: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:57 +501: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:57 +502: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:57 +503: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:58 +504: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:58 +505: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:58 +506: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: atomic replacement with growth reads only new suffix and audits changed old prefix explicitly
+00:58 +507: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +508: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +509: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +510: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +511: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +512: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:58 +513: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: seeked new clock rejects transactionally without advancing admitted bytes
+00:58 +514: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +515: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +516: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +517: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +518: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +519: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +520: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +521: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +522: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:58 +523: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:58 +524: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:58 +525: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:58 +526: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:58 +527: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:58 +528: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:59 +529: /workspace/tandemlog-kotlin-remediation/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:59 +530: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: seeked command receipts reject changed new raw bytes and durable retry is idempotent
+00:59 +531: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: new suffix selfhash has exact diagnostic and never advances cache
+00:59 +532: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: new suffix previousHash has exact diagnostic and never advances cache
+00:59 +533: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: fresh replay checks genesis even when every selfhash is valid
+00:59 +534: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: full verification reports exact changed record with UTF8 byte offset
+00:59 +535: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: successful full verification counts records and bytes without appending an event
+00:59 +536: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: retained baseline detects recomputed chain while a fresh cache cannot authenticate it
+00:59 +537: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: known final-record removal fails verification while fresh valid prefix remains admissible
+00:59 +538: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: old v2 canonical history and cache are retained without migration
+00:59 +539: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: full verification retains and rejects inconsistent cached chain_head
+00:59 +540: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: full verification retains and rejects inconsistent cached last_seq
+00:59 +541: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: full verification retains and rejects inconsistent cached last_clock
+00:59 +542: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: oversized partial suffix identifies exact absolute record and offset
+00:59 +543: /workspace/tandemlog-kotlin-remediation/test/incremental_history_test.dart: semantic failure identifies invalid move before later unrelated event
+00:59 +544: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:00 +545: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:00 +546: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:01 +547: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:01 +548: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:01 +549: /workspace/tandemlog-kotlin-remediation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+01:01 +550: /workspace/tandemlog-kotlin-remediation/test/checklist_architecture_gate_test.dart: local item native Save cannot resurrect a canceled successor
+01:01 +551: /workspace/tandemlog-kotlin-remediation/test/checklist_architecture_gate_test.dart: item Save returns its current merged item rather than a deleted row
+01:02 +552: /workspace/tandemlog-kotlin-remediation/test/checklist_security_review_test.dart: admissible large checklist copy has bounded decode work and preserves canonical bytes
+01:02 +553: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+01:02 +554: /workspace/tandemlog-kotlin-remediation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:02 +555: /workspace/tandemlog-kotlin-remediation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:02 +556: /workspace/tandemlog-kotlin-remediation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:03 +557: /workspace/tandemlog-kotlin-remediation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:03 +558: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator unchanged Save preserves captured lease and nontext-only Save uses ordinary edit
+01:03 +559: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+01:03 +560: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+01:03 +561: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+01:03 +562: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+01:03 +563: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+01:03 +564: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+01:03 +565: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+01:03 +566: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+01:03 +567: /workspace/tandemlog-kotlin-remediation/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+01:04 +568: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: future hints use projection availability and the observed local day
+01:04 +569: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: passed start and history hints stay absent even with a retained instant
+01:04 +570: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: same heading removes date-only details and empty separators
+01:04 +571: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: same heading retains role and time
+01:04 +572: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: day groups hide due dates and available starts
+01:04 +573: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: day groups hide pinned dates even across local days
+01:04 +574: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: repeat perimeter needs no redundant metadata line or verbose rule
+01:04 +575: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: local zone changes alter only pinned presentation
+01:04 +576: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: pinned DST gaps and folds share projection resolution
+01:04 +577: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: local day headings and bounded task times share the observed zone
+01:04 +578: /workspace/tandemlog-kotlin-remediation/test/task_metadata_test.dart: date-only occurrence override suppresses timed base due
+01:04 +579: /workspace/tandemlog-kotlin-remediation/test/task_clock_test.dart: Chicago completion day follows local midnight across DST
+01:04 +580: /workspace/tandemlog-kotlin-remediation/test/task_clock_test.dart: unknown timezone never silently falls back
+01:05 +581: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: title normalization respects composition and selection-only history
+01:05 +582: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+01:05 +583: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+01:05 +584: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+01:06 +585: /workspace/tandemlog-kotlin-remediation/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+01:06 +586: /workspace/tandemlog-kotlin-remediation/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+01:06 +587: /workspace/tandemlog-kotlin-remediation/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+01:06 +588: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: dirty close can be cancelled, dismissed and asked repeatedly without popping
+01:06 +589: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: save through close guard renews dirty baseline; reopening starts clean
+01:06 +590: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: failed save retains draft; pending receipt freezes fields and close but permits exact retry
+01:07 +591: /workspace/tandemlog-kotlin-remediation/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+01:07 +592: /workspace/tandemlog-kotlin-remediation/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+01:07 +593: /workspace/tandemlog-kotlin-remediation/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+01:07 +594: /workspace/tandemlog-kotlin-remediation/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+01:07 +595: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+01:07 +596: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+01:07 +597: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+01:07 +598: /workspace/tandemlog-kotlin-remediation/test/checklist_presentation_test.dart: render dark desktop and narrow enlarged components
+01:07 +599: All tests passed!

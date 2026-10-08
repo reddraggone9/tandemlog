@@ -1,0 +1,73 @@
+{
+  "run": 37813474065,
+  "job": 113435998223,
+  "runner_source": "a249af55d49148db0525abd7f713ee716900353b",
+  "branch": "test/final-preview-windows-native",
+  "application_test_native_inputs": "byte-identical to frozen e205e650b5614935a73cf5acb96ca9b36fda8e4e; only four CI/runner route files differ",
+  "runner_provenance": "copied reviewed9d308a6235685038583415573d8a0bc7d4937690; only3+1scope/countfixture/workflowdescriptions change; architecture predispatch accepted",
+  "status": "completed",
+  "conclusion": "success",
+  "counts": {
+    "tag_input_workflow": {
+      "passed": 3,
+      "failed": 0,
+      "skipped": 0
+    },
+    "historical_checklist_recompletion": {
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "total_passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "runner_unit_checks": 9
+  },
+  "startup": {
+    "first_frame_ms": [
+      285,
+      17,
+      43,
+      239
+    ],
+    "ready_ms": [
+      1002,
+      313,
+      396,
+      939
+    ]
+  },
+  "loader_qualification": "source-declared default adjacent debug-bundle DLL; no runtime loaded-module enumeration",
+  "decoded_log": {
+    "file": "decoded-job-log.txt",
+    "bytes": 66316,
+    "sha256": "893a53fbed03f50b4c95f0e5d0b21618b67dd5bf0b08279cf8d98c3b78bf1f71",
+    "scope": "exact UTF8 bytes of decoded MCP log, WindowsCRLF retained; not raw log archive"
+  },
+  "runner_unit_log": {
+    "file": "runner-unit.txt",
+    "sha256": "208228fb1268be6f4e35dd1f3a1956c5b9418650b4410f5f44ece61395adb1da"
+  },
+  "artifacts_reported": [
+    {
+      "id": 11565823346,
+      "name": "windows-native-app-flows-37813474065-1",
+      "size_in_bytes": 8025,
+      "digest": "sha256:2b83a2627cea3a210cc3cacce0ac886defdd2ce88ae2b063b1eb7bde70047a77",
+      "expired": false
+    }
+  ],
+  "consumer_artifact_bytes_verified": false,
+  "raw_receipt_zip_member_read": false,
+  "payload_binary_rehashed_here": false,
+  "manual_visual_AT_signed_installed_release_acceptance": false,
+  "full_matrix_qualification": "scope-only job intentionally skips checks; separate exact e205 fullCI37810677866 all3success unchanged",
+  "remaining_gates": [
+    "Parent isolated A16 regression acceptance",
+    "Consumer byte/install verification",
+    "Final exact signed/native/manual/UX acceptance",
+    "Fresh quota and final executable-range editorial confirmation"
+  ],
+  "publication": "not attempted; stable feature approval absent",
+  "independent_review": "Correctness accepted; fresh public API confirms source/status/job/metadata, exact decoded CRLF bytehash and nine-runner-check loghash, actual3+1/startup/zero skip-failure, and four-file-only source diff to e205. No consumerZIP/member/payload/manual-release claim."
+}

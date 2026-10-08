@@ -1,0 +1,24 @@
+{
+  "source": "7d6a8bd8baa74e136ce26b8d75a138e47a9adf0d",
+  "ci_run": 37739454257,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37739454257",
+  "status_at_snapshot": "in_progress",
+  "artifacts": [
+    {
+      "id": 11534110002,
+      "name": "windows",
+      "digest": "sha256:b5cc9140fb347596312613331af9ae54aa5dfccafb6b260ba449188d840d8833",
+      "size_in_bytes": 25735949
+    },
+    {
+      "id": 11533890556,
+      "name": "android",
+      "digest": "sha256:04cf802c9f9174147c1041d56ddf9c611e3fc752bf32ed9a57e82a65c7eff900",
+      "size_in_bytes": 80367359
+    }
+  ],
+  "digest_provenance": "GitHub API reports these archive digests; this consumer has not downloaded/verified their bytes.",
+  "consumer_artifact_download": "HTTP403 from GitHub artifact storage",
+  "native_windows_android_acceptance": "pending for checklist candidate",
+  "library_save": "Current skill helper failed before preparation: hosted apps tools/list HTTP401; no upload started."
+}

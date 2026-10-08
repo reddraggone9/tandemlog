@@ -1,0 +1,1376 @@
+[
+  {
+    "module": "kotlin-gradle-plugin",
+    "reviewed_entries": [
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-android.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "8f16b1b3236df5752dc2dff27ec4a93aeab417652ec80e35e8c769d3487d0592",
+        "new_sha256": "8f16b1b3236df5752dc2dff27ec4a93aeab417652ec80e35e8c769d3487d0592",
+        "new_bytes": 82
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-kapt.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "a67549737e9f6e529a5eb2f372c6a3dbec50dce4fe894a5547eeeec02762a283",
+        "new_sha256": "a67549737e9f6e529a5eb2f372c6a3dbec50dce4fe894a5547eeeec02762a283",
+        "new_bytes": 78
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-multiplatform.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "62f6ae16fd85f1abe4b725bb5a5e24646b285f8e31e78761e1efc16fa3b41f6f",
+        "new_sha256": "62f6ae16fd85f1abe4b725bb5a5e24646b285f8e31e78761e1efc16fa3b41f6f",
+        "new_bytes": 88
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-native-cocoapods.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "a6d124048d910ea64547433a7f7beb9e5bc106942da22c3adbd9ac56839b5214",
+        "new_sha256": "a6d124048d910ea64547433a7f7beb9e5bc106942da22c3adbd9ac56839b5214",
+        "new_bytes": 87
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-parcelize.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "4d74089918690efe7a0132d56883e224903d2cc67999f1a439af86385341b734",
+        "new_sha256": "4d74089918690efe7a0132d56883e224903d2cc67999f1a439af86385341b734",
+        "new_bytes": 76
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin-scripting.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "24c59171a97056d896e382e615b3ffae16d4af68abdb01918ed233768c5d23da",
+        "new_sha256": "24c59171a97056d896e382e615b3ffae16d4af68abdb01918ed233768c5d23da",
+        "new_bytes": 92
+      },
+      {
+        "entry": "META-INF/gradle-plugins/kotlin.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "93b9bf4b019499ce284d0af0a803050721dc16ed37944a2aa9264fe924ca9e18",
+        "new_sha256": "93b9bf4b019499ce284d0af0a803050721dc16ed37944a2aa9264fe924ca9e18",
+        "new_bytes": 75
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.android.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "14306439a2edec5d8db3349892951d5618c8ba6d5ba2e2ff2fe9be21d9e693b1",
+        "new_sha256": "14306439a2edec5d8db3349892951d5618c8ba6d5ba2e2ff2fe9be21d9e693b1",
+        "new_bytes": 144
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.js.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "d04de13ba0246c02dfde8c6730619467c44c977b71474d55b943e26fc4821fab",
+        "new_sha256": "d04de13ba0246c02dfde8c6730619467c44c977b71474d55b943e26fc4821fab",
+        "new_bytes": 131
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.jvm.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "337760895e10440bd741f8808f5f92458337b4ed2ff744ec53a07e40e1d85d16",
+        "new_sha256": "337760895e10440bd741f8808f5f92458337b4ed2ff744ec53a07e40e1d85d16",
+        "new_bytes": 137
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.kapt.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "659b07ce454ee41d17d9d28e298072f8f9b5aaaf50b40acb557dae611239ef0f",
+        "new_sha256": "659b07ce454ee41d17d9d28e298072f8f9b5aaaf50b40acb557dae611239ef0f",
+        "new_bytes": 140
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.multiplatform.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "8461d741c90eb579689d040427d1cad62cc8c4f4aec16d5a08155abb1864b325",
+        "new_sha256": "8461d741c90eb579689d040427d1cad62cc8c4f4aec16d5a08155abb1864b325",
+        "new_bytes": 150
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.native.cocoapods.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "44953ee5109820b4bf606069ee2f900ae986810a682093edb25a640adcc78efa",
+        "new_sha256": "44953ee5109820b4bf606069ee2f900ae986810a682093edb25a640adcc78efa",
+        "new_bytes": 149
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.plugin.parcelize.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "6862b57a43ce14cc0df98db2a28539cddc4fb9b738e0befdcd721a8991c6a704",
+        "new_sha256": "6862b57a43ce14cc0df98db2a28539cddc4fb9b738e0befdcd721a8991c6a704",
+        "new_bytes": 138
+      },
+      {
+        "entry": "META-INF/gradle-plugins/org.jetbrains.kotlin.plugin.scripting.properties",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "d15b4b67c6e2179887c715e085134d2f2f8e658665ec8934fab6618ab7a8cf95",
+        "new_sha256": "d15b4b67c6e2179887c715e085134d2f2f8e658665ec8934fab6618ab7a8cf95",
+        "new_bytes": 154
+      },
+      {
+        "entry": "META-INF/maven/com.microsoft.playwright/driver/pom.properties",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6bf70f5ef67e59c326cb0e838aa5d92510ed286b31488861f0ec73fcbb1b293d",
+        "new_bytes": 66
+      },
+      {
+        "entry": "META-INF/maven/com.microsoft.playwright/driver/pom.xml",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "1b7438f7737e1e6ae28e9506226aee973047ed1197bc99e8f4bd6c35da46079f",
+        "new_bytes": 1344
+      },
+      {
+        "entry": "META-INF/maven/com.microsoft.playwright/playwright/pom.properties",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "9fa74995b69c1a0d72ae2e1e0f4c12708552343d7c3027a891ae530cb6898cd4",
+        "new_bytes": 70
+      },
+      {
+        "entry": "META-INF/maven/com.microsoft.playwright/playwright/pom.xml",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "ea625e1aa8ffa65906ab35a5c66ad2ebed26ba1397794bb467be83d957111326",
+        "new_bytes": 2914
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.util.ModuleVisibilityHelper",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "e076c74c1194aa7f8872f1fe13409f6a58ad8535814ff62e2310e17792fda037",
+        "new_sha256": "e076c74c1194aa7f8872f1fe13409f6a58ad8535814ff62e2310e17792fda037",
+        "new_bytes": 59
+      },
+      {
+        "entry": "driver/package/LICENSE",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb",
+        "new_bytes": 11601
+      },
+      {
+        "entry": "driver/package/NOTICE",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6d602191187b35b9b01d2cffa01c8469c2c8d9de8a96f1bf868e0f264f51c81d",
+        "new_bytes": 254
+      },
+      {
+        "entry": "driver/package/README.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "d16ff7f8e38fa1fc954f695ad551cdc118d9c9bdd5f3d83203901f4c317d7d7e",
+        "new_bytes": 120
+      },
+      {
+        "entry": "driver/package/ThirdPartyNotices.txt",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a549d329bad8806fe279f0ecae0fc0270dec7e7c2dc8ec10f90e394f7c32b144",
+        "new_bytes": 676
+      },
+      {
+        "entry": "driver/package/bin/install_media_pack.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "bc20f049badf021e3a53bdb4156603caa5ef482c9a9a251f927605e676a44171",
+        "new_bytes": 174
+      },
+      {
+        "entry": "driver/package/bin/install_webkit_wsl.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "bc61beda37a808eef27d39ce684baa792f6d17737a25a432b1a84d3b591ab815",
+        "new_bytes": 1464
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_beta_linux.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "dc8c22b9dde76583cece2857575b88094299615f3136a3c598149710c45dee3a",
+        "new_bytes": 1217
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_beta_mac.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a92eaeb4ebcf5633a4e9c981481e14c80764fc81b6fcbc0565398e50ff319433",
+        "new_bytes": 563
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_beta_win.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "b6d9e44742feafb98d5edc56fa20042949973cf30d141a1c5b4fb384096967c5",
+        "new_bytes": 957
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_stable_linux.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "dc72ab3567a4ce43bd8353d4ecf41f1d9c03e870169367cd3ed9043aabf67dd1",
+        "new_bytes": 1212
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_stable_mac.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "bb43a96c192a6cc81524ade0264686fff7809c019a89f7db0a9849635879c3be",
+        "new_bytes": 519
+      },
+      {
+        "entry": "driver/package/bin/reinstall_chrome_stable_win.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3d96c4e2f4ebbb3fad44cf3ba58d9cf90af1c9fb3073e3b27d45a74cf005515b",
+        "new_bytes": 923
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_beta_linux.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "10b26f35dbc2000b94edf1172d803a29c5873a4eb8d523afbc687997b642767e",
+        "new_bytes": 1494
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_beta_mac.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "0036d738bc90d686100d81f328ba0003bf07863f5500b792c8da391d149750fa",
+        "new_bytes": 377
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_beta_win.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "b173c378a59f0cc38033cee702de1f44f09276c9b2270d1a650ebe66ee312433",
+        "new_bytes": 874
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_dev_linux.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "00e4947e7a4f8339c6db09c87976d808583c07f9179e4aa7694d88614b82fe95",
+        "new_bytes": 1489
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_dev_mac.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6f899e3b311f742c24ca37ff9e32298e8290514ffc14bf588cc51556a29da4c0",
+        "new_bytes": 372
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_dev_win.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "46f7f98c81cb0abe687d7f4a5afea9b897a38d2a6dd6f6662fbd847f7a22bd51",
+        "new_bytes": 869
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_stable_linux.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "ec0a31a5f09c565e108473a1850895a4458ab00c713ac1de3aa2001912e4668f",
+        "new_bytes": 1507
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_stable_mac.sh",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3af1e893527ff2257aa2dbc3b259a053b92f45c3eadb13e38eba46e87902655d",
+        "new_bytes": 371
+      },
+      {
+        "entry": "driver/package/bin/reinstall_msedge_stable_win.ps1",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "40bb5fcbfcebbbe2ce43c6e736e7c5deefc5be03b6e9c6914423c06ec1f591be",
+        "new_bytes": 856
+      },
+      {
+        "entry": "driver/package/browsers.json",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+        "new_bytes": 1939
+      },
+      {
+        "entry": "driver/package/cli.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f1c4075aef116c766092250d7f37b3249a7cee6465d953207fc38c8f6145becd",
+        "new_bytes": 839
+      },
+      {
+        "entry": "driver/package/index.d.ts",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "7a8ec10b0834eb7183e4bfcd929838ac77583828e343211bb73676d1e47f6f01",
+        "new_bytes": 634
+      },
+      {
+        "entry": "driver/package/index.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a58fb2cec4293e7dcf73c58a179898a4f3986666451a19da4e731fa3af63265b",
+        "new_bytes": 697
+      },
+      {
+        "entry": "driver/package/index.mjs",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3d36e2132d3c8b62397d23f0bb4177336aaee503203ae2a2c90fbeb5bf3317dd",
+        "new_bytes": 1063
+      },
+      {
+        "entry": "driver/package/lib/bootstrap.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "97ffe165e8e45f1b51a713b3f380d383e4e183727135fe9a5e045ec62e9310ab",
+        "new_bytes": 3481
+      },
+      {
+        "entry": "driver/package/lib/coreBundle.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6be5c2ea035554e9b184b1dbc7aa5e7f1fb428dd1b5c202022858dcfae9bee27",
+        "new_bytes": 3352341
+      },
+      {
+        "entry": "driver/package/lib/entry/cliDaemon.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "062f256fb29a7bf91793a014b9c3f1f9cf2dc6b12e40a8a2ebba88a630ae16a0",
+        "new_bytes": 197
+      },
+      {
+        "entry": "driver/package/lib/entry/dashboardApp.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "209962c6eaeef11629f226d6a2ab33ec7a2480754242b6e19590a9e6eb71d126",
+        "new_bytes": 108
+      },
+      {
+        "entry": "driver/package/lib/entry/mcp.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "cc87dc0020cb41caebbf04f50e42bc7835b033a6d80e9c3f0a3d0b3dbdf341c7",
+        "new_bytes": 442
+      },
+      {
+        "entry": "driver/package/lib/entry/oopBrowserDownload.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "87567cdbd67dd2f50bb232d47d3784701ece7c81e39c0287bb7d1b466b68cf06",
+        "new_bytes": 120
+      },
+      {
+        "entry": "driver/package/lib/package.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "9f938e1d44a0dd231b1660ca62f7dae964859b79cbdc370b8542c5d375ca3c05",
+        "new_bytes": 2112
+      },
+      {
+        "entry": "driver/package/lib/server/chromium/appIcon.png",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6ba994f05c5cf18e22d9b6bef9898fbdec6ad4d4d77f5187d0609cb42d72d01e",
+        "new_bytes": 16565
+      },
+      {
+        "entry": "driver/package/lib/server/deviceDescriptorsSource.json",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "796ff93bfd5e38b84541a1e8745a7abcbccba54d440fb3b7a1acec0655d056cc",
+        "new_bytes": 80785
+      },
+      {
+        "entry": "driver/package/lib/server/electron/loader.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "8c99c632a9fcef9d691160954d01acdf374ba15566e153bef7fb61b0d3796e6d",
+        "new_bytes": 4821
+      },
+      {
+        "entry": "driver/package/lib/serverRegistry.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "85f63dbf8dc73fa651dcf046a732d78a86dbda401084b1d144d5a1ef1a59730d",
+        "new_bytes": 247050
+      },
+      {
+        "entry": "driver/package/lib/serverRegistry.js.LICENSE",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "5cf540fe55a2ba9bcf0eb76e739b454faa8581e2f1a0f777602ef0855534302e",
+        "new_bytes": 18617
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/channelSessions.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6b9c613e87340f48ad7182addd7495a8ff3fbe55feb1bbd0ce04f59f1552e126",
+        "new_bytes": 7087
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/cli.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "dfde8e9dfde30c4b3914eb25ba1c5a8524ec64651d866171d75cd7b41a827180",
+        "new_bytes": 153
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/help.json",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "961a8792b8b4e43f6d28d8d3029f6b3b7fa2e04d04d84fb0590bd0d759d2c456",
+        "new_bytes": 36596
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/minimist.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "1d200627373a367e0097f1abeaaa4d67cde2c33f2e5efca5cb55222c7667adc3",
+        "new_bytes": 4106
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/output.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "2eace914547a487b2aa1dc34af787fe92168f0b7b3dde24f2b127e817cc9b2b4",
+        "new_bytes": 11703
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/program.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "722f00475112d4a3b569af51172e0bd88d1e4627a65ed8a2245031e08e7cc1ec",
+        "new_bytes": 16054
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/registry.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "c11d278e05542808ba37bdb032018eccf9dc78377f8025bd74fa906ae009ca30",
+        "new_bytes": 6662
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/session.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "c47202e7886ddd17ad2ce3e7f4b893f751e0e074cb1111a8bbc20fd33ecec800",
+        "new_bytes": 9395
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/SKILL.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "b4c81c39e39f30e4790607e57b12283878f3751daca9c0e44f301899f2108b13",
+        "new_bytes": 11869
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/element-attributes.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "bf19aa4671e0a50a0fefa9c790f39124e803060eefe395042b723c29fcb7faa2",
+        "new_bytes": 665
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/playwright-tests.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "c5b0719fef2cfdff50bd744051b2f9afc119775db4b48e9b2882c1cf3886797c",
+        "new_bytes": 1690
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/request-mocking.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "54e801c9663fc2b6d68ceb058cb1c360724c2499f42acc7852a68e83e5b5f37c",
+        "new_bytes": 2182
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/running-code.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "d95c539a5990b71d02d8bdf1d9414df16191eb6cff95b0063820518b7a13dcb2",
+        "new_bytes": 5642
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/session-management.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "cd3e261b8763bf952f1e371b876cb78d054379afec85482f9250633e1b7e6c44",
+        "new_bytes": 5671
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/spec-driven-testing.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3326b3af65ed6e05180aa394a7fd578f29822e67bde9f22f7c7f94e6c8e3a594",
+        "new_bytes": 11578
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/storage-state.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "9ac47f9ae4a1aedcd2077f8ac9ab1ba6bee1962cb83ff51adcd36fb6d83b5ec6",
+        "new_bytes": 5198
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/test-generation.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "2a9c4d94effa31b05cf367dfa8bbace8874a3bc9799987ad2b03269af224d299",
+        "new_bytes": 4585
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/tracing.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "792e0ac7705e56ac48df84c0f5400221ce86107897c671590a64a4ea6a82508e",
+        "new_bytes": 3440
+      },
+      {
+        "entry": "driver/package/lib/tools/cli-client/skill/references/video-recording.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "8555ab5400df0d90e66318aacc0a8a4418fbf872e7463824d55d5c41615abd83",
+        "new_bytes": 5387
+      },
+      {
+        "entry": "driver/package/lib/tools/dashboard/appIcon.png",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "38037bcf18c7f9b950da2e1a2d8800d38fb27637ccda293d38368a3704b67f18",
+        "new_bytes": 18945
+      },
+      {
+        "entry": "driver/package/lib/tools/trace/SKILL.md",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "df85506bfa8a445c961efa1ac244cca733667b717711bcc99c1f93994c29d5dc",
+        "new_bytes": 4712
+      },
+      {
+        "entry": "driver/package/lib/tools/utils/extension.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "c07d365ccff8c7fab3d65848bc01616c74e422f3be7b1c0e7b587b84ef866ada",
+        "new_bytes": 3132
+      },
+      {
+        "entry": "driver/package/lib/tools/utils/socketConnection.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "973c2bea70a1f1445f4673f99e9fa351e50a2ec9fd93d7381b2c41bb4de764dd",
+        "new_bytes": 3317
+      },
+      {
+        "entry": "driver/package/lib/utilsBundle.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "1295945f0054d2504c9b751945b15aa3c672530ad5a340f3f9636e5e238f304a",
+        "new_bytes": 3143574
+      },
+      {
+        "entry": "driver/package/lib/utilsBundle.js.LICENSE",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "e3f91eea8ba98019d8e65ec61756af34a67e170070005a09d1fc6f49a64b544b",
+        "new_bytes": 110417
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/codicon-DCmgc-ay.ttf",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+        "new_bytes": 80340
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/firefox-1bWoP6pv.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3f3742d1e78c0db6c2d3531250f70c30675ee5310de32fa89befaf738c54efd0",
+        "new_bytes": 7488
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/firefox-beta-k3eOH_eK.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "7eab5ffdc25903ba33a7202f7fffa1999f119c7be45a39e9e703c118904f917a",
+        "new_bytes": 9280
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/firefox-nightly-Cp5nfeDT.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f311c074b0fa999fcd6b73441301fb54ee87a48ff3bf05f318647928110476da",
+        "new_bytes": 9143
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/index-BY2S1tHT.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "4e741ba6be0fb15305f6dfd907e245e68554f6dbd5282a58dcc1e9d2493eb917",
+        "new_bytes": 142433
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/index-C_5TMfeg.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "cf991b92763fb3b3759e9c5b9839e3625b351041db4199501a53c3c82bd2e28c",
+        "new_bytes": 331501
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/assets/safari-na3_-uQk.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "80fd72ca5eb8545f1981277b31f4f92951d469d4efebd078e4086b676fe517dc",
+        "new_bytes": 5254
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/index.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "1025839f364c006a0a3b6f94196a630fdbec355cfe15de3777d975e725c915c7",
+        "new_bytes": 1078
+      },
+      {
+        "entry": "driver/package/lib/vite/dashboard/playwright-logo.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "511524a1c145819303a18fb71870a4307c3e740f9e9722f7686a2b42b0995b6c",
+        "new_bytes": 5645
+      },
+      {
+        "entry": "driver/package/lib/vite/htmlReport/index.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "ce7c098020a0eb9ce10edd416245ea6da50dfeaab18dfd0a2176979d22643be6",
+        "new_bytes": 464
+      },
+      {
+        "entry": "driver/package/lib/vite/htmlReport/report.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3298f11062d5112516c8b3fa2368c6138b4700aa9fa215bb5fc0a1f0efe94e3f",
+        "new_bytes": 108330
+      },
+      {
+        "entry": "driver/package/lib/vite/htmlReport/report.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "9e7baad230ee5aec5af605ac4687687cf0e079f3299423811aa9768543d8947b",
+        "new_bytes": 416009
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/assets/codeMirrorModule-DYBRYzYX.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "70bf421a13e87857ca684bfa2cc55f06d7c5a50f71253a3ff1d74769b14a957e",
+        "new_bytes": 6421
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/assets/codeMirrorModule-DeBYQozu.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f4ad79265956fe5186af9d2b8ebcf4c0e40ec8d0405ab623471a6cecb22bc1d7",
+        "new_bytes": 313009
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/assets/codicon-DCmgc-ay.ttf",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+        "new_bytes": 80340
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/assets/index-4ZiSSCmn.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "4278e600a533667369328e9eb52a212693d52e46072ec37228e0ef8621a48ead",
+        "new_bytes": 92234
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/assets/index-Bq-mQf8S.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "b9215ab0e84dba105788f7ae82559892b4ebab1e9c7cde479d00a381e8375c40",
+        "new_bytes": 365888
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/index.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a02e5446589dc2515a986f9944918029df332418db0f706a819d3bf1a0bf7fa3",
+        "new_bytes": 1078
+      },
+      {
+        "entry": "driver/package/lib/vite/recorder/playwright-logo.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+        "new_bytes": 5033
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/assets/codeMirrorModule-LEHpjmcn.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "e3d682edfb4dd1fa17882466dd15058120278b27ff1101785a57b6df4db7ada5",
+        "new_bytes": 313054
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/assets/defaultSettingsView-BNmKHKpQ.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f21839cd274944763d12ad24529345b9f8ebf339409f51f4dbe52f9d9baeb09c",
+        "new_bytes": 658064
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/assets/urlMatch-BYQrIQwR.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "168c4dee4815ea8d3c131a504033cd23d4b15aefa0209dd10ad3f643e8f1d8a7",
+        "new_bytes": 819
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/assets/xtermModule-CsJ4vdCR.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "4aa82b0448cef1cf951bbe0ac80bf2d2b7c5d279dd74bcc798a9e563e98e5295",
+        "new_bytes": 292244
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/codeMirrorModule.DYBRYzYX.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "70bf421a13e87857ca684bfa2cc55f06d7c5a50f71253a3ff1d74769b14a957e",
+        "new_bytes": 6421
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/codicon.DCmgc-ay.ttf",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+        "new_bytes": 80340
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/defaultSettingsView.CjdS-WJx.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "de9c068d0e8043820fe42f30558e972eb7e2a8a45a34f65c7c8f73fa2dbc9fd0",
+        "new_bytes": 112258
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/index.CzXZzn5A.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "4ec2a3d49db259ce9025cb4fa48d73b1afd58215e567eef3b4a4cbf76c1674d9",
+        "new_bytes": 2111
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/index.DMMX1gXU.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f33ceae71f13fde446a244c113548fec5ef890bf7b93ded7b861bebcebaa3e23",
+        "new_bytes": 6547
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/index.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "5ced36d3feb5bbbc0e8350330be0a293a1b4784ddecb6e58e1851323a93640cc",
+        "new_bytes": 2363
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/manifest.webmanifest",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "d8540500603a32a39fe7e5a0375dc0f9ebafd11118e06a846db7efc608223ab9",
+        "new_bytes": 429
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/playwright-logo.svg",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+        "new_bytes": 5033
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/snapshot.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "11c80efe4f4424fa59004bcc71fed77a420d2da5f199790e355c30a5b965d0cd",
+        "new_bytes": 389
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/snapshot.v8KI4P3m.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "97a3cd6d67aaac66efc838d7d743ac51bbf7d272e1287981c11758fca21a0657",
+        "new_bytes": 660
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/sw.bundle.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "5237c6c68ba1f3591caf8cf951be4873192342a72fbcc31e5a667f7a7904c624",
+        "new_bytes": 95855
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/uiMode.BZQ54Kgt.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a548cd88f2041433da2d60fd3a33ef23af2fb8ddf2557b7bef79806364498e57",
+        "new_bytes": 60311
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/uiMode.Ut8wwJNp.js",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "0ab1e917250833c3f6b3ed3ae3f359158bf68cd2d9951163ee6edff9b8ed1e5b",
+        "new_bytes": 38514
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/uiMode.html",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "95bf648d76d380b779770aae1c560b58ee456096b2b3b02922e629af29e3d492",
+        "new_bytes": 727
+      },
+      {
+        "entry": "driver/package/lib/vite/traceViewer/xtermModule.DYP7pi_n.css",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "7c5a01f382f76539fc9b4db6b18e18a7035741845fd14968c5cdc0a7e373d817",
+        "new_bytes": 4150
+      },
+      {
+        "entry": "driver/package/lib/xdg-open",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "2e79a4d5171dd384d20a75b023dfe0e9f4330cdb5d441f6c3859a11fce3db51a",
+        "new_bytes": 25778
+      },
+      {
+        "entry": "driver/package/package.json",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "759e376f995bf39edd4810d699b99469bab1d7428b6fbc78d41912f367df7ba9",
+        "new_bytes": 876
+      },
+      {
+        "entry": "driver/package/types/protocol.d.ts",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "17c6561066a9708a09115ad4b49ff23cf81a607f54278c9b9b5865964906f415",
+        "new_bytes": 814471
+      },
+      {
+        "entry": "driver/package/types/structs.d.ts",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "32727845ab5bd8a9ef3e4844c567c09f6d418fcf0f90d381c00652a6f23e7f6e",
+        "new_bytes": 2103
+      },
+      {
+        "entry": "driver/package/types/types.d.ts",
+        "classification": "bundled JS/driver metadata",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "60200590d8ecf247a6e9c769c6b79bd8e688c3af14ef208072d0c6954b25f125",
+        "new_bytes": 1003279
+      }
+    ],
+    "unchanged": 16,
+    "changed": 110
+  },
+  {
+    "module": "kotlin-compiler-embeddable",
+    "reviewed_entries": [
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.builtins.BuiltInsLoader",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "fb7d05267f3ae35985b59c368478342a013b974aaf8aefbd0d2c120c6d2d28bd",
+        "new_sha256": "fb7d05267f3ae35985b59c368478342a013b974aaf8aefbd0d2c120c6d2d28bd",
+        "new_bytes": 78
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.org.jline.terminal.spi.TerminalProvider",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "f67692ebef3a2bbb0f1618ebac30fb3192b93595771fe42884d9750ff74275fd",
+        "new_bytes": 1025
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.resolve.ExternalOverridabilityCondition",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "29c446a0e07244710d32cf833d1ec8e3a918422039c01260b7856b6068fccb1a",
+        "new_sha256": "29c446a0e07244710d32cf833d1ec8e3a918422039c01260b7856b6068fccb1a",
+        "new_bytes": 199
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.resolve.jvm.KotlinToJvmSignatureMapper",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": "6544eefa747b0c0b0a8d5cad48fbd102873c32379f72233c92975452b39c5389",
+        "new_sha256": null,
+        "new_bytes": null
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.util.ModuleVisibilityHelper",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "5d3ba5a700fe198276ca1ca6f74a1ab912ea36deca1372342e4d46788674a998",
+        "new_sha256": "5d3ba5a700fe198276ca1ca6f74a1ab912ea36deca1372342e4d46788674a998",
+        "new_bytes": 58
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/exec",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": "e13a8e25cecc2912784724307ccfd1f4f625e58bd5b9aaea47cf1a41d7347146",
+        "new_sha256": null,
+        "new_bytes": null
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jansi",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "2698202450997f47068e25f6a2cd1b46dc6ddeaca16a00c32fad8a77b8cc10eb",
+        "new_sha256": "2698202450997f47068e25f6a2cd1b46dc6ddeaca16a00c32fad8a77b8cc10eb",
+        "new_bytes": 642
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jna",
+        "classification": "hook/service",
+        "unchanged": true,
+        "old_sha256": "76ca90db9b19e1efad35707ebafdd49dd63ff135591ee2fc68ae5541ded288f4",
+        "new_sha256": "76ca90db9b19e1efad35707ebafdd49dd63ff135591ee2fc68ae5541ded288f4",
+        "new_bytes": 638
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jni",
+        "classification": "hook/service",
+        "unchanged": false,
+        "old_sha256": "1038ffc5c25b659f6f5ba24f82214c8ea8fe47cf9de5ec24a5f27ba418ff75ae",
+        "new_sha256": null,
+        "new_bytes": null
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/linux/aarch64/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "a732552e3855c4f81d70f34a7468c26ffd4f3babcf20a06fa309082905ec4e81",
+        "new_sha256": "a732552e3855c4f81d70f34a7468c26ffd4f3babcf20a06fa309082905ec4e81",
+        "new_bytes": 77859
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/linux/amd64/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "108157738367c0a972c2228dead1af896bf5d5a7fc7f58fcbf855aa2b67049ea",
+        "new_sha256": "108157738367c0a972c2228dead1af896bf5d5a7fc7f58fcbf855aa2b67049ea",
+        "new_bytes": 203408
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/linux/i386/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "f72fff01f82b13bf54e945d1d9158a4b6c10caabca0a102fba5477c8d8baa8b4",
+        "new_sha256": "f72fff01f82b13bf54e945d1d9158a4b6c10caabca0a102fba5477c8d8baa8b4",
+        "new_bytes": 68840
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/linux/ppc64le/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "c6dd51e13b98853688589828e6760f334088bec00a143197c05486bb94fd8495",
+        "new_sha256": "c6dd51e13b98853688589828e6760f334088bec00a143197c05486bb94fd8495",
+        "new_bytes": 209016
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/linux/s390x/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "9584dad637d5241fdb649f1db07835623a7c567c43f0c9450249c72a81657990",
+        "new_sha256": "9584dad637d5241fdb649f1db07835623a7c567c43f0c9450249c72a81657990",
+        "new_bytes": 89200
+      },
+      {
+        "entry": "org/jetbrains/kotlin/net/jpountz/util/win32/amd64/liblz4-java.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "1ba944ded629f0ea2c7669c9cb4b3a39b2d773142a0b5f8fce8e11d6a50800fd",
+        "new_sha256": "1ba944ded629f0ea2c7669c9cb4b3a39b2d773142a0b5f8fce8e11d6a50800fd",
+        "new_bytes": 516677
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/FreeBSD/x86/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "71d4e610ba70854a344078512afd3ca42676107e48cd753ecd91e806abb45569",
+        "new_sha256": "71d4e610ba70854a344078512afd3ca42676107e48cd753ecd91e806abb45569",
+        "new_bytes": 12100
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/FreeBSD/x86_64/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "8c56980e59f79e7a95b8edcbfe0a4f6b54bb6964aa9034efa7617725179d1d52",
+        "new_sha256": "8c56980e59f79e7a95b8edcbfe0a4f6b54bb6964aa9034efa7617725179d1d52",
+        "new_bytes": 15308
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/arm/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "fc3bb7c1178369ae6d3b07e51b0590eb8a6bb6dd6acd90115afeb18c65d85ad6",
+        "new_sha256": "fc3bb7c1178369ae6d3b07e51b0590eb8a6bb6dd6acd90115afeb18c65d85ad6",
+        "new_bytes": 22232
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/arm64/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "a807b7b420a15ee48e13c694f1e4d84b0d69c8857c2f0008c484328522bc69e5",
+        "new_sha256": "a807b7b420a15ee48e13c694f1e4d84b0d69c8857c2f0008c484328522bc69e5",
+        "new_bytes": 15952
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/armv6/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "402a6ee45d724e95eacace01e4e17029e10869ddaa5f5f4b45e13eed33d016d7",
+        "new_sha256": "402a6ee45d724e95eacace01e4e17029e10869ddaa5f5f4b45e13eed33d016d7",
+        "new_bytes": 15068
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/armv7/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "f01f068c1be78380c36868b4f47f8f24877a17a3e2269cc43c43615f9aee3ecb",
+        "new_sha256": "f01f068c1be78380c36868b4f47f8f24877a17a3e2269cc43c43615f9aee3ecb",
+        "new_bytes": 12236
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/ppc64/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "8d97571bb654005984c4d7595062f94a7bdb8f11203abc9efe005c22571def43",
+        "new_sha256": "8d97571bb654005984c4d7595062f94a7bdb8f11203abc9efe005c22571def43",
+        "new_bytes": 18064
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/x86/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "8bdd29ef7e167116e848594760fe49546cd7a3e45f130bc30766ba1490193653",
+        "new_sha256": "8bdd29ef7e167116e848594760fe49546cd7a3e45f130bc30766ba1490193653",
+        "new_bytes": 17580
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "4bf8600bdeee40175ee1f5978c76bc9caa5083c35d6a7844d5ede74a669fb234",
+        "new_sha256": "4bf8600bdeee40175ee1f5978c76bc9caa5083c35d6a7844d5ede74a669fb234",
+        "new_bytes": 15800
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "a2d8080e97424ddc0c21b6c16326eaa8b5e5c7a6aca0de2113da3ea1aa6726aa",
+        "new_sha256": "a2d8080e97424ddc0c21b6c16326eaa8b5e5c7a6aca0de2113da3ea1aa6726aa",
+        "new_bytes": 53036
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/x86/libjansi.jnilib",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "ea7ceaf2b63f95ac34822fed2f4cdfd436599c682e04383fac3736dd4c4a41a6",
+        "new_sha256": "ea7ceaf2b63f95ac34822fed2f4cdfd436599c682e04383fac3736dd4c4a41a6",
+        "new_bytes": 14748
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/x86_64/libjansi.jnilib",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "537d38ad49b9d159eef64ed0a774c816e679606d9c37266776b74c2cd6074f3f",
+        "new_sha256": "537d38ad49b9d159eef64ed0a774c816e679606d9c37266776b74c2cd6074f3f",
+        "new_bytes": 15612
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Windows/x86/jansi.dll",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "1d6314da4b3a7a5e9dded6b0cc1b83f15f8f603897ae00cfe98ef171285620f3",
+        "new_sha256": "1d6314da4b3a7a5e9dded6b0cc1b83f15f8f603897ae00cfe98ef171285620f3",
+        "new_bytes": 113924
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Windows/x86_64/jansi.dll",
+        "classification": "native",
+        "unchanged": true,
+        "old_sha256": "d23fc9293b68781d43314403048d6dc655fa4620b6b4db3dcd345c52c332a2f4",
+        "new_sha256": "d23fc9293b68781d43314403048d6dc655fa4620b6b4db3dcd345c52c332a2f4",
+        "new_bytes": 127010
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/FreeBSD/x86/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "7c1c26a62d09206009504a769718d360ca4238b832a3d89601a8964b1529aa4f",
+        "new_bytes": 8945
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/FreeBSD/x86_64/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "d0924a1b1b930d39bf1cca03748d6ce5ae7db2be6ac1b1e92b8c25c788c628c8",
+        "new_bytes": 11637
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/arm/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a6dbb0acb4f382b4419c99aa149d7463ecbb796a86acc66af7a7c428db67ea23",
+        "new_bytes": 21016
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/arm64/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "2d2ec1580e7c46aecf939f3ad0f140b77bde5c8de1f04feeace9d6932c6e9dc4",
+        "new_bytes": 14248
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/armv6/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "e6fbd656bd80ad0d64dbef0c7629dd37b55b83437c3a57ef0956dcdf45bd4bbe",
+        "new_bytes": 14056
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/armv7/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "4513c310e7668b110af6300bb1f7faf3a17f72f04e0385ccafa1e3eb95c5f8f5",
+        "new_bytes": 13404
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/ppc64/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6caa33406f446de40bc09302b02a4349c86a7ff6dbb3e37a2ea9ac8c20f82557",
+        "new_bytes": 72008
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/x86/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "7ec2832fc93a5be3004af0813051fa5f35532c7c0df0a97a58c02786845e909c",
+        "new_bytes": 15920
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/x86_64/libjlinenative.so",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "6913e90cd3115940016193069a57b1b391b78cbedcd2c2f8cef2d6d345aac63b",
+        "new_bytes": 13704
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/arm64/libjlinenative.jnilib",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "34a3a7b6a7b97f3d0738f49174b7e614f1158cb89a1b5b984cbf24e9fbc88e63",
+        "new_bytes": 51666
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/x86/libjlinenative.jnilib",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "72b52a58b00ecdadc7694d472a2dc2e349ffa4c09f04807e9cc46a6b91050137",
+        "new_bytes": 13720
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/x86_64/libjlinenative.jnilib",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "bc38e62e79815b91b0a134e7e189627a2c6116bbcaaf38ed4c0ee31867c67028",
+        "new_bytes": 14228
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/arm64/jlinenative.dll",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "a1e7ff94faea0b17da0442f68b7eacd38d137763a1fba1631b415702624faaf2",
+        "new_bytes": 80384
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/x86/jlinenative.dll",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "b878e5bc4a0d0660ca982271968d59d582986613420d9fbfc1cbe43577ce319c",
+        "new_bytes": 114585
+      },
+      {
+        "entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/x86_64/jlinenative.dll",
+        "classification": "native",
+        "unchanged": false,
+        "old_sha256": null,
+        "new_sha256": "3322cf464b273c2e0844b32bc9c16cc1909eb8c393ad65cf0202d0cdee177669",
+        "new_bytes": 129577
+      }
+    ],
+    "unchanged": 25,
+    "changed": 19
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "coordinate": "org.jetbrains.kotlin:kotlin-reflect:1.6.10",
+    "unchanged_baseline_and_proposal_metadata": true,
+    "metadata": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/1.6.10/kotlin-reflect-1.6.10.pom",
+    "metadata_sha256": "57905524274a00ae028aaccc27283f6bc5925a934a046c1cc5d06c8ee4d6d5a9",
+    "files": [
+      {
+        "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-reflect/1.6.10/kotlin-reflect-1.6.10.jar",
+        "name": "kotlin-reflect-1.6.10.jar",
+        "expected_sha256": null,
+        "observed_sha256": "3277ac102ae17aad10a55abec75ff5696c8d109790396434b496e75087854203"
+      }
+    ]
+  },
+  {
+    "coordinate": "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.8.0",
+    "unchanged_baseline_and_proposal_metadata": true,
+    "metadata": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.module",
+    "metadata_sha256": "ff6a22da40040938751db0ae21177e76517dbf126a76796f5426727bf76c1228",
+    "files": [
+      {
+        "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlinx/kotlinx-coroutines-core-jvm/1.8.0/kotlinx-coroutines-core-jvm-1.8.0.jar",
+        "expected_sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5",
+        "name": "kotlinx-coroutines-core-jvm-1.8.0.jar",
+        "observed_sha256": "9860906a1937490bf5f3b06d2f0e10ef451e65b95b269f22daf68a3d1f5065c5"
+      }
+    ]
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "synthetic": true,
+  "user": "b3957dc2-c9ca-4c51-af45-975fea5aa6b5",
+  "tasks": {
+    "plan_weekend": "9fb66f6c-439c-46b1-98ad-41b57cb84cc7",
+    "review_supplies": "56aa10cf-168f-418e-b7ee-b39bdf8a596c",
+    "finished_reference": "06432780-ca96-4e88-91d1-d63b77366a54"
+  },
+  "exact_initial_tags": {
+    "9fb66f6c-439c-46b1-98ad-41b57cb84cc7": [
+      "#Legacy",
+      "Home Office"
+    ],
+    "56aa10cf-168f-418e-b7ee-b39bdf8a596c": [
+      "Planning"
+    ],
+    "06432780-ca96-4e88-91d1-d63b77366a54": [
+      "ArchivedOnly"
+    ]
+  },
+  "files": {
+    "tandemlog-space.json": "cb5eea203849655558fdd41361dcdd26ec34e824c3a4e008bf8c904fda2633bc",
+    "76afc231-b3ce-4578-98f9-92f5e36ed5d7.jsonl": "9a4ad2446418e1891ff5fea887c9cb2f7a00fb65759ac505364f4f8d195a4369"
+  }
+}

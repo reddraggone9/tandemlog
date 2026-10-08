@@ -1,0 +1,46 @@
+{
+  "red_source": "5204e276b641dd05cb5b5e648b2c6369ed11f5cf",
+  "red_run": 37792711739,
+  "red_job": 113364050190,
+  "red_native_aggregate": {
+    "passed": 68,
+    "failed": 1
+  },
+  "red_failure": "Bulk Save tap hit tag popup ListTile; changed-message assertion failed. Frozen decoded job log preserved.",
+  "standalone_original_result": "The unchanged standalone case passed locally. The standalone visibility/hit-test diagnostics also passed; no local red reproduction claimed. Actual hosted failure is the test-first red.",
+  "green_source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
+  "production_unchanged": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "green": {
+    "actual_linux_gtk_passed": 1,
+    "failed": 0,
+    "exit_code": 0,
+    "duration_seconds": 41
+  },
+  "corrections": [
+    "Pump and assert actual tag popup present, dismiss by Escape and assert absent before guarded/successful bulk Save",
+    "Preserve exact Frozen draft/Reviewed pending query; assert every Save hit-testable",
+    "Compare exact prior tag list after rejected Save retry, strengthening prior multiword contains check"
+  ],
+  "preserved_assertions": [
+    "peer edit changed warning",
+    "query retention through conflict",
+    "retry does not commit pending query",
+    "Cancel/Discard guards",
+    "successful bulk save closes editor and persists Reviewed on both tasks",
+    "all remaining selection/delete/filter/order/session checks"
+  ],
+  "format": "One file formatted; zero changes",
+  "analysis": "No issues found",
+  "independent_review": "Accepted testblob e5872c13ff40c9e04bd156ff5ef4da0326320662; no must-fix. Actualnative1/0, stronger exact prior tagset, qualified hostedred versus localpass and retained jobloghashes reviewed.",
+  "full_ci": {
+    "run": 37796892998,
+    "source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
+    "state": "SUCCESS allLinuxWindowsAndroid; actualLinuxaggregate69/0. Separate reportednativehistoricalbug blocksreleaseacceptance."
+  },
+  "sha256": {
+    "green/ci-linux-37792711739-failed.txt": "cf8ed9e8ccef0277d7b5072c8fa654241618e7b49f4b8ebee54ac6734586f73f",
+    "red/bulk-save-initial-standalone-5204.txt": "76c47732abef0dbf7cc8c58bf3d5e5b70aed3e0cb0ee93a98a8edfe1f5e92f03",
+    "green/bulk-save-controls.txt": "c3542f8a9d1db8964ea6aaf27ee3544f27fd02cd0030310e34939ed050c79582",
+    "green/bulk-save-analyze.txt": "79565e0a84449f1097b46ae74246c78652a3ddf5fb716ce5e250552344080ab5"
+  }
+}

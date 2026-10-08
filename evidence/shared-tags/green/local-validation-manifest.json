@@ -1,0 +1,81 @@
+{
+  "tested_source": "8b13cd0e50242b071fa1b1b2422b1138892652ea",
+  "production_source": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "unit_tests": 621,
+  "tool_tests": 37,
+  "native_workflow_tests": 3,
+  "native_runtime": "actual Linux GTK debug, desktop1200x850 dark;390x850 dark/light200percent; simulated260px IME inset",
+  "video": {
+    "duration_seconds": 37.6,
+    "width": 1200,
+    "height": 850,
+    "bytes": 984876,
+    "scripted_input": true,
+    "pointer_recorded": true
+  },
+  "fixture_corrections_only_after_production": [
+    "semantics label first line retains field identity with hint merged",
+    "compact selection uses existing explicit Edit selected action",
+    "no redundant Escape after selected suggestion already closed dropdown"
+  ],
+  "claims_not_made": [
+    "actual Android IME/accessibility/provider acceptance",
+    "Windows native runtime acceptance",
+    "signed release acceptance"
+  ],
+  "sha256": {
+    "native/after/editor-selected-narrow-light-200.png": "6ffd589d280ab35e2a7b3848b39f3cb585073bb76bfbcd6d75914a27f671a348",
+    "native/after/editor-options-narrow-dark.png": "529b355075f2f37a01144ef16367376676e10e6413afe0bb9fb307a1fe442c6a",
+    "native/after/editor-draft-narrow-light-200.png": "d2fb81a446535cfcf522a86a4e426e0d2ca0cc60e80b3f82f150ff5d0de5c4c9",
+    "native/after/bulk-draft-narrow-light-200.png": "152f6c06a5d10065076dc786d1a3f601935d096a268f6f62c6fcb06ad3a4ad61",
+    "native/after/editor-selected-narrow-dark.png": "7b35766250e89e22cc802c73c8887fdf6f9942072cd37bcc7116287fbb8196e6",
+    "native/after/editor-draft-desktop-dark.png": "de11fc17781d901eee690399f01d4439121ca955b9de6cf802abb438b1ea8de0",
+    "native/after/editor-options-narrow-light-200.png": "9e96be5035d36ed1b33a5c19d9632e866513371ce9107527a5cbe6f8b39f9152",
+    "native/after/editor-options-desktop-dark.png": "a61690f1516455d7472fe05360c16b36c45c1de53f18073bd26e973d8ba8c8e5",
+    "native/after/editor-draft-narrow-dark.png": "e580586d4bd620257e2f90430dbcb81ce1e4a128a8162666d4ebf37dabdf8b74",
+    "native/after/bulk-draft-narrow-dark.png": "a08d8f56a4ee84979fd6175988920b03392b29e65bc7334b390f89128de12717",
+    "native/after/editor-ime-narrow-light-200.png": "4bb27d271f555d023882b10a65267695d9118f4ae84eabfb5d89b1a45c936c9d",
+    "native/after/editor-ime-narrow-dark.png": "4f2872d34a3ea68c352d40e01951255c9985cc0092f1aa502168f6a839dd8019",
+    "native/after/filter-selected-desktop-dark.png": "ef784298380e42ee23416d390b4644d66d4eabd0d4da422f8b7ac565e32fe0da",
+    "native/after/editor-selected-desktop-dark.png": "42773f319690f7254d1171b938b16d8b2682904ce3d1ce039ee842d204e31763",
+    "native/after/filter-selected-narrow-dark.png": "6e7340c05561ca837b8a698376aa78b4475831cd843c43e53c39152986791d1c",
+    "native/after/filter-selected-narrow-light-200.png": "420654a629cda9644810d46f38620fbb55a1c331b7d97c8ad1d5081463b50460",
+    "native/after/bulk-draft-desktop-dark.png": "34357b01dd0513ff888d54d09677e8e311a3282be60b8fc1a017a011ede884bf",
+    "native/shared-tags-linux-desktop.mp4": "082eb2487ef96df2657303681f31286100709a106916cf685ac0ece73d38a2f9",
+    "green/full-flutter.txt": "328e91498e10198adfa62903ba04c34396ece339d1cf707b5865bf33f2abc73e",
+    "green/native-workflow.txt": "caeb76550c6fed4c96589bd5e369fbf3b633f28f2b2cab6525314512379f105f",
+    "green/format.txt": "c3741f57c9e9ea9c5bfaec97ffbd6644dcabba434f4c070fa269c4cea2e069df",
+    "green/analyze-final.txt": "7779a37bab1e7d866054a3419aa4396887f3aea138b01f9dc2fcf8e1dbdee26a",
+    "green/tool-tests.txt": "9f2da90b8b6e0b568498b33941104e50c4d854109a658a8d35a0d446e63bcf15",
+    "green/bulk-semantics-followup.txt": "5610cb3718ec1ae41c5424da218e5396ec90ee1be3adfe2807dbe07a973a0723"
+  },
+  "native_debug_bundle_sha256": {
+    "tandemlog": "92b5642aba9fabb3ef46b41d80cea785214cffd5927f2d6e35e82c00a405749d",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "lib/libfile_selector_linux_plugin.so": "3a0b16fdde3df6591f2f59ab7b995c31e108209de3bc1798bb2d23733da9f0d8",
+    "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "lib/libdartjni.so": "77fab3ba9118f32c4704c778198903a811275615b74d8c1516521f61c64ea24d",
+    "lib/liburl_launcher_linux_plugin.so": "c7e8b4c92c7c2dfb4239018bfe5da7db2b91b7927f1b41507e83e9b8179da247",
+    "lib/libflutter_linux_gtk.so": "7a5698608a3c79ad3f123a74bce8074339ffa1a83c896d73ae853c9f92a43cc3",
+    "lib/libtandemlog_text.so": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+    "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+    "data/flutter_assets/NOTICES.Z": "b01e00160052e04ecfe27ebed53664209bdd75c044c8b664fcf58971007897ea",
+    "data/flutter_assets/kernel_blob.bin": "8c4dfa0e9b3330503d5d91483d489bf7b4877e941d5e117ac24119f88af66263",
+    "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/version.json": "2075897a466835c1ae2e829b7e7ba60c79eb6760e68baf040e459d1dcc344f98",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c"
+  },
+  "local_check_outcomes": {
+    "full_flutter": "621/621 exit0",
+    "tool": "37/37 exit0",
+    "native_workflows": "3/3 exit0",
+    "format": "154files0changes",
+    "analyze": "Noissues"
+  }
+}

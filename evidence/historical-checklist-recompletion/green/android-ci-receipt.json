@@ -1,0 +1,20 @@
+{
+  "run": 37804634954,
+  "job": 113405587461,
+  "compiled_source": "d73662ab8479aa8076ee04a5ed5badd1542e585d",
+  "job_status": "success",
+  "decoded_utf8_log_sha256": "998e40b949828684224fb9593d7c3c60fa62964481a332a415893cc5de3446c4",
+  "decoded_log_qualification": "MCP completed-job decoded text, not original raw ZIP/archive bytes",
+  "artifact_api_reported": {
+    "id": 11561899292,
+    "name": "android",
+    "bytes": 80369922,
+    "sha256": "1fbe0347a14e9edd6c7a204732fbd449d6c22fe28c2ba5737f2e324528299878"
+  },
+  "apk_host_reported_sha256": "5e35400713e614c74730713c060e65bb3edea2d409df1cb57e7f6de94bf87a1c",
+  "signer_host_reported_sha256": "dca591b067fbbfb1b1b88afbf0dc696e8f23b8bba5951a966309ed3c45d2e6b7",
+  "consumer_byte_verification": false,
+  "consumer_download": "gh run download official artifact redirect returnedForbidden403; signedURL not exported",
+  "android_runtime": "pending exact parent materialization/install/checkpointthroughA16 retest",
+  "full_ci": "success LinuxWindowsAndroid exactd736/run37804634954"
+}

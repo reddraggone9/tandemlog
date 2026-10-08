@@ -1,0 +1,22 @@
+test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state (test_shared_history_materializer.SharedHistoryMaterializer.test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state) ... ok
+test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival (test_shared_history_materializer.SharedHistoryMaterializer.test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival) ... ok
+test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners (test_shared_history_materializer.SharedHistoryMaterializer.test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners) ... ok
+test_H04_materializer_and_session_handles_cannot_alias (test_shared_history_materializer.SharedHistoryMaterializer.test_H04_materializer_and_session_handles_cannot_alias) ... ok
+test_H05_incremental_history_has_no_session_undo_replay_budget (test_shared_history_materializer.SharedHistoryMaterializer.test_H05_incremental_history_has_no_session_undo_replay_budget) ... ok
+test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets (test_shared_history_materializer.SharedHistoryMaterializer.test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets) ... ok
+test_H07_foreign_root_and_conflicting_seed_quarantine_materializers (test_shared_history_materializer.SharedHistoryMaterializer.test_H07_foreign_root_and_conflicting_seed_quarantine_materializers) ... ok
+test_H08_visible_and_retained_budgets_fail_without_touching_editor (test_shared_history_materializer.SharedHistoryMaterializer.test_H08_visible_and_retained_budgets_fail_without_touching_editor) ... FAIL
+test_H09_rejected_seed_does_not_reserve_handle (test_shared_history_materializer.SharedHistoryMaterializer.test_H09_rejected_seed_does_not_reserve_handle) ... ok
+
+======================================================================
+FAIL: test_H08_visible_and_retained_budgets_fail_without_touching_editor (test_shared_history_materializer.SharedHistoryMaterializer.test_H08_visible_and_retained_budgets_fail_without_touching_editor)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 121, in test_H08_visible_and_retained_budgets_fail_without_touching_editor
+    self.assertIn('error', self.b.request(op='materializer_apply', name='history', update=update))
+AssertionError: 'error' not found in {'pending': False, 'text': 'AXXXXXXXXXXXXXXXXXXXXB'}
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.033s
+
+FAILED (failures=1)

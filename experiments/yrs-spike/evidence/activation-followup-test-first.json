@@ -1,0 +1,8 @@
+{
+  "frozen_utc": "2026-10-04T20:16:44.405945+00:00",
+  "test_sha256": "9d2a5b375a7de5925b5a5556609a88c2891e09081157b9a2d083ac13da9d00e6",
+  "original_22_expectations_unchanged": true,
+  "reason": "Strengthen verification of original missing-dependency/checkpoint/retry/crash claims; not a product scope expansion. A cacheRestoreCount metric was added before this freeze, without altering activation/append behavior.",
+  "result_before_fixes": "F01 unresolved Undo dependency accepted; F03 same-process unknown-receipt retry appended twice; F04 incomplete tail allowed writes; all reproduced failures. F02 actual pending native restore count passed.",
+  "red_log_sha256": "edb9f94610a5a3890cc8fcd1c3848f9d34b49d2e4fb0e5b2ab0d9c0d47990918"
+}

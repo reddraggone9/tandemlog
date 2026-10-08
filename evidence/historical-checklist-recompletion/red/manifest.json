@@ -1,0 +1,32 @@
+{
+  "base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "affected_compiled_source": "17ae5e5619bbd890a9778ffe39b1c94156086bb3",
+  "production_unchanged": true,
+  "native_text_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "parent_packet": {
+    "library_id": "libfile_e6105dbf742c8191bacdab08d8e64782",
+    "filename": "tandemlog-successor-text-leak-17ae5e5.zip",
+    "reported_bytes": 352997,
+    "parent_supplied_sha256": "0e8728088ed099bdd45b4b814ff41ec637ee282c31166cb19d6707cb2c8729f9",
+    "consumer_materialization": "Supportedresolvedreferenceprepare succeeded file_00000000bca081f59fe4a613a81be50e; helperdownload403. No consumerZIP/hash/contentverification claimed."
+  },
+  "fallback": "Parent explicitly supplied ordered native actions and authorized production-command reproduction if403. Uses same P/C/IP/IC IDs and dates, fiveuncheckeditems and offlineBprecompletionprefix; fresh writers/clocks/otheritemIDs. Doesnotclaimoriginalcanonicalbyteidentity or exactA11-A18sequenceIDs.",
+  "result": {
+    "passed": 0,
+    "failed": 3,
+    "phases": [
+      "recompletion",
+      "Undo",
+      "cold replay"
+    ],
+    "expected_copied_item_title": "Native item Saved ChildItemA",
+    "actual_copied_item_title": "Native item Saved ParentLater ChildItemA",
+    "child_task_title_preserved": "Pack for a walk ChildA",
+    "no_grandchild": true
+  },
+  "sha256": {
+    "test/native_checklist_recompletion_test.dart": "967a097188a249bd5a72fdec0742794f06748ce09f649827e402d0ff0dc8b9c6",
+    "evidence/historical-checklist-recompletion/red/native-command-sequence.txt": "ee7e8140b4e7d59284970af2f3643c94eac3a808b704f037cdfd00724f99f1d4"
+  },
+  "independent_review": "Regressionfidelity reviewpending; no productionfix yet."
+}

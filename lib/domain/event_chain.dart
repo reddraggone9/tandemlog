@@ -54,6 +54,10 @@ String canonicalEventJson(
   }).join(',')}}';
 }
 
+/// Canonical nested data encoding, shared by domain-separated descriptors.
+/// This is the same encoder used inside canonical event envelopes.
+String canonicalDataJson(Object? value) => _value(value);
+
 String _value(Object? value) {
   if (value == null) return 'null';
   if (value is bool) return value ? 'true' : 'false';

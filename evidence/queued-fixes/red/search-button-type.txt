@@ -1,0 +1,24 @@
+Compiled source8613c84245632242b36e6912a55556337f55b40b, actual GTK with screenshot-induced compact viewport. Preserves failure before business expectations.
+06:43 +43: workspace search preserves filters drafts and completion sections
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+type 'IconButton' is not a subtype of type 'ButtonStyleButton' in type cast
+
+When the exception was thrown, this was the stack:
+#0      WidgetController.widget (package:flutter_test/src/controller.dart:828:44)
+#1      main.<anonymous closure> (file:///workspace/tandemlog-queued-fixes/integration_test/task_flow_test.dart:985:14)
+<asynchronous suspension>
+#2      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#3      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  workspace search preserves filters drafts and completion sections
+════════════════════════════════════════════════════════════════════════════════════════════════════
+06:43 +43 -1: workspace search preserves filters drafts and completion sections [E]
+  Test failed. See exception logs above.
+  The test description was: workspace search preserves filters drafts and completion sections
+  

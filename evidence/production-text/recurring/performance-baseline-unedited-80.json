@@ -1,0 +1,508 @@
+{
+  "source": "1eb8336-baseline",
+  "generations_requested": 80,
+  "edits_each_generation": false,
+  "mode": "Dart AOT executable; actual production TaskStore/native FFI; no Flutter UI or process-to-ready timing",
+  "tasks": 81,
+  "history_events": 82,
+  "samples": [
+    {
+      "generation": 1,
+      "completion_ms": 19.008,
+      "native_creations": 12,
+      "inspections": 0
+    },
+    {
+      "generation": 2,
+      "completion_ms": 25.95,
+      "native_creations": 30,
+      "inspections": 0
+    },
+    {
+      "generation": 3,
+      "completion_ms": 28.714,
+      "native_creations": 40,
+      "inspections": 0
+    },
+    {
+      "generation": 4,
+      "completion_ms": 33.248,
+      "native_creations": 50,
+      "inspections": 0
+    },
+    {
+      "generation": 5,
+      "completion_ms": 35.127,
+      "native_creations": 60,
+      "inspections": 0
+    },
+    {
+      "generation": 6,
+      "completion_ms": 38.711,
+      "native_creations": 70,
+      "inspections": 0
+    },
+    {
+      "generation": 7,
+      "completion_ms": 43.045,
+      "native_creations": 80,
+      "inspections": 0
+    },
+    {
+      "generation": 8,
+      "completion_ms": 45.784,
+      "native_creations": 90,
+      "inspections": 0
+    },
+    {
+      "generation": 9,
+      "completion_ms": 55.9,
+      "native_creations": 100,
+      "inspections": 0
+    },
+    {
+      "generation": 10,
+      "completion_ms": 58.166,
+      "native_creations": 110,
+      "inspections": 0
+    },
+    {
+      "generation": 11,
+      "completion_ms": 61.45,
+      "native_creations": 120,
+      "inspections": 0
+    },
+    {
+      "generation": 12,
+      "completion_ms": 72.387,
+      "native_creations": 130,
+      "inspections": 0
+    },
+    {
+      "generation": 13,
+      "completion_ms": 84.9,
+      "native_creations": 140,
+      "inspections": 0
+    },
+    {
+      "generation": 14,
+      "completion_ms": 75.946,
+      "native_creations": 150,
+      "inspections": 0
+    },
+    {
+      "generation": 15,
+      "completion_ms": 81.749,
+      "native_creations": 160,
+      "inspections": 0
+    },
+    {
+      "generation": 16,
+      "completion_ms": 88.024,
+      "native_creations": 170,
+      "inspections": 0
+    },
+    {
+      "generation": 17,
+      "completion_ms": 87.881,
+      "native_creations": 180,
+      "inspections": 0
+    },
+    {
+      "generation": 18,
+      "completion_ms": 92.848,
+      "native_creations": 190,
+      "inspections": 0
+    },
+    {
+      "generation": 19,
+      "completion_ms": 85.92,
+      "native_creations": 200,
+      "inspections": 0
+    },
+    {
+      "generation": 20,
+      "completion_ms": 89.048,
+      "native_creations": 210,
+      "inspections": 0
+    },
+    {
+      "generation": 21,
+      "completion_ms": 96.336,
+      "native_creations": 220,
+      "inspections": 0
+    },
+    {
+      "generation": 22,
+      "completion_ms": 99.893,
+      "native_creations": 230,
+      "inspections": 0
+    },
+    {
+      "generation": 23,
+      "completion_ms": 102.605,
+      "native_creations": 240,
+      "inspections": 0
+    },
+    {
+      "generation": 24,
+      "completion_ms": 107.611,
+      "native_creations": 250,
+      "inspections": 0
+    },
+    {
+      "generation": 25,
+      "completion_ms": 108.343,
+      "native_creations": 260,
+      "inspections": 0
+    },
+    {
+      "generation": 26,
+      "completion_ms": 122.86,
+      "native_creations": 270,
+      "inspections": 0
+    },
+    {
+      "generation": 27,
+      "completion_ms": 125.537,
+      "native_creations": 280,
+      "inspections": 0
+    },
+    {
+      "generation": 28,
+      "completion_ms": 138.656,
+      "native_creations": 290,
+      "inspections": 0
+    },
+    {
+      "generation": 29,
+      "completion_ms": 137.18,
+      "native_creations": 300,
+      "inspections": 0
+    },
+    {
+      "generation": 30,
+      "completion_ms": 141.457,
+      "native_creations": 310,
+      "inspections": 0
+    },
+    {
+      "generation": 31,
+      "completion_ms": 147.645,
+      "native_creations": 320,
+      "inspections": 0
+    },
+    {
+      "generation": 32,
+      "completion_ms": 141.335,
+      "native_creations": 330,
+      "inspections": 0
+    },
+    {
+      "generation": 33,
+      "completion_ms": 147.295,
+      "native_creations": 340,
+      "inspections": 0
+    },
+    {
+      "generation": 34,
+      "completion_ms": 142.309,
+      "native_creations": 350,
+      "inspections": 0
+    },
+    {
+      "generation": 35,
+      "completion_ms": 152.201,
+      "native_creations": 360,
+      "inspections": 0
+    },
+    {
+      "generation": 36,
+      "completion_ms": 151.177,
+      "native_creations": 370,
+      "inspections": 0
+    },
+    {
+      "generation": 37,
+      "completion_ms": 155.509,
+      "native_creations": 380,
+      "inspections": 0
+    },
+    {
+      "generation": 38,
+      "completion_ms": 161.501,
+      "native_creations": 390,
+      "inspections": 0
+    },
+    {
+      "generation": 39,
+      "completion_ms": 162.612,
+      "native_creations": 400,
+      "inspections": 0
+    },
+    {
+      "generation": 40,
+      "completion_ms": 161.722,
+      "native_creations": 410,
+      "inspections": 0
+    },
+    {
+      "generation": 41,
+      "completion_ms": 175.062,
+      "native_creations": 420,
+      "inspections": 0
+    },
+    {
+      "generation": 42,
+      "completion_ms": 171.716,
+      "native_creations": 430,
+      "inspections": 0
+    },
+    {
+      "generation": 43,
+      "completion_ms": 181.454,
+      "native_creations": 440,
+      "inspections": 0
+    },
+    {
+      "generation": 44,
+      "completion_ms": 181.766,
+      "native_creations": 450,
+      "inspections": 0
+    },
+    {
+      "generation": 45,
+      "completion_ms": 176.467,
+      "native_creations": 460,
+      "inspections": 0
+    },
+    {
+      "generation": 46,
+      "completion_ms": 193.643,
+      "native_creations": 470,
+      "inspections": 0
+    },
+    {
+      "generation": 47,
+      "completion_ms": 205.24,
+      "native_creations": 480,
+      "inspections": 0
+    },
+    {
+      "generation": 48,
+      "completion_ms": 209.126,
+      "native_creations": 490,
+      "inspections": 0
+    },
+    {
+      "generation": 49,
+      "completion_ms": 216.104,
+      "native_creations": 500,
+      "inspections": 0
+    },
+    {
+      "generation": 50,
+      "completion_ms": 206.229,
+      "native_creations": 510,
+      "inspections": 0
+    },
+    {
+      "generation": 51,
+      "completion_ms": 197.102,
+      "native_creations": 520,
+      "inspections": 0
+    },
+    {
+      "generation": 52,
+      "completion_ms": 201.502,
+      "native_creations": 530,
+      "inspections": 0
+    },
+    {
+      "generation": 53,
+      "completion_ms": 213.983,
+      "native_creations": 540,
+      "inspections": 0
+    },
+    {
+      "generation": 54,
+      "completion_ms": 214.25,
+      "native_creations": 550,
+      "inspections": 0
+    },
+    {
+      "generation": 55,
+      "completion_ms": 233.552,
+      "native_creations": 560,
+      "inspections": 0
+    },
+    {
+      "generation": 56,
+      "completion_ms": 249.276,
+      "native_creations": 570,
+      "inspections": 0
+    },
+    {
+      "generation": 57,
+      "completion_ms": 254.693,
+      "native_creations": 580,
+      "inspections": 0
+    },
+    {
+      "generation": 58,
+      "completion_ms": 304.505,
+      "native_creations": 590,
+      "inspections": 0
+    },
+    {
+      "generation": 59,
+      "completion_ms": 244.816,
+      "native_creations": 600,
+      "inspections": 0
+    },
+    {
+      "generation": 60,
+      "completion_ms": 252.488,
+      "native_creations": 610,
+      "inspections": 0
+    },
+    {
+      "generation": 61,
+      "completion_ms": 245.466,
+      "native_creations": 620,
+      "inspections": 0
+    },
+    {
+      "generation": 62,
+      "completion_ms": 237.963,
+      "native_creations": 630,
+      "inspections": 0
+    },
+    {
+      "generation": 63,
+      "completion_ms": 236.472,
+      "native_creations": 640,
+      "inspections": 0
+    },
+    {
+      "generation": 64,
+      "completion_ms": 241.592,
+      "native_creations": 650,
+      "inspections": 0
+    },
+    {
+      "generation": 65,
+      "completion_ms": 246.908,
+      "native_creations": 660,
+      "inspections": 0
+    },
+    {
+      "generation": 66,
+      "completion_ms": 256.845,
+      "native_creations": 670,
+      "inspections": 0
+    },
+    {
+      "generation": 67,
+      "completion_ms": 266.527,
+      "native_creations": 680,
+      "inspections": 0
+    },
+    {
+      "generation": 68,
+      "completion_ms": 268.706,
+      "native_creations": 690,
+      "inspections": 0
+    },
+    {
+      "generation": 69,
+      "completion_ms": 269.621,
+      "native_creations": 700,
+      "inspections": 0
+    },
+    {
+      "generation": 70,
+      "completion_ms": 295.073,
+      "native_creations": 710,
+      "inspections": 0
+    },
+    {
+      "generation": 71,
+      "completion_ms": 301.67,
+      "native_creations": 720,
+      "inspections": 0
+    },
+    {
+      "generation": 72,
+      "completion_ms": 322.969,
+      "native_creations": 730,
+      "inspections": 0
+    },
+    {
+      "generation": 73,
+      "completion_ms": 319.022,
+      "native_creations": 740,
+      "inspections": 0
+    },
+    {
+      "generation": 74,
+      "completion_ms": 328.71,
+      "native_creations": 750,
+      "inspections": 0
+    },
+    {
+      "generation": 75,
+      "completion_ms": 305.488,
+      "native_creations": 760,
+      "inspections": 0
+    },
+    {
+      "generation": 76,
+      "completion_ms": 326.023,
+      "native_creations": 770,
+      "inspections": 0
+    },
+    {
+      "generation": 77,
+      "completion_ms": 339.28,
+      "native_creations": 780,
+      "inspections": 0
+    },
+    {
+      "generation": 78,
+      "completion_ms": 351.603,
+      "native_creations": 790,
+      "inspections": 0
+    },
+    {
+      "generation": 79,
+      "completion_ms": 359.815,
+      "native_creations": 800,
+      "inspections": 0
+    },
+    {
+      "generation": 80,
+      "completion_ms": 306.578,
+      "native_creations": 810,
+      "inspections": 0
+    }
+  ],
+  "warm_open_ms": 3.368,
+  "warm_canonical_reads": 0,
+  "cache_rebuild_ms": 3365.063,
+  "cache_rebuild_reads": 1,
+  "wall_ms": 17430,
+  "canonical_unchanged": true,
+  "cache_states_identical": true,
+  "canonical_bytes": 121599,
+  "sqlite_bytes": 430080,
+  "native_state_blob_bytes": 4617,
+  "frontier_json_bytes": 324,
+  "rss_initial_bytes": 7598080,
+  "rss_before_close_bytes": 46563328,
+  "rss_peak_before_close_bytes": 48082944,
+  "rss_peak_bytes": 48082944,
+  "native_document_creations": 39998,
+  "native_seed_calls": 968,
+  "native_inspections": 0
+}

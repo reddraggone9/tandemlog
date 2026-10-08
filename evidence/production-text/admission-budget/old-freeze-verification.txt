@@ -1,0 +1,6 @@
+experiments/yrs-spike/tests/test_resource_limits.py: OK
+experiments/yrs-spike/tests/test_worker_ownership.py: OK
+experiments/yrs-spike/tests/test_prepared_undo.py: OK
+experiments/yrs-spike/tests/test_contract.py: OK
+experiments/yrs-spike/tests/test_ownership.py: OK
+experiments/yrs-spike/tests/test_admission.py: OK

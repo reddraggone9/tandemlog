@@ -1,0 +1,8 @@
+{
+  "scope": "Noncomposing hardware ArrowDown followed by Enter/numpadEnter; both compile and fail actual selection before production handler fix",
+  "sha256": {
+    "lib/presentation/tag_input.dart": "f6f6d40e7ed8ca1c0458900437b93e0975c53dd523d7f65f6153764a194856b1",
+    "test/tag_input_test.dart": "f308d1cf2129296ad5d443471cf8a2bcfc6355c90c8f5c232df4d9db430d7cbf",
+    "evidence/shared-tags/red/hardware-selection-baseline.txt": "5bb646bcaca5529df3d3b780cef15b533bae23af10a1e563d2ece7e296054061"
+  }
+}

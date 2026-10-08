@@ -1,0 +1,218 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_delivery_test.dart
+00:00 +0: remote item waits for missing task parent then attaches once without appearing as a task
+00:00 +0 -1: remote item waits for missing task parent then attaches once without appearing as a task [E]
+  Bad state: No element
+  dart:collection                           ListBase.single
+  test/checklist_delivery_test.dart 258:29  main.<fn>
+  
+00:00 +0 -1: late user parent invalidates retained item transactionally
+00:00 +0 -2: late user parent invalidates retained item transactionally [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 282:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 271:9            main.<fn>
+  
+00:00 +0 -2: late item parent invalidates retained item transactionally
+00:00 +0 -3: late item parent invalidates retained item transactionally [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 282:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 271:9            main.<fn>
+  
+00:00 +0 -3: late same-parent creation anchor settles item order and duplicates do not add items
+00:00 +0 -4: late same-parent creation anchor settles item order and duplicates do not add items [E]
+  Expected: ['6925adbb-eb3f-4d03-a89e-b8128fe3bbd0', 'c7690b6e-3df1-40a7-ae1c-88315b2008e0']
+    Actual: MappedListIterable<Map<String, dynamic>, dynamic>:[]
+     Which: at location [0] is MappedListIterable<Map<String, dynamic>, dynamic>:[] which shorter than expected
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_delivery_test.dart 302:7             main.<fn>
+  
+00:00 +0 -4: late cross-parent move anchor rolls back arrival without changing the pending source item
+00:00 +0 -5: late cross-parent move anchor rolls back arrival without changing the pending source item [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 322:13           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 312:21           main.<fn>
+  
+00:00 +0 -5: late user creation anchor rejects with transactional rollback
+00:00 +0 -6: late user creation anchor rejects with transactional rollback [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 356:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 341:9            main.<fn>
+  
+00:00 +0 -6: late task creation anchor rejects with transactional rollback
+00:00 +0 -7: late task creation anchor rejects with transactional rollback [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<void>'>
+     Which: emitted <null>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 356:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 341:9            main.<fn>
+  
+00:00 +0 -7: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:00 +0 -8: copy contribution waits for its source frontier then reconstructs unchecked native item exactly [E]
+  Bad state: No element
+  dart:collection                           ListBase.single
+  test/checklist_delivery_test.dart 403:29  main.<fn>
+  
+00:00 +0 -8: forged membership copy rejects before receipt and leaves canonical history untouched
+00:00 +0 -9: forged membership copy rejects before receipt and leaves canonical history untouched [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 469:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 432:23           main.<fn>
+  
+00:00 +0 -9: forged order copy rejects before receipt and leaves canonical history untouched
+00:00 +0 -10: forged order copy rejects before receipt and leaves canonical history untouched [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 469:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 432:23           main.<fn>
+  
+00:00 +0 -10: forged visible text copy rejects before receipt and leaves canonical history untouched
+00:01 +0 -11: forged visible text copy rejects before receipt and leaves canonical history untouched [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 469:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 432:23           main.<fn>
+  
+00:01 +0 -11: forged history proof copy rejects before receipt and leaves canonical history untouched
+00:01 +0 -12: forged history proof copy rejects before receipt and leaves canonical history untouched [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 469:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 432:23           main.<fn>
+  
+00:01 +0 -12: forged source parent copy rejects before receipt and leaves canonical history untouched
+00:01 +0 -13: forged source parent copy rejects before receipt and leaves canonical history untouched [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 469:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 432:23           main.<fn>
+  
+00:01 +0 -13: copied ID collision with independent task rejects before receipt
+00:01 +0 -14: copied ID collision with independent task rejects before receipt [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 513:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 490:24           main.<fn>
+  
+00:01 +0 -14: copied ID collision with independent item rejects before receipt
+00:01 +0 -15: copied ID collision with independent item rejects before receipt [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<LogEvent>'>
+     Which: emitted <Instance of 'LogEvent'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_delivery_test.dart 513:15           main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_delivery_test.dart 490:24           main.<fn>
+  
+00:01 +0 -15: late duplicate copy contribution preserves child-owned ordering and check state
+00:01 +0 -16: late duplicate copy contribution preserves child-owned ordering and check state [E]
+  Local command requires an existing entity.
+  package:tandemlog/storage/task_store.dart 2268:7   TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:01 +0 -16: parent recurrence preserves live item private draft and later source Save does not flow into copied notes
+00:01 +0 -17: parent recurrence preserves live item private draft and later source Save does not flow into copied notes [E]
+  Unknown or deleted task.
+  package:tandemlog/storage/task_store.dart 1209:7  TaskStore.captureTaskText.<fn>
+  
+00:01 +0 -17: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:01 +0 -18: item private drafts, pre-append Save cancellation and scoped Undo preserve another item [E]
+  Unknown or deleted task.
+  package:tandemlog/storage/task_store.dart 1209:7  TaskStore.captureTaskText.<fn>
+  
+00:01 +0 -18: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copied ID collision with independent item rejects before receipt
+  /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copied ID collision with independent task rejects before receipt
+  /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+  /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged history proof copy rejects before receipt and leaves canonical history untouched
+  ... and 14 more

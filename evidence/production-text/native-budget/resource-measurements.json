@@ -1,0 +1,7 @@
+{
+  "command": "all 90 native Python contract tests in one fresh Linux process",
+  "exit_code": 0,
+  "wall_seconds": 3.6194918690016493,
+  "peak_process_rss_kib": 95268,
+  "scope": "whole child Python+native process peak, not native-only allocator accounting and not a RAM-cap proof"
+}

@@ -1,0 +1,19 @@
+{
+  "status": "isolated proposal, not adopted, not released",
+  "officialRegistryPackage": "yrs 0.28.0",
+  "registryPackageSha256": "52c70dc8beca8666c77612a96889106ca3cd65318609721f464624ff79685da9",
+  "verifiedOfficialSourceFiles": 67,
+  "sourceMismatches": [],
+  "upstreamGit": {
+    "git": {
+      "sha1": "23b7f5693bbf9e7d26340c521ee8647f79bdfba2"
+    },
+    "path_in_vcs": "yrs"
+  },
+  "originalUndoSha256": "6c48c65ded717d843518e7116d41395a9c5c9bc22fbc4879f8a5c914d1dca452",
+  "patchedUndoSha256": "2e37cd3f1114822a18be6fc9cebd2acc3da79786a342bd0a528e9a4e8afb14f6",
+  "patchSha256": "9d502e49d1dfacbefb713658295a18997a3fbc4951932eba70c6f174f52b7532",
+  "isolatedLibrarySha256": "2ecac4a009bad24e4eb3e2d8dac788cc62add1120d1c28295578d481a5ac9fb1",
+  "repoCargoAndLockChanged": false,
+  "canonicalAndFrozenHistoryRewritten": false
+}

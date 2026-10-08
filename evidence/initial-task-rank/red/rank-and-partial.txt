@@ -1,0 +1,73 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-initial-rank/test/initial_task_rank_test.dart
+00:00 +0: scalar capture retains top rank after Inbox triage and replay
+00:00 +0 -1: scalar capture retains top rank after Inbox triage and replay [E]
+  Expected: [
+              'f6a6c7b7-fbdd-4c70-9647-cfc744d65b1d',
+              '7c09d7fb-4392-4cc3-a0d5-1fe031f708d5',
+              '51cf151b-89ee-4920-8b21-ac8f144c509d',
+              'a110a283-b10f-449c-817d-db1edb0b486c'
+            ]
+    Actual: [
+              '51cf151b-89ee-4920-8b21-ac8f144c509d',
+              'a110a283-b10f-449c-817d-db1edb0b486c',
+              'f6a6c7b7-fbdd-4c70-9647-cfc744d65b1d',
+              '7c09d7fb-4392-4cc3-a0d5-1fe031f708d5'
+            ]
+     Which: at location [0] is '51cf151b-89ee-4920-8b21-ac8f144c509d' instead of 'f6a6c7b7-fbdd-4c70-9647-cfc744d65b1d'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/initial_task_rank_test.dart 68:11              main.<fn>
+  
+00:00 +0 -1: native capture retains top rank after Inbox triage and replay
+00:00 +0 -2: native capture retains top rank after Inbox triage and replay [E]
+  Expected: [
+              '35ea149e-fa2d-45da-b847-51ef29351fcc',
+              '9399f9a9-9f2c-4b0d-a0e7-e2bce7393ea1',
+              '39e68b9d-e63a-4745-ba6d-ac09fd10b9b1',
+              '66e3953e-40ba-4613-aa31-22209b512a54'
+            ]
+    Actual: [
+              '39e68b9d-e63a-4745-ba6d-ac09fd10b9b1',
+              '66e3953e-40ba-4613-aa31-22209b512a54',
+              '35ea149e-fa2d-45da-b847-51ef29351fcc',
+              '9399f9a9-9f2c-4b0d-a0e7-e2bce7393ea1'
+            ]
+     Which: at location [0] is '39e68b9d-e63a-4745-ba6d-ac09fd10b9b1' instead of '35ea149e-fa2d-45da-b847-51ef29351fcc'
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/initial_task_rank_test.dart 68:11              main.<fn>
+  
+00:00 +0 -2: legacy creations and retries retain their released append order
+00:00 +1 -2: complete-prefix capture waits for initial position and retries exact suffix
+00:00 +1 -3: complete-prefix capture waits for initial position and retries exact suffix [E]
+  Expected: empty
+    Actual: ['971150f9-55d8-4aff-9442-5eb541c1e789']
+  Creation alone has not established the promised initial rank.
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/initial_task_rank_test.dart 195:7              main.<fn>
+  
+00:00 +1 -3: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-initial-rank/test/initial_task_rank_test.dart: complete-prefix capture waits for initial position and retries exact suffix
+  /workspace/tandemlog-initial-rank/test/initial_task_rank_test.dart: native capture retains top rank after Inbox triage and replay
+  /workspace/tandemlog-initial-rank/test/initial_task_rank_test.dart: scalar capture retains top rank after Inbox triage and replay

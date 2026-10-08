@@ -1,0 +1,12 @@
+{
+  "source_base": "b1b80aaa892d2c0053a56e2e3aad31fae7cee843",
+  "production_base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "added_test": "integration_test/tag_input_workflow_test.dart",
+  "test_sha256": "580461e4a795ceab2460856ecfe260ef8d3e0e3551244f11367c28d5073fdf25",
+  "command": "xvfb-run -a -s '-screen 0 1200x850x24' dbus-run-session -- flutter test integration_test/tag_input_workflow_test.dart -d linux --plain-name 'shared tag editing and filtering desktop-dark'",
+  "outcome": "actual Linux GTK build and launch; one behavioral failure: completed-task tag is not suggested in editor",
+  "exit_code": 1,
+  "log_sha256": "5dc48cb5a080e8493663ea13588d69b6667cea5c622cbdc29b858b7292b0b27d",
+  "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "live_user_data": false
+}

@@ -1,0 +1,1 @@
+Packaged native library and exact notices verified: /workspace/recovery/kotlin-remediation-first-ci-android/tandemlog-android-test-only.apk

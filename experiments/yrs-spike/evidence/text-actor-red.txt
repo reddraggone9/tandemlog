@@ -1,0 +1,152 @@
+00:00 +0: loading /workspace/tandemlog/test/text_actor_registry_test.dart
+test/text_actor_registry_test.dart:4:8: Error: Error when reading 'lib/domain/text_actor.dart': No such file or directory
+import 'package:tandemlog/domain/text_actor.dart';
+       ^
+test/text_actor_registry_test.dart:12:1: Error: Type 'TextActorClaim' not found.
+TextActorClaim claim(
+^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:20:19: Error: Method not found: 'deriveTextActor'.
+  actor: actor ?? deriveTextActor(context, writer, allocation),
+                  ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:16:7: Error: Method not found: 'TextActorClaim'.
+}) => TextActorClaim(
+      ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:25:19: Error: Method not found: 'deriveTextActor'.
+    final actor = deriveTextActor(context, writerA, allocationA);
+                  ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:27:12: Error: Method not found: 'deriveTextActor'.
+    expect(deriveTextActor(context, writerA, allocationA), actor);
+           ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:28:12: Error: Method not found: 'deriveTextActor'.
+    expect(deriveTextActor('b' * 64, writerA, allocationA), isNot(actor));
+           ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:29:12: Error: Method not found: 'deriveTextActor'.
+    expect(deriveTextActor(context, writerB, allocationA), isNot(actor));
+           ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:30:12: Error: Method not found: 'deriveTextActor'.
+    expect(deriveTextActor(context, writerA, allocationB), isNot(actor));
+           ^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:32:7: Error: Undefined name 'TextActorClaim'.
+      TextActorClaim.fromJson(claim(allocationA).toJson()).toJson(),
+      ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:40:15: Error: Method not found: 'TextActorRegistry'.
+        () => TextActorRegistry().bindAll([claim(allocationA, actor: value)]),
+              ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:45:13: Error: Method not found: 'TextActorRegistry'.
+      () => TextActorRegistry().bindAll([claim(allocationA, actor: 42)]),
+            ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:55:15: Error: Undefined name 'TextActorClaim'.
+        () => TextActorClaim.fromJson(data),
+              ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:64:24: Error: Method not found: 'TextActorRegistry'.
+      final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                       ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:83:22: Error: Method not found: 'TextActorRegistry'.
+    final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                     ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:99:21: Error: Method not found: 'TextActorRegistry'.
+      final first = TextActorRegistry()..bindAll([a, b, a]);
+                    ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:100:22: Error: Method not found: 'TextActorRegistry'.
+      final replay = TextActorRegistry()
+                     ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:102:11: Error: Undefined name 'TextActorClaim'.
+          TextActorClaim.fromJson(b.toJson()),
+          ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:103:11: Error: Undefined name 'TextActorClaim'.
+          TextActorClaim.fromJson(a.toJson()),
+          ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:104:11: Error: Undefined name 'TextActorClaim'.
+          TextActorClaim.fromJson(b.toJson()),
+          ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:116:22: Error: Method not found: 'TextActorRegistry'.
+    final registry = TextActorRegistry()..bindAll([a, b]);
+                     ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:133:22: Error: Method not found: 'TextActorRegistry'.
+    final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                     ^^^^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:136:7: Error: Method not found: 'TextActorClaim'.
+      TextActorClaim(
+      ^^^^^^^^^^^^^^
+test/text_actor_registry_test.dart:148:13: Error: Undefined name 'TextActorClaim'.
+      () => TextActorClaim.fromJson({
+            ^^^^^^^^^^^^^^
+00:00 +0 -1: loading /workspace/tandemlog/test/text_actor_registry_test.dart [E]
+  Failed to load "/workspace/tandemlog/test/text_actor_registry_test.dart":
+  Compilation failed for testPath=/workspace/tandemlog/test/text_actor_registry_test.dart: test/text_actor_registry_test.dart:4:8: Error: Error when reading 'lib/domain/text_actor.dart': No such file or directory
+  import 'package:tandemlog/domain/text_actor.dart';
+         ^
+  test/text_actor_registry_test.dart:12:1: Error: Type 'TextActorClaim' not found.
+  TextActorClaim claim(
+  ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:20:19: Error: Method not found: 'deriveTextActor'.
+    actor: actor ?? deriveTextActor(context, writer, allocation),
+                    ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:16:7: Error: Method not found: 'TextActorClaim'.
+  }) => TextActorClaim(
+        ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:25:19: Error: Method not found: 'deriveTextActor'.
+      final actor = deriveTextActor(context, writerA, allocationA);
+                    ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:27:12: Error: Method not found: 'deriveTextActor'.
+      expect(deriveTextActor(context, writerA, allocationA), actor);
+             ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:28:12: Error: Method not found: 'deriveTextActor'.
+      expect(deriveTextActor('b' * 64, writerA, allocationA), isNot(actor));
+             ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:29:12: Error: Method not found: 'deriveTextActor'.
+      expect(deriveTextActor(context, writerB, allocationA), isNot(actor));
+             ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:30:12: Error: Method not found: 'deriveTextActor'.
+      expect(deriveTextActor(context, writerA, allocationB), isNot(actor));
+             ^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:32:7: Error: Undefined name 'TextActorClaim'.
+        TextActorClaim.fromJson(claim(allocationA).toJson()).toJson(),
+        ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:40:15: Error: Method not found: 'TextActorRegistry'.
+          () => TextActorRegistry().bindAll([claim(allocationA, actor: value)]),
+                ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:45:13: Error: Method not found: 'TextActorRegistry'.
+        () => TextActorRegistry().bindAll([claim(allocationA, actor: 42)]),
+              ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:55:15: Error: Undefined name 'TextActorClaim'.
+          () => TextActorClaim.fromJson(data),
+                ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:64:24: Error: Method not found: 'TextActorRegistry'.
+        final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                         ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:83:22: Error: Method not found: 'TextActorRegistry'.
+      final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                       ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:99:21: Error: Method not found: 'TextActorRegistry'.
+        final first = TextActorRegistry()..bindAll([a, b, a]);
+                      ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:100:22: Error: Method not found: 'TextActorRegistry'.
+        final replay = TextActorRegistry()
+                       ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:102:11: Error: Undefined name 'TextActorClaim'.
+            TextActorClaim.fromJson(b.toJson()),
+            ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:103:11: Error: Undefined name 'TextActorClaim'.
+            TextActorClaim.fromJson(a.toJson()),
+            ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:104:11: Error: Undefined name 'TextActorClaim'.
+            TextActorClaim.fromJson(b.toJson()),
+            ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:116:22: Error: Method not found: 'TextActorRegistry'.
+      final registry = TextActorRegistry()..bindAll([a, b]);
+                       ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:133:22: Error: Method not found: 'TextActorRegistry'.
+      final registry = TextActorRegistry(deriveActor: (_, _, _) => 42);
+                       ^^^^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:136:7: Error: Method not found: 'TextActorClaim'.
+        TextActorClaim(
+        ^^^^^^^^^^^^^^
+  test/text_actor_registry_test.dart:148:13: Error: Undefined name 'TextActorClaim'.
+        () => TextActorClaim.fromJson({
+              ^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/text_actor_registry_test.dart: loading /workspace/tandemlog/test/text_actor_registry_test.dart

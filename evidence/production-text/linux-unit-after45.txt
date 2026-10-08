@@ -1,0 +1,470 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/storage_test.dart
+00:00 +0: /workspace/tandemlog/test/storage_test.dart: local task deletion targeting user rejects before canonical append
+00:00 +1: /workspace/tandemlog/test/stable_v3_compatibility_test.dart: first stable v3 bytes, identities, clocks and event meanings stay frozen
+00:00 +2: /workspace/tandemlog/test/stable_v3_compatibility_test.dart: first stable v3 bytes, identities, clocks and event meanings stay frozen
+00:00 +3: /workspace/tandemlog/test/storage_test.dart: bulk edit reconciles durable append after refresh failure before retry
+00:00 +4: /workspace/tandemlog/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:00 +5: /workspace/tandemlog/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:00 +6: /workspace/tandemlog/test/storage_test.dart: bulk move reconciles durable append after refresh failure before retry
+00:00 +7: /workspace/tandemlog/test/storage_test.dart: bulk move reconciles durable append after refresh failure before retry
+00:00 +8: /workspace/tandemlog/test/stable_v3_compatibility_test.dart: new writer extends frozen v3 without rewriting prior history
+00:00 +9: /workspace/tandemlog/test/storage_test.dart: bulk patch preserves mixed fields and observed tags; invalid patch writes nothing
+00:00 +10: /workspace/tandemlog/test/storage_test.dart: bulk guard rechecks before the batch append; retry block uses global order
+00:01 +11: /workspace/tandemlog/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:01 +12: /workspace/tandemlog/test/storage_test.dart: stale bulk and invalid selections fail before any durable command
+00:01 +13: /workspace/tandemlog/test/storage_test.dart: guarded move rejects changes arriving inside its refresh without append
+00:01 +14: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:01 +15: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:01 +16: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:01 +17: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:01 +18: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +19: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +20: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +21: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +22: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +23: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +24: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +25: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +26: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +27: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +28: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +29: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +30: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +31: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:02 +32: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +33: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +34: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +35: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +36: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +37: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +38: /workspace/tandemlog/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:03 +39: /workspace/tandemlog/test/storage_test.dart: remote undo cannot suppress a future-clock completion
+00:03 +40: /workspace/tandemlog/test/storage_test.dart: close drains accepted work, rejects new work and is idempotent
+00:03 +41: /workspace/tandemlog/test/storage_test.dart: pending undo is validated before its local target is appended
+00:03 +42: /workspace/tandemlog/test/storage_test.dart: missing canonical folder contents do not initialize a new manifest
+00:03 +43: /workspace/tandemlog/test/storage_test.dart: offline tag removal preserves unseen same-name additions and atomic edits
+00:03 +44: /workspace/tandemlog/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:03 +45: /workspace/tandemlog/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:03 +46: /workspace/tandemlog/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:03 +47: /workspace/tandemlog/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:04 +48: /workspace/tandemlog/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:04 +49: /workspace/tandemlog/test/storage_test.dart: unchanged repeating completion rejects before append and refreshes remote schedule
+00:04 +50: /workspace/tandemlog/test/storage_test.dart: accepted historic unchanged recurrence is replayed without retroactive rejection
+00:04 +51: /workspace/tandemlog/test/storage_test.dart: concurrent recurrence completion has one durable successor and history reopen retains edits
+00:04 +52: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 10240 bytes
+00:04 +53: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 10240 bytes
+00:05 +54: /workspace/tandemlog/test/storage_test.dart: late winning recurrence seed cannot resurrect removed successor tags
+00:05 +55: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +56: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +57: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +58: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +59: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +60: /workspace/tandemlog/test/incremental_history_test.dart: cache reopen and repeated unchanged refresh read zero log bytes at 1048576 bytes
+00:05 +61: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +62: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +63: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +64: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +65: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +66: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +67: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +68: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +69: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +70: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +71: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:05 +72: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:06 +73: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:06 +74: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:06 +75: /workspace/tandemlog/test/incremental_history_test.dart: seeked new blank rejects transactionally without advancing admitted bytes
+00:06 +76: /workspace/tandemlog/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:06 +77: /workspace/tandemlog/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:06 +78: /workspace/tandemlog/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:06 +79: /workspace/tandemlog/test/incremental_history_test.dart: seeked new move reference rejects transactionally without advancing admitted bytes
+00:06 +80: /workspace/tandemlog/test/storage_test.dart: future records remain immutable and readable while warning permits writes
+00:06 +81: /workspace/tandemlog/test/storage_test.dart: future records remain immutable and readable while warning permits writes
+00:06 +82: /workspace/tandemlog/test/storage_test.dart: future records remain immutable and readable while warning permits writes
+00:06 +83: /workspace/tandemlog/test/incremental_history_test.dart: unknown size provider honestly full-reads and verifies every refresh
+00:06 +84: /workspace/tandemlog/test/storage_test.dart: large clock rollback warns without blocking and warning clears when caught up
+00:06 +85: /workspace/tandemlog/test/storage_test.dart: large clock rollback warns without blocking and warning clears when caught up
+00:06 +86: /workspace/tandemlog/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:06 +87: /workspace/tandemlog/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:06 +88: /workspace/tandemlog/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:06 +89: /workspace/tandemlog/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+00:06 +90: /workspace/tandemlog/test/storage_test.dart: late pre-completion move converges and old order cache rebuilds without log writes
+00:06 +91: /workspace/tandemlog/test/incremental_history_test.dart: obsolete-cache replay preserves baseline guards through failed migration and retry
+00:06 +92: /workspace/tandemlog/test/incremental_history_test.dart: owned incomplete append is visible after cold reopen and cannot confirm receipt
+00:06 +93: /workspace/tandemlog/test/incremental_history_test.dart: new raw receipt cannot confirm a transport rewrite with equivalent JSON meaning
+00:07 +94: /workspace/tandemlog/test/incremental_history_test.dart: seeked command receipts reject changed new raw bytes and durable retry is idempotent
+00:07 +95: /workspace/tandemlog/test/incremental_history_test.dart: new suffix selfhash has exact diagnostic and never advances cache
+00:07 +96: /workspace/tandemlog/test/incremental_history_test.dart: new suffix previousHash has exact diagnostic and never advances cache
+00:07 +97: /workspace/tandemlog/test/incremental_history_test.dart: fresh replay checks genesis even when every selfhash is valid
+00:07 +98: /workspace/tandemlog/test/incremental_history_test.dart: full verification reports exact changed record with UTF8 byte offset
+00:07 +99: /workspace/tandemlog/test/incremental_history_test.dart: successful full verification counts records and bytes without appending an event
+00:07 +100: /workspace/tandemlog/test/incremental_history_test.dart: retained baseline detects recomputed chain while a fresh cache cannot authenticate it
+00:07 +101: /workspace/tandemlog/test/incremental_history_test.dart: known final-record removal fails verification while fresh valid prefix remains admissible
+00:07 +102: /workspace/tandemlog/test/incremental_history_test.dart: old v2 canonical history and cache are retained without migration
+00:07 +103: /workspace/tandemlog/test/incremental_history_test.dart: full verification retains and rejects inconsistent cached chain_head
+00:07 +104: /workspace/tandemlog/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:07 +105: /workspace/tandemlog/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:07 +106: /workspace/tandemlog/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:07 +107: /workspace/tandemlog/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:07 +108: /workspace/tandemlog/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:07 +109: /workspace/tandemlog/test/recurring_completion_undo_test.dart: ordinary Reopen retains successor and generic recurring Undo rejects
+00:07 +110: /workspace/tandemlog/test/recurring_completion_undo_test.dart: edit protects successor from cleanup
+00:08 +111: /workspace/tandemlog/test/recurring_completion_undo_test.dart: edit protects successor from cleanup
+00:08 +112: /workspace/tandemlog/test/recurring_completion_undo_test.dart: edit protects successor from cleanup
+00:08 +113: /workspace/tandemlog/test/recurring_completion_undo_test.dart: tags protects successor from cleanup
+00:08 +114: /workspace/tandemlog/test/recurring_completion_undo_test.dart: move protects successor from cleanup
+00:08 +115: /workspace/tandemlog/test/recurring_completion_undo_test.dart: complete protects successor from cleanup
+00:08 +116: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +117: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +118: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +119: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +120: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +121: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:08 +122: /workspace/tandemlog/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+00:08 +123: /workspace/tandemlog/test/recurring_completion_undo_test.dart: undoneEdit protects successor from cleanup
+00:09 +124: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:09 +125: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +126: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +127: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +128: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +129: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +130: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +131: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:09 +132: /workspace/tandemlog/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+00:09 +133: /workspace/tandemlog/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+00:09 +134: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+00:09 +135: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+00:09 +136: /workspace/tandemlog/test/android_log_folder_test.dart: range truncation/provider errors remain failures rather than fallback
+00:09 +137: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +138: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +139: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +140: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +141: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +142: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +143: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +144: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +145: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +146: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +147: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +148: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +149: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +150: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +151: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +152: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +153: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +154: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +155: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +156: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +157: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +158: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +159: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:09 +160: /workspace/tandemlog/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:10 +161: /workspace/tandemlog/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+00:10 +162: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delayed valid cleanup suppresses successor once its target arrives
+00:10 +163: /workspace/tandemlog/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:10 +164: /workspace/tandemlog/test/recurring_completion_undo_test.dart: generic recurring Undo rejects transactionally when completion arrives late
+00:10 +165: /workspace/tandemlog/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:10 +166: /workspace/tandemlog/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:10 +167: /workspace/tandemlog/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:10 +168: /workspace/tandemlog/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:10 +169: /workspace/tandemlog/test/recurring_completion_undo_test.dart: pure seed selection is independent of arrival order and preserves historical Undo
+00:10 +170: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +171: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +172: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +173: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +174: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +175: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +176: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +177: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +178: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +179: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +180: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +181: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:11 +182: /workspace/tandemlog/test/release_version_tile_test.dart: shows and copies only release version 2026.10.2-rc.1
+00:11 +183: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:11 +184: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:11 +185: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +186: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +187: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +188: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +189: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +190: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +191: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +192: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +193: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +194: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +195: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +196: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +197: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:12 +198: /workspace/tandemlog/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 2.0 text scale
+00:13 +199: /workspace/tandemlog/test/batch_storage_test.dart: 1-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:13 +200: /workspace/tandemlog/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:13 +201: /workspace/tandemlog/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +202: /workspace/tandemlog/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +203: /workspace/tandemlog/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +204: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +205: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +206: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +207: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +208: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +209: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:14 +210: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +211: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +212: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +213: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +214: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +215: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +216: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +217: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +218: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +219: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +220: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +221: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +222: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +223: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:15 +224: /workspace/tandemlog/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+00:16 +225: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +226: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +227: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +228: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +229: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +230: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +231: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:16 +232: /workspace/tandemlog/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:17 +233: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +234: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +235: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +236: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +237: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +238: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +239: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +240: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +241: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +242: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +243: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +244: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +245: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +246: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +247: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +248: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +249: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +250: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +251: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +252: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +253: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +254: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +255: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:18 +256: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:18 +257: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:18 +258: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +259: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +260: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +261: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +262: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +263: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +264: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +265: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +266: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +267: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +268: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +269: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +270: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +271: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:19 +272: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+00:20 +273: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+00:21 +274: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +275: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +276: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +277: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +278: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +279: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+00:21 +280: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +281: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +282: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:21 +283: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +284: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +285: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +286: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +287: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +288: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+00:22 +289: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +290: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +291: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +292: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +293: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +294: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:22 +295: /workspace/tandemlog/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:23 +296: /workspace/tandemlog/test/task_text_session_test.dart: private UTF16 edits survive remote arrival; composition blocks preparation; cancel retains live owner
+00:23 +297: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +298: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +299: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +300: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +301: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +302: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +303: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +304: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +305: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:23 +306: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +307: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +308: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +309: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +310: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +311: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +312: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +313: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +314: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:24 +315: /workspace/tandemlog/test/task_text_session_test.dart: later-field preparation failure retains earlier packet for retry
+00:25 +316: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +317: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +318: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +319: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +320: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +321: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:25 +322: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:26 +323: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:26 +324: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:27 +325: /workspace/tandemlog/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:27 +326: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:27 +327: /workspace/tandemlog/test/task_toolbar_test.dart: status changes reserve count and control geometry
+00:27 +328: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:27 +329: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:27 +330: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:27 +331: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:27 +332: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:27 +333: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:27 +334: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:27 +335: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=false
+00:27 +336: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=false
+00:28 +337: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:28 +338: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:28 +339: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:28 +340: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:28 +341: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unchanged Save preserves captured lease and nontext-only Save uses ordinary edit
+00:28 +342: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:28 +343: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+00:28 +344: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:28 +345: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:28 +346: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:28 +347: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:28 +348: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:28 +349: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:28 +350: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:28 +351: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:28 +352: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:28 +353: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+00:28 +354: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:29 +355: /workspace/tandemlog/test/foreground_importer_test.dart: coalesces repeated notifications and retains bounded fallback
+00:29 +356: /workspace/tandemlog/test/foreground_importer_test.dart: pause and workspace disposal cancel debounce and fallback; resume reconciles
+00:29 +357: /workspace/tandemlog/test/foreground_importer_test.dart: watcher failure recovers on fallback and overlapping work is serialized
+00:29 +358: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +359: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +360: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +361: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +362: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +363: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +364: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +365: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +366: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +367: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +368: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +369: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:29 +370: /workspace/tandemlog/test/sticky_task_group_test.dart: native heading pins and pushes off at 2.0x text
+00:30 +371: /workspace/tandemlog/test/sticky_task_group_test.dart: heading wraps to its measured extent and has one header node
+00:30 +372: /workspace/tandemlog/test/profile_lock_test.dart: same process and canonical aliases contend until release
+00:30 +373: /workspace/tandemlog/test/profile_lock_test.dart: failed acquisition releases the process guard for retry
+00:30 +374: /workspace/tandemlog/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:30 +375: /workspace/tandemlog/test/task_metadata_test.dart: future hints use projection availability and the observed local day
+00:30 +376: /workspace/tandemlog/test/task_metadata_test.dart: passed start and history hints stay absent even with a retained instant
+00:30 +377: /workspace/tandemlog/test/task_metadata_test.dart: same heading removes date-only details and empty separators
+00:30 +378: /workspace/tandemlog/test/task_metadata_test.dart: same heading retains role and time
+00:30 +379: /workspace/tandemlog/test/task_metadata_test.dart: day groups hide due dates and available starts
+00:30 +380: /workspace/tandemlog/test/task_metadata_test.dart: day groups hide pinned dates even across local days
+00:30 +381: /workspace/tandemlog/test/task_metadata_test.dart: repeat perimeter needs no redundant metadata line or verbose rule
+00:30 +382: /workspace/tandemlog/test/task_metadata_test.dart: local zone changes alter only pinned presentation
+00:30 +383: /workspace/tandemlog/test/task_metadata_test.dart: pinned DST gaps and folds share projection resolution
+00:30 +384: /workspace/tandemlog/test/task_metadata_test.dart: local day headings and bounded task times share the observed zone
+00:30 +385: /workspace/tandemlog/test/task_metadata_test.dart: date-only occurrence override suppresses timed base due
+00:31 +386: /workspace/tandemlog/test/text_event_test.dart: new text packets retain exact bytes and closed metadata
+00:31 +387: /workspace/tandemlog/test/text_event_test.dart: text packet fields, ownership and canonical base64 fail closed
+00:31 +388: /workspace/tandemlog/test/text_event_test.dart: one text command can carry atomic existing nontext edits
+00:31 +389: /workspace/tandemlog/test/text_event_test.dart: pure projection applies nontext without leaking native packet metadata
+00:31 +390: /workspace/tandemlog/test/text_event_test.dart: baseline root declares closed exact prefix and genesis frontiers
+00:31 +391: /workspace/tandemlog/test/text_event_test.dart: baseline unknown versions and invalid scope or frontiers fail closed
+00:31 +392: /workspace/tandemlog/test/inbox_test.dart: Inbox means raw capture until first surviving saved edit
+00:31 +393: /workspace/tandemlog/test/inbox_test.dart: derived successors are organized even if their snapshot is empty
+00:31 +394: /workspace/tandemlog/test/inbox_test.dart: Inbox is first in manual order and separate from Someday/history
+00:31 +395: /workspace/tandemlog/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:32 +396: /workspace/tandemlog/test/command_acknowledgement_test.dart: single edit must fail when transport drops newly appended event
+00:32 +397: /workspace/tandemlog/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:32 +398: /workspace/tandemlog/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:32 +399: /workspace/tandemlog/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:32 +400: /workspace/tandemlog/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:32 +401: /workspace/tandemlog/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:32 +402: /workspace/tandemlog/test/command_acknowledgement_test.dart: reopen must fail and retain unconfirmed completion targets (0 prefix)
+00:32 +403: /workspace/tandemlog/test/undo_storage_test.dart: move Undo retains later relative move and replays after known-cache upgrade
+00:32 +404: /workspace/tandemlog/test/undo_storage_test.dart: move Undo retains later relative move and replays after known-cache upgrade
+00:32 +405: /workspace/tandemlog/test/command_acknowledgement_test.dart: create batch reports 1 confirmed records after suffix replacement
+00:32 +406: /workspace/tandemlog/test/undo_storage_test.dart: Undo failure before append confirms only durable prefix and retry is idempotent
+00:32 +407: /workspace/tandemlog/test/undo_storage_test.dart: Undo failure before append confirms only durable prefix and retry is idempotent
+00:33 +408: /workspace/tandemlog/test/command_acknowledgement_test.dart: delete batch reports 1 confirmed records after suffix replacement
+00:33 +409: /workspace/tandemlog/test/undo_storage_test.dart: Undo failure after append confirms only durable prefix and retry is idempotent
+00:33 +410: /workspace/tandemlog/test/command_acknowledgement_test.dart: reopen must fail and retain unconfirmed completion targets (1 prefix)
+00:33 +411: /workspace/tandemlog/test/undo_storage_test.dart: unresolved write blocks new payload until exact delayed record appears
+00:33 +412: /workspace/tandemlog/test/command_acknowledgement_test.dart: Undo reports only confirmed retractions and preserves retry (1 prefix)
+00:33 +413: /workspace/tandemlog/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:33 +414: /workspace/tandemlog/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:33 +415: /workspace/tandemlog/test/task_editor_test.dart: blocked text instruction wraps with full semantics at narrow 200 percent
+00:34 +416: /workspace/tandemlog/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:35 +417: /workspace/tandemlog/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:35 +418: /workspace/tandemlog/test/task_editor_test.dart: single and bulk editors put tags and assignee after scheduling
+00:36 +419: /workspace/tandemlog/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:36 +420: /workspace/tandemlog/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:36 +421: /workspace/tandemlog/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:37 +422: /workspace/tandemlog/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:37 +423: /workspace/tandemlog/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:38 +424: /workspace/tandemlog/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:38 +425: /workspace/tandemlog/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:38 +426: /workspace/tandemlog/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:38 +427: /workspace/tandemlog/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:38 +428: /workspace/tandemlog/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:39 +429: /workspace/tandemlog/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:39 +430: /workspace/tandemlog/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:39 +431: /workspace/tandemlog/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:39 +432: /workspace/tandemlog/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:40 +433: /workspace/tandemlog/test/task_editor_test.dart: bulk coupled validation checks every task
+00:40 +434: /workspace/tandemlog/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:40 +435: /workspace/tandemlog/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:40 +436: /workspace/tandemlog/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:41 +437: /workspace/tandemlog/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:41 +438: /workspace/tandemlog/test/task_editor_test.dart: title and notes wire limits validate before save
+00:42 +439: /workspace/tandemlog/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:42 +440: /workspace/tandemlog/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:42 +441: /workspace/tandemlog/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:42 +442: /workspace/tandemlog/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:42 +443: /workspace/tandemlog/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:42 +444: /workspace/tandemlog/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:43 +445: /workspace/tandemlog/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:43 +446: /workspace/tandemlog/test/task_editor_test.dart: selection header wraps at narrow large text
+00:43 +447: /workspace/tandemlog/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:43 +448: All tests passed!

@@ -1,0 +1,57 @@
+test_R01_foreign_root_apply_is_atomic (test_admission.Admission.test_R01_foreign_root_apply_is_atomic) ... ok
+test_R02_foreign_root_cannot_enter_new (test_admission.Admission.test_R02_foreign_root_cannot_enter_new) ... ok
+test_R03_foreign_root_cannot_enter_restore (test_admission.Admission.test_R03_foreign_root_cannot_enter_restore) ... ok
+test_R04_embed_rejected_even_when_get_string_hides_it (test_admission.Admission.test_R04_embed_rejected_even_when_get_string_hides_it) ... ok
+test_R05_format_rejected (test_admission.Admission.test_R05_format_rejected) ... ok
+test_R06_nested_shared_type_rejected (test_admission.Admission.test_R06_nested_shared_type_rejected) ... ok
+test_R07_map_slot_rejected (test_admission.Admission.test_R07_map_slot_rejected) ... ok
+test_R08_missing_nested_parent_rejected_before_pending_storage (test_admission.Admission.test_R08_missing_nested_parent_rejected_before_pending_storage) ... ok
+test_R09_conflicting_reserved_seed_rejected (test_admission.Admission.test_R09_conflicting_reserved_seed_rejected) ... ok
+test_R10_deleted_seed_identity_survives_checkpoint (test_admission.Admission.test_R10_deleted_seed_identity_survives_checkpoint) ... ok
+test_R11_duplicate_full_state_with_split_seed_is_allowed (test_admission.Admission.test_R11_duplicate_full_state_with_split_seed_is_allowed) ... ok
+test_R12_conflicting_nonseed_actor_overlap_rejected (test_admission.Admission.test_R12_conflicting_nonseed_actor_overlap_rejected) ... ok
+test_R13_trailing_bytes_rejected_without_mutation (test_admission.Admission.test_R13_trailing_bytes_rejected_without_mutation) ... ok
+test_R14_reserved_seed_cannot_extend_its_original_identity (test_admission.Admission.test_R14_reserved_seed_cannot_extend_its_original_identity) ... ok
+test_C01_shared_seed_does_not_duplicate_historical_text (test_contract.Contract.test_C01_shared_seed_does_not_duplicate_historical_text) ... ok
+test_C02_save_publishes_only_draft_changes (test_contract.Contract.test_C02_save_publishes_only_draft_changes) ... ok
+test_C03_cancel_has_no_published_change (test_contract.Contract.test_C03_cancel_has_no_published_change) ... ok
+test_C04_save_captured_baseline_preserves_remote_insert (test_contract.Contract.test_C04_save_captured_baseline_preserves_remote_insert) ... ok
+test_C05_draft_delete_does_not_delete_concurrent_insert (test_contract.Contract.test_C05_draft_delete_does_not_delete_concurrent_insert) ... ok
+test_C06_offline_disjoint_insertions_merge (test_contract.Contract.test_C06_offline_disjoint_insertions_merge) ... ok
+test_C07_same_location_insertions_converge_without_lost_text (test_contract.Contract.test_C07_same_location_insertions_converge_without_lost_text) ... ok
+test_C08_concurrent_overlapping_deletes_converge (test_contract.Contract.test_C08_concurrent_overlapping_deletes_converge) ... ok
+test_C09_duplicate_delivery_is_idempotent (test_contract.Contract.test_C09_duplicate_delivery_is_idempotent) ... ok
+test_C10_out_of_order_missing_dependency_eventually_integrates (test_contract.Contract.test_C10_out_of_order_missing_dependency_eventually_integrates) ... ok
+test_C11_pending_dependency_survives_checkpoint_restart (test_contract.Contract.test_C11_pending_dependency_survives_checkpoint_restart) ... ok
+test_C12_all_delivery_permutations_converge (test_contract.Contract.test_C12_all_delivery_permutations_converge) ... ok
+test_C13_random_duplicate_out_of_order_delivery (test_contract.Contract.test_C13_random_duplicate_out_of_order_delivery) ... ok
+test_C14_independent_fields_remain_independent (test_contract.Contract.test_C14_independent_fields_remain_independent) ... ok
+test_C15_recurrence_successor_text_is_independent (test_contract.Contract.test_C15_recurrence_successor_text_is_independent) ... ok
+test_C16_unicode_utf16_offsets_and_emoji (test_contract.Contract.test_C16_unicode_utf16_offsets_and_emoji) ... ok
+test_C17_split_surrogate_offsets_rejected_without_mutation (test_contract.Contract.test_C17_split_surrogate_offsets_rejected_without_mutation) ... ok
+test_C18_combining_zwj_and_markdown_remain_source_text (test_contract.Contract.test_C18_combining_zwj_and_markdown_remain_source_text) ... ok
+test_C19_composition_blocks_save_and_cancel_discards (test_contract.Contract.test_C19_composition_blocks_save_and_cancel_discards) ... ok
+test_C20_composition_commit_publishes_final_text_once (test_contract.Contract.test_C20_composition_commit_publishes_final_text_once) ... ok
+test_C21_sticky_selection_moves_with_remote_prefix (test_contract.Contract.test_C21_sticky_selection_moves_with_remote_prefix) ... ok
+test_C22_selective_undo_preserves_remote_insert (test_contract.Contract.test_C22_selective_undo_preserves_remote_insert) ... ok
+test_C23_selective_undo_save_batch_retains_remote (test_contract.Contract.test_C23_selective_undo_save_batch_retains_remote) ... ok
+test_C24_redo_is_compensation_not_history_removal (test_contract.Contract.test_C24_redo_is_compensation_not_history_removal) ... ok
+test_C25_undo_after_remote_delete_does_not_resurrect_remote_work (test_contract.Contract.test_C25_undo_after_remote_delete_does_not_resurrect_remote_work) ... ok
+test_C26_invalid_binary_rejected_atomically (test_contract.Contract.test_C26_invalid_binary_rejected_atomically) ... ok
+test_C27_oversized_update_rejected_before_decode (test_contract.Contract.test_C27_oversized_update_rejected_before_decode) ... ok
+test_C28_out_of_range_edit_and_invalid_base64_are_atomic (test_contract.Contract.test_C28_out_of_range_edit_and_invalid_base64_are_atomic) ... ok
+test_C29_actor_collision_rejected (test_contract.Contract.test_C29_actor_collision_rejected) ... ok
+test_C30_text_limit_rejected_without_partial_commit (test_contract.Contract.test_C30_text_limit_rejected_without_partial_commit) ... ok
+test_C31_exact_update_bytes_survive_json_roundtrip_and_replay (test_contract.Contract.test_C31_exact_update_bytes_survive_json_roundtrip_and_replay) ... ok
+test_C32_full_checkpoint_and_tail_equal_full_replay (test_contract.Contract.test_C32_full_checkpoint_and_tail_equal_full_replay) ... ok
+test_C33_bridge_utf8_memory_cycles (test_contract.Contract.test_C33_bridge_utf8_memory_cycles) ... ok
+test_C34_performance_and_storage_measurements (test_contract.Contract.test_C34_performance_and_storage_measurements) ... ok
+test_O01_draft_cannot_save_to_different_source (test_ownership.Ownership.test_O01_draft_cannot_save_to_different_source) ... ok
+test_O02_incoming_update_cannot_be_attributed_to_draft (test_ownership.Ownership.test_O02_incoming_update_cannot_be_attributed_to_draft) ... ok
+test_O03_successful_save_consumes_draft_once (test_ownership.Ownership.test_O03_successful_save_consumes_draft_once) ... ok
+test_O04_failed_save_preserves_prior_undo_and_draft (test_ownership.Ownership.test_O04_failed_save_preserves_prior_undo_and_draft) ... ok
+
+----------------------------------------------------------------------
+Ran 52 tests in 0.092s
+
+OK

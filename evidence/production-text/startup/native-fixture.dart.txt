@@ -1,0 +1,38 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'package:uuid/uuid.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/text/native_text_engine.dart';
+
+void main(List<String> args) {
+  final root = Directory(args[0]);
+  if (root.existsSync()) throw StateError('Fresh synthetic folder required');
+  final count = int.parse(args[1]);
+  final shared = Directory('${root.path}/shared')..createSync(recursive: true);
+  final profile = Directory('${root.path}/profile')..createSync();
+  final space = const Uuid().v4(), writer = const Uuid().v4(), user = const Uuid().v4();
+  final engine = NativeTextEngine(libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY']);
+  File('${shared.path}/tandemlog-space.json').writeAsStringSync(jsonEncode({'v':3,'id':space}));
+  File('${profile.path}/settings.json').writeAsStringSync(jsonEncode({'folder':shared.path,'user':user}));
+  var previous = eventGenesisHash(space,writer);
+  final clock = BigInt.from(DateTime.now().microsecondsSinceEpoch)*BigInt.from(1000);
+  final lines=<String>[];
+  for(var i=0;i<=count;i++) {
+    final title='Task ${i.toString().padLeft(4,'0')}';
+    const description='Synthetic startup workload';
+    final data=i==0 ? <String,dynamic>{'name':'Benchmark user'} : <String,dynamic>{
+      'title':title,'description':description,'assignee':user,
+      'text':{'codec':'yrs-v1','adapter':1,'seeds':{
+        'title':sha256.convert(engine.seedText(title).bytes).toString(),
+        'description':sha256.convert(engine.seedText(description).bytes).toString(),
+      }}
+    };
+    final event=LogEvent.decode(LogEvent(space,writer,i+1,EventClock(clock+BigInt.from(i)),i==0?user:const Uuid().v4(),i==0?'user.created':'task.createdWithText',data).encode(previousHash:previous));
+    previous=event.hash!;
+    lines.add(event.encode());
+  }
+  File('${shared.path}/$writer.jsonl').writeAsStringSync('${lines.join('\n')}\n');
+  engine.dispose();
+  stdout.writeln('Created $count synthetic native tasks via production event and engine APIs');
+}

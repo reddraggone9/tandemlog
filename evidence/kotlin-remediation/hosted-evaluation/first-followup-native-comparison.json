@@ -1,0 +1,80 @@
+[
+  {
+    "entry": "lib/arm64-v8a/libVkLayer_khronos_validation.so",
+    "bytes": 15240080,
+    "sha256": "ae445f7e74d402e3a367adb230b1edd9841899fcb3310166e5cc96a09ad37a3f",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/arm64-v8a/libdartjni.so",
+    "bytes": 97768,
+    "sha256": "9a663e7f2a7c5d4371a3a5276468e6cad9d3501b32021e216fa6e71c0d3db29a",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/arm64-v8a/libflutter.so",
+    "bytes": 38828704,
+    "sha256": "047acc6348bb5094466b42c3b060d9c9ae18c5a55c7191567f5ed6d4599ef0c5",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/arm64-v8a/libsqlite3.so",
+    "bytes": 1732360,
+    "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/arm64-v8a/libtandemlog_text.so",
+    "bytes": 1044120,
+    "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/armeabi-v7a/libdartjni.so",
+    "bytes": 57416,
+    "sha256": "0a857af8a41f068820e363a13e36a93eab87ca1dac2ecff89f907a506f988a17",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/armeabi-v7a/libflutter.so",
+    "bytes": 33150308,
+    "sha256": "572df43976e7a3a012ee861881aa1406d82db8c0ff1eb74ef5f0a7d0da0a9928",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/armeabi-v7a/libsqlite3.so",
+    "bytes": 1713736,
+    "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/armeabi-v7a/libtandemlog_text.so",
+    "bytes": 793428,
+    "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/x86_64/libdartjni.so",
+    "bytes": 99784,
+    "sha256": "550ff5b92c63b6f744e47566bec1298a0fe92376c3b669bab0c947eac0a35fa7",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/x86_64/libflutter.so",
+    "bytes": 40083280,
+    "sha256": "a690ac9970296a0004baa0e87717fb57e0af69a4e53ededea02f02679bbf0cd5",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/x86_64/libsqlite3.so",
+    "bytes": 1709544,
+    "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+    "unchangedFromFirst": true
+  },
+  {
+    "entry": "lib/x86_64/libtandemlog_text.so",
+    "bytes": 1192968,
+    "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+    "unchangedFromFirst": true
+  }
+]

@@ -1,0 +1,217 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-shared-tags/test/tag_input_test.dart
+00:00 +0: /workspace/tandemlog-shared-tags/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:00 +1: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:01 +2: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:01 +3: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:01 +4: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:01 +5: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:01 +6: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:02 +7: /workspace/tandemlog-shared-tags/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:02 +8: /workspace/tandemlog-shared-tags/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:03 +9: /workspace/tandemlog-shared-tags/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:03 +10: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: failed Save retains selected chips and exact pending query
+00:03 +11: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: active tag composition blocks Save and canClose Save
+00:03 +12: /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: single Save adds pending query without replacing selected tags
+00:04 +13: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:04 +14: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:04 +15: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: 'Expand Tags options'
+  Actual: ''
+   Which: is different. Both strings start the same, but the actual value is missing the following
+trailing characters: Expand Tag ...
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:99:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart line 99
+The test description was:
+  query clear and dropdown actions identify every editing context
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +15 -1: /workspace/tandemlog-shared-tags/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:05 +15 -1: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context [E]
+  Test failed. See exception logs above.
+  The test description was: query clear and dropdown actions identify every editing context
+  
+00:06 +16 -1: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _ElementPredicateWidgetFinder:<Found 0 widgets with a semantics label named "Remove
+#retained from Tags": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      activateRemove (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:60:3)
+#5      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:155:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart line 60
+The test description was:
+  editor exposes named query and removable selected tags
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +16 -2: /workspace/tandemlog-shared-tags/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:06 +16 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags [E]
+  Test failed. See exception logs above.
+  The test description was: editor exposes named query and removable selected tags
+  
+00:06 +17 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:06 +18 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:06 +19 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:07 +20 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:07 +21 -2: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _ElementPredicateWidgetFinder:<Found 0 widgets with a semantics label named "Remove
+#retained from Add tags": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:197:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart line 197
+The test description was:
+  bulk suggestions are readable and semantics activation is local
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +21 -3: /workspace/tandemlog-shared-tags/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:07 +21 -3: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local [E]
+  Test failed. See exception logs above.
+  The test description was: bulk suggestions are readable and semantics activation is local
+  
+00:07 +22 -3: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _ElementPredicateWidgetFinder:<Found 0 widgets with a semantics label named "Remove #new
+from Add tags": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:257:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart line 257
+The test description was:
+  bulk chip actions preserve independent deltas and Apply state
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +22 -4: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:08 +22 -4: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state [E]
+  Test failed. See exception logs above.
+  The test description was: bulk chip actions preserve independent deltas and Apply state
+  
+00:09 +23 -4: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:09 +24 -4: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      tagQuery (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:44:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart:355:7)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart line 44
+The test description was:
+  Saving freezes tag editing and chip removal in both bulk contexts
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +24 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: blocked text instruction wraps with full semantics at narrow 200 percent
+00:09 +24 -5: /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts [E]
+  Test failed. See exception logs above.
+  The test description was: Saving freezes tag editing and chip removal in both bulk contexts
+  
+00:09 +25 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:10 +26 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:11 +27 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: single and bulk editors put tags and assignee after scheduling
+00:11 +28 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:12 +29 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:12 +30 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:13 +31 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:13 +32 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:14 +33 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:14 +34 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:15 +35 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:15 +36 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:15 +37 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:15 +38 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:16 +39 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:16 +40 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:16 +41 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:17 +42 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: bulk coupled validation checks every task
+00:17 +43 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:17 +44 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:18 +45 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:18 +46 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:18 +47 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: title and notes wire limits validate before save
+00:19 +48 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:19 +49 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:19 +50 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:19 +51 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:20 +52 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:20 +53 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:20 +54 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:20 +55 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: selection header wraps at narrow large text
+00:21 +56 -5: /workspace/tandemlog-shared-tags/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:21 +57 -5: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+  /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+  /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+  /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+  /workspace/tandemlog-shared-tags/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context

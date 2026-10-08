@@ -1,0 +1,24 @@
+{
+  "comparison": "read-only decodedRGBApixelcomparison, not editing",
+  "same": [
+    "bulk-draft-narrow-light-200.png",
+    "editor-draft-narrow-light-200.png",
+    "editor-ime-narrow-dark.png",
+    "editor-ime-narrow-light-200.png",
+    "editor-options-desktop-dark.png",
+    "editor-options-narrow-dark.png",
+    "editor-options-narrow-light-200.png",
+    "editor-selected-desktop-dark.png",
+    "editor-selected-narrow-dark.png",
+    "editor-selected-narrow-light-200.png",
+    "filter-selected-narrow-dark.png",
+    "filter-selected-narrow-light-200.png"
+  ],
+  "different": [
+    "bulk-draft-desktop-dark.png",
+    "bulk-draft-narrow-dark.png",
+    "editor-draft-desktop-dark.png",
+    "editor-draft-narrow-dark.png",
+    "filter-selected-desktop-dark.png"
+  ]
+}

@@ -52,7 +52,7 @@ The Open/Completed choice in Filter defaults to Open. Completed tasks use the sa
 
 Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
 
-Inbox groups raw captures at the top, in shared manual order, until their first saved edit. A raw capture has no notes, tags or scheduling fields. Populated creations and generated recurring successors begin organized. Opening/canceling an editor, moving or completing a task does not count as an edit; Undo of its surviving edits restores Inbox. Completed browsing uses ordinary date/Someday groups, and reopening an unedited raw task restores its Inbox presentation. There is no separate never-edited flag. Inbox is a derived projection from existing events; cache replay updates earlier projections without rewriting canonical history. Manual reorder cannot cross Inbox and other groups.
+Inbox groups raw captures at the top, in shared manual order, until their first saved edit. New captures receive the first shared manual position, preserving multiline entry order; their initial rank survives leaving Inbox. A raw capture has no notes, tags or scheduling fields. Populated creations and generated recurring successors begin organized. Opening/canceling an editor, moving or completing a task does not count as an edit; Undo of its surviving edits restores Inbox. Completed browsing uses ordinary date/Someday groups, and reopening an unedited raw task restores its Inbox presentation. There is no separate never-edited flag. Inbox is a derived projection from existing events; cache replay updates earlier projections without rewriting canonical history. Manual reorder cannot cross Inbox and other groups.
 
 
 Description previews use one ellipsized line with embedded whitespace flattened for display; whitespace-only notes reserve no subtitle. Titles wrap fully in the list. New title input stays one logical line, initially one visual line and growing to two with internal scrolling beyond that; pasted line breaks become spaces after IME composition commits. Historical multiline titles remain readable and are preserved on unrelated edits. Notes grow with content beyond three lines up to a viewport/keyboard-aware cap, then scroll internally; editor actions remain reachable. Settings exposes Theme/current choice, with System/Light/Dark radio choices and cancel without saving.
@@ -84,7 +84,9 @@ Scheduled dates are intended as overrides for a repeating occurrence. Existing n
 
 Date-sorted drag-and-drop is constrained to an exact effective date/time and precision bucket, matching the accessible move actions. Explicit midnight and date-only on the same day are different buckets. Invalid destinations must be apparent during dragging; no drag may silently change schedule fields or pretend to override automatic ordering. Revalidate source/target after concurrent updates and preserve the relative order of unaffected hidden/filtered tasks in the shared manual sequence. Moving A after B in `A, hidden, B` produces `hidden, B, A`: no hidden task is moved or edited, but its absolute index naturally changes. This is a relative insertion contract, not a fixed-slot permutation of the visible tasks.
 
-Ordinary-tag filtering selects multiple exact spelling-preserving tags, matching any selected tag and intersecting with assignee, completion and upcoming filters. Removable chips expose the active set; a fresh session starts unfiltered. The query and chips share one field; suggestions use an anchored dropdown outside the dialog layout, so query/result-count changes do not resize Filter. The dropdown is bounded and scrollable within the viewport/keyboard bounds. Options include ordinary tags across the current space, not scheduling-bound fields. Filtering never changes task data or manual order.
+Ordinary-tag filtering selects multiple exact spelling-preserving tags, matching any selected tag and intersecting with assignee, completion and upcoming filters. Removable chips expose the active set; a fresh session starts unfiltered. Selected chips occupy a row above the full-width query in the shared tag control. Suggestions use an anchored dropdown outside the dialog layout, so query/result-count changes do not resize Filter. The dropdown is bounded and scrollable within the viewport/keyboard bounds. Options include ordinary tags across the current space, not scheduling-bound fields. Filtering never changes task data or manual order.
+
+The single-task editor, bulk Add/Remove and Filter use the same tag control and space-wide suggestions. Search ignores case; choosing an existing tag preserves its spelling. Task editing and bulk Add can stage new tags; Save/Apply validates and commits them with the other draft changes. An unfinished query participates in the unsaved-change guard and must not disappear on Save or Cancel. Bulk Remove and Filter choose existing tags only. Bulk Add and Remove retain separate deltas, while Filter applies its selected set immediately. [Accepted shared-control decision](decisions/0012-shared-tag-input.md).
 
 Dragging near the list viewport edge scrolls during the active gesture so off-screen peers are reachable. Eligibility remains restricted to equal effective date/time, including after scrolling, clock changes and incoming updates; invalid targets remain visible during the gesture. Stop scroll work when the drag ends/cancels, the app suspends or the workspace/view changes.
 
@@ -110,10 +112,26 @@ Rows use selection highlights, with a separate completion checkbox and drag hand
 
 Bulk edits exclude title/notes, retain untouched mixed values and apply only explicit schedule/assignee/tag deltas. Validate the selection before writing and disclose any partial durable progress; preserve/reconcile remaining drafts for retry. Bulk drag retains selected tasks' global relative order and unaffected tasks' relative order within an exact date/time and completion bucket, even though edit selections may span groups. Absolute indexes can shift; filters never cause hidden-task move records. Confirmed deletion is a canonical tombstone, recoverable through session Undo while preserving history and independent recurrence successors; deletion belongs in the editor rather than a duplicate selection toolbar.
 
+Bulk schedule and Assignee apply checkboxes expose their field names to accessibility services, including distinct Start/Due date and time names in both row and stacked layouts. They retain native checked, disabled, focus and activation semantics. Add tags and Remove tags remain separate labeled text inputs without apply checkboxes.
+
 ## Session Undo and toolbar fit
 
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
 
+
+## Approved one-level checklists — isolated implementation
+
+Lee approved a title, optional notes, completion and order for each checklist
+item, one level deep. Recurrence copies fresh unchecked items; existing successor
+edits remain independent. Domain/storage and editor/warning UI are implemented
+separately from shared-history candidatec182385. Items appear within the single
+task editor with checkboxes, editable title/notes, relative movement and deletion.
+Item Save is separate from parent Save/Cancel. Unfinished items trigger a
+warn-but-allow dialog; incoming changes renew consent before bytes are prepared.
+Linux desktop/narrow/enlarged/theme workflows are verified; exact checklist
+Android/Windows acceptance remains pending. Explicit item Save/Cancel,
+parent-draft boundary, renewed warning confirmation and recurrence/Undo meanings
+are specified in [ADR0011](decisions/0011-one-level-checklists.md).
 
 ## Completion eligibility and reorder continuity — RC5 follow-up
 
@@ -137,3 +155,12 @@ Folder failures explain recovery in ordinary language. A missing file names the 
 
 
 Keyboard completion retains native checkbox focus when the same task remains in the current view, including status regrouping in Search. A short pending write rejects additional completion commands without disabling the control and releasing its focus. Deliberate traversal elsewhere stays elsewhere; when the task leaves the filtered view, normal focus fallback applies. No async focus restoration steals focus from another control.
+
+## Accepted historical recompletion
+
+When a reopened old occurrence has an existing, independently initialized next
+occurrence, completing the old task retains that next occurrence exactly. Its
+edits, notes, schedule, tags, manual order, draft and scoped Undo survive; completed
+or deleted children keep that status. Undo/reopen affects the old parent's
+completion and keeps the existing child. Forward native recurrence retains its
+approved completion-observed union. See the [policy and compatibility boundary](historical-recurring-text-policy.md).

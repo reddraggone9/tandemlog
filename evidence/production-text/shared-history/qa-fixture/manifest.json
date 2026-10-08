@@ -1,0 +1,13 @@
+{
+  "source_behavior_commit": "f952744c4e8623df49a90e575aa7293cfa2eb6ff",
+  "origin": "Actual preserved historical_delivery_test.dart synthetic source workspace A, before new recompletion",
+  "user": "62e55c17-153a-4b5a-9af9-607d9caa4493",
+  "historical_parent": "bf5e9217-ab2a-44c6-97af-b611e0796fab",
+  "independent_child": "98b80574-ba96-56ed-a6c3-4380466a8d14",
+  "initial_parent_completed": false,
+  "files": {
+    "ff2e6d91-a75c-4ca3-8231-0217510fa7b5.jsonl": "ea4ed1a7ae4ee49f7ddb44cb22164c66c98b6335be814c354501938e0f78b22d",
+    "88fde054-ff3c-4479-96da-05b032aeadc4.jsonl": "6a6ec53c790af785ee5a44a566f199ddedc24febe4e1495fa53cf5d288f7f7ed",
+    "tandemlog-space.json": "634fa40ebd2799ba11daff06ed1220b0994c3fb2e36a61ad1336ba70e8746499"
+  }
+}

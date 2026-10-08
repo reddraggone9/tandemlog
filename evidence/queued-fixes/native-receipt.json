@@ -1,0 +1,21 @@
+{
+  "aggregate": {
+    "compiled_source": "509e41c4dae4bb98cb5c3d6659231eae5e50391a",
+    "passed": 66,
+    "failed": 0,
+    "reported_duration": "13:47",
+    "actual_platform": "Linux x64 GTK debug via xvfb/dbus-run-session",
+    "screenshot_capture": "enabled; synthetic output preserved at /workspace/recovery/queued-fixes-native-ui-final",
+    "log": "green/native-aggregate.txt",
+    "log_sha256": "ba1e47f6c2af7bd42fb7efb7c1dd4eb83595dea74ed1ec058bf2e028376f1bf0"
+  },
+  "final_source": {
+    "sha": "17ae5e5619bbd890a9778ffe39b1c94156086bb3",
+    "delta_from_aggregate_source": "Test-only DPR1 plus teardown reset. Application inputs identical; Linux aggregate used DPR1.",
+    "focused_actual_GTK": "workspace search preserves filters drafts and completion sections:1 passed including390 and1200 widths.",
+    "log": "green/responsive-search-final-dpi.txt",
+    "independent_review": "Correctness accepted both test corrections, unchanged assertions and Windows native handoff; no must-fix."
+  },
+  "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "scope_limit": "Source-bound Linux native evidence, not execution or manual acceptance of exact Windows/Android release payload. Final17ae5e5 CI37747198468 remains pending; no resource cap increase, publication or live synced profile."
+}

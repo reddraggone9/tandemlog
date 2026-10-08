@@ -9,6 +9,9 @@ import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import 'package:tandemlog/application/task_text_session.dart';
+import 'package:tandemlog/application/text_save_command.dart';
+import 'native_text_fixtures.dart';
 
 /// Simulates a sync-provider atomic replacement after an acknowledged append.
 /// Existing committed bytes survive; the new suffix is absent at reconciliation.
@@ -56,7 +59,7 @@ void main() {
 
 void registerSaveAcknowledgementTests() {
   testWidgets(
-    'provider replacement blocks retry and keeps draft until exact pending history recovery',
+    'legacy v3 provider replacement blocks retry until exact pending history recovery',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('save-ack-native-');
       final folder = _ReplacingFolder(
@@ -195,6 +198,127 @@ void registerSaveAcknowledgementTests() {
       } finally {
         await tester.pumpWidget(const SizedBox());
         await tester.pumpAndSettle();
+        await store.close();
+        await root.delete(recursive: true);
+      }
+    },
+  );
+  testWidgets(
+    'native provider replacement freezes draft and retries the exact canonical receipt',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('native-save-ack-ui-');
+      final folder = _ReplacingFolder(
+        LocalLogFolder((await Directory('${root.path}/shared').create()).path),
+      );
+      final store = await openNativeFixtureStore(
+        folder,
+        '${root.path}/private',
+      );
+      TaskTextSession? session;
+      var closes = 0;
+      try {
+        await folder.create('${store.writer}.jsonl', Uint8List(0));
+        final user = const Uuid().v4(), id = const Uuid().v4();
+        await store.command(user, 'user.created', {'name': 'Synthetic'});
+        await store.createNativeFixtureTask(id, {
+          'title': 'Original task',
+          'description': 'Original notes',
+          'assignee': user,
+        });
+        final task = store.rows.singleWhere((row) => row['id'] == id);
+        final capture = await store.captureTaskText(id);
+        session = TaskTextSession(
+          capture,
+          registerDraftActor: (field, allocation, actor) =>
+              store.registerTextDraftActor(capture, field, allocation, actor),
+        );
+        final command = TextSaveCommand(store, session);
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: TaskEditor(
+                task: task,
+                panel: true,
+                textSession: session,
+                onClose: () => closes++,
+                save: (fields, added, removed) async {
+                  await command.save(
+                    fields: fields,
+                    tags: [],
+                    observedTagRefs: {},
+                  );
+                },
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.enterText(
+          find.byKey(const ValueKey('title')),
+          'Retained native draft',
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey('description')),
+          'Retained native notes',
+        );
+        final before = await folder.read('${store.writer}.jsonl');
+        folder.replaceAfterAppend = true;
+        await tester.tap(find.text('Save changes'));
+        await tester.pumpAndSettle();
+        final prepared = session.prepare(), receipt = prepared.receipt!;
+        expect(prepared.committed, isFalse);
+        expect(session.hasPendingReceipt, isTrue);
+        expect(closes, 0);
+        expect(await folder.read('${store.writer}.jsonl'), before);
+        expect(
+          store.rows.singleWhere((row) => row['id'] == id)['title'],
+          'Original task',
+        );
+        for (final entry in {
+          'title': 'Retained native draft',
+          'description': 'Retained native notes',
+        }.entries) {
+          final field = tester.widget<TextField>(
+            find.byKey(ValueKey(entry.key)),
+          );
+          expect(field.controller!.text, entry.value);
+          expect(field.enabled, isFalse);
+        }
+        expect(find.text('Retry Save'), findsOneWidget);
+        final cancel = tester.widget<TextButton>(
+          find.widgetWithText(TextButton, 'Cancel'),
+        );
+        expect(cancel.onPressed, isNull);
+        final attempted = folder.droppedSuffix!;
+        expect(utf8.decode(attempted), '${receipt.raw}\n');
+        await tester.tap(find.text('Retry Save'));
+        await tester.pumpAndSettle();
+        expect(session.hasPendingReceipt, isFalse);
+        expect(prepared.committed, isTrue);
+        expect(await folder.read('${store.writer}.jsonl'), [
+          ...before,
+          ...attempted,
+        ]);
+        expect(store.confirmedOperations([receipt]), {receipt.id});
+        expect(
+          store.rows.singleWhere((row) => row['id'] == id)['title'],
+          'Retained native draft',
+        );
+        final events = const LineSplitter()
+            .convert(utf8.decode(await folder.read('${store.writer}.jsonl')))
+            .map((line) => jsonDecode(line) as Map);
+        expect(
+          events.where((event) => event['type'] == 'task.textEdited'),
+          hasLength(1),
+        );
+        expect(tester.takeException(), isNull);
+      } finally {
+        await tester.pumpWidget(const SizedBox());
+        await tester.pumpAndSettle();
+        if (session != null && !session.hasPendingReceipt) {
+          session.cancel();
+          store.releaseTextCapture(session.capture);
+        }
         await store.close();
         await root.delete(recursive: true);
       }

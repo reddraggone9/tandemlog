@@ -1,0 +1,18 @@
+{
+  "previous_frozen_red": "90b4def6ad20d867546cc523edade34bc4f16700",
+  "production_unchanged_from": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "test_sha256": "b9c3c358cca3e1d8ce8d5fecc96164b0acdc817f2806d974ddcb7c3afde19537",
+  "log_sha256": "8f5768ddc3b4aab394b217040ce8c371e0c2c939387415e837185e8645611a47",
+  "result": {
+    "passed": 0,
+    "failed": 4,
+    "observed": {
+      "recompletion": "Native item Saved ParentLater ChildItemA",
+      "Undo": "Native item Saved ChildItemA ParentLater",
+      "recompletion cold replay": "Native item Saved ParentLater ChildItemA",
+      "Undo cold replay": "Native item Saved ChildItemA ParentLater"
+    }
+  },
+  "extension": "Explicitall5itemJSONsnapshot; coldreconstructionbothbeforeandafterUndo. Originalchildrowalreadysnapshotsall5items; supplieddatesmatchOct1due/Oct8completion/Oct15child.",
+  "independent_review": "Original90b generatedreproductionanddatefidelityaccepted; extendedredawaitingreview; no productionfix yet."
+}

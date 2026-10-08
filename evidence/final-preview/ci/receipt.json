@@ -1,0 +1,132 @@
+{
+  "source": "e205e650b5614935a73cf5acb96ca9b36fda8e4e",
+  "branch": "preview/shared-history-checklists-final",
+  "run": 37810677866,
+  "workflow_path": ".github/workflows/ci.yml",
+  "event": "workflow_dispatch",
+  "status": "completed",
+  "conclusion": "success",
+  "created_at": "2026-10-08T16:40:47Z",
+  "completed_metadata_updated_at": "2026-10-08T17:02:45Z",
+  "version": "2026.10.2-rc.4+46",
+  "jobs": [
+    {
+      "id": 113426406147,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-08T16:40:51Z",
+      "completed_at": "2026-10-08T17:02:39Z"
+    },
+    {
+      "id": 113426406473,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-08T16:40:51Z",
+      "completed_at": "2026-10-08T16:47:44Z"
+    },
+    {
+      "id": 113426406538,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-08T16:40:51Z",
+      "completed_at": "2026-10-08T16:50:42Z"
+    }
+  ],
+  "counts": {
+    "linux_unit_passed": 628,
+    "linux_native_app_passed": 70,
+    "windows_unit_passed": 626,
+    "windows_expected_linux_only_skips": 2,
+    "desktop_each_cargo_passed": 4,
+    "desktop_each_native_worker_passed": 107,
+    "desktop_each_tools_run": 37
+  },
+  "platform_payload_and_install_gates": "all3 packaged-native/notices gates plus Linux release/Flatpak/fresh-warm install smoke and Windows release/portable/installed lifecycle complete; no manual/signed acceptance inferred",
+  "reported_artifacts": [
+    {
+      "id": 11566475838,
+      "name": "linux",
+      "size_in_bytes": 9003289,
+      "digest": "sha256:17707119e22929cbe60ce7621657978415276c6ca64411144952f435220ffa59",
+      "expired": false,
+      "created_at": "2026-10-08T17:02:36Z"
+    },
+    {
+      "id": 11565436217,
+      "name": "android",
+      "size_in_bytes": 80393758,
+      "digest": "sha256:e8d7e452db32aecea8de30c12d55053507e9a9d09dbabba415bcca56eae8e831",
+      "expired": false,
+      "created_at": "2026-10-08T16:47:41Z"
+    },
+    {
+      "id": 11564614184,
+      "name": "windows",
+      "size_in_bytes": 25761070,
+      "digest": "sha256:886733fffac3da20782b56694d187476af129aae5f7683f00ac92a09791413bf",
+      "expired": false,
+      "created_at": "2026-10-08T16:50:38Z"
+    }
+  ],
+  "hosted_android": {
+    "artifact_id": 11565436217,
+    "apk_sha256": "41b2321ff24182890696cda172368bf9dad34b6e906c5820b01539fd5b5bb3b2",
+    "debug_signer_sha256": "898863c455d8013fcc8e66e7816333b00a3e6f532727a55b13d2d4b787e64d7c",
+    "scope": "hosted completed job output; no consumer bytes or local signer verification"
+  },
+  "hosted_windows": {
+    "artifact_id": 11564614184,
+    "portable_zip_sha256": "b2b0e84b540d99ee8e791d85620c2d7eaa28cc8b68452ca000845c8c3f6c2ea2",
+    "executable_sha256": "90ec52f1cec5b878e4ffd92f2926c0f46f9cce99da0926bf738648a824e98ae6",
+    "native_dll_sha256": "b82ab4e91fa91c4ebd20aebfffe5af6e5bca8e037083cb989fcaccdc8219b990",
+    "scope": "hosted completed job output; no consumer inner/outer archive verification"
+  },
+  "consumer_artifact_verification": false,
+  "transfer": "GitHubdownload resolved file_00000000d6f481f5abf931aeddff5bc6; current Library prepare succeeded; supported helper materialization returned403. No alternate URL or retry loop.",
+  "decoded_logs": {
+    "linux": {
+      "file": "linux-decoded-job-log.txt",
+      "bytes": 421115,
+      "sha256": "a8109d338b2635f07ad6fc2fc3955e5f89afc0dd988476022d9d06d14ab2e10d",
+      "scope": "exact UTF8 bytes of decoded MCP job-log content, not a downloaded raw log archive"
+    },
+    "windows": {
+      "file": "windows-decoded-job-log.txt",
+      "bytes": 274979,
+      "sha256": "4a1af79666ed4ea816f89017a619d8ec6f76622cc5dedb383542a5a074c3a912",
+      "scope": "exact UTF8 bytes of decoded MCP job-log content, not a downloaded raw log archive"
+    },
+    "android": {
+      "file": "android-decoded-job-log.txt",
+      "bytes": 186764,
+      "sha256": "eec59d6d70527e9f978763a40e68fd792543fe1a3922072ff3f320dc2803dc80",
+      "scope": "exact UTF8 bytes of decoded MCP job-log content, not a downloaded raw log archive"
+    }
+  },
+  "remaining_gates": [
+    "Parent isolated A16 regression acceptance",
+    "Consumer artifact-byte/install verification",
+    "Combined exact signed/native/manual/UX acceptance",
+    "Fresh quota before publication",
+    "Final actual executable-range editorial confirmation"
+  ],
+  "publication": "not attempted; stable feature approval absent",
+  "independent_reviews": {
+    "correctness": "accepted; freshAPI source/status/artifacts, exactloghashes/counts/hostpayloadreports verified",
+    "security": "accepted; literal UTF8/CRLF logs, API+hostartifact/source/hash/signers and consumer403/no byteclaim, unchanged main-onlysign/publishworkflow gates verified",
+    "architecture": "accepted; unchanged executableinputs, artifact qualification/A16profileisolation/floors/finalnative/quota/publication/notes-range contract verified"
+  },
+  "supporting_windows_native": {
+    "run": 37813474065,
+    "runner_source": "a249af55d49148db0525abd7f713ee716900353b",
+    "application_source": "e205e650b5614935a73cf5acb96ca9b36fda8e4e",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "receipt": "../windows-native/receipt.json",
+    "review": "accepted; debug only"
+  }
+}

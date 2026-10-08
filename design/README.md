@@ -37,4 +37,13 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
 - [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
-- [Collaborative text investigation](text-merge-investigation.md) and [test-first prototype](text-merge-prototype.md): approved isolated evaluation; no adopted protocol. [Concrete adoption choices](text-merge-adoption-options.md) separate user decisions from engineering details.
+- [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): authorized implementation, existing-field shared baseline and offline new-task exception; unreleased with remaining gates. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve the earlier research and evidence.
+
+- [Android text-preview QA](android-text-preview-qa.md): exact synthetic test package and native workflow instructions.
+- [Historical recurring-text policy](historical-recurring-text-policy.md): approved historical recompletion preserves the independently initialized child; implementation and remaining gates.
+- [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.
+- [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; isolated storage and UI implementation, with exact Windows/Android acceptance still pending.
+- [Checklist native acceptance](checklist-native-acceptance.md): exact candidate/fixture contract, platform workflow gates and current Linux evidence.
+- [Composed final preview](final-preview-acceptance.md): reviewed component/source bindings, rc.4/build46 and remaining exact-artifact/native/publication gates.
+- [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
+- [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.

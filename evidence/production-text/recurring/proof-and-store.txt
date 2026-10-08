@@ -1,0 +1,11 @@
+00:00 +0: loading /workspace/tandemlog/test/recurring_text_test.dart
+00:00 +0: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text offline title and notes union preserves acknowledged child prefix and duplicates
+00:00 +1: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +2: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +3: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +4: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +5: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +6: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +7: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +8: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:01 +9: All tests passed!

@@ -11,13 +11,31 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common
       - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
       - run: flutter pub get --enforce-lockfile
       - run: dart format --output=none --set-exit-if-changed lib test integration_test tool
       - run: flutter analyze
+      - name: Build and require production native library for all unit tests
+        shell: bash
+        run: |
+          python tool/build_text_engine.py --platform linux --output-dir "$RUNNER_TEMP/native-unit"
+          native_library="$RUNNER_TEMP/native-unit/libtandemlog_text.so"
+          if [[ "$RUNNER_OS" == Windows ]]; then native_library="$(cygpath -w "$native_library")"; fi
+          python tool/native_build_gates.py verify_library "$native_library"
+          echo "TANDEMLOG_TEXT_LIBRARY=$native_library" >> "$GITHUB_ENV"
       - run: flutter test
+      - name: Verify frozen native admission and worker contracts
+        shell: bash
+        run: |
+          cargo +1.99.0 test --locked --offline --manifest-path native/text_engine/Cargo.toml --target-dir "$TANDEMLOG_TEXT_TARGET_DIR"
+          export SPIKE_LIBRARY="$TANDEMLOG_TEXT_LIBRARY"
+          python -m unittest discover -s experiments/yrs-spike/tests -v
       - run: python3 -m unittest discover -s tool -p 'test_*.py'
       - run: xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux
       - run: flutter build linux --release
+      - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
       - name: Smoke-test native release startup with fresh and warm cache
         run: |
           xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" > linux-startup.json
@@ -40,13 +58,42 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: windows
       - run: flutter pub get --enforce-lockfile
+      - name: Build and require production native library for all unit tests
+        shell: bash
+        run: |
+          python tool/build_text_engine.py --platform windows --output-dir "$RUNNER_TEMP/native-unit"
+          native_library="$RUNNER_TEMP/native-unit/tandemlog_text.dll"
+          if [[ "$RUNNER_OS" == Windows ]]; then native_library="$(cygpath -w "$native_library")"; fi
+          python tool/native_build_gates.py verify_library "$native_library"
+          echo "TANDEMLOG_TEXT_LIBRARY=$native_library" >> "$GITHUB_ENV"
       - run: flutter test
+      - name: Verify frozen native admission and worker contracts
+        shell: bash
+        run: |
+          cargo +1.99.0 test --locked --offline --manifest-path native/text_engine/Cargo.toml --target-dir "$TANDEMLOG_TEXT_TARGET_DIR"
+          export SPIKE_LIBRARY="$TANDEMLOG_TEXT_LIBRARY"
+          python -m unittest discover -s experiments/yrs-spike/tests -v
+      - run: python -m unittest discover -s tool -p 'test_*.py'
       - run: python tool/app_version.py
       - run: flutter build windows --release
+      - run: python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release
+      - name: Preserve exact portable Windows payload for isolated native acceptance
+        shell: pwsh
+        run: >-
+          python packaging/windows/package_portable.py
+          --bundle build/windows/x64/runner/Release
+          --output dist
+          --source-revision "$env:GITHUB_SHA"
+          --run-id "$env:GITHUB_RUN_ID"
       - name: Build per-user installer and verify native installation lifecycle
         shell: pwsh
-        run: ./packaging/windows/build-and-smoke.ps1
+        run: |
+          ./packaging/windows/build-and-smoke.ps1
+          Get-Content dist/windows-SHA256SUMS.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: windows
@@ -63,16 +110,75 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: android
       - run: flutter pub get --enforce-lockfile
       # The standard Ubuntu runner image includes this exact build-tools version.
       - run: test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
-      - run: flutter build apk --debug
+      - name: Observe reviewed Kotlin scopes on the remediation branch
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation'
+        shell: bash
+        run: |
+          observation_dir="$RUNNER_TEMP/kotlin-remediation"
+          mkdir -p "$observation_dir" "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d"
+          cp evidence/kotlin-remediation/ci/observe.gradle "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/kotlin-remediation.gradle"
+          echo "KOTLIN_REMEDIATION_EVIDENCE_DIR=$observation_dir" >> "$GITHUB_ENV"
+          echo "KOTLIN_REMEDIATION_PHASE=cold" >> "$GITHUB_ENV"
+          echo "KOTLIN_REMEDIATION_MANIFEST=$GITHUB_WORKSPACE/evidence/kotlin-remediation/graph.json" >> "$GITHUB_ENV"
+      - name: Build Android debug APK
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/heads/fix/kotlin-2.4.20-remediation ]]; then
+            set -o pipefail
+            flutter build apk --debug 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-build.txt"
+            python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-native-gate.txt"
+            sha256sum build/app/outputs/flutter-apk/app-debug.apk > "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-apk.sha256"
+          else
+            flutter build apk --debug
+          fi
+      - name: Repeat warm Android debug build on the remediation branch
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation'
+        shell: bash
+        run: |
+          set -o pipefail
+          export KOTLIN_REMEDIATION_PHASE=warm
+          flutter build apk --debug 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-build.txt"
+          python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-native-gate.txt"
+          sha256sum build/app/outputs/flutter-apk/app-debug.apk > "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-apk.sha256"
+      - if: github.ref != 'refs/heads/fix/kotlin-2.4.20-remediation'
+        run: python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk
       - run: |
           mkdir dist
           cp build/app/outputs/flutter-apk/app-debug.apk dist/tandemlog-android-test-only.apk
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs dist/tandemlog-android-test-only.apk > dist/android-signature.txt
           cd dist
           sha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt
+          cat android-SHA256SUMS.txt
+          cat android-signature.txt
+      - name: Preserve cold and warm Kotlin evaluation receipts
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kotlin-remediation-android-evidence
+          path: ${{ runner.temp }}/kotlin-remediation/*
+          retention-days: 5
+          if-no-files-found: error
+      - name: Remove the remediation observation script
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation' && always()
+        shell: bash
+        run: rm -f "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/kotlin-remediation.gradle"
+      - name: Package separate recovery harness on the isolated adoption branch
+        if: github.ref == 'refs/heads/experiment/text-activation-policy'
+        run: |
+          # This immutable reviewed base excludes unrelated in-flight experiments.
+          git fetch --no-tags --depth=1 origin 926f28dd617527d168ce94236bb9f4a99d1f9708
+          python3 tool/android_recovery/build_apk.py \
+            --revision 926f28dd617527d168ce94236bb9f4a99d1f9708 \
+            --output "$GITHUB_WORKSPACE/dist/android-recovery"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs \
+            dist/android-recovery/tandemlog-TEST-ONLY-recovery-debug.apk \
+            > dist/android-recovery/signature.txt
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: android

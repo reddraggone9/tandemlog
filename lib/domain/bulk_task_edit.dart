@@ -73,3 +73,16 @@ class BulkTaskResult {
        remainingIds = List.unmodifiable(remaining);
   bool get succeeded => error == null && remainingIds.isEmpty;
 }
+
+/// A capture is complete after both creation and its initial placement persist.
+/// A complete JSONL prefix may contain a creation before its move; report that
+/// durable progress without dropping the still unfinished capture identity.
+class TaskCaptureResult extends BulkTaskResult {
+  final List<String> createdIds;
+  TaskCaptureResult(
+    super.committed,
+    super.remaining,
+    Iterable<String> created, [
+    super.error,
+  ]) : createdIds = List.unmodifiable(created);
+}

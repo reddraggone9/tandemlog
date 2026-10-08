@@ -60,6 +60,137 @@ Completion accepts an explicitly captured instant and computes its civil day fro
 
 The data-only importer emits ordinary user/task events. There is no import.document event, task import reference, source template, original-text snapshot or formatting sidecar in the app protocol. Superseded private rehearsal histories containing those removed fields fail explicit closed-schema validation; no live conversion is needed because none was authorized or performed. Source hashes, private diffs and import reports remain external audit outputs. Private one-off migration tooling lives outside this repository and is not shipped or supported as an application feature. Generic domain validation, ordering and persistence remain app responsibilities.
 
+## Unreleased required text extension
+
+The authorized branch adds `task.createdWithText`, `text.baselineInitialized`,
+`task.textEdited` and `task.textEditUndone` within the unchanged v3 envelope.
+These are required meanings: older readers fail explicitly instead of ignoring
+the packets or treating them as scalar edits. Creation seeds and field context,
+exact shared baseline frontiers, actor admission, receipt-gated native Save and
+compensation are specified in [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+Original v3 scalar records, canonical hashes, clocks and historical Undo retain
+their original meaning. Frozen stable histories remain unchanged.
+
+Branch cache 14 adds verified native field checkpoints, actor claims and pending
+receipt indexing to SQLite. Order-projection revision3 recognizes native creations
+in the chronological move sequence. A prior revision2 positions cache rebuilds
+from its cached canonical events on open, atomically and without shared-log
+replay or history changes; this does not change the SQLite layout or v3 wire. Existing current cache 13 upgrades additively without
+full-log replay; older supported cache rebuild and integrity guards still apply.
+Installation-private exact text intent files survive disposable cache loss and
+are retired only after matching canonical acknowledgement. They are never shared
+or treated as accepted task state. Missing native engine support fails explicitly
+if required native records are present. The extension is not released; native
+recurring successor semantics and platform acceptance remain gates.
+
+## Unreleased native successor text
+
+`task.completedWithText` is additive to the existing v3 envelope and completion
+snapshot; older readers explicitly reject its required type. Its payload is
+`completedAt`, `successor`, and `inheritance`. Inheritance has exactly
+`codec: "yrs-v1"`, integer `adapter: 1`, `frontiers`, and `fields`. Frontiers map
+writer UUIDs to exact `{seq, hash}` heads, including bound genesis for seq zero.
+Both `title` and `description` declare exactly `parentContext`, `seedHash`, and
+`stateHash` SHA-256 values. Known heads must match admitted hashes, precede the
+completion clock, and never point forward in its writer's sequence.
+
+The native adapter resolves the parent at exactly those immutable prefixes,
+verifies declared context/seed/full-state hashes and snapshot strings, then
+contributes original native packets to the child's fixed lineage. Packets retain
+their original actor context, writer and allocation. Child context uses
+`basisKind: "recurring-successor"` and its parent's context hash as basis, with
+unchanged root seed hash. Child edits bind only that child context. No raw source,
+formatting provenance or new canonical checkpoint is introduced.
+
+Missing heads/current ungranted dependencies are pending; an incomplete closed
+proof is invalid. Cache flags never authorize new native capture/Save before
+proof verification. Completion Undo does not retract inherited text. Old
+`task.completed` retains its exact scalar snapshot semantics; mixed historical
+scalar/new native initialization is rejected explicitly, preserving both data
+and identities. See [ADR 0010](decisions/0010-collaborative-text-adoption.md).
+
+The 2026-10-08 redesign adds explicit inheritance adapter2 for new prototype
+completions. It retains the same exact frontiers, parent context, seed hash and
+successor strings, but each field declares `historyHash` instead of `stateHash`.
+Adapter1 remains readable and verifies its original exact native-state hash.
+Unknown adapters and mixed proof keys are rejected; old bytes are not rewritten.
+
+`historyHash` is SHA-256 of canonical JSON with domain
+`tandemlog.text.history.reference.v1`, original `rootContext`, `seedHash`, and
+`parents` (reference hashes). A root has no parents. An original operation node
+has one parent plus `operation: {space,id,hash,field}`. A union has sorted unique
+parent hashes and no operation. The resolver builds nodes deterministically from
+the exact observed prefix, preserves original authorship, verifies the field
+context and compares the declared reference and visible text. References identify
+the construction graph, not a flattened unordered packet-set digest.
+
+Native-enabled disposable cache version15 uses `text_fields.adapter=2` for
+resolver-verified references: empty `state`, reference hash in `state_hash`, and
+compact `frontier: {history: hash}`. These are not native checkpoints. Ordinary
+adapter1 rows keep their previous state/hash/list meanings. Capture reconstructs
+exact state and original operation IDs from canonical history for editor and Undo
+receipt use, without persisting another inherited BLOB. Older cache readers reject
+version15 explicitly. Cache loss replays originals; no canonical migration occurs.
+
+### Unreleased one-level checklist extension
+
+The isolated checklist branch adds required event meanings; released scalar v3
+records and both existing inheritance adapters keep their original contracts.
+Older peers explicitly reject these unknown event types. Native-enabled cache16
+adds checklist kind/projection handling to cache15; scalar-only histories retain
+cache13. Canonical history is never rewritten by this disposable cache change.
+
+| Event | Exact payload |
+| --- | --- |
+| `checklist.itemCreated` | `parent`, `title`, `description`, `before`, `text` (ordinary adapter1 native creation seed hashes) |
+| `checklist.itemEdited` | `completed` boolean |
+| `checklist.itemMoved` | `before` same-parent item UUID, or null for end |
+| `checklist.itemDeleted` | empty payload |
+| `task.completedWithChecklist` | `completedAt`, `successor`, `checklist`; optional ordinary parent-text `inheritance` |
+
+Items have distinct UUIDs and `checklistItem` kind. Their native title/notes use
+the existing `task.textEdited`/`task.textEditUndone` adapter with item-only admission;
+task schedule, tags, assignee, recurrence and nested items are invalid. Items are
+hidden from the ordinary task sequence and projected under their parent. Known
+wrong kinds/cross-parent anchors fail; missing remote dependencies remain pending.
+
+`checklist` has exactly `codec: yrs-v1`, integer `adapter: 2`, shared `frontiers`,
+and ordered `items`. Each entry has exactly `id`, `source`, `title`, `description`,
+and the ordinary two-field adapter2 proof map `fields`. The copied ID is
+UUIDv5(successor, `checklist:<source UUID>`). Validate common frontiers once and
+each item proof independently. Copies are capped at1000 items within the existing
+one-MiB complete-record limit; aggregate bytes are checked before preparing a
+local receipt. Verify exact source membership/order, native context/history hashes
+and rendered strings at the immutable prefix. Copied field history shares original
+operation references, including sources copied through previous generations.
+
+Concurrent contributions union source items/native histories, initialize copied
+checks false and apply child-owned order/check/deletion actions afterwards. Later
+old-parent edits do not enter an existing copy. Any canonical child-item activity,
+even undone/deleted, protects the containing successor; synthetic seeds/private
+drafts alone do not. All scalar baseline selectors use that rule only within their
+declared prefix. Local item commands/captures require an available parent; genuine
+late remote descendant activity still restores its protected parent. Historical
+`task.completedKeepingSuccessor` also accepts an earlier hash-matched scalar-mode
+`task.completedWithChecklist` initializer or a native initializer with durable
+successor task/checklist activity, and leaves its independently owned child
+unchanged. Untouched native successors retain forward/concurrent inheritance.
+Released `task.completed` historical guards remain unchanged.
+
+The domain/storage component, item UI and completion warning are implemented;
+exact replacement-candidate Android acceptance remains pending after the historical
+recompletion finding. See [ADR0011](decisions/0011-one-level-checklists.md).
+
+`task.completedKeepingSuccessor` adds the accepted historical-recompletion edge.
+Its exact keys are `completedAt` and `retainedSuccessor`; the latter has exactly
+`id`, `completion` (original writer:sequence) and `hash`. The child ID remains
+UUIDv5(parent, `successor`). Known sources must be the earlier hash-matched scalar
+`task.completed`, scalar-mode `task.completedWithChecklist`, or native successor
+initializer of that parent, whose successor has this ID. No successor snapshot
+or inheritance contribution is created. Parent completion/Undo projection includes
+the new type; original scalar/native completion meanings remain unchanged. See the
+[accepted policy](historical-recurring-text-policy.md).
+
 ## Durability and recovery
 
 Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.
@@ -84,7 +215,7 @@ Mixed Undo batches append unchanged per-record envelopes together. Exact confirm
 The RC8 v2 transition is historical: older peers rejected its additive cleanup type. Current v3 rejects all v2 envelopes without converting them. The historical fixture `test/fixtures/recurring_operation_undone_v2.jsonl` verifies explicit unsupported-version preservation; `test/recurring_completion_undo_test.dart` covers current cleanup, protection, recompletion, delayed references, convergence and partial retries.
 
 
-## Cache 13 and installation identity
+## Released cache 13 and installation identity
 
 Canonical workspace/event protocol is v3. The accepted Inbox classification is derived from existing functional task fields and surviving edits/tags, not a new event or stored `neverEdited` flag. Supported old projection caches rebuild only against supported v3 canonical logs with a private backup and existing identity/committed-history guards; caches newer than 13 remain untouched with an explicit compatible-app error. A real v2 folder is rejected before private cache migration. Supported prior caches replay v3 records after preserving a private backup and integrity guards, so retired draft meanings cannot survive a cached fast path. This never converts canonical files; warmed current caches retain incremental reads.
 

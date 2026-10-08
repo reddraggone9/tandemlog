@@ -1,0 +1,89 @@
+{
+  "run": 37796892998,
+  "tested_source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
+  "production_source": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "overall_conclusion": "success",
+  "jobs": {
+    "android": {
+      "id": 113378584980,
+      "conclusion": "success",
+      "scope": "Debug APK build and static packaged-native/signature checks; no Android runtime acceptance"
+    },
+    "linux": {
+      "id": 113378585475,
+      "conclusion": "success",
+      "unit_tests": {
+        "passed": 621,
+        "skipped": 0,
+        "failed": 0
+      },
+      "native_aggregate": {
+        "passed": 69,
+        "skipped": 0,
+        "failed": 0,
+        "includes": [
+          "three shared-tag workflow geometry variants",
+          "legacy guarded multi-tag bulk editor",
+          "legacy phone editor caret/inset controls"
+        ]
+      },
+      "contracts": {
+        "cargo_passed": 4,
+        "native_admission_worker_tests": 107,
+        "tool_tests": 37
+      },
+      "packaging": "Release Linux bundle built and packaged native gate passed"
+    },
+    "windows": {
+      "id": 113378585477,
+      "conclusion": "success",
+      "unit_tests": {
+        "passed": 619,
+        "skipped": 2,
+        "failed": 0,
+        "skip_reasons": [
+          "real Linux FFI durability smoke",
+          "Linux zone-file identity"
+        ]
+      },
+      "contracts": {
+        "cargo_passed": 4,
+        "native_admission_worker_tests": 107,
+        "tool_tests": 37
+      },
+      "packaging": "Release Windows bundle and per-user installer/native installation lifecycle gates passed; separate22-flow native debug run remains source-qualified supporting evidence"
+    }
+  },
+  "log_representation": "GitHub app decoded job logs retained as UTF8; not original zipped job-log byte verification",
+  "log_sha256": {
+    "ci-android-37796892998.txt": "60d66674fe73dc318d2534529c50e0e4eafd32e38b1b8c79e8d5a81c82fe1b3f",
+    "ci-linux-37796892998.txt": "144f1285d69c8d64c327a7ab8db343c07d5565c68c7006615896cf2dc5f77058",
+    "ci-windows-37796892998.txt": "141f932a5d7f6a557e783ef00f5359dc46ae667760254f65fe769637c98238ef"
+  },
+  "api_reported_artifacts": {
+    "android": {
+      "id": 11558568673,
+      "archive_bytes": 80385087,
+      "archive_sha256": "2bb2170807aa60ef03ae34b4fc507903874a84de52104fdd32970b2b8e2dc2e6"
+    },
+    "windows": {
+      "id": 11559961217,
+      "archive_bytes": 25761945,
+      "archive_sha256": "d25b24a9131f8dec0f62d8e003483e5f12a128981d8e81b68729ccb6a24ca639"
+    },
+    "linux": {
+      "id": 11559714166,
+      "archive_bytes": 8999134,
+      "archive_sha256": "d62fc6921b53b32810fa2f6adfacf312b7fa2948dceb76b5ddcc10e04069ac2b"
+    }
+  },
+  "consumer_archive_or_member_bytes_verified": false,
+  "library_delivery": "Prior supported resolved-reference transfer403 and media helper authorization401 remain; no retry/new Library success claimed. Repository evidence available.",
+  "blocking_native_bug": {
+    "reported_by": "parent native acceptance of exact17ae5e5",
+    "summary": "Historical checklist parent recompletion leaks later text into independently edited successor; Undo/cache rebuild retain it.",
+    "shared_tag_inheritance": "Domain/application/storage/text/native core byteidentical17\u2192ec; thisCI doesnotfixoraccept reporteddefect.",
+    "next_gate": "Await exact native sequence/fixture, freeze regression, narrowfix+independentreview, new exact candidate/affectednative retest. No release acceptance/publication."
+  },
+  "independent_review": "Accepted exactec2309checkout, all3decodedloghashes/counts/nativeflows/packaging, unchangedprotectedproduction/coreinputs, qualifiedWindowsselectedscope reuse andAPIartifactmetadata. No must-fix. Historicalnativebug stillblocksreleaseacceptance; exactparentstepsnowreceived,consumerLibrarytransfer403, production-commandregression underway."
+}

@@ -1,0 +1,15 @@
+{
+  "baselineProductionRevision": "1eb8336b2d2eb515b1a974b5c0b66cfc456eb09f",
+  "finalProductionFiles": "performance-source-files.json",
+  "finalRawSourceLabel": "working-stage12",
+  "aotExecutableSha256": "c472258c9f477703d389e787ca99527ca956dc82b660309ca8e29e93bb0715a0",
+  "nativeLibrarySha256": "5d0a7b1b3e0e6b906e831bed562a45f8db03a2bf4f08c80d9dc0c29a6f169153",
+  "runtime": "Linux x64 cloud, Dart3.13.4 AOT, pinned sqlite3-3.7.0 native asset; no Flutter UI",
+  "freshNativeEngineForFinalRebuild": true,
+  "operatingSystemPageCacheFlushed": false,
+  "concurrentHeavyBuildOrTestDuringMeasurements": false,
+  "notes": "Single sequential samples, synthetic UUIDs/actors; baseline did not reset engine but had no inspection memo. Native inspection counts are Dart API invocations including cache hits, not native RPC counts. Process RSS includes Dart/SQLite/native/driver; no retained UI Undo owners.",
+  "measuredDriverSha256": "36c78472b1be37295f4649f577a3e553b879a86a9dc7737bf0607aa1b8e80ff4",
+  "publishedDriverSha256": "2ef03dd7802028f56dbaaae389a4f12abc34d3d9c829fdc28c4135065706cdd1",
+  "driverDifference": "Three lint-only braces and formatting; measured control flow unchanged."
+}

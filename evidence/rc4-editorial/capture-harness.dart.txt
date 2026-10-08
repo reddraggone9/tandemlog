@@ -1,0 +1,58 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
+import 'package:tandemlog/main.dart';
+import 'package:tandemlog/platform/log_folder.dart';
+import 'package:tandemlog/storage/task_store.dart';
+import 'package:uuid/uuid.dart';
+import 'task_flow_test.dart' as flows;
+
+void main() {
+  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  testWidgets('matched release tag editor media', (tester) async {
+    final root = await Directory.systemTemp.createTemp('rc4-tag-media-');
+    final shared = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final seed = await TaskStore.open(LocalLogFolder(shared.path), '${root.path}/seed');
+    final user = const Uuid().v4(), first = const Uuid().v4(), second = const Uuid().v4();
+    await seed.command(user, 'user.created', {'name': 'Lee'});
+    for (final task in [(first, 'Plan weekend'), (second, 'Review supplies')]) {
+      await seed.command(task.$1, 'task.created', {'title': task.$2, 'description': '', 'assignee': user});
+      await seed.edit(task.$1, {'assignee': user}, tags: [task.$1 == first ? 'Home Office' : 'Planning'], observedTagRefs: {});
+    }
+    await seed.close();
+    await File('${profile.path}/settings.json').writeAsString(jsonEncode({'folder': shared.path, 'user': user, 'appearance': 'dark'}));
+    tester.view.devicePixelRatio = 1;
+    tester.view.physicalSize = const Size(1200, 850);
+    tester.platformDispatcher.textScaleFactorTestValue = 1;
+    try {
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await flows.waitForUi(tester, () => find.byKey(ValueKey('task-row-$first')).evaluate().isNotEmpty);
+      await flows.selectTask(tester, first, control: false);
+      final tags = find.byKey(const ValueKey('tags'));
+      await tester.ensureVisible(tags);
+      await tester.pumpAndSettle();
+      expect(find.text('Plan weekend'), findsWidgets);
+      final output = Directory(Platform.environment['TANDEMLOG_RC4_MEDIA_OUTPUT']!);
+      await output.create(recursive: true);
+      final windowResult = await Process.run('xdotool', ['search', '--onlyvisible', '--name', r'^tandemlog$']);
+      expect(windowResult.exitCode, 0);
+      final window = (windowResult.stdout as String).trim().split('\n').last;
+      await Process.run('xdotool', ['windowmove', window, '0', '0']);
+      await Process.run('xdotool', ['windowsize', window, '1200', '850']);
+      await tester.pumpAndSettle();
+      await tester.runAsync(() => Future<void>.delayed(const Duration(milliseconds: 200)));
+      expect((await Process.run('import', ['-window', window, '${output.path}/tag-editor.png'])).exitCode, 0);
+      final rect = tester.getRect(tags);
+      await File('${output.path}/tag-editor-geometry.json').writeAsString(jsonEncode({'tags': {'left': rect.left, 'top': rect.top, 'right': rect.right, 'bottom': rect.bottom}, 'viewport': [1200, 850], 'theme': 'dark', 'text_scale': 1, 'synthetic_titles': ['Plan weekend', 'Review supplies'], 'selected_tag': 'Home Office'}));
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      tester.view.resetPhysicalSize();
+      tester.view.resetDevicePixelRatio();
+      tester.platformDispatcher.clearTextScaleFactorTestValue();
+    }
+  });
+}

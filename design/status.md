@@ -1,4 +1,116 @@
-# Current status — 2026-10-04
+# Current status — 2026-10-08
+
+## Isolated checklist implementation checkpoint
+
+Lee approved starting checklist implementation on a separate worktree after the
+shared-history redesign. `feature/one-level-checklists` starts from exact native
+candidatec182385, leaving that candidate and the diagnostic performance branch
+unchanged. Domain/additive persistence, native item text/receipts, observed-prefix
+recurrence copies, scoped Undo protection, item editor UI and refreshed
+unfinished-item completion warning are implemented. Exact checklist Windows/Android
+artifacts and affected native acceptance remain pending; c182385 platform results
+do not cover this new UI.
+Independent storage/architecture/security/correctness findings were frozen before
+their fixes; evidence and next gates are in [checklists](../evidence/checklists/README.md).
+Released scalar v3 fixtures, hashes/clocks/IDs, native vendor source and locks are
+unchanged. No stable promotion or candidate publication was performed.
+
+The shared-history prototype removes repeated inherited BLOB/packet arrays but
+retains measured quadratic prefix CPU work. Its exact c182385 Windows/Android
+acceptance remains incomplete; earlier hosted compile/tests are not complete
+native acceptance. Previous text-integration checkpoints below are historical.
+
+## Authorized text integration — isolated, unreleased
+
+Second performance follow-up: a transaction-scoped actor index removes repeated
+registry-table scans and duplicate inserts during edited-history reconstruction.
+The same synthetic321-task/642-event cold rebuild improves from11.83s to7.77s;
+views match the prior revision, canonical bytes are unchanged, and warm reopen
+reads zero logs (4.64ms). A separate fresh320-occurrence sample confirms190.2ms
+last completion (prior236.9ms),7.81s rebuild and4.48ms warm open. This remains a material open performance gate. The
+profile separates native apply/restore (~2.07s) from repeated canonical decode
+(~0.80s); recursive resolution and immutable proof/packet work still remain.
+[Measured breakdown and method](../evidence/production-text/recurring/README.md#transaction-scoped-actor-indexing-follow-up).
+The pushed4027d13 full Linux/Windows/Android
+[run37265261204](https://github.com/reddraggone9/tandemlog/actions/runs/37265261204)
+passed. This follow-up has478 local app tests, clean analysis/format and a passing
+bundled GTK recurring completion/edit/Save/Undo workflow; its hosted gates are
+separate. No UI, canonical/cache schema, native payload, main adoption or
+publication changed. Historical recompletion policy remains proposed.
+
+Performance follow-up on the isolated branch: bounded immutable proof/record and
+inspection reuse, verified SQLite ancestor checkpoints, atomic actor deltas and
+shared transaction resolution reduce the original unchanged80 completion from
+306.578ms to22.542ms and rebuild from3365.063ms to197.782ms. Edited80 gives60.469ms
+last completion/932.279ms fresh-engine rebuild; edited320 gives236.885ms/11832.5ms.
+All final workloads retain identical states/canonical bytes and zero-log warm
+open (3.4–4.5ms). Long edited-history rebuild is still a material performance gate,
+not satisfactory UI startup. [Raw method/size/memory evidence](../evidence/production-text/recurring/README.md#bounded-performance-optimization)
+separates these storage probes from the prior hosted release first-frame samples.
+Final changed-source477 app tests and three affected bundled GTK flows pass.
+Native1200×850 Dark screenshots were inspected; completion/child edit/Undo and
+historical guard remain coherent. Full hosted gates for4027d13 passed; the newer follow-up gates are separate. No UI,
+main/published release, signing or canonical/cache schema change is included.
+The [historical mixed-lineage decision](historical-recurring-text-policy.md) remains
+proposed; [Android QA instructions](android-text-preview-qa.md) identify the earlier
+exact intermediate artifact and require final-package verification.
+
+
+Lee approved both completion-observed successor text union and the narrow Yrs
+0.28.0 restoration patch on 2026-10-05. The branch now vendors the reviewed
+67-file official crate with only the approved traversal change, integrity gates,
+exact provenance and MIT notices. Repeated closed-editor Save/Undo no longer
+blocks the tested path. No CRDT main adoption or release has occurred.
+
+The actual adopted library passes 98 frozen native cases, four Rust cases,
+36 tooling checks and four notice checks. The current hosted Windows suite passes
+470 app cases with two platform skips, including the new real-store identity
+contract and exact private-intent recovery regressions,
+including closed-proof and three-writer delayed-head
+regressions. Production-store tests cover offline parent completions,
+child edits/private drafts before late arrivals, original actor ownership,
+selective Undo, post-completion parent isolation, warm zero-log-read reopen and
+exact cold-cache reconstruction. Bundled GTK completion → successor edit → Save
+→ Undo passes; its native library hash matches the adopted build. Independent
+review's pending/strict-command/closed-proof findings were fixed and regressed.
+See [current evidence](../evidence/production-text/recurring/README.md).
+
+Independent native/store probes confirmed that a broader GTK whole-title
+expectation was stale scalar LWW coverage: native `A → BC → DC → Undo = AD`
+retains original character ownership and converges. The original real diagnostic
+is retained; actual ownership and peer-append preservation replace that assertion,
+with awkward whole-title Undo text documented. The corrected bundled GTK
+aggregate passes all three flows; the final focused suite passes 35 cases after
+affected-owner refresh optimization.
+[Hosted rerun37257156550](https://github.com/reddraggone9/tandemlog/actions/runs/37257156550)
+at `fd9f667` passes all targets:472 Linux app tests,470 Windows tests/two skips,
+51 native GTK workflows, frozen native/Rust/tooling gates, three-ABI Android debug
+packaging and installed Windows/Flatpak lifecycle checks.
+The prior Linux50-pass/one-failure result was an obsolete pre-approval recurrence
+guard, now replaced by a native passing historical mixed-lineage guard without
+changing app logic. Exact signed Android installation and new behavior acceptance
+remain required. Mixed historical scalar/new native
+successor initialization stays an explicit compatibility limitation; no rebasing
+or rewriting is attempted. Long-history affected-field replay/startup performance
+and final native workflow coverage remain release gates. A bounded production
+TaskStore/Dart AOT workload measures17.827ms first completion,316.287ms eightieth,
+4.063ms warm open with zero log reads and3406.699ms full81-task cache rebuild.
+States match and canonical bytes are unchanged; these are storage costs, not
+user-perceived startup. This history scaling remains unresolved; see the linked
+evidence and methodology. Hosted ten-task release process-to-loaded-frame samples
+are642ms fresh SQLite and510ms warm, first frames330/264ms and zero warm canonical
+reads. OS page caches are not flushed; these samples neither measure physical
+presentation/first input nor resolve the recurring-lineage scaling problem.
+Existing published
+build45 remains parent/local-owned; its notes now retain one ordinary-width
+comparison. The private checklist prototype stays paused.
+
+Checklist clarification: an unpublished domain/storage prototype was implemented
+on2026-10-04 and saved outside the repository at
+`/workspace/toolchains/checklist-draft-20261004`. It has commands and tests, but no
+current app integration, UI or release. It has not resumed under Lee's new quota
+and sequencing guard; the earlier model-draft reference must not be read as a
+claim that no coding ever began.
 
 ## Prepared preview 2026.10.2-rc.3 build45 — narrower date/time layout
 
@@ -17,9 +129,16 @@ review passes with verified immutable public image bytes. Historical direct-Time
 media describes build43→44 and is excluded from the new build45 change narrative.
 See the [reconciliation evidence](../evidence/date-time-width-reconciliation/README.md).
 
-The branch is prepared for all-platform/signed candidate checks after coordinator
-handoff. It is not signed or published; exact Android affected-flow acceptance
-and all release gates remain pending. Stable 2026.10.1 is unchanged.
+Exact app source `5ac35da50acca69ab196a54312efc8ccef1452da` passes hosted
+push CI37242660649 and signed candidate37243170201. Parent reports exact native
+Android acceptance for APK SHA256
+`625bee0e2fd1b51cd131f10004f696ebeff711e7b61fb0168851e2cda0d1e8aa`,
+including actual Gboard editing. Rapid ADB replacement can move the focused field
+out of view; physical-keyboard replacement remains unverified. Final immutable
+Dark canvases/body/independent review are on main79a3201, with pixel-identical UI
+crops and no binary rebuild. Publication is parent/local-owned and requires a
+fresh quota check. No release was published by this production-text task.
+Stable2026.10.1 is unchanged.
 
 ## Next preview2026.10.2-rc.2 build44 — editor refinement
 

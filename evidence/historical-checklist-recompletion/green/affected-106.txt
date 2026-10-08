@@ -1,0 +1,127 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart
+00:00 +0: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:00 +1: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:00 +2: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:01 +3: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:01 +4: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+HISTORICAL_RECOMPLETION recompletion: Native item Saved ChildItemA
+00:01 +5: /workspace/tandemlog-historical-checklist-fix/test/historical_recompletion_test.dart: historical recompletion leaves completed child unchanged through warm and cold replay
+00:01 +6: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+00:01 +7: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+HISTORICAL_RECOMPLETION Undo: Native item Saved ChildItemA
+00:02 +8: /workspace/tandemlog-historical-checklist-fix/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:03 +9: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+00:03 +10: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+00:03 +11: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+00:03 +12: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+HISTORICAL_RECOMPLETION recompletion cold replay: Native item Saved ChildItemA
+00:03 +13: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo cold replay
+00:04 +14: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo cold replay
+00:04 +15: /workspace/tandemlog-historical-checklist-fix/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo cold replay
+HISTORICAL_RECOMPLETION Undo cold replay: Native item Saved ChildItemA
+00:04 +16: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+00:05 +17: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:05 +18: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:05 +19: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:05 +20: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:05 +21: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:06 +22: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:06 +23: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:06 +24: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:06 +25: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:06 +26: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:06 +27: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+00:06 +28: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+00:06 +29: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: forged order copy rejects before receipt and leaves canonical history untouched
+00:06 +30: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+00:06 +31: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+00:07 +32: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: forged history proof copy rejects before receipt and leaves canonical history untouched
+00:07 +33: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:07 +34: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:07 +35: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:07 +36: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:07 +37: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:07 +38: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:08 +39: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:08 +40: /workspace/tandemlog-historical-checklist-fix/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:08 +41: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+00:08 +42: /workspace/tandemlog-historical-checklist-fix/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+00:08 +43: /workspace/tandemlog-historical-checklist-fix/test/checklist_security_review_test.dart: admissible large checklist copy has bounded decode work and preserves canonical bytes
+00:09 +44: /workspace/tandemlog-historical-checklist-fix/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+00:09 +45: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+00:09 +46: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: cancel unfinished warning prepares nothing and preserves exact canonical bytes
+00:09 +47: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+00:10 +48: /workspace/tandemlog-historical-checklist-fix/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:10 +49: /workspace/tandemlog-historical-checklist-fix/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:10 +50: /workspace/tandemlog-historical-checklist-fix/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:10 +51: /workspace/tandemlog-historical-checklist-fix/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:11 +52: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: incoming notes during warning requires fresh confirmation before receipt
+00:11 +53: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: incoming order during warning requires fresh confirmation before receipt
+00:11 +54: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: cancel renewed warning keeps peer changes but writes no local completion
+00:11 +55: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: incoming checks clearing all unfinished work need no second warning
+00:11 +56: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: failed native admission discards rejected replay authority and recovers, cancellation fault=false
+00:11 +57: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+00:11 +58: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+00:11 +59: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+00:11 +60: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+00:12 +61: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+00:12 +62: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+00:12 +63: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:12 +64: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:12 +65: /workspace/tandemlog-historical-checklist-fix/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:12 +66: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text shared originals remain bounded without evicting the latest edited proof
+00:12 +67: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text shared originals remain bounded without evicting the latest edited proof
+00:12 +68: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text offline title and notes union preserves acknowledged child prefix and duplicates
+00:12 +69: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text later parent edits flow only through another completion and Undo retains contributions
+00:12 +70: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text missing proof is pending; known wrong context or state hash is invalid
+00:12 +71: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text actual foreign struct author is rejected
+00:12 +72: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text reusing another writer’s actor claim is rejected
+00:12 +73: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text grandchild prefix excludes a late ancestor completion
+00:12 +74: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text missing current grant waits but a closed incomplete proof rejects
+00:12 +75: /workspace/tandemlog-historical-checklist-fix/test/recurring_text_test.dart: actual native recurring inherited text union visible overflow rejects without modifying canonical inputs
+00:13 +76: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+00:13 +77: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:13 +78: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:13 +79: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:13 +80: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: tags protects successor from cleanup
+00:13 +81: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:14 +82: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:14 +83: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:14 +84: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:14 +85: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: move Undo retains later relative move and replays after known-cache upgrade
+00:14 +86: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+00:14 +87: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: Undo failure before append confirms only durable prefix and retry is idempotent
+00:14 +88: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: Undo failure before append confirms only durable prefix and retry is idempotent
+00:14 +89: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:14 +90: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:15 +91: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: unresolved write blocks new payload until exact delayed record appears
+00:15 +92: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:15 +93: /workspace/tandemlog-historical-checklist-fix/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:15 +94: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+00:15 +95: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+00:15 +96: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+00:15 +97: /workspace/tandemlog-historical-checklist-fix/test/undo_history_test.dart: failed receipt ID reuse confirms only exact successful retry bytes
+00:15 +98: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:15 +99: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:15 +100: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+00:16 +101: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: delayed valid cleanup suppresses successor once its target arrives
+00:16 +102: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:16 +103: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: generic recurring Undo rejects transactionally when completion arrives late
+00:16 +104: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:16 +105: /workspace/tandemlog-historical-checklist-fix/test/recurring_completion_undo_test.dart: pure seed selection is independent of arrival order and preserves historical Undo
+00:16 +106: All tests passed!

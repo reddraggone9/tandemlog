@@ -1,0 +1,64 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/integration_test/task_flow_test.dart
+Building Linux application...                                   
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: session Undo survives notices, protects drafts and preserves newer synced edits
+TANDEMLOG_FIRST_FRAME_MS=350
+TANDEMLOG_PHASE identity_lock=14
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=41
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=908 FILES_READ=1
+TANDEMLOG_NATIVE_UNDO_REGISTRATION_ERROR=Bad state: Prepared Undo awaits its receipt or cancellation
+TANDEMLOG_SESSION_SAVE_NOTICE_ROWS=[{"id":"598f8e71-1a55-4c0b-85a7-59c9734c904f","kind":"user","name":"Alexandria Example Household","order":"1791159674443295000:ebd76606-6e0c-4cb5-88f8-c0f10f2f0081","inbox":false,"schedule":{"startDate":null,"scheduledDate":null,"dueDate":null,"startTime":null,"scheduledTime":null,"dueTime":null,"timeZone":null,"recurrence":null,"dueMinDays":null,"dueMaxDays":null},"tags":[],"deleted":false,"tagRefs":{},"completed":false,"completedAt":null},{"id":"16a611d0-1e72-43f4-9bc8-5166083b7791","kind":"task","assignee":"598f8e71-1a55-4c0b-85a7-59c9734c904f","description":"Keep reference notes","schedule":{"dueDate":"2030-05-01"},"title":"Local pending review","order":"1791159674569523000:ebd76606-6e0c-4cb5-88f8-c0f10f2f0081","inbox":false,"tags":[],"deleted":false,"tagRefs":{},"completed":false,"completedAt":null},{"id":"5f04d867-0e4c-4d9d-9f7e-f6413427adae","kind":"task","assignee":"598f8e71-1a55-4c0b-85a7-59c9734c904f","description":"","title":"Burst completion reference","order":"1791159695216476000:ebd76606-6e0c-4cb5-88f8-c0f10f2f0081","inbox":true,"schedule":{"startDate":null,"scheduledDate":null,"dueDate":null,"startTime":null,"scheduledTime":null,"dueTime":null,"timeZone":null,"recurrence":null,"dueMinDays":null,"dueMaxDays":null},"tags":[],"deleted":false,"tagRefs":{},"completed":false,"completedAt":null}]
+TANDEMLOG_SESSION_SAVE_NOTICE_UI=["Tasks","2 open","Filter","Alexandria Example Household","What needs doing?","One task per line","Add","Enter to add · Shift+Enter for another task","Inbox","Burst completion reference","Wednesday · 2030-05-01","Local pending review","Keep reference notes","Saved. Undo is unavailable for this change."]
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _TypeWidgetFinder:<Found 1 widget with type "SnackBar": [
+            SnackBar-[#52bcb](dependencies: [InheritedCupertinoTheme, MediaQuery, _InheritedTheme,
+_LocalizationsScope-[GlobalKey#0c754]], state: _SnackBarState#a8ebe),
+          ]>
+   Which: means one was found but none were expected
+Ordinary edits are quiet.
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure>.editTitle (file:///workspace/tandemlog/integration_test/task_flow_test.dart:3403:11)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///workspace/tandemlog/integration_test/task_flow_test.dart:3608:7)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog/integration_test/task_flow_test.dart line 3403
+The test description was:
+  session Undo survives notices, protects drafts and preserves newer synced edits
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:08 +0 -1: session Undo survives notices, protects drafts and preserves newer synced edits [E]
+  Test failed. See exception logs above.
+  The test description was: session Undo survives notices, protects drafts and preserves newer synced edits
+  
+01:08 +0 -1: (tearDownAll)
+01:08 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/integration_test/task_flow_test.dart: session Undo survives notices, protects drafts and preserves newer synced edits

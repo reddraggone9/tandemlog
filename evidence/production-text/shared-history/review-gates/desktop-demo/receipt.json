@@ -1,0 +1,22 @@
+{
+  "application_source": "f952744c4e8623df49a90e575aa7293cfa2eb6ff",
+  "platform": "Linux native Flutter GTK Release under Xvfb; synthetic only",
+  "viewport": "1280x720",
+  "theme": "dark",
+  "text_scale": 1.0,
+  "inputs": "Real xdotool pointer movement and click; pointer visually verified in extracted video frame",
+  "duration_seconds": 7.133333,
+  "canonical_existing_files_unchanged": true,
+  "new_record_types": [
+    "task.completedKeepingSuccessor"
+  ],
+  "files": {
+    "before.png": "b992e36798c6769df18c93e9a55bc2820fe7d965f45792f11dff4fa9d616f3c9",
+    "app.txt": "fb2404f965423cf18403b916816ff0ea6b05572ca16fc1cd34478418acb0685b",
+    "historical-recompletion-linux-release.mp4": "7e38d225a1e398a4eaa040e245e4d4ab6bda9e83d2b0b15f4d37ab015092675f",
+    "pointer-frame.png": "842117f71a60f6378a47ca65ff829dc4e0aef745f54e39a301ee1b7e5c24138c",
+    "after.png": "0ac5f2604f556f9cae4599e3d08799929c969d95d506d034920734ad8c9f657f"
+  },
+  "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "application_sha256": "61fdf1831ea3df8281985ece0198634627134963808a3a61b0077cf1db86f51b"
+}

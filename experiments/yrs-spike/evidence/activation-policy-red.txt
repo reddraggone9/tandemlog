@@ -1,0 +1,210 @@
+00:00 +0: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart
+experiments/yrs-spike/activation_lab/test/activation_test.dart:12:8: Error: Error when reading 'experiments/yrs-spike/activation_lab/lib/activation.dart': No such file or directory
+import '../lib/activation.dart';
+       ^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:13:8: Error: Error when reading 'experiments/yrs-spike/activation_lab/lib/flutter_draft.dart': No such file or directory
+import '../lib/flutter_draft.dart';
+       ^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:65:1: Error: Type 'ActivationLab' not found.
+ActivationLab replica(
+^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:68:3: Error: Type 'LabConfig' not found.
+  LabConfig? config = cfg,
+  ^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:83:3: Error: Type 'ActivationLab' not found.
+  ActivationLab x,
+  ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:84:3: Error: Type 'ActivationLab' not found.
+  ActivationLab y,
+  ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:99:3: Error: Type 'ActivationLab' not found.
+  ActivationLab lab,
+  ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:20:13: Error: Method not found: 'LabConfig'.
+const cfg = LabConfig(
+            ^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:25:15: Error: 'ActivationLab' isn't a type.
+final labs = <ActivationLab>[];
+              ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:68:3: Error: 'LabConfig' isn't a type.
+  LabConfig? config = cfg,
+  ^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:71:15: Error: Method not found: 'ActivationLab'.
+  final lab = ActivationLab(
+              ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:99:3: Error: 'ActivationLab' isn't a type.
+  ActivationLab lab,
+  ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:106:16: Error: Method not found: 'DraftValue'.
+  draft.change(DraftValue(text));
+               ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:123:60: Error: Undefined name 'ActivationLab'.
+String altered(String raw, Map<String, dynamic> fields) => ActivationLab.seal(
+                                                           ^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:334:22: Error: Couldn't find constructor 'DraftValue'.
+        value: const DraftValue('Private old draft'),
+                     ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:368:23: Error: Couldn't find constructor 'LabConfig'.
+        config: const LabConfig(
+                      ^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:420:28: Error: Couldn't find constructor 'DraftValue'.
+        draft.change(const DraftValue('Buy oats and fruit'));
+                           ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:650:22: Error: Couldn't find constructor 'DraftValue'.
+        value: const DraftValue(
+                     ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:658:26: Error: Method not found: 'LabDraftController'.
+      final controller = LabDraftController(draft);
+                         ^^^^^^^^^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:685:20: Error: Couldn't find constructor 'DraftValue'.
+      value: const DraftValue('Buy oats'),
+                   ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:699:22: Error: Couldn't find constructor 'DraftValue'.
+        value: const DraftValue('Preserved old draft'),
+                     ^^^^^^^^^^
+experiments/yrs-spike/activation_lab/test/activation_test.dart:702:26: Error: Method not found: 'LabDraftController'.
+      final controller = LabDraftController(draft);
+                         ^^^^^^^^^^^^^^^^^^
+00:00 +0: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: prepare returns repeatable bytes without mutating or consuming a draft
+00:00 +0 -2: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart [E]
+  Failed to load "/workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart":
+  Compilation failed for testPath=/workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: experiments/yrs-spike/activation_lab/test/activation_test.dart:12:8: Error: Error when reading 'experiments/yrs-spike/activation_lab/lib/activation.dart': No such file or directory
+  import '../lib/activation.dart';
+         ^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:13:8: Error: Error when reading 'experiments/yrs-spike/activation_lab/lib/flutter_draft.dart': No such file or directory
+  import '../lib/flutter_draft.dart';
+         ^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:65:1: Error: Type 'ActivationLab' not found.
+  ActivationLab replica(
+  ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:68:3: Error: Type 'LabConfig' not found.
+    LabConfig? config = cfg,
+    ^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:83:3: Error: Type 'ActivationLab' not found.
+    ActivationLab x,
+    ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:84:3: Error: Type 'ActivationLab' not found.
+    ActivationLab y,
+    ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:99:3: Error: Type 'ActivationLab' not found.
+    ActivationLab lab,
+    ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:20:13: Error: Method not found: 'LabConfig'.
+  const cfg = LabConfig(
+              ^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:25:15: Error: 'ActivationLab' isn't a type.
+  final labs = <ActivationLab>[];
+                ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:68:3: Error: 'LabConfig' isn't a type.
+    LabConfig? config = cfg,
+    ^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:71:15: Error: Method not found: 'ActivationLab'.
+    final lab = ActivationLab(
+                ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:99:3: Error: 'ActivationLab' isn't a type.
+    ActivationLab lab,
+    ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:106:16: Error: Method not found: 'DraftValue'.
+    draft.change(DraftValue(text));
+                 ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:123:60: Error: Undefined name 'ActivationLab'.
+  String altered(String raw, Map<String, dynamic> fields) => ActivationLab.seal(
+                                                             ^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:334:22: Error: Couldn't find constructor 'DraftValue'.
+          value: const DraftValue('Private old draft'),
+                       ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:368:23: Error: Couldn't find constructor 'LabConfig'.
+          config: const LabConfig(
+                        ^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:420:28: Error: Couldn't find constructor 'DraftValue'.
+          draft.change(const DraftValue('Buy oats and fruit'));
+                             ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:650:22: Error: Couldn't find constructor 'DraftValue'.
+          value: const DraftValue(
+                       ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:658:26: Error: Method not found: 'LabDraftController'.
+        final controller = LabDraftController(draft);
+                           ^^^^^^^^^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:685:20: Error: Couldn't find constructor 'DraftValue'.
+        value: const DraftValue('Buy oats'),
+                     ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:699:22: Error: Couldn't find constructor 'DraftValue'.
+          value: const DraftValue('Preserved old draft'),
+                       ^^^^^^^^^^
+  experiments/yrs-spike/activation_lab/test/activation_test.dart:702:26: Error: Method not found: 'LabDraftController'.
+        final controller = LabDraftController(draft);
+                           ^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -2: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: prepare returns repeatable bytes without mutating or consuming a draft [E]
+  Bad state: unknown prototype command
+  experiments/yrs-spike/editor_lab/lib/native_bridge.dart 62:9              NativeBridge.call
+  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 22:28  main.<fn>
+  
+00:00 +0 -3: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart [E]
+  Error: The Dart compiler exited unexpectedly.
+  package:flutter_tools/src/base/common.dart 34:3  throwToolExit
+  package:flutter_tools/src/compile.dart 1024:11   DefaultResidentCompiler._compile.<fn>
+  dart:async/zone_root.dart 48:47                  _rootRunUnary
+  dart:async/zone.dart 816:35                      _CustomZone.runUnary
+  dart:async/future_impl.dart 948:45               Future._propagateToListeners.handleValueCallback
+  dart:async/future_impl.dart 977:13               Future._propagateToListeners
+  dart:async/future_impl.dart 862:9                Future._propagateToListeners
+  dart:async/future_impl.dart 720:5                Future._completeWithValue
+  dart:async/future_impl.dart 804:7                Future._asyncCompleteWithValue.<fn>
+  dart:async/zone_root.dart 35:13                  _rootRun
+  dart:async/zone.dart 810:35                      _CustomZone.run
+  dart:async/zone.dart 702:7                       _CustomZone.runGuarded
+  dart:async/zone.dart 743:23                      _CustomZone.bindCallbackGuarded.<fn>
+  dart:async/schedule_microtask.dart 40:35         _microtaskLoop
+  dart:async/schedule_microtask.dart 49:5          _startMicrotaskLoop
+  dart:isolate-patch/isolate_patch.dart 127:13     _runPendingImmediateCallback
+  dart:isolate-patch/isolate_patch.dart 193:5      _RawReceivePort._handleMessage
+  
+00:00 +0 -3: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: composing preparation rejects atomically and preserves the draft
+00:00 +0 -4: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: composing preparation rejects atomically and preserves the draft [E]
+  Expected: throws <Instance of 'StateError'> with `reason`: contains 'composition'
+    Actual: <Closure: () => Map<String, dynamic>>
+     Which: threw StateError:<Bad state: unknown prototype command>
+            stack experiments/yrs-spike/editor_lab/lib/native_bridge.dart 62:9              NativeBridge.call
+                  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 40:20  main.<fn>.<fn>
+                  package:matcher                                                           expect
+                  package:flutter_test/src/widget_tester.dart 473:18                        expect
+                  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 39:5   main.<fn>
+                  
+            which has `reason` with value 'unknown prototype command' which does not contain 'composition'
+  
+  package:matcher                                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18                       expect
+  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 39:5  main.<fn>
+  
+00:00 +0 -4: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: wrong-source preparation rejects before changing either document
+00:00 +0 -5: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: wrong-source preparation rejects before changing either document [E]
+  Expected: throws <Instance of 'StateError'> with `reason`: contains 'source'
+    Actual: <Closure: () => Map<String, dynamic>>
+     Which: threw StateError:<Bad state: unknown prototype command>
+            stack experiments/yrs-spike/editor_lab/lib/native_bridge.dart 62:9              NativeBridge.call
+                  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 56:20  main.<fn>.<fn>
+                  package:matcher                                                           expect
+                  package:flutter_test/src/widget_tester.dart 473:18                        expect
+                  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 55:5   main.<fn>
+                  
+            which has `reason` with value 'unknown prototype command' which does not contain 'source'
+  
+  package:matcher                                                          expect
+  package:flutter_test/src/widget_tester.dart 473:18                       expect
+  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 55:5  main.<fn>
+  
+00:00 +0 -5: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: confirmed prepared local bytes retain selective native Undo
+00:00 +0 -6: /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: confirmed prepared local bytes retain selective native Undo [E]
+  Bad state: unknown prototype command
+  experiments/yrs-spike/editor_lab/lib/native_bridge.dart 62:9              NativeBridge.call
+  experiments/yrs-spike/activation_lab/test/native_prepare_test.dart 69:27  main.<fn>
+  
+00:00 +0 -6: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/activation_test.dart
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: composing preparation rejects atomically and preserves the draft
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: confirmed prepared local bytes retain selective native Undo
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_prepare_test.dart
+  ... and 2 more

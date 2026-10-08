@@ -1,0 +1,11 @@
+00:00 +0: loading /workspace/tandemlog/test/text_store_test.dart
+00:00 +0: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:00 +1: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:00 +2: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:00 +3: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:00 +4: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:00 +5: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:01 +6: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=true
+00:01 +7: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:01 +8: actual native TaskStore misnamed private native intent rejects recovery before append and retains evidence
+00:01 +9: All tests passed!
