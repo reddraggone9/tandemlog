@@ -1,0 +1,582 @@
+﻿2026-10-08T16:01:28.3340941Z Current runner version: '2.337.0'
+2026-10-08T16:01:28.3368482Z ##[group]Runner Image Provisioner
+2026-10-08T16:01:28.3369275Z Hosted Compute Agent
+2026-10-08T16:01:28.3369827Z Version: 20261002.596
+2026-10-08T16:01:28.3370530Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-08T16:01:28.3371195Z Build Date: 2026-10-02T22:28:27Z
+2026-10-08T16:01:28.3371820Z Worker ID: {4982b2d6-73db-4812-aa4e-5e913699f86c}
+2026-10-08T16:01:28.3372503Z Region: eastus
+2026-10-08T16:01:28.3372981Z Cloud: Azure
+2026-10-08T16:01:28.3373454Z ##[endgroup]
+2026-10-08T16:01:28.3374842Z ##[group]Operating System
+2026-10-08T16:01:28.3375462Z Microsoft Windows Server 2022
+2026-10-08T16:01:28.3376040Z 10.0.20348
+2026-10-08T16:01:28.3376507Z Datacenter
+2026-10-08T16:01:28.3376967Z ##[endgroup]
+2026-10-08T16:01:28.3377467Z ##[group]Runner Image
+2026-10-08T16:01:28.3378007Z Image: windows-2022
+2026-10-08T16:01:28.3378516Z Version: 20261004.326.1
+2026-10-08T16:01:28.3379908Z Included Software: https://github.com/actions/runner-images/blob/win22/20261004.326/images/windows/Windows2022-Readme.md
+2026-10-08T16:01:28.3381361Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261004.326
+2026-10-08T16:01:28.3382261Z ##[endgroup]
+2026-10-08T16:01:28.3383269Z ##[group]GITHUB_TOKEN Permissions
+2026-10-08T16:01:28.3385109Z Contents: read
+2026-10-08T16:01:28.3385660Z Metadata: read
+2026-10-08T16:01:28.3386196Z ##[endgroup]
+2026-10-08T16:01:28.3388401Z Secret source: Actions
+2026-10-08T16:01:28.3389276Z Cache mode: write
+2026-10-08T16:01:28.3389945Z Prepare workflow directory
+2026-10-08T16:01:28.3750135Z Prepare all required actions
+2026-10-08T16:01:28.3796383Z Getting action download info
+2026-10-08T16:01:28.5393876Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-08T16:01:28.6490715Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-10-08T16:01:28.9049061Z Uses: reddraggone9/tandemlog/.github/workflows/windows-app-flows.yml@refs/heads/test/historical-checklist-windows-native (bcbcece5dc34d44dbb7453fa54c0882a3dbacd10)
+2026-10-08T16:01:28.9054467Z ##[group] Inputs
+2026-10-08T16:01:28.9055337Z   windows_app_flows: true
+2026-10-08T16:01:28.9055839Z ##[endgroup]
+2026-10-08T16:01:28.9056312Z Complete job name: windows_app_flows / windows
+2026-10-08T16:01:29.0934863Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-08T16:01:29.0936369Z with:
+2026-10-08T16:01:29.0936900Z   repository: reddraggone9/tandemlog
+2026-10-08T16:01:29.0941771Z   token: ***
+2026-10-08T16:01:29.0942279Z   ssh-strict: true
+2026-10-08T16:01:29.0942791Z   ssh-user: git
+2026-10-08T16:01:29.0943250Z   persist-credentials: true
+2026-10-08T16:01:29.0943708Z   clean: true
+2026-10-08T16:01:29.0944121Z   sparse-checkout-cone-mode: true
+2026-10-08T16:01:29.0944616Z   fetch-depth: 1
+2026-10-08T16:01:29.0945040Z   fetch-tags: false
+2026-10-08T16:01:29.0945451Z   show-progress: true
+2026-10-08T16:01:29.0945868Z   lfs: false
+2026-10-08T16:01:29.0946236Z   submodules: false
+2026-10-08T16:01:29.0946660Z   set-safe-directory: true
+2026-10-08T16:01:29.0947139Z   allow-unsafe-pr-checkout: false
+2026-10-08T16:01:29.0948026Z ##[endgroup]
+2026-10-08T16:01:29.2370261Z Syncing repository: reddraggone9/tandemlog
+2026-10-08T16:01:29.2372193Z ##[group]Getting Git version info
+2026-10-08T16:01:29.2372835Z Working directory is 'D:\a\tandemlog\tandemlog'
+2026-10-08T16:01:29.3730977Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-08T16:01:29.8191897Z git version 2.56.0.windows.1
+2026-10-08T16:01:29.8242905Z ##[endgroup]
+2026-10-08T16:01:29.8259245Z Temporarily overriding HOME='D:\a\_temp\9f0f5816-dc47-4512-b61f-6cc6f9d8fd27' before making global git config changes
+2026-10-08T16:01:29.8260711Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T16:01:29.8274446Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tandemlog\tandemlog
+2026-10-08T16:01:29.8893465Z Deleting the contents of 'D:\a\tandemlog\tandemlog'
+2026-10-08T16:01:29.8897617Z ##[group]Determining repository object format
+2026-10-08T16:01:29.8899778Z ##[endgroup]
+2026-10-08T16:01:29.8901764Z ##[group]Initializing the repository
+2026-10-08T16:01:29.8910244Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\tandemlog\tandemlog
+2026-10-08T16:01:29.9951035Z Initialized empty Git repository in D:/a/tandemlog/tandemlog/.git/
+2026-10-08T16:01:29.9991721Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/reddraggone9/tandemlog
+2026-10-08T16:01:30.0641207Z ##[endgroup]
+2026-10-08T16:01:30.0642547Z ##[group]Disabling automatic garbage collection
+2026-10-08T16:01:30.0650211Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-08T16:01:30.0945331Z ##[endgroup]
+2026-10-08T16:01:30.0947567Z ##[group]Setting up auth
+2026-10-08T16:01:30.0949228Z Removing SSH command configuration
+2026-10-08T16:01:30.0958100Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T16:01:30.1250295Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-08T16:01:31.7388561Z Removing HTTP extra header
+2026-10-08T16:01:31.7397734Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T16:01:31.7692042Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-08T16:01:32.2749142Z Removing includeIf entries pointing to credentials config files
+2026-10-08T16:01:32.2762809Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T16:01:32.3080132Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-08T16:01:32.8082940Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-08T16:01:32.8389937Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tandemlog/tandemlog/.git.path D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:01:32.8686309Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:01:32.9239738Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:01:32.9571013Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:01:32.9928380Z ##[endgroup]
+2026-10-08T16:01:32.9929216Z ##[group]Fetching the repository
+2026-10-08T16:01:32.9940325Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +bcbcece5dc34d44dbb7453fa54c0882a3dbacd10:refs/remotes/origin/test/historical-checklist-windows-native
+2026-10-08T16:01:34.8411368Z From https://github.com/reddraggone9/tandemlog
+2026-10-08T16:01:34.8413254Z  * [new ref]         bcbcece5dc34d44dbb7453fa54c0882a3dbacd10 -> origin/test/historical-checklist-windows-native
+2026-10-08T16:01:34.8456708Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/test/historical-checklist-windows-native
+2026-10-08T16:01:34.8822972Z   origin/test/historical-checklist-windows-native
+2026-10-08T16:01:34.8860357Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/test/historical-checklist-windows-native
+2026-10-08T16:01:34.9212564Z bcbcece5dc34d44dbb7453fa54c0882a3dbacd10
+2026-10-08T16:01:34.9241013Z ##[endgroup]
+2026-10-08T16:01:34.9241464Z ##[group]Determining the checkout info
+2026-10-08T16:01:34.9242182Z ##[endgroup]
+2026-10-08T16:01:34.9251758Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-08T16:01:34.9698391Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-08T16:01:34.9990971Z ##[group]Checking out the ref
+2026-10-08T16:01:34.9999593Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B test/historical-checklist-windows-native refs/remotes/origin/test/historical-checklist-windows-native
+2026-10-08T16:01:35.3631357Z Switched to a new branch 'test/historical-checklist-windows-native'
+2026-10-08T16:01:35.3652798Z branch 'test/historical-checklist-windows-native' set up to track 'origin/test/historical-checklist-windows-native'.
+2026-10-08T16:01:35.3698584Z ##[endgroup]
+2026-10-08T16:01:35.4109053Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-08T16:01:35.4378145Z bcbcece5dc34d44dbb7453fa54c0882a3dbacd10
+2026-10-08T16:01:35.4763180Z Prepare all required actions
+2026-10-08T16:01:35.4805339Z ##[group]Run ./.github/actions/setup-flutter
+2026-10-08T16:01:35.4805652Z ##[endgroup]
+2026-10-08T16:01:35.4860465Z ##[start-action display=Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter";id=__self.__run]
+2026-10-08T16:01:35.4992720Z ##[group]Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+2026-10-08T16:01:35.4993536Z [36;1mgit clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"[0m
+2026-10-08T16:01:35.4994295Z [36;1mtest "$(git -C "$RUNNER_TEMP/flutter" rev-parse HEAD)" = 6a19cca56475dbfba1478ee68d7bd0c2ef891da1[0m
+2026-10-08T16:01:35.4994837Z [36;1mecho "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"[0m
+2026-10-08T16:01:35.5012090Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T16:01:35.5012505Z ##[endgroup]
+2026-10-08T16:01:35.7272047Z Cloning into 'D:\a\_temp/flutter'...
+2026-10-08T16:01:37.0657810Z Note: switching to '6a19cca56475dbfba1478ee68d7bd0c2ef891da1'.
+2026-10-08T16:01:37.0660198Z 
+2026-10-08T16:01:37.0660987Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-08T16:01:37.0661860Z changes and commit them, and you can discard any commits you make in this
+2026-10-08T16:01:37.0663224Z state without impacting any branches by switching back to a branch.
+2026-10-08T16:01:37.0663753Z 
+2026-10-08T16:01:37.0664108Z If you want to create a new branch to retain commits you create, you may
+2026-10-08T16:01:37.0664927Z do so (now or later) by using -c with the switch command. Example:
+2026-10-08T16:01:37.0665393Z 
+2026-10-08T16:01:37.0665660Z   git switch -c <new-branch-name>
+2026-10-08T16:01:37.0665947Z 
+2026-10-08T16:01:37.0666111Z Or undo this operation with:
+2026-10-08T16:01:37.0666367Z 
+2026-10-08T16:01:37.0666457Z   git switch -
+2026-10-08T16:01:37.0666604Z 
+2026-10-08T16:01:37.0666893Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-08T16:01:37.0667311Z 
+2026-10-08T16:01:38.1005323Z Updating files:  29% (4698/16074)
+2026-10-08T16:01:38.1277287Z Updating files:  30% (4823/16074)
+2026-10-08T16:01:38.1596818Z Updating files:  31% (4983/16074)
+2026-10-08T16:01:38.1892622Z Updating files:  32% (5144/16074)
+2026-10-08T16:01:38.2234880Z Updating files:  33% (5305/16074)
+2026-10-08T16:01:38.2560633Z Updating files:  34% (5466/16074)
+2026-10-08T16:01:38.2856884Z Updating files:  35% (5626/16074)
+2026-10-08T16:01:38.3156375Z Updating files:  36% (5787/16074)
+2026-10-08T16:01:38.3477587Z Updating files:  37% (5948/16074)
+2026-10-08T16:01:38.3828394Z Updating files:  38% (6109/16074)
+2026-10-08T16:01:38.4159424Z Updating files:  39% (6269/16074)
+2026-10-08T16:01:38.4710824Z Updating files:  40% (6430/16074)
+2026-10-08T16:01:38.5158972Z Updating files:  41% (6591/16074)
+2026-10-08T16:01:38.5441898Z Updating files:  42% (6752/16074)
+2026-10-08T16:01:38.5782763Z Updating files:  43% (6912/16074)
+2026-10-08T16:01:38.6184447Z Updating files:  44% (7073/16074)
+2026-10-08T16:01:38.6557182Z Updating files:  45% (7234/16074)
+2026-10-08T16:01:38.6988856Z Updating files:  46% (7395/16074)
+2026-10-08T16:01:38.7297820Z Updating files:  47% (7555/16074)
+2026-10-08T16:01:38.7651042Z Updating files:  48% (7716/16074)
+2026-10-08T16:01:38.8006393Z Updating files:  49% (7877/16074)
+2026-10-08T16:01:38.8349066Z Updating files:  50% (8037/16074)
+2026-10-08T16:01:38.8709744Z Updating files:  51% (8198/16074)
+2026-10-08T16:01:38.9017063Z Updating files:  52% (8359/16074)
+2026-10-08T16:01:38.9332961Z Updating files:  53% (8520/16074)
+2026-10-08T16:01:38.9657942Z Updating files:  54% (8680/16074)
+2026-10-08T16:01:39.0002009Z Updating files:  55% (8841/16074)
+2026-10-08T16:01:39.0335479Z Updating files:  56% (9002/16074)
+2026-10-08T16:01:39.0692034Z Updating files:  57% (9163/16074)
+2026-10-08T16:01:39.0811318Z Updating files:  58% (9323/16074)
+2026-10-08T16:01:39.1090120Z Updating files:  58% (9361/16074)
+2026-10-08T16:01:39.1417195Z Updating files:  59% (9484/16074)
+2026-10-08T16:01:39.1746588Z Updating files:  60% (9645/16074)
+2026-10-08T16:01:39.2044489Z Updating files:  61% (9806/16074)
+2026-10-08T16:01:39.2741934Z Updating files:  62% (9966/16074)
+2026-10-08T16:01:39.3091567Z Updating files:  63% (10127/16074)
+2026-10-08T16:01:39.3417043Z Updating files:  64% (10288/16074)
+2026-10-08T16:01:39.3774087Z Updating files:  65% (10449/16074)
+2026-10-08T16:01:39.4102803Z Updating files:  66% (10609/16074)
+2026-10-08T16:01:39.4432514Z Updating files:  67% (10770/16074)
+2026-10-08T16:01:39.4775316Z Updating files:  68% (10931/16074)
+2026-10-08T16:01:39.5085613Z Updating files:  69% (11092/16074)
+2026-10-08T16:01:39.6028057Z Updating files:  70% (11252/16074)
+2026-10-08T16:01:39.6344880Z Updating files:  71% (11413/16074)
+2026-10-08T16:01:39.6640179Z Updating files:  72% (11574/16074)
+2026-10-08T16:01:39.6933811Z Updating files:  73% (11735/16074)
+2026-10-08T16:01:39.7230498Z Updating files:  74% (11895/16074)
+2026-10-08T16:01:39.7659119Z Updating files:  75% (12056/16074)
+2026-10-08T16:01:39.8711740Z Updating files:  76% (12217/16074)
+2026-10-08T16:01:39.9227225Z Updating files:  77% (12377/16074)
+2026-10-08T16:01:39.9775437Z Updating files:  78% (12538/16074)
+2026-10-08T16:01:40.0300033Z Updating files:  79% (12699/16074)
+2026-10-08T16:01:40.0744916Z Updating files:  80% (12860/16074)
+2026-10-08T16:01:40.0828162Z Updating files:  81% (13020/16074)
+2026-10-08T16:01:40.1324462Z Updating files:  81% (13040/16074)
+2026-10-08T16:01:40.1682473Z Updating files:  82% (13181/16074)
+2026-10-08T16:01:40.2105670Z Updating files:  83% (13342/16074)
+2026-10-08T16:01:40.2564008Z Updating files:  84% (13503/16074)
+2026-10-08T16:01:40.2929119Z Updating files:  85% (13663/16074)
+2026-10-08T16:01:40.3236302Z Updating files:  86% (13824/16074)
+2026-10-08T16:01:40.3603503Z Updating files:  87% (13985/16074)
+2026-10-08T16:01:40.3839413Z Updating files:  88% (14146/16074)
+2026-10-08T16:01:40.4200079Z Updating files:  89% (14306/16074)
+2026-10-08T16:01:40.4521757Z Updating files:  90% (14467/16074)
+2026-10-08T16:01:40.4960646Z Updating files:  91% (14628/16074)
+2026-10-08T16:01:40.5408895Z Updating files:  92% (14789/16074)
+2026-10-08T16:01:40.5733298Z Updating files:  93% (14949/16074)
+2026-10-08T16:01:40.6042160Z Updating files:  94% (15110/16074)
+2026-10-08T16:01:40.6430247Z Updating files:  95% (15271/16074)
+2026-10-08T16:01:40.6862817Z Updating files:  96% (15432/16074)
+2026-10-08T16:01:40.7271124Z Updating files:  97% (15592/16074)
+2026-10-08T16:01:40.7595970Z Updating files:  98% (15753/16074)
+2026-10-08T16:01:40.7904797Z Updating files:  99% (15914/16074)
+2026-10-08T16:01:40.7905332Z Updating files: 100% (16074/16074)
+2026-10-08T16:01:40.7905599Z Updating files: 100% (16074/16074), done.
+2026-10-08T16:01:40.8728939Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=5386]
+2026-10-08T16:01:40.8733237Z ##[start-action display=Run flutter config --no-analytics;id=__self.__run_2]
+2026-10-08T16:01:40.8839099Z ##[group]Run flutter config --no-analytics
+2026-10-08T16:01:40.8839417Z [36;1mflutter config --no-analytics[0m
+2026-10-08T16:01:40.8839675Z [36;1mflutter --version[0m
+2026-10-08T16:01:40.8854696Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T16:01:40.8855097Z ##[endgroup]
+2026-10-08T16:01:42.2181674Z Checking Dart SDK version... 
+2026-10-08T16:01:42.2196419Z Downloading Dart SDK from Flutter engine ... 
+2026-10-08T16:01:43.7601127Z Expanding downloaded archive with 7z...
+2026-10-08T16:01:48.1808094Z Building flutter tool... 
+2026-10-08T16:01:48.1840945Z Running pub upgrade... 
+2026-10-08T16:01:48.2386158Z Resolving dependencies...
+2026-10-08T16:01:48.7239718Z Downloading packages...
+2026-10-08T16:02:03.4939697Z Got dependencies.
+2026-10-08T16:02:20.7195671Z Analytics reporting disabled.
+2026-10-08T16:02:20.7198408Z 
+2026-10-08T16:02:20.7200110Z You may need to restart any open editors for them to read new settings.
+2026-10-08T16:02:21.5367201Z Flutter 3.47.5 • channel [user-branch] • https://github.com/flutter/flutter.git
+2026-10-08T16:02:21.5368814Z Framework • revision 6a19cca564 (3 weeks ago) • 2026-09-17 14:13:22 -0400
+2026-10-08T16:02:21.5370413Z Engine • hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) • 2026-09-16 18:35:09.000Z
+2026-10-08T16:02:21.5371727Z Tools • Dart 3.13.4 • DevTools 2.60.0
+2026-10-08T16:02:21.5527228Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=40678]
+2026-10-08T16:02:21.5689783Z Prepare all required actions
+2026-10-08T16:02:21.5736435Z ##[group]Run ./.github/actions/setup-text-engine
+2026-10-08T16:02:21.5736735Z with:
+2026-10-08T16:02:21.5736914Z   platform: windows
+2026-10-08T16:02:21.5737101Z ##[endgroup]
+2026-10-08T16:02:21.5741115Z ##[start-action display=Select preinstalled Windows Python 3.11;id=__self_2.__run]
+2026-10-08T16:02:21.5850262Z ##[group]Run py -3.11 -c "import pathlib, sys; print(pathlib.Path(sys.executable).parent)" >> $env:GITHUB_PATH
+2026-10-08T16:02:21.5851020Z [36;1mpy -3.11 -c "import pathlib, sys; print(pathlib.Path(sys.executable).parent)" >> $env:GITHUB_PATH[0m
+2026-10-08T16:02:21.5890564Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T16:02:21.5890919Z ##[endgroup]
+2026-10-08T16:02:23.2215802Z ##[end-action id=__self_2.__run;outcome=success;conclusion=success;duration_ms=1647]
+2026-10-08T16:02:23.2222334Z ##[start-action display=Bootstrap reviewed official Rust inputs outside app builds;id=__self_2.__run_2]
+2026-10-08T16:02:23.2345429Z ##[group]Run python tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"
+2026-10-08T16:02:23.2346008Z [36;1mpython tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"[0m
+2026-10-08T16:02:23.2358760Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T16:02:23.2359145Z env:
+2026-10-08T16:02:23.2359318Z   TEXT_PLATFORM: windows
+2026-10-08T16:02:23.2359521Z ##[endgroup]
+2026-10-08T16:02:26.1905775Z info: profile set to minimal
+2026-10-08T16:02:26.1906165Z info: default host tuple is x86_64-pc-windows-msvc
+2026-10-08T16:02:26.1906495Z info: skipping toolchain installation
+2026-10-08T16:02:26.1906691Z 
+2026-10-08T16:02:26.1907562Z 
+2026-10-08T16:02:26.1907967Z Rust is installed now. Great!
+2026-10-08T16:02:26.1908217Z 
+2026-10-08T16:02:26.1908429Z To get started you need Cargo's bin directory (D:\a\_temp
+2026-10-08T16:02:26.1908823Z \tandemlog-rust-bootstrap\cargo\bin) in your PATH
+2026-10-08T16:02:26.1911222Z environment variable. This has not been done automatically.
+2026-10-08T16:02:26.2169041Z info: auto-self-update mode set to disable
+2026-10-08T16:02:26.2169963Z warn: no toolchain installed and no default toolchain set
+2026-10-08T16:02:26.2171439Z help: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.
+2026-10-08T16:02:26.2323787Z info: syncing channel updates for 1.99.0-x86_64-pc-windows-msvc
+2026-10-08T16:02:26.3524025Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T16:02:26.3526938Z info: downloading 3 components
+2026-10-08T16:02:33.1631719Z 
+2026-10-08T16:02:33.4187506Z   1.99.0-x86_64-pc-windows-msvc installed - rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T16:02:33.4188297Z 
+2026-10-08T16:02:33.4193950Z info: default toolchain set to 1.99.0-x86_64-pc-windows-msvc
+2026-10-08T16:02:33.4915052Z info: component rust-std is up to date
+2026-10-08T16:02:33.5280646Z     Updating crates.io index
+2026-10-08T16:02:33.7559061Z  Downloading crates ...
+2026-10-08T16:02:33.9954921Z   Downloaded thiserror-impl v2.0.21
+2026-10-08T16:02:34.0023626Z   Downloaded serde_core v1.0.229
+2026-10-08T16:02:34.0116117Z   Downloaded wasm-bindgen-macro v0.2.129
+2026-10-08T16:02:34.0149429Z   Downloaded memchr v2.8.3
+2026-10-08T16:02:34.0360412Z   Downloaded rustversion v1.0.23
+2026-10-08T16:02:34.0471518Z   Downloaded redox_syscall v0.5.18
+2026-10-08T16:02:34.0569836Z   Downloaded dashmap v6.2.1
+2026-10-08T16:02:34.0691181Z   Downloaded scopeguard v1.2.0
+2026-10-08T16:02:34.0737216Z   Downloaded getrandom v0.4.3
+2026-10-08T16:02:34.0873898Z   Downloaded base64 v0.22.1
+2026-10-08T16:02:34.1006149Z   Downloaded parking v2.2.1
+2026-10-08T16:02:34.1044275Z   Downloaded unicode-ident v1.0.26
+2026-10-08T16:02:34.1132941Z   Downloaded event-listener-strategy v0.5.4
+2026-10-08T16:02:34.1170372Z   Downloaded cfg-if v1.0.5
+2026-10-08T16:02:34.1217812Z   Downloaded proc-macro2 v1.0.107
+2026-10-08T16:02:34.1322543Z   Downloaded smallvec v1.16.2
+2026-10-08T16:02:34.1365115Z   Downloaded js-sys v0.3.106
+2026-10-08T16:02:34.1438038Z   Downloaded lock_api v0.4.14
+2026-10-08T16:02:34.1477267Z   Downloaded pin-project-lite v0.2.17
+2026-10-08T16:02:34.1698755Z   Downloaded async-trait v0.1.92
+2026-10-08T16:02:34.1842045Z   Downloaded arc-swap v1.9.2
+2026-10-08T16:02:34.1983912Z   Downloaded thiserror v2.0.21
+2026-10-08T16:02:34.2232410Z   Downloaded syn v3.0.6
+2026-10-08T16:02:34.2556015Z   Downloaded smallstr v0.3.1
+2026-10-08T16:02:34.2599828Z   Downloaded r-efi v6.0.0
+2026-10-08T16:02:34.2783998Z   Downloaded zmij v1.0.23
+2026-10-08T16:02:34.2866213Z   Downloaded itoa v1.0.18
+2026-10-08T16:02:34.2914952Z   Downloaded windows-link v0.2.1
+2026-10-08T16:02:34.2943066Z   Downloaded once_cell v1.21.4
+2026-10-08T16:02:34.3037902Z   Downloaded quote v1.0.47
+2026-10-08T16:02:34.3137253Z   Downloaded serde_derive v1.0.229
+2026-10-08T16:02:34.3253691Z   Downloaded wasm-bindgen-shared v0.2.129
+2026-10-08T16:02:34.3291982Z   Downloaded crossbeam-utils v0.8.23
+2026-10-08T16:02:34.3390396Z   Downloaded async-lock v3.4.2
+2026-10-08T16:02:34.3467569Z   Downloaded bitflags v2.13.2
+2026-10-08T16:02:34.3639185Z   Downloaded event-listener v5.4.2
+2026-10-08T16:02:34.3694657Z   Downloaded serde v1.0.229
+2026-10-08T16:02:34.3803659Z   Downloaded wasm-bindgen-macro-support v0.2.129
+2026-10-08T16:02:34.3865977Z   Downloaded wasm-bindgen v0.2.129
+2026-10-08T16:02:34.3987221Z   Downloaded parking_lot_core v0.9.12
+2026-10-08T16:02:34.4063637Z   Downloaded fastrand v2.5.0
+2026-10-08T16:02:34.4111514Z   Downloaded bumpalo v3.20.3
+2026-10-08T16:02:34.4184063Z   Downloaded hashbrown v0.14.5
+2026-10-08T16:02:34.4326103Z   Downloaded serde_json v1.0.151
+2026-10-08T16:02:34.4584053Z   Downloaded libc v0.2.190
+2026-10-08T16:02:34.6859316Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=11463]
+2026-10-08T16:02:34.6861893Z ##[start-action display=Install exact approved NDK outside app builds;id=__self_2.__run_3]
+2026-10-08T16:02:34.6867631Z ##[end-action id=__self_2.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-08T16:02:34.7035923Z ##[group]Run flutter pub get --enforce-lockfile
+2026-10-08T16:02:34.7036433Z [36;1mflutter pub get --enforce-lockfile[0m
+2026-10-08T16:02:34.7078728Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T16:02:34.7079072Z env:
+2026-10-08T16:02:34.7079303Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T16:02:34.7079672Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T16:02:34.7080062Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T16:02:34.7080421Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T16:02:34.7080707Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T16:02:34.7100345Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T16:02:34.7100728Z ##[endgroup]
+2026-10-08T16:02:35.9390793Z [1/10] Material Fonts                                              267ms
+2026-10-08T16:02:35.9890794Z [2/10] Gradle Wrapper                                                8ms
+2026-10-08T16:02:36.0205654Z [3/10] Flutter SDK
+2026-10-08T16:02:36.1333026Z   ├─ [1/5] sky_engine                                              110ms
+2026-10-08T16:02:36.2766767Z   ├─ [2/5] flutter_gpu                                              25ms
+2026-10-08T16:02:36.5161689Z   ├─ [3/5] flutter_patched_sdk                                     221ms
+2026-10-08T16:02:36.7573424Z   ├─ [4/5] flutter_patched_sdk_product                             201ms
+2026-10-08T16:02:38.2533886Z   └─ [5/5] windows-x64                                           1,452ms
+2026-10-08T16:02:38.6940701Z [10/10] windows-x64/font-subset                                    128ms
+2026-10-08T16:02:38.7620493Z Resolving dependencies...
+2026-10-08T16:02:39.1003065Z Downloading packages...
+2026-10-08T16:02:47.1240305Z   code_assets 1.2.1 (2.1.0 available)
+2026-10-08T16:02:47.1241210Z   cross_file 0.3.5+5 (0.4.0 available)
+2026-10-08T16:02:47.1241728Z   jni 1.0.3 (1.1.0 available)
+2026-10-08T16:02:47.1242158Z   jni_flutter 1.0.3 (1.0.4+1 available)
+2026-10-08T16:02:47.1242711Z   material_color_utilities 0.13.0 (0.13.1 available)
+2026-10-08T16:02:47.1243297Z   native_toolchain_c 0.19.3 (0.19.5 available)
+2026-10-08T16:02:47.1243839Z   objective_c 9.5.0 (9.6.2 available)
+2026-10-08T16:02:47.1244301Z   test_api 0.7.12 (0.7.14 available)
+2026-10-08T16:02:47.1244793Z   url_launcher 6.3.2 (6.3.3 available)
+2026-10-08T16:02:47.1245247Z   vector_math 2.4.0 (2.4.3 available)
+2026-10-08T16:02:47.1245738Z Got dependencies!
+2026-10-08T16:02:47.1246568Z 10 packages have newer versions incompatible with dependency constraints.
+2026-10-08T16:02:47.1247181Z Try `flutter pub outdated` for more information.
+2026-10-08T16:02:47.4313557Z ##[group]Run python tool/windows_app_flows.py --output "$env:RUNNER_TEMP/tandemlog-windows-app-flows"
+2026-10-08T16:02:47.4314686Z [36;1mpython tool/windows_app_flows.py --output "$env:RUNNER_TEMP/tandemlog-windows-app-flows"[0m
+2026-10-08T16:02:47.4356059Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T16:02:47.4356401Z env:
+2026-10-08T16:02:47.4356634Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T16:02:47.4356991Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T16:02:47.4357380Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T16:02:47.4357731Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T16:02:47.4358016Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T16:02:47.4358328Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T16:02:47.4358681Z ##[endgroup]
+2026-10-08T16:02:48.5331958Z Flutter 3.47.5 • channel [user-branch] • https://github.com/flutter/flutter.git
+2026-10-08T16:02:48.5332980Z Framework • revision 6a19cca564 (3 weeks ago) • 2026-09-17 14:13:22 -0400
+2026-10-08T16:02:48.5334954Z Engine • hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) • 2026-09-16 18:35:09.000Z
+2026-10-08T16:02:48.5336114Z Tools • Dart 3.13.4 • DevTools 2.60.0
+2026-10-08T16:02:48.5336437Z 
+2026-10-08T16:03:12.7845432Z [!] Flutter (Channel [user-branch], 3.47.5, on Microsoft Windows [Version 10.0.20348.5622], locale en-US) [747ms]
+2026-10-08T16:03:12.7846620Z     ! Flutter version 3.47.5 on channel [user-branch] at D:\a\_temp\flutter
+2026-10-08T16:03:12.7847497Z       Currently on an unknown channel. Run `flutter channel` to switch to an official channel.
+2026-10-08T16:03:12.7849277Z       If that doesn't fix the issue, try deleting the 'bin/cache/flutter.version.json' file in your Flutter SDK directory and then reinstall Flutter by following instructions at https://flutter.dev/setup.
+2026-10-08T16:03:12.7851273Z     • Upstream repository https://github.com/flutter/flutter.git
+2026-10-08T16:03:12.7852208Z     • Framework revision 6a19cca564 (3 weeks ago), 2026-09-17 14:13:22 -0400
+2026-10-08T16:03:12.7852925Z     • Engine revision af7e796e16
+2026-10-08T16:03:12.7853384Z     • Dart version 3.13.4
+2026-10-08T16:03:12.7853830Z     • DevTools version 2.60.0
+2026-10-08T16:03:12.7856284Z     • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, enable-record-use, enable-swift-package-manager, omit-legacy-version-file, enable-lldb-debugging, enable-uiscene-migration, enable-riscv64
+2026-10-08T16:03:12.7859449Z     • If those were intentional, you can disregard the above warnings; however it is recommended to use "git" directly to perform update checks and upgrades.
+2026-10-08T16:03:12.7860439Z 
+2026-10-08T16:03:12.7860917Z [√] Windows Version (Server 2022 Datacenter 64-bit, 21H2, 2009) [16.2s]
+2026-10-08T16:03:12.7861432Z 
+2026-10-08T16:03:12.7861819Z [!] Android toolchain - develop for Android devices (Android SDK version 37.0.0) [23.2s]
+2026-10-08T16:03:12.7862713Z     • Android SDK at C:\Android\android-sdk
+2026-10-08T16:03:12.7863338Z     • Emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)
+2026-10-08T16:03:12.7864028Z     • Platform android-37.2-beta3, build-tools 37.0.0
+2026-10-08T16:03:12.7864660Z     • ANDROID_HOME = C:\Android\android-sdk
+2026-10-08T16:03:12.7865241Z     • ANDROID_SDK_ROOT = C:\Android\android-sdk
+2026-10-08T16:03:12.7866131Z     • Java binary at: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\8.0.504-1\x64\bin\java
+2026-10-08T16:03:12.7867043Z       This JDK is specified by the JAVA_HOME environment variable.
+2026-10-08T16:03:12.7867815Z       To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+2026-10-08T16:03:12.7868460Z     X Could not determine java version
+2026-10-08T16:03:12.7871611Z     ! Some Android licenses not accepted. To resolve this, run: flutter doctor --android-licenses
+2026-10-08T16:03:12.7872310Z 
+2026-10-08T16:03:12.7872608Z [√] Chrome - develop for the web [415ms]
+2026-10-08T16:03:12.7873296Z     • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+2026-10-08T16:03:12.7873742Z 
+2026-10-08T16:03:12.7874352Z [√] Visual Studio - develop Windows apps (Visual Studio Enterprise 2022 17.14.41 (September 2026)) [414ms]
+2026-10-08T16:03:12.7875448Z     • Visual Studio at C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2026-10-08T16:03:12.7876245Z     • Visual Studio Enterprise 2022 version 17.14.37710.0
+2026-10-08T16:03:12.7876814Z     • Windows 10 SDK version 10.0.26100.0
+2026-10-08T16:03:12.7877105Z 
+2026-10-08T16:03:12.7877323Z [√] Connected device (2 available) [7.0s]
+2026-10-08T16:03:12.7878127Z     • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.20348.5622]
+2026-10-08T16:03:12.7878997Z     • Chrome (web)      • chrome  • web-javascript • unknown
+2026-10-08T16:03:12.7879392Z 
+2026-10-08T16:03:12.7879587Z [√] Network resources [421ms]
+2026-10-08T16:03:12.7880080Z     • All expected network resources are available.
+2026-10-08T16:03:12.7880673Z 
+2026-10-08T16:03:12.7880814Z ! Doctor found issues in 2 categories.
+2026-10-08T16:03:12.7881107Z 
+2026-10-08T16:03:13.7420345Z Found 2 connected devices:
+2026-10-08T16:03:13.7421179Z   Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.20348.5622]
+2026-10-08T16:03:13.7421745Z   Chrome (web)      • chrome  • web-javascript • unknown
+2026-10-08T16:03:13.7421970Z 
+2026-10-08T16:03:13.7422170Z Run "flutter emulators" to list and start any available device emulators.
+2026-10-08T16:03:13.7422451Z 
+2026-10-08T16:03:13.7423322Z If you expected another device to be detected, please run "flutter doctor" to diagnose potential issues. You may also try increasing the time to wait for connected devices with the "--device-timeout" flag. Visit https://flutter.dev/setup/ for troubleshooting tips.
+2026-10-08T16:03:13.7424430Z 
+2026-10-08T16:03:13.7777369Z rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T16:03:13.7778255Z binary: rustc
+2026-10-08T16:03:13.7779184Z commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+2026-10-08T16:03:13.7780231Z commit-date: 2026-09-28
+2026-10-08T16:03:13.7780608Z host: x86_64-pc-windows-msvc
+2026-10-08T16:03:13.7780949Z release: 1.99.0
+2026-10-08T16:03:13.7781240Z LLVM version: 23.1.1
+2026-10-08T16:03:13.7781504Z 
+2026-10-08T16:03:13.8074369Z cargo 1.99.0 (5f94df478 2026-08-27)
+2026-10-08T16:03:13.8074604Z 
+2026-10-08T16:05:58.4893943Z [1/3] Windows SDK
+2026-10-08T16:05:58.4895126Z   ├─ [1/4] windows-x64-debug/windows-x64-flutter                    3.4s
+2026-10-08T16:05:58.4896016Z   ├─ [2/4] windows-x64/flutter-cpp-client-wrapper                   38ms
+2026-10-08T16:05:58.4896879Z   ├─ [3/4] windows-x64-profile/windows-x64-flutter               2,472ms
+2026-10-08T16:05:58.4897606Z   └─ [4/4] windows-x64-release/windows-x64-flutter               2,347ms
+2026-10-08T16:05:58.4898226Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/historical_checklist_recompletion_test.dart
+2026-10-08T16:05:58.4898806Z Building Windows application...                                 
+2026-10-08T16:05:58.4900315Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4901720Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4903071Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4904606Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4911481Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4913462Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4914381Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4915167Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4915981Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4916840Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4917674Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4918494Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4919297Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4920833Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4921761Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4922611Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4923454Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4924330Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4925258Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4926210Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4927563Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4928535Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4929484Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4930336Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4931133Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4932060Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4933082Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4933997Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4934857Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4935860Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4936689Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4937517Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4938380Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4939261Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4940157Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4941037Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4942001Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4942852Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4943657Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4944559Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4945548Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4946513Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4947516Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4948498Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4949475Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4950438Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4951405Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4952377Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4953344Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4954312Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4955274Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4956249Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4957291Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4958264Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4959229Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4960193Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4962366Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4965101Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4967042Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T16:05:58.4968096Z Building Windows application...                                   121.9s
+2026-10-08T16:05:58.4968683Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T16:05:58.4969099Z 00:00 +0: native historical checklist recompletion and Undo keep child text
+2026-10-08T16:05:58.4969474Z TANDEMLOG_FIRST_FRAME_MS=300
+2026-10-08T16:05:58.4969717Z TANDEMLOG_PHASE identity_lock=9
+2026-10-08T16:05:58.4969960Z TANDEMLOG_PHASE sqlite_open_schema=80
+2026-10-08T16:05:58.4970207Z TANDEMLOG_PHASE manifest=75
+2026-10-08T16:05:58.4970426Z TANDEMLOG_PHASE ingest=83
+2026-10-08T16:05:58.4970683Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T16:05:58.4970980Z TANDEMLOG_READY_MS=1021 FILES_READ=1
+2026-10-08T16:05:58.4971214Z 00:26 +1: (tearDownAll)
+2026-10-08T16:05:58.4971418Z 00:26 +1: All tests passed!
+2026-10-08T16:05:58.4971579Z 
+2026-10-08T16:05:58.7394185Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-10-08T16:05:58.7394681Z with:
+2026-10-08T16:05:58.7394915Z   name: windows-native-app-flows-37805503087-1
+2026-10-08T16:05:58.7395255Z   path: D:\a\_temp/tandemlog-windows-app-flows/*
+2026-10-08T16:05:58.7395544Z   retention-days: 5
+2026-10-08T16:05:58.7395759Z   if-no-files-found: error
+2026-10-08T16:05:58.7395972Z   compression-level: 6
+2026-10-08T16:05:58.7396171Z   overwrite: false
+2026-10-08T16:05:58.7396364Z   include-hidden-files: false
+2026-10-08T16:05:58.7396587Z   archive: true
+2026-10-08T16:05:58.7396757Z env:
+2026-10-08T16:05:58.7396977Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T16:05:58.7397335Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T16:05:58.7397713Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T16:05:58.7398071Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T16:05:58.7398402Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T16:05:58.7398719Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T16:05:58.7399074Z ##[endgroup]
+2026-10-08T16:05:58.9103802Z With the provided path, there will be 7 files uploaded
+2026-10-08T16:05:58.9109217Z Artifact name is valid!
+2026-10-08T16:05:58.9111207Z Root directory input is valid!
+2026-10-08T16:05:59.1512122Z Uploading artifact: windows-native-app-flows-37805503087-1.zip
+2026-10-08T16:05:59.1558959Z Beginning upload of artifact content to blob storage
+2026-10-08T16:05:59.2358792Z Uploaded bytes 6509
+2026-10-08T16:05:59.2506925Z Finished uploading artifact content to blob storage!
+2026-10-08T16:05:59.2508341Z SHA256 digest of uploaded artifact is af2842160d4783020c0847437e9cd2b5c4d30cb3710cafbffcbf9634f70dba28
+2026-10-08T16:05:59.2509338Z Finalizing artifact upload
+2026-10-08T16:05:59.5046858Z Artifact windows-native-app-flows-37805503087-1 successfully finalized. Artifact ID 11563525981
+2026-10-08T16:05:59.5048237Z Artifact windows-native-app-flows-37805503087-1 has been successfully uploaded! Final size is 6509 bytes. Artifact ID is 11563525981
+2026-10-08T16:05:59.5053259Z Artifact download URL: https://github.com/reddraggone9/tandemlog/actions/runs/37805503087/artifacts/11563525981
+2026-10-08T16:05:59.5346146Z Post job cleanup.
+2026-10-08T16:05:59.7243446Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-08T16:05:59.7531935Z git version 2.56.0.windows.1
+2026-10-08T16:05:59.7599714Z Temporarily overriding HOME='D:\a\_temp\4c0360dd-037a-4fcc-b824-949bf224b57a' before making global git config changes
+2026-10-08T16:05:59.7600987Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T16:05:59.7612723Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tandemlog\tandemlog
+2026-10-08T16:05:59.7957198Z Removing SSH command configuration
+2026-10-08T16:05:59.7968200Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T16:05:59.8281677Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-08T16:06:00.3261881Z Removing HTTP extra header
+2026-10-08T16:06:00.3273087Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T16:06:00.3606935Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-08T16:06:00.8526669Z Removing includeIf entries pointing to credentials config files
+2026-10-08T16:06:00.8542730Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T16:06:00.8808777Z includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path
+2026-10-08T16:06:00.8809524Z includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T16:06:00.8810143Z includeif.gitdir:/github/workspace/.git.path
+2026-10-08T16:06:00.8810621Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T16:06:00.8841144Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path
+2026-10-08T16:06:00.9126539Z D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:06:00.9162968Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path D\:\\a\\_temp\\git\-credentials\-fd010e4a\-19b3\-4ea3\-b118\-0f5301643d1a\.config
+2026-10-08T16:06:00.9490416Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T16:06:00.9766540Z D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:06:00.9802621Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-fd010e4a\-19b3\-4ea3\-b118\-0f5301643d1a\.config
+2026-10-08T16:06:01.0111305Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-08T16:06:01.0382858Z /github/runner_temp/git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:06:01.0414469Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-fd010e4a\-19b3\-4ea3\-b118\-0f5301643d1a\.config
+2026-10-08T16:06:01.0713612Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T16:06:01.0979605Z /github/runner_temp/git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config
+2026-10-08T16:06:01.1054706Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-fd010e4a\-19b3\-4ea3\-b118\-0f5301643d1a\.config
+2026-10-08T16:06:01.1364979Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-08T16:06:01.6678703Z Removing credentials config 'D:\a\_temp\git-credentials-fd010e4a-19b3-4ea3-b118-0f5301643d1a.config'
+2026-10-08T16:06:01.6864313Z Cleaning up orphan processes
+2026-10-08T16:06:01.6968116Z Terminate orphan process: pid (6496) (adb)
+2026-10-08T16:06:01.7122817Z Terminate orphan process: pid (6540) (vctip)
+

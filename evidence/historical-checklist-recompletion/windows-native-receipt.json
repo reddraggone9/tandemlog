@@ -1,0 +1,22 @@
+{
+  "run": 37805503087,
+  "job": 113408581947,
+  "compiled_source": "bcbcece5dc34d44dbb7453fa54c0882a3dbacd10",
+  "production_application_source": "d73662ab8479aa8076ee04a5ed5badd1542e585d",
+  "application_test_native_platform_dependency_inputs": "byteidentical to reviewed d736; only copied reviewed runner scope/count/workflows differ",
+  "expected": 1,
+  "passed": 1,
+  "failed": 0,
+  "skipped": 0,
+  "first_frame_ms": 300,
+  "ready_ms": 1021,
+  "decoded_utf8_log_sha256": "5fc461f3a5687d6c843cda0dcd0a9da4fea212937c5d9c337c1a751578f1771f",
+  "decoded_log_qualification": "MCP completed-job decoded text, not original raw log archive bytes",
+  "receipt_archive_host_reported": {
+    "id": 11563525981,
+    "bytes": 6509,
+    "sha256": "af2842160d4783020c0847437e9cd2b5c4d30cb3710cafbffcbf9634f70dba28"
+  },
+  "consumer_artifact_bytes_verified": false,
+  "limitations": "Actual hosted scripted debug Windows oneflow; no signedrelease/manualvisual/assistivetechnology/loadedmoduleenumeration or Androidacceptance"
+}
