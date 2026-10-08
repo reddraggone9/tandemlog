@@ -57,6 +57,22 @@ run creates no new editor documents or native inspection calls during completion
 Full-prefix collection/hashing and graph ancestry scans remain candidates for
 profiling; they have not been isolated as the dominant cost.
 
+A later single 320-generation phase diagnostic uses the unchanged application
+from `c1823856be3f2b5aada5aa6960e7fbe9023f918f` with measurement-only receipt and
+transport timers. Exact warm/cold projections and canonical preservation pass.
+Median completion grows from13.787ms in the first20 to54.620ms in the last20.
+The before-receipt portion grows from6.945ms to31.450ms; after-receipt work grows
+from6.707ms to23.195ms. Canonical file append medians remain0.055ms/0.040ms.
+These independent medians need not sum. The receipt split includes validation,
+snapshot/proof collection and staging before it; writer reservation, append and
+ingestion/reconciliation follow it. Thus canonical file append is a small part
+of the observed cost, and both sides of receipt preparation grow. This does not
+isolate a specific Dart/SQLite method or establish a speedup. Warm reopen2.970ms,
+cold rebuild1348.312ms, native BLOB101B and reference JSON50004B are diagnostic
+results; [raw phase measurements](phase-320.json) retain every per-generation
+sample and the synthetic fixture path. Native completion still creates no new
+editor documents or inspections after the first generation.
+
 Owner: Tandemlog implementation work, coordinated with Lee. Impact: growing
 warm commands and potential retained-reference amplification under offline
 history reshaping. Exit: measured per-phase scaling at20/80/320/640 with bounded

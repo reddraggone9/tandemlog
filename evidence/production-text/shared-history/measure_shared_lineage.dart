@@ -1,11 +1,26 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/text/native_text_engine.dart';
+
+class TimingLogFolder extends LocalLogFolder {
+  TimingLogFolder(super.path);
+  int appendMicroseconds = 0;
+  @override
+  Future<void> append(String name, Uint8List bytes) async {
+    final watch = Stopwatch()..start();
+    try {
+      await super.append(name, bytes);
+    } finally {
+      appendMicroseconds += watch.elapsedMicroseconds;
+    }
+  }
+}
 
 class CountingEngine extends NativeTextEngine {
   CountingEngine({super.libraryPath});
@@ -82,6 +97,7 @@ Future<void> editChild(TaskStore store, String id, int generation) async {
 Future<void> main() async {
   final root = await Directory.systemTemp.createTemp('tandemlog-aot-cost-');
   final folder = await Directory('${root.path}/shared').create();
+  final logFolder = TimingLogFolder(folder.path);
   final profile = '${root.path}/profile';
   var engine = CountingEngine(
     libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
@@ -96,11 +112,7 @@ Future<void> main() async {
   final samples = <Map<String, Object>>[];
   final wall = Stopwatch()..start();
   try {
-    store = await TaskStore.open(
-      LocalLogFolder(folder.path),
-      profile,
-      textEngine: engine,
-    );
+    store = await TaskStore.open(logFolder, profile, textEngine: engine);
     final user = const Uuid().v4();
     var id = const Uuid().v4();
     await store.command(user, 'user.created', {'name': 'Synthetic'});
@@ -130,6 +142,8 @@ Future<void> main() async {
       final creationsBefore = engine.creations,
           inspectionsBefore = engine.inspections;
       final watch = Stopwatch()..start();
+      final priorAppendUs = logFolder.appendMicroseconds;
+      var preparedUs = 0;
       await store.complete(
         id,
         completionDay: DateTime.utc(
@@ -137,12 +151,17 @@ Future<void> main() async {
           10,
           1,
         ).add(Duration(days: generation)),
+        onPrepared: (_) => preparedUs = watch.elapsedMicroseconds,
       );
       id = const Uuid().v5(id, 'successor');
       watch.stop();
       samples.add({
         'generation': generation,
         'completion_ms': watch.elapsedMicroseconds / 1000,
+        'before_receipt_ms': preparedUs / 1000,
+        'after_receipt_ms': (watch.elapsedMicroseconds - preparedUs) / 1000,
+        'canonical_append_ms':
+            (logFolder.appendMicroseconds - priorAppendUs) / 1000,
         'native_creations': engine.creations - creationsBefore,
         'inspections': engine.inspections - inspectionsBefore,
       });
@@ -182,11 +201,7 @@ Future<void> main() async {
     await store.close();
     store = null;
     final warm = Stopwatch()..start();
-    store = await TaskStore.open(
-      LocalLogFolder(folder.path),
-      profile,
-      textEngine: engine,
-    );
+    store = await TaskStore.open(logFolder, profile, textEngine: engine);
     warm.stop();
     if (jsonEncode(store.taskSnapshot) != snapshot || store.readFiles != 0) {
       throw StateError('Warm cache projection or zero-read invariant failed');
@@ -204,11 +219,7 @@ Future<void> main() async {
       libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
     );
     final cold = Stopwatch()..start();
-    store = await TaskStore.open(
-      LocalLogFolder(folder.path),
-      coldProfile,
-      textEngine: engine,
-    );
+    store = await TaskStore.open(logFolder, coldProfile, textEngine: engine);
     cold.stop();
     if (jsonEncode(store.taskSnapshot) != snapshot) {
       throw StateError('Rebuild projection mismatch');
