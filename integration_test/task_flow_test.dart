@@ -292,6 +292,12 @@ void main() {
         tester.view.viewInsets = const FakeViewPadding(bottom: 420);
         await tester.pumpAndSettle();
         usable(initial);
+        if (find.byKey(const ValueKey('tag-results')).evaluate().isNotEmpty) {
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+        }
+        expect(find.text('Cancel').last.hitTestable(), findsOneWidget);
         await tester.tap(find.text('Cancel').last);
         await tester.pumpAndSettle();
         expect(find.text('Unsaved changes'), findsNothing);
@@ -591,7 +597,10 @@ void main() {
       expect(find.byType(InputChip), findsNWidgets(2));
       final homeChip = find.byKey(const ValueKey('selected-tag-Home'));
       await tester.tap(
-        find.descendant(of: homeChip, matching: find.byTooltip('Delete')),
+        find.descendant(
+          of: homeChip,
+          matching: find.byTooltip('Remove #Home from tag filters'),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('selected-tag-Home')), findsNothing);
