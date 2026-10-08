@@ -30,6 +30,7 @@ import 'recurring_text_workflow_test.dart'
     show registerRecurringTextWorkflowTests;
 import 'checklist_workflow_test.dart' show registerChecklistWorkflowTests;
 import 'checklist_lifecycle_test.dart' show registerChecklistLifecycleTests;
+import 'bulk_apply_semantics_test.dart' show registerBulkApplySemanticsTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -170,6 +171,7 @@ void main() {
   registerRecurringTextWorkflowTests();
   registerChecklistWorkflowTests();
   registerChecklistLifecycleTests();
+  registerBulkApplySemanticsTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
