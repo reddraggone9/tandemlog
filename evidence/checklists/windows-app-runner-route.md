@@ -5,9 +5,9 @@ The preserved candidate branch remains `eb68b46259f745e86ec9f41c144d473f19d0fb0f
 its later changes are documentation/evidence only.
 
 The repository already supplies native Flutter integration entrypoints for the
-changed checklist workflows. A Windows host with the approved Flutter toolchain,
-Visual Studio desktop C++ workload, Python 3.11+, and the pinned Rust/toolchain
-build inputs can run these in an isolated exact-source checkout:
+changed checklist workflows. An x64 Windows host with the approved Flutter toolchain,
+Visual Studio desktop C++ / MSVC workload, Python 3.11+, Rust 1.99.0 and
+prepopulated locked/offline Cargo build inputs can run these in an isolated exact-source checkout:
 
 ```powershell
 git rev-parse HEAD
@@ -44,3 +44,6 @@ It rebuilds a debug test application, so it does not establish manual visual
 acceptance or execution of the downloaded release executable, physical display
 presentation, real assistive technology or Android SAF/IME behavior. Keep those
 claims and the exact downloaded-artifact acceptance separate.
+
+Independent source review found no route blocker or acceptance overstatement.
+No Windows command was executed during that review.
