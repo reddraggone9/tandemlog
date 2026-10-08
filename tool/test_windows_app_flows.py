@@ -70,6 +70,26 @@ class WindowsAppFlowReceipts(unittest.TestCase):
             self.assertEqual(entry['bytes'], path.stat().st_size)
             self.assertFalse(entry['used_by_app_entrypoints'])
 
+    def test_zero_byte_runtime_payload_cannot_pass_presence_gate(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            bundle = Path(temporary)
+            required = ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll',
+                        'data/icudtl.dat', 'data/flutter_assets/kernel_blob.bin')
+            for name in required:
+                path = bundle / name
+                path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_bytes(b'Nonempty runtime fixture')
+            for name in required:
+                with self.subTest(name=name):
+                    path = bundle / name
+                    original = path.read_bytes()
+                    path.write_bytes(b'')
+                    try:
+                        with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+                            hashes(bundle)
+                    finally:
+                        path.write_bytes(original)
+
 
 if __name__ == '__main__':
     unittest.main()

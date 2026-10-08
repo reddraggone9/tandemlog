@@ -1,0 +1,61 @@
+test_exact_scope_counts (test_windows_app_flows.WindowsAppFlowReceipts.test_exact_scope_counts) ... ok
+test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flows.WindowsAppFlowReceipts.test_hashes_require_native_app_and_do_not_collect_profiles) ... ok
+test_library_variable_hash_is_recorded_without_claiming_app_override (test_windows_app_flows.WindowsAppFlowReceipts.test_library_variable_hash_is_recorded_without_claiming_app_override) ... ok
+test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) ... ok
+test_no_false_pass_on_zero_skipped_failed_or_incomplete_output (test_windows_app_flows.WindowsAppFlowReceipts.test_no_false_pass_on_zero_skipped_failed_or_incomplete_output) ... ok
+test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) ... 
+  test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='tandemlog.exe') ... FAIL
+  test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='tandemlog_text.dll') ... FAIL
+  test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='flutter_windows.dll') ... FAIL
+  test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='data/icudtl.dat') ... FAIL
+  test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='data/flutter_assets/kernel_blob.bin') ... FAIL
+
+======================================================================
+FAIL: test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='tandemlog.exe')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 88, in test_zero_byte_runtime_payload_cannot_pass_presence_gate
+    with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='tandemlog_text.dll')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 88, in test_zero_byte_runtime_payload_cannot_pass_presence_gate
+    with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='flutter_windows.dll')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 88, in test_zero_byte_runtime_payload_cannot_pass_presence_gate
+    with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='data/icudtl.dat')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 88, in test_zero_byte_runtime_payload_cannot_pass_presence_gate
+    with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) (name='data/flutter_assets/kernel_blob.bin')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 88, in test_zero_byte_runtime_payload_cannot_pass_presence_gate
+    with self.assertRaisesRegex(ValueError, 'Empty debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.005s
+
+FAILED (failures=5)
