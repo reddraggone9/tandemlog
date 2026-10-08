@@ -73,6 +73,8 @@ void main() {
       });
       final key = GlobalKey<ChecklistItemEditorState>();
       final closed = <bool>[];
+      // Keep the real store's IO in runAsync while forwarding its exact outcome
+      // through the host callback already awaited by the widget.
       final saveResult = Completer<void>();
       var saveInvoked = false;
       try {
