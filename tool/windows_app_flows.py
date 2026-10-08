@@ -47,6 +47,19 @@ def hashes(bundle):
             for path in sorted(bundle.rglob('*')) if path.is_file()}
 
 
+def library_environment(env):
+    value = env.get('TANDEMLOG_TEXT_LIBRARY')
+    entry = dict(value=value, used_by_app_entrypoints=False)
+    if value:
+        try:
+            path = Path(value)
+            entry.update(bytes=path.stat().st_size,
+                         sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+        except OSError as error:
+            entry['read_error'] = str(error)
+    return entry
+
+
 def command(args, output, env, timeout=300):
     started = time.monotonic()
     with output.open('wb') as log:
@@ -85,6 +98,15 @@ def main():
         if os.environ.get('GITHUB_SHA') != source:
             raise ValueError('Checkout HEAD does not match the dispatched source.')
         env = os.environ.copy()
+        report['native_library_environment'] = library_environment(env)
+        report['native_build_target_directory'] = env.get('TANDEMLOG_TEXT_TARGET_DIR')
+        report['native_loader_policy'] = dict(
+            selection='NativeTextEngine() default; adjacent debug-bundle DLL',
+            windows_path='File(Platform.resolvedExecutable).parent/tandemlog_text.dll',
+            environment_override_applies=False,
+            evidence='Source-declared loader; runtime loaded-module enumeration is not performed',
+            source_sha256=hashlib.sha256((ROOT / 'lib/text/native_text_engine.dart').read_bytes()).hexdigest(),
+        )
         for key in CAPTURE_VARIABLES:
             env.pop(key, None)
         report['unset_capture_variables'] = list(CAPTURE_VARIABLES)

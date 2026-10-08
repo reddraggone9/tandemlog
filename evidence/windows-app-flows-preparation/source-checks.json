@@ -13,8 +13,14 @@
   "files": {
     ".github/workflows/ci.yml": "9caf61ae4b794ebea6e549a9e9efc9c92d6179282f957050c9ef31610c5c769f",
     ".github/workflows/windows-app-flows.yml": "6c23d1895f4ae87964ad3a64aa20dd183079ca6c67b179c5164a445d0b2420b0",
-    "tool/windows_app_flows.py": "7295aa09cc4f58ce761ba858297285852cea41bb4e8e2fd2d2ddbd4fe0c727b6",
-    "tool/test_windows_app_flows.py": "972f54ad25870a7ed560ab0fab1c0d3ac885f09e8ca73e05889041ec0e054e36"
+    "tool/windows_app_flows.py": "b0b07e86bdc7a83488aca34f2862462c1c0e43e46bde3a75f7e451fc71e68fb9",
+    "tool/test_windows_app_flows.py": "86995cfc84890280770aaad8ae39e5e429cdb76a4f692ec182a787604219b854"
   },
-  "windows_execution": "not dispatched; actual runtime/display result pending independent review"
+  "windows_execution": "not dispatched; actual runtime/display result pending independent review",
+  "native_loader_inspection": {
+    "source_sha256": "1447cd6944e152234fa5850f7534c7fd77bd3ebe39f85adfe8b8b863b5e2ca84",
+    "entrypoints": "App and fixture peers call NativeTextEngine() without explicit libraryPath",
+    "default_windows_library": "adjacent to Platform.resolvedExecutable/tandemlog_text.dll",
+    "TANDEMLOG_TEXT_LIBRARY": "not consumed by production adapter or these integration entrypoints; any value/hash recorded separately"
+  }
 }

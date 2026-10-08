@@ -37,9 +37,10 @@ test_source_mutation_is_rejected_before_build (test_vendored_yrs.VendoredYrsCont
 test_windows_style_checkout_preserves_approved_vendor_bytes (test_vendored_yrs.VendoredYrsContracts.test_windows_style_checkout_preserves_approved_vendor_bytes) ... ok
 test_exact_scope_counts (test_windows_app_flows.WindowsAppFlowReceipts.test_exact_scope_counts) ... ok
 test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flows.WindowsAppFlowReceipts.test_hashes_require_native_app_and_do_not_collect_profiles) ... ok
+test_library_variable_hash_is_recorded_without_claiming_app_override (test_windows_app_flows.WindowsAppFlowReceipts.test_library_variable_hash_is_recorded_without_claiming_app_override) ... ok
 test_no_false_pass_on_zero_skipped_failed_or_incomplete_output (test_windows_app_flows.WindowsAppFlowReceipts.test_no_false_pass_on_zero_skipped_failed_or_incomplete_output) ... ok
 
 ----------------------------------------------------------------------
-Ran 40 tests in 0.103s
+Ran 41 tests in 0.097s
 
 OK (skipped=1)

@@ -44,6 +44,14 @@ contains only JSON and logs, including the actual runner/display/startup failure
 if one occurs. It never uploads test profiles, canonical histories or executables.
 The final receipt passes only when all19 expected flows and payload checks pass.
 
+Native provenance records any `TANDEMLOG_TEXT_LIBRARY` value and its exact hash
+or read error. These app/fixture entrypoints call `NativeTextEngine()`; the
+current adapter does not read that variable and defaults on Windows to
+`tandemlog_text.dll` adjacent to `Platform.resolvedExecutable`. The receipt labels
+this source-declared debug-bundle selection separately from an unused environment
+value and records the loader source hash. It does not claim runtime loaded-module
+enumeration from payload hashes.
+
 Windows execution is pending at preparation: local source/receipt checks do not
 establish runner display availability. A future successful run is source-bound
 debug native application acceptance, not manual visual/screen-reader acceptance,

@@ -1,8 +1,9 @@
 import tempfile
+import hashlib
 from pathlib import Path
 import unittest
 
-from windows_app_flows import SCOPES, hashes, result
+from windows_app_flows import SCOPES, hashes, library_environment, result
 
 
 class WindowsAppFlowReceipts(unittest.TestCase):
@@ -41,6 +42,18 @@ class WindowsAppFlowReceipts(unittest.TestCase):
             collected = hashes(bundle)
             self.assertEqual(set(collected), {'tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll'})
             self.assertTrue(all(len(item['sha256']) == 64 for item in collected.values()))
+
+    def test_library_variable_hash_is_recorded_without_claiming_app_override(self):
+        self.assertEqual(library_environment({}), {'value': None, 'used_by_app_entrypoints': False})
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / 'explicit.dll'
+            entry = library_environment({'TANDEMLOG_TEXT_LIBRARY': str(path)})
+            self.assertIn('read_error', entry)
+            path.write_bytes(b'Native override fixture')
+            entry = library_environment({'TANDEMLOG_TEXT_LIBRARY': str(path)})
+            self.assertEqual(entry['sha256'], hashlib.sha256(path.read_bytes()).hexdigest())
+            self.assertEqual(entry['bytes'], path.stat().st_size)
+            self.assertFalse(entry['used_by_app_entrypoints'])
 
 
 if __name__ == '__main__':
