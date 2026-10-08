@@ -1,0 +1,9 @@
+{
+  "synthetic": true,
+  "before_and_after": {
+    "tandemlog-space.json": "25f503da838bc7246f09313b9b9ad0c1a582087a5831ca8c8d0e4fa38f655b8f",
+    "122c369c-a72c-4d39-a8cd-9182a5bdca04.jsonl": "630be7ed9a30b63abd6d592ec83feb25ae5e49a4e5f255a55737612a93f4b8cc",
+    "85d740ff-35a9-43ab-b19f-d8face293fdd.jsonl": "cf54915fd5deabbec9f3e3f905b4979246210fef17165643f7077e4f088d5dd8"
+  },
+  "result": "exact canonical files unchanged through actual main-app Cancel/filter/clear demo"
+}

@@ -853,6 +853,7 @@ class _EditorBodyState extends State<_EditorBody> {
           const Text(
             'Days from today; affects listing order, not the deadline.',
           ),
+          const SizedBox(height: 24),
           field('dueMinDays', 'Minimum days', hint: 'No bound'),
           field('dueMaxDays', 'Maximum days', hint: 'No bound'),
           if (!bulk)

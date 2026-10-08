@@ -74,7 +74,14 @@ void main() {
             );
             expect(tester.getRect(search).bottom, closeTo(bottom, 1));
             expect(
-              tester.getRect(find.byTooltip('Clear tag filters')).bottom,
+              tester
+                  .getRect(
+                    find.ancestor(
+                      of: find.byTooltip('Clear tag filters'),
+                      matching: find.byType(IconButton),
+                    ),
+                  )
+                  .bottom,
               closeTo(bottom, 1),
               reason: 'clear control follows the last query row',
             );
