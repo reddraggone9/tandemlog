@@ -401,7 +401,7 @@ void main() {
             .getSemanticsData();
         return {
           for (final action in data.customSemanticsActionIds ?? <int>[])
-            CustomSemanticsAction.getAction(action)!.label: action,
+          CustomSemanticsAction.getAction(action)!.label!: action,
         };
       }
 
