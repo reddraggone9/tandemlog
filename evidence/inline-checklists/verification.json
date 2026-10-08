@@ -1,0 +1,135 @@
+{
+  "source": "d7a732eba7494589ef66e2ae1629911273c88a3d",
+  "base": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "bugfix": "308541e",
+  "branch": "feature/inline-checklists",
+  "platform": "Linux GTK production main debug binary; synthetic workspace only",
+  "before": {
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "mode": "local release",
+    "viewport": [
+      1200,
+      850
+    ],
+    "theme": "dark",
+    "scale": 1
+  },
+  "after": {
+    "mode": "local debug",
+    "viewports": [
+      [
+        1200,
+        850
+      ],
+      [
+        390,
+        820
+      ]
+    ],
+    "themes": [
+      "dark",
+      "light"
+    ],
+    "verified_scales": [
+      1,
+      2
+    ]
+  },
+  "enlarged_setting": "Isolated desktop Settings portal test adapter; Flutter widget tree reports SystemTextScaler (2.0x). GSettings-only attempted captures were not enlarged and are excluded as 200% evidence.",
+  "tests": {
+    "focused": 36,
+    "extended_host": 3,
+    "workspace_switch": 1,
+    "migrated_workflow": 2,
+    "lifecycle": 7,
+    "completion": 5,
+    "existing_raw_log": "12 passed, 2 failed obsolete parent-checkbox selector; both corrected and separately rerun 2 passed. Do not relabel mixed raw log green."
+  },
+  "reviews": {
+    "architecture": "accepted d7a732e; no remaining must-fix",
+    "correctness": "accepted d7a732e; no remaining must-fix",
+    "visual": "accepted eight actual GTK captures; no clear reversible UX defect"
+  },
+  "demo": {
+    "file": "inline-checklists-linux-demo.mp4",
+    "duration_seconds": 35.8,
+    "sha256": "6f1464a592bc84ff97821aff3aeafe98189a0084407fe3d0df52b3a4c9db3c89",
+    "pointer_visible": true,
+    "editing": "Concatenated three same-session native recordings, without app-pixel alterations."
+  },
+  "canonical": {
+    "original_fixture_files_unchanged": true,
+    "before": {
+      "4098fc23-a103-4697-9183-b19281ce92b5.jsonl": "2896db9bf598eedc37f923f27bc2ea7bb57fde599041e159e219a2f442037fb7",
+      "tandemlog-space.json": "1febd0d878680f33279f72fd00845c94a5ec37c386eb54e8c7ddd3d33ace5fd7"
+    },
+    "after": {
+      "a11028d2-7e15-413e-90f9-e93aad4ac35a.jsonl": "d69fd91f33fc4b3eb89c757db93eaf9269df030447fcfdf5cd0bff5c8b1984f1",
+      "4098fc23-a103-4697-9183-b19281ce92b5.jsonl": "2896db9bf598eedc37f923f27bc2ea7bb57fde599041e159e219a2f442037fb7",
+      "tandemlog-space.json": "1febd0d878680f33279f72fd00845c94a5ec37c386eb54e8c7ddd3d33ace5fd7"
+    },
+    "new_synthetic_demo_events": 9,
+    "demo_event_types": [
+      "task.createdWithText",
+      "task.moved",
+      "task.createdWithText",
+      "task.moved",
+      "checklist.itemCreated",
+      "checklist.itemEdited",
+      "task.operationUndone",
+      "checklist.itemMoved",
+      "task.operationUndone"
+    ],
+    "no_parent_completion_event": true
+  },
+  "ci": {
+    "run_id": 37860886439,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37860886439",
+    "source": "d7a732eba7494589ef66e2ae1629911273c88a3d",
+    "last_observed": {
+      "android": "success",
+      "windows": "success",
+      "linux": "native aggregate in progress"
+    }
+  },
+  "remaining": [
+    "Composed hosted Linux CI terminal result",
+    "Bounded Android source/exact-artifact/native acceptance and Android demo",
+    "Signed preview candidate/version and exact-artifact gates; fresh quota before publication",
+    "Separate release-note/media review before any publication"
+  ],
+  "unchanged": [
+    "released scalar v3 and native/domain wire meanings",
+    "native code and Yrs patch",
+    "dependencies and platform build inputs",
+    "pubspec release version",
+    "live synced data"
+  ],
+  "artifacts": {
+    "light-desktop-200.png": "fa90df074c5cf5eb23b88ea09671ec0cdeffd8c6e5054d30d294d1751f0bef82",
+    "light-narrow-200.png": "f8715cf8736f439cb6f29ef6cd50c4cc244236c3d1d2b8824e1524a81948e10e",
+    ".gitattributes": "28ef6ba93f049a192bdc902a2620d41350df06a75b05f7e77da2b0d4cfd4c2ad",
+    "native-host.txt": "f6e810a828088fb9d35c6b8fd9eeab6997cc6dd4e44f19252890d6016338a732",
+    "menu-refresh-red.txt": "5b4d42d87fd93432502a10708193cfaad9cf41651cb64df651839fc39c1cd5c5",
+    "after-inline.png": "343b2bc4ec83420bb7376e1a6abbe69b134f7e192e4cb918a59f730ab636e415",
+    "analysis.txt": "3c288f66713d4e1cb2431c98ad74dc4032fb6fbe3b24903e105064d1f1131bb6",
+    "item-decision-red.txt": "03191d76bf3985be774bb0228119796ce99fe89d942afae976f5ff4786f664f4",
+    "dark-consent.png": "1d1cfc9bc12e13aae9d0b2d0877a939b69c1d60bcd306ca38d76bfc50a7c5846",
+    "light-narrow-bottom-200.png": "05f274445e3016a5da08ab8e9a36bd0f9f13fc84ec2b92efc1c19f82e0e39d91",
+    "dark-empty-focused.png": "f482505e469bb00c8445377d93e21abf1606ff3264ddee5bdf362d15cede660a",
+    "native-existing-mixed.txt": "ad2f9264c0a0b9337a1f702b8c81186abbef3596d490adca83205fc6497c9948",
+    "native-workspace.txt": "6f14a888f439f4c3e43d5ff1b6b64d782716772a9fad4cb70c0d413c0b8104bb",
+    "native-text-scale.json": "1d83001dc25c9ebeed4716814bf654fdf04d3234ac5e340f9b441cf5c3d66902",
+    "dark-menu.png": "b868f7e47c8a4573eec44dae39f83470f94b4ed0f8257c0de38fc17124f2b45f",
+    "light-narrow-normal.png": "46f80d85415617269e975b6f2ce4b6b368c7c8283abd60df6483ff892218a9ca",
+    "dark-collapsed.png": "0ccb1b60c4fd1db4d5c6d66880e7b16b72e8d3c8036f1615ec272035ff4a12ea",
+    "unit.txt": "a4207ea8f09875de1b34d05eace2a8a8dcfa03597939f7aafda45cbc84b9e068",
+    "before-editor.png": "ffb6bb4a69a3d2a20d8584194694148c5eb5355400b538eaef67444bee0ec518",
+    "README.md": "0b2242bee522215232b858c1719b4681ca4bc6b48e7faf2ef7a54e15ad691458",
+    "native-workflow.txt": "efa4c36d510b7c3fa9dc291a75ea959d276713d20d41d27e0d2ce29872334dff",
+    "host-initial-red.txt": "806c384c865427b7f096225f70844b75e62208f8d9533f3143b033e5b0ce533a",
+    "demo-pointer-frame.png": "e1a873afa66b578fd5e959b5e06035281ab3022b6e5b0d7823e22befb97dea57"
+  },
+  "binary_sha256": "08fbc6c36d41bc085d5b7a13a7c0cb8e7decd3b55ec5b989989933a3b82f1abf",
+  "source_main_sha256": "25a473340caaf9074c09045f87834a041196a406b7121223d18a3df3285fd9ad"
+}

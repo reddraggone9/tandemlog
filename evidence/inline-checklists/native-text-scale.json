@@ -1,0 +1,9 @@
+{
+  "source": "d7a732eba7494589ef66e2ae1629911273c88a3d",
+  "platform": "Linux GTK",
+  "qa_setting": "Isolated synthetic desktop Settings portal; no app source change",
+  "requested_factor": 2.0,
+  "observed_widget_tree_textScalers": [
+    "textScaler: SystemTextScaler (2.0x)"
+  ]
+}

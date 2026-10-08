@@ -1,0 +1,38 @@
+00:00 +0: loading /workspace/tandemlog-inline-checklists/test/checklist_expansion_store_test.dart
+00:00 +0: /workspace/tandemlog-inline-checklists/test/checklist_expansion_store_test.dart: sparse local expansion preserves other metadata and normal reopen
+00:00 +1: /workspace/tandemlog-inline-checklists/test/checklist_expansion_store_test.dart: cache reset defaults collapsed and invalid local values are ignored
+00:00 +2: /workspace/tandemlog-inline-checklists/test/checklist_expansion_store_test.dart: bad IDs and an active canonical transaction cannot cause partial UI writes
+00:00 +3: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: title normalization respects composition and selection-only history
+00:00 +4: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+00:00 +5: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:00 +6: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +7: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +8: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +9: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +10: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +11: /workspace/tandemlog-inline-checklists/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +12: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: new item saves normalized title and multiline notes independently
+00:01 +13: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: new item saves normalized title and multiline notes independently
+00:02 +14: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: dirty close can be cancelled, dismissed and asked repeatedly without popping
+00:02 +15: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: save through close guard renews dirty baseline; reopening starts clean
+00:02 +16: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:02 +17: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:02 +18: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: IME composition cannot save; length errors retain fields
+00:02 +19: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:02 +20: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:03 +21: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:03 +22: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:03 +23: /workspace/tandemlog-inline-checklists/test/checklist_presentation_test.dart: render dark desktop and narrow enlarged components
+00:03 +24: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+00:03 +25: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+00:04 +26: /workspace/tandemlog-inline-checklists/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:04 +27: /workspace/tandemlog-inline-checklists/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:04 +28: /workspace/tandemlog-inline-checklists/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:05 +29: /workspace/tandemlog-inline-checklists/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:05 +30: /workspace/tandemlog-inline-checklists/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:05 +31: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:05 +32: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:06 +33: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:06 +34: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+00:06 +35: /workspace/tandemlog-inline-checklists/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+00:06 +36: All tests passed!
