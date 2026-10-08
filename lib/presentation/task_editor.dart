@@ -632,7 +632,11 @@ class _EditorBodyState extends State<_EditorBody> {
           ? Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                scheduleApply(key, fullTarget: dateTimeField),
+                scheduleApply(
+                  key,
+                  clearLabel ?? label,
+                  fullTarget: dateTimeField,
+                ),
                 Expanded(child: input),
               ],
             )
@@ -645,21 +649,23 @@ class _EditorBodyState extends State<_EditorBody> {
     );
   }
 
-  Widget scheduleApply(String key, {bool fullTarget = false}) => Checkbox(
-    visualDensity: fullTarget ? VisualDensity.standard : null,
-    materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
-    key: ValueKey('${key}Apply'),
-    value: applied.contains(key),
-    onChanged: editingFrozen
-        ? null
-        : (value) => setState(() {
-            if (value!) {
-              applied.add(key);
-            } else {
-              applied.remove(key);
-            }
-          }),
-  );
+  Widget scheduleApply(String key, String label, {bool fullTarget = false}) =>
+      Checkbox(
+        semanticLabel: 'Apply $label',
+        visualDensity: fullTarget ? VisualDensity.standard : null,
+        materialTapTargetSize: fullTarget ? MaterialTapTargetSize.padded : null,
+        key: ValueKey('${key}Apply'),
+        value: applied.contains(key),
+        onChanged: editingFrozen
+            ? null
+            : (value) => setState(() {
+                if (value!) {
+                  applied.add(key);
+                } else {
+                  applied.remove(key);
+                }
+              }),
+      );
 
   Widget dateTimeRow(String prefix, String label) {
     // Use the editor's outer constraints: AlertDialog asks its content for
@@ -728,10 +734,10 @@ class _EditorBodyState extends State<_EditorBody> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (bulk) scheduleApply(dateKey, fullTarget: true),
+        if (bulk) scheduleApply(dateKey, '$label date', fullTarget: true),
         Expanded(flex: 5, child: date),
         const SizedBox(width: 12),
-        if (bulk) scheduleApply(timeKey, fullTarget: true),
+        if (bulk) scheduleApply(timeKey, '$label time', fullTarget: true),
         Expanded(flex: 3, child: time),
       ],
     );
@@ -870,6 +876,7 @@ class _EditorBodyState extends State<_EditorBody> {
               children: [
                 if (bulk)
                   Checkbox(
+                    semanticLabel: 'Apply Assignee',
                     value: applyAssignee,
                     onChanged: editingFrozen
                         ? null

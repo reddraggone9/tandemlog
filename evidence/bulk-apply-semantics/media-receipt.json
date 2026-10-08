@@ -1,0 +1,57 @@
+{
+  "base": "eb68b46259f745e86ec9f41c144d473f19d0fb0f",
+  "platform": "Linux GTK debug / Xvfb",
+  "entrypoint": "integration_test/bulk_apply_semantics_test.dart",
+  "modified_production_file": "lib/presentation/task_editor.dart",
+  "modified_production_sha256": "5b19b318087e4a3fe3f0f07802762fd1dd56db4d39d5aa0da146a29688fb914c",
+  "bundled_native_text_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "media_metadata": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "width": 1200,
+        "height": 850,
+        "r_frame_rate": "15/1"
+      }
+    ],
+    "format": {
+      "duration": "11.466667",
+      "size": "155183"
+    }
+  },
+  "files": {
+    "bulk-linux-gtk-debug.mp4": {
+      "bytes": 155183,
+      "sha256": "8180817f43e1e26b3866f18edff59c91ad95f8de462b7323ab10b90b99ee7681"
+    },
+    "screenshots/bulk-desktop-dark-date-controls.png": {
+      "bytes": 73291,
+      "sha256": "bc0624a2a8fc2beff84e5b188e72214741600fac925e7631b61ee566ebc43651"
+    },
+    "screenshots/bulk-desktop-dark-tags-assignee.png": {
+      "bytes": 76087,
+      "sha256": "66d5c319d87edd01a378da260cfaf1ff314e34155ec5f35631cc5cfd2d5d57f5"
+    },
+    "screenshots/bulk-narrow-light-200-date-controls.png": {
+      "bytes": 53847,
+      "sha256": "0792bc53c244904c82fda121d6055d4a40a08eb80da63126bf3a618c800c6c91"
+    },
+    "screenshots/bulk-narrow-light-200-tags-assignee.png": {
+      "bytes": 59504,
+      "sha256": "29621cfe644503bd77bcf49ad57fa722bff9226c36b34b59c0e5b60deffd6044"
+    }
+  },
+  "reviewed_video_frames_seconds": [
+    2,
+    8,
+    "last 0.5 seconds"
+  ],
+  "inputs": "Scripted framework semantics/touch/Space actions; real X11 pointer identifies controls; not a manual native assistive technology demo",
+  "pending": [
+    "exact rebuilt Windows acceptance",
+    "exact rebuilt Android acceptance and video",
+    "native assistive technology acceptance"
+  ]
+}
