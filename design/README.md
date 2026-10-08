@@ -37,15 +37,15 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
 - [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
-- [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): authorized implementation, existing-field shared baseline and offline new-task exception; unreleased with remaining gates. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve the earlier research and evidence.
+- [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): authorized implementation, existing-field shared baseline and offline new-task exception; published in RC4+47; exact acceptance in the replacement handoff. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve the earlier research and evidence.
 
 - [Android text-preview QA](android-text-preview-qa.md): exact synthetic test package and native workflow instructions.
-- [Historical recurring-text policy](historical-recurring-text-policy.md): approved historical recompletion preserves the independently initialized child; implementation and remaining gates.
+- [Historical recurring-text policy](historical-recurring-text-policy.md): approved historical recompletion preserves the independently initialized child; implemented and included in published RC4+47.
 - [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.
-- [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; isolated storage and UI implementation, with exact Windows/Android acceptance still pending.
+- [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; storage/UI implementation published in RC4+47; final acceptance and RC Windows waiver are in the replacement handoff.
 - [Checklist native acceptance](checklist-native-acceptance.md): exact candidate/fixture contract, platform workflow gates and current Linux evidence.
-- [Composed final preview](final-preview-acceptance.md): reviewed component/source bindings, rc.4/build46 and remaining exact-artifact/native/publication gates.
-- [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
-- [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.
+- [Composed final preview](final-preview-acceptance.md): historical reviewed build46 composition, superseded for delivery by published RC4+47.
+- [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; implementation published and accepted in RC4+47.
+- [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; final Android acceptance is recorded in the RC4+47 replacement handoff.
 
-- [RC4 build47 replacement handoff](rc4-build47-signed-handoff.md): independently reviewed warning fix, source-bound full CI, preserved superseded build46 and Lee's RC-only manual Windows waiver; exact signed replacement gates remain pending.
+- [RC4 build47 replacement handoff](rc4-build47-signed-handoff.md): published RC4+47, independently reviewed warning fix and exact signed/native acceptance, preserved superseded build46, Lee's RC-only manual Windows waiver and verified public installer/source/latest bindings.

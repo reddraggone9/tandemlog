@@ -3,7 +3,7 @@
   "version": "2026.10.2-rc.4+47",
   "main_ci_run": 37835589840,
   "signed_candidate_run": 37838800145,
-  "status": "signed replacement completed success; local exact-package/native acceptance and fresh publication quota remain",
+  "status": "Published v2026.10.2-rc.4 from accepted signed run without rebuilding; public downloads verified",
   "source_review": {
     "architecture": "accepted integrated five-commit diff",
     "correctness": "accepted integrated five-commit diff",
@@ -23,10 +23,7 @@
     "date_utc": "2026-10-08",
     "stable_waiver": false
   },
-  "remaining_gates": [
-    "local exact replacement artifact/package and bounded affected native acceptance",
-    "fresh publication quota coordinated by parent"
-  ],
+  "remaining_gates": [],
   "superseded_build46": {
     "run": 37819214432,
     "source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
@@ -38,7 +35,48 @@
     "parent_android_acceptance_packet": "libfile_2254ff7abc188191b4075b190a0e4823",
     "acceptance_relabelled_as_build47": false
   },
-  "publication": "finish remaining gates before RC delivery; parent coordinates conditional preview publication; no dispatch yet; no stable promotion",
+  "publication": {
+    "run": 37849503931,
+    "release_id": 407291600,
+    "tag": "v2026.10.2-rc.4",
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "URL": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.4",
+    "published_UTC": "2026-10-08T21:50:27Z",
+    "prerelease": true,
+    "draft": false,
+    "latest_requested": false,
+    "latest_confirmed": "v2026.10.1",
+    "latest_release_id": 403030558,
+    "installer_count": 3,
+    "GitHub_auto_source_archives": true,
+    "assets": [
+      {
+        "id": 623102405,
+        "name": "tandemlog-2026.10.2-rc.4-android.apk",
+        "size": 65263981,
+        "sha256": "cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+        "public_download_matches_GitHub_digest": true
+      },
+      {
+        "id": 623102406,
+        "name": "tandemlog-2026.10.2-rc.4-linux-x64.flatpak",
+        "size": 8994688,
+        "sha256": "3233f69caacf9495a9af4875733ffbabc7c714b7561aa7c92fa09dfa6599b609",
+        "public_download_matches_GitHub_digest": true
+      },
+      {
+        "id": 623102407,
+        "name": "tandemlog-2026.10.2-rc.4-windows-x64-setup.exe",
+        "size": 12187692,
+        "sha256": "9901bc644e17755535683318fad32fb9fa3b68d511f332b8b698d51ebea13dbe",
+        "public_download_matches_GitHub_digest": true
+      }
+    ],
+    "notes_sha256": "5f42203a41067edfe769bff66df60f5580c201d7e32e03e2cd6b6f50be493ee8",
+    "notes_match_reviewed_source": true,
+    "consumer_verification": "All3publicinstaller bytes downloaded via supported GitHubCLI and hashed; APK equals parent exactacceptedSHA and Windows equals signedrun printedchecksum. Linux candidate ZIP/containedchecksums passed trusted promotion and exactcopy; consumerpublicdigest verified against GitHubAPI, no independent prepubLinux ZIP-byte claim.",
+    "independent_review": "Correctness accepted fresh promotion/source/tag/prerelease/draft/Latest/exact3assets; independently rehashed all3actualpublic downloads matchingfreshAPI, APKexactparentacceptedsha, EXEexactoriginalsignedCIchecksum; notesbyteexactapprovedsource443/image89cec; all8publicationmanifest hashes valid; trustedpublisherselected3ZIPdigests/checksum/exactcopy verified, no independentprepubLinuxZIPclaim/no optionalgates."
+  },
   "main_ci": {
     "run": 37835589840,
     "all_three_jobs": "success",
@@ -92,7 +130,8 @@
     "parent_byte_acceptance": "pending new replacement, old acceptance remains build46-only",
     "owner_signedrun_artifact_id": 11578730972,
     "owner_resolved_file_id": "file_0000000035ac81f7accd7e462688b679",
-    "owner_result": "Current supported Library materialization helper HTTP403; no ownerZIP/APK bytes materialized here; parent local verification remains"
+    "owner_result": "Current supported Library materialization helper HTTP403; no ownerZIP/APK bytes materialized here; parent local verification remains",
+    "postpublication_public_downloads": "GitHub official CLI public release download succeeded for all3; historical Library/candidateZIP403 remains preserved and qualified. Actual public installer bytes now independently readable and hashed."
   },
   "signed_matrix": {
     "Linux": {
@@ -209,12 +248,37 @@
     "certificate_pin_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
     "runner_verified": "owner cert/package/versionCode47/nondebuggable/universal3ABIs/nativepayload/notices",
     "verification_source": "source-bound owner job public decoded gate lines; consumer APK bytes unreadable",
-    "inner_APK_sha256": null
+    "inner_APK_sha256": "cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+    "inner_hash_source": "Parent relayed final bounded local installed APK acceptance; not cloud consumer byte verification"
   },
   "final_independent_review": {
     "correctness": "Accepted fresh terminalAPI exactsource443/all5success/owner verification/new3selected artifact IDs-digests-expiry and all33manifest files; no mustfix. READMEmanifest race corrected before freeze; no rawlog/API bytes changed.",
     "security": "Accepted fresh all5API/source47/signer/package/ABI/native-notices/artifacts/expiry and privacy/scope; 12signedCI and17LinuxQAmanifest entries verify; no codechanges/no mustfix.",
     "architecture_editorial": "Previously accepted integratedsource443 actualrc3..443 notes/media and source47 actualGTKrelease screenshots/video; concisefirst12s encodedprefix independently accepted.",
     "consumer_byte_qualification": "Both reviewer gates retain consumer403, no ZIP/APK byte claims, innerAPKhash null pending parentlocal."
+  },
+  "parent_final_local_acceptance": {
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "run": 37838800145,
+    "version": "2026.10.2-rc.4+47",
+    "APK_sha256": "cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+    "Library_packet": "libfile_36bf4e4005bc8191a58d21b811aec4cc",
+    "archive_sha256": "1f6007f56ceccab90804230626fab4238e59ca251514b4b2cd589ccc5c22480f",
+    "attribution": "Parent/local task verified actual bytes; cloud does not claim independent materialization",
+    "result": "pass signer/package/version/nondebug/threeABIs/notices/artifact integrity; upgrade preserved4syntheticprofiles; dark/light200% Gboard staleSave/retry drafts and zero writes; discard peer; cold reconstruction/A16data equal; labclean/no additionalOOMswap",
+    "observation": "Refocused Gboard suggestions temporarily cover part of warning; ordinary collapse reveals warning above fixedactions without formscrolling. Documented minor, no essential blocker."
+  },
+  "publication_authorization": {
+    "source": "Parent explicitly instructed authorized RC4 prerelease promotion after final local acceptance",
+    "candidate_run": 37838800145,
+    "exact_APK_attestation": "cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+    "rebuild": false,
+    "prerelease": true,
+    "latest": false,
+    "public_installers": 3,
+    "stable_promotion": false,
+    "quota_percent": 58,
+    "quota_read_UTC": "2026-10-08T21:41:58Z",
+    "quota_reset_UTC": "2026-10-14T10:33:41Z"
   }
 }

@@ -1,0 +1,23 @@
+[
+  {
+    "id": 623102405,
+    "name": "tandemlog-2026.10.2-rc.4-android.apk",
+    "size": 65263981,
+    "sha256": "cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+    "public_download_matches_GitHub_digest": true
+  },
+  {
+    "id": 623102406,
+    "name": "tandemlog-2026.10.2-rc.4-linux-x64.flatpak",
+    "size": 8994688,
+    "sha256": "3233f69caacf9495a9af4875733ffbabc7c714b7561aa7c92fa09dfa6599b609",
+    "public_download_matches_GitHub_digest": true
+  },
+  {
+    "id": 623102407,
+    "name": "tandemlog-2026.10.2-rc.4-windows-x64-setup.exe",
+    "size": 12187692,
+    "sha256": "9901bc644e17755535683318fad32fb9fa3b68d511f332b8b698d51ebea13dbe",
+    "public_download_matches_GitHub_digest": true
+  }
+]

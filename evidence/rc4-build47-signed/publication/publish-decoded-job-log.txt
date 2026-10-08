@@ -1,0 +1,295 @@
+﻿2026-10-08T21:50:17.2950107Z Current runner version: '2.337.0'
+2026-10-08T21:50:17.2988430Z ##[group]Runner Image Provisioner
+2026-10-08T21:50:17.2989980Z Hosted Compute Agent
+2026-10-08T21:50:17.2991128Z Version: 20261002.596
+2026-10-08T21:50:17.2992222Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-08T21:50:17.2994401Z Build Date: 2026-10-02T22:28:27Z
+2026-10-08T21:50:17.2995700Z Worker ID: {28e75d6c-610c-439f-84e9-15e36bd41023}
+2026-10-08T21:50:17.2997011Z Region: eastus
+2026-10-08T21:50:17.2998135Z Cloud: Azure
+2026-10-08T21:50:17.2999105Z ##[endgroup]
+2026-10-08T21:50:17.3001687Z ##[group]Operating System
+2026-10-08T21:50:17.3002793Z Ubuntu
+2026-10-08T21:50:17.3003797Z 24.04.5
+2026-10-08T21:50:17.3005069Z LTS
+2026-10-08T21:50:17.3006061Z ##[endgroup]
+2026-10-08T21:50:17.3007209Z ##[group]Runner Image
+2026-10-08T21:50:17.3008354Z Image: ubuntu-24.04
+2026-10-08T21:50:17.3009448Z Version: 20261004.327.1
+2026-10-08T21:50:17.3011643Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-08T21:50:17.3014736Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-08T21:50:17.3016460Z ##[endgroup]
+2026-10-08T21:50:17.3018546Z ##[group]GITHUB_TOKEN Permissions
+2026-10-08T21:50:17.3021581Z Actions: read
+2026-10-08T21:50:17.3022693Z Contents: write
+2026-10-08T21:50:17.3023761Z Metadata: read
+2026-10-08T21:50:17.3025374Z ##[endgroup]
+2026-10-08T21:50:17.3028579Z Secret source: Actions
+2026-10-08T21:50:17.3030310Z Cache mode: write
+2026-10-08T21:50:17.3031820Z Prepare workflow directory
+2026-10-08T21:50:17.3538354Z Prepare all required actions
+2026-10-08T21:50:17.3614789Z Getting action download info
+2026-10-08T21:50:17.5152252Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-08T21:50:17.6067731Z Download action repository 'actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c' (SHA:3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c)
+2026-10-08T21:50:17.9045331Z Complete job name: publish
+2026-10-08T21:50:17.9835472Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-08T21:50:17.9836601Z with:
+2026-10-08T21:50:17.9837073Z   ref: 44344407200b61d38d7b33f22c0ace715376fd6f
+2026-10-08T21:50:17.9837919Z   fetch-depth: 0
+2026-10-08T21:50:17.9838535Z   repository: reddraggone9/tandemlog
+2026-10-08T21:50:17.9842576Z   token: ***
+2026-10-08T21:50:17.9843014Z   ssh-strict: true
+2026-10-08T21:50:17.9843446Z   ssh-user: git
+2026-10-08T21:50:17.9844109Z   persist-credentials: true
+2026-10-08T21:50:17.9844642Z   clean: true
+2026-10-08T21:50:17.9845155Z   sparse-checkout-cone-mode: true
+2026-10-08T21:50:17.9845684Z   fetch-tags: false
+2026-10-08T21:50:17.9846122Z   show-progress: true
+2026-10-08T21:50:17.9846562Z   lfs: false
+2026-10-08T21:50:17.9846966Z   submodules: false
+2026-10-08T21:50:17.9847407Z   set-safe-directory: true
+2026-10-08T21:50:17.9847922Z   allow-unsafe-pr-checkout: false
+2026-10-08T21:50:17.9848761Z ##[endgroup]
+2026-10-08T21:50:18.0871982Z Syncing repository: reddraggone9/tandemlog
+2026-10-08T21:50:18.0874609Z ##[group]Getting Git version info
+2026-10-08T21:50:18.0875451Z Working directory is '/home/runner/work/tandemlog/tandemlog'
+2026-10-08T21:50:18.0876504Z [command]/usr/bin/git version
+2026-10-08T21:50:18.0980752Z git version 2.55.0
+2026-10-08T21:50:18.1005308Z ##[endgroup]
+2026-10-08T21:50:18.1017137Z Temporarily overriding HOME='/home/runner/work/_temp/5befc40d-061a-46f5-a30e-e76314c7a07e' before making global git config changes
+2026-10-08T21:50:18.1019145Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T21:50:18.1023335Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+2026-10-08T21:50:18.1076117Z Deleting the contents of '/home/runner/work/tandemlog/tandemlog'
+2026-10-08T21:50:18.1079914Z ##[group]Determining repository object format
+2026-10-08T21:50:18.1081745Z ##[endgroup]
+2026-10-08T21:50:18.1082987Z ##[group]Initializing the repository
+2026-10-08T21:50:18.1086673Z [command]/usr/bin/git init /home/runner/work/tandemlog/tandemlog
+2026-10-08T21:50:18.1200965Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-08T21:50:18.1202225Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-08T21:50:18.1203385Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-08T21:50:18.1204566Z hint: call:
+2026-10-08T21:50:18.1205023Z hint:
+2026-10-08T21:50:18.1205661Z hint: 	git config --global init.defaultBranch <name>
+2026-10-08T21:50:18.1206410Z hint:
+2026-10-08T21:50:18.1207119Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-08T21:50:18.1208280Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-08T21:50:18.1209208Z hint:
+2026-10-08T21:50:18.1209704Z hint: 	git branch -m <name>
+2026-10-08T21:50:18.1210280Z hint:
+2026-10-08T21:50:18.1211093Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-08T21:50:18.1222665Z Initialized empty Git repository in /home/runner/work/tandemlog/tandemlog/.git/
+2026-10-08T21:50:18.1235023Z [command]/usr/bin/git remote add origin https://github.com/reddraggone9/tandemlog
+2026-10-08T21:50:18.1291151Z ##[endgroup]
+2026-10-08T21:50:18.1291971Z ##[group]Disabling automatic garbage collection
+2026-10-08T21:50:18.1295597Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-08T21:50:18.1331133Z ##[endgroup]
+2026-10-08T21:50:18.1332916Z ##[group]Setting up auth
+2026-10-08T21:50:18.1334147Z Removing SSH command configuration
+2026-10-08T21:50:18.1338643Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T21:50:18.1382982Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-08T21:50:18.1750088Z Removing HTTP extra header
+2026-10-08T21:50:18.1758456Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T21:50:18.1795695Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-08T21:50:18.2048225Z Removing includeIf entries pointing to credentials config files
+2026-10-08T21:50:18.2054417Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T21:50:18.2093092Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-08T21:50:18.2354517Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-08T21:50:18.2399580Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path /home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:18.2440662Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:18.2490003Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:18.2533373Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:18.2568858Z ##[endgroup]
+2026-10-08T21:50:18.2570212Z ##[group]Fetching the repository
+2026-10-08T21:50:18.2578960Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-08T21:50:19.1950776Z From https://github.com/reddraggone9/tandemlog
+2026-10-08T21:50:19.1952921Z  * [new branch]      analysis/kotlin-gradle-audit -> origin/analysis/kotlin-gradle-audit
+2026-10-08T21:50:19.1955993Z  * [new branch]      analysis/shared-history-performance -> origin/analysis/shared-history-performance
+2026-10-08T21:50:19.1959209Z  * [new branch]      copilot/research-undo-behavior-design -> origin/copilot/research-undo-behavior-design
+2026-10-08T21:50:19.1961369Z  * [new branch]      dependabot/gradle/android/com.android.application-9.4.1 -> origin/dependabot/gradle/android/com.android.application-9.4.1
+2026-10-08T21:50:19.1963065Z  * [new branch]      dependabot/gradle/android/gradle-wrapper-9.8.0 -> origin/dependabot/gradle/android/gradle-wrapper-9.8.0
+2026-10-08T21:50:19.1965266Z  * [new branch]      docs/final-preview-ci-qa -> origin/docs/final-preview-ci-qa
+2026-10-08T21:50:19.1966948Z  * [new branch]      docs/rc4-build47-signed-handoff -> origin/docs/rc4-build47-signed-handoff
+2026-10-08T21:50:19.1968139Z  * [new branch]      docs/rc4-release-notes  -> origin/docs/rc4-release-notes
+2026-10-08T21:50:19.1969256Z  * [new branch]      docs/rc4-signed-candidate-handoff -> origin/docs/rc4-signed-candidate-handoff
+2026-10-08T21:50:19.1970451Z  * [new branch]      experiment/date-time-layout -> origin/experiment/date-time-layout
+2026-10-08T21:50:19.1971654Z  * [new branch]      experiment/tag-autocomplete-trials -> origin/experiment/tag-autocomplete-trials
+2026-10-08T21:50:19.1973315Z  * [new branch]      experiment/text-activation-policy -> origin/experiment/text-activation-policy
+2026-10-08T21:50:19.1975992Z  * [new branch]      feature/one-level-checklists -> origin/feature/one-level-checklists
+2026-10-08T21:50:19.1978155Z  * [new branch]      feature/shared-tag-input -> origin/feature/shared-tag-input
+2026-10-08T21:50:19.1980256Z  * [new branch]      fix/android-field-layout -> origin/fix/android-field-layout
+2026-10-08T21:50:19.1982673Z  * [new branch]      fix/bulk-apply-semantics -> origin/fix/bulk-apply-semantics
+2026-10-08T21:50:19.1985372Z  * [new branch]      fix/bulk-stale-warning-visibility -> origin/fix/bulk-stale-warning-visibility
+2026-10-08T21:50:19.1988109Z  * [new branch]      fix/historical-checklist-recompletion -> origin/fix/historical-checklist-recompletion
+2026-10-08T21:50:19.1990431Z  * [new branch]      fix/initial-task-rank   -> origin/fix/initial-task-rank
+2026-10-08T21:50:19.1992416Z  * [new branch]      fix/kotlin-2.4.20-remediation -> origin/fix/kotlin-2.4.20-remediation
+2026-10-08T21:50:19.1995038Z  * [new branch]      fix/publish-portable-qa-inventory -> origin/fix/publish-portable-qa-inventory
+2026-10-08T21:50:19.1997557Z  * [new branch]      investigate/windows-idle-refresh -> origin/investigate/windows-idle-refresh
+2026-10-08T21:50:19.1999499Z  * [new branch]      main                    -> origin/main
+2026-10-08T21:50:19.2001448Z  * [new branch]      preview/checklists-queued-fixes -> origin/preview/checklists-queued-fixes
+2026-10-08T21:50:19.2003487Z  * [new branch]      preview/rc4-main-ready  -> origin/preview/rc4-main-ready
+2026-10-08T21:50:19.2006004Z  * [new branch]      preview/shared-history-checklists-final -> origin/preview/shared-history-checklists-final
+2026-10-08T21:50:19.2007482Z  * [new branch]      recovery/shared-history -> origin/recovery/shared-history
+2026-10-08T21:50:19.2008673Z  * [new branch]      release/rc4-build47     -> origin/release/rc4-build47
+2026-10-08T21:50:19.2010573Z  * [new branch]      test/final-preview-windows-native -> origin/test/final-preview-windows-native
+2026-10-08T21:50:19.2012858Z  * [new branch]      test/historical-checklist-windows-native -> origin/test/historical-checklist-windows-native
+2026-10-08T21:50:19.2014819Z  * [new branch]      test/shared-tags-windows-native -> origin/test/shared-tags-windows-native
+2026-10-08T21:50:19.2016180Z  * [new branch]      test/windows-native-app-flows -> origin/test/windows-native-app-flows
+2026-10-08T21:50:19.2017820Z  * [new branch]      text-lab-artifact-inspection -> origin/text-lab-artifact-inspection
+2026-10-08T21:50:19.2020125Z  * [new tag]         v0.1.0-rc.1             -> v0.1.0-rc.1
+2026-10-08T21:50:19.2020916Z  * [new tag]         v0.1.0-rc.2             -> v0.1.0-rc.2
+2026-10-08T21:50:19.2021669Z  * [new tag]         v0.1.0-rc.3             -> v0.1.0-rc.3
+2026-10-08T21:50:19.2022471Z  * [new tag]         v0.1.0-rc.4             -> v0.1.0-rc.4
+2026-10-08T21:50:19.2023224Z  * [new tag]         v0.1.0-rc.5             -> v0.1.0-rc.5
+2026-10-08T21:50:19.2024312Z  * [new tag]         v0.1.0-rc.6             -> v0.1.0-rc.6
+2026-10-08T21:50:19.2025090Z  * [new tag]         v0.1.0-rc.7             -> v0.1.0-rc.7
+2026-10-08T21:50:19.2025852Z  * [new tag]         v0.1.0-rc.8             -> v0.1.0-rc.8
+2026-10-08T21:50:19.2026638Z  * [new tag]         v0.1.0-rc.9             -> v0.1.0-rc.9
+2026-10-08T21:50:19.2028055Z  * [new tag]         v2026.10.0              -> v2026.10.0
+2026-10-08T21:50:19.2029711Z  * [new tag]         v2026.10.0-rc.1         -> v2026.10.0-rc.1
+2026-10-08T21:50:19.2030898Z  * [new tag]         v2026.10.1              -> v2026.10.1
+2026-10-08T21:50:19.2032138Z  * [new tag]         v2026.10.1-rc.1         -> v2026.10.1-rc.1
+2026-10-08T21:50:19.2033424Z  * [new tag]         v2026.10.2-rc.1         -> v2026.10.2-rc.1
+2026-10-08T21:50:19.2034931Z  * [new tag]         v2026.10.2-rc.2         -> v2026.10.2-rc.2
+2026-10-08T21:50:19.2036275Z  * [new tag]         v2026.10.2-rc.3         -> v2026.10.2-rc.3
+2026-10-08T21:50:19.2039788Z [command]/usr/bin/git rev-parse --verify --quiet 44344407200b61d38d7b33f22c0ace715376fd6f^{object}
+2026-10-08T21:50:19.2041624Z 44344407200b61d38d7b33f22c0ace715376fd6f
+2026-10-08T21:50:19.2044639Z ##[endgroup]
+2026-10-08T21:50:19.2046087Z ##[group]Determining the checkout info
+2026-10-08T21:50:19.2047670Z ##[endgroup]
+2026-10-08T21:50:19.2048584Z [command]/usr/bin/git sparse-checkout disable
+2026-10-08T21:50:19.2090920Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-08T21:50:19.2126930Z ##[group]Checking out the ref
+2026-10-08T21:50:19.2132106Z [command]/usr/bin/git checkout --progress --force 44344407200b61d38d7b33f22c0ace715376fd6f
+2026-10-08T21:50:19.3977733Z Note: switching to '44344407200b61d38d7b33f22c0ace715376fd6f'.
+2026-10-08T21:50:19.3978607Z 
+2026-10-08T21:50:19.3979143Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-08T21:50:19.3980346Z changes and commit them, and you can discard any commits you make in this
+2026-10-08T21:50:19.3981510Z state without impacting any branches by switching back to a branch.
+2026-10-08T21:50:19.3982214Z 
+2026-10-08T21:50:19.3982681Z If you want to create a new branch to retain commits you create, you may
+2026-10-08T21:50:19.3984045Z do so (now or later) by using -c with the switch command. Example:
+2026-10-08T21:50:19.3984753Z 
+2026-10-08T21:50:19.3985022Z   git switch -c <new-branch-name>
+2026-10-08T21:50:19.3985443Z 
+2026-10-08T21:50:19.3985693Z Or undo this operation with:
+2026-10-08T21:50:19.3986183Z 
+2026-10-08T21:50:19.3986407Z   git switch -
+2026-10-08T21:50:19.3986715Z 
+2026-10-08T21:50:19.3987217Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-08T21:50:19.3987961Z 
+2026-10-08T21:50:19.3988518Z HEAD is now at 4434440 Prepare build47 RC4 replacement with visible bulk save failures
+2026-10-08T21:50:19.3999336Z ##[endgroup]
+2026-10-08T21:50:19.4046756Z [command]/usr/bin/git log -1 --format=%H
+2026-10-08T21:50:19.4072571Z 44344407200b61d38d7b33f22c0ace715376fd6f
+2026-10-08T21:50:19.4349169Z ##[group]Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+2026-10-08T21:50:19.4350225Z with:
+2026-10-08T21:50:19.4350646Z   run-id: 37838800145
+2026-10-08T21:50:19.4356349Z   github-token: ***
+2026-10-08T21:50:19.4356920Z   pattern: {linux,windows,android-release}
+2026-10-08T21:50:19.4357591Z   path: dist
+2026-10-08T21:50:19.4358043Z   merge-multiple: true
+2026-10-08T21:50:19.4358590Z   repository: reddraggone9/tandemlog
+2026-10-08T21:50:19.4359458Z   skip-decompress: false
+2026-10-08T21:50:19.4360002Z   digest-mismatch: error
+2026-10-08T21:50:19.4360524Z ##[endgroup]
+2026-10-08T21:50:19.5769672Z Fetching artifact list for workflow run 37838800145 in repository reddraggone9/tandemlog
+2026-10-08T21:50:19.7990539Z Found 4 artifact(s)
+2026-10-08T21:50:19.7992732Z Filtering artifacts by pattern '{linux,windows,android-release}'
+2026-10-08T21:50:19.8026345Z Preparing to download the following artifacts:
+2026-10-08T21:50:19.8029114Z - android-release (ID: 11578730972, Size: 30300639, Expected Digest: sha256:b3af19e3b58634ece4820b3cf6d292569fe5bd0c31d903f0dd073ae98390a015)
+2026-10-08T21:50:19.8032195Z - linux (ID: 11577946907, Size: 8999481, Expected Digest: sha256:1cf172fd35e8529f0c744d590758e67ae954add825f497d2aefd53fb514db692)
+2026-10-08T21:50:19.8036785Z - windows (ID: 11576483975, Size: 25762639, Expected Digest: sha256:8e4ab620888b1d2ee8c432f0e03b6b4b01e3af4736dd4ea4b911ccd7f11ad0cf)
+2026-10-08T21:50:19.8045468Z Downloading artifact '11578730972' from 'reddraggone9/tandemlog'
+2026-10-08T21:50:19.8061862Z Downloading artifact '11576483975' from 'reddraggone9/tandemlog'
+2026-10-08T21:50:19.8084245Z Downloading artifact '11577946907' from 'reddraggone9/tandemlog'
+2026-10-08T21:50:19.9831999Z Redirecting to blob download url: https://productionresultssa15.blob.core.windows.net/actions-results/f5c3db96-ee85-478c-952a-693e3bda6da6/workflow-job-run-a3adad0b-6954-5891-887f-37ecb7d4dffe/artifacts/ac6dcc7a68f4d5b47146f84fdfda212e349f3760c01747920cb5562a87e41c84.zip
+2026-10-08T21:50:19.9838871Z Starting download of artifact to: /home/runner/work/tandemlog/tandemlog/dist
+2026-10-08T21:50:19.9952037Z Redirecting to blob download url: https://productionresultssa15.blob.core.windows.net/actions-results/f5c3db96-ee85-478c-952a-693e3bda6da6/workflow-job-run-c71b0f27-37b0-5c43-b723-26dabebc4af0/artifacts/caf90169eefa5f807d577486b9f795ab86ae2983c5c20806cff959117e90af18.zip
+2026-10-08T21:50:19.9959834Z Starting download of artifact to: /home/runner/work/tandemlog/tandemlog/dist
+2026-10-08T21:50:20.0051560Z Redirecting to blob download url: https://productionresultssa15.blob.core.windows.net/actions-results/f5c3db96-ee85-478c-952a-693e3bda6da6/workflow-job-run-759aca17-5f96-5fb8-abcf-6682a6da9c18/artifacts/340d600392818df2413382dc7d8325c360d83ea49a262d31760348484bbc10b5.zip
+2026-10-08T21:50:20.0058333Z Starting download of artifact to: /home/runner/work/tandemlog/tandemlog/dist
+2026-10-08T21:50:20.0934654Z (node:2279) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+2026-10-08T21:50:20.0939744Z (Use `node --trace-deprecation ...` to show where the warning was created)
+2026-10-08T21:50:20.4539396Z SHA256 digest of downloaded artifact is 1cf172fd35e8529f0c744d590758e67ae954add825f497d2aefd53fb514db692
+2026-10-08T21:50:20.4541871Z Artifact download completed successfully.
+2026-10-08T21:50:20.7857943Z SHA256 digest of downloaded artifact is 8e4ab620888b1d2ee8c432f0e03b6b4b01e3af4736dd4ea4b911ccd7f11ad0cf
+2026-10-08T21:50:20.7859278Z Artifact download completed successfully.
+2026-10-08T21:50:21.1190898Z SHA256 digest of downloaded artifact is b3af19e3b58634ece4820b3cf6d292569fe5bd0c31d903f0dd073ae98390a015
+2026-10-08T21:50:21.1192314Z Artifact download completed successfully.
+2026-10-08T21:50:21.1193081Z Total of 3 artifact(s) downloaded
+2026-10-08T21:50:21.1197820Z Download artifact has finished successfully
+2026-10-08T21:50:21.1350213Z ##[group]Run # Always use the trusted dispatch policy even when selecting an older
+2026-10-08T21:50:21.1350943Z [36;1m# Always use the trusted dispatch policy even when selecting an older[0m
+2026-10-08T21:50:21.1351477Z [36;1m# candidate. Cwd/source/artifacts remain that exact candidate.[0m
+2026-10-08T21:50:21.1351873Z [36;1mmkdir .release-policy[0m
+2026-10-08T21:50:21.1352430Z [36;1mfor policy in app_version.py android_release.py publish_gate.py release_assets.py attach_preview_assets.py; do[0m
+2026-10-08T21:50:21.1353370Z [36;1m  git show "$GITHUB_SHA:tool/$policy" > ".release-policy/$policy"[0m
+2026-10-08T21:50:21.1353746Z [36;1mdone[0m
+2026-10-08T21:50:21.1354332Z [36;1mpython3 .release-policy/publish_gate.py[0m
+2026-10-08T21:50:21.1354645Z [36;1mcd dist[0m
+2026-10-08T21:50:21.1354892Z [36;1msha256sum --check linux-SHA256SUMS.txt[0m
+2026-10-08T21:50:21.1355241Z [36;1msha256sum --check windows-SHA256SUMS.txt[0m
+2026-10-08T21:50:21.1355632Z [36;1msha256sum --check android-SHA256SUMS.txt[0m
+2026-10-08T21:50:21.1355948Z [36;1mcd ..[0m
+2026-10-08T21:50:21.1356275Z [36;1m# Artifact/source gates remain pinned to the accepted candidate.[0m
+2026-10-08T21:50:21.1356774Z [36;1m# Copy may be corrected in a later approved docs-only main commit;[0m
+2026-10-08T21:50:21.1357269Z [36;1m# pin it to this dispatch commit, not a moving branch at publish time.[0m
+2026-10-08T21:50:21.1357781Z [36;1mgit show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md[0m
+2026-10-08T21:50:21.1358305Z [36;1m# Evidence/checksums stay in the gated candidate; users see installers.[0m
+2026-10-08T21:50:21.1358762Z [36;1mpython3 .release-policy/release_assets.py[0m
+2026-10-08T21:50:21.1359108Z [36;1mif [[ -n "$DRAFT_RELEASE_ID" ]]; then[0m
+2026-10-08T21:50:21.1359473Z [36;1m  python3 .release-policy/attach_preview_assets.py[0m
+2026-10-08T21:50:21.1359795Z [36;1melse[0m
+2026-10-08T21:50:21.1360067Z [36;1m  gh release create "$CANDIDATE" public-assets/* \[0m
+2026-10-08T21:50:21.1360721Z [36;1m    --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md[0m
+2026-10-08T21:50:21.1361307Z [36;1mfi[0m
+2026-10-08T21:50:21.1625449Z shell: /usr/bin/bash -e {0}
+2026-10-08T21:50:21.1625857Z env:
+2026-10-08T21:50:21.1630267Z   GH_TOKEN: ***
+2026-10-08T21:50:21.1630596Z   CANDIDATE: v2026.10.2-rc.4
+2026-10-08T21:50:21.1631028Z   CANDIDATE_SHA: 44344407200b61d38d7b33f22c0ace715376fd6f
+2026-10-08T21:50:21.1631748Z   ANDROID_VERIFIED_SHA256: cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722
+2026-10-08T21:50:21.1632453Z   RELEASE_KIND: prerelease
+2026-10-08T21:50:21.1632793Z   DRAFT_RELEASE_ID: 
+2026-10-08T21:50:21.1633073Z ##[endgroup]
+2026-10-08T21:50:23.5491856Z Exact tested APK, signer, source, version, installed desktop QA and asset set verified.
+2026-10-08T21:50:23.5651179Z tandemlog-linux-x64.flatpak: OK
+2026-10-08T21:50:23.5757661Z tandemlog-windows-x64-unsigned-setup.exe: OK
+2026-10-08T21:50:23.6252743Z tandemlog-android.apk: OK
+2026-10-08T21:50:23.6886783Z tandemlog-2026.10.2-rc.4-android.apk
+2026-10-08T21:50:23.6887357Z tandemlog-2026.10.2-rc.4-windows-x64-setup.exe
+2026-10-08T21:50:23.6887900Z tandemlog-2026.10.2-rc.4-linux-x64.flatpak
+2026-10-08T21:50:27.6068890Z https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.4
+2026-10-08T21:50:27.6229182Z Post job cleanup.
+2026-10-08T21:50:27.7076606Z [command]/usr/bin/git version
+2026-10-08T21:50:27.7118042Z git version 2.55.0
+2026-10-08T21:50:27.7163140Z Temporarily overriding HOME='/home/runner/work/_temp/07f368fb-29d0-424d-86b7-2bf63bf704c2' before making global git config changes
+2026-10-08T21:50:27.7164807Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T21:50:27.7169167Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+2026-10-08T21:50:27.7204976Z Removing SSH command configuration
+2026-10-08T21:50:27.7211394Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T21:50:27.7246446Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-08T21:50:27.7476080Z Removing HTTP extra header
+2026-10-08T21:50:27.7481865Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T21:50:27.7523357Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-08T21:50:27.7750265Z Removing includeIf entries pointing to credentials config files
+2026-10-08T21:50:27.7758407Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T21:50:27.7788496Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+2026-10-08T21:50:27.7789736Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T21:50:27.7790843Z includeif.gitdir:/github/workspace/.git.path
+2026-10-08T21:50:27.7791765Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T21:50:27.7800800Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+2026-10-08T21:50:27.7825791Z /home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:27.7837054Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-c63b88d4\-d4bd\-4e8c\-921a\-596b211003f1\.config
+2026-10-08T21:50:27.7908517Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T21:50:27.7931948Z /home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:27.7948997Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-c63b88d4\-d4bd\-4e8c\-921a\-596b211003f1\.config
+2026-10-08T21:50:27.7984934Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-08T21:50:27.8008065Z /github/runner_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:27.8016111Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-c63b88d4\-d4bd\-4e8c\-921a\-596b211003f1\.config
+2026-10-08T21:50:27.8050410Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T21:50:27.8073439Z /github/runner_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config
+2026-10-08T21:50:27.8081899Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-c63b88d4\-d4bd\-4e8c\-921a\-596b211003f1\.config
+2026-10-08T21:50:27.8117607Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-08T21:50:27.8342713Z Removing credentials config '/home/runner/work/_temp/git-credentials-c63b88d4-d4bd-4e8c-921a-596b211003f1.config'
+2026-10-08T21:50:27.8495826Z Cleaning up orphan processes

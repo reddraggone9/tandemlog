@@ -1,5 +1,12 @@
 # Current status — 2026-10-08
 
+
+## Published preview RC4+47
+
+[2026.10.2-rc.4](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.4) is published from source44344407200b61d38d7b33f22c0ace715376fd6f, signed run37838800145/build47, promotion37849503931. It includes shared offline title/notes edits, one-level recurring checklists, shared tag input, initial top manual rank, spacing/accessibility fixes and visible bulk stale-save warnings. Full platform/native/install gates, independent source/editorial reviews and parent/local exact affected Android acceptance passed. Public installer downloads and source/prerelease/Latest state are verified. [Final handoff](rc4-build47-signed-handoff.md) records exact bindings, attributed acceptance, preserved superseded build46 and bounded observations. Stablev2026.10.1 remains Latest; no stable feature promotion.
+
+Manual Windows interaction is waived forRCs byLee, with existing automated Windows gates and Linux native coverage retained. Spoken-audio acceptance was an assistant-added detour and is not a release gate. Earlier isolated/preparation checkpoints below are historical; their pending RC4 delivery gates are resolved or superseded by the final handoff, without relabelling old artifacts as build47.
+
 ## Isolated checklist implementation checkpoint
 
 Lee approved starting checklist implementation on a separate worktree after the

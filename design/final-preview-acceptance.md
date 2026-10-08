@@ -1,4 +1,7 @@
-# Composed preview: 2026.10.2-rc.4+46
+# Historical composed preview: 2026.10.2-rc.4+46
+
+
+Superseded for delivery by the independently reviewed and accepted [published RC4+47 replacement](rc4-build47-signed-handoff.md), source44344407200b61d38d7b33f22c0ace715376fd6f, signed run37838800145/promotion37849503931. The build46 composition and its historical gate statements below remain preserved as stage records. Final build47 acceptance and Lee's RC-only Windows manual waiver are recorded in the replacement handoff. Stablev2026.10.1 remains Latest; stable feature promotion still requires Lee's acceptance.
 
 Status: preparation authorized by parent on 2026-10-08 while the exact isolated
 historical-leak retest proceeds. Composition is separate from all frozen candidates.
