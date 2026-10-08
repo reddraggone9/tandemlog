@@ -16,7 +16,7 @@ class TextSaveResult {
   final OperationReceipt? receipt;
 
   /// The current merged projection after native commit, including remote work.
-  /// A missing row means the entity has since been deleted.
+  /// A missing row means the entity or its containing task is unavailable.
   final Map<String, dynamic>? currentRow;
   final Object? undoError;
 
@@ -150,10 +150,6 @@ class TextSaveCommand {
     );
   }
 
-  Map<String, dynamic>? _currentRow() {
-    for (final row in store.rows) {
-      if (row['id'] == session.capture.entity) return Map.unmodifiable(row);
-    }
-    return null;
-  }
+  Map<String, dynamic>? _currentRow() =>
+      store.currentTextRow(session.capture.entity);
 }

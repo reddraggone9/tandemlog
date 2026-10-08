@@ -24,7 +24,9 @@ void main() {
     'after baseline only',
   ]) {
     test(
-      'shared baseline preserves earliest scalar successor protected by $disposition copied-item history',
+      disposition == 'after baseline only'
+          ? 'later copied-item activity preserves the declared scalar baseline through native capture and cold replay'
+          : 'shared baseline preserves earliest scalar successor protected by $disposition copied-item history',
       () async {
         final root = await Directory.systemTemp.createTemp(
           'checklist-baseline-selection-',

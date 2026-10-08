@@ -1,0 +1,53 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart
+00:00 +0: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+00:00 +1: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+00:00 +2: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+00:00 +3: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+00:00 +4: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+00:00 +5: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: late cross-parent move anchor rolls back arrival without changing the pending source item
+00:00 +6: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item create cannot resurrect a canceled successor
+00:00 +7: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item create cannot resurrect a canceled successor
+00:00 +8: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item create cannot resurrect a canceled successor
+00:00 +9: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+00:00 +10: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item check cannot resurrect a canceled successor
+00:01 +11: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged membership copy rejects before receipt and leaves canonical history untouched
+00:01 +12: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item move cannot resurrect a canceled successor
+00:01 +13: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged order copy rejects before receipt and leaves canonical history untouched
+00:01 +14: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item delete cannot resurrect a canceled successor
+00:01 +15: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged visible text copy rejects before receipt and leaves canonical history untouched
+00:01 +16: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item native Save cannot resurrect a canceled successor
+00:01 +17: /workspace/tandemlog-checklists/test/checklist_architecture_gate_test.dart: local item native Save cannot resurrect a canceled successor
+00:01 +18: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged source parent copy rejects before receipt and leaves canonical history untouched
+00:01 +19: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: forged source parent copy rejects before receipt and leaves canonical history untouched
+00:01 +20: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copied ID collision with independent task rejects before receipt
+00:01 +21: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: copied ID collision with independent item rejects before receipt
+00:01 +22: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+00:02 +23: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:02 +24: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:02 +25: /workspace/tandemlog-checklists/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+00:02 +26: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=false
+00:02 +27: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=true
+00:02 +28: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:02 +29: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator unchanged Save preserves captured lease and nontext-only Save uses ordinary edit
+00:02 +30: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+00:02 +31: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:03 +32: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:03 +33: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:03 +34: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+00:03 +35: /workspace/tandemlog-checklists/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:03 +36: All tests passed!

@@ -1,4 +1,22 @@
-# Current status — 2026-10-05
+# Current status — 2026-10-08
+
+## Isolated checklist storage checkpoint
+
+Lee approved starting checklist implementation on a separate worktree after the
+shared-history redesign. `feature/one-level-checklists` starts from exact native
+candidatec182385, leaving that candidate and the diagnostic performance branch
+unchanged. Domain/additive persistence, native item text/receipts, observed-prefix
+recurrence copies and scoped Undo protection are implemented. Item editor UI,
+unfinished-item completion warning and affected native delivery remain pending.
+Independent storage/architecture/security/correctness findings were frozen before
+their fixes; evidence and next gates are in [checklists](../evidence/checklists/README.md).
+Released scalar v3 fixtures, hashes/clocks/IDs, native vendor source and locks are
+unchanged. No stable promotion or candidate publication was performed.
+
+The shared-history prototype removes repeated inherited BLOB/packet arrays but
+retains measured quadratic prefix CPU work. Its exact c182385 Windows/Android
+acceptance remains incomplete; earlier hosted compile/tests are not complete
+native acceptance. Previous text-integration checkpoints below are historical.
 
 ## Authorized text integration — isolated, unreleased
 

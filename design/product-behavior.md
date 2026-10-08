@@ -115,6 +115,17 @@ Bulk edits exclude title/notes, retain untouched mixed values and apply only exp
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
 
 
+## Approved one-level checklists — isolated implementation
+
+Lee approved a title, optional notes, completion and order for each checklist
+item, one level deep. Recurrence copies fresh unchecked items; existing successor
+edits remain independent. The domain/storage component is implemented separately
+from shared-history candidatec182385. Item editor UI and the unfinished-items
+completion warning remain pending, including native narrow/enlarged/theme
+inspection and affected Android acceptance. The intended explicit item Save/Cancel,
+parent-draft boundary, renewed warning confirmation and recurrence/Undo meanings
+are specified in [ADR0011](decisions/0011-one-level-checklists.md).
+
 ## Completion eligibility and reorder continuity — RC5 follow-up
 
 An open repeating task cannot be completed when its computed successor preserves all three stored dates (start, due and this-occurrence override). A cleared override counts as a change. Sorting bounds/group labels are not inputs to this rule, and recurrence calculation itself is unchanged. The unavailable checkbox explains on tap, hover and keyboard focus. This prevents another identical scheduled occurrence; recording repeated same-period work is not a current requirement. Advancing, overdue and nonrepeating tasks remain completable. History reopening and Undo remain available. The store checks after ingestion and before append; accepted older history is never retroactively rejected.

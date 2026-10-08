@@ -132,11 +132,58 @@ exact state and original operation IDs from canonical history for editor and Und
 receipt use, without persisting another inherited BLOB. Older cache readers reject
 version15 explicitly. Cache loss replays originals; no canonical migration occurs.
 
+### Unreleased one-level checklist extension
+
+The isolated checklist branch adds required event meanings; released scalar v3
+records and both existing inheritance adapters keep their original contracts.
+Older peers explicitly reject these unknown event types. Native-enabled cache16
+adds checklist kind/projection handling to cache15; scalar-only histories retain
+cache13. Canonical history is never rewritten by this disposable cache change.
+
+| Event | Exact payload |
+| --- | --- |
+| `checklist.itemCreated` | `parent`, `title`, `description`, `before`, `text` (ordinary adapter1 native creation seed hashes) |
+| `checklist.itemEdited` | `completed` boolean |
+| `checklist.itemMoved` | `before` same-parent item UUID, or null for end |
+| `checklist.itemDeleted` | empty payload |
+| `task.completedWithChecklist` | `completedAt`, `successor`, `checklist`; optional ordinary parent-text `inheritance` |
+
+Items have distinct UUIDs and `checklistItem` kind. Their native title/notes use
+the existing `task.textEdited`/`task.textEditUndone` adapter with item-only admission;
+task schedule, tags, assignee, recurrence and nested items are invalid. Items are
+hidden from the ordinary task sequence and projected under their parent. Known
+wrong kinds/cross-parent anchors fail; missing remote dependencies remain pending.
+
+`checklist` has exactly `codec: yrs-v1`, integer `adapter: 2`, shared `frontiers`,
+and ordered `items`. Each entry has exactly `id`, `source`, `title`, `description`,
+and the ordinary two-field adapter2 proof map `fields`. The copied ID is
+UUIDv5(successor, `checklist:<source UUID>`). Validate common frontiers once and
+each item proof independently. Copies are capped at1000 items within the existing
+one-MiB complete-record limit; aggregate bytes are checked before preparing a
+local receipt. Verify exact source membership/order, native context/history hashes
+and rendered strings at the immutable prefix. Copied field history shares original
+operation references, including sources copied through previous generations.
+
+Concurrent contributions union source items/native histories, initialize copied
+checks false and apply child-owned order/check/deletion actions afterwards. Later
+old-parent edits do not enter an existing copy. Any canonical child-item activity,
+even undone/deleted, protects the containing successor; synthetic seeds/private
+drafts alone do not. All scalar baseline selectors use that rule only within their
+declared prefix. Local item commands/captures require an available parent; genuine
+late remote descendant activity still restores its protected parent. Historical
+`task.completedKeepingSuccessor` also accepts an earlier hash-matched scalar-mode
+`task.completedWithChecklist` initializer and leaves its independently owned child
+unchanged. Released `task.completed` historical guards remain unchanged.
+
+The domain/storage component is implemented; item UI, completion warning and
+affected native acceptance remain pending. See [ADR0011](decisions/0011-one-level-checklists.md).
+
 `task.completedKeepingSuccessor` adds the accepted historical-recompletion edge.
 Its exact keys are `completedAt` and `retainedSuccessor`; the latter has exactly
 `id`, `completion` (original writer:sequence) and `hash`. The child ID remains
 UUIDv5(parent, `successor`). Known sources must be the earlier hash-matched scalar
-`task.completed` of that parent, whose successor has this ID. No successor snapshot
+`task.completed` or scalar-mode `task.completedWithChecklist` of that parent,
+whose successor has this ID. No successor snapshot
 or inheritance contribution is created. Parent completion/Undo projection includes
 the new type; original scalar/native completion meanings remain unchanged. See the
 [accepted policy](historical-recurring-text-policy.md).

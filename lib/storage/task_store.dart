@@ -1235,6 +1235,14 @@ class TaskStore {
         task['deleted'] == true) {
       throw FormatFailure('Unknown or deleted task.');
     }
+    _attachSuccessorSuppression(task);
+    if (task['successorSuppressed'] == true) {
+      throw FormatFailure('This untouched next occurrence was canceled.');
+    }
+    if (task['kind'] == 'checklistItem' &&
+        !_checklistParentAvailable(task['parent'] as String)) {
+      throw FormatFailure('This checklist item’s task is unavailable.');
+    }
     final native = _hasNativeTextRoot(entity, history);
     if (!native && (_textBaseline == null || textWriteBlocked != null)) {
       throw FormatFailure(
@@ -1989,7 +1997,10 @@ class TaskStore {
       final selected = selectSuccessor(
         entry.value,
         grouped[parent] ?? [],
-        protected: own.isNotEmpty || anchored,
+        protected:
+            own.isNotEmpty ||
+            anchored ||
+            hasDurableChecklistActivity(prefix, entry.key),
       );
       grouped
           .putIfAbsent(entry.key, () => [])
@@ -2844,6 +2855,13 @@ class TaskStore {
       resolution: resolution,
       textCache: textCache,
     );
+    _attachSuccessorSuppression(state);
+    _attachChecklist(state, resolution: resolution, textCache: textCache);
+    return state;
+  }
+
+  void _attachSuccessorSuppression(Map<String, dynamic> state) {
+    final entity = state['id'] as String;
     final seeds = db.select(
       "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
@@ -2859,8 +2877,6 @@ class TaskStore {
         own,
       ).suppressed;
     }
-    _attachChecklist(state, resolution: resolution, textCache: textCache);
-    return state;
   }
 
   void _materializeText(
@@ -3011,7 +3027,8 @@ class TaskStore {
                     (event) =>
                         event.type == 'task.moved' &&
                         event.data['before'] == entity,
-                  ),
+                  ) ||
+                  hasDurableChecklistActivity(prefix, entity),
             ).seed,
           ),
         );
@@ -3088,7 +3105,17 @@ class TaskStore {
           selectSuccessor(
             seeds,
             parent,
-            protected: own.isNotEmpty || anchors,
+            protected:
+                own.isNotEmpty ||
+                anchors ||
+                hasDurableChecklistActivity(
+                  db
+                      .select('SELECT raw FROM events')
+                      .map((row) => LogEvent.decode(row['raw'] as String))
+                      .where((event) => _baselineIncludes(event, baseline))
+                      .toList(),
+                  entity,
+                ),
           ).seed,
         ),
       );

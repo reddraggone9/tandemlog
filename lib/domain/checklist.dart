@@ -11,6 +11,25 @@ bool isChecklistCreation(String type) =>
 String copiedChecklistId(String successor, String source) =>
     const Uuid().v5(successor, 'checklist:$source');
 
+/// Only canonical descendant actions protect a task's initialized successor.
+/// Callers pass their exact observed prefix; future activity must not influence
+/// an earlier baseline or inheritance proof. Undo/deletion retains ownership.
+bool hasDurableChecklistActivity(List<LogEvent> history, String parent) {
+  final ids = <String>{};
+  for (final event in history) {
+    if (event.type == 'checklist.itemCreated' &&
+        event.data['parent'] == parent) {
+      ids.add(event.entity);
+    } else if (event.type == 'task.completedWithChecklist' &&
+        (event.data['successor'] as Map)['id'] == parent) {
+      for (final item in (event.data['checklist'] as Map)['items'] as List) {
+        ids.add((item as Map)['id'] as String);
+      }
+    }
+  }
+  return history.any((event) => ids.contains(event.entity));
+}
+
 /// Required additive copy meaning; old successor snapshots remain unchanged.
 void validateChecklistCopy(Object? value, String successor) {
   if (value is! Map<String, dynamic> ||

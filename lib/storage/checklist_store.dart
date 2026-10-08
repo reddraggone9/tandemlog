@@ -64,6 +64,34 @@ extension ChecklistStore on TaskStore {
 
   String checklistSnapshot(String parent) => jsonEncode(checklistItems(parent));
 
+  /// The acknowledged native Save result includes items hidden from task rows.
+  /// A missing result means the entity or its containing task is unavailable.
+  Map<String, dynamic>? currentTextRow(String entity) {
+    final records = db.select('SELECT raw FROM views WHERE id=?', [entity]);
+    if (records.isEmpty) return null;
+    final row =
+        jsonDecode(records.single['raw'] as String) as Map<String, dynamic>;
+    if (!{'task', 'checklistItem'}.contains(row['kind']) ||
+        row['deleted'] == true ||
+        row['successorSuppressed'] == true ||
+        (row['kind'] == 'checklistItem' &&
+            !_checklistParentAvailable(row['parent'] as String))) {
+      return null;
+    }
+    return Map.unmodifiable(row);
+  }
+
+  bool _checklistParentAvailable(String id) {
+    final parent = project(_entityEvents(id));
+    if (parent == null ||
+        parent['kind'] != 'task' ||
+        parent['deleted'] == true) {
+      return false;
+    }
+    _attachSuccessorSuppression(parent);
+    return parent['successorSuppressed'] != true;
+  }
+
   List<LogEvent> _checklistHistory(String parent) {
     final creations = db
         .select(
@@ -147,20 +175,8 @@ extension ChecklistStore on TaskStore {
 
   /// Durable descendant work protects its containing task. Merely materialized
   /// item seeds and private drafts do not fabricate canonical activity.
-  bool _hasChecklistActivity(String parent) {
-    final history = _checklistHistory(parent);
-    final ids = {
-      for (final event in history)
-        if (event.type == 'checklist.itemCreated' &&
-            event.data['parent'] == parent)
-          event.entity,
-      for (final event in history)
-        if (event.type == 'task.completedWithChecklist')
-          for (final item in (event.data['checklist'] as Map)['items'] as List)
-            (item as Map)['id'] as String,
-    };
-    return history.any((event) => ids.contains(event.entity));
-  }
+  bool _hasChecklistActivity(String parent) =>
+      hasDurableChecklistActivity(_checklistHistory(parent), parent);
 
   void _validateChecklistReferences([LogEvent? pending]) {
     final references = db
@@ -170,7 +186,10 @@ extension ChecklistStore on TaskStore {
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
     if (pending != null &&
-        {'checklist.itemCreated', 'checklist.itemMoved'}.contains(pending.type)) {
+        {
+          'checklist.itemCreated',
+          'checklist.itemMoved',
+        }.contains(pending.type)) {
       references.add(pending);
     }
     Map<String, dynamic>? state(String id) =>
@@ -190,8 +209,7 @@ extension ChecklistStore on TaskStore {
           'Checklist parent must be a task in ${reference.id}.',
         );
       }
-      if (identical(reference, pending) &&
-          (parentState == null || parentState['deleted'] == true)) {
+      if (identical(reference, pending) && !_checklistParentAvailable(parent)) {
         throw FormatFailure('Choose an existing task for the checklist.');
       }
       final before = reference.data['before'];
@@ -213,6 +231,9 @@ extension ChecklistStore on TaskStore {
       final owner = state(pending.entity);
       if (owner?['kind'] == 'checklistItem') {
         final parent = state(owner!['parent'] as String);
+        if (!_checklistParentAvailable(owner['parent'] as String)) {
+          throw FormatFailure('This checklist item’s task is unavailable.');
+        }
         if (parent == null ||
             parent['kind'] != 'task' ||
             parent['deleted'] == true ||

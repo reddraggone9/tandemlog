@@ -44,6 +44,25 @@ offline new-task exception and remaining release gates.
 
 Future games, nutrition and inventory are separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
 
+The isolated checklist component keeps membership/order, item kind and durable
+descendant protection in `domain/checklist.dart`. `storage/checklist_store.dart`
+shares the existing TaskStore command/ingestion transaction as a focused part;
+it owns parent/anchor admission and native copy-proof validation. Item title/notes
+reuse item-scoped native contexts and receipts without new Rust or dependencies.
+Native-enabled cache16 aggregates items under task projections, while the ordinary
+task list excludes item rows. Immutable-prefix baseline selection and live
+selection use the same pure descendant-protection rule. Editor captures and local
+item writes check the containing task's availability; remote late work retains
+normal deterministic restoration. This is a storage milestone, with UI and final
+platform review pending; see [ADR0011](decisions/0011-one-level-checklists.md).
+
+Checklist validation currently revisits existing completion prefixes during
+reconciliation/commands. Impact: larger checklists add work to the separately
+documented historical prefix CPU debt. Owner: Tandemlog implementation with Lee;
+exit: measured checklist native workflows meet the agreed device budget or a
+bounded indexed verifier is independently reviewed. Revisit before stable
+checklist promotion; do not claim linear replay or open-ended optimization here.
+
 ## Trust and privacy
 
 A selected user is not a security principal. A Syncthing peer that can alter the shared directory can fabricate another user's content; encrypted transport does not add application authorization or encrypt files at rest. Initially assume explicitly trusted household devices. Keep secrets, tokens and SQLite caches private. Before adding personal food/weight data, decide sharing boundaries; hiding a screen is not privacy. Workspace separation is simpler than field-level permissions on a shared log.
