@@ -10,11 +10,20 @@ on:
       - "experiments/yrs-spike/evidence/**"
   pull_request:
   workflow_dispatch:
+    inputs:
+      windows_app_flows:
+        description: Run only the 22 scoped Windows native application flows
+        type: boolean
+        default: false
 permissions:
   contents: read
 concurrency:
-  group: ci-${{ github.ref }}
+  group: ci-${{ github.ref }}${{ inputs.windows_app_flows && '-windows-app-flows' || '' }}
   cancel-in-progress: true
 jobs:
   checks:
+    if: ${{ github.event_name != 'workflow_dispatch' || !inputs.windows_app_flows }}
     uses: ./.github/workflows/validate.yml
+  windows_app_flows:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.windows_app_flows }}
+    uses: ./.github/workflows/windows-app-flows.yml
