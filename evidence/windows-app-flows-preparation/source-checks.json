@@ -1,0 +1,20 @@
+{
+  "baseline": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "yaml_parser": "already-installed PyYAML BaseLoader (local check only; not a CI dependency)",
+  "checks": [
+    "dispatch Boolean default false",
+    "normal CI condition and validate target",
+    "manual-only scoped condition and local reusable target",
+    "read-only permissions, windows-2022 and existing pinned actions",
+    "locked pub get",
+    "always-upload dedicated logs path only",
+    "no app/tests/native/dependency/normal validation diff"
+  ],
+  "files": {
+    ".github/workflows/ci.yml": "9caf61ae4b794ebea6e549a9e9efc9c92d6179282f957050c9ef31610c5c769f",
+    ".github/workflows/windows-app-flows.yml": "6c23d1895f4ae87964ad3a64aa20dd183079ca6c67b179c5164a445d0b2420b0",
+    "tool/windows_app_flows.py": "7295aa09cc4f58ce761ba858297285852cea41bb4e8e2fd2d2ddbd4fe0c727b6",
+    "tool/test_windows_app_flows.py": "972f54ad25870a7ed560ab0fab1c0d3ac885f09e8ca73e05889041ec0e054e36"
+  },
+  "windows_execution": "not dispatched; actual runtime/display result pending independent review"
+}
