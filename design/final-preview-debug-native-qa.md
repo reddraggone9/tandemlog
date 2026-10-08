@@ -1,5 +1,10 @@
 # Frozen RC4: debug/native QA handoff
 
+This preserves the frozen debug evidence and earlier preparation snapshot.
+The [current main signed-candidate handoff](rc4-signed-candidate-acceptance.md)
+records subsequent main integration and parent isolated regression acceptance.
+Earlier debug artifacts remain separate from final signed-package acceptance.
+
 Frozen source `e205e650b5614935a73cf5acb96ca9b36fda8e4e`, branch
 `preview/shared-history-checklists-final`, source version `2026.10.2-rc.4+46`.
 This is a separate combined candidate. Do not replace the parent-owned isolated

@@ -1,5 +1,10 @@
 # Composed preview: 2026.10.2-rc.4+46
 
+Historical preparation snapshot below. Main integration and isolated Android
+regression acceptance subsequently completed; see the [current signed-candidate
+handoff](rc4-signed-candidate-acceptance.md) for authoritative source/run bindings
+and remaining exact signed-package gates.
+
 Status: preparation authorized by parent on 2026-10-08 while the exact isolated
 historical-leak retest proceeds. Composition is separate from all frozen candidates.
 No main merge, owner signing or publication has occurred. Stable feature promotion
