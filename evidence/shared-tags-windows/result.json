@@ -1,0 +1,38 @@
+{
+  "run": 37790261412,
+  "job": 113355485932,
+  "source": "ff1d1f8286149cf725dc63598fd42facbeacc12d",
+  "application_and_test_source_equivalent": "8b13cd0e50242b071fa1b1b2422b1138892652ea",
+  "conclusion": "success",
+  "actual_hosted_native_platform": "Windows debug",
+  "counts": [
+    3,
+    2,
+    7,
+    4,
+    2,
+    3,
+    1
+  ],
+  "total_passed": 22,
+  "skipped": 0,
+  "failed": 0,
+  "startup_and_ready_markers": true,
+  "source_guard": "Runner requires Git HEAD == GITHUB_SHA; exact app/test/native inputs have no diff versus reviewed feature",
+  "decoded_job_log_sha256": "8f0ef4fdef52cdf16a0e0ea4ce4c8439a943e00307e81c8fab79a1215f1ed4d0",
+  "log_representation": "Decoded GitHub job log retained as UTF8; original archive bytes were not rehashed",
+  "receipt_archive_api_reported": {
+    "id": 11556970118,
+    "bytes": 15772,
+    "sha256": "9c8ca4a28135bfa7155156cb04cae60453b03d93727d9b51c42761be58387fde"
+  },
+  "consumer_archive_bytes_verified": false,
+  "binary_hashes": "Runner records debug bundle hashes per group; raw receipt archive and binary bytes were not rehashed by this consumer",
+  "loaded_module_enumeration": false,
+  "pending": [
+    "Signed release exact-artifact manual visual/assistive technology acceptance",
+    "Android native IME/provider/affected-flow acceptance",
+    "Windows overnight/physical display investigation"
+  ],
+  "independent_review": "Accepted decoded job counts, startup/readiness and source binding; no must-fix. Archive/digest remain reported metadata only."
+}

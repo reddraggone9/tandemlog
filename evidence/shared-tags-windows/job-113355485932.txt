@@ -1,0 +1,1132 @@
+﻿2026-10-08T14:10:20.1030712Z Current runner version: '2.337.0'
+2026-10-08T14:10:20.1046810Z ##[group]Runner Image Provisioner
+2026-10-08T14:10:20.1047299Z Hosted Compute Agent
+2026-10-08T14:10:20.1047613Z Version: 20261002.596
+2026-10-08T14:10:20.1047977Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-08T14:10:20.1048381Z Build Date: 2026-10-02T22:28:27Z
+2026-10-08T14:10:20.1048759Z Worker ID: {823a3f70-64dd-43d4-8057-769a344f6a35}
+2026-10-08T14:10:20.1049134Z Region: centralus
+2026-10-08T14:10:20.1049424Z Cloud: Azure
+2026-10-08T14:10:20.1049710Z ##[endgroup]
+2026-10-08T14:10:20.1050418Z ##[group]Operating System
+2026-10-08T14:10:20.1050742Z Microsoft Windows Server 2022
+2026-10-08T14:10:20.1051075Z 10.0.20348
+2026-10-08T14:10:20.1051349Z Datacenter
+2026-10-08T14:10:20.1051622Z ##[endgroup]
+2026-10-08T14:10:20.1051924Z ##[group]Runner Image
+2026-10-08T14:10:20.1052216Z Image: windows-2022
+2026-10-08T14:10:20.1052523Z Version: 20261004.326.1
+2026-10-08T14:10:20.1053296Z Included Software: https://github.com/actions/runner-images/blob/win22/20261004.326/images/windows/Windows2022-Readme.md
+2026-10-08T14:10:20.1054110Z Image Release: https://github.com/actions/runner-images/releases/tag/win22%2F20261004.326
+2026-10-08T14:10:20.1054600Z ##[endgroup]
+2026-10-08T14:10:20.1055179Z ##[group]GITHUB_TOKEN Permissions
+2026-10-08T14:10:20.1056211Z Contents: read
+2026-10-08T14:10:20.1056526Z Metadata: read
+2026-10-08T14:10:20.1056814Z ##[endgroup]
+2026-10-08T14:10:20.1057993Z Secret source: Actions
+2026-10-08T14:10:20.1058471Z Cache mode: write
+2026-10-08T14:10:20.1058824Z Prepare workflow directory
+2026-10-08T14:10:20.1286704Z Prepare all required actions
+2026-10-08T14:10:20.1317169Z Getting action download info
+2026-10-08T14:10:20.3797627Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-08T14:10:20.4429784Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-10-08T14:10:20.6085560Z Uses: reddraggone9/tandemlog/.github/workflows/windows-app-flows.yml@refs/heads/test/shared-tags-windows-native (ff1d1f8286149cf725dc63598fd42facbeacc12d)
+2026-10-08T14:10:20.6088587Z ##[group] Inputs
+2026-10-08T14:10:20.6088998Z   windows_app_flows: true
+2026-10-08T14:10:20.6089244Z ##[endgroup]
+2026-10-08T14:10:20.6089487Z Complete job name: windows_app_flows / windows
+2026-10-08T14:10:20.7527328Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-08T14:10:20.7528040Z with:
+2026-10-08T14:10:20.7528260Z   repository: reddraggone9/tandemlog
+2026-10-08T14:10:20.7530340Z   token: ***
+2026-10-08T14:10:20.7530544Z   ssh-strict: true
+2026-10-08T14:10:20.7530754Z   ssh-user: git
+2026-10-08T14:10:20.7530972Z   persist-credentials: true
+2026-10-08T14:10:20.7531204Z   clean: true
+2026-10-08T14:10:20.7531421Z   sparse-checkout-cone-mode: true
+2026-10-08T14:10:20.7531670Z   fetch-depth: 1
+2026-10-08T14:10:20.7531878Z   fetch-tags: false
+2026-10-08T14:10:20.7532110Z   show-progress: true
+2026-10-08T14:10:20.7532320Z   lfs: false
+2026-10-08T14:10:20.7532515Z   submodules: false
+2026-10-08T14:10:20.7532729Z   set-safe-directory: true
+2026-10-08T14:10:20.7532974Z   allow-unsafe-pr-checkout: false
+2026-10-08T14:10:20.7533306Z ##[endgroup]
+2026-10-08T14:10:20.8436688Z Syncing repository: reddraggone9/tandemlog
+2026-10-08T14:10:20.8437732Z ##[group]Getting Git version info
+2026-10-08T14:10:20.8438037Z Working directory is 'D:\a\tandemlog\tandemlog'
+2026-10-08T14:10:20.8996922Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-08T14:10:21.2671723Z git version 2.56.0.windows.1
+2026-10-08T14:10:21.2699800Z ##[endgroup]
+2026-10-08T14:10:21.2709698Z Temporarily overriding HOME='D:\a\_temp\4bd0ef95-302b-432f-8093-241c38c2e90f' before making global git config changes
+2026-10-08T14:10:21.2710427Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T14:10:21.2716201Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tandemlog\tandemlog
+2026-10-08T14:10:21.3206488Z Deleting the contents of 'D:\a\tandemlog\tandemlog'
+2026-10-08T14:10:21.3209054Z ##[group]Determining repository object format
+2026-10-08T14:10:21.3210378Z ##[endgroup]
+2026-10-08T14:10:21.3210932Z ##[group]Initializing the repository
+2026-10-08T14:10:21.3216732Z [command]"C:\Program Files\Git\bin\git.exe" init D:\a\tandemlog\tandemlog
+2026-10-08T14:10:21.4071651Z Initialized empty Git repository in D:/a/tandemlog/tandemlog/.git/
+2026-10-08T14:10:21.4094773Z [command]"C:\Program Files\Git\bin\git.exe" remote add origin https://github.com/reddraggone9/tandemlog
+2026-10-08T14:10:21.4696682Z ##[endgroup]
+2026-10-08T14:10:21.4697112Z ##[group]Disabling automatic garbage collection
+2026-10-08T14:10:21.4701916Z [command]"C:\Program Files\Git\bin\git.exe" config --local gc.auto 0
+2026-10-08T14:10:21.4889217Z ##[endgroup]
+2026-10-08T14:10:21.4889805Z ##[group]Setting up auth
+2026-10-08T14:10:21.4890346Z Removing SSH command configuration
+2026-10-08T14:10:21.4896612Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T14:10:21.5085222Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-08T14:10:22.9856360Z Removing HTTP extra header
+2026-10-08T14:10:22.9862542Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T14:10:23.0051996Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-08T14:10:23.3390072Z Removing includeIf entries pointing to credentials config files
+2026-10-08T14:10:23.3397623Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T14:10:23.3593441Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-08T14:10:23.7161587Z [command]"C:\Program Files\Git\bin\git.exe" config --file D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config http.https://github.com/.extraheader "AUTHORIZATION: basic ***"
+2026-10-08T14:10:23.7354449Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tandemlog/tandemlog/.git.path D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:10:23.7542420Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:10:23.7776239Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:10:23.7965058Z [command]"C:\Program Files\Git\bin\git.exe" config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:10:23.8149130Z ##[endgroup]
+2026-10-08T14:10:23.8149463Z ##[group]Fetching the repository
+2026-10-08T14:10:23.8158660Z [command]"C:\Program Files\Git\bin\git.exe" -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +ff1d1f8286149cf725dc63598fd42facbeacc12d:refs/remotes/origin/test/shared-tags-windows-native
+2026-10-08T14:10:25.7853824Z From https://github.com/reddraggone9/tandemlog
+2026-10-08T14:10:25.7854504Z  * [new ref]         ff1d1f8286149cf725dc63598fd42facbeacc12d -> origin/test/shared-tags-windows-native
+2026-10-08T14:10:25.7883690Z [command]"C:\Program Files\Git\bin\git.exe" branch --list --remote origin/test/shared-tags-windows-native
+2026-10-08T14:10:25.8165707Z   origin/test/shared-tags-windows-native
+2026-10-08T14:10:25.8187155Z [command]"C:\Program Files\Git\bin\git.exe" rev-parse refs/remotes/origin/test/shared-tags-windows-native
+2026-10-08T14:10:25.8404907Z ff1d1f8286149cf725dc63598fd42facbeacc12d
+2026-10-08T14:10:25.8421701Z ##[endgroup]
+2026-10-08T14:10:25.8421948Z ##[group]Determining the checkout info
+2026-10-08T14:10:25.8422580Z ##[endgroup]
+2026-10-08T14:10:25.8427151Z [command]"C:\Program Files\Git\bin\git.exe" sparse-checkout disable
+2026-10-08T14:10:25.8714830Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset-all extensions.worktreeConfig
+2026-10-08T14:10:25.8903222Z ##[group]Checking out the ref
+2026-10-08T14:10:25.8903646Z [command]"C:\Program Files\Git\bin\git.exe" checkout --progress --force -B test/shared-tags-windows-native refs/remotes/origin/test/shared-tags-windows-native
+2026-10-08T14:10:26.1227381Z Switched to a new branch 'test/shared-tags-windows-native'
+2026-10-08T14:10:26.1240699Z branch 'test/shared-tags-windows-native' set up to track 'origin/test/shared-tags-windows-native'.
+2026-10-08T14:10:26.1282383Z ##[endgroup]
+2026-10-08T14:10:26.1608223Z [command]"C:\Program Files\Git\bin\git.exe" log -1 --format=%H
+2026-10-08T14:10:26.1789610Z ff1d1f8286149cf725dc63598fd42facbeacc12d
+2026-10-08T14:10:26.2066008Z Prepare all required actions
+2026-10-08T14:10:26.2089599Z ##[group]Run ./.github/actions/setup-flutter
+2026-10-08T14:10:26.2089755Z ##[endgroup]
+2026-10-08T14:10:26.2123952Z ##[start-action display=Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter";id=__self.__run]
+2026-10-08T14:10:26.2202180Z ##[group]Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+2026-10-08T14:10:26.2202603Z [36;1mgit clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"[0m
+2026-10-08T14:10:26.2202996Z [36;1mtest "$(git -C "$RUNNER_TEMP/flutter" rev-parse HEAD)" = 6a19cca56475dbfba1478ee68d7bd0c2ef891da1[0m
+2026-10-08T14:10:26.2203270Z [36;1mecho "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"[0m
+2026-10-08T14:10:26.2212125Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T14:10:26.2212339Z ##[endgroup]
+2026-10-08T14:10:26.3872277Z Cloning into 'D:\a\_temp/flutter'...
+2026-10-08T14:10:27.7021443Z Note: switching to '6a19cca56475dbfba1478ee68d7bd0c2ef891da1'.
+2026-10-08T14:10:27.7021824Z 
+2026-10-08T14:10:27.7021973Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-08T14:10:27.7022323Z changes and commit them, and you can discard any commits you make in this
+2026-10-08T14:10:27.7022669Z state without impacting any branches by switching back to a branch.
+2026-10-08T14:10:27.7022878Z 
+2026-10-08T14:10:27.7023007Z If you want to create a new branch to retain commits you create, you may
+2026-10-08T14:10:27.7023397Z do so (now or later) by using -c with the switch command. Example:
+2026-10-08T14:10:27.7023595Z 
+2026-10-08T14:10:27.7023729Z   git switch -c <new-branch-name>
+2026-10-08T14:10:27.7023874Z 
+2026-10-08T14:10:27.7023955Z Or undo this operation with:
+2026-10-08T14:10:27.7024073Z 
+2026-10-08T14:10:27.7024136Z   git switch -
+2026-10-08T14:10:27.7024225Z 
+2026-10-08T14:10:27.7024396Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-08T14:10:27.7024645Z 
+2026-10-08T14:10:28.7312230Z Updating files:  59% (9491/16074)
+2026-10-08T14:10:28.7472619Z Updating files:  60% (9645/16074)
+2026-10-08T14:10:28.7611682Z Updating files:  61% (9806/16074)
+2026-10-08T14:10:28.8061017Z Updating files:  62% (9966/16074)
+2026-10-08T14:10:28.8221895Z Updating files:  63% (10127/16074)
+2026-10-08T14:10:28.8371856Z Updating files:  64% (10288/16074)
+2026-10-08T14:10:28.8523183Z Updating files:  65% (10449/16074)
+2026-10-08T14:10:28.8679269Z Updating files:  66% (10609/16074)
+2026-10-08T14:10:28.8832215Z Updating files:  67% (10770/16074)
+2026-10-08T14:10:28.8979115Z Updating files:  68% (10931/16074)
+2026-10-08T14:10:28.9124126Z Updating files:  69% (11092/16074)
+2026-10-08T14:10:29.0293722Z Updating files:  70% (11252/16074)
+2026-10-08T14:10:29.0446273Z Updating files:  71% (11413/16074)
+2026-10-08T14:10:29.0588882Z Updating files:  72% (11574/16074)
+2026-10-08T14:10:29.0736892Z Updating files:  73% (11735/16074)
+2026-10-08T14:10:29.0879921Z Updating files:  74% (11895/16074)
+2026-10-08T14:10:29.1103988Z Updating files:  75% (12056/16074)
+2026-10-08T14:10:29.1428625Z Updating files:  76% (12217/16074)
+2026-10-08T14:10:29.1711696Z Updating files:  77% (12377/16074)
+2026-10-08T14:10:29.2002380Z Updating files:  78% (12538/16074)
+2026-10-08T14:10:29.2299465Z Updating files:  79% (12699/16074)
+2026-10-08T14:10:29.2542124Z Updating files:  80% (12860/16074)
+2026-10-08T14:10:29.2855494Z Updating files:  81% (13020/16074)
+2026-10-08T14:10:29.3026043Z Updating files:  82% (13181/16074)
+2026-10-08T14:10:29.3254220Z Updating files:  83% (13342/16074)
+2026-10-08T14:10:29.3467126Z Updating files:  84% (13503/16074)
+2026-10-08T14:10:29.3655804Z Updating files:  85% (13663/16074)
+2026-10-08T14:10:29.3802643Z Updating files:  86% (13824/16074)
+2026-10-08T14:10:29.4884093Z Updating files:  87% (13985/16074)
+2026-10-08T14:10:29.5001232Z Updating files:  88% (14146/16074)
+2026-10-08T14:10:29.5179996Z Updating files:  89% (14306/16074)
+2026-10-08T14:10:29.5341584Z Updating files:  90% (14467/16074)
+2026-10-08T14:10:29.5546343Z Updating files:  91% (14628/16074)
+2026-10-08T14:10:29.5774876Z Updating files:  92% (14789/16074)
+2026-10-08T14:10:29.5918641Z Updating files:  93% (14949/16074)
+2026-10-08T14:10:29.6065226Z Updating files:  94% (15110/16074)
+2026-10-08T14:10:29.6271049Z Updating files:  95% (15271/16074)
+2026-10-08T14:10:29.6493359Z Updating files:  96% (15432/16074)
+2026-10-08T14:10:29.6703061Z Updating files:  97% (15592/16074)
+2026-10-08T14:10:29.6861424Z Updating files:  98% (15753/16074)
+2026-10-08T14:10:29.7012399Z Updating files:  99% (15914/16074)
+2026-10-08T14:10:29.7012677Z Updating files: 100% (16074/16074)
+2026-10-08T14:10:29.7012883Z Updating files: 100% (16074/16074), done.
+2026-10-08T14:10:29.7624691Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=3550]
+2026-10-08T14:10:29.7627244Z ##[start-action display=Run flutter config --no-analytics;id=__self.__run_2]
+2026-10-08T14:10:29.7694685Z ##[group]Run flutter config --no-analytics
+2026-10-08T14:10:29.7694872Z [36;1mflutter config --no-analytics[0m
+2026-10-08T14:10:29.7695013Z [36;1mflutter --version[0m
+2026-10-08T14:10:29.7703465Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T14:10:29.7703671Z ##[endgroup]
+2026-10-08T14:10:30.7698515Z Checking Dart SDK version... 
+2026-10-08T14:10:30.7709793Z Downloading Dart SDK from Flutter engine ... 
+2026-10-08T14:10:33.3940737Z Expanding downloaded archive with 7z...
+2026-10-08T14:10:36.2610466Z Building flutter tool... 
+2026-10-08T14:10:36.2629606Z Running pub upgrade... 
+2026-10-08T14:10:36.3049616Z Resolving dependencies...
+2026-10-08T14:10:37.0216125Z Downloading packages...
+2026-10-08T14:10:47.4901554Z Got dependencies.
+2026-10-08T14:11:03.8278493Z Analytics reporting disabled.
+2026-10-08T14:11:03.8279408Z 
+2026-10-08T14:11:03.8279629Z You may need to restart any open editors for them to read new settings.
+2026-10-08T14:11:04.3426012Z Flutter 3.47.5 • channel [user-branch] • https://github.com/flutter/flutter.git
+2026-10-08T14:11:04.3426578Z Framework • revision 6a19cca564 (3 weeks ago) • 2026-09-17 14:13:22 -0400
+2026-10-08T14:11:04.3427136Z Engine • hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) • 2026-09-16 18:35:09.000Z
+2026-10-08T14:11:04.3427579Z Tools • Dart 3.13.4 • DevTools 2.60.0
+2026-10-08T14:11:04.3546409Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=34592]
+2026-10-08T14:11:04.3647530Z Prepare all required actions
+2026-10-08T14:11:04.3673487Z ##[group]Run ./.github/actions/setup-text-engine
+2026-10-08T14:11:04.3673649Z with:
+2026-10-08T14:11:04.3673753Z   platform: windows
+2026-10-08T14:11:04.3673860Z ##[endgroup]
+2026-10-08T14:11:04.3676222Z ##[start-action display=Select preinstalled Windows Python 3.11;id=__self_2.__run]
+2026-10-08T14:11:04.3742673Z ##[group]Run py -3.11 -c "import pathlib, sys; print(pathlib.Path(sys.executable).parent)" >> $env:GITHUB_PATH
+2026-10-08T14:11:04.3743051Z [36;1mpy -3.11 -c "import pathlib, sys; print(pathlib.Path(sys.executable).parent)" >> $env:GITHUB_PATH[0m
+2026-10-08T14:11:04.3765022Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T14:11:04.3765210Z ##[endgroup]
+2026-10-08T14:11:08.2202740Z ##[end-action id=__self_2.__run;outcome=success;conclusion=success;duration_ms=3852]
+2026-10-08T14:11:08.2207951Z ##[start-action display=Bootstrap reviewed official Rust inputs outside app builds;id=__self_2.__run_2]
+2026-10-08T14:11:08.2278350Z ##[group]Run python tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"
+2026-10-08T14:11:08.2278638Z [36;1mpython tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"[0m
+2026-10-08T14:11:08.2285973Z shell: C:\Program Files\Git\bin\bash.EXE --noprofile --norc -e -o pipefail {0}
+2026-10-08T14:11:08.2286173Z env:
+2026-10-08T14:11:08.2286275Z   TEXT_PLATFORM: windows
+2026-10-08T14:11:08.2286395Z ##[endgroup]
+2026-10-08T14:11:10.5500347Z info: profile set to minimal
+2026-10-08T14:11:10.5500597Z info: default host tuple is x86_64-pc-windows-msvc
+2026-10-08T14:11:10.5500778Z info: skipping toolchain installation
+2026-10-08T14:11:10.5500886Z 
+2026-10-08T14:11:10.5501360Z 
+2026-10-08T14:11:10.5501597Z Rust is installed now. Great!
+2026-10-08T14:11:10.5501689Z 
+2026-10-08T14:11:10.5501773Z To get started you need Cargo's bin directory (D:\a\_temp
+2026-10-08T14:11:10.5502027Z \tandemlog-rust-bootstrap\cargo\bin) in your PATH
+2026-10-08T14:11:10.5502379Z environment variable. This has not been done automatically.
+2026-10-08T14:11:10.6050817Z info: auto-self-update mode set to disable
+2026-10-08T14:11:10.6051179Z warn: no toolchain installed and no default toolchain set
+2026-10-08T14:11:10.6051687Z help: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.
+2026-10-08T14:11:10.6142996Z info: syncing channel updates for 1.99.0-x86_64-pc-windows-msvc
+2026-10-08T14:11:10.7955375Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T14:11:10.7957308Z info: downloading 3 components
+2026-10-08T14:11:19.3613619Z 
+2026-10-08T14:11:20.1113266Z   1.99.0-x86_64-pc-windows-msvc installed - rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T14:11:20.1113484Z 
+2026-10-08T14:11:20.2386114Z info: default toolchain set to 1.99.0-x86_64-pc-windows-msvc
+2026-10-08T14:11:20.2870767Z info: component rust-std is up to date
+2026-10-08T14:11:20.3137986Z     Updating crates.io index
+2026-10-08T14:11:20.6930232Z  Downloading crates ...
+2026-10-08T14:11:20.9405013Z   Downloaded thiserror v2.0.21
+2026-10-08T14:11:20.9541536Z   Downloaded smallstr v0.3.1
+2026-10-08T14:11:20.9562608Z   Downloaded wasm-bindgen-shared v0.2.129
+2026-10-08T14:11:20.9582754Z   Downloaded parking v2.2.1
+2026-10-08T14:11:20.9602948Z   Downloaded cfg-if v1.0.5
+2026-10-08T14:11:20.9628029Z   Downloaded windows-link v0.2.1
+2026-10-08T14:11:20.9683818Z   Downloaded scopeguard v1.2.0
+2026-10-08T14:11:20.9707044Z   Downloaded wasm-bindgen-macro v0.2.129
+2026-10-08T14:11:20.9724378Z   Downloaded zmij v1.0.23
+2026-10-08T14:11:20.9757173Z   Downloaded dashmap v6.2.1
+2026-10-08T14:11:20.9804509Z   Downloaded itoa v1.0.18
+2026-10-08T14:11:20.9830472Z   Downloaded pin-project-lite v0.2.17
+2026-10-08T14:11:20.9941521Z   Downloaded fastrand v2.5.0
+2026-10-08T14:11:20.9965398Z   Downloaded lock_api v0.4.14
+2026-10-08T14:11:20.9985388Z   Downloaded redox_syscall v0.5.18
+2026-10-08T14:11:21.0034762Z   Downloaded async-trait v0.1.92
+2026-10-08T14:11:21.0106724Z   Downloaded quote v1.0.47
+2026-10-08T14:11:21.0156923Z   Downloaded rustversion v1.0.23
+2026-10-08T14:11:21.0210522Z   Downloaded once_cell v1.21.4
+2026-10-08T14:11:21.0257069Z   Downloaded crossbeam-utils v0.8.23
+2026-10-08T14:11:21.0307268Z   Downloaded event-listener-strategy v0.5.4
+2026-10-08T14:11:21.0326731Z   Downloaded thiserror-impl v2.0.21
+2026-10-08T14:11:21.0354344Z   Downloaded async-lock v3.4.2
+2026-10-08T14:11:21.0395669Z   Downloaded event-listener v5.4.2
+2026-10-08T14:11:21.0424453Z   Downloaded parking_lot_core v0.9.12
+2026-10-08T14:11:21.0462198Z   Downloaded unicode-ident v1.0.26
+2026-10-08T14:11:21.0508258Z   Downloaded smallvec v1.16.2
+2026-10-08T14:11:21.0530437Z   Downloaded serde_core v1.0.229
+2026-10-08T14:11:21.0575122Z   Downloaded getrandom v0.4.3
+2026-10-08T14:11:21.0643698Z   Downloaded r-efi v6.0.0
+2026-10-08T14:11:21.0740719Z   Downloaded bitflags v2.13.2
+2026-10-08T14:11:21.0826671Z   Downloaded proc-macro2 v1.0.107
+2026-10-08T14:11:21.0879652Z   Downloaded base64 v0.22.1
+2026-10-08T14:11:21.0945268Z   Downloaded serde_derive v1.0.229
+2026-10-08T14:11:21.1003524Z   Downloaded serde v1.0.229
+2026-10-08T14:11:21.1061600Z   Downloaded wasm-bindgen v0.2.129
+2026-10-08T14:11:21.1106909Z   Downloaded arc-swap v1.9.2
+2026-10-08T14:11:21.1177892Z   Downloaded bumpalo v3.20.3
+2026-10-08T14:11:21.1217519Z   Downloaded memchr v2.8.3
+2026-10-08T14:11:21.1313176Z   Downloaded js-sys v0.3.106
+2026-10-08T14:11:21.1354321Z   Downloaded wasm-bindgen-macro-support v0.2.129
+2026-10-08T14:11:21.1390377Z   Downloaded hashbrown v0.14.5
+2026-10-08T14:11:21.1462331Z   Downloaded syn v3.0.6
+2026-10-08T14:11:21.1636804Z   Downloaded serde_json v1.0.151
+2026-10-08T14:11:21.1771945Z   Downloaded libc v0.2.190
+2026-10-08T14:11:21.3177326Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=13097]
+2026-10-08T14:11:21.3179673Z ##[start-action display=Install exact approved NDK outside app builds;id=__self_2.__run_3]
+2026-10-08T14:11:21.3183850Z ##[end-action id=__self_2.__run_3;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-08T14:11:21.3262360Z ##[group]Run flutter pub get --enforce-lockfile
+2026-10-08T14:11:21.3262589Z [36;1mflutter pub get --enforce-lockfile[0m
+2026-10-08T14:11:21.3286417Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T14:11:21.3286606Z env:
+2026-10-08T14:11:21.3286752Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T14:11:21.3286964Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T14:11:21.3287179Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T14:11:21.3287375Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T14:11:21.3287541Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T14:11:21.3287717Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T14:11:21.3287921Z ##[endgroup]
+2026-10-08T14:11:22.1230705Z [1/10] Material Fonts                                              227ms
+2026-10-08T14:11:22.1688690Z [2/10] Gradle Wrapper                                               19ms
+2026-10-08T14:11:22.1863405Z [3/10] Flutter SDK
+2026-10-08T14:11:22.2655974Z   ├─ [1/5] sky_engine                                               78ms
+2026-10-08T14:11:22.3757636Z   ├─ [2/5] flutter_gpu                                              44ms
+2026-10-08T14:11:22.5192721Z   ├─ [3/5] flutter_patched_sdk                                     133ms
+2026-10-08T14:11:22.6763061Z   ├─ [4/5] flutter_patched_sdk_product                             128ms
+2026-10-08T14:11:23.4174504Z   └─ [5/5] windows-x64                                             710ms
+2026-10-08T14:11:23.8268246Z [10/10] windows-x64/font-subset                                    121ms
+2026-10-08T14:11:23.8728022Z Resolving dependencies...
+2026-10-08T14:11:24.5690517Z Downloading packages...
+2026-10-08T14:11:30.3969151Z   code_assets 1.2.1 (2.1.0 available)
+2026-10-08T14:11:30.3969381Z   cross_file 0.3.5+5 (0.4.0 available)
+2026-10-08T14:11:30.3969907Z   jni 1.0.3 (1.1.0 available)
+2026-10-08T14:11:30.3970150Z   jni_flutter 1.0.3 (1.0.4+1 available)
+2026-10-08T14:11:30.3970323Z   material_color_utilities 0.13.0 (0.13.1 available)
+2026-10-08T14:11:30.3970574Z   native_toolchain_c 0.19.3 (0.19.5 available)
+2026-10-08T14:11:30.3970786Z   objective_c 9.5.0 (9.6.2 available)
+2026-10-08T14:11:30.3970976Z   test_api 0.7.12 (0.7.14 available)
+2026-10-08T14:11:30.3971165Z   url_launcher 6.3.2 (6.3.3 available)
+2026-10-08T14:11:30.3971356Z   vector_math 2.4.0 (2.4.3 available)
+2026-10-08T14:11:30.3971538Z Got dependencies!
+2026-10-08T14:11:30.3971779Z 10 packages have newer versions incompatible with dependency constraints.
+2026-10-08T14:11:30.3972149Z Try `flutter pub outdated` for more information.
+2026-10-08T14:11:30.5829148Z ##[group]Run python tool/windows_app_flows.py --output "$env:RUNNER_TEMP/tandemlog-windows-app-flows"
+2026-10-08T14:11:30.5829560Z [36;1mpython tool/windows_app_flows.py --output "$env:RUNNER_TEMP/tandemlog-windows-app-flows"[0m
+2026-10-08T14:11:30.5851843Z shell: C:\Program Files\PowerShell\7\pwsh.EXE -command ". '{0}'"
+2026-10-08T14:11:30.5852037Z env:
+2026-10-08T14:11:30.5852172Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T14:11:30.5852374Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T14:11:30.5852572Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T14:11:30.5852762Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T14:11:30.5852923Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T14:11:30.5853099Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T14:11:30.5853295Z ##[endgroup]
+2026-10-08T14:11:31.2357197Z Flutter 3.47.5 • channel [user-branch] • https://github.com/flutter/flutter.git
+2026-10-08T14:11:31.2357568Z Framework • revision 6a19cca564 (3 weeks ago) • 2026-09-17 14:13:22 -0400
+2026-10-08T14:11:31.2357956Z Engine • hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) • 2026-09-16 18:35:09.000Z
+2026-10-08T14:11:31.2358275Z Tools • Dart 3.13.4 • DevTools 2.60.0
+2026-10-08T14:11:31.2358375Z 
+2026-10-08T14:12:05.2128732Z [!] Flutter (Channel [user-branch], 3.47.5, on Microsoft Windows [Version 10.0.20348.5622], locale en-US) [537ms]
+2026-10-08T14:12:05.2129262Z     ! Flutter version 3.47.5 on channel [user-branch] at D:\a\_temp\flutter
+2026-10-08T14:12:05.2129658Z       Currently on an unknown channel. Run `flutter channel` to switch to an official channel.
+2026-10-08T14:12:05.2130442Z       If that doesn't fix the issue, try deleting the 'bin/cache/flutter.version.json' file in your Flutter SDK directory and then reinstall Flutter by following instructions at https://flutter.dev/setup.
+2026-10-08T14:12:05.2131390Z     • Upstream repository https://github.com/flutter/flutter.git
+2026-10-08T14:12:05.2131687Z     • Framework revision 6a19cca564 (3 weeks ago), 2026-09-17 14:13:22 -0400
+2026-10-08T14:12:05.2131917Z     • Engine revision af7e796e16
+2026-10-08T14:12:05.2132086Z     • Dart version 3.13.4
+2026-10-08T14:12:05.2132236Z     • DevTools version 2.60.0
+2026-10-08T14:12:05.2132978Z     • Feature flags: enable-web, enable-linux-desktop, enable-macos-desktop, enable-windows-desktop, enable-android, enable-ios, cli-animations, enable-native-assets, enable-record-use, enable-swift-package-manager, omit-legacy-version-file, enable-lldb-debugging, enable-uiscene-migration, enable-riscv64
+2026-10-08T14:12:05.2133881Z     • If those were intentional, you can disregard the above warnings; however it is recommended to use "git" directly to perform update checks and upgrades.
+2026-10-08T14:12:05.2134161Z 
+2026-10-08T14:12:05.2134300Z [√] Windows Version (Server 2022 Datacenter 64-bit, 21H2, 2009) [27.5s]
+2026-10-08T14:12:05.2134449Z 
+2026-10-08T14:12:05.2134578Z [!] Android toolchain - develop for Android devices (Android SDK version 37.0.0) [33.3s]
+2026-10-08T14:12:05.2134838Z     • Android SDK at C:\Android\android-sdk
+2026-10-08T14:12:05.2135038Z     • Emulator version 37.2.12.0 (build_id 16428233) (CL:N/A)
+2026-10-08T14:12:05.2135459Z     • Platform android-37.2-beta3, build-tools 37.0.0
+2026-10-08T14:12:05.2135645Z     • ANDROID_HOME = C:\Android\android-sdk
+2026-10-08T14:12:05.2135822Z     • ANDROID_SDK_ROOT = C:\Android\android-sdk
+2026-10-08T14:12:05.2136094Z     • Java binary at: C:\hostedtoolcache\windows\Java_Temurin-Hotspot_jdk\8.0.504-1\x64\bin\java
+2026-10-08T14:12:05.2136792Z       This JDK is specified by the JAVA_HOME environment variable.
+2026-10-08T14:12:05.2137154Z       To manually set the JDK path, use: `flutter config --jdk-dir="path/to/jdk"`.
+2026-10-08T14:12:05.2137463Z     X Could not determine java version
+2026-10-08T14:12:05.2139189Z     ! Some Android licenses not accepted. To resolve this, run: flutter doctor --android-licenses
+2026-10-08T14:12:05.2139413Z 
+2026-10-08T14:12:05.2139521Z [√] Chrome - develop for the web [346ms]
+2026-10-08T14:12:05.2139748Z     • Chrome at C:\Program Files\Google\Chrome\Application\chrome.exe
+2026-10-08T14:12:05.2139894Z 
+2026-10-08T14:12:05.2140096Z [√] Visual Studio - develop Windows apps (Visual Studio Enterprise 2022 17.14.41 (September 2026)) [345ms]
+2026-10-08T14:12:05.2140433Z     • Visual Studio at C:\Program Files\Microsoft Visual Studio\2022\Enterprise
+2026-10-08T14:12:05.2140687Z     • Visual Studio Enterprise 2022 version 17.14.37710.0
+2026-10-08T14:12:05.2140874Z     • Windows 10 SDK version 10.0.26100.0
+2026-10-08T14:12:05.2140969Z 
+2026-10-08T14:12:05.2141043Z [√] Connected device (2 available) [6.0s]
+2026-10-08T14:12:05.2141300Z     • Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.20348.5622]
+2026-10-08T14:12:05.2141570Z     • Chrome (web)      • chrome  • web-javascript • unknown
+2026-10-08T14:12:05.2141700Z 
+2026-10-08T14:12:05.2141774Z [√] Network resources [460ms]
+2026-10-08T14:12:05.2141944Z     • All expected network resources are available.
+2026-10-08T14:12:05.2142051Z 
+2026-10-08T14:12:05.2142108Z ! Doctor found issues in 2 categories.
+2026-10-08T14:12:05.2142200Z 
+2026-10-08T14:12:05.7859224Z Found 2 connected devices:
+2026-10-08T14:12:05.7859802Z   Windows (desktop) • windows • windows-x64    • Microsoft Windows [Version 10.0.20348.5622]
+2026-10-08T14:12:05.7860108Z   Chrome (web)      • chrome  • web-javascript • unknown
+2026-10-08T14:12:05.7860233Z 
+2026-10-08T14:12:05.7860343Z Run "flutter emulators" to list and start any available device emulators.
+2026-10-08T14:12:05.7860496Z 
+2026-10-08T14:12:05.7860932Z If you expected another device to be detected, please run "flutter doctor" to diagnose potential issues. You may also try increasing the time to wait for connected devices with the "--device-timeout" flag. Visit https://flutter.dev/setup/ for troubleshooting tips.
+2026-10-08T14:12:05.7861470Z 
+2026-10-08T14:12:05.8100909Z rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-08T14:12:05.8101102Z binary: rustc
+2026-10-08T14:12:05.8101246Z commit-hash: b940084d7eb6a299eb4bfeb8e34901bc051e7ac4
+2026-10-08T14:12:05.8101444Z commit-date: 2026-09-28
+2026-10-08T14:12:05.8101571Z host: x86_64-pc-windows-msvc
+2026-10-08T14:12:05.8101690Z release: 1.99.0
+2026-10-08T14:12:05.8101791Z LLVM version: 23.1.1
+2026-10-08T14:12:05.8101860Z 
+2026-10-08T14:12:05.8295077Z cargo 1.99.0 (5f94df478 2026-08-27)
+2026-10-08T14:12:05.8295236Z 
+2026-10-08T14:14:28.2231217Z [1/3] Windows SDK
+2026-10-08T14:14:28.2232027Z   ├─ [1/4] windows-x64-debug/windows-x64-flutter                 1,965ms
+2026-10-08T14:14:28.2232486Z   ├─ [2/4] windows-x64/flutter-cpp-client-wrapper                   58ms
+2026-10-08T14:14:28.2232886Z   ├─ [3/4] windows-x64-profile/windows-x64-flutter               1,438ms
+2026-10-08T14:14:28.2233253Z   └─ [4/4] windows-x64-release/windows-x64-flutter               1,418ms
+2026-10-08T14:14:28.2233706Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/tag_input_workflow_test.dart
+2026-10-08T14:14:28.2233972Z Building Windows application...                                 
+2026-10-08T14:14:28.2234957Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2235770Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2236186Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2236635Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2241465Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2243224Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2244002Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2244649Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2245346Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2246082Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2246765Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2247441Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2248090Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2248823Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2249577Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2250015Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2250433Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2250870Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2251508Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2251983Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2252463Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2252956Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2253446Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2253886Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2254288Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2255330Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2255861Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2256331Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2256773Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2257275Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2257686Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2258113Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2258562Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2259010Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2259471Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2259922Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2260353Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2260790Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2261218Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2261680Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2262186Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2262682Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2263174Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2263674Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2264159Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2264670Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2265154Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2265666Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2266147Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2266722Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2267202Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2267684Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2268215Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2268696Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2269181Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2269672Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2270156Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2270640Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2271270Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:14:28.2271699Z Building Windows application...                                    76.7s
+2026-10-08T14:14:28.2272062Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:14:28.2272260Z 00:00 +0: shared tag editing and filtering desktop-dark
+2026-10-08T14:14:28.2272432Z TANDEMLOG_FIRST_FRAME_MS=166
+2026-10-08T14:14:28.2272566Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:14:28.2272703Z TANDEMLOG_PHASE sqlite_open_schema=79
+2026-10-08T14:14:28.2272843Z TANDEMLOG_PHASE manifest=46
+2026-10-08T14:14:28.2272971Z TANDEMLOG_PHASE ingest=53
+2026-10-08T14:14:28.2273116Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:14:28.2273287Z TANDEMLOG_READY_MS=658 FILES_READ=1
+2026-10-08T14:14:28.2273456Z 00:16 +1: shared tag editing and filtering narrow-dark
+2026-10-08T14:14:28.2273639Z 00:17 +1: shared tag editing and filtering desktop-dark
+2026-10-08T14:14:28.2273798Z TANDEMLOG_FIRST_FRAME_MS=10
+2026-10-08T14:14:28.2273926Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:14:28.2274063Z TANDEMLOG_PHASE sqlite_open_schema=102
+2026-10-08T14:14:28.2274209Z TANDEMLOG_PHASE manifest=20
+2026-10-08T14:14:28.2274329Z TANDEMLOG_PHASE ingest=22
+2026-10-08T14:14:28.2274470Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:14:28.2274633Z TANDEMLOG_READY_MS=296 FILES_READ=1
+2026-10-08T14:14:28.2274800Z 00:34 +2: shared tag editing and filtering narrow-light-200
+2026-10-08T14:14:28.2274986Z 00:34 +2: shared tag editing and filtering desktop-dark
+2026-10-08T14:14:28.2275142Z TANDEMLOG_FIRST_FRAME_MS=13
+2026-10-08T14:14:28.2275269Z TANDEMLOG_PHASE identity_lock=11
+2026-10-08T14:14:28.2275408Z TANDEMLOG_PHASE sqlite_open_schema=60
+2026-10-08T14:14:28.2275543Z TANDEMLOG_PHASE manifest=19
+2026-10-08T14:14:28.2275665Z TANDEMLOG_PHASE ingest=23
+2026-10-08T14:14:28.2275809Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:14:28.2275970Z TANDEMLOG_READY_MS=285 FILES_READ=1
+2026-10-08T14:14:28.2276098Z 00:53 +3: (tearDownAll)
+2026-10-08T14:14:28.2276220Z 00:53 +3: All tests passed!
+2026-10-08T14:14:28.2276357Z 
+2026-10-08T14:15:25.2174350Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/checklist_workflow_test.dart
+2026-10-08T14:15:25.2174722Z Building Windows application...                                 
+2026-10-08T14:15:25.2175432Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2176088Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2176793Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2178463Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2179338Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2180169Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2180950Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2181637Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2182316Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2183053Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2183819Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2184625Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2185353Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2186122Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2186951Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2187766Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2188521Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2189313Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2190193Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2191041Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2191932Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2192822Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2193681Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2194659Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2195382Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2196193Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2197032Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2197961Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2198844Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2199715Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2200525Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2201294Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2202095Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2202908Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2203733Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2204571Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2205355Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2206159Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2206912Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2207750Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2208620Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2209504Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2210327Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2211126Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2211911Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2212717Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2213506Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2214436Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2215231Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2216018Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2216820Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2217688Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2218514Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2219309Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2220095Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2220896Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2221690Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2222488Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2223384Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:15:25.2224055Z Building Windows application...                                    12.4s
+2026-10-08T14:15:25.2224732Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:15:25.2225135Z 00:00 +0: native checklist desktop dark repeated editors and refreshed completion warning
+2026-10-08T14:15:25.2225516Z TANDEMLOG_FIRST_FRAME_MS=140
+2026-10-08T14:15:25.2225746Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:15:25.2225985Z TANDEMLOG_PHASE sqlite_open_schema=63
+2026-10-08T14:15:25.2226248Z TANDEMLOG_PHASE manifest=42
+2026-10-08T14:15:25.2226470Z TANDEMLOG_PHASE ingest=36
+2026-10-08T14:15:25.2226751Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:15:25.2227038Z TANDEMLOG_READY_MS=609 FILES_READ=1
+2026-10-08T14:15:25.2227423Z 00:21 +1: native checklist narrow enlarged light repeated editors and refreshed completion warning
+2026-10-08T14:15:25.2227926Z 00:22 +1: native checklist desktop dark repeated editors and refreshed completion warning
+2026-10-08T14:15:25.2228301Z TANDEMLOG_FIRST_FRAME_MS=12
+2026-10-08T14:15:25.2228527Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:15:25.2228771Z TANDEMLOG_PHASE sqlite_open_schema=100
+2026-10-08T14:15:25.2229016Z TANDEMLOG_PHASE manifest=22
+2026-10-08T14:15:25.2229251Z TANDEMLOG_PHASE ingest=29
+2026-10-08T14:15:25.2229526Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:15:25.2229808Z TANDEMLOG_READY_MS=313 FILES_READ=1
+2026-10-08T14:15:25.2230042Z 00:42 +2: (tearDownAll)
+2026-10-08T14:15:25.2230257Z 00:42 +2: All tests passed!
+2026-10-08T14:15:25.2230384Z 
+2026-10-08T14:16:01.8266517Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/checklist_lifecycle_test.dart
+2026-10-08T14:16:01.8267065Z Building Windows application...                                 
+2026-10-08T14:16:01.8267969Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8268685Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8269530Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8270302Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8271382Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8273007Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8273821Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8274494Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8275207Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8275997Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8276769Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8277528Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8278305Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8279115Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8279915Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8280630Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8281346Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8282235Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8283063Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8283871Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8284748Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8285713Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8286594Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8287391Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8288139Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8289167Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8290139Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8290984Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8292971Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8293805Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8294564Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8295374Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8296180Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8296992Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8297829Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8298652Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8299431Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8300245Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8300993Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8301817Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8302727Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8303597Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8304482Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8305388Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8306272Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8307158Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8308042Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8308908Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8309910Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8310756Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8311603Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8312452Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8313402Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8314255Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8315126Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8315973Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8316830Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8317691Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8318628Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:01.8319344Z Building Windows application...                                    12.2s
+2026-10-08T14:16:01.8320046Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:16:01.8320460Z 00:00 +0: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8320844Z TANDEMLOG_FIRST_FRAME_MS=138
+2026-10-08T14:16:01.8321091Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:01.8321349Z TANDEMLOG_PHASE sqlite_open_schema=73
+2026-10-08T14:16:01.8321613Z TANDEMLOG_PHASE manifest=15
+2026-10-08T14:16:01.8321845Z TANDEMLOG_PHASE ingest=37
+2026-10-08T14:16:01.8322117Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8322425Z TANDEMLOG_READY_MS=610 FILES_READ=2
+2026-10-08T14:16:01.8322684Z TANDEMLOG_FIRST_FRAME_MS=13
+2026-10-08T14:16:01.8322950Z TANDEMLOG_PHASE identity_lock=0
+2026-10-08T14:16:01.8323211Z TANDEMLOG_PHASE sqlite_open_schema=16
+2026-10-08T14:16:01.8323466Z TANDEMLOG_PHASE manifest=16
+2026-10-08T14:16:01.8323700Z TANDEMLOG_PHASE ingest=10
+2026-10-08T14:16:01.8323971Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8324268Z TANDEMLOG_READY_MS=190 FILES_READ=2
+2026-10-08T14:16:01.8324621Z 00:04 +1: application disposal during item Save unknown preserves durable intent
+2026-10-08T14:16:01.8325093Z 00:04 +1: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8325470Z TANDEMLOG_FIRST_FRAME_MS=12
+2026-10-08T14:16:01.8325712Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:01.8325989Z TANDEMLOG_PHASE sqlite_open_schema=92
+2026-10-08T14:16:01.8326244Z TANDEMLOG_PHASE manifest=16
+2026-10-08T14:16:01.8326472Z TANDEMLOG_PHASE ingest=34
+2026-10-08T14:16:01.8326737Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8327037Z TANDEMLOG_READY_MS=296 FILES_READ=2
+2026-10-08T14:16:01.8327279Z TANDEMLOG_FIRST_FRAME_MS=10
+2026-10-08T14:16:01.8327513Z TANDEMLOG_PHASE identity_lock=0
+2026-10-08T14:16:01.8328261Z TANDEMLOG_PHASE sqlite_open_schema=16
+2026-10-08T14:16:01.8328517Z TANDEMLOG_PHASE manifest=12
+2026-10-08T14:16:01.8328750Z TANDEMLOG_PHASE ingest=52
+2026-10-08T14:16:01.8329049Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8329344Z TANDEMLOG_READY_MS=170 FILES_READ=2
+2026-10-08T14:16:01.8329662Z 00:07 +2: application disposal finishes item route ownership teardown
+2026-10-08T14:16:01.8330103Z 00:08 +2: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8330468Z TANDEMLOG_FIRST_FRAME_MS=10
+2026-10-08T14:16:01.8330705Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:01.8330950Z TANDEMLOG_PHASE sqlite_open_schema=78
+2026-10-08T14:16:01.8331201Z TANDEMLOG_PHASE manifest=13
+2026-10-08T14:16:01.8331511Z TANDEMLOG_PHASE ingest=25
+2026-10-08T14:16:01.8331793Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8332111Z TANDEMLOG_READY_MS=516 FILES_READ=1
+2026-10-08T14:16:01.8332444Z 00:09 +3: new item late acknowledgement remains frozen until exact Retry Save
+2026-10-08T14:16:01.8332894Z 00:10 +3: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8333266Z TANDEMLOG_FIRST_FRAME_MS=9
+2026-10-08T14:16:01.8333501Z TANDEMLOG_PHASE identity_lock=7
+2026-10-08T14:16:01.8333746Z TANDEMLOG_PHASE sqlite_open_schema=74
+2026-10-08T14:16:01.8334006Z TANDEMLOG_PHASE manifest=9
+2026-10-08T14:16:01.8334235Z TANDEMLOG_PHASE ingest=39
+2026-10-08T14:16:01.8334495Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8334791Z TANDEMLOG_READY_MS=283 FILES_READ=2
+2026-10-08T14:16:01.8335128Z 00:13 +4: task Undo waits for item route and native lease teardown once
+2026-10-08T14:16:01.8335566Z 00:13 +4: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8335932Z TANDEMLOG_FIRST_FRAME_MS=9
+2026-10-08T14:16:01.8336163Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:01.8336412Z TANDEMLOG_PHASE sqlite_open_schema=66
+2026-10-08T14:16:01.8336671Z TANDEMLOG_PHASE manifest=9
+2026-10-08T14:16:01.8336895Z TANDEMLOG_PHASE ingest=23
+2026-10-08T14:16:01.8337154Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8337451Z TANDEMLOG_READY_MS=162 FILES_READ=1
+2026-10-08T14:16:01.8337751Z 00:16 +5: user switch waits only for item Save and route teardown
+2026-10-08T14:16:01.8338189Z 00:17 +5: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8338569Z TANDEMLOG_FIRST_FRAME_MS=11
+2026-10-08T14:16:01.8338805Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:01.8339063Z TANDEMLOG_PHASE sqlite_open_schema=70
+2026-10-08T14:16:01.8339329Z TANDEMLOG_PHASE manifest=13
+2026-10-08T14:16:01.8339562Z TANDEMLOG_PHASE ingest=35
+2026-10-08T14:16:01.8339834Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8340195Z TANDEMLOG_READY_MS=281 FILES_READ=2
+2026-10-08T14:16:01.8340498Z 00:19 +6: user switch saves private item before changing identity
+2026-10-08T14:16:01.8340911Z 00:19 +6: application disposal during item Save confirmed preserves durable intent
+2026-10-08T14:16:01.8341275Z TANDEMLOG_FIRST_FRAME_MS=10
+2026-10-08T14:16:01.8341507Z TANDEMLOG_PHASE identity_lock=0
+2026-10-08T14:16:01.8341757Z TANDEMLOG_PHASE sqlite_open_schema=64
+2026-10-08T14:16:01.8342014Z TANDEMLOG_PHASE manifest=25
+2026-10-08T14:16:01.8342243Z TANDEMLOG_PHASE ingest=23
+2026-10-08T14:16:01.8342528Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:01.8342820Z TANDEMLOG_READY_MS=299 FILES_READ=2
+2026-10-08T14:16:01.8343061Z 00:22 +7: (tearDownAll)
+2026-10-08T14:16:01.8343284Z 00:22 +7: All tests passed!
+2026-10-08T14:16:01.8343413Z 
+2026-10-08T14:16:27.5873279Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/inbox_flow_test.dart
+2026-10-08T14:16:27.5873778Z Building Windows application...                                 
+2026-10-08T14:16:27.5874322Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5875143Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5875611Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5876078Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5876601Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5877231Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5877689Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5878117Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5878589Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5879060Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5879517Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5879973Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5880418Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5880902Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5881428Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5881911Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5882371Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5882852Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5883389Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5883900Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5884443Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5884966Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5885481Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5885956Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5886394Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5886905Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5887566Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5888058Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5888585Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5889133Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5889621Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5890090Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5890579Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5891078Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5891583Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5892075Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5892549Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5893040Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5893509Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5981757Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5982806Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5983643Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5984452Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5985294Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5986144Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5986913Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5987437Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5987960Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5988478Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5989252Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5989768Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5990284Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5990906Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5991423Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5991940Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5992480Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5992995Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5993510Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5994099Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:27.5994552Z Building Windows application...                                    12.2s
+2026-10-08T14:16:27.5995142Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:16:27.5995449Z 00:00 +0: second instance does not read or write preferences and Retry acquires released lease
+2026-10-08T14:16:27.5995722Z TANDEMLOG_FIRST_FRAME_MS=113
+2026-10-08T14:16:27.5995901Z TANDEMLOG_ONBOARDING_READY_MS=530 FILES_READ=0
+2026-10-08T14:16:27.5996142Z 00:01 +1: interrupted startup releases installation lease after pending work
+2026-10-08T14:16:27.5996453Z 00:01 +1: second instance does not read or write preferences and Retry acquires released lease
+2026-10-08T14:16:27.5996691Z TANDEMLOG_FIRST_FRAME_MS=14
+2026-10-08T14:16:27.5996907Z 00:01 +2: Inbox capture cancel edit Undo and history remain coherent
+2026-10-08T14:16:27.5997190Z 00:01 +2: second instance does not read or write preferences and Retry acquires released lease
+2026-10-08T14:16:27.5997451Z TANDEMLOG_FIRST_FRAME_MS=13
+2026-10-08T14:16:27.5997619Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:27.5997785Z TANDEMLOG_PHASE sqlite_open_schema=72
+2026-10-08T14:16:27.5997957Z TANDEMLOG_PHASE manifest=13
+2026-10-08T14:16:27.5998118Z TANDEMLOG_PHASE ingest=24
+2026-10-08T14:16:27.5998299Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:27.5998493Z TANDEMLOG_READY_MS=409 FILES_READ=1
+2026-10-08T14:16:27.5998723Z 00:09 +3: creation-only prefix keeps immutable capture through background reconciliation
+2026-10-08T14:16:27.5999045Z 00:09 +3: second instance does not read or write preferences and Retry acquires released lease
+2026-10-08T14:16:27.5999298Z TANDEMLOG_FIRST_FRAME_MS=11
+2026-10-08T14:16:27.5999479Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:27.5999651Z TANDEMLOG_PHASE sqlite_open_schema=66
+2026-10-08T14:16:27.5999822Z TANDEMLOG_PHASE manifest=11
+2026-10-08T14:16:27.5999963Z TANDEMLOG_PHASE ingest=23
+2026-10-08T14:16:27.6000144Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:27.6000344Z TANDEMLOG_READY_MS=266 FILES_READ=1
+2026-10-08T14:16:27.6000494Z 00:11 +4: (tearDownAll)
+2026-10-08T14:16:27.6000710Z 00:11 +4: All tests passed!
+2026-10-08T14:16:27.6000805Z 
+2026-10-08T14:16:52.8985870Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/bulk_apply_semantics_test.dart
+2026-10-08T14:16:52.8986404Z Building Windows application...                                 
+2026-10-08T14:16:52.8986983Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8987693Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8988424Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8989476Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8990312Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8991129Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8991725Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8992119Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8992543Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8993004Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8993449Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8993901Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8994334Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8994811Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8995302Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8995771Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8996209Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8996693Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8997188Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8997689Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8998181Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8998702Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8999217Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.8999829Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9000224Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9000710Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9001253Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9001822Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9002326Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9002779Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9003220Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9003671Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9004136Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9004629Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9005116Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9005602Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9006064Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9006533Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9006985Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9007445Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9007949Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9008465Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9008987Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9009489Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9009998Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9010521Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9011024Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9011610Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9012126Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9012646Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9014313Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9015320Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9016159Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9016966Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9017760Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9018533Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9019318Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9020082Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9020955Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:16:52.9021627Z Building Windows application...                                    12.1s
+2026-10-08T14:16:52.9022318Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:16:52.9022641Z 00:00 +0: native bulk named apply persists only Due time desktop-dark
+2026-10-08T14:16:52.9022955Z TANDEMLOG_FIRST_FRAME_MS=133
+2026-10-08T14:16:52.9023177Z TANDEMLOG_PHASE identity_lock=6
+2026-10-08T14:16:52.9023409Z TANDEMLOG_PHASE sqlite_open_schema=61
+2026-10-08T14:16:52.9023651Z TANDEMLOG_PHASE manifest=12
+2026-10-08T14:16:52.9023867Z TANDEMLOG_PHASE ingest=36
+2026-10-08T14:16:52.9024073Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:52.9024313Z TANDEMLOG_READY_MS=587 FILES_READ=1
+2026-10-08T14:16:52.9024583Z 00:06 +1: native bulk named apply persists only Due time narrow-light-200
+2026-10-08T14:16:52.9024923Z 00:06 +1: native bulk named apply persists only Due time desktop-dark
+2026-10-08T14:16:52.9025193Z TANDEMLOG_FIRST_FRAME_MS=14
+2026-10-08T14:16:52.9025374Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:16:52.9025560Z TANDEMLOG_PHASE sqlite_open_schema=79
+2026-10-08T14:16:52.9025754Z TANDEMLOG_PHASE manifest=11
+2026-10-08T14:16:52.9025928Z TANDEMLOG_PHASE ingest=21
+2026-10-08T14:16:52.9026128Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:16:52.9026361Z TANDEMLOG_READY_MS=268 FILES_READ=1
+2026-10-08T14:16:52.9026545Z 00:11 +2: (tearDownAll)
+2026-10-08T14:16:52.9026702Z 00:11 +2: All tests passed!
+2026-10-08T14:16:52.9026817Z 
+2026-10-08T14:17:23.8499684Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/field_layout_test.dart
+2026-10-08T14:17:23.8500134Z Building Windows application...                                 
+2026-10-08T14:17:23.8500728Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8501161Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8501563Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8501995Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8502599Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8503045Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8503480Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8503864Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8504270Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8504701Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8505116Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8505523Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8505925Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8506373Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8506836Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8507290Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8507713Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8508155Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8508621Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8509093Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8509571Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8510063Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8510545Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8510983Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8511386Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8511928Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8512445Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8512917Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8513376Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8513853Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8514264Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8514686Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8515133Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8515584Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8516048Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8516506Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8516934Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8517375Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8517793Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8518248Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8518749Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8519240Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8519733Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8520222Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8520703Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8521182Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8521670Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8522156Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8522687Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8523168Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8523655Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8524142Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8524669Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8525149Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8525637Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8526119Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8526607Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8527093Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8527645Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:23.8528100Z Building Windows application...                                    12.9s
+2026-10-08T14:17:23.8528633Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:17:23.8528841Z 00:00 +0: native field spacing 1200.0/1.0
+2026-10-08T14:17:23.8528995Z TANDEMLOG_FIRST_FRAME_MS=127
+2026-10-08T14:17:23.8529131Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:17:23.8529270Z TANDEMLOG_PHASE sqlite_open_schema=68
+2026-10-08T14:17:23.8529413Z TANDEMLOG_PHASE manifest=46
+2026-10-08T14:17:23.8529544Z TANDEMLOG_PHASE ingest=31
+2026-10-08T14:17:23.8529693Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:17:23.8529864Z TANDEMLOG_READY_MS=583 FILES_READ=1
+2026-10-08T14:17:23.8530011Z 00:05 +1: native field spacing 390.0/1.0
+2026-10-08T14:17:23.8530172Z 00:06 +1: native field spacing 1200.0/1.0
+2026-10-08T14:17:23.8530310Z TANDEMLOG_FIRST_FRAME_MS=13
+2026-10-08T14:17:23.8530434Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:17:23.8530566Z TANDEMLOG_PHASE sqlite_open_schema=59
+2026-10-08T14:17:23.8530708Z TANDEMLOG_PHASE manifest=8
+2026-10-08T14:17:23.8530831Z TANDEMLOG_PHASE ingest=23
+2026-10-08T14:17:23.8530973Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:17:23.8531136Z TANDEMLOG_READY_MS=182 FILES_READ=1
+2026-10-08T14:17:23.8531274Z 00:10 +2: native field spacing 390.0/2.0
+2026-10-08T14:17:23.8531415Z 00:11 +2: native field spacing 1200.0/1.0
+2026-10-08T14:17:23.8531548Z TANDEMLOG_FIRST_FRAME_MS=10
+2026-10-08T14:17:23.8531676Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:17:23.8531806Z TANDEMLOG_PHASE sqlite_open_schema=68
+2026-10-08T14:17:23.8531941Z TANDEMLOG_PHASE manifest=9
+2026-10-08T14:17:23.8532061Z TANDEMLOG_PHASE ingest=31
+2026-10-08T14:17:23.8532203Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:17:23.8532363Z TANDEMLOG_READY_MS=280 FILES_READ=1
+2026-10-08T14:17:23.8532495Z 00:15 +3: (tearDownAll)
+2026-10-08T14:17:23.8532608Z 00:15 +3: All tests passed!
+2026-10-08T14:17:23.8532691Z 
+2026-10-08T14:17:49.2978001Z 00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/task_flow_test.dart
+2026-10-08T14:17:49.2978318Z Building Windows application...                                 
+2026-10-08T14:17:49.2978755Z CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2979250Z CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2979656Z CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2980332Z CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2980824Z CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2981286Z CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2981709Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2982091Z CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2982501Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2982936Z CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2983365Z CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2983771Z CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2984178Z CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2984624Z CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2985080Z CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2985517Z CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2985936Z CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2986369Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2986852Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2987322Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2987797Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2988292Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2988775Z CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2989211Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2989747Z CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2990217Z CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2990729Z CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2991244Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2991701Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2992130Z CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2992545Z CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2992967Z CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2993406Z CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2993854Z CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2994306Z CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2994747Z CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2995173Z CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2995604Z CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2996010Z CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2996467Z CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2996963Z CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2997447Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2997930Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2998408Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2998899Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2999378Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.2999856Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3000385Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3000861Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3001343Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3001831Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3002362Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3002847Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3003330Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3003809Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3004292Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3004775Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3005257Z CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3005802Z CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+2026-10-08T14:17:49.3006217Z Building Windows application...                                    12.3s
+2026-10-08T14:17:49.3006780Z √ Built build\windows\x64\runner\Debug\tandemlog.exe
+2026-10-08T14:17:49.3007010Z 00:00 +0: workspace search preserves filters drafts and completion sections
+2026-10-08T14:17:49.3007222Z TANDEMLOG_FIRST_FRAME_MS=127
+2026-10-08T14:17:49.3007360Z TANDEMLOG_PHASE identity_lock=1
+2026-10-08T14:17:49.3007498Z TANDEMLOG_PHASE sqlite_open_schema=65
+2026-10-08T14:17:49.3007643Z TANDEMLOG_PHASE manifest=55
+2026-10-08T14:17:49.3007771Z TANDEMLOG_PHASE ingest=48
+2026-10-08T14:17:49.3007927Z TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+2026-10-08T14:17:49.3008094Z TANDEMLOG_READY_MS=598 FILES_READ=1
+2026-10-08T14:17:49.3008227Z 00:11 +1: (tearDownAll)
+2026-10-08T14:17:49.3008353Z 00:11 +1: All tests passed!
+2026-10-08T14:17:49.3009146Z 
+2026-10-08T14:17:49.4848276Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-10-08T14:17:49.4848565Z with:
+2026-10-08T14:17:49.4848726Z   name: windows-native-app-flows-37790261412-1
+2026-10-08T14:17:49.4848932Z   path: D:\a\_temp/tandemlog-windows-app-flows/*
+2026-10-08T14:17:49.4849132Z   retention-days: 5
+2026-10-08T14:17:49.4849280Z   if-no-files-found: error
+2026-10-08T14:17:49.4849436Z   compression-level: 6
+2026-10-08T14:17:49.4849580Z   overwrite: false
+2026-10-08T14:17:49.4849720Z   include-hidden-files: false
+2026-10-08T14:17:49.4849849Z   archive: true
+2026-10-08T14:17:49.4849946Z env:
+2026-10-08T14:17:49.4850075Z   CARGO_HOME: D:\a\_temp\tandemlog-rust-bootstrap\cargo
+2026-10-08T14:17:49.4850271Z   RUSTUP_HOME: D:\a\_temp\tandemlog-rust-bootstrap\rustup
+2026-10-08T14:17:49.4850482Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-08T14:17:49.4850679Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-08T14:17:49.4851022Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-08T14:17:49.4851200Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T14:17:49.4851389Z ##[endgroup]
+2026-10-08T14:17:49.5925925Z With the provided path, there will be 13 files uploaded
+2026-10-08T14:17:49.5928865Z Artifact name is valid!
+2026-10-08T14:17:49.5929714Z Root directory input is valid!
+2026-10-08T14:17:49.8826714Z Uploading artifact: windows-native-app-flows-37790261412-1.zip
+2026-10-08T14:17:49.8852028Z Beginning upload of artifact content to blob storage
+2026-10-08T14:17:50.1333606Z Uploaded bytes 15772
+2026-10-08T14:17:50.1883833Z Finished uploading artifact content to blob storage!
+2026-10-08T14:17:50.1884356Z SHA256 digest of uploaded artifact is 9c8ca4a28135bfa7155156cb04cae60453b03d93727d9b51c42761be58387fde
+2026-10-08T14:17:50.1884958Z Finalizing artifact upload
+2026-10-08T14:17:50.5179594Z Artifact windows-native-app-flows-37790261412-1 successfully finalized. Artifact ID 11556970118
+2026-10-08T14:17:50.5180325Z Artifact windows-native-app-flows-37790261412-1 has been successfully uploaded! Final size is 15772 bytes. Artifact ID is 11556970118
+2026-10-08T14:17:50.5185250Z Artifact download URL: https://github.com/reddraggone9/tandemlog/actions/runs/37790261412/artifacts/11556970118
+2026-10-08T14:17:50.5415457Z Post job cleanup.
+2026-10-08T14:17:50.6480726Z [command]"C:\Program Files\Git\bin\git.exe" version
+2026-10-08T14:17:50.6676667Z git version 2.56.0.windows.1
+2026-10-08T14:17:50.6712916Z Temporarily overriding HOME='D:\a\_temp\2ae7059f-8c99-4fda-b773-d5ba24ac082f' before making global git config changes
+2026-10-08T14:17:50.6713399Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-08T14:17:50.6720764Z [command]"C:\Program Files\Git\bin\git.exe" config --global --add safe.directory D:\a\tandemlog\tandemlog
+2026-10-08T14:17:50.6927844Z Removing SSH command configuration
+2026-10-08T14:17:50.6935689Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp core\.sshCommand
+2026-10-08T14:17:50.7147647Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :\""
+2026-10-08T14:17:51.0975483Z Removing HTTP extra header
+2026-10-08T14:17:51.0982524Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-08T14:17:51.1196661Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "sh -c \"git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :\""
+2026-10-08T14:17:51.5193378Z Removing includeIf entries pointing to credentials config files
+2026-10-08T14:17:51.5206194Z [command]"C:\Program Files\Git\bin\git.exe" config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-08T14:17:51.5391738Z includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path
+2026-10-08T14:17:51.5392016Z includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T14:17:51.5392232Z includeif.gitdir:/github/workspace/.git.path
+2026-10-08T14:17:51.5392470Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T14:17:51.5417755Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path
+2026-10-08T14:17:51.5600279Z D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:17:51.5628728Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tandemlog/tandemlog/.git.path D\:\\a\\_temp\\git\-credentials\-71b3289a\-f59e\-442d\-b4bd\-7931664fd98a\.config
+2026-10-08T14:17:51.5836887Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-08T14:17:51.6013939Z D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:17:51.6038243Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:D:/a/tandemlog/tandemlog/.git/worktrees/*.path D\:\\a\\_temp\\git\-credentials\-71b3289a\-f59e\-442d\-b4bd\-7931664fd98a\.config
+2026-10-08T14:17:51.6237240Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-08T14:17:51.6417659Z /github/runner_temp/git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:17:51.6440795Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-71b3289a\-f59e\-442d\-b4bd\-7931664fd98a\.config
+2026-10-08T14:17:51.6648783Z [command]"C:\Program Files\Git\bin\git.exe" config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-08T14:17:51.6827033Z /github/runner_temp/git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config
+2026-10-08T14:17:51.6883609Z [command]"C:\Program Files\Git\bin\git.exe" config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-71b3289a\-f59e\-442d\-b4bd\-7931664fd98a\.config
+2026-10-08T14:17:51.7100492Z [command]"C:\Program Files\Git\bin\git.exe" submodule foreach --recursive "git config --local --show-origin --name-only --get-regexp remote.origin.url"
+2026-10-08T14:17:52.0818846Z Removing credentials config 'D:\a\_temp\git-credentials-71b3289a-f59e-442d-b4bd-7931664fd98a.config'
+2026-10-08T14:17:52.0962995Z Cleaning up orphan processes
+2026-10-08T14:17:52.1112303Z Terminate orphan process: pid (2032) (adb)
+2026-10-08T14:17:52.1168681Z Terminate orphan process: pid (2724) (vctip)
+

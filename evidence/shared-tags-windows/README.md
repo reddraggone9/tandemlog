@@ -15,7 +15,16 @@ found no must-fix. All nine existing receipt tests pass, including zero-run,
 skip/failure, absent startup, incomplete/empty payload and cp1252 controls.
 No app/native/dependency/build-bootstrap change is introduced by this gate.
 
-Actual Windows execution is pending. A hosted pass establishes scripted debug
+Actual Windows [run 37790261412](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
+at `ff1d1f82` passed all seven groups: 3 + 2 + 7 + 4 + 2 + 3 + 1 = 22.
+The [decoded job log](job-113355485932.txt) and [qualified result](result.json)
+were independently reviewed: numeric startup/readiness evidence accompanies
+each group, with no skips or failures. Application/test/native inputs match
+`8b13cd0e` byte for byte. The uploaded receipt archive's ID, size and digest
+are reported metadata only; this consumer has not verified its bytes or
+rehashed the actual Windows binary payloads.
+
+A hosted pass establishes scripted debug
 application behavior; it does not establish signed-release/manual visual,
 assistive technology, Android IME/provider, overnight idle or physical display
 acceptance. Receipt binary hashes are runner-reported; raw logs are uploaded,
