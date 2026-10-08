@@ -214,6 +214,13 @@ void registerTagInputWorkflowTests() {
 
         await flows.selectTask(tester, first, control: false, longPress: true);
         await flows.selectTask(tester, second, control: false);
+        if (variant.width < 900) {
+          expect(find.text('2 selected'), findsOneWidget);
+          await tap(
+            find.byKey(const ValueKey('edit-selected-tasks')),
+            recording,
+          );
+        }
         expect(find.byType(BulkTaskEditor), findsOneWidget);
         await type('addTags', 'Shared', recording);
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
@@ -247,7 +254,6 @@ void registerTagInputWorkflowTests() {
         expect(find.byKey(ValueKey('task-row-$second')), findsNothing);
         await flows.openFilters(tester);
         await flows.chooseFilter(tester, '#Shared');
-        await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tap(find.text('Done').last, recording);
         expect(find.byKey(ValueKey('task-row-$first')), findsOneWidget);
         expect(

@@ -191,7 +191,9 @@ void main() {
               find.descendant(of: input, matching: find.byType(EditableText)),
             )
             .getSemanticsData()
-            .label,
+            .label
+            .split('\n')
+            .first,
         key == 'addTags' ? 'Add tags' : 'Remove tags',
       );
       await tester.enterText(input, key == 'addTags' ? 'new' : 'retained');
