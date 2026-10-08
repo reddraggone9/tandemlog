@@ -1,0 +1,13 @@
+{
+  "production_commit": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "command": "flutter test test/shared_tag_semantics_test.dart",
+  "outcome": "5/5 passed",
+  "fixture_corrections": [
+    "Pinned testWidgets enables semantics itself; removed additional late-disposed handles",
+    "Standard IconButton/InputChip controls expose contextual names in SemanticsData.tooltip rather than label; assert exact names AND semantic tap actions",
+    "Successful Submit closes through host callback; test verifies that close and host removal instead of expecting noop host to reenable a closed editor"
+  ],
+  "production_semantics_override_added": false,
+  "test_sha256": "3f95bced2e55200192206b3ae5431710fc4bbe92bf4484b99584a6ec94345233",
+  "log_sha256": "05caa50256c9b4707fff21214b87d9bb257ec796e83b3af0dcaf6de172f0c02b"
+}

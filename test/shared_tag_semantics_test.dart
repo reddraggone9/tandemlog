@@ -56,20 +56,21 @@ Future<void> activateRemove(
   String tag,
   String contextLabel,
 ) async {
-  final remove = find.bySemanticsLabel('Remove #$tag from $contextLabel');
+  final remove = find.byTooltip('Remove #$tag from $contextLabel');
   expect(remove, findsOneWidget);
   final node = tester.getSemantics(remove);
+  expect(node.getSemanticsData().tooltip, 'Remove #$tag from $contextLabel');
   expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
   node.owner!.performAction(node.id, SemanticsAction.tap);
   await tester.pumpAndSettle();
 }
 
+// The pinned testWidgets API enables semantics by default. Icon controls expose
+// contextual names in SemanticsData.tooltip, while query labels use .label.
 void main() {
   testWidgets(
     'query clear and dropdown actions identify every editing context',
     (tester) async {
-      final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
       for (final context in [
         ('tags', 'Tags'),
         ('addTags', 'Add tags'),
@@ -97,7 +98,7 @@ void main() {
         await tester.pumpAndSettle();
         final expandNode = tester.getSemantics(expand);
         expect(
-          expandNode.getSemanticsData().label,
+          expandNode.getSemanticsData().tooltip,
           'Expand ${context.$2} options',
         );
         expect(
@@ -116,7 +117,7 @@ void main() {
         final clear = find.byTooltip('Clear ${context.$2}');
         expect(clear, findsOneWidget);
         final clearNode = tester.getSemantics(clear);
-        expect(clearNode.getSemanticsData().label, 'Clear ${context.$2}');
+        expect(clearNode.getSemanticsData().tooltip, 'Clear ${context.$2}');
         expect(
           clearNode.getSemanticsData().hasAction(SemanticsAction.tap),
           isTrue,
@@ -134,8 +135,6 @@ void main() {
   testWidgets('editor exposes named query and removable selected tags', (
     tester,
   ) async {
-    final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     List<String>? added;
     List<String>? removed;
     await mountTags(
@@ -165,8 +164,6 @@ void main() {
   testWidgets(
     'bulk suggestions are readable and semantics activation is local',
     (tester) async {
-      final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
       await mountTags(
         tester,
         BulkTaskEditor(
@@ -195,7 +192,7 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byKey(const ValueKey('tag-option-retained')), findsNothing);
         expect(
-          find.bySemanticsLabel('Remove #retained from ${context.$2}'),
+          find.byTooltip('Remove #retained from ${context.$2}'),
           findsOneWidget,
         );
         await tester.enterText(query, 'ret');
@@ -212,7 +209,7 @@ void main() {
         // selected set even when the tag text is identical.
         await activateRemove(tester, 'retained', context.$2);
         expect(
-          find.bySemanticsLabel('Remove #retained from ${context.$2}'),
+          find.byTooltip('Remove #retained from ${context.$2}'),
           findsNothing,
         );
       }
@@ -223,8 +220,6 @@ void main() {
   testWidgets('bulk chip actions preserve independent deltas and Apply state', (
     tester,
   ) async {
-    final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     BulkTaskEdit? saved;
     await mountTags(
       tester,
@@ -254,16 +249,10 @@ void main() {
       await tagQuery(tester, 'removeTags', 'Remove tags'),
       'retained',
     );
-    expect(find.bySemanticsLabel('Remove #new from Add tags'), findsOneWidget);
-    expect(
-      find.bySemanticsLabel('Remove #retained from Remove tags'),
-      findsOneWidget,
-    );
+    expect(find.byTooltip('Remove #new from Add tags'), findsOneWidget);
+    expect(find.byTooltip('Remove #retained from Remove tags'), findsOneWidget);
     await activateRemove(tester, 'new', 'Add tags');
-    expect(
-      find.bySemanticsLabel('Remove #retained from Remove tags'),
-      findsOneWidget,
-    );
+    expect(find.byTooltip('Remove #retained from Remove tags'), findsOneWidget);
     await submitTag(
       tester,
       await tagQuery(tester, 'addTags', 'Add tags'),
@@ -289,16 +278,14 @@ void main() {
   testWidgets(
     'Saving freezes tag editing and chip removal in both bulk contexts',
     (tester) async {
-      final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
       final saving = Completer<void>();
-      var calls = 0;
+      var calls = 0, closed = 0;
       await mountTags(
         tester,
         BulkTaskEditor(
           panel: true,
           tasks: [taggedTask('first'), taggedTask('second')],
-          onClose: () {},
+          onClose: () => closed++,
           onSave: (_) {
             calls++;
             return saving.future;
@@ -352,11 +339,10 @@ void main() {
       expect(calls, 1);
       saving.complete();
       await tester.pumpAndSettle();
-      await tagQuery(tester, 'addTags', 'Add tags');
-      expect(
-        find.bySemanticsLabel('Remove #new from Add tags'),
-        findsOneWidget,
-      );
+      expect(closed, 1, reason: 'successful Submit asks the host to close');
+      await tester.pumpWidget(const SizedBox());
+      await tester.pumpAndSettle();
+      expect(find.byType(BulkTaskEditor), findsNothing);
       expect(tester.takeException(), isNull);
     },
   );
