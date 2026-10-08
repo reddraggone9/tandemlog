@@ -63,3 +63,16 @@ debug native application acceptance, not manual visual/screen-reader acceptance,
 execution of the downloaded release executable or Android SAF/IME evidence.
 Those exact-artifact and platform gates remain in
 [runtime QA](runtime-qa.md) and [checklist native acceptance](checklist-native-acceptance.md).
+
+The first hosted attempt, [run37752581063](https://github.com/reddraggone9/tandemlog/actions/runs/37752581063)
+at `c5b5834`, stopped before any of the19 app flows: Python's cp1252 console
+could not print the UTF-8 Flutter doctor checkmark. Setup completed according to
+the coordinator; this is a receipt-printer defect, not a display/session finding.
+The preserved evidence is a partial MCP-decoded job excerpt and reported receipt
+artifact metadata; this consumer has not verified the artifact archive bytes.
+
+The runner now configures its own stdout/stderr as UTF-8 before printing, with
+backslash escaping for unencodable surrogate values. Raw subprocess log bytes
+and existing acceptance guards remain unchanged. Frozen strict-cp1252 regression
+tests reproduce the actual U+221A failure before the fix and pass afterward.
+Actual Windows app execution awaits a separately reviewed hosted retry.

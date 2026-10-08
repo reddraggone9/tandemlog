@@ -13,15 +13,23 @@
   "files": {
     ".github/workflows/ci.yml": "9caf61ae4b794ebea6e549a9e9efc9c92d6179282f957050c9ef31610c5c769f",
     ".github/workflows/windows-app-flows.yml": "6c23d1895f4ae87964ad3a64aa20dd183079ca6c67b179c5164a445d0b2420b0",
-    "tool/windows_app_flows.py": "595aa5f4470a0aaff1e1a4fe2a396a9a8a8b2638f458d0e67e327e3f1a436588",
-    "tool/test_windows_app_flows.py": "724fbdccf5191ba2f77a413e463bfb1e5b8a40c4f6b16c7f09adcb2d5e2eee23"
+    "tool/windows_app_flows.py": "4af7bdbafa5dbca86b809094dbe6c8c5a52ec9a9afd4f64122cd429b500c73ba",
+    "tool/test_windows_app_flows.py": "3f209c4f187d98a040579e499a11af241caffced0e807d6b84c6427c0a3eb61a"
   },
-  "windows_execution": "not dispatched; actual runtime/display result pending independent review",
+  "windows_execution": "First hosted run37752581063 at c5b5834 stopped before0/19 flows on diagnostic console Unicode encoding; repaired runner awaits reviewed hosted retry.",
   "native_loader_inspection": {
     "source_sha256": "1447cd6944e152234fa5850f7534c7fd77bd3ebe39f85adfe8b8b863b5e2ca84",
     "entrypoints": "App and fixture peers call NativeTextEngine() without explicit libraryPath",
     "default_windows_library": "adjacent to Platform.resolvedExecutable/tandemlog_text.dll",
     "TANDEMLOG_TEXT_LIBRARY": "not consumed by production adapter or these integration entrypoints; any value/hash recorded separately"
   },
-  "receipt_negative_controls": "frozen e4def3a missing startup/ICU/kernel; separately frozen zero-byte controls for all5 required payload files; implementation now passes all6 receipt tests"
+  "receipt_negative_controls": "frozen e4def3a missing startup/ICU/kernel; separately frozen zero-byte controls for all5 required payload files; implementation now passes all6 receipt tests",
+  "unicode_console_repair": {
+    "frozen_red_commit": "84bd263",
+    "red": "strict cp1252 stdout/stderr fail on genuine U+221A",
+    "green_receipt_tests": 9,
+    "raw_subprocess_log_bytes": "unchanged and byte-equality tested",
+    "independent_review": "correctness reviewer accepts runner blob c5dd3db2790b2f53ceeeb5ea9e4637f590ac64f4",
+    "actual_windows_retry": "not dispatched by this consumer"
+  }
 }

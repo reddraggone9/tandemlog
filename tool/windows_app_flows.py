@@ -30,7 +30,10 @@ CAPTURE_VARIABLES = (
 
 def configure_console():
     """Set this receipt runner's console encoding before printing tool output."""
-    pass
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, 'reconfigure', None)
+        if reconfigure is not None:
+            reconfigure(encoding='utf-8', errors='backslashreplace')
 
 
 def result(text, expected, exit_code):
