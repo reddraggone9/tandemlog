@@ -1,8 +1,9 @@
 # Final integration plan — 2026-10-08
 
 Status: preparation only. The current combined candidate stays frozen throughout
-local Android acceptance. No merge, build, publication or autocomplete adoption
-is performed by this plan. Lee approved a persistent 6 GiB emulator cap with
+local Android acceptance. No merge, build or publication is performed by this
+plan. Shared tag input was subsequently approved and implemented on a separate
+branch; it does not change this frozen artifact. Lee approved a persistent 6 GiB emulator cap with
 2 CPU, no host swap and one AVD; the local task owns headroom checks and the
 narrow configuration change.
 
@@ -46,8 +47,10 @@ record terminal CI and hosted Windows results without changing the candidate.
    separate integration branch after acceptance. Reviewed Kotlin head
    `1b8f0cc5c6eeb302519231d7269ee37a529e36d0` already descends directly from
    a960c88; its merge base with that candidate is exactly a960c88. Preserve this
-   reviewed ancestry and evidence instead of stacking the old save-delta,
-   cache-only or autocomplete experiments. Compare the then-current main before
+   reviewed ancestry and evidence. The separately approved shared-tag branch
+   also descends from a960c88; include its reviewed production implementation
+   only after its remaining gates pass. Do not stack the old save-delta,
+   cache-only or autocomplete trial branches. Compare the then-current main before
    proposing a merge, and review any intervening source or resolved conflicts.
 3. Include the narrow Kotlin update: main Android KGP 2.4.0 to 2.4.20, retaining
    AGP 9.1.0, Gradle 9.3.1, Flutter/pub/Cargo/native inputs and durable v3 meanings.
@@ -59,14 +62,17 @@ record terminal CI and hosted Windows results without changing the candidate.
    classes Android/JVM. Flutter's separate
    included-build Kotlin remains 2.2.21. The evaluation observer is branch-scoped;
    moving source to a new branch does not automatically rerun its cold/warm step.
-4. Resolve Android runtime acceptance for Kotlin as well. Existing verified
+4. Resolve Android runtime acceptance for the integrated Kotlin and tag changes.
+   Existing verified
    45eb9e8 debug APK SHA256
    `d8a1dd334bec9ce21139c4ddd25b114e723f463ae3ca7904e58c8d15d723182c`
-   can supply focused follow-up evidence if its application/build inputs match
-   the proposed integration. Verify its separate debug signer and fixture
+   supplies supporting evidence for the isolated Kotlin change. Shared tags
+   change application inputs, so that older APK cannot establish acceptance of
+   the combined integration. Verify each artifact's separate signer and fixture
    isolation first; do not assume an in-place update from the 17ae5e5 debug APK.
    Exercise startup/native FFI, SAF grant/reopen/refresh, Kotlin-backed picker
-   callbacks and the affected task/text/checklist flows. Passing the original
+   callbacks, tag suggestion/selection/creation/removal/filtering, actual IME,
+   accessibility and the affected task/text/checklist flows. Passing the original
    Kotlin-2.4.0 APK does not accept this changed Kotlin-2.4.20 artifact.
 5. Once integration scope is fixed, obtain the parent's fresh quota read before
    a publication or major new start. Choose a valid new preview version and
@@ -86,16 +92,38 @@ record terminal CI and hosted Windows results without changing the candidate.
    only after all gates pass, consuming those accepted artifacts without a
    rebuild. Stable feature promotion still requires Lee's explicit acceptance.
 
-## Separate choice and remaining work
+## Approved shared-tag work and remaining gates
 
-Autocomplete A/B previews are delivered and neither is adopted. If Lee chooses
-an option, handle that implementation as separately scoped work with fresh quota,
-tests-first checks and independent native/IME/accessibility review. It changes
-the candidate and needs its own artifact acceptance; do not silently fold it into
-the frozen run or call trial media final production evidence.
+Lee explicitly approved shared B-style tag input at 2026-10-08 13:01:08 UTC;
+the parent's supported quota read was 77% at 13:01:14 UTC. This supersedes the
+earlier unchosen A/B stage. Production is `041c06488cb2d937d38519dec8e3e3ebd69abbf3`,
+test revision `5204e276b641dd05cb5b5e648b2c6369ed11f5cf`, and the current evidence
+head is `4ab182688460d31b8e17647f0f6e8659370f28c6` on
+`feature/shared-tag-input`. Later changes are test fixtures and evidence only.
+[The accepted design and receipts](https://github.com/reddraggone9/tandemlog/blob/4ab182688460d31b8e17647f0f6e8659370f28c6/evidence/shared-tags/README.md)
+cover opaque tag identity, separate Add/Remove policies, pending query safety,
+keyboard/composition behavior, controlled chips and query-row anchoring.
+
+Local 621 Flutter tests, 37 tooling tests, three actual GTK workflows and the
+17 screenshots/desktop recording pass independent review. The first full CI
+passed Android/Windows but found two legacy Linux test interactions; both were
+reproduced, corrected without production changes and passed focused native
+retests. [Fresh full CI 37792711739](https://github.com/reddraggone9/tandemlog/actions/runs/37792711739)
+is pending terminal Linux results; Android/Windows jobs pass. Separately,
+[22 hosted Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
+pass on `ff1d1f82`. The later 5204 aggregate file differs only in two excluded
+fixture blocks; selected Windows test bodies and production inputs are unchanged.
+Consumer ZIP/binary rehash and loaded-module enumeration are not claimed.
+These debug observations do not replace exact integrated release acceptance.
+
+Bounded actual GTK external-write and clock-boundary investigations did not
+reproduce Lee's overnight Windows staleness. Their temporary observers remain
+in [evidence only](https://github.com/reddraggone9/tandemlog/tree/866c11ff9eea1c17e4b808fb8b005097517f0a77/evidence/windows-idle-refresh);
+no speculative redraw, polling, dependency or idle fix belongs in integration.
+Windows, overnight and physical display behavior remain unverified.
 
 Remaining external gates are the current local Android acceptance, the focused
-Kotlin Android runtime follow-up, installed Windows/manual visual/assistive
+Kotlin/tag Android runtime follow-up, installed Windows/manual visual/assistive
 technology acceptance, and final signed-artifact/release-note/media review. The
 parent owns those decisions and device/resource configuration. Live synced user
 data remains outside this plan.
