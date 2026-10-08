@@ -103,6 +103,45 @@ class TextCache {
         !fields.containsKey('description')) {
       throw FormatFailure('Resolved text requires both fields.');
     }
+    if (fields.values.every((field) => field.historyReference != null)) {
+      _ensureUsable();
+      final rows = <List<Object?>>[];
+      final texts = <String, String>{};
+      for (final entry in fields.entries) {
+        final field = entry.value, context = field.context;
+        final reference = field.historyReference!;
+        if (context.entity != view['id'] ||
+            context.field != entry.key ||
+            sha256.convert(field.seed.bytes).toString() != context.seedHash ||
+            reference.seed.encoded != field.seed.encoded) {
+          throw FormatFailure('Resolved shared reference or seed mismatch.');
+        }
+        // Only the resolver can construct a field with a history reference.
+        // It already verified context grants, original claims and native text.
+        // No native checkpoint from SQLite is trusted or replayed on this path.
+        // Ingestion persists actor claims through validatePackets beforehand.
+        rows.add([
+          view['id'],
+          entry.key,
+          context.hash,
+          'yrs-v1',
+          2,
+          context.seedHash,
+          Uint8List(0),
+          reference.hash,
+          jsonEncode({'history': reference.hash}),
+        ]);
+        texts[entry.key] = field.text;
+      }
+      for (final row in rows) {
+        db.execute(
+          'INSERT OR REPLACE INTO text_fields VALUES (?,?,?,?,?,?,?,?,?)',
+          row,
+        );
+      }
+      view.addAll(texts);
+      return;
+    }
     final registry = _actors();
     final claims = <TextActorClaim>[];
     final rows = <List<Object?>>[];

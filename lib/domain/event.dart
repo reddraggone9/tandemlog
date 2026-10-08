@@ -614,7 +614,7 @@ void validateTextInheritance(Map<String, dynamic> data) {
   if (!_keys(data, {'codec', 'adapter', 'frontiers', 'fields'}) ||
       data['codec'] != 'yrs-v1' ||
       data['adapter'] is! int ||
-      data['adapter'] != 1 ||
+      !const {1, 2}.contains(data['adapter']) ||
       data['frontiers'] is! Map<String, dynamic> ||
       (data['frontiers'] as Map).isEmpty ||
       data['fields'] is! Map<String, dynamic>) {
@@ -623,7 +623,7 @@ void validateTextInheritance(Map<String, dynamic> data) {
   // Reuse baseline frontier admission, including namespace and safe integers.
   validateTextBaseline({
     'codec': data['codec'],
-    'adapter': data['adapter'],
+    'adapter': 1,
     'frontiers': data['frontiers'],
     'seedDigest': '0' * 64,
   });
@@ -632,11 +632,12 @@ void validateTextInheritance(Map<String, dynamic> data) {
     throw FormatFailure('Text inheritance requires both fields.');
   }
   for (final field in fields.values) {
+    final proofHash = data['adapter'] == 1 ? 'stateHash' : 'historyHash';
     if (field is! Map<String, dynamic> ||
-        !_keys(field, {'parentContext', 'seedHash', 'stateHash'}) ||
+        !_keys(field, {'parentContext', 'seedHash', proofHash}) ||
         !isEventHash(field['parentContext']) ||
         !isEventHash(field['seedHash']) ||
-        !isEventHash(field['stateHash'])) {
+        !isEventHash(field[proofHash])) {
       throw FormatFailure('Invalid inherited text field proof.');
     }
   }

@@ -206,8 +206,14 @@ class SharedTextHistoryGraph {
 }
 
 class SharedTextSnapshot {
-  const SharedTextSnapshot(this.text, this.pending, this.stateHash);
-  final String text, stateHash;
+  SharedTextSnapshot(this.text, this.pending, String stateHash)
+    : _stateHash = stateHash,
+      _hash = null;
+  SharedTextSnapshot._lazy(this.text, this.pending, this._hash);
+  final String text;
+  String? _stateHash;
+  final String Function()? _hash;
+  String get stateHash => _stateHash ??= _hash!();
   final bool pending;
 }
 
@@ -323,12 +329,10 @@ class SharedTextMaterializer {
       return cached;
     }
     final current = _activate(reference), read = current.native.read();
-    final state = current.native.fullState;
-    stateExports++;
-    final snapshot = SharedTextSnapshot(
+    final snapshot = SharedTextSnapshot._lazy(
       read.text,
       read.pending,
-      sha256.convert(state.bytes).toString(),
+      () => sha256.convert(state(reference).bytes).toString(),
     );
     if (_snapshots.length >= maxSnapshots) {
       _snapshots.remove(_snapshots.keys.first);
@@ -338,6 +342,9 @@ class SharedTextMaterializer {
         reference.depth > 0 &&
         reference.depth % checkpointInterval == 0 &&
         !_checkpoints.containsKey(reference.hash)) {
+      final state = current.native.fullState;
+      stateExports++;
+      snapshot._stateHash = sha256.convert(state.bytes).toString();
       final checkpoint = _HistoricalCheckpoint(reference, state);
       if (checkpoint.bytes <= checkpointByteLimit) {
         while (_checkpoints.isNotEmpty &&
@@ -357,11 +364,16 @@ class SharedTextMaterializer {
     final expected = snapshot(reference), current = _activate(reference);
     final result = current.native.fullState;
     stateExports++;
-    if (sha256.convert(result.bytes).toString() != expected.stateHash) {
+    final hash = sha256.convert(result.bytes).toString();
+    if (expected._stateHash != null && hash != expected._stateHash) {
+      final root =
+          '${reference.rootContext}:${sha256.convert(reference.seed.bytes)}';
+      _active.remove(root)?.native.close();
       throw FormatFailure(
         'Shared history replay differs from its verified state.',
       );
     }
+    expected._stateHash = hash;
     return result;
   }
 

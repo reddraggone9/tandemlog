@@ -109,6 +109,29 @@ proof verification. Completion Undo does not retract inherited text. Old
 scalar/new native initialization is rejected explicitly, preserving both data
 and identities. See [ADR 0010](decisions/0010-collaborative-text-adoption.md).
 
+The 2026-10-08 redesign adds explicit inheritance adapter2 for new prototype
+completions. It retains the same exact frontiers, parent context, seed hash and
+successor strings, but each field declares `historyHash` instead of `stateHash`.
+Adapter1 remains readable and verifies its original exact native-state hash.
+Unknown adapters and mixed proof keys are rejected; old bytes are not rewritten.
+
+`historyHash` is SHA-256 of canonical JSON with domain
+`tandemlog.text.history.reference.v1`, original `rootContext`, `seedHash`, and
+`parents` (reference hashes). A root has no parents. An original operation node
+has one parent plus `operation: {space,id,hash,field}`. A union has sorted unique
+parent hashes and no operation. The resolver builds nodes deterministically from
+the exact observed prefix, preserves original authorship, verifies the field
+context and compares the declared reference and visible text. References identify
+the construction graph, not a flattened unordered packet-set digest.
+
+Native-enabled disposable cache version15 uses `text_fields.adapter=2` for
+resolver-verified references: empty `state`, reference hash in `state_hash`, and
+compact `frontier: {history: hash}`. These are not native checkpoints. Ordinary
+adapter1 rows keep their previous state/hash/list meanings. Capture reconstructs
+exact state and original operation IDs from canonical history for editor and Undo
+receipt use, without persisting another inherited BLOB. Older cache readers reject
+version15 explicitly. Cache loss replays originals; no canonical migration occurs.
+
 ## Durability and recovery
 
 Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.

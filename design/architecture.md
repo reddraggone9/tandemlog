@@ -30,8 +30,11 @@ with immutable original-operation references. Resolver admission shares original
 claims and incremental unowned native documents; its bounded pool carries sparse
 historical checkpoints. Memo entries carry visible summaries and references.
 Original authority is retained once separately from disposable cache budgets.
-The existing SQLite full-state/frontier path and observed-prefix verification
-remain pending redesign; this is not yet an end-to-end scaling claim. See the
+New reference proofs and compact SQLite reference rows now avoid inherited BLOBs
+and operation-ID arrays per occurrence; exact editor/receipt state is reconstructed
+on demand. Adapter1 proof/checkpoint meanings remain supported. Full observed-prefix
+scans and warm command costs remain scaling work; this is not a constant-latency
+claim. Independent review and platform acceptance are pending. See the
 [implementation evidence](../evidence/production-text/shared-history/README.md).
 `text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;
 the single Rust implementation owns character identity and selective Undo only.

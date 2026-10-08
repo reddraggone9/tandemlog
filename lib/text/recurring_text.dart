@@ -124,7 +124,12 @@ class _RecurringHistoryRuntime {
       limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
     );
     try {
-      return temporary.snapshot(reference);
+      final snapshot = temporary.snapshot(reference);
+      return SharedTextSnapshot(
+        snapshot.text,
+        snapshot.pending,
+        snapshot.stateHash,
+      );
     } finally {
       temporary.close();
     }
@@ -595,7 +600,10 @@ class RecurringTextResolver {
           final declaration = fields[field] as Map;
           if (declaration['parentContext'] != parent.context.hash ||
               declaration['seedHash'] != parent.context.seedHash ||
-              declaration['stateHash'] != parent.stateHash ||
+              (proof['adapter'] == 1
+                  ? declaration['stateHash'] != parent.stateHash
+                  : declaration['historyHash'] !=
+                        parent.historyReference!.hash) ||
               (completion.data['successor'] as Map)[field] != parent.text) {
             throw FormatFailure(
               'Observed parent text proof differs in ${completion.id}.',

@@ -1916,7 +1916,7 @@ void main() {
             expect(store.readFiles, 0);
             expect(
               store.db.select('PRAGMA user_version').single.values.single,
-              14,
+              15,
             );
             expect(
               store.db.select(

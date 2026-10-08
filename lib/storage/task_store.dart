@@ -244,7 +244,7 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 14) {
+      if (version < 0 || version > 15) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
@@ -315,7 +315,7 @@ class TaskStore {
           'CREATE TABLE IF NOT EXISTS text_outbox (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
         );
         db.execute(
-          'PRAGMA user_version=${textEngine != null || version == 14 ? 14 : 13}',
+          'PRAGMA user_version=${textEngine != null || version >= 14 ? 15 : 13}',
         );
         db.execute('COMMIT');
       } catch (_) {
@@ -1234,19 +1234,22 @@ class TaskStore {
       db.execute('ROLLBACK');
       rethrow;
     }
+    final resolvedFields = _hasInheritedText(entity)
+        ? _resolvedText(entity)
+        : null;
     final fields = <String, TaskTextFieldCapture>{};
     try {
       for (final field in ['title', 'description']) {
-        final rows = db.select(
-          'SELECT * FROM text_fields WHERE entity=? AND field=?',
-          [entity, field],
+        final row = _nativeTextFieldRow(
+          entity,
+          field,
+          resolved: resolvedFields,
         );
-        if (rows.isEmpty) {
+        if (row == null) {
           throw FormatFailure(
             'Native text is waiting for its initialization history.',
           );
         }
-        final row = rows.single;
         final state = row['state'] as Uint8List;
         if (row['codec'] != 'yrs-v1' ||
             row['adapter'] != 1 ||
@@ -1305,6 +1308,48 @@ class TaskStore {
     }
   });
 
+  /// Editor/receipt capture needs exact native state, while historical cache
+  /// rows retain only references. Reconstruct from admitted originals on demand;
+  /// never reinterpret a reference hash or compact frontier as a native BLOB.
+  Map<String, dynamic>? _nativeTextFieldRow(
+    String entity,
+    String field, {
+    Map<String, ResolvedTextField>? resolved,
+  }) {
+    final rows = db.select(
+      'SELECT * FROM text_fields WHERE entity=? AND field=?',
+      [entity, field],
+    );
+    if (rows.isEmpty) return null;
+    final row = Map<String, dynamic>.from(rows.single);
+    if (row['adapter'] != 2) return row;
+    final lineage = (resolved ?? _resolvedText(entity))[field]!;
+    final reference = lineage.historyReference!;
+    final frontier = jsonDecode(row['frontier'] as String);
+    if (row['codec'] != 'yrs-v1' ||
+        row['context'] != lineage.context.hash ||
+        row['seed_hash'] != lineage.context.seedHash ||
+        row['state_hash'] != reference.hash ||
+        (row['state'] as Uint8List).isNotEmpty ||
+        frontier is! Map ||
+        frontier.length != 1 ||
+        frontier['history'] != reference.hash) {
+      throw FormatFailure(
+        'Shared text reference needs a verified cache rebuild.',
+      );
+    }
+    final state = lineage.state.bytes;
+    final operationIds =
+        lineage.operations.map((packet) => packet.event.id).toList()..sort();
+    return {
+      ...row,
+      'adapter': 1,
+      'state': state,
+      'state_hash': sha256.convert(state).toString(),
+      'frontier': jsonEncode(operationIds),
+    };
+  }
+
   Future<LogEvent> editNativeTask(
     String entity,
     Map<String, dynamic> changes, {
@@ -1314,18 +1359,18 @@ class TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
+    final resolvedFields = _hasInheritedText(entity)
+        ? _resolvedText(entity)
+        : null;
     final bases = <String, Map<String, dynamic>>{};
     for (final name in changes.keys) {
-      final row = db.select(
-        'SELECT * FROM text_fields WHERE entity=? AND field=?',
-        [entity, name],
-      );
-      if (row.isEmpty) {
+      final row = _nativeTextFieldRow(entity, name, resolved: resolvedFields);
+      if (row == null) {
         throw FormatFailure(
           'Native text is waiting for its initialized field.',
         );
       }
-      final cached = Map<String, dynamic>.from(row.single);
+      final cached = Map<String, dynamic>.from(row);
       cached['state'] = Uint8List.fromList(
         cached['state'] as Uint8List,
       ).asUnmodifiableView();
@@ -3046,7 +3091,7 @@ class TaskStore {
       final fields = _resolvedText(entity);
       data['inheritance'] = {
         'codec': 'yrs-v1',
-        'adapter': 1,
+        'adapter': 2,
         'frontiers': {
           for (final row in db.select(
             'SELECT name,last_seq,chain_head FROM streams',
@@ -3061,7 +3106,7 @@ class TaskStore {
             entry.key: {
               'parentContext': entry.value.context.hash,
               'seedHash': entry.value.context.seedHash,
-              'stateHash': entry.value.stateHash,
+              'historyHash': entry.value.historyReference!.hash,
             },
         },
       };

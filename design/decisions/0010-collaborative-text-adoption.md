@@ -438,8 +438,10 @@ Historical mixed-lineage behavior remains [a separate decision](../historical-re
 Lee approved replacing repeated inherited-history reconstruction with shared
 original-operation references, incremental unowned native documents and sparse
 historical checkpoints. The recovered workspace now implements and tests those
-primitives and integrates the resolver with them. [Evidence and limits](../../evidence/production-text/shared-history/README.md)
-distinguish this from pending cache/reference-proof integration and scaling gates.
-They do not yet change durable record formats, scalar v3 meanings or completion
-policy. The pinned Yrs determinism patch retains its exact original provenance;
+primitives, resolver integration, explicit new prototype adapter2 reference proofs
+and compact version15 cache reference rows. [Evidence and limits](../../evidence/production-text/shared-history/README.md)
+distinguish implementation from independent review, remaining scaling work and
+platform gates. Adapter1 prototype proofs keep exact native-state-hash semantics;
+released scalar v3 meanings and completion policy are unchanged. The pinned Yrs
+determinism patch retains its exact original provenance;
 independent review of the adapter changes and integrated architecture is pending.
