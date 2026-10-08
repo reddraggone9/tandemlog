@@ -199,17 +199,17 @@
     "main_source": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
     "scope": "reviewed policy/tests/docs/evidence only; exact application/native/dependency/workflow/producer/notes/media inputs from77 retained",
     "new_ci_run": 37822643601,
-    "state": "in progress; final policy CI remains pending",
+    "state": "normalCI37822643601 terminalSUCCESS all3 exact311; newpolicyartifacts are not selected candidate",
     "preserved_candidate_source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
     "rebuild_required": false,
     "public_assets": "three versioned installers only; portable QA engineering-side; automatic source archives unchanged",
     "independent_reviews": "architecture/correctness/security accepted;13focused50tool allpass; baseline behavioral red preserved",
-    "policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147"
+    "policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "ci_receipt": "../rc4-policy-ci/receipt.json"
   },
   "remaining_gates": [
     "consumer outer/inner artifact checksums and signer/package identity",
     "exact owner-signed Android and installed Windows affected native/manual/UX acceptance",
-    "normal CI on policy dispatch revision",
     "fresh quota before publication"
   ],
   "publication": "not attempted; RC4 prerelease only/latest=false; stable2026.10.1 remainsLatest; stable feature promotion unauthorized",

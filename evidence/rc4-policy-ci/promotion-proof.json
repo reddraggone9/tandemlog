@@ -1,0 +1,46 @@
+{
+  "reviewed_policy_source": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
+  "frozen_candidate_source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+  "candidate_run": 37819214432,
+  "policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "independent_reviewers": [
+    "architecture",
+    "correctness",
+    "security"
+  ],
+  "verdict": "accepted; all original gates retained; only complete verified optional engineering QA permitted",
+  "unchanged_promotion_inputs": {
+    "tool/release_assets.py": {
+      "bytes": 1302,
+      "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+      "candidate_equals_policy": true
+    },
+    ".github/workflows/prerelease.yml": {
+      "bytes": 3821,
+      "sha256": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+      "candidate_equals_policy": true
+    },
+    "design/prerelease-notes.md": {
+      "bytes": 821,
+      "sha256": "1001b5556fc718e00e62e582458c6c3ce5c714941b972922ebadcd0de4853a64",
+      "candidate_equals_policy": true
+    }
+  },
+  "public_installers": [
+    "tandemlog-2026.10.2-rc.4-android.apk",
+    "tandemlog-2026.10.2-rc.4-windows-x64-setup.exe",
+    "tandemlog-2026.10.2-rc.4-linux-x64.flatpak"
+  ],
+  "proof_tests": [
+    "test_public_installers_are_versioned_and_byte_identical",
+    "test_current_complete_portable_evidence_passes_without_public_extras",
+    "test_actual_portable_producer_is_compatible"
+  ],
+  "proof_scope": "reviewed synthetic tests13focused/50tool; Windows hosted50tool pass; cloud consumer403, no actual signedartifact byte-stage claim",
+  "read_only_selector": "sha=77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+  "rebuild_required": false,
+  "publication_dispatched": false,
+  "command_syntax_check": "bash -n passed; no workflow dispatch executed",
+  "fresh_frozen_artifact_metadata_recheck": "all three selected immutable IDs/digests match original receipt and are unexpired; API metadata not local byte verification",
+  "recipe_independent_review": "correctness accepted; source selector, protected source equality, exact3staging proof, guarded64hex innerhash/mainhead/command gate, no dispatch"
+}

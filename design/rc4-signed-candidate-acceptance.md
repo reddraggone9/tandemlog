@@ -108,13 +108,18 @@ Thirteen focused and fifty tooling tests pass; baseline behavioral reds and
 independent correctness/security/architecture reviews are retained in
 [policy evidence](https://github.com/reddraggone9/tandemlog/blob/3111dd94510a8f77e6978aa177e8d9b44fd7607c/evidence/publish-portable-qa/README.md).
 [Normal policy CI37822643601](https://github.com/reddraggone9/tandemlog/actions/runs/37822643601)
-is still running. This source advances main's trusted dispatch policy only:
+completed successfully on exact311 at 2026-10-08 18:35 UTC: all three platforms,
+Linux628 unit/70 native, Windows626 unit/two expected Linux-only skips, each desktop
+4 Cargo/107 native worker/50 tooling cases and packaging/install gates passed.
+The [policy receipt](../evidence/rc4-policy-ci/receipt.json) records exact terminal
+source/count/log evidence. This source advances main's trusted dispatch policy only:
 application, native, dependency, producer, workflow and notes/media inputs are
 unchanged. Select successful signed run37819214432/source77 for acceptance and
 publication; do not replace it with a later debug artifact. The existing trusted
 dispatch-policy route consumes those exact built artifacts without a rebuild.
-Final native acceptance, completed dispatch-policy CI and fresh quota still gate
-publication. No new signing or release dispatch accompanied this policy push.
+Final native acceptance and fresh quota still gate publication. The [prepared
+promotion inputs](rc4-promotion-inputs.md) preserve the signed run/source and three
+public installers. No new signing or release dispatch accompanied this policy push.
 
 ## Final native and promotion gates
 

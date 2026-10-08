@@ -1,0 +1,75 @@
+{
+  "run": {
+    "conclusion": "success",
+    "created_at": "2026-10-08T18:13:44Z",
+    "event": "push",
+    "head_branch": "main",
+    "head_repository": "reddraggone9/tandemlog",
+    "head_sha": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
+    "id": 37822643601,
+    "path": ".github/workflows/ci.yml",
+    "repository": "reddraggone9/tandemlog",
+    "run_attempt": 1,
+    "status": "completed",
+    "updated_at": "2026-10-08T18:35:32Z"
+  },
+  "jobs": [
+    {
+      "completed_at": "2026-10-08T18:20:20Z",
+      "conclusion": "success",
+      "id": 113467334605,
+      "name": "checks / android",
+      "started_at": "2026-10-08T18:13:46Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T18:35:32Z",
+      "conclusion": "success",
+      "id": 113467335117,
+      "name": "checks / linux",
+      "started_at": "2026-10-08T18:13:46Z",
+      "status": "completed"
+    },
+    {
+      "completed_at": "2026-10-08T18:22:42Z",
+      "conclusion": "success",
+      "id": 113467335130,
+      "name": "checks / windows",
+      "started_at": "2026-10-08T18:13:46Z",
+      "status": "completed"
+    }
+  ],
+  "decoded_logs": {
+    "linux-decoded.txt": {
+      "bytes": 421310,
+      "sha256": "9b58808e4b08df5b5f0259f9e850a5190d31ba0e79be8c4c9720f2b6dec0c012",
+      "scope": "exact UTF8 of decoded tool content, not raw archive download"
+    },
+    "windows-decoded.txt": {
+      "bytes": 274686,
+      "sha256": "64775686bd358072982aafd49cc75932e443a865b53ad6c7bd510383990d2576",
+      "scope": "exact UTF8 of decoded tool content, not raw archive download"
+    }
+  },
+  "counts": {
+    "linux_unit": 628,
+    "linux_native_app": 70,
+    "windows_unit": 626,
+    "windows_expected_linux_only_skips": 2,
+    "desktop_each_cargo": 4,
+    "desktop_each_native_worker": 107,
+    "desktop_each_tool": 50
+  },
+  "policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "frozen_signed_run": 37819214432,
+  "frozen_signed_source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+  "promotion_proof": "promotion-proof.json",
+  "promotion_command": "../../design/rc4-promotion-inputs.md",
+  "publication_dispatched": false,
+  "remaining_gates": [
+    "local artifact/signature verification and exact package/device Windows/manual/UX acceptance",
+    "fresh quota before publication"
+  ],
+  "new_policy_ci_artifacts_selected_for_publication": false,
+  "independent_terminal_review": "correctness accepted freshAPI terminalsource/all3jobs, exactloghashes/counts, originalartifactmetadata unchanged/unexpired, selectedsignedsource/run and gates; no consumerbyte or publicationclaim"
+}
