@@ -1,0 +1,122 @@
+{
+  "status": "unadopted lightweight comparison; not a release candidate",
+  "source_base": "eb68b46259f745e86ec9f41c144d473f19d0fb0f",
+  "branch": "experiment/tag-autocomplete-trials",
+  "platform": "Linux GTK debug, standalone synthetic preview harness",
+  "theme": "dark",
+  "text_scale": 1.0,
+  "screenshots": "1000x820 and 390x820 actual desktop windows",
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1000,
+        "height": 820
+      }
+    ],
+    "format": {
+      "duration": "19.133333"
+    }
+  },
+  "pointer_observed_video_second": 6,
+  "no_profile_or_store_opened": true,
+  "sources": {
+    "lib/presentation/task_editor.dart": {
+      "bytes": 36635,
+      "sha256": "c841a3e27c50d2cb2076abae8b6ac1488b2e58bb2d6ed3afaf830152ae8b7f91"
+    },
+    "tool/tag_trials/main.dart": {
+      "bytes": 4682,
+      "sha256": "f44914da795172a914804fa385a64c84f69f1739aeec628824d2f9aa5e407c51"
+    },
+    "tool/tag_trials/tag_entry_trials.dart": {
+      "bytes": 7684,
+      "sha256": "ea81d19cf8a510a62ad6183f0ace37fdae1f6c9550280313c57397cf5a46ce1a"
+    },
+    "tool/tag_trials/capture.py": {
+      "bytes": 4821,
+      "sha256": "cf3dcf12a43f0e7b556b8cdaabfd1d2ca9e50ffc148719dfee51980dd22be08e"
+    },
+    "integration_test/tag_autocomplete_trials_test.dart": {
+      "bytes": 3724,
+      "sha256": "2c4ea35bcfeb68fc108447050f860f3da28afa2c9908706929e146fe64e08553"
+    }
+  },
+  "media": {
+    "evidence/tag-autocomplete-trials/ui/a-1000-selected.png": {
+      "bytes": 48742,
+      "sha256": "2991f06cb9e20d2b63477a3e641bbc16e26937a9cb8e7a0be98243513b5681cd",
+      "width": 1000,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/a-1000-suggestions.png": {
+      "bytes": 46592,
+      "sha256": "c4393b438961491008f5ed0478c74f2ea68d1a59772982071daa959654beb82f",
+      "width": 1000,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/a-390-bulk.png": {
+      "bytes": 41982,
+      "sha256": "e7f728a4433a883b572162b3a50b4122be765680b317343d87c49c4a7704fdb3",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/a-390-selected.png": {
+      "bytes": 39807,
+      "sha256": "71fb74a4eb98d1f66119060b667360c636ef1019acd62fc37d48faf3eae47b17",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/a-390-suggestions.png": {
+      "bytes": 38959,
+      "sha256": "e3d523e5afd09779592baea6ab00f950a190ca5f279397dabf3258832c3285e9",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/b-1000-selected.png": {
+      "bytes": 46775,
+      "sha256": "1821442aba67d678022fded10b675ce7dc169d91df2f75c1f2643f6e0a15bcf1",
+      "width": 1000,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/b-1000-suggestions.png": {
+      "bytes": 41885,
+      "sha256": "5a7b8267d236ea5ad9604183b1290c094b39cb51cb1fc05a2a22bf4f86bad11f",
+      "width": 1000,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/b-390-bulk.png": {
+      "bytes": 40277,
+      "sha256": "77accadde241289b3532a3503ad78d3d0686e0bddb0d6664fe235fb42e9b488a",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/b-390-selected.png": {
+      "bytes": 42850,
+      "sha256": "fa9c43b5e3f38c6e3e667200ef4f2d1e2daf40d75ac0569ad3234e58cdd6b4ab",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/b-390-suggestions.png": {
+      "bytes": 39355,
+      "sha256": "da136db21549026cdb32d47611961a8c9d19269c17783648827bb2c4072f760a",
+      "width": 390,
+      "height": 820
+    },
+    "evidence/tag-autocomplete-trials/ui/tag-entry-linux-gtk-trials.mp4": {
+      "bytes": 496283,
+      "sha256": "4f35a2c1fa3427e6ac00d4b5ae45d6305ae7ab46e3707ea3336d4c1c3a510c8c"
+    }
+  },
+  "preview_binary_at_capture": {
+    "bytes": 69712,
+    "sha256": "96a8fd14f75dbb70b26b3990f3447353d7cb5f678581d72d07a81affb65a2709"
+  },
+  "checks": {
+    "targeted_analyzer": "clean",
+    "native_smoke": "1 case passed, 12 seconds; two choices/viewports, keyboard/chips/leading-hash normalization/new-tag/bulk",
+    "full_implementation_testing": "deferred until Lee chooses",
+    "independent_pixel_review": "root: A/B390 suggestions and A/B1000 selected; no winner"
+  }
+}

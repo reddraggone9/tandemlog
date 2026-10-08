@@ -7,6 +7,15 @@ import 'failure_message.dart';
 import '../application/task_text_session.dart';
 import 'title_line_formatter.dart';
 
+// Experimental preview injection only; not connected to the application host.
+typedef TagEntryTrialBuilder =
+    Widget Function(
+      String field,
+      String label,
+      TextEditingController controller,
+      bool enabled,
+    );
+
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
     super.key,
@@ -18,6 +27,7 @@ class TaskEditor extends StatefulWidget {
     this.onClearSelection,
     this.users = const [],
     this.panel = false,
+    this.tagEntryTrialBuilder,
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
@@ -36,6 +46,7 @@ class TaskEditor extends StatefulWidget {
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final TagEntryTrialBuilder? tagEntryTrialBuilder;
   @override
   TaskEditorState createState() => TaskEditorState();
 }
@@ -50,6 +61,7 @@ class TaskEditorState extends State<TaskEditor> {
     tasks: [widget.task],
     users: widget.users,
     panel: widget.panel,
+    tagEntryTrialBuilder: widget.tagEntryTrialBuilder,
     onClose: widget.onClose,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
@@ -73,6 +85,7 @@ class BulkTaskEditor extends StatefulWidget {
     this.onClearSelection,
     this.users = const [],
     this.panel = false,
+    this.tagEntryTrialBuilder,
   });
   final List<Map<String, dynamic>> tasks;
   final Future<void> Function(BulkTaskEdit) onSave;
@@ -82,6 +95,7 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final TagEntryTrialBuilder? tagEntryTrialBuilder;
   @override
   BulkTaskEditorState createState() => BulkTaskEditorState();
 }
@@ -96,6 +110,7 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     tasks: widget.tasks,
     users: widget.users,
     panel: widget.panel,
+    tagEntryTrialBuilder: widget.tagEntryTrialBuilder,
     onClose: widget.onClose,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
@@ -110,6 +125,7 @@ class _EditorBody extends StatefulWidget {
     required this.tasks,
     required this.users,
     required this.panel,
+    this.tagEntryTrialBuilder,
     this.onClose,
     this.selectionCount,
     this.onClearSelection,
@@ -127,6 +143,7 @@ class _EditorBody extends StatefulWidget {
   final bool disableTextFields;
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
+  final TagEntryTrialBuilder? tagEntryTrialBuilder;
   final VoidCallback? onClose;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
@@ -539,6 +556,18 @@ class _EditorBodyState extends State<_EditorBody> {
       'dueDate',
       'dueTime',
     }.contains(key);
+    if (widget.tagEntryTrialBuilder != null &&
+        const {'tags', 'addTags', 'removeTags'}.contains(key)) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: widget.tagEntryTrialBuilder!(
+          key,
+          label,
+          controllers[key]!,
+          !editingFrozen,
+        ),
+      );
+    }
     final input = TextField(
       key: ValueKey(key),
       controller: controllers[key],

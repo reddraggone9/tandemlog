@@ -44,3 +44,5 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.
 - [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; isolated storage and UI implementation, with exact Windows/Android acceptance still pending.
 - [Checklist native acceptance](checklist-native-acceptance.md): exact candidate/fixture contract, platform workflow gates and current Linux evidence.
+
+- [Tag-entry UI trials](tag-autocomplete-trials.md): two lightweight autocomplete alternatives awaiting Lee's choice; isolated synthetic native Linux previews, neither adopted.
