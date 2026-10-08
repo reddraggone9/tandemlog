@@ -1,0 +1,121 @@
+{
+  "inputs": {
+    "https://repo.maven.apache.org/maven2/org/jline/jline/3.30.16/jline-3.30.16-jdk8.jar": {
+      "file": "downloads/repo.maven.apache.org/maven2/org/jline/jline/3.30.16/jline-3.30.16-jdk8.jar",
+      "bytes": 1468912,
+      "sha256": "a11f8b5b3cf03a7da8d50c91b1c7ed33750562dec1c53566647266c6bcd9a2e0"
+    },
+    "https://repo.maven.apache.org/maven2/org/jline/jline/3.30.16/jline-3.30.16-sources.jar": {
+      "file": "downloads/repo.maven.apache.org/maven2/org/jline/jline/3.30.16/jline-3.30.16-sources.jar",
+      "bytes": 1008114,
+      "sha256": "0242eb89fd5a39f022fa7a0899d98da913b643afdc35708fe1903867c1a1275e"
+    },
+    "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.14.0/gson-2.14.0.jar": {
+      "file": "downloads/repo.maven.apache.org/maven2/com/google/code/gson/gson/2.14.0/gson-2.14.0.jar",
+      "bytes": 313604,
+      "sha256": "2cbd119bf1961c28788310963dc80ba65f58cdeec1dd139c8bdb1240faa2c36f"
+    },
+    "https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.14.0/gson-2.14.0-sources.jar": {
+      "file": "downloads/repo.maven.apache.org/maven2/com/google/code/gson/gson/2.14.0/gson-2.14.0-sources.jar",
+      "bytes": 213519,
+      "sha256": "a4873f0ef88981cab520c3d7449cd89a68e605f15e9fe46e1aa2c77d5f87eb6f"
+    },
+    "https://repo.maven.apache.org/maven2/com/microsoft/playwright/driver/1.61.0/driver-1.61.0-sources.jar": {
+      "file": "downloads/repo.maven.apache.org/maven2/com/microsoft/playwright/driver/1.61.0/driver-1.61.0-sources.jar",
+      "bytes": 8218,
+      "sha256": "6a3b894041bcca67d66864618656ad18ac0129effad9797cd15809532cd8b2ab"
+    }
+  },
+  "jline_native_binding": [
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/FreeBSD/x86/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/FreeBSD/x86/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "7c1c26a62d09206009504a769718d360ca4238b832a3d89601a8964b1529aa4f"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/FreeBSD/x86_64/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/FreeBSD/x86_64/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "d0924a1b1b930d39bf1cca03748d6ce5ae7db2be6ac1b1e92b8c25c788c628c8"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/arm/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/arm/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "a6dbb0acb4f382b4419c99aa149d7463ecbb796a86acc66af7a7c428db67ea23"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/arm64/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/arm64/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "2d2ec1580e7c46aecf939f3ad0f140b77bde5c8de1f04feeace9d6932c6e9dc4"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/armv6/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/armv6/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "e6fbd656bd80ad0d64dbef0c7629dd37b55b83437c3a57ef0956dcdf45bd4bbe"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/armv7/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/armv7/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "4513c310e7668b110af6300bb1f7faf3a17f72f04e0385ccafa1e3eb95c5f8f5"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/ppc64/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/ppc64/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "6caa33406f446de40bc09302b02a4349c86a7ff6dbb3e37a2ea9ac8c20f82557"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/x86/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/x86/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "7ec2832fc93a5be3004af0813051fa5f35532c7c0df0a97a58c02786845e909c"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Linux/x86_64/libjlinenative.so",
+      "upstream_entry": "org/jline/nativ/Linux/x86_64/libjlinenative.so",
+      "exact_bytes_match": true,
+      "sha256": "6913e90cd3115940016193069a57b1b391b78cbedcd2c2f8cef2d6d345aac63b"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/arm64/libjlinenative.jnilib",
+      "upstream_entry": "org/jline/nativ/Mac/arm64/libjlinenative.jnilib",
+      "exact_bytes_match": true,
+      "sha256": "34a3a7b6a7b97f3d0738f49174b7e614f1158cb89a1b5b984cbf24e9fbc88e63"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/x86/libjlinenative.jnilib",
+      "upstream_entry": "org/jline/nativ/Mac/x86/libjlinenative.jnilib",
+      "exact_bytes_match": true,
+      "sha256": "72b52a58b00ecdadc7694d472a2dc2e349ffa4c09f04807e9cc46a6b91050137"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Mac/x86_64/libjlinenative.jnilib",
+      "upstream_entry": "org/jline/nativ/Mac/x86_64/libjlinenative.jnilib",
+      "exact_bytes_match": true,
+      "sha256": "bc38e62e79815b91b0a134e7e189627a2c6116bbcaaf38ed4c0ee31867c67028"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/arm64/jlinenative.dll",
+      "upstream_entry": "org/jline/nativ/Windows/arm64/jlinenative.dll",
+      "exact_bytes_match": true,
+      "sha256": "a1e7ff94faea0b17da0442f68b7eacd38d137763a1fba1631b415702624faaf2"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/x86/jlinenative.dll",
+      "upstream_entry": "org/jline/nativ/Windows/x86/jlinenative.dll",
+      "exact_bytes_match": true,
+      "sha256": "b878e5bc4a0d0660ca982271968d59d582986613420d9fbfc1cbe43577ce319c"
+    },
+    {
+      "shipped_entry": "org/jetbrains/kotlin/org/jline/nativ/Windows/x86_64/jlinenative.dll",
+      "upstream_entry": "org/jline/nativ/Windows/x86_64/jlinenative.dll",
+      "exact_bytes_match": true,
+      "sha256": "3322cf464b273c2e0844b32bc9c16cc1909eb8c393ad65cf0202d0cdee177669"
+    }
+  ]
+}

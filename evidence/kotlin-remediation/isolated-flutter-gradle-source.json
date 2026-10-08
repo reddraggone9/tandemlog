@@ -1,0 +1,238 @@
+{
+  "original": "/workspace/toolchains/flutter/packages/flutter_tools/gradle",
+  "isolated_copy": "/workspace/recovery/kotlin-remediation-flutter-sdk/packages/flutter_tools/gradle",
+  "files": [
+    {
+      "file": "build.gradle.kts",
+      "sha256": "8bce67c561f7a91bb743b443242b8d804ddc4190dc5524278bdecf8797515008"
+    },
+    {
+      "file": "aar_init_script.gradle",
+      "sha256": "5be84d9ef4fcf6560c7236bf4e68c3f36161397e3e2ebb9c33b60e6ad0739da9"
+    },
+    {
+      "file": "manual_migration_settings.gradle.md",
+      "sha256": "201291c59a97889b0c65b4c45879718e528062f586cb053a8238bdc2cedea462"
+    },
+    {
+      "file": "flutter.gradle",
+      "sha256": "c0b047798cd6eee41a57e897942cf9eb7ed92bf5455451cdc948f2a1155b08a4"
+    },
+    {
+      "file": "flutter_proguard_rules.pro",
+      "sha256": "598ebeeedd83bec19aae109cd17f02594506d0e5cb6ac76317c59111810e1edd"
+    },
+    {
+      "file": "app_plugin_loader.gradle",
+      "sha256": "0dedbfe40412e8b1607bc3e31c7697548c733ce32ee389495bb3dcab15559c12"
+    },
+    {
+      "file": ".gitignore",
+      "sha256": "e95bac168cd7c651f3ff9b6f97cae51d5781b24781a7d1ac312d4d3282e47877"
+    },
+    {
+      "file": "resolve_dependencies.gradle.kts",
+      "sha256": "10a6cdd619b5f38d56acd628198f097c2777e4ad75d9d2a78a3cfefbd4e1d647"
+    },
+    {
+      "file": "settings.gradle.kts",
+      "sha256": "56fe45270044d31615e1d9b8aa1410511a05b83ef431c24613b7907f225f9779"
+    },
+    {
+      "file": "module_plugin_loader.gradle",
+      "sha256": "f54877f9d466a108b601a1914be802c19cc38c0fb52bceec013091e7095518e0"
+    },
+    {
+      "file": ".dartignore",
+      "sha256": "61b47efab3d70f53c2c3feedff1c697d252ab10083d8529aaa73b02c31def68a"
+    },
+    {
+      "file": "README.md",
+      "sha256": "54084eb73dc6efd97675da2290130a59c2a161a08afc5b49e0a1d5afd0599cc9"
+    },
+    {
+      "file": "settings_aar.gradle.tmpl",
+      "sha256": "4b919cfffaed71637d1ee9c89f21f4247273e14eb8433afdcd0672eba906b41f"
+    },
+    {
+      "file": "src/test/kotlin/VersionFetcherTest.kt",
+      "sha256": "47acb2223475b9b6aa230f524982c49b457cfa9d05aa74d57f597db9357adf60"
+    },
+    {
+      "file": "src/test/kotlin/FlutterPluginTest.kt",
+      "sha256": "d275246cdbb7f3ddd6dba8fbbd355067ffa167c7de9ded33707c2f30f877f5a5"
+    },
+    {
+      "file": "src/test/kotlin/DependencyVersionCheckerTest.kt",
+      "sha256": "66ec59b37378f70f347075b2c05393d4ce09c8f577e252200590db8bfe3fd933"
+    },
+    {
+      "file": "src/test/kotlin/VersionUtilsTest.kt",
+      "sha256": "790abc8a24ced7c06e0f3efa8ca55fca2f3e063ac3e8a4ff02461d647e1f361f"
+    },
+    {
+      "file": "src/test/kotlin/AppLinkSettingsTest.kt",
+      "sha256": "d1537a9c84b8bd6598ec9cf763b2031169205118ca4422708382ff2b35eccf0d"
+    },
+    {
+      "file": "src/test/kotlin/FlutterPluginUtilsTest.kt",
+      "sha256": "d595101c31d071fd2f4cca3ddae33d59d7e13f4b3bf2c4c897d88a7db72cbbda"
+    },
+    {
+      "file": "src/test/kotlin/FlutterExtensionTest.kt",
+      "sha256": "a9aa201709d657bec30dc5910be7a1c10ac13f11998b9250e23fe81ea359e4ee"
+    },
+    {
+      "file": "src/test/kotlin/AgpCommonExtensionWrapperTest.kt",
+      "sha256": "6e8ffcdf90d1fc8c4cca6f1924e5fc45b23217ce41465c44fd835d94b466da07"
+    },
+    {
+      "file": "src/test/kotlin/IntentFilterCheckTest.kt",
+      "sha256": "386524f8031c306fe67c1d008d0d2aaa3a1d40362d2d88374412a99d37118168"
+    },
+    {
+      "file": "src/test/kotlin/BaseApplicationNameHandlerTest.kt",
+      "sha256": "8f21e88162286fd88dbb2631cc5446cc198cfc043b594e739b13bbac7ff72aad"
+    },
+    {
+      "file": "src/test/kotlin/DeeplinkTest.kt",
+      "sha256": "525fc434a271b6540e4665e6a3bb48c7250d751c4c060198ec7fdf7559abe648"
+    },
+    {
+      "file": "src/test/kotlin/plugins/PluginHandlerTest.kt",
+      "sha256": "5a4b7b28f038d39e7c2322923e2abe191d5fc68822c59d73b27c86ffb708f7c5"
+    },
+    {
+      "file": "src/test/kotlin/tasks/BaseFlutterTaskHelperTest.kt",
+      "sha256": "4e8c4947c8071539b01ffeb521fb2da86d7b521d5fa8fd0346f03a8ebeb58f8c"
+    },
+    {
+      "file": "src/test/kotlin/tasks/ValidateCompileSdkVersionTaskExecutionTest.kt",
+      "sha256": "d46a55a538147afc33a63e209163eab17df8cb26777875f510b00a024f7af388"
+    },
+    {
+      "file": "src/test/kotlin/tasks/PrintTaskTest.kt",
+      "sha256": "e7207c373dc8293395bb343785a709d5a0f968895dca53b1b2dc2efb2fb7c30a"
+    },
+    {
+      "file": "src/test/kotlin/tasks/ValidateCompileSdkVersionTaskTest.kt",
+      "sha256": "56e809c97a667ffa36c1d995c6393b86e24d5a1cf0e684b4d6c4e39866a23400"
+    },
+    {
+      "file": "src/test/kotlin/tasks/DeepLinkJsonFromManifestTaskTest.kt",
+      "sha256": "596013e3cc19ca54766f42eb9371fa7e678da37b14e6dfd689c911692b0606eb"
+    },
+    {
+      "file": "src/test/kotlin/tasks/FlutterTaskHelperTest.kt",
+      "sha256": "c52df12d70480e198217fc3a6cb1458172a7651d3d7776d0561e883bf9b0f86d"
+    },
+    {
+      "file": "src/test/kotlin/testing/VersionFetcherTestHelper.kt",
+      "sha256": "44682af9e0455c4060855f502f4b35247b5adb29465669486cbf688daf519fc7"
+    },
+    {
+      "file": "src/main/scripts/CMakeLists.txt",
+      "sha256": "1cd4fd6c4b9131b249743965e5611770424b9a0b12602126b2239b5e3b3b0265"
+    },
+    {
+      "file": "src/main/scripts/native_plugin_loader.gradle.kts",
+      "sha256": "e0aac9eefc8581ea6d28e6c1284f0b92e03727aaf0453ac4b8a2b8689a13e686"
+    },
+    {
+      "file": "src/main/kotlin/AppLinkSettings.kt",
+      "sha256": "b29aadd4b4790fad75e54f86b03a0eb859d0df5b1e240a51e0dae9910d82f735"
+    },
+    {
+      "file": "src/main/kotlin/Deeplink.kt",
+      "sha256": "5640a2f351c3130da1c8d89a584f8503a9f163bc9df2fd2f9eb28838c9ffe55c"
+    },
+    {
+      "file": "src/main/kotlin/NativePluginLoaderReflectionBridge.kt",
+      "sha256": "ad3144370bcc6b7afeace047b0a16de4739dcd57c4388a498dfd28a0472d5d4c"
+    },
+    {
+      "file": "src/main/kotlin/FlutterExtension.kt",
+      "sha256": "a8ca02d55798c200d766e245dae9df20565cb9d638d4887b51bf617abac938a1"
+    },
+    {
+      "file": "src/main/kotlin/FlutterPlugin.kt",
+      "sha256": "aba6c2f7331ea613227fed69666f8edb3839c09413188ccab64989dabe4bcd6f"
+    },
+    {
+      "file": "src/main/kotlin/IntentFilterCheck.kt",
+      "sha256": "285f5eb814fac14259115e420c9188cfb4bb5e95eac07ff387adfcc31d736c2a"
+    },
+    {
+      "file": "src/main/kotlin/VersionFetcher.kt",
+      "sha256": "46dc5b89b2ce5a7554c0b21c52f8ef25cbe0fed25958dd84f8328998b7df75e6"
+    },
+    {
+      "file": "src/main/kotlin/BaseApplicationNameHandler.kt",
+      "sha256": "a4ce2196411a716eccd3f1dfc4dfdbba72f7614a2b21e6d30a1de2333ab3c5a2"
+    },
+    {
+      "file": "src/main/kotlin/DependencyVersionChecker.kt",
+      "sha256": "573148ac80642432e1c84a7874efdea6a827fcaa8dd34de01e61ab4a6be309ef"
+    },
+    {
+      "file": "src/main/kotlin/VersionUtils.kt",
+      "sha256": "dd669d4b44917ecf451604a40dbf87cb65d74c4ce5587ae451d98d12c22955b1"
+    },
+    {
+      "file": "src/main/kotlin/FlutterPluginUtils.kt",
+      "sha256": "92f05b75bae280223c3cea04fceb8c7860c65a6b464399a5a51d71dfe90f0c05"
+    },
+    {
+      "file": "src/main/kotlin/FlutterAppPluginLoaderPlugin.kt",
+      "sha256": "4cc53d34ca996bd9e672163fe51774a92f465aa8906792a4438a0fd9cc740748"
+    },
+    {
+      "file": "src/main/kotlin/AgpCommonExtensionWrapper.kt",
+      "sha256": "0b7e2c52a3087b5ff8409515421d4c7288a4078da52ca394eb79a366097585da"
+    },
+    {
+      "file": "src/main/kotlin/FlutterPluginConstants.kt",
+      "sha256": "d367a170e6eefaf38a2eabeb35b62a247faee1e3bd14cde2ac1ccbf86afc1910"
+    },
+    {
+      "file": "src/main/kotlin/plugins/PluginHandler.kt",
+      "sha256": "2e0aabbee4b6699ded8fb75fa38347d1fe6d1c719051a2177bfc6ea7595b4817"
+    },
+    {
+      "file": "src/main/kotlin/tasks/CopyFlutterJniLibsTask.kt",
+      "sha256": "2ec8d7c3741ad925bc9a7d9f19c27966b4483735678fa3c69872d662f222412b"
+    },
+    {
+      "file": "src/main/kotlin/tasks/PrintTask.kt",
+      "sha256": "d9d8cbde483634611927ed7e1d0078cea5792297274b767cf6c2285347277e27"
+    },
+    {
+      "file": "src/main/kotlin/tasks/FlutterTaskHelper.kt",
+      "sha256": "117ff398ef94af8ce4fe83ecb227da5ccb2a2d4e6bcdeb05f1392f7e5343ef22"
+    },
+    {
+      "file": "src/main/kotlin/tasks/FlutterTask.kt",
+      "sha256": "93dc5805d863e1df88f1b297a18dc1eedd619c7e80bfdaa37b7edbf9dd506920"
+    },
+    {
+      "file": "src/main/kotlin/tasks/ValidateCompileSdkVersionTask.kt",
+      "sha256": "5be216402d5cb379840a107b1227dde566203f00c96881c12e996025a0bcb61f"
+    },
+    {
+      "file": "src/main/kotlin/tasks/BaseFlutterTask.kt",
+      "sha256": "27dd5ea0f0938f3d1cfb54b992601b39cbf25ae8f20bfe2da771d2ebbb630c56"
+    },
+    {
+      "file": "src/main/kotlin/tasks/BaseFlutterTaskHelper.kt",
+      "sha256": "2436cca453b4a1ac7720b3a951f6bce8fc668e966d577d4b256c2d8a96ff43f7"
+    },
+    {
+      "file": "src/main/kotlin/tasks/DeepLinkJsonFromManifestTaskHelper.kt",
+      "sha256": "c09653face63e9e272d6280d1e95e6b170353cedef62019c36b9b71ff147fc39"
+    },
+    {
+      "file": "src/main/kotlin/tasks/DeepLinkJsonFromManifestTask.kt",
+      "sha256": "3f5d3b4e1b361d5a8f2f80c0c6e0dfa7f9e90a3392dcf1b28e553521c77e6ad6"
+    }
+  ]
+}

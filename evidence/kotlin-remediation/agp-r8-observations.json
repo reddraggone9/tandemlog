@@ -1,0 +1,22 @@
+{
+  "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.module": {
+    "file": "downloads/dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.module",
+    "bytes": 11102,
+    "sha256": "0a27a1d6cbaf91bc52b8163103b9a34eb970c0dbf8b47dbc466e6b64e176d492"
+  },
+  "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.jar": {
+    "file": "downloads/dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.jar",
+    "bytes": 12671948,
+    "sha256": "74b47a2a57349371273fb0893f61977a68dc40d5fb5e012a71d9e00c76ad728d"
+  },
+  "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.module": {
+    "file": "downloads/dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.module",
+    "bytes": 8009,
+    "sha256": "48d7118b8ae420e91f607196d273f23419e756824838e74c392ebbf933afc621"
+  },
+  "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.jar": {
+    "file": "downloads/dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.jar",
+    "bytes": 15839059,
+    "sha256": "0670034adae63a4fabc25d42c1173d11b4e083021ff95c4bcee6f9e3945f9ae9"
+  }
+}
