@@ -323,13 +323,19 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
                   onPointerDown: (_) {
                     if (widget.enabled) moveFocus.requestFocus();
                   },
-                  child: Tooltip(
-                    message: 'Reorder checklist item: $title',
-                    child: SizedBox(
-                      key: Key('checklist-drag-$id'),
-                      width: 48,
-                      height: 48,
-                      child: const Icon(Icons.drag_handle),
+                  child: GestureDetector(
+                    excludeFromSemantics: true,
+                    onTap: () {
+                      if (widget.enabled) moveFocus.requestFocus();
+                    },
+                    child: Tooltip(
+                      message: 'Reorder checklist item: $title',
+                      child: SizedBox(
+                        key: Key('checklist-drag-$id'),
+                        width: 48,
+                        height: 48,
+                        child: const Icon(Icons.drag_handle),
+                      ),
                     ),
                   ),
                 ),
