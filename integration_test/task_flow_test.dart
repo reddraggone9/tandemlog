@@ -707,7 +707,7 @@ void main() {
       );
       await selectTask(tester, ids['Read planning notes']!, control: false);
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
+        find.byKey(const ValueKey('addTags')),
         'Selection draft',
       );
       await selectTask(tester, ids['Arrange reference shelf']!, control: false);
@@ -717,7 +717,7 @@ void main() {
       expect(selectionSummary(2), findsOneWidget);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         'Selection draft',
@@ -728,7 +728,7 @@ void main() {
       expect(selectionSummary(3), findsOneWidget);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         isEmpty,
@@ -801,7 +801,7 @@ void main() {
       expect(find.byType(BulkTaskEditor), findsOneWidget);
       expect(find.widgetWithText(TextField, 'Title'), findsNothing);
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
+        find.byKey(const ValueKey('addTags')),
         'Frozen draft',
       );
       await writer.editNativeFixtureTask(ids['Review household supplies']!, {
@@ -813,7 +813,7 @@ void main() {
       expect(find.textContaining('changed'), findsWidgets);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         'Frozen draft',
@@ -841,15 +841,12 @@ void main() {
       }
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         isEmpty,
       );
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
-        'Reviewed',
-      );
+      await tester.enterText(find.byKey(const ValueKey('addTags')), 'Reviewed');
       await tester.tap(find.text('Save changes'));
       for (
         var attempt = 0;
@@ -2544,6 +2541,8 @@ void main() {
             ? find.byKey(const ValueKey('startTime'))
             : label == 'Due time'
             ? find.byKey(const ValueKey('dueTime'))
+            : label == 'Tags'
+            ? find.byKey(const ValueKey('tags'))
             : find.widgetWithText(TextField, label);
         await tester.ensureVisible(field);
         await tester.pumpAndSettle();
@@ -2576,6 +2575,12 @@ void main() {
       await fill('This occurrence time', '08:00');
       await fill('Due time', '17:00');
       await fill('Time zone', 'UTC');
+      // Replacing the original set now removes its chip explicitly; typing in
+      // the shared query adds tags without silently replacing selected values.
+      final clearTags = find.byTooltip('Clear Tags');
+      await tester.ensureVisible(clearTags);
+      await tester.tap(clearTags);
+      await tester.pumpAndSettle();
       await fill('Tags', '#home #weekly');
       await tester.tap(find.text('Save changes'));
       await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
@@ -3960,7 +3965,7 @@ void main() {
       final bulk = tester.state<BulkTaskEditorState>(
         find.byType(BulkTaskEditor),
       );
-      final addTags = find.widgetWithText(TextField, 'Add tags');
+      final addTags = find.byKey(const ValueKey('addTags'));
       await tester.ensureVisible(addTags);
       await tester.tap(addTags);
       await tester.enterText(addTags, 'Reviewed');
