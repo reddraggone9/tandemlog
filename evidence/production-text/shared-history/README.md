@@ -6,7 +6,11 @@ Based on the recovered committed checkpoint `34addf6402ebe1d1546abe51e70f5264a92
 Neither failed, unadopted recovery experiment was applied here. Parent separately
 verified both original Library archives, their hashes/manifests and the eight-file
 index overlay. This consumer's supported Library transfer returned HTTP403.
-No old task, source file or synced user data was deleted or changed.
+Cloud recovery did not delete old source files or touch synced user data.
+Coordinator correction: Lee accepted discarding the inaccessible old workspace on
+2026-10-08 at03:09UTC after being told about possible later edits; the parent
+successfully archived old task `01a0f24e-662b-7053-b746-cbe1a420b0ec`. The fresh
+workspace and verified Library backups remain. No disposal permission is pending.
 
 ## Contract and test-first record
 
