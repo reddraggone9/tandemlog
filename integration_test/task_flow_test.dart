@@ -21,6 +21,8 @@ import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
 import 'completion_focus_test.dart' show registerCompletionFocusTests;
 import 'header_selection_test.dart' show registerHeaderSelectionTests;
+import 'historical_checklist_recompletion_test.dart'
+    show registerHistoricalChecklistRecompletionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
 import 'data_integrity_test.dart' show registerDataIntegrityTests;
@@ -164,6 +166,7 @@ void main() {
   registerCompletionActionTests();
   registerCompletionFocusTests();
   registerHeaderSelectionTests();
+  registerHistoricalChecklistRecompletionTests();
   registerHeaderSearchTests();
   registerInboxFlowTests();
   registerDataIntegrityTests();

@@ -172,18 +172,21 @@ drafts alone do not. All scalar baseline selectors use that rule only within the
 declared prefix. Local item commands/captures require an available parent; genuine
 late remote descendant activity still restores its protected parent. Historical
 `task.completedKeepingSuccessor` also accepts an earlier hash-matched scalar-mode
-`task.completedWithChecklist` initializer and leaves its independently owned child
-unchanged. Released `task.completed` historical guards remain unchanged.
+`task.completedWithChecklist` initializer or a native initializer with durable
+successor task/checklist activity, and leaves its independently owned child
+unchanged. Untouched native successors retain forward/concurrent inheritance.
+Released `task.completed` historical guards remain unchanged.
 
-The domain/storage component is implemented; item UI, completion warning and
-affected native acceptance remain pending. See [ADR0011](decisions/0011-one-level-checklists.md).
+The domain/storage component, item UI and completion warning are implemented;
+exact replacement-candidate Android acceptance remains pending after the historical
+recompletion finding. See [ADR0011](decisions/0011-one-level-checklists.md).
 
 `task.completedKeepingSuccessor` adds the accepted historical-recompletion edge.
 Its exact keys are `completedAt` and `retainedSuccessor`; the latter has exactly
 `id`, `completion` (original writer:sequence) and `hash`. The child ID remains
 UUIDv5(parent, `successor`). Known sources must be the earlier hash-matched scalar
-`task.completed` or scalar-mode `task.completedWithChecklist` of that parent,
-whose successor has this ID. No successor snapshot
+`task.completed`, scalar-mode `task.completedWithChecklist`, or native successor
+initializer of that parent, whose successor has this ID. No successor snapshot
 or inheritance contribution is created. Parent completion/Undo projection includes
 the new type; original scalar/native completion meanings remain unchanged. See the
 [accepted policy](historical-recurring-text-policy.md).

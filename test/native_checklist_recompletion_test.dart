@@ -175,6 +175,16 @@ void main() {
           final before = jsonEncode(_childRow(a));
           final beforeItems = jsonEncode(a.checklistItems(_child));
           final again = await _completeWithConsent(a);
+          expect(again.type, 'task.completedKeepingSuccessor');
+          expect(again.data['retainedSuccessor'], {
+            'id': _child,
+            'completion': first.id,
+            'hash': first.hash,
+          });
+          for (final excluded in ['successor', 'inheritance', 'checklist']) {
+            expect(again.data, isNot(contains(excluded)));
+          }
+          expect(a.currentTextRow(_parent)!['completed'], true);
           if (phase.startsWith('Undo')) {
             final undo = await a.undoOperations([again.id]);
             expect(undo.remaining, isEmpty);
@@ -219,6 +229,89 @@ void main() {
           engine.dispose();
           // Preserve these synthetic reproductions while the native blocker is
           // investigated; no live synced data or original candidate is touched.
+        }
+      },
+    );
+  }
+
+  for (final adopted in [false, true]) {
+    test(
+      'native recurrence without checklist ${adopted ? 'retains edited' : 'reinitializes untouched'} child',
+      () async {
+        final root = await Directory.systemTemp.createTemp(
+          'native-task-recompletion-',
+        );
+        final folder = LocalLogFolder(
+          (await Directory('${root.path}/shared').create()).path,
+        );
+        final engine = NativeTextEngine(
+          libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+        );
+        final store = await TaskStore.open(
+          folder,
+          '${root.path}/profile',
+          textEngine: engine,
+        );
+        try {
+          final user = const Uuid().v4();
+          const title = 'Pack for a walk';
+          await store.command(user, 'user.created', {'name': 'Synthetic'});
+          await store.command(_parent, 'task.createdWithText', {
+            'title': title,
+            'description': '',
+            'assignee': user,
+            'schedule': {
+              'dueDate': '2026-10-01',
+              'recurrence': 'every week when done',
+            },
+            'text': {
+              'codec': 'yrs-v1',
+              'adapter': 1,
+              'seeds': {
+                'title': sha256
+                    .convert(engine.seedText(title).bytes)
+                    .toString(),
+                'description': sha256
+                    .convert(engine.seedText('').bytes)
+                    .toString(),
+              },
+            },
+          });
+          final original = await store.complete(
+            _parent,
+            completionDay: DateTime(2026, 10, 8),
+          );
+          expect(original.type, 'task.completedWithText');
+          if (adopted) {
+            await _saveTitle(store, _child, 'Pack for a walk ChildA');
+          }
+          await _saveTitle(store, _parent, 'Pack for a walk ParentLater');
+          await store.reopen(_parent, [original.id]);
+          final before = adopted ? jsonEncode(_childRow(store)) : null;
+          final again = await store.complete(
+            _parent,
+            completionDay: DateTime(2026, 10, 8),
+          );
+          expect(store.currentTextRow(_parent)!['completed'], true);
+          if (adopted) {
+            expect(again.type, 'task.completedKeepingSuccessor');
+            expect(again.data['retainedSuccessor'], {
+              'id': _child,
+              'completion': original.id,
+              'hash': original.hash,
+            });
+            expect(jsonEncode(_childRow(store)), before);
+            expect((await store.undoOperations([again.id])).remaining, isEmpty);
+            expect(jsonEncode(_childRow(store)), before);
+          } else {
+            expect(again.type, 'task.completedWithText');
+            expect(again.data, contains('inheritance'));
+            expect(again.data, isNot(contains('retainedSuccessor')));
+            expect(_childRow(store)['title'], 'Pack for a walk ParentLater');
+          }
+        } finally {
+          await store.close();
+          engine.dispose();
         }
       },
     );

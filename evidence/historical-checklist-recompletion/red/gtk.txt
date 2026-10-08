@@ -1,0 +1,166 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-historical-checklist-red/integration_test/historical_checklist_recompletion_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[104661]: [session uid=1000 pid=104661 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=104908 comm="/workspace/tandemlog-historical-checklist-red/buil" label="kernel")
+
+(process:104913): dconf-CRITICAL **: 15:52:25.303: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:104913): dconf-CRITICAL **: 15:52:25.304: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:104913): dconf-CRITICAL **: 15:52:25.304: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:104913): dconf-CRITICAL **: 15:52:25.304: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:104913): dconf-CRITICAL **: 15:52:25.305: unable to create directory '/home/agent/.cache/dconf': Read-only file systemdbus-daemon[104661]: .  dconf will not work properly.
+[session uid=1000 pid=104661 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:104913): dconf-CRITICAL **: 15:52:25.305: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[104919]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=104908 comm="/workspace/tandemlog-historical-checklist-red/buil" label="kernel")
+dbus-daemon[104919]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: native historical checklist recompletion and Undo keep child text
+TANDEMLOG_FIRST_FRAME_MS=444
+TANDEMLOG_PHASE identity_lock=18
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=158
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1243 FILES_READ=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected:
+'{"id":"a119a352-62a0-5475-ad33-0f4cd75d636a","kind":"task","assignee":"9b0300e9-48f8-4eeb-84c3-fe79bc4cc0b9","description":"","schedule":{"dueDate":"2026-10-15","dueMaxDays":null,"dueMinDays":null,"dueTime":null,"recurrence":"every
+week when
+done","scheduledDate":null,"scheduledTime":null,"startDate":null,"startTime":null,"timeZone":null},"tags":[],"title":"Pack
+for a walk
+ChildA","order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","inbox":false,"deleted":false,"tagRefs":{},"completed":false,"completedAt":null,"successorSuppressed":false,"checklist":[{"id":"57fed6a9-c36b-58e1-b122-bc7a6b356331","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"8dede838-27a9-4ead-8088-5f532a9956f0","title":"Native
+item Saved
+ChildItemA","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"362b3c76-1418-5c85-a552-3d831b2a62fe","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"f8235c2a-7dea-4029-bf9d-061ccf681315","title":"Other
+unchecked item
+0","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"06d214b6-0bc0-5bf3-bc64-9308af789c7b","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"fcbe36e7-7dee-411f-ae4b-d40fbf9c0bc0","title":"Other
+unchecked item
+1","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"72b948fe-33a8-5738-9670-a56e7a913846","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"325f4e71-c947-4337-a965-70b446fb305c","title":"Other
+unchecked item
+2","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"e13d204b-8e1d-5d94-a03d-a3277a8945b8","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"17f95bf7-c80e-43f6-9a19-5c719909587c","title":"Other
+unchecked item
+3","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false}]}'
+  Actual:
+'{"id":"a119a352-62a0-5475-ad33-0f4cd75d636a","kind":"task","assignee":"9b0300e9-48f8-4eeb-84c3-fe79bc4cc0b9","description":"","schedule":{"dueDate":"2026-10-15","dueMaxDays":null,"dueMinDays":null,"dueTime":null,"recurrence":"every
+week when
+done","scheduledDate":null,"scheduledTime":null,"startDate":null,"startTime":null,"timeZone":null},"tags":[],"title":"Pack
+for a walk
+ChildA","order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","inbox":false,"deleted":false,"tagRefs":{},"completed":false,"completedAt":null,"successorSuppressed":false,"checklist":[{"id":"57fed6a9-c36b-58e1-b122-bc7a6b356331","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"8dede838-27a9-4ead-8088-5f532a9956f0","title":"Native
+item Saved ParentLater
+ChildItemA","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"362b3c76-1418-5c85-a552-3d831b2a62fe","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"f8235c2a-7dea-4029-bf9d-061ccf681315","title":"Other
+unchecked item
+0","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"06d214b6-0bc0-5bf3-bc64-9308af789c7b","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"fcbe36e7-7dee-411f-ae4b-d40fbf9c0bc0","title":"Other
+unchecked item
+1","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"72b948fe-33a8-5738-9670-a56e7a913846","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"325f4e71-c947-4337-a965-70b446fb305c","title":"Other
+unchecked item
+2","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false},{"id":"e13d204b-8e1d-5d94-a03d-a3277a8945b8","kind":"checklistItem","parent":"a119a352-62a0-5475-ad33-0f4cd75d636a","source":"17f95bf7-c80e-43f6-9a19-5c719909587c","title":"Other
+unchecked item
+3","description":"","before":null,"order":"1791474752831033000:2fc76f42-fa8a-4c76-b3b8-ac261cd64d55","completed":false,"deleted":false}]}'
+   Which: is different.
+          Expected: ... tem Saved ChildItemA ...
+            Actual: ... tem Saved ParentLate ...
+                                  ^
+           Differ at offset 763
+
+When the exception was thrown, this was the stack:
+#4      registerHistoricalChecklistRecompletionTests.<anonymous closure> (file:///workspace/tandemlog-historical-checklist-red/integration_test/historical_checklist_recompletion_test.dart:227:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-historical-checklist-red/integration_test/historical_checklist_recompletion_test.dart line 227
+The test description was:
+  native historical checklist recompletion and Undo keep child text
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:30 +0 -1: native historical checklist recompletion and Undo keep child text [E]
+  Test failed. See exception logs above.
+  The test description was: native historical checklist recompletion and Undo keep child text
+  
+00:30 +0 -1: (tearDownAll)
+00:30 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-historical-checklist-red/integration_test/historical_checklist_recompletion_test.dart: native historical checklist recompletion and Undo keep child text
