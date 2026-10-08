@@ -417,5 +417,31 @@
   ],
   "scope": "Confirmed API source/run/job/artifact bindings and reported archive digests. No consumer archive-byte/signature verification or exact Windows/Android manual/native UI acceptance is inferred. Coordinator acceptance remains required.",
   "local_native_evidence": "Full screenshot-enabled Linux GTK66/0 at509e41c; final17ae5e5 differs only reviewed DPR1/reset test guard and focused native case passed. Hosted final17ae5e5 also passed full native aggregate.",
-  "recovery_disposition": "Parent reports old task archived after Lee accepted discarding it at2026-10-08 03:09 UTC. Fresh workspace and verified Library backups preserved; no disposal permission pending."
+  "recovery_disposition": "Parent reports old task archived after Lee accepted discarding it at2026-10-08 03:09 UTC. Fresh workspace and verified Library backups preserved; no disposal permission pending.",
+  "windows_hosted_app_flows": {
+    "run_id": 37754442151,
+    "job_id": 113235408884,
+    "tested_source": "7b6cd65ed7db8ff8b5025abacba503e5c2f812c3",
+    "preserved_candidate_head": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+    "source_relation": "Application/native/integration-test/dependency inputs match preserved candidate; only scoped CI receipt runner/tests were added.",
+    "completed": 19,
+    "counts": [
+      2,
+      7,
+      4,
+      2,
+      3,
+      1
+    ],
+    "conclusion": "success",
+    "archive": {
+      "artifact_id": 11539453667,
+      "bytes": 14342,
+      "sha256": "ae3d4be3ccbe0409546e650170aebc4a9b902b98b7c6e197a09d1fee02873669",
+      "consumer_bytes_verified": true
+    },
+    "evidence_commit": "50f12459ab32c65715665a188ddf7a47cc281cf5",
+    "independent_review": "Archive and six raw-log hashes, exits, exact counts/no skips/failures, startup/readiness and protected-source equality accepted.",
+    "qualification": "Hosted debug app tests; payload hashes recorded by runner but binaries not archived or consumer-rehashed. No loaded-module enumeration. Installed release/manual visual/native assistive-technology and Android acceptance pending."
+  }
 }

@@ -11,8 +11,9 @@ teardown reset; application inputs are identical. They have independent review.
 Final-source CI [37747198468](https://github.com/reddraggone9/tandemlog/actions/runs/37747198468)
 completed successfully on Linux, Windows and Android, including the final native
 aggregate and packaging checks. The [final CI receipt](queued-fixes-final-ci-receipt.json)
-binds its exact source and reported archive digests; consumer byte/signature and
-Windows/Android native UI acceptance remain pending. Read the [queued-fixes receipt](https://github.com/reddraggone9/tandemlog/blob/preview/checklists-queued-fixes/evidence/queued-fixes/README.md)
+binds its exact source and reported archive digests. Hosted Windows debug app
+flows have since passed as recorded below; installed-release/manual Windows and
+Android acceptance remain pending. Read the [queued-fixes receipt](https://github.com/reddraggone9/tandemlog/blob/a960c882c06c018a1e721e7459f08dbe4d17bed3/evidence/queued-fixes/README.md)
 for exact final-head CI/native bindings.
 This composes reviewed rank `064cac1`, bulk Apply semantics
 `9d5a5aa` and field spacing `3b03e62` onto checklist candidate `eb68b46`.
@@ -52,11 +53,18 @@ commands use Flutter's app test runner, not shell mouse/keyboard control or CUA.
 Leave optional Linux capture variables unset. Required x64 Windows/MSVC, pinned
 Flutter, Python 3.11+, Rust 1.99.0 and locked/offline Cargo inputs remain prerequisites.
 
-Record source/host/toolchains, exit codes and complete logs, plus rebuilt debug
-application/native DLL hashes. Windows execution remains pending here. Passing
-these tests would add source-bound native app/lifecycle evidence; it would not
-establish manual visual acceptance or execution of the downloaded release payload.
-Do not bypass unavailable desktop-control APIs to obtain the latter.
+Hosted [run 37754442151](https://github.com/reddraggone9/tandemlog/actions/runs/37754442151)
+passed all 19 flows at `7b6cd65ed7db8ff8b5025abacba503e5c2f812c3`, whose application,
+native and integration-test inputs match preserved candidate `a960c88`. Independent
+review verified the downloaded receipt archive (14,342 bytes, SHA256
+`ae3d4be3ccbe0409546e650170aebc4a9b902b98b7c6e197a09d1fee02873669`), six raw-log
+hashes, exact counts, exits and startup/readiness markers. The
+[immutable result and receipts](https://github.com/reddraggone9/tandemlog/blob/50f12459ab32c65715665a188ddf7a47cc281cf5/evidence/windows-app-flows-37754442151/README.md)
+retain runner-measured debug payload hashes; payload binaries were not archived
+for consumer rehashing, and DLL loading was source-declared without module
+enumeration. This establishes hosted Windows debug app/lifecycle evidence.
+Installed release-artifact execution, manual visual and native assistive-technology
+acceptance remain pending. Do not bypass unavailable desktop-control APIs for them.
 
 ## Additional Android/manual affected flows
 
