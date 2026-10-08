@@ -33,13 +33,20 @@ def result(text, expected, exit_code):
     counts = re.findall(r'\+(\d+)(?:\s+~(\d+))?(?:\s+-(\d+))?:', text)
     passed, skipped, failed = (map(lambda value: int(value or 0), counts[-1])
                                if counts else (0, 0, 0))
+    first_frames = [int(value) for value in re.findall(
+        r'\bTANDEMLOG_FIRST_FRAME_MS=(\d+)(?=\s|$)', text)]
+    readiness = [dict(marker=marker, elapsed_ms=int(value)) for marker, value in re.findall(
+        r'\bTANDEMLOG_(READY|ONBOARDING_READY)_MS=(\d+)(?=\s|$)', text)]
     return dict(completed=passed, skipped=skipped, failed=failed,
+                first_frame_ms=first_frames, readiness_markers=readiness,
                 passed=(exit_code == 0 and passed == expected and skipped == failed == 0
+                        and bool(first_frames) and bool(readiness)
                         and 'All tests passed!' in text))
 
 
 def hashes(bundle):
-    for name in ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll'):
+    for name in ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll',
+                 'data/icudtl.dat', 'data/flutter_assets/kernel_blob.bin'):
         if not (bundle / name).is_file():
             raise ValueError('Missing debug payload: ' + name)
     return {path.relative_to(bundle).as_posix():

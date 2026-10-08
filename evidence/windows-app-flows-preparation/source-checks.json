@@ -13,8 +13,8 @@
   "files": {
     ".github/workflows/ci.yml": "9caf61ae4b794ebea6e549a9e9efc9c92d6179282f957050c9ef31610c5c769f",
     ".github/workflows/windows-app-flows.yml": "6c23d1895f4ae87964ad3a64aa20dd183079ca6c67b179c5164a445d0b2420b0",
-    "tool/windows_app_flows.py": "b0b07e86bdc7a83488aca34f2862462c1c0e43e46bde3a75f7e451fc71e68fb9",
-    "tool/test_windows_app_flows.py": "86995cfc84890280770aaad8ae39e5e429cdb76a4f692ec182a787604219b854"
+    "tool/windows_app_flows.py": "f47a2084585e5992fe6f6795e14d8e97d883d9c72f5de38b475ae73c540c3db7",
+    "tool/test_windows_app_flows.py": "84ee97c232d4dbe803ad4cb647b4915ac7fa193d8b002b8bbc63291af2e85711"
   },
   "windows_execution": "not dispatched; actual runtime/display result pending independent review",
   "native_loader_inspection": {
@@ -22,5 +22,6 @@
     "entrypoints": "App and fixture peers call NativeTextEngine() without explicit libraryPath",
     "default_windows_library": "adjacent to Platform.resolvedExecutable/tandemlog_text.dll",
     "TANDEMLOG_TEXT_LIBRARY": "not consumed by production adapter or these integration entrypoints; any value/hash recorded separately"
-  }
+  },
+  "receipt_negative_controls": "frozen e4def3a: missing app startup markers and missing debug ICU/kernel assets; implementation now passes all5 receipt tests"
 }

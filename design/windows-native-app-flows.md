@@ -38,8 +38,14 @@ failure. A command has a300-second limit; timeout stops only its fresh process
 tree. The workflow retains the current40-minute Windows job bound, with32minutes
 for the receipt step. Source must equal the dispatched GitHub SHA.
 
+Every scope must also emit a numeric `TANDEMLOG_FIRST_FRAME_MS` plus a numeric
+loaded or onboarding readiness marker from the production app. A success banner
+without genuine app startup markers fails; all observed values are retained.
+
 After each command, the receipt hashes every generated debug payload file and
 requires the app EXE, native text DLL and Flutter DLL. The dedicated artifact
+also requires `data/icudtl.dat` and the debug Flutter-assets `kernel_blob.bin`.
+The dedicated artifact
 contains only JSON and logs, including the actual runner/display/startup failure
 if one occurs. It never uploads test profiles, canonical histories or executables.
 The final receipt passes only when all19 expected flows and payload checks pass.
