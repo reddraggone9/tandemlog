@@ -1,0 +1,101 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_storage_test.dart
+00:00 +0: one-level items have native title/notes, completion, order and targeted Undo
+00:00 +0 -1: one-level items have native title/notes, completion, order and targeted Undo [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -1: nested, non-task parents and cross-parent move anchors append nothing
+00:00 +0 -2: nested, non-task parents and cross-parent move anchors append nothing [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -2: recurrence copies fresh unchecked items preserving order and native field identities
+00:00 +0 -3: recurrence copies fresh unchecked items preserving order and native field identities [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -3: offline completions union item text and membership while preserving successor edits
+00:00 +0 -4: offline completions union item text and membership while preserving successor edits [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -4: scalar parent can recur with native checklist without a forced parent text baseline
+00:00 +0 -5: scalar parent can recur with native checklist without a forced parent text baseline [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -5: historical recompletion leaves the independently initialized child checklist untouched
+00:00 +0 -6: historical recompletion leaves the independently initialized child checklist untouched [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -6: saved item completion/move/delete protects successor from completion Undo
+00:00 +0 -7: saved item completion/move/delete protects successor from completion Undo [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -7: late offline copy cannot overwrite a saved child order or checked state
+00:00 +0 -8: late offline copy cannot overwrite a saved child order or checked state [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -8: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:00 +0 -9: scalar-mode checklist history also preserves initialized child on historical recompletion [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -9: copied-item native proofs work through three generations and exact membership cannot be forged
+00:00 +0 -10: copied-item native proofs work through three generations and exact membership cannot be forged [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:00 +0 -10: untouched copied items follow successor suppression and identical cold/warm cache replay
+00:01 +0 -11: untouched copied items follow successor suppression and identical cold/warm cache replay [E]
+  Unknown event checklist.itemCreated. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 249:11         new LogEvent.decode
+  package:tandemlog/storage/task_store.dart 2232:24  TaskStore._prepareCommand
+  package:tandemlog/storage/task_store.dart 1848:15  TaskStore._command
+  
+00:01 +0 -11: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-checklists/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+  /workspace/tandemlog-checklists/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+  /workspace/tandemlog-checklists/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+  /workspace/tandemlog-checklists/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+  ... and 7 more
