@@ -1,8 +1,10 @@
 import hashlib
 import json
 from pathlib import Path
+import runpy
 import tempfile
 import unittest
+from unittest.mock import patch
 import zipfile
 
 from publish_gate import verify_candidate_inventory
@@ -67,6 +69,20 @@ class PublishInventory(unittest.TestCase):
                          set(public_asset_names('2026.10.2-rc.4').values()))
         self.assertEqual({p.name: p.read_bytes() for p in self.dist.iterdir()}, before)
 
+    def test_actual_portable_producer_is_compatible(self):
+        bundle = self.root / 'bundle'
+        for name in ('tandemlog.exe', 'tandemlog_text.dll', 'flutter_windows.dll',
+                     'data/flutter_assets/AssetManifest.bin'):
+            path = bundle / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_bytes(name.encode())
+        with patch('sys.argv', ['package_portable', '--bundle', str(bundle),
+                               '--output', str(self.dist), '--source-revision', SOURCE,
+                               '--run-id', '123']):
+            runpy.run_path(str(Path(__file__).resolve().parents[1]
+                               / 'packaging/windows/package_portable.py'))['main']()
+        verify_candidate_inventory(self.dist, SOURCE)
+
     def test_each_partial_portable_set_is_rejected(self):
         for missing in QA_FILES:
             with self.subTest(missing=missing):
@@ -111,12 +127,50 @@ class PublishInventory(unittest.TestCase):
             verify_candidate_inventory(self.dist, SOURCE)
 
     def test_unsafe_and_missing_required_payload_paths_are_rejected(self):
-        for payload in ({'../tandemlog.exe': b'app'}, {'/tandemlog.exe': b'app'},
-                        {'tandemlog.exe': b'app'}):
-            with self.subTest(payload=payload):
+        for unsafe in ('../outside', '/outside', 'C:/outside', 'data\\outside',
+                       'data/./outside', 'TANDEMLOG.EXE'):
+            with self.subTest(unsafe=unsafe):
+                self.portable()
+                payload = {name: b'content' for name in self.metadata['payload_sha256']}
+                payload[unsafe] = b'unsafe'
                 self.portable(payload)
                 with self.assertRaises(ValueError):
                     verify_candidate_inventory(self.dist, SOURCE)
+        self.portable({'tandemlog.exe': b'app'})
+        with self.assertRaises(ValueError):
+            verify_candidate_inventory(self.dist, SOURCE)
+
+    def test_member_digest_mismatch_is_rejected(self):
+        self.portable()
+        self.metadata['payload_sha256']['tandemlog.exe'] = 'b' * 64
+        self.save_metadata()
+        with self.assertRaises(ValueError):
+            verify_candidate_inventory(self.dist, SOURCE)
+
+    def test_archive_symlink_is_rejected_with_valid_source_and_digests(self):
+        self.portable()
+        archive = self.dist / self.metadata['artifact']
+        with zipfile.ZipFile(archive) as zipped:
+            payload = {name: zipped.read(name) for name in zipped.namelist()}
+        with zipfile.ZipFile(archive, 'w') as zipped:
+            for name, data in payload.items():
+                member = zipfile.ZipInfo(name)
+                member.external_attr = (0o120777 if name == 'tandemlog.exe'
+                                        else 0o100644) << 16
+                zipped.writestr(member, data)
+        digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+        self.metadata['artifact_sha256'] = digest
+        self.save_metadata()
+        (self.dist / 'windows-portable-SHA256SUMS.txt').write_text(
+            f'{digest}  {archive.name}\n')
+        with self.assertRaises(ValueError):
+            verify_candidate_inventory(self.dist, SOURCE)
+
+    def test_non_object_provenance_is_rejected(self):
+        self.portable()
+        (self.dist / 'windows-portable-provenance.json').write_text('[]')
+        with self.assertRaises(ValueError):
+            verify_candidate_inventory(self.dist, SOURCE)
 
     def test_inventory_directory_and_symlink_are_rejected(self):
         target = self.dist / 'android-signature.txt'
