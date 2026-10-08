@@ -1,0 +1,47 @@
+{"utc": "2026-10-08T14:02:23.230238+00:00", "phase": "clockBoundaryPlan", "first": "2026-10-08T14:04:00+00:00", "second": "2026-10-08T14:05:00+00:00", "noClockModification": true}
+{"utc": "2026-10-08T14:02:23.232111+00:00", "phase": "externalCanonicalArrivalVerified", "title": null, "seq": 1, "bytes": 403, "sha256": "ddaaa5b627b53ccb85b6067acd2a7848c7889426dfb8188bc4a20e0b1e387803", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-clock-20261008T140223Z/shared/c448d3f0-3030-4231-84b6-ff82dfa84fa9.jsonl", "eventHash": "a32c651d790797e96953d8ac1050f034004e7f37c9e09f31c2ce43bfecb80d82"}
+{"utc": "2026-10-08T14:02:23.232610+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Baseline synthetic task", "seq": 2, "bytes": 880, "sha256": "94acace93a7970f717cd7c34c2a8402b66108518b250a046f689e6898c7d9c59", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-clock-20261008T140223Z/shared/c448d3f0-3030-4231-84b6-ff82dfa84fa9.jsonl", "eventHash": "d17e0106a29cfa201a9b529b547ebac0e688bea017cd0aa490e7d70dde20fc70"}
+{"utc": "2026-10-08T14:02:23.232982+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Visible unfocused clock boundary", "seq": 3, "bytes": 1441, "sha256": "876f464d1ff3bdc6a189c902cce8b9f74b41edcaa12fa0abb89d704c9a33f6e0", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-clock-20261008T140223Z/shared/c448d3f0-3030-4231-84b6-ff82dfa84fa9.jsonl", "eventHash": "eaeb1d548ba97973bee687636b3f699bf4b8396083c5811b55c2e4530d0ddfe4"}
+{"utc": "2026-10-08T14:02:23.233541+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Minimized clock boundary", "seq": 4, "bytes": 1994, "sha256": "d96fcb4181e55a4974af573f621794f02c6bdb2ed4bc4cad7b226973e4349072", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-clock-20261008T140223Z/shared/c448d3f0-3030-4231-84b6-ff82dfa84fa9.jsonl", "eventHash": "03ae5a97cb382cb7d2ec283d1cb2ce3e77da4a3364c1f8dc25734897ddf2a355"}
+{"utc": "2026-10-08T14:02:23.233598+00:00", "phase": "fixtureCompleteBeforeApp", "sha256": "d96fcb4181e55a4974af573f621794f02c6bdb2ed4bc4cad7b226973e4349072"}
+dbus-daemon[94164]: [session uid=1000 pid=94164 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=94169 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+
+(process:94171): dconf-CRITICAL **: 14:02:25.285: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:94171): dconf-CRITICAL **: 14:02:25.285: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:94171): dconf-CRITICAL **: 14:02:25.285: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:94171): dconf-CRITICAL **: 14:02:25.285: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[94164]: [session uid=1000 pid=94164 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:94171): dconf-CRITICAL **: 14:02:25.287: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:94171): dconf-CRITICAL **: 14:02:25.287: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[94177]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=94169 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+dbus-daemon[94164]: [session uid=1000 pid=94164 pidfd=5] Activating service name='org.xfce.Xfconf' requested by ':1.2' (uid=1000 pid=94169 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+dbus-daemon[94177]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[94164]: [session uid=1000 pid=94164 pidfd=5] Successfully activated service 'org.xfce.Xfconf'
+{"utc": "2026-10-08T14:02:39.812353+00:00", "phase": "windowState", "label": "focusedReady", "active": "4194307", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_FOCUSED"}
+{"utc": "2026-10-08T14:02:39.914880+00:00", "phase": "screenshot", "name": "01-baseline-focused", "sha256": "27573396b207b356fd892da563e7b5b75f7f1082e161bb1966993e18a6d33c63", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:02:46.962506+00:00", "phase": "windowState", "label": "visibleUnfocusedReady", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) ="}
+{"utc": "2026-10-08T14:02:47.052531+00:00", "phase": "screenshot", "name": "03-visible-unfocused-before", "sha256": "4439f883e34803108dc1f3f77bae68186cc53aaa4edbe6e9ac7089b4a415f537", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:02:47.052653+00:00", "phase": "clockObservationBegin", "case": "visibleUnfocused", "boundary": "2026-10-08T14:04:00+00:00", "noInput": true}
+{"utc": "2026-10-08T14:04:08.000196+00:00", "phase": "clockBoundaryPassed", "case": "visibleUnfocused", "boundary": "2026-10-08T14:04:00+00:00"}
+{"utc": "2026-10-08T14:04:08.086990+00:00", "phase": "screenshot", "name": "04-visible-unfocused-after-clock-before-input", "sha256": "164488adc96a46120d4b50d863decc68a40ed6bf5ba928d1c5cf757ba8e31b51", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:04:08.090971+00:00", "phase": "windowState", "label": "visibleUnfocusedComplete", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) ="}
+{"utc": "2026-10-08T14:04:08.091036+00:00", "phase": "minimizeAction"}
+{"utc": "2026-10-08T14:04:13.099335+00:00", "phase": "windowState", "label": "minimizedReady", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Iconic\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_HIDDEN"}
+{"utc": "2026-10-08T14:04:13.164355+00:00", "phase": "screenshot", "name": "05-minimized-before-clock", "sha256": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:04:13.164460+00:00", "phase": "clockObservationBegin", "case": "minimized", "boundary": "2026-10-08T14:05:00+00:00", "noInput": true}
+{"utc": "2026-10-08T14:05:08.000187+00:00", "phase": "clockBoundaryPassed", "case": "minimized", "boundary": "2026-10-08T14:05:00+00:00"}
+{"utc": "2026-10-08T14:05:08.087012+00:00", "phase": "screenshot", "name": "06-minimized-after-clock", "sha256": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:05:08.092029+00:00", "phase": "windowState", "label": "minimizedComplete", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Iconic\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_HIDDEN"}
+{"utc": "2026-10-08T14:05:08.092103+00:00", "phase": "restoreAction", "mouseover": false}
+{"utc": "2026-10-08T14:05:20.219606+00:00", "phase": "screenshot", "name": "07-restored-after-clock-before-mouseover", "sha256": "d357c2df36742b94f4c4e497e9cd198fed070b6b20e2fc3d6d24e1f102dc511f", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T14:05:20.225413+00:00", "phase": "windowState", "label": "restoredComplete", "active": "4194307", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_FOCUSED"}
+{"utc": "2026-10-08T14:05:20.225572+00:00", "phase": "canonicalUnchangedDuringObservation", "sha256": "d96fcb4181e55a4974af573f621794f02c6bdb2ed4bc4cad7b226973e4349072"}
+{"utc": "2026-10-08T14:05:20.225603+00:00", "phase": "probeComplete", "appExit": null}
+
+(xfconfd:94185): xfconfd-WARNING **: 14:05:20.282: Name org.xfce.Xfconf lost on the message dbus, exiting.

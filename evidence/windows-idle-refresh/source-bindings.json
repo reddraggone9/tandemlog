@@ -1,0 +1,50 @@
+{
+  "purpose": "Read-only source comparison; not Windows runtime evidence",
+  "commits": {
+    "stable": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "main": "0a16a88355823d74c98246ed55f1ce85e45428ab",
+    "queued": "a960c882c06c018a1e721e7459f08dbe4d17bed3"
+  },
+  "blobs": {
+    "lib/platform/foreground_importer.dart": {
+      "stable": "ce20fdc19dc7c6d666e9818ff306c6fb5ab20f7d",
+      "main": "ce20fdc19dc7c6d666e9818ff306c6fb5ab20f7d",
+      "queued": "ce20fdc19dc7c6d666e9818ff306c6fb5ab20f7d"
+    },
+    "lib/storage/log_folder.dart": {
+      "stable": "fb1434c4f477545748c045fb0325267cdce2b917",
+      "main": "fb1434c4f477545748c045fb0325267cdce2b917",
+      "queued": "fb1434c4f477545748c045fb0325267cdce2b917"
+    },
+    "lib/presentation/view_clock.dart": {
+      "stable": "2d886fe0b0923aa47237508b92ccdb6958b327ee",
+      "main": "2d886fe0b0923aa47237508b92ccdb6958b327ee",
+      "queued": "2d886fe0b0923aa47237508b92ccdb6958b327ee"
+    },
+    "lib/platform/view_time_source.dart": {
+      "stable": "c46498dcce4d122dcb18461122dfd510c4850396",
+      "main": "c46498dcce4d122dcb18461122dfd510c4850396",
+      "queued": "c46498dcce4d122dcb18461122dfd510c4850396"
+    },
+    "windows/runner/main.cpp": {
+      "stable": "2521ac1a3a69729de17e100f97af24476ed65567",
+      "main": "2521ac1a3a69729de17e100f97af24476ed65567",
+      "queued": "2521ac1a3a69729de17e100f97af24476ed65567"
+    },
+    "windows/runner/flutter_window.cpp": {
+      "stable": "e6a179f005427662ce21cd4f60371dfbd6065d01",
+      "main": "e6a179f005427662ce21cd4f60371dfbd6065d01",
+      "queued": "e6a179f005427662ce21cd4f60371dfbd6065d01"
+    },
+    "windows/runner/win32_window.cpp": {
+      "stable": "60608d0fe5bff3a7a7e05d5a232944a1a8effe5f",
+      "main": "60608d0fe5bff3a7a7e05d5a232944a1a8effe5f",
+      "queued": "60608d0fe5bff3a7a7e05d5a232944a1a8effe5f"
+    },
+    ".github/actions/setup-flutter/action.yml": {
+      "stable": "ba482c8c3aca3c6da204d5768e5094ae0cfa8729",
+      "main": "ba482c8c3aca3c6da204d5768e5094ae0cfa8729",
+      "queued": "ba482c8c3aca3c6da204d5768e5094ae0cfa8729"
+    }
+  }
+}

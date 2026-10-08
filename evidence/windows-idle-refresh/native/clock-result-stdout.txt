@@ -1,0 +1,81 @@
+{
+  "outcome": "No stale-view reproduction: normal real start-time crossing published/built/painted while visible-unfocused; hidden view/import stopped and normal restore displayed second now-available task before mouseover.",
+  "cases": [
+    {
+      "case": "visibleUnfocused",
+      "entity": "b2d050cf-ccd9-43e1-a246-5d1b5b934b7e",
+      "startSchedule": {
+        "startDate": "2026-10-08",
+        "startTime": "14:04",
+        "timeZone": "UTC"
+      },
+      "timings": {
+        "onView": {
+          "utc": "2026-10-08T14:04:00.002459Z",
+          "msSinceBoundary": 2.459,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T14:04:00.002770Z",
+          "msSinceBoundary": 2.77,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T14:04:00.011924Z",
+          "msSinceBoundary": 11.924,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T14:04:00.047688Z",
+          "msSinceBoundary": 47.688,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        }
+      }
+    },
+    {
+      "case": "minimizedRestored",
+      "entity": "3ceacb3f-22a8-438e-9a77-44de3553fd25",
+      "startSchedule": {
+        "startDate": "2026-10-08",
+        "startTime": "14:05",
+        "timeZone": "UTC"
+      },
+      "timings": {
+        "onView": {
+          "utc": "2026-10-08T14:05:08.114591Z",
+          "msSinceRestore": 22.488,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T14:05:08.114811Z",
+          "msSinceRestore": 22.708,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T14:05:08.129978Z",
+          "msSinceRestore": 37.875,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T14:05:08.178633Z",
+          "msSinceRestore": 86.53,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        }
+      }
+    }
+  ],
+  "hiddenInterval": {
+    "from": "2026-10-08T14:04:13.164460+00:00",
+    "through": "2026-10-08T14:05:08.092103+00:00",
+    "crossedBoundary": "2026-10-08T14:05:00+00:00",
+    "importViewBuildPaintEvents": 0
+  }
+}

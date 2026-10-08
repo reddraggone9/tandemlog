@@ -1,0 +1,41 @@
+{
+  "baseCommit": "0a16a88355823d74c98246ed55f1ce85e45428ab",
+  "patchSha256": "f66c5a50bbb92d22fe64ebf655cd6ccb8d6eb191361afcd2dfb8a610b0c1fb17",
+  "kind": "temporary test-only metadata observation; no production fix",
+  "noNewFrameRequests": true,
+  "notWidgetsTester": true,
+  "profileGuard": "synthetic-only env + identical profile/trace parent inside native/run-*",
+  "initialAbortedRuns": "run-01 (initial plus interrupted DBus retry, mixed fixture: NOT acceptance); run-03 (display race: NOT acceptance). Raw files retained unchanged.",
+  "files": {
+    "lib/main.dart": "d129af51bbd05d9f46b08b8135939bf299b767e6b85963401b4cf3326131fef4",
+    "lib/platform/foreground_importer.dart": "6b8860c2a8f34d745b1260441ac3fa1c638618b74ceed7ea1ede436973ecbd20",
+    "lib/idle_probe.dart": "71d0518d5ea72dde9e0d7d0aaf63f49cff5f8c388fac4e13deafddab896c5b4a",
+    "evidence/windows-idle-refresh/native/run_probe.py": "3e3b05a08c50e8a9eda054f0deacbb3474bb8b97e7423b817618fc7eb5f4bf69"
+  },
+  "executedRunner": {
+    "path": "run-04/executed-runner.py",
+    "sha256": "3e3b05a08c50e8a9eda054f0deacbb3474bb8b97e7423b817618fc7eb5f4bf69"
+  },
+  "replayRunnerSha256": "6ec666985f754670e5ca7778981ce23dfe8e7913d63f3f7923b2eac11bfd245d",
+  "replayRunnerChange": "Fresh UTC run directory, refuses reuse; identical observed phases. Original exact executed runner retained.",
+  "builtBundleSha256": {
+    "data/flutter_assets/AssetManifest.bin": "f566cc6fccc657365c0197accf3a7d6f80f85209ff666ff774f4dcbc524aa842",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/NOTICES.Z": "b01e00160052e04ecfe27ebed53664209bdd75c044c8b664fcf58971007897ea",
+    "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453",
+    "data/flutter_assets/kernel_blob.bin": "faa1c180bccae26da6c2db176235bb6a6311039c2cd4d50a986ef359d8122b15",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/flutter_assets/version.json": "2075897a466835c1ae2e829b7e7ba60c79eb6760e68baf040e459d1dcc344f98",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "lib/libdartjni.so": "40b8165cddf1f7ffc0fb1de6d14c9dd4af1390fab66a3b437d6c8fdb9ba4a9a1",
+    "lib/libfile_selector_linux_plugin.so": "522184c67cc2454fd91a46dc4f3a976416e8f37f1f2ba6e119b21b27b9fad401",
+    "lib/libflutter_linux_gtk.so": "7a5698608a3c79ad3f123a74bce8074339ffa1a83c896d73ae853c9f92a43cc3",
+    "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "lib/liburl_launcher_linux_plugin.so": "f7bd46fed9180aeee358ec7bee0b45b6b8ee0cabb7148c529963b7a20c7411d7",
+    "tandemlog": "3bcdde8c568a9bbbf12ce197c9faf5cfff9d804ee9093d30e2fd5a4ef3fd1608"
+  },
+  "flutterRevision": "6a19cca56475dbfba1478ee68d7bd0c2ef891da1",
+  "compiledBuildLog": "build-metadata.txt"
+}

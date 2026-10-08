@@ -1,0 +1,210 @@
+{
+  "outcome": "No stale-view reproduction in this bounded actual GTK observation: foreground/inactive writes painted before input; hidden importer stopped and restore imported/painted without mouseover.",
+  "cases": [
+    {
+      "case": "focused",
+      "sequence": 3,
+      "entity": "331582bc-8179-4535-a926-b48f2088aae5",
+      "verifiedArrivalUtc": "2026-10-08T13:42:14.133333+00:00",
+      "observationSeconds": 25,
+      "timings": {
+        "watchEvent": {
+          "utc": "2026-10-08T13:42:14.138798Z",
+          "msSinceVerifiedArrival": 5.465,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "reconcileBegin": {
+          "utc": "2026-10-08T13:42:14.392952Z",
+          "msSinceVerifiedArrival": 259.619,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "storeRefreshBegin": {
+          "utc": "2026-10-08T13:42:14.393130Z",
+          "msSinceVerifiedArrival": 259.797,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "storeRefreshEnd": {
+          "utc": "2026-10-08T13:42:14.428977Z",
+          "msSinceVerifiedArrival": 295.644,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "rowsPublished": {
+          "utc": "2026-10-08T13:42:14.430111Z",
+          "msSinceVerifiedArrival": 296.778,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "onView": {
+          "utc": "2026-10-08T13:42:14.431521Z",
+          "msSinceVerifiedArrival": 298.188,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T13:42:14.431676Z",
+          "msSinceVerifiedArrival": 298.343,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T13:42:14.450521Z",
+          "msSinceVerifiedArrival": 317.188,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T13:42:14.501383Z",
+          "msSinceVerifiedArrival": 368.05,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "postFrame": {
+          "utc": "2026-10-08T13:42:14.512616Z",
+          "msSinceVerifiedArrival": 379.283,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        }
+      },
+      "fallbackTicksDuringInterval": 2
+    },
+    {
+      "case": "visibleUnfocused",
+      "sequence": 4,
+      "entity": "b40bfd39-1463-451b-93ac-4c9439242dc0",
+      "verifiedArrivalUtc": "2026-10-08T13:42:46.369962+00:00",
+      "observationSeconds": 70,
+      "timings": {
+        "watchEvent": {
+          "utc": "2026-10-08T13:42:46.371134Z",
+          "msSinceVerifiedArrival": 1.172,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "reconcileBegin": {
+          "utc": "2026-10-08T13:42:46.623466Z",
+          "msSinceVerifiedArrival": 253.504,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "storeRefreshBegin": {
+          "utc": "2026-10-08T13:42:46.623660Z",
+          "msSinceVerifiedArrival": 253.698,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "storeRefreshEnd": {
+          "utc": "2026-10-08T13:42:46.664763Z",
+          "msSinceVerifiedArrival": 294.801,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "rowsPublished": {
+          "utc": "2026-10-08T13:42:46.665344Z",
+          "msSinceVerifiedArrival": 295.382,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "onView": {
+          "utc": "2026-10-08T13:42:46.665861Z",
+          "msSinceVerifiedArrival": 295.899,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T13:42:46.665937Z",
+          "msSinceVerifiedArrival": 295.975,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T13:42:46.685900Z",
+          "msSinceVerifiedArrival": 315.938,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T13:42:46.718903Z",
+          "msSinceVerifiedArrival": 348.941,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "postFrame": {
+          "utc": "2026-10-08T13:42:46.731620Z",
+          "msSinceVerifiedArrival": 361.658,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        }
+      },
+      "fallbackTicksDuringInterval": 5
+    },
+    {
+      "case": "minimized",
+      "sequence": 5,
+      "entity": "e9782846-1766-4f0e-b1c7-51a0a64b9a6c",
+      "verifiedArrivalUtc": "2026-10-08T13:44:01.535670+00:00",
+      "observationSeconds": 35,
+      "timings": {
+        "reconcileBegin": {
+          "utc": "2026-10-08T13:44:36.606046Z",
+          "msSinceRestore": 4.1,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "storeRefreshBegin": {
+          "utc": "2026-10-08T13:44:36.606123Z",
+          "msSinceRestore": 4.177,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "storeRefreshEnd": {
+          "utc": "2026-10-08T13:44:36.713060Z",
+          "msSinceRestore": 111.114,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "rowsPublished": {
+          "utc": "2026-10-08T13:44:36.713532Z",
+          "msSinceRestore": 111.586,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "onView": {
+          "utc": "2026-10-08T13:44:36.714027Z",
+          "msSinceRestore": 112.081,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T13:44:36.714109Z",
+          "msSinceRestore": 112.163,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T13:44:36.734634Z",
+          "msSinceRestore": 132.688,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T13:44:36.768092Z",
+          "msSinceRestore": 166.146,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "postFrame": {
+          "utc": "2026-10-08T13:44:36.780491Z",
+          "msSinceRestore": 178.545,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        }
+      },
+      "fallbackTicksDuringInterval": 0,
+      "importBuildPaintEventsBeforeRestore": 0
+    }
+  ]
+}

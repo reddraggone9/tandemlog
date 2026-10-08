@@ -1,0 +1,114 @@
+{
+  "baseCommit": "0a16a88355823d74c98246ed55f1ce85e45428ab",
+  "runtime": "Actual Linux GTK debug,1400x900 virtual X display:195, app1100x740,dark,xfwm4",
+  "run": "run-clock-20261008T140223Z",
+  "sourceBinding": "instrumentation-manifest.json binds the existing compiled bundle and instrumentation.patch; all bundle hashes reverified before observation",
+  "noRebuildOrProductionEdits": true,
+  "widgetsTester": false,
+  "forcedFrameOrTimerInput": false,
+  "noSystemClockChangesOrSuspend": true,
+  "canonicalSha256Unchanged": "d96fcb4181e55a4974af573f621794f02c6bdb2ed4bc4cad7b226973e4349072",
+  "cases": [
+    {
+      "case": "visibleUnfocused",
+      "entity": "b2d050cf-ccd9-43e1-a246-5d1b5b934b7e",
+      "startSchedule": {
+        "startDate": "2026-10-08",
+        "startTime": "14:04",
+        "timeZone": "UTC"
+      },
+      "timings": {
+        "onView": {
+          "utc": "2026-10-08T14:04:00.002459Z",
+          "msSinceBoundary": 2.459,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T14:04:00.002770Z",
+          "msSinceBoundary": 2.77,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T14:04:00.011924Z",
+          "msSinceBoundary": 11.924,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T14:04:00.047688Z",
+          "msSinceBoundary": 47.688,
+          "lifecycle": "inactive",
+          "framesEnabled": true
+        }
+      }
+    },
+    {
+      "case": "minimizedRestored",
+      "entity": "3ceacb3f-22a8-438e-9a77-44de3553fd25",
+      "startSchedule": {
+        "startDate": "2026-10-08",
+        "startTime": "14:05",
+        "timeZone": "UTC"
+      },
+      "timings": {
+        "onView": {
+          "utc": "2026-10-08T14:05:08.114591Z",
+          "msSinceRestore": 22.488,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "viewPublished": {
+          "utc": "2026-10-08T14:05:08.114811Z",
+          "msSinceRestore": 22.708,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "build": {
+          "utc": "2026-10-08T14:05:08.129978Z",
+          "msSinceRestore": 37.875,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        },
+        "paint": {
+          "utc": "2026-10-08T14:05:08.178633Z",
+          "msSinceRestore": 86.53,
+          "lifecycle": "resumed",
+          "framesEnabled": true
+        }
+      }
+    }
+  ],
+  "hiddenInterval": {
+    "from": "2026-10-08T14:04:13.164460+00:00",
+    "through": "2026-10-08T14:05:08.092103+00:00",
+    "crossedBoundary": "2026-10-08T14:05:00+00:00",
+    "importViewBuildPaintEvents": 0
+  },
+  "outcome": "No stale-view reproduction: normal real start-time crossing published/built/painted while visible-unfocused; hidden view/import stopped and normal restore displayed second now-available task before mouseover.",
+  "limits": [
+    "Linux GTK debug on virtual X11, not Windows or release acceptance",
+    "Finite minutes, not overnight",
+    "No physical monitor power, display sleep/wake, manual display off, system suspend or remote provider observation",
+    "Parent-reported Windows High performance AC Never sleep/hibernate/display settings are context only; no automatic-sleep assumption",
+    "Observer synchronous metadata I/O may perturb diagnostic timing; not a performance benchmark"
+  ],
+  "artifactSha256": {
+    "run-clock-20261008T140223Z/01-baseline-focused.png": "27573396b207b356fd892da563e7b5b75f7f1082e161bb1966993e18a6d33c63",
+    "run-clock-20261008T140223Z/03-visible-unfocused-before.png": "4439f883e34803108dc1f3f77bae68186cc53aaa4edbe6e9ac7089b4a415f537",
+    "run-clock-20261008T140223Z/04-visible-unfocused-after-clock-before-input.png": "164488adc96a46120d4b50d863decc68a40ed6bf5ba928d1c5cf757ba8e31b51",
+    "run-clock-20261008T140223Z/05-minimized-before-clock.png": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029",
+    "run-clock-20261008T140223Z/06-minimized-after-clock.png": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029",
+    "run-clock-20261008T140223Z/07-restored-after-clock-before-mouseover.png": "d357c2df36742b94f4c4e497e9cd198fed070b6b20e2fc3d6d24e1f102dc511f",
+    "run-clock-20261008T140223Z/app-stdout.txt": "103f5ea213e70a636bb174e5f29266feca488d8e791051dcee60f387f5bf6f9d",
+    "run-clock-20261008T140223Z/app-trace.jsonl": "201b7d9477ab27678f99c8bb4feda02a30fdf5a26a842b6bec23590791d37fe9",
+    "run-clock-20261008T140223Z/dummy.txt": "328bfaa4228e59991509e0fc33eb235c6c5c0a4eafc8526abd441e67a1518d74",
+    "run-clock-20261008T140223Z/fixture.json": "5cbb23f00fcdd2d1dc3e63672a6f39501c2872d61d532a7ebbbe0ea1ccc9128a",
+    "run-clock-20261008T140223Z/orchestrator.jsonl": "7a939b44e170a18837cd3853827bb7f6686c81307ac965917ef9c238c76507f1",
+    "run-clock-20261008T140223Z/shared/c448d3f0-3030-4231-84b6-ff82dfa84fa9.jsonl": "d96fcb4181e55a4974af573f621794f02c6bdb2ed4bc4cad7b226973e4349072",
+    "run-clock-20261008T140223Z/shared/tandemlog-space.json": "dbf8c2d23cc19478b97123aef2206d338dccf26237f0c77175558bb838b4969a",
+    "run-clock-20261008T140223Z/wm.txt": "0c216145f1ab08f153b3def5c8fd08e2fe8b869360d2f6349665353c7bb2002a",
+    "run-clock-20261008T140223Z/xvfb.txt": "87e9572cf030493a1f7ba83d385129046b224374ca1414911674b30fc44276d7"
+  }
+}

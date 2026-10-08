@@ -1,0 +1,10 @@
+# Excluded setup attempts remain locally preserved; never acceptance evidence.
+run-01/
+run-03/
+orchestration-stdout.txt
+orchestration-02-stdout.txt
+orchestration-03-stdout.txt
+# Private disposable runtime directories are never repository artifacts.
+*/profile/
+*/cache/
+*/config/

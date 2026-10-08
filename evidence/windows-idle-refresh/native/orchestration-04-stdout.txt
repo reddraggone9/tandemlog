@@ -1,0 +1,46 @@
+{"utc": "2026-10-08T13:41:57.425489+00:00", "phase": "externalCanonicalArrivalVerified", "title": null, "seq": 1, "bytes": 403, "sha256": "c7351d91a0d3b7c1d541fbeff5e7fb177df2a19e18d45fdd806e3d7f03598878", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-04/shared/8850fd66-ad7b-4935-b238-47ed02708b5a.jsonl", "eventHash": "2279518e5c174c413946e33b551285449825d01cae08c499a39c39de47307594"}
+{"utc": "2026-10-08T13:41:57.426023+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Baseline synthetic task", "seq": 2, "bytes": 880, "sha256": "0ba30ef45b3b95c7b5d16fe8eb35e68f60b4599d007c46c5bc2a4fb3cab5f482", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-04/shared/8850fd66-ad7b-4935-b238-47ed02708b5a.jsonl", "eventHash": "0c9ab4f4c8a65537f6a40a21bb4d6fb37ee97140556d666981c86e85158a9821"}
+dbus-daemon[89605]: [session uid=1000 pid=89605 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.0' (uid=1000 pid=89610 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+
+(process:89612): dconf-CRITICAL **: 13:41:59.477: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:89612): dconf-CRITICAL **: 13:41:59.477: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:89612): dconf-CRITICAL **: 13:41:59.477: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:89612): dconf-CRITICAL **: 13:41:59.477: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[89605]: [session uid=1000 pid=89605 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:89612): dconf-CRITICAL **: 13:41:59.479: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:89612): dconf-CRITICAL **: 13:41:59.479: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[89618]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=89610 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+dbus-daemon[89605]: [session uid=1000 pid=89605 pidfd=5] Activating service name='org.xfce.Xfconf' requested by ':1.2' (uid=1000 pid=89610 comm="/usr/bin/xfwm4 --replace --compositor=off" label="kernel")
+dbus-daemon[89618]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+dbus-daemon[89605]: [session uid=1000 pid=89605 pidfd=5] Successfully activated service 'org.xfce.Xfconf'
+{"utc": "2026-10-08T13:42:14.020948+00:00", "phase": "windowState", "label": "focusedReady", "active": "4194307", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_FOCUSED"}
+{"utc": "2026-10-08T13:42:14.132122+00:00", "phase": "screenshot", "name": "01-baseline-focused", "sha256": "27573396b207b356fd892da563e7b5b75f7f1082e161bb1966993e18a6d33c63", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:42:14.132253+00:00", "phase": "idleBegin", "case": "focused", "seconds": 25, "noInput": true}
+{"utc": "2026-10-08T13:42:14.133333+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Focused idle arrival", "seq": 3, "bytes": 1354, "sha256": "eb1beeebb6682a3260a2dd4fdd009e88733a481e5721849a33a75c29f1926576", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-04/shared/8850fd66-ad7b-4935-b238-47ed02708b5a.jsonl", "eventHash": "834cc8e43219adfe5ff0f786dd73d6bd0a15cf273183a8363bedd5e16311fb84"}
+{"utc": "2026-10-08T13:42:39.219631+00:00", "phase": "screenshot", "name": "02-focused-arrived-before-input", "sha256": "aa01aba956229fcea22e8e8e400e3ee83d3eef440b21192d06ca139689f17805", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:42:39.226437+00:00", "phase": "windowState", "label": "focusedComplete", "active": "4194307", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_FOCUSED"}
+{"utc": "2026-10-08T13:42:46.274826+00:00", "phase": "windowState", "label": "visibleUnfocusedReady", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) ="}
+{"utc": "2026-10-08T13:42:46.366809+00:00", "phase": "screenshot", "name": "03-visible-unfocused-before", "sha256": "c09d497487a6163e591eefdf9861808362d5d90a85dfc180f865539db6b4b7cf", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:42:46.366915+00:00", "phase": "idleBegin", "case": "visibleUnfocused", "seconds": 70, "noInput": true}
+{"utc": "2026-10-08T13:42:46.369962+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Visible unfocused arrival", "seq": 4, "bytes": 1833, "sha256": "d0c4a088c9964bf23d67bf638f6ba8c446d310432562a34702c33d9611c060c7", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-04/shared/8850fd66-ad7b-4935-b238-47ed02708b5a.jsonl", "eventHash": "9c0ed56b3e68ecca1a5d5f2e42992980145f347374b17275d923e5d7d096fe18"}
+{"utc": "2026-10-08T13:43:56.464187+00:00", "phase": "screenshot", "name": "04-visible-unfocused-arrived-before-input", "sha256": "29ca5b4c9502ae8f2364272de856caa537b7801578cb3669d824028e97003551", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:43:56.468715+00:00", "phase": "windowState", "label": "visibleUnfocusedComplete", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) ="}
+{"utc": "2026-10-08T13:43:56.468784+00:00", "phase": "minimizeAction"}
+{"utc": "2026-10-08T13:44:01.476100+00:00", "phase": "windowState", "label": "minimizedReady", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Iconic\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_HIDDEN"}
+{"utc": "2026-10-08T13:44:01.534346+00:00", "phase": "screenshot", "name": "05-minimized-before", "sha256": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:44:01.534507+00:00", "phase": "idleBegin", "case": "minimized", "seconds": 35, "noInput": true}
+{"utc": "2026-10-08T13:44:01.535670+00:00", "phase": "externalCanonicalArrivalVerified", "title": "Minimized external arrival", "seq": 5, "bytes": 2313, "sha256": "2b9edeada2979ba16ba7f37d06242a9a1a847470aeee447cbfe64112084de2c8", "path": "/workspace/tandemlog-windows-idle-refresh/evidence/windows-idle-refresh/native/run-04/shared/8850fd66-ad7b-4935-b238-47ed02708b5a.jsonl", "eventHash": "4f11a03ad13c4955cc21fe6ac7238eaf6c437d0cec24c07a47f6a7beb989dc67"}
+{"utc": "2026-10-08T13:44:36.597223+00:00", "phase": "screenshot", "name": "06-minimized-after-arrival", "sha256": "f442ae37f4ec91fe37eae652487784ccc0ece88c7bafd98bca3fab8b9864c029", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:44:36.601870+00:00", "phase": "windowState", "label": "minimizedComplete", "active": "6291488", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Iconic\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_HIDDEN"}
+{"utc": "2026-10-08T13:44:36.601946+00:00", "phase": "restoreAction", "mouseover": false}
+{"utc": "2026-10-08T13:44:51.726786+00:00", "phase": "screenshot", "name": "07-restored-arrival-before-mouseover", "sha256": "fb4f427607e52e33bec24a9f040c632c3a6e0c17066689e5ca1044a4f83c36be", "pointer": "X=1390\nY=890\nSCREEN=0\nWINDOW=543"}
+{"utc": "2026-10-08T13:44:51.731096+00:00", "phase": "windowState", "label": "restoredComplete", "active": "4194307", "app": "4194307", "details": "WM_STATE(WM_STATE):\n\t\twindow state: Normal\n\t\ticon window: 0x0\n_NET_WM_STATE(ATOM) = _NET_WM_STATE_FOCUSED"}
+{"utc": "2026-10-08T13:44:51.731222+00:00", "phase": "probeComplete", "appExit": null}
+
+(xfconfd:89626): xfconfd-WARNING **: 13:44:51.811: Name org.xfce.Xfconf lost on the message dbus, exiting.
