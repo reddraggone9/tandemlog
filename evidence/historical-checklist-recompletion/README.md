@@ -1,8 +1,9 @@
 # Historical checklist recompletion: replacement candidate
 
 Status: reproduced and fixed locally; independent correctness, architecture and
-security source review passed. Exact replacement Android artifact acceptance is
-pending. The original frozen candidate remains failed and unchanged.
+security source review passed. Actual focused Windows debug regression also passes.
+Exact replacement Android artifact acceptance is pending. The original frozen
+candidate remains failed and unchanged.
 
 ## Native finding and reproduction
 
@@ -86,7 +87,13 @@ and this evidence link. No reviewer claims to have rerun the local checks.
 
 ## Remaining gates
 
-Run full CI against the exact replacement source and preserve its artifact identity.
+[Full CI37804634954](https://github.com/reddraggone9/tandemlog/actions/runs/37804634954)
+passed all three platforms at exactd73662a. Linux606unit/67actual-native apps,
+Windows604unit/twoexpectedLinux-onlyskips,4Cargo/107nativeworker/37tool checks
+and release packaging/staticnative/installation smoke gates passed. The
+[qualified CI receipt](green/ci-receipt.json) binds sources/jobs/logs and host-reported
+artifacts. [Exact Android handoff](../../design/historical-checklist-native-acceptance.md)
+records the new source/artifact/hosted checksum/signer and consumer403 limitation.
 Parent must verify installed APK bytes/signing and repeat the actual Android
 checkpoint-through-A16 trigger, Undo and disposable cache rebuild, plus affected
 native recurrence/checklist flows. The failed original APK, tag component and Kotlin
