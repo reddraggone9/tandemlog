@@ -166,6 +166,7 @@ class NativeTextEngine {
   final _NativeBindings _bindings;
   final String ownerId = const Uuid().v4();
   final Set<NativeTextDocument> _documents = {};
+  final Set<NativeTextMaterializer> _materializers = {};
   final _inspectionCache = <String, List<int>>{};
   int _inspectionPayloadBytes = 0;
   int get cachedInspectionCount => _inspectionCache.length;
@@ -183,6 +184,26 @@ class NativeTextEngine {
   NativeTextUpdate seedText(String text) {
     _validateText(text, 10000);
     return NativeTextUpdate.parse(_call('seed', {'text': text})['update']);
+  }
+
+  /// Disposable reconstruction has no editor, receipt or Undo ownership.
+  NativeTextMaterializer createMaterializer({
+    required NativeTextState seed,
+    required NativeTextLimits limits,
+  }) {
+    _ensureOpen();
+    if (seed.bytes.length > limits.stateBytes) {
+      throw const FormatException('Materializer seed exceeds its state budget');
+    }
+    final name = const Uuid().v4();
+    _call('materializer_new', {
+      'name': name,
+      'seed': seed.encoded,
+      'limits': limits.toJson(),
+    });
+    final materializer = NativeTextMaterializer._(this, name, limits);
+    _materializers.add(materializer);
+    return materializer;
   }
 
   NativeTextDocument createDocument({
@@ -336,6 +357,13 @@ class NativeTextEngine {
     _inspectionCache.clear();
     _inspectionPayloadBytes = 0;
     Object? failure;
+    for (final materializer in _materializers.toList()) {
+      try {
+        materializer.close();
+      } catch (error) {
+        failure ??= error;
+      }
+    }
     for (final document in _documents.toList()) {
       try {
         document.dispose();
@@ -345,6 +373,71 @@ class NativeTextEngine {
     }
     _closed = true;
     if (failure != null) throw failure;
+  }
+}
+
+class NativeMaterializedText {
+  const NativeMaterializedText(this.text, this.pending);
+  final String text;
+  final bool pending;
+}
+
+/// Quarantined on failure. Only immutable original packets may reconstruct it;
+/// it cannot capture a draft or acquire character Undo ownership.
+class NativeTextMaterializer {
+  NativeTextMaterializer._(this._engine, this._name, this.limits);
+  final NativeTextEngine _engine;
+  final String _name;
+  final NativeTextLimits limits;
+  bool _closed = false;
+  Map<String, dynamic> _call(
+    String op, [
+    Map<String, Object?> data = const {},
+  ]) {
+    if (_closed) throw StateError('Native materializer is closed');
+    return _engine._call(op, {'name': _name, ...data});
+  }
+
+  NativeMaterializedText _snapshot(Map<String, dynamic> result) {
+    final text = _string(result, 'text', 'materializer_read');
+    _validateText(text, limits.visibleUtf16);
+    if (result['pending'] is! bool) {
+      throw const FormatException('Invalid native materializer pending flag');
+    }
+    return NativeMaterializedText(text, result['pending'] as bool);
+  }
+
+  NativeMaterializedText read() => _snapshot(_call('materializer_read'));
+  NativeTextState get fullState =>
+      NativeTextState.parse(_call('materializer_state')['update']);
+  NativeMaterializedText apply(NativeTextUpdate update) {
+    try {
+      if (update.bytes.length > limits.updateBytes) {
+        throw const FormatException('Materializer update exceeds its budget');
+      }
+      return _snapshot(_call('materializer_apply', {'update': update.encoded}));
+    } catch (_) {
+      // The native layer removes failed candidates. Cancellation also covers
+      // a response/transport validation failure after successful integration.
+      try {
+        close();
+      } catch (_) {
+        /* Original failure remains authoritative. */
+      }
+      rethrow;
+    }
+  }
+
+  void close() {
+    if (_closed) return;
+    try {
+      _call('materializer_cancel');
+    } on NativeTextException catch (error) {
+      if (!error.message.contains('unknown materializer')) rethrow;
+    } finally {
+      _closed = true;
+      _engine._materializers.remove(this);
+    }
   }
 }
 

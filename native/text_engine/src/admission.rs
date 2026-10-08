@@ -175,6 +175,11 @@ impl Admission {
         }
         Ok(())
     }
+    /// Publish identities only after the caller validates the complete delta.
+    /// Disposable materializers discard their handle on any integration error.
+    pub fn merge_validated(&mut self, incoming: Self) {
+        self.units.extend(incoming.units);
+    }
 }
 fn err(e: yrs::encoding::read::Error) -> String {
     format!("invalid admission packet: {e}")

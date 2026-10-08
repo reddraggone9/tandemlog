@@ -275,12 +275,26 @@ impl Replica {
         Ok(())
     }
     fn recreate(&self) -> Result<Self, String> {
+        self.recreate_observing(None)
+    }
+    fn recreate_observing(
+        &self,
+        capture: Option<Arc<Mutex<Vec<Vec<u8>>>>>,
+    ) -> Result<Self, String> {
         let mut clone = Self::new_with_guid(
             self.doc.client_id().get(),
             self.initial_seed.as_deref(),
             Some(self.doc.guid()),
             self.limits.clone(),
         )?;
+        if let Some(capture) = capture {
+            clone
+                .doc
+                .observe_update_v1("private-save-delta", move |_, event| {
+                    capture.lock().unwrap().push(event.update.clone());
+                })
+                .map_err(|e| e.to_string())?;
+        }
         for step in &self.replay {
             match step {
                 ReplayStep::Apply(update, origin) => {
@@ -316,6 +330,25 @@ impl Replica {
         clone.composing = self.composing;
         clone.anchor = self.anchor.clone();
         Ok(clone)
+    }
+    fn draft_update(&self) -> Result<Vec<u8>, String> {
+        if self.baseline.is_none() {
+            return Err("not a captured draft".into());
+        }
+        // Observe only replayed private transactions, after its captured seed.
+        // This includes private Undo/Redo, while retaining the strict identity
+        // equality check. A vector diff repeats every historical delete range.
+        let packets = Arc::new(Mutex::new(Vec::new()));
+        let candidate = self.recreate_observing(Some(packets.clone()))?;
+        candidate
+            .doc
+            .unobserve_update_v1("private-save-delta")
+            .map_err(|e| e.to_string())?;
+        let captured = packets.lock().unwrap();
+        let update =
+            yrs::merge_updates_v1(captured.iter().map(Vec::as_slice)).map_err(|e| e.to_string())?;
+        decode_limit(&update, self.limits.update)?;
+        Ok(update)
     }
     fn apply_owned(&mut self, data: &[u8], operation: &str) -> Result<(), String> {
         if operation.is_empty() || operation.len() > 128 {
@@ -499,9 +532,100 @@ fn boundary(s: &str, index: u64) -> bool {
     }
     false
 }
+
+/// Private replay acceleration, never an editor or an Undo owner. Its native
+/// document and admission identities advance together. Any failed mutation
+/// removes the handle; its caller must reconstruct from immutable originals.
+struct Materializer {
+    doc: Doc,
+    text: TextRef,
+    identities: admission::Admission,
+    limits: Limits,
+    charged_bytes: usize,
+}
+impl Materializer {
+    fn new(seed: &[u8], limits: Limits) -> Result<Self, String> {
+        let identities =
+            admission::Admission::parse_with_budgets(seed, limits.state, limits.units())?;
+        identities.check_initial()?;
+        let doc = make_doc(2);
+        let text = doc.get_or_insert_text("text");
+        doc.transact_mut()
+            .apply_update(decode_limit(seed, limits.state)?)
+            .map_err(|e| e.to_string())?;
+        let result = Self {
+            doc,
+            text,
+            identities,
+            limits,
+            charged_bytes: seed.len(),
+        };
+        if result.weight() > result.limits.retained {
+            return Err("materializer payload budget exceeded".into());
+        }
+        result.check_visible()?;
+        Ok(result)
+    }
+    fn check_visible(&self) -> Result<(), String> {
+        if self
+            .text
+            .get_string(&self.doc.transact())
+            .encode_utf16()
+            .count()
+            > self.limits.visible
+        {
+            return Err("visible text budget exceeded".into());
+        }
+        Ok(())
+    }
+    fn weight(&self) -> usize {
+        self.charged_bytes + self.doc.guid().len()
+    }
+    fn apply(&mut self, packet: &[u8]) -> Result<(), String> {
+        let incoming = admission::Admission::parse_with_budgets(
+            packet,
+            self.limits.update,
+            self.limits.units(),
+        )?;
+        incoming.check_combined(&self.identities, self.limits.units())?;
+        let charged = self
+            .charged_bytes
+            .checked_add(packet.len() + 16)
+            .ok_or("materializer payload budget exceeded")?;
+        // A conservative packet-byte budget bounds retained encoded state
+        // without serializing inherited history for every incoming operation.
+        if charged > self.limits.state
+            || charged.saturating_add(self.doc.guid().len()) > self.limits.retained
+        {
+            return Err("materializer payload budget exceeded".into());
+        }
+        self.doc
+            .transact_mut()
+            .apply_update(decode_limit(packet, self.limits.update)?)
+            .map_err(|e| e.to_string())?;
+        self.check_visible()?;
+        self.identities.merge_validated(incoming);
+        self.charged_bytes = charged;
+        Ok(())
+    }
+    fn read(&self) -> Value {
+        let tx = self.doc.transact();
+        json!({"text":self.text.get_string(&tx),
+            "pending":tx.store().pending_update().is_some() || tx.store().pending_ds().is_some()})
+    }
+    fn state(&self) -> Result<Value, String> {
+        let state = self
+            .doc
+            .transact()
+            .encode_state_as_update_v1(&StateVector::default());
+        admission::Admission::parse_with_budgets(&state, self.limits.state, self.limits.units())?;
+        Ok(json!({"update":STANDARD.encode(state)}))
+    }
+}
 #[derive(Default)]
 struct Engine {
     docs: HashMap<String, Replica>,
+    materializers: HashMap<String, Materializer>,
     next_preparation: u64,
     undo_receipts: HashMap<String, UndoReceipt>,
 }
@@ -529,6 +653,11 @@ impl Engine {
                 .undo_receipts
                 .iter()
                 .map(|(token, r)| Self::receipt_weight(r, token))
+                .sum::<usize>()
+            + self
+                .materializers
+                .iter()
+                .map(|(name, m)| name.len() + m.weight())
                 .sum::<usize>()
     }
     fn command(&mut self, v: Value) -> Result<Value, String> {
@@ -569,6 +698,7 @@ impl Engine {
         }
         let mut candidate = Engine {
             docs: HashMap::new(),
+            materializers: HashMap::new(),
             next_preparation: self.next_preparation,
             undo_receipts: self
                 .undo_receipts
@@ -615,6 +745,12 @@ impl Engine {
                 .filter(|(_, r)| !names.contains(&r.name))
                 .map(|(token, r)| Self::receipt_weight(r, token))
                 .sum::<usize>();
+        let untouched = untouched
+            + self
+                .materializers
+                .iter()
+                .map(|(name, m)| name.len() + m.weight())
+                .sum::<usize>();
         if untouched.saturating_add(candidate.retained_weight()) > RETAINED_CAP {
             return Err("global serialized payload budget exceeded".into());
         }
@@ -633,7 +769,7 @@ impl Engine {
             .ok_or_else(|| "unknown replica".into())
     }
     fn add(&mut self, name: String, r: Replica) -> Result<Value, String> {
-        if self.docs.contains_key(&name) {
+        if self.docs.contains_key(&name) || self.materializers.contains_key(&name) {
             return Err("replica exists".into());
         }
         if self
@@ -773,6 +909,7 @@ impl Engine {
         match op {
             "reset" => {
                 self.docs.clear();
+                self.materializers.clear();
                 self.undo_receipts.clear();
                 return Ok(json!({"ok":true}));
             }
@@ -806,6 +943,64 @@ impl Engine {
         }
         let name = string(&v, "name")?.to_owned();
         match op {
+            "materializer_new" => {
+                if self.docs.contains_key(&name) || self.materializers.contains_key(&name) {
+                    return Err("replica exists".into());
+                }
+                let limits = Limits::parse(&v["limits"])?;
+                let seed = bytes_limit(&v, "seed", limits.state)?;
+                let materializer = Materializer::new(&seed, limits)?;
+                if self
+                    .retained_weight()
+                    .saturating_add(materializer.weight() + name.len())
+                    > RETAINED_CAP
+                {
+                    return Err("global serialized payload budget exceeded".into());
+                }
+                let response = materializer.read();
+                if response.to_string().len() > RESPONSE_CAP {
+                    return Err("response frame budget exceeded".into());
+                }
+                self.materializers.insert(name, materializer);
+                Ok(response)
+            }
+            "materializer_apply" => {
+                let mut materializer = self
+                    .materializers
+                    .remove(&name)
+                    .ok_or("unknown materializer")?;
+                let packet = bytes_limit(&v, "update", materializer.limits.update)?;
+                materializer.apply(&packet)?;
+                if self
+                    .retained_weight()
+                    .saturating_add(materializer.weight() + name.len())
+                    > RETAINED_CAP
+                {
+                    return Err("global serialized payload budget exceeded".into());
+                }
+                let response = materializer.read();
+                if response.to_string().len() > RESPONSE_CAP {
+                    return Err("response frame budget exceeded".into());
+                }
+                self.materializers.insert(name, materializer);
+                Ok(response)
+            }
+            "materializer_read" => self
+                .materializers
+                .get(&name)
+                .map(Materializer::read)
+                .ok_or_else(|| "unknown materializer".into()),
+            "materializer_state" => self
+                .materializers
+                .get(&name)
+                .ok_or("unknown materializer")?
+                .state(),
+            "materializer_cancel" => {
+                self.materializers
+                    .remove(&name)
+                    .ok_or("unknown materializer")?;
+                Ok(json!({"ok":true}))
+            }
             "new" => {
                 let limits = Limits::parse(&v["limits"])?;
                 let seed = if v["seed"].is_string() {
@@ -949,8 +1144,7 @@ impl Engine {
                 if r.source.as_ref() != Some(&(target, target_guid)) {
                     return Err("draft source identity changed or wrong target".into());
                 }
-                let baseline = r.baseline.as_ref().ok_or("not a captured draft")?;
-                let data = r.doc.transact().encode_diff_v1(baseline);
+                let data = r.draft_update()?;
                 decode_limit(&data, r.limits.update)?;
                 Ok(json!({"update":STANDARD.encode(data)}))
             }
@@ -964,8 +1158,7 @@ impl Engine {
                 if r.source.as_ref() != Some(&(target.clone(), target_guid)) {
                     return Err("draft source identity changed or wrong target".into());
                 }
-                let baseline = r.baseline.as_ref().ok_or("not a captured draft")?;
-                let data = r.doc.transact().encode_diff_v1(baseline);
+                let data = r.draft_update()?;
                 self.apply_to(&target, &data, "local")?;
                 self.docs.remove(&name);
                 Ok(json!({"update":STANDARD.encode(data),"text":self.get(&target)?.string()}))

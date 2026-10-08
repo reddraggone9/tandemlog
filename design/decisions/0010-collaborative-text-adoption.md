@@ -432,3 +432,14 @@ These changes introduce no canonical, clock, UUID, context, packet, Undo or cach
 schema migration. They do not rebase identities or change completion-observed
 union. See [measurements and limits](../../evidence/production-text/recurring/README.md).
 Historical mixed-lineage behavior remains [a separate decision](../historical-recurring-text-policy.md).
+
+## Shared-history redesign foundation — 2026-10-08
+
+Lee approved replacing repeated inherited-history reconstruction with shared
+original-operation references, incremental unowned native documents and sparse
+historical checkpoints. The recovered workspace now implements and tests those
+primitives. [Foundation evidence and limits](../../evidence/production-text/shared-history/README.md)
+distinguish them from the pending resolver/cache integration and scaling gates.
+They do not yet change durable record formats, scalar v3 meanings or completion
+policy. The pinned Yrs determinism patch retains its exact original provenance;
+independent review of the adapter changes and integrated architecture is pending.
