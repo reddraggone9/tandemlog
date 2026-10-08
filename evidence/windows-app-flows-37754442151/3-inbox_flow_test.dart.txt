@@ -1,0 +1,89 @@
+00:00 +0: loading D:/a/tandemlog/tandemlog/integration_test/inbox_flow_test.dart
+Building Windows application...                                 
+CUSTOMBUILD : warning : unused imports: `BlockRange` and `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused import: `Block` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused import: `ItemContent` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused imports: `SmallVec` and `smallvec` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused import: `crate::utils::OptionExt` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : value assigned to `left` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused variable: `ptr` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : variable does not need to be mutable [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused variable: `clear_undo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : unused variable: `clear_redo` [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `as_item` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : methods `last_id`, `is_item`, and `is_gc` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `delete_as_cleanup` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `integrate` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `contains` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_QUOTE` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_ASSOC` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `as_id_set` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : associated functions `next_target` and `return_stack` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : methods `forward`, `backward`, and `values` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `remove_at` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : method `inner_mut` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : trait `BlockIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : trait `BlockSliceIterator` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : struct `RangeIter` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : associated items `new` and `begin` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : enum `RangeIterState` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : struct `Values` is never constructed [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : associated function `new` is never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : field `txn` is never read [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : methods `adjacent`, `contains_id`, `right`, and `left` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : methods `within_range` and `get_item` are never used [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : hiding a lifetime that's elided elsewhere is confusing [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+CUSTOMBUILD : warning : `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions) [D:\a\tandemlog\tandemlog\build\windows\x64\tandemlog_text_build.vcxproj]
+Building Windows application...                                    15.0s
+√ Built build\windows\x64\runner\Debug\tandemlog.exe
+00:00 +0: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=178
+TANDEMLOG_ONBOARDING_READY_MS=725 FILES_READ=0
+00:01 +1: interrupted startup releases installation lease after pending work
+00:01 +1: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=26
+00:01 +2: Inbox capture cancel edit Undo and history remain coherent
+00:02 +2: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=24
+TANDEMLOG_PHASE identity_lock=9
+TANDEMLOG_PHASE sqlite_open_schema=121
+TANDEMLOG_PHASE manifest=18
+TANDEMLOG_PHASE ingest=42
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=563 FILES_READ=1
+00:10 +3: creation-only prefix keeps immutable capture through background reconciliation
+00:11 +3: second instance does not read or write preferences and Retry acquires released lease
+TANDEMLOG_FIRST_FRAME_MS=20
+TANDEMLOG_PHASE identity_lock=2
+TANDEMLOG_PHASE sqlite_open_schema=82
+TANDEMLOG_PHASE manifest=16
+TANDEMLOG_PHASE ingest=34
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=316 FILES_READ=1
+00:13 +4: (tearDownAll)
+00:13 +4: All tests passed!

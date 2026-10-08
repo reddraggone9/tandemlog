@@ -57,9 +57,17 @@ this source-declared debug-bundle selection separately from an unused environmen
 value and records the loader source hash. It does not claim runtime loaded-module
 enumeration from payload hashes.
 
-Windows execution is pending at preparation: local source/receipt checks do not
-establish runner display availability. A future successful run is source-bound
-debug native application acceptance, not manual visual/screen-reader acceptance,
+The reviewed hosted retry passed all 19 scoped flows on Windows at
+`7b6cd65ed7db8ff8b5025abacba503e5c2f812c3`: [run 37754442151](https://github.com/reddraggone9/tandemlog/actions/runs/37754442151),
+job 113235408884, completed 2026-10-08 09:14:52 UTC. All six command exits were 0,
+with no skipped/failed tests and first-frame plus readiness markers per scope.
+The exact receipt archive bytes were downloaded through the supported MCP
+resolved reference and SHA256-verified against the API/upload digest. Raw test
+logs independently match their recorded hashes and receipt result guards.
+[The retained result](../evidence/windows-app-flows-37754442151/README.md)
+preserves all five mandatory debug payload receipts, including six entrypoint
+kernel variants. This is source-bound debug native application acceptance,
+not manual visual/screen-reader acceptance,
 execution of the downloaded release executable or Android SAF/IME evidence.
 Those exact-artifact and platform gates remain in
 [runtime QA](runtime-qa.md) and [checklist native acceptance](checklist-native-acceptance.md).
@@ -75,4 +83,5 @@ The runner now configures its own stdout/stderr as UTF-8 before printing, with
 backslash escaping for unencodable surrogate values. Raw subprocess log bytes
 and existing acceptance guards remain unchanged. Frozen strict-cp1252 regression
 tests reproduce the actual U+221A failure before the fix and pass afterward.
-Actual Windows app execution awaits a separately reviewed hosted retry.
+The separately reviewed hosted retry completed actual Windows app execution
+successfully; the original failure evidence remains preserved.

@@ -1,0 +1,792 @@
+{
+  "platform": "Windows-10-10.0.20348-SP0",
+  "machine": "AMD64",
+  "python": "3.11.9 (tags/v3.11.9:de54cf5, Apr  2 2024, 10:12:12) [MSC v.1938 64 bit (AMD64)]",
+  "expected_flows": 19,
+  "scopes": [
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/checklist_workflow_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub"
+      ],
+      "entrypoint": "checklist_workflow_test.dart",
+      "expected": 2,
+      "status": "completed",
+      "log": "1-checklist_workflow_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 147.969,
+      "completed": 2,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        211,
+        27
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 832
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 340
+        }
+      ],
+      "passed": true,
+      "log_sha256": "723979d23c6f468b627c11c166db8f7d681eee2617051ebd3a956d6b9c219ba0",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661112,
+          "sha256": "0186e7f83af74c305a55a6510c40bfb6776f6d028ea7874f473bc3ac890989ff"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/checklist_lifecycle_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub"
+      ],
+      "entrypoint": "checklist_lifecycle_test.dart",
+      "expected": 7,
+      "status": "completed",
+      "log": "2-checklist_lifecycle_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 43.281,
+      "completed": 7,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        212,
+        22,
+        21,
+        17,
+        21,
+        20,
+        17,
+        17,
+        16
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 822
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 200
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 380
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 209
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 325
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 354
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 370
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 349
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 351
+        }
+      ],
+      "passed": true,
+      "log_sha256": "723fc068bed647b775d4f649902bc5e79f61f061dd3645f51691780d4e2c2772",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661112,
+          "sha256": "69a4b6d9e613f864aadb294bac141f8ce4c55e9cda2896eb9f3d6bca6b14af7f"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/inbox_flow_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub"
+      ],
+      "entrypoint": "inbox_flow_test.dart",
+      "expected": 4,
+      "status": "completed",
+      "log": "3-inbox_flow_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 30.969,
+      "completed": 4,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        178,
+        26,
+        24,
+        20
+      ],
+      "readiness_markers": [
+        {
+          "marker": "ONBOARDING_READY",
+          "elapsed_ms": 725
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 563
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 316
+        }
+      ],
+      "passed": true,
+      "log_sha256": "3d419c6aaafd918c17d3768b86e8e3aa3c2ba1aec929479a01a969515a773da2",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661088,
+          "sha256": "07f6614cd23d79e6a7e2f3cfa05323f3341ec5cbe6d4446cc8ed2fee3088b2b4"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/bulk_apply_semantics_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub"
+      ],
+      "entrypoint": "bulk_apply_semantics_test.dart",
+      "expected": 2,
+      "status": "completed",
+      "log": "4-bulk_apply_semantics_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 30.672,
+      "completed": 2,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        194,
+        24
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 780
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 331
+        }
+      ],
+      "passed": true,
+      "log_sha256": "25fb55c18c3144a8ec1ff7ea014a7856256b40882ea6edb04e7b86fe5cc4698f",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661112,
+          "sha256": "f50131370366457053cf229bef7db512e547ec05fef741d938a6195fb652ae4c"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/field_layout_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub"
+      ],
+      "entrypoint": "field_layout_test.dart",
+      "expected": 3,
+      "status": "completed",
+      "log": "5-field_layout_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 36.297,
+      "completed": 3,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        196,
+        24,
+        25
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 847
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 398
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 358
+        }
+      ],
+      "passed": true,
+      "log_sha256": "99df9842e8ce2f68c2a048cae0816265e67c00a0ea4f4f742367774ab865189c",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661096,
+          "sha256": "63308308445763305426ce81793067e26e94cb669f73f3ff606b1b2fef18febd"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "test",
+        "integration_test/task_flow_test.dart",
+        "-d",
+        "windows",
+        "--reporter",
+        "expanded",
+        "--no-pub",
+        "--plain-name",
+        "workspace search preserves filters drafts and completion sections"
+      ],
+      "entrypoint": "task_flow_test.dart",
+      "expected": 1,
+      "status": "completed",
+      "log": "6-task_flow_test.dart.txt",
+      "exit_code": 0,
+      "elapsed_seconds": 31.313,
+      "completed": 1,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        190
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 808
+        }
+      ],
+      "passed": true,
+      "log_sha256": "4bae9caa9b044156bff3ed1f3a3282718f90c89327aa57a966c9355e624c9df7",
+      "debug_payload_hashes": {
+        "dartjni.dll": {
+          "bytes": 197120,
+          "sha256": "f7ccea0d0b09ed1d9621957c03ade666b953ba4242fca5a370f6d2ef35f0f2fc"
+        },
+        "data/flutter_assets/AssetManifest.bin": {
+          "bytes": 101,
+          "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+        },
+        "data/flutter_assets/FontManifest.json": {
+          "bytes": 82,
+          "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+        },
+        "data/flutter_assets/fonts/MaterialIcons-Regular.otf": {
+          "bytes": 1645184,
+          "sha256": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453"
+        },
+        "data/flutter_assets/kernel_blob.bin": {
+          "bytes": 62661088,
+          "sha256": "a71e0605940321c0654744b645155cbe0913047e2fcecbaabdd21e2a2a0705ee"
+        },
+        "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": {
+          "bytes": 2008832,
+          "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+        },
+        "data/flutter_assets/NativeAssetsManifest.json": {
+          "bytes": 131,
+          "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+        },
+        "data/flutter_assets/NOTICES.Z": {
+          "bytes": 103365,
+          "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+        },
+        "data/flutter_assets/shaders/ink_sparkle.frag": {
+          "bytes": 21856,
+          "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+        },
+        "data/flutter_assets/shaders/stretch_effect.frag": {
+          "bytes": 17616,
+          "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+        },
+        "data/icudtl.dat": {
+          "bytes": 864880,
+          "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+        },
+        "file_selector_windows_plugin.dll": {
+          "bytes": 1255424,
+          "sha256": "b336896fecf3d8b873501fdd645635b409b6c73ce3a88ca53c254c470d301718"
+        },
+        "flutter_windows.dll": {
+          "bytes": 46623744,
+          "sha256": "f406dc7b0ddb5b8e3028b79980e560a481bcd02490cc513b495f2d91db29eb25"
+        },
+        "sqlite3.dll": {
+          "bytes": 1709056,
+          "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+        },
+        "tandemlog.exe": {
+          "bytes": 1067008,
+          "sha256": "e6231586dd39e34756c079f578d3ae7a74972ff775fcaa100bcb6a66d0224432"
+        },
+        "tandemlog.pdb": {
+          "bytes": 8097792,
+          "sha256": "a98f27118150a75f166b93e817ee926dda5ac01d7e71f03fa97a753b4df3cccd"
+        },
+        "tandemlog_text.dll": {
+          "bytes": 1160192,
+          "sha256": "e7f619e8fd3abd5f6f5dcca1d4d717c61f250b1f140c290bb66a00c873fea63b"
+        },
+        "url_launcher_windows_plugin.dll": {
+          "bytes": 1046528,
+          "sha256": "28516527ce9a56801c0b17ed28eede57884eef72805d5ebc7c4428214fc9e09e"
+        }
+      }
+    }
+  ],
+  "diagnostics": [
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.578,
+      "log": "diagnostic-1.txt"
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "doctor",
+        "-v"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 32.984,
+      "log": "diagnostic-2.txt"
+    },
+    {
+      "command": [
+        "D:\\a\\_temp/flutter/bin\\flutter.BAT",
+        "devices"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.75,
+      "log": "diagnostic-3.txt"
+    },
+    {
+      "command": [
+        "rustc",
+        "+1.99.0",
+        "--version",
+        "--verbose"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.032,
+      "log": "diagnostic-4.txt"
+    },
+    {
+      "command": [
+        "cargo",
+        "+1.99.0",
+        "--version"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 0.015,
+      "log": "diagnostic-5.txt"
+    }
+  ],
+  "run_id": "37754442151",
+  "run_attempt": "1",
+  "image_version": "20261004.326.1",
+  "passed": true,
+  "source_sha": "7b6cd65ed7db8ff8b5025abacba503e5c2f812c3",
+  "native_library_environment": {
+    "value": null,
+    "used_by_app_entrypoints": false
+  },
+  "native_build_target_directory": "D:\\a\\_temp\\tandemlog-rust-bootstrap\\target",
+  "native_loader_policy": {
+    "selection": "NativeTextEngine() default; adjacent debug-bundle DLL",
+    "windows_path": "File(Platform.resolvedExecutable).parent/tandemlog_text.dll",
+    "environment_override_applies": false,
+    "evidence": "Source-declared loader; runtime loaded-module enumeration is not performed",
+    "source_sha256": "796b6e69af978f7aad9729a0d784fd9b4fa55e53dcaaa214502f412b82560cea"
+  },
+  "unset_capture_variables": [
+    "TANDEMLOG_NATIVE_QA_SCREENSHOTS",
+    "TANDEMLOG_BULK_QA_VIDEO",
+    "TANDEMLOG_TEXT_QA_SCREENSHOTS",
+    "DATE_LAYOUT_EVIDENCE",
+    "DATE_LAYOUT_RECORD"
+  ]
+}

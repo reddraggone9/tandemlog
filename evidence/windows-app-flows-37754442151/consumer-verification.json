@@ -1,0 +1,207 @@
+{
+  "run_id": 37754442151,
+  "job_id": 113235408884,
+  "source_sha": "7b6cd65ed7db8ff8b5025abacba503e5c2f812c3",
+  "conclusion": "success",
+  "completed_flows": 19,
+  "scopes": [
+    {
+      "entrypoint": "checklist_workflow_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 147.969,
+      "raw_log_sha256": "723979d23c6f468b627c11c166db8f7d681eee2617051ebd3a956d6b9c219ba0",
+      "completed": 2,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        211,
+        27
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 832
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 340
+        }
+      ],
+      "passed": true
+    },
+    {
+      "entrypoint": "checklist_lifecycle_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 43.281,
+      "raw_log_sha256": "723fc068bed647b775d4f649902bc5e79f61f061dd3645f51691780d4e2c2772",
+      "completed": 7,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        212,
+        22,
+        21,
+        17,
+        21,
+        20,
+        17,
+        17,
+        16
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 822
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 200
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 380
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 209
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 325
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 354
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 370
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 349
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 351
+        }
+      ],
+      "passed": true
+    },
+    {
+      "entrypoint": "inbox_flow_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 30.969,
+      "raw_log_sha256": "3d419c6aaafd918c17d3768b86e8e3aa3c2ba1aec929479a01a969515a773da2",
+      "completed": 4,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        178,
+        26,
+        24,
+        20
+      ],
+      "readiness_markers": [
+        {
+          "marker": "ONBOARDING_READY",
+          "elapsed_ms": 725
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 563
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 316
+        }
+      ],
+      "passed": true
+    },
+    {
+      "entrypoint": "bulk_apply_semantics_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 30.672,
+      "raw_log_sha256": "25fb55c18c3144a8ec1ff7ea014a7856256b40882ea6edb04e7b86fe5cc4698f",
+      "completed": 2,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        194,
+        24
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 780
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 331
+        }
+      ],
+      "passed": true
+    },
+    {
+      "entrypoint": "field_layout_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 36.297,
+      "raw_log_sha256": "99df9842e8ce2f68c2a048cae0816265e67c00a0ea4f4f742367774ab865189c",
+      "completed": 3,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        196,
+        24,
+        25
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 847
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 398
+        },
+        {
+          "marker": "READY",
+          "elapsed_ms": 358
+        }
+      ],
+      "passed": true
+    },
+    {
+      "entrypoint": "task_flow_test.dart",
+      "exit_code": 0,
+      "elapsed_seconds": 31.313,
+      "raw_log_sha256": "4bae9caa9b044156bff3ed1f3a3282718f90c89327aa57a966c9355e624c9df7",
+      "completed": 1,
+      "skipped": 0,
+      "failed": 0,
+      "first_frame_ms": [
+        190
+      ],
+      "readiness_markers": [
+        {
+          "marker": "READY",
+          "elapsed_ms": 808
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "archive": {
+    "bytes": 14342,
+    "sha256": "ae3d4be3ccbe0409546e650170aebc4a9b902b98b7c6e197a09d1fee02873669",
+    "matches_api_and_upload_report": true
+  },
+  "decoded_job_log": {
+    "path": "/workspace/recovery/windows-app-flows-37754442151-decoded-job.log",
+    "sha256": "66940dceac940319381482d3c5df759243800aa2f5dc4890054e5da69aaeacac",
+    "qualification": "MCP-decoded text; not original raw job-log bytes"
+  },
+  "payload_hash_boundary": "Runner-measured exact Debug payload hashes retained in receipt; executable/DLL/kernel bytes are deliberately not uploaded, so consumer does not independently rehash those files",
+  "native_loader_boundary": "Source-declared adjacent debug DLL; TANDEMLOG_TEXT_LIBRARY unset; no runtime loaded-module enumeration",
+  "remaining_acceptance": "Manual visual/native assistive technology, downloaded release artifact, and Android SAF/IME acceptance are separate and remain pending"
+}

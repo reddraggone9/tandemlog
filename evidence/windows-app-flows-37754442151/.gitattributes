@@ -1,0 +1,3 @@
+# Preserve original Windows receipt/log bytes, including their recorded whitespace.
+receipt.json -text whitespace=cr-at-eol
+[1-6]-*.txt -text whitespace=-blank-at-eol
