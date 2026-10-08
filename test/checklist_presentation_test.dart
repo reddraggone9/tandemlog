@@ -121,36 +121,21 @@ void main() {
           onDelete: (i) => calls.add('delete:${i['id']}'),
         ),
       );
-      expect(find.text('1/3'), findsOneWidget);
+      expect(find.text('Checklist'), findsNothing);
+      expect(find.text('1/3'), findsNothing);
+      expect(find.text('Items save separately.'), findsNothing);
       expect(find.text('Read these notes'), findsOneWidget);
+      expect(tester.widget<Text>(find.text('Read these notes')).maxLines, 1);
+      expect(find.byType(PopupMenuButton<String>), findsNothing);
+      expect(
+        tester.getRect(find.byKey(const Key('checklist-add'))).top,
+        greaterThanOrEqualTo(tester.getRect(find.byKey(const Key('checklist-edit-2'))).bottom),
+      );
       await tester.tap(find.byKey(const Key('checklist-add')));
       await tester.tap(find.byKey(const Key('checklist-check-0')));
       await tester.tap(find.byKey(const Key('checklist-edit-1')));
-      await tester.tap(find.byKey(const Key('checklist-menu-0')));
-      await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<PopupMenuItem<String>>(
-              find.widgetWithText(PopupMenuItem<String>, 'Move up'),
-            )
-            .enabled,
-        isFalse,
-      );
-      await tester.tap(find.text('Move down'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('checklist-menu-2')));
-      await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<PopupMenuItem<String>>(
-              find.widgetWithText(PopupMenuItem<String>, 'Move down'),
-            )
-            .enabled,
-        isFalse,
-      );
-      await tester.tap(find.text('Move up'));
-      await tester.pumpAndSettle();
-      expect(calls, ['add', 'check:0:true', 'edit:1', 'move:0:2', 'move:2:1']);
+      await tester.tap(find.byKey(const Key('checklist-delete-1')));
+      expect(calls, ['add', 'check:0:true', 'edit:1', 'delete:1']);
     },
   );
 
@@ -187,7 +172,7 @@ void main() {
       ),
       findsOneWidget,
     );
-    for (final key in ['checklist-check-one', 'checklist-menu-one']) {
+    for (final key in ['checklist-check-one', 'checklist-delete-one', 'checklist-drag-one', 'checklist-edit-one']) {
       final size = tester.getSize(find.byKey(Key(key)));
       expect(size.width, greaterThanOrEqualTo(48));
       expect(size.height, greaterThanOrEqualTo(48));
@@ -195,6 +180,35 @@ void main() {
     await tester.tap(find.byKey(const Key('checklist-check-one')));
     expect(tester.takeException(), isNull);
     semantics.dispose();
+  });
+
+  testWidgets('busy checkbox keeps child focus and guards repeat Space', (tester) async {
+    var enabled = true;
+    var toggles = 0;
+    late StateSetter update;
+    await mount(tester, StatefulBuilder(builder: (_, setState) {
+      update = setState;
+      return ChecklistPanel(
+        items: const [{'id': 'one', 'title': 'One', 'completed': false}],
+        enabled: enabled,
+        onAdd: () {}, onEdit: (_) {}, onMove: (_, _) {}, onDelete: (_) {},
+        onToggle: (_, _) { toggles++; update(() => enabled = false); },
+      );
+    }));
+    final checkbox = find.byKey(const Key('checklist-check-one'));
+    final focus = Focus.of(tester.element(find.descendant(of: checkbox, matching: find.byType(CustomPaint)).first));
+    focus.requestFocus();
+    await tester.pumpAndSettle();
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(toggles, 1);
+    expect(focus.hasFocus, isTrue);
+    await tester.sendKeyEvent(LogicalKeyboardKey.space);
+    await tester.pumpAndSettle();
+    expect(toggles, 1);
+    update(() => enabled = true);
+    await tester.pumpAndSettle();
+    expect(focus.hasFocus, isTrue);
   });
 
   testWidgets(
