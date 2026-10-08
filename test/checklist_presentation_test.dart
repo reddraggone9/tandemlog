@@ -212,12 +212,28 @@ void main() {
       'checklist-delete-one',
       'checklist-drag-one',
       'checklist-edit-one',
+      'checklist-add',
     ]) {
       final size = tester.getSize(find.byKey(Key(key)));
       expect(size.width, greaterThanOrEqualTo(48));
       expect(size.height, greaterThanOrEqualTo(48));
     }
     await tester.tap(find.byKey(const Key('checklist-check-one')));
+    final checkData = tester
+        .getSemantics(
+          find.bySemanticsLabel(
+            'Complete checklist item: Long item title for enlarged text',
+          ),
+        )
+        .getSemanticsData();
+    expect(checkData.flagsCollection.isEnabled, ui.Tristate.isFalse);
+    expect(checkData.hasAction(ui.SemanticsAction.tap), isFalse);
+    expect(
+      tester
+          .widget<Checkbox>(find.byKey(const Key('checklist-check-one')))
+          .onChanged,
+      isNotNull,
+    );
     expect(tester.takeException(), isNull);
     semantics.dispose();
   });
@@ -277,10 +293,32 @@ void main() {
     tester,
   ) async {
     final calls = <String>[];
+    var parentSelections = 0;
+    var parentDrags = 0;
     await mount(
       tester,
-      dragPanel(onMove: (item, before) => calls.add('${item['id']}:$before')),
+      GestureDetector(
+        onTap: () => parentSelections++,
+        child: Draggable<String>(
+          data: 'parent',
+          onDragStarted: () => parentDrags++,
+          feedback: const Material(child: Text('Parent task')),
+          child: dragPanel(
+            onMove: (item, before) => calls.add('${item['id']}:$before'),
+          ),
+        ),
+      ),
     );
+    for (final key in [
+      'checklist-check-0',
+      'checklist-edit-0',
+      'checklist-delete-0',
+    ]) {
+      await tester.tap(find.byKey(Key(key)));
+      await tester.pumpAndSettle();
+    }
+    expect(parentSelections, 0);
+    expect(parentDrags, 0);
     final handle = find.byKey(const Key('checklist-drag-0'));
     final draggable = tester.widget<Draggable<ChecklistItemDrag>>(
       find
@@ -307,6 +345,8 @@ void main() {
     await gesture.up();
     await tester.pumpAndSettle();
     expect(calls, ['0:2']);
+    expect(parentSelections, 0);
+    expect(parentDrags, 0);
     expect(tester.takeException(), isNull);
   });
 
@@ -384,7 +424,6 @@ void main() {
     'move semantics keyboard edges and Add focus hook stay child scoped',
     (tester) async {
       final semantics = tester.ensureSemantics();
-      addTearDown(semantics.dispose);
       final calls = <String>[];
       final addFocus = FocusNode();
       addTearDown(addFocus.dispose);
@@ -401,7 +440,7 @@ void main() {
             .getSemanticsData();
         return {
           for (final action in data.customSemanticsActionIds ?? <int>[])
-          CustomSemanticsAction.getAction(action)!.label!: action,
+            CustomSemanticsAction.getAction(action)!.label!: action,
         };
       }
 
@@ -460,6 +499,7 @@ void main() {
         addFocus,
       );
       expect(tester.takeException(), isNull);
+      semantics.dispose();
     },
   );
 
@@ -794,6 +834,35 @@ void main() {
     }
     await tester.binding.setSurfaceSize(const Size(900, 700));
     addTearDown(() => tester.binding.setSurfaceSize(null));
+    await mount(
+      tester,
+      Padding(
+        padding: const EdgeInsets.all(12),
+        child: SizedBox(
+          width: 560,
+          child: dragPanel(
+            items: [
+              {
+                'id': 'boots',
+                'title': 'Check hiking boots',
+                'description': 'Make sure the laces and soles are sound.',
+                'completed': true,
+              },
+              {
+                'id': 'water',
+                'title': 'Fill the water bottles',
+                'description': 'Two litres for each person.',
+                'completed': false,
+              },
+            ],
+            onMove: (_, _) {},
+          ),
+        ),
+      ),
+      dark: true,
+    );
+    await capture(tester, 'dark-desktop-inline-panel');
+    expect(tester.takeException(), isNull);
     await mount(
       tester,
       ChecklistItemEditor(
