@@ -1,0 +1,36 @@
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart
+00:00 +0: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:00 +0 -1: shared baseline preserves earliest scalar successor protected by checked copied-item history [E]
+  Expected: 'Earliest scalar successor'
+    Actual: 'Later scalar successor'
+     Which: is different.
+            Expected: Earliest s ...
+              Actual: Later scal ...
+                      ^
+             Differ at offset 0
+  A shared-text baseline must preserve the already protected scalar seed.
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_baseline_selection_test.dart 118:11  main.<fn>
+  
+00:00 +0 -1: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+00:01 +0 -2: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history [E]
+  Expected: 'Earliest scalar successor'
+    Actual: 'Later scalar successor'
+     Which: is different.
+            Expected: Earliest s ...
+              Actual: Later scal ...
+                      ^
+             Differ at offset 0
+  A shared-text baseline must preserve the already protected scalar seed.
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/checklist_baseline_selection_test.dart 118:11  main.<fn>
+  
+00:01 +0 -2: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+  /workspace/tandemlog-checklists/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
