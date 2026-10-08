@@ -1,0 +1,34 @@
+{
+  "source_commit": "7d6a8bd8baa74e136ce26b8d75a138e47a9adf0d",
+  "candidate_documentation_commit": "eb68b46259f745e86ec9f41c144d473f19d0fb0f",
+  "run_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37739454257",
+  "run_attempt": 1,
+  "status": "completed",
+  "conclusion": "success",
+  "binding_checks": "repository, head repository, branch, head SHA, workflow path, event, run ID, artifact set and expiry verified from GitHub API",
+  "artifacts": [
+    {
+      "id": 11534110002,
+      "name": "windows",
+      "size_in_bytes": 25735949,
+      "digest": "sha256:b5cc9140fb347596312613331af9ae54aa5dfccafb6b260ba449188d840d8833",
+      "expires_at": "2026-10-13T06:56:37Z"
+    },
+    {
+      "id": 11533890556,
+      "name": "android",
+      "size_in_bytes": 80367359,
+      "digest": "sha256:04cf802c9f9174147c1041d56ddf9c611e3fc752bf32ed9a57e82a65c7eff900",
+      "expires_at": "2026-10-13T06:52:11Z"
+    },
+    {
+      "id": 11533838344,
+      "name": "linux",
+      "size_in_bytes": 8989823,
+      "digest": "sha256:980fdea98963c0203f5bed1048fe1bb8b1b068050f3a632787842e52bb3e2a08",
+      "expires_at": "2026-10-13T07:05:58Z"
+    }
+  ],
+  "byte_verification": "Cloud download HTTP403; parent reports downloaded exact archives verified, Android signer and17 Windows portable files; cloud API digest is not local byte verification.",
+  "native_acceptance": "Parent reports exact candidate WindowsDLL107native tests and128peer/history schedules passed. Changed checklist WindowsGUI andAndroidUI acceptance remain pending; Android resource capapproval unresolved."
+}
