@@ -1,0 +1,28 @@
+name: Scoped Windows native application flows
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: windows
+      - run: flutter pub get --enforce-lockfile
+      - name: Run four composed tag and historical native application flows and retain exact receipts
+        timeout-minutes: 32
+        shell: pwsh
+        run: python tool/windows_app_flows.py --output "$env:RUNNER_TEMP/tandemlog-windows-app-flows"
+      - name: Preserve logs and hashes even when native launch fails
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: windows-native-app-flows-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/tandemlog-windows-app-flows/*
+          retention-days: 5
+          if-no-files-found: error
