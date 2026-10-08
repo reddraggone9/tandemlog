@@ -40,8 +40,9 @@ test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flo
 test_library_variable_hash_is_recorded_without_claiming_app_override (test_windows_app_flows.WindowsAppFlowReceipts.test_library_variable_hash_is_recorded_without_claiming_app_override) ... ok
 test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) ... ok
 test_no_false_pass_on_zero_skipped_failed_or_incomplete_output (test_windows_app_flows.WindowsAppFlowReceipts.test_no_false_pass_on_zero_skipped_failed_or_incomplete_output) ... ok
+test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) ... ok
 
 ----------------------------------------------------------------------
-Ran 42 tests in 0.105s
+Ran 43 tests in 0.102s
 
 OK (skipped=1)

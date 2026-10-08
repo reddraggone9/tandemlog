@@ -49,6 +49,8 @@ def hashes(bundle):
                  'data/icudtl.dat', 'data/flutter_assets/kernel_blob.bin'):
         if not (bundle / name).is_file():
             raise ValueError('Missing debug payload: ' + name)
+        if (bundle / name).stat().st_size == 0:
+            raise ValueError('Empty debug payload: ' + name)
     return {path.relative_to(bundle).as_posix():
             dict(bytes=path.stat().st_size, sha256=hashlib.sha256(path.read_bytes()).hexdigest())
             for path in sorted(bundle.rglob('*')) if path.is_file()}

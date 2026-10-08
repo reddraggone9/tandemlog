@@ -13,8 +13,8 @@
   "files": {
     ".github/workflows/ci.yml": "9caf61ae4b794ebea6e549a9e9efc9c92d6179282f957050c9ef31610c5c769f",
     ".github/workflows/windows-app-flows.yml": "6c23d1895f4ae87964ad3a64aa20dd183079ca6c67b179c5164a445d0b2420b0",
-    "tool/windows_app_flows.py": "f47a2084585e5992fe6f6795e14d8e97d883d9c72f5de38b475ae73c540c3db7",
-    "tool/test_windows_app_flows.py": "84ee97c232d4dbe803ad4cb647b4915ac7fa193d8b002b8bbc63291af2e85711"
+    "tool/windows_app_flows.py": "595aa5f4470a0aaff1e1a4fe2a396a9a8a8b2638f458d0e67e327e3f1a436588",
+    "tool/test_windows_app_flows.py": "724fbdccf5191ba2f77a413e463bfb1e5b8a40c4f6b16c7f09adcb2d5e2eee23"
   },
   "windows_execution": "not dispatched; actual runtime/display result pending independent review",
   "native_loader_inspection": {
@@ -23,5 +23,5 @@
     "default_windows_library": "adjacent to Platform.resolvedExecutable/tandemlog_text.dll",
     "TANDEMLOG_TEXT_LIBRARY": "not consumed by production adapter or these integration entrypoints; any value/hash recorded separately"
   },
-  "receipt_negative_controls": "frozen e4def3a: missing app startup markers and missing debug ICU/kernel assets; implementation now passes all5 receipt tests"
+  "receipt_negative_controls": "frozen e4def3a missing startup/ICU/kernel; separately frozen zero-byte controls for all5 required payload files; implementation now passes all6 receipt tests"
 }
