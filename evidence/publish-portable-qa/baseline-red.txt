@@ -1,0 +1,24 @@
+.E.F.....
+======================================================================
+ERROR: test_current_complete_portable_evidence_passes_without_public_extras (test_publish_inventory.PublishInventory.test_current_complete_portable_evidence_passes_without_public_extras)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-publish-qa-inventory/tool/test_publish_inventory.py", line 64, in test_current_complete_portable_evidence_passes_without_public_extras
+    verify_candidate_inventory(self.dist, SOURCE)
+  File "/workspace/tandemlog-publish-qa-inventory/tool/publish_gate.py", line 27, in verify_candidate_inventory
+    raise ValueError('Missing/unexpected candidate assets or oversized asset')
+ValueError: Missing/unexpected candidate assets or oversized asset
+
+======================================================================
+FAIL: test_inventory_directory_and_symlink_are_rejected (test_publish_inventory.PublishInventory.test_inventory_directory_and_symlink_are_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-publish-qa-inventory/tool/test_publish_inventory.py", line 125, in test_inventory_directory_and_symlink_are_rejected
+    with self.assertRaises(ValueError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.006s
+
+FAILED (failures=1, errors=1)

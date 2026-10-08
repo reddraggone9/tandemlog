@@ -18,6 +18,15 @@ def verify_metadata(metadata, sha, accepted, actual, expected_version, pin):
         raise ValueError('Accepted APK identity does not match candidate artifacts/source')
 
 
+def verify_candidate_inventory(dist, source_sha):
+    expected_files = {'tandemlog-linux-x64.flatpak', 'linux-SHA256SUMS.txt', 'linux-startup.json', 'linux-install-smoke.json',
+                      'tandemlog-windows-x64-unsigned-setup.exe', 'windows-SHA256SUMS.txt', 'windows-install-smoke.json',
+                      'tandemlog-android.apk', 'android-SHA256SUMS.txt',
+                      'android-signature.txt', 'android-release-metadata.json'}
+    if {p.name for p in dist.iterdir()} != expected_files or any(p.stat().st_size >= 2*1024**3 for p in dist.iterdir()):
+        raise ValueError('Missing/unexpected candidate assets or oversized asset')
+
+
 def verify_install_smoke(report, require_changed_commit=False):
     phases = report.get('phases', [])
     required = ['after-install', 'after-upgrade', 'after-uninstall', 'after-reinstall']
@@ -59,12 +68,7 @@ if __name__ == '__main__':
         raise ValueError('Checkout is not the validated source')
     check_candidate_history(expected, sha)
     dist = Path('dist')
-    expected_files = {'tandemlog-linux-x64.flatpak', 'linux-SHA256SUMS.txt', 'linux-startup.json', 'linux-install-smoke.json',
-                      'tandemlog-windows-x64-unsigned-setup.exe', 'windows-SHA256SUMS.txt', 'windows-install-smoke.json',
-                      'tandemlog-android.apk', 'android-SHA256SUMS.txt',
-                      'android-signature.txt', 'android-release-metadata.json'}
-    if {p.name for p in dist.iterdir()} != expected_files or any(p.stat().st_size >= 2*1024**3 for p in dist.iterdir()):
-        raise ValueError('Missing/unexpected candidate assets or oversized asset')
+    verify_candidate_inventory(dist, sha)
     for platform in ('linux', 'windows'):
         verify_install_smoke(json.loads((dist / f'{platform}-install-smoke.json').read_text()),
                              require_changed_commit=platform == 'linux')
