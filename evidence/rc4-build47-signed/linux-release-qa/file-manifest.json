@@ -62,5 +62,9 @@
   "release-build.txt": {
     "size": 3919,
     "sha256": "abd1fa625a6dc9ffa33df5dcfbe62cf988eac9161adeb91b54250f8da7630441"
+  },
+  "linux-release-47-first-rejection.mp4": {
+    "size": 90310,
+    "sha256": "77b5fe3ff0f5de6d8e1d3b69eadfdba4e175aeb7c0d65797156f7afbe7c74ba2"
   }
 }

@@ -3,7 +3,7 @@
   "version": "2026.10.2-rc.4+47",
   "main_ci_run": 37835589840,
   "signed_candidate_run": 37838800145,
-  "status": "signed replacement running after independent all3 mainCI review",
+  "status": "signed replacement completed success; local exact-package/native acceptance and fresh publication quota remain",
   "source_review": {
     "architecture": "accepted integrated five-commit diff",
     "correctness": "accepted integrated five-commit diff",
@@ -24,10 +24,7 @@
     "stable_waiver": false
   },
   "remaining_gates": [
-    "main-only signed replacement full matrix and owner Android signing",
-    "exact replacement artifact/package/native essential acceptance",
-    "local Android spoken screen-reader acceptance",
-    "independent final receipt/artifact/editorial review",
+    "local exact replacement artifact/package and bounded affected native acceptance",
     "fresh publication quota coordinated by parent"
   ],
   "superseded_build46": {
@@ -55,7 +52,7 @@
     "decoded_logs_qualification": "MCP redirected decoded UTF8 strings persisted literally; not original compressed log archive bytes",
     "independent_review": "correctness accepted fresh all3 decoded logs, terminalsource/build47/native tests and installed lifecycles"
   },
-  "linux_release_source_review": "Architecture independently viewed06-11 and actual video55s, verified current canonical/settings hashes, default native loader and synthetic private profile; accepted bounded local release runtime, not hosted Flatpak/Android package/IME/spoken proof. No claim exact caret coordinates from stills.",
+  "linux_release_source_review": "Architecture independently viewed06-11 and actual video55s, verified current canonical/settings hashes, default native loader and synthetic private profile; accepted bounded local release runtime, not hosted Flatpak/Android package/IME proof. No claim exact caret coordinates from stills. Spoken audio subsequently clarified as assistant-added, not a release gate.",
   "signed_dispatch": {
     "ref": "main",
     "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
@@ -64,5 +61,160 @@
     "remote_main_verified_immediately_before_dispatch": true,
     "workflow": "android-candidate.yml",
     "published": false
+  },
+  "concise_linux_release_demo": {
+    "file": "linux-release-qa/linux-release-47-first-rejection.mp4",
+    "duration_seconds": 12,
+    "sha256": "77b5fe3ff0f5de6d8e1d3b69eadfdba4e175aeb7c0d65797156f7afbe7c74ba2",
+    "Library": "libfile_1e76f29a950c8191a5a3823392cd4621",
+    "Library_file_id": "file_00000000f8f481f589f34c6ca2fa0501",
+    "Library_filename": "linux-release-47-first-rejection(1).mp4",
+    "Library_version": 0,
+    "intro_caption": "actual Linux GTK release/source443/build47/scripted X11 input",
+    "review": "architecture independently compared exact encoded-video prefix and actual input/warning frames; first rejection only",
+    "xattrs_applied_verified": true
+  },
+  "Android_spoken_status": {
+    "status": "assistant-added check stopped; not a release gate",
+    "parent_report_UTC": "2026-10-08T20:27:36Z",
+    "reason": "real local TalkBack recording produced, local executor cannot consume audio and fallback recognition incoherent",
+    "next": "No spoken-audio detour. Local bounded signed-package, warning visibility and essential affected UI/data checks only.",
+    "local_cleanup": "reader/engine/settings reverted, lab stopped, no new canonical events or OOM",
+    "quota_parent_percent": 61,
+    "release_gate": false,
+    "scope_correction": "Parent relayed user correction2026-10-08: assistant mistakenly elevated spoken-audio check; no waiver pending. Retain existing accessibility tests, no new manual matrix."
+  },
+  "consumer_artifact_access": {
+    "windows_signedrun_artifact_id": 11576483975,
+    "resolved_file_id": "file_000000002f1481f59b289ef40062ee69",
+    "route": "supported GitHub resolved reference then current Library prepare_materialize/wholetransfer helper",
+    "result": "HTTP403; no ZIP bytes materialized in this consumer; no ZIP/payload/checksum/manual claim",
+    "parent_byte_acceptance": "pending new replacement, old acceptance remains build46-only",
+    "owner_signedrun_artifact_id": 11578730972,
+    "owner_resolved_file_id": "file_0000000035ac81f7accd7e462688b679",
+    "owner_result": "Current supported Library materialization helper HTTP403; no ownerZIP/APK bytes materialized here; parent local verification remains"
+  },
+  "signed_matrix": {
+    "Linux": {
+      "job": 113522746537,
+      "status": "success",
+      "unit": 634,
+      "native_flows": 74,
+      "installed_lifecycle": "success"
+    },
+    "Windows": {
+      "job": 113522746623,
+      "status": "success",
+      "unit": 632,
+      "Linux_only_skips": 2,
+      "installed_lifecycle": "success"
+    },
+    "Android_debug": {
+      "job": 113522746528,
+      "status": "success",
+      "payload_gate": "success",
+      "release_APK": false
+    },
+    "owner_job": 113532408220,
+    "owner_status": "success",
+    "full_integrity_native_contracts_kept": true,
+    "independent_review": "Correctness independently accepted fresh API exact443/main/run37838800145 and all7 literal signed-ci receipt hashes; verified all74flows/4namedwarnings, 634Linux/632Windows+2Linux-only, frozenCargo/worker/tools, package/native and installed lifecycles. Artifact source/digests/expiry are metadata-only; ownerterminal/local bytes remain separate."
+  },
+  "signed_terminal": {
+    "id": 37838800145,
+    "name": "Build signed candidate",
+    "path": ".github/workflows/android-candidate.yml",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-10-08T20:21:13Z",
+    "updated_at": "2026-10-08T20:51:47Z",
+    "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37838800145"
+  },
+  "candidate_artifacts": [
+    {
+      "id": 11578730972,
+      "name": "android-release",
+      "size_in_bytes": 30300639,
+      "digest": "sha256:b3af19e3b58634ece4820b3cf6d292569fe5bd0c31d903f0dd073ae98390a015",
+      "created_at": "2026-10-08T20:51:41Z",
+      "expires_at": "2026-10-13T20:51:38Z",
+      "expired": false,
+      "workflow_run": {
+        "id": 37838800145,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f"
+      }
+    },
+    {
+      "id": 11577946907,
+      "name": "linux",
+      "size_in_bytes": 8999481,
+      "digest": "sha256:1cf172fd35e8529f0c744d590758e67ae954add825f497d2aefd53fb514db692",
+      "created_at": "2026-10-08T20:44:27Z",
+      "expires_at": "2026-10-13T20:44:25Z",
+      "expired": false,
+      "workflow_run": {
+        "id": 37838800145,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f"
+      }
+    },
+    {
+      "id": 11577022659,
+      "name": "android",
+      "size_in_bytes": 80394857,
+      "digest": "sha256:1fc3aeda7d4685ff34769aedb44dd82ac4fbe2dc5bf05bd90d1cf5cd0bbd0146",
+      "created_at": "2026-10-08T20:27:47Z",
+      "expires_at": "2026-10-13T20:27:42Z",
+      "expired": false,
+      "workflow_run": {
+        "id": 37838800145,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f"
+      }
+    },
+    {
+      "id": 11576483975,
+      "name": "windows",
+      "size_in_bytes": 25762639,
+      "digest": "sha256:8e4ab620888b1d2ee8c432f0e03b6b4b01e3af4736dd4ea4b911ccd7f11ad0cf",
+      "created_at": "2026-10-08T20:29:54Z",
+      "expires_at": "2026-10-13T20:29:53Z",
+      "expired": false,
+      "workflow_run": {
+        "id": 37838800145,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f"
+      }
+    }
+  ],
+  "owner_signing_verification": {
+    "job": 113532408220,
+    "status": "success",
+    "source_version": "2026.10.2-rc.4+47",
+    "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "package": "com.reddraggone9.tandemlog",
+    "certificate_pin_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "runner_verified": "owner cert/package/versionCode47/nondebuggable/universal3ABIs/nativepayload/notices",
+    "verification_source": "source-bound owner job public decoded gate lines; consumer APK bytes unreadable",
+    "inner_APK_sha256": null
+  },
+  "final_independent_review": {
+    "correctness": "Accepted fresh terminalAPI exactsource443/all5success/owner verification/new3selected artifact IDs-digests-expiry and all33manifest files; no mustfix. READMEmanifest race corrected before freeze; no rawlog/API bytes changed.",
+    "security": "Accepted fresh all5API/source47/signer/package/ABI/native-notices/artifacts/expiry and privacy/scope; 12signedCI and17LinuxQAmanifest entries verify; no codechanges/no mustfix.",
+    "architecture_editorial": "Previously accepted integratedsource443 actualrc3..443 notes/media and source47 actualGTKrelease screenshots/video; concisefirst12s encodedprefix independently accepted.",
+    "consumer_byte_qualification": "Both reviewer gates retain consumer403, no ZIP/APK byte claims, innerAPKhash null pending parentlocal."
   }
 }

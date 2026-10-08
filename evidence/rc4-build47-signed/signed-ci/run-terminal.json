@@ -1,0 +1,14 @@
+{
+  "id": 37838800145,
+  "name": "Build signed candidate",
+  "path": ".github/workflows/android-candidate.yml",
+  "event": "workflow_dispatch",
+  "head_branch": "main",
+  "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "status": "completed",
+  "conclusion": "success",
+  "run_attempt": 1,
+  "created_at": "2026-10-08T20:21:13Z",
+  "updated_at": "2026-10-08T20:51:47Z",
+  "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37838800145"
+}

@@ -1,0 +1,50 @@
+{
+  "README.md": {
+    "size": 1787,
+    "sha256": "8dd7cdaf68839a6b56a1e37639ad4ec23168756833cda3aeec1ceb3b1695ad05"
+  },
+  "android-decoded-job-log.txt": {
+    "size": 186335,
+    "sha256": "6c607024094acc1e7cf3e7e1683b29cc8539d33b91c0243ea385b4c1f460aca6"
+  },
+  "artifacts-inprogress.json": {
+    "size": 1395,
+    "sha256": "24b91536f7f8318d3cafc8fa6f27f918afa48c639504c1641820e41f28f57b7a"
+  },
+  "artifacts-terminal.json": {
+    "size": 2764,
+    "sha256": "715693510a6874a3b58e847cf72d6959ca2d11ddbb7d3be33a0a4ffc124d5319"
+  },
+  "candidate-decoded-job-log.txt": {
+    "size": 19290,
+    "sha256": "8b440c6ee4ecdd91abb61fb35efe2992de7d519a6acc9acc521488c9eb7343d6"
+  },
+  "jobs-before-owner-complete.json": {
+    "size": 10115,
+    "sha256": "eaa77544a26a847300f662ce5e942353fe4507695bf31373f8e632778533c4a8"
+  },
+  "jobs-terminal.json": {
+    "size": 10282,
+    "sha256": "ae98ae1c02a6642a454b388a3529ae377993d0251963953390eba362ca05667a"
+  },
+  "linux-decoded-job-log.txt": {
+    "size": 425607,
+    "sha256": "4db9300c9d9eac505274049b2a39b52d0196c92858864179dada78f57dcc9631"
+  },
+  "owner-signed-android-decoded-job-log.txt": {
+    "size": 188588,
+    "sha256": "7e67845468b738fd937016dcb3b214371d9ef65a37fbb619879e5cec17f49257"
+  },
+  "run-inprogress.json": {
+    "size": 251,
+    "sha256": "1b916c0937fe37f18f2babf0c016e06232bc86221e81d826a8446e2a7b123a85"
+  },
+  "run-terminal.json": {
+    "size": 464,
+    "sha256": "7ec2e9ffc59c6517ea5b17da62c1a96d3edd1500a7f2c99da341087b160b4e61"
+  },
+  "windows-decoded-job-log.txt": {
+    "size": 276690,
+    "sha256": "a65b0238d1251e9aa4228289324d87400f64465b7bddb015eaf05f697cdd3636"
+  }
+}
