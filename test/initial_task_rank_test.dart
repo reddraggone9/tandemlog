@@ -299,6 +299,68 @@ void main() {
   );
 
   test(
+    'native staging failure retains complete creation and placement reservation',
+    () async {
+      final root = await Directory.systemTemp.createTemp(
+        'initial-rank-staging-',
+      );
+      final folder = LocalLogFolder(
+        (await Directory('${root.path}/shared').create()).path,
+      );
+      final guard = FileWriterGuard('${root.path}/profile');
+      final engine = NativeTextEngine(
+        libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
+      );
+      final store = await TaskStore.open(
+        folder,
+        '${root.path}/profile',
+        writerGuard: guard,
+        textEngine: engine,
+      );
+      final user = const Uuid().v4(),
+          old = const Uuid().v4(),
+          fresh = const Uuid().v4();
+      try {
+        await store.command(user, 'user.created', {'name': 'Synthetic'});
+        await store.command(old, 'task.created', {
+          'title': 'Old',
+          'description': 'Organized',
+          'assignee': user,
+        });
+        final original = await folder.read('${store.writer}.jsonl');
+        final sequence = (await guard.load(
+          store.space,
+          store.writer,
+        ))!.sequence;
+        await Directory(
+          '${store.privatePath}/text-intents/${store.writer}-${sequence + 1}.json',
+        ).create(recursive: true);
+        final failed = await store.createTasks({fresh: 'New'}, user);
+        expect(failed.error, isA<FileSystemException>());
+        expect(failed.createdIds, isEmpty);
+        expect(
+          (await guard.load(
+            store.space,
+            store.writer,
+          ))!.pending.map((r) => r.sequence),
+          [sequence + 1, sequence + 2],
+        );
+        expect(await folder.read('${store.writer}.jsonl'), original);
+        expect(store.isCaptureConfirmed(fresh), isFalse);
+        expect(
+          (await store.createTasks({fresh: 'New'}, user)).error,
+          isA<WriterGuardFailure>(),
+        );
+      } finally {
+        await store.close();
+      }
+    },
+    skip: Platform.environment['TANDEMLOG_TEXT_LIBRARY'] == null
+        ? 'Reviewed native library required.'
+        : false,
+  );
+
+  test(
     'global first rank covers completed and other-assignee hidden tasks',
     () async {
       final root = await Directory.systemTemp.createTemp(

@@ -231,10 +231,7 @@ void registerInboxFlowTests() {
         );
         expect(tester.widget<TextField>(capture).readOnly, isTrue);
         final beforeRefresh = folder.lists;
-        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-        tester.binding.handleAppLifecycleStateChanged(
-          AppLifecycleState.resumed,
-        );
+        _resumeFromPause(tester);
         await flows.waitForUi(tester, () => folder.lists > beforeRefresh);
         await tester.pumpAndSettle(const Duration(milliseconds: 100));
         expect(
@@ -257,10 +254,7 @@ void registerInboxFlowTests() {
         );
         await captureNativeFixtureUi(tester, 'initial-rank-prefix-pending');
         await folder.revealPending();
-        tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
-        tester.binding.handleAppLifecycleStateChanged(
-          AppLifecycleState.resumed,
-        );
+        _resumeFromPause(tester);
         await flows.waitForUi(
           tester,
           () => tester.widget<TextField>(capture).controller!.text.isEmpty,
@@ -289,4 +283,24 @@ void registerInboxFlowTests() {
       }
     },
   );
+}
+
+void _resumeFromPause(WidgetTester tester) {
+  final states = tester.binding.lifecycleState == AppLifecycleState.paused
+      ? [
+          AppLifecycleState.hidden,
+          AppLifecycleState.inactive,
+          AppLifecycleState.resumed,
+        ]
+      : [
+          AppLifecycleState.inactive,
+          AppLifecycleState.hidden,
+          AppLifecycleState.paused,
+          AppLifecycleState.hidden,
+          AppLifecycleState.inactive,
+          AppLifecycleState.resumed,
+        ];
+  for (final state in states) {
+    tester.binding.handleAppLifecycleStateChanged(state);
+  }
 }
