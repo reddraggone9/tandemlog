@@ -931,7 +931,9 @@ void main() {
   testWidgets(
     'workspace search preserves filters drafts and completion sections',
     (tester) async {
+      tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
+      addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.view.resetPhysicalSize);
       final root = await Directory.systemTemp.createTemp('workspace-search-');
       final folder = await Directory('${root.path}/shared').create();
