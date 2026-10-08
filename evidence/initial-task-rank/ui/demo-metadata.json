@@ -1,0 +1,34 @@
+{
+  "display": ":99",
+  "window": "2097155",
+  "root": "/workspace/recovery/initial-rank-demo-3f132607",
+  "source": "48ca813caabbf6317acdb5c5713f74d1a472f0c8",
+  "platform": "Linux GTK debug main application",
+  "viewport": "1200x850",
+  "theme": "dark",
+  "text_scale": 1,
+  "input": "actual xdotool X11 pointer, button and keyboard events",
+  "durationSeconds": 50.8,
+  "sha256": "c4203455c590fba43c86f4d7e3e1120ceea114fe051aab9dbc4c05e3aa1187ca",
+  "editing": "idle pauses removed only; no speed changes, synthetic clicks, layout edits or composited app pixels",
+  "sourceIntervalsSeconds": [
+    [
+      0,
+      14
+    ],
+    [
+      37.5,
+      51
+    ],
+    [
+      85.4,
+      96
+    ],
+    [
+      121.6,
+      134.2
+    ]
+  ],
+  "rawRecording": "/workspace/recovery/initial-rank-demo-3f132607/initial-rank-linux-gtk-debug.mp4",
+  "nativeLibrarySha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56"
+}

@@ -2242,6 +2242,7 @@ class TaskStore {
     int seq,
     EventClock clock, {
     String? previousHash,
+    LogEvent? pendingCreation,
   }) {
     final legacyTextChange =
         type == 'task.edited' &&
@@ -2279,7 +2280,11 @@ class TaskStore {
         data,
       ).encode(previousHash: previousHash ?? _writerChainHead),
     );
-    final prior = _entityEvents(entity);
+    final prior = [
+      ..._entityEvents(entity),
+      if (type == 'task.moved' && pendingCreation?.entity == entity)
+        pendingCreation!,
+    ];
     if (type == 'task.textEdited' || type == 'task.textEditUndone') {
       if (_hasInheritedText(entity)) _resolvedText(entity, pending: [e]);
       final nativeCreation = _hasNativeTextRoot(entity, prior);
@@ -2442,6 +2447,7 @@ class TaskStore {
     List<(String, String, Map<String, dynamic>)> commands, {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
+    bool reserveBeforeTextStaging = false,
   }) async {
     if (commands.isEmpty) return [];
     _requireWriterAppendReady();
@@ -2456,6 +2462,7 @@ class TaskStore {
         1;
     var maximum = _maximumClock();
     final receipts = <OperationReceipt>[];
+    final creations = <String, LogEvent>{};
     final bytes = BytesBuilder(copy: false);
     var chainHead = _writerChainHead;
     for (final (entity, type, data) in commands) {
@@ -2469,7 +2476,11 @@ class TaskStore {
         seq++,
         clock,
         previousHash: chainHead,
+        pendingCreation: type == 'task.moved' ? creations[entity] : null,
       );
+      if (type == 'task.created' || type == 'task.createdWithText') {
+        creations[entity] = event;
+      }
       final raw = event.canonicalRaw!;
       chainHead = event.hash!;
       receipts.add(OperationReceipt(event.id, raw, entity));
@@ -2482,10 +2493,11 @@ class TaskStore {
       onPrepared?.call(receipt);
     }
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
+    if (reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
     for (final receipt in receipts) {
       await _stageTextReceipt(LogEvent.decode(receipt.raw), receipt);
     }
-    await _prepareWriterAppend(receipts);
+    if (!reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
     phase.reset();
     try {
       await folder.append('$writer.jsonl', bytes.takeBytes());
@@ -2508,13 +2520,21 @@ class TaskStore {
     return receipts;
   }
 
+  /// A durable creation alone cannot finish a capture with a reserved suffix.
+  bool isCaptureConfirmed(String entity) =>
+      !_writerHasPendingAppend && hasEntity(entity);
+
   /// Retry identities belong to the same capture; already present tasks are
   /// acknowledged without recreating them. UI updates happen after this batch.
-  Future<BulkTaskResult> createTasks(
+  Future<TaskCaptureResult> createTasks(
     Map<String, String> titles,
     String assignee,
   ) => _serialize(() async {
     await _refresh();
+    final anchor = rows
+        .where((row) => row['kind'] == 'task')
+        .map((row) => row['id'] as String)
+        .firstOrNull;
     final present = <String>[];
     final commands = <(String, Map<String, dynamic>)>[];
     for (final entry in titles.entries) {
@@ -2551,10 +2571,22 @@ class TaskStore {
     final prepared = <OperationReceipt>[];
     Object? error;
     try {
-      await _appendCommandBatch(
-        textEngine == null ? 'task.created' : 'task.createdWithText',
-        commands,
+      // Even an all-present retry must wait for its reserved exact suffix.
+      _requireWriterAppendReady();
+      await _appendCommands(
+        [
+          for (final (id, data) in commands)
+            (
+              id,
+              textEngine == null ? 'task.created' : 'task.createdWithText',
+              data,
+            ),
+          if (anchor != null)
+            for (final (id, _) in commands)
+              (id, 'task.moved', {'before': anchor}),
+        ],
         onPrepared: prepared.add,
+        reserveBeforeTextStaging: true,
       );
     } catch (failure) {
       error = failure;
@@ -2565,14 +2597,28 @@ class TaskStore {
       }
     }
     final confirmed = confirmedOperations(prepared);
-    final committed = {
+    final byEntity = <String, List<OperationReceipt>>{};
+    for (final receipt in prepared) {
+      (byEntity[receipt.entity] ??= []).add(receipt);
+    }
+    final created = {
       ...present,
-      for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
+      for (final receipt in prepared.where(
+        (r) =>
+            confirmed.contains(r.id) &&
+            LogEvent.decode(r.raw).type != 'task.moved',
+      ))
         receipt.entity,
     };
-    return BulkTaskResult(
+    final committed = {
+      ...present.where(isCaptureConfirmed),
+      for (final entry in byEntity.entries)
+        if (entry.value.every((r) => confirmed.contains(r.id))) entry.key,
+    };
+    return TaskCaptureResult(
       titles.keys.where(committed.contains),
       titles.keys.where((id) => !committed.contains(id)),
+      titles.keys.where(created.contains),
       error,
     );
   });

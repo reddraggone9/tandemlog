@@ -439,24 +439,25 @@ void main() {
           two: 'Two',
           three: 'Three',
         }, user);
-        expect(result.committedIds, partial ? isEmpty : [one]);
+        expect(result.committedIds, isEmpty);
+        expect(result.createdIds, partial ? isEmpty : [one]);
         final space = store!.space;
         final current = await folder.inner.read('$owner.jsonl');
         await close();
         if (partial) {
           final guardBefore = await guard.load(space, owner);
           expect(guardBefore!.sequence, 2);
-          expect(guardBefore.pending, hasLength(3));
+          expect(guardBefore.pending, hasLength(6));
           await expectLater(
             open('${root.path}/fresh-cache'),
             throwsA(isA<FormatFailure>()),
           );
           expect(await folder.inner.read('$owner.jsonl'), current);
-          expect((await guard.load(space, owner))!.pending, hasLength(3));
+          expect((await guard.load(space, owner))!.pending, hasLength(6));
         } else {
           await open('${root.path}/fresh-cache');
           expect((await state()).sequence, 3);
-          expect((await state()).pending, hasLength(2));
+          expect((await state()).pending, hasLength(5));
           await expectLater(
             store!.command(task, 'task.edited', {'title': 'Different'}),
             throwsA(isA<WriterGuardFailure>()),
@@ -474,14 +475,29 @@ void main() {
             three: 'Three',
           }, user);
           expect(retry.succeeded, isTrue);
-          expect((await state()).sequence, 5);
+          expect((await state()).sequence, 8);
           final events = utf8
               .decode(await folder.inner.read('$owner.jsonl'))
               .trim()
               .split('\n')
               .map(LogEvent.decode)
               .toList();
-          expect(events.map((event) => event.sequence), [1, 2, 3, 4, 5]);
+          expect(events.map((event) => event.sequence), [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+          ]);
+          expect(
+            store!.rows
+                .where((row) => row['kind'] == 'task')
+                .map((row) => row['id']),
+            [one, two, three, task],
+          );
         }
       },
     );

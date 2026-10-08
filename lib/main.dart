@@ -1019,11 +1019,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         final reconcileCapture = captureFailure && pendingCapture.isNotEmpty;
         if (mounted && identical(store, origin) && reconcileCapture) {
           final unsaved = pendingCapture
-              .where((entry) => !origin.hasEntity(entry.id))
+              .where((entry) => !origin.isCaptureConfirmed(entry.id))
               .toList();
           capture.text = unsaved.map((entry) => entry.title).join('\n');
-          pendingCapture.clear();
-          captureFailure = false;
+          pendingCapture
+            ..clear()
+            ..addAll(unsaved);
+          captureFailure = unsaved.isNotEmpty;
           if (unsaved.isEmpty) error = null;
         }
         if (mounted &&
@@ -1247,8 +1249,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       }
       if (result.error != null) {
         throw StateError(
-          '${result.committedIds.length} tasks confirmed saved; '
-          '${pendingCapture.length} remain. ${failureMessage(result.error!)}',
+          '${result.createdIds.length} tasks confirmed created; '
+          '${pendingCapture.length} remain to finish capture. ${failureMessage(result.error!)}',
         );
       }
     });
