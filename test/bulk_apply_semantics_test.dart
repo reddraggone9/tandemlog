@@ -91,7 +91,6 @@ void main() {
       'bulk apply names and accessible actions isolate fields at $geometry',
       (tester) async {
         final semantics = tester.ensureSemantics();
-        addTearDown(semantics.dispose);
         await mountBulk(
           tester,
           width: geometry.$1,
@@ -160,6 +159,7 @@ void main() {
           );
         }
         expect(tester.takeException(), isNull);
+        semantics.dispose();
       },
     );
   }
@@ -168,7 +168,6 @@ void main() {
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     BulkTaskEdit? saved;
     await mountBulk(tester, save: (draft) async => saved = draft);
     final checkbox = await revealApply(tester, 'Apply Due time');
@@ -187,7 +186,12 @@ void main() {
       await tester.ensureVisible(input);
       await tester.pumpAndSettle();
       expect(
-        tester.getSemantics(input).getSemanticsData().label,
+        tester
+            .getSemantics(
+              find.descendant(of: input, matching: find.byType(EditableText)),
+            )
+            .getSemanticsData()
+            .label,
         key == 'addTags' ? 'Add tags' : 'Remove tags',
       );
       await tester.enterText(input, key == 'addTags' ? 'new' : 'retained');
@@ -199,13 +203,13 @@ void main() {
     expect(saved!.assignee, isNull);
     expect(saved!.addTags, ['new']);
     expect(saved!.removeTags, ['retained']);
+    semantics.dispose();
   });
 
   testWidgets('saving retains field names but disables all apply actions', (
     tester,
   ) async {
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     final saving = Completer<void>();
     await mountBulk(tester, save: (_) => saving.future);
     await tester.enterText(find.byKey(const ValueKey('dueTime')), '14:00');
@@ -225,5 +229,6 @@ void main() {
     saving.complete();
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
+    semantics.dispose();
   });
 }

@@ -23,7 +23,7 @@ Expected: exactly one matching candidate
 
 When the exception was thrown, this was the stack:
 #4      revealApply (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:82:3)
-#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:103:34)
+#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:102:34)
 <asynchronous suspension>
 #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
 <asynchronous suspension>
@@ -50,7 +50,7 @@ Expected: exactly one matching candidate
 
 When the exception was thrown, this was the stack:
 #4      revealApply (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:82:3)
-#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:103:34)
+#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:102:34)
 <asynchronous suspension>
 #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
 <asynchronous suspension>
@@ -77,7 +77,7 @@ Expected: exactly one matching candidate
 
 When the exception was thrown, this was the stack:
 #4      revealApply (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:82:3)
-#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:174:28)
+#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:173:28)
 <asynchronous suspension>
 #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
 <asynchronous suspension>
@@ -104,7 +104,7 @@ Expected: exactly one matching candidate
 
 When the exception was thrown, this was the stack:
 #4      revealApply (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:82:3)
-#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:216:30)
+#5      main.<anonymous closure> (file:///workspace/tandemlog-bulk-semantics/test/bulk_apply_semantics_test.dart:220:30)
 <asynchronous suspension>
 #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
 <asynchronous suspension>
