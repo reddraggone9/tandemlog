@@ -37,8 +37,24 @@ It shows the legacy space-separated field without selected chips/suggestions.
 
 ## Current gates
 
-Implementation, focused/full test results, independent final code review and
-source-bound Linux screenshots/video are in progress. Exact new Android
+Production `041c06488` and test source `8b13cd0e` pass independent correctness
+and architecture review. The local [validation manifest](green/local-validation-manifest.json)
+binds actual logs and artifacts: 621 Flutter tests, 37 tooling tests, three
+actual Linux GTK tag workflows, clean analysis and 154-file formatting. The
+final fixture corrections preserve field names despite merged semantic hints,
+use the existing compact Edit selected action and avoid a redundant Escape
+after selecting a suggestion; they do not change production behavior.
+
+The [17 actual After screenshots](native/after/) and
+[37.6-second desktop recording](native/shared-tags-linux-desktop.mp4) were
+viewed directly and independently reviewed. Chips, query, selected suggestions,
+bulk deltas and filtering remain legible at the recorded desktop/narrow/theme
+and text-scale variants. The desktop pointer appears in the recording. Popups
+can temporarily cover later fields/footer; collapse and dismissal remain usable.
+The canonical Cancel/Discard and filter checks passed without history writes.
+
+[Full three-platform CI](https://github.com/reddraggone9/tandemlog/actions/runs/37789101688)
+is running against exact `8b13cd0e`. Exact new Android
 affected-flow acceptance remains pending. Linux inspection cannot establish
 Android keyboard/accessibility/provider behavior or Windows runtime acceptance.
 The frozen checklist candidate's separate parent-run Android installation is
