@@ -1,0 +1,717 @@
+{
+  "baseline": "eb68b46259f745e86ec9f41c144d473f19d0fb0f",
+  "observed_date": "2026-10-08",
+  "scope": "Read-only upstream metadata/source inspection. No dependency execution, resolution, installation or upgrade. SHA256 records are observed bytes, not verified publisher signatures.",
+  "artifacts": [
+    {
+      "name": "kgp-2.4.0.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.0/kotlin-gradle-plugin-2.4.0.pom",
+      "bytes": 10827,
+      "observed_sha256": "46e72b6d12381adf80a8d26da8a09f45bfae8e203a6ebfca9e67408a9cde85f7",
+      "declared_dependencies": [
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-api",
+          "version": "2.4.0",
+          "scope": "compile"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "fus-statistics-gradle-plugin",
+          "version": "2.4.0",
+          "scope": "compile"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-idea",
+          "version": "2.4.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-idea-proto",
+          "version": "2.4.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-klib-commonizer-api",
+          "version": "2.4.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-build-statistics",
+          "version": "2.4.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-util-klib-metadata",
+          "version": "2.4.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-compiler-runner",
+          "version": "2.4.0",
+          "scope": "runtime"
+        }
+      ]
+    },
+    {
+      "name": "kgp-2.4.20.pom",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.20/kotlin-gradle-plugin-2.4.20.pom",
+      "bytes": 10837,
+      "observed_sha256": "934dba7a977a17c008dac6c8670c8c86519a91cedb759b9a8f77040005e95dc5",
+      "declared_dependencies": [
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-api",
+          "version": "2.4.20",
+          "scope": "compile"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "fus-statistics-gradle-plugin",
+          "version": "2.4.20",
+          "scope": "compile"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-idea",
+          "version": "2.4.20",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin-idea-proto",
+          "version": "2.4.20",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-klib-commonizer-api",
+          "version": "2.4.20",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-build-statistics",
+          "version": "2.4.20",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-util-klib-metadata",
+          "version": "2.4.20",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-compiler-runner",
+          "version": "2.4.20",
+          "scope": "runtime"
+        }
+      ]
+    },
+    {
+      "name": "kgp-2.4.0.module",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.0/kotlin-gradle-plugin-2.4.0.module",
+      "bytes": 143775,
+      "observed_sha256": "7b7c5da8bc0b62e3f6f39e43960e777625dbf3da157a55c36a7cdc0216d306fa"
+    },
+    {
+      "name": "kgp-2.4.20.module",
+      "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.4.20/kotlin-gradle-plugin-2.4.20.module",
+      "bytes": 160053,
+      "observed_sha256": "8a88cf52de5fb9c829730b0f5aec1fcd35633e697871e256230f09903c74dd43"
+    },
+    {
+      "name": "agp-9.1.0.pom",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.pom",
+      "bytes": 9034,
+      "observed_sha256": "76fefe0707e59ae1847bdda5926c4d90bd4e38532038d635e4ffb76c9e0786a8",
+      "declared_dependencies": [
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder",
+          "version": "9.1.0",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder-model",
+          "version": "9.1.0",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "gradle-api",
+          "version": "9.1.0",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "gradle-settings-api",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "sdk-common",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "sdklib",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "repository",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.ddms",
+          "artifactId": "ddmlib",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "aapt2-proto",
+          "version": "9.1.0-14792394",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "aaptcompiler",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.analytics-library",
+          "artifactId": "crash",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.analytics-library",
+          "artifactId": "shared",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.lint",
+          "artifactId": "lint-model",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.lint",
+          "artifactId": "lint-typedef-remover",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "androidx.databinding",
+          "artifactId": "databinding-compiler-common",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "androidx.databinding",
+          "artifactId": "databinding-common",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.databinding",
+          "artifactId": "baseLibrary",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder-test-api",
+          "version": "9.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.layoutlib",
+          "artifactId": "layoutlib-api",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.utp",
+          "artifactId": "gradle-work-action-api",
+          "version": "32.1.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-stdlib",
+          "version": "2.2.10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.apache.httpcomponents",
+          "artifactId": "httpmime",
+          "version": "4.5.6",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "commons-io",
+          "artifactId": "commons-io",
+          "version": "2.16.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-analysis",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-commons",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-util",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.glassfish.jaxb",
+          "artifactId": "jaxb-runtime",
+          "version": "2.3.2",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "net.sf.jopt-simple",
+          "artifactId": "jopt-simple",
+          "version": "4.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "bundletool",
+          "version": "1.18.3",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build.jetifier",
+          "artifactId": "jetifier-core",
+          "version": "1.0.0-beta10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build.jetifier",
+          "artifactId": "jetifier-processor",
+          "version": "1.0.0-beta10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.squareup",
+          "artifactId": "javapoet",
+          "version": "1.13.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin",
+          "version": "2.2.10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.protobuf",
+          "artifactId": "protobuf-java",
+          "version": "3.25.5",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.protobuf",
+          "artifactId": "protobuf-java-util",
+          "version": "3.25.5",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.code.gson",
+          "artifactId": "gson",
+          "version": "2.11.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.crypto.tink",
+          "artifactId": "tink",
+          "version": "1.7.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.tensorflow",
+          "artifactId": "tensorflow-lite-metadata",
+          "version": "0.2.0",
+          "scope": "runtime"
+        }
+      ]
+    },
+    {
+      "name": "agp-9.4.1.pom",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.4.1/gradle-9.4.1.pom",
+      "bytes": 9034,
+      "observed_sha256": "ee7d29e7d41cb389dc65b02518ffa8c806c522ca565510694eb8ee8dad7f938a",
+      "declared_dependencies": [
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder",
+          "version": "9.4.1",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder-model",
+          "version": "9.4.1",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "gradle-api",
+          "version": "9.4.1",
+          "scope": "compile"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "gradle-settings-api",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "sdk-common",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "sdklib",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools",
+          "artifactId": "repository",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.ddms",
+          "artifactId": "ddmlib",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "aapt2-proto",
+          "version": "9.4.1-15978811",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "aaptcompiler",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.analytics-library",
+          "artifactId": "crash",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.analytics-library",
+          "artifactId": "shared",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.lint",
+          "artifactId": "lint-model",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.lint",
+          "artifactId": "lint-typedef-remover",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "androidx.databinding",
+          "artifactId": "databinding-compiler-common",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "androidx.databinding",
+          "artifactId": "databinding-common",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.databinding",
+          "artifactId": "baseLibrary",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "builder-test-api",
+          "version": "9.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.layoutlib",
+          "artifactId": "layoutlib-api",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.utp",
+          "artifactId": "gradle-work-action-api",
+          "version": "32.4.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-stdlib",
+          "version": "2.2.10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.apache.httpcomponents",
+          "artifactId": "httpmime",
+          "version": "4.5.6",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "commons-io",
+          "artifactId": "commons-io",
+          "version": "2.16.1",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-analysis",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-commons",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.ow2.asm",
+          "artifactId": "asm-util",
+          "version": "9.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.glassfish.jaxb",
+          "artifactId": "jaxb-runtime",
+          "version": "2.3.2",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "net.sf.jopt-simple",
+          "artifactId": "jopt-simple",
+          "version": "4.9",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build",
+          "artifactId": "bundletool",
+          "version": "1.18.3",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build.jetifier",
+          "artifactId": "jetifier-core",
+          "version": "1.0.0-beta10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.android.tools.build.jetifier",
+          "artifactId": "jetifier-processor",
+          "version": "1.0.0-beta10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.squareup",
+          "artifactId": "javapoet",
+          "version": "1.13.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.jetbrains.kotlin",
+          "artifactId": "kotlin-gradle-plugin",
+          "version": "2.2.10",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.protobuf",
+          "artifactId": "protobuf-java",
+          "version": "3.25.5",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.protobuf",
+          "artifactId": "protobuf-java-util",
+          "version": "3.25.5",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.code.gson",
+          "artifactId": "gson",
+          "version": "2.11.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "com.google.crypto.tink",
+          "artifactId": "tink",
+          "version": "1.7.0",
+          "scope": "runtime"
+        },
+        {
+          "groupId": "org.tensorflow",
+          "artifactId": "tensorflow-lite-metadata",
+          "version": "0.2.0",
+          "scope": "runtime"
+        }
+      ]
+    },
+    {
+      "name": "gradle-9.8.0-all.zip.sha256",
+      "url": "https://services.gradle.org/distributions/gradle-9.8.0-all.zip.sha256",
+      "bytes": 64,
+      "observed_sha256": "5d6530b1159d3d7f309d671ac48f8f90021a4e3269c4402f93afe5d65fbace8a",
+      "publisher_reported_distribution_sha256": "46ac66d47f30f3dacfdf306e0b714a91a34fb94a22ba0a744b280933f47bc0cf"
+    },
+    {
+      "name": "agp-9.1.0-sources.jar",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0-sources.jar",
+      "bytes": 3802564,
+      "observed_sha256": "48d1ba4f8096c9bff57a684c7dcb00044e94fbf3a7f1b605f1941da788de3709",
+      "inspected_version_fields": {
+        "com/android/build/api/extension/impl/CurrentAndroidGradlePluginVersion.kt": [],
+        "com/android/build/api/variant/impl/MutableAndroidVersion.kt": [],
+        "com/android/build/gradle/internal/dependency/ShrinkerVersion.kt": [],
+        "com/android/build/gradle/internal/dsl/BundleOptionsAiModelVersion.kt": [],
+        "com/android/build/gradle/internal/plugins/VersionCheckPlugin.kt": [
+          "val GRADLE_MIN_VERSION = GradleVersion.version(SdkConstants.GRADLE_LATEST_VERSION)!!",
+          "if (GRADLE_MIN_VERSION > currentVersion) {",
+          "Minimum supported Gradle version is ${GRADLE_MIN_VERSION.version}. Current version is ${currentVersion.version}.",
+          "Try updating the 'distributionUrl' property in ${project.rootDir.resolve(\"gradle/wrapper/gradle-wrapper.properties\").path} to 'gradle-${GRADLE_MIN_VERSION.version}-bin.zip'."
+        ],
+        "com/android/build/gradle/internal/utils/KgpVersion.kt": [
+          "val MINIMUM_BUILT_IN_KOTLIN_VERSION: KgpVersion = parse(\"1.9.20\")"
+        ],
+        "com/android/build/gradle/options/Version.kt": []
+      },
+      "inspection_scope": "Version admission only; whole AGP source/native toolchain not approved."
+    },
+    {
+      "name": "agp-9.4.1-sources.jar",
+      "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.4.1/gradle-9.4.1-sources.jar",
+      "bytes": 4032753,
+      "observed_sha256": "08a69084ca47b2681671a611113ed919b986facb79dc24404fb7348d2c62a386",
+      "inspected_version_fields": {
+        "com/android/build/api/extension/impl/CurrentAndroidGradlePluginVersion.kt": [],
+        "com/android/build/api/variant/impl/MutableAndroidVersion.kt": [],
+        "com/android/build/gradle/internal/dependency/ShrinkerVersion.kt": [],
+        "com/android/build/gradle/internal/dsl/BundleOptionsAiModelVersion.kt": [],
+        "com/android/build/gradle/internal/plugins/VersionCheckPlugin.kt": [
+          "val GRADLE_MIN_VERSION = GradleVersion.version(SdkConstants.GRADLE_LATEST_VERSION)!!",
+          "if (GRADLE_MIN_VERSION > currentVersion) {",
+          "Minimum supported Gradle version is ${GRADLE_MIN_VERSION.version}. Current version is ${currentVersion.version}.",
+          "Try updating the 'distributionUrl' property in ${project.rootDir.resolve(\"gradle/wrapper/gradle-wrapper.properties\").path} to 'gradle-${GRADLE_MIN_VERSION.version}-bin.zip'."
+        ],
+        "com/android/build/gradle/internal/utils/KgpVersion.kt": [
+          "val MINIMUM_BUILT_IN_KOTLIN_VERSION: KgpVersion = parse(\"1.9.20\")"
+        ],
+        "com/android/build/gradle/options/Version.kt": []
+      },
+      "inspection_scope": "Version admission only; whole AGP source/native toolchain not approved."
+    }
+  ],
+  "jetbrains_advisory_source": {
+    "url": "https://resources.jetbrains.com/storage/issues-fixed/data.json",
+    "observed_sha256": "d072ef90c76e4aa51de3364592f441661e5e7f1f03d209470628479361f496f5",
+    "entry": [
+      {
+        "product": "Kotlin",
+        "description": "Code execution was possible via unsafe deserialization in the build cache metadata. Reported by Sherry Zhou (KT-86604)",
+        "severity": "Medium",
+        "resolved_in": [
+          "2.4.20"
+        ],
+        "cwe": "https://cwe.mitre.org/data/definitions/502.html",
+        "cve": "https://nvd.nist.gov/vuln/detail/CVE-2026-53914",
+        "year": "2026",
+        "publication_date": "2026-06-26"
+      }
+    ]
+  },
+  "prs": [
+    {
+      "number": 1,
+      "html_url": "https://github.com/reddraggone9/tandemlog/pull/1",
+      "state": "open",
+      "updated_at": "2026-10-04T14:59:18Z",
+      "head": "0cd4f59b60fcb7c617217a28d0855deaf6dd9dae",
+      "base": "104e0914572f43c4d1f25e232792ec33e2b0a5e2"
+    },
+    {
+      "number": 2,
+      "html_url": "https://github.com/reddraggone9/tandemlog/pull/2",
+      "state": "open",
+      "updated_at": "2026-10-04T14:59:35Z",
+      "head": "f4306d3cda003455650894966119cb5079c51c6b",
+      "base": "104e0914572f43c4d1f25e232792ec33e2b0a5e2"
+    }
+  ],
+  "security_fix": {
+    "sha": "bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+    "url": "https://github.com/JetBrains/kotlin/commit/bf51df665b458fda7c3eaf436c4d88dc119d7ec6",
+    "files": [
+      "plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/KaptContext.kt",
+      "plugins/kapt/kapt-base/src/org/jetbrains/kotlin/kapt/base/incremental/cache.kt",
+      "plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/InheritedAnnotationTest.kt",
+      "plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/JavaClassCacheManagerTest.kt",
+      "plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/ReferencedContantsTest.kt",
+      "plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestComplexIncrementalAptCache.kt",
+      "plugins/kapt/kapt-base/test/org/jetbrains/kotlin/kapt/base/test/incremental/TestSimpleIncrementalAptCache.kt"
+    ]
+  }
+}

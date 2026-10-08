@@ -1,5 +1,9 @@
 # Dependency inventory — 2026-10-04
 
+The [2026-10-08 Kotlin/AGP/Gradle security audit](kotlin-gradle-security-audit.md)
+records the applicable KGP advisory, exact open PRs, supported narrow remediation
+and remaining source/artifact/native acceptance gates. No dependency was upgraded.
+
 Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
 
 ## Direct application dependencies
