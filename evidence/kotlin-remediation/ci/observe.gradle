@@ -1,0 +1,103 @@
+// Remediation-branch Android evaluation only. No dependency/task is requested here.
+// Reviewed plugin code has already loaded during evaluation. The afterProject
+// guard covers subsequent selected artifact resolution, before its consumers.
+import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+import org.gradle.api.artifacts.component.ModuleComponentIdentifier
+
+def outputPath = System.getenv('KOTLIN_REMEDIATION_EVIDENCE_DIR')
+def manifestPath = System.getenv('KOTLIN_REMEDIATION_MANIFEST')
+if (!outputPath || !manifestPath) throw new GradleException('Remediation observation paths are required')
+def sourceCommit = System.getenv('GITHUB_SHA')
+if (!(sourceCommit ==~ /[0-9a-f]{40}/)) throw new GradleException('An exact GITHUB_SHA source commit is required')
+def phase = System.getenv('KOTLIN_REMEDIATION_PHASE')
+if (!(phase in ['cold', 'warm', 'observer-smoke', 'negative-control'])) throw new GradleException('An explicit observation phase is required')
+def output = new File(outputPath)
+output.mkdirs()
+def manifest = new JsonSlurper().parse(new File(manifestPath))
+def expected = [:]
+manifest.nodes.each { coordinate, node ->
+    if (coordinate.startsWith('org.jetbrains.kotlin:') && coordinate.endsWith(':2.4.20')) {
+        node.files.each { file ->
+            if (!file.name.endsWith('.jar')) return
+            def observed = manifest.observations[file.url]?.sha256
+            if (!(observed ==~ /[0-9a-f]{64}/) || (file.expected_sha256 != null && file.expected_sha256 != observed)) {
+                throw new GradleException("Missing or inconsistent reviewed binary hash for ${coordinate}:${file.name}")
+            }
+            expected["${coordinate}:${file.name}".toString()] = observed
+        }
+    }
+}
+if (expected.isEmpty()) throw new GradleException('Reviewed Kotlin coordinate/hash inventory is empty')
+def sha = { File file ->
+    def digest = MessageDigest.getInstance('SHA-256')
+    file.withInputStream { input ->
+        byte[] buffer = new byte[1024 * 1024]
+        int count
+        while ((count = input.read(buffer)) > 0) digest.update(buffer, 0, count)
+    }
+    digest.digest().encodeHex().toString()
+}
+def record = { row ->
+    row.sourceCommit = sourceCommit
+    row.runId = System.getenv('GITHUB_RUN_ID')
+    row.phase = phase
+    row.root = gradle.rootProject.rootDir.absolutePath
+    row.gradleVersion = gradle.gradleVersion
+    synchronized (output) {
+        def rootKey = MessageDigest.getInstance('SHA-256').digest(row.root.getBytes('UTF-8')).encodeHex().toString().take(16)
+        new File(output, phase + '-selected-scopes-' + rootKey + '.jsonl').append(JsonOutput.toJson(row) + '\n', 'UTF-8')
+    }
+}
+def verify = { artifact, scope ->
+    def id = artifact.id.componentIdentifier
+    if (!(id instanceof ModuleComponentIdentifier) || id.group != 'org.jetbrains.kotlin' || id.version != '2.4.20') return
+    def hash = sha(artifact.file)
+    def key = "${id.group}:${id.module}:${id.version}:${artifact.file.name}".toString()
+    if (expected[key] != hash) throw new GradleException("Unreviewed selected Kotlin artifact ${id.displayName}: ${artifact.file.name} SHA256 ${hash}")
+    record([kind: 'selectedKotlinArtifact', scope: scope, coordinate: id.displayName, filename: artifact.file.name, sha256: hash, reviewed: true])
+}
+gradle.afterProject { project, state ->
+    if (state.failure != null) return
+    project.configurations.configureEach { configuration ->
+        configuration.incoming.afterResolve { incoming ->
+            incoming.artifactView { view ->
+                view.componentFilter { id -> id instanceof ModuleComponentIdentifier && id.group == 'org.jetbrains.kotlin' && id.version == '2.4.20' }
+            }.artifacts.artifacts.each { verify(it, "${project.path}:${configuration.name}") }
+        }
+    }
+    project.plugins.each { plugin ->
+        def clazz = plugin.class
+        if (!clazz.name.contains('kotlin') && !clazz.name.startsWith('com.android.')) return
+        def location = clazz.protectionDomain?.codeSource?.location
+        def jar = location?.protocol == 'file' ? new File(location.toURI()) : null
+        def hash = jar?.isFile() ? sha(jar) : null
+        def pluginExpectedHashes = expected.findAll { key, value -> jar != null && key.endsWith(':' + jar.name) }.values()
+        if (clazz.package?.implementationVersion == '2.4.20' && !pluginExpectedHashes.contains(hash)) {
+            throw new GradleException("Unreviewed loaded Kotlin2.4.20 plugin ${clazz.name} SHA256 ${hash}")
+        }
+        record([kind: 'loadedPlugin', project: project.path, implementation: clazz.name, implementationVersion: clazz.package?.implementationVersion, location: location?.toString(), sha256: hash])
+    }
+    if (project.path == ':app' && project.plugins.hasPlugin('com.android.application')) {
+        def kotlinAndroid = project.plugins.find { it.class.name.contains('KotlinAndroidPluginWrapper') }
+        if (kotlinAndroid?.class?.package?.implementationVersion != '2.4.20') {
+            throw new GradleException('Main app must load KotlinAndroidPluginWrapper2.4.20')
+        }
+    }
+    def r8 = project.plugins.find { it.class.name.startsWith('com.android.') }?.class?.classLoader?.getResourceAsStream('r8-version.properties')
+    if (r8 != null) record([kind: 'r8Version', project: project.path, resource: r8.withCloseable { it.getText('UTF-8') }])
+}
+gradle.taskGraph.whenReady { graph ->
+    def selected = graph.allTasks.collect { [project: it.project.path, name: it.name, path: it.path, implementation: it.class.name] }
+    // This is a name heuristic; independent review of actual task classes is required.
+    def blocked = selected.findAll { row ->
+        def name = row.name.toLowerCase()
+        name.contains('kapt') || name.contains('playwright') || name.contains('kotlinnative') ||
+            name.contains('kotlinjs') || name.contains('kotlinwasm') ||
+            name.contains('browser') && name.contains('test') ||
+            name.contains('abi') && (name.contains('dump') || name.contains('check'))
+    }
+    record([kind: 'selectedTaskGraph', requested: gradle.startParameter.taskNames, selected: selected, blocked: blocked])
+    if (!blocked.isEmpty()) throw new GradleException('Unexpected KAPT/platform/ABI task activation')
+}

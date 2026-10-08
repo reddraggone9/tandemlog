@@ -1,0 +1,9 @@
+{
+  "runId": 37753131078,
+  "sourceCommit": "ac20d4e0edbcb81d4d80b69b7957fe5243989095",
+  "artifactId": 11538976572,
+  "archiveDigest": "sha256:f9f8b5f344a4a1db542141945507f775bd42ec59168ba8c3f021fafdee4d7aa2",
+  "archiveBytes": 80377709,
+  "hostedAndroidJob": "success; native payload and signature/archive gates passed",
+  "localDownload": "403; no local APK re-verification claimed"
+}

@@ -116,8 +116,38 @@ jobs:
       - run: flutter pub get --enforce-lockfile
       # The standard Ubuntu runner image includes this exact build-tools version.
       - run: test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
-      - run: flutter build apk --debug
-      - run: python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk
+      - name: Observe reviewed Kotlin scopes on the remediation branch
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation'
+        shell: bash
+        run: |
+          observation_dir="$RUNNER_TEMP/kotlin-remediation"
+          mkdir -p "$observation_dir" "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d"
+          cp evidence/kotlin-remediation/ci/observe.gradle "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/kotlin-remediation.gradle"
+          echo "KOTLIN_REMEDIATION_EVIDENCE_DIR=$observation_dir" >> "$GITHUB_ENV"
+          echo "KOTLIN_REMEDIATION_PHASE=cold" >> "$GITHUB_ENV"
+          echo "KOTLIN_REMEDIATION_MANIFEST=$GITHUB_WORKSPACE/evidence/kotlin-remediation/graph.json" >> "$GITHUB_ENV"
+      - name: Build Android debug APK
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/heads/fix/kotlin-2.4.20-remediation ]]; then
+            set -o pipefail
+            flutter build apk --debug 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-build.txt"
+            python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-native-gate.txt"
+            sha256sum build/app/outputs/flutter-apk/app-debug.apk > "$KOTLIN_REMEDIATION_EVIDENCE_DIR/cold-apk.sha256"
+          else
+            flutter build apk --debug
+          fi
+      - name: Repeat warm Android debug build on the remediation branch
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation'
+        shell: bash
+        run: |
+          set -o pipefail
+          export KOTLIN_REMEDIATION_PHASE=warm
+          flutter build apk --debug 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-build.txt"
+          python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk 2>&1 | tee "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-native-gate.txt"
+          sha256sum build/app/outputs/flutter-apk/app-debug.apk > "$KOTLIN_REMEDIATION_EVIDENCE_DIR/warm-apk.sha256"
+      - if: github.ref != 'refs/heads/fix/kotlin-2.4.20-remediation'
+        run: python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk
       - run: |
           mkdir dist
           cp build/app/outputs/flutter-apk/app-debug.apk dist/tandemlog-android-test-only.apk
@@ -126,6 +156,18 @@ jobs:
           sha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt
           cat android-SHA256SUMS.txt
           cat android-signature.txt
+      - name: Preserve cold and warm Kotlin evaluation receipts
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation' && always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: kotlin-remediation-android-evidence
+          path: ${{ runner.temp }}/kotlin-remediation/*
+          retention-days: 5
+          if-no-files-found: error
+      - name: Remove the remediation observation script
+        if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation' && always()
+        shell: bash
+        run: rm -f "${GRADLE_USER_HOME:-$HOME/.gradle}/init.d/kotlin-remediation.gradle"
       - name: Package separate recovery harness on the isolated adoption branch
         if: github.ref == 'refs/heads/experiment/text-activation-policy'
         run: |
