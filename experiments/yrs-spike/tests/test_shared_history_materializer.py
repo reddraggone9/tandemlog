@@ -8,6 +8,7 @@ import base64
 import unittest
 
 from test_contract import Bridge
+from test_admission import packet
 
 
 class SharedHistoryMaterializer(unittest.TestCase):
@@ -103,6 +104,28 @@ class SharedHistoryMaterializer(unittest.TestCase):
                              'A private Save must publish its own transactions, not historical deletes.')
         self.assertEqual(self.b.ok('state', name='cold')['update'],
                          self.b.ok('state', name='owner')['update'])
+
+    def test_H07_foreign_root_and_conflicting_seed_quarantine_materializers(self):
+        for update in [packet(root='evil'), self.b.ok('seed', text='Different')['update']]:
+            self.materializer()
+            self.assertIn('error', self.b.request(op='materializer_apply', name='history', update=update))
+            self.assertIn('error', self.b.request(op='materializer_state', name='history'))
+
+    def test_H08_visible_and_retained_budgets_fail_without_touching_editor(self):
+        seed = self.b.ok('seed', text='AB')['update']
+        self.b.ok('new', name='editor', client=10, seed=seed)
+        update = self.b.ok('edit', name='editor', index=1, delete=0, insert='X' * 20)['update']
+        expected = self.b.ok('state', name='editor')['update']
+        for limits in [{'visibleUtf16': 2}, {'retainedBytes': 64}]:
+            self.b.ok('materializer_new', name='history', seed=seed, limits=limits)
+            self.assertIn('error', self.b.request(op='materializer_apply', name='history', update=update))
+            self.assertIn('error', self.b.request(op='materializer_read', name='history'))
+            self.assertEqual(self.b.ok('state', name='editor')['update'], expected)
+
+    def test_H09_rejected_seed_does_not_reserve_handle(self):
+        self.assertIn('error', self.b.request(op='materializer_new', name='history', seed=packet(root='evil')))
+        self.materializer()
+        self.assertEqual(self.b.ok('materializer_read', name='history')['text'], 'AB')
 
 
 if __name__ == '__main__':
