@@ -58,12 +58,8 @@ void validateChecklistCopy(Object? value, String successor) {
         (item['description'] as String).length > 10000) {
       throw FormatFailure('Invalid copied checklist item.');
     }
-    validateTextInheritance({
-      'codec': value['codec'],
-      'adapter': value['adapter'],
-      'frontiers': value['frontiers'],
-      'fields': item['fields'],
-    });
+    // The common frontier map above belongs to the whole copy, not each item.
+    validateTextInheritanceFields(item['fields'], 2);
   }
 }
 

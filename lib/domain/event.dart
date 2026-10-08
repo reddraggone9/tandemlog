@@ -730,12 +730,18 @@ void validateTextInheritance(Map<String, dynamic> data) {
     'frontiers': data['frontiers'],
     'seedDigest': '0' * 64,
   });
-  final fields = data['fields'] as Map<String, dynamic>;
-  if (!_keys(fields, {'title', 'description'})) {
+  validateTextInheritanceFields(data['fields'], data['adapter'] as int);
+}
+
+/// Admit field proofs after the enclosing descriptor's shared frontiers.
+void validateTextInheritanceFields(Object? fields, int adapter) {
+  if (!const {1, 2}.contains(adapter) ||
+      fields is! Map<String, dynamic> ||
+      !_keys(fields, {'title', 'description'})) {
     throw FormatFailure('Text inheritance requires both fields.');
   }
   for (final field in fields.values) {
-    final proofHash = data['adapter'] == 1 ? 'stateHash' : 'historyHash';
+    final proofHash = adapter == 1 ? 'stateHash' : 'historyHash';
     if (field is! Map<String, dynamic> ||
         !_keys(field, {'parentContext', 'seedHash', proofHash}) ||
         !isEventHash(field['parentContext']) ||

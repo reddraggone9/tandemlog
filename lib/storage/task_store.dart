@@ -3097,18 +3097,8 @@ class TaskStore {
   }
 
   LogEvent? _historicalSuccessorInitialization(String entity) {
-    if (textEngine == null ||
-        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
-          entity,
-        ]).isEmpty) {
-      return null;
-    }
+    if (textEngine == null) return null;
     final child = const Uuid().v5(entity, 'successor');
-    if (_hasInheritedText(child) ||
-        db.select('SELECT 1 FROM text_fields WHERE entity=?', [child]).length !=
-            2) {
-      return null;
-    }
     final creations = _entityEvents(child).where(
       (event) => event.type == 'task.created' && event.canonicalRaw == null,
     );
@@ -3118,9 +3108,35 @@ class TaskStore {
     ]);
     if (source.isEmpty) return null;
     final event = LogEvent.decode(source.single['raw'] as String);
-    return isScalarSuccessorInitialization(event) && event.entity == entity
-        ? event
-        : null;
+    if (!isScalarSuccessorInitialization(event) || event.entity != entity) {
+      return null;
+    }
+    if (event.type == 'task.completedWithChecklist') {
+      // Additive scalar-mode checklist copies own native item histories even
+      // before the scalar parent opts into shared text. Durable child activity
+      // protects that initialized successor, including undone/deleted work.
+      final independent =
+          db.select('SELECT 1 FROM events WHERE entity=? LIMIT 1', [
+            child,
+          ]).isNotEmpty ||
+          db.select(
+            "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+            [child],
+          ).isNotEmpty ||
+          _hasChecklistActivity(child);
+      if (independent) return event;
+    }
+    // Preserve released scalar completion policy: its historical marker still
+    // requires an independently initialized pair of parent/child documents.
+    if (db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isEmpty ||
+        _hasInheritedText(child) ||
+        db.select('SELECT 1 FROM text_fields WHERE entity=?', [child]).length !=
+            2) {
+      return null;
+    }
+    return event;
   }
 
   void _validateHistoricalCompletions([LogEvent? pending]) {
