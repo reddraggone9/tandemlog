@@ -66,3 +66,13 @@ after exiting Inbox. `dark-before-capture.png` and `dark-after-triage.png` are
 states within this same fixed-source workflow, not comparative old/new builds.
 The generated initial canonical fixture and its hashes are in `qa-fixture/`;
 `ui/demo-metadata.json` records the exact platform, source, input and video hash.
+
+Independent gates accepted: architecture reviewed the unchanged historical
+projector, additive ordinary moves, bounded prepared-creation validation and
+recovery paths, and passed 32 focused native rank/writer-guard tests. Security
+accepted the repaired host reconciliation and native reservation admission after
+its two focused gates. The parent independently verified the 589-test and
+4-workflow green logs, inspected the actual light/dark PNGs, and decoded final
+demo frames at 4/27/49 seconds: visible pointer/I-beam, interrupted Save prompt,
+First/Second above Earlier B/A after triage, and truthful retained prefix notice.
+No remaining must-fix was reported. Final ffprobe duration is **50.8 seconds**.
