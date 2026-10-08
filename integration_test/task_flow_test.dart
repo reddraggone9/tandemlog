@@ -816,6 +816,24 @@ void main() {
       await writer.editNativeFixtureTask(ids['Review household supplies']!, {
         'description': 'Updated reference notes',
       });
+      final tagsBeforeRejectedSave = List<String>.from(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Review household supplies'],
+        )['tags'],
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
+            .controller!
+            .text,
+        'Frozen draft',
+      );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
@@ -827,6 +845,7 @@ void main() {
             .text,
         'Frozen draft',
       );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
@@ -835,7 +854,7 @@ void main() {
         writer.rows.firstWhere(
           (row) => row['id'] == ids['Review household supplies'],
         )['tags'],
-        isNot(contains('Frozen draft')),
+        tagsBeforeRejectedSave,
       );
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
@@ -856,6 +875,19 @@ void main() {
         isEmpty,
       );
       await tester.enterText(find.byKey(const ValueKey('addTags')), 'Reviewed');
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
+            .controller!
+            .text,
+        'Reviewed',
+      );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       for (
         var attempt = 0;
