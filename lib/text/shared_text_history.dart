@@ -255,6 +255,7 @@ class SharedTextMaterializer {
   final _snapshots = <String, SharedTextSnapshot>{};
   bool _closed = false;
   int packetApplications = 0;
+  int stateExports = 0;
   int checkpointBytes = 0;
   int get checkpointCount => _checkpoints.length;
 
@@ -323,6 +324,7 @@ class SharedTextMaterializer {
     }
     final current = _activate(reference), read = current.native.read();
     final state = current.native.fullState;
+    stateExports++;
     final snapshot = SharedTextSnapshot(
       read.text,
       read.pending,
@@ -354,6 +356,7 @@ class SharedTextMaterializer {
   NativeTextState state(SharedTextReference reference) {
     final expected = snapshot(reference), current = _activate(reference);
     final result = current.native.fullState;
+    stateExports++;
     if (sha256.convert(result.bytes).toString() != expected.stateHash) {
       throw FormatFailure(
         'Shared history replay differs from its verified state.',

@@ -273,6 +273,32 @@ void main() {
   );
 
   test(
+    'reference summaries export full state only for sparse checkpoints or explicit proof',
+    () {
+      final graph = SharedTextHistoryGraph();
+      var reference = graph.root(_context, packets.seed);
+      final native = SharedTextMaterializer(engine, checkpointInterval: 8);
+      try {
+        for (var generation = 0; generation < 32; generation++) {
+          reference = graph.append(
+            reference,
+            packets.replace('Task $generation'),
+          );
+          expect(native.snapshot(reference).text, 'Task $generation');
+        }
+        expect(native.stateExports, 4);
+        expect(
+          native.state(reference).encoded,
+          packets.owner.fullState.encoded,
+        );
+        expect(native.stateExports, 5);
+      } finally {
+        native.close();
+      }
+    },
+  );
+
+  test(
     'evicting native roots and closing a materializer does not change references',
     () {
       final graph = SharedTextHistoryGraph();
