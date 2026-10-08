@@ -1,0 +1,14 @@
+{
+  "source_base": "b1b80aaa892d2c0053a56e2e3aad31fae7cee843",
+  "production_base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "capture": "actual Linux GTK debug synthetic task editor",
+  "viewport": "1200x850",
+  "theme": "dark",
+  "scale": 1,
+  "image_sha256": "d46bdf2f77963b3d6deafb3e30210f7522fffedb594bb0b6c650a64a6c86694b",
+  "inspected": true,
+  "observation": "Legacy field displays Home Office as editable space-separated text, with no selected chips or suggestion controls.",
+  "native_baseline_expected_failure": "completed-task tag is not suggested",
+  "test_source": "1655938:integration_test/tag_input_workflow_test.dart",
+  "android_or_windows_runtime": false
+}

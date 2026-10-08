@@ -150,6 +150,20 @@ void registerTagInputWorkflowTests() {
           reason: 'completed task inventory is available in the editor',
         );
         await captureNativeFixtureUi(tester, 'editor-options-${variant.name}');
+        if (variant.width < 900) {
+          tester.view.viewInsets = const FakeViewPadding(bottom: 260);
+          await tester.pumpAndSettle();
+          await tester.ensureVisible(find.byKey(const ValueKey('tags')));
+          await tester.pumpAndSettle();
+          expect(archivedOption, findsOneWidget);
+          final popup = tester.getRect(
+            find.byKey(const ValueKey('tag-results')),
+          );
+          expect(popup.bottom, lessThanOrEqualTo(850 - 260));
+          await captureNativeFixtureUi(tester, 'editor-ime-${variant.name}');
+          tester.view.resetViewInsets();
+          await tester.pumpAndSettle();
+        }
         await tester.sendKeyEvent(LogicalKeyboardKey.escape);
         await tap(find.text('Cancel').last, recording);
         expect(find.text('Unsaved changes'), findsOneWidget);
@@ -202,7 +216,7 @@ void registerTagInputWorkflowTests() {
           recording,
         );
         await captureNativeFixtureUi(tester, 'bulk-draft-${variant.name}');
-        await tap(find.text('Apply changes').last, recording);
+        await tap(find.text('Save changes').last, recording);
         await flows.waitForUi(
           tester,
           () => find.byType(BulkTaskEditor).evaluate().isEmpty,
@@ -246,6 +260,7 @@ void registerTagInputWorkflowTests() {
         await tester.pumpAndSettle();
         tester.view.resetPhysicalSize();
         tester.view.resetDevicePixelRatio();
+        tester.view.resetViewInsets();
         tester.platformDispatcher.clearTextScaleFactorTestValue();
         await peer.close();
         await root.delete(recursive: true);

@@ -1721,6 +1721,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ? TaskEditor(
               key: editorKey,
               task: task,
+              tagInventory: _tagInventory(),
               textSession: editingText,
               textStatus: editingTextStatus,
               disableTextFields: editingText == null,
@@ -1874,6 +1875,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           : BulkTaskEditor(
               key: bulkEditorKey,
               tasks: editingBulk!,
+              tagInventory: _tagInventory(),
               users: users,
               panel: panel,
               selectionCount: selectedTasks.isEmpty
@@ -3184,19 +3186,24 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _invalidateView();
   }
 
-  Future<void> _showFilters() async {
-    if (!await _closeEditor()) return;
-    if (!mounted) return;
+  List<String> _tagInventory({Iterable<String> selected = const []}) {
     final tags = rows
         .where((row) => row['kind'] == 'task')
         .expand((row) => (row['tags'] as List? ?? []).cast<String>())
         .toSet();
-    if (selectedTags.isNotEmpty) tags.addAll(selectedTags);
+    tags.addAll(selected);
     final sortedTags = tags.toList()
       ..sort((a, b) {
         final order = a.toLowerCase().compareTo(b.toLowerCase());
         return order == 0 ? a.compareTo(b) : order;
       });
+    return sortedTags;
+  }
+
+  Future<void> _showFilters() async {
+    if (!await _closeEditor()) return;
+    if (!mounted) return;
+    final sortedTags = _tagInventory(selected: selectedTags);
     final pickerKey = GlobalKey<TagFilterPickerState>();
     late final _FilterDialogRoute route;
     route = _FilterDialogRoute(

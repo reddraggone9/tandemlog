@@ -1,0 +1,8 @@
+{
+  "frozen_test_commit": "977aab86e3bf9e68a4b8e042faf05bf910304f88",
+  "tested_editor_source": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "unreferenced_component_drafts_present": true,
+  "test_sha256": "50a82a4e63979ed4f17921efb546242a30aeb1aff8e33099472fdd58968023b0",
+  "outcome": "5/5 compile and fail against old editor controls; no shared component linked into tested editor",
+  "log_sha256": "586d9afb777606a992579c242bd35afb9a56a4c94163f8f7a5bfd1b5d23aca60"
+}
