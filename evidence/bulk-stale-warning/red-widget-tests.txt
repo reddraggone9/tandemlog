@@ -1,0 +1,94 @@
+00:00 +0: loading /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart
+00:00 +0: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, scale: 1.0, width: 390.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with text "Selected tasks changed. Close this
+editor and review them before retrying." (considering only hit-testable widgets with a RenderBox):
+[]>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart:89:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart line 89
+The test description was:
+  bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, scale: 1.0, width:
+  390.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, scale: 1.0, width: 390.0) [E]
+  Test failed. See exception logs above.
+  The test description was: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, scale: 1.0, width: 390.0)
+  
+00:02 +0 -1: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, scale: 2.0, width: 390.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with text "Selected tasks changed. Close this
+editor and review them before retrying." (considering only hit-testable widgets with a RenderBox):
+[]>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart:89:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart line 89
+The test description was:
+  bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, scale: 2.0,
+  width: 390.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -2: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, scale: 2.0, width: 390.0) [E]
+  Test failed. See exception logs above.
+  The test description was: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, scale: 2.0, width: 390.0)
+  
+00:03 +0 -2: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, scale: 2.0, width: 360.0)
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with text "Selected tasks changed. Close this
+editor and review them before retrying." (considering only hit-testable widgets with a RenderBox):
+[]>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart:89:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart line 89
+The test description was:
+  bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, scale: 2.0,
+  width: 360.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -3: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, scale: 2.0, width: 360.0) [E]
+  Test failed. See exception logs above.
+  The test description was: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, scale: 2.0, width: 360.0)
+  
+00:03 +0 -3: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, scale: 2.0, width: 360.0)
+  /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, scale: 1.0, width: 390.0)
+  /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, scale: 2.0, width: 390.0)
