@@ -1,0 +1,64 @@
+test_exact_scope_counts (test_windows_app_flows.WindowsAppFlowReceipts.test_exact_scope_counts) ... ok
+test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flows.WindowsAppFlowReceipts.test_hashes_require_native_app_and_do_not_collect_profiles) ... FAIL
+test_library_variable_hash_is_recorded_without_claiming_app_override (test_windows_app_flows.WindowsAppFlowReceipts.test_library_variable_hash_is_recorded_without_claiming_app_override) ... ok
+test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) ... 
+  test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='') ... FAIL
+  test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=5\n') ... FAIL
+  test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_READY_MS=120\n') ... FAIL
+  test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=wrong\nTANDEMLOG_READY_MS=120\n') ... FAIL
+  test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=5\nTANDEMLOG_READY_MS=wrong\n') ... FAIL
+test_no_false_pass_on_zero_skipped_failed_or_incomplete_output (test_windows_app_flows.WindowsAppFlowReceipts.test_no_false_pass_on_zero_skipped_failed_or_incomplete_output) ... ok
+
+======================================================================
+FAIL: test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flows.WindowsAppFlowReceipts.test_hashes_require_native_app_and_do_not_collect_profiles)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 53, in test_hashes_require_native_app_and_do_not_collect_profiles
+    with self.assertRaisesRegex(ValueError, 'Missing debug payload'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 42, in test_native_app_startup_cannot_be_replaced_by_a_success_banner
+    self.assertFalse(result(markers + banner, 2, 0)['passed'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=5\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 42, in test_native_app_startup_cannot_be_replaced_by_a_success_banner
+    self.assertFalse(result(markers + banner, 2, 0)['passed'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_READY_MS=120\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 42, in test_native_app_startup_cannot_be_replaced_by_a_success_banner
+    self.assertFalse(result(markers + banner, 2, 0)['passed'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=wrong\nTANDEMLOG_READY_MS=120\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 42, in test_native_app_startup_cannot_be_replaced_by_a_success_banner
+    self.assertFalse(result(markers + banner, 2, 0)['passed'])
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) (markers='TANDEMLOG_FIRST_FRAME_MS=5\nTANDEMLOG_READY_MS=wrong\n')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 42, in test_native_app_startup_cannot_be_replaced_by_a_success_banner
+    self.assertFalse(result(markers + banner, 2, 0)['passed'])
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.002s
+
+FAILED (failures=6)
