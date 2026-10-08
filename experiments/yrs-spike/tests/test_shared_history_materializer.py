@@ -24,8 +24,8 @@ class SharedHistoryMaterializer(unittest.TestCase):
         seed = self.b.ok('seed', text='AB')['update']
         for name, actor in [('a', 10), ('b', 20)]:
             self.b.ok('new', name=name, client=actor, seed=seed)
-        ax = self.b.ok('edit', name='a', index=1, insert='X')['update']
-        by = self.b.ok('edit', name='b', index=2, insert='Y')['update']
+        ax = self.b.ok('edit', name='a', index=1, delete=0, insert='X')['update']
+        by = self.b.ok('edit', name='b', index=2, delete=0, insert='Y')['update']
         self.b.ok('apply', name='a', update=by)
         expected = self.b.ok('state', name='a')['update']
         self.materializer()
@@ -37,8 +37,8 @@ class SharedHistoryMaterializer(unittest.TestCase):
     def test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival(self):
         seed = self.b.ok('seed', text='AB')['update']
         self.b.ok('new', name='a', client=10, seed=seed)
-        first = self.b.ok('edit', name='a', index=1, insert='X')['update']
-        second = self.b.ok('edit', name='a', index=2, insert='Z')['update']
+        first = self.b.ok('edit', name='a', index=1, delete=0, insert='X')['update']
+        second = self.b.ok('edit', name='a', index=2, delete=0, insert='Z')['update']
         self.materializer()
         pending = self.b.ok('materializer_apply', name='history', update=second)
         self.assertTrue(pending['pending'])
@@ -55,7 +55,7 @@ class SharedHistoryMaterializer(unittest.TestCase):
     def test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners(self):
         seed = self.b.ok('seed', text='AB')['update']
         self.b.ok('new', name='editor', client=10, seed=seed)
-        self.b.ok('edit', name='editor', index=1, insert='X')
+        self.b.ok('edit', name='editor', index=1, delete=0, insert='X')
         before = self.b.ok('state', name='editor')['update']
         self.materializer()
         invalid = base64.b64encode(b'unsupported native packet').decode()
@@ -74,7 +74,7 @@ class SharedHistoryMaterializer(unittest.TestCase):
         self.assertIn('error', self.b.request(op='materializer_new', name='editor', seed=seed))
         self.materializer()
         self.assertIn('error', self.b.request(op='new', name='history', client=20, seed=seed))
-        self.assertIn('error', self.b.request(op='edit', name='history', index=0, insert='x'))
+        self.assertIn('error', self.b.request(op='edit', name='history', index=0, delete=0, insert='x'))
         self.assertEqual(self.b.ok('read', name='editor')['text'], 'AB')
 
     def test_H05_incremental_history_has_no_session_undo_replay_budget(self):
@@ -82,7 +82,7 @@ class SharedHistoryMaterializer(unittest.TestCase):
         self.b.ok('new', name='source', client=10, seed=seed)
         self.materializer(sessionBytes=1)
         for index in range(40):
-            packet = self.b.ok('edit', name='source', index=1, insert='x')['update']
+            packet = self.b.ok('edit', name='source', index=1, delete=0, insert='x')['update']
             self.b.ok('materializer_apply', name='history', update=packet)
         self.assertEqual(self.b.ok('materializer_state', name='history')['update'],
                          self.b.ok('state', name='source')['update'])
