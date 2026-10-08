@@ -1,0 +1,22 @@
+{
+  "red_source": "8b13cd0e50242b071fa1b1b2422b1138892652ea",
+  "green_source": "5204e276b641dd05cb5b5e648b2c6369ed11f5cf",
+  "production_unchanged": "041c06488cb2d937d38519dec8e3e3ebd69abbf3",
+  "red": "2 native cases failed",
+  "green": "2 native cases passed, exit0",
+  "corrections": [
+    "Dismiss open suggestions via Escape; assert popup absent and Cancel hit-testable before existing cancellation checks",
+    "Target exact contextual Home chip removal tooltip instead of obsolete generic Delete"
+  ],
+  "preserved_assertions": [
+    "all original caret/inset/text-scale geometry",
+    "no dirty close guard for untouched editor",
+    "canonical bytes unchanged",
+    "exact tag-filter deletion and bulk/edit/restart persistence"
+  ],
+  "independent_review": "Accepted; no must-fix; full CI rerun required",
+  "sha256": {
+    "red/legacy-native-controls.txt": "4a6f8e613b3f09609c515e495d483690cc2fea617ece25bca5327a7c709ef0de",
+    "green/legacy-native-controls.txt": "10a15a4fefc63776a21636f2cbc8a351ba602b2ebbb319433f383c586461aecc"
+  }
+}

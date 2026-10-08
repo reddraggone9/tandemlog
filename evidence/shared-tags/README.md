@@ -53,8 +53,25 @@ and text-scale variants. The desktop pointer appears in the recording. Popups
 can temporarily cover later fields/footer; collapse and dismissal remain usable.
 The canonical Cancel/Discard and filter checks passed without history writes.
 
-[Full three-platform CI](https://github.com/reddraggone9/tandemlog/actions/runs/37789101688)
-is running against exact `8b13cd0e`. Exact new Android
+The first [three-platform CI](https://github.com/reddraggone9/tandemlog/actions/runs/37789101688)
+passed Android and Windows but failed two legacy Linux native interactions.
+Both failures were reproduced locally and corrected in test revision `5204e276`:
+close the open popup before Cancel and use the chip's contextual removal tooltip.
+The [red/green receipt](green/legacy-native-controls-manifest.json) preserves
+all caret, canonical-byte, filtering and close assertions; both cases now pass
+and independent review accepted the corrections. Production remains `041c06488`.
+[Fresh full CI](https://github.com/reddraggone9/tandemlog/actions/runs/37792711739)
+is running against exact `5204e276`.
+
+Separately, [22 actual Windows native debug flows](https://github.com/reddraggone9/tandemlog/actions/runs/37790261412)
+passed on `ff1d1f82`, including the three tag workflows; decoded logs, startup,
+counts and source binding were independently reviewed. The isolated branch's
+[qualified result](https://github.com/reddraggone9/tandemlog/blob/test/shared-tags-windows-native/evidence/shared-tags-windows/result.json)
+records that later `5204e276` changes only two excluded aggregate test blocks;
+the seven selected test bodies and production inputs remain unchanged. Archive
+digests/sizes are reported metadata, without consumer byte verification.
+
+Exact new Android
 affected-flow acceptance remains pending. Linux inspection cannot establish
 Android keyboard/accessibility/provider behavior or Windows runtime acceptance.
 The frozen checklist candidate's separate parent-run Android installation is
