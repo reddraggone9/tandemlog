@@ -2,6 +2,10 @@
 
 Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `2026.10.2-rc.1+43`; app dependency graph remains unchanged at `29827eb`. Inventory itself required no package update/build. Subsequent maintenance implements the bounded updater and enforced lockfile below; no dependency PR is merged.
 
+## Narrow Kotlin maintenance — 2026-10-08
+
+The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
+
 ## Direct application dependencies
 
 | Dependency | Declared | Resolved | Purpose |

@@ -1,0 +1,59 @@
+{
+  "sourceCommit": "ac20d4e0edbcb81d4d80b69b7957fe5243989095",
+  "resolutionSource": "same production settings as committed ac20d4e; reports captured before commit",
+  "status": "Android build blocked before app compilation: unchanged JNI compileSdk35 absent; SDK auto-download disabled",
+  "checks": {
+    "format": "148 files, 0 changes",
+    "analyze": "No issues found",
+    "tools": "37 passed including one skip",
+    "nativeABI": "production required ABI loaded",
+    "cargo": "4 passed",
+    "nativeContracts": "107 passed",
+    "flutter": "599 passed with production native library",
+    "linuxNativeFlows": "Interrupted gracefully after7 completed tests at coordinator request; no aggregate pass"
+  },
+  "logBindings": {
+    "format.txt": {
+      "sha256": "cc9f99f1c4403a7570b280433ff684d9a880ed1ef7d61dd42262dc7ef608f3d6",
+      "bytes": 49
+    },
+    "analyze.txt": {
+      "sha256": "bee29a648b0e958d559d82e9295fe3bba9c3773d15c9a7ad160eda77fe5cc80f",
+      "bytes": 686
+    },
+    "tool-tests.txt": {
+      "sha256": "8d3da6911ceaf07364951c920a0201c4ff38c493c9f211c725ffa8bebe37559d",
+      "bytes": 148
+    },
+    "native-unit-build.txt": {
+      "sha256": "8939da9d70a655b23b7996e97cf050f7d681d4bea096324ce2426b0b9fedd31f",
+      "bytes": 22523
+    },
+    "cargo-tests.txt": {
+      "sha256": "eceb6e38ab67ff2cbb9e507aa31b24dec42629b96cf6b4832d7608396207a648",
+      "bytes": 23024
+    },
+    "native-contract-tests.txt": {
+      "sha256": "86e4d042b7598d32258aa460e87270afa0b667851d64264dc9c0d4f397ec7c05",
+      "bytes": 16417
+    },
+    "flutter-unit-tests.txt": {
+      "sha256": "2448a98bd4d4d3980be21dfca1d0f3007ba85b483bd0d16da2acf99321d9c1c4",
+      "bytes": 94961
+    },
+    "cold-debug-build.txt": {
+      "sha256": "157e1b8d885a9fb4f33f63d019f41a872a101bf4a6487d973dafa6e8c7412c09",
+      "bytes": 6326
+    },
+    "cold-debug-build-overlay.txt": {
+      "sha256": "2d6674a074d056a7a1ba8268544519970a6edd61d9bcc62f116923bbfddda01d",
+      "bytes": 9431
+    },
+    "cold-debug-build-overlay-home.txt": {
+      "sha256": "92b2919c49e589cfe048352f62e6a984b0793b4beedc782b56ec71dfe03043cd",
+      "bytes": 6489
+    }
+  },
+  "nativeLibrarySha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "ci": "https://github.com/reddraggone9/tandemlog/actions/runs/37753131078"
+}

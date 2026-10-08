@@ -1,0 +1,34 @@
+{
+  "kind": "private existing-module launcher overlay, not standalone JDK installation",
+  "original": "/usr/lib/jvm/java-21-openjdk-amd64",
+  "overlay": "/workspace/recovery/kotlin-remediation-java21-overlay",
+  "javaSha256": "6698f6f10143ed8463b06062281c727152d2e0ae2a3569b1716fbb2c6cedf0ba",
+  "originalJavaSha256": "6698f6f10143ed8463b06062281c727152d2e0ae2a3569b1716fbb2c6cedf0ba",
+  "modulesSha256": "f82ec56fbf7c7b69da09a04d4fb103c74c44e6443c8a1b2744e59c5539e7f781",
+  "release": "IMPLEMENTOR=\"Debian\"\nJAVA_RUNTIME_VERSION=\"21.0.12.1+1-1-deb13u1-Debian\"\nJAVA_VERSION=\"21.0.12.1\"\nJAVA_VERSION_DATE=\"2026-08-18\"\nLIBC=\"gnu\"\nMODULES=\"java.base java.compiler java.datatransfer java.xml java.prefs java.desktop java.instrument java.logging java.management java.security.sasl java.naming java.rmi java.management.rmi java.net.http java.scripting java.security.jgss java.transaction.xa java.sql java.sql.rowset java.xml.crypto java.se java.smartcardio jdk.accessibility jdk.internal.jvmstat jdk.attach jdk.charsets jdk.internal.opt jdk.zipfs jdk.compiler jdk.crypto.ec jdk.crypto.cryptoki jdk.dynalink jdk.internal.ed jdk.editpad jdk.hotspot.agent jdk.httpserver jdk.incubator.vector jdk.internal.le jdk.internal.vm.ci jdk.internal.vm.compiler jdk.internal.vm.compiler.management jdk.jartool jdk.javadoc jdk.jcmd jdk.management jdk.management.agent jdk.jconsole jdk.jdeps jdk.jdwp.agent jdk.jdi jdk.jfr jdk.jlink jdk.jpackage jdk.jshell jdk.jsobject jdk.jstatd jdk.localedata jdk.management.jfr jdk.naming.dns jdk.naming.rmi jdk.net jdk.nio.mapmode jdk.random jdk.sctp jdk.security.auth jdk.security.jgss jdk.unsupported jdk.unsupported.desktop jdk.xml.dom\"\nOS_ARCH=\"x86_64\"\nOS_NAME=\"Linux\"\nSOURCE=\"\"\n",
+  "launchers": {
+    "javac": {
+      "text": "#!/bin/bash\nexec /workspace/recovery/kotlin-remediation-java21-overlay/bin/java -m jdk.compiler/com.sun.tools.javac.Main \"$@\"\n",
+      "sha256": "62357f12c66feb9309975424103843905f2af5e9747741f122e8a56f31104552"
+    },
+    "jar": {
+      "text": "#!/bin/bash\nexec /workspace/recovery/kotlin-remediation-java21-overlay/bin/java -m jdk.jartool/sun.tools.jar.Main \"$@\"\n",
+      "sha256": "28025e78c8fa32d18a2688326145613e711e96654b3e830cabfafbbf5ad6d0b2"
+    },
+    "jlink": {
+      "text": "#!/bin/bash\nexec /workspace/recovery/kotlin-remediation-java21-overlay/bin/java -m jdk.jlink/jdk.tools.jlink.internal.Main \"$@\"\n",
+      "sha256": "add938ec4e3955d1008e7123e7b93d32b636598baa8afab0f8dd776d2d8324fa"
+    },
+    "javap": {
+      "text": "#!/bin/bash\nexec /workspace/recovery/kotlin-remediation-java21-overlay/bin/java -m jdk.jdeps/com.sun.tools.javap.Main \"$@\"\n",
+      "sha256": "4945a9141a177658155d020b9d617dacbabcdfbd916db9bfd1ba034883187cd1"
+    }
+  },
+  "evaluationProperty": "JAVA_TOOL_OPTIONS=-Djava.home=/workspace/recovery/kotlin-remediation-java21-overlay",
+  "compilerSmoke": {
+    "source": "public class CompilerSmoke { public static void main(String[] args) { System.out.println(\"existing Java 21 compiler module smoke passed\"); } }",
+    "javacVersion": "21.0.12.1",
+    "javaOutput": "existing Java 21 compiler module smoke passed",
+    "jlinkVersion": "21.0.12.1"
+  }
+}

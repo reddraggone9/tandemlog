@@ -1,0 +1,17 @@
+{
+  "https://raw.githubusercontent.com/JetBrains/kotlin/890ac1d94fdb80eb85f0eeb5be5e4352df987b2f/gradle/libs.versions.toml": {
+    "file": "downloads/raw.githubusercontent.com/JetBrains/kotlin/890ac1d94fdb80eb85f0eeb5be5e4352df987b2f/gradle/libs.versions.toml",
+    "bytes": 15986,
+    "sha256": "d2cd5d2064f16f356942f5805f0d1c388194d51114a3574d90121d548f20b63c"
+  },
+  "https://raw.githubusercontent.com/JetBrains/kotlin/890ac1d94fdb80eb85f0eeb5be5e4352df987b2f/gradle/verification-metadata.xml": {
+    "file": "downloads/raw.githubusercontent.com/JetBrains/kotlin/890ac1d94fdb80eb85f0eeb5be5e4352df987b2f/gradle/verification-metadata.xml",
+    "bytes": 325983,
+    "sha256": "60d44a5f54f4a439583db9808af334feb9a7468c17806f661449e3e34e3a042a"
+  },
+  "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/android/org.jetbrains.kotlin.android.gradle.plugin/2.4.20/org.jetbrains.kotlin.android.gradle.plugin-2.4.20.pom.asc": {
+    "file": "downloads/repo.maven.apache.org/maven2/org/jetbrains/kotlin/android/org.jetbrains.kotlin.android.gradle.plugin/2.4.20/org.jetbrains.kotlin.android.gradle.plugin-2.4.20.pom.asc",
+    "bytes": 659,
+    "sha256": "df45850a9d8d75ace1364792862d4145d6a9dff98fc7cfc7c2d693c27c897c7f"
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.pom": {
+    "file": "downloads/dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.pom",
+    "bytes": 5306,
+    "sha256": "4700c109bf7fcc65c0791d5f5213250ff02b583fed4baf4d79d5b267ba80f454"
+  },
+  "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/android/org.jetbrains.kotlin.android.gradle.plugin/2.4.20/org.jetbrains.kotlin.android.gradle.plugin-2.4.20.pom": {
+    "file": "downloads/repo.maven.apache.org/maven2/org/jetbrains/kotlin/android/org.jetbrains.kotlin.android.gradle.plugin/2.4.20/org.jetbrains.kotlin.android.gradle.plugin-2.4.20.pom",
+    "bytes": 1392,
+    "sha256": "f64c72cf0175c0915a12b58ecaa1c34645922d92e1242cf8083abd8861a8729a"
+  }
+}
