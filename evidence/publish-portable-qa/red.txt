@@ -1,0 +1,20 @@
+E
+======================================================================
+ERROR: test_publish_inventory (unittest.loader._FailedTest.test_publish_inventory)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_publish_inventory
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/workspace/tandemlog-publish-qa-inventory/tool/test_publish_inventory.py", line 8, in <module>
+    from publish_gate import verify_candidate_inventory
+ImportError: cannot import name 'verify_candidate_inventory' from 'publish_gate' (/workspace/tandemlog-publish-qa-inventory/tool/publish_gate.py)
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)
