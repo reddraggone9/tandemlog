@@ -29,6 +29,58 @@ Future<void> edit(WidgetTester tester, String key, String value) async {
 }
 
 void main() {
+  for (final scale in [1.0, 2.0]) {
+    testWidgets(
+      'sort bounds explanation clears floating Minimum days label at $scale',
+      (tester) async {
+        tester.view.physicalSize = const Size(390, 820);
+        tester.view.devicePixelRatio = 1;
+        tester.platformDispatcher.textScaleFactorTestValue = scale;
+        addTearDown(() {
+          tester.view.resetPhysicalSize();
+          tester.view.resetDevicePixelRatio();
+          tester.platformDispatcher.clearTextScaleFactorTestValue();
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(
+              inputDecorationTheme: const InputDecorationTheme(
+                border: OutlineInputBorder(),
+                filled: true,
+              ),
+            ),
+            home: Scaffold(
+              body: TaskEditor(
+                panel: true,
+                task: task({'dueMinDays': 0}),
+                save: (_, a, r) async {},
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.ensureVisible(input('dueMinDays'));
+        await tester.pumpAndSettle();
+        final explanation = find.text(
+          'Days from today; affects listing order, not the deadline.',
+        );
+        final label = find.descendant(
+          of: input('dueMinDays'),
+          matching: find.text('Minimum days'),
+        );
+        expect(
+          tester.getRect(label).top - tester.getRect(explanation).bottom,
+          greaterThanOrEqualTo(8),
+          reason: 'space is measured against the actual floating label',
+        );
+        expect(
+          tester.widget<TextField>(input('dueMinDays')).controller!.text,
+          '0',
+        );
+        expect(tester.takeException(), isNull);
+      },
+    );
+  }
   testWidgets(
     'blocked text instruction wraps with full semantics at narrow 200 percent',
     (tester) async {
