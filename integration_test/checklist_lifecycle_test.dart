@@ -220,10 +220,13 @@ void registerChecklistLifecycleTests() {
       await peer.close();
     }
   });
-  for (final unknownAppend in [true, false]) {
+  for (final scenario in ['unknown', 'undo', 'switch']) {
+    final unknownAppend = scenario == 'unknown';
     testWidgets(
       unknownAppend
           ? 'new item late acknowledgement remains frozen until exact Retry Save'
+          : scenario == 'switch'
+          ? 'user switch waits only for item Save and route teardown'
           : 'task Undo waits for item route and native lease teardown once',
       (tester) async {
         final root = await Directory.systemTemp.createTemp(
@@ -238,6 +241,10 @@ void registerChecklistLifecycleTests() {
         final user = const Uuid().v4(), parent = const Uuid().v4();
         try {
           await peer.command(user, 'user.created', {'name': 'Synthetic'});
+          final otherUser = const Uuid().v4();
+          if (scenario == 'switch') {
+            await peer.command(otherUser, 'user.created', {'name': 'Another'});
+          }
           await peer.createNativeFixtureTask(parent, {
             'title': 'Checklist lifecycle',
             'description': '',
@@ -321,8 +328,10 @@ void registerChecklistLifecycleTests() {
                 entry.name: base64Encode(await inner.read(entry.name)),
             }, before);
           } else {
-            await _tap(tester, _key('checklist-check-${original!.entity}'));
-            await _tap(tester, _key('checklist-edit-${original.entity}'));
+            if (scenario == 'undo') {
+              await _tap(tester, _key('checklist-check-${original!.entity}'));
+            }
+            await _tap(tester, _key('checklist-edit-${original!.entity}'));
             final editor = tester.widget<ChecklistItemEditor>(
               find.byType(ChecklistItemEditor),
             );
@@ -332,6 +341,30 @@ void registerChecklistLifecycleTests() {
               _key('checklist-item-title'),
               'Private draft',
             );
+            if (scenario == 'switch') {
+              // A host navigation request can overlap the modal's closing
+              // transition. Invoke its actual user-menu callback and verify
+              // that its own _act is never awaited by the item teardown.
+              tester
+                  .widget<PopupMenuButton<String>>(_key('identity-menu'))
+                  .onSelected!(otherUser);
+              await tester.pump(const Duration(milliseconds: 300));
+              expect(find.text('Unsaved changes'), findsOneWidget);
+              await tester.tap(find.text('Discard'));
+              await flows.waitForUi(
+                tester,
+                () => find
+                    .byTooltip('Active user: Another')
+                    .evaluate()
+                    .isNotEmpty,
+              );
+              expect(find.byType(ChecklistItemEditor), findsNothing);
+              expect(() => document.read(), throwsStateError);
+              await peer.refresh();
+              expect(peer.checklistItems(parent).single['title'], 'Original');
+              expect(tester.takeException(), isNull);
+              return;
+            }
             var leaseClosedAtUndo = false;
             folder.beforeNextAppend = () {
               try {
