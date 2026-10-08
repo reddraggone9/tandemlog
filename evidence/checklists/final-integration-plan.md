@@ -1,5 +1,31 @@
 # Final integration plan — 2026-10-08
 
+## Current coordination checkpoint, 16:41 UTC
+
+Parent authorized separate combined preparation while its isolated A16 retest
+continues, superseding this older plan's wait-before-preparation sequence. The
+original failed source and isolated replacement remain frozen. The current
+[reviewed composition/QA contract](https://github.com/reddraggone9/tandemlog/blob/e205e650b5614935a73cf5acb96ca9b36fda8e4e/design/final-preview-acceptance.md)
+is authoritative for preparation and remaining acceptance gates.
+
+`preview/shared-history-checklists-final` is pushed clean at
+`e205e650b5614935a73cf5acb96ca9b36fda8e4e`, version `2026.10.2-rc.4+46`.
+It cleanly merges reviewed shared-B `e816f433`, historical fix/evidence
+`19377652` (compiled fix `d73662a`) and narrow Kotlin `1b8f0cc5`. Independent
+source, documentation and local receipt/pixel reviews accepted. Local gates pass
+628 Flutter tests, clean format/analysis, historical GTK 1 and separate tag GTK 3;
+the earlier multi-entrypoint debugger attachment failure is retained. Exact
+[composed CI 37810677866](https://github.com/reddraggone9/tandemlog/actions/runs/37810677866)
+is running against e205e65; no hosted success is claimed yet.
+
+Isolated fix CI 37804634954 passed all three platforms, and hosted Windows
+historical workflow 37805503087 passed 1/0. Security/correctness accepted its
+source-bound decoded-log/API artifact evidence; consumer byte verification and
+parent native A16 retest remain pending. No main merge, signing or publication;
+fresh quota, exact combined signed/native/manual/UX acceptance and independent
+release-note/media range review remain required. Stable feature approval absent.
+The older sequence below is retained as historical coordination context.
+
 Status: **BLOCKED by a parent-reported reproducible native historical-recompletion
 defect in exact source17ae5e5.** Recompletion of an old checklist parent leaks
 later text into an independently edited successor; Undo and cache rebuild retain
@@ -14,7 +40,7 @@ reproduced the leak before source changes. Narrow reviewed fix
 source. [Replacement evidence](https://github.com/reddraggone9/tandemlog/blob/d73662ab8479aa8076ee04a5ed5badd1542e585d/evidence/historical-checklist-recompletion/README.md)
 preserves qualification and actual Before/After/Undo pixels. Exact replacement
 [CI37804634954](https://github.com/reddraggone9/tandemlog/actions/runs/37804634954)
-is in progress. Preserve the
+completed successfully on all three platforms. Preserve the
 failed artifact/evidence; any fix requires a new exact candidate and affected
 native retest starting from checkpoint throughA16, before the leaked A17 proof.
 The fix does not rewrite an already leaked history. Other passing local flows
