@@ -220,13 +220,15 @@ void registerChecklistLifecycleTests() {
       await peer.close();
     }
   });
-  for (final scenario in ['unknown', 'undo', 'switch']) {
+  for (final scenario in ['unknown', 'undo', 'switch', 'switch-save']) {
     final unknownAppend = scenario == 'unknown';
     testWidgets(
       unknownAppend
           ? 'new item late acknowledgement remains frozen until exact Retry Save'
-          : scenario == 'switch'
-          ? 'user switch waits only for item Save and route teardown'
+          : scenario.startsWith('switch')
+          ? scenario == 'switch-save'
+                ? 'user switch saves private item before changing identity'
+                : 'user switch waits only for item Save and route teardown'
           : 'task Undo waits for item route and native lease teardown once',
       (tester) async {
         final root = await Directory.systemTemp.createTemp(
@@ -242,7 +244,7 @@ void registerChecklistLifecycleTests() {
         try {
           await peer.command(user, 'user.created', {'name': 'Synthetic'});
           final otherUser = const Uuid().v4();
-          if (scenario == 'switch') {
+          if (scenario.startsWith('switch')) {
             await peer.command(otherUser, 'user.created', {'name': 'Another'});
           }
           await peer.createNativeFixtureTask(parent, {
@@ -341,7 +343,7 @@ void registerChecklistLifecycleTests() {
               _key('checklist-item-title'),
               'Private draft',
             );
-            if (scenario == 'switch') {
+            if (scenario.startsWith('switch')) {
               // A host navigation request can overlap the modal's closing
               // transition. Invoke its actual user-menu callback and verify
               // that its own _act is never awaited by the item teardown.
@@ -350,7 +352,9 @@ void registerChecklistLifecycleTests() {
                   .onSelected!(otherUser);
               await tester.pump(const Duration(milliseconds: 300));
               expect(find.text('Unsaved changes'), findsOneWidget);
-              await tester.tap(find.text('Discard'));
+              await tester.tap(
+                find.text(scenario == 'switch-save' ? 'Save' : 'Discard'),
+              );
               await flows.waitForUi(
                 tester,
                 () => find
@@ -361,7 +365,10 @@ void registerChecklistLifecycleTests() {
               expect(find.byType(ChecklistItemEditor), findsNothing);
               expect(() => document.read(), throwsStateError);
               await peer.refresh();
-              expect(peer.checklistItems(parent).single['title'], 'Original');
+              expect(
+                peer.checklistItems(parent).single['title'],
+                scenario == 'switch-save' ? 'Private draft' : 'Original',
+              );
               expect(tester.takeException(), isNull);
               return;
             }
