@@ -14,6 +14,10 @@ import 'task_flow_test.dart' as flows;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  registerFieldLayoutTests();
+}
+
+void registerFieldLayoutTests() {
   for (final variant in const [
     (width: 1200.0, scale: 1.0, theme: 'dark'),
     (width: 390.0, scale: 1.0, theme: 'dark'),

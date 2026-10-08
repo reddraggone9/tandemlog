@@ -10,6 +10,7 @@ labels, and empty/selected/wrapped tag-query caret/control gaps at260/390px and
 not its inset Tooltip child. Both the original and corrected baseline red logs
 are preserved. All42 affected widget tests and analysis pass.
 
+The same three tests also pass through their registered aggregate entrypoint.
 Three actual native Linux GTK debug application workflows pass:1200x850 dark100%,
 390x850 dark100%, and390x850 light200%. Nine actual PNGs show the affected fields.
 Tests cover focus, empty and selected query, Escape, chip selection and clearing;
@@ -21,8 +22,9 @@ also remain byte-identical; its receipt lists their hashes.
 
 Independent review reran42 tests and inspected all nine native screenshots,
 accepting production blobs `797ae76c58cfdb6b5b1a4e04ab68bca11d31c116` and
-`801bcd8437017f0394901b784791e4ae6fb6880f` with no must-fix. Video review is recorded
-separately in the media receipt.
+`801bcd8437017f0394901b784791e4ae6fb6880f` with no must-fix. Independent video review decoded3/12/15/30-second frames, confirmed the visible
+arrow and affected states, and accepted the36-second recording. Source, media
+hashes, trims and review scope are recorded in `ui/media-receipt.json`.
 
 Reference grounding: the supported current Library resolved-reference helper
 returned HTTP403 for all three originals (`libfile_0c8e6320c1288191a405cb721ef5816b`,
