@@ -1,0 +1,44 @@
+{
+  "source_commit": "5dbfbf6213104728bd2b468ad6396f4c75aa240a",
+  "status": "Both preserved unadopted; no further prototype expansion or full testing beforeLee choice.",
+  "recommendation": "Lean A:text completion. It preserves typing/paste and stays compact for task and bulk editing. B makes selected tags/removal clearer but uses more height and requires remove/re-enter to edit spelling. This is a recommendation, not adoption.",
+  "platform": "ActualLinux GTKdebug dark100%:screenshots390x820;video1000x820,19.133333s withvisiblepointer. NotAndroid/Windows acceptance.",
+  "media": [
+    {
+      "path": "evidence/tag-autocomplete-trials/ui/a-390-suggestions.png",
+      "local_path": "/workspace/tandemlog-tag-trials/evidence/tag-autocomplete-trials/ui/a-390-suggestions.png",
+      "immutable_blob_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/ui/a-390-suggestions.png",
+      "sha256": "e3d523e5afd09779592baea6ab00f950a190ca5f279397dabf3258832c3285e9",
+      "bytes": 38959
+    },
+    {
+      "path": "evidence/tag-autocomplete-trials/ui/b-390-suggestions.png",
+      "local_path": "/workspace/tandemlog-tag-trials/evidence/tag-autocomplete-trials/ui/b-390-suggestions.png",
+      "immutable_blob_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/ui/b-390-suggestions.png",
+      "sha256": "da136db21549026cdb32d47611961a8c9d19269c17783648827bb2c4072f760a",
+      "bytes": 39355
+    },
+    {
+      "path": "evidence/tag-autocomplete-trials/ui/a-390-selected.png",
+      "local_path": "/workspace/tandemlog-tag-trials/evidence/tag-autocomplete-trials/ui/a-390-selected.png",
+      "immutable_blob_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/ui/a-390-selected.png",
+      "sha256": "71fb74a4eb98d1f66119060b667360c636ef1019acd62fc37d48faf3eae47b17",
+      "bytes": 39807
+    },
+    {
+      "path": "evidence/tag-autocomplete-trials/ui/b-390-selected.png",
+      "local_path": "/workspace/tandemlog-tag-trials/evidence/tag-autocomplete-trials/ui/b-390-selected.png",
+      "immutable_blob_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/ui/b-390-selected.png",
+      "sha256": "fa9c43b5e3f38c6e3e667200ef4f2d1e2daf40d75ac0569ad3234e58cdd6b4ab",
+      "bytes": 42850
+    },
+    {
+      "path": "evidence/tag-autocomplete-trials/ui/tag-entry-linux-gtk-trials.mp4",
+      "local_path": "/workspace/tandemlog-tag-trials/evidence/tag-autocomplete-trials/ui/tag-entry-linux-gtk-trials.mp4",
+      "immutable_blob_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/ui/tag-entry-linux-gtk-trials.mp4",
+      "sha256": "4f35a2c1fa3427e6ac00d4b5ae45d6305ae7ab46e3707ea3336d4c1c3a510c8c",
+      "bytes": 496283
+    }
+  ],
+  "comparison_url": "https://github.com/reddraggone9/tandemlog/blob/5dbfbf6213104728bd2b468ad6396f4c75aa240a/evidence/tag-autocomplete-trials/README.md"
+}
