@@ -51,7 +51,7 @@ class TextFieldContext {
       );
 
   factory TextFieldContext.fromCreation(LogEvent event, String field) {
-    if (event.type != 'task.createdWithText') {
+    if (!isNativeTextCreation(event.type)) {
       throw FormatFailure('Native field context requires its creation record.');
     }
     validateTextSeedDescriptor(event.data['text']);

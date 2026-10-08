@@ -347,7 +347,7 @@ class TextCache {
   }) {
     _ensureUsable();
     final creations = history.where(
-      (event) => event.type == 'task.createdWithText',
+      (event) => isNativeTextCreation(event.type),
     );
     final creation = creations.isEmpty ? null : creations.single;
     if (creation == null && basis == null) {

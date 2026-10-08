@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import '../domain/text_actor.dart';
 import '../domain/text_context.dart';
+import '../domain/checklist.dart';
 import '../domain/text_inheritance.dart';
 import 'native_text_engine.dart';
 import 'shared_text_history.dart';
@@ -558,15 +559,9 @@ class RecurringTextResolver {
     }
     final own = history.where((event) => event.entity == entity).toList();
     final creations = own
-        .where((event) => event.type == 'task.createdWithText')
+        .where((event) => isNativeTextCreation(event.type))
         .toList();
-    final contributions = history
-        .where(
-          (event) =>
-              event.type == 'task.completedWithText' &&
-              (event.data['successor'] as Map)['id'] == entity,
-        )
-        .toList();
+    final contributions = textContributions(history, entity).toList();
     final roots = <String, TextFieldSeed>{};
     final inheritedReferences = <String, List<SharedTextReference>>{
       'title': [],
@@ -581,6 +576,7 @@ class RecurringTextResolver {
         (event) =>
             event.type == 'task.created' ||
             event.type == 'task.createdWithText' ||
+            event.type == 'checklist.itemCreated' ||
             event.type == 'user.created',
       )) {
         throw FormatFailure(
@@ -589,18 +585,25 @@ class RecurringTextResolver {
       }
       if (history.any(
         (event) =>
-            event.type == 'task.completed' &&
+            isScalarSuccessorInitialization(event) &&
             (event.data['successor'] as Map?)?['id'] == entity,
       )) {
         throw FormatFailure(
           'Mixed successor text initialization; history retained.',
         );
       }
-      for (final completion in contributions) {
-        if (const Uuid().v5(completion.entity, 'successor') != entity) {
+      for (final contribution in contributions) {
+        final completion = contribution.event;
+        final expected = contribution.checklist
+            ? copiedChecklistId(
+                (completion.data['successor'] as Map)['id'] as String,
+                contribution.parent,
+              )
+            : const Uuid().v5(completion.entity, 'successor');
+        if (expected != entity) {
           throw FormatFailure('Invalid recurring text identity.');
         }
-        final proof = completion.data['inheritance'] as Map<String, dynamic>;
+        final proof = contribution.proof;
         final verified = verifyTextInheritance(
           proof,
           completion: completion,
@@ -613,11 +616,12 @@ class RecurringTextResolver {
         }
         Map<String, ResolvedTextField> observed;
         try {
-          observed = observedFields.putIfAbsent(completion.id, () {
+          observed = observedFields.putIfAbsent(contribution.key, () {
             // The exact record set matters even when a declared head is
             // present: a sparse closed prefix must not reuse a fuller proof.
-            final key =
+            var key =
                 '${engine.ownerId}|${legacyScope ?? ''}|${completion.hash}|${sha256.convert(utf8.encode(verified.observedPrefix.map((event) => '${event.id}:${event.hash}\n').join()))}';
+            if (contribution.checklist) key += '|${contribution.parent}';
             final remembered = memo?._get(key);
             if (remembered != null) return remembered;
             final result = RecurringTextResolver._(
@@ -630,7 +634,7 @@ class RecurringTextResolver {
               legacyScope,
               _runtime,
               false,
-            ).resolve(completion.entity);
+            ).resolve(contribution.parent);
             memo?._put(key, result);
             return result;
           });
@@ -651,7 +655,7 @@ class RecurringTextResolver {
                   ? declaration['stateHash'] != parent.stateHash
                   : declaration['historyHash'] !=
                         parent.historyReference!.hash) ||
-              (completion.data['successor'] as Map)[field] != parent.text) {
+              contribution.snapshot[field] != parent.text) {
             throw FormatFailure(
               'Observed parent text proof differs in ${completion.id}.',
             );

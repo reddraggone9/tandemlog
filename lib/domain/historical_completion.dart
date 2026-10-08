@@ -13,7 +13,7 @@ bool verifyHistoricalCompletion(LogEvent completion, LogEvent? source) {
       source.hash != retained['hash'] ||
       source.space != completion.space ||
       source.entity != completion.entity ||
-      source.type != 'task.completed' ||
+      !isScalarSuccessorInitialization(source) ||
       source.clock >= completion.clock ||
       (source.data['successor'] as Map?)?['id'] != retained['id']) {
     throw FormatFailure(

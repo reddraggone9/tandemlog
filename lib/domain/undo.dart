@@ -12,6 +12,10 @@ const reversibleTaskEvents = {
   'task.completed',
   'task.completedWithText',
   'task.completedKeepingSuccessor',
+  'task.completedWithChecklist',
+  'checklist.itemEdited',
+  'checklist.itemMoved',
+  'checklist.itemDeleted',
   'task.completionUndone',
 };
 

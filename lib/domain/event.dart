@@ -6,12 +6,24 @@ export 'event_clock.dart';
 import 'package:uuid/uuid.dart';
 import 'schedule.dart' hide validateSchedule;
 import 'wall_time.dart';
+import 'checklist.dart';
 
 const protocolVersion = 3;
 bool isTaskCompletion(String type) =>
     type == 'task.completed' ||
     type == 'task.completedWithText' ||
-    type == 'task.completedKeepingSuccessor';
+    type == 'task.completedKeepingSuccessor' ||
+    type == 'task.completedWithChecklist';
+bool isNativeTextCreation(String type) =>
+    type == 'task.createdWithText' || type == 'checklist.itemCreated';
+bool hasNativeTaskSuccessor(LogEvent event) =>
+    event.type == 'task.completedWithText' ||
+    (event.type == 'task.completedWithChecklist' &&
+        event.data['inheritance'] != null);
+bool isScalarSuccessorInitialization(LogEvent event) =>
+    event.type == 'task.completed' ||
+    (event.type == 'task.completedWithChecklist' &&
+        !event.data.containsKey('inheritance'));
 final _idShape = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
 );
@@ -157,6 +169,32 @@ class LogEvent {
           if (d.containsKey('assignee') && !isCanonicalId(d['assignee'])) {
             throw FormatFailure('Invalid assignee.');
           }
+        case 'checklist.itemCreated':
+          text('title', 500);
+          text('description', 10000, empty: true);
+          if (!isCanonicalId(d['parent']) || d['parent'] == j['entity']) {
+            throw FormatFailure('Invalid checklist parent.');
+          }
+          validateTextSeedDescriptor(d['text']);
+          if (!d.containsKey('before') ||
+              (d['before'] != null &&
+                  (!isCanonicalId(d['before']) ||
+                      d['before'] == j['entity']))) {
+            throw FormatFailure('Invalid checklist order anchor.');
+          }
+        case 'checklist.itemEdited':
+          if (d['completed'] is! bool) {
+            throw FormatFailure('Invalid checklist completion state.');
+          }
+        case 'checklist.itemMoved':
+          if (!d.containsKey('before') ||
+              (d['before'] != null &&
+                  (!isCanonicalId(d['before']) ||
+                      d['before'] == j['entity']))) {
+            throw FormatFailure('Invalid checklist order anchor.');
+          }
+        case 'checklist.itemDeleted':
+          break;
         case 'task.textEditUndone':
           if (!_validReference(d['operation'])) {
             throw FormatFailure('Invalid native text operation reference.');
@@ -184,6 +222,7 @@ class LogEvent {
         case 'task.completed':
         case 'task.completedWithText':
         case 'task.completedKeepingSuccessor':
+        case 'task.completedWithChecklist':
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -213,6 +252,22 @@ class LogEvent {
               );
             }
             validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
+          }
+          if (j['type'] == 'task.completedWithChecklist') {
+            if (d['successor'] is! Map<String, dynamic> ||
+                !d.containsKey('completedAt')) {
+              throw FormatFailure('Checklist recurrence requires a successor.');
+            }
+            validateChecklistCopy(
+              d['checklist'],
+              (d['successor'] as Map)['id'] as String,
+            );
+            if (d.containsKey('inheritance')) {
+              if (d['inheritance'] is! Map<String, dynamic>) {
+                throw FormatFailure('Invalid parent text inheritance.');
+              }
+              validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
+            }
           }
           if (j['type'] == 'task.completedKeepingSuccessor') {
             final retained = d['retainedSuccessor'];
@@ -293,6 +348,16 @@ class LogEvent {
           'assignee',
         },
         'task.textEditUndone' => {'operation', 'changes'},
+        'checklist.itemCreated' => {
+          'parent',
+          'title',
+          'description',
+          'before',
+          'text',
+        },
+        'checklist.itemEdited' => {'completed'},
+        'checklist.itemMoved' => {'before'},
+        'checklist.itemDeleted' => <String>{},
         'text.baselineInitialized' => {
           'codec',
           'adapter',
@@ -303,6 +368,12 @@ class LogEvent {
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
         'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
+        'task.completedWithChecklist' => {
+          'completedAt',
+          'successor',
+          'inheritance',
+          'checklist',
+        },
         'task.completedKeepingSuccessor' => {
           'completedAt',
           'retainedSuccessor',
@@ -369,6 +440,9 @@ int compareEvents(LogEvent a, LogEvent b) {
 
 /// Replay is a pure function of an event set; never emits authoritative events.
 Map<String, dynamic>? project(List<LogEvent> events) {
+  if (events.any((event) => isChecklistCreation(event.type))) {
+    return projectChecklistItem(events);
+  }
   events.sort(compareEvents);
   Map<String, dynamic>? state;
   final completions = <String>{};
@@ -411,6 +485,9 @@ Map<String, dynamic>? project(List<LogEvent> events) {
     }
   }
   if (state == null) return null; // dependencies may arrive later
+  if (events.any((event) => event.type.startsWith('checklist.'))) {
+    throw FormatFailure('Checklist operation references a non-item entity.');
+  }
   if (state['kind'] != 'task' &&
       events.any((e) => e.type.startsWith('task.'))) {
     throw FormatFailure('Task event references a user entity.');
