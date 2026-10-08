@@ -1,0 +1,215 @@
+00:00 +0: loading /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart
+00:00 +0: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+00:01 +1: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 390.0)
+00:02 +2: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 360.0)
+00:03 +3: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 360.0)
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 92 pixels on the bottom.
+
+The relevant error-causing widget was:
+  AlertDialog
+  AlertDialog:file:///workspace/tandemlog-bulk-warning/lib/presentation/task_editor.dart:1173:11
+
+The overflowing RenderFlex has an orientation of Axis.vertical.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#8b8b7 relayoutBoundary=up11:
+  needs compositing
+  creator: Column ← IntrinsicWidth ← Semantics ← DefaultTextStyle ← AnimatedDefaultTextStyle ←
+    _InkFeatures-[GlobalKey#08f8c ink renderer] ← NotificationListener<LayoutChangedNotification> ←
+    CustomPaint ← _ShapeBorderPaint ← PhysicalShape ← _MaterialInterior ← Material ← ⋯
+  parentData: <none> (can use size)
+  constraints: BoxConstraints(w=328.0, 0.0<=h<=208.0)
+  size: Size(328.0, 208.0)
+  direction: vertical
+  mainAxisAlignment: start
+  mainAxisSize: min
+  crossAxisAlignment: stretch
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 92 pixels on the bottom.
+
+The relevant error-causing widget was:
+  Column Column:file:///workspace/tandemlog-bulk-warning/lib/presentation/task_editor.dart:1190:26
+
+The overflowing RenderFlex has an orientation of Axis.vertical.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#6af49 relayoutBoundary=up15 OVERFLOWING:
+  needs compositing
+  creator: Column ← ConstrainedBox ← OverflowBar ← Padding ← Column ← IntrinsicWidth ← Semantics ←
+    DefaultTextStyle ← AnimatedDefaultTextStyle ← _InkFeatures-[GlobalKey#08f8c ink renderer] ←
+    NotificationListener<LayoutChangedNotification> ← CustomPaint ← ⋯
+  parentData: <none> (can use size)
+  constraints: BoxConstraints(0.0<=w<=296.0, 0.0<=h<=192.0)
+  size: Size(296.0, 192.0)
+  direction: vertical
+  mainAxisAlignment: start
+  mainAxisSize: min
+  crossAxisAlignment: stretch
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with text "Selected tasks changed. Close this
+editor and review them before retrying." (considering only hit-testable widgets with a RenderBox):
+[]>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart:126:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart line 126
+The test description was:
+  bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message:
+  Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width:
+  360.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (3) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +3 -1: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 360.0) [E]
+  Test failed. See exception logs above.
+  The test description was: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 360.0)
+  
+00:04 +3 -1: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Folder save failed. Your draft is retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its permissions before retrying. No successful save has been reported. A long provider explanation must remain readable without moving the form., scale: 2.0, width: 360.0)
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 92 pixels on the bottom.
+
+The relevant error-causing widget was:
+  AlertDialog
+  AlertDialog:file:///workspace/tandemlog-bulk-warning/lib/presentation/task_editor.dart:1173:11
+
+The overflowing RenderFlex has an orientation of Axis.vertical.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#708a4 relayoutBoundary=up11:
+  needs compositing
+  creator: Column ← IntrinsicWidth ← Semantics ← DefaultTextStyle ← AnimatedDefaultTextStyle ←
+    _InkFeatures-[GlobalKey#f6a62 ink renderer] ← NotificationListener<LayoutChangedNotification> ←
+    CustomPaint ← _ShapeBorderPaint ← PhysicalShape ← _MaterialInterior ← Material ← ⋯
+  parentData: <none> (can use size)
+  constraints: BoxConstraints(w=328.0, 0.0<=h<=208.0)
+  size: Size(328.0, 208.0)
+  direction: vertical
+  mainAxisAlignment: start
+  mainAxisSize: min
+  crossAxisAlignment: stretch
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during layout:
+A RenderFlex overflowed by 92 pixels on the bottom.
+
+The relevant error-causing widget was:
+  Column Column:file:///workspace/tandemlog-bulk-warning/lib/presentation/task_editor.dart:1190:26
+
+The overflowing RenderFlex has an orientation of Axis.vertical.
+The edge of the RenderFlex that is overflowing has been marked in the rendering with a yellow and
+black striped pattern. This is usually caused by the contents being too big for the RenderFlex.
+Consider applying a flex factor (e.g. using an Expanded widget) to force the children of the
+RenderFlex to fit within the available space instead of being sized to their natural size.
+This is considered an error condition because it indicates that there is content that cannot be
+seen. If the content is legitimately bigger than the available space, consider clipping it with a
+ClipRect widget before putting it in the flex, or using a scrollable container rather than a Flex,
+like a ListView.
+The specific RenderFlex in question is: RenderFlex#f849b relayoutBoundary=up15 OVERFLOWING:
+  needs compositing
+  creator: Column ← ConstrainedBox ← OverflowBar ← Padding ← Column ← IntrinsicWidth ← Semantics ←
+    DefaultTextStyle ← AnimatedDefaultTextStyle ← _InkFeatures-[GlobalKey#f6a62 ink renderer] ←
+    NotificationListener<LayoutChangedNotification> ← CustomPaint ← ⋯
+  parentData: <none> (can use size)
+  constraints: BoxConstraints(0.0<=w<=296.0, 0.0<=h<=192.0)
+  size: Size(296.0, 192.0)
+  direction: vertical
+  mainAxisAlignment: start
+  mainAxisSize: min
+  crossAxisAlignment: stretch
+  verticalDirection: down
+  spacing: 0.0
+◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤◢◤
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with text "Folder save failed. Your draft is
+retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its
+permissions before retrying. No successful save has been reported. A long provider explanation must
+remain readable without moving the form." (considering only hit-testable widgets with a RenderBox):
+[]>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart:126:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart line 126
+The test description was:
+  bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Folder
+  save failed. Your draft is retained. The provider did not acknowledge the selected changes.
+  Reconnect the folder and check its permissions before retrying. No successful save has been
+  reported. A long provider explanation must remain readable without moving the form., scale: 2.0,
+  width: 360.0)
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (3) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +3 -2: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Folder save failed. Your draft is retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its permissions before retrying. No successful save has been reported. A long provider explanation must remain readable without moving the form., scale: 2.0, width: 360.0) [E]
+  Test failed. See exception logs above.
+  The test description was: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Folder save failed. Your draft is retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its permissions before retrying. No successful save has been reported. A long provider explanation must remain readable without moving the form., scale: 2.0, width: 360.0)
+  
+00:05 +3 -2: single modal and bulk panel keep existing failure location false
+00:05 +4 -2: single modal and bulk panel keep existing failure location true
+00:05 +5 -2: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Folder save failed. Your draft is retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its permissions before retrying. No successful save has been reported. A long provider explanation must remain readable without moving the form., scale: 2.0, width: 360.0)
+  /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 520.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 360.0)

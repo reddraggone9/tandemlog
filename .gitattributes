@@ -15,3 +15,6 @@ evidence/final-preview/ci/** -text
 
 # Scoped Windows decoded receipt keeps literal CRLF bytes.
 evidence/final-preview/windows-native/** -text
+
+# Exact focused regression and native capture receipts retain their bytes.
+evidence/bulk-stale-warning/** -text

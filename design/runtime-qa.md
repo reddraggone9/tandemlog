@@ -784,3 +784,16 @@ The coordinator reports acceptance for exact APK `bd2f7097fde440f8b3850f75a1c99a
 ### Stable 2026.10.1 public promotion — 2026-10-04
 
 [Promotion37205170375](https://github.com/reddraggone9/tandemlog/actions/runs/37205170375) reused exact accepted candidate37202648731 without rebuilding, at source `da4859ea82f8b066ed701740c57cb9bcff1083ff`. [Stable2026.10.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.1) is Latest, prerelease=false/draft=false. The three unauthenticated public APK/EXE/Flatpak downloads match accepted candidate hashes/GitHub digests/sizes. Official downloaded-APK owner pin/package/nondebuggable2026.10.1/code42/three-ABI recheck passes; tag and pinned three-change notes match. All12 prior releases retain metadata/notes/asset IDs/hashes/sizes. [Receipt](../evidence/stable-2026.10.1-build42-public-verification.json). No new runtime coverage is inferred from publication; Windows remains unsigned, wider manual Windows/phone/API36/provider/power-loss coverage remains unclaimed. No live-data reset/import or canonical-history rewrite occurred.
+
+
+## Bulk stale-save warning visibility — isolated follow-up
+
+The [reviewed follow-up](bulk-stale-warning-visibility.md) pins bulk-modal failures
+beside recovery actions. Final source d0ecbbb passes 55 focused widget tests and
+four actual GTK peer-change workflows, with retained canonical hashes and drafts.
+Baseline311 native pixels reproduce the off-screen warning. The exact-source
+video has visible pointer input and an accurate Linux/scripted caption.
+Android/Windows and spoken accessibility acceptance of a replacement artifact
+remain pending. The reproduced 160px editor limit is explicitly retained, with
+UI maintenance ownership and a revisit before stable promotion; no universal
+small-keyboard claim is made. Frozen signed source77/build46 remains unchanged.

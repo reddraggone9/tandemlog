@@ -1,0 +1,304 @@
+{
+  "schema": 1,
+  "date_utc": "2026-10-08",
+  "branch": "fix/bulk-stale-warning-visibility",
+  "baseline_source": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
+  "tests_first_commit": "fc13df0",
+  "final_runtime_source": "d0ecbbb4aabbcb11a784eeda9735f2ecd30b87ff",
+  "scope": "One production file, bulk-modal failure location/geometry only. Guard, domain, storage, native bytes, dependencies, version, workflows and frozen candidate unchanged.",
+  "frozen_candidate": {
+    "run": 37819214432,
+    "source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+    "version": "2026.10.2-rc.4+46",
+    "parent_reported_accepted_apk_sha256": "465c123d91be4465296945aa6d576545cd17dd05329da338c013dd069f4a7a1d",
+    "packet_library_id": "libfile_2254ff7abc188191b4075b190a0e4823",
+    "attribution": "Parent-supplied acceptance, not consumer APK/packet bytes verification"
+  },
+  "tests": {
+    "focused_widgets": {
+      "passed": 55,
+      "failed": 0,
+      "files": [
+        "bulk_failure_visibility_test.dart",
+        "task_editor_test.dart",
+        "task_editor_tags_test.dart",
+        "date_time_layout_test.dart",
+        "bulk_apply_semantics_test.dart"
+      ],
+      "log": "focused-green.txt"
+    },
+    "analysis": "No issues found",
+    "format": "158 files, 0 changed",
+    "native_final": {
+      "passed": 4,
+      "failed": 0,
+      "source": "d0ecbbb4aabbcb11a784eeda9735f2ecd30b87ff",
+      "log": "native-green.txt",
+      "command": "xvfb-run -a -s '-screen 0 1200x850x24' dbus-run-session -- flutter test --no-pub integration_test/bulk_failure_visibility_test.dart -d linux --reporter expanded",
+      "native_override": "TANDEMLOG_TEXT_LIBRARY unset; default adjacent bundle path",
+      "bundled_native_library": {
+        "bytes": 1167040,
+        "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56"
+      },
+      "loaded_module_enumeration": false,
+      "variants": [
+        {
+          "window": "1200x850",
+          "theme": "dark",
+          "text_scale": 1,
+          "simulated_ime_px": 0
+        },
+        {
+          "window": "390x820",
+          "theme": "dark",
+          "text_scale": 1,
+          "simulated_ime_px": 0
+        },
+        {
+          "window": "390x820",
+          "theme": "light",
+          "text_scale": 2,
+          "simulated_ime_px": 280
+        },
+        {
+          "window": "360x640",
+          "theme": "dark",
+          "text_scale": 2,
+          "simulated_ime_px": 280
+        }
+      ],
+      "assertions": [
+        "Real native fixture peer changes description",
+        "Two stale Saves retain all synthetic root JSONL log hashes, selection and draft",
+        "No dueMaxDays patch persists",
+        "Peer description survives",
+        "Retry preserves focus and form position",
+        "Cancel and Discard retain all synthetic root JSONL log hashes"
+      ],
+      "manual_human_interaction": false
+    },
+    "baseline_native_red": {
+      "source": "3111dd94510a8f77e6978aa177e8d9b44fd7607c",
+      "log": "baseline-native-red.txt",
+      "result": "Expected-visible warning is not hit-testable after scrolling. Actual screenshot captured before assertion.",
+      "harness": "baseline-capture-harness.dart.txt"
+    },
+    "extreme_limit": {
+      "window": "360x520",
+      "text_scale": 2,
+      "simulated_ime_px": 280,
+      "editor_remaining_px": 160,
+      "result": "Existing actions consume footer; warning has zero height. Known constrained-layout limit, not final supported native acceptance.",
+      "log": "extreme-native-red.txt",
+      "screenshot": "native-diagnostic/bulk-failure-small-dark-200-ime-rejected-debug.png",
+      "owner": "Tandemlog UI maintenance coordinated by Lee",
+      "revisit": "Actual small-window/landscape Android use or before stable promotion"
+    }
+  },
+  "media": {
+    "final_directory": "native-verified",
+    "video": "native-verified/linux-gtk-narrow-dark.mp4",
+    "recorded_desktop": "1200x850 Linux GTK debug Xvfb",
+    "app_window": "390x820 dark",
+    "duration_seconds": 7.466667,
+    "fps": 15,
+    "input": "Scripted Flutter clicks plus actual X11 pointer marker; pointer/caption verified at1.6s and independently3.5s",
+    "caption": "Linux GTK debug - scripted clicks - 390x820 dark",
+    "older_directories": "native, native-final and native-diagnostic are retained investigation captures, not substituted for final evidence. Native-final has an earlier overly broad inherited caption; use native-verified only."
+  },
+  "independent_reviews": {
+    "correctness": "Final d0ecbbb source, terminal4/0 proof and all4 rejected pixels accepted; no must-fix within scope",
+    "architecture_and_ux": "Source/pixels/video accepted for supported minimum, extreme limitation deferred with owner/revisit",
+    "security": "Final d0ecbbb scope/source and terminal4/0 proof accepted; no guard/domain/native/dependency change"
+  },
+  "remaining_gates": [
+    "Any shipping UI replacement needs fresh monotonic build>=47 after floor recheck, full CI, owner-signed package and exact affected Android/native/manual acceptance",
+    "Actual Android keyboard, Windows interaction and spoken accessibility for replacement remain unverified",
+    "Independent release-note/media review of resulting commit range if included in preview",
+    "Fresh quota check before publication; no publication authorized/performed"
+  ],
+  "artifact_files": {
+    "analyze.txt": {
+      "bytes": 96,
+      "sha256": "df33ee88099b35285d6101c1563a39df67a3dc8515a456ec7ecd966a18ab791f"
+    },
+    "baseline-capture-harness.dart.txt": {
+      "bytes": 8394,
+      "sha256": "22685ca8a3e1e059e2ca865ae10a5445f980b8b56b191f6ab9aa828deb67970c"
+    },
+    "baseline-native/bulk-failure-narrow-dark-before-save.png": {
+      "bytes": 177,
+      "sha256": "c1aff07f4b5df6cc10eda0b10fa95551def7e8484731036d7bc396a703eef872"
+    },
+    "baseline-native/bulk-failure-narrow-dark-rejected.png": {
+      "bytes": 37793,
+      "sha256": "1e0c141f6322167ee0ce062c089976a71d5f99fe3a7be7ee49c786f8653073bb"
+    },
+    "baseline-native-red.txt": {
+      "bytes": 7453,
+      "sha256": "d05cdf7bb10281e948ebda370ce792a697cb1bb8442eee37023d3dbfd5122eed"
+    },
+    "extreme-native-red.txt": {
+      "bytes": 7621,
+      "sha256": "1112817cf29197dcc48f073f260b73c7c49a19c50a18da8ce61edeab2a63808e"
+    },
+    "extreme-widget-investigation.txt": {
+      "bytes": 18822,
+      "sha256": "2ee1810ea9ca9a6c27d03b703abd8d8a5ef8f78b8d9e0dfe6d3ce5ae25bfb250"
+    },
+    "focused-green.txt": {
+      "bytes": 9340,
+      "sha256": "b70246cbec5caae1f105ef493a066903597aec933e033b09c90ce098b87d1e69"
+    },
+    "format.txt": {
+      "bytes": 49,
+      "sha256": "690a21e07ebbbae46fef6b5b32ea68a7e5bca67e39ec2f260745fa89074ddc17"
+    },
+    "native/bulk-failure-desktop-dark-before-save.png": {
+      "bytes": 3646,
+      "sha256": "b8046cfb22ecbdcad16baa889064ce266b0a269f3bb43ae8d20cd6999efa5d81"
+    },
+    "native/bulk-failure-desktop-dark-rejected.png": {
+      "bytes": 68416,
+      "sha256": "4556be3786420d532e3052bb89844623b98323ceadc111d4054b7f12492a609e"
+    },
+    "native/bulk-failure-narrow-dark-before-save.png": {
+      "bytes": 38081,
+      "sha256": "49daa9eff32ed061568df066b58abf8ee9e318e3ed574c978cccc7d79f45b759"
+    },
+    "native/bulk-failure-narrow-dark-rejected.png": {
+      "bytes": 41540,
+      "sha256": "6d2a05d0859743dca0b297083beebf09330fa0132217b8f9908626af12a76288"
+    },
+    "native/bulk-failure-narrow-light-200-ime-before-save.png": {
+      "bytes": 37211,
+      "sha256": "092816f0bd1e119e011df011de1057534d16e2e38f681969c46aac69d1ddf6b0"
+    },
+    "native/bulk-failure-narrow-light-200-ime-rejected.png": {
+      "bytes": 41608,
+      "sha256": "45eefac268debee700624e14b6ea44871c2f2b5ec7f81b96f85a031e5e6ee1a1"
+    },
+    "native/bulk-failure-small-dark-200-ime-before-save.png": {
+      "bytes": 16977,
+      "sha256": "098217f2c3c2bff2df1f3c0505d4ef64d8627132733b2c0f2e6ab86a8c12106d"
+    },
+    "native/linux-gtk-narrow-dark.mp4": {
+      "bytes": 184012,
+      "sha256": "cbd39f65a9e0b516482209b7935fb0b19b1b2406aa86baea073deb01d5e26ed6"
+    },
+    "native-diagnostic/bulk-failure-small-dark-200-ime-before-save.png": {
+      "bytes": 161,
+      "sha256": "e8e976b8feb817c5c228686d003f37d08414264370dd44119ea54b925d78449c"
+    },
+    "native-diagnostic/bulk-failure-small-dark-200-ime-rejected-debug.png": {
+      "bytes": 16958,
+      "sha256": "1f0aaceda8aece54f875afd8f8f07382e7517db3c7dced89d35ca1a38df2f499"
+    },
+    "native-final/bulk-failure-desktop-dark-before-save.png": {
+      "bytes": 3646,
+      "sha256": "b8046cfb22ecbdcad16baa889064ce266b0a269f3bb43ae8d20cd6999efa5d81"
+    },
+    "native-final/bulk-failure-desktop-dark-rejected.png": {
+      "bytes": 68416,
+      "sha256": "4556be3786420d532e3052bb89844623b98323ceadc111d4054b7f12492a609e"
+    },
+    "native-final/bulk-failure-narrow-dark-before-save.png": {
+      "bytes": 38081,
+      "sha256": "49daa9eff32ed061568df066b58abf8ee9e318e3ed574c978cccc7d79f45b759"
+    },
+    "native-final/bulk-failure-narrow-dark-rejected.png": {
+      "bytes": 41540,
+      "sha256": "6d2a05d0859743dca0b297083beebf09330fa0132217b8f9908626af12a76288"
+    },
+    "native-final/bulk-failure-narrow-light-200-ime-before-save.png": {
+      "bytes": 37211,
+      "sha256": "092816f0bd1e119e011df011de1057534d16e2e38f681969c46aac69d1ddf6b0"
+    },
+    "native-final/bulk-failure-narrow-light-200-ime-rejected.png": {
+      "bytes": 41608,
+      "sha256": "45eefac268debee700624e14b6ea44871c2f2b5ec7f81b96f85a031e5e6ee1a1"
+    },
+    "native-final/bulk-failure-small-dark-200-ime-before-save.png": {
+      "bytes": 26202,
+      "sha256": "32db45dc4c6870d91c8eb36b73ae01edb6b1266ea02d84cc127037b973c58196"
+    },
+    "native-final/bulk-failure-small-dark-200-ime-rejected.png": {
+      "bytes": 29918,
+      "sha256": "68631bfdbaf7400712c2c8e699e30ea8e88e0d488745306b6cf0201257bf57fb"
+    },
+    "native-final/linux-gtk-narrow-dark.mp4": {
+      "bytes": 198827,
+      "sha256": "c8474e5c0d8fa999ddaea94574bb1a9842aa0fa91b572f23e0cbd22f68c381b9"
+    },
+    "native-green.txt": {
+      "bytes": 6543,
+      "sha256": "9e2a6461427f67871654a6389d54ed67316c74644253840946798af5668f2028"
+    },
+    "native-verified/bulk-failure-desktop-dark-before-save.png": {
+      "bytes": 3646,
+      "sha256": "b8046cfb22ecbdcad16baa889064ce266b0a269f3bb43ae8d20cd6999efa5d81"
+    },
+    "native-verified/bulk-failure-desktop-dark-rejected.png": {
+      "bytes": 68416,
+      "sha256": "4556be3786420d532e3052bb89844623b98323ceadc111d4054b7f12492a609e"
+    },
+    "native-verified/bulk-failure-narrow-dark-before-save.png": {
+      "bytes": 38081,
+      "sha256": "49daa9eff32ed061568df066b58abf8ee9e318e3ed574c978cccc7d79f45b759"
+    },
+    "native-verified/bulk-failure-narrow-dark-rejected.png": {
+      "bytes": 41540,
+      "sha256": "6d2a05d0859743dca0b297083beebf09330fa0132217b8f9908626af12a76288"
+    },
+    "native-verified/bulk-failure-narrow-light-200-ime-before-save.png": {
+      "bytes": 37211,
+      "sha256": "092816f0bd1e119e011df011de1057534d16e2e38f681969c46aac69d1ddf6b0"
+    },
+    "native-verified/bulk-failure-narrow-light-200-ime-rejected.png": {
+      "bytes": 41608,
+      "sha256": "45eefac268debee700624e14b6ea44871c2f2b5ec7f81b96f85a031e5e6ee1a1"
+    },
+    "native-verified/bulk-failure-small-dark-200-ime-before-save.png": {
+      "bytes": 26202,
+      "sha256": "32db45dc4c6870d91c8eb36b73ae01edb6b1266ea02d84cc127037b973c58196"
+    },
+    "native-verified/bulk-failure-small-dark-200-ime-rejected.png": {
+      "bytes": 29918,
+      "sha256": "68631bfdbaf7400712c2c8e699e30ea8e88e0d488745306b6cf0201257bf57fb"
+    },
+    "native-verified/linux-gtk-narrow-dark.mp4": {
+      "bytes": 172398,
+      "sha256": "ad8a0d4f363bbbe0b4e5f260635e9c426752765c4ff28bdc33162395d2bd2af1"
+    },
+    "native-verified/video-frame-1.6s.png": {
+      "bytes": 70123,
+      "sha256": "502c282e9668bf5967869c81784054733d15e05ce3eb754e20303c128c6ccb30"
+    },
+    "red-widget-tests.txt": {
+      "bytes": 6999,
+      "sha256": "3bf584fe83ef12b93dda028e7bae8b301c4429c106ad0e697b09fa554216cb2c"
+    }
+  },
+  "reviewed_source_files": {
+    "lib/presentation/task_editor.dart": {
+      "bytes": 42532,
+      "sha256": "7acb7d3a44658b60b84982a8cd3c56f14ed99bcf4ac62bdf40894ddf7b7a5add"
+    },
+    "test/bulk_failure_visibility_test.dart": {
+      "bytes": 7849,
+      "sha256": "140cb5ce2cb430ac4b5456f9ac04749f91e3862ba5c0c22ce9c5984fd62d47ee"
+    },
+    "integration_test/bulk_failure_visibility_test.dart": {
+      "bytes": 8434,
+      "sha256": "478fc2cab79fab6492ef5e069cdf79f097ec2137a06c0da71b48feb6c7640636"
+    },
+    "integration_test/bulk_apply_semantics_test.dart": {
+      "bytes": 10284,
+      "sha256": "cacad3ce28e918e50ef373607c359bc972cd0170c15ac4c7776aeb3919a8b345"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 168401,
+      "sha256": "ebc5a9ceda9d3adf3c45506fe81f8169196ed06a29e3c0b8cad9fb6b71269bd9"
+    }
+  }
+}

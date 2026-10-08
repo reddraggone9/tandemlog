@@ -1,0 +1,63 @@
+00:00 +0: loading /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart
+00:00 +0: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+00:01 +1: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+00:01 +2: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+00:01 +3: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+00:02 +4: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:02 +5: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 390.0)
+00:02 +6: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:03 +7: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:03 +8: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 640.0, keyboard: 280.0, message: Folder save failed. Your draft is retained. The provider did not acknowledge the selected changes. Reconnect the folder and check its permissions before retrying. No successful save has been reported. A long provider explanation must remain readable without moving the form., scale: 2.0, width: 360.0)
+00:03 +9: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: single and bulk editors put tags and assignee after scheduling
+00:03 +10: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: single modal and bulk panel keep existing failure location false
+00:04 +11: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:04 +12: /workspace/tandemlog-bulk-warning/test/bulk_failure_visibility_test.dart: single modal and bulk panel keep existing failure location true
+00:04 +13: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:04 +14: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:05 +15: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:05 +16: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:06 +17: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:06 +18: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:06 +19: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:07 +20: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:07 +21: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:07 +22: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:07 +23: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: touch creation adds all new tokens and invalid query never enables it
+00:07 +24: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: touch creation adds all new tokens and invalid query never enables it
+00:07 +25: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:08 +26: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: opaque original tags survive pending Save with exact case and spaces
+00:08 +27: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:08 +28: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:08 +29: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: active tag composition blocks Save and canClose Save
+00:08 +30: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:09 +31: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: single Save adds pending query without replacing selected tags
+00:09 +32: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:09 +33: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:09 +34: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: bulk Remove cannot create an unknown tag from an unfinished query
+00:09 +35: /workspace/tandemlog-bulk-warning/test/task_editor_tags_test.dart: bulk Remove cannot create an unknown tag from an unfinished query
+00:09 +36: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:10 +37: /workspace/tandemlog-bulk-warning/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:10 +38: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:10 +39: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:11 +40: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:11 +41: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:11 +42: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:12 +43: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:12 +44: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:12 +45: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:12 +46: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+00:13 +47: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:13 +48: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:13 +49: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:13 +50: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+00:16 +51: /workspace/tandemlog-bulk-warning/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:17 +52: /workspace/tandemlog-bulk-warning/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+00:18 +53: /workspace/tandemlog-bulk-warning/test/bulk_apply_semantics_test.dart: keyboard applies only Due time; tag operations stay distinct
+00:18 +54: /workspace/tandemlog-bulk-warning/test/bulk_apply_semantics_test.dart: saving retains field names but disables all apply actions
+00:19 +55: All tests passed!
