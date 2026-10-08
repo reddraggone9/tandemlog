@@ -53,7 +53,9 @@ completion time grows from17.022ms in the first20 to24.319ms in the last20. The
 earlier640 run grows from13.465ms to125.409ms across the corresponding ends.
 Single-run timings are diagnostic and were collected under different load;
 they do not establish a speedup/regression. After the first completion, the80
-run creates no new editor documents or native inspection calls during completion.
+run records no new `createDocument` or native inspection calls during completion.
+That original counter excludes `restoreDocument` and Rust-internal allocations;
+it is not a total native-document count.
 Full-prefix collection/hashing and graph ancestry scans remain candidates for
 profiling; they have not been isolated as the dominant cost.
 
@@ -70,8 +72,11 @@ of the observed cost, and both sides of receipt preparation grow. This does not
 isolate a specific Dart/SQLite method or establish a speedup. Warm reopen2.970ms,
 cold rebuild1348.312ms, native BLOB101B and reference JSON50004B are diagnostic
 results; [raw phase measurements](phase-320.json) retain every per-generation
-sample and the synthetic fixture path. Native completion still creates no new
-editor documents or inspections after the first generation.
+sample and the synthetic fixture path. The `createDocument` and inspection
+counters remain zero during completion after the first generation. The later
+[scaling assessment](../scaling-acceptance/README.md) separately counts restores
+in a supplementary native run and documents the counters' limits, the bounded
+640 stress result and the ten-year weekly fixture.
 
 Owner: Tandemlog implementation work, coordinated with Lee. Impact: growing
 warm commands and potential retained-reference amplification under offline

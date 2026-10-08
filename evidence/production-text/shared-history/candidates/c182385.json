@@ -42,5 +42,11 @@
     "hash_evidence": "Trusted GitHub completed-job logs and artifact metadata; local artifact download returned HTTP 403",
     "installer_sha256": "28f83af5ef0690cd85b009b5da1333ca43d82b30c1f21cc5fa72e75819d84c3e"
   },
-  "ci_overall_conclusion": "pending Linux aggregate completion"
+  "ci_overall_conclusion": "success",
+  "linux": {
+    "job_id": 113150925365,
+    "job_conclusion": "success",
+    "artifact_id": 11529496389,
+    "artifact_zip_sha256": "1fa418f8e1b0c0388bbf34aa188c81cbd8a217c939fd32e456cc4f256aa04d03"
+  }
 }

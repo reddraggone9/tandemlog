@@ -25,6 +25,7 @@ class TimingLogFolder extends LocalLogFolder {
 class CountingEngine extends NativeTextEngine {
   CountingEngine({super.libraryPath});
   int creations = 0, seedCalls = 0, inspections = 0;
+  int restorations = 0;
   int materializerCreations = 0;
   @override
   NativeTextMaterializer createMaterializer({
@@ -46,6 +47,20 @@ class CountingEngine extends NativeTextEngine {
       actorClientId: actorClientId,
       limits: limits,
       seed: seed,
+    );
+  }
+
+  @override
+  NativeTextDocument restoreDocument({
+    required int actorClientId,
+    required NativeTextLimits limits,
+    required NativeTextCheckpoint checkpoint,
+  }) {
+    restorations++;
+    return super.restoreDocument(
+      actorClientId: actorClientId,
+      limits: limits,
+      checkpoint: checkpoint,
     );
   }
 
@@ -106,6 +121,20 @@ Future<void> main() async {
     Platform.environment['PROBE_GENERATIONS'] ?? '80',
   );
   final edits = Platform.environment['PROBE_EDITS'] == 'yes';
+  final editEvery = int.parse(Platform.environment['PROBE_EDIT_EVERY'] ?? '1');
+  final otherTasks = int.parse(
+    Platform.environment['PROBE_OTHER_TASKS'] ?? '0',
+  );
+  final recurrence =
+      Platform.environment['PROBE_RECURRENCE'] ?? 'every day when done';
+  final start = DateTime.parse(
+    Platform.environment['PROBE_START_DATE'] ?? '2026-10-01',
+  );
+  final daySpacing = int.parse(
+    Platform.environment['PROBE_DAY_SPACING'] ?? '1',
+  );
+  if (editEvery < 1 || otherTasks < 0 || daySpacing < 1)
+    throw ArgumentError('Invalid fixture parameters');
   final report = Platform.environment['PROBE_REPORT']!;
   final initialRss = ProcessInfo.currentRss;
   TaskStore? store;
@@ -115,14 +144,35 @@ Future<void> main() async {
     store = await TaskStore.open(logFolder, profile, textEngine: engine);
     final user = const Uuid().v4();
     var id = const Uuid().v4();
+    final lineageIds = <String>{id};
     await store.command(user, 'user.created', {'name': 'Synthetic'});
+    for (var index = 0; index < otherTasks; index++) {
+      final title = 'Independent active task $index';
+      const description = 'Synthetic independent work';
+      await store.command(const Uuid().v4(), 'task.createdWithText', {
+        'title': title,
+        'description': description,
+        'assignee': user,
+        'schedule': <String, dynamic>{},
+        'text': {
+          'codec': 'yrs-v1',
+          'adapter': 1,
+          'seeds': {
+            'title': sha256.convert(engine.seedText(title).bytes).toString(),
+            'description': sha256
+                .convert(engine.seedText(description).bytes)
+                .toString(),
+          },
+        },
+      });
+    }
     await store.command(id, 'task.createdWithText', {
       'title': 'Review plan',
       'description': 'Synthetic cost probe',
       'assignee': user,
       'schedule': {
-        'dueDate': '2026-10-01',
-        'recurrence': 'every day when done',
+        'dueDate': start.toIso8601String().split('T').first,
+        'recurrence': recurrence,
       },
       'text': {
         'codec': 'yrs-v1',
@@ -138,22 +188,21 @@ Future<void> main() async {
       },
     });
     for (var generation = 1; generation <= generations; generation++) {
-      if (edits) await editChild(store, id, generation);
+      if (edits && (generation - 1) % editEvery == 0)
+        await editChild(store, id, generation);
       final creationsBefore = engine.creations,
+          restorationsBefore = engine.restorations,
           inspectionsBefore = engine.inspections;
       final watch = Stopwatch()..start();
       final priorAppendUs = logFolder.appendMicroseconds;
       var preparedUs = 0;
       await store.complete(
         id,
-        completionDay: DateTime.utc(
-          2026,
-          10,
-          1,
-        ).add(Duration(days: generation)),
+        completionDay: start.add(Duration(days: (generation - 1) * daySpacing)),
         onPrepared: (_) => preparedUs = watch.elapsedMicroseconds,
       );
       id = const Uuid().v5(id, 'successor');
+      lineageIds.add(id);
       watch.stop();
       samples.add({
         'generation': generation,
@@ -163,6 +212,7 @@ Future<void> main() async {
         'canonical_append_ms':
             (logFolder.appendMicroseconds - priorAppendUs) / 1000,
         'native_creations': engine.creations - creationsBefore,
+        'native_restore_calls': engine.restorations - restorationsBefore,
         'inspections': engine.inspections - inspectionsBefore,
       });
       if (watch.elapsedMilliseconds > 2000 ||
@@ -190,6 +240,10 @@ Future<void> main() async {
     final frontierBytes = store.db
         .select('SELECT SUM(length(frontier)) AS n FROM text_fields')
         .single['n'];
+    final lineageNativeBytes = store.db
+        .select('SELECT entity,length(state) AS n FROM text_fields')
+        .where((row) => lineageIds.contains(row['entity']))
+        .fold<int>(0, (total, row) => total + (row['n'] as int));
     final sqlBytes =
         (store.db.select('PRAGMA page_count').single['page_count'] as int) *
         (store.db.select('PRAGMA page_size').single['page_size'] as int);
@@ -211,6 +265,7 @@ Future<void> main() async {
     // A fresh private profile simulates cache loss without deleting any files.
     final coldProfile = '${root.path}/cold-profile';
     final priorCreations = engine.creations,
+        priorRestorations = engine.restorations,
         priorSeedCalls = engine.seedCalls,
         priorInspections = engine.inspections,
         priorMaterializers = engine.materializerCreations;
@@ -235,10 +290,17 @@ Future<void> main() async {
     final result = {
       'source': const String.fromEnvironment('PROBE_SOURCE'),
       'generations_requested': generations,
-      'edits_each_generation': edits,
+      'edits_enabled': edits,
+      'edits_each_generation': edits && editEvery == 1,
+      'edit_every_generations': editEvery,
+      'independent_active_tasks': otherTasks,
+      'recurrence': recurrence,
+      'synthetic_start_day': start.toIso8601String().split('T').first,
+      'completion_day_spacing': daySpacing,
       'mode':
           'Dart AOT executable; actual production TaskStore/native FFI; no Flutter UI or process-to-ready timing',
-      'tasks': samples.length + 1,
+      'tasks': samples.length + 1 + otherTasks,
+      'lineage_tasks': samples.length + 1,
       'history_events': count,
       'samples': samples,
       'warm_open_ms': warm.elapsedMicroseconds / 1000,
@@ -251,6 +313,7 @@ Future<void> main() async {
       'canonical_bytes': canonicalBytes,
       'sqlite_bytes': sqlBytes,
       'native_state_blob_bytes': nativeBytes,
+      'lineage_native_state_blob_bytes': lineageNativeBytes,
       'frontier_json_bytes': frontierBytes,
       'rss_initial_bytes': initialRss,
       'rss_before_close_bytes': beforeCloseRss,
@@ -258,6 +321,9 @@ Future<void> main() async {
       'rss_peak_bytes': ProcessInfo.maxRss,
       'fresh_engine_for_rebuild': true,
       'native_document_creations': priorCreations + engine.creations,
+      'native_restore_document_calls': priorRestorations + engine.restorations,
+      'document_counter_scope':
+          'createDocument and restoreDocument calls counted separately; materializer creation has its own counter',
       'native_seed_calls': priorSeedCalls + engine.seedCalls,
       'native_inspections': priorInspections + engine.inspections,
       'native_history_materializers':
