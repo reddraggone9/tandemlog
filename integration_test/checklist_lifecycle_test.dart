@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -58,6 +59,63 @@ void main() {
 }
 
 void registerChecklistLifecycleTests() {
+  testWidgets('application disposal finishes item route ownership teardown', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('checklist-disposal-');
+    final shared = await Directory('${root.path}/shared').create();
+    final profile = await Directory('${root.path}/profile').create();
+    final peer = await openNativeFixtureStore(
+      LocalLogFolder(shared.path),
+      '${root.path}/peer',
+    );
+    final user = const Uuid().v4(), parent = const Uuid().v4();
+    try {
+      await peer.command(user, 'user.created', {'name': 'Alex Example'});
+      await peer.createNativeFixtureTask(parent, {
+        'title': 'Synthetic disposal task',
+        'description': '',
+        'assignee': user,
+      });
+      final item = await peer.addChecklistItem(parent, 'Original');
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+      await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+      await flows.waitForUi(
+        tester,
+        () => _key('task-row-$parent').evaluate().isNotEmpty,
+      );
+      await flows.selectTask(tester, parent, control: false);
+      await _tap(tester, _key('checklist-edit-${item.entity}'));
+      await tester.enterText(_key('checklist-item-title'), 'Private draft');
+      final state = tester.state(find.byType(TasksPage)) as dynamic;
+      final done = state.checklistEditorDone as Completer<void>;
+      final document = tester
+          .widget<ChecklistItemEditor>(find.byType(ChecklistItemEditor))
+          .textSession!
+          .capture
+          .fields['title']!
+          .document;
+      await tester.pumpWidget(const SizedBox.shrink());
+      for (var attempt = 0; attempt < 50 && !done.isCompleted; attempt++) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(
+        done.isCompleted,
+        true,
+        reason: 'Disposed item routes must release the host native ownership.',
+      );
+      expect(() => document.read(), throwsStateError);
+      await peer.refresh();
+      expect(peer.checklistItems(parent).single['title'], 'Original');
+      expect(tester.takeException(), isNull);
+    } finally {
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pump();
+      await peer.close();
+    }
+  });
   for (final unknownAppend in [true, false]) {
     testWidgets(
       unknownAppend
