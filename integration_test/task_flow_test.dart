@@ -931,6 +931,8 @@ void main() {
   testWidgets(
     'workspace search preserves filters drafts and completion sections',
     (tester) async {
+      tester.view.physicalSize = const Size(1200, 850);
+      addTearDown(tester.view.resetPhysicalSize);
       final root = await Directory.systemTemp.createTemp('workspace-search-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
@@ -984,14 +986,25 @@ void main() {
       final searchField = find.byKey(const ValueKey('task-search'));
       await tester.enterText(searchField, '  PLANNING  ');
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<ButtonStyleButton>(
-              find.byKey(const ValueKey('task-filter')),
-            )
-            .onPressed,
-        isNull,
-      );
+      for (final width in [390.0, 1200.0]) {
+        tester.view.physicalSize = Size(width, 850);
+        await tester.pumpAndSettle();
+        final filter = tester.widget(find.byKey(const ValueKey('task-filter')));
+        expect(
+          filter,
+          width < 600 ? isA<IconButton>() : isA<ButtonStyleButton>(),
+        );
+        final filterAction = switch (filter) {
+          ButtonStyleButton(:final onPressed) => onPressed,
+          IconButton(:final onPressed) => onPressed,
+          _ => throw StateError('Filter must remain a button.'),
+        };
+        expect(filterAction, isNull);
+        expect(
+          tester.widget<TextField>(searchField).controller!.text,
+          '  PLANNING  ',
+        );
+      }
       for (final title in [
         'Planning available',
         'Other household task',
