@@ -205,3 +205,37 @@ Kotlin/tag Android runtime follow-up, installed Windows/manual visual/assistive
 technology acceptance, and final signed-artifact/release-note/media review. The
 parent owns those decisions and device/resource configuration. Live synced user
 data remains outside this plan.
+
+## Main integration checkpoint: 2026-10-08 17:50 UTC
+
+The preceding pending isolated-regression status is superseded by the parent's
+17:30 acceptance of the exact installed d736 debug APK (SHA256 `5e35400713e614c74730713c060e65bb3edea2d409df1cb57e7f6de94bf87a1c`) from
+CI37804634954/artifact11561899292. Original pre-leak A16 recompletion, Undo,
+cold replay before Undo, duplicate delivery, legacy scalar history, retained
+grandchild, offline recurrence and later-parent/successor edits passed. The
+reported packet SHA256 is `49ce66ebb848508cae7f96e07a938c3bd1cfb82533977f0c153bcb5ddc01fefc`; this consumer did not materialize packet
+bytes. The lab stopped cleanly without new OOM/swap. This accepts the isolated
+debug regression, not the composed signed package.
+
+Parent expressly authorized main integration and main-only signing preparation.
+Fresh published/successful-signed floors remained 45, rc4 absent, and build46
+preflight/history checks passed. Main accepted normal non-force linear commit
+`77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc`, one parent `0a16a88` and entire tree
+`94426a94d81559b2409a3efe108618174ae45f23` identical reviewed `56213cc`. GitHub's
+linear-history rule rejected the earlier merge-based push; protections were
+unchanged and the merge branch preserved. Independent final tree/range review
+accepted executable equality to frozen e205 and unchanged notes/media coverage
+of published `5ac35da` → `77a5f2d`.
+
+[Main CI37819186249](https://github.com/reddraggone9/tandemlog/actions/runs/37819186249)
+and [signed candidate37819214432](https://github.com/reddraggone9/tandemlog/actions/runs/37819214432)
+both use exact `77a5f2d`. The successful push and remote SHA were verified before
+the valid signing dispatch. An unintended earlier old-main dispatch 37818335528
+failed preflight and skipped checks/signing; it is not an RC4 artifact.
+The [reviewed current handoff](https://github.com/reddraggone9/tandemlog/blob/d1b3967/design/rc4-signed-candidate-acceptance.md)
+records these bindings and final native/Windows/manual/UX/consumer-byte gates.
+Those runs were still in progress at this checkpoint, with no signed artifact
+acceptance or publication claimed. Latest supported quota was 67% at 17:30:04 UTC,
+reset Oct14 10:33:41 UTC; publication still requires a fresh read. Stable feature
+promotion remains unauthorized. Continue to use isolated synthetic profiles;
+live synced user data and already-appended canonical proofs remain untouched.
