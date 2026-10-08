@@ -1,0 +1,15 @@
+2026-10-08T04:42:34.0539089Z {"executable_sha256": "f5fdc23ca3fd1236df6eb4c5687b098b2f66f5d01f56b174e6dc2cb8fa5ea74c", "github_run_id": "37728151359", "native_library_sha256": "bc3c267df2745b1a59033574de3cf12ca8dd51ca643743b8b7b9c3e5ba498a99", "portable_archive": "tandemlog-windows-x64-unsigned-portable.zip", "portable_sha256": "daa10a133a87ea8d128b1edfd306740ae1ad256578396ea1675adf9d86f01af1", "source_revision": "c1823856be3f2b5aada5aa6960e7fbe9023f918f"}
+2026-10-08T04:42:58.4959076Z 28f83af5ef0690cd85b009b5da1333ca43d82b30c1f21cc5fa72e75819d84c3e  tandemlog-windows-x64-unsigned-setup.exe
+2026-10-08T04:43:00.0600561Z SHA256 digest of uploaded artifact is c4bd7e5fb078ac776ac6d8b00041e204974ed125fdd2d5df4bd38fad07302db4
+2026-10-08T04:36:00.8997551Z ##[group]Run test -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"
+2026-10-08T04:36:00.8997974Z [36;1mtest -x "$ANDROID_HOME/build-tools/36.0.0/apksigner"[0m
+2026-10-08T04:39:42.1355549Z [36;1mcp build/app/outputs/flutter-apk/app-debug.apk dist/tandemlog-android-test-only.apk[0m
+2026-10-08T04:39:42.1356473Z [36;1m"$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs dist/tandemlog-android-test-only.apk > dist/android-signature.txt[0m
+2026-10-08T04:39:42.1357295Z [36;1msha256sum tandemlog-android-test-only.apk > android-SHA256SUMS.txt[0m
+2026-10-08T04:39:42.1357653Z [36;1mcat android-SHA256SUMS.txt[0m
+2026-10-08T04:39:42.9579257Z 213b26369d5b7d4f962951d963a7e60a8e44e6f80808feeb4c8b11d102b0450f  tandemlog-android-test-only.apk
+2026-10-08T04:39:42.9586832Z Signer #1 certificate DN: C=US, O=Android, CN=Android Debug
+2026-10-08T04:39:42.9587206Z Signer #1 certificate SHA-256 digest: bd77f64457b64454e047dcf12c3e8361991e78ae7d474e1a78018973fc0a97db
+2026-10-08T04:39:42.9587546Z Signer #1 certificate SHA-1 digest: fba3aafccf8238cbb9dc92a23f1863a9c8a29deb
+2026-10-08T04:39:42.9587913Z Signer #1 certificate MD5 digest: 68a4913f498632e9ee708414f0dac01e
+2026-10-08T04:39:47.1116419Z SHA256 digest of uploaded artifact is 938373a54ef72b1144388c7da92db8f55641a46558097f35c843efd6239062dc

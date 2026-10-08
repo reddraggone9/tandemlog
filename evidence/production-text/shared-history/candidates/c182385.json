@@ -1,0 +1,46 @@
+{
+  "source_revision": "c1823856be3f2b5aada5aa6960e7fbe9023f918f",
+  "reviewed_application_revision": "f952744c4e8623df49a90e575aa7293cfa2eb6ff",
+  "application_inputs_unchanged": true,
+  "workflow_run_id": 37728151359,
+  "workflow_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37728151359",
+  "independent_reviews": {
+    "architecture": "no remaining must-fix",
+    "correctness_compatibility_undo_recurrence": "no remaining must-fix",
+    "security_resource_abuse": "no remaining must-fix",
+    "portable_packaging": "no must-fix"
+  },
+  "android": {
+    "job_id": 113150925344,
+    "job_conclusion": "success",
+    "artifact_id": 11528831584,
+    "artifact_zip_sha256": "938373a54ef72b1144388c7da92db8f55641a46558097f35c843efd6239062dc",
+    "apk": "tandemlog-android-test-only.apk",
+    "apk_sha256": "213b26369d5b7d4f962951d963a7e60a8e44e6f80808feeb4c8b11d102b0450f",
+    "signer_certificate_sha256": "bd77f64457b64454e047dcf12c3e8361991e78ae7d474e1a78018973fc0a97db",
+    "package": "com.reddraggone9.tandemlog",
+    "build": "debug test-only; ephemeral signer",
+    "hash_evidence": "Trusted GitHub completed-job logs and artifact metadata; local artifact download returned HTTP 403",
+    "displayed_version": "2026.10.2-rc.3"
+  },
+  "native_acceptance_contract": "design/shared-history-native-acceptance.md",
+  "fixture_manifest": "evidence/production-text/shared-history/qa-fixture/manifest.json",
+  "native_runtime_acceptance": "pending parent Windows/Android affected-flow evidence",
+  "publication": "Pending exact-artifact/native acceptance gates; stable behavior promotion requires Lee's approval",
+  "windows": {
+    "job_id": 113150925172,
+    "job_conclusion": "success",
+    "artifact_id": 11528488988,
+    "artifact_zip_sha256": "c4bd7e5fb078ac776ac6d8b00041e204974ed125fdd2d5df4bd38fad07302db4",
+    "portable_archive": "tandemlog-windows-x64-unsigned-portable.zip",
+    "portable_sha256": "daa10a133a87ea8d128b1edfd306740ae1ad256578396ea1675adf9d86f01af1",
+    "executable_sha256": "f5fdc23ca3fd1236df6eb4c5687b098b2f66f5d01f56b174e6dc2cb8fa5ea74c",
+    "native_library_sha256": "bc3c267df2745b1a59033574de3cf12ca8dd51ca643743b8b7b9c3e5ba498a99",
+    "payload_manifest": "windows-portable-provenance.json",
+    "archive_checks": "CRC, exact file membership and every archived byte SHA256 verified by CI packager after native payload gate",
+    "installation_lifecycle": "passed separately on native Windows CI",
+    "hash_evidence": "Trusted GitHub completed-job logs and artifact metadata; local artifact download returned HTTP 403",
+    "installer_sha256": "28f83af5ef0690cd85b009b5da1333ca43d82b30c1f21cc5fa72e75819d84c3e"
+  },
+  "ci_overall_conclusion": "pending Linux aggregate completion"
+}
