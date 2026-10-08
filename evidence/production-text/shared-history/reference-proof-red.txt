@@ -1,0 +1,51 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/recurring_text_test.dart
+00:00 +0: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text new reference proofs preserve old exact-state proofs and reject substitution
+00:00 +0 -1: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text new reference proofs preserve old exact-state proofs and reject substitution [E]
+  Invalid text inheritance descriptor.
+  package:tandemlog/domain/event.dart 621:5   validateTextInheritance
+  package:tandemlog/domain/event.dart 212:13  new LogEvent.decode
+  test/recurring_text_test.dart 30:28         _History.append
+  test/recurring_text_test.dart 129:12        _History.complete
+  test/recurring_text_test.dart 160:32        main.<fn>.<fn>
+  
+00:00 +0 -1: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+00:00 +0 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+00:00 +0 -2: /workspace/tandemlog/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction [E]
+  Expected: <2>
+    Actual: <1>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/shared_text_storage_test.dart 75:11            main.<fn>
+  
+00:00 +1 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text memo preserves union and rejects sparse closed prefixes after a hit
+00:00 +2 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text memo budgets evict without changing replay or requiring native checkpoints
+00:00 +3 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text shared originals remain bounded without evicting the latest edited proof
+00:01 +4 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text offline title and notes union preserves acknowledged child prefix and duplicates
+00:01 +5 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text later parent edits flow only through another completion and Undo retains contributions
+00:01 +6 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text missing proof is pending; known wrong context or state hash is invalid
+00:01 +7 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text actual foreign struct author is rejected
+00:01 +8 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text reusing another writer’s actor claim is rejected
+00:01 +9 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text grandchild prefix excludes a late ancestor completion
+00:01 +10 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text missing current grant waits but a closed incomplete proof rejects
+00:01 +11 -2: /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text union visible overflow rejects without modifying canonical inputs
+00:01 +12 -2: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/test/recurring_text_test.dart: actual native recurring inherited text new reference proofs preserve old exact-state proofs and reject substitution
+  /workspace/tandemlog/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction

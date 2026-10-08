@@ -99,6 +99,7 @@ class _History {
     String parent,
     String child, {
     void Function(Map<String, dynamic>)? corrupt,
+    bool referenceProof = false,
   }) {
     final fields = RecurringTextResolver(engine, observed).resolve(parent);
     final latest = <String, LogEvent>{};
@@ -107,7 +108,7 @@ class _History {
     }
     final proof = <String, dynamic>{
       'codec': 'yrs-v1',
-      'adapter': 1,
+      'adapter': referenceProof ? 2 : 1,
       'frontiers': {
         for (final e in latest.values)
           e.writer: {'seq': e.sequence, 'hash': e.hash},
@@ -117,7 +118,10 @@ class _History {
           entry.key: <String, dynamic>{
             'parentContext': entry.value.context.hash,
             'seedHash': entry.value.context.seedHash,
-            'stateHash': entry.value.stateHash,
+            if (referenceProof)
+              'historyHash': entry.value.historyReference!.hash
+            else
+              'stateHash': entry.value.stateHash,
           },
       },
     };
@@ -148,6 +152,51 @@ void main() {
         h = _History(engine);
       });
       tearDown(() => engine.dispose());
+      test(
+        'new reference proofs preserve old exact-state proofs and reject substitution',
+        () {
+          final history = [h.create()];
+          history.add(h.edit(history, _a, _parent, {'title': 'AXB'}));
+          final completion = h.complete(
+            history,
+            _a,
+            _parent,
+            _child,
+            referenceProof: true,
+          );
+          final shared = RecurringTextResolver(engine, [
+            ...history,
+            completion,
+          ]).resolve(_child);
+          final old = h.complete(history, _b, _parent, _child);
+          final compatible = RecurringTextResolver(engine, [
+            ...history,
+            completion,
+            old,
+          ]).resolve(_child);
+          expect(shared['title']!.text, 'AXB');
+          expect(
+            compatible['title']!.state.encoded,
+            shared['title']!.state.encoded,
+          );
+          final corrupt = h.complete(
+            history,
+            _a,
+            _parent,
+            _child,
+            referenceProof: true,
+            corrupt: (proof) =>
+                proof['fields']['title']['historyHash'] = 'f' * 64,
+          );
+          expect(
+            () => RecurringTextResolver(engine, [
+              ...history,
+              corrupt,
+            ]).resolve(_child),
+            throwsA(isA<FormatFailure>()),
+          );
+        },
+      );
       test(
         'resolver shares recurrence references and advances native history once',
         () {
