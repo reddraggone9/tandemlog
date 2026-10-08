@@ -118,5 +118,15 @@
     "correctness": "accepted; freshAPI source/status/artifacts, exactloghashes/counts/hostpayloadreports verified",
     "security": "accepted; literal UTF8/CRLF logs, API+hostartifact/source/hash/signers and consumer403/no byteclaim, unchanged main-onlysign/publishworkflow gates verified",
     "architecture": "accepted; unchanged executableinputs, artifact qualification/A16profileisolation/floors/finalnative/quota/publication/notes-range contract verified"
+  },
+  "supporting_windows_native": {
+    "run": 37813474065,
+    "runner_source": "a249af55d49148db0525abd7f713ee716900353b",
+    "application_source": "e205e650b5614935a73cf5acb96ca9b36fda8e4e",
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "receipt": "../windows-native/receipt.json",
+    "review": "accepted; debug only"
   }
 }

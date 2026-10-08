@@ -12,3 +12,6 @@ evidence/kotlin-remediation/hosted-evaluation/** -text
 
 # Source-bound decoded job-log receipts retain literal UTF8/CRLF bytes.
 evidence/final-preview/ci/** -text
+
+# Scoped Windows decoded receipt keeps literal CRLF bytes.
+evidence/final-preview/windows-native/** -text

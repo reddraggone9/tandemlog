@@ -72,8 +72,11 @@ runtime results as acceptance of the combined payload.
    runner source `a249af55d49148db0525abd7f713ee716900353b`, application/test/native
    inputs byte-identical to e205, and selects three tag plus one historical flow.
    [Scoped run 37813474065](https://github.com/reddraggone9/tandemlog/actions/runs/37813474065)
-   is pending. Its eventual receipt will be supporting debug evidence, not
-   installed-release acceptance or
+   passed all four flows without failures/skips. Its [qualified receipt](../evidence/final-preview/windows-native/receipt.json)
+   records actual source/startup/count evidence and reported ZIP 8025 bytes, artifact
+   `11565823346`, SHA256 `2b83a2627cea3a210cc3cacce0ac886defdd2ce88ae2b063b1eb7bde70047a77`.
+   Consumer ZIP/member/payload hashes are not verified here. This supports debug
+   execution, not installed-release acceptance or
    runtime loaded-module enumeration. Linux narrow screenshots are not Android.
 
 ## Proposed signing and preview promotion sequence
