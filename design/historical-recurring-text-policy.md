@@ -6,11 +6,19 @@ independent review and candidate platform acceptance remain pending.
 
 `task.completedKeepingSuccessor` is a required additive v3 record with
 `completedAt` and `retainedSuccessor: {id, completion, hash}`. It binds the earlier
-scalar completion that selected this deterministic child, but contains no child
+completion that selected this deterministic child, but contains no child
 snapshot or text inheritance. It completes only the parent and leaves the child's
 context, text, notes, schedule, tags, completion/deletion status and manual position
 unchanged. Concurrent historical recompletions are independent parent completions
 that retain the same child; later parent edits have no path into that child.
+
+The unreleased shared-history implementation also recognizes an earlier native
+initializer when durable successor task or checklist activity established its
+independent work. That activity remains protective after Undo or deletion. An
+untouched native successor continues to use ordinary forward/concurrent inheritance.
+The original scalar eligibility rules remain unchanged. See the
+[native checklist regression](../evidence/historical-checklist-recompletion/README.md)
+for the Android finding, production-command reproduction and acceptance status.
 
 Ordinary forward native recurrence retains its observed-text union behavior.
 Explicit attempts to initialize the historical child through that inheritance

@@ -3181,13 +3181,14 @@ class TaskStore {
     ]);
     if (source.isEmpty) return null;
     final event = LogEvent.decode(source.single['raw'] as String);
-    if (!isScalarSuccessorInitialization(event) || event.entity != entity) {
+    if (!isHistoricalSuccessorInitialization(event) || event.entity != entity) {
       return null;
     }
-    if (event.type == 'task.completedWithChecklist') {
-      // Additive scalar-mode checklist copies own native item histories even
-      // before the scalar parent opts into shared text. Durable child activity
-      // protects that initialized successor, including undone/deleted work.
+    if (event.type == 'task.completedWithChecklist' ||
+        hasNativeTaskSuccessor(event)) {
+      // Checklist copies own item histories; native children also own their
+      // saved task edits. Durable activity protects either initialized child,
+      // including undone/deleted work, from later historical inheritance.
       final independent =
           db.select('SELECT 1 FROM events WHERE entity=? LIMIT 1', [
             child,
@@ -3198,6 +3199,9 @@ class TaskStore {
           ).isNotEmpty ||
           _hasChecklistActivity(child);
       if (independent) return event;
+      // An unadopted native successor keeps the existing forward/concurrent
+      // inheritance policy. The checks below belong to released scalar history.
+      if (hasNativeTaskSuccessor(event)) return null;
     }
     // Preserve released scalar completion policy: its historical marker still
     // requires an independently initialized pair of parent/child documents.

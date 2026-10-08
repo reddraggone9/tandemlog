@@ -1,0 +1,67 @@
+{
+  "base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "frozen_red": "f00ed0040272b9f81a678b1d504d1beb5e8330f9",
+  "production_blobs": {
+    "lib/domain/historical_completion.dart": "13a6996316ea60c83d424a7a853c12fa29b94459",
+    "lib/storage/task_store.dart": "92aeddc3848da5fcc7e92df5b37da2d181fee965"
+  },
+  "native_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "local_results": {
+    "native_four": [
+      4,
+      0
+    ],
+    "boundaries_delivery": [
+      8,
+      0
+    ],
+    "affected": [
+      106,
+      0
+    ],
+    "flutter_full": [
+      606,
+      0
+    ],
+    "analysis": "clean",
+    "actual_gtk_final": [
+      1,
+      0
+    ],
+    "actual_gtk_frozen": [
+      0,
+      1
+    ]
+  },
+  "independent_review": {
+    "correctness": "accepted production and expanded source/tests/logs; not rerun",
+    "security": "accepted narrow source eligibility and unchanged strict bindings; not rerun",
+    "architecture": "accepted production preservation; schema status and evidence link corrected"
+  },
+  "original_library_packet": "prepare succeeded; consumer403; no bytes/hash verification claim; authorized ordered fallback",
+  "native_retest": "BLOCKED pending exact new APK acceptance; restart checkpoint through A16 before leaked proof",
+  "sha256": {
+    "evidence/historical-checklist-recompletion/README.md": "913413cd8ba8abb0ad63339ccc31cfb99750a6e79a4a1bea6f864448a7112f1a",
+    "evidence/historical-checklist-recompletion/green/affected-106.txt": "8bcfa52ca1dbadfa3f9783cfad4f1fa711eb63409409630dca8ed267f3d2a03c",
+    "evidence/historical-checklist-recompletion/green/analyze.txt": "5c57d0a1ef5efde2983c524fc5ec2a5c52d1b3d2d37751b4e9e44a1877ff47dd",
+    "evidence/historical-checklist-recompletion/green/boundaries-eight.txt": "ce509243a085d18ae17fd9bc9a3666fddd8f3106996b584954ab96563bafd8a9",
+    "evidence/historical-checklist-recompletion/green/full-flutter-606.txt": "4a16ce4543efd0138a3cc78ade57acc31fb98f36178ce9d52a4fb298eb86c66f",
+    "evidence/historical-checklist-recompletion/green/gtk.txt": "4217bc1d522d52f134450f55582f23122fed364dcc0202da71ec4f86bc811b48",
+    "evidence/historical-checklist-recompletion/green/native-four.txt": "8495bc33c2de0b522942333b84e18d112851c1b970e4c8625ac228a2241f4ee0",
+    "evidence/historical-checklist-recompletion/harness/editor-readiness-failure.txt": "b223064a8430f87628aacc6e960833241b5d791d1abf5089409a92e0881a2794",
+    "evidence/historical-checklist-recompletion/native/after-native-recompletion.png": "ecced1a1b539595eedf1fef57910f508ddbf6ed3fda0e7793946fa6c120b8564",
+    "evidence/historical-checklist-recompletion/native/after-native-undo.png": "ce1869bc79bff2283c77afe231f77d61f0c58931c672e923236b1b7ac8490eec",
+    "evidence/historical-checklist-recompletion/native/before-native-recompletion.png": "b889163818a2c791d99e266ceea0f217a07714c870d2bb4bbbf26c57b51bae9a",
+    "evidence/historical-checklist-recompletion/red/extended-manifest.json": "053b577b451274c10f59427359a8277b45124e66a4efdf2b68a0f496c55761bd",
+    "evidence/historical-checklist-recompletion/red/extended-native-command-sequence.txt": "8f5768ddc3b4aab394b217040ce8c371e0c2c939387415e837185e8645611a47",
+    "evidence/historical-checklist-recompletion/red/gtk.txt": "653072765ca59fd0a38ca37a9da18fe53901c7d3523eab2f7be492a004a8e8b9",
+    "evidence/historical-checklist-recompletion/red/manifest.json": "a3a9118f4b1c0b397c8a65b8764f6ca6b38c594eae58047f18eb1fcefa603b81",
+    "evidence/historical-checklist-recompletion/red/native-command-sequence.txt": "ee7e8140b4e7d59284970af2f3643c94eac3a808b704f037cdfd00724f99f1d4",
+    "integration_test/historical_checklist_recompletion_test.dart": "cdc0dda7bf9147a305127f30abd3f527ce69fe4722144a911e977a4a179f25d5",
+    "integration_test/task_flow_test.dart": "569c2f917a627829e47e1d7b0ee08592ebbedd9ff6e13951e0ae1015754f222e",
+    "lib/domain/historical_completion.dart": "3f2e3f6ae5a6357d9be980ae076cb56e5881ca237d96ceed5403d6b99fd58afe",
+    "lib/storage/task_store.dart": "a6ba93708197b76440078ba07bce957b453cd80ffdf46f016bb26b970ab419ca",
+    "test/historical_delivery_test.dart": "f0038dd896ed57862fd1a82c93769f5c9ccd199181784c08b6abb307f3d634e4",
+    "test/native_checklist_recompletion_test.dart": "8a17843c22d014bce5d08c6f46e9efecfbad35b45cf6d492a7bca6d5cf124443"
+  }
+}

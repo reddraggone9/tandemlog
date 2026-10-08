@@ -1,0 +1,117 @@
+{
+  "run": 37804634954,
+  "compiled_source": "d73662ab8479aa8076ee04a5ed5badd1542e585d",
+  "overall": "success",
+  "jobs": {
+    "checks / android": {
+      "id": 113405587461,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "checks / linux": {
+      "id": 113405588061,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "checks / windows": {
+      "id": 113405588166,
+      "status": "completed",
+      "conclusion": "success"
+    }
+  },
+  "counts": {
+    "linux_flutter": [
+      606,
+      0,
+      0
+    ],
+    "linux_actual_native_apps": [
+      67,
+      0,
+      0
+    ],
+    "windows_flutter": [
+      604,
+      2,
+      0
+    ],
+    "cargo_each_desktop": [
+      4,
+      0,
+      0
+    ],
+    "native_worker_each_desktop": [
+      107,
+      0,
+      0
+    ],
+    "tools_each_desktop": [
+      37,
+      0,
+      0
+    ]
+  },
+  "count_order": "passed,skipped,failed; Windows2 Linux-only expected skips",
+  "artifact_api_reported": [
+    {
+      "id": 11562878043,
+      "name": "linux",
+      "size_in_bytes": 8992598,
+      "expired": false,
+      "digest": "sha256:45a4495ff9b54b66bca32c75b59c47ed3343c90df8ead1620afd1044507968fc",
+      "workflow_run": {
+        "id": 37804634954,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "fix/historical-checklist-recompletion",
+        "head_sha": "d73662ab8479aa8076ee04a5ed5badd1542e585d"
+      }
+    },
+    {
+      "id": 11562827013,
+      "name": "windows",
+      "size_in_bytes": 25741854,
+      "expired": false,
+      "digest": "sha256:1f06a381406f5b54636511a2fdcd89d2af9ee2b817aa66cc68c50f28ca6840b1",
+      "workflow_run": {
+        "id": 37804634954,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "fix/historical-checklist-recompletion",
+        "head_sha": "d73662ab8479aa8076ee04a5ed5badd1542e585d"
+      }
+    },
+    {
+      "id": 11561899292,
+      "name": "android",
+      "size_in_bytes": 80369922,
+      "expired": false,
+      "digest": "sha256:1fbe0347a14e9edd6c7a204732fbd449d6c22fe28c2ba5737f2e324528299878",
+      "workflow_run": {
+        "id": 37804634954,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "fix/historical-checklist-recompletion",
+        "head_sha": "d73662ab8479aa8076ee04a5ed5badd1542e585d"
+      }
+    }
+  ],
+  "consumer_artifact_bytes_verified": false,
+  "android_download": "official GitHub artifact redirect403; actual APK/signing/native runtime acceptance parent-owned pending",
+  "decoded_utf8_job_logs": {
+    "linux-job-113405588061.txt": "41c4f25f491675f3136141c504bd17d9b0ae45b2d3c9d5782860010bca780595",
+    "windows-job-113405588166.txt": "916200d6aec87ce8a20eea2576af1743e914fcfa372b1d43314fbd9be90fc7ec",
+    "android-job-113405587461.txt": "998e40b949828684224fb9593d7c3c60fa62964481a332a415893cc5de3446c4"
+  },
+  "logs_qualification": "Completed job MCP decoded text retained; does not claim original raw archive bytes",
+  "focused_windows": {
+    "run": 37805503087,
+    "job": 113408581947,
+    "compiled_source": "bcbcece5dc34d44dbb7453fa54c0882a3dbacd10",
+    "application_source": "d73662ab8479aa8076ee04a5ed5badd1542e585d",
+    "passed": 1,
+    "skipped": 0,
+    "failed": 0
+  },
+  "release_acceptance": "BLOCKED exact byteverified newAndroid checkpointthroughA16 test, Undo and coldrebuild; no releasepublication"
+}

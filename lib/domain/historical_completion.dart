@@ -1,6 +1,11 @@
 import 'event.dart';
 
-/// This completion retains an existing scalar-initialized child. It supplies
+/// An earlier completion establishing the deterministic child can be retained.
+/// Native initialization is additive; the released scalar predicate stays intact.
+bool isHistoricalSuccessorInitialization(LogEvent event) =>
+    isScalarSuccessorInitialization(event) || hasNativeTaskSuccessor(event);
+
+/// This completion retains an existing independently edited child. It supplies
 /// no successor creation/text contribution. Missing source is a transport
 /// dependency; a known wrong source is invalid, never a replacement seed.
 bool verifyHistoricalCompletion(LogEvent completion, LogEvent? source) {
@@ -13,7 +18,7 @@ bool verifyHistoricalCompletion(LogEvent completion, LogEvent? source) {
       source.hash != retained['hash'] ||
       source.space != completion.space ||
       source.entity != completion.entity ||
-      !isScalarSuccessorInitialization(source) ||
+      !isHistoricalSuccessorInitialization(source) ||
       source.clock >= completion.clock ||
       (source.data['successor'] as Map?)?['id'] != retained['id']) {
     throw FormatFailure(
