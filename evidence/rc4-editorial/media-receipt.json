@@ -1,0 +1,58 @@
+{
+  "covered_range": {
+    "before": "5ac35da50acca69ab196a54312efc8ccef1452da",
+    "after": "e205e650b5614935a73cf5acb96ca9b36fda8e4e"
+  },
+  "actual_capture": "Linux x64 GTK debug under Xvfb,1200x850,dark,scale1",
+  "overlay": "Identical capture-only harness added to separate detached5ac and editoriale205 worktrees; production files unchanged; no live synced data",
+  "workflow": "fresh scalar-v3 synthetic user Lee, Plan weekend/Home Office, Review supplies/Planning; select Plan weekend and scroll Tags into view",
+  "passes": {
+    "before": 1,
+    "after": 1
+  },
+  "media": "Vector layout embeds unchanged PNG captures; Chromium renders comparison; raw crop pixels independently compared exactly",
+  "recipe": {
+    "canvas": [
+      856,
+      180
+    ],
+    "background": "#19231e",
+    "labels": "centered Before/After only",
+    "before_crop": [
+      790,
+      670,
+      400,
+      58
+    ],
+    "after_crop": [
+      790,
+      620,
+      400,
+      108
+    ],
+    "pane_origin": {
+      "before": [
+        16,
+        48
+      ],
+      "after": [
+        440,
+        48
+      ]
+    },
+    "scaling": 1
+  },
+  "scope": "tag UI comparison only; no Android/Windows/release acceptance",
+  "files_sha256": {
+    "after-tag-editor-geometry.json": "7d34103fc947f1ff77fc2498ca156a768c7c9ed70566ea0e9392cb2e146eb7cc",
+    "after-tag-editor.png": "8804e346547e8cec22e9c230e4ab2a4b9f3781e7b68d038d0c44846d72ca448a",
+    "before-tag-editor-geometry.json": "34f15d65078f0028f413d8f88fdd604bc6778b36428f787f9443911caab07048",
+    "before-tag-editor.png": "bce436474b358ba1aff1f870ddca2d430565a35a8baad945636dcfa121d9ae4b",
+    "capture-harness.dart.txt": "65780c1963ff956c8afed86d53031fca532cc770a5d3cb94d2040d73b997a4c1",
+    "rc4-media-baseline-capture.txt": "024a5bd973fd7c73e62cf4c11e9e2b72dabe41a09ca3a0e72c3eaad6c4400424",
+    "rc4-media-candidate-capture.txt": "8e403f71d562705196837ec91754fa7f0cbd4115a0caa4c69a73e825a9492b4f",
+    "tag-before-after.svg": "b231e8d02f17d16eccc908560c0fdb2958c656077ead646a4b1ab2e765421a40",
+    "tag-control-before-after.png": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90"
+  },
+  "render_failures": "Unavailable CairoSVG module, two rejected Inkscape layouts/renders, file URL navigation blocked; preserved outside repository under recovery/rc4-media-render-rejected. Final comparison rendered from in-memory vector document."
+}
