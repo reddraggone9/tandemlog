@@ -8,6 +8,9 @@ import '../domain/text_actor.dart';
 import '../domain/text_context.dart';
 import '../domain/text_inheritance.dart';
 import 'native_text_engine.dart';
+import 'shared_text_history.dart';
+import 'text_history_operation.dart';
+export 'text_history_operation.dart';
 
 /// A declared canonical dependency has not arrived. This is distinct from a
 /// known invalid proof, and must never cause a guessed replacement seed.
@@ -30,35 +33,129 @@ typedef LegacyTextRoots =
       List<LogEvent> observed,
     );
 
-/// An original packet and its original authorship. Inheritance grants permission
-/// to reuse the packet; it does not make its completing writer the author.
-class LineageTextOperation {
-  const LineageTextOperation(this.event, this.field, this.claim, this.update);
-  final LogEvent event;
-  final String field;
-  final TextActorClaim claim;
-  final NativeTextUpdate update;
-}
-
 class ResolvedTextField {
   ResolvedTextField({
     required this.context,
     required this.seed,
     required Iterable<LineageTextOperation> operations,
-    required this.state,
+    required NativeTextState state,
     required this.text,
-  }) : operations = List.unmodifiable(operations);
+  }) : _operations = List.unmodifiable(operations),
+       _state = state,
+       historyReference = null,
+       _runtime = null;
+  ResolvedTextField._shared({
+    required this.context,
+    required this.seed,
+    required this.historyReference,
+    required this.text,
+    required _RecurringHistoryRuntime runtime,
+  }) : _runtime = runtime,
+       _operations = null,
+       _state = null;
   final TextFieldContext context;
   final NativeTextUpdate seed;
-  final List<LineageTextOperation> operations;
-  final NativeTextState state;
+  final SharedTextReference? historyReference;
+  final _RecurringHistoryRuntime? _runtime;
+  final List<LineageTextOperation>? _operations;
+  final NativeTextState? _state;
+  Iterable<LineageTextOperation> get operations =>
+      _operations ?? _runtime!.graph.operations(historyReference!);
+  NativeTextState get state =>
+      _state ?? _runtime!.state(context.field, historyReference!);
   final String text;
-  String get stateHash => sha256.convert(state.bytes).toString();
+  String get stateHash => historyReference == null
+      ? sha256.convert(state.bytes).toString()
+      : _runtime!.snapshot(context.field, historyReference!).stateHash;
 }
 
-/// Disposable, process-local reuse of fully verified immutable completion
-/// prefixes. It contains serialized state, never a live native document/Undo
-/// owner. The byte limit accounts retained payload, not Dart heap overhead.
+/// Original packets and admission claims are shared authority, rather than a
+/// separate inherited list for each occurrence. Only disposable live native
+/// documents/checkpoints are in the bounded replay pool. No editor owner enters
+/// this runtime. Original context grants remain the resolver's responsibility.
+class _RecurringHistoryRuntime {
+  _RecurringHistoryRuntime(this.engine, this.deriveActor)
+    : registry = TextActorRegistry(deriveActor: deriveActor);
+  final NativeTextEngine engine;
+  final TextActorDeriver? deriveActor;
+  final graph = SharedTextHistoryGraph();
+  final TextActorRegistry registry;
+  final _admitted = <String>{};
+  final _rootActors = <String, TextActorClaim>{};
+  final _pools = <String, SharedTextMaterializer>{};
+  bool _closed = false;
+  int get packetApplications =>
+      _pools.values.fold(0, (n, pool) => n + pool.packetApplications);
+  SharedTextMaterializer _pool(String field) => _pools.putIfAbsent(
+    field,
+    () => SharedTextMaterializer(
+      engine,
+      limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
+    ),
+  );
+  SharedTextReference append(
+    SharedTextReference parent,
+    LineageTextOperation packet,
+  ) {
+    final key =
+        '${parent.rootContext}:${packet.event.space}:${packet.event.hash}:${packet.field}';
+    final ownerKey = '${parent.rootContext}:${packet.claim.actor}';
+    if (!_admitted.contains(key)) {
+      registry.bindAll([packet.claim]);
+      registry.validateStructActors(
+        packet.claim,
+        engine.inspect(packet.update),
+      );
+      final owner = _rootActors[ownerKey];
+      if (owner != null && !owner.sameOwner(packet.claim)) {
+        throw FormatFailure('Inherited native text actor collision.');
+      }
+    }
+    final reference = graph.append(parent, packet);
+    _rootActors[ownerKey] = packet.claim;
+    _admitted.add(key);
+    return reference;
+  }
+
+  SharedTextSnapshot snapshot(String field, SharedTextReference reference) {
+    if (!_closed) return _pool(field).snapshot(reference);
+    final temporary = SharedTextMaterializer(
+      engine,
+      limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
+    );
+    try {
+      return temporary.snapshot(reference);
+    } finally {
+      temporary.close();
+    }
+  }
+
+  NativeTextState state(String field, SharedTextReference reference) {
+    if (!_closed) return _pool(field).state(reference);
+    final temporary = SharedTextMaterializer(
+      engine,
+      limits: NativeTextLimits(visibleUtf16: field == 'title' ? 500 : 10000),
+    );
+    try {
+      return temporary.state(reference);
+    } finally {
+      temporary.close();
+    }
+  }
+
+  void close() {
+    for (final pool in _pools.values) {
+      pool.close();
+    }
+    _pools.clear();
+    _closed = true;
+  }
+}
+
+/// Process-local reuse of fully verified immutable completion references.
+/// The entry budget covers visible summaries and root/reference metadata.
+/// Original authority is shared once in a graph; bounded native history pools
+/// carry sparse disposable state separately, never editor/Undo ownership.
 class RecurringTextMemo {
   RecurringTextMemo({
     this.maxEntries = 128,
@@ -83,7 +180,17 @@ class RecurringTextMemo {
   final _sharedPackets = <String, LineageTextOperation>{};
   final _packetUses = Map<LineageTextOperation, int>.identity();
   final _eventUses = Map<LogEvent, int>.identity();
-  int get sharedPacketCount => _sharedPackets.length;
+  final _histories = <String, _RecurringHistoryRuntime>{};
+  _RecurringHistoryRuntime _history(NativeTextEngine engine) =>
+      _histories.putIfAbsent(
+        engine.ownerId,
+        () => _RecurringHistoryRuntime(engine, deriveActor),
+      );
+  int get sharedPacketCount =>
+      _sharedPackets.length +
+      _histories.values.fold(0, (n, history) => n + history.graph.packetCount);
+  int get historyPacketApplications =>
+      _histories.values.fold(0, (n, history) => n + history.packetApplications);
 
   String _packetKey(LineageTextOperation packet) =>
       '${packet.event.hash}:${packet.field}';
@@ -156,6 +263,10 @@ class RecurringTextMemo {
   }
 
   void clear() {
+    for (final runtime in _histories.values) {
+      runtime.close();
+    }
+    _histories.clear();
     _entries.clear();
     _records.clear();
     _actors.clear();
@@ -207,6 +318,18 @@ class RecurringTextMemo {
     final packets = Set<LineageTextOperation>.identity();
     final events = Set<LogEvent>.identity();
     for (final field in frozen.values) {
+      if (field.historyReference != null) {
+        // Keep one immutable reference and its visible summary. The authority
+        // graph shares original packets; this entry retains no full-state BLOB,
+        // flattened operation list or per-entry packet/event membership set.
+        bytes +=
+            field.seed.bytes.length +
+            2 *
+                (field.seed.encoded.length +
+                    field.text.length +
+                    field.historyReference!.hash.length);
+        continue;
+      }
       bytes +=
           field.seed.bytes.length +
           field.state.bytes.length +
@@ -339,6 +462,8 @@ class RecurringTextResolver {
       {},
       memo,
       legacyScope,
+      memo?._history(engine) ?? _RecurringHistoryRuntime(engine, null),
+      memo == null,
     );
   }
 
@@ -350,6 +475,8 @@ class RecurringTextResolver {
     this.observedFields,
     this.memo,
     this.legacyScope,
+    this._runtime,
+    this._closeRuntime,
   );
   final NativeTextEngine engine;
   final List<LogEvent> history;
@@ -360,9 +487,19 @@ class RecurringTextResolver {
   final Map<String, Map<String, ResolvedTextField>> observedFields;
   final RecurringTextMemo? memo;
   final String? legacyScope;
+  final _RecurringHistoryRuntime _runtime;
+  final bool _closeRuntime;
   final Map<String, Map<String, ResolvedTextField>> _resolved = {};
 
   Map<String, ResolvedTextField> resolve(String entity) {
+    try {
+      return _resolve(entity);
+    } finally {
+      if (_closeRuntime) _runtime.close();
+    }
+  }
+
+  Map<String, ResolvedTextField> _resolve(String entity) {
     if (_resolved.containsKey(entity)) return _resolved[entity]!;
     if (ancestors.contains(entity)) {
       throw FormatFailure('Cyclic recurring text lineage.');
@@ -379,7 +516,7 @@ class RecurringTextResolver {
         )
         .toList();
     final roots = <String, TextFieldSeed>{};
-    final inheritedStates = <String, List<ResolvedTextField>>{
+    final inheritedReferences = <String, List<SharedTextReference>>{
       'title': [],
       'description': [],
     };
@@ -439,6 +576,8 @@ class RecurringTextResolver {
               observedFields,
               memo,
               legacyScope,
+              _runtime,
+              false,
             ).resolve(completion.entity);
             memo?._put(key, result);
             return result;
@@ -470,12 +609,9 @@ class RecurringTextResolver {
             throw FormatFailure('Incompatible recurring text parent lineages.');
           }
           roots[field] = TextFieldSeed(context, parent.seed);
-          inheritedStates[field]!.add(parent);
+          inheritedReferences[field]!.add(parent.historyReference!);
           // Contributions remain immutable even if completion is later undone.
           // Completion projection separately governs suppression of the child.
-          for (final packet in parent.operations) {
-            _include(packets[field]!, packet);
-          }
         }
       }
     } else if (creations.isNotEmpty) {
@@ -539,100 +675,26 @@ class RecurringTextResolver {
       }
       final ordered = packets[field]!.values.toList()
         ..sort((a, b) => compareEvents(a.event, b.event));
-      // Native identity is the seed plus original packets; field context only
-      // scopes ownership. When the union adds no packets, the verified native
-      // state is exactly an inherited state, including its retained deletions.
-      ResolvedTextField? unchanged;
-      for (final candidate in inheritedStates[field]!) {
-        if (candidate.seed.encoded == root.update.encoded &&
-            candidate.operations.length == ordered.length &&
-            List.generate(
-              ordered.length,
-              (index) =>
-                  candidate.operations[index].event.id ==
-                      ordered[index].event.id &&
-                  candidate.operations[index].update.encoded ==
-                      ordered[index].update.encoded &&
-                  candidate.operations[index].claim.sameOwner(
-                    ordered[index].claim,
-                  ),
-            ).every((same) => same)) {
-          unchanged = candidate;
-          break;
-        }
+      final parents = inheritedReferences[field]!;
+      var reference = parents.isEmpty
+          ? _runtime.graph.root(root.context.hash, root.update)
+          : _runtime.graph.merge(parents);
+      for (final packet in ordered) {
+        reference = _runtime.append(reference, packet);
       }
-      if (unchanged != null) {
-        result[field] = ResolvedTextField(
-          context: root.context,
-          seed: root.update,
-          operations: ordered,
-          state: unchanged.state,
-          text: unchanged.text,
+      final snapshot = _runtime.snapshot(field, reference);
+      if (snapshot.pending) {
+        throw TextInheritancePending(
+          'Recurring text is waiting for an inherited update dependency.',
         );
-        continue;
       }
-      final registry = TextActorRegistry(deriveActor: memo?.deriveActor)
-        ..bindAll(ordered.map((packet) => packet.claim));
-      final authors = <int, TextActorClaim>{};
-      // Start from a verified inherited snapshot and apply only the union's
-      // additional original packets. Cache materialization still independently
-      // replays the full packet set and checks the resulting state hash/text.
-      ResolvedTextField? carrier;
-      for (final candidate in inheritedStates[field]!) {
-        if (carrier == null ||
-            candidate.operations.length > carrier.operations.length) {
-          carrier = candidate;
-        }
-      }
-      final limits = NativeTextLimits(
-        visibleUtf16: field == 'title' ? 500 : 10000,
+      result[field] = ResolvedTextField._shared(
+        context: root.context,
+        seed: root.update,
+        historyReference: reference,
+        text: snapshot.text,
+        runtime: _runtime,
       );
-      final document = carrier == null
-          ? engine.createDocument(
-              actorClientId: 2,
-              seed: root.update,
-              limits: limits,
-            )
-          : engine.restoreDocument(
-              actorClientId: 2,
-              limits: limits,
-              checkpoint: NativeTextCheckpoint(carrier.state),
-            );
-      final carried = {
-        for (final packet in carrier?.operations ?? <LineageTextOperation>[])
-          packet.event.id,
-      };
-      try {
-        for (final packet in ordered) {
-          registry.validateStructActors(
-            packet.claim,
-            engine.inspect(packet.update),
-          );
-          final previous = authors[packet.claim.actor];
-          if (previous != null && !previous.sameOwner(packet.claim)) {
-            throw FormatFailure('Inherited native text actor collision.');
-          }
-          authors[packet.claim.actor] = packet.claim;
-          if (!carried.contains(packet.event.id)) {
-            document.applyRemote(packet.update);
-          }
-        }
-        final snapshot = document.read();
-        if (snapshot.pending) {
-          throw TextInheritancePending(
-            'Recurring text is waiting for an inherited update dependency.',
-          );
-        }
-        result[field] = ResolvedTextField(
-          context: root.context,
-          seed: root.update,
-          operations: ordered,
-          state: document.fullState,
-          text: snapshot.text,
-        );
-      } finally {
-        document.dispose();
-      }
     }
     return _resolved[entity] = Map.unmodifiable(result);
   }

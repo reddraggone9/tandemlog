@@ -4,7 +4,7 @@ import 'package:crypto/crypto.dart';
 
 import '../domain/event.dart';
 import 'native_text_engine.dart';
-import 'recurring_text.dart';
+import 'text_history_operation.dart';
 
 /// An immutable reference to original operations. Recurrence copies references,
 /// never a growing inherited packet list. Context/actor grants are verified by

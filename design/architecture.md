@@ -25,6 +25,14 @@ materializes native field checkpoints in the same disposable SQLite cache.
 Bounded process-local immutable-record/proof memos belong to storage/text
 resolution, never editor/Undo ownership; every reused checkpoint must match the
 independently verified native state.
+The current shared-history redesign replaces per-prefix inherited packet arrays
+with immutable original-operation references. Resolver admission shares original
+claims and incremental unowned native documents; its bounded pool carries sparse
+historical checkpoints. Memo entries carry visible summaries and references.
+Original authority is retained once separately from disposable cache budgets.
+The existing SQLite full-state/frontier path and observed-prefix verification
+remain pending redesign; this is not yet an end-to-end scaling claim. See the
+[implementation evidence](../evidence/production-text/shared-history/README.md).
 `text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;
 the single Rust implementation owns character identity and selective Undo only.
 Domain context/actor claims and required event validation stay in Dart. See

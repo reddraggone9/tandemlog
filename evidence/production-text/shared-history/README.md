@@ -1,6 +1,7 @@
 # Shared-history redesign: native/reference foundation
 
-Status: implementation foundation; resolver and SQLite integration pending.
+Status: native/reference foundation and resolver integration implemented;
+SQLite integration and reference-based canonical proof still pending.
 Based on the recovered committed checkpoint `34addf6402ebe1d1546abe51e70f5264a929456e`.
 Neither failed, unadopted recovery experiment was applied here. Parent separately
 verified both original Library archives, their hashes/manifests and the eight-file
@@ -39,8 +40,13 @@ checkpoints every 32 operation depths by default, with 16MiB accounted checkpoin
 payload. Historical references remain immutable when disposable checkpoints or
 live roots are evicted. This initial foundation still exports full state to hash
 each new snapshot; it does **not** establish end-to-end linear recurrence time.
-The current resolver, observed-prefix scans and SQLite per-field BLOB/frontier
-storage remain to be redesigned before that claim can be tested.
+The resolver now shares references, original actor admission and native pools
+across completion prefixes. Memo entries retain visible summaries and references,
+with neither full-state BLOBs nor copied packet membership sets. Original authority
+is retained once in the graph and is separate from disposable memo/checkpoint
+budgets; total graph/loaded-history memory still grows with admitted originals.
+Observed-prefix scans and SQLite per-field BLOB/frontier storage remain to be
+redesigned before an end-to-end scaling claim can be tested.
 
 Six native gates were committed before implementation in `ce3ca26`. Four calls
 initially omitted the existing ABI's required `delete=0`; `f08ce0a` corrects only
@@ -58,10 +64,14 @@ Existing 98 native acceptance cases and frozen scalar fixtures are unchanged.
   new cases for concurrent/duplicate delivery, pending checkpoint restoration,
   private-handle quarantine, editor isolation, compact Save deltas and budgets.
 - All 487 Flutter unit/widget cases pass, including seven new graph/pool cases.
+- After resolver integration, all 488 cases pass. The new resolver case verifies
+  16 edited generations consume exactly 16 native packet applications across
+  parent/successor resolution, preserve the same inherited reference, and match
+  exact cold native state. Existing union/pending/invalid-author gates pass.
 - Four Rust ownership/worker tests and all 36 tooling/provenance cases pass.
 - Static analysis passes. No UI was changed; earlier recovered-baseline GTK
   evidence is not acceptance of an integrated redesign candidate.
-- Native Windows/Android candidate acceptance, resolver/cache integration,
+- Native Windows/Android candidate acceptance, cache/reference-proof integration,
   realistic edited-generation scaling and independent implementation review
   remain open. No release or stable promotion was performed.
 
