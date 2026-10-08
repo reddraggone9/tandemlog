@@ -1,0 +1,757 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-queued-fixes/integration_test/task_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[65272]: [session uid=1000 pid=65272 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=65969 comm="/workspace/tandemlog-queued-fixes/build/linux/x64/" label="kernel")
+
+(process:65974): dconf-CRITICAL **: 07:38:49.766: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:65974): dconf-CRITICAL **: 07:38:49.767: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:65974): dconf-CRITICAL **: 07:38:49.767: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:65974): dconf-CRITICAL **: 07:38:49.767: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:65974): dconf-CRITICAL **: 07:38:49.768: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:65974): dconf-CRITICAL **: 07:38:49.768: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[65272]: [session uid=1000 pid=65272 pidfd=5] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[65980]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=65969 comm="/workspace/tandemlog-queued-fixes/build/linux/x64/" label="kernel")
+dbus-daemon[65980]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=422
+TANDEMLOG_PHASE identity_lock=6
+TANDEMLOG_PHASE sqlite_open_schema=20
+TANDEMLOG_PHASE manifest=5
+TANDEMLOG_PHASE ingest=269
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1503 FILES_READ=1
+00:24 +1: future start hints update idle, search and resumed local time
+00:26 +1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=24
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=70
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=329 FILES_READ=1
+00:38 +2: legacy v3 provider replacement blocks retry until exact pending history recovery
+00:44 +3: native provider replacement freezes draft and retries the exact canonical receipt
+00:46 +4: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+00:47 +4: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=21
+TANDEMLOG_PHASE identity_lock=14
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=46
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=225 FILES_READ=1
+00:58 +5: checkbox focus light 1200.0 x1.0: offline native task
+00:59 +5: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=23
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=56
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=307 FILES_READ=1
+01:05 +6: checkbox focus dark 390.0 x1.0: offline native task
+01:05 +6: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=19
+TANDEMLOG_PHASE identity_lock=12
+TANDEMLOG_PHASE sqlite_open_schema=20
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=56
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=303 FILES_READ=1
+01:12 +7: checkbox focus dark 390.0 x2.0: historical v3 recurrence compatibility
+01:12 +7: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=23
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=62
+TANDEMLOG_PHASE ingest=51
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=304 FILES_READ=1
+01:20 +8: combined header and stationary selection 390.0 x1.0
+01:28 +8: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=237
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=529 FILES_READ=1
+01:39 +9: combined header and stationary selection 320.0 x2.0
+01:47 +9: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=146
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=391 FILES_READ=1
+01:59 +10: Search keeps Undo and text alignment 1200.0 x1.0
+02:00 +10: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=40
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=183 FILES_READ=1
+02:01 +11: Search keeps Undo and text alignment 1200.0 x2.0
+02:02 +11: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=21
+TANDEMLOG_PHASE ingest=40
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=184 FILES_READ=1
+02:04 +12: Search keeps Undo and text alignment 390.0 x1.0
+02:04 +12: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=20
+TANDEMLOG_PHASE manifest=5
+TANDEMLOG_PHASE ingest=21
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=182 FILES_READ=1
+02:06 +13: Search keeps Undo and text alignment 320.0 x2.0
+02:06 +13: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=68
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=291 FILES_READ=1
+02:08 +14: second instance does not read or write preferences and Retry acquires released lease
+02:08 +14: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_ONBOARDING_READY_MS=328 FILES_READ=0
+02:09 +15: interrupted startup releases installation lease after pending work
+02:09 +15: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=16
+02:09 +16: Inbox capture cancel edit Undo and history remain coherent
+02:10 +16: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=16
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=169 FILES_READ=1
+02:18 +17: creation-only prefix keeps immutable capture through background reconciliation
+02:18 +17: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=36
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=169 FILES_READ=1
+02:21 +18: integrity action requires an open store
+02:21 +18: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_ONBOARDING_READY_MS=149 FILES_READ=0
+02:22 +19: manual integrity preserves drafts Search selection and Undo, imports valid growth, and copies diagnostics
+02:22 +19: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=14
+TANDEMLOG_PHASE ingest=62
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=302 FILES_READ=1
+02:33 +20: same-day precision sorts, constrains dragging and retains historical title
+02:34 +20: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=64
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=285 FILES_READ=1
+02:37 +21: Settings copies the running release name without changing tasks
+02:37 +21: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=16
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=48
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=286 FILES_READ=1
+02:48 +22: optional time rows preserve precision, zone and drafts
+02:48 +22: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=10
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=39
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=165 FILES_READ=1
+03:04 +23: offline new text, remote draft Save, Undo and explicit legacy setup
+03:04 +23: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=6
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=171 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=165 FILES_READ=0
+03:13 +24: historical successor recompletion completes parent and keeps independent child
+03:14 +24: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=45
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=195 FILES_READ=1
+03:15 +25: native recurring completion creates one editable inherited successor with receipt Undo
+03:15 +25: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=21
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=168 FILES_READ=1
+03:21 +26: native checklist desktop dark repeated editors and refreshed completion warning
+03:21 +26: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=73
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=304 FILES_READ=1
+03:47 +27: native checklist narrow enlarged light repeated editors and refreshed completion warning
+03:47 +27: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=43
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=167 FILES_READ=1
+04:12 +28: application disposal during item Save confirmed preserves durable intent
+04:12 +28: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=161 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=48
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=172 FILES_READ=2
+04:16 +29: application disposal during item Save unknown preserves durable intent
+04:16 +29: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=46
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=59
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=321 FILES_READ=2
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=75
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=278 FILES_READ=2
+04:20 +30: application disposal finishes item route ownership teardown
+04:20 +30: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=23
+TANDEMLOG_PHASE ingest=50
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=281 FILES_READ=1
+04:22 +31: new item late acknowledgement remains frozen until exact Retry Save
+04:22 +31: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=42
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=172 FILES_READ=1
+04:25 +32: task Undo waits for item route and native lease teardown once
+04:26 +32: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=16
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=42
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=183 FILES_READ=1
+04:30 +33: user switch waits only for item Save and route teardown
+04:30 +33: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=45
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=170 FILES_READ=1
+04:33 +34: user switch saves private item before changing identity
+04:33 +34: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=47
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=169 FILES_READ=1
+04:36 +35: native bulk named apply persists only Due time desktop-dark
+04:37 +35: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=42
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=170 FILES_READ=1
+04:43 +36: native bulk named apply persists only Due time narrow-light-200
+04:44 +36: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=22
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=48
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=197 FILES_READ=1
+04:51 +37: native field spacing 1200.0/1.0
+04:51 +37: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=75
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=301 FILES_READ=1
+04:58 +38: native field spacing 390.0/1.0
+04:59 +38: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=178 FILES_READ=1
+05:06 +39: native field spacing 390.0/2.0
+05:06 +39: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=9
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=200 FILES_READ=1
+05:13 +40: phone single and bulk editors keep fields usable with the IME
+05:14 +40: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=39
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=161 FILES_READ=1
+05:46 +41: phone tag dropdown stays tappable above an open keyboard
+05:46 +41: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=153 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=33
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=151 FILES_READ=0
+06:04 +42: multi-tag selection bulk editing deletion and guarded editor sessions
+06:05 +42: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=21
+TANDEMLOG_PHASE ingest=56
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=288 FILES_READ=1
+06:39 +43: workspace search preserves filters drafts and completion sections
+06:40 +43: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=65
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=264 FILES_READ=1
+06:43 +43: workspace search preserves filters drafts and completion sections
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following _TypeError was thrown running a test:
+type 'IconButton' is not a subtype of type 'ButtonStyleButton' in type cast
+
+When the exception was thrown, this was the stack:
+#0      WidgetController.widget (package:flutter_test/src/controller.dart:828:44)
+#1      main.<anonymous closure> (file:///workspace/tandemlog-queued-fixes/integration_test/task_flow_test.dart:985:14)
+<asynchronous suspension>
+#2      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#3      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  workspace search preserves filters drafts and completion sections
+════════════════════════════════════════════════════════════════════════════════════════════════════
+06:43 +43 -1: workspace search preserves filters drafts and completion sections [E]
+  Test failed. See exception logs above.
+  The test description was: workspace search preserves filters drafts and completion sections
+  
+06:43 +43 -1: native capture, edit, completion, undo, restart and error recovery
+06:43 +43 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=16
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=6
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=27
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_ONBOARDING_READY_MS=139 FILES_READ=0
+TANDEMLOG_FIRST_FRAME_MS=10
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=34
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=147 FILES_READ=0
+07:05 +44 -1: desktop onboarding, live theme, inline retry and folder actions
+07:05 +44 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_ONBOARDING_READY_MS=133 FILES_READ=0
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_ONBOARDING_READY_MS=144 FILES_READ=0
+07:12 +44 -1: desktop onboarding, live theme, inline retry and folder actions
+TANDEMLOG_PHASE identity_lock=17
+TANDEMLOG_PHASE sqlite_open_schema=6
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=27
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_PHASE identity_lock=25
+07:20 +44 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=144 FILES_READ=0
+07:21 +45 -1: explicit Add finalizes composing drafts once while Enter leaves IME candidates alone
+07:21 +45 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=12
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=35
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=159 FILES_READ=1
+07:30 +46 -1: automatic imports preserve edit/capture buffers and keyboard submission
+07:30 +46 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=158 FILES_READ=1
+07:42 +47 -1: desktop Start retains legacy default data after settings reset
+07:42 +47 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_ONBOARDING_READY_MS=130 FILES_READ=0
+07:42 +47 -1: desktop Start retains legacy default data after settings reset
+TANDEMLOG_PHASE identity_lock=27
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+07:43 +47 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=5
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=25
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=150 FILES_READ=0
+07:44 +48 -1: missing saved workspace does not silently create a default
+07:44 +48 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+07:44 +48 -1: missing saved workspace does not silently create a default
+TANDEMLOG_PHASE identity_lock=22
+07:45 +49 -1: Android Start keeps picker and cancel creates no private workspace
+07:45 +49 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_ONBOARDING_READY_MS=133 FILES_READ=0
+07:46 +50 -1: Shift+Enter reveals caret before any further input
+07:46 +50 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=36
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=143 FILES_READ=1
+07:52 +51 -1: compact filters compose reopen reset and keep identity separate
+07:53 +51 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=53
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=274 FILES_READ=1
+08:03 +52 -1: bounded tag search and responsive task metadata remain readable
+08:04 +52 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=62
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=279 FILES_READ=1
+08:16 +53 -1: header controls stay fixed between open and completed tabs
+09:57 +53 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=8
+TANDEMLOG_PHASE sqlite_open_schema=7
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=1161
+TANDEMLOG_ROWS {"query_ms":3,"decode_ms":11,"sort_ms":0}
+TANDEMLOG_READY_MS=1388 FILES_READ=1
+10:21 +54 -1: dates, zones, tags and order with historical v3 recurrence compatibility
+10:21 +54 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=21
+TANDEMLOG_PHASE identity_lock=6
+TANDEMLOG_PHASE sqlite_open_schema=8
+TANDEMLOG_PHASE manifest=5
+TANDEMLOG_PHASE ingest=28
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=156 FILES_READ=1
+10:34 +55 -1: future event clock warns without blocking capture
+10:34 +55 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=10
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=18
+TANDEMLOG_PHASE ingest=49
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=258 FILES_READ=1
+10:35 +56 -1: native tag filters preserve drafts and selected block drag scrolls offscreen
+10:43 +56 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=121
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=406 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=32
+TANDEMLOG_PHASE identity_lock=3
+TANDEMLOG_PHASE sqlite_open_schema=7
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=26
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=233 FILES_READ=0
+11:10 +57 -1: native drag preserves hidden order and rejects other time buckets
+11:11 +57 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=59
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=282 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=6
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=37
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=164 FILES_READ=0
+11:24 +58 -1: loaded startup marker waits for a rendered time projection
+11:24 +58 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=18
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=42
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=302 FILES_READ=1
+11:25 +59 -1: timed task groups preserve drafts and editors without log writes
+11:26 +59 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=70
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=281 FILES_READ=1
+11:36 +60 -1: session Undo survives notices, protects drafts and preserves newer synced edits
+11:36 +60 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=35
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=164 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=6
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=175 FILES_READ=0
+12:45 +61 -1: historical v3 recurrence compatibility enables unchanged completion at midnight
+12:46 +61 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=18
+TANDEMLOG_PHASE ingest=49
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=296 FILES_READ=1
+12:50 +62 -1: single and bulk dirty panes stay mounted through drag and reorder Undo
+12:52 +62 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=11
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=44
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=180 FILES_READ=1
+13:00 +63 -1: capture batches update draft once and retain responsive native frames
+13:00 +63 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=15
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=48
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=279 FILES_READ=1
+13:02 +63 -1: capture batches update draft once and retain responsive native frames
+TANDEMLOG_NATIVE_BATCH count=1 input_clear_ms=348 settle_ms=366 frames=11 input_updates=1
+TANDEMLOG_NATIVE_BATCH count=30 input_clear_ms=1326 settle_ms=378 frames=50 input_updates=1
+TANDEMLOG_NATIVE_BATCH count=100 input_clear_ms=3724 settle_ms=379 frames=134 input_updates=1
+13:09 +64 -1: compact selection commands stay reachable through scrolling and resize
+13:10 +64 -1: sticky date groups retain drafts, selection and safe edge drops
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=108
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=354 FILES_READ=1
+13:35 +65 -1: (tearDownAll)
+13:35 +65 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-queued-fixes/integration_test/task_flow_test.dart: workspace search preserves filters drafts and completion sections
