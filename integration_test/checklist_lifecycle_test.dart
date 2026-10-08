@@ -21,6 +21,7 @@ class _LateAcknowledgementFolder implements LogFolder {
   bool loseNextAcknowledgement = false;
   int appends = 0;
   void Function()? beforeNextAppend;
+  Completer<void>? appendStarted, releaseAppend;
   @override
   String get location => inner.location;
   @override
@@ -38,6 +39,10 @@ class _LateAcknowledgementFolder implements LogFolder {
     final callback = beforeNextAppend;
     beforeNextAppend = null;
     callback?.call();
+    if (releaseAppend != null) {
+      appendStarted!.complete();
+      await releaseAppend!.future;
+    }
     await inner.append(name, bytes);
     if (loseNextAcknowledgement) {
       loseNextAcknowledgement = false;
@@ -59,6 +64,105 @@ void main() {
 }
 
 void registerChecklistLifecycleTests() {
+  for (final lostAcknowledgement in [false, true]) {
+    testWidgets(
+      'application disposal during item Save ${lostAcknowledgement ? 'unknown' : 'confirmed'} preserves durable intent',
+      (tester) async {
+        final root = await Directory.systemTemp.createTemp(
+          'checklist-save-exit-',
+        );
+        final shared = await Directory('${root.path}/shared').create();
+        final profile = await Directory('${root.path}/profile').create();
+        final inner = LocalLogFolder(shared.path);
+        final folder = _LateAcknowledgementFolder(inner);
+        final peer = await openNativeFixtureStore(inner, '${root.path}/peer');
+        final user = const Uuid().v4(), parent = const Uuid().v4();
+        try {
+          await peer.command(user, 'user.created', {'name': 'Alex Example'});
+          await peer.createNativeFixtureTask(parent, {
+            'title': 'Synthetic disposal task',
+            'description': '',
+            'assignee': user,
+          });
+          final item = await peer.addChecklistItem(parent, 'Original');
+          await File(
+            '${profile.path}/settings.json',
+          ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+          await tester.pumpWidget(
+            TandemlogApp(
+              profilePath: profile.path,
+              folderFactory: (_) => folder,
+            ),
+          );
+          await flows.waitForUi(
+            tester,
+            () => _key('task-row-$parent').evaluate().isNotEmpty,
+          );
+          await flows.selectTask(tester, parent, control: false);
+          await _tap(tester, _key('checklist-edit-${item.entity}'));
+          final session = tester
+              .widget<ChecklistItemEditor>(find.byType(ChecklistItemEditor))
+              .textSession!;
+          final document = session.capture.fields['title']!.document;
+          await tester.enterText(_key('checklist-item-title'), 'Saved at exit');
+          folder.appendStarted = Completer<void>();
+          folder.releaseAppend = Completer<void>();
+          folder.loseNextAcknowledgement = lostAcknowledgement;
+          await tester.tap(_key('checklist-item-save'));
+          for (
+            var attempt = 0;
+            attempt < 100 && !folder.appendStarted!.isCompleted;
+            attempt++
+          ) {
+            await tester.pump(const Duration(milliseconds: 100));
+          }
+          expect(folder.appendStarted!.isCompleted, true);
+          final state = tester.state(find.byType(TasksPage)) as dynamic;
+          final done = state.checklistEditorDone as Completer<void>;
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump(const Duration(milliseconds: 300));
+          expect(
+            done.isCompleted,
+            false,
+            reason: 'In-flight append still owns the captured native document.',
+          );
+          expect(session.hasPendingReceipt, true);
+          expect(() => document.read(), returnsNormally);
+          folder.releaseAppend!.complete();
+          for (var attempt = 0; attempt < 100 && !done.isCompleted; attempt++) {
+            await tester.pump(const Duration(milliseconds: 100));
+          }
+          expect(
+            done.isCompleted,
+            true,
+            reason: 'Save and native route teardown must finish on exit.',
+          );
+          await tester.pump(const Duration(milliseconds: 500));
+          expect(() => document.read(), throwsStateError);
+          await peer.refresh();
+          expect(peer.checklistItems(parent).single['title'], 'Saved at exit');
+          // Restart the exact former application profile, recovering its original
+          // outbox intent rather than creating a second edit after lost ack.
+          folder.releaseAppend = null;
+          await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+          await flows.waitForUi(
+            tester,
+            () => _key('task-row-$parent').evaluate().isNotEmpty,
+          );
+          await flows.selectTask(tester, parent, control: false);
+          expect(find.text('Saved at exit'), findsOneWidget);
+          expect(tester.takeException(), isNull);
+        } finally {
+          if (folder.releaseAppend?.isCompleted == false) {
+            folder.releaseAppend!.complete();
+          }
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pump();
+          await peer.close();
+        }
+      },
+    );
+  }
   testWidgets('application disposal finishes item route ownership teardown', (
     tester,
   ) async {
