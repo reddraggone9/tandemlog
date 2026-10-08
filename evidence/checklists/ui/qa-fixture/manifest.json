@@ -1,0 +1,10 @@
+{
+  "synthetic": true,
+  "user": "952d6cce-736a-4236-af53-f1a62a2d0770",
+  "task": "84b20089-b9e9-4a2d-8d91-c205631e7c09",
+  "successor": "a119a352-62a0-5475-ad33-0f4cd75d636a",
+  "files": {
+    "tandemlog-space.json": "25f503da838bc7246f09313b9b9ad0c1a582087a5831ca8c8d0e4fa38f655b8f",
+    "122c369c-a72c-4d39-a8cd-9182a5bdca04.jsonl": "630be7ed9a30b63abd6d592ec83feb25ae5e49a4e5f255a55737612a93f4b8cc"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "raw_duration_seconds": 196.4,
+  "removed": "idle pauses between action sequences only",
+  "retained_intervals_seconds": [
+    [
+      0,
+      33.390516138076784
+    ],
+    [
+      104.7784146308899,
+      114.5168050289154
+    ],
+    [
+      184.4757806301117,
+      196.4
+    ]
+  ]
+}

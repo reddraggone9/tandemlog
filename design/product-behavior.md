@@ -119,10 +119,13 @@ Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 c
 
 Lee approved a title, optional notes, completion and order for each checklist
 item, one level deep. Recurrence copies fresh unchecked items; existing successor
-edits remain independent. The domain/storage component is implemented separately
-from shared-history candidatec182385. Item editor UI and the unfinished-items
-completion warning remain pending, including native narrow/enlarged/theme
-inspection and affected Android acceptance. The intended explicit item Save/Cancel,
+edits remain independent. Domain/storage and editor/warning UI are implemented
+separately from shared-history candidatec182385. Items appear within the single
+task editor with checkboxes, editable title/notes, relative movement and deletion.
+Item Save is separate from parent Save/Cancel. Unfinished items trigger a
+warn-but-allow dialog; incoming changes renew consent before bytes are prepared.
+Linux desktop/narrow/enlarged/theme workflows are verified; exact checklist
+Android/Windows acceptance remains pending. Explicit item Save/Cancel,
 parent-draft boundary, renewed warning confirmation and recurrence/Undo meanings
 are specified in [ADR0011](decisions/0011-one-level-checklists.md).
 

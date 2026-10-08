@@ -1,4 +1,4 @@
-# One-level checklist storage component
+# One-level checklist implementation
 
 Isolated branch: `feature/one-level-checklists`, based on shared-history native
 candidate `c1823856be3f2b5aada5aa6960e7fbe9023f918f`. Neither recovered alternate
@@ -6,12 +6,12 @@ experiment was stacked into this branch. Candidate/native acceptance work and th
 performance analysis branch remain separate. No live synced user data, published
 release, dependency/native vendor source or frozen historical fixture was changed.
 
-This checkpoint implements the domain, additive canonical item/copy meanings,
-SQLite aggregation, native item text/receipt integration, recurrence and scoped
-Undo protection. It does **not** implement the item editor UI or unfinished-item
-completion warning. `expectedChecklistSnapshot` is the command guard prepared for
-that UI. [ADR0011](../../design/decisions/0011-one-level-checklists.md) records accepted
-product behavior and remaining gates.
+The original storage checkpoint implements domain/additive canonical item/copy
+meanings, SQLite aggregation, native item text/receipts, recurrence and scoped Undo.
+The follow-up now adds the item editor and unfinished-item completion warning.
+`ChecklistCompletionCommand` uses `expectedChecklistSnapshot` to reconcile consent
+before preparation. [ADR0011](../../design/decisions/0011-one-level-checklists.md)
+records accepted product behavior and remaining gates.
 
 ## Frozen gates and independent findings
 
@@ -41,7 +41,7 @@ and preserve them for diagnostics. Assertions and historical bytes were not
 regenerated to make failures pass. The only existing test expectation changed
 is the unreleased native-enabled cache version15→16; scalar cache13 remains.
 
-## Final component validation
+## Original storage checkpoint validation
 
 All550 Flutter unit/widget/storage cases pass with the actual production native
 FFI library; this includes43 added checklist cases. Analysis is clean and formatting
@@ -60,20 +60,54 @@ accepts bounded decoding and historical preservation. Availability/merged-row
 fixes also pass the architecture review's native regression set. These are
 component reviews, with UI and exact-artifact platform gates still pending.
 
-## Remaining implementation and acceptance
+## Editor/warning follow-up
 
-Next: freeze item editor/warning workflow gates, wire explicit native item
-Save/Cancel and ordering/status/deletion, resolve item private drafts before
-navigation/task Undo, then warning confirmation with refreshed checklist snapshot.
+Frozen gates precede the command/presentation/host implementation. Fifteen real
+native application tests cover immutable refreshed consent, Cancel, changed
+membership/text/order/status, disappearing/completed parents and a preparation
+boundary race. Fourteen component/native editor tests cover item semantics,
+explicit Save/Cancel, notes/composition, scoped native ownership and receipt-free
+preparation failure followed by Discard. Original meaningful red runs and the
+independent presentation implementation/review receipt remain in `red/` and
+`presentation/`; early compilation/fixture mistakes are not red gate evidence.
+
+The host wires independent item Save/Cancel and ordering/status/deletion, resolves
+private drafts before navigation/Undo, and retains exact creation/text receipt
+values until Retry Save closes the route. Actual GTK negative controls freeze
+late-acknowledgement edit unlocking and premature native lease release. Additional
+native regressions freeze application disposal, confirmed/unknown in-flight Save,
+and a host user-change wait cycle. Item teardown uses route disposal and its own
+Save completion, preserving unresolved outbox intent for store-owned shutdown.
+
 Item actions are independently durable from the parent editor; avoid a misleading
 multi-entity Save transaction. Keyboard and checkbox completion share one guarded
 application path, with re-confirmation after incoming item/status changes.
 
-Run and inspect the actual native Linux workflow at desktop/narrow sizes, both
-themes and enlarged text; record a pointer-visible demonstration. New checklist
+All579 Flutter tests pass with the actual production FFI library;37 tooling
+checks pass and analysis/format are clean. No native Rust/dependency change was
+made; the original107 native contract result above still describes those exact
+inputs. Actual bundled GTK editor/warning flows pass at1200×850 dark and390×820
+light with200% text: repeated item dialogs, private parent draft, separately saved
+items, Cancel with byte preservation, Space, incoming-item renewed consent and
+fresh unchecked successor copies. Inspected actual pixels are retained in `ui/`;
+the first screenshot's stale “Test starting” frame was rejected as UI evidence.
+All60 aggregated native Linux workflows pass. The seven lifecycle green cases,
+reviewed54.93second pointer-visible demo and exact local source/payload receipt
+are in [UI evidence](ui/README.md). Hosted artifact IDs/digests are reported
+separately from this consumer's blocked byte download and pending platform QA.
+
+Independent correctness review reran all29 focused coordinator/presentation
+cases and inspected four component PNGs; no presentation must-fix remained.
+Independent security review accepted receipt/route close guards after meaningful
+negative controls. Independent host architecture review found abrupt disposal and
+global-wait coupling, frozen and repaired before the final host checkpoint.
+
+New checklist
 Windows/Android exact artifacts and affected native acceptance are still required.
 The earlier c182385 candidate's partial Windows/Android results do not establish
 checklist acceptance. Stable feature promotion remains Lee's decision.
+See [checklist native acceptance](../../design/checklist-native-acceptance.md)
+for the retained synthetic fixture and exact platform QA contract.
 
 Historical prefix processing still has the previously reported CPU scaling debt;
 checklist validation adds bounded item work but no claim of linear replay, total

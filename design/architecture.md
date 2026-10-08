@@ -53,8 +53,13 @@ Native-enabled cache16 aggregates items under task projections, while the ordina
 task list excludes item rows. Immutable-prefix baseline selection and live
 selection use the same pure descendant-protection rule. Editor captures and local
 item writes check the containing task's availability; remote late work retains
-normal deterministic restoration. This is a storage milestone, with UI and final
-platform review pending; see [ADR0011](decisions/0011-one-level-checklists.md).
+normal deterministic restoration. The single-task editor supplies an enabled
+checklist slot; reusable item widgets delegate durable commands to the host.
+The host owns item capture/receipt lifetime independently from the parent draft.
+`ChecklistCompletionCommand` reconciles a complete immutable item snapshot before
+consent and again before preparation, renewing consent after incoming changes.
+Exact Windows/Android acceptance remains pending; see
+[ADR0011](decisions/0011-one-level-checklists.md).
 
 Checklist validation currently revisits existing completion prefixes during
 reconciliation/commands. Impact: larger checklists add work to the separately
