@@ -137,7 +137,9 @@ void registerBulkFailureVisibilityTests() {
         position.jumpTo(position.maxScrollExtent);
         await tester.pumpAndSettle();
         if (variant.name == 'narrow-dark') {
-          recording = await media.startBulkRecording();
+          recording = await media.startBulkRecording(
+            caption: 'Linux GTK debug - scripted clicks - 390x820 dark',
+          );
         }
         await captureNativeFixtureUi(
           tester,

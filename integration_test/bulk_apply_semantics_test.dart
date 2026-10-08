@@ -24,7 +24,9 @@ void main() {
 
 // Optional capture of the actual GTK workflow. Input remains the test's
 // semantics/touch/key actions; the real X11 pointer identifies the control.
-Future<Process?> startBulkRecording() async {
+Future<Process?> startBulkRecording({
+  String caption = 'Linux GTK debug - scripted semantics/touch/Space workflow',
+}) async {
   final output = Platform.environment['TANDEMLOG_BULK_QA_VIDEO'];
   if (output == null || !Platform.isLinux) return null;
   await File(output).parent.create(recursive: true);
@@ -43,7 +45,7 @@ Future<Process?> startBulkRecording() async {
     '-i',
     Platform.environment['DISPLAY']!,
     '-vf',
-    'drawtext=text=Linux GTK debug - scripted semantics/touch/Space workflow:x=10:y=825:fontsize=14:fontcolor=white',
+    'drawtext=text=$caption:x=10:y=825:fontsize=14:fontcolor=white',
     '-c:v',
     'libx264',
     '-preset',
