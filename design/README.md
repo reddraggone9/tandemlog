@@ -41,3 +41,4 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Android text-preview QA](android-text-preview-qa.md): exact synthetic test package and native workflow instructions.
 - [Historical recurring-text policy](historical-recurring-text-policy.md): approved historical recompletion preserves the independently initialized child; implementation and remaining gates.
+- [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.

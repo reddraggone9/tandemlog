@@ -106,8 +106,9 @@ class History {
     ).resolve(entity);
     final latest = <String, LogEvent>{};
     for (final event in observed) {
-      if (event.sequence > (latest[event.writer]?.sequence ?? 0))
+      if (event.sequence > (latest[event.writer]?.sequence ?? 0)) {
         latest[event.writer] = event;
+      }
     }
     return append(writer, entity, 'task.completedWithText', {
       'completedAt': '2030-05-10',
