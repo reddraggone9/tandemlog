@@ -159,7 +159,10 @@ class _EditorBodyState extends State<_EditorBody> {
   String? failure, assignee;
   bool applyAssignee = false;
   Future<bool>? closeRequest;
-  double notesMaxHeight = 360, scheduleWidth = 480;
+  double notesMaxHeight = 360,
+      scheduleWidth = 480,
+      failureMaxHeight = 144,
+      modalActionsMaxHeight = 312;
   final textFocus = {
     'title': FocusNode(),
     'description': FocusNode(),
@@ -903,6 +906,11 @@ class _EditorBodyState extends State<_EditorBody> {
           ? constraints.maxHeight
           : visibleHeight;
       notesMaxHeight = (availableHeight * .4).clamp(100.0, 360.0);
+      failureMaxHeight = availableHeight * .4;
+      // Match the dialog's vertical insets and action padding. Flexible notice
+      // space below also accommodates buttons that wrap with enlarged text.
+      modalActionsMaxHeight = (availableHeight - 48 - media.padding.vertical)
+          .clamp(0.0, double.infinity);
       return buildEditor(context);
     },
   );
@@ -1093,6 +1101,16 @@ class _EditorBodyState extends State<_EditorBody> {
         ),
       ],
     );
+    final pinBulkFailure = bulk && !widget.panel;
+    Widget failureNotice(String message) => Semantics(
+      liveRegion: true,
+      child: Text(
+        message,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.error,
+        ),
+      ),
+    );
     final heading = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -1122,20 +1140,12 @@ class _EditorBodyState extends State<_EditorBody> {
             (key) => error != null && tagError(key) == error,
           ))
             error,
-          failure,
+          if (!pinBulkFailure) failure,
         ])
           if (message != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
-              child: Semantics(
-                liveRegion: true,
-                child: Text(
-                  message,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
-                ),
-              ),
+              child: failureNotice(message),
             ),
       ],
     );
@@ -1173,7 +1183,37 @@ class _EditorBodyState extends State<_EditorBody> {
             actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             title: heading,
             content: SizedBox(width: 480, child: content),
-            actions: [actions],
+            actions: [
+              if (pinBulkFailure && failure != null)
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: modalActionsMaxHeight),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: ConstrainedBox(
+                            key: const ValueKey('bulk-save-failure'),
+                            // Long provider errors and enlarged text must leave
+                            // the actions reachable above a small keyboard viewport.
+                            constraints: BoxConstraints(
+                              maxHeight: failureMaxHeight,
+                            ),
+                            child: SingleChildScrollView(
+                              child: failureNotice(failure!),
+                            ),
+                          ),
+                        ),
+                      ),
+                      actions,
+                    ],
+                  ),
+                )
+              else
+                actions,
+            ],
           );
     if (widget.onClose != null) return editor;
     return PopScope(

@@ -114,6 +114,14 @@ Bulk edits exclude title/notes, retain untouched mixed values and apply only exp
 
 Bulk schedule and Assignee apply checkboxes expose their field names to accessibility services, including distinct Start/Due date and time names in both row and stacked layouts. They retain native checked, disabled, focus and activation semantics. Add tags and Remove tags remain separate labeled text inputs without apply checkboxes.
 
+Bulk-modal save and delete failures appear beside the fixed actions, so a
+bottom-scrolled draft does not hide a stale-selection rejection. Long messages
+scroll independently within the available editor height; rejecting Save retains
+the draft, focus and form scroll position. Validation stays with the heading or
+relevant tag input. Single-editor and wide-panel placement are unchanged. An
+extreme keyboard viewport whose enlarged actions already consume the entire
+editor remains a constrained-layout limitation; see [runtime QA](runtime-qa.md).
+
 ## Session Undo and toolbar fit
 
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
