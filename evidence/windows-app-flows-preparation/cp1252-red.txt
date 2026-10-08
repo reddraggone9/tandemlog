@@ -1,0 +1,39 @@
+test_console_configuration_accepts_unicode_stringio_captures (test_windows_app_flows.WindowsAppFlowReceipts.test_console_configuration_accepts_unicode_stringio_captures) ... ok
+test_exact_scope_counts (test_windows_app_flows.WindowsAppFlowReceipts.test_exact_scope_counts) ... ok
+test_hashes_require_native_app_and_do_not_collect_profiles (test_windows_app_flows.WindowsAppFlowReceipts.test_hashes_require_native_app_and_do_not_collect_profiles) ... ok
+test_library_variable_hash_is_recorded_without_claiming_app_override (test_windows_app_flows.WindowsAppFlowReceipts.test_library_variable_hash_is_recorded_without_claiming_app_override) ... ok
+test_native_app_startup_cannot_be_replaced_by_a_success_banner (test_windows_app_flows.WindowsAppFlowReceipts.test_native_app_startup_cannot_be_replaced_by_a_success_banner) ... ok
+test_no_false_pass_on_zero_skipped_failed_or_incomplete_output (test_windows_app_flows.WindowsAppFlowReceipts.test_no_false_pass_on_zero_skipped_failed_or_incomplete_output) ... ok
+test_unicode_error_reporting_handles_initial_cp1252_stderr (test_windows_app_flows.WindowsAppFlowReceipts.test_unicode_error_reporting_handles_initial_cp1252_stderr) ... ERROR
+test_utf8_command_log_can_print_through_initial_cp1252_console (test_windows_app_flows.WindowsAppFlowReceipts.test_utf8_command_log_can_print_through_initial_cp1252_console) ... ERROR
+test_zero_byte_runtime_payload_cannot_pass_presence_gate (test_windows_app_flows.WindowsAppFlowReceipts.test_zero_byte_runtime_payload_cannot_pass_presence_gate) ... ok
+
+======================================================================
+ERROR: test_unicode_error_reporting_handles_initial_cp1252_stderr (test_windows_app_flows.WindowsAppFlowReceipts.test_unicode_error_reporting_handles_initial_cp1252_stderr)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 36, in test_unicode_error_reporting_handles_initial_cp1252_stderr
+    print('Synthetic diagnostic path: résumé/√.txt', file=windows_app_flows.sys.stderr, flush=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u221a' in position 34: character maps to <undefined>
+
+======================================================================
+ERROR: test_utf8_command_log_can_print_through_initial_cp1252_console (test_windows_app_flows.WindowsAppFlowReceipts.test_utf8_command_log_can_print_through_initial_cp1252_console)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog-windows-app-flows/tool/test_windows_app_flows.py", line 25, in test_utf8_command_log_can_print_through_initial_cp1252_console
+    code, _ = command(['fake-flutter', 'doctor', '-v'], log, {}, timeout=60)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog-windows-app-flows/tool/windows_app_flows.py", line 90, in command
+    print(output.read_text(encoding='utf-8', errors='replace'), flush=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/encodings/cp1252.py", line 19, in encode
+    return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+UnicodeEncodeError: 'charmap' codec can't encode character '\u221a' in position 1: character maps to <undefined>
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.005s
+
+FAILED (errors=2)

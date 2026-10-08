@@ -28,6 +28,11 @@ CAPTURE_VARIABLES = (
 )
 
 
+def configure_console():
+    """Set this receipt runner's console encoding before printing tool output."""
+    pass
+
+
 def result(text, expected, exit_code):
     text = re.sub(r'\x1b\[[0-9;]*[A-Za-z]', '', text)
     counts = re.findall(r'\+(\d+)(?:\s+~(\d+))?(?:\s+-(\d+))?:', text)
@@ -87,6 +92,7 @@ def command(args, output, env, timeout=300):
 
 
 def main():
+    configure_console()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
     output = parser.parse_args().output

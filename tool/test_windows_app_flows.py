@@ -1,12 +1,52 @@
 import tempfile
 import hashlib
+import io
 from pathlib import Path
 import unittest
+from unittest.mock import Mock, patch
 
-from windows_app_flows import SCOPES, hashes, library_environment, result
+import windows_app_flows
+from windows_app_flows import SCOPES, command, configure_console, hashes, library_environment, result
 
 
 class WindowsAppFlowReceipts(unittest.TestCase):
+    def test_utf8_command_log_can_print_through_initial_cp1252_console(self):
+        raw = '[√] Windows toolchain ready\n[!] Android toolchain missing\n'.encode('utf-8')
+        console_bytes = io.BytesIO()
+        console = io.TextIOWrapper(console_bytes, encoding='cp1252', errors='strict')
+        def start(_args, **kwargs):
+            kwargs['stdout'].write(raw)
+            return Mock(wait=Mock(return_value=0))
+        with tempfile.TemporaryDirectory() as temporary:
+            log = Path(temporary) / 'doctor.txt'
+            with patch.object(windows_app_flows.sys, 'stdout', console), \
+                 patch.object(windows_app_flows.subprocess, 'Popen', side_effect=start):
+                configure_console()
+                code, _ = command(['fake-flutter', 'doctor', '-v'], log, {}, timeout=60)
+            self.assertEqual(code, 0)
+            self.assertEqual(log.read_bytes(), raw)
+            self.assertIn('[√] Windows toolchain ready', console_bytes.getvalue().decode('utf-8'))
+        console.detach()
+
+    def test_unicode_error_reporting_handles_initial_cp1252_stderr(self):
+        error_bytes = io.BytesIO()
+        errors = io.TextIOWrapper(error_bytes, encoding='cp1252', errors='strict')
+        with patch.object(windows_app_flows.sys, 'stderr', errors):
+            configure_console()
+            print('Synthetic diagnostic path: résumé/√.txt', file=windows_app_flows.sys.stderr, flush=True)
+        self.assertEqual(error_bytes.getvalue().decode('utf-8'), 'Synthetic diagnostic path: résumé/√.txt\n')
+        errors.detach()
+
+    def test_console_configuration_accepts_unicode_stringio_captures(self):
+        console, errors = io.StringIO(), io.StringIO()
+        with patch.object(windows_app_flows.sys, 'stdout', console), \
+             patch.object(windows_app_flows.sys, 'stderr', errors):
+            configure_console()
+            print('√', flush=True)
+            print('√', file=windows_app_flows.sys.stderr, flush=True)
+        self.assertEqual(console.getvalue(), '√\n')
+        self.assertEqual(errors.getvalue(), '√\n')
+
     def test_exact_scope_counts(self):
         self.assertEqual([scope[1] for scope in SCOPES], [2, 7, 4, 2, 3, 1])
         self.assertEqual(sum(scope[1] for scope in SCOPES), 19)

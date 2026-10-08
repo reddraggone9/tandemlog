@@ -1,0 +1,22 @@
+Source: c5b5834d363d286e24905c4923fae08a0e84b912
+Run: https://github.com/reddraggone9/tandemlog/actions/runs/37752581063
+Job: 113229167997
+Retrieved: GitHub MCP decoded job log
+App flows started: 0/19 (diagnostic output encoding failed before flow loop)
+2026-10-08T08:52:20.4001476Z   TANDEMLOG_TEXT_TARGET_DIR: D:\a\_temp\tandemlog-rust-bootstrap\target
+2026-10-08T08:52:20.4001821Z ##[endgroup]
+2026-10-08T08:52:21.5073228Z Flutter 3.47.5 � channel [user-branch] � https://github.com/flutter/flutter.git
+2026-10-08T08:52:21.5073885Z Framework � revision 6a19cca564 (3 weeks ago) � 2026-09-17 14:13:22 -0400
+2026-10-08T08:52:21.5074600Z Engine � hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) � 2026-09-16 18:35:09.000Z
+2026-10-08T08:52:21.5075472Z Tools � Dart 3.13.4 � DevTools 2.60.0
+2026-10-08T08:52:21.5075644Z 
+2026-10-08T08:52:42.8050284Z 'charmap' codec can't encode character '\u221a' in position 1199: character maps to <undefined>
+2026-10-08T08:52:42.8985753Z ##[error]Process completed with exit code 1.
+2026-10-08T08:52:42.9171292Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-10-08T08:52:42.9171757Z with:
+2026-10-08T08:52:42.9171981Z   name: windows-native-app-flows-37752581063-1
+2026-10-08T08:52:42.9172318Z   path: D:\a\_temp/tandemlog-windows-app-flows/*
+2026-10-08T08:52:42.9172615Z   retention-days: 5
+2026-10-08T08:52:42.9172812Z   if-no-files-found: error
+2026-10-08T08:52:42.9173020Z   compression-level: 6
+2026-10-08T08:52:42.9173208Z   overwrite: false

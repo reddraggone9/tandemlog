@@ -1,0 +1,22 @@
+{
+  "run_id": 37752581063,
+  "job_id": 113229167997,
+  "run_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37752581063",
+  "source_revision": "c5b5834d363d286e24905c4923fae08a0e84b912",
+  "app_flows_started": 0,
+  "expected_app_flows": 19,
+  "observed_failure": "'charmap' codec can't encode character '\\u221a' in position 1199: character maps to <undefined>",
+  "classification": "receipt-console Unicode encoding failure before scope loop; no Windows display/session finding",
+  "log_evidence": {
+    "file": "first-run-decoded-excerpt.txt",
+    "sha256": "1f088d0ce2f2281b4d18097ac0548a2deee509160ab8f0181ba244151f3d613f",
+    "bytes": 1569,
+    "retrieval": "parent-supplied partial GitHub MCP decoded job excerpt, including annotations; not full raw job log"
+  },
+  "artifact_reported_by_parent": {
+    "id": 11538144867,
+    "sha256": "f1ae37382742e27b8c25d1bf7e648c46d528b974ac75c9347efb6ee835abe10a",
+    "bytes": 2867,
+    "archive_bytes_verified_in_this_consumer": false
+  }
+}
