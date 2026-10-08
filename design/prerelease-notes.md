@@ -9,3 +9,4 @@ Experimental 2026.10.2-rc.4 preview.
 - New tasks keep their place at the top of manual order after leaving Inbox.
 - Sort-date bounds and tag filters have clearer spacing.
 - Bulk Apply controls announce the field they affect to screen readers.
+- Compact bulk editors show save failures beside the action buttons.
