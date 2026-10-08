@@ -29,3 +29,9 @@ application behavior; it does not establish signed-release/manual visual,
 assistive technology, Android IME/provider, overnight idle or physical display
 acceptance. Receipt binary hashes are runner-reported; raw logs are uploaded,
 and loaded-module enumeration is not performed.
+
+Later test revision `ec2309db` changes three excluded legacy aggregate blocks
+(two earlier 5204 interactions plus the guarded bulk Save interaction). The
+whole aggregate file differs, but the selected workspace-search body and six
+other entrypoints remain byte-identical, as do production/native/platform inputs.
+This 22-flow run compiled `ff1d1f82`; new full CI 37796892998 remains pending.

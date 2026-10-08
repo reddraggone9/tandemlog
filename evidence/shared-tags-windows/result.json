@@ -41,6 +41,16 @@
     "selected_windows_search_test_body_identical": true,
     "selected_body_sha256": "f08ad24014a9a2d0240f989503ea900090ac76863f19f224a958bf8bf5f1517b",
     "other_six_entrypoints_and_production_native_platform_inputs_identical": true,
-    "full_CI_for_new_test_revision": "37792711739 pending; do not treat this hosted run as compilation at5204e276"
+    "full_CI_for_new_test_revision": "37792711739 terminal failure: AndroidWindows success/Linux68pass1bulkSaveinteractionfailure; superseded by test-onlyec2309 freshCI37796892998 pending."
+  },
+  "later_ec2309_fixture_revision": {
+    "source": "ec2309dbbdde09d5fce0a07610bc253258dd508b",
+    "whole_aggregate_file_identical": false,
+    "changes": "Adds popup dismissal and hit-test/exact-query assertions plus stronger rejected-Save exact-tagset check in excluded legacy multi-tag block, alongside two earlier5204 excluded legacy corrections.",
+    "selected_windows_search_test_body_identical": true,
+    "selected_body_sha256": "4a18eff58ba9ed742d7d37ca17a57f620905ae86a23cceda6f8087d6eab82920",
+    "body_hash_scope": "From testWidgets declaration naming workspace search to before next testWidgets declaration",
+    "other_six_entrypoints_and_production_native_platform_inputs_identical": true,
+    "full_CI_for_new_test_revision": "37796892998 pending; this hosted22-flow run compiledff1d, notec2309."
   }
 }
