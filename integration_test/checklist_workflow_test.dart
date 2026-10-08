@@ -17,9 +17,8 @@ import 'task_flow_test.dart' as flows;
 Finder _key(String value) => find.byKey(ValueKey(value));
 Future<void> _settle(WidgetTester tester) async {
   await tester.pump();
-  // The consent dialog intentionally holds the application command open. Its
-  // background progress indicator animates until the user decides; waiting for
-  // global animation quiescence would prevent the test from making that choice.
+  // Consent holds command admission without showing background work. Settle the
+  // modal's entrance separately from progress while an actual write is running.
   for (
     var attempt = 0;
     attempt < 100 &&
@@ -171,6 +170,7 @@ void registerChecklistWorkflowTests() {
           };
           await _tap(tester, checkbox());
           expect(find.text('Unfinished checklist items'), findsOneWidget);
+          expect(find.byType(LinearProgressIndicator), findsNothing);
           await _tap(tester, find.widgetWithText(TextButton, 'Cancel').last);
           expect({
             await for (final file in folder.list())
@@ -192,6 +192,7 @@ void registerChecklistWorkflowTests() {
           await tester.sendKeyEvent(LogicalKeyboardKey.space);
           await _settle(tester);
           expect(find.text('Unfinished checklist items'), findsOneWidget);
+          expect(find.byType(LinearProgressIndicator), findsNothing);
           await peer.addChecklistItem(parent, 'Incoming raincoat');
           await _tap(tester, find.text('Complete anyway'));
           expect(find.text('Unfinished checklist items'), findsOneWidget);

@@ -1,0 +1,21 @@
+00:00 +0: loading /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart
+00:00 +0: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+00:00 +1: /workspace/tandemlog-completion-progress/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+00:00 +2: /workspace/tandemlog-completion-progress/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+00:00 +3: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+00:00 +4: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+00:00 +5: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+00:00 +6: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: incoming new unchecked item during warning requires fresh confirmation before receipt
+00:01 +7: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: incoming completion state during warning requires fresh confirmation before receipt
+00:01 +8: /workspace/tandemlog-completion-progress/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:01 +9: /workspace/tandemlog-completion-progress/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:01 +10: /workspace/tandemlog-completion-progress/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:01 +11: /workspace/tandemlog-completion-progress/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:02 +12: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: cancel renewed warning keeps peer changes but writes no local completion
+00:02 +13: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: incoming checks clearing all unfinished work need no second warning
+00:02 +14: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+00:02 +15: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: task completed while warning is open stops without preparing duplicate completion
+00:02 +16: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: already completed task returns null without warning or duplicate receipt
+00:02 +17: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: native incoming notes renew warning while another private item draft stays unpublished
+00:02 +18: /workspace/tandemlog-completion-progress/test/checklist_completion_command_test.dart: incoming unchecked item at native preparation boundary retries confirmation before any receipt
+00:02 +19: All tests passed!

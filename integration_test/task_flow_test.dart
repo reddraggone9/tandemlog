@@ -20,6 +20,8 @@ import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
 import 'completion_actions_test.dart' show registerCompletionActionTests;
 import 'completion_focus_test.dart' show registerCompletionFocusTests;
+import 'completion_confirmation_progress_test.dart'
+    show registerCompletionConfirmationProgressTests;
 import 'header_selection_test.dart' show registerHeaderSelectionTests;
 import 'historical_checklist_recompletion_test.dart'
     show registerHistoricalChecklistRecompletionTests;
@@ -168,6 +170,7 @@ void main() {
   registerSaveAcknowledgementTests();
   registerCompletionActionTests();
   registerCompletionFocusTests();
+  registerCompletionConfirmationProgressTests();
   registerHeaderSelectionTests();
   registerHistoricalChecklistRecompletionTests();
   registerBulkFailureVisibilityTests();

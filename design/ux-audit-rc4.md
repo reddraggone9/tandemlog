@@ -1,5 +1,13 @@
 # RC4 task-based UX audit
 
+The post-RC4 unfinished-checklist confirmation regression keeps command admission
+active while hiding the header progress bar during user consent. Cancel/dismissal
+writes nothing; confirmed work retains progress. Repeated or dismissed dialog
+callbacks cannot pop the task page. Native desktop/narrow regression results and
+inspected Dark Before/After screenshots are recorded in
+[completion progress evidence](../evidence/completion-confirmation-progress/README.md).
+This isolated fix does not change the published RC4.
+
 Scope and rationale: [decision 0004](decisions/0004-editing-bulk-actions-and-installers.md).
 
 Pre-native review fixed missing live title/notes limits (500/10,000), hidden draft occurrence overrides after Repeat removal, and narrow enlarged-text action overflows. Bulk partial writes require reconciliation before retry. Cloud Flatpak execution is blocked by read-only user-namespace mappings; hosted installation is a required gate.

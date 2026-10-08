@@ -185,6 +185,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final dropKeys = <String, GlobalKey>{};
   final groupHeadingKeys = <String, GlobalKey>{};
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
+  // Consent retains command admission/lifecycle ownership without displaying
+  // a running operation while the user is deciding.
+  bool awaitingCompletionConfirmation = false;
   String? privateRoot;
   LocalSettings? settings;
   ProfileLock? profileLock;
@@ -2489,39 +2492,57 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             final unfinished = items
                 .where((item) => item['completed'] != true)
                 .toList();
-            return await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    scrollable: true,
-                    title: const Text('Unfinished checklist items'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${unfinished.length} ${unfinished.length == 1 ? 'item is' : 'items are'} still unchecked. Complete this task anyway?',
-                        ),
-                        const SizedBox(height: 12),
-                        for (final item in unfinished)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4),
-                            child: Text('• ${item['title']}'),
+            var decisionMade = false;
+            void decide(BuildContext dialogContext, bool answer) {
+              if (decisionMade ||
+                  !dialogContext.mounted ||
+                  ModalRoute.of(dialogContext)?.isCurrent != true) {
+                return;
+              }
+              decisionMade = true;
+              Navigator.pop(dialogContext, answer);
+            }
+
+            setState(() => awaitingCompletionConfirmation = true);
+            try {
+              return await showDialog<bool>(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      scrollable: true,
+                      title: const Text('Unfinished checklist items'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${unfinished.length} ${unfinished.length == 1 ? 'item is' : 'items are'} still unchecked. Complete this task anyway?',
                           ),
+                          const SizedBox(height: 12),
+                          for (final item in unfinished)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Text('• ${item['title']}'),
+                            ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => decide(ctx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        FilledButton(
+                          onPressed: () => decide(ctx, true),
+                          child: const Text('Complete anyway'),
+                        ),
                       ],
                     ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.pop(ctx, false),
-                        child: const Text('Cancel'),
-                      ),
-                      FilledButton(
-                        onPressed: () => Navigator.pop(ctx, true),
-                        child: const Text('Complete anyway'),
-                      ),
-                    ],
-                  ),
-                ) ??
-                false;
+                  ) ??
+                  false;
+            } finally {
+              if (mounted) {
+                setState(() => awaitingCompletionConfirmation = false);
+              }
+            }
           },
           onPrepared: prepared,
         ),
@@ -2887,7 +2908,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       ),
                       SizedBox(
                         height: 2,
-                        child: busy
+                        child: busy && !awaitingCompletionConfirmation
                             ? const LinearProgressIndicator(minHeight: 2)
                             : null,
                       ),

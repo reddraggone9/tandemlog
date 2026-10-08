@@ -1,0 +1,31 @@
+{
+  "baseline": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "platform": "native Linux GTK",
+  "viewport": [
+    1200,
+    850
+  ],
+  "appearance": "dark",
+  "text_scale": 1,
+  "fixture": "synthetic parent with six unchecked checklist items",
+  "canonical_unchanged_after_both_cancellations": true,
+  "source_main_sha256": "2eaddca990880c02afb0b98df74fed8f8b99cdc7156e313bf4f19df314361f57",
+  "before_mode": "local release baseline",
+  "after_mode": "local debug fix",
+  "independent_review": "/root/correctness_review; amended dialog guard accepted, no must-fix",
+  "tests": {
+    "native_progress": 5,
+    "native_existing_checklist": 2,
+    "focused": 19,
+    "analyze": "no issues"
+  },
+  "artifacts": {
+    "before.png": "7bce51e795505d54253ab84d7040038380133f1c2c0976357a00abd5adf27c26",
+    "native-checklist.txt": "50b85febc5ecad336cf36505e44e8a592c4197d415faea146bb95a329a111d0c",
+    "analyze.txt": "bc8042400f8e0f0c0082f60e598b9c0f7a1383385d4ab1673bc24434d84c8298",
+    "focused-tests.txt": "b5333f2303bce7893d475b8741bea52c0f90cef7af3db9edb21bdc8729d36ebc",
+    "native-red.txt": "682c9a43c71eafb90197fc7321e9e7d9d575d995a2f1ae5fec7255b722a00283",
+    "native-green.txt": "e2889b42b441b2ffdfd7c9776ebfa784dbf8af6d4b67ae488cf9e8fc91da6b6e",
+    "after.png": "5dbc741c150313b86b5293f827bc98ba72efbb2b961737fe68949b8dc549483b"
+  }
+}
