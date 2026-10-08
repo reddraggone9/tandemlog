@@ -1,0 +1,16 @@
+{
+  "source_base": "a960c882c06c018a1e721e7459f08dbe4d17bed3",
+  "command": "flutter test test/tag_input_test.dart test/task_editor_tags_test.dart",
+  "outcome": "5 behavioral failures; both files compile",
+  "failures": [
+    "selected chips remain beside query at390/1000",
+    "pending Save replaces old tag",
+    "selected old chip missing; pending close test blocked at initial assertion",
+    "bulk Remove accepts unknown query"
+  ],
+  "tests": {
+    "test/tag_input_test.dart": "bf33743eed7cd34411bdd934b64f01e94879143ff0f4c7ee09c6309e2bfe40ad",
+    "test/task_editor_tags_test.dart": "eda3bd351b602ba0814049a5fa531bb1fc3dc479a06f724ad2af78d2adb92a89"
+  },
+  "log_sha256": "a622eb5463469a8dc1e15d8eb4c3f18b289e1e8c9b7474b22a35ede68b728104"
+}
