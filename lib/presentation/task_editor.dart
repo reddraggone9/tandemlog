@@ -1,45 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
 import 'failure_message.dart';
 import '../application/task_text_session.dart';
-
-// Input-only normalization keeps historical canonical titles untouched until
-// the user edits them. Do not interfere with the platform's IME candidates.
-class _TitleLineFormatter extends TextInputFormatter {
-  static final breaks = RegExp(r'\r\n|[\r\n\u2028\u2029]');
-
-  @override
-  TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
-    if (newValue.composing.isValid && !newValue.composing.isCollapsed) {
-      return newValue;
-    }
-    if (oldValue.text == newValue.text &&
-        !(oldValue.composing.isValid && !oldValue.composing.isCollapsed)) {
-      return newValue;
-    }
-    if (!breaks.hasMatch(newValue.text)) return newValue;
-    int offset(int value) => value < 0
-        ? value
-        : newValue.text.substring(0, value).replaceAll(breaks, ' ').length;
-    return newValue.copyWith(
-      text: newValue.text.replaceAll(breaks, ' '),
-      selection: TextSelection(
-        baseOffset: offset(newValue.selection.baseOffset),
-        extentOffset: offset(newValue.selection.extentOffset),
-        affinity: newValue.selection.affinity,
-        isDirectional: newValue.selection.isDirectional,
-      ),
-      composing: TextRange.empty,
-    );
-  }
-}
+import 'title_line_formatter.dart';
 
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
@@ -55,7 +21,9 @@ class TaskEditor extends StatefulWidget {
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
+    this.checklistBuilder,
   });
+  final Widget Function(bool enabled)? checklistBuilder;
   final TaskTextSession? textSession;
   final String? textStatus;
   final bool disableTextFields;
@@ -90,6 +58,7 @@ class TaskEditorState extends State<TaskEditor> {
     textSession: widget.textSession,
     textStatus: widget.textStatus,
     disableTextFields: widget.disableTextFields,
+    checklistBuilder: widget.checklistBuilder,
   );
 }
 
@@ -150,7 +119,9 @@ class _EditorBody extends StatefulWidget {
     this.textSession,
     this.textStatus,
     this.disableTextFields = false,
+    this.checklistBuilder,
   });
+  final Widget Function(bool enabled)? checklistBuilder;
   final TaskTextSession? textSession;
   final String? textStatus;
   final bool disableTextFields;
@@ -435,7 +406,7 @@ class _EditorBodyState extends State<_EditorBody> {
       // Focus loss can finalize composition through the controller without
       // running input formatters. Normalize only this changed, committed title.
       final title = controllers['title']!;
-      title.value = _TitleLineFormatter().formatEditUpdate(
+      title.value = TitleLineFormatter().formatEditUpdate(
         TextEditingValue.empty,
         title.value,
       );
@@ -580,7 +551,7 @@ class _EditorBodyState extends State<_EditorBody> {
               {'title', 'description'}.contains(key)),
       minLines: key == 'description' ? 3 : 1,
       maxLines: key == 'description' ? null : lines,
-      inputFormatters: key == 'title' ? [_TitleLineFormatter()] : null,
+      inputFormatters: key == 'title' ? [TitleLineFormatter()] : null,
       keyboardType: key == 'title' ? TextInputType.text : null,
       textInputAction: key == 'title' ? TextInputAction.next : null,
       decoration: InputDecoration(
@@ -820,6 +791,8 @@ class _EditorBodyState extends State<_EditorBody> {
           if (!bulk) ...[
             field('title', 'Title', lines: 2),
             field('description', 'Notes', lines: 3),
+            if (widget.checklistBuilder != null)
+              widget.checklistBuilder!(!editingFrozen),
             if (widget.disableTextFields && widget.textStatus != null)
               Padding(
                 padding: const EdgeInsets.only(top: 4),

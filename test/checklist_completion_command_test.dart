@@ -158,9 +158,6 @@ class _BeforeCommitPeerStore implements TaskStore {
   List<String> activeCompletionIds(String entity) =>
       actual.activeCompletionIds(entity);
   @override
-  Map<String, dynamic>? currentTextRow(String entity) =>
-      actual.currentTextRow(entity);
-  @override
   Future<LogEvent> complete(
     String entity, {
     DateTime? completionDay,
@@ -171,8 +168,9 @@ class _BeforeCommitPeerStore implements TaskStore {
     void Function(OperationReceipt)? onPrepared,
   }) async {
     attempts++;
-    if (attempts == 1)
+    if (attempts == 1) {
       await peer.addChecklistItem(parent, 'Arrived at preparation boundary');
+    }
     return actual.complete(
       entity,
       completionDay: completionDay,
@@ -476,8 +474,9 @@ void main() {
           warnings++;
           expect(prepared, 0);
           expect(items, hasLength(warnings == 1 ? 2 : 3));
-          if (warnings == 2)
+          if (warnings == 2) {
             expect(items.last['title'], 'Arrived at preparation boundary');
+          }
           return true;
         },
         onPrepared: (_) => prepared++,

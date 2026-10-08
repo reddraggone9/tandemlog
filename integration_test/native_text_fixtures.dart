@@ -101,7 +101,11 @@ extension NativeTaskFixtures on TaskStore {
 }
 
 /// Optional real GTK screenshots for an affected native integration run.
-Future<void> captureNativeFixtureUi(WidgetTester tester, String name) async {
+Future<void> captureNativeFixtureUi(
+  WidgetTester tester,
+  String name, {
+  bool waitingForConsent = false,
+}) async {
   final directory = Platform.environment['TANDEMLOG_NATIVE_QA_SCREENSHOTS'];
   if (directory == null || !Platform.isLinux) return;
   await Directory(directory).create(recursive: true);
@@ -120,7 +124,11 @@ Future<void> captureNativeFixtureUi(WidgetTester tester, String name) async {
     tester.view.physicalSize.width.round().toString(),
     tester.view.physicalSize.height.round().toString(),
   ]);
-  await tester.pumpAndSettle();
+  if (waitingForConsent) {
+    await tester.pump(const Duration(milliseconds: 300));
+  } else {
+    await tester.pumpAndSettle();
+  }
   await tester.runAsync(
     () => Future<void>.delayed(const Duration(milliseconds: 200)),
   );

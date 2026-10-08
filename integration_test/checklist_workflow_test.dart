@@ -15,11 +15,31 @@ import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 Finder _key(String value) => find.byKey(ValueKey(value));
+Future<void> _settle(WidgetTester tester) async {
+  await tester.pump();
+  // The consent dialog intentionally holds the application command open. Its
+  // background progress indicator animates until the user decides; waiting for
+  // global animation quiescence would prevent the test from making that choice.
+  for (
+    var attempt = 0;
+    attempt < 100 &&
+        find.byType(LinearProgressIndicator).evaluate().isNotEmpty &&
+        find.text('Unfinished checklist items').evaluate().isEmpty;
+    attempt++
+  ) {
+    await tester.pump(const Duration(milliseconds: 100));
+  }
+  await tester.pump(const Duration(milliseconds: 300));
+  if (find.text('Unfinished checklist items').evaluate().isEmpty) {
+    await tester.pumpAndSettle();
+  }
+}
+
 Future<void> _tap(WidgetTester tester, Finder finder) async {
   await tester.ensureVisible(finder);
-  await tester.pumpAndSettle();
+  await _settle(tester);
   await tester.tap(finder);
-  await tester.pumpAndSettle();
+  await _settle(tester);
 }
 
 void main() {
@@ -170,7 +190,7 @@ void registerChecklistWorkflowTests() {
           ).requestFocus();
           await tester.pumpAndSettle();
           await tester.sendKeyEvent(LogicalKeyboardKey.space);
-          await tester.pumpAndSettle();
+          await _settle(tester);
           expect(find.text('Unfinished checklist items'), findsOneWidget);
           await peer.addChecklistItem(parent, 'Incoming raincoat');
           await _tap(tester, find.text('Complete anyway'));
@@ -180,6 +200,7 @@ void registerChecklistWorkflowTests() {
           await captureNativeFixtureUi(
             tester,
             'checklist-${narrow ? 'narrow-light-200' : 'desktop-dark'}-warning',
+            waitingForConsent: true,
           );
           await _tap(tester, find.text('Complete anyway'));
           await flows.waitForUi(
