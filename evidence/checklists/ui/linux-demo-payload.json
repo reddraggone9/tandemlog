@@ -1,0 +1,27 @@
+{
+  "source": "7d6a8bd8baa74e136ce26b8d75a138e47a9adf0d",
+  "platform": "Linux GTK local debug main application",
+  "published": false,
+  "flutter": "Flutter 3.47.5 \u2022 channel [user-branch] \u2022 https://github.com/flutter/flutter.git\nFramework \u2022 revision 6a19cca564 (3 weeks ago) \u2022 2026-09-17 14:13:22 -0400\nEngine \u2022 hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (21 days ago) \u2022 2026-09-16 18:35:09.000Z\nTools \u2022 Dart 3.13.4 \u2022 DevTools 2.60.0",
+  "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "files": {
+    "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/NOTICES.Z": "b01e00160052e04ecfe27ebed53664209bdd75c044c8b664fcf58971007897ea",
+    "data/flutter_assets/NativeAssetsManifest.json": "cac6ed54604e88a281fdf937e13069ee88123bf111e9a4af1ad323b3a561b3f0",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "d9865b671a09d683d13a863089d8825e0f61a37696ce5d7d448bc8023aa62453",
+    "data/flutter_assets/kernel_blob.bin": "8d660120ea34e65fbab7bf005ea048612339c75d9e1b05f289f3ba4146311ab8",
+    "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/flutter_assets/version.json": "2075897a466835c1ae2e829b7e7ba60c79eb6760e68baf040e459d1dcc344f98",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "lib/libdartjni.so": "d2c2974f5f440e308720b7e03f649b766284fe64847f92794e6de908dd7acfa9",
+    "lib/libfile_selector_linux_plugin.so": "48b07966d929af5edc22f6af7bb8ad0e0cd0a61e7430bd47c86916c0551583ca",
+    "lib/libflutter_linux_gtk.so": "7a5698608a3c79ad3f123a74bce8074339ffa1a83c896d73ae853c9f92a43cc3",
+    "lib/libsqlite3.so": "0f947ebe629e8d9d02d7f408bef36e056bfc63ea47e02e0d45a7bae454f04ace",
+    "lib/libtandemlog_text.so": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+    "lib/liburl_launcher_linux_plugin.so": "0733979405d2e117d7588fe7f5f6684ff1d94192dc15474e4b786f68f03ff8c5",
+    "tandemlog": "1f9e646b498981638d8b15f108ac7b5187ced016bdc67acf564a7f6425a49be6"
+  }
+}

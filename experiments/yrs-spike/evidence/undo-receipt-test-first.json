@@ -1,0 +1,15 @@
+{
+  "frozen_utc": "2026-10-04T20:50:45.060824+00:00",
+  "coordinator_implementation_present": false,
+  "native_nonmutating_prepare_already_available": true,
+  "test_sha256": "fc33b72de38d7cd221cddec0f26b7582c945c4e51293db15ccd3abe070ede6ea",
+  "red_log_sha256": "efe96242927db34d633a4a73f3a3773d49c88e47e5f984e705da1d2956c81be2",
+  "red_result": "4 executed failures: coordinator prepareUndo method absent; tests invoke future API dynamically so missingmethod errors are executed, not test-loading failures.",
+  "cases": [
+    "UF01 prepared outbox persists exact bytes without live change",
+    "UF02 append/receipt interruption plus actual filesystem restart and retry",
+    "UF03 unknownreceipt sameprocess idempotence and prior Undo",
+    "UF04 remote-after-preparation immutable compensation converges"
+  ],
+  "scope": "Private synthetic POSIX journal/outbox; productionfolder/SQLite receipt integration not yet covered."
+}

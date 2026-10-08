@@ -1,0 +1,37 @@
+{
+  "rust": "rustc 1.99.0 (b940084d7 2026-09-28)",
+  "crate": "native/text_engine",
+  "platform": "android",
+  "library": "tandemlog_text",
+  "yrs": "0.28.0",
+  "exports": [
+    "tandemlog_text_json",
+    "tandemlog_text_free",
+    "tandemlog_text_alloc",
+    "tandemlog_text_release_input"
+  ],
+  "cargo_lock_sha256": "55e1a0802bc978e6b4bf376e8c8bb7a0fd34a7e46428c7a43bdf68d704fb8eec",
+  "artifacts": [
+    {
+      "abi": "arm64-v8a",
+      "target": "aarch64-linux-android",
+      "path": "/tmp/tandemlog-production-text-libs/android/arm64-v8a/libtandemlog_text.so",
+      "sha256": "8109ed2344e3ae711d6c39a0f9b3e202e966b0fedadd3e0c284f1b8207f0e29a"
+    },
+    {
+      "abi": "x86_64",
+      "target": "x86_64-linux-android",
+      "path": "/tmp/tandemlog-production-text-libs/android/x86_64/libtandemlog_text.so",
+      "sha256": "2c0535932c13d3e941b2ff20d60d506508d2a13e0fd7006a0ad6bd52010639a5"
+    },
+    {
+      "abi": "armeabi-v7a",
+      "target": "armv7-linux-androideabi",
+      "path": "/tmp/tandemlog-production-text-libs/android/armeabi-v7a/libtandemlog_text.so",
+      "sha256": "34ca3470eee5ce18110fa473c73acbcdbb4a27a60f2fd12d87159e5a9de7f1f5"
+    }
+  ],
+  "ndk": "28.2.13676358",
+  "android_min_api": 24,
+  "elf_page_alignment": 16384
+}

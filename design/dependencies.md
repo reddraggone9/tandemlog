@@ -120,13 +120,49 @@ Primary reference checks (2026-10-04): [Dependabot ecosystem support](https://do
 
 ## Complete resolved Dart graph and archive provenance
 
-The isolated [Yrs experiment](text-merge-prototype.md) has a separate Rust1.99.0
-toolchain and crate lockfile. Its direct crates are Yrs0.28.0 (text engine),
-serde_json1.0.151 (lab request encoding) and base640.22.1 (opaque update transport).
-Its46 resolved registry packages/asset provenance are recorded in the prototype
-package. They are **not application dependencies**, are not linked/shipped in
-Tandemlog, and are not covered by the app's pub/Gradle updater. The experiment is
-manually reviewed and dispatched; no Rust bridge adoption is implied.
+The [isolated Yrs experiment](text-merge-prototype.md) preceded the authorized,
+unreleased [production text bridge](decisions/0010-collaborative-text-adoption.md).
+One implementation now lives in `native/text_engine`; experiment wrappers include
+it rather than maintain a second engine. Rust1.99.0, Yrs0.28.0, serde_json1.0.151
+and base640.22.1 are pinned by the canonical Cargo.lock. Its46 registry pins,
+checksums and dependency notices are recorded in
+[`THIRD_PARTY_NOTICES.txt`](../native/text_engine/THIRD_PARTY_NOTICES.txt). The
+review inspected actual native-target graphs and enabled build hooks, recovered
+Yrs's omitted MIT text from its exact upstream source commit, and retained the
+Unicode/parking and supplied Rust standard-library notices. Four offline tests
+check the locked notices graph; source and target-feature review remains required.
+
+Lee approved carrying the narrowly patched Yrs0.28.0 source on 2026-10-05
+(Sentinel_d979d6961af481918adb9e972c57a5e6). The official 67-file crate is
+vendored in `native/text_engine/vendor/yrs-0.28.0`; only `src/undo.rs` changes:
+Undo restoration sorts its HashSet candidates by immutable `(client, clock)`
+IDs before allocating restored identities. This fixes repeated closed-editor
+Undo replay divergence without changing canonical events or text admission.
+The upstream archive SHA-256 is
+`52c70dc8beca8666c77612a96889106ca3cd65318609721f464624ff79685da9`, from
+upstream revision `23b7f5693bbf9e7d26340c521ee8647f79bdfba2`; the approved
+[patch](../evidence/production-text/undo/proposed-deterministic-undo.patch)
+SHA-256 is `9d502e49d1dfacbefb713658295a18997a3fbc4951932eba70c6f174f52b7532`.
+The build gate checks every shipped file against the committed provenance
+inventory and rejects missing/modified files or an absent Cargo override.
+Cargo.lock resolves this local source; all other registry versions/checksums
+remain unchanged. The original upstream MIT text remains in the bundled notices.
+
+Maintenance owner: native text engine maintainers. Review the patch at every
+Yrs update and re-run repeated save/Undo, peer-edit, exact receipt and replay
+regressions. Exit condition: a reviewed upstream version supplies deterministic
+restoration and passes those gates, allowing removal of the override. This patch
+establishes deterministic traversal for the observed path, not a claim that all
+Yrs execution is deterministic. No additional build hooks or downloads are added.
+
+The build helper requires preinstalled official Rust/std targets, reviewed Cargo
+inputs and NDK28.2.13676358. App builds use locked offline Cargo and do not fetch
+dependencies, tools or notices. Every app target bundles the notices as a Flutter
+asset, loaded on demand from Settings → Licenses. The pub/Gradle updater does not
+cover Cargo; manually review exact Rust graph/toolchain changes under the same
+policy before execution. New-platform/feature enablement requires another graph
+and notice review. Production Windows/Android and final package gates remain
+pending; historical prototype builds do not establish their acceptance.
 
 All hosted entries below are `https://pub.dev` package archives with their committed SHA-256. SDK entries come from the pinned Flutter SDK. This appendix distinguishes direct/dev/transitive without presenting transitive packages as direct app requirements.
 

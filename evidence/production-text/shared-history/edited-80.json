@@ -1,0 +1,513 @@
+{
+  "source": "shared-history-working-tree",
+  "generations_requested": 80,
+  "edits_each_generation": true,
+  "mode": "Dart AOT executable; actual production TaskStore/native FFI; no Flutter UI or process-to-ready timing",
+  "tasks": 81,
+  "history_events": 162,
+  "samples": [
+    {
+      "generation": 1,
+      "completion_ms": 12.232,
+      "native_creations": 0,
+      "inspections": 2
+    },
+    {
+      "generation": 2,
+      "completion_ms": 12.024,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 3,
+      "completion_ms": 12.477,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 4,
+      "completion_ms": 11.853,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 5,
+      "completion_ms": 13.088,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 6,
+      "completion_ms": 12.398,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 7,
+      "completion_ms": 13.869,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 8,
+      "completion_ms": 13.039,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 9,
+      "completion_ms": 15.555,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 10,
+      "completion_ms": 13.659,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 11,
+      "completion_ms": 14.497,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 12,
+      "completion_ms": 14.41,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 13,
+      "completion_ms": 14.511,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 14,
+      "completion_ms": 14.303,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 15,
+      "completion_ms": 15.037,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 16,
+      "completion_ms": 15.032,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 17,
+      "completion_ms": 13.883,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 18,
+      "completion_ms": 14.901,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 19,
+      "completion_ms": 14.892,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 20,
+      "completion_ms": 14.934,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 21,
+      "completion_ms": 14.623,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 22,
+      "completion_ms": 18.912,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 23,
+      "completion_ms": 18.683,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 24,
+      "completion_ms": 18.455,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 25,
+      "completion_ms": 18.058,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 26,
+      "completion_ms": 16.055,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 27,
+      "completion_ms": 19.218,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 28,
+      "completion_ms": 16.966,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 29,
+      "completion_ms": 22.415,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 30,
+      "completion_ms": 16.324,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 31,
+      "completion_ms": 25.457,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 32,
+      "completion_ms": 16.501,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 33,
+      "completion_ms": 18.405,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 34,
+      "completion_ms": 18.237,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 35,
+      "completion_ms": 19.294,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 36,
+      "completion_ms": 23.515,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 37,
+      "completion_ms": 18.537,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 38,
+      "completion_ms": 24.609,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 39,
+      "completion_ms": 25.737,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 40,
+      "completion_ms": 16.564,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 41,
+      "completion_ms": 19.224,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 42,
+      "completion_ms": 20.416,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 43,
+      "completion_ms": 17.375,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 44,
+      "completion_ms": 17.607,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 45,
+      "completion_ms": 22.017,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 46,
+      "completion_ms": 20.977,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 47,
+      "completion_ms": 27.239,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 48,
+      "completion_ms": 21.147,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 49,
+      "completion_ms": 17.629,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 50,
+      "completion_ms": 23.121,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 51,
+      "completion_ms": 21.558,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 52,
+      "completion_ms": 25.516,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 53,
+      "completion_ms": 17.967,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 54,
+      "completion_ms": 18.24,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 55,
+      "completion_ms": 23.116,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 56,
+      "completion_ms": 21.341,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 57,
+      "completion_ms": 24.095,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 58,
+      "completion_ms": 20.061,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 59,
+      "completion_ms": 22.024,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 60,
+      "completion_ms": 20.679,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 61,
+      "completion_ms": 24.224,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 62,
+      "completion_ms": 31.812,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 63,
+      "completion_ms": 33.025,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 64,
+      "completion_ms": 39.37,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 65,
+      "completion_ms": 24.978,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 66,
+      "completion_ms": 24.203,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 67,
+      "completion_ms": 20.372,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 68,
+      "completion_ms": 20.484,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 69,
+      "completion_ms": 21.815,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 70,
+      "completion_ms": 21.743,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 71,
+      "completion_ms": 22.058,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 72,
+      "completion_ms": 22.987,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 73,
+      "completion_ms": 22.672,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 74,
+      "completion_ms": 21.794,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 75,
+      "completion_ms": 25.677,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 76,
+      "completion_ms": 28.215,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 77,
+      "completion_ms": 29.611,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 78,
+      "completion_ms": 25.617,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 79,
+      "completion_ms": 31.25,
+      "native_creations": 0,
+      "inspections": 0
+    },
+    {
+      "generation": 80,
+      "completion_ms": 34.824,
+      "native_creations": 0,
+      "inspections": 0
+    }
+  ],
+  "warm_open_ms": 1.747,
+  "warm_canonical_reads": 0,
+  "cache_rebuild_ms": 272.48,
+  "cache_rebuild_reads": 1,
+  "wall_ms": 3795,
+  "canonical_unchanged": true,
+  "cache_states_identical": true,
+  "canonical_bytes": 189728,
+  "sqlite_bytes": 692224,
+  "native_state_blob_bytes": 101,
+  "frontier_json_bytes": 12564,
+  "rss_initial_bytes": 7692288,
+  "rss_before_close_bytes": 30515200,
+  "rss_peak_before_close_bytes": 30093312,
+  "rss_peak_bytes": 33796096,
+  "fresh_engine_for_rebuild": true,
+  "native_document_creations": 6,
+  "native_seed_calls": 24,
+  "native_inspections": 806,
+  "native_history_materializers": 4,
+  "cold_history_materializers": 2,
+  "preserved_fixture_directory": "/tmp/tandemlog-aot-cost-XFUGGR",
+  "original_cache_path": "/tmp/tandemlog-aot-cost-XFUGGR/profile/cache.sqlite"
+}

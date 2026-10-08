@@ -1,0 +1,555 @@
+[
+  {
+    "mode": "idle",
+    "exit": 0,
+    "result": {
+      "mode": "idle",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10964,
+      "loadedRssKiB": 11264,
+      "finalRssKiB": 11276,
+      "peakRssKiB": 12160,
+      "peakMinusBaselineKiB": 1196,
+      "calls": {},
+      "outcome": {
+        "nativeDocsCreated": 0,
+        "nativeCalls": 0,
+        "taskListRows": 2000,
+        "qualification": "models lazy native allocation; actual Dart idle-list allocation requires app integration evidence"
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "title100",
+    "exit": 0,
+    "result": {
+      "mode": "title100",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10960,
+      "loadedRssKiB": 11264,
+      "finalRssKiB": 12624,
+      "peakRssKiB": 13268,
+      "peakMinusBaselineKiB": 2308,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.400485,
+          "meanMs": 0.400485,
+          "p95Ms": 0.400485
+        },
+        "new": {
+          "count": 2,
+          "maxMs": 0.228224,
+          "meanMs": 0.1611685,
+          "p95Ms": 0.228224
+        },
+        "draft": {
+          "count": 1,
+          "maxMs": 0.15851,
+          "meanMs": 0.15851,
+          "p95Ms": 0.15851
+        },
+        "edit": {
+          "count": 102,
+          "maxMs": 0.461197,
+          "meanMs": 0.1836161862745098,
+          "p95Ms": 0.313834
+        },
+        "read": {
+          "count": 2,
+          "maxMs": 0.078168,
+          "meanMs": 0.058348,
+          "p95Ms": 0.078168
+        },
+        "prepare": {
+          "count": 1,
+          "maxMs": 0.036035,
+          "meanMs": 0.036035,
+          "p95Ms": 0.036035
+        },
+        "apply": {
+          "count": 2,
+          "maxMs": 0.175576,
+          "meanMs": 0.1483945,
+          "p95Ms": 0.175576
+        },
+        "save": {
+          "count": 1,
+          "maxMs": 0.374596,
+          "meanMs": 0.374596,
+          "p95Ms": 0.374596
+        },
+        "prepare_undo": {
+          "count": 1,
+          "maxMs": 0.189005,
+          "meanMs": 0.189005,
+          "p95Ms": 0.189005
+        },
+        "commit_undo": {
+          "count": 1,
+          "maxMs": 0.248445,
+          "meanMs": 0.248445,
+          "p95Ms": 0.248445
+        },
+        "usage": {
+          "count": 1,
+          "maxMs": 0.056315,
+          "meanMs": 0.056315,
+          "p95Ms": 0.056315
+        }
+      },
+      "outcome": {
+        "edits": 100,
+        "remotePreserved": true,
+        "preparedEqualsSaved": true,
+        "usage": {
+          "accounting": "serialized-payload-bytes-not-native-rss",
+          "client": 10,
+          "globalLimitBytes": 67108864,
+          "globalRetainedBytes": 3264,
+          "limits": {
+            "retainedBytes": 67108864,
+            "sessionBytes": 16777216,
+            "stateBytes": 8388608,
+            "updateBytes": 1048576,
+            "visibleUtf16": 500
+          },
+          "ownerGuid": "422f2439-166c-4b28-8fcb-0633b1c78673",
+          "preparedBytes": 0,
+          "receiptBytes": 710,
+          "replayBytes": 690,
+          "retainedBytes": 2112,
+          "sessionBytes": 690,
+          "stateBytes": 666,
+          "visibleUtf16": 498
+        },
+        "initializedRssKiB": 12252
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "title1000",
+    "exit": 0,
+    "result": {
+      "mode": "title1000",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10960,
+      "loadedRssKiB": 11260,
+      "finalRssKiB": 14456,
+      "peakRssKiB": 15404,
+      "peakMinusBaselineKiB": 4444,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.286573,
+          "meanMs": 0.286573,
+          "p95Ms": 0.286573
+        },
+        "new": {
+          "count": 2,
+          "maxMs": 0.177328,
+          "meanMs": 0.13246000000000002,
+          "p95Ms": 0.177328
+        },
+        "draft": {
+          "count": 1,
+          "maxMs": 0.114413,
+          "meanMs": 0.114413,
+          "p95Ms": 0.114413
+        },
+        "edit": {
+          "count": 1002,
+          "maxMs": 2.536984,
+          "meanMs": 0.9549745439121756,
+          "p95Ms": 1.744646
+        },
+        "read": {
+          "count": 2,
+          "maxMs": 0.049485,
+          "meanMs": 0.0399105,
+          "p95Ms": 0.049485
+        },
+        "prepare": {
+          "count": 1,
+          "maxMs": 0.044126,
+          "meanMs": 0.044126,
+          "p95Ms": 0.044126
+        },
+        "apply": {
+          "count": 2,
+          "maxMs": 0.310439,
+          "meanMs": 0.27296750000000003,
+          "p95Ms": 0.310439
+        },
+        "save": {
+          "count": 1,
+          "maxMs": 2.319976,
+          "meanMs": 2.319976,
+          "p95Ms": 2.319976
+        },
+        "prepare_undo": {
+          "count": 1,
+          "maxMs": 0.171368,
+          "meanMs": 0.171368,
+          "p95Ms": 0.171368
+        },
+        "commit_undo": {
+          "count": 1,
+          "maxMs": 0.435828,
+          "meanMs": 0.435828,
+          "p95Ms": 0.435828
+        },
+        "usage": {
+          "count": 1,
+          "maxMs": 0.050486,
+          "meanMs": 0.050486,
+          "p95Ms": 0.050486
+        }
+      },
+      "outcome": {
+        "edits": 1000,
+        "remotePreserved": true,
+        "preparedEqualsSaved": true,
+        "usage": {
+          "accounting": "serialized-payload-bytes-not-native-rss",
+          "client": 10,
+          "globalLimitBytes": 67108864,
+          "globalRetainedBytes": 5070,
+          "limits": {
+            "retainedBytes": 67108864,
+            "sessionBytes": 16777216,
+            "stateBytes": 8388608,
+            "updateBytes": 1048576,
+            "visibleUtf16": 500
+          },
+          "ownerGuid": "57a9d519-27fe-43a8-ad1f-9ff02738df2c",
+          "preparedBytes": 0,
+          "receiptBytes": 711,
+          "replayBytes": 1593,
+          "retainedBytes": 3918,
+          "sessionBytes": 1593,
+          "stateBytes": 1568,
+          "visibleUtf16": 498
+        },
+        "initializedRssKiB": 12164
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "notes100",
+    "exit": 0,
+    "result": {
+      "mode": "notes100",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10960,
+      "loadedRssKiB": 11260,
+      "finalRssKiB": 13804,
+      "peakRssKiB": 14624,
+      "peakMinusBaselineKiB": 3664,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.540217,
+          "meanMs": 0.540217,
+          "p95Ms": 0.540217
+        },
+        "new": {
+          "count": 2,
+          "maxMs": 1.808012,
+          "meanMs": 1.2846365,
+          "p95Ms": 1.808012
+        },
+        "draft": {
+          "count": 1,
+          "maxMs": 1.467137,
+          "meanMs": 1.467137,
+          "p95Ms": 1.467137
+        },
+        "edit": {
+          "count": 102,
+          "maxMs": 1.596993,
+          "meanMs": 0.9470335490196078,
+          "p95Ms": 1.327376
+        },
+        "read": {
+          "count": 2,
+          "maxMs": 0.073611,
+          "meanMs": 0.0728145,
+          "p95Ms": 0.073611
+        },
+        "prepare": {
+          "count": 1,
+          "maxMs": 0.030065,
+          "meanMs": 0.030065,
+          "p95Ms": 0.030065
+        },
+        "apply": {
+          "count": 2,
+          "maxMs": 2.893302,
+          "meanMs": 2.093478,
+          "p95Ms": 2.893302
+        },
+        "save": {
+          "count": 1,
+          "maxMs": 2.194045,
+          "meanMs": 2.194045,
+          "p95Ms": 2.194045
+        },
+        "prepare_undo": {
+          "count": 1,
+          "maxMs": 1.527017,
+          "meanMs": 1.527017,
+          "p95Ms": 1.527017
+        },
+        "commit_undo": {
+          "count": 1,
+          "maxMs": 2.860863,
+          "meanMs": 2.860863,
+          "p95Ms": 2.860863
+        },
+        "usage": {
+          "count": 1,
+          "maxMs": 0.097467,
+          "meanMs": 0.097467,
+          "p95Ms": 0.097467
+        }
+      },
+      "outcome": {
+        "edits": 100,
+        "remotePreserved": true,
+        "preparedEqualsSaved": true,
+        "usage": {
+          "accounting": "serialized-payload-bytes-not-native-rss",
+          "client": 10,
+          "globalLimitBytes": 67108864,
+          "globalRetainedBytes": 50764,
+          "limits": {
+            "retainedBytes": 67108864,
+            "sessionBytes": 16777216,
+            "stateBytes": 8388608,
+            "updateBytes": 1048576,
+            "visibleUtf16": 10000
+          },
+          "ownerGuid": "eb08d305-bb91-431a-b5b1-3c72ea0b8a89",
+          "preparedBytes": 0,
+          "receiptBytes": 10210,
+          "replayBytes": 10190,
+          "retainedBytes": 30612,
+          "sessionBytes": 10190,
+          "stateBytes": 10166,
+          "visibleUtf16": 9998
+        },
+        "initializedRssKiB": 12360
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "notes1000",
+    "exit": 0,
+    "result": {
+      "mode": "notes1000",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10960,
+      "loadedRssKiB": 11260,
+      "finalRssKiB": 17632,
+      "peakRssKiB": 17316,
+      "peakMinusBaselineKiB": 6356,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.438262,
+          "meanMs": 0.438262,
+          "p95Ms": 0.438262
+        },
+        "new": {
+          "count": 2,
+          "maxMs": 1.560969,
+          "meanMs": 1.3678219999999999,
+          "p95Ms": 1.560969
+        },
+        "draft": {
+          "count": 1,
+          "maxMs": 1.404362,
+          "meanMs": 1.404362,
+          "p95Ms": 1.404362
+        },
+        "edit": {
+          "count": 1002,
+          "maxMs": 4.611167,
+          "meanMs": 1.8403961546906187,
+          "p95Ms": 2.875917
+        },
+        "read": {
+          "count": 2,
+          "maxMs": 0.078729,
+          "meanMs": 0.0770265,
+          "p95Ms": 0.078729
+        },
+        "prepare": {
+          "count": 1,
+          "maxMs": 0.041463,
+          "meanMs": 0.041463,
+          "p95Ms": 0.041463
+        },
+        "apply": {
+          "count": 2,
+          "maxMs": 2.025051,
+          "meanMs": 1.6610055,
+          "p95Ms": 2.025051
+        },
+        "save": {
+          "count": 1,
+          "maxMs": 4.121568,
+          "meanMs": 4.121568,
+          "p95Ms": 4.121568
+        },
+        "prepare_undo": {
+          "count": 1,
+          "maxMs": 1.816505,
+          "meanMs": 1.816505,
+          "p95Ms": 1.816505
+        },
+        "commit_undo": {
+          "count": 1,
+          "maxMs": 2.715824,
+          "meanMs": 2.715824,
+          "p95Ms": 2.715824
+        },
+        "usage": {
+          "count": 1,
+          "maxMs": 0.106,
+          "meanMs": 0.106,
+          "p95Ms": 0.106
+        }
+      },
+      "outcome": {
+        "edits": 1000,
+        "remotePreserved": true,
+        "preparedEqualsSaved": true,
+        "usage": {
+          "accounting": "serialized-payload-bytes-not-native-rss",
+          "client": 10,
+          "globalLimitBytes": 67108864,
+          "globalRetainedBytes": 52570,
+          "limits": {
+            "retainedBytes": 67108864,
+            "sessionBytes": 16777216,
+            "stateBytes": 8388608,
+            "updateBytes": 1048576,
+            "visibleUtf16": 10000
+          },
+          "ownerGuid": "64c218cc-a9c5-42bb-928f-d67eefeb2bb8",
+          "preparedBytes": 0,
+          "receiptBytes": 10211,
+          "replayBytes": 11093,
+          "retainedBytes": 32418,
+          "sessionBytes": 11093,
+          "stateBytes": 11068,
+          "visibleUtf16": 9998
+        },
+        "initializedRssKiB": 12256
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "hostile500",
+    "exit": 0,
+    "result": {
+      "mode": "hostile500",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10968,
+      "loadedRssKiB": 11268,
+      "finalRssKiB": 20944,
+      "peakRssKiB": 244888,
+      "peakMinusBaselineKiB": 233920,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.449088,
+          "meanMs": 0.449088,
+          "p95Ms": 0.449088
+        },
+        "new": {
+          "count": 1,
+          "maxMs": 0.21839,
+          "meanMs": 0.21839,
+          "p95Ms": 0.21839
+        },
+        "state": {
+          "count": 2,
+          "maxMs": 0.115054,
+          "meanMs": 0.1074425,
+          "p95Ms": 0.115054
+        },
+        "apply": {
+          "count": 1,
+          "maxMs": 296.81296,
+          "meanMs": 296.81296,
+          "p95Ms": 296.81296
+        }
+      },
+      "outcome": {
+        "decodedUpdateBytes": 1048574,
+        "rejection": {
+          "error": "text size limit"
+        },
+        "stateUnchanged": true,
+        "initializedRssKiB": 12252
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "hostile10000",
+    "exit": 0,
+    "result": {
+      "mode": "hostile10000",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10960,
+      "loadedRssKiB": 11260,
+      "finalRssKiB": 22356,
+      "peakRssKiB": 246228,
+      "peakMinusBaselineKiB": 235268,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.437731,
+          "meanMs": 0.437731,
+          "p95Ms": 0.437731
+        },
+        "new": {
+          "count": 1,
+          "maxMs": 1.325793,
+          "meanMs": 1.325793,
+          "p95Ms": 1.325793
+        },
+        "state": {
+          "count": 2,
+          "maxMs": 0.132931,
+          "meanMs": 0.1307025,
+          "p95Ms": 0.132931
+        },
+        "apply": {
+          "count": 1,
+          "maxMs": 301.156684,
+          "meanMs": 301.156684,
+          "p95Ms": 301.156684
+        }
+      },
+      "outcome": {
+        "decodedUpdateBytes": 1048574,
+        "rejection": {
+          "error": "text size limit"
+        },
+        "stateUnchanged": true,
+        "initializedRssKiB": 12264
+      }
+    },
+    "stderr": ""
+  }
+]

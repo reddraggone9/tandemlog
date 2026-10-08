@@ -4,6 +4,100 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/tag_filter_picker.dart';
 
 void main() {
+  for (final width in [260.0, 390.0]) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets(
+        'query underline gap stays stable with chips at $width/$scale',
+        (tester) async {
+          tester.view.physicalSize = Size(width, 800);
+          tester.view.devicePixelRatio = 1;
+          tester.platformDispatcher.textScaleFactorTestValue = scale;
+          addTearDown(() {
+            tester.view.resetPhysicalSize();
+            tester.view.resetDevicePixelRatio();
+            tester.platformDispatcher.clearTextScaleFactorTestValue();
+          });
+          var selected = <String>{};
+          late StateSetter update;
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: ThemeData(
+                inputDecorationTheme: const InputDecorationTheme(
+                  border: OutlineInputBorder(),
+                  filled: true,
+                ),
+              ),
+              home: Scaffold(
+                body: StatefulBuilder(
+                  builder: (context, setState) {
+                    update = setState;
+                    return TagFilterPicker(
+                      tags: const ['backlog', 'a-long-selected-tag-name'],
+                      selected: selected,
+                      onChanged: (value) => setState(() => selected = value),
+                      onQueryChanged: () {},
+                      onDropdownChanged: (_) {},
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          final search = find.byKey(const ValueKey('tag-search'));
+          final underline = find.byKey(const ValueKey('tag-autocomplete'));
+          final gaps = <double>[];
+          for (final tags in [
+            <String>{},
+            {'backlog'},
+            {'backlog', 'a-long-selected-tag-name'},
+          ]) {
+            update(() => selected = tags);
+            await tester.pumpAndSettle();
+            await tester.tap(search);
+            await tester.enterText(search, '');
+            await tester.pumpAndSettle();
+            final editable = tester.state<EditableTextState>(
+              find.descendant(of: search, matching: find.byType(EditableText)),
+            );
+            final render = editable.renderEditable;
+            final caret = render
+                .getLocalRectForCaret(const TextPosition(offset: 0))
+                .shift(render.localToGlobal(Offset.zero));
+            final bottom = tester.getRect(underline).bottom;
+            final gap = bottom - caret.bottom;
+            gaps.add(gap);
+            expect(
+              gap,
+              inInclusiveRange(0, 16),
+              reason: 'caret near its underline with $tags',
+            );
+            expect(tester.getRect(search).bottom, closeTo(bottom, 1));
+            expect(
+              tester
+                  .getRect(
+                    find.ancestor(
+                      of: find.byTooltip('Clear tag filters'),
+                      matching: find.byType(IconButton),
+                    ),
+                  )
+                  .bottom,
+              closeTo(bottom, 1),
+              reason: 'clear control follows the last query row',
+            );
+            expect(tester.takeException(), isNull);
+          }
+          expect(
+            gaps.reduce((a, b) => a > b ? a : b) -
+                gaps.reduce((a, b) => a < b ? a : b),
+            lessThanOrEqualTo(1),
+            reason:
+                'selection must not shift query baseline relative to underline',
+          );
+        },
+      );
+    }
+  }
   for (final scale in [1.0, 2.0]) {
     testWidgets('initial suggestions survive IME relayout at $scale text scale', (
       tester,

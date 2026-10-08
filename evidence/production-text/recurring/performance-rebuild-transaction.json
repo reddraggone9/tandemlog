@@ -1,0 +1,12 @@
+{
+  "source": "working-transaction-actors",
+  "cache_rebuild_ms": 7769.32,
+  "tasks": 321,
+  "canonical_reads": 1,
+  "rss_peak_bytes": 91860992,
+  "warm_open_ms": 4.642,
+  "warm_canonical_reads": 0,
+  "canonical_unchanged": true,
+  "cache_states_identical": true,
+  "prior_revision_views_identical": true
+}

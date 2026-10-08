@@ -1,0 +1,6 @@
+test_external_subtypes_cannot_supply_resolver_capabilities (tool.test_resolved_text_capability.ResolvedTextCapabilityTests.test_external_subtypes_cannot_supply_resolver_capabilities) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.690s
+
+OK

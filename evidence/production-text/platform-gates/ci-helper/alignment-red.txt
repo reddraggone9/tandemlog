@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_relro_end_must_be_16k_aligned (test_native_alignment_gate.Alignment.test_relro_end_must_be_16k_aligned)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/tool/test_native_alignment_gate.py", line 11, in test_relro_end_must_be_16k_aligned
+    with self.assertRaisesRegex(BuildError,'RELRO'):verify_elf(p,183,android=True)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: BuildError not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

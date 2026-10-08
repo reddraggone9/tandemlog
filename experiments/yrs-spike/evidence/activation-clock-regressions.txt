@@ -1,0 +1,9 @@
+00:00 +0: loading /workspace/tandemlog/test/event_clock_test.dart
+00:00 +0: /workspace/tandemlog/test/event_clock_test.dart: canonical decimal clock round trips values beyond JSON number precision
+00:00 +1: /workspace/tandemlog/test/event_clock_test.dart: numeric legacy and tuple draft event clocks are rejected explicitly
+00:00 +2: /workspace/tandemlog/test/storage_test.dart: remote undo cannot suppress a future-clock completion
+00:00 +3: /workspace/tandemlog/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:01 +4: /workspace/tandemlog/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:01 +5: /workspace/tandemlog/test/storage_test.dart: large clock rollback warns without blocking and warning clears when caught up
+00:01 +6: /workspace/tandemlog/test/storage_test.dart: SQLite and canonical clock retain exact signed-64-bit nanoseconds
+00:01 +7: All tests passed!

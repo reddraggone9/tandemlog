@@ -8,8 +8,8 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/presentation/sticky_task_group.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
+import 'native_text_fixtures.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,7 @@ void registerStickyTaskGroupTests() {
     final root = await Directory.systemTemp.createTemp('sticky-groups-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -33,7 +33,7 @@ void registerStickyTaskGroupTests() {
     for (var i = 0; i < 62; i++) {
       final id = const Uuid().v4();
       ids.add(id);
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': 'Reference task ${i + 1}',
         'description': '',
         'assignee': user,
@@ -46,7 +46,7 @@ void registerStickyTaskGroupTests() {
       // These undated fixtures are organized Someday tasks. Raw captures now
       // precede dated groups in Inbox, which is covered by inbox_flow_test.
       if (i >= 32) {
-        await writer.command(id, 'task.edited', {
+        await writer.editNativeFixtureTask(id, {
           'title': 'Reference task ${i + 1}',
         });
       }

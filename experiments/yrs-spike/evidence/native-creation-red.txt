@@ -1,0 +1,87 @@
+00:00 +0: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_creation_test.dart
+00:00 +0: N01 new native title and notes edit offline without legacy baseline
+00:00 +0 -1: N01 new native title and notes edit offline without legacy baseline [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7              ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 104:11  main.<fn>
+  
+00:00 +0 -1: N02 independent offline creations later exchange edits without a migration gate
+00:00 +0 -2: N02 independent offline creations later exchange edits without a migration gate [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7              ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 125:34  main.<fn>
+  
+00:00 +0 -2: N03 creation identities remain distinct for identical values and fields
+00:00 +0 -3: N03 creation identities remain distinct for identical values and fields [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7              ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 156:11  main.<fn>
+  
+00:00 +0 -3: N04 a pending legacy migration does not gate a newly created task
+00:00 +0 -4: N04 a pending legacy migration does not gate a newly created task [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                 new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35            ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12            ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30            ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7             ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 176:9  main.<fn>
+  
+00:00 +0 -4: N05 native creation context and edits survive cache loss and restart
+00:00 +0 -5: N05 native creation context and edits survive cache loss and restart [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7              ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 198:11  main.<fn>
+  
+00:00 +0 -5: N06 updates arriving before native creation remain pending and converge
+00:00 +0 -6: N06 updates arriving before native creation remain pending and converge [E]
+  Unknown event task.createdWithText. Update the app; history was preserved.
+  package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+  experiments/yrs-spike/activation_lab/lib/activation.dart 214:7              ActivationLab.ingestAll
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 219:39  main.<fn>
+  
+00:00 +0 -6: N07 seed mismatch is preserved and blocks instead of creating another basis
+00:00 +0 -7: N07 seed mismatch is preserved and blocks instead of creating another basis [E]
+  Expected: throws native seed mismatch, rather than merely unknown event type
+    Actual: <Closure: () => void>
+     Which: threw FormatFailure:<Unknown event task.createdWithText. Update the app; history was preserved.>
+            stack package:tandemlog/domain/event.dart 194:11                                  new LogEvent.decode
+                  experiments/yrs-spike/activation_lab/lib/activation.dart 208:35             ActivationLab._packetId
+                  experiments/yrs-spike/activation_lab/lib/activation.dart 247:12             ActivationLab._ingest
+                  experiments/yrs-spike/activation_lab/lib/activation.dart 211:30             ActivationLab.ingest
+                  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 260:17  main.<fn>.<fn>
+                  package:matcher                                                             expect
+                  package:flutter_test/src/widget_tester.dart 473:18                          expect
+                  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 259:7   main.<fn>
+  
+  package:matcher                                                            expect
+  package:flutter_test/src/widget_tester.dart 473:18                         expect
+  experiments/yrs-spike/activation_lab/test/native_creation_test.dart 259:7  main.<fn>
+  
+00:00 +0 -7: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_creation_test.dart: N01 new native title and notes edit offline without legacy baseline
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_creation_test.dart: N02 independent offline creations later exchange edits without a migration gate
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_creation_test.dart: N03 creation identities remain distinct for identical values and fields
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/native_creation_test.dart: N04 a pending legacy migration does not gate a newly created task
+  ... and 3 more

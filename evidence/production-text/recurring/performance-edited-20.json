@@ -1,0 +1,149 @@
+{
+  "source": "working-stage12",
+  "generations_requested": 20,
+  "edits_each_generation": true,
+  "mode": "Dart AOT executable; actual production TaskStore/native FFI; no Flutter UI or process-to-ready timing",
+  "tasks": 21,
+  "history_events": 42,
+  "samples": [
+    {
+      "generation": 1,
+      "completion_ms": 17.68,
+      "native_creations": 4,
+      "inspections": 6
+    },
+    {
+      "generation": 2,
+      "completion_ms": 19.574,
+      "native_creations": 0,
+      "inspections": 28
+    },
+    {
+      "generation": 3,
+      "completion_ms": 20.532,
+      "native_creations": 0,
+      "inspections": 42
+    },
+    {
+      "generation": 4,
+      "completion_ms": 19.431,
+      "native_creations": 0,
+      "inspections": 56
+    },
+    {
+      "generation": 5,
+      "completion_ms": 19.776,
+      "native_creations": 0,
+      "inspections": 70
+    },
+    {
+      "generation": 6,
+      "completion_ms": 19.762,
+      "native_creations": 0,
+      "inspections": 84
+    },
+    {
+      "generation": 7,
+      "completion_ms": 20.543,
+      "native_creations": 0,
+      "inspections": 98
+    },
+    {
+      "generation": 8,
+      "completion_ms": 22.66,
+      "native_creations": 0,
+      "inspections": 112
+    },
+    {
+      "generation": 9,
+      "completion_ms": 22.673,
+      "native_creations": 0,
+      "inspections": 126
+    },
+    {
+      "generation": 10,
+      "completion_ms": 23.601,
+      "native_creations": 0,
+      "inspections": 140
+    },
+    {
+      "generation": 11,
+      "completion_ms": 24.203,
+      "native_creations": 0,
+      "inspections": 154
+    },
+    {
+      "generation": 12,
+      "completion_ms": 24.975,
+      "native_creations": 0,
+      "inspections": 168
+    },
+    {
+      "generation": 13,
+      "completion_ms": 24.674,
+      "native_creations": 0,
+      "inspections": 182
+    },
+    {
+      "generation": 14,
+      "completion_ms": 25.771,
+      "native_creations": 0,
+      "inspections": 196
+    },
+    {
+      "generation": 15,
+      "completion_ms": 24.923,
+      "native_creations": 0,
+      "inspections": 210
+    },
+    {
+      "generation": 16,
+      "completion_ms": 25.553,
+      "native_creations": 0,
+      "inspections": 224
+    },
+    {
+      "generation": 17,
+      "completion_ms": 28.078,
+      "native_creations": 0,
+      "inspections": 238
+    },
+    {
+      "generation": 18,
+      "completion_ms": 26.26,
+      "native_creations": 0,
+      "inspections": 252
+    },
+    {
+      "generation": 19,
+      "completion_ms": 27.838,
+      "native_creations": 0,
+      "inspections": 266
+    },
+    {
+      "generation": 20,
+      "completion_ms": 26.732,
+      "native_creations": 0,
+      "inspections": 280
+    }
+  ],
+  "warm_open_ms": 3.421,
+  "warm_canonical_reads": 0,
+  "cache_rebuild_ms": 121.855,
+  "cache_rebuild_reads": 1,
+  "wall_ms": 1089,
+  "canonical_unchanged": true,
+  "cache_states_identical": true,
+  "canonical_bytes": 53155,
+  "sqlite_bytes": 270336,
+  "native_state_blob_bytes": 16308,
+  "frontier_json_bytes": 19206,
+  "rss_initial_bytes": 7450624,
+  "rss_before_close_bytes": 17387520,
+  "rss_peak_before_close_bytes": 16756736,
+  "rss_peak_bytes": 17543168,
+  "fresh_engine_for_rebuild": true,
+  "native_document_creations": 12,
+  "native_seed_calls": 24,
+  "native_inspections": 7242
+}

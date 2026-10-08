@@ -1,0 +1,335 @@
+{
+  "source": "fd9f6678c1fcf91c9734d071f82da35fd3490ccb",
+  "mode": "Dart AOT executable; actual production TaskStore/native FFI; no Flutter UI or process-to-ready timing",
+  "tasks": 81,
+  "history_events": 82,
+  "samples": [
+    {
+      "generation": 1,
+      "completion_ms": 17.827
+    },
+    {
+      "generation": 2,
+      "completion_ms": 27.586
+    },
+    {
+      "generation": 3,
+      "completion_ms": 27.458
+    },
+    {
+      "generation": 4,
+      "completion_ms": 34.612
+    },
+    {
+      "generation": 5,
+      "completion_ms": 39.182
+    },
+    {
+      "generation": 6,
+      "completion_ms": 41.523
+    },
+    {
+      "generation": 7,
+      "completion_ms": 45.754
+    },
+    {
+      "generation": 8,
+      "completion_ms": 52.445
+    },
+    {
+      "generation": 9,
+      "completion_ms": 56.99
+    },
+    {
+      "generation": 10,
+      "completion_ms": 60.924
+    },
+    {
+      "generation": 11,
+      "completion_ms": 67.128
+    },
+    {
+      "generation": 12,
+      "completion_ms": 71.614
+    },
+    {
+      "generation": 13,
+      "completion_ms": 71.385
+    },
+    {
+      "generation": 14,
+      "completion_ms": 77.942
+    },
+    {
+      "generation": 15,
+      "completion_ms": 80.627
+    },
+    {
+      "generation": 16,
+      "completion_ms": 83.797
+    },
+    {
+      "generation": 17,
+      "completion_ms": 88.6
+    },
+    {
+      "generation": 18,
+      "completion_ms": 93.555
+    },
+    {
+      "generation": 19,
+      "completion_ms": 98.334
+    },
+    {
+      "generation": 20,
+      "completion_ms": 110.894
+    },
+    {
+      "generation": 21,
+      "completion_ms": 106.15
+    },
+    {
+      "generation": 22,
+      "completion_ms": 102.291
+    },
+    {
+      "generation": 23,
+      "completion_ms": 103.141
+    },
+    {
+      "generation": 24,
+      "completion_ms": 102.848
+    },
+    {
+      "generation": 25,
+      "completion_ms": 108.805
+    },
+    {
+      "generation": 26,
+      "completion_ms": 114.425
+    },
+    {
+      "generation": 27,
+      "completion_ms": 126.461
+    },
+    {
+      "generation": 28,
+      "completion_ms": 130.713
+    },
+    {
+      "generation": 29,
+      "completion_ms": 125.311
+    },
+    {
+      "generation": 30,
+      "completion_ms": 127.602
+    },
+    {
+      "generation": 31,
+      "completion_ms": 133.029
+    },
+    {
+      "generation": 32,
+      "completion_ms": 159.118
+    },
+    {
+      "generation": 33,
+      "completion_ms": 152.444
+    },
+    {
+      "generation": 34,
+      "completion_ms": 141.404
+    },
+    {
+      "generation": 35,
+      "completion_ms": 150.998
+    },
+    {
+      "generation": 36,
+      "completion_ms": 152.259
+    },
+    {
+      "generation": 37,
+      "completion_ms": 151.209
+    },
+    {
+      "generation": 38,
+      "completion_ms": 156.987
+    },
+    {
+      "generation": 39,
+      "completion_ms": 166.023
+    },
+    {
+      "generation": 40,
+      "completion_ms": 169.406
+    },
+    {
+      "generation": 41,
+      "completion_ms": 186.788
+    },
+    {
+      "generation": 42,
+      "completion_ms": 195.024
+    },
+    {
+      "generation": 43,
+      "completion_ms": 177.571
+    },
+    {
+      "generation": 44,
+      "completion_ms": 180.231
+    },
+    {
+      "generation": 45,
+      "completion_ms": 199.675
+    },
+    {
+      "generation": 46,
+      "completion_ms": 209.4
+    },
+    {
+      "generation": 47,
+      "completion_ms": 209.238
+    },
+    {
+      "generation": 48,
+      "completion_ms": 218.341
+    },
+    {
+      "generation": 49,
+      "completion_ms": 205.27
+    },
+    {
+      "generation": 50,
+      "completion_ms": 233.292
+    },
+    {
+      "generation": 51,
+      "completion_ms": 224.582
+    },
+    {
+      "generation": 52,
+      "completion_ms": 239.004
+    },
+    {
+      "generation": 53,
+      "completion_ms": 244.906
+    },
+    {
+      "generation": 54,
+      "completion_ms": 251.24
+    },
+    {
+      "generation": 55,
+      "completion_ms": 243.137
+    },
+    {
+      "generation": 56,
+      "completion_ms": 237.116
+    },
+    {
+      "generation": 57,
+      "completion_ms": 238.893
+    },
+    {
+      "generation": 58,
+      "completion_ms": 247.847
+    },
+    {
+      "generation": 59,
+      "completion_ms": 248.186
+    },
+    {
+      "generation": 60,
+      "completion_ms": 258.056
+    },
+    {
+      "generation": 61,
+      "completion_ms": 256.884
+    },
+    {
+      "generation": 62,
+      "completion_ms": 275.126
+    },
+    {
+      "generation": 63,
+      "completion_ms": 264.739
+    },
+    {
+      "generation": 64,
+      "completion_ms": 242.332
+    },
+    {
+      "generation": 65,
+      "completion_ms": 243.266
+    },
+    {
+      "generation": 66,
+      "completion_ms": 250.672
+    },
+    {
+      "generation": 67,
+      "completion_ms": 270.745
+    },
+    {
+      "generation": 68,
+      "completion_ms": 295.364
+    },
+    {
+      "generation": 69,
+      "completion_ms": 276.464
+    },
+    {
+      "generation": 70,
+      "completion_ms": 300.392
+    },
+    {
+      "generation": 71,
+      "completion_ms": 306.041
+    },
+    {
+      "generation": 72,
+      "completion_ms": 304.435
+    },
+    {
+      "generation": 73,
+      "completion_ms": 309.155
+    },
+    {
+      "generation": 74,
+      "completion_ms": 313.095
+    },
+    {
+      "generation": 75,
+      "completion_ms": 330.482
+    },
+    {
+      "generation": 76,
+      "completion_ms": 322.566
+    },
+    {
+      "generation": 77,
+      "completion_ms": 298.528
+    },
+    {
+      "generation": 78,
+      "completion_ms": 300.544
+    },
+    {
+      "generation": 79,
+      "completion_ms": 316.77
+    },
+    {
+      "generation": 80,
+      "completion_ms": 316.287
+    }
+  ],
+  "warm_open_ms": 4.063,
+  "warm_canonical_reads": 0,
+  "cache_rebuild_ms": 3406.699,
+  "cache_rebuild_reads": 1,
+  "wall_ms": 17623,
+  "canonical_unchanged": true,
+  "cache_states_identical": true
+}

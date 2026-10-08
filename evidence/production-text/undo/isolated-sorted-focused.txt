@@ -1,0 +1,66 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+9 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog/test/native_text_engine_test.dart
+00:00 +0: /workspace/tandemlog/test/native_text_engine_test.dart: missing native library is an explicit failure
+00:00 +1: /workspace/tandemlog/test/native_text_engine_test.dart: operation bytes require exact canonical Base64 and bounded size
+00:00 +2: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI pending named Undo rejects a different operation and keeps exact retry
+00:00 +3: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI dedicated receipt owner never undoes an older Save after remote cancellation
+00:00 +4: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI captured Unicode edit survives remote arrival and receipt-gated Save
+00:00 +5: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI IME and wrong-source preparation preserve the captured draft
+00:00 +6: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI rejected receipt preserves live state, draft and prior Undo
+00:00 +7: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI prepared Undo keeps remote text and cancellation retains prior stack
+00:00 +8: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI invalid update, field limit and split surrogate rejection are atomic
+00:00 +9: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI native remote limit rejection preserves source and captured draft
+00:00 +10: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI inspection reports struct authors rather than delivery owner
+00:00 +11: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI checkpoint includes pending operations and restores with a fresh GUID
+00:00 +12: /workspace/tandemlog/test/native_text_engine_test.dart: actual production FFI foreign handles, disposed generations and actor collisions fail explicitly
+00:00 +13: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +14: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:01 +15: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:01 +16: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:01 +17: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:01 +18: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:01 +19: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:02 +20: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:02 +21: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:02 +22: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:02 +23: /workspace/tandemlog/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:02 +24: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:02 +25: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:02 +26: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:02 +27: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore bulk capture with native engine creates independently editable native tasks
+00:02 +28: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:02 +29: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:02 +30: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:02 +31: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator canonical acknowledgement precedes commit and enables selective Undo
+00:03 +32: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:03 +33: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=false
+00:03 +34: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=false
+00:03 +35: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:03 +36: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unknown append retains exact packet and nontext intent afterWriting=true
+00:03 +37: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:03 +38: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:03 +39: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:03 +40: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator bound retry completes frozen intent after remote metadata changes
+00:03 +41: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:03 +42: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator unchanged Save preserves captured lease and nontext-only Save uses ordinary edit
+00:03 +43: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:03 +44: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+00:03 +45: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:03 +46: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:03 +47: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:03 +48: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator postcommit draft allocation failure reports saved and can finish renewal
+00:03 +49: /workspace/tandemlog/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:03 +50: All tests passed!

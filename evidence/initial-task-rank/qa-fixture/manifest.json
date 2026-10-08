@@ -1,0 +1,16 @@
+{
+  "synthetic": true,
+  "user": "28552836-13d1-4c21-a5f1-7d07feb89d25",
+  "tasks": {
+    "a": "1aca3dbb-4d95-48f9-b11d-be7ac3c692d6",
+    "b": "8565ee6c-01e2-4b33-b59e-5422538e400c"
+  },
+  "initialManualOrder": [
+    "8565ee6c-01e2-4b33-b59e-5422538e400c",
+    "1aca3dbb-4d95-48f9-b11d-be7ac3c692d6"
+  ],
+  "sha256": {
+    "tandemlog-space.json": "ea7313c7fe3489ec69d9ef9ff2ed1d76b91520cd8266bc784dc82bd1675f3f45",
+    "ede42f85-c9d4-4608-a33f-a3e62a780f05.jsonl": "a766526d01becf3038b16d29bf676d37a43b15aa4b3c1be050a46ff8330b2407"
+  }
+}

@@ -7,9 +7,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -24,7 +24,7 @@ void registerTaskPrecisionTests() {
       final root = await Directory.systemTemp.createTemp('task-precision-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -56,6 +56,8 @@ void registerTaskPrecisionTests() {
       });
       const historical = 'Historical title\nwith a retained second line';
       await add(historical, {});
+      // Preserve legacy record meaning, then establish its shared native basis.
+      await writer.initializeSharedText();
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));

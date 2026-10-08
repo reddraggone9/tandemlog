@@ -16,7 +16,33 @@ import 'log_folder.dart';
 import 'profile_lock.dart';
 import 'writer_guard.dart';
 import 'local_durability.dart';
+import '../text/native_text_engine.dart';
+import '../text/recurring_text.dart';
+import 'text_cache.dart';
+import '../domain/text_context.dart';
+import '../domain/text_actor.dart';
+import '../domain/historical_completion.dart';
+import '../domain/checklist.dart';
+import '../domain/text_inheritance.dart' show verifyTextInheritance;
 export 'writer_guard.dart';
+
+part 'checklist_store.dart';
+
+Map<String, dynamic>? calculateTaskTagChanges(
+  List<String> tags,
+  Map<String, String> observedTagRefs,
+) {
+  final wanted = tags.toSet();
+  final removed = observedTagRefs.entries
+      .where((entry) => !wanted.contains(entry.value))
+      .map((entry) => entry.key)
+      .toList();
+  final added = wanted.difference(observedTagRefs.values.toSet()).toList()
+    ..sort();
+  return added.isEmpty && removed.isEmpty
+      ? null
+      : {'add': added, 'remove': removed};
+}
 
 /// The task state observed by a caller changed before a guarded command.
 class StaleTaskSnapshot implements Exception {
@@ -49,6 +75,53 @@ class HistoryVerificationReport {
   });
 }
 
+class TaskTextFieldCapture {
+  const TaskTextFieldCapture({
+    required this.field,
+    required this.context,
+    required this.allocation,
+    required this.actor,
+    required this.document,
+    required this.undoAllocation,
+    required this.undoActor,
+  });
+  final String field, context, allocation, undoAllocation;
+  final int actor, undoActor;
+  final NativeTextDocument document;
+}
+
+class TaskTextCapture {
+  const TaskTextCapture(this.entity, this.fields, {required this.writer});
+  final String entity, writer;
+  final Map<String, TaskTextFieldCapture> fields;
+}
+
+class _NativeTextOperation {
+  _NativeTextOperation(this.receipt, this.capture, this.fields, this.owners);
+  final OperationReceipt receipt;
+  final TaskTextCapture capture;
+  final List<String> fields;
+  final Map<String, _NativeUndoField> owners;
+  Map<String, NativeTextPreparedUndo>? prepared;
+  OperationReceipt? compensation;
+}
+
+class _NativeUndoField {
+  _NativeUndoField(
+    this.entity,
+    this.field,
+    this.context,
+    this.allocation,
+    this.actor,
+    this.document,
+  );
+  final String entity, field;
+  final Set<String> applied = {};
+  final String context, allocation;
+  final int actor;
+  final NativeTextDocument document;
+}
+
 /// Owns durable log ingestion and one disposable SQLite materialization.
 class TaskStore {
   final LogFolder folder;
@@ -56,6 +129,28 @@ class TaskStore {
   final String writer;
   final ProfileLock lock;
   final WriterGuard writerGuard;
+  final NativeTextEngine? textEngine;
+  final String privatePath;
+  String? textWriteBlocked;
+  LogEvent? _textBaseline;
+  final List<TaskTextCapture> _textCaptures = [];
+  final Map<NativeTextDocument, Set<int>> _capturedLocalActors = {};
+  final Map<NativeTextDocument, Set<String>> _capturedApplied = {};
+  final Map<String, _NativeTextOperation> _nativeOperations = {};
+  final Map<String, Map<String, Map<String, dynamic>>> _preparedTextBases = {};
+  final Map<NativeTextDocument, List<String>> _nativeUndoStacks = {};
+  final Map<String, _NativeUndoField> _nativeUndoFields = {};
+  final _recurringTextMemo = RecurringTextMemo();
+  static const _textTypes = {
+    'task.createdWithText',
+    'task.completedWithText',
+    'task.completedKeepingSuccessor',
+    'task.completedWithChecklist',
+    'checklist.itemCreated',
+    'task.textEdited',
+    'task.textEditUndone',
+    'text.baselineInitialized',
+  };
   int _acknowledgedOwnedSequence = 0;
   bool _writerHasPendingAppend = false;
   final DateTime Function() now;
@@ -109,6 +204,8 @@ class TaskStore {
     this.lock,
     this.now,
     this.writerGuard,
+    this.textEngine,
+    this.privatePath,
   );
   static Future<TaskStore> open(
     LogFolder folder,
@@ -117,6 +214,7 @@ class TaskStore {
     DateTime Function()? now,
     String? writerIdentity,
     WriterGuard? writerGuard,
+    NativeTextEngine? textEngine,
   }) async {
     final phase = Stopwatch()..start();
     void mark(String name) {
@@ -154,7 +252,7 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 13) {
+      if (version < 0 || version > 16) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
@@ -215,7 +313,18 @@ class TaskStore {
         db.execute(
           "UPDATE streams SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)), last_clock=(SELECT MAX(clock) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)) WHERE chain_head IS NULL",
         );
-        db.execute('PRAGMA user_version=13');
+        db.execute(
+          'CREATE TABLE IF NOT EXISTS text_fields (entity TEXT NOT NULL, field TEXT NOT NULL, context TEXT NOT NULL, codec TEXT NOT NULL, adapter INTEGER NOT NULL, seed_hash TEXT NOT NULL, state BLOB NOT NULL, state_hash TEXT NOT NULL, frontier TEXT NOT NULL, PRIMARY KEY(entity,field))',
+        );
+        db.execute(
+          'CREATE TABLE IF NOT EXISTS text_actors (context TEXT NOT NULL, actor INTEGER NOT NULL, writer TEXT NOT NULL, allocation TEXT NOT NULL, PRIMARY KEY(context,actor))',
+        );
+        db.execute(
+          'CREATE TABLE IF NOT EXISTS text_outbox (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
+        );
+        db.execute(
+          'PRAGMA user_version=${textEngine != null || version >= 14 ? 16 : 13}',
+        );
         db.execute('COMMIT');
       } catch (_) {
         db.execute('ROLLBACK');
@@ -232,6 +341,8 @@ class TaskStore {
         lock,
         now ?? DateTime.now,
         writerGuard ?? FileWriterGuard(privatePath),
+        textEngine,
+        privatePath,
       );
       db.execute(
         'CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
@@ -267,12 +378,24 @@ class TaskStore {
         store.space,
       ]);
       mark('manifest');
+      await store._restoreTextIntents();
       await store.refresh();
+      if (textEngine == null &&
+          db
+              .select(
+                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','task.createdWithText','task.completedWithText','task.completedWithChecklist','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
+              )
+              .isNotEmpty) {
+        throw FormatFailure(
+          'Native text support is required. Update the app; history was preserved.',
+        );
+      }
+      if (textEngine != null) store._validateTextBaseline();
       final orderVersion = db.select(
         "SELECT value FROM metadata WHERE key='order_projection'",
       );
       if (orderVersion.isEmpty ||
-          orderVersion.single['value'] != '2' ||
+          orderVersion.single['value'] != '3' ||
           db.select('SELECT COUNT(*) AS n FROM positions').first['n'] !=
               db.select('SELECT COUNT(*) AS n FROM views').first['n']) {
         db.execute('BEGIN IMMEDIATE');
@@ -625,6 +748,8 @@ class TaskStore {
       _validateUndoReferences();
       _validateMoves();
       _validateTagReferences();
+      _validateChecklistReferences();
+      _validateChecklistCompletions();
       for (final entity in auditedEntities) {
         _projectEntity(entity);
       }
@@ -904,11 +1029,28 @@ class TaskStore {
       await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
       if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       if (verify) _lastHistoryVerification = verificationReport;
+      await _retireConfirmedTextIntents();
       return false;
     }
+    final originalBaseline = _textBaseline;
+    final originalTextBlocked = textWriteBlocked;
+    var committed = false;
+    TextCache? transactionTextCache;
     db.execute('BEGIN IMMEDIATE');
     try {
+      if (textEngine != null) {
+        transactionTextCache = TextCache.forTransaction(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+        );
+      }
       for (final (index, e) in newEvents.indexed) {
+        if (_textTypes.contains(e.type) && textEngine == null) {
+          throw FormatFailure(
+            'Native text support is required. Update the app; history was preserved.',
+          );
+        }
         db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
           e.id,
           e.entity,
@@ -917,18 +1059,43 @@ class TaskStore {
           e.clock.value.toInt(),
           newEventRaws[index],
         ]);
+        db.execute('DELETE FROM text_outbox WHERE id=? AND raw=?', [
+          e.id,
+          newEventRaws[index],
+        ]);
       }
+      final oldBaseline = _textBaseline?.id;
       if (newEvents.isNotEmpty) {
+        if (textEngine != null) {
+          transactionTextCache!.validatePackets(newEvents);
+        }
+        _validateTextBaseline();
         _validateUndoReferences();
         _validateMoves();
         _validateTagReferences();
+        _validateHistoricalCompletions();
+        _validateChecklistReferences();
+        _validateChecklistCompletions();
       }
       if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
       final affected = newEvents.map((e) => e.entity).toSet();
+      if (newEvents.any((event) => event.type == 'text.baselineInitialized') ||
+          oldBaseline != _textBaseline?.id) {
+        affected.addAll(
+          db.select('SELECT id FROM views').map((row) => row['id'] as String),
+        );
+      }
       for (final e in newEvents) {
-        if (e.type == 'task.completed' && e.data['successor'] != null) {
+        if (isTaskCompletion(e.type) && e.data['successor'] != null) {
           affected.add((e.data['successor'] as Map)['id'] as String);
         }
+        if (e.type == 'task.completedWithChecklist') {
+          for (final item in (e.data['checklist'] as Map)['items'] as List) {
+            affected.add((item as Map)['id'] as String);
+          }
+        }
+        final checklistParent = _checklistParent(e.entity);
+        if (checklistParent != null) affected.add(checklistParent);
       }
       for (final e in newEvents) {
         if (e.type == 'task.recurringCompletionUndone') {
@@ -938,8 +1105,31 @@ class TaskStore {
           affected.add(e.data['before'] as String);
         }
       }
+      affected.addAll(
+        db
+            .select(
+              "SELECT id FROM views WHERE json_extract(raw,'\$.textInheritancePending')=1",
+            )
+            .map((row) => row['id'] as String),
+      );
+      // Pending copied fields can settle when another writer's source arrives.
+      // Reconcile their containing task's cached checklist in the same commit.
+      for (final entity in affected.toList()) {
+        final parent = _checklistParent(entity);
+        if (parent != null) affected.add(parent);
+      }
+      // This transaction has one admitted canonical record set. Reuse its pure
+      // resolver across affected projections, rather than selecting/copying all
+      // original records again for every historical occurrence during rebuild.
+      final resolution = textEngine != null && affected.any(_hasInheritedText)
+          ? _textResolution()
+          : null;
       for (final entity in affected) {
-        final state = _projectEntity(entity);
+        final state = _projectEntity(
+          entity,
+          resolution: resolution,
+          textCache: transactionTextCache,
+        );
         if (state != null) {
           db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
             entity,
@@ -957,8 +1147,12 @@ class TaskStore {
             (e) =>
                 {
                   'task.created',
+                  'task.createdWithText',
                   'user.created',
                   'task.completed',
+                  'task.completedWithText',
+                  'task.completedWithChecklist',
+                  'checklist.itemCreated',
                   'task.moved',
                 }.contains(e.type) ||
                 (e.type == 'task.operationUndone' &&
@@ -984,12 +1178,30 @@ class TaskStore {
       db.execute("DELETE FROM metadata WHERE key='replay_pending'");
       await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
       db.execute('COMMIT');
+      committed = true;
       cacheTransactions++;
+      _updateCapturedTextDocuments(newEvents, affected);
+      _updateNativeUndoOwners(newEvents, affected);
+      // Cleanup is dispensable: exact canonical receipts are already committed.
+      // A failed deletion leaves the immutable intent available next startup.
+      try {
+        await _retireConfirmedTextIntents();
+      } on FileSystemException {
+        // Preserve the file; it cannot authorize a different prepared event.
+      }
       _updateClockWarning(_maximumClock(), _nowNs());
       if (verify) _lastHistoryVerification = verificationReport;
       return newEvents.isNotEmpty;
     } catch (failure) {
+      if (committed) rethrow;
       db.execute('ROLLBACK');
+      try {
+        _recurringTextMemo.clear();
+      } catch (_) {
+        /* Authority was discarded; preserve the located ingestion failure. */
+      }
+      _textBaseline = originalBaseline;
+      textWriteBlocked = originalTextBlocked;
       if (verify) _lastHistoryVerification = null;
       if (failure is FormatFailure &&
           failure is! HistoryVerificationFailure &&
@@ -1001,17 +1213,525 @@ class TaskStore {
         );
       }
       rethrow;
+    } finally {
+      transactionTextCache?.close();
     }
   }
 
   bool hasEntity(String id) =>
       db.select('SELECT 1 FROM views WHERE id=?', [id]).isNotEmpty;
 
+  Future<TaskTextCapture> captureTaskText(
+    String entity,
+  ) => _serialize(() async {
+    await _refresh();
+    if (textEngine == null) {
+      throw FormatFailure('Native text support is unavailable.');
+    }
+    final history = _entityEvents(entity);
+    final task = project(history);
+    if (task == null ||
+        !{'task', 'checklistItem'}.contains(task['kind']) ||
+        task['deleted'] == true) {
+      throw FormatFailure('Unknown or deleted task.');
+    }
+    _attachSuccessorSuppression(task);
+    if (task['successorSuppressed'] == true) {
+      throw FormatFailure('This untouched next occurrence was canceled.');
+    }
+    if (task['kind'] == 'checklistItem' &&
+        !_checklistParentAvailable(task['parent'] as String)) {
+      throw FormatFailure('This checklist item’s task is unavailable.');
+    }
+    final native = _hasNativeTextRoot(entity, history);
+    if (!native && (_textBaseline == null || textWriteBlocked != null)) {
+      throw FormatFailure(
+        textWriteBlocked ??
+            'Initialize shared text before editing this existing task.',
+      );
+    }
+    if (!native &&
+        history.any(
+          (event) => event.type == 'task.created' && event.canonicalRaw == null,
+        ) &&
+        project(_baselineEntityHistory(entity, _textBaseline!)) == null) {
+      throw FormatFailure(
+        'This recurring occurrence is waiting for a verified native text creation context.',
+      );
+    }
+    // Verify the lazily opened field checkpoints against their canonical
+    // context and operation frontier; corrupt disposable state rebuilds.
+    db.execute('BEGIN IMMEDIATE');
+    try {
+      _materializeText(task, history);
+      _attachChecklist(task);
+      if (task['textUnavailable'] != null) {
+        throw TextInheritancePending(task['textUnavailable'] as String);
+      }
+      db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
+        entity,
+        jsonEncode(task),
+      ]);
+      db.execute('COMMIT');
+      cacheTransactions++;
+    } catch (_) {
+      db.execute('ROLLBACK');
+      rethrow;
+    }
+    final resolvedFields = _hasInheritedText(entity)
+        ? _resolvedText(entity)
+        : null;
+    final fields = <String, TaskTextFieldCapture>{};
+    try {
+      for (final field in ['title', 'description']) {
+        final row = _nativeTextFieldRow(
+          entity,
+          field,
+          resolved: resolvedFields,
+        );
+        if (row == null) {
+          throw FormatFailure(
+            'Native text is waiting for its initialization history.',
+          );
+        }
+        final state = row['state'] as Uint8List;
+        if (row['codec'] != 'yrs-v1' ||
+            row['adapter'] != 1 ||
+            sha256.convert(state).toString() != row['state_hash']) {
+          throw FormatFailure(
+            'Native text checkpoint needs a verified cache rebuild.',
+          );
+        }
+        final context = row['context'] as String;
+        final allocation = const Uuid().v4();
+        final actor = deriveTextActor(context, writer, allocation);
+        final undoAllocation = const Uuid().v4();
+        final undoActor = deriveTextActor(context, writer, undoAllocation);
+        final document = textEngine!.restoreDocument(
+          actorClientId: undoActor,
+          limits: NativeTextLimits(
+            visibleUtf16: field == 'title' ? 500 : 10000,
+          ),
+          checkpoint: NativeTextCheckpoint(
+            NativeTextState.parse(base64Encode(state)),
+          ),
+        );
+        if (document.read().pending) {
+          document.dispose();
+          throw FormatFailure(
+            'Native text is waiting for a missing update dependency.',
+          );
+        }
+        fields[field] = TaskTextFieldCapture(
+          field: field,
+          context: context,
+          allocation: allocation,
+          actor: actor,
+          document: document,
+          undoActor: undoActor,
+          undoAllocation: undoAllocation,
+        );
+        _capturedLocalActors[document] = {actor, undoActor};
+        _capturedApplied[document] =
+            (jsonDecode(row['frontier'] as String) as List)
+                .cast<String>()
+                .toSet();
+      }
+      final result = TaskTextCapture(
+        entity,
+        Map.unmodifiable(fields),
+        writer: writer,
+      );
+      _textCaptures.add(result);
+      return result;
+    } catch (_) {
+      for (final field in fields.values) {
+        field.document.dispose();
+      }
+      rethrow;
+    }
+  });
+
+  /// Editor/receipt capture needs exact native state, while historical cache
+  /// rows retain only references. Reconstruct from admitted originals on demand;
+  /// never reinterpret a reference hash or compact frontier as a native BLOB.
+  Map<String, dynamic>? _nativeTextFieldRow(
+    String entity,
+    String field, {
+    Map<String, ResolvedTextField>? resolved,
+  }) {
+    final rows = db.select(
+      'SELECT * FROM text_fields WHERE entity=? AND field=?',
+      [entity, field],
+    );
+    if (rows.isEmpty) return null;
+    final row = Map<String, dynamic>.from(rows.single);
+    if (row['adapter'] != 2) return row;
+    final lineage = (resolved ?? _resolvedText(entity))[field]!;
+    final reference = lineage.historyReference!;
+    final frontier = jsonDecode(row['frontier'] as String);
+    if (row['codec'] != 'yrs-v1' ||
+        row['context'] != lineage.context.hash ||
+        row['seed_hash'] != lineage.context.seedHash ||
+        row['state_hash'] != reference.hash ||
+        (row['state'] as Uint8List).isNotEmpty ||
+        frontier is! Map ||
+        frontier.length != 1 ||
+        frontier['history'] != reference.hash) {
+      throw FormatFailure(
+        'Shared text reference needs a verified cache rebuild.',
+      );
+    }
+    final state = lineage.state.bytes;
+    final operationIds =
+        lineage.operations.map((packet) => packet.event.id).toList()..sort();
+    return {
+      ...row,
+      'adapter': 1,
+      'state': state,
+      'state_hash': sha256.convert(state).toString(),
+      'frontier': jsonEncode(operationIds),
+    };
+  }
+
+  Future<LogEvent> editNativeTask(
+    String entity,
+    Map<String, dynamic> changes, {
+    Map<String, dynamic>? nonText,
+    String? expectedSnapshot,
+    bool Function()? canCommit,
+    void Function(OperationReceipt)? onPrepared,
+  }) => _serialize(() async {
+    await _refresh();
+    final resolvedFields = _hasInheritedText(entity)
+        ? _resolvedText(entity)
+        : null;
+    final bases = <String, Map<String, dynamic>>{};
+    for (final name in changes.keys) {
+      final row = _nativeTextFieldRow(entity, name, resolved: resolvedFields);
+      if (row == null) {
+        throw FormatFailure(
+          'Native text is waiting for its initialized field.',
+        );
+      }
+      final cached = Map<String, dynamic>.from(row);
+      cached['state'] = Uint8List.fromList(
+        cached['state'] as Uint8List,
+      ).asUnmodifiableView();
+      bases[name] = Map.unmodifiable(cached);
+    }
+    return _command(
+      entity,
+      'task.textEdited',
+      {...?nonText, 'changes': changes},
+      expectedTaskSnapshot: expectedSnapshot,
+      ignoreSnapshotText: true,
+      canCommit: canCommit,
+      onPrepared: (receipt) {
+        _preparedTextBases[receipt.id] = Map.unmodifiable(bases);
+        onPrepared?.call(receipt);
+      },
+    );
+  });
+
+  void registerTextOperation(
+    OperationReceipt receipt,
+    TaskTextCapture capture,
+  ) {
+    _requireConfirmed([receipt]);
+    final event = LogEvent.decode(receipt.raw);
+    if (!_textCaptures.contains(capture) ||
+        event.type != 'task.textEdited' ||
+        event.writer != writer ||
+        event.entity != capture.entity ||
+        capture.writer != writer) {
+      throw FormatFailure(
+        'Native Undo requires this session’s exact saved text receipt.',
+      );
+    }
+    if (_nativeOperations.containsKey(event.id)) return;
+    final fields = (event.data['changes'] as Map).keys.cast<String>().toList();
+    for (final name in fields) {
+      final field = capture.fields[name];
+      final change = (event.data['changes'] as Map)[name] as Map;
+      if (field == null ||
+          field.document.isClosed ||
+          change['context'] != field.context ||
+          !_capturedLocalActors[field.document]!.contains(change['actor'])) {
+        throw FormatFailure(
+          'Saved native text receipt does not belong to its retained owner.',
+        );
+      }
+    }
+    final bases = _preparedTextBases[event.id];
+    if (bases == null) {
+      throw FormatFailure(
+        'Native Undo requires its captured immutable pre-Save state.',
+      );
+    }
+    final owners = <String, _NativeUndoField>{};
+    for (final name in fields) {
+      final base = bases[name]!;
+      final context = base['context'] as String;
+      var owner = _nativeUndoFields[context];
+      if (owner == null) {
+        final allocation = const Uuid().v4();
+        final actor = deriveTextActor(context, writer, allocation);
+        final document = textEngine!.restoreDocument(
+          actorClientId: actor,
+          limits: NativeTextLimits(visibleUtf16: name == 'title' ? 500 : 10000),
+          checkpoint: NativeTextCheckpoint(
+            NativeTextState.parse(base64Encode(base['state'] as Uint8List)),
+          ),
+        );
+        owner = _NativeUndoField(
+          event.entity,
+          name,
+          context,
+          allocation,
+          actor,
+          document,
+        );
+        owner.applied.addAll(
+          (jsonDecode(base['frontier'] as String) as List).cast<String>(),
+        );
+        _nativeUndoFields[context] = owner;
+      }
+      owners[name] = owner;
+      _syncNativeUndoField(
+        owner,
+        _entityEvents(event.entity),
+        exclude: event.id,
+      );
+      if (!owner.applied.contains(event.id)) {
+        owner.document.applyOwnedReceipt(
+          NativeTextUpdate.parse(
+            (event.data['changes'] as Map)[name]['update'],
+          ),
+          operationId: event.id,
+        );
+        owner.applied.add(event.id);
+      }
+    }
+    _nativeOperations[event.id] = _NativeTextOperation(
+      receipt,
+      capture,
+      fields,
+      owners,
+    );
+    _preparedTextBases.remove(event.id);
+    for (final name in fields) {
+      _nativeUndoStacks
+          .putIfAbsent(owners[name]!.document, () => [])
+          .add(event.id);
+    }
+  }
+
+  /// Release process-local Undo owners without pruning canonical events or
+  /// unresolved immutable intents.
+  void releaseTextOperations(Iterable<String> operations) {
+    for (final id in operations) {
+      final owner = _nativeOperations[id];
+      if (owner?.compensation != null &&
+          confirmedOperations([owner!.compensation!]).isEmpty) {
+        continue;
+      }
+      if (owner != null) {
+        for (final prepared
+            in owner.prepared?.values ?? <NativeTextPreparedUndo>[]) {
+          prepared.cancel();
+        }
+        for (final name in owner.fields) {
+          final field = owner.owners[name]!;
+          final document = field.document;
+          final stack = _nativeUndoStacks[document];
+          stack?.remove(id);
+          if (stack?.isEmpty == true) _nativeUndoStacks.remove(document);
+          final retained = _nativeOperations.entries.any(
+            (entry) =>
+                entry.key != id && entry.value.owners.values.contains(field),
+          );
+          if (!retained) {
+            _nativeUndoFields.remove(field.context);
+            document.dispose();
+          }
+        }
+        _nativeOperations.remove(id);
+      }
+      if (db.select('SELECT 1 FROM text_outbox WHERE id=?', [id]).isEmpty) {
+        _preparedTextBases.remove(id);
+      }
+    }
+  }
+
+  /// Closed editors release source handles. Saved operations retain separate
+  /// shared session Undo owners until history eviction.
+  void releaseTextCapture(TaskTextCapture capture) {
+    if (!_textCaptures.contains(capture)) return;
+    for (final receipt in pendingTextOperations) {
+      final event = LogEvent.decode(receipt.raw);
+      if (event.entity != capture.entity) continue;
+      final changes = event.data['changes'] as Map?;
+      if (changes != null &&
+          changes.entries.any((entry) {
+            final field = capture.fields[entry.key];
+            return field != null &&
+                _capturedLocalActors[field.document]!.contains(
+                  (entry.value as Map)['actor'],
+                );
+          })) {
+        throw StateError(
+          'The captured editor still owns an unconfirmed exact text intent.',
+        );
+      }
+    }
+    for (final field in capture.fields.values) {
+      field.document.dispose();
+      _capturedLocalActors.remove(field.document);
+      _capturedApplied.remove(field.document);
+      if (_nativeUndoStacks[field.document]?.isEmpty == true) {
+        _nativeUndoStacks.remove(field.document);
+      }
+    }
+    _textCaptures.remove(capture);
+  }
+
+  void registerTextDraftActor(
+    TaskTextCapture capture,
+    String field,
+    String allocation,
+    int actor,
+  ) {
+    if (_closed ||
+        !_textCaptures.contains(capture) ||
+        capture.writer != writer) {
+      throw StateError('Captured native text owner is unavailable.');
+    }
+    final source = capture.fields[field];
+    if (source == null ||
+        source.document.isClosed ||
+        deriveTextActor(source.context, writer, allocation) != actor) {
+      throw FormatFailure('Invalid private native draft allocation.');
+    }
+    _capturedLocalActors[source.document]!.add(actor);
+  }
+
+  void _updateCapturedTextDocuments(
+    List<LogEvent> events,
+    Set<String> affected,
+  ) {
+    for (final capture in _textCaptures) {
+      if (_hasInheritedText(capture.entity)) {
+        if (!affected.contains(capture.entity)) continue;
+        Map<String, ResolvedTextField> resolved;
+        try {
+          resolved = _resolvedText(capture.entity);
+        } on TextInheritancePending {
+          continue;
+        }
+        for (final field in capture.fields.values) {
+          if (field.document.isClosed) continue;
+          final lineage = resolved[field.field]!;
+          if (lineage.context.hash != field.context) {
+            throw FormatFailure('Captured successor text context changed.');
+          }
+          final applied = _capturedApplied[field.document]!;
+          for (final packet in lineage.operations) {
+            if (applied.contains(packet.event.id) ||
+                _capturedLocalActors[field.document]!.contains(
+                  packet.claim.actor,
+                )) {
+              continue;
+            }
+            field.document.applyRemote(packet.update);
+            applied.add(packet.event.id);
+          }
+        }
+        continue;
+      }
+      for (final event in events) {
+        if (event.entity != capture.entity ||
+            (event.type != 'task.textEdited' &&
+                event.type != 'task.textEditUndone')) {
+          continue;
+        }
+        for (final entry in (event.data['changes'] as Map).entries) {
+          final field = capture.fields[entry.key];
+          final change = entry.value as Map;
+          if (field == null ||
+              field.document.isClosed ||
+              change['context'] != field.context ||
+              _capturedLocalActors[field.document]!.contains(change['actor'])) {
+            continue;
+          }
+          field.document.applyRemote(NativeTextUpdate.parse(change['update']));
+        }
+      }
+    }
+  }
+
+  void _syncNativeUndoField(
+    _NativeUndoField owner,
+    List<LogEvent> events, {
+    String? exclude,
+  }) {
+    if (_hasInheritedText(owner.entity)) {
+      Map<String, ResolvedTextField> fields;
+      try {
+        fields = _resolvedText(owner.entity);
+      } on TextInheritancePending {
+        // Missing foreign proof is ordinary transport delay. Preserve the
+        // session owner and its scoped Undo until the dependency arrives.
+        return;
+      }
+      final lineage = fields[owner.field]!;
+      if (lineage.context.hash != owner.context) {
+        throw FormatFailure('Retained successor text context changed.');
+      }
+      for (final packet in lineage.operations) {
+        if (packet.event.id == exclude ||
+            owner.applied.contains(packet.event.id) ||
+            _preparedTextBases.containsKey(packet.event.id) ||
+            packet.claim.actor == owner.actor) {
+          continue;
+        }
+        owner.document.applyRemote(packet.update);
+        owner.applied.add(packet.event.id);
+      }
+      return;
+    }
+    for (final event in events) {
+      if (event.entity != owner.entity ||
+          event.id == exclude ||
+          owner.applied.contains(event.id) ||
+          _preparedTextBases.containsKey(event.id) ||
+          (event.type != 'task.textEdited' &&
+              event.type != 'task.textEditUndone')) {
+        continue;
+      }
+      final change = (event.data['changes'] as Map)[owner.field] as Map?;
+      if (change == null ||
+          change['context'] != owner.context ||
+          change['actor'] == owner.actor) {
+        continue;
+      }
+      owner.document.applyRemote(NativeTextUpdate.parse(change['update']));
+      owner.applied.add(event.id);
+    }
+  }
+
+  void _updateNativeUndoOwners(List<LogEvent> events, Set<String> affected) {
+    for (final owner in _nativeUndoFields.values) {
+      if (!affected.contains(owner.entity)) continue;
+      _syncNativeUndoField(owner, events);
+    }
+  }
+
   final Map<String, int> lastReadTimings = {};
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(
-      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
+      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE json_extract(views.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
     );
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
@@ -1036,17 +1756,26 @@ class TaskStore {
           )
           .map((r) => LogEvent.decode(r['raw'] as String)),
     );
-    final selectedSeedIds = <String, String>{};
+    // Views already contain the selected derived creation's exact clock/writer
+    // stamp. Strict per-writer clocks identify that completion uniquely. Reuse
+    // this projection after affected views update, instead of replaying every
+    // successor's history again while rebuilding global manual order.
+    final selectedSeedIds = <String, String>{
+      for (final row in db.select(
+        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
+      ))
+        row['successor'] as String: row['id'] as String,
+    };
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.completed','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
             return !retracted.contains(row['id']);
           }
           final successor = row['successor'] as String?;
-          if (row['type'] == 'task.completed' && successor != null) {
+          if (isTaskCompletion(row['type'] as String) && successor != null) {
             final selected = selectedSeedIds.putIfAbsent(
               successor,
               () => _entityEvents(
@@ -1071,7 +1800,7 @@ class TaskStore {
       db.execute('INSERT INTO positions VALUES (?,?)', [ordered[i], i]);
     }
     db.execute(
-      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','2')",
+      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','3')",
     );
   }
 
@@ -1092,7 +1821,7 @@ class TaskStore {
     return events
         .where(
           (e) =>
-              e.type == 'task.completed' &&
+              isTaskCompletion(e.type) &&
               !undone.contains(e.id) &&
               !retracted.contains(e.id),
         )
@@ -1128,12 +1857,17 @@ class TaskStore {
     String type,
     Map<String, dynamic> data, {
     String? expectedTaskSnapshot,
+    bool ignoreSnapshotText = false,
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) async {
     await _refresh();
     _requireWriterAppendReady();
-    if (expectedTaskSnapshot != null && expectedTaskSnapshot != taskSnapshot) {
+    if (expectedTaskSnapshot != null &&
+        (ignoreSnapshotText
+            ? _nonTextSnapshot(expectedTaskSnapshot) !=
+                  _nonTextSnapshot(taskSnapshot)
+            : expectedTaskSnapshot != taskSnapshot)) {
       throw StaleTaskSnapshot();
     }
     final seq =
@@ -1151,6 +1885,7 @@ class TaskStore {
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
     final raw = e.canonicalRaw!;
     final receipt = OperationReceipt(e.id, raw, e.entity);
+    await _stageTextReceipt(e, receipt);
     onPrepared?.call(receipt);
     await _prepareWriterAppend([receipt]);
     await folder.append(
@@ -1165,9 +1900,313 @@ class TaskStore {
   }
 
   void _requireWriterAppendReady() {
-    if (_writerHasPendingAppend) {
+    if (_writerHasPendingAppend ||
+        db.select('SELECT 1 FROM text_outbox LIMIT 1').isNotEmpty) {
       throw WriterGuardFailure.unresolvedAppend();
     }
+  }
+
+  bool _baselineIncludes(LogEvent event, LogEvent baseline) {
+    final head = (baseline.data['frontiers'] as Map)[event.writer] as Map?;
+    return head != null && event.sequence <= (head['seq'] as int);
+  }
+
+  void _validateTextBaseline() {
+    final roots = db.select(
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='text.baselineInitialized'",
+    );
+    _textBaseline = null;
+    textWriteBlocked = null;
+    if (roots.isEmpty) return;
+    if (roots.length != 1) {
+      textWriteBlocked =
+          'Competing text initialization records were retained. Text saving is blocked.';
+      return;
+    }
+    final root = LogEvent.decode(roots.single['raw'] as String);
+    if (root.entity != space) {
+      throw FormatFailure(
+        'Text initialization must reference its workspace in ${root.id}.',
+      );
+    }
+    for (final entry in (root.data['frontiers'] as Map).entries) {
+      final head = entry.value as Map;
+      final seq = head['seq'] as int;
+      if (seq == 0) {
+        if (head['hash'] != eventGenesisHash(space, entry.key as String)) {
+          throw FormatFailure(
+            'Invalid text baseline genesis frontier in ${root.id}.',
+          );
+        }
+        continue;
+      }
+      final record = db.select(
+        'SELECT raw FROM events WHERE writer=? AND seq=?',
+        [entry.key, seq],
+      );
+      if (record.isEmpty) {
+        textWriteBlocked =
+            'Text initialization is waiting for its declared history.';
+        return;
+      }
+      final event = LogEvent.decode(record.single['raw'] as String);
+      if (event.hash != head['hash'] ||
+          event.clock.value >= root.clock.value ||
+          (event.writer == root.writer && seq >= root.sequence)) {
+        throw FormatFailure('Invalid text baseline frontier in ${root.id}.');
+      }
+    }
+    final verified = db.select(
+      "SELECT value FROM metadata WHERE key='text_baseline_verified'",
+    );
+    if (verified.isEmpty || verified.single['value'] != root.id) {
+      final fields = _baselineSeedFields(root);
+      if (textBaselineSeedDigest(fields) != root.data['seedDigest']) {
+        throw FormatFailure('Text baseline seed digest differs in ${root.id}.');
+      }
+      db.execute(
+        "INSERT OR REPLACE INTO metadata VALUES ('text_baseline_verified',?)",
+        [root.id],
+      );
+    }
+    _textBaseline = root;
+  }
+
+  Map<String, Map<String, String>> _baselineSeedFields(LogEvent root) {
+    final prefix = db
+        .select('SELECT raw FROM events')
+        .map((row) => LogEvent.decode(row['raw'] as String))
+        .where((event) => _baselineIncludes(event, root))
+        .toList();
+    final grouped = <String, List<LogEvent>>{};
+    final successors = <String, List<LogEvent>>{};
+    for (final event in prefix) {
+      grouped.putIfAbsent(event.entity, () => []).add(event);
+      if (isTaskCompletion(event.type) && event.data['successor'] != null) {
+        final entity = (event.data['successor'] as Map)['id'] as String;
+        successors.putIfAbsent(entity, () => []).add(event);
+      }
+    }
+    for (final entry in successors.entries) {
+      final own = grouped[entry.key] ?? [];
+      final parent = entry.value.first.entity;
+      final anchored = prefix.any(
+        (event) =>
+            event.type == 'task.moved' && event.data['before'] == entry.key,
+      );
+      final selected = selectSuccessor(
+        entry.value,
+        grouped[parent] ?? [],
+        protected:
+            own.isNotEmpty ||
+            anchored ||
+            hasDurableChecklistActivity(prefix, entry.key),
+      );
+      grouped
+          .putIfAbsent(entry.key, () => [])
+          .add(successorCreation(selected.seed));
+    }
+    final fields = <String, Map<String, String>>{};
+    for (final entry in grouped.entries) {
+      if (entry.value.any((event) => event.type == 'task.createdWithText') ||
+          successors[entry.key]?.any(
+                (event) => hasNativeTaskSuccessor(event),
+              ) ==
+              true) {
+        continue;
+      }
+      final state = project(entry.value);
+      if (state == null || state['kind'] != 'task') continue;
+      fields[entry.key] = {
+        for (final field in ['title', 'description'])
+          field: sha256
+              .convert(
+                textEngine!.seedText(state[field] as String? ?? '').bytes,
+              )
+              .toString(),
+      };
+    }
+    return fields;
+  }
+
+  bool get sharedTextInitialized =>
+      _textBaseline != null && textWriteBlocked == null;
+
+  Future<LogEvent> initializeSharedText({
+    void Function(OperationReceipt)? onPrepared,
+  }) => _serialize(() async {
+    await _refresh();
+    if (textEngine == null) {
+      throw FormatFailure('Native text support is unavailable.');
+    }
+    if (db
+        .select(
+          "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='text.baselineInitialized' LIMIT 1",
+        )
+        .isNotEmpty) {
+      throw FormatFailure(
+        'A text initialization record already exists. Wait for its history or resolve competing records.',
+      );
+    }
+    final frontiers = <String, dynamic>{};
+    for (final row in db.select(
+      'SELECT name,last_seq,chain_head FROM streams',
+    )) {
+      final name = row['name'] as String;
+      frontiers[name.substring(0, name.length - 6)] = {
+        'seq': row['last_seq'],
+        'hash': row['chain_head'],
+      };
+    }
+    final reference = LogEvent(
+      space,
+      writer,
+      1,
+      EventClock.next(_nowNs(), _maximumClock()),
+      space,
+      'text.baselineInitialized',
+      {'frontiers': frontiers},
+    );
+    final digest = textBaselineSeedDigest(_baselineSeedFields(reference));
+    return _command(space, 'text.baselineInitialized', {
+      'codec': 'yrs-v1',
+      'adapter': 1,
+      'frontiers': frontiers,
+      'seedDigest': digest,
+    }, onPrepared: onPrepared);
+  });
+
+  File _textIntentFile(LogEvent event) =>
+      File('$privatePath/text-intents/${event.writer}-${event.sequence}.json');
+
+  Future<void> _stageTextReceipt(
+    LogEvent event,
+    OperationReceipt receipt,
+  ) async {
+    if (!_textTypes.contains(event.type)) return;
+    if (textEngine == null) {
+      throw FormatFailure('Native text support is required before saving.');
+    }
+    final intent = _textIntentFile(event);
+    if (await intent.exists()) {
+      if (await intent.readAsString() != receipt.raw) {
+        throw FormatFailure(
+          'Prepared text intent differs from its immutable event bytes.',
+        );
+      }
+    } else {
+      await createFileDurable(intent, utf8.encode(receipt.raw));
+    }
+    db.execute('INSERT OR IGNORE INTO text_outbox VALUES (?,?,?)', [
+      receipt.id,
+      receipt.raw,
+      receipt.entity,
+    ]);
+  }
+
+  Future<void> _restoreTextIntents() async {
+    final directory = Directory('$privatePath/text-intents');
+    if (!await directory.exists()) return;
+    await for (final file in directory.list()) {
+      if (file is! File || !file.path.endsWith('.json')) continue;
+      final raw = await file.readAsString();
+      final event = LogEvent.decode(raw);
+      if (!_textTypes.contains(event.type) ||
+          event.writer != writer ||
+          event.space != space ||
+          file.absolute.uri.normalizePath() !=
+              _textIntentFile(event).absolute.uri.normalizePath()) {
+        throw FormatFailure(
+          'Invalid private prepared text intent; evidence was retained.',
+        );
+      }
+      db.execute('INSERT OR IGNORE INTO text_outbox VALUES (?,?,?)', [
+        event.id,
+        raw,
+        event.entity,
+      ]);
+    }
+  }
+
+  Future<void> _retireConfirmedTextIntents() async {
+    final directory = Directory('$privatePath/text-intents');
+    if (!await directory.exists()) return;
+    await for (final file in directory.list()) {
+      if (file is! File || !file.path.endsWith('.json')) continue;
+      final raw = await file.readAsString();
+      final event = LogEvent.decode(raw);
+      final present = db.select('SELECT raw FROM events WHERE id=?', [
+        event.id,
+      ]);
+      if (present.isNotEmpty && present.single['raw'] == raw) {
+        db.execute('DELETE FROM text_outbox WHERE id=? AND raw=?', [
+          event.id,
+          raw,
+        ]);
+        await file.delete();
+        await syncParentAfterCreate(file);
+      }
+    }
+  }
+
+  /// Exact prepared bytes survive an unknown append outcome and process restart.
+  List<OperationReceipt> get pendingTextOperations => db
+      .select('SELECT id,raw,entity FROM text_outbox ORDER BY rowid')
+      .map(
+        (row) => OperationReceipt(
+          row['id'] as String,
+          row['raw'] as String,
+          row['entity'] as String,
+        ),
+      )
+      .toList(growable: false);
+
+  Future<LogEvent> retryTextOperation(OperationReceipt receipt) =>
+      _serialize(() => _retryTextOperation(receipt));
+
+  Future<LogEvent> _retryTextOperation(OperationReceipt receipt) async {
+    await _refresh();
+    final event = LogEvent.decode(receipt.raw);
+    if (!_textTypes.contains(event.type) ||
+        event.writer != writer ||
+        event.space != space ||
+        event.id != receipt.id ||
+        event.entity != receipt.entity ||
+        textEngine == null) {
+      throw FormatFailure('Invalid prepared native text receipt.');
+    }
+    final present = db.select('SELECT raw FROM events WHERE id=?', [event.id]);
+    if (present.isNotEmpty) {
+      _requireConfirmed([receipt]);
+      return event;
+    }
+    final staged = db.select('SELECT raw FROM text_outbox WHERE id=?', [
+      event.id,
+    ]);
+    if (staged.isEmpty ||
+        staged.single['raw'] != receipt.raw ||
+        event.sequence != _acknowledgedOwnedSequence + 1 ||
+        event.previousHash != _writerChainHead) {
+      throw FormatFailure(
+        'Prepared native text bytes do not match the owned canonical prefix.',
+      );
+    }
+    final guarded = await writerGuard.load(space, writer);
+    if (guarded == null || guarded.pending.isEmpty) {
+      await _prepareWriterAppend([receipt]);
+    } else if (guarded.pending.first.sequence != event.sequence ||
+        guarded.pending.first.hash != event.hash) {
+      throw FormatFailure(
+        'Prepared text receipt differs from the reserved writer append.',
+      );
+    }
+    await folder.append(
+      '$writer.jsonl',
+      Uint8List.fromList(utf8.encode('${receipt.raw}\n')),
+    );
+    await _refresh();
+    _requireConfirmed([receipt]);
+    return event;
   }
 
   Future<void> _prepareWriterAppend(List<OperationReceipt> receipts) async {
@@ -1203,7 +2242,33 @@ class TaskStore {
     int seq,
     EventClock clock, {
     String? previousHash,
+    LogEvent? pendingCreation,
   }) {
+    final legacyTextChange =
+        type == 'task.edited' &&
+        (data.containsKey('title') || data.containsKey('description'));
+    final textSnapshotRequired =
+        type == 'task.completed' && data['successor'] != null;
+    if (textSnapshotRequired &&
+        textEngine != null &&
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isNotEmpty) {
+      throw FormatFailure(
+        'Collaborative recurring completion is not available yet; existing history is retained.',
+      );
+    }
+    if ((legacyTextChange || textSnapshotRequired) &&
+        textWriteBlocked != null &&
+        !_hasNativeTextRoot(entity, _entityEvents(entity))) {
+      throw FormatFailure(textWriteBlocked!);
+    }
+    if (_textTypes.contains(type) &&
+        !isNativeTextCreation(type) &&
+        textWriteBlocked != null &&
+        !_hasNativeTextRoot(entity, _entityEvents(entity))) {
+      throw FormatFailure(textWriteBlocked!);
+    }
     final e = LogEvent.decode(
       LogEvent(
         space,
@@ -1215,30 +2280,109 @@ class TaskStore {
         data,
       ).encode(previousHash: previousHash ?? _writerChainHead),
     );
-    final prior = _entityEvents(entity);
-    final projected = project([...prior, e]);
+    final prior = [
+      ..._entityEvents(entity),
+      if (type == 'task.moved' && pendingCreation?.entity == entity)
+        pendingCreation!,
+    ];
+    if (type == 'task.textEdited' || type == 'task.textEditUndone') {
+      if (_hasInheritedText(entity)) _resolvedText(entity, pending: [e]);
+      final nativeCreation = _hasNativeTextRoot(entity, prior);
+      if (!nativeCreation && _textBaseline == null) {
+        throw FormatFailure(
+          textWriteBlocked ??
+              'Initialize shared text before saving this existing task.',
+        );
+      }
+      if (!nativeCreation &&
+          prior.any(
+            (event) =>
+                event.type == 'task.created' && event.canonicalRaw == null,
+          ) &&
+          project(_baselineEntityHistory(entity, _textBaseline!)) == null) {
+        throw FormatFailure(
+          'This recurring occurrence is waiting for a verified native text creation context.',
+        );
+      }
+    }
+    final projected = type == 'text.baselineInitialized'
+        ? <String, dynamic>{'id': space}
+        : project([...prior, e]);
     if (projected == null) {
       throw FormatFailure('Local command requires an existing entity.');
     }
+    if (_textTypes.contains(type)) {
+      if (textEngine == null) {
+        throw FormatFailure('Native text support is required before saving.');
+      }
+      db.execute('SAVEPOINT validate_text_command');
+      final oldBaseline = _textBaseline;
+      final oldBlocked = textWriteBlocked;
+      try {
+        TextCache(
+          db,
+          textEngine!,
+          memo: _recurringTextMemo,
+        ).validatePackets([e]);
+        if (type == 'text.baselineInitialized') {
+          db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
+            e.id,
+            e.entity,
+            e.writer,
+            e.sequence,
+            e.clock.value.toInt(),
+            e.canonicalRaw,
+          ]);
+          _validateTextBaseline();
+          if (textWriteBlocked != null) throw FormatFailure(textWriteBlocked!);
+        } else if (type == 'task.completedWithText' ||
+            type == 'task.completedWithChecklist') {
+          if (type == 'task.completedWithChecklist') {
+            _validateChecklistCompletions(e);
+          }
+          if (hasNativeTaskSuccessor(e)) {
+            _resolvedText(
+              (data['successor'] as Map)['id'] as String,
+              pending: [e],
+            );
+          }
+        } else {
+          _materializeText(projected, [...prior, e]);
+        }
+      } finally {
+        _textBaseline = oldBaseline;
+        textWriteBlocked = oldBlocked;
+        db.execute('ROLLBACK TO validate_text_command');
+        db.execute('RELEASE validate_text_command');
+      }
+    }
     if (type.startsWith('task.') &&
         type != 'task.created' &&
+        type != 'task.createdWithText' &&
         type != 'task.operationUndone' &&
+        type != 'task.textEditUndone' &&
         type != 'task.recurringCompletionUndone' &&
         project(prior)?['deleted'] == true) {
       throw FormatFailure('This task was deleted.');
     }
     if ((type == 'task.created' ||
-            (type == 'task.edited' && data.containsKey('assignee'))) &&
+            type == 'task.createdWithText' ||
+            ((type == 'task.edited' || type == 'task.textEdited') &&
+                data.containsKey('assignee'))) &&
         db.select(
           "SELECT id FROM views WHERE id=? AND json_extract(raw,'\$.kind')='user'",
           [data['assignee']],
         ).isEmpty) {
       throw FormatFailure('Choose an existing user before creating a task.');
     }
-    if (type == 'task.completionUndone' ||
+    if (type == 'task.textEditUndone' ||
+        type == 'task.completionUndone' ||
         type == 'task.operationUndone' ||
         type == 'task.recurringCompletionUndone') {
-      final field = type == 'task.operationUndone' ? 'operation' : 'completion';
+      final field =
+          type == 'task.operationUndone' || type == 'task.textEditUndone'
+          ? 'operation'
+          : 'completion';
       if (!prior.any((target) => target.id == data[field])) {
         throw FormatFailure('Undo requires an earlier operation of this task.');
       }
@@ -1246,15 +2390,19 @@ class TaskStore {
     _validateUndoReferences(e);
     _validateMoves(e);
     _validateTagReferences(e);
-    if (type == 'task.completed' &&
+    _validateHistoricalCompletions(e);
+    _validateChecklistReferences(e);
+    _validateChecklistCompletions(e);
+    if (isTaskCompletion(type) &&
         data['successor'] == null &&
+        type != 'task.completedKeepingSuccessor' &&
         TaskSchedule.fromJson(
               Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
             ).recurrence !=
             null) {
       throw FormatFailure('Repeating completion requires a next occurrence.');
     }
-    if (type == 'task.completed' && data['successor'] != null) {
+    if (isTaskCompletion(type) && data['successor'] != null) {
       final current = TaskSchedule.fromJson(
         Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
       );
@@ -1269,7 +2417,7 @@ class TaskStore {
       }
       final successorId = (data['successor'] as Map)['id'];
       if (db.select(
-        "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','user.created')",
+        "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','task.createdWithText','user.created')",
         [successorId],
       ).isNotEmpty) {
         throw FormatFailure(
@@ -1299,6 +2447,7 @@ class TaskStore {
     List<(String, String, Map<String, dynamic>)> commands, {
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
+    bool reserveBeforeTextStaging = false,
   }) async {
     if (commands.isEmpty) return [];
     _requireWriterAppendReady();
@@ -1313,6 +2462,7 @@ class TaskStore {
         1;
     var maximum = _maximumClock();
     final receipts = <OperationReceipt>[];
+    final creations = <String, LogEvent>{};
     final bytes = BytesBuilder(copy: false);
     var chainHead = _writerChainHead;
     for (final (entity, type, data) in commands) {
@@ -1326,7 +2476,11 @@ class TaskStore {
         seq++,
         clock,
         previousHash: chainHead,
+        pendingCreation: type == 'task.moved' ? creations[entity] : null,
       );
+      if (type == 'task.created' || type == 'task.createdWithText') {
+        creations[entity] = event;
+      }
       final raw = event.canonicalRaw!;
       chainHead = event.hash!;
       receipts.add(OperationReceipt(event.id, raw, entity));
@@ -1339,7 +2493,11 @@ class TaskStore {
       onPrepared?.call(receipt);
     }
     if (canCommit != null && !canCommit()) throw StaleTaskSnapshot();
-    await _prepareWriterAppend(receipts);
+    if (reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
+    for (final receipt in receipts) {
+      await _stageTextReceipt(LogEvent.decode(receipt.raw), receipt);
+    }
+    if (!reserveBeforeTextStaging) await _prepareWriterAppend(receipts);
     phase.reset();
     try {
       await folder.append('$writer.jsonl', bytes.takeBytes());
@@ -1362,13 +2520,21 @@ class TaskStore {
     return receipts;
   }
 
+  /// A durable creation alone cannot finish a capture with a reserved suffix.
+  bool isCaptureConfirmed(String entity) =>
+      !_writerHasPendingAppend && hasEntity(entity);
+
   /// Retry identities belong to the same capture; already present tasks are
   /// acknowledged without recreating them. UI updates happen after this batch.
-  Future<BulkTaskResult> createTasks(
+  Future<TaskCaptureResult> createTasks(
     Map<String, String> titles,
     String assignee,
   ) => _serialize(() async {
     await _refresh();
+    final anchor = rows
+        .where((row) => row['kind'] == 'task')
+        .map((row) => row['id'] as String)
+        .firstOrNull;
     final present = <String>[];
     final commands = <(String, Map<String, dynamic>)>[];
     for (final entry in titles.entries) {
@@ -1381,17 +2547,46 @@ class TaskStore {
       } else {
         commands.add((
           entry.key,
-          {'title': entry.value, 'description': '', 'assignee': assignee},
+          {
+            'title': entry.value,
+            'description': '',
+            'assignee': assignee,
+            if (textEngine != null)
+              'text': {
+                'codec': 'yrs-v1',
+                'adapter': 1,
+                'seeds': {
+                  'title': sha256
+                      .convert(textEngine!.seedText(entry.value).bytes)
+                      .toString(),
+                  'description': sha256
+                      .convert(textEngine!.seedText('').bytes)
+                      .toString(),
+                },
+              },
+          },
         ));
       }
     }
     final prepared = <OperationReceipt>[];
     Object? error;
     try {
-      await _appendCommandBatch(
-        'task.created',
-        commands,
+      // Even an all-present retry must wait for its reserved exact suffix.
+      _requireWriterAppendReady();
+      await _appendCommands(
+        [
+          for (final (id, data) in commands)
+            (
+              id,
+              textEngine == null ? 'task.created' : 'task.createdWithText',
+              data,
+            ),
+          if (anchor != null)
+            for (final (id, _) in commands)
+              (id, 'task.moved', {'before': anchor}),
+        ],
         onPrepared: prepared.add,
+        reserveBeforeTextStaging: true,
       );
     } catch (failure) {
       error = failure;
@@ -1402,47 +2597,79 @@ class TaskStore {
       }
     }
     final confirmed = confirmedOperations(prepared);
-    final committed = {
+    final byEntity = <String, List<OperationReceipt>>{};
+    for (final receipt in prepared) {
+      (byEntity[receipt.entity] ??= []).add(receipt);
+    }
+    final created = {
       ...present,
-      for (final receipt in prepared.where((r) => confirmed.contains(r.id)))
+      for (final receipt in prepared.where(
+        (r) =>
+            confirmed.contains(r.id) &&
+            LogEvent.decode(r.raw).type != 'task.moved',
+      ))
         receipt.entity,
     };
-    return BulkTaskResult(
+    final committed = {
+      ...present.where(isCaptureConfirmed),
+      for (final entry in byEntity.entries)
+        if (entry.value.every((r) => confirmed.contains(r.id))) entry.key,
+    };
+    return TaskCaptureResult(
       titles.keys.where(committed.contains),
       titles.keys.where((id) => !committed.contains(id)),
+      titles.keys.where(created.contains),
       error,
     );
   });
 
   void _validateUndoReferences([LogEvent? pending]) {
+    final invalidText = db.select(
+      "SELECT u.id FROM events u JOIN events t ON t.id=json_extract(u.raw,'\$.data.operation') WHERE json_extract(u.raw,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.raw,'\$.type')<>'task.textEdited') LIMIT 1",
+    );
+    if (invalidText.isNotEmpty) {
+      throw FormatFailure(
+        'Invalid text Undo reference in ${invalidText.single['id']}.',
+      );
+    }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type')<>'task.completed') OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type')<>'task.completed' OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completionUndone') OR (json_extract(t.raw,'\$.type')='task.completed' AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
     }
     if (pending == null) return;
     void validate(LogEvent undo, LogEvent target) {
+      if (undo.type == 'task.textEditUndone') {
+        if (target.entity != undo.entity ||
+            target.clock >= undo.clock ||
+            target.type != 'task.textEdited') {
+          throw FormatFailure('Invalid text Undo reference in ${undo.id}.');
+        }
+        return;
+      }
       final operation = undo.type == 'task.operationUndone';
       if (target.entity != undo.entity ||
           target.clock >= undo.clock ||
           (operation
               ? (!reversibleTaskEvents.contains(target.type) ||
-                    (target.type == 'task.completed' &&
+                    (isTaskCompletion(target.type) &&
                         target.data['successor'] != null))
-              : target.type != 'task.completed') ||
+              : !isTaskCompletion(target.type)) ||
           (undo.type == 'task.recurringCompletionUndone' &&
               target.data['successor'] == null)) {
         throw FormatFailure('Invalid undo reference in ${undo.id}.');
       }
     }
 
-    if (pending.type == 'task.operationUndone' ||
+    if (pending.type == 'task.textEditUndone' ||
+        pending.type == 'task.operationUndone' ||
         pending.type == 'task.completionUndone' ||
         pending.type == 'task.recurringCompletionUndone') {
       final ref =
-          pending.data[pending.type == 'task.operationUndone'
+          pending.data[pending.type == 'task.operationUndone' ||
+                  pending.type == 'task.textEditUndone'
               ? 'operation'
               : 'completion'];
       final targets = db.select('SELECT raw FROM events WHERE id=?', [ref]);
@@ -1451,7 +2678,7 @@ class TaskStore {
       }
     }
     for (final row in db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
+      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
       [pending.id],
     )) {
       validate(LogEvent.decode(row['raw'] as String), pending);
@@ -1489,8 +2716,10 @@ class TaskStore {
     // only needs mutations referencing this new event (or its derived seed),
     // plus the new mutation itself. Do not repeatedly decode unrelated history.
     final successor =
-        pending?.type == 'task.completed' && pending?.data['successor'] is Map
-        ? (pending!.data['successor'] as Map)['id']
+        pending != null &&
+            isTaskCompletion(pending.type) &&
+            pending.data['successor'] is Map
+        ? (pending.data['successor'] as Map)['id']
         : null;
     final mutations = db
         .select(
@@ -1532,9 +2761,10 @@ class TaskStore {
               matches.add(seed);
             }
           }
-          if (pending?.type == 'task.completed' &&
-              pending?.data['successor'] != null) {
-            final successor = pending!.data['successor'] as Map;
+          if (pending != null &&
+              isTaskCompletion(pending.type) &&
+              pending.data['successor'] != null) {
+            final successor = pending.data['successor'] as Map;
             if (successor['id'] == mutation.entity &&
                 (successor['tags'] as List? ?? []).any(
                   (tag) =>
@@ -1554,10 +2784,13 @@ class TaskStore {
         }
         List? additions;
         final owner = target.entity;
-        if (target.type == 'task.created') {
+        if (target.type == 'task.created' ||
+            target.type == 'task.createdWithText') {
           additions = target.data['tags'] as List? ?? [];
         }
-        if (target.type == 'task.edited' && target.data['tagChanges'] != null) {
+        if ((target.type == 'task.edited' ||
+                target.type == 'task.textEdited') &&
+            target.data['tagChanges'] != null) {
           additions = (target.data['tagChanges'] as Map)['add'] as List;
         }
         if (owner != mutation.entity ||
@@ -1586,12 +2819,17 @@ class TaskStore {
     );
     if (seeds.isNotEmpty) {
       if (own.any(
-        (e) => e.type == 'task.created' || e.type == 'user.created',
+        (e) =>
+            e.type == 'task.created' ||
+            e.type == 'task.createdWithText' ||
+            e.type == 'user.created',
       )) {
         final creations = own
             .where(
               (event) =>
-                  event.type == 'task.created' || event.type == 'user.created',
+                  event.type == 'task.created' ||
+                  event.type == 'task.createdWithText' ||
+                  event.type == 'user.created',
             )
             .toList();
         creations.add(LogEvent.decode(seeds.first['raw'] as String));
@@ -1601,6 +2839,10 @@ class TaskStore {
         );
       }
       own.add(successorCreation(_successorSelection(entity, seeds, own).seed));
+    }
+    final copies = _itemCopySeeds(entity);
+    if (copies.isNotEmpty) {
+      own.add(checklistCopyCreation(copies.first.$1, copies.first.$2));
     }
     return own;
   }
@@ -1624,11 +2866,15 @@ class TaskStore {
     return selectSuccessor(
       decoded,
       parentHistory,
-      protected: own.isNotEmpty || anchored,
+      protected: own.isNotEmpty || anchored || _hasChecklistActivity(entity),
     );
   }
 
-  Map<String, dynamic>? _projectEntity(String entity) {
+  Map<String, dynamic>? _projectEntity(
+    String entity, {
+    RecurringTextResolver? resolution,
+    TextCache? textCache,
+  }) {
     final history = _entityEvents(entity);
     Map<String, dynamic>? state;
     try {
@@ -1640,6 +2886,7 @@ class TaskStore {
                 .where(
                   (event) =>
                       event.type == 'task.created' ||
+                      event.type == 'task.createdWithText' ||
                       event.type == 'user.created',
                 )
                 .skip(1)
@@ -1648,6 +2895,19 @@ class TaskStore {
       throw FormatFailure('${failure.message} In ${candidates.first.id}.');
     }
     if (state == null) return null;
+    _materializeText(
+      state,
+      history,
+      resolution: resolution,
+      textCache: textCache,
+    );
+    _attachSuccessorSuppression(state);
+    _attachChecklist(state, resolution: resolution, textCache: textCache);
+    return state;
+  }
+
+  void _attachSuccessorSuppression(Map<String, dynamic> state) {
+    final entity = state['id'] as String;
     final seeds = db.select(
       "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
@@ -1663,7 +2923,318 @@ class TaskStore {
         own,
       ).suppressed;
     }
-    return state;
+  }
+
+  void _materializeText(
+    Map<String, dynamic> state,
+    List<LogEvent> history, {
+    RecurringTextResolver? resolution,
+    TextCache? textCache,
+  }) {
+    if (textEngine == null) return;
+    final entity = state['id'] as String;
+    if (_hasInheritedText(entity)) {
+      try {
+        (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+            .materializeResolved(
+              state,
+              resolution?.resolve(entity) ??
+                  _resolvedText(
+                    entity,
+                    pending: history
+                        .where((event) => event.canonicalRaw != null)
+                        .toList(),
+                  ),
+            );
+      } on TextInheritancePending catch (pending) {
+        // Retain the verified display if any; do not establish a guessed seed.
+        final cached = db.select('SELECT raw FROM views WHERE id=?', [entity]);
+        if (cached.isNotEmpty) {
+          final prior = jsonDecode(cached.single['raw'] as String) as Map;
+          for (final field in ['title', 'description']) {
+            state[field] = prior[field];
+          }
+        }
+        state['textUnavailable'] = pending.message;
+        state['textInheritancePending'] = true;
+      }
+      return;
+    }
+    var basis = _textBaseline;
+    var kind = 'legacy-baseline';
+    Map<String, String>? seedText;
+    final nativeCreation = history.any(
+      (event) => isNativeTextCreation(event.type),
+    );
+    if (!nativeCreation &&
+        textWriteBlocked?.startsWith('Competing') == true &&
+        history.any((event) => event.type == 'task.created') &&
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          state['id'],
+        ]).isEmpty) {
+      state['textUnavailable'] = textWriteBlocked;
+      return;
+    }
+    if (basis != null &&
+        !history.any((event) => isNativeTextCreation(event.type))) {
+      final prefix = project(
+        _baselineEntityHistory(state['id'] as String, basis),
+      );
+      Map<String, dynamic>? initial = prefix;
+      if (initial == null) {
+        final creations = history
+            .where((event) => event.type == 'task.created')
+            .toList();
+        if (creations.isNotEmpty) {
+          basis = creations.single;
+          kind = 'legacy-creation';
+          initial = project([basis]);
+        }
+      }
+      if (initial?['kind'] == 'task') {
+        seedText = {
+          for (final field in ['title', 'description'])
+            field: initial![field] as String? ?? '',
+        };
+      }
+    }
+    if (history.any((event) => _textTypes.contains(event.type)) ||
+        seedText != null ||
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          state['id'],
+        ]).isNotEmpty) {
+      (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+          .materialize(
+            state,
+            history,
+            basis: basis,
+            legacySeedText: seedText,
+            basisKind: kind,
+          );
+    }
+  }
+
+  bool _hasInheritedText(String entity) =>
+      db.select(
+        "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(raw,'\$.data.inheritance') IS NOT NULL AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+        [entity],
+      ).isNotEmpty ||
+      _itemCopySeeds(entity).isNotEmpty;
+
+  bool _hasNativeTextRoot(String entity, List<LogEvent> history) =>
+      history.any((event) => isNativeTextCreation(event.type)) ||
+      _hasInheritedText(entity);
+
+  Map<String, ResolvedTextField> _resolvedText(
+    String entity, {
+    List<LogEvent> pending = const [],
+  }) => _textResolution(pending: pending).resolve(entity);
+
+  RecurringTextResolver _textResolution({List<LogEvent> pending = const []}) =>
+      RecurringTextResolver.fromCanonical(
+        textEngine!,
+        [
+          ...db
+              .select('SELECT raw FROM events')
+              .map((row) => row['raw'] as String),
+          ...pending.map((event) => event.canonicalRaw!),
+        ],
+        legacyRoots: _legacyTextRoots,
+        memo: _recurringTextMemo,
+        legacyScope: '${_textBaseline?.hash ?? ''}|${textWriteBlocked ?? ''}',
+      );
+
+  Map<String, TextFieldSeed>? _legacyTextRoots(
+    String entity,
+    List<LogEvent> observed,
+  ) {
+    final baseline = _textBaseline;
+    if (baseline == null || !observed.any((event) => event.id == baseline.id)) {
+      return null;
+    }
+    List<LogEvent> entityHistory(List<LogEvent> prefix) {
+      final own = prefix.where((event) => event.entity == entity).toList();
+      final seeds = prefix
+          .where(
+            (event) =>
+                isTaskCompletion(event.type) &&
+                (event.data['successor'] as Map?)?['id'] == entity,
+          )
+          .toList();
+      if (seeds.isNotEmpty) {
+        own.add(
+          successorCreation(
+            selectSuccessor(
+              seeds,
+              prefix.where((event) => event.entity == seeds.first.entity),
+              protected:
+                  own.isNotEmpty ||
+                  prefix.any(
+                    (event) =>
+                        event.type == 'task.moved' &&
+                        event.data['before'] == entity,
+                  ) ||
+                  hasDurableChecklistActivity(prefix, entity),
+            ).seed,
+          ),
+        );
+      }
+      return own;
+    }
+
+    var basis = baseline;
+    var kind = 'legacy-baseline';
+    var initial = project(
+      entityHistory(
+        observed.where((event) => _baselineIncludes(event, baseline)).toList(),
+      ),
+    );
+    if (initial == null) {
+      final creations = observed
+          .where(
+            (event) => event.entity == entity && event.type == 'task.created',
+          )
+          .toList();
+      if (creations.length != 1) return null;
+      basis = creations.single;
+      kind = 'legacy-creation';
+      initial = project([basis]);
+    }
+    if (initial?['kind'] != 'task') return null;
+    return {
+      for (final field in ['title', 'description'])
+        field: (() {
+          final seed = textEngine!.seedText(initial![field] as String? ?? '');
+          return TextFieldSeed(
+            TextFieldContext(
+              space: space,
+              entity: entity,
+              field: field,
+              basis: basis.id,
+              basisKind: kind,
+              seedHash: sha256.convert(seed.bytes).toString(),
+            ),
+            seed,
+          );
+        })(),
+    };
+  }
+
+  List<LogEvent> _baselineEntityHistory(String entity, LogEvent baseline) {
+    final own = db
+        .select('SELECT raw FROM events WHERE entity=?', [entity])
+        .map((row) => LogEvent.decode(row['raw'] as String))
+        .where((event) => _baselineIncludes(event, baseline))
+        .toList();
+    final seeds = db
+        .select(
+          "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=?",
+          [entity],
+        )
+        .map((row) => LogEvent.decode(row['raw'] as String))
+        .where((event) => _baselineIncludes(event, baseline))
+        .toList();
+    if (seeds.isNotEmpty) {
+      final parent = db
+          .select('SELECT raw FROM events WHERE entity=?', [seeds.first.entity])
+          .map((row) => LogEvent.decode(row['raw'] as String))
+          .where((event) => _baselineIncludes(event, baseline));
+      final anchors = db
+          .select(
+            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+            [entity],
+          )
+          .map((row) => LogEvent.decode(row['raw'] as String))
+          .any((event) => _baselineIncludes(event, baseline));
+      own.add(
+        successorCreation(
+          selectSuccessor(
+            seeds,
+            parent,
+            protected:
+                own.isNotEmpty ||
+                anchors ||
+                hasDurableChecklistActivity(
+                  db
+                      .select('SELECT raw FROM events')
+                      .map((row) => LogEvent.decode(row['raw'] as String))
+                      .where((event) => _baselineIncludes(event, baseline))
+                      .toList(),
+                  entity,
+                ),
+          ).seed,
+        ),
+      );
+    }
+    return own;
+  }
+
+  LogEvent? _historicalSuccessorInitialization(String entity) {
+    if (textEngine == null) return null;
+    final child = const Uuid().v5(entity, 'successor');
+    final creations = _entityEvents(child).where(
+      (event) => event.type == 'task.created' && event.canonicalRaw == null,
+    );
+    if (creations.length != 1) return null;
+    final source = db.select('SELECT raw FROM events WHERE id=?', [
+      creations.single.id,
+    ]);
+    if (source.isEmpty) return null;
+    final event = LogEvent.decode(source.single['raw'] as String);
+    if (!isScalarSuccessorInitialization(event) || event.entity != entity) {
+      return null;
+    }
+    if (event.type == 'task.completedWithChecklist') {
+      // Additive scalar-mode checklist copies own native item histories even
+      // before the scalar parent opts into shared text. Durable child activity
+      // protects that initialized successor, including undone/deleted work.
+      final independent =
+          db.select('SELECT 1 FROM events WHERE entity=? LIMIT 1', [
+            child,
+          ]).isNotEmpty ||
+          db.select(
+            "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+            [child],
+          ).isNotEmpty ||
+          _hasChecklistActivity(child);
+      if (independent) return event;
+    }
+    // Preserve released scalar completion policy: its historical marker still
+    // requires an independently initialized pair of parent/child documents.
+    if (db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isEmpty ||
+        _hasInheritedText(child) ||
+        db.select('SELECT 1 FROM text_fields WHERE entity=?', [child]).length !=
+            2) {
+      return null;
+    }
+    return event;
+  }
+
+  void _validateHistoricalCompletions([LogEvent? pending]) {
+    final markers = <LogEvent>[
+      for (final row in db.select(
+        "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+      ))
+        LogEvent.decode(row['raw'] as String),
+      if (pending?.type == 'task.completedKeepingSuccessor') pending!,
+    ];
+    for (final marker in markers) {
+      final retained = marker.data['retainedSuccessor'] as Map;
+      final rows = db.select('SELECT raw FROM events WHERE id=?', [
+        retained['completion'],
+      ]);
+      final known = verifyHistoricalCompletion(
+        marker,
+        rows.isEmpty ? null : LogEvent.decode(rows.single['raw'] as String),
+      );
+      if (!known && identical(marker, pending)) {
+        throw FormatFailure(
+          'Historical completion requires its earlier initialization history.',
+        );
+      }
+    }
   }
 
   Future<LogEvent> complete(
@@ -1671,12 +3242,21 @@ class TaskStore {
     DateTime? completionDay,
     DateTime? completionInstant,
     String? localZoneId,
+    String? expectedChecklistSnapshot,
+    bool requireIncomplete = false,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
-    final state = project(_entityEvents(entity));
+    final state = _projectEntity(entity);
     if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
       throw FormatFailure('Unknown task.');
+    }
+    if (expectedChecklistSnapshot != null &&
+        expectedChecklistSnapshot != jsonEncode(state['checklist'] ?? [])) {
+      throw StaleTaskSnapshot();
+    }
+    if (requireIncomplete && state['completed'] == true) {
+      throw StaleTaskSnapshot();
     }
     final schedule = TaskSchedule.fromJson(
       Map<String, dynamic>.from(state['schedule'] as Map),
@@ -1691,6 +3271,23 @@ class TaskStore {
       'completedAt':
           '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
     };
+    final historical = schedule.recurrence == null
+        ? null
+        : _historicalSuccessorInitialization(entity);
+    if (historical != null) {
+      data['retainedSuccessor'] = {
+        'id': const Uuid().v5(entity, 'successor'),
+        'completion': historical.id,
+        'hash': historical.hash,
+      };
+      return _command(
+        entity,
+        'task.completedKeepingSuccessor',
+        data,
+        expectedTaskSnapshot: taskSnapshot,
+        onPrepared: onPrepared,
+      );
+    }
     if (schedule.recurrence != null) {
       final next = schedule.next(day);
       if (schedule.hasSameOccurrenceDates(next)) {
@@ -1705,9 +3302,57 @@ class TaskStore {
         'schedule': next.toJson(),
       };
     }
+    var type = 'task.completed';
+    if (data['successor'] != null &&
+        textEngine != null &&
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isNotEmpty) {
+      final fields = _resolvedText(entity);
+      data['inheritance'] = {
+        'codec': 'yrs-v1',
+        'adapter': 2,
+        'frontiers': {
+          for (final row in db.select(
+            'SELECT name,last_seq,chain_head FROM streams',
+          ))
+            (row['name'] as String).replaceFirst(RegExp(r'\.jsonl$'), ''): {
+              'seq': row['last_seq'],
+              'hash': row['chain_head'],
+            },
+        },
+        'fields': {
+          for (final entry in fields.entries)
+            entry.key: {
+              'parentContext': entry.value.context.hash,
+              'seedHash': entry.value.context.seedHash,
+              'historyHash': entry.value.historyReference!.hash,
+            },
+        },
+      };
+      type = 'task.completedWithText';
+    }
+    if (data['successor'] != null && state.containsKey('checklist')) {
+      final frontiers = <String, dynamic>{
+        for (final row in db.select(
+          'SELECT name,last_seq,chain_head FROM streams',
+        ))
+          (row['name'] as String).replaceFirst('.jsonl', ''): {
+            'seq': row['last_seq'],
+            'hash': row['chain_head'],
+          },
+      };
+      data['checklist'] = _checklistCopy(
+        entity,
+        (data['successor'] as Map)['id'] as String,
+        (state['checklist'] as List).cast<Map<String, dynamic>>(),
+        frontiers,
+      );
+      type = 'task.completedWithChecklist';
+    }
     return _command(
       entity,
-      'task.completed',
+      type,
       data,
       expectedTaskSnapshot: taskSnapshot,
       onPrepared: onPrepared,
@@ -1719,6 +3364,28 @@ class TaskStore {
   /// here: callers separately validate filters/time-dependent move eligibility.
   String get taskSnapshot =>
       jsonEncode(rows.where((row) => row['kind'] == 'task').toList());
+
+  String _nonTextSnapshot(String snapshot) {
+    final rows = (jsonDecode(snapshot) as List)
+        .map(
+          (row) => Map<String, dynamic>.from(row as Map)
+            ..remove('title')
+            ..remove('description')
+            ..remove('inbox'),
+        )
+        .toList();
+    for (final row in rows) {
+      if (row['checklist'] is List) {
+        row['checklist'] = [
+          for (final item in row['checklist'] as List)
+            Map<String, dynamic>.from(item as Map)
+              ..remove('title')
+              ..remove('description'),
+        ];
+      }
+    }
+    return canonicalTextJson(rows);
+  }
 
   /// Optional synchronous guard checks caller-owned conditions after ingestion
   /// and immediately before append. It must not mutate this store.
@@ -1745,25 +3412,17 @@ class TaskStore {
     required List<String> tags,
     required Map<String, String> observedTagRefs,
     String? expectedTaskSnapshot,
+    bool ignoreSnapshotText = false,
     bool Function()? canCommit,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
-    final wanted = tags.toSet();
-    final removed = observedTagRefs.entries
-        .where((e) => !wanted.contains(e.value))
-        .map((e) => e.key)
-        .toList();
-    final added = wanted.difference(observedTagRefs.values.toSet()).toList()
-      ..sort();
+    final tagChanges = calculateTaskTagChanges(tags, observedTagRefs);
     return _command(
       entity,
       'task.edited',
-      {
-        ...fields,
-        if (added.isNotEmpty || removed.isNotEmpty)
-          'tagChanges': {'add': added, 'remove': removed},
-      },
+      {...fields, 'tagChanges': ?tagChanges},
       expectedTaskSnapshot: expectedTaskSnapshot,
+      ignoreSnapshotText: ignoreSnapshotText,
       canCommit: canCommit,
       onPrepared: onPrepared,
     );
@@ -1873,13 +3532,156 @@ class TaskStore {
   }
 
   bool _operationUndone(String id) => db.select(
-    "SELECT 1 FROM events WHERE (json_extract(raw,'\$.type')='task.operationUndone' AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
+    "SELECT 1 FROM events WHERE (json_extract(raw,'\$.type') IN ('task.operationUndone','task.textEditUndone') AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
     [id, id],
   ).isNotEmpty;
 
-  Future<TaskUndoResult> undoOperations(
+  Future<TaskUndoResult> _undoMixedTextOperations(
     List<String> operations,
-  ) => _serialize(() async {
+    Map<String, LogEvent> targets,
+  ) async {
+    final undone = <String>[], remaining = <String>[];
+    Object? failure;
+    var newer = false, retained = 0, removed = 0;
+    for (final id in operations) {
+      if (targets[id]!.type != 'task.textEdited') {
+        final result = await _undoOperations([id]);
+        undone.addAll(result.undone);
+        remaining.addAll(result.remaining);
+        failure ??= result.error;
+        newer |= result.keptNewerChanges;
+        retained += result.retainedSuccessorCount;
+        removed += result.removedSuccessorCount;
+        continue;
+      }
+      final owner = _nativeOperations[id];
+      try {
+        if (_operationUndone(id) && owner?.prepared == null) {
+          undone.add(id);
+          continue;
+        }
+        if (owner == null) {
+          throw FormatFailure(
+            'Native Undo is available only in its retained editing session.',
+          );
+        }
+        final history = _entityEvents(owner.capture.entity);
+        if (history.any(
+          (event) =>
+              _preparedTextBases.containsKey(event.id) &&
+              !_nativeOperations.containsKey(event.id) &&
+              event.type == 'task.textEdited' &&
+              owner.fields.any(
+                (name) =>
+                    (event.data['changes'] as Map)[name]?['context'] ==
+                    owner.owners[name]!.context,
+              ),
+        )) {
+          throw FormatFailure(
+            'A newer saved edit has unfinished Undo registration. Restart Tandemlog to clear session Undo; the saved tasks remain in the folder.',
+          );
+        }
+        final inactive = retractedOperationIds(history);
+        newer |= history.any(
+          (event) =>
+              (reversibleTaskEvents.contains(event.type) ||
+                  event.type == 'task.textEdited') &&
+              compareEvents(event, targets[id]!) > 0 &&
+              !inactive.contains(event.id),
+        );
+        if (owner.prepared == null) {
+          for (final name in owner.fields) {
+            final field = owner.owners[name]!;
+            _syncNativeUndoField(field, _entityEvents(owner.capture.entity));
+            if (field.document.isClosed ||
+                _nativeUndoStacks[field.document]?.last != id) {
+              throw FormatFailure(
+                'Undo the newer text save before this operation.',
+              );
+            }
+          }
+          final prepared = <String, NativeTextPreparedUndo>{};
+          try {
+            for (final name in owner.fields) {
+              prepared[name] = owner.owners[name]!.document
+                  .prepareOperationUndo(operationId: id);
+            }
+          } catch (_) {
+            for (final value in prepared.values) {
+              value.cancel();
+            }
+            rethrow;
+          }
+          owner.prepared = prepared;
+        }
+        if (owner.compensation != null) {
+          await _retryTextOperation(owner.compensation!);
+        } else {
+          final changes = <String, dynamic>{};
+          for (final entry in owner.prepared!.entries) {
+            final field = owner.owners[entry.key]!;
+            changes[entry.key] = {
+              'context': field.context,
+              'allocation': field.allocation,
+              'actor': field.actor,
+              'update': entry.value.update.encoded,
+            };
+          }
+          await _command(owner.capture.entity, 'task.textEditUndone', {
+            'operation': id,
+            'changes': changes,
+          }, onPrepared: (receipt) => owner.compensation = receipt);
+        }
+        _commitNativeCompensation(owner, id);
+        undone.add(id);
+      } catch (error) {
+        try {
+          await _refresh();
+        } catch (_) {
+          /* Keep exact intent and private preparation. */
+        }
+        if (owner?.compensation != null &&
+            confirmedOperations([owner!.compensation!]).isNotEmpty) {
+          try {
+            _commitNativeCompensation(owner, id);
+            undone.add(id);
+            continue;
+          } catch (_) {
+            /* Preserve for retry. */
+          }
+        }
+        failure ??= error;
+        remaining.add(id);
+      }
+    }
+    return TaskUndoResult(
+      undone,
+      remaining,
+      newer,
+      error: failure,
+      retainedSuccessorCount: retained,
+      removedSuccessorCount: removed,
+    );
+  }
+
+  void _commitNativeCompensation(_NativeTextOperation owner, String id) {
+    _requireConfirmed([owner.compensation!]);
+    for (final value in owner.prepared!.values) {
+      value.commit(receiptUpdate: value.update);
+    }
+    for (final name in owner.fields) {
+      final field = owner.owners[name]!;
+      field.applied.add(owner.compensation!.id);
+      final stack = _nativeUndoStacks[field.document]!;
+      if (stack.isNotEmpty && stack.last == id) stack.removeLast();
+    }
+    owner.prepared = null;
+  }
+
+  Future<TaskUndoResult> undoOperations(List<String> operations) =>
+      _serialize(() => _undoOperations(operations));
+
+  Future<TaskUndoResult> _undoOperations(List<String> operations) async {
     await _refresh();
     if (operations.isEmpty || operations.toSet().length != operations.length) {
       throw FormatFailure('Choose distinct saved operations.');
@@ -1891,10 +3693,14 @@ class TaskStore {
         throw FormatFailure('The saved operation is unavailable.');
       }
       final event = LogEvent.decode(found.single['raw'] as String);
-      if (!reversibleTaskEvents.contains(event.type)) {
+      if (!reversibleTaskEvents.contains(event.type) &&
+          event.type != 'task.textEdited') {
         throw FormatFailure('This operation cannot be undone.');
       }
       targets[id] = event;
+    }
+    if (targets.values.any((event) => event.type == 'task.textEdited')) {
+      return _undoMixedTextOperations(operations, targets);
     }
     var newer = false;
     final alreadyUndone = <String>{};
@@ -1915,7 +3721,7 @@ class TaskStore {
     try {
       await _appendCommands([
         for (final id in operations.where((id) => !alreadyUndone.contains(id)))
-          targets[id]!.type == 'task.completed' &&
+          isTaskCompletion(targets[id]!.type) &&
                   targets[id]!.data['successor'] != null
               ? (
                   targets[id]!.entity,
@@ -1946,9 +3752,14 @@ class TaskStore {
     };
     final successors = {
       for (final id in operations.where(undone.contains))
-        if (targets[id]!.type == 'task.completed' &&
+        if (isTaskCompletion(targets[id]!.type) &&
             targets[id]!.data['successor'] != null)
           (targets[id]!.data['successor'] as Map)['id'] as String,
+    };
+    final retainedHistorical = {
+      for (final id in operations.where(undone.contains))
+        if (targets[id]!.type == 'task.completedKeepingSuccessor')
+          (targets[id]!.data['retainedSuccessor'] as Map)['id'] as String,
     };
     final suppressed = successors
         .where((id) => _projectEntity(id)?['successorSuppressed'] == true)
@@ -1958,10 +3769,11 @@ class TaskStore {
       operations.where((id) => !undone.contains(id)),
       newer,
       error: error,
-      retainedSuccessorCount: successors.length - suppressed,
+      retainedSuccessorCount:
+          {...successors, ...retainedHistorical}.length - suppressed,
       removedSuccessorCount: suppressed,
     );
-  });
+  }
 
   Future<BulkTaskResult> deleteTasks(
     List<String> ids, {
@@ -2027,8 +3839,17 @@ class TaskStore {
     _closed = true;
     return _closing ??= _queue.then((_) async {
       try {
+        for (final capture in _textCaptures) {
+          for (final field in capture.fields.values) {
+            field.document.dispose();
+          }
+        }
+        for (final field in _nativeUndoFields.values) {
+          field.document.dispose();
+        }
         db.close();
       } finally {
+        _recurringTextMemo.clear();
         await lock.close();
       }
     });

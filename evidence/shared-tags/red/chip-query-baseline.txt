@@ -1,0 +1,384 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart
+00:00 +0: removing a chip retains unrelated query, caret, and active composition
+══╡ EXCEPTION CAUGHT BY RENDERING LIBRARY ╞═════════════════════════════════════════════════════════
+The following assertion was thrown during performLayout():
+'package:flutter/src/rendering/shifted_box.dart': Failed assertion: line 62 pos 12:
+'!debugNeedsLayout': is not true.
+
+Either the assertion indicates an error in the framework itself, or we should provide substantially
+more information in this error message to help you determine and fix the underlying cause.
+In either case, please report this assertion by filing a bug on GitHub:
+  https://github.com/flutter/flutter/issues/new?template=02_bug.yml
+
+The relevant error-causing widget was:
+  InputDecorator
+  InputDecorator:file:///workspace/tandemlog-shared-tags/lib/presentation/tag_input.dart:440:18
+
+When the exception was thrown, this was the stack:
+#2      RenderShiftedBox.computeDistanceToActualBaseline (package:flutter/src/rendering/shifted_box.dart:62:12)
+#3      RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#4      _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#5      _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#6      _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#7      RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#8      RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#9      RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#10     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#11     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#12     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#13     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#14     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#15     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#16     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#17     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#18     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#19     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#20     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#21     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#22     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#23     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#24     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#25     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#26     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#27     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#28     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#29     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#30     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#31     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#32     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#33     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#34     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#35     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#36     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#37     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#38     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#39     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#40     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#41     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#42     RenderShiftedBox.computeDistanceToActualBaseline (package:flutter/src/rendering/shifted_box.dart:65:22)
+#43     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#44     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#45     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#46     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#47     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#48     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#49     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#50     RenderShiftedBox.computeDistanceToActualBaseline (package:flutter/src/rendering/shifted_box.dart:65:22)
+#51     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#52     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#53     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#54     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#55     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#56     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#57     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#58     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#59     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#60     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#61     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#62     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#63     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#64     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#65     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#66     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#67     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#68     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#69     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#70     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#71     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#72     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#73     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#74     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#75     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#76     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#77     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#78     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#79     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#80     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#81     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#82     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#83     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#84     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#85     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#86     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#87     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#88     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#89     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#90     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#91     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#92     _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#93     _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#94     _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#95     RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#96     RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#97     RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#98     RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#99     RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#100    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#101    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#102    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#103    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#104    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#105    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#106    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#107    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#108    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#109    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#110    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#111    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#112    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#113    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#114    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#115    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#116    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#117    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#118    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#119    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#120    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#121    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#122    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#123    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#124    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#125    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#126    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#127    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#128    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#129    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#130    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#131    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#132    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#133    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#134    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#135    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#136    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#137    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#138    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#139    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#140    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#141    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#142    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#143    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#144    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#145    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#146    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#147    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#148    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#149    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#150    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#151    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#152    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#153    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#154    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#155    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#156    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#157    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#158    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#159    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#160    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#161    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#162    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#163    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#164    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#165    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#166    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#167    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#168    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#169    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#170    RenderShiftedBox.computeDistanceToActualBaseline (package:flutter/src/rendering/shifted_box.dart:65:22)
+#171    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#172    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#173    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#174    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#175    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#176    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#177    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#178    RenderProxyBoxMixin.computeDistanceToActualBaseline (package:flutter/src/rendering/proxy_box.dart:98:19)
+#179    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#180    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#181    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#182    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#183    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#184    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#185    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#186    RenderBoxContainerDefaultsMixin.defaultComputeDistanceToHighestActualBaseline (package:flutter/src/rendering/box.dart:3343:32)
+#187    RenderFlex.computeDistanceToActualBaseline (package:flutter/src/rendering/flex.dart:809:26)
+#188    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#189    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#190    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#191    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#192    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#193    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#194    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#195    RenderBoxContainerDefaultsMixin.defaultComputeDistanceToFirstActualBaseline (package:flutter/src/rendering/box.dart:3323:36)
+#196    RenderFlex.computeDistanceToActualBaseline (package:flutter/src/rendering/flex.dart:810:24)
+#197    RenderBox.getDistanceToActualBaseline.<anonymous closure> (package:flutter/src/rendering/box.dart:2518:26)
+#198    _Baseline.memoize.ifAbsent (package:flutter/src/rendering/box.dart:1088:42)
+#199    _LinkedHashMapMixin.putIfAbsent (dart:_compact_hash:631:23)
+#200    _Baseline.memoize (package:flutter/src/rendering/box.dart:1089:18)
+#201    RenderBox._computeWithTimeline (package:flutter/src/rendering/box.dart:1620:32)
+#202    RenderBox._computeIntrinsics (package:flutter/src/rendering/box.dart:1598:26)
+#203    RenderBox.getDistanceToActualBaseline (package:flutter/src/rendering/box.dart:2514:12)
+#204    RenderBox.getDistanceToBaseline (package:flutter/src/rendering/box.dart:2492:16)
+#205    ChildLayoutHelper.getBaseline (package:flutter/src/rendering/layout_helper.dart:81:18)
+#206    _RenderDecoration._getBaseline (package:flutter/src/material/input_decorator.dart:911:30)
+#207    _RenderDecoration._layout (package:flutter/src/material/input_decorator.dart:1079:67)
+#208    _RenderDecoration.performLayout (package:flutter/src/material/input_decorator.dart:1390:44)
+#209    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#210    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#211    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#212    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#213    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#214    RenderTapRegion.layout (package:flutter/src/widgets/tap_region.dart:782:11)
+#215    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#216    RenderLeaderLayer.performLayout (package:flutter/src/rendering/proxy_box.dart:4508:11)
+#217    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#218    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#219    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#220    RenderTapRegion.layout (package:flutter/src/widgets/tap_region.dart:782:11)
+#221    RenderPadding.performLayout (package:flutter/src/rendering/shifted_box.dart:262:12)
+#222    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#223    ChildLayoutHelper.layoutChild (package:flutter/src/rendering/layout_helper.dart:62:11)
+#224    RenderFlex._computeSizes (package:flutter/src/rendering/flex.dart:1237:28)
+#225    RenderFlex.performLayout (package:flutter/src/rendering/flex.dart:1329:32)
+#226    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#227    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#228    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#229    RenderPadding.performLayout (package:flutter/src/rendering/shifted_box.dart:262:12)
+#230    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#231    _RenderSingleChildViewport.performLayout (package:flutter/src/widgets/single_child_scroll_view.dart:502:14)
+#232    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#233    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#234    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#235    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#236    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#237    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#238    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#239    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#240    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#241    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#242    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#243    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#244    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#245    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#246    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#247    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#248    _RenderCustomClip.performLayout (package:flutter/src/rendering/proxy_box.dart:1549:11)
+#249    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#250    ChildLayoutHelper.layoutChild (package:flutter/src/rendering/layout_helper.dart:62:11)
+#251    RenderFlex._computeSizes (package:flutter/src/rendering/flex.dart:1275:26)
+#252    RenderFlex.performLayout (package:flutter/src/rendering/flex.dart:1329:32)
+#253    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#254    RenderPadding.performLayout (package:flutter/src/rendering/shifted_box.dart:262:12)
+#255    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#256    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#257    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#258    RenderProxyBoxMixin.performLayout (package:flutter/src/rendering/proxy_box.dart:118:18)
+#259    _RenderCustomClip.performLayout (package:flutter/src/rendering/proxy_box.dart:1549:11)
+#260    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#261    _RenderLayoutBuilder.performLayout (package:flutter/src/widgets/layout_builder.dart:449:14)
+#262    RenderObject.layout (package:flutter/src/rendering/object.dart:2923:7)
+#263    MultiChildLayoutDelegate.layoutChild (package:flutter/src/rendering/custom_layout.dart:180:12)
+#264    _ScaffoldLayout.performLayout (package:flutter/src/material/scaffold.dart:1113:7)
+#265    MultiChildLayoutDelegate._callPerformLayout (package:flutter/src/rendering/custom_layout.dart:246:7)
+#266    RenderCustomMultiChildLayoutBox.performLayout (package:flutter/src/rendering/custom_layout.dart:417:14)
+#267    RenderObject._layoutWithoutResize (package:flutter/src/rendering/object.dart:2771:7)
+#268    PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1174:18)
+#269    PipelineOwner.flushLayout (package:flutter/src/rendering/object.dart:1187:15)
+#270    AutomatedTestWidgetsFlutterBinding.drawFrame (package:flutter_test/src/binding.dart:2434:27)
+#271    RendererBinding._handlePersistentFrameCallback (package:flutter/src/rendering/binding.dart:558:5)
+#272    SchedulerBinding._invokeFrameCallback (package:flutter/src/scheduler/binding.dart:1430:15)
+#273    SchedulerBinding.handleDrawFrame (package:flutter/src/scheduler/binding.dart:1345:9)
+#274    AutomatedTestWidgetsFlutterBinding.pump.<anonymous closure> (package:flutter_test/src/binding.dart:2261:9)
+#277    TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#278    AutomatedTestWidgetsFlutterBinding.pump (package:flutter_test/src/binding.dart:2250:27)
+#279    WidgetTester.pumpAndSettle.<anonymous closure> (package:flutter_test/src/widget_tester.dart:719:23)
+#282    TestAsyncUtils.guard (package:flutter_test/src/test_async_utils.dart:74:41)
+#283    WidgetTester.pumpAndSettle (package:flutter_test/src/widget_tester.dart:712:27)
+#284    main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart:59:20)
+<asynchronous suspension>
+#285    testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#286    TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided 7 frames from class _AssertionError, dart:async, and package:stack_trace)
+
+The following RenderObject was being processed when the exception was fired: _RenderDecoration#e9258 relayoutBoundary=up9:
+  needs compositing
+  creator: _Decorator ← Semantics ← InputDecorator ← Container-[GlobalKey#5bf14] ← TapRegion ←
+    CompositedTransformTarget ← TextFieldTapRegion ← TagInput ← Padding ← Column ← _FormScope ←
+    WillPopScope ← ⋯
+  parentData: <none> (can use size)
+  constraints: BoxConstraints(w=860.0, 0.0<=h<=Infinity)
+  layer: TransformLayer#73b40
+  size: Size(860.0, 80.0)
+This RenderObject had the following descendants (showing up to depth 5):
+    input: RenderFlex#f7453 relayoutBoundary=up10
+      child 1: RenderFlex#54250 relayoutBoundary=up11
+        child 1: RenderConstrainedBox#75cea relayoutBoundary=up12
+          child: RenderSemanticsAnnotations#50601 relayoutBoundary=up13
+            child: RenderSemanticsAnnotations#7e81f relayoutBoundary=up14
+        child 2: RenderSemanticsAnnotations#b4d8e relayoutBoundary=up12
+          child: _RenderInputPadding#001c7 relayoutBoundary=up13
+            child: RenderConstrainedBox#d469a relayoutBoundary=up14
+        child 3: RenderSemanticsAnnotations#b1c83 relayoutBoundary=up12
+          child: _RenderInputPadding#a6ac8 relayoutBoundary=up13
+            child: RenderConstrainedBox#50aa3 relayoutBoundary=up14
+    label: RenderTransform#0a84e relayoutBoundary=up10
+      child: RenderAnimatedOpacity#0e010 relayoutBoundary=up11
+        child: RenderParagraph#e3d47 relayoutBoundary=up12
+          text: TextSpan
+    helperError: RenderConstrainedBox#3ff59 relayoutBoundary=up10
+    container: RenderCustomPaint#26b7c
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: TextEditingValue:<TextEditingValue(text: ┤Fresh├, selection:
+TextSelection.collapsed(offset: 2, affinity: TextAffinity.downstream, isDirectional: false),
+composing: TextRange(start: 0, end: 5))>
+  Actual: TextEditingValue:<TextEditingValue(text: ┤├, selection: TextSelection.collapsed(offset: 0,
+affinity: TextAffinity.downstream, isDirectional: false), composing: TextRange(start: -1, end: -1))>
+chip deletion must not consume query
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart:60:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart line 60
+The test description was:
+  removing a chip retains unrelated query, caret, and active composition
+════════════════════════════════════════════════════════════════════════════════════════════════════
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following message was thrown:
+Multiple exceptions (2) were detected during the running of the current test, and at least one was
+unexpected.
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: removing a chip retains unrelated query, caret, and active composition [E]
+  Test failed. See exception logs above.
+  The test description was: removing a chip retains unrelated query, caret, and active composition
+  
+00:01 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-shared-tags/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition

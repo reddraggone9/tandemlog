@@ -1,0 +1,16 @@
+00:00 +0: loading /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart
+00:00 +0: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: title normalization respects composition and selection-only history
+00:00 +1: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+00:00 +2: /workspace/tandemlog-checklist-presentation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:00 +3: /workspace/tandemlog-checklist-presentation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +4: /workspace/tandemlog-checklist-presentation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+00:01 +5: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: dirty close can be cancelled, dismissed and asked repeatedly without popping
+00:01 +6: /workspace/tandemlog-checklist-presentation/test/checklist_item_native_editor_test.dart: native caret-only edits stay clean; composition propagates; committed merged text renews before close
+00:01 +7: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: save through close guard renews dirty baseline; reopening starts clean
+00:01 +8: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: failed save retains draft; pending receipt freezes fields and close but permits exact retry
+00:01 +9: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: IME composition cannot save; length errors retain fields
+00:02 +10: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: narrow enlarged editor and keyboard keep multiline input and actions reachable
+00:02 +11: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: busy Save admits one command and freezes draft until success
+00:02 +12: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+00:02 +13: /workspace/tandemlog-checklist-presentation/test/checklist_presentation_test.dart: render dark desktop and narrow enlarged components
+00:02 +14: All tests passed!

@@ -1,0 +1,244 @@
+{
+  "recorded_utc": "2026-10-04T20:26:07.091196+00:00",
+  "production_adoption": false,
+  "production_base": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+  "branch": "experiment/text-activation-policy",
+  "test_first_commit": "bc43c9b",
+  "followup_test_first_commit": "2330222",
+  "scope": "Linux x64 synthetic API/FFI/controller and private journal tests; no new application protocol, UI or release",
+  "toolchain": {
+    "flutter": "3.47.5",
+    "dart": "3.13.4",
+    "rust": "1.99.0",
+    "yrs": "0.28.0"
+  },
+  "native_library": {
+    "sha256": "5110acefb17f3ffe2cb28bf540822eac8a073113469c7113a9025bf43d55a899",
+    "build": "release locked isolated target"
+  },
+  "checks": {
+    "activation_cases": 22,
+    "native_prepare_cases": 4,
+    "recovery_followup_cases": 4,
+    "activation_total": 30,
+    "original_native_cases": 52,
+    "original_editor_session_widget_cases": 10,
+    "production_clock_cases": 7,
+    "production_future_clock_warning_cases": 1,
+    "linux_dart_ffi": "pass",
+    "activation_analysis": "pass"
+  },
+  "frozen_hashes_verified": {
+    "experiments/yrs-spike/activation_lab/test/activation_test.dart": "d2bf867966c0eca8f0d4b289a7b7d5b918f1798a082d252864c0603b43565cee",
+    "experiments/yrs-spike/activation_lab/test/native_prepare_test.dart": "0cfaf8829d1e72db4991ebcd74d6bb159146d1a77cf5ab69b5bc9006db29d761",
+    "experiments/yrs-spike/evidence/activation-policy-matrix.json": "a43c7b10dc4bd3e359f69ba39069272660318238c5e2a32b7408f07ab37646c2",
+    "experiments/yrs-spike/evidence/activation-draft-policy-matrix.json": "1aeb611ef8b521fd9dec859b6500a64dc8348d6d710f41851f1351e88cddd9eb",
+    "experiments/yrs-spike/activation_lab/test/activation_safety_test.dart": "9d2a5b375a7de5925b5a5556609a88c2891e09081157b9a2d083ac13da9d00e6"
+  },
+  "original_assertions_unchanged": true,
+  "cases": [
+    {
+      "id": "B01",
+      "case": "Historical v3 remains unchanged",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B02",
+      "case": "Legacy scalar loses after activation",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B03",
+      "case": "Arrival-order independence",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B04",
+      "case": "Baseline validates original historical projection",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B05",
+      "case": "Scope of loser policy",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B06",
+      "case": "Legacy Undo across the cut",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B07",
+      "case": "Same shared basis, independent first field edits",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B08",
+      "case": "One-time baseline availability guard",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B09",
+      "case": "Explicit bootstrap issuer/reference",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B10",
+      "case": "Different independent snapshot seeds remain unsafe",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B11",
+      "case": "Every acknowledged upgraded update retained",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B12",
+      "case": "Save preparation/retry/crash boundary",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B13",
+      "case": "Full native checkpoint replay",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B14",
+      "case": "Old reader and backward readability",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B15",
+      "case": "Independent fields and successors",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B16",
+      "case": "Clock metadata remains original",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B17",
+      "case": "Selective native Undo remains causal compensation",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B18",
+      "case": "One chosen device can proceed",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B19",
+      "case": "Gate text editing, not only Save",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B20",
+      "case": "Different scalar draft base survives activation without replacement",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B21",
+      "case": "A matching string does not supply a captured native base",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    },
+    {
+      "id": "B22",
+      "case": "Explicit transition to verified editing preserves remote work",
+      "status": "pass",
+      "scope": "bounded Linux synthetic coordinator, production decoder/projection and native APIs; see executable test and README limits"
+    }
+  ],
+  "additional_followups": [
+    {
+      "id": "F01",
+      "case": "Unresolved historical Undo dependency gates activation",
+      "before": "fail",
+      "after": "pass"
+    },
+    {
+      "id": "F02",
+      "case": "Pending checkpoint really executes native restore",
+      "before": "pass",
+      "after": "pass"
+    },
+    {
+      "id": "F03",
+      "case": "Same-process unknown-receipt retry appends exactly once",
+      "before": "fail",
+      "after": "pass"
+    },
+    {
+      "id": "F04",
+      "case": "Incomplete owned journal tail blocks writes and retains bytes",
+      "before": "fail",
+      "after": "pass"
+    }
+  ],
+  "observations": [
+    "B03 exercises all 120 permutations of five supplied records plus duplicates, not all possible histories.",
+    "B01 opens frozen 22-event stable v3 fixture through production TaskStore; cache reopen reads zero old log bytes and original canonical hashes/writer identity remain.",
+    "B13 actually restores full native pending state, then compares tail replay and a fresh Dart OS process using journal-only input.",
+    "B14 production old TaskStore rejects unknown required event without advancing events/stream checkpoints or rewriting input.",
+    "B16 preserves raw future clock; existing production warning test separately proves readable immutable future records and warning permits writes.",
+    "B19-B22 preserve captured scalar draft value/selection/composition, reject implicit native reattachment and composing Save, then explicitly open new native capture."
+  ],
+  "fixed_reproduced_defects": [
+    "Idempotent retry attempted to delete an already removed prepared file.",
+    "Checkpoint restore returned the cancelled original native field handle.",
+    "Baseline admitted unresolved historical Undo dependency.",
+    "Same-process unknown-receipt retry appended an already complete record again.",
+    "Incomplete owned journal tail allowed further writes."
+  ],
+  "remaining_gates": [
+    "Single issuer/reference is explicit test configuration; production bootstrap agreement and UX are not designed or approved.",
+    "Synthetic private POSIX JSONL journal/JSON checkpoint is not production SQLite/SAF/transport integration.",
+    "Interrupted native Undo durability is not implemented: current happy-path compensation applies native Undo before append.",
+    "Durable actor ownership/collision registry, bounded native resource policy and parser isolation remain open.",
+    "New prepare/apply_local paths and coordinator have not run on Windows or Android.",
+    "No process-death durability promise for unsaved drafts; no automatic incompatible-root merge.",
+    "Existing Android editor-lab acceptance is partial parent-reported evidence for its older exact APK, not this coordinator."
+  ],
+  "logs": {
+    "activation-policy-red.txt": "8a56c2ffae740dcf35e8d94ada38471add812adab764990e4dcd6cdf5963d654",
+    "activation-policy-tests.txt": "d974b37565f7d98f26dbff34324430c91a9d0686e60023cc877e3384de2911df",
+    "activation-followup-red.txt": "edb9f94610a5a3890cc8fcd1c3848f9d34b49d2e4fb0e5b2ab0d9c0d47990918",
+    "activation-native-regressions.txt": "5d04a0be03a7746503a079ac383965ad111752785fcc6000f1b39ae1c92c9cc6",
+    "activation-editor-regressions.txt": "138f21a2f77175b10162f6d23c31871189e5fc5045b8450095fb1514dd85139a",
+    "activation-clock-regressions.txt": "1e63f4e3ddb8adf5691eb6fbb6c1826495e04237b9761c063cf88fd264fe001c",
+    "activation-future-clock-warning.txt": "770340062590f7b20a5f9c7dda34faa2adc83b17bb4bf28ce00f2df6fc10419c",
+    "activation-analysis.txt": "cc45ffa0712e2ae07df91e31db56be137733f26aa151484c530786eddb4ad009"
+  },
+  "executable_source_sha256": {
+    "experiments/yrs-spike/activation_lab/bin/replay_probe.dart": "6eacac57bb8ef77eb11184e10689ed8eb5943a97262b5152fcea4b498421920c",
+    "experiments/yrs-spike/activation_lab/lib/activation.dart": "af3119846a45b3455850462a0b63f23e9e1a4565daaf003361d1ad170754810b",
+    "experiments/yrs-spike/activation_lab/lib/flutter_draft.dart": "e6ffff09e71b3eae797313cc0ffac1b7cec6b74bcb2c97f87c01acfbbcc35996",
+    "experiments/yrs-spike/activation_lab/test/activation_safety_test.dart": "9d2a5b375a7de5925b5a5556609a88c2891e09081157b9a2d083ac13da9d00e6",
+    "experiments/yrs-spike/activation_lab/test/activation_test.dart": "d2bf867966c0eca8f0d4b289a7b7d5b918f1798a082d252864c0603b43565cee",
+    "experiments/yrs-spike/activation_lab/test/native_prepare_test.dart": "0cfaf8829d1e72db4991ebcd74d6bb159146d1a77cf5ab69b5bc9006db29d761",
+    "experiments/yrs-spike/src/lib.rs": "019091a724df1a7d800c38fe833a66b3835329b33d363ea86da0d1717445a148",
+    "experiments/yrs-spike/src/admission.rs": "542042bae1182cc97ec1de375b1276f82424f9861699dbcdf22f49ba3b9516d6",
+    "experiments/yrs-spike/Cargo.lock": "cfc3e18f5eacee2e46138bc9392d33adb2d66b0a535d1fff59983ecbb5b5f0f5"
+  }
+}

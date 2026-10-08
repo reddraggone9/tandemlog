@@ -1,0 +1,84 @@
+test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state (test_shared_history_materializer.SharedHistoryMaterializer.test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state) ... FAIL
+test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival (test_shared_history_materializer.SharedHistoryMaterializer.test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival) ... FAIL
+test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners (test_shared_history_materializer.SharedHistoryMaterializer.test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners) ... FAIL
+test_H04_materializer_and_session_handles_cannot_alias (test_shared_history_materializer.SharedHistoryMaterializer.test_H04_materializer_and_session_handles_cannot_alias) ... FAIL
+test_H05_incremental_history_has_no_session_undo_replay_budget (test_shared_history_materializer.SharedHistoryMaterializer.test_H05_incremental_history_has_no_session_undo_replay_budget) ... FAIL
+test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets (test_shared_history_materializer.SharedHistoryMaterializer.test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets) ... FAIL
+
+======================================================================
+FAIL: test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state (test_shared_history_materializer.SharedHistoryMaterializer.test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 31, in test_H01_original_packets_duplicates_and_concurrent_delivery_match_owned_state
+    self.materializer()
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 20, in materializer
+    return self.b.ok('materializer_new', name=name, seed=seed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival (test_shared_history_materializer.SharedHistoryMaterializer.test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 42, in test_H02_missing_causal_dependency_survives_checkpoint_and_later_arrival
+    self.materializer()
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 20, in materializer
+    return self.b.ok('materializer_new', name=name, seed=seed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners (test_shared_history_materializer.SharedHistoryMaterializer.test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 60, in test_H03_rejection_quarantines_disposable_state_and_preserves_other_owners
+    self.materializer()
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 20, in materializer
+    return self.b.ok('materializer_new', name=name, seed=seed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_H04_materializer_and_session_handles_cannot_alias (test_shared_history_materializer.SharedHistoryMaterializer.test_H04_materializer_and_session_handles_cannot_alias)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 75, in test_H04_materializer_and_session_handles_cannot_alias
+    self.materializer()
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 20, in materializer
+    return self.b.ok('materializer_new', name=name, seed=seed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_H05_incremental_history_has_no_session_undo_replay_budget (test_shared_history_materializer.SharedHistoryMaterializer.test_H05_incremental_history_has_no_session_undo_replay_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 83, in test_H05_incremental_history_has_no_session_undo_replay_budget
+    self.materializer(sessionBytes=1)
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 20, in materializer
+    return self.b.ok('materializer_new', name=name, seed=seed,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown prototype command
+
+======================================================================
+FAIL: test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets (test_shared_history_materializer.SharedHistoryMaterializer.test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_shared_history_materializer.py", line 102, in test_H06_private_save_packets_do_not_repeat_prior_generations_delete_sets
+    self.assertLessEqual(sizes[-1], sizes[0] + 48,
+AssertionError: 145 not less than or equal to 64 : A private Save must publish its own transactions, not historical deletes.
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.018s
+
+FAILED (failures=6)

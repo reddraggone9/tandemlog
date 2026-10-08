@@ -42,3 +42,10 @@ run37216546987 passes52 tests + Dart FFI on native Linux/Windows and cross-build
 Android ARM64/x86_64. Additional gates8pass/0fail/4not-run remain separately
 reported. Test-first commit cac56d3 precedes src/admission.rs (16:15:02 vs
 16:17:29UTC). All original assertion hashes are unchanged.
+
+The [isolated activation coordinator](activation_lab/README.md) subsequently
+tests approved legacy text exclusion, a proposed shared baseline and captured
+draft handling against actual production decoder/projection/native APIs.
+Its30 Linux tests and stronger recovery checks have separate frozen expectations
+and [results](evidence/activation-results.json). No production adoption, bootstrap
+UX, new Android/Windows coordinator acceptance or crash-safe Undo is claimed.

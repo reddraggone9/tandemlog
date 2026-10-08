@@ -1,0 +1,21 @@
+00:00 +0: loading /workspace/tandemlog-checklists/test/checklist_suppressed_capture_test.dart
+00:00 +0: canceled untouched checklist successor cannot open a private native editor or become visible through capture
+00:00 +0 -1: canceled untouched checklist successor cannot open a private native editor or become visible through capture [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<TaskTextCapture>'>
+     Which: emitted <Instance of 'TaskTextCapture'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/checklist_suppressed_capture_test.dart 83:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_suppressed_capture_test.dart 79:17  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/checklist_suppressed_capture_test.dart 15:20  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog-checklists/test/checklist_suppressed_capture_test.dart: canceled untouched checklist successor cannot open a private native editor or become visible through capture

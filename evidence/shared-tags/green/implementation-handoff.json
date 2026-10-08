@@ -1,0 +1,39 @@
+{
+  "scope": "Shared B tag control production handoff, no durable format/native/dependency changes",
+  "validation": {
+    "analyzer": "No issues found",
+    "hardware": "7 passed: active composition propagation and noncomposing Enter/numpad selection",
+    "combined_before_fixture_correction": "57 passed, 5 failed only independent semantics fixture; root owns correcting tooltip-vs-label assertions, semantics disposal and successful close fixture",
+    "native": "Pending root native Linux acceptance and independent visual review",
+    "full_suite": "Pending root full-suite run"
+  },
+  "sha256": {
+    "lib/presentation/tag_input.dart": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49",
+    "lib/presentation/tag_filter_picker.dart": "bc4242262a07f90a86aeb24889cef66ba4fd262a3fb1a92696b29e7a8aacba7e",
+    "lib/presentation/task_editor.dart": "a23b96228fc6dc4100df5afd7989fab2df127683296beb6e0fec35b9c7ba892f",
+    "test/tag_input_test.dart": "849c67f54c6bd8dba8668865114ec3c90fa9a1d73671c2924045fc9a13557ec8",
+    "test/task_editor_tags_test.dart": "e25a4e9816e3bda7389c89bb53138ff6e8818160ae67e389504f6054ae188c19",
+    "evidence/shared-tags/red/geometry-baseline.txt": "5b1e3e8c1e45d92385bc3b381f7849277ebe95d0842b68cb0132554ad7b950ff",
+    "evidence/shared-tags/red/geometry-manifest.json": "00b50792caa6a1a399603532c0b9da9f1cbc9838387e17f862ef61eeb194189b",
+    "evidence/shared-tags/red/hardware-ime-baseline.txt": "55b48d818b7a74380e3488b94eb09a8097bc814b1d5d73397c5bb899f2e5cd7a",
+    "evidence/shared-tags/red/widget-baseline.txt": "a622eb5463469a8dc1e15d8eb4c3f18b289e1e8c9b7474b22a35ede68b728104",
+    "evidence/shared-tags/red/semantics-controls-baseline.txt": "586d9afb777606a992579c242bd35afb9a56a4c94163f8f7a5bfd1b5d23aca60",
+    "evidence/shared-tags/red/semantics-manifest.json": "1efd82503e39fd0a19df62f6310665283b85005e19c7510e4e09f50661fd0397",
+    "evidence/shared-tags/red/hardware-selection-manifest.json": "2f7d111fc64b18190161e616721ff754bfe18f7b4c12db678d7010e5db6046c8",
+    "evidence/shared-tags/red/draft-safety-baseline.txt": "3b9f15a52c062ecfa82c55c93d0557c4324ee6d4982e52d220a49f6e54b1253b",
+    "evidence/shared-tags/red/creator-key-negative-control.txt": "1b84347c57b382cf5fc136ccfba9c0461a0c25ec56dfa5b095b0d7feb5c9929e",
+    "evidence/shared-tags/red/semantics-baseline.txt": "f54de8bd8287b549c55e75031d80d3cce794d971af25e0ee5ed3ee01fdd4e99f",
+    "evidence/shared-tags/red/native-manifest.json": "5b1f851d3d37b385ad3954d32eed391ae8c2ffb3412f8495f6fb3dd446ffba22",
+    "evidence/shared-tags/red/chip-query-baseline.txt": "0418ac4269f22139f9963dd351b9d802d82b1da5c7843c3e528a4e05d988412e",
+    "evidence/shared-tags/red/geometry-input-source.dart.txt": "bf2dea342816a92990f83d3f4a428ae9c3a3200443f2f796c48ff025f939981e",
+    "evidence/shared-tags/red/native-baseline.txt": "5dc48cb5a080e8493663ea13588d69b6667cea5c622cbdc29b858b7292b0b27d",
+    "evidence/shared-tags/red/semantics-controls-manifest.json": "927910795c8ba32763483a0d077a5b4cce4e5a08c2f53f536b2570e94023b6ee",
+    "evidence/shared-tags/red/hardware-selection-baseline.txt": "5bb646bcaca5529df3d3b780cef15b533bae23af10a1e563d2ece7e296054061",
+    "evidence/shared-tags/red/manifest.json": "34aa4444f1d60fa2958b33d42ba6ab1994bad46c625bc65a29b570d5863ffe14",
+    "evidence/shared-tags/red/draft-safety-manifest.json": "f3487cb3ee784be8360a628a4e3833ccd2f6036e1d58d1f561e9de30bf67bb94",
+    "evidence/shared-tags/red/followup-manifest.json": "7a41bf9ecdc3c73b564454c5ba8fa9473dc27a6121fe78f41d3c41c3f905a1c9",
+    "evidence/shared-tags/green/analyze.txt": "63e6c3970908cdaa68332943f5cc6aa0cdaa53a2ce126fef59193b7ac5a55855",
+    "evidence/shared-tags/green/hardware-selection.txt": "ae8ed5f1fc91743a1df060e8654beba8919e840deb25c7bdb0ef952066c0837f",
+    "evidence/shared-tags/green/focused-before-fixture-correction.txt": "afc5ea022eb6836ab432aa28fbd137dc105c06baafc4ba8545ec4770452af419"
+  }
+}

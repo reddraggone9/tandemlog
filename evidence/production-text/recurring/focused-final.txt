@@ -1,0 +1,37 @@
+00:00 +0: loading /workspace/tandemlog/test/recurring_store_test.dart
+00:00 +0: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +1: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +2: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +3: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +4: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +5: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +6: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +7: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +8: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:00 +9: /workspace/tandemlog/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:01 +10: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:02 +11: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:02 +12: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild
+00:02 +13: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:02 +14: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:03 +15: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:03 +16: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore mixed historical successor initialization refuses without changing history
+00:03 +17: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:03 +18: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:04 +19: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:04 +20: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:04 +21: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:04 +22: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:04 +23: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore bulk capture with native engine creates independently editable native tasks
+00:04 +24: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:05 +25: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:05 +26: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:05 +27: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:05 +28: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:05 +29: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:05 +30: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:05 +31: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=true
+00:06 +32: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:06 +33: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:06 +34: /workspace/tandemlog/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:06 +35: All tests passed!

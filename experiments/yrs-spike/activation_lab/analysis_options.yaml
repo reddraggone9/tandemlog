@@ -1,0 +1,10 @@
+include: package:flutter_lints/flutter.yaml
+analyzer:
+  language:
+    strict-casts: true
+    strict-inference: true
+
+linter:
+  rules:
+    # Deliberate source imports across isolated probes; no app runtime imports it.
+    avoid_relative_lib_imports: false

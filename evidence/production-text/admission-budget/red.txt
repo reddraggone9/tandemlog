@@ -1,0 +1,70 @@
+FFFFFF
+======================================================================
+FAIL: test_U01_large_plaintext_inspect_rejected_preflight (test_admission_units.Units.test_U01_large_plaintext_inspect_rejected_preflight)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 12, in test_U01_large_plaintext_inspect_rejected_preflight
+    self.assertIn('admission',r.get('error',''))
+AssertionError: 'admission' not found in ''
+
+======================================================================
+FAIL: test_U02_explicit_inspector_units (test_admission_units.Units.test_U02_explicit_inspector_units)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 15, in test_U02_explicit_inspector_units
+    self.assertIn('error',self.b.request(op='inspect',update=p,admissionUnits=19))
+AssertionError: 'error' not found in {'structActors': [50]}
+
+======================================================================
+FAIL: test_U03_retained_deleted_identity_budget_preserves_undo (test_admission_units.Units.test_U03_retained_deleted_identity_budget_preserves_undo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 18, in test_U03_retained_deleted_identity_budget_preserves_undo
+    self.owner(5)
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 9, in owner
+    return self.b.ok('new',name='a',client=10,seed=seed,limits={'admissionUnits':units,'visibleUtf16':10000,'updateBytes':1048576})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown limit
+
+======================================================================
+FAIL: test_U04_remote_combined_budget_atomic (test_admission_units.Units.test_U04_remote_combined_budget_atomic)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 26, in test_U04_remote_combined_budget_atomic
+    self.owner(5);self.b.ok('edit',name='a',index=0,delete=1,insert='L')
+    ^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 9, in owner
+    return self.b.ok('new',name='a',client=10,seed=seed,limits={'admissionUnits':units,'visibleUtf16':10000,'updateBytes':1048576})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown limit
+
+======================================================================
+FAIL: test_U05_skips_and_delete_ranges_have_work_budget (test_admission_units.Units.test_U05_skips_and_delete_ranges_have_work_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 33, in test_U05_skips_and_delete_ranges_have_work_budget
+    self.assertIn('error',self.b.request(op='inspect',update=p,admissionUnits=10))
+AssertionError: 'error' not found in {'structActors': []}
+
+======================================================================
+FAIL: test_U06_restore_draft_inherit_and_validation (test_admission_units.Units.test_U06_restore_draft_inherit_and_validation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 37, in test_U06_restore_draft_inherit_and_validation
+    self.owner(4);self.b.ok('draft',name='d',source='a',client=30)
+    ^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_admission_units.py", line 9, in owner
+    return self.b.ok('new',name='a',client=10,seed=seed,limits={'admissionUnits':units,'visibleUtf16':10000,'updateBytes':1048576})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/tandemlog/experiments/yrs-spike/tests/test_contract.py", line 41, in ok
+    raise AssertionError(r['error'])
+AssertionError: unknown limit
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.014s
+
+FAILED (failures=6)

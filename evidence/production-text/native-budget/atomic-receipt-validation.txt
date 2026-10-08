@@ -1,0 +1,7 @@
+test_A01_receipt_history_budget_rejection_keeps_preparation_and_live_undo (test_resource_atomic.AtomicBudgetReceipt.test_A01_receipt_history_budget_rejection_keeps_preparation_and_live_undo) ... ok
+test_A02_queued_remote_budget_rejection_preserves_live_and_frozen_packet (test_resource_atomic.AtomicBudgetReceipt.test_A02_queued_remote_budget_rejection_preserves_live_and_frozen_packet) ... ok
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.002s
+
+OK

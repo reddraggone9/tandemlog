@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -13,6 +13,8 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
+
+import 'native_text_fixtures.dart';
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
@@ -25,6 +27,14 @@ import 'data_integrity_test.dart' show registerDataIntegrityTests;
 import 'task_precision_test.dart' show registerTaskPrecisionTests;
 import 'release_version_test.dart' show registerReleaseVersionTests;
 import 'date_time_rows_test.dart' show registerDateTimeRowTests;
+import 'text_workflow_test.dart' show registerTextWorkflowTests;
+import 'recurring_text_workflow_test.dart'
+    show registerRecurringTextWorkflowTests;
+import 'checklist_workflow_test.dart' show registerChecklistWorkflowTests;
+import 'checklist_lifecycle_test.dart' show registerChecklistLifecycleTests;
+import 'bulk_apply_semantics_test.dart' show registerBulkApplySemanticsTests;
+import 'field_layout_test.dart' show registerFieldLayoutTests;
+import 'tag_input_workflow_test.dart' show registerTagInputWorkflowTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -161,13 +171,20 @@ void main() {
   registerTaskPrecisionTests();
   registerReleaseVersionTests();
   registerDateTimeRowTests();
+  registerTextWorkflowTests();
+  registerRecurringTextWorkflowTests();
+  registerChecklistWorkflowTests();
+  registerChecklistLifecycleTests();
+  registerBulkApplySemanticsTests();
+  registerFieldLayoutTests();
+  registerTagInputWorkflowTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
     final root = await Directory.systemTemp.createTemp('rc4-phone-editors-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -175,7 +192,7 @@ void main() {
     final ids = [const Uuid().v4(), const Uuid().v4()];
     await writer.command(user, 'user.created', {'name': 'Alex Example'});
     for (var i = 0; i < ids.length; i++) {
-      await writer.command(ids[i], 'task.created', {
+      await writer.createNativeFixtureTask(ids[i], {
         'title': 'Synthetic editor task ${i + 1}',
         'description': 'Reference notes for keyboard regression.',
         'assignee': user,
@@ -275,6 +292,12 @@ void main() {
         tester.view.viewInsets = const FakeViewPadding(bottom: 420);
         await tester.pumpAndSettle();
         usable(initial);
+        if (find.byKey(const ValueKey('tag-results')).evaluate().isNotEmpty) {
+          await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+          await tester.pumpAndSettle();
+          expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+        }
+        expect(find.text('Cancel').last.hitTestable(), findsOneWidget);
         await tester.tap(find.text('Cancel').last);
         await tester.pumpAndSettle();
         expect(find.text('Unsaved changes'), findsNothing);
@@ -317,7 +340,7 @@ void main() {
     final root = await Directory.systemTemp.createTemp('rc4-phone-picker-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -335,7 +358,7 @@ void main() {
     });
     final user = const Uuid().v4(), task = const Uuid().v4();
     await writer.command(user, 'user.created', {'name': 'Alex Example'});
-    await writer.command(task, 'task.created', {
+    await writer.createNativeFixtureTask(task, {
       'title': 'Review synthetic supplies',
       'description': '',
       'assignee': user,
@@ -472,7 +495,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('rc4-native-');
       final folder = await Directory('${root.path}/shared').create(),
           profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -487,7 +510,7 @@ void main() {
         bool done = false,
       }) async {
         final id = ids[title] = const Uuid().v4();
-        await writer.command(id, 'task.created', {
+        await writer.createNativeFixtureTask(id, {
           'title': title,
           'description': 'Reference notes for $title',
           'assignee': assigned ?? user,
@@ -574,7 +597,10 @@ void main() {
       expect(find.byType(InputChip), findsNWidgets(2));
       final homeChip = find.byKey(const ValueKey('selected-tag-Home'));
       await tester.tap(
-        find.descendant(of: homeChip, matching: find.byTooltip('Delete')),
+        find.descendant(
+          of: homeChip,
+          matching: find.byTooltip('Remove #Home from tag filters'),
+        ),
       );
       await tester.pumpAndSettle();
       expect(find.byKey(const ValueKey('selected-tag-Home')), findsNothing);
@@ -690,7 +716,7 @@ void main() {
       );
       await selectTask(tester, ids['Read planning notes']!, control: false);
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
+        find.byKey(const ValueKey('addTags')),
         'Selection draft',
       );
       await selectTask(tester, ids['Arrange reference shelf']!, control: false);
@@ -700,7 +726,7 @@ void main() {
       expect(selectionSummary(2), findsOneWidget);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         'Selection draft',
@@ -711,7 +737,7 @@ void main() {
       expect(selectionSummary(3), findsOneWidget);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         isEmpty,
@@ -784,23 +810,42 @@ void main() {
       expect(find.byType(BulkTaskEditor), findsOneWidget);
       expect(find.widgetWithText(TextField, 'Title'), findsNothing);
       await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
+        find.byKey(const ValueKey('addTags')),
         'Frozen draft',
       );
-      await writer.command(ids['Review household supplies']!, 'task.edited', {
+      await writer.editNativeFixtureTask(ids['Review household supplies']!, {
         'description': 'Updated reference notes',
       });
+      final tagsBeforeRejectedSave = List<String>.from(
+        writer.rows.firstWhere(
+          (row) => row['id'] == ids['Review household supplies'],
+        )['tags'],
+      );
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
+            .controller!
+            .text,
+        'Frozen draft',
+      );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       expect(find.textContaining('changed'), findsWidgets);
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         'Frozen draft',
       );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       await tester.pump(const Duration(milliseconds: 300));
       await tester.pumpAndSettle();
@@ -809,7 +854,7 @@ void main() {
         writer.rows.firstWhere(
           (row) => row['id'] == ids['Review household supplies'],
         )['tags'],
-        isNot(contains('Frozen draft')),
+        tagsBeforeRejectedSave,
       );
       await tester.tap(find.text('Cancel'));
       await tester.pumpAndSettle();
@@ -824,15 +869,25 @@ void main() {
       }
       expect(
         tester
-            .widget<TextField>(find.widgetWithText(TextField, 'Add tags'))
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
             .controller!
             .text,
         isEmpty,
       );
-      await tester.enterText(
-        find.widgetWithText(TextField, 'Add tags'),
+      await tester.enterText(find.byKey(const ValueKey('addTags')), 'Reviewed');
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsOneWidget);
+      await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('tag-results')), findsNothing);
+      expect(
+        tester
+            .widget<TextField>(find.byKey(const ValueKey('addTags')))
+            .controller!
+            .text,
         'Reviewed',
       );
+      expect(find.text('Save changes').hitTestable(), findsOneWidget);
       await tester.tap(find.text('Save changes'));
       for (
         var attempt = 0;
@@ -916,10 +971,14 @@ void main() {
   testWidgets(
     'workspace search preserves filters drafts and completion sections',
     (tester) async {
+      tester.view.devicePixelRatio = 1;
+      tester.view.physicalSize = const Size(1200, 850);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      addTearDown(tester.view.resetPhysicalSize);
       final root = await Directory.systemTemp.createTemp('workspace-search-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -936,7 +995,7 @@ void main() {
       }) async {
         final id = const Uuid().v4();
         ids.add(id);
-        await writer.command(id, 'task.created', {
+        await writer.createNativeFixtureTask(id, {
           'title': title,
           'description': description,
           'assignee': assigned ?? user,
@@ -944,7 +1003,7 @@ void main() {
         });
         // This search scenario intentionally reorders organized tasks across
         // assignees. Raw Inbox captures use a separate manual-order bucket.
-        await writer.command(id, 'task.edited', {'title': title});
+        await writer.editNativeFixtureTask(id, {'title': title});
         if (done) await writer.command(id, 'task.completed', {});
       }
 
@@ -969,14 +1028,25 @@ void main() {
       final searchField = find.byKey(const ValueKey('task-search'));
       await tester.enterText(searchField, '  PLANNING  ');
       await tester.pumpAndSettle();
-      expect(
-        tester
-            .widget<ButtonStyleButton>(
-              find.byKey(const ValueKey('task-filter')),
-            )
-            .onPressed,
-        isNull,
-      );
+      for (final width in [390.0, 1200.0]) {
+        tester.view.physicalSize = Size(width, 850);
+        await tester.pumpAndSettle();
+        final filter = tester.widget(find.byKey(const ValueKey('task-filter')));
+        expect(
+          filter,
+          width < 600 ? isA<IconButton>() : isA<ButtonStyleButton>(),
+        );
+        final filterAction = switch (filter) {
+          ButtonStyleButton(:final onPressed) => onPressed,
+          IconButton(:final onPressed) => onPressed,
+          _ => throw StateError('Filter must remain a button.'),
+        };
+        expect(filterAction, isNull);
+        expect(
+          tester.widget<TextField>(searchField).controller!.text,
+          '  PLANNING  ',
+        );
+      }
       for (final title in [
         'Planning available',
         'Other household task',
@@ -1058,7 +1128,7 @@ void main() {
         tester.widget<TextField>(capture).controller!.text,
         'Unsubmitted household draft',
       );
-      await writer.command(const Uuid().v4(), 'task.created', {
+      await writer.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Planning incoming',
         'description': '',
         'assignee': other,
@@ -1383,7 +1453,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('rc5-ime-submit-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -1526,12 +1596,12 @@ void main() {
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
       final user = const Uuid().v4(), task = const Uuid().v4();
-      final remote = await TaskStore.open(
+      final remote = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/remote',
       );
       await remote.command(user, 'user.created', {'name': 'Lee'});
-      await remote.command(task, 'task.created', {
+      await remote.createNativeFixtureTask(task, {
         'title': 'Original task',
         'description': 'Original notes',
         'assignee': user,
@@ -1589,8 +1659,15 @@ void main() {
         find.widgetWithText(TextField, 'Title'),
         'Local edited title',
       );
-      await remote.command(task, 'task.edited', {
+      final localSelection = tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Title'))
+          .controller!
+          .selection;
+      await remote.editNativeFixtureTask(task, {
         'description': 'Arrived automatically',
+        // Incoming native text alone may merge. Retain the existing stale
+        // editor contract by also changing a guarded nontext detail.
+        'schedule': {'dueDate': '2026-10-01'},
       });
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
@@ -1601,9 +1678,26 @@ void main() {
             .text,
         'Local edited title',
       );
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Title'))
+            .controller!
+            .selection,
+        localSelection,
+      );
+      expect(
+        tester
+            .widget<TextField>(find.widgetWithText(TextField, 'Notes'))
+            .controller!
+            .text,
+        'Original notes',
+      );
       await tester.tap(find.text('Save changes'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('This task changed.'), findsOneWidget);
+      expect(
+        find.textContaining('This task’s other details changed.'),
+        findsOneWidget,
+      );
       expect(
         tester
             .widget<TextField>(find.widgetWithText(TextField, 'Title'))
@@ -1622,13 +1716,13 @@ void main() {
         'Local edited title',
       );
       await tester.tap(find.text('Save changes'));
-      await tester.pumpAndSettle();
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
       expect(find.text('Local edited title'), findsOneWidget);
       expect(find.text('Arrived automatically'), findsOneWidget);
       expect(capture.text, 'Unsent draft');
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
       tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.hidden);
-      await remote.command(task, 'task.edited', {
+      await remote.editNativeFixtureTask(task, {
         'description': 'Changed while suspended',
       });
       // Hidden native windows do not schedule frames: resume before pumping.
@@ -1649,7 +1743,7 @@ void main() {
       await tester.pumpAndSettle();
       expect(tester.widget<TextField>(notesField).controller!.text, notes);
       await tester.tap(find.text('Save changes'));
-      await tester.pumpAndSettle();
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
       final preview = tester.widget<Text>(
         find.text(notes.replaceAll('\n', ' ')),
       );
@@ -1699,13 +1793,13 @@ void main() {
       );
       final profile = await Directory('${root.path}/profile').create();
       final legacy = await Directory('${profile.path}/data').create();
-      final seed = await TaskStore.open(
+      final seed = await openNativeFixtureStore(
         LocalLogFolder(legacy.path),
         '${root.path}/seed',
       );
       final user = const Uuid().v4();
       await seed.command(user, 'user.created', {'name': 'Legacy example'});
-      await seed.command(const Uuid().v4(), 'task.created', {
+      await seed.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Retained example task',
         'description': '',
         'assignee': user,
@@ -1805,7 +1899,7 @@ void main() {
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
     final user = const Uuid().v4();
-    final store = await TaskStore.open(
+    final store = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -1881,7 +1975,7 @@ void main() {
     final root = await Directory.systemTemp.createTemp('compact-filter-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -1897,7 +1991,7 @@ void main() {
       String tag = 'Home',
     }) async {
       final id = const Uuid().v4();
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': title,
         'description': '',
         'assignee': assignee,
@@ -2087,7 +2181,7 @@ void main() {
     final root = await Directory.systemTemp.createTemp('tag-picker-rows-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -2103,7 +2197,7 @@ void main() {
       String description = '',
     }) async {
       final id = ids[title] = const Uuid().v4();
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': title,
         'description': description,
         'assignee': assigned ?? user,
@@ -2349,7 +2443,7 @@ void main() {
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
     final user = const Uuid().v4();
-    final store = await TaskStore.open(
+    final store = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -2358,7 +2452,7 @@ void main() {
     });
     for (var i = 0; i <= 1000; i++) {
       final id = const Uuid().v4();
-      await store.command(id, 'task.created', {
+      await store.createNativeFixtureTask(id, {
         'title': 'Example task $i',
         'description': '',
         'assignee': user,
@@ -2431,18 +2525,18 @@ void main() {
     await root.delete(recursive: true);
   });
   testWidgets(
-    'dates, zones, tags, order and recurring history work through native UI',
+    'dates, zones, tags and order with historical v3 recurrence compatibility',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('parity-ui-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
       final user = const Uuid().v4(), task = const Uuid().v4();
-      final remote = await TaskStore.open(
+      final remote = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/reader',
       );
       await remote.command(user, 'user.created', {'name': 'Example user'});
-      await remote.command(task, 'task.created', {
+      await remote.createHistoricalRecurrenceFixtureTask(task, {
         'title': 'Monthly review',
         'description': 'Keep the original notes.',
         'assignee': user,
@@ -2456,7 +2550,7 @@ void main() {
           'recurrence': 'every month',
         },
       });
-      await remote.command(const Uuid().v4(), 'task.created', {
+      await remote.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Second task',
         'description': '',
         'assignee': user,
@@ -2488,6 +2582,8 @@ void main() {
             ? find.byKey(const ValueKey('startTime'))
             : label == 'Due time'
             ? find.byKey(const ValueKey('dueTime'))
+            : label == 'Tags'
+            ? find.byKey(const ValueKey('tags'))
             : find.widgetWithText(TextField, label);
         await tester.ensureVisible(field);
         await tester.pumpAndSettle();
@@ -2520,9 +2616,15 @@ void main() {
       await fill('This occurrence time', '08:00');
       await fill('Due time', '17:00');
       await fill('Time zone', 'UTC');
+      // Replacing the original set now removes its chip explicitly; typing in
+      // the shared query adds tags without silently replacing selected values.
+      final clearTags = find.byTooltip('Clear Tags');
+      await tester.ensureVisible(clearTags);
+      await tester.tap(clearTags);
+      await tester.pumpAndSettle();
       await fill('Tags', '#home #weekly');
       await tester.tap(find.text('Save changes'));
-      await tester.pumpAndSettle();
+      await waitForUi(tester, () => find.byType(TaskEditor).evaluate().isEmpty);
       expect(
         find.byType(AlertDialog),
         findsNothing,
@@ -2559,14 +2661,33 @@ void main() {
                 ) ??
                 false,
           );
+      await captureNativeFixtureUi(tester, 'mixed-order-before');
       reorder.properties.customSemanticsActions!.entries
           .firstWhere((entry) => entry.key.label == 'Move down')
           .value();
-      await tester.pumpAndSettle();
+      try {
+        await waitForUi(
+          tester,
+          () =>
+              tester.getTopLeft(find.text('Second task')).dy <
+              tester.getTopLeft(find.text('Monthly review')).dy,
+        );
+      } catch (_) {
+        await remote.refresh();
+        debugPrint('TANDEMLOG_PARITY_ORDER_ROWS=${jsonEncode(remote.rows)}');
+        debugPrint(
+          'TANDEMLOG_PARITY_ORDER_MOVES=${jsonEncode(remote.db.select("SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved'").map((row) => row['raw']).toList())}',
+        );
+        debugPrint(
+          'TANDEMLOG_PARITY_ORDER_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        rethrow;
+      }
       expect(
         tester.getTopLeft(find.text('Second task')).dy,
         lessThan(tester.getTopLeft(find.text('Monthly review')).dy),
       );
+      await captureNativeFixtureUi(tester, 'mixed-order-after');
       await tester.tap(find.byTooltip('Complete Monthly review'));
       await tester.pumpAndSettle();
       await remote.refresh();
@@ -2614,7 +2735,7 @@ void main() {
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
     final user = const Uuid().v4();
-    final remote = await TaskStore.open(
+    final remote = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/remote',
       now: () => DateTime.now().add(const Duration(minutes: 10)),
@@ -2648,7 +2769,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('tag-scroll-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -2659,7 +2780,7 @@ void main() {
       for (var i = 0; i < 35; i++) {
         final id = const Uuid().v4();
         ids.add(id);
-        await writer.command(id, 'task.created', {
+        await writer.createNativeFixtureTask(id, {
           'title': 'Task $i',
           'description': '',
           'assignee': i == 1 ? other : user,
@@ -2802,7 +2923,7 @@ void main() {
     final root = await Directory.systemTemp.createTemp('drag-order-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
@@ -2816,7 +2937,7 @@ void main() {
       Map<String, dynamic> schedule = const {},
     }) async {
       final id = ids[title] = const Uuid().v4();
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': title,
         'description': '',
         'assignee': assignee ?? user,
@@ -3073,13 +3194,13 @@ void main() {
     final root = await Directory.systemTemp.createTemp('startup-projection-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final writer = await TaskStore.open(
+    final writer = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/writer',
     );
     final user = const Uuid().v4();
     await writer.command(user, 'user.created', {'name': 'Example user'});
-    await writer.command(const Uuid().v4(), 'task.created', {
+    await writer.createNativeFixtureTask(const Uuid().v4(), {
       'title': 'Ready after projection',
       'description': '',
       'assignee': user,
@@ -3164,7 +3285,7 @@ void main() {
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
       final user = const Uuid().v4();
-      final remote = await TaskStore.open(
+      final remote = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/reader',
       );
@@ -3172,7 +3293,7 @@ void main() {
       final ids = <String, String>{};
       Future<void> add(String title, Map<String, dynamic> schedule) async {
         final id = ids[title] = const Uuid().v4();
-        await remote.command(id, 'task.created', {
+        await remote.createNativeFixtureTask(id, {
           'title': title,
           'description': 'Original notes',
           'assignee': user,
@@ -3317,7 +3438,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('rc5-native-undo-');
       final folder = await Directory('${root.path}/shared').create(),
           profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -3325,7 +3446,7 @@ void main() {
       await writer.command(user, 'user.created', {
         'name': 'Alexandria Example Household',
       });
-      await writer.command(id, 'task.created', {
+      await writer.createNativeFixtureTask(id, {
         'title': 'Review household supplies',
         'description': 'Keep reference notes',
         'assignee': user,
@@ -3354,11 +3475,23 @@ void main() {
           tester,
           () => find.byType(TaskEditor).evaluate().isEmpty,
         );
-        expect(
-          find.byType(SnackBar),
-          findsNothing,
-          reason: 'Ordinary edits are quiet.',
-        );
+        try {
+          expect(
+            find.byType(SnackBar),
+            findsNothing,
+            reason: 'Ordinary edits are quiet.',
+          );
+        } catch (_) {
+          await writer.refresh();
+          debugPrint(
+            'TANDEMLOG_SESSION_SAVE_NOTICE_ROWS=${jsonEncode(writer.rows)}',
+          );
+          debugPrint(
+            'TANDEMLOG_SESSION_SAVE_NOTICE_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+          );
+          await captureNativeFixtureUi(tester, 'session-save-notice-failure');
+          rethrow;
+        }
       }
 
       await editTitle('Review household supplies', 'Check household supplies');
@@ -3384,20 +3517,52 @@ void main() {
       await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyZ);
       await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
-      await waitForUi(
-        tester,
-        () => find.text('Check household supplies').evaluate().isNotEmpty,
-      );
+      try {
+        await waitForUi(
+          tester,
+          () => find.text('Check household supplies').evaluate().isNotEmpty,
+        );
+      } catch (_) {
+        await writer.refresh();
+        debugPrint('TANDEMLOG_SESSION_UNDO_ROWS=${jsonEncode(writer.rows)}');
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_FOCUS=${FocusManager.instance.primaryFocus}',
+        );
+        await captureNativeFixtureUi(tester, 'session-undo-failure');
+        rethrow;
+      }
       expect(
         tester.widget<TextField>(capture).controller!.text,
         'Unsent capture draft',
       );
       await tester.tap(undo);
-      await waitForUi(
-        tester,
-        () => find.text('Review household supplies').evaluate().isNotEmpty,
-      );
+      try {
+        await waitForUi(
+          tester,
+          () => find.text('Review household supplies').evaluate().isNotEmpty,
+        );
+      } catch (_) {
+        await writer.refresh();
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_SECOND_ROWS=${jsonEncode(writer.rows)}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_SECOND_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_UNDO_SECOND_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        await captureNativeFixtureUi(tester, 'session-undo-second-failure');
+        rethrow;
+      }
       expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      await captureNativeFixtureUi(tester, 'session-second-undo-restored');
       // Completion remains undoable after its transient notice expires.
       final checkbox = find.descendant(
         of: find.byKey(ValueKey('task-row-$id')),
@@ -3421,7 +3586,7 @@ void main() {
       // Accessibility mode, action focus/hover, a completion burst and an
       // unrelated metrics rebuild must not make the notice persistent.
       final burst = const Uuid().v4();
-      await writer.command(burst, 'task.created', {
+      await writer.createNativeFixtureTask(burst, {
         'title': 'Burst completion reference',
         'description': '',
         'assignee': user,
@@ -3513,19 +3678,51 @@ void main() {
         tester,
         () => find.text('Review household supplies').evaluate().isNotEmpty,
       );
-      // A remote later title must survive undoing a local full task edit.
+      // Peer-owned appended characters survive identity-scoped Undo; the
+      // separately pinned causal replacement case covers reused local IDs.
       await tester.pump(const Duration(seconds: 12));
       await tester.pumpAndSettle();
       await editTitle('Review household supplies', 'Local pending review');
-      await writer.command(id, 'task.edited', {'title': 'Newer synced review'});
+      await writer.editNativeFixtureTask(id, {
+        'title': 'Local pending review · peer note',
+      });
+      const afterSelectiveUndo = 'Review household supplies · peer note';
       await tester.tap(undo);
-      await waitForUi(
-        tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
-      );
-      expect(find.textContaining('Newer changes were kept'), findsOneWidget);
+      try {
+        await waitForUi(
+          tester,
+          () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
+        );
+      } catch (_) {
+        await writer.refresh();
+        debugPrint('TANDEMLOG_NEWER_WAIT_ROWS=${jsonEncode(writer.rows)}');
+        debugPrint(
+          'TANDEMLOG_NEWER_WAIT_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        await captureNativeFixtureUi(tester, 'session-newer-wait-failure');
+        rethrow;
+      }
+      try {
+        expect(find.textContaining('Newer changes were kept'), findsOneWidget);
+      } catch (_) {
+        await writer.refresh();
+        debugPrint(
+          'TANDEMLOG_SESSION_NEWER_UNDO_ROWS=${jsonEncode(writer.rows)}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_NEWER_UNDO_EVENTS=${jsonEncode(writer.db.select("SELECT raw FROM events WHERE entity=?", [id]).map((row) => row['raw']).toList())}',
+        );
+        debugPrint(
+          'TANDEMLOG_SESSION_NEWER_UNDO_UI=${jsonEncode(tester.widgetList<Text>(find.byType(Text)).map((text) => text.data).toList())}',
+        );
+        await captureNativeFixtureUi(
+          tester,
+          'session-newer-undo-notice-failure',
+        );
+        rethrow;
+      }
       // Deletion restores only our tombstone, then restart clears session history.
-      await tester.tap(find.text('Newer synced review'));
+      await tester.tap(find.text(afterSelectiveUndo));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Delete'));
       await tester.pumpAndSettle();
@@ -3534,19 +3731,19 @@ void main() {
         tester,
         () =>
             find.byType(TaskEditor).evaluate().isEmpty &&
-            find.text('Newer synced review').evaluate().isEmpty,
+            find.text(afterSelectiveUndo).evaluate().isEmpty,
       );
       await tester.tap(undo);
       await waitForUi(
         tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
+        () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
       );
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await waitForUi(
         tester,
-        () => find.text('Newer synced review').evaluate().isNotEmpty,
+        () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
       );
       expect(tester.widget<IconButton>(undo).onPressed, isNull);
       await tester.pumpWidget(const SizedBox());
@@ -3558,18 +3755,18 @@ void main() {
     },
   );
   testWidgets(
-    'unchanged recurring completion explains and enables at idle midnight',
+    'historical v3 recurrence compatibility enables unchanged completion at midnight',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('rc5-native-repeat-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
       final user = const Uuid().v4(), id = const Uuid().v4();
       await writer.command(user, 'user.created', {'name': 'Alex Example'});
-      await writer.command(id, 'task.created', {
+      await writer.createHistoricalRecurrenceFixtureTask(id, {
         'title': 'Plan tomorrow',
         'description': '',
         'assignee': user,
@@ -3671,7 +3868,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('rc5-native-pane-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -3689,7 +3886,7 @@ void main() {
       ]) {
         final id = const Uuid().v4();
         ids[title] = id;
-        await writer.command(id, 'task.created', {
+        await writer.createNativeFixtureTask(id, {
           'title': title,
           'description': '',
           'assignee': title == 'Hidden' ? other : user,
@@ -3697,7 +3894,7 @@ void main() {
         });
         // Keep this pane/drag fixture in the organized bucket after a real
         // notes save. Inbox departure is covered by the dedicated flow.
-        await writer.command(id, 'task.edited', {'title': title});
+        await writer.editNativeFixtureTask(id, {'title': title});
       }
       await File(
         '${profile.path}/settings.json',
@@ -3809,7 +4006,7 @@ void main() {
       final bulk = tester.state<BulkTaskEditorState>(
         find.byType(BulkTaskEditor),
       );
-      final addTags = find.widgetWithText(TextField, 'Add tags');
+      final addTags = find.byKey(const ValueKey('addTags'));
       await tester.ensureVisible(addTags);
       await tester.tap(addTags);
       await tester.enterText(addTags, 'Reviewed');
@@ -3868,7 +4065,7 @@ void main() {
       final root = await Directory.systemTemp.createTemp('rc5-native-batch-');
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );
@@ -3947,7 +4144,7 @@ void main() {
       );
       final folder = await Directory('${root.path}/shared').create();
       final profile = await Directory('${root.path}/profile').create();
-      final writer = await TaskStore.open(
+      final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
       );

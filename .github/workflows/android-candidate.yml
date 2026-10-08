@@ -38,6 +38,9 @@ jobs:
           distribution: temurin
           java-version: '21'
       - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: android
       - run: flutter pub get --enforce-lockfile
       - name: Build with owner signing identity
         env:
@@ -46,6 +49,8 @@ jobs:
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: bash tool/build_android_release.sh
+      - name: Verify signed APK native payload and notices
+        run: python tool/native_build_gates.py verify_payload --platform android --payload dist/tandemlog-android.apk
       - name: Remove temporary signing material
         if: always()
         run: rm -rf -- "$RUNNER_TEMP/tandemlog-signing"

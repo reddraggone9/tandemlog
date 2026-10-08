@@ -1,0 +1,9 @@
+{
+  "edits": 2000,
+  "utf16_length": 2005,
+  "edit_and_ffi_ms": 2925.5755379854236,
+  "checkpoint_restore_and_ffi_ms": 0.3998540050815791,
+  "raw_update_bytes": 23743,
+  "checkpoint_json_bytes": 2749,
+  "checkpoint_engine_bytes": 2026
+}

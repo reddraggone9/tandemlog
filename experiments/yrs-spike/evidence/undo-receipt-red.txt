@@ -1,0 +1,44 @@
+00:00 +0: loading /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart
+00:00 +0: UF01 durable preparation preserves live text before receipt
+00:00 +0 -1: UF01 durable preparation preserves live text before receipt [E]
+  NoSuchMethodError: Class 'ActivationLab' has no instance method 'prepareUndo'.
+  Receiver: Instance of 'ActivationLab'
+  Tried calling: prepareUndo("66666666-6666-4666-8666-666666666666", "title")
+  dart:core                                                               Object.noSuchMethod
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 10:22  prepare
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 33:17  main.<fn>
+  
+00:00 +0 -1: UF02 interruption after append retains original bytes and restarts exact compensation
+00:00 +0 -2: UF02 interruption after append retains original bytes and restarts exact compensation [E]
+  NoSuchMethodError: Class 'ActivationLab' has no instance method 'prepareUndo'.
+  Receiver: Instance of 'ActivationLab'
+  Tried calling: prepareUndo("66666666-6666-4666-8666-666666666666", "title")
+  dart:core                                                               Object.noSuchMethod
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 10:22  prepare
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 54:19  main.<fn>
+  
+00:00 +0 -2: UF03 same-process unknown receipt commits once and retains earlier Undo
+00:00 +0 -3: UF03 same-process unknown receipt commits once and retains earlier Undo [E]
+  NoSuchMethodError: Class 'ActivationLab' has no instance method 'prepareUndo'.
+  Receiver: Instance of 'ActivationLab'
+  Tried calling: prepareUndo("66666666-6666-4666-8666-666666666666", "title")
+  dart:core                                                               Object.noSuchMethod
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 10:22  prepare
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 81:19  main.<fn>
+  
+00:00 +0 -3: UF04 remote arrival after preparation merges with immutable compensation
+00:00 +0 -4: UF04 remote arrival after preparation merges with immutable compensation [E]
+  NoSuchMethodError: Class 'ActivationLab' has no instance method 'prepareUndo'.
+  Receiver: Instance of 'ActivationLab'
+  Tried calling: prepareUndo("66666666-6666-4666-8666-666666666666", "title")
+  dart:core                                                                Object.noSuchMethod
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 10:22   prepare
+  experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart 102:19  main.<fn>
+  
+00:00 +0 -4: Some tests failed.
+
+Failing tests:
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart: UF01 durable preparation preserves live text before receipt
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart: UF02 interruption after append retains original bytes and restarts exact compensation
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart: UF03 same-process unknown receipt commits once and retains earlier Undo
+  /workspace/tandemlog/experiments/yrs-spike/activation_lab/test/undo_receipt_test.dart: UF04 remote arrival after preparation merges with immutable compensation

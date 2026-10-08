@@ -1,0 +1,100 @@
+[
+  {
+    "mode": "hostile500",
+    "exit": 0,
+    "result": {
+      "mode": "hostile500",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10944,
+      "loadedRssKiB": 11244,
+      "finalRssKiB": 20852,
+      "peakRssKiB": 244728,
+      "peakMinusBaselineKiB": 233784,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.383209,
+          "meanMs": 0.383209,
+          "p95Ms": 0.383209
+        },
+        "new": {
+          "count": 1,
+          "maxMs": 0.179711,
+          "meanMs": 0.179711,
+          "p95Ms": 0.179711
+        },
+        "state": {
+          "count": 2,
+          "maxMs": 0.144909,
+          "meanMs": 0.10764800000000001,
+          "p95Ms": 0.144909
+        },
+        "apply": {
+          "count": 1,
+          "maxMs": 296.207974,
+          "meanMs": 296.207974,
+          "p95Ms": 296.207974
+        }
+      },
+      "outcome": {
+        "preApplyPayloadRssKiB": 15892,
+        "decodedUpdateBytes": 1048576,
+        "rejection": {
+          "error": "text size limit"
+        },
+        "stateUnchanged": true,
+        "initializedRssKiB": 12156
+      }
+    },
+    "stderr": ""
+  },
+  {
+    "mode": "hostile10000",
+    "exit": 0,
+    "result": {
+      "mode": "hostile10000",
+      "soSha256": "945c219d8191fa861020aae90c577e5b8814d17b625570d50b9d510614c16f2d",
+      "baselineRssKiB": 10948,
+      "loadedRssKiB": 11216,
+      "finalRssKiB": 20640,
+      "peakRssKiB": 246156,
+      "peakMinusBaselineKiB": 235208,
+      "calls": {
+        "seed": {
+          "count": 1,
+          "maxMs": 0.441107,
+          "meanMs": 0.441107,
+          "p95Ms": 0.441107
+        },
+        "new": {
+          "count": 1,
+          "maxMs": 1.37012,
+          "meanMs": 1.37012,
+          "p95Ms": 1.37012
+        },
+        "state": {
+          "count": 2,
+          "maxMs": 0.408647,
+          "meanMs": 0.3010395,
+          "p95Ms": 0.408647
+        },
+        "apply": {
+          "count": 1,
+          "maxMs": 275.831094,
+          "meanMs": 275.831094,
+          "p95Ms": 275.831094
+        }
+      },
+      "outcome": {
+        "preApplyPayloadRssKiB": 16012,
+        "decodedUpdateBytes": 1048576,
+        "rejection": {
+          "error": "text size limit"
+        },
+        "stateUnchanged": true,
+        "initializedRssKiB": 12256
+      }
+    },
+    "stderr": ""
+  }
+]

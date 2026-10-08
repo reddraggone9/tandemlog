@@ -1,0 +1,1 @@
+PASS supplemental pending token/packet, live state, captured draft, exact receipt preserved after admission rejection; no canonical IO in native test

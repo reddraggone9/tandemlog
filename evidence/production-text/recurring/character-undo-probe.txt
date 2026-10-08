@@ -1,0 +1,4 @@
+SO_SHA256=5d0a7b1b3e0e6b906e831bed562a45f8db03a2bf4f08c80d9dc0c29a6f169153
+{"before": "A", "local": "BC", "peer": "DC", "local_diff": {"prefix": 0, "suffix": 0, "deleted": "A", "inserted": "BC"}, "peer_diff": {"prefix": 0, "suffix": 1, "deleted": "B", "inserted": "D"}, "result": "AD", "converged": true}
+{"before": "Review household supplies", "local": "Local pending review", "peer": "Newer synced review", "local_diff": {"prefix": 0, "suffix": 0, "deleted": "Review household supplies", "inserted": "Local pending review"}, "peer_diff": {"prefix": 0, "suffix": 7, "deleted": "Local pending", "inserted": "Newer synced"}, "result": "Review household suppliesNewer synced", "converged": true}
+{"before": "AB", "local": "AXB", "peer": "AXBY", "local_diff": {"prefix": 1, "suffix": 1, "deleted": "", "inserted": "X"}, "peer_diff": {"prefix": 3, "suffix": 0, "deleted": "", "inserted": "Y"}, "result": "ABY", "converged": true}

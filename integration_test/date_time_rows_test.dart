@@ -7,9 +7,9 @@ import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
-import 'package:tandemlog/storage/task_store.dart';
 import 'package:uuid/uuid.dart';
 
+import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
 void main() {
@@ -24,13 +24,13 @@ void registerDateTimeRowTests() {
     final root = await Directory.systemTemp.createTemp('date-time-rows-');
     final folder = await Directory('${root.path}/shared').create();
     final profile = await Directory('${root.path}/profile').create();
-    final seed = await TaskStore.open(
+    final seed = await openNativeFixtureStore(
       LocalLogFolder(folder.path),
       '${root.path}/seed',
     );
     final user = const Uuid().v4(), id = const Uuid().v4();
     await seed.command(user, 'user.created', {'name': 'Alex Example'});
-    await seed.command(id, 'task.created', {
+    await seed.createNativeFixtureTask(id, {
       'title': 'Plan reference meeting',
       'description': '',
       'assignee': user,
