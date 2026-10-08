@@ -3,16 +3,18 @@ import 'dart:io';
 
 import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
-import '../lib/storage/log_folder.dart';
-import '../lib/storage/task_store.dart';
-import '../lib/text/native_text_engine.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/task_store.dart';
+import 'package:tandemlog/text/native_text_engine.dart';
 
 Future<void> main(List<String> args) async {
-  if (args.length != 1)
+  if (args.length != 1) {
     throw ArgumentError('Provide a new synthetic fixture directory.');
+  }
   final root = Directory(args.single);
-  if (await root.exists())
+  if (await root.exists()) {
     throw ArgumentError('Preserve existing fixtures; use a new directory.');
+  }
   final shared = await Directory('${root.path}/shared').create(recursive: true);
   final engine = NativeTextEngine(
     libraryPath: Platform.environment['TANDEMLOG_TEXT_LIBRARY'],
@@ -34,10 +36,11 @@ Future<void> main(List<String> args) async {
     await store.moveBefore(b, a);
     final files = <String, String>{};
     await for (final file in shared.list()) {
-      if (file is File)
+      if (file is File) {
         files[file.uri.pathSegments.last] = sha256
             .convert(await file.readAsBytes())
             .toString();
+      }
     }
     await File('${root.path}/manifest.json').writeAsString(
       '${const JsonEncoder.withIndent('  ').convert({

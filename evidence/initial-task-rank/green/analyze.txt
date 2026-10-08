@@ -14,12 +14,4 @@ Got dependencies!
 10 packages have newer versions incompatible with dependency constraints.
 Try `flutter pub outdated` for more information.
 Analyzing tandemlog-initial-rank...                             
-
-   info • Can't use a relative path to import a library in 'lib'. Try fixing the relative path or changing the import to a 'package:' import • tool/initial_rank_qa_fixture.dart:6:8 • avoid_relative_lib_imports
-   info • Can't use a relative path to import a library in 'lib'. Try fixing the relative path or changing the import to a 'package:' import • tool/initial_rank_qa_fixture.dart:7:8 • avoid_relative_lib_imports
-   info • Can't use a relative path to import a library in 'lib'. Try fixing the relative path or changing the import to a 'package:' import • tool/initial_rank_qa_fixture.dart:8:8 • avoid_relative_lib_imports
-   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • tool/initial_rank_qa_fixture.dart:12:5 • curly_braces_in_flow_control_structures
-   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • tool/initial_rank_qa_fixture.dart:15:5 • curly_braces_in_flow_control_structures
-   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • tool/initial_rank_qa_fixture.dart:38:9 • curly_braces_in_flow_control_structures
-
-6 issues found. (ran in 1.0s)
+No issues found! (ran in 1.0s)

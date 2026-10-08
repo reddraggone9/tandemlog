@@ -52,3 +52,17 @@ reorder/import. Include prefix/unknown-ack recovery where the fixture transport
 supports it. Android/Windows native acceptance and Android demo remain pending;
 Linux evidence does not stand in for those platforms. No publication/push by the
 implementation agent.
+
+
+The 50.8-second `ui/initial-rank-linux-gtk-debug.mp4` is the real Linux GTK
+main application at source `48ca813caabbf6317acdb5c5713f74d1a472f0c8`, dark,
+1200×850, with actual X11 pointer/button/keyboard input. Only idle pauses were
+removed; the original recording and original synthetic shared/profile fixture
+are retained in `/workspace/recovery/initial-rank-demo-3f132607`. A frame extracted
+from the final MP4 was inspected to verify the input pointer is visible. The
+flow captures two lines, adds notes (including Save at an interrupted-edit
+prompt), and leaves both new tasks above the previously reordered B/A tasks
+after exiting Inbox. `dark-before-capture.png` and `dark-after-triage.png` are
+states within this same fixed-source workflow, not comparative old/new builds.
+The generated initial canonical fixture and its hashes are in `qa-fixture/`;
+`ui/demo-metadata.json` records the exact platform, source, input and video hash.
