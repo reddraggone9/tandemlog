@@ -137,3 +137,12 @@ Folder failures explain recovery in ordinary language. A missing file names the 
 
 
 Keyboard completion retains native checkbox focus when the same task remains in the current view, including status regrouping in Search. A short pending write rejects additional completion commands without disabling the control and releasing its focus. Deliberate traversal elsewhere stays elsewhere; when the task leaves the filtered view, normal focus fallback applies. No async focus restoration steals focus from another control.
+
+## Accepted historical recompletion
+
+When a reopened old occurrence has an existing, independently initialized next
+occurrence, completing the old task retains that next occurrence exactly. Its
+edits, notes, schedule, tags, manual order, draft and scoped Undo survive; completed
+or deleted children keep that status. Undo/reopen affects the old parent's
+completion and keeps the existing child. Forward native recurrence retains its
+approved completion-observed union. See the [policy and compatibility boundary](historical-recurring-text-policy.md).

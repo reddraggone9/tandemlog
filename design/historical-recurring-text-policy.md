@@ -1,7 +1,36 @@
-# Historical recurring text: decision required
+# Historical recurring text: accepted preservation policy
 
-Status: proposal. The current implementation rejects mixed initialization before
-receipt preparation. Logs, child work and original meanings are preserved.
+Status: Lee approved completing the historical parent while retaining the existing
+independently initialized successor unchanged. Implemented on the recovery branch;
+independent review and candidate platform acceptance remain pending.
+
+`task.completedKeepingSuccessor` is a required additive v3 record with
+`completedAt` and `retainedSuccessor: {id, completion, hash}`. It binds the earlier
+scalar completion that selected this deterministic child, but contains no child
+snapshot or text inheritance. It completes only the parent and leaves the child's
+context, text, notes, schedule, tags, completion/deletion status and manual position
+unchanged. Concurrent historical recompletions are independent parent completions
+that retain the same child; later parent edits have no path into that child.
+
+Ordinary forward native recurrence retains its observed-text union behavior.
+Explicit attempts to initialize the historical child through that inheritance
+path still reject before receipt preparation. Existing scalar/native records and
+hashes keep their original meanings; no identity rebase or history rewrite occurs.
+
+Undo/reopen retracts or cancels the new parent completion, with the historical
+child retained. Its independent draft and scoped Undo survive. Completed or deleted
+children remain completed/deleted. The UI uses its existing completion/Undo feedback
+and reports that the next occurrence was kept. No extra confirmation was part of
+Lee's accepted behavior; the earlier proposal below is historical rationale.
+
+Known source ID/hash/type/entity/child/clock mismatches fail validation. Missing
+source records are retained as transport dependencies and revalidated on arrival;
+local commands require the source before preparing a receipt. A self/forward
+same-writer reference fails wire admission even if its source has not arrived.
+
+See [implementation evidence](../evidence/production-text/historical-recompletion/README.md).
+
+## Earlier proposal, superseded by Lee's approval
 
 ## Concrete case
 

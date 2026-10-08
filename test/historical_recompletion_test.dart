@@ -125,8 +125,9 @@ void main() {
           '${f.root.path}/peer-shared',
         ).create();
         await for (final file in f.folder.list()) {
-          if (file is File)
+          if (file is File) {
             await file.copy('${peerFolder.path}/${file.uri.pathSegments.last}');
+          }
         }
         peer = await TaskStore.open(
           LocalLogFolder(peerFolder.path),

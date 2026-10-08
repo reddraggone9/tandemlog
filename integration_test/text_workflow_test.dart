@@ -190,7 +190,7 @@ void registerTextWorkflowTests() {
     },
   );
   testWidgets(
-    'mixed historical successor recompletion rejects before canonical append',
+    'historical successor recompletion completes parent and keeps independent child',
     (tester) async {
       final root = await Directory.systemTemp.createTemp(
         'native-recurring-guard-ui-',
@@ -219,11 +219,19 @@ void registerTextWorkflowTests() {
           task,
           completionDay: DateTime(2026, 10, 1),
         );
+        await store.command(const Uuid().v5(task, 'successor'), 'task.edited', {
+          'title': 'Existing next occurrence',
+          'description': 'Independent child notes',
+        });
         await store.initializeSharedText();
         await store.reopen(task, [completion.id]);
-        await File(
-          '${profile.path}/settings.json',
-        ).writeAsString(jsonEncode({'folder': shared.path, 'user': user}));
+        await File('${profile.path}/settings.json').writeAsString(
+          jsonEncode({
+            'folder': shared.path,
+            'user': user,
+            'appearance': 'dark',
+          }),
+        );
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         final parentCheckbox = find.descendant(
           of: find.byKey(ValueKey('task-row-$task')),
@@ -238,20 +246,31 @@ void registerTextWorkflowTests() {
             if (file is File) file.path: base64Encode(await file.readAsBytes()),
         };
         final before = await canonical();
+        final child = const Uuid().v5(task, 'successor');
+        final beforeChild = store.rows.singleWhere((row) => row['id'] == child);
+        await _capture(tester, 'historical-recompletion-before');
         await tester.tap(parentCheckbox);
-        await flows.waitForUi(
-          tester,
-          () => find
-              .textContaining('Mixed successor text initialization')
-              .evaluate()
-              .isNotEmpty,
-        );
-        expect(await canonical(), before);
+        await flows.waitForUi(tester, () => parentCheckbox.evaluate().isEmpty);
         await store.refresh();
+        final after = await canonical();
+        for (final entry in before.entries) {
+          expect(after[entry.key], entry.value);
+        }
+        expect(
+          store.db.select(
+            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+          ),
+          hasLength(1),
+        );
         expect(
           store.rows.singleWhere((row) => row['id'] == task)['completed'],
-          isFalse,
+          isTrue,
         );
+        expect(
+          store.rows.singleWhere((row) => row['id'] == child),
+          beforeChild,
+        );
+        await _capture(tester, 'historical-recompletion-after');
         expect(store.rows.where((row) => row['kind'] == 'task'), hasLength(2));
         expect(store.pendingTextOperations, isEmpty);
         expect(tester.takeException(), isNull);

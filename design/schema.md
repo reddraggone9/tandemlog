@@ -132,6 +132,15 @@ exact state and original operation IDs from canonical history for editor and Und
 receipt use, without persisting another inherited BLOB. Older cache readers reject
 version15 explicitly. Cache loss replays originals; no canonical migration occurs.
 
+`task.completedKeepingSuccessor` adds the accepted historical-recompletion edge.
+Its exact keys are `completedAt` and `retainedSuccessor`; the latter has exactly
+`id`, `completion` (original writer:sequence) and `hash`. The child ID remains
+UUIDv5(parent, `successor`). Known sources must be the earlier hash-matched scalar
+`task.completed` of that parent, whose successor has this ID. No successor snapshot
+or inheritance contribution is created. Parent completion/Undo projection includes
+the new type; original scalar/native completion meanings remain unchanged. See the
+[accepted policy](historical-recurring-text-policy.md).
+
 ## Durability and recovery
 
 Commands and ingestion share one queue. Durable canonical append is the commit point. Events, affected materialized views and stream checkpoints commit in one SQLite transaction. A failed cache update or process interruption after append is recoverable by ingestion; no second authoritative successor record is needed. Untouched desktop logs are stamp-cached and skip parsing/projection. Android scans revalidate because provider metadata can be unreliable. Derived seed lookup is indexed; only affected entities are projected on ingestion. Shared sequence positions are cached transactionally after order-affecting ingestion; the order-projection marker permits a one-time cache-only rebuild when ordering semantics change, without touching canonical history; ordinary row reads and untouched startup do not replay move history.

@@ -11,6 +11,7 @@ const reversibleTaskEvents = {
   'task.deleted',
   'task.completed',
   'task.completedWithText',
+  'task.completedKeepingSuccessor',
   'task.completionUndone',
 };
 

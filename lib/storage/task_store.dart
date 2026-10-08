@@ -21,6 +21,7 @@ import '../text/recurring_text.dart';
 import 'text_cache.dart';
 import '../domain/text_context.dart';
 import '../domain/text_actor.dart';
+import '../domain/historical_completion.dart';
 export 'writer_guard.dart';
 
 Map<String, dynamic>? calculateTaskTagChanges(
@@ -139,6 +140,7 @@ class TaskStore {
   static const _textTypes = {
     'task.createdWithText',
     'task.completedWithText',
+    'task.completedKeepingSuccessor',
     'task.textEdited',
     'task.textEditUndone',
     'text.baselineInitialized',
@@ -1063,6 +1065,7 @@ class TaskStore {
         _validateUndoReferences();
         _validateMoves();
         _validateTagReferences();
+        _validateHistoricalCompletions();
       }
       if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
       final affected = newEvents.map((e) => e.entity).toSet();
@@ -1718,13 +1721,13 @@ class TaskStore {
     // successor's history again while rebuilding global manual order.
     final selectedSeedIds = <String, String>{
       for (final row in db.select(
-        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText')",
+        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor')",
       ))
         row['successor'] as String: row['id'] as String,
     };
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
@@ -2332,8 +2335,10 @@ class TaskStore {
     _validateUndoReferences(e);
     _validateMoves(e);
     _validateTagReferences(e);
+    _validateHistoricalCompletions(e);
     if (isTaskCompletion(type) &&
         data['successor'] == null &&
+        type != 'task.completedKeepingSuccessor' &&
         TaskSchedule.fromJson(
               Map<String, dynamic>.from(project(prior)!['schedule'] as Map),
             ).recurrence !=
@@ -2531,7 +2536,7 @@ class TaskStore {
     }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -3043,6 +3048,58 @@ class TaskStore {
     return own;
   }
 
+  LogEvent? _historicalSuccessorInitialization(String entity) {
+    if (textEngine == null ||
+        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+          entity,
+        ]).isEmpty) {
+      return null;
+    }
+    final child = const Uuid().v5(entity, 'successor');
+    if (_hasInheritedText(child) ||
+        db.select('SELECT 1 FROM text_fields WHERE entity=?', [child]).length !=
+            2) {
+      return null;
+    }
+    final creations = _entityEvents(child).where(
+      (event) => event.type == 'task.created' && event.canonicalRaw == null,
+    );
+    if (creations.length != 1) return null;
+    final source = db.select('SELECT raw FROM events WHERE id=?', [
+      creations.single.id,
+    ]);
+    if (source.isEmpty) return null;
+    final event = LogEvent.decode(source.single['raw'] as String);
+    return event.type == 'task.completed' && event.entity == entity
+        ? event
+        : null;
+  }
+
+  void _validateHistoricalCompletions([LogEvent? pending]) {
+    final markers = <LogEvent>[
+      for (final row in db.select(
+        "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+      ))
+        LogEvent.decode(row['raw'] as String),
+      if (pending?.type == 'task.completedKeepingSuccessor') pending!,
+    ];
+    for (final marker in markers) {
+      final retained = marker.data['retainedSuccessor'] as Map;
+      final rows = db.select('SELECT raw FROM events WHERE id=?', [
+        retained['completion'],
+      ]);
+      final known = verifyHistoricalCompletion(
+        marker,
+        rows.isEmpty ? null : LogEvent.decode(rows.single['raw'] as String),
+      );
+      if (!known && identical(marker, pending)) {
+        throw FormatFailure(
+          'Historical completion requires its earlier initialization history.',
+        );
+      }
+    }
+  }
+
   Future<LogEvent> complete(
     String entity, {
     DateTime? completionDay,
@@ -3068,6 +3125,23 @@ class TaskStore {
       'completedAt':
           '${day.year.toString().padLeft(4, '0')}-${day.month.toString().padLeft(2, '0')}-${day.day.toString().padLeft(2, '0')}',
     };
+    final historical = schedule.recurrence == null
+        ? null
+        : _historicalSuccessorInitialization(entity);
+    if (historical != null) {
+      data['retainedSuccessor'] = {
+        'id': const Uuid().v5(entity, 'successor'),
+        'completion': historical.id,
+        'hash': historical.hash,
+      };
+      return _command(
+        entity,
+        'task.completedKeepingSuccessor',
+        data,
+        expectedTaskSnapshot: taskSnapshot,
+        onPrepared: onPrepared,
+      );
+    }
     if (schedule.recurrence != null) {
       final next = schedule.next(day);
       if (schedule.hasSameOccurrenceDates(next)) {
@@ -3508,6 +3582,11 @@ class TaskStore {
             targets[id]!.data['successor'] != null)
           (targets[id]!.data['successor'] as Map)['id'] as String,
     };
+    final retainedHistorical = {
+      for (final id in operations.where(undone.contains))
+        if (targets[id]!.type == 'task.completedKeepingSuccessor')
+          (targets[id]!.data['retainedSuccessor'] as Map)['id'] as String,
+    };
     final suppressed = successors
         .where((id) => _projectEntity(id)?['successorSuppressed'] == true)
         .length;
@@ -3516,7 +3595,8 @@ class TaskStore {
       operations.where((id) => !undone.contains(id)),
       newer,
       error: error,
-      retainedSuccessorCount: successors.length - suppressed,
+      retainedSuccessorCount:
+          {...successors, ...retainedHistorical}.length - suppressed,
       removedSuccessorCount: suppressed,
     );
   }

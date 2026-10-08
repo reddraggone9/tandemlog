@@ -475,7 +475,7 @@ void main() {
         },
       );
       test(
-        'mixed historical successor initialization refuses without changing history',
+        'explicit mixed historical inheritance refuses without changing history',
         () async {
           final root = await Directory.systemTemp.createTemp(
             'text-legacy-child-',
@@ -510,11 +510,37 @@ void main() {
             final snapshot = store.taskSnapshot;
             var prepared = false;
             await expectLater(
-              store.complete(
-                task,
-                completionDay: DateTime(2030, 5, 10),
-                onPrepared: (_) => prepared = true,
-              ),
+              store.command(task, 'task.completedWithText', {
+                'completedAt': '2030-05-10',
+                'successor': old.data['successor'],
+                'inheritance': {
+                  'codec': 'yrs-v1',
+                  'adapter': 1,
+                  'frontiers': {
+                    for (final stream in store.db.select(
+                      'SELECT name,last_seq,chain_head FROM streams',
+                    ))
+                      (stream['name'] as String).replaceFirst(
+                        RegExp(r'\.jsonl$'),
+                        '',
+                      ): {
+                        'seq': stream['last_seq'],
+                        'hash': stream['chain_head'],
+                      },
+                  },
+                  'fields': {
+                    for (final field in store.db.select(
+                      'SELECT * FROM text_fields WHERE entity=?',
+                      [task],
+                    ))
+                      field['field']: {
+                        'parentContext': field['context'],
+                        'seedHash': field['seed_hash'],
+                        'stateHash': field['state_hash'],
+                      },
+                  },
+                },
+              }, onPrepared: (_) => prepared = true),
               throwsA(
                 isA<FormatFailure>().having(
                   (e) => e.message,

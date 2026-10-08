@@ -9,7 +9,9 @@ import 'wall_time.dart';
 
 const protocolVersion = 3;
 bool isTaskCompletion(String type) =>
-    type == 'task.completed' || type == 'task.completedWithText';
+    type == 'task.completed' ||
+    type == 'task.completedWithText' ||
+    type == 'task.completedKeepingSuccessor';
 final _idShape = RegExp(
   r'^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$',
 );
@@ -181,6 +183,7 @@ class LogEvent {
           }
         case 'task.completed':
         case 'task.completedWithText':
+        case 'task.completedKeepingSuccessor':
           if (d.containsKey('completedAt')) {
             if (d['completedAt'] is! String ||
                 DateTime.tryParse(d['completedAt']) == null) {
@@ -210,6 +213,25 @@ class LogEvent {
               );
             }
             validateTextInheritance(d['inheritance'] as Map<String, dynamic>);
+          }
+          if (j['type'] == 'task.completedKeepingSuccessor') {
+            final retained = d['retainedSuccessor'];
+            if (!d.containsKey('completedAt') ||
+                retained is! Map<String, dynamic> ||
+                !_keys(retained, {'id', 'completion', 'hash'}) ||
+                retained['id'] != const Uuid().v5(j['entity'], 'successor') ||
+                !_validReference(retained['completion']) ||
+                (retained['completion'] as String).length > 80 ||
+                !isEventHash(retained['hash'])) {
+              throw FormatFailure('Invalid retained historical successor.');
+            }
+            final source = (retained['completion'] as String).split(':');
+            if (source.first == j['writer'] &&
+                BigInt.parse(source.last) >= BigInt.from(j['seq'] as int)) {
+              throw FormatFailure(
+                'Historical completion cannot reference a forward operation.',
+              );
+            }
           }
           break;
         case 'task.completionUndone':
@@ -281,6 +303,10 @@ class LogEvent {
         'task.moved' => {'before'},
         'task.completed' => {'completedAt', 'successor'},
         'task.completedWithText' => {'completedAt', 'successor', 'inheritance'},
+        'task.completedKeepingSuccessor' => {
+          'completedAt',
+          'retainedSuccessor',
+        },
         'task.operationUndone' => {'operation'},
         _ => {'completion'},
       };
