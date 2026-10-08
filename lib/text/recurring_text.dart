@@ -33,7 +33,7 @@ typedef LegacyTextRoots =
       List<LogEvent> observed,
     );
 
-class ResolvedTextField {
+final class ResolvedTextField {
   ResolvedTextField({
     required this.context,
     required this.seed,
@@ -499,6 +499,14 @@ class RecurringTextResolver {
   Map<String, ResolvedTextField> resolve(String entity) {
     try {
       return _resolve(entity);
+    } catch (_) {
+      // Failed admission cannot publish a lasting packet/claim authority graph.
+      // Existing immutable fields can replay their originals after pool closure.
+      memo?.clear();
+      _runtime.close();
+      _resolved.clear();
+      observedFields.clear();
+      rethrow;
     } finally {
       if (_closeRuntime) _runtime.close();
     }

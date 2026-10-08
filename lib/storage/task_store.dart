@@ -1170,6 +1170,7 @@ class TaskStore {
     } catch (failure) {
       if (committed) rethrow;
       db.execute('ROLLBACK');
+      _recurringTextMemo.clear();
       _textBaseline = originalBaseline;
       textWriteBlocked = originalTextBlocked;
       if (verify) _lastHistoryVerification = null;

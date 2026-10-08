@@ -142,9 +142,10 @@ below replaces the temporary native-recurrence guard. Historical scalar
 completion records retain their original snapshot selection and Undo meaning.
 Mixing a historical scalar successor initialization with the new native lineage
 is explicitly rejected before local receipt preparation; neither history nor
-existing character identities are rebased. This compatibility edge remains a
-release limitation requiring a concrete policy before claiming universal
-recompletion support.
+existing character identities are rebased. Lee subsequently accepted a parent-only historical recompletion record that
+retains the independently initialized child unchanged. The explicit native
+inheritance guard remains; the normal completion action uses the accepted
+[historical policy](../historical-recurring-text-policy.md).
 
 The production controller, captured editor and session Undo are wired. The
 native Linux flow covers offline creation before setup, private draft retention
@@ -325,7 +326,9 @@ Nontext schedule/tag/assignee ordering remains under the existing contract.
 
 `task.completedWithText` retains the existing successor UUID, nontext snapshot
 and recurrence schedule. It adds verified observed stream frontiers plus title
-and notes parent-context, seed and full-native-state hashes. The child context
+and notes parent-context and seed hashes. Original adapter1 proofs retain their
+full-native-state hashes; new prototype adapter2 explicitly declares structural
+history-reference hashes, as described in the October8 foundation below. The child context
 is derived from its immutable parent context and child UUID, independent of
 which completion arrives first. It reuses original parent seed/operation packets
 with their original actor ownership; the completing writer cannot claim peer
@@ -344,9 +347,10 @@ command resolves strictly before any receipt preparation. Original canonical
 packets, clocks, hashes, historical completion and Undo meanings are untouched.
 
 The resolver memoizes verified immutable completion prefixes within a resolution
-and in a bounded process-local memo. SQLite checkpoint reuse must match the
-independently resolved native state hash/text; absent or incorrect checkpoints
-replay original packets before persisting disposable BLOBs/frontiers. Warm store startup
+and in a bounded process-local memo. Legacy full-state SQLite checkpoint reuse
+must match the independently resolved native state hash/text. Current version15
+reference rows reconstruct originals for exact editor state instead of persisting
+an inherited BLOB for each child. Cache loss replays originals. Warm store startup
 retains its existing zero-log-read path. Affected recurring fields still verify
 their lineage on updates; long-history performance remains a measured release
 gate, not an assertion of constant-time replay.
@@ -396,7 +400,11 @@ checks are unchanged. The current UI notice refers to preserved contributions,
 not a guarantee that every later rendered string remains verbatim.
 
 
-## Bounded lineage reuse — 2026-10-05
+## Earlier bounded lineage reuse — 2026-10-05
+
+This subsection records the earlier optimization checkpoint. The October8
+shared-history foundation below supersedes its state/list representation and
+cache schema; original compatibility and ownership requirements still apply.
 
 Repeated reconstruction was measured before optimizing. The process-local memo
 keys each immutable completion by engine owner, legacy baseline scope, completion
@@ -444,4 +452,12 @@ distinguish implementation from independent review, remaining scaling work and
 platform gates. Adapter1 prototype proofs keep exact native-state-hash semantics;
 released scalar v3 meanings and completion policy are unchanged. The pinned Yrs
 determinism patch retains its exact original provenance;
-independent review of the adapter changes and integrated architecture is pending.
+independent reviews of the adapter changes and integrated architecture identified
+resource and capability fixes, with re-review pending. Disposable node interning
+is capped at4096 entries; reference hashes and packets are unchanged by eviction.
+Live memo/checkpoint references can still retain larger chains, so this is an
+index bound rather than a total graph-memory guarantee. Native pools track applied
+original packet keys across reshaped branches and checkpoint restoration.
+Rejected resolution/transaction state clears shared authority; resolver-only
+fields are a final Dart class, preserving legacy construction while forbidding
+external implementations of the verified-reference capability.

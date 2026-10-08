@@ -45,10 +45,11 @@ String _packetKey(LineageTextOperation packet) =>
 
 Iterable<LineageTextOperation> _operations(
   SharedTextReference reference,
-  Set<String> visited,
-) sync* {
+  Set<String> visited, [
+  Set<String>? appliedPackets,
+]) sync* {
   final stack = <(SharedTextReference, bool)>[(reference, false)];
-  final packets = <String>{};
+  final packets = appliedPackets ?? <String>{};
   while (stack.isNotEmpty) {
     final (current, expanded) = stack.removeLast();
     if (expanded) {
@@ -65,6 +66,12 @@ Iterable<LineageTextOperation> _operations(
 }
 
 class SharedTextHistoryGraph {
+  SharedTextHistoryGraph({this.maxInternedNodes = 4096}) {
+    if (maxInternedNodes < 1) throw ArgumentError('Invalid node cache budget');
+  }
+  // Only disposable interning is bounded here. Original packets and references
+  // still held by callers, summaries or checkpoints have separate lifetimes.
+  final int maxInternedNodes;
   final _nodes = <String, SharedTextReference>{};
   final _packets = <String, LineageTextOperation>{};
   int get nodeCount => _nodes.length;
@@ -100,17 +107,22 @@ class SharedTextHistoryGraph {
       if (parent.depth > depth) depth = parent.depth;
     }
     if (packet != null) depth++;
-    return _nodes.putIfAbsent(
+    final cached = _nodes.remove(hash);
+    if (cached != null) {
+      _nodes[hash] = cached;
+      return cached;
+    }
+    if (_nodes.length >= maxInternedNodes) _nodes.remove(_nodes.keys.first);
+    final node = SharedTextReference._(
       hash,
-      () => SharedTextReference._(
-        hash,
-        context,
-        seed,
-        List.unmodifiable(parents),
-        packet,
-        depth,
-      ),
+      context,
+      seed,
+      List.unmodifiable(parents),
+      packet,
+      depth,
     );
+    _nodes[hash] = node;
+    return node;
   }
 
   SharedTextReference root(String context, NativeTextUpdate seed) {
@@ -218,10 +230,16 @@ class SharedTextSnapshot {
 }
 
 class _ActiveHistory {
-  _ActiveHistory(this.reference, this.native, this.visited);
+  _ActiveHistory(
+    this.reference,
+    this.native,
+    this.visited,
+    this.appliedPackets,
+  );
   SharedTextReference reference;
   final NativeTextMaterializer native;
   final Set<String> visited;
+  final Set<String> appliedPackets;
 }
 
 class _HistoricalCheckpoint {
@@ -291,9 +309,13 @@ class SharedTextMaterializer {
             checkpoint?.state ?? NativeTextState.parse(reference.seed.encoded),
         limits: limits,
       );
-      final visited = <String>{};
+      final visited = <String>{}, appliedPackets = <String>{};
       if (checkpoint != null) {
-        for (final _ in _operations(checkpoint.reference, visited)) {
+        for (final _ in _operations(
+          checkpoint.reference,
+          visited,
+          appliedPackets,
+        )) {
           // Establish the visited reference frontier without retaining a list.
         }
       }
@@ -301,10 +323,15 @@ class SharedTextMaterializer {
         checkpoint?.reference ?? reference,
         native,
         visited,
+        appliedPackets,
       );
     }
     try {
-      for (final operation in _operations(reference, current.visited)) {
+      for (final operation in _operations(
+        reference,
+        current.visited,
+        current.appliedPackets,
+      )) {
         current.native.apply(operation.update);
         packetApplications++;
       }
