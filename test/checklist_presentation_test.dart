@@ -9,6 +9,8 @@ import 'package:tandemlog/presentation/checklist_panel.dart';
 import 'package:tandemlog/presentation/checklist_item_editor.dart';
 import 'package:tandemlog/presentation/title_line_formatter.dart';
 
+final panelOrigin = Object();
+
 const titleKey = Key('checklist-item-title');
 const notesKey = Key('checklist-item-notes');
 const saveKey = Key('checklist-item-save');
@@ -58,6 +60,31 @@ Future<void> capture(WidgetTester tester, String name) async {
     image.dispose();
   });
 }
+
+List<Map<String, dynamic>> dragItems() => [
+  for (final id in ['0', '1', '2'])
+    {'id': id, 'title': 'Item $id', 'completed': false},
+];
+
+ChecklistPanel dragPanel({
+  List<Map<String, dynamic>>? items,
+  bool enabled = true,
+  Object revision = 'snapshot-1',
+  FocusNode? addFocusNode,
+  required void Function(Map<String, dynamic>, String?) onMove,
+}) => ChecklistPanel(
+  parentId: 'parent',
+  origin: panelOrigin,
+  revision: revision,
+  items: items ?? dragItems(),
+  enabled: enabled,
+  addFocusNode: addFocusNode,
+  onAdd: () {},
+  onEdit: (_) {},
+  onToggle: (_, _) {},
+  onMove: onMove,
+  onDelete: (_) {},
+);
 
 void main() {
   test(
@@ -113,6 +140,9 @@ void main() {
       await mount(
         tester,
         ChecklistPanel(
+          parentId: 'parent',
+          origin: panelOrigin,
+          revision: 'snapshot-1',
           items: items,
           onAdd: () => calls.add('add'),
           onEdit: (i) => calls.add('edit:${i['id']}'),
@@ -129,7 +159,9 @@ void main() {
       expect(find.byType(PopupMenuButton<String>), findsNothing);
       expect(
         tester.getRect(find.byKey(const Key('checklist-add'))).top,
-        greaterThanOrEqualTo(tester.getRect(find.byKey(const Key('checklist-edit-2'))).bottom),
+        greaterThanOrEqualTo(
+          tester.getRect(find.byKey(const Key('checklist-edit-2'))).bottom,
+        ),
       );
       await tester.tap(find.byKey(const Key('checklist-add')));
       await tester.tap(find.byKey(const Key('checklist-check-0')));
@@ -149,6 +181,9 @@ void main() {
     await mount(
       tester,
       ChecklistPanel(
+        parentId: 'parent',
+        origin: panelOrigin,
+        revision: 'snapshot-1',
         items: [
           {
             'id': 'one',
@@ -172,7 +207,12 @@ void main() {
       ),
       findsOneWidget,
     );
-    for (final key in ['checklist-check-one', 'checklist-delete-one', 'checklist-drag-one', 'checklist-edit-one']) {
+    for (final key in [
+      'checklist-check-one',
+      'checklist-delete-one',
+      'checklist-drag-one',
+      'checklist-edit-one',
+    ]) {
       final size = tester.getSize(find.byKey(Key(key)));
       expect(size.width, greaterThanOrEqualTo(48));
       expect(size.height, greaterThanOrEqualTo(48));
@@ -182,21 +222,43 @@ void main() {
     semantics.dispose();
   });
 
-  testWidgets('busy checkbox keeps child focus and guards repeat Space', (tester) async {
+  testWidgets('busy checkbox keeps child focus and guards repeat Space', (
+    tester,
+  ) async {
     var enabled = true;
     var toggles = 0;
     late StateSetter update;
-    await mount(tester, StatefulBuilder(builder: (_, setState) {
-      update = setState;
-      return ChecklistPanel(
-        items: const [{'id': 'one', 'title': 'One', 'completed': false}],
-        enabled: enabled,
-        onAdd: () {}, onEdit: (_) {}, onMove: (_, _) {}, onDelete: (_) {},
-        onToggle: (_, _) { toggles++; update(() => enabled = false); },
-      );
-    }));
+    await mount(
+      tester,
+      StatefulBuilder(
+        builder: (_, setState) {
+          update = setState;
+          return ChecklistPanel(
+            parentId: 'parent',
+            origin: panelOrigin,
+            revision: 'snapshot-1',
+            items: const [
+              {'id': 'one', 'title': 'One', 'completed': false},
+            ],
+            enabled: enabled,
+            onAdd: () {},
+            onEdit: (_) {},
+            onMove: (_, _) {},
+            onDelete: (_) {},
+            onToggle: (_, _) {
+              toggles++;
+              update(() => enabled = false);
+            },
+          );
+        },
+      ),
+    );
     final checkbox = find.byKey(const Key('checklist-check-one'));
-    final focus = Focus.of(tester.element(find.descendant(of: checkbox, matching: find.byType(CustomPaint)).first));
+    final focus = Focus.of(
+      tester.element(
+        find.descendant(of: checkbox, matching: find.byType(CustomPaint)).first,
+      ),
+    );
     focus.requestFocus();
     await tester.pumpAndSettle();
     await tester.sendKeyEvent(LogicalKeyboardKey.space);
@@ -210,6 +272,196 @@ void main() {
     await tester.pumpAndSettle();
     expect(focus.hasFocus, isTrue);
   });
+
+  testWidgets('child handle supports scoped typed drag and relative movement', (
+    tester,
+  ) async {
+    final calls = <String>[];
+    await mount(
+      tester,
+      dragPanel(onMove: (item, before) => calls.add('${item['id']}:$before')),
+    );
+    final handle = find.byKey(const Key('checklist-drag-0'));
+    final draggable = tester.widget<Draggable<ChecklistItemDrag>>(
+      find
+          .ancestor(
+            of: handle,
+            matching: find.byType(Draggable<ChecklistItemDrag>),
+          )
+          .first,
+    );
+    expect(draggable.data!.parentId, 'parent');
+    expect(identical(draggable.data!.origin, panelOrigin), isTrue);
+    expect(draggable.data!.observedOrder, ['0', '1', '2']);
+    expect(
+      () => draggable.data!.observedOrder.add('forged'),
+      throwsUnsupportedError,
+    );
+    final gesture = await tester.startGesture(tester.getCenter(handle));
+    await gesture.moveBy(const Offset(0, 10));
+    await tester.pump();
+    await gesture.moveTo(
+      tester.getCenter(find.byKey(const Key('checklist-drop-before-2'))),
+    );
+    await tester.pump();
+    await gesture.up();
+    await tester.pumpAndSettle();
+    expect(calls, ['0:2']);
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets(
+    'drop rejects wrong scope stale snapshot and disabled late acceptance',
+    (tester) async {
+      final calls = <String>[];
+      void move(Map<String, dynamic> item, String? before) =>
+          calls.add('${item['id']}:$before');
+      await mount(tester, dragPanel(onMove: move));
+      DragTarget<ChecklistItemDrag> target() =>
+          tester.widget(find.byKey(const Key('checklist-drop-before-2')));
+      ChecklistItemDrag payload({
+        String parent = 'parent',
+        Object? origin,
+        Object revision = 'snapshot-1',
+        String item = '0',
+        List<String> order = const ['0', '1', '2'],
+      }) => ChecklistItemDrag(
+        parentId: parent,
+        origin: origin ?? panelOrigin,
+        revision: revision,
+        itemId: item,
+        observedOrder: order,
+      );
+      DragTargetDetails<ChecklistItemDrag> details(ChecklistItemDrag data) =>
+          DragTargetDetails(data: data, offset: Offset.zero);
+      for (final invalid in [
+        payload(parent: 'other'),
+        payload(origin: Object()),
+        payload(revision: 'old'),
+        payload(order: ['1', '0', '2']),
+        payload(item: 'missing'),
+        payload(item: '2'),
+      ]) {
+        expect(target().onWillAcceptWithDetails!(details(invalid)), isFalse);
+        target().onAcceptWithDetails!(details(invalid));
+        expect(calls, isEmpty);
+      }
+      final valid = details(payload());
+      expect(target().onWillAcceptWithDetails!(valid), isTrue);
+      final acceptedBeforeUpdate = target().onAcceptWithDetails!;
+      await mount(tester, dragPanel(enabled: false, onMove: move));
+      acceptedBeforeUpdate(valid);
+      expect(calls, isEmpty);
+      expect(target().onWillAcceptWithDetails!(valid), isFalse);
+      await mount(tester, dragPanel(revision: 'snapshot-2', onMove: move));
+      expect(target().onWillAcceptWithDetails!(valid), isFalse);
+      acceptedBeforeUpdate(valid);
+      expect(calls, isEmpty);
+      await mount(
+        tester,
+        dragPanel(
+          items: [dragItems()[1], dragItems()[0], dragItems()[2]],
+          onMove: move,
+        ),
+      );
+      expect(target().onWillAcceptWithDetails!(valid), isFalse);
+      acceptedBeforeUpdate(valid);
+      expect(calls, isEmpty);
+      final ending = tester.widget<DragTarget<ChecklistItemDrag>>(
+        find.byKey(const Key('checklist-drop-end')),
+      );
+      expect(
+        ending.onWillAcceptWithDetails!(
+          details(payload(order: ['1', '0', '2'], item: '2')),
+        ),
+        isFalse,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
+
+  testWidgets(
+    'move semantics keyboard edges and Add focus hook stay child scoped',
+    (tester) async {
+      final semantics = tester.ensureSemantics();
+      addTearDown(semantics.dispose);
+      final calls = <String>[];
+      final addFocus = FocusNode();
+      addTearDown(addFocus.dispose);
+      await mount(
+        tester,
+        dragPanel(
+          addFocusNode: addFocus,
+          onMove: (item, before) => calls.add('${item['id']}:$before'),
+        ),
+      );
+      Map<String, int> actions(String id) {
+        final data = tester
+            .getSemantics(find.byKey(Key('checklist-drag-$id')))
+            .getSemanticsData();
+        return {
+          for (final action in data.customSemanticsActionIds ?? <int>[])
+            CustomSemanticsAction.getAction(action)!.label: action,
+        };
+      }
+
+      expect(actions('0').keys, ['Move down']);
+      expect(actions('2').keys, ['Move up']);
+      final node = tester.getSemantics(
+        find.byKey(const Key('checklist-drag-0')),
+      );
+      node.owner!.performAction(
+        node.id,
+        ui.SemanticsAction.customAction,
+        actions('0')['Move down'],
+      );
+      await tester.pumpAndSettle();
+      final handle = find.byKey(const Key('checklist-drag-1'));
+      final focus = Focus.of(
+        tester.element(
+          find.descendant(of: handle, matching: find.byType(Icon)).first,
+        ),
+      );
+      focus.requestFocus();
+      await tester.pumpAndSettle();
+      await tester.sendKeyDownEvent(LogicalKeyboardKey.altLeft);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
+      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+      await tester.sendKeyUpEvent(LogicalKeyboardKey.altLeft);
+      await tester.pumpAndSettle();
+      expect(calls, ['0:2', '1:0', '1:null']);
+      await mount(
+        tester,
+        dragPanel(
+          enabled: false,
+          addFocusNode: addFocus,
+          onMove: (_, _) => fail('disabled move'),
+        ),
+      );
+      expect(actions('1'), isEmpty);
+      expect(
+        tester
+            .getSemantics(find.byKey(const Key('checklist-drag-1')))
+            .getSemanticsData()
+            .hasAction(ui.SemanticsAction.tap),
+        isFalse,
+      );
+      await mount(
+        tester,
+        dragPanel(items: [], addFocusNode: addFocus, onMove: (_, _) {}),
+      );
+      addFocus.requestFocus();
+      await tester.pumpAndSettle();
+      expect(addFocus.hasFocus, isTrue);
+      expect(
+        tester
+            .widget<TextButton>(find.byKey(const Key('checklist-add')))
+            .focusNode,
+        addFocus,
+      );
+      expect(tester.takeException(), isNull);
+    },
+  );
 
   testWidgets(
     'new item saves normalized title and multiline notes independently',
@@ -564,6 +816,9 @@ void main() {
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: ChecklistPanel(
+            parentId: 'parent',
+            origin: panelOrigin,
+            revision: 'snapshot-1',
             items: [
               {
                 'id': 'boots',

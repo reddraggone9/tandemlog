@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
 
+/// A checklist child drag cannot be mistaken for a parent task drag.
+class ChecklistItemDrag {
+  ChecklistItemDrag({
+    required this.parentId,
+    required this.origin,
+    required this.revision,
+    required this.itemId,
+    required List<String> observedOrder,
+  }) : observedOrder = List.unmodifiable(observedOrder);
+  final String parentId, itemId;
+  final Object origin, revision;
+  final List<String> observedOrder;
+}
+
 class ChecklistPanel extends StatelessWidget {
   const ChecklistPanel({
     super.key,
+    required this.parentId,
+    required this.origin,
+    required this.revision,
     required this.items,
     required this.onAdd,
     required this.onEdit,
@@ -10,7 +27,11 @@ class ChecklistPanel extends StatelessWidget {
     required this.onMove,
     required this.onDelete,
     this.enabled = true,
+    this.addFocusNode,
   });
+  final String parentId;
+  final Object origin, revision;
+  final FocusNode? addFocusNode;
   final List<Map<String, dynamic>> items;
   final VoidCallback onAdd;
   final void Function(Map<String, dynamic>) onEdit;
