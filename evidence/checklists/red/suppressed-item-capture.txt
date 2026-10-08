@@ -1,0 +1,21 @@
+00:00 +0: loading /workspace/recovery/checklist_suppressed_item_capture_test.dart
+00:00 +0: copied item under canceled successor cannot open a private native editor
+00:00 +0 -1: copied item under canceled successor cannot open a private native editor [E]
+  Expected: throws <Instance of 'FormatFailure'>
+    Actual: <Instance of 'Future<TaskTextCapture>'>
+     Which: emitted <Instance of 'TaskTextCapture'>
+  
+  package:matcher                                                expectLater
+  package:flutter_test/src/widget_tester.dart 507:8              expectLater
+  ../recovery/checklist_suppressed_item_capture_test.dart 83:15  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                     _CustomZone.registerUnaryCallback
+  ../recovery/checklist_suppressed_item_capture_test.dart 79:17  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                     _CustomZone.registerUnaryCallback
+  ../recovery/checklist_suppressed_item_capture_test.dart 15:20  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /workspace/recovery/checklist_suppressed_item_capture_test.dart: copied item under canceled successor cannot open a private native editor
