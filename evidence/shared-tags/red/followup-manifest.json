@@ -1,0 +1,11 @@
+{
+  "status": "additional focused regression receipts before chip/IME fixes; creator collision reproduced with private negative source after already-fixed production",
+  "sources": {
+    "lib/presentation/tag_input.dart": "bf2dea342816a92990f83d3f4a428ae9c3a3200443f2f796c48ff025f939981e",
+    "test/tag_input_test.dart": "3f3ff338af9a33bb9f43e56b5e47e6aed390191703586a7013ef06e46e0d39d8",
+    "test/task_editor_tags_test.dart": "e25a4e9816e3bda7389c89bb53138ff6e8818160ae67e389504f6054ae188c19"
+  },
+  "negative_control_source": "/workspace/recovery/tag_input_collision_negative.dart",
+  "negative_source_sha256": "670a26456fd0fee624c77fc8f177096b76b58675f40bb1a23efec2fd4d496e6e",
+  "negative_test_sha256": "a81d2d19a13ab0a725b411c3e989170e2400f95c32348538add3e8992d78665f"
+}

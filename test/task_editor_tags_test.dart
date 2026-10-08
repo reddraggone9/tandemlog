@@ -27,6 +27,131 @@ Future<void> query(WidgetTester tester, String key, String text) async {
 
 void main() {
   testWidgets(
+    'removing a chip retains unrelated query, caret, and active composition',
+    (tester) async {
+      List<String>? added, removed;
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task(),
+          onClose: () {},
+          save: (_, a, r) async {
+            added = a;
+            removed = r;
+          },
+        ),
+      );
+      await query(tester, 'tags', 'Fresh');
+      final field = tester.widget<TextField>(
+        find.byKey(const ValueKey('tags')),
+      );
+      const value = TextEditingValue(
+        text: 'Fresh',
+        selection: TextSelection.collapsed(offset: 2),
+        composing: TextRange(start: 0, end: 5),
+      );
+      field.controller!.value = value;
+      await tester.pump();
+      tester
+          .widget<InputChip>(find.byKey(const ValueKey('selected-tag-old')))
+          .onDeleted!();
+      await tester.pumpAndSettle();
+      expect(
+        field.controller!.value,
+        value,
+        reason: 'chip deletion must not consume query',
+      );
+      field.controller!.value = value.copyWith(composing: TextRange.empty);
+      await tester.pump();
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(added, ['Fresh']);
+      expect(removed, ['old']);
+    },
+  );
+
+  testWidgets(
+    'Enter uses existing match idempotently and Save resolves opaque pending inventory tag',
+    (tester) async {
+      List<String>? added, removed;
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task(),
+          onClose: () {},
+          tagInventory: const ['Home Office', '#literal', 'Planning'],
+          save: (_, a, r) async {
+            added = a;
+            removed = r;
+          },
+        ),
+      );
+      await query(tester, 'tags', 'plan');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('selected-tag-Planning')),
+        findsOneWidget,
+      );
+      await query(tester, 'tags', 'Planning');
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pumpAndSettle();
+      expect(
+        find.byKey(const ValueKey('selected-tag-Planning')),
+        findsOneWidget,
+      );
+      await query(tester, 'tags', 'Home Office');
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(added, ['Planning', 'Home Office']);
+      expect(removed, isEmpty);
+    },
+  );
+
+  testWidgets(
+    'touch creation adds all new tokens and invalid query never enables it',
+    (tester) async {
+      List<String>? added;
+      await mount(
+        tester,
+        TaskEditor(
+          panel: true,
+          task: task(),
+          onClose: () {},
+          save: (_, a, r) async {
+            added = a;
+          },
+        ),
+      );
+      await query(tester, 'tags', '#');
+      await tester.pumpAndSettle();
+      expect(
+        tester.widget<ListTile>(find.byKey(const ValueKey('tag-create'))).onTap,
+        isNull,
+      );
+      await query(tester, 'tags', 'new another');
+      await tester.pumpAndSettle();
+      final create = find.byKey(const ValueKey('tag-create'));
+      expect(
+        find.descendant(of: create, matching: find.text('Add tags')),
+        findsOneWidget,
+      );
+      await tester.tap(create);
+      await tester.pumpAndSettle();
+      expect(find.byKey(const ValueKey('selected-tag-new')), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('selected-tag-another')),
+        findsOneWidget,
+      );
+      await tester.tap(find.text('Save changes'));
+      await tester.pumpAndSettle();
+      expect(added, ['new', 'another']);
+    },
+  );
+
+  testWidgets(
     'opaque original tags survive pending Save with exact case and spaces',
     (tester) async {
       List<String>? added, removed;
@@ -127,9 +252,13 @@ void main() {
     expect(saves, 0);
     final closing = key.currentState!.canClose();
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(FilledButton, 'Save').last);
-    await tester.pumpAndSettle();
     expect(await closing, isFalse);
+    expect(
+      find.text('Unsaved changes'),
+      findsNothing,
+      reason:
+          'Do not take focus and finalize active composition through a dialog.',
+    );
     expect(saves, 0);
     expect(field.controller!.text, 'new');
   });

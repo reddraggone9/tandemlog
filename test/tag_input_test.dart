@@ -20,8 +20,9 @@ void main() {
           home: Scaffold(
             body: Focus(
               onKeyEvent: (_, event) {
-                if (event is KeyDownEvent && event.logicalKey == key)
+                if (event is KeyDownEvent && event.logicalKey == key) {
                   propagated++;
+                }
                 return KeyEventResult.ignored;
               },
               child: TagInput(
@@ -59,35 +60,59 @@ void main() {
     });
   }
 
-  for (final key in [LogicalKeyboardKey.enter, LogicalKeyboardKey.numpadEnter]) {
-    testWidgets('hardware ArrowDown then ${key.keyLabel} selects existing option', (tester) async {
-      final query = TextEditingController();
-      addTearDown(query.dispose);
-      var selected = <String>{};
-      var created = 0;
-      await tester.pumpWidget(MaterialApp(home: Scaffold(body: StatefulBuilder(
-        builder: (context, update) => TagInput(
-          tags: const ['Planning'], selected: selected, queryController: query,
-          clearQueryOnSelection: true, allowCreate: true,
-          onChanged: (value) => update(() => selected = value),
-          onSubmitQuery: () { created++; return true; },
-          onDropdownChanged: (_) {},
-        ),
-      ))));
-      await tester.enterText(find.byKey(const ValueKey('tag-search')), 'plan');
-      await tester.pumpAndSettle();
-      await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
-      await tester.sendKeyEvent(key);
-      await tester.pumpAndSettle();
-      expect(selected, {'Planning'});
-      expect(query.text, isEmpty);
-      expect(created, 0);
-      await tester.enterText(find.byKey(const ValueKey('tag-search')), 'Planning');
-      await tester.sendKeyEvent(key);
-      await tester.pumpAndSettle();
-      expect(selected, {'Planning'}, reason: 'repeated Enter is idempotent');
-      expect(created, 0);
-    });
+  for (final key in [
+    LogicalKeyboardKey.enter,
+    LogicalKeyboardKey.numpadEnter,
+  ]) {
+    testWidgets(
+      'hardware ArrowDown then ${key.keyLabel} selects existing option',
+      (tester) async {
+        final query = TextEditingController();
+        addTearDown(query.dispose);
+        var selected = <String>{};
+        var created = 0;
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: StatefulBuilder(
+                builder: (context, update) => TagInput(
+                  tags: const ['Planning'],
+                  selected: selected,
+                  queryController: query,
+                  clearQueryOnSelection: true,
+                  allowCreate: true,
+                  onChanged: (value) => update(() => selected = value),
+                  onSubmitQuery: () {
+                    created++;
+                    return true;
+                  },
+                  onDropdownChanged: (_) {},
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.enterText(
+          find.byKey(const ValueKey('tag-search')),
+          'plan',
+        );
+        await tester.pumpAndSettle();
+        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
+        await tester.sendKeyEvent(key);
+        await tester.pumpAndSettle();
+        expect(selected, {'Planning'});
+        expect(query.text, isEmpty);
+        expect(created, 0);
+        await tester.enterText(
+          find.byKey(const ValueKey('tag-search')),
+          'Planning',
+        );
+        await tester.sendKeyEvent(key);
+        await tester.pumpAndSettle();
+        expect(selected, {'Planning'}, reason: 'repeated Enter is idempotent');
+        expect(created, 0);
+      },
+    );
   }
 
   testWidgets(

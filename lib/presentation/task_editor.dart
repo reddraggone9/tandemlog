@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show setEquals;
+import 'tag_input.dart';
 import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
@@ -17,6 +19,7 @@ class TaskEditor extends StatefulWidget {
     this.selectionCount,
     this.onClearSelection,
     this.users = const [],
+    this.tagInventory = const [],
     this.panel = false,
     this.textSession,
     this.textStatus,
@@ -36,6 +39,7 @@ class TaskEditor extends StatefulWidget {
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final List<String> tagInventory;
   @override
   TaskEditorState createState() => TaskEditorState();
 }
@@ -49,6 +53,7 @@ class TaskEditorState extends State<TaskEditor> {
     key: _body,
     tasks: [widget.task],
     users: widget.users,
+    tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
     selectionCount: widget.selectionCount,
@@ -72,6 +77,7 @@ class BulkTaskEditor extends StatefulWidget {
     this.selectionCount,
     this.onClearSelection,
     this.users = const [],
+    this.tagInventory = const [],
     this.panel = false,
   });
   final List<Map<String, dynamic>> tasks;
@@ -82,6 +88,7 @@ class BulkTaskEditor extends StatefulWidget {
   final Future<void> Function()? onClearSelection;
   final List<Map<String, dynamic>> users;
   final bool panel;
+  final List<String> tagInventory;
   @override
   BulkTaskEditorState createState() => BulkTaskEditorState();
 }
@@ -95,6 +102,7 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     key: _body,
     tasks: widget.tasks,
     users: widget.users,
+    tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
     selectionCount: widget.selectionCount,
@@ -109,6 +117,7 @@ class _EditorBody extends StatefulWidget {
     super.key,
     required this.tasks,
     required this.users,
+    required this.tagInventory,
     required this.panel,
     this.onClose,
     this.selectionCount,
@@ -127,6 +136,7 @@ class _EditorBody extends StatefulWidget {
   final bool disableTextFields;
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
+  final List<String> tagInventory;
   final VoidCallback? onClose;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
@@ -141,6 +151,8 @@ class _EditorBody extends StatefulWidget {
 class _EditorBodyState extends State<_EditorBody> {
   late final List<Map<String, dynamic>> originals;
   final controllers = <String, TextEditingController>{};
+  final tagQueries = <String, TextEditingController>{};
+  final tagSelections = <String, Set<String>>{};
   final touched = <String>{}, applied = <String>{}, mixed = <String>{};
   final scroll = ScrollController();
   bool busy = false, attempted = false, showOverride = false, allowPop = false;
@@ -181,14 +193,16 @@ class _EditorBodyState extends State<_EditorBody> {
     originals = (jsonDecode(jsonEncode(widget.tasks)) as List)
         .cast<Map<String, dynamic>>();
     final first = originals.first;
-    for (final key in [
-      ...TaskSchedule.keys,
-      'title',
-      'description',
-      'tags',
-      'addTags',
-      'removeTags',
-    ]) {
+    for (final key in ['tags', 'addTags', 'removeTags']) {
+      tagSelections[key] = key == 'tags'
+          ? Set<String>.from(first['tags'] as List? ?? [])
+          : <String>{};
+      final query = tagQueries[key] = TextEditingController();
+      query.addListener(() {
+        if (mounted) setState(() => touched.add(key));
+      });
+    }
+    for (final key in [...TaskSchedule.keys, 'title', 'description']) {
       dynamic value = TaskSchedule.keys.contains(key)
           ? scheduleOf(first)[key]
           : first[key];
@@ -198,13 +212,7 @@ class _EditorBodyState extends State<_EditorBody> {
         mixed.add(key);
         value = null;
       }
-      controllers[key] = TextEditingController(
-        text: key == 'tags'
-            ? (first['tags'] as List? ?? []).join(' ')
-            : {'addTags', 'removeTags'}.contains(key)
-            ? ''
-            : value?.toString() ?? '',
-      );
+      controllers[key] = TextEditingController(text: value?.toString() ?? '');
       if (widget.textSession != null &&
           {'title', 'description'}.contains(key)) {
         controllers[key]!.text = widget.textSession!.text(key);
@@ -252,6 +260,9 @@ class _EditorBodyState extends State<_EditorBody> {
 
   @override
   void dispose() {
+    for (final c in tagQueries.values) {
+      c.dispose();
+    }
     for (final c in controllers.values) {
       c.dispose();
     }
@@ -274,15 +285,84 @@ class _EditorBodyState extends State<_EditorBody> {
     return text;
   }
 
-  List<String> tags(String key) {
-    final result = controllers[key]!.text
+  List<String> get availableTags {
+    final tags = {
+      ...widget.tagInventory,
+      for (final task in originals)
+        ...List<String>.from(task['tags'] as List? ?? []),
+    }.toList();
+    tags.sort((a, b) {
+      final compared = a.toLowerCase().compareTo(b.toLowerCase());
+      return compared == 0 ? a.compareTo(b) : compared;
+    });
+    return tags;
+  }
+
+  String tagLabel(String key) => switch (key) {
+    'addTags' => 'Add tags',
+    'removeTags' => 'Remove tags',
+    _ => 'Tags',
+  };
+
+  List<String> pendingTags(String key) {
+    final query = tagQueries[key]!;
+    final composing = query.value.composing;
+    if (composing.isValid && !composing.isCollapsed) {
+      throw FormatException('Finish entering ${tagLabel(key)} before saving.');
+    }
+    final text = query.text.trim();
+    if (availableTags.contains(text)) return [text];
+    if (text.startsWith('#') && availableTags.contains(text.substring(1))) {
+      return [text.substring(1)];
+    }
+    final tokens = query.text
         .split(RegExp(r'\s+'))
-        .where((v) => v.isNotEmpty)
-        .map((v) => v.startsWith('#') ? v.substring(1) : v)
+        .where((token) => token.isNotEmpty)
+        .map((token) => token.startsWith('#') ? token.substring(1) : token)
         .toSet()
         .toList();
+    if (key == 'removeTags' &&
+        tokens.any((token) => !availableTags.contains(token))) {
+      throw const FormatException(
+        'Choose existing tags to remove, or clear the query.',
+      );
+    }
+    return tokens;
+  }
+
+  List<String> tags(String key) {
+    // Existing tag identities stay opaque: only newly typed query is tokenized.
+    final result = {...tagSelections[key]!, ...pendingTags(key)}.toList();
     validateTags(result);
     return result;
+  }
+
+  String? tagError(String key) {
+    try {
+      tags(key);
+      return null;
+    } catch (error) {
+      return error is FormatException ? error.message : error.toString();
+    }
+  }
+
+  void setTags(String key, Set<String> selected) {
+    if (editingFrozen) return;
+    setState(() {
+      tagSelections[key] = Set<String>.of(selected);
+      touched.add(key);
+    });
+  }
+
+  bool submitTagQuery(String key) {
+    if (editingFrozen || tagError(key) != null) {
+      if (mounted) setState(() => touched.add(key));
+      return false;
+    }
+    final selected = tags(key).toSet();
+    setTags(key, selected);
+    tagQueries[key]!.clear();
+    return true;
   }
 
   Map<String, dynamic> get patch => {
@@ -329,16 +409,24 @@ class _EditorBodyState extends State<_EditorBody> {
     removeTags: tags('removeTags'),
   );
   bool get dirty {
+    if ((bulk ? ['addTags', 'removeTags'] : ['tags']).any(
+      (key) => tagQueries[key]!.text.isNotEmpty,
+    )) {
+      return true;
+    }
     if (bulk) {
       return applied.isNotEmpty ||
           applyAssignee ||
-          controllers['addTags']!.text.isNotEmpty ||
-          controllers['removeTags']!.text.isNotEmpty;
+          tagSelections['addTags']!.isNotEmpty ||
+          tagSelections['removeTags']!.isNotEmpty;
     }
     final first = originals.first;
     return controllers['title']!.text != (first['title'] ?? '') ||
         controllers['description']!.text != (first['description'] ?? '') ||
-        controllers['tags']!.text != (first['tags'] as List? ?? []).join(' ') ||
+        !setEquals(
+          tagSelections['tags'],
+          Set<String>.from(first['tags'] as List? ?? []),
+        ) ||
         assignee != first['assignee'] ||
         TaskSchedule.keys.any(
           (key) =>
@@ -348,6 +436,15 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> canClose() {
+    final activeTagComposition = (bulk ? ['addTags', 'removeTags'] : ['tags'])
+        .any((key) {
+          final composing = tagQueries[key]!.value.composing;
+          return composing.isValid && !composing.isCollapsed;
+        });
+    if (activeTagComposition) {
+      setState(() => attempted = true);
+      return Future.value(false);
+    }
     if (editingFrozen) return Future.value(false);
     if (!dirty) return Future.value(true);
     return closeRequest ??= askClose().whenComplete(() => closeRequest = null);
@@ -402,6 +499,10 @@ class _EditorBodyState extends State<_EditorBody> {
     if (busy) return false;
     setState(() => attempted = true);
     if (validation != null) return false;
+    final committedTags = {
+      for (final key in bulk ? ['addTags', 'removeTags'] : ['tags'])
+        key: tags(key).toSet(),
+    };
     if (!bulk && controllers['title']!.text != originals.first['title']) {
       // Focus loss can finalize composition through the controller without
       // running input formatters. Normalize only this changed, committed title.
@@ -442,6 +543,13 @@ class _EditorBodyState extends State<_EditorBody> {
         );
       }
       if (!mounted) return false;
+      // Keep pending chips/query intact until the durable save is acknowledged.
+      if (widget.textSession?.hasPendingReceipt != true) {
+        for (final entry in committedTags.entries) {
+          tagSelections[entry.key] = entry.value;
+          tagQueries[entry.key]!.clear();
+        }
+      }
       if (widget.textSession != null && !widget.textSession!.frozen) {
         for (final field in ['title', 'description']) {
           final controller = controllers[field]!;
@@ -533,6 +641,31 @@ class _EditorBodyState extends State<_EditorBody> {
     int lines = 1,
     bool withApplyControl = true,
   }) {
+    if (const {'tags', 'addTags', 'removeTags'}.contains(key)) {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: TagInput(
+          tags: availableTags,
+          selected: tagSelections[key]!,
+          queryController: tagQueries[key]!,
+          queryKey: ValueKey(key),
+          label: label,
+          queryLabel: label,
+          chipContext: label,
+          clearLabel: 'Clear $label',
+          expandLabel: 'Expand $label options',
+          collapseLabel: 'Collapse $label options',
+          hint: key == 'removeTags' ? 'Find existing tags' : 'Find or add tags',
+          allowCreate: key != 'removeTags',
+          clearQueryOnSelection: true,
+          enabled: !editingFrozen,
+          queryErrorText: tagError(key),
+          onSubmitQuery: () => submitTagQuery(key),
+          onChanged: (value) => setTags(key, value),
+          onDropdownChanged: (_) {},
+        ),
+      );
+    }
     final dateTimeField = const {
       'startDate',
       'startTime',
@@ -984,7 +1117,13 @@ class _EditorBodyState extends State<_EditorBody> {
               ),
           ],
         ),
-        for (final message in [error, failure])
+        for (final message in [
+          if (!(bulk ? ['addTags', 'removeTags'] : ['tags']).any(
+            (key) => error != null && tagError(key) == error,
+          ))
+            error,
+          failure,
+        ])
           if (message != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
