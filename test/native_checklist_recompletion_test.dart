@@ -76,7 +76,12 @@ Future<LogEvent> _completeWithConsent(TaskStore store) async {
 }
 
 void main() {
-  for (final phase in ['recompletion', 'Undo', 'cold replay']) {
+  for (final phase in [
+    'recompletion',
+    'Undo',
+    'recompletion cold replay',
+    'Undo cold replay',
+  ]) {
     test(
       'native offline checklist successor keeps its edited item after $phase',
       () async {
@@ -168,14 +173,15 @@ void main() {
           expect(jsonEncode(_childRow(a)), editedChild);
 
           final before = jsonEncode(_childRow(a));
+          final beforeItems = jsonEncode(a.checklistItems(_child));
           final again = await _completeWithConsent(a);
-          if (phase != 'recompletion') {
+          if (phase.startsWith('Undo')) {
             final undo = await a.undoOperations([again.id]);
             expect(undo.remaining, isEmpty);
             expect(a.currentTextRow(_parent)!['completed'], false);
           }
           var observed = a;
-          if (phase == 'cold replay') {
+          if (phase.endsWith('cold replay')) {
             // A fresh cache/profile reconstructs intact canonical history.
             // Existing caches, logs and private profiles are not deleted.
             cold = await TaskStore.open(
@@ -204,6 +210,7 @@ void main() {
             _copiedItem(observed)['title'],
             'Native item Saved ChildItemA',
           );
+          expect(jsonEncode(observed.checklistItems(_child)), beforeItems);
           expect(jsonEncode(_childRow(observed)), before);
         } finally {
           await cold?.close();
