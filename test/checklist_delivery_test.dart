@@ -120,8 +120,9 @@ class _DeliveryFixture {
   Map<String, dynamic> get frontiers {
     final heads = <String, LogEvent>{};
     for (final event in records) {
-      if (event.sequence > (heads[event.writer]?.sequence ?? 0))
+      if (event.sequence > (heads[event.writer]?.sequence ?? 0)) {
         heads[event.writer] = event;
+      }
     }
     return {
       for (final event in heads.values)

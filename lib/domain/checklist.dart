@@ -204,8 +204,9 @@ List<Map<String, dynamic>> projectChecklist(
   final initial = <String>[];
   for (final event in history) {
     if (event.type != 'task.completedWithChecklist' ||
-        (event.data['successor'] as Map)['id'] != parent)
+        (event.data['successor'] as Map)['id'] != parent) {
       continue;
+    }
     final copies = (event.data['checklist'] as Map)['items'] as List;
     for (final item in copies.cast<Map<String, dynamic>>()) {
       seeds

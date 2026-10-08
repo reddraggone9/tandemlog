@@ -22,7 +22,11 @@ import 'text_cache.dart';
 import '../domain/text_context.dart';
 import '../domain/text_actor.dart';
 import '../domain/historical_completion.dart';
+import '../domain/checklist.dart';
+import '../domain/text_inheritance.dart' show verifyTextInheritance;
 export 'writer_guard.dart';
+
+part 'checklist_store.dart';
 
 Map<String, dynamic>? calculateTaskTagChanges(
   List<String> tags,
@@ -141,6 +145,8 @@ class TaskStore {
     'task.createdWithText',
     'task.completedWithText',
     'task.completedKeepingSuccessor',
+    'task.completedWithChecklist',
+    'checklist.itemCreated',
     'task.textEdited',
     'task.textEditUndone',
     'text.baselineInitialized',
@@ -246,7 +252,7 @@ class TaskStore {
       db = sqlite3.open('$privatePath/cache.sqlite');
       final version =
           db.select('PRAGMA user_version').first.values.first as int;
-      if (version < 0 || version > 15) {
+      if (version < 0 || version > 16) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
@@ -317,7 +323,7 @@ class TaskStore {
           'CREATE TABLE IF NOT EXISTS text_outbox (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
         );
         db.execute(
-          'PRAGMA user_version=${textEngine != null || version >= 14 ? 15 : 13}',
+          'PRAGMA user_version=${textEngine != null || version >= 14 ? 16 : 13}',
         );
         db.execute('COMMIT');
       } catch (_) {
@@ -377,7 +383,7 @@ class TaskStore {
       if (textEngine == null &&
           db
               .select(
-                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.createdWithText','task.completedWithText','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
+                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','task.createdWithText','task.completedWithText','task.completedWithChecklist','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
               )
               .isNotEmpty) {
         throw FormatFailure(
@@ -742,6 +748,8 @@ class TaskStore {
       _validateUndoReferences();
       _validateMoves();
       _validateTagReferences();
+      _validateChecklistReferences();
+      _validateChecklistCompletions();
       for (final entity in auditedEntities) {
         _projectEntity(entity);
       }
@@ -1066,6 +1074,8 @@ class TaskStore {
         _validateMoves();
         _validateTagReferences();
         _validateHistoricalCompletions();
+        _validateChecklistReferences();
+        _validateChecklistCompletions();
       }
       if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
       final affected = newEvents.map((e) => e.entity).toSet();
@@ -1079,6 +1089,13 @@ class TaskStore {
         if (isTaskCompletion(e.type) && e.data['successor'] != null) {
           affected.add((e.data['successor'] as Map)['id'] as String);
         }
+        if (e.type == 'task.completedWithChecklist') {
+          for (final item in (e.data['checklist'] as Map)['items'] as List) {
+            affected.add((item as Map)['id'] as String);
+          }
+        }
+        final checklistParent = _checklistParent(e.entity);
+        if (checklistParent != null) affected.add(checklistParent);
       }
       for (final e in newEvents) {
         if (e.type == 'task.recurringCompletionUndone') {
@@ -1095,6 +1112,12 @@ class TaskStore {
             )
             .map((row) => row['id'] as String),
       );
+      // Pending copied fields can settle when another writer's source arrives.
+      // Reconcile their containing task's cached checklist in the same commit.
+      for (final entity in affected.toList()) {
+        final parent = _checklistParent(entity);
+        if (parent != null) affected.add(parent);
+      }
       // This transaction has one admitted canonical record set. Reuse its pure
       // resolver across affected projections, rather than selecting/copying all
       // original records again for every historical occurrence during rebuild.
@@ -1128,6 +1151,8 @@ class TaskStore {
                   'user.created',
                   'task.completed',
                   'task.completedWithText',
+                  'task.completedWithChecklist',
+                  'checklist.itemCreated',
                   'task.moved',
                 }.contains(e.type) ||
                 (e.type == 'task.operationUndone' &&
@@ -1205,7 +1230,9 @@ class TaskStore {
     }
     final history = _entityEvents(entity);
     final task = project(history);
-    if (task == null || task['kind'] != 'task' || task['deleted'] == true) {
+    if (task == null ||
+        !{'task', 'checklistItem'}.contains(task['kind']) ||
+        task['deleted'] == true) {
       throw FormatFailure('Unknown or deleted task.');
     }
     final native = _hasNativeTextRoot(entity, history);
@@ -1229,6 +1256,7 @@ class TaskStore {
     db.execute('BEGIN IMMEDIATE');
     try {
       _materializeText(task, history);
+      _attachChecklist(task);
       if (task['textUnavailable'] != null) {
         throw TextInheritancePending(task['textUnavailable'] as String);
       }
@@ -1695,7 +1723,7 @@ class TaskStore {
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(
-      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
+      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE json_extract(views.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
     );
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
@@ -1726,13 +1754,13 @@ class TaskStore {
     // successor's history again while rebuilding global manual order.
     final selectedSeedIds = <String, String>{
       for (final row in db.select(
-        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor')",
+        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
       ))
         row['successor'] as String: row['id'] as String,
     };
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
@@ -1971,7 +1999,7 @@ class TaskStore {
     for (final entry in grouped.entries) {
       if (entry.value.any((event) => event.type == 'task.createdWithText') ||
           successors[entry.key]?.any(
-                (event) => event.type == 'task.completedWithText',
+                (event) => hasNativeTaskSuccessor(event),
               ) ==
               true) {
         continue;
@@ -2224,7 +2252,7 @@ class TaskStore {
       throw FormatFailure(textWriteBlocked!);
     }
     if (_textTypes.contains(type) &&
-        type != 'task.createdWithText' &&
+        !isNativeTextCreation(type) &&
         textWriteBlocked != null &&
         !_hasNativeTextRoot(entity, _entityEvents(entity))) {
       throw FormatFailure(textWriteBlocked!);
@@ -2291,11 +2319,17 @@ class TaskStore {
           ]);
           _validateTextBaseline();
           if (textWriteBlocked != null) throw FormatFailure(textWriteBlocked!);
-        } else if (type == 'task.completedWithText') {
-          _resolvedText(
-            (data['successor'] as Map)['id'] as String,
-            pending: [e],
-          );
+        } else if (type == 'task.completedWithText' ||
+            type == 'task.completedWithChecklist') {
+          if (type == 'task.completedWithChecklist') {
+            _validateChecklistCompletions(e);
+          }
+          if (hasNativeTaskSuccessor(e)) {
+            _resolvedText(
+              (data['successor'] as Map)['id'] as String,
+              pending: [e],
+            );
+          }
         } else {
           _materializeText(projected, [...prior, e]);
         }
@@ -2341,6 +2375,8 @@ class TaskStore {
     _validateMoves(e);
     _validateTagReferences(e);
     _validateHistoricalCompletions(e);
+    _validateChecklistReferences(e);
+    _validateChecklistCompletions(e);
     if (isTaskCompletion(type) &&
         data['successor'] == null &&
         type != 'task.completedKeepingSuccessor' &&
@@ -2541,7 +2577,7 @@ class TaskStore {
     }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -2747,6 +2783,10 @@ class TaskStore {
       }
       own.add(successorCreation(_successorSelection(entity, seeds, own).seed));
     }
+    final copies = _itemCopySeeds(entity);
+    if (copies.isNotEmpty) {
+      own.add(checklistCopyCreation(copies.first.$1, copies.first.$2));
+    }
     return own;
   }
 
@@ -2769,7 +2809,7 @@ class TaskStore {
     return selectSuccessor(
       decoded,
       parentHistory,
-      protected: own.isNotEmpty || anchored,
+      protected: own.isNotEmpty || anchored || _hasChecklistActivity(entity),
     );
   }
 
@@ -2819,6 +2859,7 @@ class TaskStore {
         own,
       ).suppressed;
     }
+    _attachChecklist(state, resolution: resolution, textCache: textCache);
     return state;
   }
 
@@ -2861,7 +2902,7 @@ class TaskStore {
     var kind = 'legacy-baseline';
     Map<String, String>? seedText;
     final nativeCreation = history.any(
-      (event) => event.type == 'task.createdWithText',
+      (event) => isNativeTextCreation(event.type),
     );
     if (!nativeCreation &&
         textWriteBlocked?.startsWith('Competing') == true &&
@@ -2873,7 +2914,7 @@ class TaskStore {
       return;
     }
     if (basis != null &&
-        !history.any((event) => event.type == 'task.createdWithText')) {
+        !history.any((event) => isNativeTextCreation(event.type))) {
       final prefix = project(
         _baselineEntityHistory(state['id'] as String, basis),
       );
@@ -2911,13 +2952,15 @@ class TaskStore {
     }
   }
 
-  bool _hasInheritedText(String entity) => db.select(
-    "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.completedWithText' AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
-    [entity],
-  ).isNotEmpty;
+  bool _hasInheritedText(String entity) =>
+      db.select(
+        "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(raw,'\$.data.inheritance') IS NOT NULL AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+        [entity],
+      ).isNotEmpty ||
+      _itemCopySeeds(entity).isNotEmpty;
 
   bool _hasNativeTextRoot(String entity, List<LogEvent> history) =>
-      history.any((event) => event.type == 'task.createdWithText') ||
+      history.any((event) => isNativeTextCreation(event.type)) ||
       _hasInheritedText(entity);
 
   Map<String, ResolvedTextField> _resolvedText(
@@ -3075,7 +3118,7 @@ class TaskStore {
     ]);
     if (source.isEmpty) return null;
     final event = LogEvent.decode(source.single['raw'] as String);
-    return event.type == 'task.completed' && event.entity == entity
+    return isScalarSuccessorInitialization(event) && event.entity == entity
         ? event
         : null;
   }
@@ -3110,12 +3153,17 @@ class TaskStore {
     DateTime? completionDay,
     DateTime? completionInstant,
     String? localZoneId,
+    String? expectedChecklistSnapshot,
     void Function(OperationReceipt)? onPrepared,
   }) => _serialize(() async {
     await _refresh();
     final state = _projectEntity(entity);
     if (state == null || state['kind'] != 'task' || state['deleted'] == true) {
       throw FormatFailure('Unknown task.');
+    }
+    if (expectedChecklistSnapshot != null &&
+        expectedChecklistSnapshot != jsonEncode(state['checklist'] ?? [])) {
+      throw StaleTaskSnapshot();
     }
     final schedule = TaskSchedule.fromJson(
       Map<String, dynamic>.from(state['schedule'] as Map),
@@ -3191,6 +3239,24 @@ class TaskStore {
       };
       type = 'task.completedWithText';
     }
+    if (data['successor'] != null && state.containsKey('checklist')) {
+      final frontiers = <String, dynamic>{
+        for (final row in db.select(
+          'SELECT name,last_seq,chain_head FROM streams',
+        ))
+          (row['name'] as String).replaceFirst('.jsonl', ''): {
+            'seq': row['last_seq'],
+            'hash': row['chain_head'],
+          },
+      };
+      data['checklist'] = _checklistCopy(
+        entity,
+        (data['successor'] as Map)['id'] as String,
+        (state['checklist'] as List).cast<Map<String, dynamic>>(),
+        frontiers,
+      );
+      type = 'task.completedWithChecklist';
+    }
     return _command(
       entity,
       type,
@@ -3215,6 +3281,16 @@ class TaskStore {
             ..remove('inbox'),
         )
         .toList();
+    for (final row in rows) {
+      if (row['checklist'] is List) {
+        row['checklist'] = [
+          for (final item in row['checklist'] as List)
+            Map<String, dynamic>.from(item as Map)
+              ..remove('title')
+              ..remove('description'),
+        ];
+      }
+    }
     return canonicalTextJson(rows);
   }
 
