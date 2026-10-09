@@ -1,0 +1,281 @@
+{
+  "reviewer": "/root/correctness_review",
+  "captured_utc": "2026-10-09T20:50:00.923306+00:00",
+  "worktree": "/workspace/tandemlog-local-db-proof",
+  "baseline": "9a8914abdf31c4d256462cddb47b5fe94b03939a",
+  "verdict": "accepted bounded integrated source; no remaining must-fix found",
+  "scope": [
+    "cleanup source completeness and target obligations",
+    "exact allowlist/canonical exclusion",
+    "startup and failed/successful workspace switch/shutdown",
+    "crash-retained legacy WAL/SHM import and cleanup"
+  ],
+  "resolved_findings": [
+    {
+      "severity": "P1",
+      "issue": "target settings deleted after cleanup.marked formerly allowed legacy settings removal and phase complete",
+      "original_red": "migration-cleanup-target-loss-red.log",
+      "fixed_green": "migration-cleanup-target-loss-green.log",
+      "fix": "target obligations rechecked after cleanup.marked before unlink and before complete; immutable guard baseline and writer fences retained"
+    }
+  ],
+  "independent_checks": [
+    {
+      "name": "focused migration/cache suites initial",
+      "passed": 32,
+      "failed": 0,
+      "log": "migration-cache-initial-review-tests.log"
+    },
+    {
+      "name": "focused migration/cache suites expanded",
+      "passed": 34,
+      "failed": 0,
+      "log": "migration-cache-final-review-tests.log"
+    },
+    {
+      "name": "same actual settings deletion scratch after fix",
+      "result": "rejects missing settings before unlink; original retained",
+      "log": "migration-cleanup-target-loss-green.log"
+    },
+    {
+      "name": "valid different settings writer index+raw JSON at cleanup.marked",
+      "result": "rejects writer differing from immutable migration authority; original retained",
+      "log": "migration-cleanup-writer-change-red.log",
+      "qualification": "Provisional red filename actually contains safe rejection, not a reproduced red"
+    },
+    {
+      "name": "actual synthetic legacy TaskStore child SIGKILL",
+      "result": "WAL 292552 bytes and SHM 32768 bytes retained; full migration/cleanup passes; committed task/writer and exact canonical bytes preserved",
+      "script": "migration-hot-wal.dart",
+      "log": "migration-hot-wal.log"
+    }
+  ],
+  "invariants_reviewed": [
+    "No canonical v3 record rewrite or reinterpretation",
+    "Cleanup removes exact recognized profile paths only; unknown files/canonical logs retained; no recursive deletion",
+    "Source fingerprints and immutable target guard/intent/writer obligations checked before destructive cleanup",
+    "Namespace and protected intent/guard separation maintained",
+    "New workspace publication is reverted on settings-save failure; prior store/rows/user/expansion/Undo/importer ownership retained until switch success",
+    "Shutdown waits admitted work before owned connection and lease release"
+  ],
+  "limits": [
+    "Source hashes describe reviewed working-tree files at closure, not a new frozen commit or full-matrix compilation claim",
+    "Independent probes use synthetic paths only; no live user DB/raw handle access",
+    "Actual WAL/SHM proof is Linux pinned runtime only; Windows/Android native lease/process-death/migration acceptance remains pending",
+    "Root-owned native startup/switch evidence and full suite are not duplicated or claimed as independently executed here",
+    "Downgrade/concurrent old-binary use after activation unsupported per accepted policy",
+    "Physical disk/power failure and every platform VFS behavior not proved by SIGKILL tests"
+  ],
+  "reviewed_file_bindings": {
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 11528,
+      "sha256": "3157faa5312e030d889b626be942e82873dc426836af2927862d3e7f30c63119"
+    },
+    "lib/storage/local_profile_migration.dart": {
+      "bytes": 22404,
+      "sha256": "4d123a2432b1269f0e4ea576cd00d91105d142c7496dd033c996a21c7aacebda"
+    },
+    "lib/storage/legacy_cache_import.dart": {
+      "bytes": 22298,
+      "sha256": "b80a0f19a4d98ed6f93ceba218a9727ebfc7c3b43615a60e92dbf757eec52a1d"
+    },
+    "lib/storage/legacy_profile_lease.dart": {
+      "bytes": 3128,
+      "sha256": "ded9665978486358e8f87e72a002d1dd40b52754bf6d82dda215752aab2fa6c6"
+    },
+    "lib/storage/legacy_protected_files_import.dart": {
+      "bytes": 18001,
+      "sha256": "5852aff41d8f249673210e5e81821f0c4ba43bfd6f19e5da666377e0953006af"
+    },
+    "lib/storage/profile_text_intents.dart": {
+      "bytes": 7505,
+      "sha256": "c5dba0698819c26670cfff24326fcd5ed3bf5e9744b7ba8ecadd5aa5ff6e9ea0"
+    },
+    "lib/storage/local_settings.dart": {
+      "bytes": 7325,
+      "sha256": "166e0722aacdd37236b03a306e42f38d06dda683b3edb8cdc2322a20547b8561"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 156237,
+      "sha256": "c12d6427033068687f8a41e77fc29f86eea6b1d02db569aab3a843f2192d4326"
+    },
+    "lib/storage/checklist_expansion_store.dart": {
+      "bytes": 2237,
+      "sha256": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250"
+    },
+    "lib/main.dart": {
+      "bytes": 175870,
+      "sha256": "2bbeaa400d67702891fc30bab20a9e825803cda4cccb1cbecd21b42d5bd8cda7"
+    },
+    "packaging/linux/tandemlog": {
+      "bytes": 1155,
+      "sha256": "18b831b2053db841bd9a34f880ba7309ab1e4bfdda710b8b45ade22204bc062b"
+    },
+    "test/local_profile_migration_test.dart": {
+      "bytes": 18544,
+      "sha256": "85f25ca6441243f49d19562fe2fae22a454206885a89d4ffcdea4982aa31c428"
+    },
+    "test/legacy_cache_import_test.dart": {
+      "bytes": 9138,
+      "sha256": "b21ee1b19094bebd66a5e89808e5536ec13d237c6cf2e6cf6e2e4a02b60dbcb2"
+    },
+    "test/profile_task_store_test.dart": {
+      "bytes": 14230,
+      "sha256": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890"
+    },
+    "test/local_profile_database_test.dart": {
+      "bytes": 8390,
+      "sha256": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e"
+    },
+    "integration_test/local_profile_workflow_test.dart": {
+      "bytes": 6824,
+      "sha256": "ce14fdf0f6b23d87f18cb36a8252bab6b4f80156eafb98a542acc426b6101869"
+    },
+    "tool/test_linux_profile_discovery.py": {
+      "bytes": 2397,
+      "sha256": "a328f1289bf46cb91f653da90dad94afbab3729b7ac2c4b223c8d72227bbe88f"
+    },
+    "pubspec.yaml": {
+      "bytes": 585,
+      "sha256": "e5b0d71f7eec28ba96223149929c9f5507faa95893d361c492a7a4fbe2416536"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    }
+  },
+  "evidence_bindings": {
+    "migration-cleanup-target-loss.dart": {
+      "bytes": 1414,
+      "sha256": "fbf17b31640d81337ab9d95c128148357d7f2fb9ddc957b18438825522b35819"
+    },
+    "migration-cleanup-target-loss-red.log": {
+      "bytes": 138,
+      "sha256": "1a2d969699e94acbe0b635a2873129f5cf650a59bc53b88843c8e5bf739fc602"
+    },
+    "migration-cleanup-target-loss-green.log": {
+      "bytes": 171,
+      "sha256": "51f8ff930e505e5d31ca1b3297f52559c1451492a48d30a09ab82ea92294bfc9"
+    },
+    "migration-cleanup-writer-change.dart": {
+      "bytes": 1706,
+      "sha256": "27f33719a643e328244af8e7e2e2a0855f0ba03aa0027c0eee30f202ff813060"
+    },
+    "migration-cleanup-writer-change-red.log": {
+      "bytes": 166,
+      "sha256": "8eba34b6b7e99d9bcc1c02350018ad2d181fed0c80c31fd8b03ddd9154fd3f50"
+    },
+    "migration-hot-wal.dart": {
+      "bytes": 3909,
+      "sha256": "a77d7e39c6665385ca5f53cf49ce9d372ff699ffa527ac1c857051a588d4db20"
+    },
+    "migration-hot-wal.log": {
+      "bytes": 165,
+      "sha256": "02820b77acd8541c38f7bc8bb4bd40d30f63e6246cad9a0b1f7b8280e7cd2a5d"
+    },
+    "migration-cache-initial-review-tests.log": {
+      "bytes": 5080,
+      "sha256": "3e9beeb70cda3a5a0eab1b36ab7bc099c03ed57bea7d36e5af591b8e1aab2926"
+    },
+    "migration-cache-final-review-tests.log": {
+      "bytes": 5381,
+      "sha256": "60e97113c8959990d8af8aaa6aab197267f7560593f7aa0eb727a25aef5bbd56"
+    }
+  },
+  "supplemental_reviewed_file_bindings": {
+    "test/support/local_profile_migration_child.dart": {
+      "bytes": 1777,
+      "sha256": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd"
+    }
+  },
+  "final_delta_review": {
+    "verdict": "accepted narrow prototype fence completion and frozen WAL/SHM regression",
+    "behavior": "Existing unchanged source manifests and actual protected authority bindings are verified before missing writer/guard/intent-source fences are recorded atomically. Missing target intents are rejected; no retired proof is fabricated. Changed or disappeared source evidence rejects before completion.",
+    "regression_review": "Frozen hot-WAL regression starts real TaskStore child, retains reachable SQL connection via timer, requires successful SIGKILL/nonzero exit and nonempty WAL/SHM, then verifies migration/replay/cleanup and exact canonical bytes.",
+    "limits": "Read-only supplemental source/test review; no additional suite executed for this final delta. Previously recorded independent 34/0 and scratch WAL proof remain their original executions; root owns final full/native reruns."
+  },
+  "final_format_refresh": {
+    "changed_files": [
+      "lib/storage/legacy_protected_files_import.dart",
+      "test/local_profile_migration_test.dart"
+    ],
+    "qualification": "Hash refresh only after parent-reported brace insertion/format/analyzer closure. No tests or repeated semantic review; independent 34/0 and scratch results remain original executions. Parent-reported full 726/0 and tools 55/1 skip are not independent execution claims."
+  },
+  "qa_reader_file_bindings": {
+    "packaging/smoke.py": {
+      "bytes": 12940,
+      "sha256": "eb9e6ec47343c6db1e2eba74ed0c77b6395be0f33de91738b5a6cc173431d106"
+    },
+    "tool/measure_startup.py": {
+      "bytes": 5034,
+      "sha256": "c6c7e1004a70fb5cf67b43bc94ed995eeedd914c06b720626ae1d24efcb58164"
+    },
+    "tool/test_installer_smoke.py": {
+      "bytes": 4441,
+      "sha256": "70d2a51461dd33d40d5090bfd424d45d6f3e5a8de29a097975a48fabd8dd3264"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 169472,
+      "sha256": "f4c35fb1bb3b381271fc45a897037ce854a8651630f46c31289535469ef32917"
+    },
+    "integration_test/inbox_flow_test.dart": {
+      "bytes": 12069,
+      "sha256": "84caaffa843015e02c9004f3c6564053947dc77540a661afa5796658b5dcf035"
+    },
+    "integration_test/data_integrity_test.dart": {
+      "bytes": 9723,
+      "sha256": "129d1bd0c0fe68402fb2072c86f744312610c2a3d8cc2b0a7a4aef2a1a58b86a"
+    },
+    "tool/test_startup_fixture_guard.py": {
+      "bytes": 1094,
+      "sha256": "2a66c797c70bdfe14d0f80a8a7c21afeed649786e1ab47c12409bb22ee8ca238"
+    }
+  },
+  "reviewed_owner_qa_evidence_bindings": {
+    "/workspace/recovery/local-db-proof/installer-helper-final.log": {
+      "bytes": 103,
+      "sha256": "0f7e4b97443e54aca647179972594d13bb587afcbf151fab8228148587ea844a"
+    },
+    "/workspace/recovery/local-db-proof/installed-layout-smoke.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/recovery/local-db-proof/installed-layout-rebuild.log": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "/workspace/recovery/local-db-proof/installed-layout-smoke.json": {
+      "bytes": 1068,
+      "sha256": "5531f1c8ddbb845a5b57f4d03c4dceadfc8d78db96e27e2f4084824e5f494a3d"
+    },
+    "/workspace/recovery/local-db-proof/integrated-affected-native.log": {
+      "bytes": 6400,
+      "sha256": "166e0155efa1e517a4f25d0ce1cd8ac8f1ffc20fc86307f99cdfe67641380262"
+    },
+    "/workspace/recovery/local-db-proof/integrated-startup-labelled.json": {
+      "bytes": 1384,
+      "sha256": "39844d031d3c2dee3cdc2eee1403e99cc8488194c64777fa51dcc55c684b3ec4"
+    }
+  },
+  "qa_reader_review": {
+    "verdict": "accepted additions; no remaining must-fix",
+    "resolved_finding": "Fresh Windows fixture cached legacy path before launch; current loop recalculates projection location via stat only, retaining exact PID visible-window preliminary gate and post-stop model/settings verification. This source finding was not represented as an executed Windows reproduction.",
+    "invariants": [
+      "Python reader/reset connections explicitly closed on return/error",
+      "DB access before own launch or after exact process/captured Flatpak instance shutdown, no competing live reads",
+      "Reset clears only scoped disposable projections and sets replay_pending; retains trusted streams/ranges/metadata, protected guards/intents/settings and other namespaces",
+      "Benchmark refuses existing app-wide DB before fixture authority writes and reads scoped views after child termination",
+      "Integration assertions retained; preference failure injected on owned SQL connection and exclusion checks use DB owner lease"
+    ],
+    "owner_evidence_reviewed": "helper 5/0; actual compiled Linux fresh+namespace rebuild preserve canonical/settings and load model; affected native6/0. Reviewed logs only, not independent execution. Total tool56/1skip parent-reported; no Windows/Android acceptance implied."
+  },
+  "reviewed_commit": "44d0577c4034cdb082b0e5f05996f367da5b19f3",
+  "final_benchmark_guard_review": {
+    "verdict": "accepted bounded guard and label correction",
+    "changed_existing_bindings": [
+      "tool/measure_startup.py"
+    ],
+    "source": "Rejects any nonempty profile/shared before dataset/settings writes; removed canonical deletion and stale-cache recursive reset. Frozen subprocess regression requires rejection and exact pre-existing bytes retained for legacy settings/shared file cases.",
+    "owner_evidence": "10-task two-run actual model checks; explicit debug binary/label and unflushed OS page cache; warm FILES_READ=0. Not a release performance claim. Tool57/1skip parent-reported; no additional reviewer tests/builds."
+  }
+}
