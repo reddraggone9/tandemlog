@@ -1,0 +1,69 @@
+{
+  "reviewer": "correctness_review",
+  "reviewedAtUtc": "2026-10-09T22:12:00.089812+00:00",
+  "verdict": "accepted for isolated QA branch build; no remaining must-fix in bounded source review",
+  "worktree": "/workspace/tandemlog-storage-fault-harness",
+  "baseline": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "state": "seven reviewed QA inputs uncommitted; bind final commit to these file hashes",
+  "files": {
+    "tool/android_storage_fault/harness.dart": {
+      "bytes": 15205,
+      "sha256": "9e665e064e80ba6aa61e4e583a34458abf5741443c93ad091e313c9ab0bda8e7"
+    },
+    "tool/android_storage_fault/main.dart": {
+      "bytes": 1841,
+      "sha256": "6dbe0253074037cf7943e368d09156eda0b3551706907134591284bfdaff8c59"
+    },
+    "tool/android_storage_fault/build_apk.py": {
+      "bytes": 6555,
+      "sha256": "fb5134e587afe775048416752299222c20659f5d4c045c1101d1f9d02b8e2601"
+    },
+    "tool/android_storage_fault/run_on_device.py": {
+      "bytes": 8964,
+      "sha256": "7c31901f9249e3ffc26f99889ed10764aeedbc3decdf345ca450ff38fc00189c"
+    },
+    "tool/android_storage_fault/README.md": {
+      "bytes": 3309,
+      "sha256": "c524dede453786d822d6995dba60be7c9d603cc193296dc8606d538af1fc70be"
+    },
+    "test/android_storage_fault_harness_test.dart": {
+      "bytes": 2455,
+      "sha256": "0fe31565bd6baaf665d07907b5068471ce4296319e340a331acc309c013ec6e9"
+    },
+    ".github/workflows/validate.yml": {
+      "bytes": 1123,
+      "sha256": "74626b77c7bfad0a1872a7cd706f38b32ea084152719bdaf063396861a483dd2"
+    }
+  },
+  "productionInputsUnchanged": true,
+  "reviewedBoundaries": [
+    "Own fixed QA package and app-private synthetic roots; restricted case/mode/cut control; no production profile or owner package access.",
+    "Immutable archived production source; locked dependencies; all patched tracked source and compiled target bytes rechecked after build; separate debug-only APK/native hashes.",
+    "Delivered exact five-tool inventory and runner self-hash checked before install; retained initial controls are not replayed on subsequent runs.",
+    "Eleven exact checkpoints require current PID and durable marker, held DB, force-stop and confirmed process exit, then matching same-root marker/source recovery.",
+    "Reports are published after owner connection close and validate exact protected writer/settings/guard/private intents/canonical and trusted cache evidence.",
+    "Actual SQLite capacity result13 is required with rollback and retained intent evidence.",
+    "Logcat restricted to collected QA PIDs and recorded run start; no global log reset."
+  ],
+  "resolvedSourceFindings": [
+    "Post-build QA target drift now rejected before artifact/provenance packaging.",
+    "Delivered tooling and executing runner now explicitly bound to provenance.",
+    "Existing app_flutter first launch now skipped to avoid stale control replay."
+  ],
+  "hostTestEvidence": {
+    "path": "/workspace/recovery/storage-release/android-fault56-host-tests.log",
+    "bytes": 447,
+    "sha256": "bbc88b775e4b236be8e2064120621f05d9dcbcc88918d844c9a83d3b65ec9c52",
+    "observed": "4 host tests passed; markers explicitly synthetic; not Android process-death proof"
+  },
+  "reviewExecution": "Read-only source review and hash checks; no build/device/live-data access or tracked edits.",
+  "pending": [
+    "Hosted isolated QA APK build and packaged artifact verification.",
+    "Actual selected Android worker eleven cut/process-exit/recovery cases and SQL result13."
+  ],
+  "limits": [
+    "No owner-signed production APK, SAF/provider, physical power-loss or Android directory-barrier proof.",
+    "Smallest synthetic protected migration fixture does not establish all production application workflows or private native edit/outbox adoption paths.",
+    "Build acceptance authorizes existing isolated QA preparation only; no publication or production cutover."
+  ]
+}

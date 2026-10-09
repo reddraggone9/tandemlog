@@ -1,0 +1,71 @@
+{
+  "reviewer": "architecture_review",
+  "captured_at_utc": "2026-10-09T22:13:07.768726+00:00",
+  "worktree": "/workspace/tandemlog-storage-fault-harness",
+  "production_revision": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "overlay_state": "uncommitted isolated QA branch; source hashes bind reviewed bytes",
+  "verdict": "accepted bounded QA build/device-run preparation; no remaining architecture must-fix found",
+  "must_fix_findings": [],
+  "resolved_findings": [
+    "Legacy-wal marker accepted for direct retained-fixture resume; migration cut refuses retained cut marker",
+    "Imported cache streams/ranges/events/outbox compare against original owned SQL evidence",
+    "Success report written only after profile.close; same-process marker cannot count as prior termination",
+    "Full archived tracked-input hash baseline after allowed identity patch is verified unchanged after build",
+    "Device logs restricted to known QA package PIDs and device runner-start timestamp; no global Flutter logs or buffer clearing"
+  ],
+  "scope": [
+    "Unchanged production storage/source76 exported into temporary build snapshot; two QA Dart targets and narrow separate appId/label/activity edits only",
+    "Debug signing, fixed separate QA package and own documents synthetic case roots; no production app installation/force-stop/data or signing changes",
+    "Machine-flushed exact-cut marker and held DB, external matching-PID force-stop/exit, same retained root resume and exact protected/canonical/trusted data assertions",
+    "Injected SQLite capacity/rollback test explicitly separate from actual physical disk/full/power-loss/SAF proof",
+    "Separate branch-only QA workflow/artifact; production candidate workflow and release publication unchanged"
+  ],
+  "runner_review": "Verifies source/package metadata, exact APK/native bytes, actual selected API/ABI; unique case per cut; marker/report PID/source/boundary/root match live QA process; prior PID must exit; resumed report includes exact cutMarker and closed owner. Direct APK identity is attested by checked builder badging/provenance; runner consumes that artifact binding rather than reparsing Android binary manifest.",
+  "evidence_qualification": {
+    "host_test_log": "/workspace/recovery/storage-release/android-fault56-host-tests.log",
+    "host_test_log_sha256": "bbc88b775e4b236be8e2064120621f05d9dcbcc88918d844c9a83d3b65ec9c52",
+    "scope": "Existing root-owned host tests only; synthetic marker PID-1 is explicitly not Android process-death evidence. Reviewer ran no tests/builds/downloads."
+  },
+  "source_sha256": {
+    ".github/workflows/validate.yml": "74626b77c7bfad0a1872a7cd706f38b32ea084152719bdaf063396861a483dd2",
+    "tool/android_storage_fault/harness.dart": "9e665e064e80ba6aa61e4e583a34458abf5741443c93ad091e313c9ab0bda8e7",
+    "tool/android_storage_fault/main.dart": "6dbe0253074037cf7943e368d09156eda0b3551706907134591284bfdaff8c59",
+    "tool/android_storage_fault/build_apk.py": "fb5134e587afe775048416752299222c20659f5d4c045c1101d1f9d02b8e2601",
+    "tool/android_storage_fault/run_on_device.py": "7c31901f9249e3ffc26f99889ed10764aeedbc3decdf345ca450ff38fc00189c",
+    "tool/android_storage_fault/README.md": "c524dede453786d822d6995dba60be7c9d603cc193296dc8606d538af1fc70be",
+    "test/android_storage_fault_harness_test.dart": "0fe31565bd6baaf665d07907b5068471ce4296319e340a331acc309c013ec6e9"
+  },
+  "remaining_gates": [
+    "Freeze reviewed overlay source before branch push/build; artifact provenance must identify actual overlay/source/hash inputs",
+    "Successful QA CI packaging and independent actual archive/APK/debug signer/package/native/hash verification before installing the selected artifact",
+    "Actual API30/device ABI cut/force-stop/exit/recovery reports; retain exact package/source/PID/case evidence",
+    "Production signed APK/native/update/startup/SAF/provider/installer and parent publication gates remain separate",
+    "No Windows, physical power-loss/directory-barrier, production receipt-retirement or live-profile claim from this QA overlay alone"
+  ],
+  "reviewer_actions": {
+    "tracked_source_edits": false,
+    "tests_builds_downloads_run": false,
+    "scratch_receipt_only": true
+  },
+  "late_qa_extension": {
+    "verdict": "accepted; no remaining architecture must-fix for isolated QA branch build",
+    "changed_bound_paths": [
+      "tool/android_storage_fault/run_on_device.py",
+      "tool/android_storage_fault/README.md"
+    ],
+    "reviewed_closures": [
+      "Compiled two-Dart overlay rehashed after build, and exact five delivered tools/source hashes included in provenance",
+      "Runner checks fixed five-name tooling inventory and its own executing file SHA before any ADB install",
+      "Initial activity launch occurs only when QA app_flutter does not exist, preventing retained control/case replay on subsequent runs",
+      "Known QA PID plus runner-start logcat scoping remains intact"
+    ],
+    "independent_correctness_receipt": "/workspace/recovery/storage-release/android-storage-fault-correctness-review.json",
+    "independent_correctness_sha256": "8ea780a610d3c97827a9723840e5386f4fac31c6eee8f6db8de0b8eb0c5d1ccc",
+    "all_seven_hashes_match": true
+  },
+  "windows_smoke_coverage_qualification": {
+    "source": "parent reported exact build56 Windows job114041211744 success; artifact bytes unavailable here",
+    "qualification": "packaging/smoke.py can stop on generic TANDEMLOG_READY_MS before EnumWindows. Its fallback requires a QA own-process visible window for3seconds only when stdout readiness is unavailable. Job success alone is not a strict visible-window/GUI acceptance claim; parent must inspect actual windows-install-smoke.json route/markers and exact artifact bytes.",
+    "production_change_required": false
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "productionSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "testOnly": true,
+  "hostTests": "4 passed; explicitly synthetic host marker, no Android process-death claim",
+  "hostTestLogSha256": "bbc88b775e4b236be8e2064120621f05d9dcbcc88918d844c9a83d3b65ec9c52",
+  "analysis": "No issues",
+  "productionUnchanged": "lib/native/android/pubspec.lock/pubspec.yaml",
+  "remaining": [
+    "Hosted debug QA APK build and native payload/provenance review",
+    "Actual Android runtime API/ABI and source-bound force-stop/same-root recovery",
+    "Separate production owner-signed APK acceptance and publication gates"
+  ]
+}
