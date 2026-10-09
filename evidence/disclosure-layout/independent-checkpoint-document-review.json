@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T13:25:03.618478+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_for_isolated_branch_checkpoint_only",
+  "must_fix_findings": [],
+  "reviewed_files": [
+    {
+      "path": "evidence/disclosure-layout/README.md",
+      "sha256": "67dfbd18542c550867b263f54953ce689b839be3a6aa538a1c172c220133169c"
+    },
+    {
+      "path": "evidence/disclosure-layout/baseline-red.log",
+      "sha256": "b39e4e07686298072ce17470885e50372156048caddf0a0c6b237827aedd1b03"
+    },
+    {
+      "path": "evidence/disclosure-layout/compact-footer-proposed.patch",
+      "sha256": "0a31b7e9d785d08f202e763080bdb84533509912feda64c0a00bcf07707e13ce"
+    },
+    {
+      "path": "evidence/disclosure-layout/desktop-enlarged-expanded.png",
+      "sha256": "1ab0642b04fb766764677caf93740d6e45a49ccd60f765b1d3a660782fad12cc"
+    },
+    {
+      "path": "evidence/disclosure-layout/held-rounded-ink.png",
+      "sha256": "e81b745fd7d855771ac8401928d65ecb81410d2021a34edbd2620e820b5da859"
+    },
+    {
+      "path": "evidence/disclosure-layout/independent-feasibility-review.json",
+      "sha256": "559eae3391e3ec2654b881633464774d6ef231cfa37b1f36a819702ad6536d8b"
+    },
+    {
+      "path": "evidence/disclosure-layout/independent-horizontal-ink-review.json",
+      "sha256": "72201f7e3d3b8f1f825c0be0e3d227a6b68537cbdb60a5658194558325ba34f8"
+    },
+    {
+      "path": "evidence/disclosure-layout/narrow-expanded.png",
+      "sha256": "f1fa431b6f26849ed0874309d8de0c8424a3fc841784fa6f71ea223c7183d354"
+    },
+    {
+      "path": "evidence/disclosure-layout/native-partial-red.log",
+      "sha256": "65012eb26be63dc8d36599c179b5b00db1f5d3d1c20cffc4c2f362a72f3b0b99"
+    },
+    {
+      "path": "evidence/disclosure-layout/native-partial-verification.json",
+      "sha256": "188720406a9099270c30aee588b1e89ef29f897bc362af28e9d501b9fca1be2f"
+    },
+    {
+      "path": "design/status.md",
+      "sha256": "0995c9f4e7f28e4f76266eda1e5b9f1961966857ab5417057475f504dc85fa74"
+    }
+  ],
+  "checks": [
+    "README and new status section accurately describe horizontal/ink-only progress, retained separate48px targets, pending compact28px decision, unchanged releasedRC6 bytes and no main adoption or publication.",
+    "Native receipt source hashes match current source/test and original independent source review; analysis receipt binds clean final-partial-analyze.log after final assertions.",
+    "Copied independent review is byte-identical to its original. Baseline/final public logs are byte-identical to preserved originals, disclose the density failure and are not represented as passing suites.",
+    "Three public images match actual owner-run synthetic native captures. Reviewer inspected held-rounded-ink, narrow-expanded and desktop-enlarged-expanded pixels.",
+    "Concrete compact-footer patch passes git apply --check against current source without being applied. It changes only disclosure minimum height/padding/tapTargetSize and corresponding test expectations, preserves body48 and disclosure minimumwidth48, and grows footer with count text. This is a reviewable conditional proposal, not approval to adopt it.",
+    "README explicitly states intentionally red focused test is outside native aggregate and must be registered and pass before any future candidate gate.",
+    "JSON parses and relative Markdown links resolve. Evidence text/log scans found no private Library identifiers, account percentage/quota keys, HTTP storage URLs or Bearer tokens. Local recovery log paths are provenance references, not public download claims."
+  ],
+  "remaining": [
+    "Normal text density assertion remains red26px versus6px; requested bottom gap is not completed.",
+    "Compact disclosure target exception still needs explicit decision; proposal remains unapplied.",
+    "Any later candidate requires complete source review, passing registered flow, actual acceptance and normal release gates; this checkpoint grants no main adoption or publication approval."
+  ],
+  "scope": "Read-only bounded documentation/receipt/image/proposal review. No tests run, source edits, patch application, workflow dispatch or publication by reviewer."
+}

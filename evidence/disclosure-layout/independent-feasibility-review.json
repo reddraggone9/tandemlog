@@ -1,0 +1,35 @@
+{
+  "reviewed_at_utc": "2026-10-09T13:03:14.194147+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent, disclosure feasibility review",
+  "scope": "read-only design/code feasibility; no tests, code edits, image materialization, builds or publication",
+  "source_files": [
+    "lib/main.dart:_checklistDisclosure",
+    "lib/main.dart task-body GestureDetector/ConstrainedBox/ListTile",
+    "design/decisions/0011-one-level-checklists.md:66",
+    "installed Flutter material/button_style_button.dart _InputPadding"
+  ],
+  "finding": "Requested normal-text top2+count20+ordinary-bottom6 produces28px footer, incompatible with prior separate48px disclosure target when body48 target, row padding/edges and nonoverlap are unchanged",
+  "existing_layout": {
+    "disclosure_min_height": 48,
+    "disclosure_top_padding": 2,
+    "normal_text_count_line_height_reported_by_parent": 20,
+    "remaining_below_count": 26,
+    "ordinary_body_bottom_padding": 6,
+    "task_body_min_height": 48,
+    "disclosure_is_following_column_sibling": true
+  },
+  "accepted_prior_rule_quote": "Separate48px targets bound further vertical compression.",
+  "framework_detail": "TextButton padded tapTargetSize adds _InputPadding minimum48 independent of reduced minimumSize. A real compact exception needs shrinkWrap or equivalent compact hit rectangle; minimumSize-only is insufficient.",
+  "recommendation": "Flag the48px-policy conflict to parent. If preserving48 remains mandatory, the requested bottom gap cannot be achieved without revising top/body geometry or overlapping another action; retain that geometry. If a disclosure-specific compact target is approved, minimally keep existing TextButton keyboard/semantics/busy guard and origin/expansion callback, body48 and row edges/padding; use minimum48 width, content-driven compact height(top2+line height+bottom6), explicit shrinkWrap, and allow height to grow with text scale. This would be28px high at normal text and must be described as smaller, not as preserving48px.",
+  "ink": "Use an explicit centered rounded-rectangle visual ink region within the footer after target policy is settled. Preserve the current glyph/count shared vertical center; an inset painted ink region can differ from the compact footer hit rectangle but cannot borrow hit area from body/adjacent rows. Top2/bottom6 is asymmetric, so full-footer ink is not perfectly centered on its label; keep any visual inset inside that same footer rather than silently moving text.",
+  "arrow_gap": "The translated18px Icon still reserves18px layout width, followed by8px SizedBox. Tighten the retained icon allocation to a stable width sufficient for both glyphs plus a small explicit gap; preserve visible left edge/title column and existing vertical Row centering. Merely changing vertical alignment does not address the observed horizontal gap.",
+  "rejected": [
+    "Transparent48px target extending into task-body text actions or the next row",
+    "Reducing body48 target/altering row padding or top gap to hide the discrepancy",
+    "Hard fixed footer height that clips enlarged text",
+    "Bare GestureDetector replacing keyboard/button semantics",
+    "Changing minimumSize while padded _InputPadding still retains48px and claiming compact row spacing"
+  ],
+  "parent_screenshot_attribution": "Parent inspected actual pixels and reports count/arrow already vertically centred and larger count-to-divider gap; this reviewer did not inspect or materialize the blocked Library screenshot.",
+  "blocker": "An explicit decision between prior48px disclosure target policy and requested compact bottom gap is necessary; no implementation has been selected or edited."
+}

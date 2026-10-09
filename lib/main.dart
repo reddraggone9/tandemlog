@@ -28,6 +28,7 @@ import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
 import 'presentation/checklist_panel.dart';
+import 'presentation/checklist_disclosure_ink_border.dart';
 import 'presentation/task_actions_menu.dart';
 import 'presentation/checklist_item_editor.dart';
 import 'presentation/failure_message.dart';
@@ -2660,6 +2661,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final complete = items.where((item) => item['completed'] == true).length;
     final label =
         '${expanded ? 'Collapse' : 'Expand'} checklist for ${task['title']}: $complete of ${items.length} complete';
+    final count = items.isEmpty ? 'Checklist' : '$complete/${items.length}';
+    final textStyle = Theme.of(context).textTheme.labelLarge!;
+    final textMetrics = TextPainter(
+      text: TextSpan(text: count, style: textStyle),
+      textDirection: Directionality.of(context),
+      textScaler: MediaQuery.textScalerOf(context),
+    )..layout();
+    final inkHeight =
+        textMetrics.height.clamp(18, double.infinity).toDouble() + 4;
+    final inkWidth = 13 + textMetrics.width + 16;
+    textMetrics.dispose();
     return Align(
       alignment: Alignment.centerLeft,
       child: Semantics(
@@ -2675,21 +2687,27 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             padding: const EdgeInsets.only(top: 2),
             alignment: Alignment.topLeft,
             visualDensity: VisualDensity.standard,
+            textStyle: textStyle,
+            shape: ChecklistDisclosureInkBorder(inkWidth, inkHeight),
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               // Remove the Material glyph's left bearing so its visible edge
               // starts at the same column as the task title and metadata.
-              Transform.translate(
-                offset: Offset(expanded ? -4.5 : -6.4425, 0),
-                child: Icon(
-                  expanded ? Icons.expand_more : Icons.chevron_right,
-                  size: 18,
+              Align(
+                alignment: Alignment.centerLeft,
+                widthFactor: 0.5,
+                child: Transform.translate(
+                  offset: Offset(expanded ? -4.5 : -6.4425, 0),
+                  child: Icon(
+                    expanded ? Icons.expand_more : Icons.chevron_right,
+                    size: 18,
+                  ),
                 ),
               ),
-              const SizedBox(width: 8),
-              Text(items.isEmpty ? 'Checklist' : '$complete/${items.length}'),
+              const SizedBox(width: 4),
+              Text(count),
             ],
           ),
         ),

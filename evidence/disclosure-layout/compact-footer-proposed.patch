@@ -1,0 +1,26 @@
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -2683,8 +2683,9 @@
+               ? null
+               : () => _setChecklistExpansion(origin, {id}, !expanded),
+           style: TextButton.styleFrom(
+-            minimumSize: const Size(48, 48),
+-            padding: const EdgeInsets.only(top: 2),
++            minimumSize: const Size(48, 0),
++            padding: const EdgeInsets.only(top: 2, bottom: 6),
++            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+             alignment: Alignment.topLeft,
+             visualDensity: VisualDensity.standard,
+             textStyle: textStyle,
+--- a/integration_test/checklist_disclosure_layout_test.dart
++++ b/integration_test/checklist_disclosure_layout_test.dart
+@@ -115,7 +115,8 @@
+           );
+           expect(countRect.left - tester.getRect(body).left, closeTo(13, 0.01));
+           expect(target.width, greaterThanOrEqualTo(48));
+-          expect(target.height, greaterThanOrEqualTo(48));
++          expect(target.height, greaterThanOrEqualTo(countRect.height + 8));
++          expect(tester.getRect(body).height, greaterThanOrEqualTo(48));
+           expect(tester.getRect(body).bottom, lessThanOrEqualTo(target.top));
+           expect(countRect.top - lastTextBottom(body), closeTo(2, 0.01));
+           final viewport = tester.getRect(find.byType(CustomScrollView).last);

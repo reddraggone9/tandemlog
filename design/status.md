@@ -1,5 +1,20 @@
 # Current status — 2026-10-09
 
+## Disclosure geometry — isolated partial checkpoint
+
+`fix/checklist-disclosure-spacing` carries the requested tighter arrow/count gap
+and centered rounded rectangular ink, retaining the body and disclosure48px
+hit targets, title-column alignment, vertical positions and row padding.
+[Native measurements and independent partial review](../evidence/disclosure-layout/README.md)
+cover normal/enlarged desktop and narrow Linux layouts, with/without secondary
+text and expanded/collapsed. The final density assertion remains red: normal
+count-to-row-bottom clearance26px versus ordinary secondary text6px. The prior
+separate48px-target policy conflicts with a2+20+6=28px compact footer; the
+explicit compact-target choice is pending. No body/next-row hit area is borrowed.
+This source has not been adopted on main, versioned as a new candidate or
+published. Debug version labels remain RC6/build50; published RC6 bytes are
+unchanged. Exact Android acceptance, final demos and release gates remain pending.
+
 ## Checklist controls follow-up — RC6 published
 
 Preview [2026.10.2-rc.6](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.6)

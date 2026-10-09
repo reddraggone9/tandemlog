@@ -1,0 +1,95 @@
+{
+  "base_commit": "409c2b9a020f065c686cbddab395601e776106bd",
+  "branch": "fix/checklist-disclosure-spacing",
+  "status": "Isolated partial checkpoint; requested bottom gap remains incomplete",
+  "local_debug_version": "2026.10.2-rc.6+50; modified debug source, not the published installer",
+  "platform": "Actual Linux GTK/Flutter; synthetic isolated stores; not native Android acceptance",
+  "reference_pixels": "Parent inspected the actual screenshot; cloud Library materialization failed, so root did not inspect reference pixels",
+  "source_sha256": {
+    "lib/main.dart": "6aa4a842c16bbeffe6ff9377ccf0227b695d1355fc8a63057ab91b2af95521fe",
+    "lib/presentation/checklist_disclosure_ink_border.dart": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b",
+    "integration_test/checklist_disclosure_layout_test.dart": "a53f33b6f6ffe2b64341b2aeef441126823ed508b1993ea8985af6f4e85b6876"
+  },
+  "native_baseline": {
+    "normal_bottom_clearance": 26,
+    "comparable_secondary_bottom_clearance": 6,
+    "normal_count_height": 20,
+    "old_count_x_from_title_column": 26,
+    "held_ink": "circular; actual capture inspected"
+  },
+  "native_partial_check": {
+    "owner_run": true,
+    "geometries": [
+      [
+        1200,
+        1
+      ],
+      [
+        1200,
+        2
+      ],
+      [
+        390,
+        1
+      ],
+      [
+        390,
+        2
+      ]
+    ],
+    "secondary_text": [
+      true,
+      false
+    ],
+    "states": [
+      "expanded",
+      "collapsed"
+    ],
+    "count_x_from_title_column": 13,
+    "top_line_gap": 2,
+    "minimum_actual_hit_size": [
+      48,
+      48
+    ],
+    "painted_ink": "rounded rectangle, centered on visible content; paint margins do not extend the hit area",
+    "body_disclosure_overlap": false,
+    "row_edges_and_padding": "retained",
+    "edge_taps": "both lower corners activate expand/collapse without falling through to body selection",
+    "normal_bottom_clearance": 26,
+    "enlarged_bottom_clearance": 6,
+    "result": "All geometry/ink/state/edge assertions reached; final density assertion fails26 versus6. This is not a passing test suite."
+  },
+  "analysis": "Focused analyzer clean",
+  "local_evidence": {
+    "baseline-native-corrected.log": {
+      "path": "/workspace/recovery/disclosure-layout-reference/baseline-native-corrected.log",
+      "sha256": "b39e4e07686298072ce17470885e50372156048caddf0a0c6b237827aedd1b03"
+    },
+    "horizontal-ink-native-verbose.log": {
+      "path": "/workspace/recovery/disclosure-layout-reference/horizontal-ink-native-verbose.log",
+      "sha256": "a3341983941a390a16c389cd06860b61b911c1469714573958ab46b98563c4fe"
+    },
+    "partial-final-native.log": {
+      "path": "/workspace/recovery/disclosure-layout-reference/partial-final-native.log",
+      "sha256": "65012eb26be63dc8d36599c179b5b00db1f5d3d1c20cffc4c2f362a72f3b0b99"
+    },
+    "partial-analyze-corrected.log": {
+      "path": "/workspace/recovery/disclosure-layout-reference/partial-analyze-corrected.log",
+      "sha256": "97e01c9b64057ee50d8e877a89781d1473266532754b5adbd7137afaf29e500f"
+    },
+    "final-partial-analyze.log": {
+      "path": "/workspace/recovery/disclosure-layout-reference/final-partial-analyze.log",
+      "sha256": "cc8e68aa57ab387275eb61b2e5affdfa0cbfdcb9f368fc547963623e744f8d64"
+    }
+  },
+  "pending": [
+    "Compact disclosure target policy decision: normal28px high, width at least48px, grows with text, separate body target stays48px",
+    "Apply/review compact patch and pass density test if approved",
+    "Register focused flow in native aggregate before candidate gates",
+    "Final source native desktop/Android acceptance and demos",
+    "Exact candidate, independent editorial/artifact gates and fresh quota before any RC publication"
+  ],
+  "no_main_adoption": true,
+  "no_release_or_stable_change": true,
+  "no_live_data_or_storage_change": true
+}

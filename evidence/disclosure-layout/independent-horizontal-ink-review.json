@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T13:17:38Z",
+  "reviewer": "independent delegated reviewer",
+  "scope": "Read-only horizontal spacing and rounded disclosure ink correction; retained 48px target. No source edits, test execution, adoption or publication by reviewer.",
+  "repository_head": "409c2b9a020f065c686cbddab395601e776106bd",
+  "reviewed_files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "6aa4a842c16bbeffe6ff9377ccf0227b695d1355fc8a63057ab91b2af95521fe"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "a53f33b6f6ffe2b64341b2aeef441126823ed508b1993ea8985af6f4e85b6876"
+    }
+  ],
+  "decision": "accepted_for_horizontal_and_ink_correction_only",
+  "must_fix_findings": [],
+  "source_findings": [
+    "Align widthFactor 0.5 allocates 9px for the existing 18px icon; spacer 4px places the count 13px from the body/title column. Existing icon translation and vertical placement are preserved.",
+    "TextPainter and TextButton use the same explicit labelLarge style and ambient text scale. Ink dimensions include the 13px leading content plus 8px horizontal padding per side, and 2px vertical padding per side.",
+    "The shape starts 8px left of the button box only for ink painting. Flutter InkWell customBorder clips ink; its opaque GestureDetector and normal TextButton sizing retain rectangular hit bounds. No body target is borrowed or shifted.",
+    "Body and disclosure remain consecutive separate Column children. Body minHeight 48 and disclosure minimumSize 48x48 are unchanged; row edges, internal padding, callbacks, busy disablement and accessibility label remain unchanged.",
+    "Custom border preserves the shape through copyWith and handles interpolation between instances. No must-fix found in current usage."
+  ],
+  "native_evidence": {
+    "executed_by": "implementation owner; reviewer read existing source/log and inspected actual captures",
+    "latest_log": {
+      "name": "partial-final-native.log",
+      "sha256": "65012eb26be63dc8d36599c179b5b00db1f5d3d1c20cffc4c2f362a72f3b0b99"
+    },
+    "scope": "1200px and 390px widths at 1x and 2x text scale, each with and without optional secondary text: eight cases, each collapsed and expanded.",
+    "observed_passes": "All cases reached centered-ink, count offset 13px, top gap 2px, target width/height >=48, separate body/footer, row edge checks, activation at lower-right/lower-left target edges and expanded/collapsed assertions before final density assertion.",
+    "overall_test_result": "FAILED: sole final bottom-clearance assertion expects 6px and observes 26px at normal text scale. The 2x text cases measure 6px. This run is not reported as a passing suite.",
+    "actually_viewed_captures": [
+      {
+        "name": "horizontal-ink/disclosure-held-ink.png",
+        "sha256": "e81b745fd7d855771ac8401928d65ecb81410d2021a34edbd2620e820b5da859"
+      },
+      {
+        "name": "horizontal-ink/disclosure-390-1-true.png",
+        "sha256": "d377b54ad33f0584705ef95332042520bce5e5e5d7fc8871fb0eb2f0108c803a"
+      },
+      {
+        "name": "horizontal-ink/disclosure-390-2-true.png",
+        "sha256": "9b778087057c61c26fe4a6cba0002b9ea01478ded6eb1cf9132971946de5cb8b"
+      },
+      {
+        "name": "partial-final/disclosure-expanded-390-1-true.png",
+        "sha256": "f1fa431b6f26849ed0874309d8de0c8424a3fc841784fa6f71ea223c7183d354"
+      },
+      {
+        "name": "partial-final/disclosure-expanded-1200-2-true.png",
+        "sha256": "2ce31367ac3f735908ab49d10faeab8e07fb041b20d18d0026b8a472b6b1fe0b"
+      }
+    ],
+    "pixel_findings": "Actual held capture shows a short rounded rectangle centered on arrow/count instead of circular ink. Narrow normal/enlarged and expanded narrow/wide enlarged captures show the intended tighter spacing without arrow/count clipping. Pointer annotation partly crosses the held-ink capture; geometry is corroborated by log/source."
+  },
+  "remaining": [
+    "Normal-scale count-to-row-bottom clearance remains 26px versus ordinary secondary-text 6px; horizontal/ripple correction does not complete the bottom-gap request.",
+    "Compact-target decision remains unanswered. A normal-size count20 + top2 + bottom6 footer requires 28px and conflicts with the previously documented separate48px target requirement; no exception is presumed.",
+    "Checkpoint is suitable only as an isolated partial implementation with the intentionally failing density assertion clearly disclosed. No main adoption or publication acceptance is granted by this review."
+  ],
+  "privacy": "Public-safe projection: no private Library identifiers, quota/account data, signed storage URLs or local absolute filesystem paths. Original local evidence remains with implementation owner."
+}
