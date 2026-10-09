@@ -1,0 +1,2 @@
+- Consolidated local app data, with automatic migration for existing installations.
+- Updated Android build dependencies.
