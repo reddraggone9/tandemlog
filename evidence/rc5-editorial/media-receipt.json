@@ -1,0 +1,60 @@
+{
+  "base": "44344407200b61d38d7b33f22c0ace715376fd6f",
+  "executable_after": "d7a732eba7494589ef66e2ae1629911273c88a3d",
+  "reviewed_followup": "66d031eaf08b47fb033adb49d538182f7eff9c01",
+  "platform": "Actual Linux GTK production main; synthetic fixture",
+  "capture_viewport": [
+    1200,
+    850
+  ],
+  "theme": "Dark",
+  "text_scale": 1,
+  "before_mode": "local release",
+  "after_mode": "local debug",
+  "fixture": "Same six-item Pack for a walk parent, all unchecked. Full histories differ at capture times; cropped comparison excludes the other parent with a added demo item.",
+  "composition": "SVG document embeds unchanged original PNG bytes, displays 1:1 pixels through clip paths; labels and background only. Raster renderer must preserve all clipped source pixels.",
+  "canvas": [
+    1008,
+    629
+  ],
+  "crops": {
+    "before": {
+      "raw": "evidence/inline-checklists/before-editor.png",
+      "box": [
+        790,
+        85,
+        400,
+        565
+      ],
+      "destination": [
+        16,
+        48
+      ]
+    },
+    "after": {
+      "raw": "evidence/inline-checklists/after-inline.png",
+      "box": [
+        16,
+        477,
+        560,
+        365
+      ],
+      "destination": [
+        432,
+        48
+      ]
+    }
+  },
+  "artifacts": {
+    "evidence/inline-checklists/before-editor.png": "ffb6bb4a69a3d2a20d8584194694148c5eb5355400b538eaef67444bee0ec518",
+    "evidence/inline-checklists/after-inline.png": "343b2bc4ec83420bb7376e1a6abbe69b134f7e192e4cb918a59f730ab636e415",
+    "evidence/rc5-editorial/inline-checklist-before-after.svg": "0e51ef00c8f48022b9a04363f701b0bb531da023ac73d463fdb831921748ec64",
+    "evidence/rc5-editorial/inline-checklist-before-after.png": "cbe93869b0d483c00cf74b4c7ce472ed323d012bf268407a6295e024037157c0"
+  },
+  "native_acceptance": "Source UI comparison; exact signed installer acceptance remains pending.",
+  "renderer": "Inkscape SVG document rasterization, 1:1 clip placement",
+  "pixel_equality": {
+    "before": true,
+    "after": true
+  }
+}
