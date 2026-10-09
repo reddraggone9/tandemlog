@@ -1,5 +1,6 @@
 """Installer subprocess cleanup must target only its captured Flatpak instance."""
 import importlib.util
+from contextlib import closing
 import io
 import hashlib
 import json
@@ -50,7 +51,7 @@ class SharedProfileProjection(unittest.TestCase):
             key = hashlib.sha256(str(folder).encode()).hexdigest()
             prefix = f'tasks_{key}_'
             raw = b'{"writer":"synthetic","folder":"unchanged"}'
-            with sqlite3.connect(str(profile/'local.sqlite')) as db:
+            with closing(sqlite3.connect(str(profile/'local.sqlite'))) as db, db:
                 db.execute('PRAGMA application_id=1414284354')
                 db.execute('CREATE TABLE protected_settings(singleton INTEGER,writer TEXT,raw BLOB)')
                 db.execute('INSERT INTO protected_settings VALUES (1,?,?)', ('synthetic',raw))
@@ -66,7 +67,7 @@ class SharedProfileProjection(unittest.TestCase):
             self.assertEqual(smoke.read_projection(profile,folder),[{'kind':'task'}])
             smoke.reset_projection(profile,folder)
             self.assertEqual(smoke.read_projection(profile,folder),[])
-            with sqlite3.connect(str(profile/'local.sqlite')) as db:
+            with closing(sqlite3.connect(str(profile/'local.sqlite'))) as db, db:
                 for table in (prefix+'streams','protected_writer_guards','protected_text_intents','another_workspace_views'):
                     self.assertEqual(db.execute(f'SELECT count(*) FROM {table}').fetchone()[0],1)
                 self.assertEqual(db.execute(f"SELECT value FROM {prefix}metadata WHERE key='replay_pending'").fetchone()[0],'1')
