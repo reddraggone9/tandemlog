@@ -25,10 +25,17 @@ workflow assertions, with an explicit hit-test guard. All six formerly failing
 flows pass locally in2m48s with clean analysis. Replacement RC6 build50 keeps the
 production UI unchanged. Exact replacement source is
 `2aa46be9043251c8ed4e21b2ad00d41aa054dffc`; [candidate37889870105](https://github.com/reddraggone9/tandemlog/actions/runs/37889870105)
-is in progress. [Replacement editorial review](../evidence/rc6-editorial/editorial-review-build50.json)
+and pushCI37889858764 completed successfully, including all86 native Linux
+flows and owner-signed Android production. [Replacement editorial review](../evidence/rc6-editorial/editorial-review-build50.json)
 accepts unchanged notes and source-attributed media through this exact range.
-Signed platform gates, exact Android acceptance and fresh quota
-remain required before authorized preview publication; no new release is published yet.
+The signed Android archive is artifact11599236271, ZIP SHA256
+`13e77d1f113532bb7e15f3241de3c40aa6838a3dcd7a0d3f7081ccc223989e23`.
+Both supported cloud download/materialization routes return HTTP403 for the
+three release archives. Hosted gates and source/policy review passed, but local
+archive-byte checks and the inner APK hash are not claimed. Complete artifact
+verification in the local consumer, exact Android acceptance/demo and fresh
+quota remain required before authorized preview publication; no new release
+is published yet.
 Broader local-storage consolidation stays queued for the next full release,
 requiring inventory and migration review. See [ADR0011](decisions/0011-one-level-checklists.md).
 

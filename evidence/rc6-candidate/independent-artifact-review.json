@@ -1,0 +1,230 @@
+{
+  "recorded_at_utc": "2026-10-09T05:46:37.051362+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent reused for RC6",
+  "candidate_run": 37889870105,
+  "source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "version": "2026.10.2-rc.6+50",
+  "status": "accepted immutable run/archive metadata and CI/promotion-policy evidence; actual local artifact byte gate blocked by HTTP403",
+  "promotion_policy": {
+    "result": "accepted static unchanged normal preview policy; no rebuild; release APK inner hash attestation/source/version/pin, inventory/lifecycle/checksums then exactly three copies prerelease/latestfalse",
+    "hashes": {
+      ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+      ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+      "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+      "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+      "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+      "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+      "tool/android_release.py": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+      "tool/app_version.py": "03a321a8168d76aa915440e58a2720b9d941d95f510cff8c0448a81503b34ccd",
+      "tool/native_build_gates.py": "6b5296484b9dd98e48fe2eade8be388bdd2ab971589fa2cc876b405cfb203748"
+    },
+    "unchanged_from_previous_reviewed_RC5": true,
+    "candidate_to_current_main": "202926f only design/status.md and editorial review JSON; executable/policies/notes unchanged"
+  },
+  "artifact_review": null,
+  "actual_apk_sha256": null,
+  "publication": "held; no dispatch",
+  "remaining": [
+    "Actual ZIP digest/CRC/internal checksums and official APK signer/package/version/nondebuggable/ABI/native payload verification in a working local consumer; actual APK hash is not known in cloud",
+    "Parent exact Android native acceptance",
+    "Fresh parent quota clearance",
+    "Normal no-rebuild preview promotion remains held; no dispatch/stable promotion"
+  ],
+  "observed_at_utc": "2026-10-09T06:16:31.232887+00:00",
+  "completed_windows_receipts": {
+    "job_id": 113688184386,
+    "conclusion": "success",
+    "flutter_tests_passed": 645,
+    "flutter_tests_skipped": 2,
+    "native_contracts": 107,
+    "python_policy_tests": 50,
+    "log_sha256": "04e9b68ef2ecdb6bcb9cf696cb474cd7dc9c5dac1b1f74d40330594ae6c0add3",
+    "archive": {
+      "artifact_id": 11598277392,
+      "bytes": 25791808,
+      "sha256": "753a5694ff39b6193fb8f77073c4ee6ca90b394ade100f97b47cb6663de8bd33",
+      "byte_verification": "pending download"
+    }
+  },
+  "known_artifacts": [
+    {
+      "id": 11598277392,
+      "node_id": "MDg6QXJ0aWZhY3QxMTU5ODI3NzM5Mg==",
+      "name": "windows",
+      "size_in_bytes": 25791808,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598277392",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598277392/zip",
+      "expired": false,
+      "digest": "sha256:753a5694ff39b6193fb8f77073c4ee6ca90b394ade100f97b47cb6663de8bd33",
+      "created_at": "2026-10-09T05:51:22Z",
+      "updated_at": "2026-10-09T05:51:22Z",
+      "expires_at": "2026-10-14T05:51:19Z",
+      "workflow_run": {
+        "id": 37889870105,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc"
+      }
+    },
+    {
+      "id": 11598062668,
+      "node_id": "MDg6QXJ0aWZhY3QxMTU5ODA2MjY2OA==",
+      "name": "android",
+      "size_in_bytes": 80419337,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598062668",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598062668/zip",
+      "expired": false,
+      "digest": "sha256:a11dacdce6273cba1c9c0c7800bcfea0b21741b7a5b3834ba3a2b7a6ed5f157e",
+      "created_at": "2026-10-09T05:49:17Z",
+      "updated_at": "2026-10-09T05:49:17Z",
+      "expires_at": "2026-10-14T05:49:12Z",
+      "workflow_run": {
+        "id": 37889870105,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc"
+      }
+    }
+  ],
+  "transfer_attempts": [
+    {
+      "platform": "windows",
+      "artifact_id": 11598277392,
+      "route": "GitHub CLI authenticated artifact redirect",
+      "result": "HTTP403, zero bytes"
+    },
+    {
+      "platform": "windows",
+      "artifact_id": 11598277392,
+      "route": "supported GitHub reusable reference + current Library resolved-reference materialization helper",
+      "file_name": "tandemlog-rc6-build50-windows.zip",
+      "result": "download/ref and prepare succeeded, local materialization HTTP403, no local bytes"
+    },
+    {
+      "platform": "linux",
+      "artifact_id": 11598771056,
+      "route": "GitHub CLI artifact redirect",
+      "result": "HTTP403, zero bytes"
+    },
+    {
+      "platform": "linux",
+      "artifact_id": 11598771056,
+      "route": "supported GitHub reusable reference + current Library resolved-reference materialization helper",
+      "file_name": "tandemlog-rc6-build50-linux.zip",
+      "result": "download/ref and prepare succeeded, local materialization HTTP403, no local bytes"
+    },
+    {
+      "platform": "android-release",
+      "artifact_id": 11599236271,
+      "route": "GitHub CLI artifact redirect",
+      "result": "HTTP403, zero bytes"
+    },
+    {
+      "platform": "android-release",
+      "artifact_id": 11599236271,
+      "route": "supported GitHub reusable reference + current Library resolved-reference materialization helper",
+      "file_name": "tandemlog-rc6-build50-android-release.zip",
+      "complete_result_private_path": "/workspace/recovery/rc6-library-transfer-helper/android-resolved-reference.json",
+      "result": "download/ref and prepare succeeded, local materialization HTTP403, no local bytes"
+    }
+  ],
+  "completed_linux_receipts": {
+    "job_id": 113688184412,
+    "conclusion": "success",
+    "flutter_tests_passed": 647,
+    "native_contracts": 107,
+    "python_policy_tests": 50,
+    "native_workflows_passed": 86,
+    "native_payload_startup_flatpak_lifecycle": "passed",
+    "log_sha256": "ce6a6a0b7e25368ed8cbfc4a5b22d6af8daceae5cca716e84fb1e2fc6737a400",
+    "archive": {
+      "artifact_id": 11598771056,
+      "bytes": 9008407,
+      "sha256": "d300d3b2024b477cd368f71dd802814e3f8c0dae1416e1310fc049c3a566b076",
+      "byte_verification": "blocked HTTP403"
+    }
+  },
+  "candidate_result": "completed success, all five jobs",
+  "candidate_run_provenance": {
+    "id": 37889870105,
+    "event": "workflow_dispatch",
+    "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+    "head_branch": "main",
+    "path": ".github/workflows/android-candidate.yml",
+    "run_attempt": 1,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "required_artifacts": [
+    {
+      "id": 11599236271,
+      "node_id": "MDg6QXJ0aWZhY3QxMTU5OTIzNjI3MQ==",
+      "name": "android-release",
+      "size_in_bytes": 30352277,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11599236271",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11599236271/zip",
+      "expired": false,
+      "digest": "sha256:13e77d1f113532bb7e15f3241de3c40aa6838a3dcd7a0d3f7081ccc223989e23",
+      "created_at": "2026-10-09T06:15:02Z",
+      "updated_at": "2026-10-09T06:15:02Z",
+      "expires_at": "2026-10-14T06:14:59Z",
+      "workflow_run": {
+        "id": 37889870105,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc"
+      }
+    },
+    {
+      "id": 11598771056,
+      "node_id": "MDg6QXJ0aWZhY3QxMTU5ODc3MTA1Ng==",
+      "name": "linux",
+      "size_in_bytes": 9008407,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598771056",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598771056/zip",
+      "expired": false,
+      "digest": "sha256:d300d3b2024b477cd368f71dd802814e3f8c0dae1416e1310fc049c3a566b076",
+      "created_at": "2026-10-09T06:08:21Z",
+      "updated_at": "2026-10-09T06:08:21Z",
+      "expires_at": "2026-10-14T06:08:20Z",
+      "workflow_run": {
+        "id": 37889870105,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc"
+      }
+    },
+    {
+      "id": 11598277392,
+      "node_id": "MDg6QXJ0aWZhY3QxMTU5ODI3NzM5Mg==",
+      "name": "windows",
+      "size_in_bytes": 25791808,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598277392",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11598277392/zip",
+      "expired": false,
+      "digest": "sha256:753a5694ff39b6193fb8f77073c4ee6ca90b394ade100f97b47cb6663de8bd33",
+      "created_at": "2026-10-09T05:51:22Z",
+      "updated_at": "2026-10-09T05:51:22Z",
+      "expires_at": "2026-10-14T05:51:19Z",
+      "workflow_run": {
+        "id": 37889870105,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc"
+      }
+    }
+  ],
+  "actual_local_byte_verification": false,
+  "completed_signed_android_receipts": {
+    "job_id": 113694740812,
+    "conclusion": "success",
+    "verification": "CI verified owner certificate/package/version/nondebuggable/universal ABIs, native payload and exact notices; signing-material cleanup completed",
+    "log_sha256": "db377cea05e5c9a0fa20b7c055cf4915916db62dddd2076c2327e0161ecf9b6b"
+  },
+  "mutations": "No source changes, build, extra tests, workflow dispatch, publication, credential or live-data operations. Failed transfer files/results retained."
+}
