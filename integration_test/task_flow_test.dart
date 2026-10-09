@@ -1205,12 +1205,30 @@ void main() {
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
-      // Interrupt startup before settling; discarded states must not retain a store/timer.
+      Future<void> closeApp() async {
+        final retired = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.pumpWidget(const SizedBox());
+        await waitForUi(tester, () {
+          final owner = retired.profileDatabase;
+          if (owner == null) return false;
+          try {
+            owner.database;
+            return false;
+          } on StateError {
+            return true;
+          }
+        });
+      }
+
+      // Interrupt startup before settling; discarded states must release their
+      // profile only after startup has drained, before a new owner is admitted.
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
+      await closeApp();
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-      await tester.pumpAndSettle();
+      await waitForUi(
+        tester,
+        () => find.byType(TextField).evaluate().isNotEmpty,
+      );
       expect(find.byType(AlertDialog), findsNothing);
       await tester.enterText(find.byType(TextField), 'Lee');
       await tester.pumpAndSettle();
@@ -1281,10 +1299,12 @@ void main() {
       await tester.pump(const Duration(seconds: 4));
       await tester.pumpAndSettle();
       expect(find.text('Unsubmitted draft'), findsOneWidget);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
+      await closeApp();
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-      await tester.pumpAndSettle();
+      await waitForUi(
+        tester,
+        () => find.text('Buy oats').evaluate().isNotEmpty,
+      );
       expect(find.text('Buy oats'), findsOneWidget);
       expect(find.text('Large bag'), findsOneWidget);
       final bad = File(
@@ -1299,8 +1319,7 @@ void main() {
       await tester.pump(const Duration(seconds: 1));
       await tester.pumpAndSettle();
       expect(find.textContaining('Unsupported event version'), findsNothing);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
+      await closeApp();
       await root.delete(recursive: true);
     },
   );
