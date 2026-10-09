@@ -36,9 +36,9 @@ Old binaries do not honor the new DB lease after legacy lock/settings cleanup. C
 
 ## Remaining rollout gates
 
-- Retain frozen tests for all imported authorities, interrupted replay, exact outbox confirmation, target/source replacement, activation and cleanup cuts. Run the integrated source checks before parent integration; standalone fixture/maintenance clients still use their established cache path.
+- Retain frozen tests for all imported authorities, interrupted replay, exact outbox confirmation, target/source replacement, activation and cleanup cuts. Run the combined source checks before candidate acceptance; standalone fixture/maintenance clients still use their established cache path.
 - Prove Windows and Android native contention, process death and clean-close behavior on the exact pinned SQLite/VFS. Linux subprocess tests do not substitute for those gates. Exercise migration crashes, disk/flush failures, source replacement and cleanup interruption.
-- Independent architecture/correctness review and source-bound native handoff before broad rollout. No live user-data operation, push or publication in this slice. Coordinate refresh onto the parent's accepted dependency-only base after its separate candidate/native outcome.
+- Independent architecture/correctness review and source-bound native handoff before broad rollout. The combined branch uses the parent's accepted dependency base; source push and candidate build are authorized. Publication requires exact combined Windows/Android acceptance, final independent review and the parent's fresh quota gate. No live user-data operation is authorized.
 
 ## Alternatives and revisit trigger
 
