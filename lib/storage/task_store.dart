@@ -18,6 +18,7 @@ import 'writer_guard.dart';
 import 'local_durability.dart';
 import 'local_profile_database.dart';
 import 'profile_text_intents.dart';
+import 'legacy_cache_import.dart';
 import 'task_tables.dart';
 import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
@@ -315,6 +316,13 @@ class TaskStore {
         throw FormatFailure('Invalid local writer identity.');
       }
       mark('identity_lock');
+      if (profileDatabase != null) {
+        for (final row in profileDatabase.database.select(
+          'SELECT * FROM protected_cache_imports',
+        )) {
+          _cacheSnapshot(row);
+        }
+      }
       // Reject old canonical protocols before opening or migrating their cache.
       if ((await folder.list()).any((f) => f.name == 'tandemlog-space.json')) {
         await _readSpace(folder);
@@ -479,6 +487,9 @@ class TaskStore {
       db.execute(
         'CREATE TABLE IF NOT EXISTS ${tables.metadata} (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
       );
+      if (profileDatabase != null && binding!.isEmpty) {
+        _seedLegacyNamespace(profileDatabase, tables, locationKey!);
+      }
       final old = db.select(
         "SELECT value FROM ${tables.metadata} WHERE key='space'",
       );
@@ -530,6 +541,7 @@ class TaskStore {
         });
       }
       mark('manifest');
+      await store._verifyLegacyObservations();
       await store._restoreTextIntents();
       await store._refresh();
       if (textEngine == null &&
@@ -573,6 +585,126 @@ class TaskStore {
       }
       rethrow;
     }
+  }
+
+  static LegacyCacheSnapshot _cacheSnapshot(Row row) {
+    final raw = row['raw'] as List<int>;
+    final snapshot = LegacyCacheSnapshot.decode(raw);
+    if (sha256.convert(raw).toString() != row['hash'] ||
+        snapshot.path != row['path'] ||
+        snapshot.location != row['location'] ||
+        snapshot.space != row['space']) {
+      throw FormatFailure(
+        'Protected cache observation binding differs; preserve the profile before recovery.',
+      );
+    }
+    return snapshot;
+  }
+
+  static void _seedLegacyNamespace(
+    LocalProfileDatabase profile,
+    TaskTables tables,
+    String location,
+  ) {
+    final rows = profile.database.select(
+      'SELECT * FROM protected_cache_imports WHERE location=? ORDER BY path',
+      [location],
+    );
+    if (rows.isEmpty) return;
+    final snapshots = rows.map(_cacheSnapshot).toList();
+    final spaces = snapshots.map((s) => s.space).toSet();
+    if (spaces.length != 1) {
+      throw FormatFailure(
+        'Legacy location has conflicting workspace identities.',
+      );
+    }
+    final primary = snapshots.where((s) => s.primary).toList();
+    profile.transaction(() {
+      final db = profile.database;
+      final existing = db.select(
+        "SELECT value FROM ${tables.metadata} WHERE key='space'",
+      );
+      if (existing.isNotEmpty && existing.single['value'] != spaces.single) {
+        throw FormatFailure('Workspace identity changed at this location.');
+      }
+      db.execute(
+        "INSERT OR IGNORE INTO ${tables.metadata} VALUES ('space',?)",
+        [spaces.single],
+      );
+      if (db
+          .select("SELECT 1 FROM ${tables.metadata} WHERE key='legacy_seeded'")
+          .isNotEmpty) {
+        return;
+      }
+      if (primary.isNotEmpty) {
+        final snapshot = primary.single;
+        for (final row in snapshot.normalizedStreams) {
+          db.execute(
+            'INSERT INTO ${tables.streams} VALUES (?,?,?,?,?,?,?,?,?)',
+            [
+              row['name'],
+              row['offset'],
+              row['hash'],
+              row['stamp'],
+              row['hash_offset'],
+              row['range_capable'],
+              row['chain_head'],
+              row['last_seq'],
+              row['last_clock'],
+            ],
+          );
+        }
+        for (final row in snapshot.ranges) {
+          db.execute('INSERT INTO ${tables.streamRanges} VALUES (?,?,?,?)', [
+            row['name'],
+            row['start_offset'],
+            row['end_offset'],
+            row['hash'],
+          ]);
+        }
+        for (final entry in snapshot.metadata.entries.where(
+          (e) => e.key.startsWith('ui.'),
+        )) {
+          db.execute('INSERT OR IGNORE INTO ${tables.metadata} VALUES (?,?)', [
+            entry.key,
+            entry.value,
+          ]);
+        }
+      }
+      db.execute(
+        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
+      );
+      db.execute("INSERT INTO ${tables.metadata} VALUES ('legacy_seeded','1')");
+    });
+  }
+
+  Future<void> _verifyLegacyObservations() async {
+    if (profileDatabase == null) return;
+    final all = db.select(
+      'SELECT * FROM protected_cache_imports ORDER BY path',
+    );
+    final snapshots = {for (final row in all) row['path']: _cacheSnapshot(row)};
+    final rows = all.where((r) => r['space'] == space).toList();
+    if (rows.isEmpty) return;
+    final digest = sha256
+        .convert(utf8.encode(rows.map((r) => r['hash']).join('|')))
+        .toString();
+    final previous = db.select(
+      "SELECT value FROM ${tables.metadata} WHERE key='legacy_verified'",
+    );
+    if (previous.isNotEmpty && previous.single['value'] == digest) return;
+    for (final row in rows) {
+      await snapshots[row['path']]!.verifyCanonical(folder);
+    }
+    // Only set this after refresh has admitted the whole present history. The
+    // verified legacy lower bounds remain in protected snapshots regardless.
+    await _refresh();
+    profileDatabase!.transaction(
+      () => db.execute(
+        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('legacy_verified',?)",
+        [digest],
+      ),
+    );
   }
 
   /// Keep prior integrity checkpoints and space binding while discarding only

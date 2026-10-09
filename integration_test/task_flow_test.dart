@@ -13,6 +13,7 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
+import 'package:tandemlog/storage/local_settings.dart';
 
 import 'native_text_fixtures.dart';
 import 'checklist_disclosure_layout_test.dart'
@@ -54,6 +55,11 @@ Finder taskScrollable() => find
       matching: find.byType(Scrollable),
     )
     .first;
+
+Map<String, dynamic> readProfileSettings(WidgetTester tester) =>
+    LocalSettings.protectedValues(
+      (tester.state(find.byType(TasksPage)) as dynamic).profileDatabase,
+    );
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
@@ -1406,14 +1412,17 @@ void main() {
       final submit = tester
           .widget<TextField>(find.byType(TextField))
           .onSubmitted!;
-      final blockedSettings = Directory('${profile.path}/settings.json.tmp');
-      await blockedSettings.create();
+      final profileOwner =
+          (tester.state(find.byType(TasksPage)) as dynamic).profileDatabase;
+      profileOwner.database.execute(
+        "CREATE TRIGGER fail_name_preferences BEFORE UPDATE ON protected_settings BEGIN SELECT RAISE(ABORT,'synthetic preference failure'); END",
+      );
       submit('Lee');
       submit('Lee');
       await tester.pumpAndSettle();
       expect(find.text('Lee'), findsOneWidget);
       expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
-      await blockedSettings.delete();
+      profileOwner.database.execute('DROP TRIGGER fail_name_preferences');
       await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
       await tester.pumpAndSettle();
       expect(find.text('No open tasks'), findsOneWidget);
@@ -1451,9 +1460,7 @@ void main() {
       await tester.tap(find.text('Use a different folder'));
       await tester.pumpAndSettle();
       expect(find.text('No open tasks'), findsOneWidget);
-      final saved = jsonDecode(
-        await File('${profile.path}/settings.json').readAsString(),
-      );
+      final saved = readProfileSettings(tester);
       expect(saved['folder'], '${profile.path}/shared-data');
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
@@ -1849,9 +1856,7 @@ void main() {
       );
       expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       expect(
-        jsonDecode(
-          await File('${profile.path}/settings.json').readAsString(),
-        )['folder'],
+        readProfileSettings(tester)['folder'],
         legacy.path,
       );
       await tester.pumpWidget(const SizedBox());
@@ -1885,9 +1890,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(await Directory('${root.path}/shared-data').exists(), isFalse);
     expect(
-      jsonDecode(
-        await File('${root.path}/settings.json').readAsString(),
-      )['folder'],
+      readProfileSettings(tester)['folder'],
       '${root.path}/absent',
     );
     await tester.pumpWidget(const SizedBox());

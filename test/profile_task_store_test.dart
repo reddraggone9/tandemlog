@@ -178,7 +178,7 @@ void main() {
     await expectLater(open('legacy-version'), throwsA(isA<Exception>()));
     expect(
       profile.database.select('PRAGMA user_version').single.values.single,
-      1,
+      LocalProfileDatabase.schemaVersion,
     );
     expect(
       profile.database.select(

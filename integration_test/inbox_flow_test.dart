@@ -7,6 +7,7 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/profile_lock.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
@@ -22,7 +23,7 @@ void registerInboxFlowTests() {
     'second instance does not read or write preferences and Retry acquires released lease',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('profile-ui-');
-      final holder = await ProfileLock.acquire(root.path);
+      final holder = await LocalProfileDatabase.open(root.path);
       try {
         await tester.pumpWidget(TandemlogApp(profilePath: root.path));
         await flows.waitForUi(
@@ -39,13 +40,14 @@ void registerInboxFlowTests() {
               find.text('Start').evaluate().isNotEmpty &&
               find.textContaining('already open').evaluate().isEmpty,
         );
-        expect(await File('${root.path}/settings.json').exists(), isTrue);
+        expect(await File('${root.path}/settings.json').exists(), isFalse);
+        expect(flows.readProfileSettings(tester)['writer'], isNotNull);
         expect(await Directory('${root.path}/shared-data').exists(), isFalse);
       } finally {
         await holder.close();
         await tester.pumpWidget(const SizedBox());
         await tester.pumpAndSettle();
-        final released = await ProfileLock.acquire(root.path);
+        final released = await LocalProfileDatabase.open(root.path);
         await released.close();
         await root.delete(recursive: true);
       }
@@ -58,11 +60,11 @@ void registerInboxFlowTests() {
       await tester.pumpWidget(TandemlogApp(profilePath: root.path));
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
-      ProfileLock? released;
+      LocalProfileDatabase? released;
       for (var attempt = 0; attempt < 100 && released == null; attempt++) {
         await tester.pump(const Duration(milliseconds: 100));
         try {
-          released = await ProfileLock.acquire(root.path);
+          released = await LocalProfileDatabase.open(root.path);
         } on ProfileInUse {
           /* shutdown is still pending */
         }

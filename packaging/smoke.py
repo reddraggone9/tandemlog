@@ -5,6 +5,7 @@ loaded SQLite projections and canonical hash continuity. GUI process existence
 alone is deliberately insufficient. Works with an installed EXE or flatpak run.
 """
 import argparse
+from contextlib import closing
 import hashlib
 import json
 import os
@@ -21,6 +22,54 @@ import uuid
 def hashes(folder):
     return {p.name: hashlib.sha256(p.read_bytes()).hexdigest()
             for p in folder.iterdir() if p.is_file()}
+
+
+def projection_location(profile, folder):
+    key = hashlib.sha256(str(folder).encode()).hexdigest()
+    if (profile/'local.sqlite').exists():
+        return profile/'local.sqlite', f'tasks_{key}_'
+    return profile/'spaces'/key/'cache.sqlite', ''
+
+
+def read_settings_bytes(profile):
+    database = profile/'local.sqlite'
+    if not database.exists():
+        return (profile/'settings.json').read_bytes()
+    # Called only before launch or after this exact process has stopped. RW
+    # permits native recovery of its crash WAL; it does not create absent DBs.
+    with closing(sqlite3.connect(str(database), timeout=0)) as db:
+        db.execute('PRAGMA locking_mode=EXCLUSIVE')
+        if db.execute('PRAGMA application_id').fetchone()[0] != 0x544c4442:
+            raise RuntimeError('Unrecognized synthetic profile database')
+        row = db.execute('SELECT writer,raw FROM protected_settings WHERE singleton=1').fetchone()
+        if row is None or json.loads(row[1])['writer'] != row[0]:
+            raise RuntimeError('Protected settings authority missing or invalid')
+        return row[1]
+
+
+def reset_projection(profile, folder):
+    database, prefix = projection_location(profile, folder)
+    if not prefix:
+        # Historical cache clients retain their disposable standalone layout.
+        for suffix in ('', '-wal', '-shm'):
+            Path(str(database)+suffix).unlink(missing_ok=True)
+        return
+    with closing(sqlite3.connect(str(database), timeout=0)) as db:
+        db.execute('PRAGMA locking_mode=EXCLUSIVE')
+        for table in ('events', 'views', 'positions', 'text_fields', 'text_actors', 'text_outbox'):
+            db.execute(f'DELETE FROM {prefix}{table}')
+        db.execute(f"DELETE FROM {prefix}metadata WHERE key='order_projection'")
+        db.execute(f"INSERT OR REPLACE INTO {prefix}metadata VALUES ('replay_pending','1')")
+        db.commit()
+
+
+def read_projection(profile, folder):
+    database, prefix = projection_location(profile, folder)
+    if not database.exists():
+        raise RuntimeError('Installed app did not create its projection database')
+    with closing(sqlite3.connect(str(database), timeout=0)) as db:
+        db.execute('PRAGMA locking_mode=EXCLUSIVE')
+        return [json.loads(row[0]) for row in db.execute(f'SELECT raw FROM {prefix}views')]
 
 
 def flatpak_instances(executable):
@@ -97,17 +146,15 @@ def main():
     expected = json.loads((root/'expected.json').read_text())
     if hashes(folder) != expected['canonical']:
         raise RuntimeError('Canonical data changed during installer lifecycle')
-    if hashlib.sha256((profile/'settings.json').read_bytes()).hexdigest() != expected['settings']:
+    if hashlib.sha256(read_settings_bytes(profile)).hexdigest() != expected['settings']:
         raise RuntimeError('Profile settings changed during installer lifecycle')
-    cache = profile/'spaces'/hashlib.sha256(str(folder).encode()).hexdigest()/'cache.sqlite'
     command = args.command
     if command and command[0] == '--':
         command = command[1:]
     if command:
         # Force this installed process to reconstruct the projection; stale cache
         # from an earlier lifecycle phase cannot satisfy the launch assertion.
-        for suffix in ('', '-wal', '-shm'):
-            Path(str(cache)+suffix).unlink(missing_ok=True)
+        reset_projection(profile, folder)
         env = dict(os.environ, GSETTINGS_BACKEND='memory')
         if args.default_profile:
             env.pop('TANDEMLOG_PROFILE', None)
@@ -129,6 +176,7 @@ def main():
                 lines.put(line.rstrip())
         threading.Thread(target=reader, daemon=True).start()
         output, ready = [], False
+        visible_since = None
         deadline = time.monotonic()+60
         try:
             while time.monotonic() < deadline:
@@ -141,9 +189,11 @@ def main():
                 except queue.Empty:
                     if proc.poll() is not None:
                         break
-                if os.name == 'nt' and cache.exists():
+                if os.name == 'nt' and projection_location(profile, folder)[0].exists():
                     # Windows GUI subsystem stdout is not reliably redirected.
-                    # Require its own visible top-level native window AND loaded cache.
+                    # Require its own visible native window, then verify the
+                    # rebuilt model after shutdown. The app-wide lease rejects
+                    # competing live DB reads; do not treat contention as empty.
                     import ctypes
                     found = []
                     ctypes.windll.user32.GetWindowThreadProcessId.argtypes = [ctypes.c_void_p, ctypes.POINTER(ctypes.c_ulong)]
@@ -157,15 +207,12 @@ def main():
                             found.append(hwnd)
                         return True
                     ctypes.windll.user32.EnumWindows(callback_type(inspect_window), 0)
-                    try:
-                        with sqlite3.connect(f'file:{cache.as_posix()}?mode=ro', uri=True) as db:
-                            count = db.execute('SELECT count(*) FROM views').fetchone()[0]
-                        if found and count == 2:
+                    if found:
+                        visible_since = visible_since or time.monotonic()
+                        if time.monotonic()-visible_since >= 3:
                             ready = True
-                            output.append('WINDOWS_VISIBLE_NATIVE_WINDOW_AND_LOADED_CACHE')
+                            output.append('WINDOWS_VISIBLE_NATIVE_WINDOW_MODEL_VERIFIED_AFTER_STOP')
                             break
-                    except sqlite3.Error:
-                        pass
         finally:
             try:
                 if instance_file is not None:
@@ -183,12 +230,13 @@ def main():
                     proc.wait()
         if not ready or (os.name != 'nt' and not any(line.startswith('TANDEMLOG_ROWS ') for line in output)):
             raise RuntimeError('Installed app failed to load synthetic tasks: '+'\n'.join(output))
-        with sqlite3.connect(f'file:{cache.as_posix()}?mode=ro', uri=True) as db:
-            views = [json.loads(row[0]) for row in db.execute('SELECT raw FROM views')]
+        views = read_projection(profile, folder)
         if len(views) != 2 or sum(row['kind'] == 'task' for row in views) != 1:
             raise RuntimeError('Installed application did not retain complete synthetic projection')
         if hashes(folder) != expected['canonical']:
             raise RuntimeError('Launch altered canonical source fixture')
+        if hashlib.sha256(read_settings_bytes(profile)).hexdigest() != expected['settings']:
+            raise RuntimeError('Launch altered protected preferences')
     else:
         output = []
     report = Path(args.report)

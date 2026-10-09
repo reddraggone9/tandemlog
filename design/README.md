@@ -48,6 +48,6 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
 - [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.
 
-- [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; isolated lease/protected-files import proof, with production migration and cleanup still pending.
+- [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; isolated integrated import, activation, cleanup and startup/switch preparation. [Native handoff](local-db-native-acceptance.md) records pending Windows/Android acceptance and production cutover.
 
 - [Food inventory proposal](food-inventory-proposal.md): approved inbox/retention/restore requirements and proposed container/contents model; awaits review and out-of-repo normalization, no implementation.

@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui' show AppExitResponse;
-import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -39,7 +38,8 @@ import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
 import 'storage/local_settings.dart';
 import 'storage/local_durability.dart';
-import 'storage/profile_lock.dart';
+import 'storage/local_profile_database.dart';
+import 'storage/local_profile_migration.dart';
 import 'storage/task_store.dart';
 import 'storage/checklist_expansion_store.dart';
 
@@ -197,7 +197,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool awaitingCompletionConfirmation = false;
   String? privateRoot;
   LocalSettings? settings;
-  ProfileLock? profileLock;
+  LocalProfileDatabase? profileDatabase;
   Future<void>? starting;
   Completer<void>? activeActionDone;
   bool settingsLoaded = false;
@@ -346,9 +346,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           widget.profilePath ??
           Platform.environment['TANDEMLOG_PROFILE'] ??
           (await getApplicationSupportDirectory()).path;
-      profileLock ??= await ProfileLock.acquire(privateRoot!);
+      profileDatabase ??= await LocalProfileDatabase.open(privateRoot!);
+      privateRoot = profileDatabase!.root;
+      await LocalProfileMigration(profileDatabase!).run();
       if (!mounted) return;
-      settings = LocalSettings(privateRoot!);
+      settings = LocalSettings(privateRoot!, profileDatabase: profileDatabase);
       await settings!.load();
       settingsLoaded = true;
       if (!mounted) return;
@@ -376,18 +378,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Future<void> _open(String location) async {
     if (!await _closeEditor()) return;
-    _clearSelection();
     final LogFolder folder =
         widget.folderFactory?.call(location) ??
         (Platform.isAndroid
             ? AndroidLogFolder(location)
             : LocalLogFolder(location));
-    final cacheKey = sha256.convert(utf8.encode(location)).toString();
     final opened = await TaskStore.open(
       folder,
-      '$privateRoot/spaces/$cacheKey',
+      privateRoot!,
+      profileDatabase: profileDatabase,
       writerIdentity: settings!.writer,
-      writerGuard: FileWriterGuard(privateRoot!),
       textEngine: textEngine ??= NativeTextEngine(),
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
@@ -395,9 +395,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await opened.close();
       return;
     }
-    undoHistory.clear();
+    Set<String> expanded;
+    try {
+      expanded = ChecklistExpansionStore(
+        opened.db,
+        tables: opened.tables,
+        profileDatabase: profileDatabase,
+      ).load();
+    } catch (_) {
+      await opened.close();
+      rethrow;
+    }
     store = opened;
-    expandedChecklists = ChecklistExpansionStore(opened.db).load();
+    expandedChecklists = expanded;
     rows = store!.rows;
     if (store!.pendingTextOperations.isNotEmpty) {
       error =
@@ -1120,6 +1130,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       final previousUser = user;
       final previousRows = rows;
       final previousFolder = settings!.folder;
+      final previousExpanded = expandedChecklists;
+      final previousError = error;
+      final previousErrorFromRefresh = errorFromRefresh;
       try {
         await _open(selected);
         if (!mounted) return;
@@ -1129,12 +1142,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         store = previousStore;
         user = previousUser;
         rows = previousRows;
+        expandedChecklists = previousExpanded;
+        error = previousError;
+        errorFromRefresh = previousErrorFromRefresh;
         settings!.folder = previousFolder;
         settings!.user = previousUser;
         rethrow;
       }
       await previousStore?.close();
       if (!mounted) return;
+      undoHistory.clear();
+      _clearSelection();
       ScaffoldMessenger.of(context).clearSnackBars();
       pendingCapture.clear();
       showCompleted = false;
@@ -2454,7 +2472,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final ids = requested.intersection(visible.cast<String>());
     if (ids.isEmpty) return;
     try {
-      ChecklistExpansionStore(origin.db).setExpanded(ids, expanded);
+      ChecklistExpansionStore(
+        origin.db,
+        tables: origin.tables,
+        profileDatabase: profileDatabase,
+      ).setExpanded(ids, expanded);
     } catch (failure) {
       // Display preferences are dispensable; a cache preference failure must
       // not block opening items or alter canonical command/error ownership.
@@ -3201,7 +3223,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       try {
         textEngine?.dispose();
       } finally {
-        await profileLock?.close();
+        await profileDatabase?.close();
       }
     }
   }

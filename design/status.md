@@ -9,6 +9,10 @@ candidate floors53. The unchanged trusted-main signed candidate and exact Androi
 release/R8/update/startup/SAF/provider acceptance remain pending; no publication
 is authorized here. [Review, gates and rollback](android-toolchain-maintenance.md).
 
+## Isolated app-wide persistence integration
+
+Branch `experiment/app-wide-local-db` prepares one private local DB, verified legacy file/cache/outbox import, durable activation, resumable allowlist cleanup, DB-backed preferences and startup/switch/shutdown wiring. Linux launcher discovery keeps migrated profiles selected. Synthetic Linux storage/process-death and native switch/restart evidence is separate from Windows/Android acceptance. No live user-data operations, push or release; the parent's dependency-only candidate is a separate task. [ADR0013](decisions/0013-app-wide-local-database.md) and [integrated handoff](local-db-native-acceptance.md) record source-bound gates.
+
 ## Stable2026.10.2 — official release published
 
 Lee explicitly accepted RC7 for the next official release on2026-10-09.

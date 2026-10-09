@@ -1,0 +1,16 @@
+# App-wide local database native acceptance
+
+Status: integrated isolated source preparation. No live user-data operations or published candidate. The final checkpoint receipt in `evidence/local-db-proof/integrated-verification.json` supplies the exact source/parent/base and test evidence. Freeze installer SHA256, embedded build/source, owner signature and SQLite/native payloads before running acceptance; a new dependency base requires a separate bounded impact check.
+
+Use only fresh synthetic profile/workspace roots. Keep parent-approved live paths outside the test. Do not open raw descriptors to a live app DB, manually remove SQLite recovery sidecars or run old binaries concurrently after migration. Released v3 bytes/IDs/clocks/hash/Undo meaning remain unchanged.
+
+On actual Windows and actual Android, exercise:
+
+1. Fresh start, interrupted onboarding, restart, saved appearance/user/folder and the same installation writer. Normal clean close leaves the one app DB; SQLite recovery sidecars after forced termination remain until native recovery.
+2. Upgrade synthetic old settings/marker/writer IDs/guards/intent files, primary cache and supported historical backup caches. Include committed hot-WAL/SHM state and an interrupted cache rebuild. Account every source, trusted prefix/head/range and exact outbox-only receipt. Unsupported, orphaned, linked or changed sources stop safely with originals retained.
+3. Same-profile second process/VFS contention fails before any writer admission. Test native process death after reservation, append acknowledgement loss, activation and both sides of cleanup unlink. Restart preserves the writer, guards, exact pending bytes and canonical prefix; no missing row may be interpreted as confirmation.
+4. Verify successful exact retry retires only its receipt with the guard/checkpoint in one commit, including aliases. Rebuild one namespace without losing other workspaces, protected intent/guard state or local checklist expansion. Frozen scalar/native recurrence/checklist fixtures still replay identically.
+5. Switch workspaces with checklist expansion and an Undo action. Inject a failed preference save/open, verify previous store/importer/rows/expansion/Undo remain usable; then successfully switch and reopen the app. Android SAF grant/provider loss must retain identity and pending receipts, with recovery after the original grant returns.
+6. Disk-full/SQL-commit and native file/directory flush failure stop admission or cleanup appropriately. Preserve unknown files, changed replacements, hard/symbolic aliases and all canonical bytes. Successful cleanup removes only accounted originals, including recognized cache recovery sidecars; interrupted cleanup resumes exact recorded states.
+
+Linux evidence covers the synthetic storage tests, six real SIGKILL migration cuts and actual GTK/Flutter desktop failed/successful-switch/restart workflow. The dark 1200×850 screenshot was inspected; controls/text were readable with no observed clipping. This is not Windows/Android evidence. Native platform videos with visible input, installer lifecycle/signing and parent cutover coordination remain pending. Do not promote stable feature behavior without Lee's acceptance.

@@ -4,13 +4,15 @@ import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart' show FormatFailure, isCanonicalId;
 import 'local_durability.dart';
+import 'local_profile_database.dart';
 
 enum Appearance { system, light, dark }
 
 /// Device preferences only. Canonical workspace records never live here.
 class LocalSettings {
-  LocalSettings(this.root, {LocalDurability? durability})
+  LocalSettings(this.root, {LocalDurability? durability, this.profileDatabase})
     : _durability = durability ?? LocalDurability.shared;
+  final LocalProfileDatabase? profileDatabase;
   final LocalDurability _durability;
   final String root;
   String? folder, user;
@@ -41,6 +43,16 @@ class LocalSettings {
   Future<void> load() async {
     folder = user = _writer = null;
     appearance = Appearance.system;
+    if (profileDatabase != null) {
+      final value = protectedValues(profileDatabase!);
+      folder = value['folder'] as String?;
+      user = value['user'] as String?;
+      appearance = Appearance.values.byName(
+        value['appearance'] as String? ?? 'system',
+      );
+      _writer = value['writer'] as String;
+      return;
+    }
     final file = File('$root/settings.json');
     if (await file.exists()) {
       final value =
@@ -125,9 +137,56 @@ class LocalSettings {
   }
 
   Future<void> save() async {
+    final profile = profileDatabase;
+    if (profile != null) {
+      await profile.serialize(() async {
+        final values = protectedValues(profile);
+        if (values['writer'] != writer) {
+          throw const LocalDatabaseFailure(
+            'Installation writer changed; retain the profile before recovery.',
+          );
+        }
+        values.addAll({
+          'folder': folder,
+          'user': user,
+          'appearance': appearance.name,
+        });
+        profile.transaction(
+          () => profile.database.execute(
+            'UPDATE protected_settings SET raw=? WHERE singleton=1',
+            [utf8.encode(jsonEncode(values))],
+          ),
+        );
+      });
+      return;
+    }
     await _durability.ensureDirectoryDurable(Directory(root));
     await _ensureWriter();
     await _writeSettings();
+  }
+
+  static Map<String, dynamic> protectedValues(LocalProfileDatabase profile) {
+    final rows = profile.database.select(
+      'SELECT writer,raw FROM protected_settings WHERE singleton=1',
+    );
+    if (rows.length != 1) {
+      throw const LocalDatabaseFailure(
+        'Protected settings are missing; retain the profile before recovery.',
+      );
+    }
+    final value = jsonDecode(utf8.decode(rows.single['raw'] as List<int>));
+    if (value is! Map<String, dynamic> ||
+        !isCanonicalId(value['writer']) ||
+        value['writer'] != rows.single['writer'] ||
+        (value['folder'] != null && value['folder'] is! String) ||
+        (value['user'] != null && value['user'] is! String) ||
+        (value['appearance'] != null &&
+            !{'system', 'light', 'dark'}.contains(value['appearance']))) {
+      throw const LocalDatabaseFailure(
+        'Protected settings binding is invalid; retain the profile before recovery.',
+      );
+    }
+    return value;
   }
 
   Future<void> _writeSettings() async {

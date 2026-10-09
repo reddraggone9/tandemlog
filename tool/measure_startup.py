@@ -1,8 +1,9 @@
-"""Native Linux release startup: process launch to loaded-frame marker.
+"""Native Linux startup: process launch to loaded-frame marker.
 Synthetic data only. Does not flush OS page caches or claim device cold boot.
 Run from repo with its native Linux release binary built and DISPLAY configured.
 """
 import json, os, pathlib, subprocess, time, uuid, hashlib, selectors, argparse, sqlite3
+from contextlib import closing
 parser=argparse.ArgumentParser()
 parser.add_argument('--tasks', type=int, default=2000)
 parser.add_argument('--runs', type=int, default=5)
@@ -15,9 +16,10 @@ root=pathlib.Path(args.workspace)
 root.mkdir(exist_ok=True)
 folder=root/'shared';folder.mkdir(exist_ok=True)
 profile=root/'profile';profile.mkdir(exist_ok=True)
+if any(profile.iterdir()) or any(folder.iterdir()):
+ raise RuntimeError('Benchmark requires fresh empty profile/shared directories; existing state retained')
 space,writer,user=(str(uuid.uuid4()) for _ in range(3))
 (folder/'tandemlog-space.json').write_text(json.dumps({'v':3,'id':space}))
-for f in folder.glob('*.jsonl'):f.unlink()
 events=[]
 batch_ns=time.time_ns()
 previous=hashlib.sha256(f'tandemlog:genesis:v3\n{space}\n{writer}\n'.encode()).hexdigest()
@@ -33,11 +35,8 @@ for n in range(args.tasks+1):
  events.append(json.dumps(record,ensure_ascii=False,separators=(',',':')))
 (folder/f'{writer}.jsonl').write_text('\n'.join(events)+'\n')
 (profile/'settings.json').write_text(json.dumps({'folder':str(folder),'user':user}))
-cache=profile/'spaces'/hashlib.sha256(str(folder).encode()).hexdigest()
-# Isolated benchmark cache only; preserve real user/demo profiles.
-if cache.exists():
- import shutil
- shutil.rmtree(cache)
+key=hashlib.sha256(str(folder).encode()).hexdigest()
+cache=profile/'spaces'/key
 results=[]
 for i in range(args.runs):
  env=dict(os.environ,TANDEMLOG_PROFILE=str(profile),GSETTINGS_BACKEND='memory')
@@ -67,11 +66,14 @@ for i in range(args.runs):
  if not args.label.startswith('minimal'):
   if not any(line.startswith('TANDEMLOG_ROWS ') for line in lines):
    raise RuntimeError('Ready marker was emitted without a successful model load')
-  with sqlite3.connect(f'file:{cache / "cache.sqlite"}?mode=ro', uri=True) as db:
-   projected=[json.loads(row[0]) for row in db.execute('SELECT raw FROM views')]
+  database=profile/'local.sqlite' if (profile/'local.sqlite').exists() else cache/'cache.sqlite'
+  table=f'tasks_{key}_views' if database.name=='local.sqlite' else 'views'
+  with closing(sqlite3.connect(str(database),timeout=0)) as db:
+   db.execute('PRAGMA locking_mode=EXCLUSIVE')
+   projected=[json.loads(row[0]) for row in db.execute(f'SELECT raw FROM {table}')]
   if len(projected)!=args.tasks+1 or sum(row['kind']=='task' for row in projected)!=args.tasks:
    raise RuntimeError('Loaded cache does not contain the complete synthetic workload')
   if i>0 and not marker.endswith('FILES_READ=0'):
    raise RuntimeError('Warm cache unexpectedly replayed canonical log contents')
  results.append({'run':i+1,'cache':('not used' if args.label.startswith('minimal') else ('rebuild' if i==0 else 'warm')),'external_ms':elapsed,'marker':marker,'phases':lines,**marks})
-print(json.dumps({'target':'Linux x86_64 native release / Xvfb','tasks':args.tasks,'label':args.label,'os_page_cache':'not flushed','results':results},indent=2))
+print(json.dumps({'target':'Linux x86_64 native / Xvfb','binary':args.binary,'tasks':args.tasks,'label':args.label,'os_page_cache':'not flushed','results':results},indent=2))

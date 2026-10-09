@@ -79,4 +79,6 @@ Model-derived content is untrusted input. A later ingestion adapter produces a p
 
 ## Growth and review
 
+The isolated app-wide profile owner serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup performs source-backed migration before opening adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and remaining platform acceptance.
+
 At each milestone, review dependencies, duplicated rules, error/recovery paths, UX consistency and actual performance. For every module addition, review cross-module transactions and compatibility before UI expansion. Record refactors and bounded debt; do not use “future flexibility” to justify unused infrastructure.

@@ -6,7 +6,7 @@ import 'package:crypto/crypto.dart';
 
 import '../domain/event.dart';
 import 'local_profile_database.dart';
-import 'profile_lock.dart';
+import 'legacy_profile_lease.dart';
 import 'profile_text_intents.dart';
 import 'writer_guard.dart';
 
@@ -27,11 +27,31 @@ class LegacyProtectedFilesImport {
   LegacyProtectedFilesImport(this.profile);
   final LocalProfileDatabase profile;
 
+  /// Final inactive-migration gate. No adapters may advance authorities yet,
+  /// so every source-backed protected value must still match exact bytes.
+  Future<void> verifyCaptured(LegacyProfileLease lease) async {
+    lease.requireRoot(profile.root);
+    for (final row in profile.database.select(
+      'SELECT path,kind,hash FROM migration_file_imports ORDER BY path',
+    )) {
+      final source = await _read(row['path'] as String, row['kind'] as String);
+      if (source.hash != row['hash']) {
+        throw const LocalDatabaseFailure(
+          'Imported source changed before activation; retained.',
+        );
+      }
+      _verifyBindings(source);
+      _verifyImported(source);
+    }
+  }
+
   Future<ProtectedFilesImportResult> run({
     void Function()? beforeCommit,
+    LegacyProfileLease? lease,
   }) async {
-    final legacy = await ProfileLock.acquire(profile.root);
-    final sessions = <ProfileLock>[];
+    final ownedLease = lease == null;
+    final legacy = lease ?? await LegacyProfileLease.acquire(profile.root);
+    legacy.requireRoot(profile.root);
     try {
       final sources = <_Source>[];
       final caches = <String>[];
@@ -58,9 +78,6 @@ class LegacyProtectedFilesImport {
               'A legacy cache path is not a plain directory; retained.',
             );
           }
-          sessions.add(
-            await ProfileLock.acquire(entry.path, fileName: 'session.lock'),
-          );
           if (await _exists('spaces/$key/cache.sqlite')) {
             caches.add('spaces/$key/cache.sqlite');
           }
@@ -84,7 +101,7 @@ class LegacyProtectedFilesImport {
       profile.transaction(() {
         final captured = sources.map((s) => s.path).toSet();
         for (final prior in profile.database.select(
-          'SELECT path FROM migration_file_imports',
+          "SELECT path FROM migration_file_imports WHERE kind!='cache'",
         )) {
           if (!captured.contains(prior['path'])) {
             throw const LocalDatabaseFailure(
@@ -115,6 +132,40 @@ class LegacyProtectedFilesImport {
         }
         for (final source in sources) {
           _verifyBindings(source);
+          // Complete the known unpublished files-only proof's missing import
+          // fences from unchanged retained source evidence, never absent rows.
+          if (source.kind == 'settings') {
+            profile.database.execute(
+              "INSERT OR IGNORE INTO profile_metadata VALUES ('migration.writer',?)",
+              [source.writer],
+            );
+          } else if (source.kind == 'guard') {
+            profile.database.execute(
+              'INSERT OR IGNORE INTO profile_metadata VALUES (?,?)',
+              [
+                'migration.guard.${source.space}.${source.writer}',
+                utf8.decode(source.bytes),
+              ],
+            );
+          } else if (source.kind == 'intent') {
+            final key = ProfileTextIntents.migrationKey(source.event!);
+            final prior = profile.database.select(
+              'SELECT value FROM profile_metadata WHERE key=?',
+              ['migration.intent-source.${source.path}'],
+            );
+            if (prior.isEmpty) {
+              ProfileTextIntents(profile).recordMigrationInTransaction(
+                source.event!,
+                source.bytes,
+                source: source.path,
+              );
+            }
+            if (prior.isNotEmpty && prior.single['value'] != key) {
+              throw const LocalDatabaseFailure(
+                'Imported source intent binding differs; retained.',
+              );
+            }
+          }
         }
         profile.database.execute(
           "INSERT INTO profile_metadata VALUES ('migration.protected-files','pending-verification') ON CONFLICT(key) DO UPDATE SET value=excluded.value",
@@ -155,10 +206,7 @@ class LegacyProtectedFilesImport {
         List.unmodifiable(caches),
       );
     } finally {
-      for (final session in sessions.reversed) {
-        await session.close();
-      }
-      await legacy.close();
+      if (ownedLease) await legacy.close();
     }
   }
 
@@ -263,6 +311,10 @@ class LegacyProtectedFilesImport {
             source.bytes,
           ]),
         );
+        db.execute(
+          "INSERT INTO profile_metadata VALUES ('migration.writer',?)",
+          [source.writer],
+        );
       case 'guard':
         _insertExact(
           'SELECT raw FROM protected_writer_guards WHERE space=? AND writer=?',
@@ -273,6 +325,10 @@ class LegacyProtectedFilesImport {
             [source.space, source.writer, source.bytes],
           ),
         );
+        db.execute('INSERT INTO profile_metadata VALUES (?,?)', [
+          'migration.guard.${source.space}.${source.writer}',
+          utf8.decode(source.bytes),
+        ]);
       case 'intent':
         final event = source.event!;
         _insertExact(
@@ -290,6 +346,11 @@ class LegacyProtectedFilesImport {
               source.bytes,
             ],
           ),
+        );
+        ProfileTextIntents(profile).recordMigrationInTransaction(
+          event,
+          source.bytes,
+          source: source.path,
         );
     }
   }
@@ -388,26 +449,7 @@ class LegacyProtectedFilesImport {
           source.space!,
           source.writer!,
         );
-        if (current.sequence < previous.sequence ||
-            (current.sequence == previous.sequence &&
-                current.hash != previous.hash)) {
-          throw const LocalDatabaseFailure(
-            'Imported writer guard regressed from retained authority; retained.',
-          );
-        }
-        final pending = {
-          for (final record in current.pending) record.sequence: record.hash,
-        };
-        for (final record in previous.pending) {
-          if ((record.sequence == current.sequence &&
-                  current.hash != record.hash) ||
-              (record.sequence > current.sequence &&
-                  pending[record.sequence] != record.hash)) {
-            throw const LocalDatabaseFailure(
-              'Imported writer guard lost or changed a retained reservation; retained.',
-            );
-          }
-        }
+        verifyImportedGuardProgress(current, previous);
       case 'intent':
         final event = source.event!;
         final raw = ProfileTextIntents(
@@ -418,6 +460,31 @@ class LegacyProtectedFilesImport {
             'Imported exact text intent is missing or differs; retained.',
           );
         }
+    }
+  }
+}
+
+void verifyImportedGuardProgress(
+  WriterGuardState current,
+  WriterGuardState previous,
+) {
+  if (current.sequence < previous.sequence ||
+      (current.sequence == previous.sequence &&
+          current.hash != previous.hash)) {
+    throw const LocalDatabaseFailure(
+      'Imported writer guard regressed from retained authority; retained.',
+    );
+  }
+  final pending = {
+    for (final record in current.pending) record.sequence: record.hash,
+  };
+  for (final record in previous.pending) {
+    if ((record.sequence == current.sequence && current.hash != record.hash) ||
+        (record.sequence > current.sequence &&
+            pending[record.sequence] != record.hash)) {
+      throw const LocalDatabaseFailure(
+        'Imported writer guard lost or changed a retained reservation; retained.',
+      );
     }
   }
 }

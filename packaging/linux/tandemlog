@@ -5,11 +5,23 @@ set -eu
 # Explicit profile overrides remain authoritative (and need a matching grant).
 if [ -z "${TANDEMLOG_PROFILE:-}" ]; then
   native_data="${TANDEMLOG_HOST_DATA_HOME:-$HOME/.local/share}"
-  TANDEMLOG_PROFILE="$native_data/com.reddraggone9.tandemlog"
-  # :create can create an empty ID directory before launch. Existing legacy
-  # settings still win over that newly created empty directory.
-  if [ ! -f "$TANDEMLOG_PROFILE/settings.json" ] && [ -f "$native_data/tandemlog/settings.json" ]; then
-    TANDEMLOG_PROFILE="$native_data/tandemlog"
+  modern="$native_data/com.reddraggone9.tandemlog"
+  legacy="$native_data/tandemlog"
+  populated() {
+    for name in settings.json local.sqlite local.sqlite-wal local.sqlite-journal; do
+      if [ -e "$1/$name" ] || [ -L "$1/$name" ]; then return 0; fi
+    done
+    return 1
+  }
+  if populated "$modern" && populated "$legacy"; then
+    echo 'Two TandemLog profiles contain local state. Set TANDEMLOG_PROFILE to the intended profile before starting; both were retained.' >&2
+    exit 1
+  fi
+  TANDEMLOG_PROFILE="$modern"
+  # :create can leave an empty ID directory. The migrated legacy DB remains
+  # authoritative after its old settings file has been removed.
+  if populated "$legacy"; then
+    TANDEMLOG_PROFILE="$legacy"
   fi
   export TANDEMLOG_PROFILE
 fi

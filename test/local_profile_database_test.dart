@@ -186,6 +186,39 @@ void main() {
       );
     },
   );
+  test('exact frozen unpublished v1 upgrades without resetting identity', () async {
+    final old = sqlite3.open('${root.path}/local.sqlite');
+    for (final sql in [
+      'CREATE TABLE profile_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+      'CREATE TABLE protected_writer_guards (space TEXT NOT NULL, writer TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer))',
+      'CREATE TABLE protected_text_intents (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, id TEXT NOT NULL, entity TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer,sequence), UNIQUE(space,id))',
+      'CREATE TABLE protected_settings (singleton INTEGER PRIMARY KEY CHECK(singleton=1), writer TEXT NOT NULL, raw BLOB NOT NULL)',
+      'CREATE TABLE migration_file_imports (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL)',
+    ]) {
+      old.execute(sql);
+    }
+    const writer = '00000000-0000-4000-8000-000000000001';
+    final bytes = utf8.encode('{"writer":"$writer","extra":"preserve"}');
+    old.execute("INSERT INTO profile_metadata VALUES ('schema','1')");
+    old.execute('INSERT INTO protected_settings VALUES (1,?,?)', [
+      writer,
+      bytes,
+    ]);
+    old.execute('PRAGMA application_id=1414284354'); // 0x544c4442
+    old.execute('PRAGMA user_version=1');
+    old.close();
+    profile = await LocalProfileDatabase.open(root.path);
+    expect(
+      profile!.database
+          .select('SELECT raw FROM protected_settings')
+          .single['raw'],
+      bytes,
+    );
+    expect(
+      profile!.database.select('PRAGMA user_version').single.values.single,
+      LocalProfileDatabase.schemaVersion,
+    );
+  });
 }
 
 Future<Process> _startChild(String root, String mode) {

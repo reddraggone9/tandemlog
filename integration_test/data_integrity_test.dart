@@ -9,6 +9,7 @@ import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/profile_lock.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
 import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
@@ -225,16 +226,16 @@ void registerDataIntegrityTests() {
         expect(state.busy, isTrue);
         await tester.pumpWidget(const SizedBox());
         await expectLater(
-          ProfileLock.acquire(profile.path),
+          LocalProfileDatabase.open(profile.path),
           throwsA(isA<ProfileInUse>()),
         );
         gate.complete();
         await tester.pumpAndSettle();
-        ProfileLock? lease;
+        LocalProfileDatabase? lease;
         for (var attempt = 0; attempt < 100 && lease == null; attempt++) {
           await tester.pump(const Duration(milliseconds: 100));
           try {
-            lease = await ProfileLock.acquire(profile.path);
+            lease = await LocalProfileDatabase.open(profile.path);
           } on ProfileInUse {
             // Shutdown still waits for the serialized store close.
           }

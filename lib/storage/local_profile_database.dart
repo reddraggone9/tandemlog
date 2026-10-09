@@ -12,15 +12,16 @@ class LocalDatabaseFailure implements Exception {
   String toString() => message;
 }
 
-/// Opt-in proof of one app-owned local connection and database-file lease.
-/// Not wired into application startup or disposable TaskStore cache migration.
+/// App-owned local connection and database-file lease. Startup completes
+/// verified legacy activation before admitting preferences/workspace adapters.
 /// Callers must not open/close a separate raw file handle to this database.
 class LocalProfileDatabase {
   LocalProfileDatabase._(this.root, this._database);
   static const fileName = 'local.sqlite';
   static const _applicationId =
       0x544c4442; // TLDB; local, not canonical format.
-  static const _version = 1;
+  static const schemaVersion = 2;
+  static const _version = schemaVersion;
   static const _schema = {
     'profile_metadata':
         'CREATE TABLE profile_metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
@@ -32,6 +33,10 @@ class LocalProfileDatabase {
         'CREATE TABLE protected_settings (singleton INTEGER PRIMARY KEY CHECK(singleton=1), writer TEXT NOT NULL, raw BLOB NOT NULL)',
     'migration_file_imports':
         'CREATE TABLE migration_file_imports (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL)',
+    'protected_cache_imports':
+        'CREATE TABLE protected_cache_imports (path TEXT PRIMARY KEY, location TEXT NOT NULL, space TEXT NOT NULL, raw BLOB NOT NULL, hash TEXT NOT NULL)',
+    'migration_cleanup':
+        "CREATE TABLE migration_cleanup (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN ('ready','deleting','deleted')))",
   };
   static final _held = <String>{};
   final String root;
@@ -125,8 +130,29 @@ class LocalProfileDatabase {
         for (final sql in _schema.values) {
           db.execute(sql);
         }
-        db.execute("INSERT INTO profile_metadata VALUES ('schema','1')");
+        db.execute(
+          "INSERT INTO profile_metadata VALUES ('schema','$_version')",
+        );
         db.execute('PRAGMA application_id=$_applicationId');
+        db.execute('PRAGMA user_version=$_version');
+      } else if (version == 1 && application == _applicationId) {
+        // Only the exact known unpublished proof schema may advance. Never
+        // rebuild missing authority tables as an empty new installation.
+        _verifyOwnedSchema(db, version: 1);
+        final prior = db.select(
+          "SELECT value FROM profile_metadata WHERE key='schema'",
+        );
+        if (prior.length != 1 || prior.single['value'] != '1') {
+          throw const LocalDatabaseFailure(
+            'Invalid proof database metadata; retained.',
+          );
+        }
+        for (final name in ['protected_cache_imports', 'migration_cleanup']) {
+          db.execute(_schema[name]!);
+        }
+        db.execute(
+          "UPDATE profile_metadata SET value='$_version' WHERE key='schema'",
+        );
         db.execute('PRAGMA user_version=$_version');
       } else if (version != _version || application != _applicationId) {
         throw const LocalDatabaseFailure(
@@ -136,7 +162,9 @@ class LocalProfileDatabase {
       _verifyOwnedSchema(db);
       // Force a real write on reopen as well; obtaining EXCLUSIVE mode must be
       // proven before any settings, writer identity or workspace is used.
-      db.execute("UPDATE profile_metadata SET value='1' WHERE key='schema'");
+      db.execute(
+        "UPDATE profile_metadata SET value='$_version' WHERE key='schema'",
+      );
       if (db.updatedRows != 1) {
         throw const LocalDatabaseFailure(
           'Invalid local database metadata; preserve it before recovery.',
@@ -184,8 +212,15 @@ class LocalProfileDatabase {
   static const _inUse =
       'This profile is already open in another TandemLog instance. Close that instance, then try again.';
 
-  static void _verifyOwnedSchema(Database db) {
+  static void _verifyOwnedSchema(Database db, {int version = _version}) {
     for (final entry in _schema.entries) {
+      if (version == 1 &&
+          {
+            'protected_cache_imports',
+            'migration_cleanup',
+          }.contains(entry.key)) {
+        continue;
+      }
       final actual = db.select(
         "SELECT sql FROM sqlite_schema WHERE type='table' AND name=?",
         [entry.key],

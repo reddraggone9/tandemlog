@@ -1,6 +1,6 @@
 # One app-wide local database
 
-Status: user-approved direction and temporary-file exception; isolated database proof and opt-in TaskStore integration independently reviewed. Production migration, startup activation and cleanup are not implemented or approved by these component reviews.
+Status: user-approved direction and temporary-file exception; isolated database proof, shared TaskStore and integrated bootstrap/cleanup preparation independently reviewed. Application startup is wired in the isolated branch. Native Windows/Android acceptance, parent integration and live cutover remain pending; no release or live migration is implied.
 
 ## Context and approved direction
 
@@ -22,7 +22,11 @@ Opt-in TaskStore handles borrow the owner's connection and share its operation q
 
 Namespace projection versions are metadata, not the profile's global SQLite version. Unsupported bound versions fail closed before standalone legacy replay can run. Explicit namespace rebuild clears only derived events, views, order, native state/actor cache and the derived outbox. It retains bindings, stream/range observations, metadata, guards and protected intents and forces full replay even when log sizes are unchanged. Pending receipts are read from protected authority; the disposable outbox is reconstructed and reconciled with exact canonical receipts, including confirmation through another location alias.
 
-`LegacyProtectedFilesImport` is deliberately **files-only**. It imports existing settings-owned writer identity, private guard records and text-intent JSON files under legacy profile/session leases, records source hashes, commits, then verifies through SQL plus source readback. Repeating an unchanged import does not overwrite newer guard state with stale source records. Conflicting/changed/linked sources fail closed. No originals are deleted, and there is no activation or cleanup API. Marker/legacy-writer manifest entries are evidence only, not a substitute for future workspace identity association.
+`LegacyProtectedFilesImport` imports settings-owned writer identity, guard records and exact intent files under the coordinated legacy profile/session leases. `LegacyCacheImport` separately captures every recognized primary and historical cache through a committed SQLite snapshot, including committed WAL state: bindings, trusted prefixes/heads/ranges, accepted raw records, local metadata and outbox-only bytes. Unsupported/conflicting/changed/linked sources fail closed. Source observations are immutable recovery evidence inside the one DB; no standalone cache backups remain after complete cleanup. The primary supplies projection seeding while every relevant backup/alias observation is verified against canonical bytes before workspace admission.
+
+`LocalProfileMigration` runs before adapters exist. It imports, reads back, validates source-to-target completeness and plans cleanup while holding the legacy leases. Only then does its durable active marker commit. Imported pending intents have immutable digest obligations; confirmation writes a matching workspace/writer/sequence digest proof in the same ingestion transaction as guard acknowledgement and intent retirement. Original guard baselines remain monotonic fences. Missing authorities cannot be mistaken for confirmation or repaired as an empty installation.
+
+Cleanup releases legacy leases before unlinking their lock files. A validated exact-path/source-digest allowlist excludes unknown files, links, changed replacements, the app DB and canonical data. Each deletion commits `deleting`, rechecks source/target obligations, unlinks, confirms the parent directory barrier, then commits `deleted`. Restart resumes either side of unlink. Duplicate atomic replacements are accounted only when byte-exact; orphan/unconfirmed authorities stop activation. The old files are never reimported after activation. DB-backed preferences preserve the installation writer and unknown settings keys. Failed workspace switches restore store/importer, rows, checklist expansion and Undo; the app-wide owner closes after all handles drain. Linux launcher discovery recognizes both settings and the new DB, preserves an explicit override and stops when both supported roots contain state.
 
 ## Exclusion boundary and independent review
 
@@ -32,11 +36,9 @@ Old binaries do not honor the new DB lease after legacy lock/settings cleanup. C
 
 ## Remaining rollout gates
 
-- Import protected location-to-space bindings, all trusted stream/head/range observations and cache-only outbox receipts from every legacy cache. Preserve conflicting observations; do not blindly deduplicate aliases. Account separately for historical backup caches and unsupported versions.
-- Wire the reviewed opt-in owner/scoping into startup, preferences and workspace switching. Restore importer bindings and checklist display state on a failed switch. Standalone clients still use their existing per-workspace cache path; the application has not activated the shared path. Do not reuse destructive cache migrations on protected tables.
-- Add exact-source allowlist cleanup only after complete verified import and activation. Track deletion progress durably, resume after interruption, and exclude unknown/changed/linked files and canonical workspace data. Filesystem deletion is not atomic with the SQLite transaction. No permanent downgrade fence or stale backup copies.
+- Retain frozen tests for all imported authorities, interrupted replay, exact outbox confirmation, target/source replacement, activation and cleanup cuts. Run the integrated source checks before parent integration; standalone fixture/maintenance clients still use their established cache path.
 - Prove Windows and Android native contention, process death and clean-close behavior on the exact pinned SQLite/VFS. Linux subprocess tests do not substitute for those gates. Exercise migration crashes, disk/flush failures, source replacement and cleanup interruption.
-- Independent architecture/correctness review before broad rollout. No live user data migration/cleanup or publication in this slice.
+- Independent architecture/correctness review and source-bound native handoff before broad rollout. No live user-data operation, push or publication in this slice. Coordinate refresh onto the parent's accepted dependency-only base after its separate candidate/native outcome.
 
 ## Alternatives and revisit trigger
 
