@@ -1,0 +1,211 @@
+{
+  "reviewer": "correctness_review",
+  "reviewedAtUtc": "2026-10-09T22:24:25.269236+00:00",
+  "verdict": "accepted source/terminal hosted CI/provenance handoff; no must-fix; no device or publication acceptance",
+  "handoff": {
+    "path": "/workspace/recovery/storage-release/build56-hosted-evidence-handoff.json",
+    "bytes": 249339,
+    "sha256": "6f8068f90d161f257504b55e835967b7570f8f4c7295b8a91a31a02b12891da4"
+  },
+  "reviewedSourceFiles": {
+    "tool/android_storage_fault/harness.dart": {
+      "bytes": 15205,
+      "sha256": "9e665e064e80ba6aa61e4e583a34458abf5741443c93ad091e313c9ab0bda8e7"
+    },
+    "tool/android_storage_fault/main.dart": {
+      "bytes": 1841,
+      "sha256": "6dbe0253074037cf7943e368d09156eda0b3551706907134591284bfdaff8c59"
+    },
+    "tool/android_storage_fault/build_apk.py": {
+      "bytes": 6555,
+      "sha256": "fb5134e587afe775048416752299222c20659f5d4c045c1101d1f9d02b8e2601"
+    },
+    "tool/android_storage_fault/run_on_device.py": {
+      "bytes": 8964,
+      "sha256": "7c31901f9249e3ffc26f99889ed10764aeedbc3decdf345ca450ff38fc00189c"
+    },
+    "tool/android_storage_fault/README.md": {
+      "bytes": 3309,
+      "sha256": "c524dede453786d822d6995dba60be7c9d603cc193296dc8606d538af1fc70be"
+    },
+    "test/android_storage_fault_harness_test.dart": {
+      "bytes": 2455,
+      "sha256": "0fe31565bd6baaf665d07907b5068471ce4296319e340a331acc309c013ec6e9"
+    },
+    ".github/workflows/validate.yml": {
+      "bytes": 1123,
+      "sha256": "74626b77c7bfad0a1872a7cd706f38b32ea084152719bdaf063396861a483dd2"
+    },
+    "windows-proof/tool/windows_visible56.py": {
+      "bytes": 5915,
+      "sha256": "832126ca0edbd5d5a2750e93196036cf4b1a0e2cfb84d5fa878f8535018e67ac"
+    },
+    "windows-proof/.github/workflows/validate.yml": {
+      "bytes": 901,
+      "sha256": "ecc68d050c79ee005fca87742b59168d401cd673916b2b2895a0b4b6f63bdc72"
+    }
+  },
+  "terminalRunsApiIndependentlyChecked": [
+    {
+      "id": 37995721678,
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "event": "workflow_dispatch",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114041160204,
+          "name": "candidate",
+          "conclusion": "success"
+        },
+        {
+          "id": 114041211583,
+          "name": "checks / android",
+          "conclusion": "success"
+        },
+        {
+          "id": 114041211736,
+          "name": "checks / linux",
+          "conclusion": "success"
+        },
+        {
+          "id": 114041211744,
+          "name": "checks / windows",
+          "conclusion": "success"
+        },
+        {
+          "id": 114049035384,
+          "name": "signed-android",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37995714950,
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114041130243,
+          "name": "checks / linux",
+          "conclusion": "success"
+        },
+        {
+          "id": 114041130623,
+          "name": "checks / android",
+          "conclusion": "success"
+        },
+        {
+          "id": 114041130659,
+          "name": "checks / windows",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37998023288,
+      "source": "e13d80f7b4dc67d654e96e0b9c31aa91aefedc03",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114048916812,
+          "name": "android-storage-fault",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 37998546954,
+      "source": "cda3003062672e227386aa505e5f609d6c2cbe76",
+      "event": "push",
+      "status": "completed",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114050666121,
+          "name": "exact-windows-visible",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "artifactsApiMetadataOnly": [
+    {
+      "id": 11646614634,
+      "name": "windows",
+      "size_in_bytes": 25989868,
+      "digest": "sha256:7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+      "expired": false,
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11648102388,
+      "name": "android-release",
+      "size_in_bytes": 30685785,
+      "digest": "sha256:18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+      "expired": false,
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11648222565,
+      "name": "android-storage-fault",
+      "size_in_bytes": 102022665,
+      "digest": "sha256:eed156cb390683d394075614685e0fb8fd87c7045021eceef019c6cc0811ac97",
+      "expired": false,
+      "workflow_run": {
+        "id": 37998023288,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "evidence/android-storage-fault56",
+        "head_sha": "e13d80f7b4dc67d654e96e0b9c31aa91aefedc03"
+      }
+    }
+  ],
+  "normalizedRetrievedLogs": {
+    "build56-windows-visible-proof-logs.txt": {
+      "bytes": 33037,
+      "sha256": "753ab4f54e108aecbfd85db4e74f53c05796228d9064c42254427a3670744a25"
+    },
+    "build56-signed-android-logs.txt": {
+      "bytes": 190118,
+      "sha256": "64726d070a7552dc0c934a03e79f2f90c3eb9704d22d6eb06c8a8373ca71d2fe"
+    },
+    "build56-android-storage-fault-logs.txt": {
+      "bytes": 476773,
+      "sha256": "4a5300a4ee285d5ad650a5d13d03ba74c7de6a3c24c92aa6e7e4777f318f2647"
+    }
+  },
+  "verified": [
+    "All seven frozen Android QA files equal previous independently reviewed bytes; five delivered tooling hashes equal frozen source, current worktree and hosted provenance.",
+    "All1668 archived tracked-input hashes match production76 Git blobs with exactly two declared Android identity/label patches; compiled Dart target hashes match immutable QA source.",
+    "Complete Android hosted provenance and Windows exact-visible JSON equal retained retrieved logs. All three retained normalized log hashes match handoff.",
+    "Signed Android hosted log confirms package/version/certificate/non-debuggable/universal ABI and exact packaged native/notices checks; successful owner job uploaded expected android-release artifact.",
+    "Windows helper checks exact existing candidate run/source/outerZIP/installer hashes and every installed payload against candidate map, with no rebuild.",
+    "Windows adapted readiness rejects stdout fallback, resets own-PID visibility interval when absent, requires explicit WINDOWS_VISIBLE_NATIVE_WINDOW_MODEL_VERIFIED_AFTER_STOP, then checks stopped synthetic model/settings/canonical bytes.",
+    "Actual Windows proof observed first-frame49ms and ready229ms plus explicit required marker; original installer smoke had stdout readiness and is not retroactively OS-visibility evidence."
+  ],
+  "qualifications": [
+    "APK117b1b0df0c0cf97f8171ba6995851a0cdb5bc5dcd2f17e3037199fa9047f55f and all13 packaged native payload hashes are hosted provenance metadata, not independently downloaded/rehashed artifact bytes.",
+    "API outer digests/size/source bindings are verified metadata; consumer artifact materialization403 remains a stated limitation.",
+    "Windows installed exact payload/own-PID IsWindowVisible samples over3seconds plus post-stop synthetic model verification are hosted observations, not pixels, occlusion, human UX or process-death migration evidence.",
+    "Android worker eleven actual force-stop/recovery cases and exact installed signed production APK acceptance remain pending.",
+    "No new publication approval, main mutation, live-user-data access, SAF/power-loss or physical-directory-barrier acceptance."
+  ],
+  "reviewerActions": "Read-only source/log/API verification, no builds/matrices/artifact downloads or tracked edits; scratch receipt only."
+}
