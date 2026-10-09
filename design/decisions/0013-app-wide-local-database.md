@@ -1,6 +1,6 @@
 # One app-wide local database
 
-Status: user-approved direction and temporary-file exception; isolated database proof, shared TaskStore and integrated bootstrap/cleanup preparation independently reviewed. Application startup is wired in the isolated branch. Native Windows/Android acceptance, parent integration and live cutover remain pending; no release or live migration is implied.
+Status: user-approved direction and temporary-file exception; database proof, shared TaskStore and integrated bootstrap/cleanup preparation independently reviewed. Application startup is wired in the combined storage/dependency candidate. Lee explicitly authorized this combined release. Exact Windows/Android acceptance, independent combined-source/artifact review and parent publication gates remain pending; no live-data operation is authorized.
 
 ## Context and approved direction
 

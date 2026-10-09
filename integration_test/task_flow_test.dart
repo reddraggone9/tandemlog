@@ -1304,176 +1304,173 @@ void main() {
       await root.delete(recursive: true);
     },
   );
-  testWidgets(
-    'desktop onboarding, live theme, inline retry and folder actions',
-    (tester) async {
-      final root = await Directory.systemTemp.createTemp(
-        'tandemlog-onboarding',
+  testWidgets('desktop onboarding, live theme, inline retry and folder actions', (
+    tester,
+  ) async {
+    final root = await Directory.systemTemp.createTemp('tandemlog-onboarding');
+    final profile = Directory('${root.path}/profile');
+    final actions = TestFolders();
+    Future<void> launch() async {
+      await tester.pumpWidget(
+        TandemlogApp(profilePath: profile.path, folderActions: actions),
       );
-      final profile = Directory('${root.path}/profile');
-      final actions = TestFolders();
-      Future<void> launch() async {
-        await tester.pumpWidget(
-          TandemlogApp(profilePath: profile.path, folderActions: actions),
-        );
-        await tester.pumpAndSettle();
-      }
+      await tester.pumpAndSettle();
+    }
 
-      Future<void> settings() async {
-        await openSettings(tester);
-        await tester.pumpAndSettle();
-      }
+    Future<void> settings() async {
+      await openSettings(tester);
+      await tester.pumpAndSettle();
+    }
 
-      Future<void> theme(String name) async {
-        await settings();
-        await tester.tap(find.text('Theme'));
-        await tester.pumpAndSettle();
-        await tester.tap(find.text(name).last);
-        await tester.pumpAndSettle();
-      }
-
-      Brightness brightness() =>
-          Theme.of(tester.element(find.byType(Scaffold))).brightness;
-      tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
-      await launch();
-      expect(brightness(), Brightness.dark);
-      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+    Future<void> theme(String name) async {
       await settings();
       await tester.tap(find.text('Theme'));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Cancel'));
+      await tester.tap(find.text(name).last);
       await tester.pumpAndSettle();
-      expect(find.text('Settings'), findsOneWidget);
-      expect(brightness(), Brightness.dark);
-      await tester.tap(find.text('Done'));
-      await tester.pumpAndSettle();
-      await theme('Light');
-      expect(brightness(), Brightness.light);
-      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
-      await launch();
-      expect(brightness(), Brightness.light);
-      await theme('System');
-      expect(brightness(), Brightness.dark);
-      tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
-      await tester.pumpAndSettle();
-      expect(brightness(), Brightness.light);
-      // Canceling the secondary chooser must not create the default workspace.
-      await tester.tap(find.text('Choose an existing folder'));
-      await tester.pumpAndSettle();
-      expect(actions.picks, 1);
-      expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
-      final start = tester
-          .widget<FilledButton>(find.widgetWithText(FilledButton, 'Start'))
-          .onPressed!;
-      start();
-      start();
-      await waitForUi(
-        tester,
-        () =>
-            find.byType(TextField).evaluate().length == 1 &&
-            tester
-                    .widget<TextField>(find.byType(TextField))
-                    .focusNode
-                    ?.hasFocus ==
-                true,
-      );
-      expect(find.byType(AlertDialog), findsNothing);
-      final name = tester.widget<TextField>(find.byType(TextField));
-      expect(name.focusNode!.hasFocus, isTrue);
-      await tester.enterText(find.byType(TextField), '   ');
-      expect(
-        tester
-            .widget<FilledButton>(find.widgetWithText(FilledButton, 'Continue'))
-            .onPressed,
-        isNull,
-      );
-      await tester.enterText(find.byType(TextField), 'Lee');
-      final manifest = File('${profile.path}/shared-data/tandemlog-space.json');
-      final originalManifest = await manifest.readAsString();
-      await manifest.rename('${manifest.path}.removed');
-      await tester.testTextInput.receiveAction(TextInputAction.done);
-      await waitForUi(
-        tester,
-        () =>
-            tester
-                .widget<TextField>(find.byType(TextField))
-                .focusNode
-                ?.hasFocus ==
-            true,
-      );
-      expect(find.text('Lee'), findsOneWidget);
-      expect(
-        tester.widget<TextField>(find.byType(TextField)).focusNode!.hasFocus,
-        isTrue,
-      );
-      await File('${manifest.path}.removed').rename(manifest.path);
-      final submit = tester
-          .widget<TextField>(find.byType(TextField))
-          .onSubmitted!;
-      final profileOwner =
-          (tester.state(find.byType(TasksPage)) as dynamic).profileDatabase;
-      profileOwner.database.execute(
-        "CREATE TRIGGER fail_name_preferences BEFORE UPDATE ON protected_settings BEGIN SELECT RAISE(ABORT,'synthetic preference failure'); END",
-      );
-      submit('Lee');
-      submit('Lee');
-      await tester.pumpAndSettle();
-      expect(find.text('Lee'), findsOneWidget);
-      expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
-      profileOwner.database.execute('DROP TRIGGER fail_name_preferences');
-      await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
-      await tester.pumpAndSettle();
-      expect(find.text('No open tasks'), findsOneWidget);
-      final records = <dynamic>[];
-      await for (final f in Directory('${profile.path}/shared-data').list()) {
-        if (f.path.endsWith('.jsonl')) {
-          records.addAll((await File(f.path).readAsLines()).map(jsonDecode));
-        }
+    }
+
+    Brightness brightness() =>
+        Theme.of(tester.element(find.byType(Scaffold))).brightness;
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.dark;
+    await launch();
+    expect(brightness(), Brightness.dark);
+    expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+    await settings();
+    await tester.tap(find.text('Theme'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(find.text('Settings'), findsOneWidget);
+    expect(brightness(), Brightness.dark);
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    await theme('Light');
+    expect(brightness(), Brightness.light);
+    expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await launch();
+    expect(brightness(), Brightness.light);
+    await theme('System');
+    expect(brightness(), Brightness.dark);
+    tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
+    await tester.pumpAndSettle();
+    expect(brightness(), Brightness.light);
+    // Canceling the secondary chooser must not create the default workspace.
+    await tester.tap(find.text('Choose an existing folder'));
+    await tester.pumpAndSettle();
+    expect(actions.picks, 1);
+    expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
+    final start = tester
+        .widget<FilledButton>(find.widgetWithText(FilledButton, 'Start'))
+        .onPressed!;
+    start();
+    start();
+    await waitForUi(
+      tester,
+      () =>
+          find.byType(TextField).evaluate().length == 1 &&
+          tester
+                  .widget<TextField>(find.byType(TextField))
+                  .focusNode
+                  ?.hasFocus ==
+              true,
+    );
+    expect(find.byType(AlertDialog), findsNothing);
+    final name = tester.widget<TextField>(find.byType(TextField));
+    expect(name.focusNode!.hasFocus, isTrue);
+    await tester.enterText(find.byType(TextField), '   ');
+    expect(
+      tester
+          .widget<FilledButton>(find.widgetWithText(FilledButton, 'Continue'))
+          .onPressed,
+      isNull,
+    );
+    await tester.enterText(find.byType(TextField), 'Lee');
+    final manifest = File('${profile.path}/shared-data/tandemlog-space.json');
+    final originalManifest = await manifest.readAsString();
+    await manifest.rename('${manifest.path}.removed');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await waitForUi(
+      tester,
+      () =>
+          tester
+              .widget<TextField>(find.byType(TextField))
+              .focusNode
+              ?.hasFocus ==
+          true,
+    );
+    expect(find.text('Lee'), findsOneWidget);
+    expect(
+      tester.widget<TextField>(find.byType(TextField)).focusNode!.hasFocus,
+      isTrue,
+    );
+    await File('${manifest.path}.removed').rename(manifest.path);
+    final submit = tester
+        .widget<TextField>(find.byType(TextField))
+        .onSubmitted!;
+    final profileOwner =
+        (tester.state(find.byType(TasksPage)) as dynamic).profileDatabase;
+    profileOwner.database.execute(
+      "CREATE TRIGGER fail_name_preferences BEFORE UPDATE ON protected_settings BEGIN SELECT RAISE(ABORT,'synthetic preference failure'); END",
+    );
+    submit('Lee');
+    submit('Lee');
+    await tester.pumpAndSettle();
+    expect(find.text('Lee'), findsOneWidget);
+    expect(tester.widget<TextField>(find.byType(TextField)).readOnly, isTrue);
+    profileOwner.database.execute('DROP TRIGGER fail_name_preferences');
+    await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
+    await tester.pumpAndSettle();
+    expect(find.text('No open tasks'), findsOneWidget);
+    final records = <dynamic>[];
+    await for (final f in Directory('${profile.path}/shared-data').list()) {
+      if (f.path.endsWith('.jsonl')) {
+        records.addAll((await File(f.path).readAsLines()).map(jsonDecode));
       }
-      expect(records.where((r) => r['type'] == 'user.created').length, 1);
-      expect(await manifest.readAsString(), originalManifest);
-      await theme('Dark');
-      expect(brightness(), Brightness.dark);
-      await settings();
-      expect(
-        tester
-            .widget<OutlinedButton>(
-              find.widgetWithText(OutlinedButton, 'Open data folder'),
-            )
-            .onPressed,
-        isNull,
-      );
-      await tester.tap(find.text('Done'));
-      await tester.pumpAndSettle();
-      actions.available = true;
-      actions.failOpen = true;
-      await settings();
-      await tester.tap(find.text('Open data folder'));
-      await tester.pumpAndSettle();
-      expect(find.textContaining('Test file manager failure'), findsOneWidget);
-      expect(find.text('No open tasks'), findsOneWidget);
-      // Failed folder switching keeps the old workspace and preference intact.
-      actions.selection = '${root.path}/missing';
-      await settings();
-      await tester.tap(find.text('Use a different folder'));
-      await tester.pumpAndSettle();
-      expect(find.text('No open tasks'), findsOneWidget);
-      final saved = readProfileSettings(tester);
-      expect(saved['folder'], '${profile.path}/shared-data');
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
-      await launch();
-      expect(brightness(), Brightness.dark);
-      expect(find.text('No open tasks'), findsOneWidget);
-      expect(await manifest.readAsString(), originalManifest);
-      await tester.pumpWidget(const SizedBox());
-      await tester.pumpAndSettle();
-      tester.platformDispatcher.clearPlatformBrightnessTestValue();
-      await root.delete(recursive: true);
-    },
-  );
+    }
+    expect(records.where((r) => r['type'] == 'user.created').length, 1);
+    expect(await manifest.readAsString(), originalManifest);
+    await theme('Dark');
+    expect(brightness(), Brightness.dark);
+    await settings();
+    expect(
+      tester
+          .widget<OutlinedButton>(
+            find.widgetWithText(OutlinedButton, 'Open data folder'),
+          )
+          .onPressed,
+      isNull,
+    );
+    await tester.tap(find.text('Done'));
+    await tester.pumpAndSettle();
+    actions.available = true;
+    actions.failOpen = true;
+    await settings();
+    await tester.tap(find.text('Open data folder'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('Test file manager failure'), findsOneWidget);
+    expect(find.text('No open tasks'), findsOneWidget);
+    // Failed folder switching keeps the old workspace and preference intact.
+    actions.selection = '${root.path}/missing';
+    await settings();
+    await tester.tap(find.text('Use a different folder'));
+    await tester.pumpAndSettle();
+    expect(find.text('No open tasks'), findsOneWidget);
+    final saved = readProfileSettings(tester);
+    expect(saved['folder'], '${profile.path}/shared-data');
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    await launch();
+    expect(brightness(), Brightness.dark);
+    expect(find.text('No open tasks'), findsOneWidget);
+    expect(await manifest.readAsString(), originalManifest);
+    await tester.pumpWidget(const SizedBox());
+    await tester.pumpAndSettle();
+    tester.platformDispatcher.clearPlatformBrightnessTestValue();
+    await root.delete(recursive: true);
+  });
 
   testWidgets(
     'explicit Add finalizes composing drafts once while Enter leaves IME candidates alone',
@@ -1855,10 +1852,7 @@ void main() {
         () => find.text('Retained example task').evaluate().isNotEmpty,
       );
       expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
-      expect(
-        readProfileSettings(tester)['folder'],
-        legacy.path,
-      );
+      expect(readProfileSettings(tester)['folder'], legacy.path);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       await launch();
@@ -1889,10 +1883,7 @@ void main() {
     await tester.tap(find.text('Try again'));
     await tester.pumpAndSettle();
     expect(await Directory('${root.path}/shared-data').exists(), isFalse);
-    expect(
-      readProfileSettings(tester)['folder'],
-      '${root.path}/absent',
-    );
+    expect(readProfileSettings(tester)['folder'], '${root.path}/absent');
     await tester.pumpWidget(const SizedBox());
     await tester.pumpAndSettle();
     await root.delete(recursive: true);
