@@ -1,0 +1,148 @@
+{
+  "reviewed_at_utc": "2026-10-09T17:35:46.183938+00:00",
+  "decision": "ACCEPTED: exact stable release, actual public installer bytes, mandatory hosted gate execution, preserved prior releases and frozen final documentation checkpoint",
+  "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "candidate_run_id": 37960853538,
+  "version": "2026.10.2+53",
+  "release_id": 408169620,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2",
+  "tag": "v2026.10.2",
+  "published_at": "2026-10-09T17:31:53Z",
+  "prerelease": false,
+  "draft": false,
+  "latest_id": 408169620,
+  "latest_tag": "v2026.10.2",
+  "promotion": {
+    "id": 37966878729,
+    "head_sha": "13d3ce412ad729fb4ac5da00cc0e149138706812",
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/stable.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1
+  },
+  "promotion_jobs": [
+    {
+      "id": 113943324895,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113943368892,
+      "name": "publish",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "actual_public_assets": [
+    {
+      "id": 625674445,
+      "name": "tandemlog-2026.10.2-android.apk",
+      "size_bytes": 65313245,
+      "independently_verified_actual_sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-android.apk"
+    },
+    {
+      "id": 625674449,
+      "name": "tandemlog-2026.10.2-linux-x64.flatpak",
+      "size_bytes": 9007280,
+      "independently_verified_actual_sha256": "fd827855a5cd639dedbd69d52256c6d9c472d35b231709f9fa34cea63cc6de7f",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-linux-x64.flatpak"
+    },
+    {
+      "id": 625674451,
+      "name": "tandemlog-2026.10.2-windows-x64-setup.exe",
+      "size_bytes": 12206276,
+      "independently_verified_actual_sha256": "00004336d6bcaaebbd7bbb22bf033ef98cea610c312f2d21d463ee1a378f33eb",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-windows-x64-setup.exe"
+    }
+  ],
+  "exact_three_versioned_installers": true,
+  "actual_hosted_gate_proof": {
+    "job_id": 113943368892,
+    "full_log_sha256": "a8b234f90a05cd54cfb128c658e9511661469fe16d75d21145cfc7017587f6d2",
+    "strict_artifact_digest_mismatch_policy": "error",
+    "artifact_ids": [
+      11632728225,
+      11632630223,
+      11632147858
+    ],
+    "actual_archive_digest_matches": [
+      "8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7",
+      "5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639",
+      "9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c"
+    ],
+    "actual_inventory_portable_full_member_crc_hash_lifecycle_accepted_apk_gate_passed_at": "2026-10-09T17:31:48.4077372Z",
+    "actual_all3_installer_checksum_manifests_OK_before_create": true,
+    "lee_accepted_true": true,
+    "trusted_dispatch_policy_unchanged": true,
+    "no_rebuild_or_resigning_in_promotion": true
+  },
+  "public_apk_independent_verification": {
+    "accepted_inner_sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+    "own_official_apksigner_aapt_and_source_verify_apk_passed": true,
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2",
+    "version_code": 53,
+    "pinned_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "own_complete_member_crc_passed": true,
+    "member_count": 79,
+    "all3actual_native_libraries_equal_rc7_bytes": true,
+    "native_payload_notices": "Root actual successful public payload/notices log inspected; no device runtime by reviewer.",
+    "source_reports_sha256": {
+      "independent-public-android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "independent-public-android-badging.txt": "6fef26e02b9e4d7bbaa9df5301659523f441e54262bde35e650ed8aaa44472ae",
+      "public-native-payload-gate.log": "184ca31887eb5ed591aa2be09b2c92c74a49fe39e978a136fd8bab8293ead161"
+    }
+  },
+  "notes_media": {
+    "actual_release_body_byte_equal_reviewed": true,
+    "notes_sha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+    "immutable_tag_media_source": "89cec5a13900291df9f1cb841c5351277f38f4ff",
+    "image_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+    "capture_attribution": "Earlier-preview5ac\u2192e205 Linux dark actual comparison reused as independently reviewed illustration of tag change in full stable range; no newly captured stable-device claim.",
+    "prior_full_range_editorial_review_sha256": "c23aa4a7ea0b10fff96a82f5c05bc0f12460f515d70582a2610bd6d1dc990915"
+  },
+  "prior_release_preservation": {
+    "prior_count": 20,
+    "fresh_notes_metadata_and_asset_ids_names_digests_sizes_urls_all_equal_before_snapshot": true,
+    "before_snapshot_sha256": "0b405b4a110ff2a55b161f7de52a2ebaca7d35a215bd53925c0e5cd68f2c1117",
+    "RC7_preserved": true,
+    "old_stable2026.10.1_preserved": true,
+    "latest_pointer_changed_as_authorized": "v2026.10.1\u2192v2026.10.2"
+  },
+  "limits": [
+    "Parent36new stable device checks/reuse56RC7 remain trusted parent exact byte/device/packet attestation; reviewer did not rerun Android device or inspect private packet bytes.",
+    "Cloud private artifact materialization403 did not bypass mandatory hosted actual-byte gates; public installers independently locally hashed.",
+    "Windows/Flatpak lifecycle evidence is actual hosted execution; reviewer public byte checks do not claim new local Windows/Android runtime."
+  ],
+  "must_fix": [],
+  "remaining": [],
+  "final_documentation_review": {
+    "decision": "ACCEPTED",
+    "reviewed_files_sha256": {
+      "design/status.md": "5faeb73c48707d20ae2f7e6d439291ff7edb084e485f2967f9e637350f2213f6",
+      "design/runtime-qa.md": "e3c61400e869e85f6647a22263ef936733765b6a65fe20235a92f3a5398eedbd",
+      "evidence/stable-2026.10.2/README.md": "24eee881710cf63e63fee9ddf3b155f182638f39b01bc966efab02c0d0e10dc0",
+      "evidence/stable-2026.10.2/native-acceptance-handoff.md": "01dc0b87c877b0663027d4b409e2758738c36b92e2f2a299c06c2619bb88945c",
+      "evidence/stable-2026.10.2/public-download-verification.json": "49c18d586d0643a21bdf46774fe015e5375e91d22166218acfa18c391abe311f",
+      "evidence/stable-2026.10.2/promotion-hosted-byte-gates.log": "e5a3abcb56b5bea301024b854ea7f04a285a6949c9e2221648630c46de586936"
+    },
+    "claims": "Exact stable53/source687/run37966878729/dispatch13d3 and3actual installers/latesttrue/public signature+CRC/native equality accurately stated. Parent36/reuse56/native/profile/SAF evidence remains parent-attributed; private transfer403 and no new stable UI/video/local Windows-device claims retained. Earlier then-pending snapshot receipts explicitly historical.",
+    "hosted_public_excerpt": "All12 actual immutable binding/digest/gate/checksum/public-URL lines exactly match preserved full hosted log.",
+    "relative_links": "All existing destinations resolve; independent-post-publication-review.json self-receipt links intentionally resolve after root copies these exact bytes. No hash cycle.",
+    "privacy": "No private Library identifier/account values introduced in current release sections/public evidence.",
+    "notes_media_code_policy_unchanged": true
+  }
+}

@@ -1,0 +1,12 @@
+2026-10-09T17:31:42.2307462Z Fetching artifact list for workflow run 37960853538 in repository reddraggone9/tandemlog
+2026-10-09T17:31:42.5314191Z - android-release (ID: 11632728225, Size: 30362267, Expected Digest: sha256:8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7)
+2026-10-09T17:31:42.5314959Z - windows (ID: 11632630223, Size: 25804512, Expected Digest: sha256:5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639)
+2026-10-09T17:31:42.5315623Z - linux (ID: 11632147858, Size: 9012065, Expected Digest: sha256:9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c)
+2026-10-09T17:31:43.9410741Z SHA256 digest of downloaded artifact is 9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c
+2026-10-09T17:31:44.4620614Z SHA256 digest of downloaded artifact is 5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639
+2026-10-09T17:31:44.4624534Z SHA256 digest of downloaded artifact is 8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7
+2026-10-09T17:31:48.4077372Z Exact tested APK, signer, source, version, installed desktop QA and asset set verified.
+2026-10-09T17:31:48.4213507Z tandemlog-linux-x64.flatpak: OK
+2026-10-09T17:31:48.4306329Z tandemlog-windows-x64-unsigned-setup.exe: OK
+2026-10-09T17:31:48.4740517Z tandemlog-android.apk: OK
+2026-10-09T17:31:54.3047283Z https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2

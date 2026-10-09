@@ -1,4 +1,4 @@
-# Stable2026.10.2 preparation
+# Stable2026.10.2 official release
 
 Exact stable candidate source is`687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`.
 [Signed candidate37960853538](https://github.com/reddraggone9/tandemlog/actions/runs/37960853538)
@@ -62,7 +62,31 @@ synced user data operation. Packet byte/device checks belong to the parent.
 Fresh parent publication clearance at17:25:54.451529Z passed; account values
 remain private. No RC7 APK identity is substituted.
 
-Remaining: retained hosted inventory/archive/member/lifecycle/
-APK/checksum gates, stable publication with lee_accepted=true/latest=true, all
-three actual public installer bytes and independent final release review.
-No stable dispatch/tag/release has occurred at this preparation checkpoint.
+## Published result
+
+[Official release](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2)
+408169620 published2026-10-09T17:31:53Z, prerelease=false/draft=false and Latest.
+Successful [promotion37966878729](https://github.com/reddraggone9/tandemlog/actions/runs/37966878729)
+at trusted dispatch13d3ce412ad729fb4ac5da00cc0e149138706812 consumed exact
+candidate687163b artifacts without rebuild. Actual downloaded archive digests,
+closed inventory, portable full-member/CRC/provenance, both desktop installed
+lifecycle records, accepted APK identity and three strict installer checksums
+passed before release creation. [Hosted excerpt](promotion-hosted-byte-gates.log)
+retains actual terminal output, with full-log hash in the public receipt.
+
+Root anonymously downloaded all three actual public installers and verified
+size/SHA256 against GitHub, Windows producer hash and accepted APK hash.
+Official SDK apksigner/aapt verify owner/package/stable53/nondebuggable/three ABIs;
+all79 APK members pass CRC, exact native payload/notices pass, and all three
+native libraries are byte-identical to accepted RC7. Stable tag resolves to
+687163b, reviewed notes are byte-identical to immutable dispatch, and all20
+prior releases' notes/metadata/asset identities remain unchanged.
+[Public verification](public-download-verification.json),
+[prepublication review](independent-prepublication-review.json) and
+[independent final review](independent-post-publication-review.json) bind actual
+bytes, review decisions and runtime origins. Native device evidence remains
+parent-attributed; hosted lifecycle evidence remains hosted-attributed.
+
+Earlier candidate-handoff and preparation receipts are preserved checkpoint
+snapshots, including their then-pending native/publication gates. No live synced
+user data was changed; private Library identifiers/account values are omitted.

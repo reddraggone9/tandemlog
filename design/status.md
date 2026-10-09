@@ -1,6 +1,6 @@
 # Current status — 2026-10-09
 
-## Stable2026.10.2 — accepted RC7 promotion preparation
+## Stable2026.10.2 — official release published
 
 Lee explicitly accepted RC7 for the next official release on2026-10-09.
 Stable policy requires a separately built stable-name candidate, so version
@@ -9,8 +9,10 @@ Application/domain/storage/native/platform/dependency/test/workflow source is
 unchanged. RC7 behavior and native acceptance are reused with their exact source
 attribution; fresh stable APK identity/upgrade/native gates remain required.
 The parent supplied fresh publication-threshold clearance at16:34:51UTC.
-Full stable candidate and bounded new stable-native acceptance passed; no stable
-publication has occurred. Current Latest remains2026.10.1, and RC7 is preserved.
+Full stable candidate and bounded new stable-native acceptance passed.
+[Official stable2026.10.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2)
+published2026-10-09T17:31:53Z and is Latest; RC7 and all20 prior releases' notes,
+metadata and asset identities are preserved.
 Candidate37960853538 and pushCI37960786048 completed successfully at exact stable source687163b;
 independent source/notes/README/media preparation review passes with no must-fix.
 Owner-signed Android artifact11632728225 passed parent's36 bounded native checks,
@@ -20,8 +22,13 @@ Upgrade retained all four synthetic profiles' settings/identities/canonical
 history/full task/order/text state; cold replay and SAF continuity passed.
 Cloud archive materialization returnedHTTP403; actual native bytes/device
 evidence belongs to parent. Fresh17:25:54UTC publication clearance passed.
-Stable promotion awaits independent final prepublication review and retained
-actual hosted byte gates; accepted candidate will not be rebuilt.
+Independent prepublication review passed. Promotion37966878729 at dispatch13d3ce4
+used exact accepted candidate687163b artifacts without rebuilding. Actual hosted
+archive digests/inventory/portable members/desktop lifecycle/accepted APK and
+all three strict checksum gates passed before creation. Anonymous public
+Windows/Linux/Android byte hashes, stable tag/source and owner-signed APK identity
+were verified; [public receipt](../evidence/stable-2026.10.2/public-download-verification.json)
+and independent final review retain the evidence and accurate runtime origins.
 
 The [stable preparation record](../evidence/stable-2026.10.2/README.md) binds code
 equivalence, applicable existing evidence, explicit approval, notes/media review

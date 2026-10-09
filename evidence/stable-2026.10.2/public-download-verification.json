@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-10-09T17:32:36.825367+00:00",
+  "release_id": 408169620,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2",
+  "tag": "v2026.10.2",
+  "tag_and_source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "published_at": "2026-10-09T17:31:53Z",
+  "candidate_run_id": 37960853538,
+  "version": "2026.10.2+53",
+  "promotion_run_id": 37966878729,
+  "promotion_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37966878729",
+  "trusted_dispatch_commit": "13d3ce412ad729fb4ac5da00cc0e149138706812",
+  "promotion_conclusion": "success",
+  "no_rebuild": true,
+  "prerelease": false,
+  "draft": false,
+  "latest_requested": true,
+  "assets": [
+    {
+      "id": 625674445,
+      "name": "tandemlog-2026.10.2-android.apk",
+      "size_bytes": 65313245,
+      "sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-android.apk",
+      "anonymous_download": true
+    },
+    {
+      "id": 625674449,
+      "name": "tandemlog-2026.10.2-linux-x64.flatpak",
+      "size_bytes": 9007280,
+      "sha256": "fd827855a5cd639dedbd69d52256c6d9c472d35b231709f9fa34cea63cc6de7f",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-linux-x64.flatpak",
+      "anonymous_download": true
+    },
+    {
+      "id": 625674451,
+      "name": "tandemlog-2026.10.2-windows-x64-setup.exe",
+      "size_bytes": 12206276,
+      "sha256": "00004336d6bcaaebbd7bbb22bf033ef98cea610c312f2d21d463ee1a378f33eb",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2/tandemlog-2026.10.2-windows-x64-setup.exe",
+      "anonymous_download": true
+    }
+  ],
+  "metadata_checks": {
+    "exact_three_versioned_installers": true,
+    "reviewed_notes_byte_equal": true,
+    "notes_sha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+    "target_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "prior_release_count": 20,
+    "all_prior_metadata_and_asset_identity_unchanged": true,
+    "latest_tag": "v2026.10.2",
+    "latest_id": 408169620
+  },
+  "public_apk_checks": {
+    "apk_sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+    "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2",
+    "version_code": 53,
+    "nondebuggable": true,
+    "official_apksigner_aapt_passed": true,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "apk_member_count": 79,
+    "apk_member_crc_passed": true,
+    "native_payload_notices_passed": true,
+    "native_library_hashes": {
+      "lib/arm64-v8a/libtandemlog_text.so": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "lib/armeabi-v7a/libtandemlog_text.so": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "lib/x86_64/libtandemlog_text.so": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    },
+    "native_libraries_byte_equal_accepted_rc7": true
+  },
+  "native_acceptance": "native-acceptance-attestation.json",
+  "limits": [
+    "Cloud private archives/evidence packet materialization unavailable; parent performed exact Android byte/device acceptance.",
+    "Actual anonymous public installer bytes verified locally; hosted member/lifecycle gates attributed to hosted jobs."
+  ],
+  "stable_promotion": true,
+  "live_synced_data_modified": false,
+  "actual_hosted_publication_log": {
+    "job_id": 113943368892,
+    "sha256": "a8b234f90a05cd54cfb128c658e9511661469fe16d75d21145cfc7017587f6d2",
+    "normalization": "LF line endings",
+    "artifact_ids": [
+      11632728225,
+      11632630223,
+      11632147858
+    ],
+    "gate_verified_at": "2026-10-09T17:31:48.4077372Z",
+    "installer_checksums_passed_before_create": true,
+    "actual_inventory_portable_members_and_desktop_installed_lifecycle_verified": true,
+    "accepted_apk_identity_verified": true,
+    "outer_archive_digest_matches": [
+      {
+        "artifact_id": 11632147858,
+        "sha256": "9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c"
+      },
+      {
+        "artifact_id": 11632630223,
+        "sha256": "5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639"
+      },
+      {
+        "artifact_id": 11632728225,
+        "sha256": "8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7"
+      }
+    ]
+  },
+  "notes_media": {
+    "notes_sha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+    "notes_byte_equal_reviewed_dispatch": true,
+    "full_range_baseline": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "images_immutable_source": "89cec5a13900291df9f1cb841c5351277f38f4ff",
+    "tag_before_after_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+    "editorial_review": "independent-editorial-review.json",
+    "media_attribution": "Actual earlier preview Dark native tag image; provenance retained in ../rc4-editorial/media-receipt.json. No new stable capture claimed."
+  },
+  "independent_final_release_review": "independent-post-publication-review.json"
+}

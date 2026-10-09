@@ -1,5 +1,35 @@
 # Runtime and visual QA — updated 2026-10-09
 
+## Stable2026.10.2 — exact accepted candidate published
+
+Stable2026.10.2/build53 at source687163b preserves accepted RC7 app/native/
+platform/dependency/test/workflow source; only embedded version/build metadata
+changed. Full candidate37960853538 and pushCI37960786048 passed647 Linux app,
+87 native,107 contract and50 policy checks; Windows645 app checks pass with two
+documented Linux-only skips. New stable release payloads/startup/installer
+lifecycle and owner-signing gates passed. Existing RC7 feature/geometry/demo
+evidence retains its original source/OS attribution; no new stable UI/video
+captures are claimed.
+
+Parent independently verified actual signed ZIP/APK and accepted36 bounded
+Android checks, reusing56 RC7 behavioral checks, with no blockers. Stable53
+identity/owner signature/native payloads/notices, four synthetic profiles'
+upgrade-retained settings/identities/history/full task/order/text state, cold
+replay and SAF continuity passed. Lab/settings were restored/stopped with no
+new OOM events. Cloud private archive materialization remainedHTTP403; those
+native bytes/device checks belong to parent and no live synced data was used.
+
+[Stable evidence and review receipts](../evidence/stable-2026.10.2/README.md)
+bind accepted APK SHA256
+`b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd`.
+Successful promotion37966878729 reused exact candidate installers without
+rebuild after actual hosted archive/member/lifecycle/APK/strict checksum gates.
+Root anonymous public downloads verify all3 actual installer hashes, stable
+tag/source/Latest and all20 prior releases unchanged. Official SDK signature,
+stable53/ABI/nondebuggable, all79 member CRC and native payload/notices pass;
+all3 native library bytes equal accepted RC7. Published stable is Latest at
+2026-10-09T17:31:53Z; fresh parent17:25:54UTC publication clearance passed.
+
 ## Compact disclosure — RC7 published
 
 Lee approved the compact exception documented in [ADR0011](decisions/0011-one-level-checklists.md).

@@ -61,4 +61,8 @@ state, cold replay and SAF continuity passed. Lab was restored/stopped with no
 new OOM events. [Parent acceptance](native-acceptance-attestation.json) retains
 accurate evidence origin; cloud does not claim device/packet byte verification.
 Fresh publication threshold clearance passed at17:25:54.451529Z. Stable
-publication remains pending its retained actual hosted byte gates.
+publication was pending its retained actual hosted byte gates at that checkpoint.
+Promotion37966878729 subsequently passed those gates and published stable Latest
+without rebuild. [Final public receipt](public-download-verification.json)
+records all three actual public installer hashes, stable tag/source and prior
+release preservation.
