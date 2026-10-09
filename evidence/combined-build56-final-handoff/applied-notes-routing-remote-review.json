@@ -1,0 +1,100 @@
+{
+  "reviewed_at_utc": "2026-10-09T22:35:38.813678+00:00",
+  "decision": "ACCEPTED: final remote publisher-notes routing/source/artifact metadata gate only",
+  "remote_main_commit": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "production_candidate_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidate_run_id": 37995721678,
+  "version": "2026.10.3+56",
+  "remote_commit_parent": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "remote_only_changed_file": "design/stable-notes.md",
+  "actual_remote_notes": {
+    "path": "design/stable-notes.md",
+    "ref": "0ae5e66115e10f6a9c355086248ff01becddc423",
+    "github_blob_sha": "b6f37a22845959b04ef28bf1eb7150377d5fdfb5",
+    "decoded_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "decoded_bytes": 122,
+    "hash_equal_approved_editorial_notes": true
+  },
+  "fresh_remote_tree_invariance": {
+    "source_tree_sha": "7ce38a75ae1818866c087dfe782ff8b50bbb31eb",
+    "dispatch_tree_sha": "3bb00a2280ba99ba0d1955e01a45e70c4cda1f16",
+    "recursive_api_not_truncated": true,
+    "tracked_path_inventory_equal": true,
+    "only_changed_tracked_blob": [
+      "design/stable-notes.md"
+    ],
+    "all_other_tracked_modes_types_shas_equal": true,
+    "unchanged_entry_count": 1667,
+    "unchanged_inventory_sha256": "88cce54b520a83d04e131f92f8dec96532630827d668f1975c2513602699fbd1",
+    "application_native_platform_dependency_test_tool_workflow_blobs_unchanged": true
+  },
+  "fresh_candidate_api": {
+    "id": 37995721678,
+    "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/android-candidate.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1
+  },
+  "original_three_release_artifacts": [
+    {
+      "id": 11648102388,
+      "name": "android-release",
+      "size_in_bytes": 30685785,
+      "digest": "sha256:18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+      "expired": false,
+      "expires_at": "2026-10-14T22:20:21Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11648101550,
+      "name": "linux",
+      "size_in_bytes": 9093385,
+      "digest": "sha256:2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+      "expired": false,
+      "expires_at": "2026-10-14T22:13:45Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11646614634,
+      "name": "windows",
+      "size_in_bytes": 25989868,
+      "digest": "sha256:7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+      "expired": false,
+      "expires_at": "2026-10-14T21:58:57Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    }
+  ],
+  "original_ids_digests_sizes_expiry_bindings_unchanged_and_unexpired": true,
+  "reviewed_local_applied_receipt_sha256": "1a306bddca667ece7b316fe1ee55c9be48903425dfbafed9598304098fc31ddf",
+  "closure": "Reviewed notes-only commit is now exact remote main0ae; publisher frozen dispatch notes match approved2bullet9e6 SHA. No candidate rebuild or application/workflow change needed. Previously stale publisher routing is resolved locally and remotely.",
+  "must_fix": [],
+  "publication_acceptance": false,
+  "actual_local_archive_byte_or_device_verification_performed": false,
+  "remaining": [
+    "Parent exact actual APK/archive bytes and bounded native acceptance/inner APK hash",
+    "Parent fresh publication quota gate",
+    "Ordinary trusted hosted artifact/inventory/member/lifecycle/acceptedAPK/checksum gates before creation",
+    "Independent final actual public installer/release/tag/notes/Latest/prior-release verification after authorized publication"
+  ]
+}

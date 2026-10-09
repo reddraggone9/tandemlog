@@ -1,0 +1,111 @@
+{
+  "reviewed_at_utc": "2026-10-09T22:34:32.566669+00:00",
+  "decision": "ACCEPTED: local pre-push notes-only routing correction and source/artifact metadata invariance; publication not approved by this receipt",
+  "production_candidate_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "trusted_local_dispatch_commit": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "candidate_run_id": 37995721678,
+  "version": "2026.10.3+56",
+  "commit_parent_is_exact_production_candidate": true,
+  "working_tree_clean": true,
+  "notes_routing": {
+    "changed_path": "design/stable-notes.md",
+    "actual_dispatch_git_blob_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "approved_draft_path": "design/release-notes-2026.10.3.md",
+    "byte_identical_to_editorially_approved_draft": true,
+    "publisher_read_at_dispatch": "git show \"$GITHUB_SHA:design/stable-notes.md\" > release-notes.md",
+    "current_stale_notes_routing_finding": "Resolved locally at0ae; trusted remote/main must contain hash-identical reviewed notes before dispatch.",
+    "candidate_rebuild_required": false,
+    "reason": "Trusted dispatch policy selects completed historical main candidate76/run37995721678 and checks out CANDIDATE_SHA for actual artifacts/identity; notes freeze from dispatchGITHUB_SHA. Only note blob changed; no build57 or new candidate artifact needed."
+  },
+  "exact_tracked_invariance": {
+    "path_inventory_equal": true,
+    "sole_changed_blob": [
+      "design/stable-notes.md"
+    ],
+    "all_other_tracked_entries_equal_including_modes_types_blob_ids": true,
+    "unchanged_entry_count": 1667,
+    "unchanged_inventory_sha256": "805695d84aaca4cf315330d0f6f3b5b2a20e50cf0e8f45bfb257978838454385",
+    "production_native_platform_dependencies_tests_tools_workflows_unchanged": true
+  },
+  "unchanged_policy_source_sha256": {
+    ".github/workflows/stable.yml": "40034bea2b65a5a67a9b17e3264624ab5214a625df10d93927dcc93f5c1300c5",
+    ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+    ".github/workflows/validate.yml": "e3194eae1a0071795da06a3174d09e6a40fab7b977a63a5e482433d4e0385c25",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/build_android_release.sh": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6"
+  },
+  "fresh_candidate_api": {
+    "id": 37995721678,
+    "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/android-candidate.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1
+  },
+  "original_release_artifact_api_metadata": [
+    {
+      "id": 11648102388,
+      "name": "android-release",
+      "size_in_bytes": 30685785,
+      "digest": "sha256:18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+      "expired": false,
+      "expires_at": "2026-10-14T22:20:21Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11648101550,
+      "name": "linux",
+      "size_in_bytes": 9093385,
+      "digest": "sha256:2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+      "expired": false,
+      "expires_at": "2026-10-14T22:13:45Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    },
+    {
+      "id": 11646614634,
+      "name": "windows",
+      "size_in_bytes": 25989868,
+      "digest": "sha256:7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+      "expired": false,
+      "expires_at": "2026-10-14T21:58:57Z",
+      "workflow_run": {
+        "id": 37995721678,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+      }
+    }
+  ],
+  "all5same_run_artifact_ids_sizes_digests_expiry_source_equal_handoff": true,
+  "handoff_sha256": "f99a8c87f902325254a918ffd4811adc2dd9abef8977c066792a09eb40f3d0c6",
+  "artifact_scope": "Release assets remain original owner-signed Android/Linux/Windows artifacts; debug and TESTONLY Windows storage harness are excluded from stable publisher pattern/staging. This review compares immutable API metadata only, not local archive/member bytes or native runtime.",
+  "prior_editorial_receipt_sha256": "ebb8fe9076d841abef3e1f57c8a2e32dd5b33cd1da133e7ac0c50c1c130a6f05",
+  "local_push_scope": "Reviewed0ae is a concrete local notes-only commit; normal push may carry it. Remote verification is not yet claimed and may be requested separately.",
+  "must_fix": [],
+  "remaining": [
+    "Push/fresh remote trusted-dispatch/source/notes invariance verification before dispatch",
+    "Parent exact APK/local archive/native acceptance and fresh publication quota clearance",
+    "All ordinary trusted hosted archive/inventory/portable-member/lifecycle/acceptedAPK/checksum gates before creation",
+    "Independent actual public installer bytes/release/tag/notes/Latest/prior-release final verification after authorized publication"
+  ],
+  "local_zip_byte_review_performed": false,
+  "device_or_packet_evidence_review_performed": false,
+  "reviewer_repository_edits_or_publication": false
+}

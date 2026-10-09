@@ -1,0 +1,83 @@
+{
+  "verifiedAtUtc": "2026-10-09T22:34:01.950050+00:00",
+  "dispatchRevision": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "candidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidateRunId": 37995721678,
+  "candidateStatus": "completed",
+  "candidateConclusion": "success",
+  "onlyChangedPath": "design/stable-notes.md",
+  "trackedFiles": 1668,
+  "unchangedOtherTrackedFiles": 1667,
+  "approvedNotesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "actualWorkflowNotesExpression": "git show \"$GITHUB_SHA:design/stable-notes.md\" > release-notes.md",
+  "candidateRebuildRequired": false,
+  "rebuilt": false,
+  "published": false,
+  "artifactMetadataComparison": "All original five candidate artifact IDs/names/ZIP sizes/digests/run/source unchanged and unexpired",
+  "artifacts": [
+    {
+      "id": 11648102388,
+      "name": "android-release",
+      "zipBytes": 30685785,
+      "digest": "sha256:18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+      "expired": false,
+      "expiresAt": "2026-10-14T22:20:21Z",
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "runId": 37995721678
+    },
+    {
+      "id": 11648101550,
+      "name": "linux",
+      "zipBytes": 9093385,
+      "digest": "sha256:2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+      "expired": false,
+      "expiresAt": "2026-10-14T22:13:45Z",
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "runId": 37995721678
+    },
+    {
+      "id": 11647432256,
+      "name": "windows-storage-harness",
+      "zipBytes": 4175873,
+      "digest": "sha256:d6a726d39c5d9d055e7ad1f6657e0d493e91038f14c53ed9ee3cb44371416cd6",
+      "expired": false,
+      "expiresAt": "2026-10-14T21:58:29Z",
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "runId": 37995721678
+    },
+    {
+      "id": 11646938565,
+      "name": "android",
+      "zipBytes": 80559961,
+      "digest": "sha256:1e54d65a71eb190320d2506ffc17053b5fe17fff9c81fe00be01226a007ceb55",
+      "expired": false,
+      "expiresAt": "2026-10-14T21:55:37Z",
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "runId": 37995721678
+    },
+    {
+      "id": 11646614634,
+      "name": "windows",
+      "zipBytes": 25989868,
+      "digest": "sha256:7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+      "expired": false,
+      "expiresAt": "2026-10-14T21:58:57Z",
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "runId": 37995721678
+    }
+  ],
+  "limits": [
+    "Artifact ZIP metadata verified only; no new local inner ZIP/APK/native byte or runtime acceptance claim",
+    "Parent native/final acceptance, accepted inner APK hash and fresh publication quota pending"
+  ],
+  "reviewState": "Independent pre-push and final remote review accepted; notes routing gate closed",
+  "remoteVerifiedAtUtc": "2026-10-09T22:35:11.207913+00:00",
+  "remoteMain": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "remoteNotesBlob": "b6f37a22845959b04ef28bf1eb7150377d5fdfb5",
+  "remoteNotesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "normalMainPushCompleted": true,
+  "routingBlockerResolved": true,
+  "prePushReviewSha256": "1a306bddca667ece7b316fe1ee55c9be48903425dfbafed9598304098fc31ddf",
+  "remoteIndependentReviewSha256": "4c4addd7d71e4b49942debed272cbf464df08295ccdef002fefc32bdeeea0c5f",
+  "newBuildOrPublicationRunsForDispatchRevision": []
+}
