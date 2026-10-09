@@ -3,7 +3,7 @@
 Exact stable candidate source is`687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`.
 [Signed candidate37960853538](https://github.com/reddraggone9/tandemlog/actions/runs/37960853538)
 and [pushCI37960786048](https://github.com/reddraggone9/tandemlog/actions/runs/37960786048)
-are running that source. [Independent source preparation](independent-source-preparation-review.json)
+both completed successfully at that source. [Independent source preparation](independent-source-preparation-review.json)
 and [full-range editorial review](independent-editorial-review.json) accept code
 equivalence, stable policy/gates and actual notes/README/immutable tag media,
 with no must-fix findings. [Bounded new-artifact native handoff](native-acceptance-handoff.md)
@@ -42,8 +42,20 @@ describes the other meaningful changes; no new app pixels or comparisons are
 invented. Separate editorial review must assess the full stable range and actual
 notes/media/README before publication.
 
-Remaining: successful stable signed candidate, exact bounded
-stable-native acceptance, retained hosted inventory/archive/member/lifecycle/
+The full signed candidate passed all platform checks, including647 Linux
+application tests,87 native flows,107 contracts and50 policies. Windows passed
+645 application tests with two documented Linux-only skips; new-version release
+payload, startup and installer lifecycle checks passed on both desktops.
+Signed Android job113932239992 verified the pinned owner certificate, stable
+name/build53, package, non-debuggable flag, all three ABIs and exact native
+payload/notices before upload. The signed artifact is11632728225, ZIP30362267B,
+reported SHA256`8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7`.
+This archive digest is not the inner APK hash. Current supported cloud archive
+materialization returnedHTTP403; actual archive/APK bytes and bounded new-native
+acceptance must come from the parent consumer. No RC7 APK identity is substituted.
+
+Remaining: exact bounded stable-native acceptance, retained hosted
+inventory/archive/member/lifecycle/
 APK/checksum gates, stable publication with lee_accepted=true/latest=true, all
 three actual public installer bytes and independent final release review.
 No stable dispatch/tag/release has occurred at this preparation checkpoint.

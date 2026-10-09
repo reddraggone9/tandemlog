@@ -3,9 +3,13 @@
 Stable candidate37960853538 runs exact source
 `687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`, version2026.10.2/build53.
 [Signed candidate](https://github.com/reddraggone9/tandemlog/actions/runs/37960853538)
-must finish successfully before its owner-signed android-release artifact is
-eligible. Artifact ID/archive digest/inner APK digest will be recorded after
-actual signing/upload; none is inferred from RC7. Package is
+completed successfully, including owner-signed Android job113932239992.
+Its android-release artifact is11632728225, ZIP30362267B with reported SHA256
+`8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7`;
+created2026-10-09T17:10:43Z, expires2026-10-14T17:10:40Z.
+The actual inner APK hash remains pending: current supported cloud
+materialization returnedHTTP403. The ZIP digest is not the APK digest, and
+neither is inferred from RC7. Package is
 com.reddraggone9.tandemlog; owner certificate remains pinned in
 android/signing-certificate.sha256. Current embedded release name/code differs
 from RC7, even though all app/native/platform/dependency/test/workflow source is

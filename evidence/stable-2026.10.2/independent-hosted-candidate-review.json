@@ -1,0 +1,178 @@
+{
+  "reviewed_at_utc": "2026-10-09T17:12:31.932239+00:00",
+  "decision": "ACCEPTED: full completed hosted stable candidate/build53 provenance and gates only; exact new APK byte/native acceptance remains pending",
+  "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "version": "2026.10.2+53",
+  "candidate_run": {
+    "id": 37960853538,
+    "status": "completed",
+    "conclusion": "success",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "path": ".github/workflows/android-candidate.yml",
+    "run_attempt": 1
+  },
+  "all_completed_jobs": [
+    {
+      "id": 113923011859,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076827,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076948,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076983,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113932239992,
+      "name": "signed-android",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "push_ci_run_id": 37960786048,
+  "push_ci_success_independently_verified_in_prior_linux_receipt": true,
+  "prior_platform_reviews": {
+    "independent-build53-completed-platform-review.json": "1f5494973014145d96b69a55562bb29c98d320e239686bc668eae4698c1bbf7c",
+    "independent-build53-linux-hosted-review.json": "d73caa58edcef66749eb6cdd0c346ac3adc61cb152c4ce43c7669a86035571d7"
+  },
+  "actual_full_logs_sha256": {
+    "build53-windows-hosted.log": "d02d394d9b48287fe477cdf3b69957a0a2d195932f63da8f5c6d996fa93438eb",
+    "build53-linux-hosted.log": "1fa715221992d97f53a11d9675c0a6be6547683855b90ff8731e0d8eda1a9120",
+    "build53-android-debug-hosted.log": "69686a15b92dd586a67d7071f4bbd679fe1105873c1adb7c57d423073b216b3b",
+    "build53-signed-android-hosted.log": "8ab6ac1e09a2c7b539d5b1f8edcfe857615191774bd638653842a9441c19f6e7"
+  },
+  "signed_android": {
+    "job_id": 113932239992,
+    "source_checkout_actual_log": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "owner_identity_verified_at": "2026-10-09T17:10:39.5265837Z",
+    "native_payload_notices_verified_at": "2026-10-09T17:10:39.7109639Z",
+    "verification_before_artifact_upload": true,
+    "expected_identity_enforced_by_successful_source_verifier": {
+      "package": "com.reddraggone9.tandemlog",
+      "version": "2026.10.2",
+      "version_code": 53,
+      "nondebuggable": true,
+      "abis": [
+        "armeabi-v7a",
+        "arm64-v8a",
+        "x86_64"
+      ],
+      "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d"
+    },
+    "official_sdk_apksigner_aapt_via_android_release_source_verifier": true,
+    "temporary_signing_material_cleanup_before_upload": true,
+    "new_inner_apk_sha256": null,
+    "actual_local_candidate_apk_bytes_verified": false
+  },
+  "completed_artifact_api_metadata": [
+    {
+      "id": 11632728225,
+      "name": "android-release",
+      "size_in_bytes": 30362267,
+      "digest": "sha256:8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7",
+      "expired": false,
+      "expires_at": "2026-10-14T17:10:40Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11632630223,
+      "name": "windows",
+      "size_in_bytes": 25804512,
+      "digest": "sha256:5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639",
+      "expired": false,
+      "expires_at": "2026-10-14T16:49:46Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11632147858,
+      "name": "linux",
+      "size_in_bytes": 9012065,
+      "digest": "sha256:9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c",
+      "expired": false,
+      "expires_at": "2026-10-14T17:03:43Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11630619853,
+      "name": "android",
+      "size_in_bytes": 80423818,
+      "digest": "sha256:f59d0a6d4c534fde3f4979b09421e0aeaff6384b6f331a411e9f06f782fdb8bf",
+      "expired": false,
+      "expires_at": "2026-10-14T16:47:24Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    }
+  ],
+  "byte_boundary": "API/upload digest8a6b43...749f7 identifies signed artifactZIP, not contained APK. Parent reports supported resolved-reference/current Library-helper placementHTTP403. Reviewer has no actual local ZIP/member/installer/APK byte proof and does not infer inner hash or device acceptance from hosted success.",
+  "platform_summary": "Previously reviewed647 Linux app/107contracts/50policy/87native, frozen-v3 meaning/hash/clock/ID/replay/new-writer tests, Linux payload/startup/real-commit Flatpak lifecycle; Windows645+2Linux-only skips/107contracts/50policy, producer portable CRC/full member hashes and installed payload/lifecycle. Android debug is test-only, never release acceptance.",
+  "identity_policy_source_sha256": {
+    "pubspec.yaml": "e5b0d71f7eec28ba96223149929c9f5507faa95893d361c492a7a4fbe2416536",
+    "android/signing-certificate.sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+    "tool/android_release.py": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+    "tool/build_android_release.sh": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6",
+    ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74"
+  },
+  "authorization_and_quota": "Already satisfied: explicit Lee stable publication acceptance and fresh parent clearance2026-10-09T16:34:51.726011Z. No renewed user approval is requested; account values remain private.",
+  "must_fix": [],
+  "remaining": [
+    "Parent obtain actual new stable ZIP/APK bytes and verify archive/owner identity/stable53/ABI/nondebuggable/hash",
+    "Bounded exact stable APK install/launch/upgrade-retained data/cold replay/SAF continuity/loaded workflow acceptance and accepted inner hash",
+    "Trusted stable.yml retained actual archive/inventory/portable-member/lifecycle/accepted-APK/checksum gates before creation; no rebuild",
+    "Independent actual published three stable installer bytes/signature/source/tag/notes/Latest/prior-release verification after authorized publication"
+  ],
+  "publication_ready": false,
+  "native_acceptance_claimed": false,
+  "final_terminal_documentation_review": {
+    "decision": "ACCEPTED",
+    "files_sha256": {
+      "design/status.md": "bccaf3ae63fb360021f2078c8a56c2d0bd1f56e617ad6032fa48b5e50d71da9c",
+      "evidence/stable-2026.10.2/README.md": "8ddffc625d8e1f560dceff344e98bf23ac9dc5b76fe6399df03a850769e54ddd",
+      "evidence/stable-2026.10.2/native-acceptance-handoff.md": "3d0bffe617660ffec73c0728d745032994775a55ccd422bd39cae39d995b4085",
+      "evidence/stable-2026.10.2/candidate-handoff.json": "d8642e5550889a6c305761c872d6832c29fbc6acc39df25a4d72b297c4c8ac20"
+    },
+    "actual_fresh_api_artifact_descriptor_comparison_passed": true,
+    "code_equivalence_hash_validated": true,
+    "relative_links_resolve": true,
+    "claims": "Exact successful stable687/build53/fulljobs and reported ZIP digest documented; cloud403/localarchivefalse/innerAPKnull/new native parent pending/publicationundispatched explicit. No private Library ID/account values introduced.",
+    "no_notes_media_or_code_changes": true
+  }
+}

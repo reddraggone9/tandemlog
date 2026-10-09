@@ -1,0 +1,136 @@
+{
+  "candidate": {
+    "conclusion": "success",
+    "headSha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "jobs": [
+      {
+        "active": [],
+        "conclusion": "success",
+        "databaseId": 113923011859,
+        "name": "candidate",
+        "status": "completed"
+      },
+      {
+        "active": [],
+        "conclusion": "success",
+        "databaseId": 113923076827,
+        "name": "checks / windows",
+        "status": "completed"
+      },
+      {
+        "active": [],
+        "conclusion": "success",
+        "databaseId": 113923076948,
+        "name": "checks / android",
+        "status": "completed"
+      },
+      {
+        "active": [],
+        "conclusion": "success",
+        "databaseId": 113923076983,
+        "name": "checks / linux",
+        "status": "completed"
+      },
+      {
+        "active": [],
+        "conclusion": "success",
+        "databaseId": 113932239992,
+        "name": "signed-android",
+        "status": "completed"
+      }
+    ],
+    "status": "completed"
+  },
+  "artifacts": [
+    {
+      "id": 11632728225,
+      "name": "android-release",
+      "size_in_bytes": 30362267,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632728225",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632728225/zip",
+      "expired": false,
+      "created_at": "2026-10-09T17:10:43Z",
+      "expires_at": "2026-10-14T17:10:40Z",
+      "updated_at": "2026-10-09T17:10:43Z",
+      "digest": "sha256:8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11632630223,
+      "name": "windows",
+      "size_in_bytes": 25804512,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632630223",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632630223/zip",
+      "expired": false,
+      "created_at": "2026-10-09T16:49:49Z",
+      "expires_at": "2026-10-14T16:49:46Z",
+      "updated_at": "2026-10-09T16:49:49Z",
+      "digest": "sha256:5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11632147858,
+      "name": "linux",
+      "size_in_bytes": 9012065,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632147858",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11632147858/zip",
+      "expired": false,
+      "created_at": "2026-10-09T17:03:44Z",
+      "expires_at": "2026-10-14T17:03:43Z",
+      "updated_at": "2026-10-09T17:03:44Z",
+      "digest": "sha256:9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11630619853,
+      "name": "android",
+      "size_in_bytes": 80423818,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11630619853",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11630619853/zip",
+      "expired": false,
+      "created_at": "2026-10-09T16:47:29Z",
+      "expires_at": "2026-10-14T16:47:24Z",
+      "updated_at": "2026-10-09T16:47:29Z",
+      "digest": "sha256:f59d0a6d4c534fde3f4979b09421e0aeaff6384b6f331a411e9f06f782fdb8bf",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    }
+  ],
+  "source": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "version": "2026.10.2",
+  "build": 53,
+  "code_equivalence_receipt": "evidence/stable-2026.10.2/code-equivalence.json",
+  "code_equivalence_sha256": "cdbcc7837516b091842cd23b3cd0df7b6d60d9222b7f905a95915117a6769b0f",
+  "actual_local_archive_bytes_verified": false,
+  "local_materialization": {
+    "route": "Current supported resolved-reference materialization workflow, fresh helper",
+    "result": "HTTP403",
+    "attempts": 1
+  },
+  "inner_apk_sha256": null,
+  "native_acceptance": "Pending parent exact new stable APK bounded acceptance",
+  "stable_publication": "Not dispatched"
+}

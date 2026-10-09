@@ -1,0 +1,123 @@
+{
+  "reviewed_at_utc": "2026-10-09T17:01:38.884469+00:00",
+  "decision": "ACCEPTED: completed Windows and Android debug hosted gates only; full stable candidate readiness pending",
+  "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "version": "2026.10.2+53",
+  "candidate_run_id": 37960853538,
+  "current_candidate": {
+    "status": "in_progress",
+    "conclusion": null,
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/android-candidate.yml"
+  },
+  "current_jobs": [
+    {
+      "id": 113923011859,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076827,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076948,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076983,
+      "name": "checks / linux",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "windows_hosted": {
+    "job_id": 113923076827,
+    "application_tests_passed": 645,
+    "platform_only_skips": 2,
+    "skip_names": [
+      "real Linux FFI durability smoke",
+      "Linux zone files/localtime identity"
+    ],
+    "contracts_passed": 107,
+    "policy_tests_passed": 50,
+    "validated_stable_version_build_resource_bounds": true,
+    "production_native_payload_and_exact_notices_verified": true,
+    "portable_source_bound_producer_receipt": {
+      "executable_sha256": "da22aca718317c8de151a2898805d7cf79f88a02e7521c5ca350c56cdb6a6a20",
+      "github_run_id": "37960853538",
+      "native_library_sha256": "64ac76089561000bff4e07fbb88066a3eaaed56a907e90697c514b7a55cb0059",
+      "portable_archive": "tandemlog-windows-x64-unsigned-portable.zip",
+      "portable_sha256": "b74268d7393013edd0a5b0746fdea37fa65f398f691cfecbe8b5fc0edb90364c",
+      "source_revision": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+    },
+    "portable_member_gate": "Actual successful source687 package_portable.py validates every archive member against build hashes plus CRC and exact inventory before writing source/run provenance. No reviewer local archive bytes available.",
+    "installer_lifecycle": "Actual successful fail-fast build-and-smoke.ps1 validates installed payload hashes/shortcut and four synthetic install/replacement/uninstall/reinstall phases before installer checksum/artifact upload; same-AppId replacement mechanism is not fabricated older-binary upgrade.",
+    "hosted_installer_sha256": "00004336d6bcaaebbd7bbb22bf033ef98cea610c312f2d21d463ee1a378f33eb"
+  },
+  "android_debug_hosted": {
+    "job_id": 113923076948,
+    "native_payload_and_notices_verified": true,
+    "test_only_apk_sha256_hosted": "07bf31bf08a87fd667bf8d98c7feefd86e1f7cdeaa57beb3d519d98434a9707b",
+    "debug_signer": "Android Debug",
+    "owner_signed_acceptance": false,
+    "publication_eligible": false
+  },
+  "completed_artifact_api_metadata": [
+    {
+      "id": 11632630223,
+      "name": "windows",
+      "size_in_bytes": 25804512,
+      "digest": "sha256:5ae87517762dc6c33afeb9a178972f8035588768afb19a65fc1c822aeb091639",
+      "expired": false,
+      "expires_at": "2026-10-14T16:49:46Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    },
+    {
+      "id": 11630619853,
+      "name": "android",
+      "size_in_bytes": 80423818,
+      "digest": "sha256:f59d0a6d4c534fde3f4979b09421e0aeaff6384b6f331a411e9f06f782fdb8bf",
+      "expired": false,
+      "expires_at": "2026-10-14T16:47:24Z",
+      "workflow_run": {
+        "id": 37960853538,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+      }
+    }
+  ],
+  "reviewed_log_sha256": {
+    "build53-windows-hosted.log": "d02d394d9b48287fe477cdf3b69957a0a2d195932f63da8f5c6d996fa93438eb",
+    "build53-android-debug-hosted.log": "69686a15b92dd586a67d7071f4bbd679fe1105873c1adb7c57d423073b216b3b"
+  },
+  "reviewed_producer_policy_sha256": {
+    "packaging/windows/package_portable.py": "8e4251b400c92d40394a0eae89e0d82f78962190bcf6c29255f6cff6a1e8a137",
+    "packaging/windows/build-and-smoke.ps1": "b0442ee1541b30e67180343c73a73c19870c757f02724c065bbc18b13c1bb451",
+    ".github/workflows/validate.yml": "e78ec531675baf3ed3e55f39439be041dc8d1364c14c0df99156315a16ac3759"
+  },
+  "local_candidate_archive_byte_verification": false,
+  "must_fix": [],
+  "remaining": [
+    "Linux full native/release/startup/lifecycle terminal log review",
+    "Owner-signed Android exact source/version/artifact terminal proof",
+    "Actual complete archive/member/checksum gate through supported consumer or mandatory trusted hosted publication path",
+    "Parent actual new stable APK bounded native acceptance and accepted inner hash",
+    "Fresh stable publication authorization/quota preflight and retained stable.yml all gates",
+    "Actual stable public byte/final release review after authorized publication"
+  ]
+}

@@ -9,10 +9,15 @@ Application/domain/storage/native/platform/dependency/test/workflow source is
 unchanged. RC7 behavior and native acceptance are reused with their exact source
 attribution; fresh stable APK identity/upgrade/native gates remain required.
 The parent supplied fresh publication-threshold clearance at16:34:51UTC.
-Full stable candidate and bounded native acceptance remain pending; no stable
+Full stable candidate passed; bounded new stable-native acceptance remains
+pending; no stable
 publication has occurred. Current Latest remains2026.10.1, and RC7 is preserved.
-Candidate37960853538 and pushCI37960786048 run exact stable source687163b;
+Candidate37960853538 and pushCI37960786048 completed successfully at exact stable source687163b;
 independent source/notes/README/media preparation review passes with no must-fix.
+Owner-signed Android artifact11632728225 is ready for the parent bounded
+identity/upgrade check; cloud archive materialization returnedHTTP403, so the
+actual inner APK hash is not yet claimed. The handoff binds its actual reported
+ZIP identity and source; stable publication awaits exact new APK acceptance.
 
 The [stable preparation record](../evidence/stable-2026.10.2/README.md) binds code
 equivalence, applicable existing evidence, explicit approval, notes/media review

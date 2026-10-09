@@ -1,0 +1,91 @@
+{
+  "reviewed_at_utc": "2026-10-09T17:06:58.119133+00:00",
+  "decision": "ACCEPTED: completed Linux full hosted platform gate; owner-signed/full-candidate and new stable native acceptance remain pending",
+  "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "version": "2026.10.2+53",
+  "candidate_run_id": 37960853538,
+  "linux_job_id": 113923076983,
+  "push_ci": {
+    "id": 37960786048,
+    "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "status": "completed",
+    "conclusion": "success",
+    "event": "push",
+    "path": ".github/workflows/ci.yml"
+  },
+  "current_jobs": [
+    {
+      "id": 113923011859,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076827,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076948,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113923076983,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 113932239992,
+      "name": "signed-android",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "actual_hosted_log_sha256": "1fa715221992d97f53a11d9675c0a6be6547683855b90ff8731e0d8eda1a9120",
+  "actual_hosted_checks": {
+    "application": 647,
+    "native_contracts": 107,
+    "policy": 50,
+    "native_linux_workflows": 87,
+    "frozen_v3_identity_clock_hash_meaning_and_convergence_cache_rebuild_checks_passed": true,
+    "new_writer_extends_frozen_history_without_rewrite": true,
+    "native_release_payload_exact_notices_passed": true,
+    "release_startup": "Successful actual measure_startup.py with10 synthetic tasks/two runs checks loaded-frame marker and complete projected cache; second run warmFILES_READ0. Numbers/report remain inside blocked candidate evidence; reviewer does not invent timings.",
+    "flatpak_lifecycle": "Actual successful fail-fast source687 install-smoke.sh checks package permissions, installed loaded projection, real distinct packaging-only baseline commit with identical payload/permissions, restores exact candidate, uninstalls without data loss and reinstalls; checksums/cleanup required before upload. Not claimed as old-binary compatibility or local reviewer runtime."
+  },
+  "linux_artifact_api_metadata": {
+    "id": 11632147858,
+    "name": "linux",
+    "size_in_bytes": 9012065,
+    "digest": "sha256:9a685a82a45248e6744e86b69c307e5afc894dd0e3cd0552ba9bd9aed4843c0c",
+    "expired": false,
+    "expires_at": "2026-10-14T17:03:43Z",
+    "workflow_run": {
+      "id": 37960853538,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884"
+    }
+  },
+  "local_archive_bytes_crc_members_checksums_verified": false,
+  "actual_hosted_scripts_reviewed_sha256": {
+    ".github/workflows/validate.yml": "e78ec531675baf3ed3e55f39439be041dc8d1364c14c0df99156315a16ac3759",
+    "tool/measure_startup.py": "29e21134149f90198d96cd90026026480005892604bc9b459b5a917a0e0f1d1f",
+    "packaging/linux/install-smoke.sh": "5205a2e073fad992f8abb743e296dd5d881bb63453000f68678eb16e47017677",
+    "packaging/linux/build-flatpak.sh": "04d5ba77db130b38d073a7223500ef40c55b73207c216d0be947ee391817f682"
+  },
+  "authorization_correction": "Lee explicit stable publication approval and fresh parent publication-threshold clearance2026-10-09T16:34:51.726011Z are satisfied. Earlier partial-platform remaining entry is historical wording, not request for renewed user approval; account values remain private.",
+  "must_fix": [],
+  "remaining": [
+    "Owner-signed Android terminal source/version/signature/payload/upload binding",
+    "Completed full signed candidate ready receipt",
+    "New actual stable APK inner hash and bounded parent native acceptance",
+    "Retained actual archive/member/lifecycle/APK/checksum stable promotion gates",
+    "Actual public-byte/tag/notes/Latest/prior-release independent final verification after authorized publication"
+  ]
+}
