@@ -1,7 +1,6 @@
-Experimental 2026.10.2-rc.5 preview.
+Experimental 2026.10.2-rc.6 preview.
 
-- Checklists now expand beneath tasks for editing, checking off and reordering items, with menus to add checklists or delete tasks.
-
-![Before: a six-item checklist is inside the parent editor. After: the same checklist appears beneath the task.](https://raw.githubusercontent.com/reddraggone9/tandemlog/c11441353a919f21cc54234685ed3a52a509ab2c/evidence/rc5-editorial/inline-checklist-before-after.png)
-
-- Fixed the header showing progress while awaiting unfinished-checklist confirmation.
+- Fixed checklist reordering after holding the drag handle.
+- Aligned checklist controls and tightened disclosure spacing; narrow task rows now use the available content width.
+- The checklist toolbar button now directly expands or collapses shown checklists.
+- Add checklist disappears from a task menu once that task has items, including incoming items while the menu is open.
