@@ -1,0 +1,22 @@
+{
+  "candidate_run_id": 37889870105,
+  "source_commit": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "version": "2026.10.2-rc.6+50",
+  "accepted_apk_sha256": "4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+  "android_acceptance": {
+    "authority": "parent handoff",
+    "checks_passed": 51,
+    "unaffected_rc5_coverage_reused": true,
+    "stationary_hold_seconds": 1.395,
+    "evidence_archive_sha256": "decf42e33ecd69d45d01da247cab0e43b7119dd51b76c34bb0a89f41655832eb",
+    "cloud_evidence_materialization": "HTTP403; acceptance supplied by parent, no duplicate native claim"
+  },
+  "authorization": "Standing RC publication authorization and fresh publication-threshold clearance supplied by parent before dispatch.",
+  "notes_sha256": "aeaaaf00475d2aa4a0df4330f3f8847da66bb4e8aab2d828156e95be703755db",
+  "trusted_dispatch_commit": "a4323116c6eb81301428ea5ee1029fcd660e864c",
+  "desktop_byte_preflight": "Reviewed trusted hosted publication job validates actual inventory, installed lifecycle, Windows portable every-member SHA and installer checksums before release creation. Cloud local placements remain403.",
+  "public_installers": 3,
+  "prerelease": true,
+  "latest": false,
+  "public_projection": "Personal account values and private Library identifier omitted; complete original retained in the recovery workspace."
+}

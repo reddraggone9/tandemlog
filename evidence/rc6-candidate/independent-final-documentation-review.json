@@ -1,0 +1,27 @@
+{
+  "reviewed_at_utc": "2026-10-09T07:08:33.730889+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent, RC6 final documentation",
+  "result": "accepted; no must-fix findings",
+  "scope": "Seven changed/new docs/evidence files plus unchanged historical candidate review: design/status.md top RC6 section, evidence/checklist-controls/README.md and every evidence/rc6-candidate file; no runtime test, source, notes or media change",
+  "reviewed_file_sha256": {
+    "design/status.md": "c8659194117b092acce1e9bd3f2536e1ae40f65e8dc4efa209d84615865cb25b",
+    "evidence/checklist-controls/README.md": "b10f1d3f5596d5267b980804ad7cca122336f762fb343447cfbcbdfbd8f52508",
+    "evidence/rc6-candidate/README.md": "dd8591bf020c573980c59fdb0bd10bdb69ddfb17e888e11284220d4159037b6e",
+    "evidence/rc6-candidate/independent-artifact-review.json": "33d5bd68074b5c42b9423738a48b766eecaf3cf50d297380b01d8a5bd961cf6e",
+    "evidence/rc6-candidate/independent-hosted-prepublication-gate-review.json": "dcb12ac171d40fecb996e76ec790b73108d100fa3a152bbcbb0ba1b95770bf73",
+    "evidence/rc6-candidate/independent-post-publication-review.json": "39103189104f454702be003791a6e3af903f619a5654530db8d2e40d76c6f9b7",
+    "evidence/rc6-candidate/native-acceptance-attestation.json": "a525afa86ccf443144054dfc1d6633cba78f91f1824c4e99ee899e77d946292a",
+    "evidence/rc6-candidate/public-download-verification.json": "4648d883808be37ef1f4bdd7584d55b28b6f15bdc9439a07c9df155f728f0dd5"
+  },
+  "checks": [
+    "RC6 release/source/candidate/promotion/version/hash/flags/prior18releases claims agree with completed independent postpublication checks",
+    "51 Android device checks, unaffected RC5 reuse and1.395-second stationary hold attributed to parent/local worker; cloud does not claim native packet inspection/device rerun",
+    "Historical build49 failure, build50 navigation corrections and unchanged UI source-attributed debug media are preserved separately",
+    "Historical cloud403/null APK/prepublication remaining fields are explicitly superseded by final hosted/public byte checks in README; no pending release gate implied",
+    "Actual hosted candidate archive digest/error/member/lifecycle/checksum proof and locally verified public APK/installer evidence accurately distinguished",
+    "Public native/policy projections omit private Library identifiers and personal account numeric quota values; no signed storage URLs or secret material in reviewed scope",
+    "Relative Markdown links resolve; published notes SHA remains unchanged; release/media/artifact source links agree with verified immutable bindings",
+    "06:56:07Z correctly attributed to release publication after root wording correction, without claiming workflow completion at that timestamp"
+  ],
+  "remaining_blockers": []
+}

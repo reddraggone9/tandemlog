@@ -1,0 +1,129 @@
+{
+  "reviewed_at_utc": "2026-10-09T06:59:54.279236+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent, RC6 post-publication review",
+  "result": "accepted post-publication; no must-fix findings; source/tag/flags/notes/media, hosted actual byte gates and independent public installer/APK checks passed",
+  "release_id": 407616987,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.6",
+  "tag": "v2026.10.2-rc.6",
+  "source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "candidate_run": 37889870105,
+  "promotion_run": 37896129554,
+  "trusted_dispatch_source": "a4323116c6eb81301428ea5ee1029fcd660e864c",
+  "promotion_conclusion": "success",
+  "prerelease": true,
+  "draft": false,
+  "latest_stable_unchanged": "v2026.10.1",
+  "public_assets": [
+    {
+      "id": 624169713,
+      "name": "tandemlog-2026.10.2-rc.6-android.apk",
+      "size": 65313253,
+      "digest": "sha256:4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a"
+    },
+    {
+      "id": 624169717,
+      "name": "tandemlog-2026.10.2-rc.6-linux-x64.flatpak",
+      "size": 9003640,
+      "digest": "sha256:bdb63d15e397c4a412b3de0bfed5eb7438d332f490d1f1463c52ac4165035797"
+    },
+    {
+      "id": 624169716,
+      "name": "tandemlog-2026.10.2-rc.6-windows-x64-setup.exe",
+      "size": 12200608,
+      "digest": "sha256:831c0e17292af2cd89a97e17c7ad70736f2a2e32287cce10094b023b8a1a673a"
+    }
+  ],
+  "notes": {
+    "source_sha256": "aeaaaf00475d2aa4a0df4330f3f8847da66bb4e8aab2d828156e95be703755db",
+    "matches_reviewed_dispatch_source": true,
+    "byte_equal_including_whitespace": true
+  },
+  "media": [
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-controls-before-after.png",
+      "anonymous_http_status": 200,
+      "bytes": 40617,
+      "actual_sha256": "001a8ff4cead3a47fe4448d31707d76a1de050ed65f58944c3929503c0fb1344",
+      "equals_reviewed_commit_blob": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-toggle-before-after.png",
+      "anonymous_http_status": 200,
+      "bytes": 15807,
+      "actual_sha256": "87257d1f5b85eda8b87c1d92ed96cf3acaa256c968ff9dd21b46448f021b242b",
+      "equals_reviewed_commit_blob": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-menu-before-after.png",
+      "anonymous_http_status": 200,
+      "bytes": 8874,
+      "actual_sha256": "7dd0123fb72064af008c9993e4a486d343425cff67e849352ec0badae0eb3bd8",
+      "equals_reviewed_commit_blob": true
+    }
+  ],
+  "hosted_actual_byte_gate_proof": {
+    "job_id": 113707824691,
+    "fresh_supported_mcp_log_sha256": "7bc968b0de52394b1089d8395d81cede1edf9966f0e3790d070a4a074036accc",
+    "archive_digest_mismatch_policy": "error",
+    "downloaded_archive_digests_match_all_three_candidate_api_digests": true,
+    "exact_candidate_source_and_accepted_apk_attestation_passed": true,
+    "installer_lifecycle_and_closed_inventory_portable_member_gate_passed": true,
+    "three_installer_checksums_passed_before_release_creation": true,
+    "no_rebuild": true
+  },
+  "parent_native_acceptance": "51 checks exact RC6+50/2aa candidate; independent reviewer did not run device checks or inspect Library acceptance packet bytes",
+  "accepted_inner_apk_sha256": "4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+  "actual_local_public_installer_byte_review": {
+    "result": "passed independently",
+    "assets": [
+      {
+        "name": "tandemlog-2026.10.2-rc.6-android.apk",
+        "actual_sha256": "4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+        "bytes": 65313253,
+        "matches_fresh_release_api": true
+      },
+      {
+        "name": "tandemlog-2026.10.2-rc.6-linux-x64.flatpak",
+        "actual_sha256": "bdb63d15e397c4a412b3de0bfed5eb7438d332f490d1f1463c52ac4165035797",
+        "bytes": 9003640,
+        "matches_fresh_release_api": true
+      },
+      {
+        "name": "tandemlog-2026.10.2-rc.6-windows-x64-setup.exe",
+        "actual_sha256": "831c0e17292af2cd89a97e17c7ad70736f2a2e32287cce10094b023b8a1a673a",
+        "bytes": 12200608,
+        "matches_fresh_release_api": true
+      }
+    ]
+  },
+  "remaining": null,
+  "prior_releases_preserved": {
+    "baseline_release_count": 18,
+    "all_prior_source_flags_notes_asset_ids_sizes_digests_unchanged": true,
+    "compared_to_root_baseline": true
+  },
+  "actual_apk_identity": {
+    "sha256": "4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+    "matches_parent_accepted_inner_apk_sha256": true,
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.6",
+    "code": 50,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "universal_abis": true,
+    "official_apksigner_aapt_independently_passed": true,
+    "inner_apk_zip_crc_independently_passed": true,
+    "native_payload_libraries_and_exact_source_notices_independently_verified": true,
+    "native_library_member_sha256": {
+      "lib/armeabi-v7a/libtandemlog_text.so": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "lib/arm64-v8a/libtandemlog_text.so": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "lib/x86_64/libtandemlog_text.so": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    }
+  },
+  "candidate_archive_cloud_placement_limit": "HTTP403 previously prevented cloud-local candidate archive CRC/member verification; successful mandatory hosted downloaded-digest/inventory/lifecycle/member/checksum gates are evidenced separately; public installer bytes and APK identity now independently verified locally",
+  "reviewed_primary_public_receipt": {
+    "path": "/workspace/recovery/rc6-public-downloads/public-download-verification.json",
+    "sha256": "4648d883808be37ef1f4bdd7584d55b28b6f15bdc9439a07c9df155f728f0dd5",
+    "result": "accepted; source/flags/assets/hashes/APKidentity/notes/media/stableLatest/prior-release preservation fields agree with independently completed checks"
+  }
+}

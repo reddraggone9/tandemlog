@@ -1,10 +1,11 @@
 # Current status — 2026-10-09
 
-## Checklist controls follow-up — unpublished
+## Checklist controls follow-up — RC6 published
 
-Preview [2026.10.2-rc.5](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.5)
-build48 is published from `bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b`.
-Stable2026.10.1 remains Latest. Lee approved a focused follow-up on2026-10-09:
+Preview [2026.10.2-rc.6](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.6)
+build50 is published from `2aa46be9043251c8ed4e21b2ad00d41aa054dffc`.
+Stable2026.10.1 remains Latest. The follow-up starts from RC5/build48 source
+`bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b`. Lee approved it on2026-10-09:
 remove the child-handle long-hold tooltip, match parent/child reorder icons and
 trailing columns, hide Add checklist whenever items exist (including incoming
 changes while a menu is open), and use full content-width narrow rows/dividers.
@@ -30,12 +31,28 @@ flows and owner-signed Android production. [Replacement editorial review](../evi
 accepts unchanged notes and source-attributed media through this exact range.
 The signed Android archive is artifact11599236271, ZIP SHA256
 `13e77d1f113532bb7e15f3241de3c40aa6838a3dcd7a0d3f7081ccc223989e23`.
-Both supported cloud download/materialization routes return HTTP403 for the
-three release archives. Hosted gates and source/policy review passed, but local
-archive-byte checks and the inner APK hash are not claimed. Complete artifact
-verification in the local consumer, exact Android acceptance/demo and fresh
-quota remain required before authorized preview publication; no new release
-is published yet.
+Direct cloud candidate-archive download/materialization returned HTTP403. The
+reviewed trusted publication job retained all actual archive digest, inventory,
+Windows portable member, installed-desktop lifecycle and installer checksum gates
+before creating the release; those gates passed. The parent/local worker supplied
+[51-check signed Android acceptance](../evidence/rc6-candidate/native-acceptance-attestation.json)
+on the exact candidate APK, reusing unaffected RC5 coverage. The affected demo
+includes a1.395-second stationary hold, drag and Undo. Fresh quota cleared the
+publication threshold before dispatch.
+
+[Promotion37896129554](https://github.com/reddraggone9/tandemlog/actions/runs/37896129554)
+completed successfully, publishing the exact candidate bytes without rebuilding.
+The release was published at2026-10-09T06:56:07Z. RC6 is a non-draft prerelease
+with exactly three installers
+and latest=false. All three public installers were downloaded anonymously and
+hashed here; the actual APK also passed official signature/identity checks and
+native payload/notices verification. Its SHA256 is
+`4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a`.
+[Final receipts](../evidence/rc6-candidate/README.md) bind these checks and the
+independent acceptance of public bytes, exact tag/source, reviewed notes and three
+immutable images. All18 prior releases remain unchanged and stable2026.10.1 is
+still Latest. Device-runtime acceptance is attributed to the parent/local worker;
+this cloud worker did not rerun it.
 Broader local-storage consolidation stays queued for the next full release,
 requiring inventory and migration review. See [ADR0011](decisions/0011-one-level-checklists.md).
 

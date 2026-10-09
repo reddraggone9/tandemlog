@@ -28,10 +28,16 @@ not overlap. At normal text size the count occupies20px, leaving26px below it.
 Further compression would shrink the target or overlap its neighbor. A black
 standalone toggle PNG is explicitly excluded from visual proof.
 
-Signed-candidate/platform checks, exact Android affected-flow/demo acceptance,
-fresh quota remain publication gates. The [assembled notes/media review](../rc6-editorial/editorial-review.json)
-is complete, including immutable links and public200/hash verification. This
-receipt does not grant Android/Windows runtime or stable-promotion acceptance.
+RC6/build50 is now [published](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.6)
+from exact source `2aa46be9043251c8ed4e21b2ad00d41aa054dffc` after successful
+candidate/platform gates, parent/local signed Android acceptance (51 checks with
+unaffected RC5 coverage reused), fresh quota clearance and hosted actual artifact
+preflight. [Final release receipts](../rc6-candidate/README.md) bind all three
+public installer downloads/hashes and independent review. The
+[assembled notes/media review](../rc6-editorial/editorial-review.json) and
+[build50 range review](../rc6-editorial/editorial-review-build50.json) accept the
+unchanged notes and immutable media. Stable2026.10.1 remains Latest; native device
+acceptance is attributed to the parent/local worker.
 
 The18.1-second [actual native Linux desktop demo](native-linux-pointer-demo.mp4)
 shows a1.2-second held drag moving Map above Water bottle and Undo restoring it,
@@ -48,5 +54,6 @@ sources. The build49 debug demo and figures remain evidence for those unchanged
 UI sources, with their original source/version attribution.
 The [aggregate navigation receipt](aggregate-test-navigation-verification.json)
 binds the hosted failure, local reproduction and six formerly failing native
-flows passing in2m48s with clean analysis. Full replacement platform gates remain
-required.
+flows passing in2m48s with clean analysis. Replacement candidate37889870105
+passed all86 full Linux native flows, Windows gates and owner-signed Android
+production; promotion37896129554 completed without rebuilding.

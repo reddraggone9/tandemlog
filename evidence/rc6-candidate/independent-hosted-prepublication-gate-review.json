@@ -1,0 +1,40 @@
+{
+  "reviewed_at_utc": "2026-10-09T06:55:08.656950+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent, RC6 gate review",
+  "result": "accepted normal hosted prepublication byte/lifecycle gates; no bypass or additional scope",
+  "candidate_run": 37889870105,
+  "candidate_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "version": "2026.10.2-rc.6+50",
+  "trusted_dispatch_source": "a4323116c6eb81301428ea5ee1029fcd660e864c",
+  "accepted_inner_apk_sha256": "4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+  "android_acceptance": "Parent/local worker attests51checks passed on exact accepted candidate APK; reviewer has not rerun native device checks",
+  "native_evidence_archive_sha256_reported_by_parent": "decf42e33ecd69d45d01da247cab0e43b7119dd51b76c34bb0a89f41655832eb",
+  "policy_file_sha256": {
+    ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/app_version.py": "03a321a8168d76aa915440e58a2720b9d941d95f510cff8c0448a81503b34ccd",
+    "tool/android_release.py": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab"
+  },
+  "notes_sha256": "aeaaaf00475d2aa4a0df4330f3f8847da66bb4e8aab2d828156e95be703755db",
+  "mandatory_order_before_release_creation": [
+    "Trusted main candidate_source resolves successful same-repository main android-candidate workflow_dispatch run; validates RC6 tag/version and exact candidate source",
+    "Checkout exact candidate source; download linux/windows/android-release from candidate_run_id37889870105 into dist",
+    "publish_gate: exact closed file inventory, no symlinks/oversize, required portable Windows archive/provenance/checksum/member inventory/safe members/member SHA256; full reads also exercise archive member CRC",
+    "publish_gate: both four-phase installed lifecycle reports passed and data-preserving launch; Linux actual commit replacement/restoration/sandbox cleanup",
+    "publish_gate: candidate SHA/version/tag/build history, exact current candidate checkout; actual APK SHA matches parent acceptance and source/version/pinned-certificate metadata",
+    "Strict sha256sum --check on linux/windows/android installer checksum manifests; any failure exits default Bash-e shell before releasecreation",
+    "Stage only exact three installer copies into fresh public-assets; no build/signing; gh release create uses candidate target with prerelease and latest=false"
+  ],
+  "cloud_byte_limit": "Previous direct and supported Library materialization were403; reviewer did not verify local candidate outer ZIP bytes/CRC or run local desktop/native acceptance. Mandatory hosted runner gates are retained and must actually pass before releasecreation. Outer candidate ZIP CRC is not independently attested here.",
+  "normal_hosted_gate_conclusion": "Existing hosted sequence can complete remaining actual desktop installer checksum, Windows portable member and installer-lifecycle gate checks before publication; using it retains established release gates. Terminal hosted proof and post-public download/identity verification remain necessary.",
+  "no_rebuild": true,
+  "exact_three_installers": true,
+  "stable_latest_required": "v2026.10.1",
+  "publication_dispatch_by_reviewer": false,
+  "remaining": "Root authorized dispatch/terminal gate evidence then independent published source/tag/flags/notes/assets/download review",
+  "parent_quota_clearance": "Fresh read cleared the publication threshold before dispatch; personal account values retained privately.",
+  "public_projection": "Personal account values and private Library identifier omitted; complete original retained in the recovery workspace."
+}
