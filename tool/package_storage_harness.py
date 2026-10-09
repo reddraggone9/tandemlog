@@ -4,6 +4,7 @@ import hashlib
 import json
 from pathlib import Path
 import subprocess
+import shutil
 import zipfile
 
 
@@ -45,10 +46,18 @@ def main():
                 raise ValueError('Harness archive member changed')
     root = Path(__file__).resolve().parents[1]
     target = root / 'test/support/local_profile_migration_child.dart'
+    dart = shutil.which('dart')
+    if dart is None:
+        raise ValueError('Pinned Dart executable is unavailable')
+    dart = Path(dart)
+    if dart.suffix.lower() == '.bat':
+        dart = dart.parent / 'cache/dart-sdk/bin/dart.exe'
+    if not dart.is_file():
+        raise ValueError('Pinned SDK Dart executable is unavailable')
     receipt = {'source': args.source, 'run': args.run, 'test_only': True,
                'target': str(target.relative_to(root)), 'target_sha256': sha(target),
                'pubspec_lock_sha256': sha(root / 'pubspec.lock'),
-               'dart_version': subprocess.check_output(['dart', '--version'], text=True).strip(),
+               'dart_version': subprocess.check_output([str(dart), '--version'], text=True).strip(),
                'archive': archive.name, 'archive_sha256': sha(archive),
                'payload_sha256': hashes, 'sqlite_sha256': sqlite_hash,
                'matching_release_sqlite': matches[0].relative_to(args.app_bundle).as_posix(),
