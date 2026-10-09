@@ -1,0 +1,90 @@
+{
+  "verdict": "accepted for isolated optional shared TaskStore proof; no remaining must-fix found in reviewed core scope",
+  "reviewer": "correctness_review",
+  "baseline": "29566ab0d08fe5d524444eb3289c78cc98dcd7d9",
+  "source_state": "uncommitted working tree, bound by exact source hashes",
+  "source_sha256": {
+    "lib/storage/local_profile_database.dart": "d7c8ae204c1a7ddf02be10a40b8a3af022c226ab913bef205bfbfc3488f2b6dc",
+    "lib/storage/profile_text_intents.dart": "45c3298e1ed1c076c34e39f7dc88e4a5e5c67bcf782f1ebca8b2fa6599836061",
+    "lib/storage/writer_guard.dart": "ba4ee68e9cef515581c9f6d01e2b76f22f55c6b1053aa3c59627d04b3fc82984",
+    "lib/storage/task_tables.dart": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f",
+    "lib/storage/task_store.dart": "b02b627f47c566ea7a1a1abc26904b1640c5273fd4820a29d7d32cf1aa190fa6",
+    "lib/storage/text_cache.dart": "b97b02d07a9475f4e4fcaa390a376b2c8cd834af020bfc7f1c2b12192ac976ed",
+    "lib/storage/checklist_store.dart": "866be0a1c1b226c32ec9bd9e79880c0390dcd3fcdfd00089e74432ea27ca2896",
+    "lib/storage/checklist_expansion_store.dart": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250",
+    "test/profile_task_store_test.dart": "9c5b4fa9ae5186b0974051132e24c370d8f7706e667c00f7a6f26a673dd23798",
+    "test/checklist_completion_command_test.dart": "38f1cae972fbcbb46c2f48379bbc34fae24057336ce84f2dc026f4723dd9b70b",
+    "test/checklist_expansion_store_test.dart": "89f6100d69910fdf947718d51f6cad8053e18f5d105cd533a2e8135fba700837"
+  },
+  "evidence_sha256": {
+    "shared-task-store-initial-tests.log": "a5a59c790dabdaa68624268c1de3c7157814f05e86da6c3c95871dbd630403cd",
+    "shared-task-store-native-review-tests.log": "b957e32ff9b13e6331f70189a6c844c217e078b835c5a70a9de5d76696bd0435",
+    "shared-alias-intent-red.log": "410a978fa46a1194b5b3d3ceda47bc1bc9eb6b0d60635ebd1fac4148ffb5b5f4",
+    "shared-atomic-ingestion-green.log": "28c8bec4f03229629f582994ea094a3c88fc358b8076947128a7ab6d8b102bb8",
+    "shared-native-checklist-green.log": "72a60379f873777f8750a4158fe6b303e63168f514091e4881c544e3a3f55420",
+    "shared-task-store-final-adapters-tests.log": "b8fd7325e9d767032cb137e46e8fedd5b1e0231d5edc68d0bcb30f86cd3ff9d6",
+    "shared-native-checklist-final-green.log": "72a60379f873777f8750a4158fe6b303e63168f514091e4881c544e3a3f55420",
+    "shared-atomic-ingestion-final-green.log": "1d9a988ad5dcecacf3eb1e6937f8cdf76472eab3e3f81e0d7a89bdaae43a276c"
+  },
+  "independent_tests": [
+    {
+      "scope": "initial shared TaskStore and profile safety",
+      "passed": 13,
+      "failed": 0,
+      "log": "shared-task-store-initial-tests.log"
+    },
+    {
+      "scope": "shared TaskStore and existing native Save coordinator",
+      "passed": 19,
+      "failed": 0,
+      "log": "shared-task-store-native-review-tests.log"
+    },
+    {
+      "scope": "final shared TaskStore plus legacy and owned-profile expansion adapter",
+      "passed": 13,
+      "failed": 0,
+      "log": "shared-task-store-final-adapters-tests.log"
+    }
+  ],
+  "actual_native_scratch": [
+    {
+      "script": "shared-alias-intent.dart",
+      "result": "unknown native append writes exact canonical bytes then loses response; second physical symlink namespace admits and retires protected receipt; original namespace reopens successfully; no extra append and canonical bytes unchanged",
+      "log": "shared-alias-intent-red.log",
+      "qualification": "Execution raced owner fix and passed. Filename is historical; no original runtime red claimed."
+    },
+    {
+      "script": "shared-atomic-ingestion.dart",
+      "result": "Synthetic SQLite trigger rejects guard acknowledgement after native canonical append; namespace receipts/views and guard advancement roll back together; exact protected intent and unresolved reservation retained; removing trigger allows alias recovery without reappend",
+      "log": "shared-atomic-ingestion-final-green.log",
+      "qualification": "One owned synthetic SQLite connection; no raw live database handle. Native created-with-text flow, not a GUI flow or disk/rollback I/O failure injection."
+    },
+    {
+      "script": "shared-native-checklist.dart",
+      "result": "Identical writer/user/task/item UUIDs in two workspace namespaces remain isolated across native checklist title/notes, private text Save, selective Undo, expansion metadata and namespace rebuild; second visible snapshot unchanged; first item title restored by Undo and local expansion retained",
+      "log": "shared-native-checklist-final-green.log",
+      "qualification": "Final rerun explicitly passes profileDatabase to expansion adapters."
+    }
+  ],
+  "reviewed_fixes": [
+    "Workspace handle reservation occurs before global queue admission; rejected/failed open releases reservation.",
+    "Bound shared projection versions below13, including0, reject before legacy replay helper; namespace projection version stays separate from profile PRAGMA user_version.",
+    "Orphan alias disposable outboxes may only reconcile through exact admitted canonical receipts; absent or differing authority rejects.",
+    "Shared guard acknowledgement, canonical event/checkpoint ingestion, and exact protected intent retirement commit together; process-local publication follows commit.",
+    "Shared rollback failures poison owner and all shared DB getters/queued operations recheck it; shared native packet validation uses synchronous owner transaction rolled back with private sentinel.",
+    "Immutable validated namespace table identifiers scope SQL in TaskStore, checklist/text adapters and expansion metadata.",
+    "rebuildCache removes only namespaced disposable projections, preserves trusted stream/range observations, durable location binding, UI state and protected authority, and forces complete verified replay.",
+    "Shared pendingTextOperations and append-readiness now use validated protected ProfileTextIntents as sole authority, independent of disposable alias outbox state.",
+    "ChecklistExpansionStore optionally accepts profile owner, verifies native connection identity, uses owner database getter and synchronous owner transaction on shared writes; legacy transaction handles SQLite auto-rollback."
+  ],
+  "remaining_limits": [
+    "No startup switching, cache-authority migration, activation, cleanup, live-user access, main integration or publication.",
+    "Main callers remain legacy; explicit namespace/owner UI construction and startup migration/activation remain outside scope. Optional shared expansion adapter itself is now reviewed and exercised.",
+    "No Windows/Android native acceptance; Linux pinned native text library only.",
+    "No rollback/close I/O-fault runtime claim; prior pinned SQLite omits authorization fault hook.",
+    "Global operation queue includes provider I/O; performance and stalled-provider responsiveness are not established by these bounded correctness checks."
+  ],
+  "native_text_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "tracked_edits_by_reviewer": false,
+  "final_summary": "No remaining must-fix in isolated shared TaskStore/storage integration. Final13 focused gates and two final actual-native scratch workflows pass. Earlier19 Save-coordinator gates and13 initial safety gates retained with their original source timing; no full-suite completion claim."
+}

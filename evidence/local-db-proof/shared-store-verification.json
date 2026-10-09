@@ -1,0 +1,37 @@
+{
+  "scope": "isolated opt-in shared TaskStore integration atop29566ab; no startup/migration activation/cleanup or publication",
+  "verified_at": "2026-10-09T19:54:08.871764+00:00",
+  "base": "29566ab0d08fe5d524444eb3289c78cc98dcd7d9",
+  "source_sha256": {
+    "lib/storage/local_profile_database.dart": "d7c8ae204c1a7ddf02be10a40b8a3af022c226ab913bef205bfbfc3488f2b6dc",
+    "lib/storage/profile_text_intents.dart": "45c3298e1ed1c076c34e39f7dc88e4a5e5c67bcf782f1ebca8b2fa6599836061",
+    "lib/storage/writer_guard.dart": "ba4ee68e9cef515581c9f6d01e2b76f22f55c6b1053aa3c59627d04b3fc82984",
+    "lib/storage/task_tables.dart": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f",
+    "lib/storage/task_store.dart": "b02b627f47c566ea7a1a1abc26904b1640c5273fd4820a29d7d32cf1aa190fa6",
+    "lib/storage/text_cache.dart": "b97b02d07a9475f4e4fcaa390a376b2c8cd834af020bfc7f1c2b12192ac976ed",
+    "lib/storage/checklist_store.dart": "866be0a1c1b226c32ec9bd9e79880c0390dcd3fcdfd00089e74432ea27ca2896",
+    "lib/storage/checklist_expansion_store.dart": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250",
+    "test/profile_task_store_test.dart": "9c5b4fa9ae5186b0974051132e24c370d8f7706e667c00f7a6f26a673dd23798",
+    "test/checklist_completion_command_test.dart": "38f1cae972fbcbb46c2f48379bbc34fae24057336ce84f2dc026f4723dd9b70b",
+    "test/checklist_expansion_store_test.dart": "89f6100d69910fdf947718d51f6cad8053e18f5d105cd533a2e8135fba700837"
+  },
+  "checks": {
+    "format": "141 Dart files; 0 changes",
+    "analyze": "0 issues",
+    "full_suite": "690/690 passing with pinned native library",
+    "full_suite_log_sha256": "8bdb641992891039d13ad33f4ead3c9fc49c07ed52091d41ca9f731f1a2da487"
+  },
+  "native_library": {
+    "path": "/workspace/recovery/local-db-proof/native-unit/libtandemlog_text.so",
+    "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+    "source": "unchanged production native source, ABI verified; Linux unit evidence"
+  },
+  "remaining": [
+    "full cache/backup observations and outbox-only receipt import",
+    "startup/settings/launcher ownership wiring",
+    "failed-switch UI/importer restoration",
+    "verified activation and resumable cleanup with interruption gates",
+    "actual Windows/Android native locking/upgrade acceptance"
+  ],
+  "preserved": "canonical v3 bytes/meanings unchanged; synthetic profiles only; no live data, push or release"
+}

@@ -7,12 +7,18 @@ import '../domain/text_actor.dart';
 import '../domain/text_context.dart';
 import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
+import 'task_tables.dart';
 
 /// Disposable full native state. Every candidate is private until SQLite commits;
 /// editor documents and their captured drafts are never used for materialization.
 class TextCache {
-  TextCache(this.db, this.engine, {this.memo});
-  TextCache._transaction(this.db, this.engine, this.memo) {
+  TextCache(
+    this.db,
+    this.engine, {
+    this.memo,
+    this.tables = const TaskTables.legacy(),
+  });
+  TextCache._transaction(this.db, this.engine, this.memo, this.tables) {
     if (db.autocommit) {
       throw StateError('Shared text actors require an active transaction.');
     }
@@ -26,8 +32,10 @@ class TextCache {
     Database db,
     NativeTextEngine engine, {
     RecurringTextMemo? memo,
-  }) => TextCache._transaction(db, engine, memo);
+    TaskTables tables = const TaskTables.legacy(),
+  }) => TextCache._transaction(db, engine, memo, tables);
   final Database db;
+  final TaskTables tables;
   final NativeTextEngine engine;
   final RecurringTextMemo? memo;
   TextActorRegistry? _transactionActors;
@@ -39,14 +47,17 @@ class TextCache {
     _transactionActors = null;
   }
 
-  TextActorRegistry _loadActors() =>
-      TextActorRegistry(deriveActor: memo?.deriveActor)..bindAll(
-        db
-            .select('SELECT context,writer,allocation,actor FROM text_actors')
-            .map(
-              (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
-            ),
-      );
+  TextActorRegistry
+  _loadActors() => TextActorRegistry(deriveActor: memo?.deriveActor)
+    ..bindAll(
+      db
+          .select(
+            'SELECT context,writer,allocation,actor FROM ${tables.textActors}',
+          )
+          .map(
+            (row) => TextActorClaim.fromJson(Map<String, dynamic>.from(row)),
+          ),
+    );
 
   TextActorRegistry _actors() {
     _ensureUsable();
@@ -80,12 +91,10 @@ class TextCache {
           engine.inspect(NativeTextUpdate.parse(change['update'])),
         );
         if (!present) {
-          db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
-            claim.context,
-            claim.actor,
-            claim.writer,
-            claim.allocation,
-          ]);
+          db.execute(
+            'INSERT OR IGNORE INTO ${tables.textActors} VALUES (?,?,?,?)',
+            [claim.context, claim.actor, claim.writer, claim.allocation],
+          );
         }
       }
     }
@@ -135,7 +144,7 @@ class TextCache {
       }
       for (final row in rows) {
         db.execute(
-          'INSERT OR REPLACE INTO text_fields VALUES (?,?,?,?,?,?,?,?,?)',
+          'INSERT OR REPLACE INTO ${tables.textFields} VALUES (?,?,?,?,?,?,?,?,?)',
           row,
         );
       }
@@ -266,16 +275,14 @@ class TextCache {
       }
     }
     for (final claim in claims) {
-      db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
-        claim.context,
-        claim.actor,
-        claim.writer,
-        claim.allocation,
-      ]);
+      db.execute(
+        'INSERT OR IGNORE INTO ${tables.textActors} VALUES (?,?,?,?)',
+        [claim.context, claim.actor, claim.writer, claim.allocation],
+      );
     }
     for (final row in rows) {
       db.execute(
-        'INSERT OR REPLACE INTO text_fields VALUES (?,?,?,?,?,?,?,?,?)',
+        'INSERT OR REPLACE INTO ${tables.textFields} VALUES (?,?,?,?,?,?,?,?,?)',
         row,
       );
     }
@@ -296,11 +303,11 @@ class TextCache {
     // full frontier copies the whole occurrence history on each materialization.
     // Fetch checkpoint bytes only until a usable candidate is found.
     for (final reference in db.select(
-      "SELECT entity FROM text_fields WHERE field=? AND seed_hash=? AND codec='yrs-v1' AND adapter=1 ORDER BY (entity=?) DESC,length(frontier) DESC",
+      "SELECT entity FROM ${tables.textFields} WHERE field=? AND seed_hash=? AND codec='yrs-v1' AND adapter=1 ORDER BY (entity=?) DESC,length(frontier) DESC",
       [context.field, context.seedHash, context.entity],
     )) {
       final row = db.select(
-        'SELECT * FROM text_fields WHERE entity=? AND field=?',
+        'SELECT * FROM ${tables.textFields} WHERE entity=? AND field=?',
         [reference['entity'], context.field],
       ).single;
       final bytes = row['state'];
@@ -353,9 +360,10 @@ class TextCache {
     if (creation == null && basis == null) {
       // Competing roots cannot select a new initialization. Retain the last
       // verified native display while the canonical evidence remains pending.
-      for (final row in db.select('SELECT * FROM text_fields WHERE entity=?', [
-        view['id'],
-      ])) {
+      for (final row in db.select(
+        'SELECT * FROM ${tables.textFields} WHERE entity=?',
+        [view['id']],
+      )) {
         final bytes = row['state'] as Uint8List;
         if (sha256.convert(bytes).toString() != row['state_hash']) {
           throw FormatFailure(
@@ -414,7 +422,7 @@ class TextCache {
   ) {
     final entity = view['id'] as String;
     final cached = db.select(
-      'SELECT * FROM text_fields WHERE entity=? AND field=?',
+      'SELECT * FROM ${tables.textFields} WHERE entity=? AND field=?',
       [entity, field],
     );
     final limits = NativeTextLimits(
@@ -495,7 +503,7 @@ class TextCache {
       registry.bindAll(
         db
             .select(
-              'SELECT context,writer,allocation,actor FROM text_actors WHERE context=?',
+              'SELECT context,writer,allocation,actor FROM ${tables.textActors} WHERE context=?',
               [context.hash],
             )
             .map(
@@ -526,18 +534,16 @@ class TextCache {
           candidate.applyRemote(update);
           applied.add(event.id);
         }
-        db.execute('INSERT OR IGNORE INTO text_actors VALUES (?,?,?,?)', [
-          claim.context,
-          claim.actor,
-          claim.writer,
-          claim.allocation,
-        ]);
+        db.execute(
+          'INSERT OR IGNORE INTO ${tables.textActors} VALUES (?,?,?,?)',
+          [claim.context, claim.actor, claim.writer, claim.allocation],
+        );
       }
       final snapshot = candidate.read();
       final state = candidate.fullState.bytes;
       final frontier = applied.toList()..sort();
       db.execute(
-        'INSERT OR REPLACE INTO text_fields VALUES (?,?,?,?,?,?,?,?,?)',
+        'INSERT OR REPLACE INTO ${tables.textFields} VALUES (?,?,?,?,?,?,?,?,?)',
         [
           entity,
           field,

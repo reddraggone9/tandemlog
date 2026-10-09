@@ -63,7 +63,9 @@ extension ChecklistStore on TaskStore {
   }) => command(item, 'checklist.itemDeleted', {}, onPrepared: onPrepared);
 
   List<Map<String, dynamic>> checklistItems(String parent) {
-    final record = db.select('SELECT raw FROM views WHERE id=?', [parent]);
+    final record = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+      parent,
+    ]);
     if (record.isEmpty) return const [];
     final state = jsonDecode(record.single['raw'] as String) as Map;
     return (state['checklist'] as List? ?? []).cast<Map<String, dynamic>>();
@@ -74,7 +76,9 @@ extension ChecklistStore on TaskStore {
   /// The acknowledged native Save result includes items hidden from task rows.
   /// A missing result means the entity or its containing task is unavailable.
   Map<String, dynamic>? currentTextRow(String entity) {
-    final records = db.select('SELECT raw FROM views WHERE id=?', [entity]);
+    final records = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+      entity,
+    ]);
     if (records.isEmpty) return null;
     final row =
         jsonDecode(records.single['raw'] as String) as Map<String, dynamic>;
@@ -102,14 +106,14 @@ extension ChecklistStore on TaskStore {
   List<LogEvent> _checklistHistory(String parent) {
     final creations = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='checklist.itemCreated' AND json_extract(raw,'\$.data.parent')=?",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='checklist.itemCreated' AND json_extract(raw,'\$.data.parent')=?",
           [parent],
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
     final copies = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedWithChecklist' AND json_extract(raw,'\$.data.successor.id')=?",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.completedWithChecklist' AND json_extract(raw,'\$.data.successor.id')=?",
           [parent],
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
@@ -125,7 +129,7 @@ extension ChecklistStore on TaskStore {
       if (ids.isNotEmpty)
         ...db
             .select(
-              'SELECT raw FROM events WHERE entity IN (${List.filled(ids.length, '?').join(',')})',
+              'SELECT raw FROM ${tables.events} WHERE entity IN (${List.filled(ids.length, '?').join(',')})',
               ids.toList(),
             )
             .map((row) => LogEvent.decode(row['raw'] as String)),
@@ -134,7 +138,7 @@ extension ChecklistStore on TaskStore {
 
   List<(LogEvent, Map<String, dynamic>)> _itemCopySeeds(String entity) => db
       .select(
-        "SELECT e.raw,i.value FROM events e JOIN json_each(json_extract(e.raw,'\$.data.checklist.items')) i WHERE json_extract(e.raw,'\$.type')='task.completedWithChecklist' AND json_extract(i.value,'\$.id')=? ORDER BY e.clock,e.writer,e.seq",
+        "SELECT e.raw,i.value FROM ${tables.events} e JOIN json_each(json_extract(e.raw,'\$.data.checklist.items')) i WHERE json_extract(e.raw,'\$.type')='task.completedWithChecklist' AND json_extract(i.value,'\$.id')=? ORDER BY e.clock,e.writer,e.seq",
         [entity],
       )
       .map(
@@ -147,7 +151,7 @@ extension ChecklistStore on TaskStore {
 
   String? _checklistParent(String entity) {
     final own = db.select(
-      "SELECT json_extract(raw,'\$.data.parent') AS parent FROM events WHERE entity=? AND json_extract(raw,'\$.type')='checklist.itemCreated'",
+      "SELECT json_extract(raw,'\$.data.parent') AS parent FROM ${tables.events} WHERE entity=? AND json_extract(raw,'\$.type')='checklist.itemCreated'",
       [entity],
     );
     if (own.isNotEmpty) return own.first['parent'] as String;
@@ -188,7 +192,7 @@ extension ChecklistStore on TaskStore {
   void _validateChecklistReferences([LogEvent? pending]) {
     final references = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','checklist.itemMoved')",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','checklist.itemMoved')",
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
@@ -262,7 +266,7 @@ extension ChecklistStore on TaskStore {
   void _validateChecklistCompletions([LogEvent? pending]) {
     final completions = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedWithChecklist'",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.completedWithChecklist'",
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
@@ -271,7 +275,7 @@ extension ChecklistStore on TaskStore {
     }
     if (completions.isEmpty) return;
     final canonical = db
-        .select('SELECT raw FROM events')
+        .select('SELECT raw FROM ${tables.events}')
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
     final resolution = _textResolution(

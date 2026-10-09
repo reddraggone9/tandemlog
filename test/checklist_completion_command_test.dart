@@ -151,6 +151,8 @@ class _BeforeCommitPeerStore implements TaskStore {
   @override
   get db => actual.db;
   @override
+  get tables => actual.tables;
+  @override
   List<Map<String, dynamic>> get rows => actual.rows;
   @override
   String get taskSnapshot => actual.taskSnapshot;

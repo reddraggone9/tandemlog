@@ -1,17 +1,33 @@
 import 'package:sqlite3/sqlite3.dart';
 
 import '../domain/event.dart' show isCanonicalId;
+import 'task_tables.dart';
+import 'local_profile_database.dart';
 
 /// Optional device-local display state in the already workspace-bound cache.
 /// Losing this namespace/cache simply restores collapsed checklists.
 class ChecklistExpansionStore {
-  ChecklistExpansionStore(this.db);
-  final Database db;
+  ChecklistExpansionStore(
+    this._database, {
+    this.tables = const TaskTables.legacy(),
+    this.profileDatabase,
+  }) {
+    if (profileDatabase != null &&
+        !identical(_database, profileDatabase!.database)) {
+      throw ArgumentError(
+        'Checklist display state must use its profile connection.',
+      );
+    }
+  }
+  final Database _database;
+  final LocalProfileDatabase? profileDatabase;
+  Database get db => profileDatabase?.database ?? _database;
+  final TaskTables tables;
   static const prefix = 'ui.checklist-expanded:';
 
   Set<String> load() => {
     for (final row in db.select(
-      'SELECT key FROM metadata WHERE key LIKE ? AND value=?',
+      'SELECT key FROM ${tables.metadata} WHERE key LIKE ? AND value=?',
       ['$prefix%', '1'],
     ))
       if (isCanonicalId((row['key'] as String).substring(prefix.length)))
@@ -29,22 +45,32 @@ class ChecklistExpansionStore {
         'Wait for the active cache transaction before display changes.',
       );
     }
-    db.execute('BEGIN IMMEDIATE');
-    try {
+    void write() {
       for (final id in ids) {
         if (expanded) {
-          db.execute('INSERT OR REPLACE INTO metadata VALUES (?,?)', [
+          db.execute('INSERT OR REPLACE INTO ${tables.metadata} VALUES (?,?)', [
             '$prefix$id',
             '1',
           ]);
         } else {
-          db.execute('DELETE FROM metadata WHERE key=?', ['$prefix$id']);
+          db.execute('DELETE FROM ${tables.metadata} WHERE key=?', [
+            '$prefix$id',
+          ]);
         }
       }
-      db.execute('COMMIT');
-    } catch (_) {
-      db.execute('ROLLBACK');
-      rethrow;
+    }
+
+    if (profileDatabase != null) {
+      profileDatabase!.transaction(write);
+    } else {
+      db.execute('BEGIN IMMEDIATE');
+      try {
+        write();
+        db.execute('COMMIT');
+      } catch (_) {
+        if (!db.autocommit) db.execute('ROLLBACK');
+        rethrow;
+      }
     }
   }
 }

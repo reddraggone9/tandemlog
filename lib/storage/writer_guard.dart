@@ -197,11 +197,27 @@ class SqliteWriterGuard implements WriterGuard {
     int sequence,
     String hash,
   ) async {
-    profile.transaction(() {
-      final current = _load(space, writer);
-      final next = _acknowledgeGuard(space, writer, current, sequence, hash);
-      if (!identical(current, next)) _save(space, writer, next);
-    });
+    profile.transaction(
+      () => acknowledgeInTransaction(space, writer, sequence, hash),
+    );
+  }
+
+  /// The profile owner's ingestion transaction commits this acknowledgement
+  /// with the exact canonical receipts and trusted stream checkpoints.
+  void acknowledgeInTransaction(
+    String space,
+    String writer,
+    int sequence,
+    String hash,
+  ) {
+    if (profile.database.autocommit) {
+      throw StateError(
+        'Writer acknowledgement requires an active transaction.',
+      );
+    }
+    final current = _load(space, writer);
+    final next = _acknowledgeGuard(space, writer, current, sequence, hash);
+    if (!identical(current, next)) _save(space, writer, next);
   }
 }
 

@@ -16,6 +16,9 @@ import 'log_folder.dart';
 import 'profile_lock.dart';
 import 'writer_guard.dart';
 import 'local_durability.dart';
+import 'local_profile_database.dart';
+import 'profile_text_intents.dart';
+import 'task_tables.dart';
 import '../text/native_text_engine.dart';
 import '../text/recurring_text.dart';
 import 'text_cache.dart';
@@ -125,9 +128,13 @@ class _NativeUndoField {
 /// Owns durable log ingestion and one disposable SQLite materialization.
 class TaskStore {
   final LogFolder folder;
-  final Database db;
+  final Database _database;
+  Database get db => profileDatabase?.database ?? _database;
   final String writer;
-  final ProfileLock lock;
+  final ProfileLock? lock;
+  final LocalProfileDatabase? profileDatabase;
+  final TaskTables tables;
+  final String? _locationKey;
   final WriterGuard writerGuard;
   final NativeTextEngine? textEngine;
   final String privatePath;
@@ -158,11 +165,23 @@ class TaskStore {
   Future<void>? _closing;
   Future<T> _serialize<T>(Future<T> Function() work) {
     if (_closed) return Future.error(StateError('Workspace is closed.'));
-    final result = _queue.then((_) {
-      return work();
-    });
+    final result = profileDatabase == null
+        ? _queue.then((_) => work())
+        : profileDatabase!.serialize(work);
     _queue = result.then<void>((_) {}, onError: (Object _, StackTrace _) {});
     return result;
+  }
+
+  static void _rollback(
+    Database db,
+    LocalProfileDatabase? profile,
+    Object error,
+  ) {
+    if (profile != null) {
+      profile.rollbackAfterFailure(error);
+    } else if (!db.autocommit) {
+      db.execute('ROLLBACK');
+    }
   }
 
   static Future<String> _readSpace(LogFolder folder) async {
@@ -190,13 +209,16 @@ class TaskStore {
 
   TaskStore._(
     this.folder,
-    this.db,
+    this._database,
     this.writer,
     this.lock,
     this.now,
     this.writerGuard,
     this.textEngine,
     this.privatePath,
+    this.profileDatabase,
+    this.tables,
+    this._locationKey,
   );
   static Future<TaskStore> open(
     LogFolder folder,
@@ -206,6 +228,59 @@ class TaskStore {
     String? writerIdentity,
     WriterGuard? writerGuard,
     NativeTextEngine? textEngine,
+    LocalProfileDatabase? profileDatabase,
+  }) async {
+    if (profileDatabase == null) {
+      return _open(
+        folder,
+        privatePath,
+        onTiming: onTiming,
+        now: now,
+        writerIdentity: writerIdentity,
+        writerGuard: writerGuard,
+        textEngine: textEngine,
+      );
+    }
+    if (writerIdentity == null || writerGuard != null) {
+      return Future.error(
+        ArgumentError(
+          'A shared profile needs its settings writer and database guard.',
+        ),
+      );
+    }
+    final key = sha256.convert(utf8.encode(folder.location)).toString();
+    profileDatabase.acquireWorkspace(key);
+    try {
+      return await profileDatabase.serialize(() async {
+        return _open(
+          folder,
+          privatePath,
+          onTiming: onTiming,
+          now: now,
+          writerIdentity: writerIdentity,
+          textEngine: textEngine,
+          profileDatabase: profileDatabase,
+          tables: TaskTables.forLocation(key),
+          locationKey: key,
+        );
+      });
+    } catch (_) {
+      profileDatabase.releaseWorkspace(key);
+      rethrow;
+    }
+  }
+
+  static Future<TaskStore> _open(
+    LogFolder folder,
+    String privatePath, {
+    void Function(String, int)? onTiming,
+    DateTime Function()? now,
+    String? writerIdentity,
+    WriterGuard? writerGuard,
+    NativeTextEngine? textEngine,
+    LocalProfileDatabase? profileDatabase,
+    TaskTables tables = const TaskTables.legacy(),
+    String? locationKey,
   }) async {
     final phase = Stopwatch()..start();
     void mark(String name) {
@@ -213,12 +288,16 @@ class TaskStore {
       phase.reset();
     }
 
-    await ensureDirectoryDurable(Directory(privatePath));
-    final lock = await ProfileLock.acquire(
-      privatePath,
-      fileName: 'session.lock',
-      message: 'This workspace is already open in another app instance.',
-    );
+    if (profileDatabase == null) {
+      await ensureDirectoryDurable(Directory(privatePath));
+    }
+    final lock = profileDatabase == null
+        ? await ProfileLock.acquire(
+            privatePath,
+            fileName: 'session.lock',
+            message: 'This workspace is already open in another app instance.',
+          )
+        : null;
     Database? db;
     try {
       // The application supplies its settings-owned installation identity.
@@ -240,56 +319,110 @@ class TaskStore {
       if ((await folder.list()).any((f) => f.name == 'tandemlog-space.json')) {
         await _readSpace(folder);
       }
-      db = sqlite3.open('$privatePath/cache.sqlite');
-      final version =
-          db.select('PRAGMA user_version').first.values.first as int;
+      db =
+          profileDatabase?.database ??
+          sqlite3.open('$privatePath/cache.sqlite');
+      final bindingKey = 'workspace.$locationKey.space';
+      final binding = profileDatabase == null
+          ? null
+          : db.select('SELECT value FROM profile_metadata WHERE key=?', [
+              bindingKey,
+            ]);
+      if (binding != null && binding.isNotEmpty) {
+        for (final name in [
+          tables.events,
+          tables.views,
+          tables.streams,
+          tables.streamRanges,
+          tables.metadata,
+          tables.positions,
+          tables.textFields,
+          tables.textActors,
+          tables.textOutbox,
+        ]) {
+          if (db.select(
+            "SELECT 1 FROM sqlite_schema WHERE type='table' AND name=?",
+            [name],
+          ).isEmpty) {
+            throw FormatFailure(
+              'Workspace tables are missing; preserve the profile before recovery.',
+            );
+          }
+        }
+      }
+      final version = profileDatabase == null
+          ? db.select('PRAGMA user_version').first.values.first as int
+          : binding!.isEmpty
+          ? 0
+          : int.parse(
+              db
+                      .select(
+                        "SELECT value FROM ${tables.metadata} WHERE key='projection_schema'",
+                      )
+                      .single['value']
+                  as String,
+            );
       if (version < 0 || version > 16) {
         throw FormatFailure(
           'This cache was created by a newer app. Use a compatible app; the cache and canonical logs were retained.',
         );
       }
-      db.execute('PRAGMA journal_mode=WAL');
-      db.execute('PRAGMA synchronous=FULL');
+      if (profileDatabase != null && binding!.isNotEmpty && version < 13) {
+        throw FormatFailure(
+          'Unsupported shared projection version; preserve the profile before recovery.',
+        );
+      }
+      if (profileDatabase == null) {
+        db.execute('PRAGMA journal_mode=WAL');
+        db.execute('PRAGMA synchronous=FULL');
+      }
       if (version > 0 && version < 13) {
+        if (profileDatabase != null) {
+          throw FormatFailure(
+            'Unsupported shared projection version; preserve the profile before recovery.',
+          );
+        }
         await _prepareCacheReplay(db, folder, privatePath, version);
       }
       db.execute(
-        'CREATE TABLE IF NOT EXISTS events (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
+        'CREATE TABLE IF NOT EXISTS ${tables.events} (id TEXT PRIMARY KEY, entity TEXT NOT NULL, writer TEXT NOT NULL, seq INTEGER NOT NULL, clock INTEGER NOT NULL, raw TEXT NOT NULL, UNIQUE(writer,seq))',
       );
       db.execute(
-        'CREATE INDEX IF NOT EXISTS events_entity ON events(entity,clock,writer)',
+        'CREATE INDEX IF NOT EXISTS ${tables.eventsEntity} ON ${tables.events}(entity,clock,writer)',
       );
       db.execute(
-        "CREATE INDEX IF NOT EXISTS events_type ON events(json_extract(raw,'\$.type'))",
-      );
-      db.execute('CREATE INDEX IF NOT EXISTS events_clock ON events(clock)');
-      db.execute(
-        "CREATE INDEX IF NOT EXISTS events_successor ON events(json_extract(raw,'\$.data.successor.id'))",
+        "CREATE INDEX IF NOT EXISTS ${tables.eventsType} ON ${tables.events}(json_extract(raw,'\$.type'))",
       );
       db.execute(
-        'CREATE TABLE IF NOT EXISTS views (id TEXT PRIMARY KEY, raw TEXT NOT NULL)',
+        'CREATE INDEX IF NOT EXISTS ${tables.eventsClock} ON ${tables.events}(clock)',
       );
       db.execute(
-        'CREATE TABLE IF NOT EXISTS streams (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL)',
+        "CREATE INDEX IF NOT EXISTS ${tables.eventsSuccessor} ON ${tables.events}(json_extract(raw,'\$.data.successor.id'))",
+      );
+      db.execute(
+        'CREATE TABLE IF NOT EXISTS ${tables.views} (id TEXT PRIMARY KEY, raw TEXT NOT NULL)',
+      );
+      db.execute(
+        'CREATE TABLE IF NOT EXISTS ${tables.streams} (name TEXT PRIMARY KEY, offset INTEGER NOT NULL, hash TEXT NOT NULL, stamp TEXT NOT NULL)',
       );
       // Retain older whole-prefix baselines as integrity evidence at their
       // original offsets; they are never resumable SHA state.
       db.execute('BEGIN IMMEDIATE');
       try {
-        final columns = db.select('PRAGMA table_info(streams)');
+        final columns = db.select('PRAGMA table_info(${tables.streams})');
         if (!columns.any((r) => r['name'] == 'hash_offset')) {
           db.execute(
-            'ALTER TABLE streams ADD COLUMN hash_offset INTEGER NOT NULL DEFAULT 0',
+            'ALTER TABLE ${tables.streams} ADD COLUMN hash_offset INTEGER NOT NULL DEFAULT 0',
           );
-          db.execute('UPDATE streams SET hash_offset=offset');
+          db.execute('UPDATE ${tables.streams} SET hash_offset=offset');
         }
         if (!columns.any((r) => r['name'] == 'range_capable')) {
           db.execute(
-            'ALTER TABLE streams ADD COLUMN range_capable INTEGER NOT NULL DEFAULT 0',
+            'ALTER TABLE ${tables.streams} ADD COLUMN range_capable INTEGER NOT NULL DEFAULT 0',
           );
         }
         db.execute(
-          'CREATE TABLE IF NOT EXISTS stream_ranges (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
+          'CREATE TABLE IF NOT EXISTS ${tables.streamRanges} (name TEXT NOT NULL, start_offset INTEGER NOT NULL, end_offset INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(name,start_offset))',
         );
         for (final definition in [
           'chain_head TEXT',
@@ -298,31 +431,33 @@ class TaskStore {
         ]) {
           final name = definition.split(' ').first;
           if (!columns.any((r) => r['name'] == name)) {
-            db.execute('ALTER TABLE streams ADD COLUMN $definition');
+            db.execute('ALTER TABLE ${tables.streams} ADD COLUMN $definition');
           }
         }
         db.execute(
-          "UPDATE streams SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)), last_clock=(SELECT MAX(clock) FROM events WHERE writer=substr(streams.name,1,length(streams.name)-6)) WHERE chain_head IS NULL",
+          "UPDATE ${tables.streams} SET chain_head=(SELECT json_extract(raw,'\$.hash') FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6) ORDER BY seq DESC LIMIT 1), last_seq=(SELECT COALESCE(MAX(seq),0) FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6)), last_clock=(SELECT MAX(clock) FROM ${tables.events} WHERE writer=substr(${tables.streams}.name,1,length(${tables.streams}.name)-6)) WHERE chain_head IS NULL",
         );
         db.execute(
-          'CREATE TABLE IF NOT EXISTS text_fields (entity TEXT NOT NULL, field TEXT NOT NULL, context TEXT NOT NULL, codec TEXT NOT NULL, adapter INTEGER NOT NULL, seed_hash TEXT NOT NULL, state BLOB NOT NULL, state_hash TEXT NOT NULL, frontier TEXT NOT NULL, PRIMARY KEY(entity,field))',
+          'CREATE TABLE IF NOT EXISTS ${tables.textFields} (entity TEXT NOT NULL, field TEXT NOT NULL, context TEXT NOT NULL, codec TEXT NOT NULL, adapter INTEGER NOT NULL, seed_hash TEXT NOT NULL, state BLOB NOT NULL, state_hash TEXT NOT NULL, frontier TEXT NOT NULL, PRIMARY KEY(entity,field))',
         );
         db.execute(
-          'CREATE TABLE IF NOT EXISTS text_actors (context TEXT NOT NULL, actor INTEGER NOT NULL, writer TEXT NOT NULL, allocation TEXT NOT NULL, PRIMARY KEY(context,actor))',
+          'CREATE TABLE IF NOT EXISTS ${tables.textActors} (context TEXT NOT NULL, actor INTEGER NOT NULL, writer TEXT NOT NULL, allocation TEXT NOT NULL, PRIMARY KEY(context,actor))',
         );
         db.execute(
-          'CREATE TABLE IF NOT EXISTS text_outbox (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
+          'CREATE TABLE IF NOT EXISTS ${tables.textOutbox} (id TEXT PRIMARY KEY, raw TEXT NOT NULL, entity TEXT NOT NULL)',
         );
-        db.execute(
-          'PRAGMA user_version=${textEngine != null || version >= 14 ? 16 : 13}',
-        );
+        if (profileDatabase == null) {
+          db.execute(
+            'PRAGMA user_version=${textEngine != null || version >= 14 ? 16 : 13}',
+          );
+        }
         db.execute('COMMIT');
-      } catch (_) {
-        db.execute('ROLLBACK');
+      } catch (error) {
+        _rollback(db, profileDatabase, error);
         rethrow;
       }
       db.execute(
-        'CREATE TABLE IF NOT EXISTS positions (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
+        'CREATE TABLE IF NOT EXISTS ${tables.positions} (id TEXT PRIMARY KEY, rank INTEGER NOT NULL)',
       );
       mark('sqlite_open_schema');
       final store = TaskStore._(
@@ -331,14 +466,22 @@ class TaskStore {
         writer,
         lock,
         now ?? DateTime.now,
-        writerGuard ?? FileWriterGuard(privatePath),
+        writerGuard ??
+            (profileDatabase == null
+                ? FileWriterGuard(privatePath)
+                : SqliteWriterGuard(profileDatabase)),
         textEngine,
         privatePath,
+        profileDatabase,
+        tables,
+        locationKey,
       );
       db.execute(
-        'CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
+        'CREATE TABLE IF NOT EXISTS ${tables.metadata} (key TEXT PRIMARY KEY, value TEXT NOT NULL)',
       );
-      final old = db.select("SELECT value FROM metadata WHERE key='space'");
+      final old = db.select(
+        "SELECT value FROM ${tables.metadata} WHERE key='space'",
+      );
       final files = await folder.list();
       if (!files.any((f) => f.name == 'tandemlog-space.json')) {
         if (old.isNotEmpty) {
@@ -361,20 +504,38 @@ class TaskStore {
         );
       }
       store.space = await _readSpace(folder);
+      if (binding != null &&
+          binding.isNotEmpty &&
+          binding.single['value'] != store.space) {
+        throw FormatFailure('Workspace identity changed at this location.');
+      }
       // A selected location must never silently change to another data space.
       if (old.isNotEmpty && old.first['value'] != store.space) {
         throw FormatFailure('Workspace identity changed at this location.');
       }
-      db.execute("INSERT OR IGNORE INTO metadata VALUES ('space',?)", [
-        store.space,
-      ]);
+      db.execute(
+        "INSERT OR IGNORE INTO ${tables.metadata} VALUES ('space',?)",
+        [store.space],
+      );
+      if (profileDatabase != null) {
+        profileDatabase.transaction(() {
+          db!.execute('INSERT OR IGNORE INTO profile_metadata VALUES (?,?)', [
+            bindingKey,
+            store.space,
+          ]);
+          db.execute(
+            "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('projection_schema',?)",
+            ['${textEngine != null || version >= 14 ? 16 : 13}'],
+          );
+        });
+      }
       mark('manifest');
       await store._restoreTextIntents();
-      await store.refresh();
+      await store._refresh();
       if (textEngine == null &&
           db
               .select(
-                "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','task.createdWithText','task.completedWithText','task.completedWithChecklist','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
+                "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('checklist.itemCreated','task.createdWithText','task.completedWithText','task.completedWithChecklist','task.textEdited','task.textEditUndone','text.baselineInitialized') LIMIT 1",
               )
               .isNotEmpty) {
         throw FormatFailure(
@@ -383,18 +544,22 @@ class TaskStore {
       }
       if (textEngine != null) store._validateTextBaseline();
       final orderVersion = db.select(
-        "SELECT value FROM metadata WHERE key='order_projection'",
+        "SELECT value FROM ${tables.metadata} WHERE key='order_projection'",
       );
       if (orderVersion.isEmpty ||
           orderVersion.single['value'] != '3' ||
-          db.select('SELECT COUNT(*) AS n FROM positions').first['n'] !=
-              db.select('SELECT COUNT(*) AS n FROM views').first['n']) {
+          db
+                  .select('SELECT COUNT(*) AS n FROM ${tables.positions}')
+                  .first['n'] !=
+              db
+                  .select('SELECT COUNT(*) AS n FROM ${tables.views}')
+                  .first['n']) {
         db.execute('BEGIN IMMEDIATE');
         try {
           store._rebuildOrder();
           db.execute('COMMIT');
-        } catch (_) {
-          db.execute('ROLLBACK');
+        } catch (error) {
+          _rollback(db, profileDatabase, error);
           rethrow;
         }
       }
@@ -402,9 +567,9 @@ class TaskStore {
       return store;
     } catch (_) {
       try {
-        db?.close();
+        if (profileDatabase == null) db?.close();
       } finally {
-        await lock.close();
+        await lock?.close();
       }
       rethrow;
     }
@@ -418,8 +583,9 @@ class TaskStore {
     String privatePath,
     int version,
   ) async {
+    const tables = TaskTables.legacy();
     final savedSpace = db.select(
-      "SELECT value FROM metadata WHERE key='space'",
+      "SELECT value FROM ${tables.metadata} WHERE key='space'",
     );
     if (savedSpace.length != 1 || !isCanonicalId(savedSpace.single['value'])) {
       throw FormatFailure(
@@ -446,21 +612,21 @@ class TaskStore {
       for (final table in ['events', 'views', 'positions']) {
         db.execute('DROP TABLE IF EXISTS $table');
       }
-      db.execute("DELETE FROM metadata WHERE key='order_projection'");
+      db.execute("DELETE FROM ${tables.metadata} WHERE key='order_projection'");
       db.execute(
-        "INSERT OR REPLACE INTO metadata VALUES ('replay_pending','1')",
+        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
       );
       db.execute('PRAGMA user_version=10');
       db.execute('COMMIT');
-    } catch (_) {
-      db.execute('ROLLBACK');
+    } catch (error) {
+      _rollback(db, null, error);
       rethrow;
     }
   }
 
   EventClock? _maximumClock([String? writerId]) {
     final result = db.select(
-      'SELECT clock FROM events ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC LIMIT 1',
+      'SELECT clock FROM ${tables.events} ${writerId == null ? '' : 'WHERE writer=?'} ORDER BY clock DESC LIMIT 1',
       writerId == null ? [] : [writerId],
     );
     return result.isEmpty
@@ -489,6 +655,34 @@ class TaskStore {
     return _refresh(verify: true);
   });
 
+  /// Rebuild only this namespace's disposable projections. Durable location
+  /// binding, trusted stream observations, UI state, guards and exact intents
+  /// remain in place; replay is forced even for unchanged-size canonical logs.
+  Future<void> rebuildCache() => _serialize(() async {
+    if (profileDatabase == null) {
+      throw StateError('Namespace rebuild requires the app-owned database.');
+    }
+    profileDatabase!.transaction(() {
+      for (final table in [
+        tables.events,
+        tables.views,
+        tables.positions,
+        tables.textFields,
+        tables.textActors,
+        tables.textOutbox,
+      ]) {
+        db.execute('DELETE FROM $table');
+      }
+      db.execute("DELETE FROM ${tables.metadata} WHERE key='order_projection'");
+      db.execute(
+        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('replay_pending','1')",
+      );
+    });
+    _recurringTextMemo.clear();
+    await _restoreTextIntents();
+    await _refresh();
+  });
+
   HistoryVerificationFailure _historyFailure(
     String name,
     Uint8List bytes,
@@ -506,7 +700,7 @@ class TaskStore {
     final writerId = name.substring(0, name.length - 6);
     var offset = 0;
     for (final row in db.select(
-      'SELECT seq,raw FROM events WHERE writer=? ORDER BY seq',
+      'SELECT seq,raw FROM ${tables.events} WHERE writer=? ORDER BY seq',
       [writerId],
     )) {
       final expected = utf8.encode('${row['raw']}\n');
@@ -549,7 +743,7 @@ class TaskStore {
     }
     var covered = baseline;
     for (final range in db.select(
-      'SELECT * FROM stream_ranges WHERE name=? ORDER BY start_offset',
+      'SELECT * FROM ${tables.streamRanges} WHERE name=? ORDER BY start_offset',
       [name],
     )) {
       final start = range['start_offset'] as int;
@@ -661,7 +855,7 @@ class TaskStore {
       }
     }
     final cached = db.select(
-      'SELECT raw FROM events WHERE writer=? AND seq=?',
+      'SELECT raw FROM ${tables.events} WHERE writer=? AND seq=?',
       [writer, sequence],
     );
     return cached.isEmpty
@@ -704,6 +898,10 @@ class TaskStore {
     String ownedHash,
   ) async {
     await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
+    _publishWriterHead(guardState, ownedSequence);
+  }
+
+  void _publishWriterHead(WriterGuardState? guardState, int ownedSequence) {
     _acknowledgedOwnedSequence = ownedSequence;
     _writerHasPendingAppend =
         guardState != null &&
@@ -776,7 +974,7 @@ class TaskStore {
     }
     final logs = files.where((f) => f.name.endsWith('.jsonl')).toList();
     final names = logs.map((f) => f.name).toSet();
-    for (final row in db.select('SELECT name FROM streams')) {
+    for (final row in db.select('SELECT name FROM ${tables.streams}')) {
       if (!names.contains(row['name'])) {
         throw HistoryVerificationFailure(
           row['name'] as String,
@@ -787,7 +985,9 @@ class TaskStore {
       }
     }
     final replay = db
-        .select("SELECT value FROM metadata WHERE key='replay_pending'")
+        .select(
+          "SELECT value FROM ${tables.metadata} WHERE key='replay_pending'",
+        )
         .isNotEmpty;
     var checkedRecords = 0, checkedBytes = 0;
     final eventLocations = <String, HistoryVerificationFailure>{};
@@ -807,7 +1007,7 @@ class TaskStore {
           'Unrecognized log filename.',
         );
       }
-      final saved = db.select('SELECT * FROM streams WHERE name=?', [
+      final saved = db.select('SELECT * FROM ${tables.streams} WHERE name=?', [
         info.name,
       ]);
       final row = saved.isEmpty ? null : saved.first;
@@ -991,7 +1191,7 @@ class TaskStore {
       (checkpoint) => checkpoint[0] == '$writer.jsonl',
     );
     final savedOwned = db.select(
-      'SELECT last_seq,chain_head FROM streams WHERE name=?',
+      'SELECT last_seq,chain_head FROM ${tables.streams} WHERE name=?',
       ['$writer.jsonl'],
     );
     final ownedSequence = ownedCheckpoint.isNotEmpty
@@ -1017,8 +1217,30 @@ class TaskStore {
     }
     if (checkpoints.isEmpty) {
       if (verify) _validateAuditedSemantics(auditedEntities, eventLocations);
-      await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
-      if (replay) db.execute("DELETE FROM metadata WHERE key='replay_pending'");
+      if (profileDatabase != null) {
+        profileDatabase!.transaction(() {
+          (writerGuard as SqliteWriterGuard).acknowledgeInTransaction(
+            space,
+            writer,
+            ownedSequence,
+            ownedHash,
+          );
+          _retireProfileIntentsInTransaction();
+          if (replay) {
+            db.execute(
+              "DELETE FROM ${tables.metadata} WHERE key='replay_pending'",
+            );
+          }
+        });
+        _publishWriterHead(guardState, ownedSequence);
+      } else {
+        await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
+        if (replay) {
+          db.execute(
+            "DELETE FROM ${tables.metadata} WHERE key='replay_pending'",
+          );
+        }
+      }
       if (verify) _lastHistoryVerification = verificationReport;
       await _retireConfirmedTextIntents();
       return false;
@@ -1034,6 +1256,7 @@ class TaskStore {
           db,
           textEngine!,
           memo: _recurringTextMemo,
+          tables: tables,
         );
       }
       for (final (index, e) in newEvents.indexed) {
@@ -1042,7 +1265,7 @@ class TaskStore {
             'Native text support is required. Update the app; history was preserved.',
           );
         }
-        db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
+        db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
           e.id,
           e.entity,
           e.writer,
@@ -1050,7 +1273,7 @@ class TaskStore {
           e.clock.value.toInt(),
           newEventRaws[index],
         ]);
-        db.execute('DELETE FROM text_outbox WHERE id=? AND raw=?', [
+        db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
           e.id,
           newEventRaws[index],
         ]);
@@ -1073,7 +1296,9 @@ class TaskStore {
       if (newEvents.any((event) => event.type == 'text.baselineInitialized') ||
           oldBaseline != _textBaseline?.id) {
         affected.addAll(
-          db.select('SELECT id FROM views').map((row) => row['id'] as String),
+          db
+              .select('SELECT id FROM ${tables.views}')
+              .map((row) => row['id'] as String),
         );
       }
       for (final e in newEvents) {
@@ -1099,7 +1324,7 @@ class TaskStore {
       affected.addAll(
         db
             .select(
-              "SELECT id FROM views WHERE json_extract(raw,'\$.textInheritancePending')=1",
+              "SELECT id FROM ${tables.views} WHERE json_extract(raw,'\$.textInheritancePending')=1",
             )
             .map((row) => row['id'] as String),
       );
@@ -1122,7 +1347,7 @@ class TaskStore {
           textCache: transactionTextCache,
         );
         if (state != null) {
-          db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
+          db.execute('INSERT OR REPLACE INTO ${tables.views} VALUES (?,?)', [
             entity,
             jsonEncode(state),
           ]);
@@ -1130,7 +1355,7 @@ class TaskStore {
       }
       if (affected.any(
             (entity) => db.select(
-              "SELECT 1 FROM events WHERE json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+              "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
               [entity],
             ).isNotEmpty,
           ) ||
@@ -1148,7 +1373,7 @@ class TaskStore {
                 }.contains(e.type) ||
                 (e.type == 'task.operationUndone' &&
                     db.select(
-                      "SELECT 1 FROM events WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
+                      "SELECT 1 FROM ${tables.events} WHERE id=? AND json_extract(raw,'\$.type')='task.moved'",
                       [e.data['operation']],
                     ).isNotEmpty),
           )) {
@@ -1156,20 +1381,34 @@ class TaskStore {
       }
       for (final c in checkpoints) {
         db.execute(
-          'INSERT OR REPLACE INTO streams (name,offset,hash,stamp,hash_offset,range_capable,chain_head,last_seq,last_clock) VALUES (?,?,?,?,?,?,?,?,?)',
+          'INSERT OR REPLACE INTO ${tables.streams} (name,offset,hash,stamp,hash_offset,range_capable,chain_head,last_seq,last_clock) VALUES (?,?,?,?,?,?,?,?,?)',
           c,
         );
       }
       for (final name in fullCheckpoints) {
-        db.execute('DELETE FROM stream_ranges WHERE name=?', [name]);
+        db.execute('DELETE FROM ${tables.streamRanges} WHERE name=?', [name]);
       }
       for (final range in rangeCheckpoints) {
-        db.execute('INSERT INTO stream_ranges VALUES (?,?,?,?)', range);
+        db.execute(
+          'INSERT INTO ${tables.streamRanges} VALUES (?,?,?,?)',
+          range,
+        );
       }
-      db.execute("DELETE FROM metadata WHERE key='replay_pending'");
-      await _acknowledgeWriterHead(guardState, ownedSequence, ownedHash);
+      db.execute("DELETE FROM ${tables.metadata} WHERE key='replay_pending'");
+      if (profileDatabase != null) {
+        (writerGuard as SqliteWriterGuard).acknowledgeInTransaction(
+          space,
+          writer,
+          ownedSequence,
+          ownedHash,
+        );
+        _retireProfileIntentsInTransaction();
+      } else {
+        await writerGuard.acknowledge(space, writer, ownedSequence, ownedHash);
+      }
       db.execute('COMMIT');
       committed = true;
+      _publishWriterHead(guardState, ownedSequence);
       cacheTransactions++;
       _updateCapturedTextDocuments(newEvents, affected);
       _updateNativeUndoOwners(newEvents, affected);
@@ -1185,7 +1424,7 @@ class TaskStore {
       return newEvents.isNotEmpty;
     } catch (failure) {
       if (committed) rethrow;
-      db.execute('ROLLBACK');
+      _rollback(db, profileDatabase, failure);
       try {
         _recurringTextMemo.clear();
       } catch (_) {
@@ -1210,7 +1449,7 @@ class TaskStore {
   }
 
   bool hasEntity(String id) =>
-      db.select('SELECT 1 FROM views WHERE id=?', [id]).isNotEmpty;
+      db.select('SELECT 1 FROM ${tables.views} WHERE id=?', [id]).isNotEmpty;
 
   Future<TaskTextCapture> captureTaskText(
     String entity,
@@ -1259,14 +1498,14 @@ class TaskStore {
       if (task['textUnavailable'] != null) {
         throw TextInheritancePending(task['textUnavailable'] as String);
       }
-      db.execute('INSERT OR REPLACE INTO views VALUES (?,?)', [
+      db.execute('INSERT OR REPLACE INTO ${tables.views} VALUES (?,?)', [
         entity,
         jsonEncode(task),
       ]);
       db.execute('COMMIT');
       cacheTransactions++;
-    } catch (_) {
-      db.execute('ROLLBACK');
+    } catch (error) {
+      _rollback(db, profileDatabase, error);
       rethrow;
     }
     final resolvedFields = _hasInheritedText(entity)
@@ -1352,7 +1591,7 @@ class TaskStore {
     Map<String, ResolvedTextField>? resolved,
   }) {
     final rows = db.select(
-      'SELECT * FROM text_fields WHERE entity=? AND field=?',
+      'SELECT * FROM ${tables.textFields} WHERE entity=? AND field=?',
       [entity, field],
     );
     if (rows.isEmpty) return null;
@@ -1549,7 +1788,9 @@ class TaskStore {
         }
         _nativeOperations.remove(id);
       }
-      if (db.select('SELECT 1 FROM text_outbox WHERE id=?', [id]).isEmpty) {
+      if (db.select('SELECT 1 FROM ${tables.textOutbox} WHERE id=?', [
+        id,
+      ]).isEmpty) {
         _preparedTextBases.remove(id);
       }
     }
@@ -1722,7 +1963,7 @@ class TaskStore {
   List<Map<String, dynamic>> get rows {
     final watch = Stopwatch()..start();
     final records = db.select(
-      "SELECT views.raw FROM views JOIN positions ON positions.id=views.id WHERE json_extract(views.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(views.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(views.raw,'\$.successorSuppressed'),0)=0 ORDER BY positions.rank",
+      "SELECT ${tables.views}.raw FROM ${tables.views} JOIN ${tables.positions} ON ${tables.positions}.id=${tables.views}.id WHERE json_extract(${tables.views}.raw,'\$.kind')<>'checklistItem' AND COALESCE(json_extract(${tables.views}.raw,'\$.deleted'),0)=0 AND COALESCE(json_extract(${tables.views}.raw,'\$.successorSuppressed'),0)=0 ORDER BY ${tables.positions}.rank",
     );
     lastReadTimings['query_ms'] = watch.elapsedMilliseconds;
     watch.reset();
@@ -1738,12 +1979,14 @@ class TaskStore {
   /// Persist disposable sequence positions only when order-affecting history changes.
   void _rebuildOrder() {
     final ids = db
-        .select("SELECT id FROM views ORDER BY json_extract(raw,'\$.order'),id")
+        .select(
+          "SELECT id FROM ${tables.views} ORDER BY json_extract(raw,'\$.order'),id",
+        )
         .map((row) => row['id'] as String);
     final retracted = retractedOperationIds(
       db
           .select(
-            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.operationUndone'",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.operationUndone'",
           )
           .map((r) => LogEvent.decode(r['raw'] as String)),
     );
@@ -1753,13 +1996,13 @@ class TaskStore {
     // successor's history again while rebuilding global manual order.
     final selectedSeedIds = <String, String>{
       for (final row in db.select(
-        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM events e JOIN views v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
+        "SELECT e.id,json_extract(e.raw,'\$.data.successor.id') AS successor FROM ${tables.events} e JOIN ${tables.views} v ON v.id=json_extract(e.raw,'\$.data.successor.id') AND json_extract(v.raw,'\$.order')=printf('%019d:%s',e.clock,e.writer) WHERE json_extract(e.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')",
       ))
         row['successor'] as String: row['id'] as String,
     };
     final actions = db
         .select(
-          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM events WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
+          "SELECT id,entity,json_extract(raw,'\$.type') AS type,json_extract(raw,'\$.data.before') AS before_id,json_extract(raw,'\$.data.successor.id') AS successor FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('user.created','task.created','task.createdWithText','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.moved') ORDER BY clock,writer,seq",
         )
         .where((row) {
           if (row['type'] == 'task.moved') {
@@ -1786,12 +2029,15 @@ class TaskStore {
           ),
         );
     final ordered = projectOrder(ids, actions);
-    db.execute('DELETE FROM positions');
+    db.execute('DELETE FROM ${tables.positions}');
     for (var i = 0; i < ordered.length; i++) {
-      db.execute('INSERT INTO positions VALUES (?,?)', [ordered[i], i]);
+      db.execute('INSERT INTO ${tables.positions} VALUES (?,?)', [
+        ordered[i],
+        i,
+      ]);
     }
     db.execute(
-      "INSERT OR REPLACE INTO metadata VALUES ('order_projection','3')",
+      "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('order_projection','3')",
     );
   }
 
@@ -1799,7 +2045,7 @@ class TaskStore {
   /// Reopening must not cancel a completion that arrives after this observation.
   List<String> activeCompletionIds(String entity) {
     final events = db
-        .select('SELECT raw FROM events WHERE entity=?', [entity])
+        .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
         .map((row) => LogEvent.decode(row['raw'] as String))
         .toList();
     final retracted = retractedOperationIds(events);
@@ -1863,7 +2109,7 @@ class TaskStore {
     }
     final seq =
         (db.select(
-              'SELECT COALESCE(MAX(seq),0) AS n FROM events WHERE writer=?',
+              'SELECT COALESCE(MAX(seq),0) AS n FROM ${tables.events} WHERE writer=?',
               [writer],
             ).first['n']
             as int) +
@@ -1891,8 +2137,7 @@ class TaskStore {
   }
 
   void _requireWriterAppendReady() {
-    if (_writerHasPendingAppend ||
-        db.select('SELECT 1 FROM text_outbox LIMIT 1').isNotEmpty) {
+    if (_writerHasPendingAppend || pendingTextOperations.isNotEmpty) {
       throw WriterGuardFailure.unresolvedAppend();
     }
   }
@@ -1904,7 +2149,7 @@ class TaskStore {
 
   void _validateTextBaseline() {
     final roots = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='text.baselineInitialized'",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='text.baselineInitialized'",
     );
     _textBaseline = null;
     textWriteBlocked = null;
@@ -1932,7 +2177,7 @@ class TaskStore {
         continue;
       }
       final record = db.select(
-        'SELECT raw FROM events WHERE writer=? AND seq=?',
+        'SELECT raw FROM ${tables.events} WHERE writer=? AND seq=?',
         [entry.key, seq],
       );
       if (record.isEmpty) {
@@ -1948,7 +2193,7 @@ class TaskStore {
       }
     }
     final verified = db.select(
-      "SELECT value FROM metadata WHERE key='text_baseline_verified'",
+      "SELECT value FROM ${tables.metadata} WHERE key='text_baseline_verified'",
     );
     if (verified.isEmpty || verified.single['value'] != root.id) {
       final fields = _baselineSeedFields(root);
@@ -1956,7 +2201,7 @@ class TaskStore {
         throw FormatFailure('Text baseline seed digest differs in ${root.id}.');
       }
       db.execute(
-        "INSERT OR REPLACE INTO metadata VALUES ('text_baseline_verified',?)",
+        "INSERT OR REPLACE INTO ${tables.metadata} VALUES ('text_baseline_verified',?)",
         [root.id],
       );
     }
@@ -1965,7 +2210,7 @@ class TaskStore {
 
   Map<String, Map<String, String>> _baselineSeedFields(LogEvent root) {
     final prefix = db
-        .select('SELECT raw FROM events')
+        .select('SELECT raw FROM ${tables.events}')
         .map((row) => LogEvent.decode(row['raw'] as String))
         .where((event) => _baselineIncludes(event, root))
         .toList();
@@ -2032,7 +2277,7 @@ class TaskStore {
     }
     if (db
         .select(
-          "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='text.baselineInitialized' LIMIT 1",
+          "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='text.baselineInitialized' LIMIT 1",
         )
         .isNotEmpty) {
       throw FormatFailure(
@@ -2041,7 +2286,7 @@ class TaskStore {
     }
     final frontiers = <String, dynamic>{};
     for (final row in db.select(
-      'SELECT name,last_seq,chain_head FROM streams',
+      'SELECT name,last_seq,chain_head FROM ${tables.streams}',
     )) {
       final name = row['name'] as String;
       frontiers[name.substring(0, name.length - 6)] = {
@@ -2078,6 +2323,20 @@ class TaskStore {
     if (textEngine == null) {
       throw FormatFailure('Native text support is required before saving.');
     }
+    if (profileDatabase != null) {
+      profileDatabase!.transaction(() {
+        ProfileTextIntents(profileDatabase!).stageInTransaction(
+          space,
+          writer,
+          Uint8List.fromList(utf8.encode(receipt.raw)),
+        );
+        db.execute(
+          'INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)',
+          [receipt.id, receipt.raw, receipt.entity],
+        );
+      });
+      return;
+    }
     final intent = _textIntentFile(event);
     if (await intent.exists()) {
       if (await intent.readAsString() != receipt.raw) {
@@ -2088,7 +2347,7 @@ class TaskStore {
     } else {
       await createFileDurable(intent, utf8.encode(receipt.raw));
     }
-    db.execute('INSERT OR IGNORE INTO text_outbox VALUES (?,?,?)', [
+    db.execute('INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)', [
       receipt.id,
       receipt.raw,
       receipt.entity,
@@ -2096,6 +2355,37 @@ class TaskStore {
   }
 
   Future<void> _restoreTextIntents() async {
+    if (profileDatabase != null) {
+      final pending = ProfileTextIntents(
+        profileDatabase!,
+      ).pending(space, writer);
+      final byId = {
+        for (final bytes in pending)
+          LogEvent.decode(utf8.decode(bytes)).id: utf8.decode(bytes),
+      };
+      for (final row in db.select('SELECT id,raw FROM ${tables.textOutbox}')) {
+        final event = LogEvent.decode(row['raw'] as String);
+        if (event.id != row['id'] ||
+            event.space != space ||
+            event.writer != writer ||
+            !_textTypes.contains(event.type) ||
+            (byId.containsKey(row['id']) && byId[row['id']] != row['raw'])) {
+          throw FormatFailure(
+            'Disposable text outbox differs from protected intent evidence.',
+          );
+        }
+      }
+      profileDatabase!.transaction(() {
+        for (final entry in byId.entries) {
+          final event = LogEvent.decode(entry.value);
+          db.execute(
+            'INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)',
+            [event.id, entry.value, event.entity],
+          );
+        }
+      });
+      return;
+    }
     final directory = Directory('$privatePath/text-intents');
     if (!await directory.exists()) return;
     await for (final file in directory.list()) {
@@ -2111,7 +2401,7 @@ class TaskStore {
           'Invalid private prepared text intent; evidence was retained.',
         );
       }
-      db.execute('INSERT OR IGNORE INTO text_outbox VALUES (?,?,?)', [
+      db.execute('INSERT OR IGNORE INTO ${tables.textOutbox} VALUES (?,?,?)', [
         event.id,
         raw,
         event.entity,
@@ -2120,17 +2410,18 @@ class TaskStore {
   }
 
   Future<void> _retireConfirmedTextIntents() async {
+    if (profileDatabase != null) return;
     final directory = Directory('$privatePath/text-intents');
     if (!await directory.exists()) return;
     await for (final file in directory.list()) {
       if (file is! File || !file.path.endsWith('.json')) continue;
       final raw = await file.readAsString();
       final event = LogEvent.decode(raw);
-      final present = db.select('SELECT raw FROM events WHERE id=?', [
+      final present = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
         event.id,
       ]);
       if (present.isNotEmpty && present.single['raw'] == raw) {
-        db.execute('DELETE FROM text_outbox WHERE id=? AND raw=?', [
+        db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
           event.id,
           raw,
         ]);
@@ -2140,17 +2431,69 @@ class TaskStore {
     }
   }
 
+  void _retireProfileIntentsInTransaction() {
+    final intents = ProfileTextIntents(profileDatabase!);
+    for (final row in db.select('SELECT id,raw FROM ${tables.textOutbox}')) {
+      final event = LogEvent.decode(row['raw'] as String);
+      final protected = intents.atSequence(space, writer, event.sequence);
+      if (protected != null && utf8.decode(protected) == row['raw']) continue;
+      final canonical = db.select(
+        'SELECT raw FROM ${tables.events} WHERE id=?',
+        [row['id']],
+      );
+      if (canonical.length != 1 || canonical.single['raw'] != row['raw']) {
+        throw FormatFailure(
+          'Disposable text outbox differs from protected intent evidence.',
+        );
+      }
+      db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
+        row['id'],
+        row['raw'],
+      ]);
+    }
+    for (final bytes in intents.pending(space, writer)) {
+      final raw = utf8.decode(bytes);
+      final event = LogEvent.decode(raw);
+      final rows = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+        event.id,
+      ]);
+      if (rows.isEmpty) continue;
+      if (rows.single['raw'] != raw) {
+        throw FormatFailure(
+          'Canonical receipt differs from the protected text intent.',
+        );
+      }
+      intents.retireInTransaction(space, writer, bytes);
+      db.execute('DELETE FROM ${tables.textOutbox} WHERE id=? AND raw=?', [
+        event.id,
+        raw,
+      ]);
+    }
+  }
+
   /// Exact prepared bytes survive an unknown append outcome and process restart.
-  List<OperationReceipt> get pendingTextOperations => db
-      .select('SELECT id,raw,entity FROM text_outbox ORDER BY rowid')
-      .map(
-        (row) => OperationReceipt(
-          row['id'] as String,
-          row['raw'] as String,
-          row['entity'] as String,
-        ),
-      )
-      .toList(growable: false);
+  List<OperationReceipt> get pendingTextOperations {
+    if (profileDatabase != null) {
+      return ProfileTextIntents(profileDatabase!)
+          .pending(space, writer)
+          .map((bytes) {
+            final raw = utf8.decode(bytes);
+            final event = LogEvent.decode(raw);
+            return OperationReceipt(event.id, raw, event.entity);
+          })
+          .toList(growable: false);
+    }
+    return db
+        .select('SELECT id,raw,entity FROM ${tables.textOutbox} ORDER BY rowid')
+        .map(
+          (row) => OperationReceipt(
+            row['id'] as String,
+            row['raw'] as String,
+            row['entity'] as String,
+          ),
+        )
+        .toList(growable: false);
+  }
 
   Future<LogEvent> retryTextOperation(OperationReceipt receipt) =>
       _serialize(() => _retryTextOperation(receipt));
@@ -2166,14 +2509,17 @@ class TaskStore {
         textEngine == null) {
       throw FormatFailure('Invalid prepared native text receipt.');
     }
-    final present = db.select('SELECT raw FROM events WHERE id=?', [event.id]);
+    final present = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+      event.id,
+    ]);
     if (present.isNotEmpty) {
       _requireConfirmed([receipt]);
       return event;
     }
-    final staged = db.select('SELECT raw FROM text_outbox WHERE id=?', [
-      event.id,
-    ]);
+    final staged = db.select(
+      'SELECT raw FROM ${tables.textOutbox} WHERE id=?',
+      [event.id],
+    );
     if (staged.isEmpty ||
         staged.single['raw'] != receipt.raw ||
         event.sequence != _acknowledgedOwnedSequence + 1 ||
@@ -2218,9 +2564,10 @@ class TaskStore {
   }
 
   String get _writerChainHead {
-    final rows = db.select('SELECT chain_head FROM streams WHERE name=?', [
-      '$writer.jsonl',
-    ]);
+    final rows = db.select(
+      'SELECT chain_head FROM ${tables.streams} WHERE name=?',
+      ['$writer.jsonl'],
+    );
     return rows.isEmpty
         ? eventGenesisHash(space, writer)
         : rows.single['chain_head'] as String;
@@ -2242,7 +2589,7 @@ class TaskStore {
         type == 'task.completed' && data['successor'] != null;
     if (textSnapshotRequired &&
         textEngine != null &&
-        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
           entity,
         ]).isNotEmpty) {
       throw FormatFailure(
@@ -2306,17 +2653,17 @@ class TaskStore {
       if (textEngine == null) {
         throw FormatFailure('Native text support is required before saving.');
       }
-      db.execute('SAVEPOINT validate_text_command');
       final oldBaseline = _textBaseline;
       final oldBlocked = textWriteBlocked;
-      try {
+      void validate() {
         TextCache(
           db,
           textEngine!,
           memo: _recurringTextMemo,
+          tables: tables,
         ).validatePackets([e]);
         if (type == 'text.baselineInitialized') {
-          db.execute('INSERT INTO events VALUES (?,?,?,?,?,?)', [
+          db.execute('INSERT INTO ${tables.events} VALUES (?,?,?,?,?,?)', [
             e.id,
             e.entity,
             e.writer,
@@ -2340,11 +2687,30 @@ class TaskStore {
         } else {
           _materializeText(projected, [...prior, e]);
         }
+      }
+
+      try {
+        if (profileDatabase != null) {
+          try {
+            profileDatabase!.transaction<Never>(() {
+              validate();
+              throw const _DiscardTextValidation();
+            });
+          } on _DiscardTextValidation {
+            // A successful validation is deliberately rolled back.
+          }
+        } else {
+          db.execute('SAVEPOINT validate_text_command');
+          try {
+            validate();
+          } finally {
+            db.execute('ROLLBACK TO validate_text_command');
+            db.execute('RELEASE validate_text_command');
+          }
+        }
       } finally {
         _textBaseline = oldBaseline;
         textWriteBlocked = oldBlocked;
-        db.execute('ROLLBACK TO validate_text_command');
-        db.execute('RELEASE validate_text_command');
       }
     }
     if (type.startsWith('task.') &&
@@ -2361,7 +2727,7 @@ class TaskStore {
             ((type == 'task.edited' || type == 'task.textEdited') &&
                 data.containsKey('assignee'))) &&
         db.select(
-          "SELECT id FROM views WHERE id=? AND json_extract(raw,'\$.kind')='user'",
+          "SELECT id FROM ${tables.views} WHERE id=? AND json_extract(raw,'\$.kind')='user'",
           [data['assignee']],
         ).isEmpty) {
       throw FormatFailure('Choose an existing user before creating a task.');
@@ -2408,7 +2774,7 @@ class TaskStore {
       }
       final successorId = (data['successor'] as Map)['id'];
       if (db.select(
-        "SELECT id FROM events WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','task.createdWithText','user.created')",
+        "SELECT id FROM ${tables.events} WHERE entity=? AND json_extract(raw,'\$.type') IN ('task.created','task.createdWithText','user.created')",
         [successorId],
       ).isNotEmpty) {
         throw FormatFailure(
@@ -2446,7 +2812,7 @@ class TaskStore {
     final transactions = cacheTransactions;
     var seq =
         (db.select(
-              'SELECT COALESCE(MAX(seq),0) AS n FROM events WHERE writer=?',
+              'SELECT COALESCE(MAX(seq),0) AS n FROM ${tables.events} WHERE writer=?',
               [writer],
             ).first['n']
             as int) +
@@ -2616,7 +2982,7 @@ class TaskStore {
 
   void _validateUndoReferences([LogEvent? pending]) {
     final invalidText = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=json_extract(u.raw,'\$.data.operation') WHERE json_extract(u.raw,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.raw,'\$.type')<>'task.textEdited') LIMIT 1",
+      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=json_extract(u.raw,'\$.data.operation') WHERE json_extract(u.raw,'\$.type')='task.textEditUndone' AND (u.entity<>t.entity OR t.clock>=u.clock OR json_extract(t.raw,'\$.type')<>'task.textEdited') LIMIT 1",
     );
     if (invalidText.isNotEmpty) {
       throw FormatFailure(
@@ -2625,7 +2991,7 @@ class TaskStore {
     }
     // A join revalidates resolved references, including newly imported targets.
     final invalid = db.select(
-      "SELECT u.id FROM events u JOIN events t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
+      "SELECT u.id FROM ${tables.events} u JOIN ${tables.events} t ON t.id=CASE WHEN json_extract(u.raw,'\$.type')='task.operationUndone' THEN json_extract(u.raw,'\$.data.operation') ELSE json_extract(u.raw,'\$.data.completion') END WHERE json_extract(u.raw,'\$.type') IN ('task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND (u.entity<>t.entity OR t.clock>=u.clock OR (json_extract(u.raw,'\$.type')='task.completionUndone' AND json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist')) OR (json_extract(u.raw,'\$.type')='task.recurringCompletionUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') OR json_extract(t.raw,'\$.data.successor.id') IS NULL)) OR (json_extract(u.raw,'\$.type')='task.operationUndone' AND (json_extract(t.raw,'\$.type') NOT IN ('checklist.itemEdited','checklist.itemMoved','checklist.itemDeleted','task.edited','task.moved','task.deleted','task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist','task.completionUndone') OR (json_extract(t.raw,'\$.type') IN ('task.completed','task.completedWithText','task.completedKeepingSuccessor','task.completedWithChecklist') AND json_extract(t.raw,'\$.data.successor') IS NOT NULL)))) LIMIT 1",
     );
     if (invalid.isNotEmpty) {
       throw FormatFailure('Invalid undo reference in ${invalid.single['id']}.');
@@ -2663,13 +3029,15 @@ class TaskStore {
                   pending.type == 'task.textEditUndone'
               ? 'operation'
               : 'completion'];
-      final targets = db.select('SELECT raw FROM events WHERE id=?', [ref]);
+      final targets = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+        ref,
+      ]);
       if (targets.isNotEmpty) {
         validate(pending, LogEvent.decode(targets.single['raw'] as String));
       }
     }
     for (final row in db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('task.textEditUndone','task.completionUndone','task.operationUndone','task.recurringCompletionUndone') AND COALESCE(json_extract(raw,'\$.data.operation'),json_extract(raw,'\$.data.completion'))=?",
       [pending.id],
     )) {
       validate(LogEvent.decode(row['raw'] as String), pending);
@@ -2680,8 +3048,8 @@ class TaskStore {
     final moves = db
         .select(
           pending == null
-              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved'"
-              : "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+              ? "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved'"
+              : "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
           pending == null ? [] : [pending.entity],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
@@ -2715,8 +3083,8 @@ class TaskStore {
     final mutations = db
         .select(
           pending == null
-              ? "SELECT raw FROM events WHERE json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
-              : "SELECT raw FROM events e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.raw,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
+              ? "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.tagChanges') IS NOT NULL"
+              : "SELECT raw FROM ${tables.events} e WHERE EXISTS (SELECT 1 FROM json_each(json_extract(e.raw,'\$.data.tagChanges.remove')) r WHERE r.value LIKE ?) OR e.entity=?",
           pending == null ? [] : ['${pending.id}:%', successor],
         )
         .map((r) => LogEvent.decode(r['raw'] as String))
@@ -2729,7 +3097,9 @@ class TaskStore {
         final pieces = token.split(':');
         final eventId = '${pieces[0]}:${pieces[1]}';
         final index = int.tryParse(pieces[2]);
-        final rows = db.select('SELECT raw FROM events WHERE id=?', [eventId]);
+        final rows = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+          eventId,
+        ]);
         final target = pending?.id == eventId
             ? pending
             : rows.isEmpty
@@ -2737,7 +3107,7 @@ class TaskStore {
             : LogEvent.decode(rows.first['raw'] as String);
         if (target == null) {
           final seeds = db.select(
-            "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=?",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=?",
             [mutation.entity],
           );
           final matches = <LogEvent>[];
@@ -2801,11 +3171,11 @@ class TaskStore {
   /// A successor is a deterministic materialized entity, never a replay append.
   List<LogEvent> _entityEvents(String entity) {
     final own = db
-        .select('SELECT raw FROM events WHERE entity=?', [entity])
+        .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
         .map((r) => LogEvent.decode(r['raw'] as String))
         .toList();
     final seeds = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
     );
     if (seeds.isNotEmpty) {
@@ -2848,10 +3218,10 @@ class TaskStore {
         .toList();
     final parent = decoded.first.entity;
     final parentHistory = db
-        .select('SELECT raw FROM events WHERE entity=?', [parent])
+        .select('SELECT raw FROM ${tables.events} WHERE entity=?', [parent])
         .map((r) => LogEvent.decode(r['raw'] as String));
     final anchored = db.select(
-      "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+      "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
       [entity],
     ).isNotEmpty;
     return selectSuccessor(
@@ -2900,12 +3270,12 @@ class TaskStore {
   void _attachSuccessorSuppression(Map<String, dynamic> state) {
     final entity = state['id'] as String;
     final seeds = db.select(
-      "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
+      "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=? ORDER BY clock,writer,seq",
       [entity],
     );
     if (seeds.isNotEmpty) {
       final own = db
-          .select('SELECT raw FROM events WHERE entity=?', [entity])
+          .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
           .map((r) => LogEvent.decode(r['raw'] as String))
           .toList();
       state['successorSuppressed'] = _successorSelection(
@@ -2926,7 +3296,13 @@ class TaskStore {
     final entity = state['id'] as String;
     if (_hasInheritedText(entity)) {
       try {
-        (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+        (textCache ??
+                TextCache(
+                  db,
+                  textEngine!,
+                  memo: _recurringTextMemo,
+                  tables: tables,
+                ))
             .materializeResolved(
               state,
               resolution?.resolve(entity) ??
@@ -2939,7 +3315,9 @@ class TaskStore {
             );
       } on TextInheritancePending catch (pending) {
         // Retain the verified display if any; do not establish a guessed seed.
-        final cached = db.select('SELECT raw FROM views WHERE id=?', [entity]);
+        final cached = db.select('SELECT raw FROM ${tables.views} WHERE id=?', [
+          entity,
+        ]);
         if (cached.isNotEmpty) {
           final prior = jsonDecode(cached.single['raw'] as String) as Map;
           for (final field in ['title', 'description']) {
@@ -2960,7 +3338,7 @@ class TaskStore {
     if (!nativeCreation &&
         textWriteBlocked?.startsWith('Competing') == true &&
         history.any((event) => event.type == 'task.created') &&
-        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
           state['id'],
         ]).isEmpty) {
       state['textUnavailable'] = textWriteBlocked;
@@ -2991,10 +3369,16 @@ class TaskStore {
     }
     if (history.any((event) => _textTypes.contains(event.type)) ||
         seedText != null ||
-        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
           state['id'],
         ]).isNotEmpty) {
-      (textCache ?? TextCache(db, textEngine!, memo: _recurringTextMemo))
+      (textCache ??
+              TextCache(
+                db,
+                textEngine!,
+                memo: _recurringTextMemo,
+                tables: tables,
+              ))
           .materialize(
             state,
             history,
@@ -3007,7 +3391,7 @@ class TaskStore {
 
   bool _hasInheritedText(String entity) =>
       db.select(
-        "SELECT 1 FROM events WHERE json_extract(raw,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(raw,'\$.data.inheritance') IS NOT NULL AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
+        "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type') IN ('task.completedWithText','task.completedWithChecklist') AND json_extract(raw,'\$.data.inheritance') IS NOT NULL AND json_extract(raw,'\$.data.successor.id')=? LIMIT 1",
         [entity],
       ).isNotEmpty ||
       _itemCopySeeds(entity).isNotEmpty;
@@ -3026,7 +3410,7 @@ class TaskStore {
         textEngine!,
         [
           ...db
-              .select('SELECT raw FROM events')
+              .select('SELECT raw FROM ${tables.events}')
               .map((row) => row['raw'] as String),
           ...pending.map((event) => event.canonicalRaw!),
         ],
@@ -3113,13 +3497,13 @@ class TaskStore {
 
   List<LogEvent> _baselineEntityHistory(String entity, LogEvent baseline) {
     final own = db
-        .select('SELECT raw FROM events WHERE entity=?', [entity])
+        .select('SELECT raw FROM ${tables.events} WHERE entity=?', [entity])
         .map((row) => LogEvent.decode(row['raw'] as String))
         .where((event) => _baselineIncludes(event, baseline))
         .toList();
     final seeds = db
         .select(
-          "SELECT raw FROM events WHERE json_extract(raw,'\$.data.successor.id')=?",
+          "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.data.successor.id')=?",
           [entity],
         )
         .map((row) => LogEvent.decode(row['raw'] as String))
@@ -3127,12 +3511,14 @@ class TaskStore {
         .toList();
     if (seeds.isNotEmpty) {
       final parent = db
-          .select('SELECT raw FROM events WHERE entity=?', [seeds.first.entity])
+          .select('SELECT raw FROM ${tables.events} WHERE entity=?', [
+            seeds.first.entity,
+          ])
           .map((row) => LogEvent.decode(row['raw'] as String))
           .where((event) => _baselineIncludes(event, baseline));
       final anchors = db
           .select(
-            "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
+            "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=?",
             [entity],
           )
           .map((row) => LogEvent.decode(row['raw'] as String))
@@ -3147,7 +3533,7 @@ class TaskStore {
                 anchors ||
                 hasDurableChecklistActivity(
                   db
-                      .select('SELECT raw FROM events')
+                      .select('SELECT raw FROM ${tables.events}')
                       .map((row) => LogEvent.decode(row['raw'] as String))
                       .where((event) => _baselineIncludes(event, baseline))
                       .toList(),
@@ -3167,7 +3553,7 @@ class TaskStore {
       (event) => event.type == 'task.created' && event.canonicalRaw == null,
     );
     if (creations.length != 1) return null;
-    final source = db.select('SELECT raw FROM events WHERE id=?', [
+    final source = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
       creations.single.id,
     ]);
     if (source.isEmpty) return null;
@@ -3181,11 +3567,11 @@ class TaskStore {
       // saved task edits. Durable activity protects either initialized child,
       // including undone/deleted work, from later historical inheritance.
       final independent =
-          db.select('SELECT 1 FROM events WHERE entity=? LIMIT 1', [
+          db.select('SELECT 1 FROM ${tables.events} WHERE entity=? LIMIT 1', [
             child,
           ]).isNotEmpty ||
           db.select(
-            "SELECT 1 FROM events WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
+            "SELECT 1 FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.moved' AND json_extract(raw,'\$.data.before')=? LIMIT 1",
             [child],
           ).isNotEmpty ||
           _hasChecklistActivity(child);
@@ -3196,11 +3582,13 @@ class TaskStore {
     }
     // Preserve released scalar completion policy: its historical marker still
     // requires an independently initialized pair of parent/child documents.
-    if (db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+    if (db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
           entity,
         ]).isEmpty ||
         _hasInheritedText(child) ||
-        db.select('SELECT 1 FROM text_fields WHERE entity=?', [child]).length !=
+        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=?', [
+              child,
+            ]).length !=
             2) {
       return null;
     }
@@ -3210,14 +3598,14 @@ class TaskStore {
   void _validateHistoricalCompletions([LogEvent? pending]) {
     final markers = <LogEvent>[
       for (final row in db.select(
-        "SELECT raw FROM events WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
+        "SELECT raw FROM ${tables.events} WHERE json_extract(raw,'\$.type')='task.completedKeepingSuccessor'",
       ))
         LogEvent.decode(row['raw'] as String),
       if (pending?.type == 'task.completedKeepingSuccessor') pending!,
     ];
     for (final marker in markers) {
       final retained = marker.data['retainedSuccessor'] as Map;
-      final rows = db.select('SELECT raw FROM events WHERE id=?', [
+      final rows = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
         retained['completion'],
       ]);
       final known = verifyHistoricalCompletion(
@@ -3300,7 +3688,7 @@ class TaskStore {
     var type = 'task.completed';
     if (data['successor'] != null &&
         textEngine != null &&
-        db.select('SELECT 1 FROM text_fields WHERE entity=? LIMIT 1', [
+        db.select('SELECT 1 FROM ${tables.textFields} WHERE entity=? LIMIT 1', [
           entity,
         ]).isNotEmpty) {
       final fields = _resolvedText(entity);
@@ -3309,7 +3697,7 @@ class TaskStore {
         'adapter': 2,
         'frontiers': {
           for (final row in db.select(
-            'SELECT name,last_seq,chain_head FROM streams',
+            'SELECT name,last_seq,chain_head FROM ${tables.streams}',
           ))
             (row['name'] as String).replaceFirst(RegExp(r'\.jsonl$'), ''): {
               'seq': row['last_seq'],
@@ -3330,7 +3718,7 @@ class TaskStore {
     if (data['successor'] != null && state.containsKey('checklist')) {
       final frontiers = <String, dynamic>{
         for (final row in db.select(
-          'SELECT name,last_seq,chain_head FROM streams',
+          'SELECT name,last_seq,chain_head FROM ${tables.streams}',
         ))
           (row['name'] as String).replaceFirst('.jsonl', ''): {
             'seq': row['last_seq'],
@@ -3511,7 +3899,7 @@ class TaskStore {
           (int.tryParse(r.id.substring(writer.length + 1)) ??
                   9007199254740991) <=
               _acknowledgedOwnedSequence &&
-          db.select('SELECT 1 FROM events WHERE id=? AND raw=?', [
+          db.select('SELECT 1 FROM ${tables.events} WHERE id=? AND raw=?', [
             r.id,
             r.raw,
           ]).isNotEmpty)
@@ -3527,7 +3915,7 @@ class TaskStore {
   }
 
   bool _operationUndone(String id) => db.select(
-    "SELECT 1 FROM events WHERE (json_extract(raw,'\$.type') IN ('task.operationUndone','task.textEditUndone') AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
+    "SELECT 1 FROM ${tables.events} WHERE (json_extract(raw,'\$.type') IN ('task.operationUndone','task.textEditUndone') AND json_extract(raw,'\$.data.operation')=?) OR (json_extract(raw,'\$.type')='task.recurringCompletionUndone' AND json_extract(raw,'\$.data.completion')=?)",
     [id, id],
   ).isNotEmpty;
 
@@ -3683,7 +4071,9 @@ class TaskStore {
     }
     final targets = <String, LogEvent>{};
     for (final id in operations) {
-      final found = db.select('SELECT raw FROM events WHERE id=?', [id]);
+      final found = db.select('SELECT raw FROM ${tables.events} WHERE id=?', [
+        id,
+      ]);
       if (found.isEmpty) {
         throw FormatFailure('The saved operation is unavailable.');
       }
@@ -3842,10 +4232,13 @@ class TaskStore {
         for (final field in _nativeUndoFields.values) {
           field.document.dispose();
         }
-        db.close();
+        if (profileDatabase == null) db.close();
       } finally {
         _recurringTextMemo.clear();
-        await lock.close();
+        await lock?.close();
+        if (_locationKey != null) {
+          profileDatabase!.releaseWorkspace(_locationKey);
+        }
       }
     });
   }
@@ -3869,4 +4262,8 @@ class _VerifiedWriterRecords {
     this.hash,
     this.records,
   );
+}
+
+class _DiscardTextValidation implements Exception {
+  const _DiscardTextValidation();
 }

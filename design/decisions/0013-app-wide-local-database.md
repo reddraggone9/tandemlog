@@ -1,6 +1,6 @@
 # One app-wide local database
 
-Status: user-approved direction and temporary-file exception; isolated proof in progress. Production migration, activation and cleanup are not implemented or architecture-approved by this proof.
+Status: user-approved direction and temporary-file exception; isolated database proof and opt-in TaskStore integration independently reviewed. Production migration, startup activation and cleanup are not implemented or approved by these component reviews.
 
 ## Context and approved direction
 
@@ -16,7 +16,11 @@ The same-process canonical-root guard avoids opening a competing handle for ordi
 
 Protected table definitions are checked on reopen. Missing or weakened authority tables fail closed; they are not regenerated as empty caches. SQL-only transactions reject nested transactions and ordinary async callbacks. A failed rollback poisons the owner until close/recovery.
 
-`SqliteWriterGuard` shares the unchanged sequence/hash/reservation policy with `FileWriterGuard`. Safety mutations commit before returning. `ProfileTextIntents` preserves and validates exact native receipt bytes, scoped by workspace and writer; it does not append canonical history or retire receipts automatically. The released v3 wire format and meaning remain unchanged.
+`SqliteWriterGuard` shares the unchanged sequence/hash/reservation policy with `FileWriterGuard`. Reservations commit before canonical append. Shared ingestion acknowledges the head in the same transaction as admitted receipts and trusted checkpoints, then publishes its in-memory acknowledgement after commit. `ProfileTextIntents` preserves and validates exact native receipt bytes, scoped by workspace and writer. Shared TaskStore retires them only against exact admitted canonical bytes in that ingestion transaction. The released v3 wire format and meaning remain unchanged.
+
+Opt-in TaskStore handles borrow the owner's connection and share its operation queue. Immutable `TaskTables` identifiers scope task, native-text, order and checklist queries/indexes by the established location hash; canonical space identity remains separately bound and checked. The owner reserves accepted opens before queue admission, so close cannot race a handle still opening. Closing a handle drains its accepted work, releases its namespace lease and native documents, and leaves other workspaces' connection open. Shared checklist display state uses the same transaction owner and explicit namespace.
+
+Namespace projection versions are metadata, not the profile's global SQLite version. Unsupported bound versions fail closed before standalone legacy replay can run. Explicit namespace rebuild clears only derived events, views, order, native state/actor cache and the derived outbox. It retains bindings, stream/range observations, metadata, guards and protected intents and forces full replay even when log sizes are unchanged. Pending receipts are read from protected authority; the disposable outbox is reconstructed and reconciled with exact canonical receipts, including confirmation through another location alias.
 
 `LegacyProtectedFilesImport` is deliberately **files-only**. It imports existing settings-owned writer identity, private guard records and text-intent JSON files under legacy profile/session leases, records source hashes, commits, then verifies through SQL plus source readback. Repeating an unchanged import does not overwrite newer guard state with stale source records. Conflicting/changed/linked sources fail closed. No originals are deleted, and there is no activation or cleanup API. Marker/legacy-writer manifest entries are evidence only, not a substitute for future workspace identity association.
 
@@ -29,7 +33,7 @@ Old binaries do not honor the new DB lease after legacy lock/settings cleanup. C
 ## Remaining rollout gates
 
 - Import protected location-to-space bindings, all trusted stream/head/range observations and cache-only outbox receipts from every legacy cache. Preserve conflicting observations; do not blindly deduplicate aliases. Account separately for historical backup caches and unsupported versions.
-- Scope every global task table/key/index/query by workspace. Current TaskStore schema and replay/reset paths assume a disposable per-workspace DB. Do not reuse destructive cache migrations on protected tables. Review one shared transaction owner, explicit acknowledgement/projection atomicity and workspace-handle close semantics before wiring startup.
+- Wire the reviewed opt-in owner/scoping into startup, preferences and workspace switching. Restore importer bindings and checklist display state on a failed switch. Standalone clients still use their existing per-workspace cache path; the application has not activated the shared path. Do not reuse destructive cache migrations on protected tables.
 - Add exact-source allowlist cleanup only after complete verified import and activation. Track deletion progress durably, resume after interruption, and exclude unknown/changed/linked files and canonical workspace data. Filesystem deletion is not atomic with the SQLite transaction. No permanent downgrade fence or stale backup copies.
 - Prove Windows and Android native contention, process death and clean-close behavior on the exact pinned SQLite/VFS. Linux subprocess tests do not substitute for those gates. Exercise migration crashes, disk/flush failures, source replacement and cleanup interruption.
 - Independent architecture/correctness review before broad rollout. No live user data migration/cleanup or publication in this slice.

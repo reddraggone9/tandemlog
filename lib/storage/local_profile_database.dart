@@ -38,6 +38,33 @@ class LocalProfileDatabase {
   final Database _database;
   bool _closed = false;
   bool _poisoned = false;
+  Future<void> _queue = Future<void>.value();
+  final _workspaces = <String>{};
+  Future<void>? _closing;
+
+  /// Workspace operations may perform provider I/O, but only this queue admits
+  /// them to the shared connection. Internal calls must not enqueue themselves.
+  Future<T> serialize<T>(Future<T> Function() work) {
+    if (_closed || _closing != null) {
+      return Future.error(StateError('Local profile is closing.'));
+    }
+    final result = _queue.then((_) {
+      database; // Fail closed after an earlier shared rollback failure.
+      return work();
+    });
+    _queue = result.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    return result;
+  }
+
+  void acquireWorkspace(String key) {
+    if (!_workspaces.add(key)) {
+      throw const ProfileInUse(
+        'This workspace is already open in this profile.',
+      );
+    }
+  }
+
+  void releaseWorkspace(String key) => _workspaces.remove(key);
 
   /// One owner serializes short transactions. Do not dispose this connection
   /// from a workspace handle or hold transactions across provider I/O.
@@ -194,22 +221,35 @@ class LocalProfileDatabase {
     } catch (error, stack) {
       // SQLITE_FULL and some I/O failures can already roll back a transaction.
       // Preserve the initiating error instead of masking it with a second one.
-      try {
-        if (!db.autocommit) db.execute('ROLLBACK');
-      } catch (failure) {
-        _poisoned = true;
-        throw LocalDatabaseFailure(
-          'Local transaction failed ($error); rollback also failed ($failure). Close the profile before recovery.',
-        );
-      }
+      rollbackAfterFailure(error);
       Error.throwWithStackTrace(error, stack);
     }
   }
 
-  Future<void> close() async {
-    if (_closed) return;
-    _database.close();
-    _closed = true;
-    _held.remove(root);
+  /// Common failure boundary for the few transaction sites that must await a
+  /// legacy file adapter. Shared ingestion itself does not await within SQL.
+  void rollbackAfterFailure(Object error) {
+    try {
+      if (!_database.autocommit) _database.execute('ROLLBACK');
+    } catch (failure) {
+      _poisoned = true;
+      throw LocalDatabaseFailure(
+        'Local transaction failed ($error); rollback also failed ($failure). Close the profile before recovery.',
+      );
+    }
+  }
+
+  Future<void> close() {
+    if (_closed) return Future<void>.value();
+    if (_workspaces.isNotEmpty) {
+      return Future.error(
+        StateError('Close workspace handles before their profile.'),
+      );
+    }
+    return _closing ??= _queue.then((_) {
+      _database.close();
+      _closed = true;
+      _held.remove(root);
+    });
   }
 }

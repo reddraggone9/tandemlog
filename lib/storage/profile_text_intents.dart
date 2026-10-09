@@ -12,6 +12,13 @@ class ProfileTextIntents {
   final LocalProfileDatabase profile;
 
   void stage(String space, String writer, Uint8List bytes) {
+    profile.transaction(() => stageInTransaction(space, writer, bytes));
+  }
+
+  void stageInTransaction(String space, String writer, Uint8List bytes) {
+    if (profile.database.autocommit) {
+      throw StateError('Staging a text intent requires an active transaction.');
+    }
     final raw = utf8.decode(bytes);
     final event = LogEvent.decode(raw);
     if (event.space != space ||
@@ -21,24 +28,43 @@ class ProfileTextIntents {
         'Invalid private prepared text intent; evidence was retained.',
       );
     }
-    profile.transaction(() {
-      final rows = profile.database.select(
-        'SELECT sequence,id,entity,raw FROM protected_text_intents WHERE space=? AND writer=? AND sequence=?',
-        [space, writer, event.sequence],
-      );
-      if (rows.isNotEmpty) {
-        if (!_sameBytes(_boundBytes(space, writer, rows.single), bytes)) {
-          throw FormatFailure(
-            'Prepared text intent differs from its immutable event bytes.',
-          );
-        }
-        return;
+    final rows = profile.database.select(
+      'SELECT sequence,id,entity,raw FROM protected_text_intents WHERE space=? AND writer=? AND sequence=?',
+      [space, writer, event.sequence],
+    );
+    if (rows.isNotEmpty) {
+      if (!_sameBytes(_boundBytes(space, writer, rows.single), bytes)) {
+        throw FormatFailure(
+          'Prepared text intent differs from its immutable event bytes.',
+        );
       }
-      profile.database.execute(
-        'INSERT INTO protected_text_intents VALUES (?,?,?,?,?,?)',
-        [space, writer, event.sequence, event.id, event.entity, bytes],
+      return;
+    }
+    profile.database.execute(
+      'INSERT INTO protected_text_intents VALUES (?,?,?,?,?,?)',
+      [space, writer, event.sequence, event.id, event.entity, bytes],
+    );
+  }
+
+  /// Only exact bytes admitted to the caller's canonical receipt table may be
+  /// removed, in the same transaction as those receipts and writer head.
+  void retireInTransaction(String space, String writer, Uint8List bytes) {
+    if (profile.database.autocommit) {
+      throw StateError(
+        'Retiring a text intent requires an active transaction.',
       );
-    });
+    }
+    final event = LogEvent.decode(utf8.decode(bytes));
+    final saved = atSequence(space, writer, event.sequence);
+    if (saved == null || !_sameBytes(saved, bytes)) {
+      throw FormatFailure(
+        'Canonical receipt differs from the protected text intent.',
+      );
+    }
+    profile.database.execute(
+      'DELETE FROM protected_text_intents WHERE space=? AND writer=? AND sequence=?',
+      [space, writer, event.sequence],
+    );
   }
 
   List<Uint8List> pending(String space, String writer) => profile.database
