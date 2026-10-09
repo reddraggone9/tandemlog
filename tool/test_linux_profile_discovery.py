@@ -2,11 +2,13 @@
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
 LAUNCHER = Path(__file__).resolve().parents[1] / 'packaging/linux/tandemlog'
 
+@unittest.skipUnless(sys.platform.startswith('linux'), 'Linux launcher requires Linux /bin/sh')
 class ProfileDiscovery(unittest.TestCase):
     def run_launcher(self, files=(), override=None):
         with tempfile.TemporaryDirectory() as directory:
