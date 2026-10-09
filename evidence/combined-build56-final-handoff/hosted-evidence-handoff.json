@@ -2079,11 +2079,23 @@
     "Windows compiledmigrationcutscaffolds actualOSrun, withhostedexactinstaller+strictOSwindowproof available",
     "Exact production owner-signed Android update/startup/SAF/provider acceptance",
     "Independent final artifact/native review andfreshparent publication quota; no releasepublished",
-    "Foodanddisabledrepeat-icon seam remain deferred; no live-user-data operations"
+    "Foodanddisabledrepeat-icon seam remain deferred; no live-user-data operations",
+    "Before using stable.yml, route its design/stable-notes.md to the reviewed two-bullet notes in a trusted docs-only dispatch revision; currentmain76 remains unchanged."
   ],
   "independentHostedHandoffReview": {
     "file": "independent-hosted-handoff-review.json",
     "sha256": "284753c0179ec1f3618c2df8114a2d558d10800af232de2bb3859879c83a3c67",
     "scope": "Source/API/hosted proof; local payload byte and Android device acceptance still pending"
+  },
+  "releaseNotes": {
+    "coveredRange": "v2026.10.2..76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "approvedNotesPath": "design/release-notes-2026.10.3.md",
+    "approvedNotesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "editorialReceipt": "final-editorial-review.json",
+    "editorialReceiptSha256": "ebb8fe9076d841abef3e1f57c8a2e32dd5b33cd1da133e7ac0c50c1c130a6f05",
+    "publisherRoutingMustFix": "stable.yml currently reads dispatch revision design/stable-notes.md containing prior-release notes; reviewed notes-only patch must be applied/hash-verified before this workflow publishes",
+    "reviewedPatch": "notes-routing-correction.patch",
+    "patchApplied": false,
+    "candidateRebuildRequired": false
   }
 }

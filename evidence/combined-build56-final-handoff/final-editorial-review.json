@@ -1,0 +1,61 @@
+{
+  "reviewed_at_utc": "2026-10-09T22:29:13.944181+00:00",
+  "decision": "ACCEPTED actual draft/final-range editorial content; MUST FIX publication notes routing before dispatch",
+  "covered_range": {
+    "baseline_tag": "v2026.10.2",
+    "baseline_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "final_candidate_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+  },
+  "version": "2026.10.3+56",
+  "prior_reviewed_endpoint": "e1d7c1b1efc85ec1fd44d59c56f543ac0d65c66b",
+  "prior_review_receipt_sha256": "a3350fea2822e6038fa35c066ab3f15b2f90fbb7de901e4b6921a331c4b691ba",
+  "draft_notes_path": "design/release-notes-2026.10.3.md",
+  "approved_notes_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "approved_notes_exact_text": "- Consolidated local app data, with automatic migration for existing installations.\n- Updated Android build dependencies.\n",
+  "editorial_guidance_path": "design/releases.md",
+  "editorial_guidance_sha256": "b922b71d31ea3a402b463f58d4cec769fdc02de8596d3051806e606225d1af6a",
+  "final_extension_assessed": "Exact e1d\u219276 diff inspected: interrupted native fixture waits for real profile release and rendered startup; QA harness resolves pinned Dart executable; evidence/native guidance only. App/lib/native/platform/version/README/notes bytes unchanged. Existing two concise storage automatic-migration and Android build-dependency bullets remain accurate for full stable range, with no security-fix, preservation or QA claim.",
+  "media_README": "No media proposed; no new visible layout/capability. README remains unchanged from stable baseline. No new screenshot/demo requirement introduced.",
+  "publication_routing_finding": {
+    "severity": "must-fix before publication",
+    "workflow": ".github/workflows/stable.yml",
+    "workflow_line": 85,
+    "actual_read": "git show \"$GITHUB_SHA:design/stable-notes.md\" > release-notes.md",
+    "actual_publisher_notes_path": "design/stable-notes.md",
+    "currently_routed_notes_sha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+    "finding": "Current publisher path contains previous2026.10.2 feature bullets and tag image. Correct draft file alone does not affect published stable notes and would publish stale copy.",
+    "required_fix": "Before stable dispatch, update design/stable-notes.md on trusted main to byte-identical approved two-bullet content SHA2569e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26; verify actual frozen dispatch Git blob and eventual release body match this hash.",
+    "candidate_rebuild_required": false,
+    "reason": "Publication freezes notes and policy from dispatchGITHUB_SHA, resolves already successful historical candidate via candidate_source.py candidate pubspec, then checks out CANDIDATE_SHA and validates actual accepted artifacts in publish_gate. A later notes-only main checkpoint can fix routing while immutable candidate76/artifacts stay selected; no workflow/source changes or rebuild needed.",
+    "repo_modified_by_reviewer": false
+  },
+  "publication_policy_hashes": {
+    ".github/workflows/stable.yml": "40034bea2b65a5a67a9b17e3264624ab5214a625df10d93927dcc93f5c1300c5",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95"
+  },
+  "artifact_native_constraints": [
+    "Select only successful exact main signed candidate76/build56 with unexpired release artifacts and accepted exact owner-signed APK inner hash.",
+    "Independent notes approval does not attest archive/member hashes, package/signer identity, native Windows/Android migration/contention/crash/cleanup coverage or parent quota/authorization.",
+    "Separate TESTONLY Windows process harness/source/provenance and QAfixture waits are support evidence, not installed-application runtime acceptance or release assets.",
+    "Retain actual hosted archive/member/inventory/desktop-lifecycle/acceptedAPK/checksum gates before creation; no rebuild in publication.",
+    "After authorized publication verify actual3public installer bytes/tag/source/stableflags/Latest/priorreleases and exact approved notes from dispatch."
+  ],
+  "must_fix": [
+    "Route byte-identical approved2026.10.3 notes through actual design/stable-notes.md dispatch path before publication."
+  ],
+  "publication_acceptance": false,
+  "limits": "Read-only repository review; no repo edits, tests, builds, device checks or publication performed. Native/final gates remain parent-dependent. Current notes-route blocker remains open.",
+  "parent_candidate_run_id": 37995721678,
+  "concrete_non_applied_routing_fix_review": {
+    "patch_path": "/workspace/recovery/storage-release/build56-notes-routing-correction.patch",
+    "patch_sha256": "871ac90801ec9bb86b2cc0e2eb36d3165583921cf950e29d65daada51a83deb7",
+    "preparation_sha256": "ab980a86aa928743f4603c5ffc05dbfa9a1c3b72ab2cf91166d8e7a3f531eaef",
+    "only_changed_repository_path": "design/stable-notes.md",
+    "replacement_added_bytes_equal_approved_notes": true,
+    "patch_applied": false,
+    "repository_remains_immutable_candidate76": true,
+    "acceptance": "Concrete proposed notes-only replacement accepted; current routing remains must-fix until actually committed in trusted dispatch revision and hash-verified before publication."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "productionCandidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "coveredEditorialBaseline": "v2026.10.2",
+  "baselineCommit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "reviewedDraft": "design/release-notes-2026.10.3.md",
+  "workflowNotesSource": "design/stable-notes.md",
+  "workflowReadExpression": "git show \"$GITHUB_SHA:design/stable-notes.md\" > release-notes.md",
+  "currentWorkflowNotesSha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+  "requiredNotesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "patchSha256": "871ac90801ec9bb86b2cc0e2eb36d3165583921cf950e29d65daada51a83deb7",
+  "patchChanges": [
+    "design/stable-notes.md"
+  ],
+  "applied": false,
+  "productionMainUnchanged": true,
+  "candidateRebuildRequired": false,
+  "reason": "Trusted stable dispatch reads notes from its own revision, while checkout/assets/source/accepted APK remain the successful historical candidate source. Candidate source resolver supports that separation.",
+  "remaining": "Before publication, apply the independently reviewed notes-only patch to the trusted dispatch revision. Do not publish old2026.10.2 notes. Native acceptance and freshquota stillpending."
+}
