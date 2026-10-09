@@ -10,8 +10,10 @@ aligned48px targets, content-width resizing and2px disclosure line gap.
 Actual390/1200px and enlarged390px PNGs were inspected; one black toggle capture
 is excluded. At100% text, the48px disclosure target has26px below its20px count
 plus2px top gap; separate body/disclosure touch areas do not overlap. Exact
-signed Android acceptance, desktop pointer-demo inspection and publication gates
-remain separate from these focused native tests.
+signed Android acceptance and publication gates remain separate. The18.1-second
+[native desktop demonstration](../evidence/checklist-controls/native-linux-pointer-demo.mp4)
+shows the held Map drag completing, Undo, menus, direct display action and narrow
+layout; its7s frame verifies the visible pointer. [Demo receipt](../evidence/checklist-controls/desktop-demo-verification.json).
 
 ## Pending field-spacing fixes
 

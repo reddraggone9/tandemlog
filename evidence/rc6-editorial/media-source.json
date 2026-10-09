@@ -1,0 +1,69 @@
+{
+  "baseline": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "after_source": "c8596f22fd56ce0b73c74e1e5010337556b269e1",
+  "prepared_version": "2026.10.2-rc.6+49",
+  "platform": "Actual native Linux GTK/Flutter debug, software renderer, dark theme, synthetic fixture",
+  "composition": "Integer-coordinate crops pasted without scaling or altering app pixels; only Before/After canvas labels added",
+  "pairs": [
+    {
+      "file": "checklist-controls-before-after.png",
+      "sha256": "001a8ff4cead3a47fe4448d31707d76a1de050ed65f58944c3929503c0fb1344",
+      "crop": [
+        0,
+        175,
+        390,
+        785
+      ],
+      "inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-expanded-narrow-verified.png",
+          "sha256": "b7cf494e953274de109aee2d1eb7cba2a65bad3951bc9de87b7b7f09edfd8f7b"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-expanded-narrow-clean.png",
+          "sha256": "b8abc61eb8736b12f28a053f7331d81dfb10a0660f854132ce5a716844fab5d5"
+        }
+      ]
+    },
+    {
+      "file": "checklist-toggle-before-after.png",
+      "sha256": "87257d1f5b85eda8b87c1d92ed96cf3acaa256c968ff9dd21b46448f021b242b",
+      "crop": [
+        795,
+        0,
+        1200,
+        145
+      ],
+      "inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-display-menu-wide.png",
+          "sha256": "d5e55372181cee23bbe4f3c38fa25fac23c6361f5951f0856e6a3046294fba31"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-direct-collapse-wide.png",
+          "sha256": "e664859b17350b5393feef9c04f6ffa62303f474501a1d9f2deb92299b623ff6"
+        }
+      ]
+    },
+    {
+      "file": "checklist-menu-before-after.png",
+      "sha256": "7dd0123fb72064af008c9993e4a486d343425cff67e849352ec0badae0eb3bd8",
+      "crop": [
+        945,
+        315,
+        1200,
+        550
+      ],
+      "inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-task-menu-wide.png",
+          "sha256": "cd84dc942b8c55f99e38b3fae493783a7527be1279cc55b068a47d5149340ea0"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-task-menu-wide.png",
+          "sha256": "5b0aea0e8611c14855ade8c3d56b7f0ff4faee8ed742e9f12d94f42656bd2d0b"
+        }
+      ]
+    }
+  ]
+}

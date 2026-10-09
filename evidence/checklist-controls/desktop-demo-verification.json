@@ -1,0 +1,62 @@
+{
+  "source": "c8596f22fd56ce0b73c74e1e5010337556b269e1",
+  "ui_commit": "4e30f70bab7fbf4ae1581b2d8de58369fb53581c",
+  "compiled_version": "2026.10.2-rc.6+49",
+  "platform": "Actual native Linux GTK/Flutter debug, software-rendered, synthetic fixture only",
+  "demo_seconds": 18.1,
+  "viewports_px": [
+    [
+      1200,
+      850
+    ],
+    [
+      390,
+      850
+    ]
+  ],
+  "pointer_verified": "White desktop arrow visible beside Map drag handle in frame at7s",
+  "observed": [
+    "Existing-item parent menu shows Delete only",
+    "One click collapses shown checklists; second expands",
+    "1.2-second hold then Map drag above Water bottle completes visibly",
+    "Undo restores Water bottle above Map",
+    "Narrow rows/dividers span content width; matching trailing columns and disclosure arrow edge"
+  ],
+  "files": [
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-demo.mp4",
+      "sha256": "0cc16c38529203dc9df833be62273c93364188a523b0576abc7bcd7915372714"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/demo-pointer-frame.png",
+      "sha256": "8afc24b5e9674d0ec9a251f5339e77cf95255c70ba6ed2336d2fef4838ecd898"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-held-drag-reordered.png",
+      "sha256": "69d5f7b845112d7f9ae560d64a1b24e0d2106c7e88f8a499ade3a561907139d4"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-held-drag-undone.png",
+      "sha256": "afdbbc5268842ff7eea76e995f6f76f4d7a702154af283381ea0c2ef2754c6cc"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-expanded-narrow-clean.png",
+      "sha256": "b8abc61eb8736b12f28a053f7331d81dfb10a0660f854132ce5a716844fab5d5"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-expanded-wide-clean.png",
+      "sha256": "873ceb351bf0d234a4316918e2d7c89a9db74b3c2b33aebd9c76a463e3e4a604"
+    }
+  ],
+  "limits": [
+    "Not Android or Windows runtime acceptance",
+    "Not signed-artifact acceptance",
+    "Black standalone toggle capture excluded"
+  ],
+  "remaining_gates": [
+    "Signed full candidate/platform gates",
+    "Exact Android affected-flow/demo acceptance",
+    "Independent final notes/media review",
+    "Fresh quota before preview publication"
+  ]
+}

@@ -31,3 +31,9 @@ standalone toggle PNG is explicitly excluded from visual proof.
 Signed-candidate/platform checks, exact Android affected-flow/demo acceptance,
 independent notes/media review and fresh quota remain publication gates. This
 receipt does not grant Android/Windows runtime or stable-promotion acceptance.
+
+The18.1-second [actual native Linux desktop demo](native-linux-pointer-demo.mp4)
+shows a1.2-second held drag moving Map above Water bottle and Undo restoring it,
+menus, immediate collapse/expand and390px layout. [Observed source/inputs](desktop-demo-verification.json)
+bind the prepared RC6 source/version. The [7s frame](native-linux-pointer-frame.png)
+shows the desktop pointer at the Map handle. This is not Android acceptance.
