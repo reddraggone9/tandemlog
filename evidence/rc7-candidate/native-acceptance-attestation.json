@@ -1,0 +1,32 @@
+{
+  "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+  "candidate_run_id": 37945597400,
+  "artifact_id": 11626160033,
+  "version": "2026.10.2-rc.7",
+  "version_code": 52,
+  "accepted_apk_sha256": "bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+  "checks_passed": 56,
+  "acceptance_blockers": [],
+  "origin": "Parent supplied exact signed native Android acceptance; cloud worker did not rerun device checks.",
+  "validated_by_parent": [
+    "Actual ZIP digest matched candidate descriptor",
+    "Owner signature and build identity",
+    "28/48 logical-pixel disclosure heights at normal/200% text",
+    "Compact rounded ink with uniform margins",
+    "Arrow/count/lower-corner activation and disjoint title/child hit areas",
+    "Upgrade preservation and cold replay",
+    "Settings restored and capped synthetic lab stopped"
+  ],
+  "evidence_library": {
+    "version": 0,
+    "size_bytes": 9761125,
+    "validated_members_reported": 437,
+    "packet_sha256": "ba30533b98797ba35be01fd9567923ca0cd1ba17180dc2e45df7149d500c76e7",
+    "cloud_materialization": "Current resolved-reference Library helper failed HTTP403; packet bytes/member/pixel verification belongs to parent, not cloud."
+  },
+  "demo": "Parent inspected recording of actual pressed ink and state changes. SDK taps do not show Show Touches dots; parent accepted this cosmetic recording limitation as non-blocking.",
+  "authorization": "Lee standing RC publication authorization plus explicit parent instruction to promote existing RC7 without rebuilding; stable Latest must stay2026.10.1.",
+  "quota_clearance": "Fresh parent read at2026-10-09T15:50:37Z cleared the publication threshold; account values retained privately.",
+  "publication_status": "Not yet dispatched; retain trusted actual archive/inventory/member/lifecycle/checksum gates.",
+  "public_projection": "Personal account values and private Library identifier omitted; complete original retained in private recovery workspace."
+}

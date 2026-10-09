@@ -1,0 +1,111 @@
+{
+  "reviewed_at_utc": "2026-10-09T16:04:06.595720+00:00",
+  "decision": "ACCEPTED: ready for explicitly authorized normal exact-artifact prerelease workflow; actual hosted byte gates must pass before release creation",
+  "scope": "Bounded prepublication readiness and gate ordering; no new builds, runtime matrix, local artifact retries, device checks, dispatch or publication by reviewer.",
+  "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+  "candidate_run_id": 37945597400,
+  "candidate_workflow": ".github/workflows/android-candidate.yml",
+  "candidate_event": "workflow_dispatch",
+  "candidate_branch": "main",
+  "candidate_status": "completed",
+  "candidate_conclusion": "success",
+  "version": "2026.10.2-rc.7",
+  "version_code": 52,
+  "tag": "v2026.10.2-rc.7",
+  "reviewed_main_head": "6b83d17e207d0384558e3e05b7a31ee2655c7a2d",
+  "dispatch_boundary": "A later docs-only main checkpoint may contain this receipt and native attestation. Exact candidate remains74afbe2; trusted policy and dispatch-frozen reviewed notes hashes must remain unchanged.",
+  "artifacts_api_metadata": [
+    {
+      "id": 11626160033,
+      "name": "android-release",
+      "size_in_bytes": 30362347,
+      "digest": "sha256:708b1b0e56f75441ec570441ac3a5f4fec913b279fbe6b88ff38d8ac00b8a4d8",
+      "expired": false,
+      "expires_at": "2026-10-14T15:10:49Z",
+      "workflow_run": {
+        "id": 37945597400,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "74afbe294065f462b742b4570d4095e690e54b04"
+      }
+    },
+    {
+      "id": 11625195361,
+      "name": "linux",
+      "size_in_bytes": 9021208,
+      "digest": "sha256:cdec9f4c6dc78a8b7a256e4edeb344713ee76c6083d293b80e0750e69b352788",
+      "expired": false,
+      "expires_at": "2026-10-14T15:03:44Z",
+      "workflow_run": {
+        "id": 37945597400,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "74afbe294065f462b742b4570d4095e690e54b04"
+      }
+    },
+    {
+      "id": 11624371832,
+      "name": "windows",
+      "size_in_bytes": 25803812,
+      "digest": "sha256:c87b7e51b441985792baeb15d4f0d4f6bc872cdff28b727b51050f576429aa8a",
+      "expired": false,
+      "expires_at": "2026-10-14T14:47:16Z",
+      "workflow_run": {
+        "id": 37945597400,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "74afbe294065f462b742b4570d4095e690e54b04"
+      }
+    }
+  ],
+  "accepted_inner_apk_sha256": "bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+  "native_acceptance": {
+    "origin": "Trusted parent actual signed-device/byte/pixel acceptance; independent cloud reviewer checked its exact bindings and documentation, not packet bytes or device execution.",
+    "checks_passed": 56,
+    "blockers": [],
+    "packet_sha256_parent_reported": "ba30533b98797ba35be01fd9567923ca0cd1ba17180dc2e45df7149d500c76e7",
+    "packet_materialization_boundary": "Supported cloud transferHTTP403; no reviewer packet/member/pixel or local candidate archive proof.",
+    "recording_limit": "Actual ink/state changes recorded; SDK Show Touches dots absent, explicitly accepted cosmetic limitation by parent."
+  },
+  "authorization_and_quota": "Explicit parent instruction to promote existing exact RC7; fresh parent reading2026-10-09T15:50:37Z cleared publication threshold. Private account values omitted.",
+  "prepublication_order": [
+    "Trusted main candidate_source.py resolves successful same-repository main workflow_dispatch candidate and matches tag/version/source.",
+    "Checkout immutable candidate74afbe2; download only linux/windows/android-release from run37945597400 through pinned artifact action. Debug Android is excluded.",
+    "Trusted dispatch policy verifies closed inventory, actual portable ZIP/member hashes and safe member inventory, desktop installed lifecycle receipts, actual APK hash equal accepted hash and signed metadata source/version/owner pin, and absent tag/history before any creation.",
+    "Verify actual Linux/Windows/Android installer checksum manifests; stage exactly three versioned installer copies in fresh public-assets directory.",
+    "Freeze notes from trusted dispatch commit; create tag at candidate74afbe2 with prerelease true and latest=false. No rebuild or signing occurs."
+  ],
+  "cloud_byte_blocker_resolution": "Existing required hosted publisher checks perform actual downloaded archive/member/installer gates before release creation; cloud consumer placement403 is documented and no gate is bypassed. Terminal hosted proof and public actual-byte review are still required.",
+  "release_absence": "Fresh earlier preflight RC7 release API404 and exact remote tag absent (ls-remote exit2); publish_gate rechecks tag absence at actual publication.",
+  "stable_latest": {
+    "id": 403030558,
+    "tag_name": "v2026.10.1",
+    "prerelease": false,
+    "draft": false
+  },
+  "documentation_accuracy": "Parent acceptance and cosmetic limit accurately attributed; historical cloud403 retained; public native attestation removes private Library identifier and account values. No publication claimed yet.",
+  "reviewed_files_sha256": {
+    ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+    "design/prerelease-notes.md": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1",
+    "evidence/rc7-editorial/disclosure-spacing-before-after.png": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef",
+    "evidence/rc7-editorial/disclosure-ink-before-after.png": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164",
+    "evidence/rc7-candidate/native-acceptance-attestation.json": "f0e610d98f518633bc3e3190c6096322bf19dee730b16440862a2d7b1c957647",
+    "evidence/rc7-candidate/README.md": "f9cb2eee1556ffe302758207b7666c48b70b13a473411496b9c84883032f7cb7",
+    "design/status.md": "e6e490e19b49477f65e730da1f7c9f866dc386ff4547596d1561bf0a05a1fc28",
+    "design/runtime-qa.md": "d545bc5adfa5cd66487f3adbfa72589ed71306c0435760019974217b96b9aed0"
+  },
+  "must_fix": [],
+  "remaining": [
+    "Hosted trusted actual byte/member/lifecycle/accepted-hash/checksum gates before create",
+    "Terminal promotion log/source/tag/prerelease/latest/notes/media verification",
+    "Independent SHA256 and size verification of all three actual public installer files after publication",
+    "Verify stable2026.10.1 remains Latest"
+  ]
+}

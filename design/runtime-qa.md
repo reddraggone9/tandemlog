@@ -22,9 +22,17 @@ and pushCI37945597874 pass at exact74afbe2, including647 Linux application tests
 and all87 native workflows, native payload/notices and hosted desktop installed
 lifecycle gates. [Terminal candidate/artifact handoff](../evidence/rc7-candidate/README.md)
 records signed artifact11626160033 and its GitHub-reported archive digest.
-Its supported cloud materialization returnedHTTP403; actual APK bytes/hash and
-bounded native Android acceptance remain pending. Hosted build success does not
-attest Android runtime acceptance or local archive/member checks.
+Its supported cloud materialization returnedHTTP403. Parent independently verified
+actual ZIP/APK identity and owner signature, then passed56 bounded native Android
+checks against APK SHA256
+`bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d`.
+[Parent native attestation](../evidence/rc7-candidate/native-acceptance-attestation.json)
+covers28/48px geometry, uniform rounded ink, target activation/separation, upgrade
+preservation and cold replay; settings restored and capped lab stopped. Actual
+recording shows ink/state changes, while SDK taps do not show Show Touches dots;
+parent accepted this cosmetic limitation. Packet bytes/pixels were inspected by
+parent, not this cloud worker, whose supported packet materialization also403.
+Public promotion/actual download verification remain pending.
 
 ## Historical RC6 checklist controls follow-up
 

@@ -26,6 +26,18 @@ hash and actual local ZIP/CRC/member checks are **unverified**. Download/verify
 the actual archive and APK locally before the bounded Android acceptance below;
 the ZIP digest is not the APK digest. Current Windows transfer also returned403.
 
+Parent subsequently verified actual archive/APK bytes, owner signature and build
+identity, then accepted56 actual Android checks with no acceptance blocker.
+Accepted APK SHA256 is
+`bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d`.
+[Exact native attestation](native-acceptance-attestation.json) records source/run,
+the independently held evidence packet and the recording limitation: actual
+pressed ink/state changes are visible, while SDK taps lack Show Touches dots.
+The parent accepted that cosmetic limit. Cloud packet materialization also
+returned403; parent byte/device/pixel verification is explicitly attributed,
+not claimed as cloud inspection. Fresh parent quota at2026-10-09T15:50:37Z clears
+the publication threshold. Promotion remains undispatched at this checkpoint.
+
 Candidate51 source`aaf06bd17beb109a89e97aff402595f5e7c49ae2`,
 [signed candidate37942135402](https://github.com/reddraggone9/tandemlog/actions/runs/37942135402)
 and [pushCI37942135365](https://github.com/reddraggone9/tandemlog/actions/runs/37942135365)
@@ -51,7 +63,11 @@ bounded tolerance/version change is covered by its independent correction review
 9b6f18b URLs. Reviewed notes SHA256 is
 `a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1`.
 
-## Exact Android delta acceptance
+## Exact Android delta acceptance — passed by parent
+
+The bounded acceptance below passed against the exact APK above, including
+upgrade preservation and cold replay. Settings were restored and the capped
+synthetic lab stopped. Unaffected prior RC6 coverage remains attributed to RC6.
 
 Use only the successful candidate's owner-signed APK from its android-release
 artifact, after obtaining/verifying actual bytes. Record archive and APK SHA256,
@@ -86,9 +102,10 @@ matrix, dependency upgrade, persistence migration or live-data test is implied.
 ## Remaining publication gates
 
 Terminal successful candidate/full hosted checks are recorded above. Still require
-exact accepted artifact identity and native acceptance, independently reviewed notes/media, and a fresh
-parent-supplied quota reading. Quota lookup is unavailable in this cloud worker;
-no earlier reading is reused. Keep the reviewed trusted publication path's
+the trusted promotion's actual archive/inventory/portable-member/lifecycle/checksum
+verification, public installer-byte verification and independent final release
+review. Exact parent native acceptance, notes/media reviews and fresh parent
+quota clearance are recorded above. Keep the reviewed trusted publication path's
 actual archive/inventory/portable-member/lifecycle/checksum gates intact. Publish
 only the three versioned installers as a prerelease with latest=false; verify
 actual public download bytes afterwards. Stable2026.10.1 stays Latest. Stable
