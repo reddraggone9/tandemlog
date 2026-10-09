@@ -17,8 +17,14 @@ actual Linux debug/scripted evidence, source-attributed to build51. Candidate51
 failed one float-bound coverage inequality by0.000003815px, with86 other native
 flows passing. Replacement build52 retains production UI/media unchanged and
 applies the existing0.01px tolerance only to that test's coverage inequalities;
-the focused replacement flow passes1/0 in19s. Signed exact Android acceptance
-and the replacement full candidate remain pending.
+the focused replacement flow passes1/0 in19s. Replacement signed candidate37945597400
+and pushCI37945597874 pass at exact74afbe2, including647 Linux application tests
+and all87 native workflows, native payload/notices and hosted desktop installed
+lifecycle gates. [Terminal candidate/artifact handoff](../evidence/rc7-candidate/README.md)
+records signed artifact11626160033 and its GitHub-reported archive digest.
+Its supported cloud materialization returnedHTTP403; actual APK bytes/hash and
+bounded native Android acceptance remain pending. Hosted build success does not
+attest Android runtime acceptance or local archive/member checks.
 
 ## Historical RC6 checklist controls follow-up
 

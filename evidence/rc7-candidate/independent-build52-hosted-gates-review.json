@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T15:09:01.894305+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_completed_platform_hosted_gates_only",
+  "must_fix_findings": [],
+  "candidate": {
+    "id": 37945597400,
+    "source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "version": "2026.10.2-rc.7+52",
+    "fresh_api": {
+      "event": "workflow_dispatch",
+      "head_branch": "main",
+      "path": ".github/workflows/android-candidate.yml",
+      "workflow_id": 371459905,
+      "run_attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "source_version_test_hashes": {
+      "pubspec.yaml": "4c8f88506f59ba15722b7c2298d26b93d0865182c0dcdee7f71b5e014ec76e8b",
+      "integration_test/checklist_disclosure_layout_test.dart": "b52148d6b43df1448c2b9075fbcdd5d1514bbbe7decca7767abdaee5c3ae6a29"
+    },
+    "preflight_job": {
+      "id": 113870913184,
+      "status": "completed",
+      "conclusion": "success"
+    },
+    "signed_job": {
+      "id": 113882195543,
+      "status": "in_progress",
+      "conclusion": null,
+      "acceptance": "No signed APK bytes/hash, identity or native device acceptance attested."
+    }
+  },
+  "platforms": {
+    "linux": {
+      "job_id": 113871180425,
+      "conclusion": "success",
+      "application_tests": 647,
+      "contract_tests": 107,
+      "policy_tests": 50,
+      "native_tests": 87,
+      "skipped": 0,
+      "new_disclosure_flow": "actual hosted passing group includes all eight width/scale/secondary cases at6px bottom gap, registered assertions retained",
+      "release": "Native release payload/notices, fresh/warm startup, Flatpak build and synthetic install/upgrade/uninstall/reinstall completed before artifact upload"
+    },
+    "windows": {
+      "job_id": 113871180506,
+      "conclusion": "success",
+      "application_passed": 645,
+      "application_skipped": 2,
+      "skips": [
+        "real Linux FFI durability smoke",
+        "Linux timezone-file/localtime identity"
+      ],
+      "contract_tests": 107,
+      "policy_tests": 50,
+      "release": "Native release payload/notices, source/run-bound portable packaging and per-user installed lifecycle completed before artifact upload"
+    },
+    "android_debug": {
+      "job_id": 113871180563,
+      "conclusion": "success",
+      "native_payload_notices": "Actual log verifies packaged production native payload/notices in debug APK",
+      "acceptance": "Debug build is not owner-signed release/native install acceptance."
+    }
+  },
+  "actual_hosted_logs": [
+    {
+      "name": "build52-linux-hosted.log",
+      "sha256": "b97d742f110e661df79698c6a301d5f59c3af60f82b68fc51f562fba859ad9cf",
+      "source_binding": "Log checkout/fetch references exact74afbe source; fresh API confirms job success."
+    },
+    {
+      "name": "build52-windows-hosted.log",
+      "sha256": "911129c0d2daa3ccd42647038202a4c2bd7ceb01d49f05819bd6a618e844d645",
+      "source_binding": "Log checkout/fetch references exact74afbe source; fresh API confirms job success."
+    },
+    {
+      "name": "build52-android-debug-hosted.log",
+      "sha256": "d8e16db84aa7dad47ea889353646f29085533a688a3c6b16b75d3ec85ea711b2",
+      "source_binding": "Log checkout/fetch references exact74afbe source; fresh API confirms job success."
+    }
+  ],
+  "artifact_api_and_upload_bindings": [
+    {
+      "id": 11625195361,
+      "name": "linux",
+      "zip_sha256": "cdec9f4c6dc78a8b7a256e4edeb344713ee76c6083d293b80e0750e69b352788",
+      "size_bytes": 9021208,
+      "expires_at": "2026-10-14T15:03:44Z",
+      "run": 37945597400,
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "verification": "Fresh API descriptor matches actual successful hosted upload log; local ZIP bytes not verified."
+    },
+    {
+      "id": 11624371832,
+      "name": "windows",
+      "zip_sha256": "c87b7e51b441985792baeb15d4f0d4f6bc872cdff28b727b51050f576429aa8a",
+      "size_bytes": 25803812,
+      "expires_at": "2026-10-14T14:47:16Z",
+      "run": 37945597400,
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "verification": "Fresh API descriptor matches actual successful hosted upload log; local ZIP/member bytes blocked."
+    },
+    {
+      "id": 11623696856,
+      "name": "android",
+      "zip_sha256": "4387210904a7fa2dc74f86c1b78154dad62091ee21a4123c40d7fa7bf9b49d7c",
+      "size_bytes": 80423795,
+      "expires_at": "2026-10-14T14:44:53Z",
+      "run": 37945597400,
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "verification": "Debug-only API/upload binding; not android-release."
+    }
+  ],
+  "hosted_windows_portable_receipt": {
+    "source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "run_id": 37945597400,
+    "portable_sha256": "af92e6460bc8a13b1e466323635abc21955beb7682b8684a99da362236af778d",
+    "executable_sha256": "8cc44da05873765a9eb2d27e9a683f8891fab8f5242fddcc74e724ab05dd099a",
+    "native_library_sha256": "8fcc83a1b35877f9a5f022490ac5a9a50f53c70af5736a499e601b47090e4178",
+    "attribution": "Reported by actual hosted packaging log, not independent local member hashing."
+  },
+  "policy_hashes": {
+    ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+    ".github/workflows/validate.yml": "e78ec531675baf3ed3e55f39439be041dc8d1364c14c0df99156315a16ac3759",
+    ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab"
+  },
+  "gate_placement": [
+    "Main-only candidate preflight/build history precedes called full validate matrix; signedAndroid requires all checks successful. Upload occurs after native release payload/notices and desktop lifecycle steps.",
+    "Trusted candidate_source policy requires completed successful same-repository main candidate workflow_dispatch and validates selected tag against candidate pubspec. Current in-progress run is not yet eligible.",
+    "Publication checks out exact selected candidate and downloads onlylinux/windows/android-release from exactrun. publish_gate checks closed inventory, safe portable full member bytes/hashes/source, installed four-phase lifecycle reports, actual accepted APK hash/source/version/pinned-certificate metadata and tag/build policy before creation.",
+    "Strict installer SHA256SUMS checks precede three exact installer copies and gh release create; no build/signing occurs in publisher, prerelease/latestfalse remain required. Terminal hosted archive/digest/member/lifecycle/checksum proof must be obtained; this review does not grant a bypass for blocked cloud placement."
+  ],
+  "byte_verification_blocker": {
+    "name": "build52-windows-materialization.log",
+    "sha256": "623e3acc7d792c13f7731a20327859c469f3bc0b721e1fa706eecdc17f77ca64",
+    "actual_result": "Supported resolved-reference/current Library helper download failedHTTP403. No local candidate ZIP/CRC/member checksum verification; no retry or alternate URL by reviewer."
+  },
+  "scope": "Bounded independent completed hosted gate/provenance/correction review using fresh API and actual logs/source. No new matrix, builds, tests, artifact download, device acceptance, dispatch or publication by reviewer.",
+  "remaining": [
+    "Terminal successful signedAndroid/fullcandidate",
+    "Exact owner-signedAPK identity/bytes and actual Android native delta",
+    "Actual candidate archive/member/lifecycle/checksum verification by retained trusted hosted gate",
+    "Fresh quota and normal publication/post-public bytes verification"
+  ],
+  "release_acceptance": false
+}

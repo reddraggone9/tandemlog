@@ -15,8 +15,11 @@ expanded/collapsed, lower-corner activation, semantics and Space/Enter. The
 retained responsive workflow and analysis also pass. Independent review found
 and verified the correction of clipped/faint left ink in an earlier compact
 attempt. Historical partial reds/reviews remain preserved. This source is
-2026.10.2-rc.7/build52; full signed candidate, exact Android acceptance,
-and fresh publication quota remain pending. [Independent notes/media review](../evidence/rc7-editorial/independent-editorial-review.json)
+2026.10.2-rc.7/build52. [Signed candidate37945597400 and pushCI37945597874](../evidence/rc7-candidate/README.md)
+are terminal green at exact source74afbe2, including647 Linux application tests
+and all87 native flows. Signed artifact11626160033 is available, but cloud
+materialization returnedHTTP403; actual APK identity/bytes, bounded Android
+acceptance and fresh publication quota remain pending. [Independent notes/media review](../evidence/rc7-editorial/independent-editorial-review.json)
 accepts the two concise changes and immutable Before/After images. Published RC6 and
 stable Latest2026.10.1 are unchanged. No storage migration or live synced data
 change is included.
@@ -29,8 +32,8 @@ test's inequalities to use the existing0.01px geometry tolerance and advances
 the build counter. Production UI and reviewed RC7 notes/images/demo are
 unchanged; media remains attributed to actual build51 debug source. The focused
 replacement flow passes1/0 in19s with clean analysis. [Independent correction review](../evidence/rc7-candidate/independent-build52-correction-review.json)
-accepts the bounded fix; replacement full candidate and exact Android/publication
-gates remain pending.
+accepts the bounded fix; the replacement full hosted candidate now passes.
+Exact actual-byte Android acceptance and publication gates remain pending.
 
 ## Checklist controls follow-up — RC6 published
 

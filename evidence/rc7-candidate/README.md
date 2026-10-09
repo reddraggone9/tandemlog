@@ -7,7 +7,24 @@ images and demo bytes are unchanged; screenshots/demo remain accurately
 attributed to actual build51 debug source. Exact replacement source is`74afbe294065f462b742b4570d4095e690e54b04`
 on main. [Replacement signed candidate37945597400](https://github.com/reddraggone9/tandemlog/actions/runs/37945597400)
 and [pushCI37945597874](https://github.com/reddraggone9/tandemlog/actions/runs/37945597874)
-are running that exact source; their full terminal results remain pending.
+are terminal successful at that exact source. Linux passes647 application tests,
+107 contracts,50 policy tests and all87 native workflows; Windows passes645
+application tests with two explicitly Linux-only skips. Native payload/notices,
+desktop packaging and installed lifecycle gates pass before artifact upload.
+[Terminal source/run/artifact descriptor](build52-candidate-hosted-verification.json)
+and [independent hosted-gate review](independent-build52-hosted-gates-review.json)
+record the evidence and remaining byte/native/publication gates.
+
+The owner-signed Android artifact is`android-release`, ID11626160033, from
+candidate37945597400/source74afbe2/version2026.10.2-rc.7/build52. GitHub and
+the successful upload log report ZIP SHA256
+`708b1b0e56f75441ec570441ac3a5f4fec913b279fbe6b88ff38d8ac00b8a4d8`,
+30,362,347bytes, expiry2026-10-14T15:10:49Z. Hosted certificate/package/version,
+nondebuggable/three-ABI and native-payload checks pass. Supported resolved-reference
+materialization of this signed archive returnedHTTP403, so the contained APK
+hash and actual local ZIP/CRC/member checks are **unverified**. Download/verify
+the actual archive and APK locally before the bounded Android acceptance below;
+the ZIP digest is not the APK digest. Current Windows transfer also returned403.
 
 Candidate51 source`aaf06bd17beb109a89e97aff402595f5e7c49ae2`,
 [signed candidate37942135402](https://github.com/reddraggone9/tandemlog/actions/runs/37942135402)
@@ -19,8 +36,8 @@ Windows and Android debug passed. Linux release/Flatpak and owner-signed APK
 were skipped, so no signed build51 is available for native acceptance.
 [Exact failure group](build51-native-containment-red.log) is retained. Replacement
 focused native checks pass1/0 in19s with clean analysis. [Independent correction review](independent-build52-correction-review.json)
-accepts the bounded change; full replacement/artifact/native/publication gates
-remain pending. A resolved-reference download of the old Windows archive
+accepts the bounded change; replacement hosted gates now pass, while actual-byte,
+native and publication gates remain pending. A resolved-reference download of the old Windows archive
 through current Library materialization returnedHTTP403; no local ZIP digest
 verification is claimed.
 
@@ -68,8 +85,8 @@ matrix, dependency upgrade, persistence migration or live-data test is implied.
 
 ## Remaining publication gates
 
-Require terminal successful candidate/full hosted checks, exact accepted artifact
-identity and native acceptance, independently reviewed notes/media, and a fresh
+Terminal successful candidate/full hosted checks are recorded above. Still require
+exact accepted artifact identity and native acceptance, independently reviewed notes/media, and a fresh
 parent-supplied quota reading. Quota lookup is unavailable in this cloud worker;
 no earlier reading is reused. Keep the reviewed trusted publication path's
 actual archive/inventory/portable-member/lifecycle/checksum gates intact. Publish

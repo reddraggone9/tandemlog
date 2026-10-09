@@ -1,0 +1,152 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T15:14:44.427204+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_terminal_signed_hosted_provenance_and_accurate_handoff_docs_only",
+  "must_fix_findings": [],
+  "amends": {
+    "receipt": "independent-rc7-build52-hosted-gates-review.json",
+    "sha256": "54b2b9cc034842723b283deb82d4febcf2588992e3ca5a85e7d405a54c0f92c2",
+    "change": "Previously pending signedAndroid/full candidate now terminal success; previous platform proofs remain valid."
+  },
+  "candidate": {
+    "id": 37945597400,
+    "source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "version": "2026.10.2-rc.7+52",
+    "fresh_api": {
+      "status": "completed",
+      "conclusion": "success",
+      "event": "workflow_dispatch",
+      "head_branch": "main",
+      "path": ".github/workflows/android-candidate.yml",
+      "workflow_id": 371459905,
+      "run_attempt": 1,
+      "updated_at": "2026-10-09T15:10:55Z"
+    },
+    "all_jobs": [
+      {
+        "id": 113870913184,
+        "name": "candidate",
+        "conclusion": "success"
+      },
+      {
+        "id": 113871180425,
+        "name": "checks / linux",
+        "conclusion": "success"
+      },
+      {
+        "id": 113871180506,
+        "name": "checks / windows",
+        "conclusion": "success"
+      },
+      {
+        "id": 113871180563,
+        "name": "checks / android",
+        "conclusion": "success"
+      },
+      {
+        "id": 113882195543,
+        "name": "signed-android",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "actual_signed_log": {
+    "name": "build52-signed-android-hosted.log",
+    "sha256": "868db0d9896bfc7ebc916307fe0736a2c11e5c3fefad303b635f1455a1a3aaae",
+    "source_binding": "Actual checkout/fetch and printed source74afbe agree with fresh API."
+  },
+  "signed_gate_findings": [
+    "SignedAndroid needs successful full called checks. Owner release build uses source preflight, officialSDK36.0.0 apksigner verification and aapt badging, then compares actual parsed signer/package/version/nondebuggable/ABI values against pinned source requirements.",
+    "Actual hosted log reports release identity verification at15:10:48.4006391Z, then native payload/exact notices verification at15:10:48.6467466Z. Both precede archive upload/finalization; any script/gate failure prevents normal upload.",
+    "Source verifier requires exactly one signer matching owner certificate, packagecom.reddraggone9.tandemlog, version2026.10.2-rc.7/code52, nondebuggable, exactlyarmeabi-v7a/arm64-v8a/x86_64. This is independent review of hosted source/log evidence, not local APK inspection.",
+    "Build script writes actual APK SHA256 to metadata and checksum file inside the artifact; its printed success message does not expose that hash. Reviewer cannot read blocked artifact contents and does not infer APK hash."
+  ],
+  "hosted_required_identity": {
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.7",
+    "version_code": 52,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "debuggable": false,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "attribution": "Exact source requirements checked by successful actual hosted signing verifier; not an APK byte attestation."
+  },
+  "artifact": {
+    "id": 11626160033,
+    "name": "android-release",
+    "run": 37945597400,
+    "source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "head_branch": "main",
+    "zip_sha256": "708b1b0e56f75441ec570441ac3a5f4fec913b279fbe6b88ff38d8ac00b8a4d8",
+    "zip_size_bytes": 30362347,
+    "expires_at": "2026-10-14T15:10:49Z",
+    "expired": false,
+    "verification": "Fresh API ID/digest/size/source/run agrees with actual successful upload log; ZIP bytes were not verified locally.",
+    "apk_sha256": null,
+    "archive_hash_is_not_apk_hash": true
+  },
+  "source_hashes": {
+    ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+    "tool/build_android_release.sh": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6",
+    "tool/android_release.py": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+    "tool/native_build_gates.py": "6b5296484b9dd98e48fe2eade8be388bdd2ab971589fa2cc876b405cfb203748",
+    "android/signing-certificate.sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+    "pubspec.yaml": "4c8f88506f59ba15722b7c2298d26b93d0865182c0dcdee7f71b5e014ec76e8b"
+  },
+  "actual_byte_blocker": {
+    "name": "build52-android-release-materialization.log",
+    "sha256": "623e3acc7d792c13f7731a20327859c469f3bc0b721e1fa706eecdc17f77ca64",
+    "result": "Supported GitHub resolved reference/current Library prepare/nonTTY helper download failedHTTP403. No local ZIP/CRC/member/APK hash/metadata/signature/pixel inspection. No additional attempt by reviewer."
+  },
+  "remaining": [
+    "Parent/local exact archive and innerAPK materialization/hash/identity verification",
+    "Actual signedAPK native install/launch and bounded Android delta acceptance",
+    "Retained trusted publisher actual full archive/member/lifecycle/checksum gates, fresh quota and authorized exact promotion",
+    "Independent actual public bytes/source/tag/notes/flags/Latest verification after any publication"
+  ],
+  "scope": "Bounded read-only hosted terminal/provenance/signature placement amendment. No extra matrix, download, build, tests, device acceptance, dispatch or publication by reviewer.",
+  "native_acceptance": false,
+  "publication_acceptance": false,
+  "initial_signed_receipt": {
+    "name": "independent-rc7-build52-signed-hosted-amendment.json",
+    "sha256": "e75cb087e8b613ec960cc0539e567b5cd56fbac0582b2ef571f71bcbfddbc895"
+  },
+  "reviewed_documentation": [
+    {
+      "path": "evidence/rc7-candidate/build52-candidate-hosted-verification.json",
+      "sha256": "fe51577b3411289339fe61a80369380a084109b14190cb11101653d0a0ed931c"
+    },
+    {
+      "path": "evidence/rc7-candidate/README.md",
+      "sha256": "dc081ac2c75c84dd7dc9bc5be78984fdc1a61d3fc7e329aee5eb4e7e47d7fe50"
+    },
+    {
+      "path": "design/status.md",
+      "sha256": "97d1d30bcfc11bc3d27aa7c1619db675b4383f7b16bf32478d13bd6a4a4b9ad8"
+    },
+    {
+      "path": "design/runtime-qa.md",
+      "sha256": "a79f06eecc75e3e5b4845c2f48ab7c29663b9042c493111c5ab13e7a6d06a6e0"
+    }
+  ],
+  "documentation_findings": [
+    "Terminal descriptor source/run/job/identity requirements and android-release API/upload ID/digest/size/expiry agree with independent signed/full terminal review. All four retained hosted-log hashes match actual private files.",
+    "Fresh independent pushCI37945597874 API confirms completedSUCCESS/main/push/.github/workflows/ci.yml at exact74afbe source; candidate/full/signed success is accurately stated.",
+    "Staged descriptor/README/top status/runtime entries explicitly distinguish reported ZIP708b... from unknownAPK SHA(null) and retain actual local ZIP/CRC/member and Android/native/publication limits. Hosted signer proof is attributed to log/source, not cloud APK bytes.",
+    "Reviewed relative Markdown links resolve; official GitHub archive API endpoints are actual artifact locators, not fabricated storage URLs. No private Library identifiers or account quota values are published.",
+    "These are staged docs-only amendments after candidate source74; next documentation commit is not substituted for immutable candidateSHA. No code/version/notes/media change or new matrix is included."
+  ],
+  "push_ci_binding": {
+    "id": 37945597874,
+    "source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "status": "completed",
+    "conclusion": "success",
+    "head_branch": "main",
+    "event": "push",
+    "path": ".github/workflows/ci.yml"
+  }
+}

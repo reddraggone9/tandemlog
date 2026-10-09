@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "recorded_at_utc": "2026-10-09T15:13:07.048242+00:00",
+  "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+  "version": "2026.10.2-rc.7",
+  "version_code": 52,
+  "candidate_run": 37945597400,
+  "candidate_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37945597400",
+  "candidate_status": "completed",
+  "candidate_conclusion": "success",
+  "push_ci": {
+    "id": 37945597874,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37945597874",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "id": 113870913184,
+      "name": "candidate",
+      "conclusion": "success"
+    },
+    {
+      "id": 113871180425,
+      "name": "checks / linux",
+      "conclusion": "success"
+    },
+    {
+      "id": 113871180506,
+      "name": "checks / windows",
+      "conclusion": "success"
+    },
+    {
+      "id": 113871180563,
+      "name": "checks / android",
+      "conclusion": "success"
+    },
+    {
+      "id": 113882195543,
+      "name": "signed-android",
+      "conclusion": "success"
+    }
+  ],
+  "tests": {
+    "linux_application": 647,
+    "linux_native": 87,
+    "windows_application_passed": 645,
+    "windows_application_skipped": 2,
+    "contract_tests_each_desktop": 107,
+    "policy_tests_each_desktop": 50
+  },
+  "hosted_signing_gate": {
+    "result": "success",
+    "certificate_pin": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "nondebuggable": true,
+    "universal_abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "production_native_payload_notices": "verified before upload",
+    "attribution": "Actual completed hosted log/source checks; no cloud APK bytes."
+  },
+  "artifacts": [
+    {
+      "id": 11626160033,
+      "name": "android-release",
+      "size_bytes": 30362347,
+      "github_reported_archive_digest": "sha256:708b1b0e56f75441ec570441ac3a5f4fec913b279fbe6b88ff38d8ac00b8a4d8",
+      "expires_at": "2026-10-14T15:10:49Z",
+      "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11626160033/zip",
+      "actual_local_archive_verification": false
+    },
+    {
+      "id": 11625195361,
+      "name": "linux",
+      "size_bytes": 9021208,
+      "github_reported_archive_digest": "sha256:cdec9f4c6dc78a8b7a256e4edeb344713ee76c6083d293b80e0750e69b352788",
+      "expires_at": "2026-10-14T15:03:44Z",
+      "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11625195361/zip",
+      "actual_local_archive_verification": false
+    },
+    {
+      "id": 11624371832,
+      "name": "windows",
+      "size_bytes": 25803812,
+      "github_reported_archive_digest": "sha256:c87b7e51b441985792baeb15d4f0d4f6bc872cdff28b727b51050f576429aa8a",
+      "expires_at": "2026-10-14T14:47:16Z",
+      "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11624371832/zip",
+      "actual_local_archive_verification": false
+    },
+    {
+      "id": 11623696856,
+      "name": "android",
+      "size_bytes": 80423795,
+      "github_reported_archive_digest": "sha256:4387210904a7fa2dc74f86c1b78154dad62091ee21a4123c40d7fa7bf9b49d7c",
+      "expires_at": "2026-10-14T14:44:53Z",
+      "source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11623696856/zip",
+      "actual_local_archive_verification": false
+    }
+  ],
+  "actual_hosted_logs": [
+    {
+      "filename": "build52-linux-hosted.log",
+      "sha256": "b97d742f110e661df79698c6a301d5f59c3af60f82b68fc51f562fba859ad9cf",
+      "normalization": "LF line endings",
+      "location": "private recovery evidence; actual GitHub job logs"
+    },
+    {
+      "filename": "build52-windows-hosted.log",
+      "sha256": "911129c0d2daa3ccd42647038202a4c2bd7ceb01d49f05819bd6a618e844d645",
+      "normalization": "LF line endings",
+      "location": "private recovery evidence; actual GitHub job logs"
+    },
+    {
+      "filename": "build52-android-debug-hosted.log",
+      "sha256": "d8e16db84aa7dad47ea889353646f29085533a688a3c6b16b75d3ec85ea711b2",
+      "normalization": "LF line endings",
+      "location": "private recovery evidence; actual GitHub job logs"
+    },
+    {
+      "filename": "build52-signed-android-hosted.log",
+      "sha256": "868db0d9896bfc7ebc916307fe0736a2c11e5c3fefad303b635f1455a1a3aaae",
+      "normalization": "LF line endings",
+      "location": "private recovery evidence; actual GitHub job logs"
+    }
+  ],
+  "local_artifact_access": {
+    "windows": "Resolved reference/current Library helper HTTP403; direct authenticated GitHub redirected storage also403.",
+    "android_release": "Resolved reference/current Library helper HTTP403.",
+    "apk_sha256": null,
+    "archive_crc_members_checksums_verified": false
+  },
+  "independent_hosted_review": "independent-build52-hosted-gates-review.json",
+  "independent_editorial_review": "../rc7-editorial/editorial-review-build52.json",
+  "remaining": [
+    "Obtain actual owner-signed APK bytes, verify archive/APK identity and contained metadata/signature.",
+    "Bounded exact Android native disclosure acceptance and actual Show-taps demo.",
+    "Fresh parent quota before publication.",
+    "Retained trusted publisher actual inventory/member/lifecycle/checksum gates and post-public-byte verification."
+  ],
+  "release_acceptance": false,
+  "publication": "Not dispatched; prior RC6/stable releases unchanged."
+}
