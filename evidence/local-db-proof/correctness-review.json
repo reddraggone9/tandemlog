@@ -1,0 +1,98 @@
+{
+  "verdict": "accepted for isolated opt-in proof only; no remaining must-fix found in reviewed scope",
+  "reviewer": "correctness_review",
+  "workspace": "/workspace/tandemlog-local-db-proof",
+  "baseline": "d93b6329c91559051d46915fc7a8114d17565cb8",
+  "reviewed_source_state": "uncommitted isolated working tree, bound by hashes below",
+  "source_sha256": {
+    "lib/storage/local_profile_database.dart": "a4a2e2aafa7e6bbc90f185f9be35145c532ac678a685db321c9df34a8778d799",
+    "lib/storage/profile_text_intents.dart": "f4a5ef1852eb25d70d68bcf1ee3aa52e1a339266685ccd61c97f62b8085e18c2",
+    "lib/storage/legacy_protected_files_import.dart": "0d87d5c86ee72626796f68345d9b93bebd7e087bd56c709f828c7d23cdebe165",
+    "lib/storage/writer_guard.dart": "af6e72134881002a242deb60a9fcb86e65e8ddf301c1cf3339fdeec11cd301a3",
+    "lib/domain/event.dart": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401",
+    "lib/storage/task_store.dart": "19bf9dc8ef34589971d5b3a26ccdcc4cfc71e433ce556c92ae98eac8356d4dd0",
+    "test/local_profile_database_test.dart": "6ca6c8763db09e564cf7dbc88dd2013781f4aa6de46a07164a2f47da48adecb8",
+    "test/profile_safety_store_test.dart": "3aa0dc7aea18555a264073483bd6d5a1c3fc80dce1bfece8b55972b5d7d4307e",
+    "test/legacy_protected_files_import_test.dart": "2688885a8bd3171f183591371596380a080494d9fd5a20b783fd2e848e138277",
+    "design/decisions/0013-app-wide-local-database.md": "fbf2b94acd671272045f9f3c18328671266605c10fbccaecc92732fc324dbf95"
+  },
+  "evidence_sha256": {
+    "writer-guard-review-tests.log": "86b0ce7a0118010abd5f0d2cabb7915576ffa9f9c363856da518b5c3d3d971c1",
+    "db-import-review-tests.log": "a3449179aac89b207c852adf29c25ba1db823631cbc0e85241d7eb3733c36f34",
+    "safety-import-final-review-tests.log": "41a804b9b06a1ec0731a606e102d47957d4621a338e4c4cfeea5a2aecb32d0fd",
+    "import-index-corruption-red.log": "2e4cdf8243940688a106e745877f777c7e34ae7ccb1c04e02af768b278e84ce5",
+    "import-index-corruption-green.log": "6eb93ed4c7b76ee00f0aafd46559b4d82215ff80168126fcdf1554ac2ad268aa",
+    "import-guard-regression-red.log": "0bce365dc09efee01cb49db63b7198d249d63c7967c4b0e071c19b3bc8ddb4dc",
+    "import-guard-regression-green.log": "0f1ddc017a85ac5385f7e0a27220f0b3062a43c8f516b1180e832e7e8d12e80e",
+    "corrupt-intent-read.log": "5418bb89c26be4cbfca669b1647e680d3e55b5c4e48571357926672363c63dbf",
+    "corrupt-intent-read-green.log": "9fd72887cd5986254248cb264a9c34bed76c244b5aec575a866aba1ac2705b6f",
+    "sqlite-version.txt": "51877c3ecf0d174a5f5fed810053c34dbff641f5b161de3e26c9b6a86c1319ee",
+    "rollback-error-red.log": "1496e6b4d9e897ebc4e8925feecff7d149af5773548f501ffe01e818ea3a62d9"
+  },
+  "independent_tests": [
+    {
+      "scope": "FileWriterGuard plus profile safety",
+      "passed": 29,
+      "failed": 0,
+      "log": "writer-guard-review-tests.log"
+    },
+    {
+      "scope": "owner lease, safety and initial import",
+      "passed": 25,
+      "failed": 0,
+      "log": "db-import-review-tests.log"
+    },
+    {
+      "scope": "final safety and expanded import",
+      "passed": 21,
+      "failed": 0,
+      "log": "safety-import-final-review-tests.log"
+    }
+  ],
+  "resolved_findings": [
+    {
+      "severity": "P2",
+      "problem": "pending reads returned corrupt bytes without validation",
+      "actual_red": "corrupt-intent-read.log",
+      "final_green": "corrupt-intent-read-green.log",
+      "fix": "shared bound-byte validation for reads, atSequence and idempotent stage"
+    },
+    {
+      "severity": "P2",
+      "problem": "import verification accepted mismatched indexed intent metadata on first and repeated import",
+      "actual_red": "import-index-corruption-red.log",
+      "final_green": "import-index-corruption-green.log",
+      "fix": "validate bindings for every source both in transaction and after source re-verification"
+    },
+    {
+      "severity": "P2",
+      "problem": "repeat import accepted lost or conflicting reservations in syntactically valid DB guard",
+      "actual_red": "import-guard-regression-red.log",
+      "final_green": "import-guard-regression-green.log",
+      "fix": "compare known source sequence/hash and surviving pending reservations without regressing advanced acknowledgement"
+    }
+  ],
+  "additional_code_review": [
+    "Existing DB authority tables created only during empty DB initialization; exact owned DDL checked on reopen; missing or weakened schema rejected.",
+    "BEGIN IMMEDIATE outside transaction cleanup prevents failed nested admission from rolling back outer work. Async callbacks are rejected before execution; Never-returning synchronous fault closure remains admitted.",
+    "Failed rollback poisons connection. Failed disposal during open retains process guard; cleanup errors include initiating error.",
+    "FileWriterGuard shared policy extraction and native intent type alias preserve prior serialization, v3 event types and meaning.",
+    "Importer retains original files, verifies manifest source disappearance and replacement, holds legacy profile/cache leases, and never activates or cleans a profile."
+  ],
+  "sqlite_binding": {
+    "version": "3.53.4",
+    "source_id": "2026-07-24 19:02:57 bf7c7f30031888f4e796e429ab3978879485813aaca6f641c7b33e4e09459bcc",
+    "measured": "owned synthetic SQL connection",
+    "platform": "Linux current pinned native asset",
+    "compile_options_contains": "OMIT_AUTHORIZATION"
+  },
+  "limitations": [
+    "Rollback/close failure protection code-reviewed; attempted authorizer fault injection unavailable because pinned SQLite omits authorization. rollback-error-red.log is an unavailable-symbol log, not a functional red.",
+    "missing-authority-red.log raced the first fix and contains rejection; it is not an original-red claim. Current tracked missing/weakened-schema tests pass.",
+    "import-index-and-stage-corruption-red.log raced the second fix and contains rejection; not a stage-red claim.",
+    "No app startup/TaskStore DB wiring, cache protected-authority import, activation, cleanup, live data access, native Windows/Android lease proof, dispatch or publication.",
+    "Cache trusted observations, bindings and outbox-only receipts remain rollout blockers. Every TaskStore global key/query must gain explicit workspace scope before activation.",
+    "Independent profile DB leases do not prevent copied writer UUID races across profiles; existing identity-contract hazard remains disclosed."
+  ],
+  "tracked_edits_by_reviewer": false
+}

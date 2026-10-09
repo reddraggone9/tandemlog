@@ -141,16 +141,7 @@ class TaskStore {
   final Map<NativeTextDocument, List<String>> _nativeUndoStacks = {};
   final Map<String, _NativeUndoField> _nativeUndoFields = {};
   final _recurringTextMemo = RecurringTextMemo();
-  static const _textTypes = {
-    'task.createdWithText',
-    'task.completedWithText',
-    'task.completedKeepingSuccessor',
-    'task.completedWithChecklist',
-    'checklist.itemCreated',
-    'task.textEdited',
-    'task.textEditUndone',
-    'text.baselineInitialized',
-  };
+  static const _textTypes = nativeTextIntentTypes;
   int _acknowledgedOwnedSequence = 0;
   bool _writerHasPendingAppend = false;
   final DateTime Function() now;

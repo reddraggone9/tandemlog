@@ -1,0 +1,54 @@
+{
+  "baseline": "d93b6329c91559051d46915fc7a8114d17565cb8",
+  "branch": "experiment/app-wide-local-db",
+  "scope": "isolated opt-in connection/lease, DB guard/intents, protected JSON files-only import; no activation or cleanup",
+  "verified_at_utc": "2026-10-09T19:25:23.608485+00:00",
+  "format": {
+    "files": 173,
+    "changed": 0,
+    "exit_code": 0
+  },
+  "analyzer": {
+    "issues": 0,
+    "exit_code": 0
+  },
+  "flutter_tests": {
+    "passed": 680,
+    "failed": 0,
+    "exit_code": 0,
+    "log_sha256": "869642c76300d10f11c050f91a99552a6807df5bae95a592ce181c6fc17ac2c5",
+    "log_path": "/workspace/recovery/local-db-proof/full-tests-final-green.log"
+  },
+  "native_text_library": {
+    "built_from": "unchanged pinned native source in this worktree",
+    "abi_gate": "passed",
+    "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56"
+  },
+  "sqlite": {
+    "version": "3.53.4",
+    "source_id": "2026-07-24 19:02:57 bf7c7f30031888f4e796e429ab3978879485813aaca6f641c7b33e4e09459bcc",
+    "measured": "owned synthetic SQL connection",
+    "platform": "Linux current pinned native asset",
+    "compile_options_contains": "OMIT_AUTHORIZATION"
+  },
+  "independent_architecture": "accepted isolated opt-in files-only proof; no must-fix; production gates remain",
+  "independent_correctness": "accepted; reviewed core source hashes match final lib files; additional tests added after review",
+  "core_source_sha256": {
+    "lib/storage/local_profile_database.dart": "a4a2e2aafa7e6bbc90f185f9be35145c532ac678a685db321c9df34a8778d799",
+    "lib/storage/profile_text_intents.dart": "f4a5ef1852eb25d70d68bcf1ee3aa52e1a339266685ccd61c97f62b8085e18c2",
+    "lib/storage/legacy_protected_files_import.dart": "0d87d5c86ee72626796f68345d9b93bebd7e087bd56c709f828c7d23cdebe165",
+    "lib/storage/writer_guard.dart": "af6e72134881002a242deb60a9fcb86e65e8ddf301c1cf3339fdeec11cd301a3",
+    "lib/domain/event.dart": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401",
+    "lib/storage/task_store.dart": "19bf9dc8ef34589971d5b3a26ccdcc4cfc71e433ce556c92ae98eac8356d4dd0"
+  },
+  "limits": [
+    "legacy cache trust/bindings/cache-only outbox not imported",
+    "TaskStore app-wide namespace and ownership not wired",
+    "no cleanup or activation API",
+    "Windows/Android native lease tests pending",
+    "copied writer IDs across profiles remain unsupported pre-existing hazard",
+    "rollback/close failure protection code-reviewed, no native failure injection"
+  ],
+  "live_user_data_touched": false,
+  "publication_or_push": false
+}

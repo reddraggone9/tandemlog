@@ -9,6 +9,18 @@ import 'wall_time.dart';
 import 'checklist.dart';
 
 const protocolVersion = 3;
+
+/// Native commands whose prepared bytes survive an uncertain append outcome.
+const nativeTextIntentTypes = {
+  'task.createdWithText',
+  'task.completedWithText',
+  'task.completedKeepingSuccessor',
+  'task.completedWithChecklist',
+  'checklist.itemCreated',
+  'task.textEdited',
+  'task.textEditUndone',
+  'text.baselineInitialized',
+};
 bool isTaskCompletion(String type) =>
     type == 'task.completed' ||
     type == 'task.completedWithText' ||
