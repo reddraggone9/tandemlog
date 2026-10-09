@@ -1,0 +1,100 @@
+{
+  "recorded_utc": "2026-10-09T16:39:16.067763+00:00",
+  "accepted_rc7_source": "74afbe294065f462b742b4570d4095e690e54b04",
+  "accepted_rc7_version": "2026.10.2-rc.7+52",
+  "stable_version": "2026.10.2+53",
+  "source_tree_objects": [
+    {
+      "path": "lib",
+      "git_object": "0d5b2d2875b9da85347682805d787a0e3890b922",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "native",
+      "git_object": "4789f2601ea2958d892aea928368348c106295aa",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "android",
+      "git_object": "7150aa9e2b4a32d20911c11adb3b810fdafe42d3",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "linux",
+      "git_object": "e5d4b704c4f9afc0fef77ca7bfccd5f3e1a12bcd",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "windows",
+      "git_object": "f3eeb9a5554b1809534b352d153ffde147a14a84",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "test",
+      "git_object": "cb73b3e51a5b3c4c635bcb0fb22b21f5fc34484c",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "integration_test",
+      "git_object": "740351f7bac97806fa4f70a15b6bc48ecca8e48e",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "tool",
+      "git_object": "a53dbd5fca4f55652d5db1652a08beb26b8f98dd",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": ".github",
+      "git_object": "f16fe82697d7f0540db60a05f77ca4c6bf259e7b",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "pubspec.lock",
+      "git_object": "7da065a372a1c3c717b4e339a66815422ff158c0",
+      "equal_to_accepted_rc7": true
+    },
+    {
+      "path": "analysis_options.yaml",
+      "git_object": "eb45238a47b46dc400276ebfc88476d4305ef1e2",
+      "equal_to_accepted_rc7": true
+    }
+  ],
+  "only_pubspec_difference": "version: 2026.10.2-rc.7+52 -> version: 2026.10.2+53",
+  "pubspec_sha256": "e5b0d71f7eec28ba96223149929c9f5507faa95893d361c492a7a4fbe2416536",
+  "frozen_released_v3_fixtures": [
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/22222222-2222-4222-8222-222222222222.jsonl",
+      "sha256": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e",
+      "unchanged_from_stable_2026_10_1": true
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/33333333-3333-4333-8333-333333333333.jsonl",
+      "sha256": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde",
+      "unchanged_from_stable_2026_10_1": true
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/README.md",
+      "sha256": "ca81165c474bf7d81800484e138b546dbf45b1ef4610302f799b9261e97db7db",
+      "unchanged_from_stable_2026_10_1": true
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/expected-rows.json",
+      "sha256": "bfd2eb917d586a56ade7b66a13ad6052561c1457be22f0cfb100a77dc0b2c38b",
+      "unchanged_from_stable_2026_10_1": true
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/fixture-metadata.json",
+      "sha256": "f8fb504c16aef3bd7af5365102fe3c622f4225169225040e3b5d9bd7283f7539",
+      "unchanged_from_stable_2026_10_1": true
+    },
+    {
+      "path": "test/fixtures/stable-v3-2026.10.0/tandemlog-space.json",
+      "sha256": "e2bbcbc4e7ea85b2a4b10e727dd762615e1de721ae03c9b89b5a6a81cd48e420",
+      "unchanged_from_stable_2026_10_1": true
+    }
+  ],
+  "code_dependency_native_platform_test_workflow_equivalence": true,
+  "artifact_bytes_equivalent": false,
+  "explanation": "Embedded release version/build changes require new binaries and exact new-artifact acceptance; source code equivalence is not binary identity."
+}

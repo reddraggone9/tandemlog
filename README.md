@@ -4,6 +4,8 @@ Shared household tasks for Android, Windows and Linux. Work offline and keep you
 
 - Capture tasks quickly, one at a time or several together.
 - Organize tasks with tags, dates, times and recurring schedules.
+- Keep smaller steps in inline checklists with item notes and ordering.
+- Edit task titles and notes collaboratively across devices.
 - Assign tasks to household members, then search and filter what you need.
 - View completed tasks, reopen them and undo recent task actions.
 

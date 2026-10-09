@@ -1,5 +1,23 @@
 # Current status — 2026-10-09
 
+## Stable2026.10.2 — accepted RC7 promotion preparation
+
+Lee explicitly accepted RC7 for the next official release on2026-10-09.
+Stable policy requires a separately built stable-name candidate, so version
+2026.10.2/build53 changes only embedded release metadata from accepted RC7/build52.
+Application/domain/storage/native/platform/dependency/test/workflow source is
+unchanged. RC7 behavior and native acceptance are reused with their exact source
+attribution; fresh stable APK identity/upgrade/native gates remain required.
+The parent supplied fresh publication-threshold clearance at16:34:51UTC.
+Full stable candidate and bounded native acceptance remain pending; no stable
+publication has occurred. Current Latest remains2026.10.1, and RC7 is preserved.
+
+The [stable preparation record](../evidence/stable-2026.10.2/README.md) binds code
+equivalence, applicable existing evidence, explicit approval, notes/media review
+and required gates. README now describes the accepted checklist and shared-text
+workflows. No feature/dependency/storage change or live synced data operation is
+part of this metadata-only preparation.
+
 ## Compact checklist disclosure — RC7 published
 
 Lee approved the disclosure-specific compact target on2026-10-09. The footer is
