@@ -1,0 +1,219 @@
+{
+  "reviewer": "independent toolchain_review",
+  "reviewed_at_utc": "2026-10-09T20:33:59.374411+00:00",
+  "decision": "No must-fix found in bounded old/new configuration, annotation/record, selected actual AGP entry and execution-boundary comparison. Supports ongoing authorized candidate validation; does not close application release shrinking or native acceptance.",
+  "binary_source_bindings": [
+    {
+      "AGP": "9.1.0",
+      "R8": "9.1.31",
+      "official_revision": "60751e845e0a27ed4dd4f3d50e53c9f196fa30bb",
+      "official_source_archive_url": "https://r8.googlesource.com/r8/+archive/60751e845e0a27ed4dd4f3d50e53c9f196fa30bb.tar.gz",
+      "archive_path": "/workspace/toolchain-eval/agp-artifacts/r8-9.1.31-source.tar.gz",
+      "archive_sha256": "d8b85180bc7f2f7b25ce7b4eb0e97b996e1df1702f17e3b984c6017edc033117",
+      "builder_binary_path": "/workspace/toolchain-eval/agp-artifacts/builder-9.1.0.jar",
+      "builder_binary_sha256": "0670034adae63a4fabc25d42c1173d11b4e083021ff95c4bcee6f9e3945f9ae9",
+      "builder_source_sha256": "bf7e06bcb4e2b64e6ff69f0ae987d5011041c93bbdaa30b0d9d4f941e485d2b5",
+      "binary_r8_version_properties": "version.sha=60751e845e0a27ed4dd4f3d50e53c9f196fa30bb\nversion.version=9.1.31\nreleaser=go/r8bot (luci-r8-custom-ci-archive-0-alg6)\nversion-file.version.code=1\n"
+    },
+    {
+      "AGP": "9.2.1",
+      "R8": "9.2.14",
+      "official_revision": "b159b01e1cdc38c1106be42aeebfb7f44397dad1",
+      "official_source_archive_url": "https://r8.googlesource.com/r8/+archive/b159b01e1cdc38c1106be42aeebfb7f44397dad1.tar.gz",
+      "archive_path": "/workspace/toolchain-eval/agp-artifacts/r8-source.tar.gz",
+      "archive_sha256": "fdc012d2673b966d4b9ff3d174f0e0152d51759b73edf4f58405b83a9e4cad6a",
+      "builder_binary_path": "/workspace/toolchain-eval/agp-artifacts/builder-9.2.1.jar",
+      "builder_binary_sha256": "091274bf71a4e29d823a54fefb4b59643f4abc23ef15b652b787d1565280bdb0",
+      "builder_source_sha256": "0b5a4d82c0a6cdbbad271f35b0a95c13361f94182b8f5285e15eb86d69236d4b",
+      "binary_r8_version_properties": "version.sha=b159b01e1cdc38c1106be42aeebfb7f44397dad1\nversion.version=9.2.14\nreleaser=go/r8bot (luci-r8-custom-ci-archive-0-vv1n)\nversion-file.version.code=1\n"
+    }
+  ],
+  "inventory": {
+    "baseline_src_main_entries": 3115,
+    "candidate_src_main_entries": 3142,
+    "changed_src_main_entries": 167,
+    "changed_status_counts": {
+      "added": 31,
+      "removed": 4,
+      "changed": 132
+    },
+    "all_changed_entries_inventoried_not_all_read_line_by_line": true,
+    "focused_changed_file_diffs_read": [
+      "D8.java",
+      "R8.java",
+      "R8Command.java",
+      "R8CommandParser.java",
+      "ProguardConfiguration.java",
+      "ProguardConfigurationParser.java",
+      "ProguardKeepAttributes.java",
+      "ProguardConfigurationParserOptions.java",
+      "AnnotationRemover.java",
+      "RootSetBuilderAnnotationIndex.java",
+      "RootSetBuilder.java",
+      "ProguardConfigurationRule.java",
+      "ProguardMemberRule.java",
+      "CfApplicationWriter.java",
+      "CfApplicationClassWriter.java",
+      "AndroidApp.java",
+      "ArchiveResourceProvider.java",
+      "BaseCompilerCommand.java",
+      "BaseCompilerCommandParser.java",
+      "BaseCompilerCommandUtils.java",
+      "ClassFileConsumer.java",
+      "ClassFileConsumerUtils.java",
+      "FileUtils.java",
+      "ZipUtils.java",
+      "EmbeddedRulesExtractor.java",
+      "AssistantExporter.java",
+      "DexDistributionRefinement.java",
+      "BackportedMethodRewriter.java",
+      "KotlinMetadataRewriter.java",
+      "ArchiveProtoAndroidResourceConsumer.java",
+      "InternalOptions.java",
+      "ProguardNameMatcher.java",
+      "ProguardWildcard.java",
+      "ProguardTypeMatcher.java",
+      "ProguardClassNameList.java",
+      "ProguardTypeMatcherAndNegation.java",
+      "ByteArrayConsumer.java",
+      "DexItemFactory.java",
+      "src/main/keep.txt"
+    ],
+    "additional_candidate_source_ranges": [
+      "AssistantOptions complete",
+      "BlastRadiusOptions complete",
+      "AtomicFieldUpdaterInstrumentor enablement and reflected-field eligibility",
+      "AtomicFieldUpdaterOptimizer rewrite gating and compareAndSet/null/type semantics",
+      "BackportedMethodRewriter Sv2 provider registration",
+      "AGP r8Tool input/config/output/minApi/resource/library invocation wiring"
+    ]
+  },
+  "findings": [
+    {
+      "paths": [
+        "R8Command.makeConfiguration",
+        "ProguardConfiguration.Builder.build",
+        "ProguardConfigurationParserOptions",
+        "ProguardKeepAttributes.applyPatterns",
+        "AnnotationRemover"
+      ],
+      "finding": "New normal DEX default excludes wildcard matches for runtime-invisible annotation attributes; explicit names are retained. Classfile default allows wildcard matches; explicit system property wins. Matches prior four-run controlled smoke, without proving application-generated configuration."
+    },
+    {
+      "paths": [
+        "ProguardConfigurationParser",
+        "ProguardNameMatcher/ProguardWildcard plumbing"
+      ],
+      "finding": "Parser now supports negated member-name patterns, rejects backreferences to negated matches and records rule ends without trailing whitespace; unsupported options routed through consumer. No new config downloader. Only parser/changed plumbing observed, not exhaustive matcher correctness proof."
+    },
+    {
+      "paths": [
+        "RootSetBuilderAnnotationIndex",
+        "ProguardConfigurationRule.forEachRelevantCandidate",
+        "RootSetBuilder"
+      ],
+      "finding": "New annotation index bounds candidate sets for simple single-annotation/member all-class rules. KEEP and NoAccessModification rules decline indexing; unknown/oversized sets fall back to full candidates. Classpath/library annotation types and missing annotation definitions considered. Whole-program rule evaluation remains a signed-application gate."
+    },
+    {
+      "paths": [
+        "AGP builder r8Tool.kt",
+        "D8DexArchiveBuilder.java",
+        "R8.java",
+        "D8.java"
+      ],
+      "finding": "AGP now passes local keep files with Maven/AGP/path origin metadata and still selects minApi, normal output consumer and R8.run. D8 adds opt-in no-op global-synthetic consumer. New library-analyzer entry points are not invoked by inspected AGP path."
+    },
+    {
+      "paths": [
+        "R8CommandParser",
+        "R8Command.getInternalOptions",
+        "AssistantOptions",
+        "AssistantExporter",
+        "BlastRadiusOptions",
+        "ByteArrayConsumer"
+      ],
+      "finding": "New configuration-analysis/assistant diagnostics use explicit local output consumer/property/path. Early exit requires singleton empty DEX consumer; ordinary AGP invocation supplies concrete program consumer and does not request these diagnostics."
+    },
+    {
+      "paths": [
+        "InternalOptions",
+        "AtomicFieldUpdaterInstrumentor",
+        "AtomicFieldUpdaterOptimizer",
+        "BackportedMethodRewriter"
+      ],
+      "finding": "AtomicReferenceFieldUpdater optimization changes from disabled to enabled by default in whole-program DEX/minApi>=19. Inspected eligibility rejects unsuitable reflected fields/operations, catch-handler operations decline optimization, null/type checks retained. Sv2 compareAndSet backport registration no longer suppressed by optimization flag. This focused code read does not establish all atomic optimization correctness or Android runtime equivalence."
+    },
+    {
+      "paths": [
+        "InternalOptions.TestingOptions",
+        "DexDistributionRefinement.run"
+      ],
+      "finding": "Class-to-DEX partition refinement changes0->5 passes and legroom5->0; debug mode skips refinement by default. Actual release timing/resource use and native startup remain required; passing debug/small fixture is insufficient."
+    },
+    {
+      "paths": [
+        "CfApplicationWriter",
+        "CfApplicationClassWriter",
+        "ClassFileConsumer",
+        "BaseCompilerCommandUtils",
+        "AndroidApp",
+        "EmbeddedRulesExtractor"
+      ],
+      "finding": "CF archive output sorted by obfuscated descriptor then written immediately and result buffers cleared; output-consumer helpers factored; embedded rule readSources preserves version-filtered relevant-rule precedence. Local input/output paths retained."
+    },
+    {
+      "paths": [
+        "src/resourceshrinker"
+      ],
+      "finding": "All24 old/new resource-shrinker files paired after package relocation. Remaining normalized diffs are import reorderings/unused import removal only; this is source comparison, not application resource-shrinking acceptance."
+    }
+  ],
+  "record_comparison": {
+    "byte_identical_record_focused_paths": [
+      "src/main/java/com/android/tools/r8/GlobalSyntheticsGenerator.java",
+      "src/main/java/com/android/tools/r8/cf/code/CfRecordFieldValues.java",
+      "src/main/java/com/android/tools/r8/dex/code/DexRecordFieldValues.java",
+      "src/main/java/com/android/tools/r8/graph/DirectMappedDexApplication.java",
+      "src/main/java/com/android/tools/r8/graph/RecordComponentInfo.java",
+      "src/main/java/com/android/tools/r8/horizontalclassmerging/policies/NoRecords.java",
+      "src/main/java/com/android/tools/r8/ir/code/RecordFieldValues.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordCfMethods.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordClassDesugaring.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordClassDesugaringPostProcessor.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordDesugaringEventConsumer.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordFieldValuesRewriter.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordFullInstructionDesugaring.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordInstructionDesugaring.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordRewriter.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordRewriterHelper.java",
+      "src/main/java/com/android/tools/r8/ir/desugar/records/RecordTagSynthesizer.java",
+      "src/main/java/com/android/tools/r8/ir/synthetic/RecordCfCodeProvider.java",
+      "src/main/java/com/android/tools/r8/naming/RecordInvokeDynamicInvokeCustomRewriter.java",
+      "src/main/java/com/android/tools/r8/naming/RecordRewritingNamingLens.java",
+      "src/main/java/com/android/tools/r8/naming/dexitembasedstring/RecordFieldNamesComputationInfo.java"
+    ],
+    "count": 21,
+    "changed_record_writer_scope": "CfApplicationClassWriter only adds buffer clearing to Result; record component write logic unchanged. Shared DexItemFactory changes atomic/string/lambda members, not record references.",
+    "limit": "Unchanged record code plus protected record smoke cannot prove every known upstream record/optimizer defect resolved."
+  },
+  "execution_callsite_scan": {
+    "added_line_matches": 19,
+    "scope": "Added lines across all167 changed src/main files scanned for selected network/process/native-load/local-file-output terms",
+    "interpretation": "Matched actual IO is local output consumers; System.load/loadLibrary matches are trace-reference documentation/report strings. No added real network/native-load/process callsite found by this targeted scan.",
+    "limit": "Term scan is not a proof of absence across upstream code or all indirect calls."
+  },
+  "evidence_sha256": {
+    "r8-source-change-inventory.json": "c244acbdcb0e5057954909b32a0552f37bcecdb7de6fba0d4151e3f5e7d645d3",
+    "r8-focused-source.diff": "c7f8cef5269ca21005396ead28bdadcbfeb4f4a6d4ad6a57f47aefa9512eaa36",
+    "r8-agp-entry-source.diff": "38d1d7d96538d98541e61309483f9b2a66b36c5fc1e7177a1a552c41e966040c",
+    "r8-resource-shrinker-source.diff": "b28e2af5483ed24d85ec70576a31567562dbda3676453f13eb71136cc515fef3",
+    "r8-resource-shrinker-source-inventory.json": "6549007247cf5327e8226f539258c94b26a4327c51c32505dcbfdf5bd9715216",
+    "r8-added-execution-callsite-scan.json": "75ef481af773b74989b398be916dbcb422405ad09a2b502d7ba24f262322a9db"
+  },
+  "remaining_gates": [
+    "Actual versioned owner-signed AGP release build, minification/resource-shrinking configuration and exact package receipts.",
+    "Exact candidate update/startup/JNI/SAF/provider/device acceptance before publication.",
+    "No comprehensive optimizer/D8 algorithm audit, all-platform semantics proof or source-rebuilt binary attestation."
+  ],
+  "execution_by_reviewer": "No R8/Gradle/new dependency execution, no application changes, no external comments/push/dispatch/merge/signing changes; official source retrieval and read-only comparison only."
+}

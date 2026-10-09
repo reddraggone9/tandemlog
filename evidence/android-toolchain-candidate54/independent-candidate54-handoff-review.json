@@ -1,0 +1,130 @@
+{
+  "reviewer": "independent toolchain_review",
+  "reviewed_at_utc": "2026-10-09T21:15:05.436876+00:00",
+  "decision": "Approve final hosted source/run/jobs/artifact-upload provenance and updated combined-release handoff interpretation. No must-fix in inspected bindings; no candidate54 install/native duplicate is requested.",
+  "inputs_sha256": {
+    "candidate54-handoff.json": "7554e8ad3e449be15df0facddcdd8fb14a6e1d1db068d8ee5be2b4d44e56bc2f",
+    "candidate54-execution.json": "cf097d96b005f640cbc2b1b2a524f2d7369d86726722679ad648e92d2456e102",
+    "candidate54-run.json": "f9a733fb48e5069e0cfdd882842a0fc488379cd58a50f6ff779425d2fd0f9535",
+    "candidate54-jobs.json": "118a006235aa7fac9c72e1c27315beb5066a7c15ce3e13e6dcdbecad7ca434db",
+    "candidate54-artifacts.json": "80a60fd12608728a0d6ca793422844a32f5468719006bf635d235efe70a1fd8f",
+    "candidate54-push-run.json": "7c127be30a77d6159622fc3369404075787d75fe7b7b5dd8b148b9c3501f934d",
+    "candidate54-signed-job.log": "e4d296048a0503c9691d468fcc82e63fb422002efc2fb80c1aea1c87bf42a53d",
+    "candidate54-bot1-final.json": "d8ade0d7c3877a22b827bd51324f447969ac0d215b790cc6bc4569af87477bdd",
+    "candidate54-bot2-final.json": "fa232cbe60c5b78b5b907f0f52973f6f064749bef9a2f32411fbfc08c6c863af"
+  },
+  "packet_manifest_sha256": "8c2fb6a05eea4c68fa0862188fb5eda46bf251ce7b7fd11a7f2b336928777930",
+  "preserved_source_audit_receipts_sha256": {
+    "independent-source-review.json": "2955c46b6c387cbcd7a43efd0aa22c40522202fb61afcf4666a0dbdd9f09f100",
+    "independent-upstream-review-breadth.json": "fb8a31caca04991b48c369e374950df6cf0976cb0b5afa3744267bb94df585fa",
+    "independent-r8-upstream-diff-review.json": "44f6faf1d7fe7a9ffe7c3e6c1aa2851096cb561bfe78936f893081151f8e40da",
+    "independent-gradle-upstream-diff-review.json": "8fe13eab5d923131a6f92c94532e04762f111c3cd3c9d46a9dc4d5964a7e3243",
+    "independent-audit-summary-policy-hold-review.json": "7af41f1bc7d29e1dce68ae03237c450a64f31a2e9abf2c46402bc85b3f713b72"
+  },
+  "candidate": {
+    "source": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+    "version": "2026.10.3+54",
+    "branch": "main",
+    "event": "workflow_dispatch",
+    "run_id": 37987187103,
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "id": 114012000550,
+        "name": "candidate",
+        "conclusion": "success"
+      },
+      {
+        "id": 114012062787,
+        "name": "checks / android",
+        "conclusion": "success"
+      },
+      {
+        "id": 114012062913,
+        "name": "checks / linux",
+        "conclusion": "success"
+      },
+      {
+        "id": 114012063017,
+        "name": "checks / windows",
+        "conclusion": "success"
+      },
+      {
+        "id": 114021013014,
+        "name": "signed-android",
+        "conclusion": "success"
+      }
+    ],
+    "push_ci_run": 37987154935,
+    "push_ci_conclusion": "success",
+    "signed_job_id": 114021013014
+  },
+  "artifact_provenance": {
+    "id": 11645201303,
+    "name": "android-release",
+    "reported_archive_size": 30370014,
+    "reported_archive_digest": "sha256:c433a70f745a85d5fe4d2303f539705bcebd9befa7f45b545c51138e26e06143",
+    "expires_at": "2026-10-14T20:58:25Z",
+    "metadata_and_upload_log_digest_size_id_match": true,
+    "archive_bytes_downloaded_or_independently_hashed": false,
+    "inner_apk_sha256": null,
+    "blocker": "Parent reports reusable ZIP file reference obtained but cloud materialization HTTP403; no archive/APK bytes supplied to reviewer. No download retry here.",
+    "member_limit": "Unchanged workflow/script expects four named files; log confirms4files uploaded. Actual ZIP member names/CRC and APK checksum/signature are unverified in cloud."
+  },
+  "signed_release_log": {
+    "checkout_source_seen": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+    "assembleRelease_success": true,
+    "assembleRelease_seconds": 264.2,
+    "identity_gate": "Log reports unchanged exact-source verifier passed pinned certificate/package/version/nondebuggable/universalABIs; independently read certificate pin 0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "native_payload_gate": "Hosted log reports native library/exact notices verified; no independent exact candidate APK extraction/ELF/hash recheck in cloud.",
+    "temporary_signing_cleanup_step": "Success in jobs metadata; unchanged workflow. No secret values accessed.",
+    "shrinking_limit": "Successful actual Flutter release route uses existing default minification/resource-shrinking configuration. Quiet log does not enumerate individual R8 tasks; do not claim unobserved task rows or runtime correctness."
+  },
+  "source_reuse": {
+    "stable_baseline": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "unchanged_application_native_workflow_lock_scopes_independently_compared": [
+      "lib",
+      "native/text_engine",
+      "assets",
+      "android/app",
+      "android/gradle.properties",
+      "tool",
+      "test",
+      "integration_test",
+      ".github",
+      "pubspec.lock"
+    ],
+    "pubspec_yaml_only_difference_verified": "2026.10.2+53 -> 2026.10.3+54; dependencies unchanged",
+    "prior_native_acceptance": "Stable36/RC7reused56 checks retain original parent source/device attribution; cloud did not rerun them.",
+    "native_checks_status": "N1\u2013N7 below are historical candidate54 toolchain acceptance references, deferred/superseded by combined candidate>=55. No candidate54 installation/native run is requested. Rebind relevant checks plus migration preservation gates to exact combined source/APK/device/provider.",
+    "latest_direction": "Combined migration plus dependency candidate FIRST, build>=55 after fresh floor check; food deferred, no standalone dependency publication.",
+    "combined_limit": "Candidate54 establishes toolchain source/build/upload evidence only; does not accept migration44d0577 or exact combined APK. Rebind relevant native plus migration-preservation gates to combined source/APK/device/provider."
+  },
+  "remaining_gates": [
+    "If54archive is inspected diagnostically, verify exact archive size/digest, ZIP members/CRC, APK checksum/metadata/signature; no54install requested.",
+    "Prepare combined reviewed source/build>=55 and unchanged trusted candidate checks; floor54 now consumed.",
+    "Exact combined artifact/platform/migration/update/startup/SAF/provider native acceptance plus fresh quota/publication clearance."
+  ],
+  "bot_final_snapshots": [
+    {
+      "number": 1,
+      "state": "open",
+      "title": "build(deps): bump com.android.application from 9.2.1 to 9.4.1 in /android",
+      "head": "998b1337afce8a2cd871f6565b38dc9502f73510",
+      "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://github.com/reddraggone9/tandemlog/pull/1",
+      "closed_by_cloud": false
+    },
+    {
+      "number": 2,
+      "state": "open",
+      "title": "build(deps): bump gradle-wrapper from 9.4.1 to 9.8.0 in /android",
+      "head": "e4f14e84fc8a14f91c55d6191450a79686de346d",
+      "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://github.com/reddraggone9/tandemlog/pull/2",
+      "closed_by_cloud": false
+    }
+  ],
+  "actions": "Private read-only Git-object/log/metadata/hash checks and receipt only; no repository/main mutation, network mutation, new dependency execution, secret access, native operation or publication."
+}

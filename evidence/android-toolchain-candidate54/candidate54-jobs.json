@@ -1,0 +1,753 @@
+{
+  "total_count": 5,
+  "jobs": [
+    {
+      "id": 114012000550,
+      "run_id": 37987187103,
+      "workflow_name": "Build signed candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/37987187103",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAai6URJg",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114012000550",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/job/114012000550",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T20:28:10Z",
+      "started_at": "2026-10-09T20:28:12Z",
+      "completed_at": "2026-10-09T20:28:19Z",
+      "name": "candidate",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T20:28:12Z",
+          "completed_at": "2026-10-09T20:28:13Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T20:28:13Z",
+          "completed_at": "2026-10-09T20:28:15Z"
+        },
+        {
+          "name": "Run test \"$GITHUB_REF\" = refs/heads/main",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T20:28:15Z",
+          "completed_at": "2026-10-09T20:28:17Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T20:28:17Z",
+          "completed_at": "2026-10-09T20:28:18Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T20:28:18Z",
+          "completed_at": "2026-10-09T20:28:18Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114012000550",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000717,
+      "runner_name": "GitHub Actions 1000000717",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114012062787,
+      "run_id": 37987187103,
+      "workflow_name": "Build signed candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/37987187103",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAai6YEQw",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114012062787",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/job/114012062787",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T20:28:20Z",
+      "started_at": "2026-10-09T20:28:21Z",
+      "completed_at": "2026-10-09T20:35:00Z",
+      "name": "checks / android",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T20:28:22Z",
+          "completed_at": "2026-10-09T20:28:23Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T20:28:23Z",
+          "completed_at": "2026-10-09T20:28:24Z"
+        },
+        {
+          "name": "Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T20:28:24Z",
+          "completed_at": "2026-10-09T20:28:25Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T20:28:25Z",
+          "completed_at": "2026-10-09T20:29:00Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T20:29:00Z",
+          "completed_at": "2026-10-09T20:29:38Z"
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T20:29:38Z",
+          "completed_at": "2026-10-09T20:29:43Z"
+        },
+        {
+          "name": "Run test -x \"$ANDROID_HOME/build-tools/36.0.0/apksigner\"",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T20:29:43Z",
+          "completed_at": "2026-10-09T20:29:43Z"
+        },
+        {
+          "name": "Observe reviewed Kotlin scopes on the remediation branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8,
+          "started_at": "2026-10-09T20:29:43Z",
+          "completed_at": "2026-10-09T20:29:43Z"
+        },
+        {
+          "name": "Build Android debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-09T20:29:43Z",
+          "completed_at": "2026-10-09T20:34:51Z"
+        },
+        {
+          "name": "Repeat warm Android debug build on the remediation branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10,
+          "started_at": "2026-10-09T20:34:51Z",
+          "completed_at": "2026-10-09T20:34:51Z"
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T20:34:51Z",
+          "completed_at": "2026-10-09T20:34:51Z"
+        },
+        {
+          "name": "Run mkdir dist",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-09T20:34:51Z",
+          "completed_at": "2026-10-09T20:34:52Z"
+        },
+        {
+          "name": "Preserve cold and warm Kotlin evaluation receipts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13,
+          "started_at": "2026-10-09T20:34:52Z",
+          "completed_at": "2026-10-09T20:34:52Z"
+        },
+        {
+          "name": "Remove the remediation observation script",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14,
+          "started_at": "2026-10-09T20:34:52Z",
+          "completed_at": "2026-10-09T20:34:52Z"
+        },
+        {
+          "name": "Package separate recovery harness on the isolated adoption branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15,
+          "started_at": "2026-10-09T20:34:52Z",
+          "completed_at": "2026-10-09T20:34:52Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-09T20:34:52Z",
+          "completed_at": "2026-10-09T20:34:58Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-09T20:34:58Z",
+          "completed_at": "2026-10-09T20:34:58Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32,
+          "started_at": "2026-10-09T20:34:58Z",
+          "completed_at": "2026-10-09T20:34:58Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33,
+          "started_at": "2026-10-09T20:34:58Z",
+          "completed_at": "2026-10-09T20:34:58Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114012062787",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000721,
+      "runner_name": "GitHub Actions 1000000721",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114012062913,
+      "run_id": 37987187103,
+      "workflow_name": "Build signed candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/37987187103",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAai6YEwQ",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114012062913",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/job/114012062913",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T20:28:20Z",
+      "started_at": "2026-10-09T20:28:22Z",
+      "completed_at": "2026-10-09T20:52:31Z",
+      "name": "checks / linux",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T20:28:22Z",
+          "completed_at": "2026-10-09T20:28:23Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T20:28:23Z",
+          "completed_at": "2026-10-09T20:28:25Z"
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T20:28:25Z",
+          "completed_at": "2026-10-09T20:28:55Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T20:28:55Z",
+          "completed_at": "2026-10-09T20:29:19Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T20:29:19Z",
+          "completed_at": "2026-10-09T20:29:27Z"
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T20:29:27Z",
+          "completed_at": "2026-10-09T20:29:31Z"
+        },
+        {
+          "name": "Run dart format --output=none --set-exit-if-changed lib test integration_test tool",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T20:29:31Z",
+          "completed_at": "2026-10-09T20:29:32Z"
+        },
+        {
+          "name": "Run flutter analyze",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-09T20:29:32Z",
+          "completed_at": "2026-10-09T20:29:40Z"
+        },
+        {
+          "name": "Build and require production native library for all unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-09T20:29:40Z",
+          "completed_at": "2026-10-09T20:30:02Z"
+        },
+        {
+          "name": "Run flutter test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T20:30:02Z",
+          "completed_at": "2026-10-09T20:32:01Z"
+        },
+        {
+          "name": "Verify frozen native admission and worker contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T20:32:01Z",
+          "completed_at": "2026-10-09T20:32:13Z"
+        },
+        {
+          "name": "Run python3 -m unittest discover -s tool -p 'test_*.py'",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-09T20:32:13Z",
+          "completed_at": "2026-10-09T20:32:13Z"
+        },
+        {
+          "name": "Run xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T20:32:13Z",
+          "completed_at": "2026-10-09T20:50:15Z"
+        },
+        {
+          "name": "Run flutter build linux --release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-09T20:50:15Z",
+          "completed_at": "2026-10-09T20:50:45Z"
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-09T20:50:45Z",
+          "completed_at": "2026-10-09T20:50:46Z"
+        },
+        {
+          "name": "Smoke-test native release startup with fresh and warm cache",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16,
+          "started_at": "2026-10-09T20:50:46Z",
+          "completed_at": "2026-10-09T20:50:47Z"
+        },
+        {
+          "name": "Run mkdir dist",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17,
+          "started_at": "2026-10-09T20:50:47Z",
+          "completed_at": "2026-10-09T20:50:47Z"
+        },
+        {
+          "name": "Build user-installable Flatpak bundle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18,
+          "started_at": "2026-10-09T20:50:47Z",
+          "completed_at": "2026-10-09T20:52:08Z"
+        },
+        {
+          "name": "Install, launch, replace and uninstall Flatpak with synthetic data",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-09T20:52:08Z",
+          "completed_at": "2026-10-09T20:52:26Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-09T20:52:26Z",
+          "completed_at": "2026-10-09T20:52:28Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 40,
+          "started_at": "2026-10-09T20:52:28Z",
+          "completed_at": "2026-10-09T20:52:28Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 41,
+          "started_at": "2026-10-09T20:52:28Z",
+          "completed_at": "2026-10-09T20:52:28Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114012062913",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000722,
+      "runner_name": "GitHub Actions 1000000722",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114012063017,
+      "run_id": 37987187103,
+      "workflow_name": "Build signed candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/37987187103",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAai6YFKQ",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114012063017",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/job/114012063017",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T20:28:20Z",
+      "started_at": "2026-10-09T20:28:21Z",
+      "completed_at": "2026-10-09T20:36:47Z",
+      "name": "checks / windows",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T20:28:22Z",
+          "completed_at": "2026-10-09T20:28:23Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T20:28:23Z",
+          "completed_at": "2026-10-09T20:28:29Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T20:28:29Z",
+          "completed_at": "2026-10-09T20:29:17Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T20:29:17Z",
+          "completed_at": "2026-10-09T20:29:29Z"
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T20:29:29Z",
+          "completed_at": "2026-10-09T20:29:40Z"
+        },
+        {
+          "name": "Build and require production native library for all unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T20:29:40Z",
+          "completed_at": "2026-10-09T20:30:24Z"
+        },
+        {
+          "name": "Run flutter test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T20:30:24Z",
+          "completed_at": "2026-10-09T20:34:02Z"
+        },
+        {
+          "name": "Verify frozen native admission and worker contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-09T20:34:02Z",
+          "completed_at": "2026-10-09T20:34:25Z"
+        },
+        {
+          "name": "Run python -m unittest discover -s tool -p 'test_*.py'",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-09T20:34:25Z",
+          "completed_at": "2026-10-09T20:34:29Z"
+        },
+        {
+          "name": "Run python tool/app_version.py",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T20:34:29Z",
+          "completed_at": "2026-10-09T20:34:29Z"
+        },
+        {
+          "name": "Run flutter build windows --release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11,
+          "started_at": "2026-10-09T20:34:29Z",
+          "completed_at": "2026-10-09T20:36:13Z"
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12,
+          "started_at": "2026-10-09T20:36:13Z",
+          "completed_at": "2026-10-09T20:36:14Z"
+        },
+        {
+          "name": "Preserve exact portable Windows payload for isolated native acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13,
+          "started_at": "2026-10-09T20:36:14Z",
+          "completed_at": "2026-10-09T20:36:16Z"
+        },
+        {
+          "name": "Build per-user installer and verify native installation lifecycle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14,
+          "started_at": "2026-10-09T20:36:16Z",
+          "completed_at": "2026-10-09T20:36:40Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15,
+          "started_at": "2026-10-09T20:36:40Z",
+          "completed_at": "2026-10-09T20:36:42Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 30,
+          "started_at": "2026-10-09T20:36:42Z",
+          "completed_at": "2026-10-09T20:36:44Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31,
+          "started_at": "2026-10-09T20:36:44Z",
+          "completed_at": "2026-10-09T20:36:44Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114012063017",
+      "labels": [
+        "windows-2022"
+      ],
+      "runner_id": 1000000723,
+      "runner_name": "GitHub Actions 1000000723",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114021013014,
+      "run_id": 37987187103,
+      "workflow_name": "Build signed candidate",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/37987187103",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAajC6WFg",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114021013014",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/job/114021013014",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-09T20:52:32Z",
+      "started_at": "2026-10-09T20:52:34Z",
+      "completed_at": "2026-10-09T20:58:30Z",
+      "name": "signed-android",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-09T20:52:35Z",
+          "completed_at": "2026-10-09T20:52:36Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-09T20:52:36Z",
+          "completed_at": "2026-10-09T20:52:38Z"
+        },
+        {
+          "name": "Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-09T20:52:38Z",
+          "completed_at": "2026-10-09T20:52:38Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-09T20:52:38Z",
+          "completed_at": "2026-10-09T20:53:09Z"
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5,
+          "started_at": "2026-10-09T20:53:09Z",
+          "completed_at": "2026-10-09T20:53:53Z"
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-09T20:53:53Z",
+          "completed_at": "2026-10-09T20:53:57Z"
+        },
+        {
+          "name": "Build with owner signing identity",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-09T20:53:57Z",
+          "completed_at": "2026-10-09T20:58:24Z"
+        },
+        {
+          "name": "Verify signed APK native payload and notices",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-09T20:58:24Z",
+          "completed_at": "2026-10-09T20:58:24Z"
+        },
+        {
+          "name": "Remove temporary signing material",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-09T20:58:24Z",
+          "completed_at": "2026-10-09T20:58:24Z"
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10,
+          "started_at": "2026-10-09T20:58:24Z",
+          "completed_at": "2026-10-09T20:58:27Z"
+        },
+        {
+          "name": "Post Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 19,
+          "started_at": "2026-10-09T20:58:27Z",
+          "completed_at": "2026-10-09T20:58:27Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 20,
+          "started_at": "2026-10-09T20:58:27Z",
+          "completed_at": "2026-10-09T20:58:28Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 21,
+          "started_at": "2026-10-09T20:58:28Z",
+          "completed_at": "2026-10-09T20:58:28Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114021013014",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000730,
+      "runner_name": "GitHub Actions 1000000730",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

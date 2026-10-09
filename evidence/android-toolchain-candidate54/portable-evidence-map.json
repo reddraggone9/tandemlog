@@ -1,0 +1,14 @@
+{
+  "root": "evidence/android-toolchain-candidate54",
+  "copy_policy": "Original JSON receipts preserved byte-for-byte. Historical absolute checkout paths and earlier pending state refer to review time; final candidate54-handoff supplements hosted success. Hash references to raw upstream source/diffs remain provenance evidence, not a claim their private files or APK bytes are included.",
+  "raw_private_signed_log_sha256": "e4d296048a0503c9691d468fcc82e63fb422002efc2fb80c1aea1c87bf42a53d",
+  "portable_log": "signed-job-selected-lines.txt contains selected decoded log lines with trailing whitespace normalized; full original decoded log SHA256 is recorded separately and full logs accessible through signed job114021013014 in run37987187103.",
+  "prior_evidence": "../android-toolchain-maintenance",
+  "native_acceptance": "No candidate54 duplicate native run; parent validates exact combined migration+dependency build>=55.",
+  "official_sources": {
+    "Gradle_baseline": "https://github.com/gradle/gradle/tree/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "Gradle_candidate": "https://github.com/gradle/gradle/tree/2d6327017519d23b96af35865dc997fcb544fb40",
+    "Kotlin_matrix": "https://kotlinlang.org/docs/gradle-configure-project.html",
+    "AGP94_requirements": "https://developer.android.com/build/releases/agp-9-4-0-release-notes"
+  }
+}

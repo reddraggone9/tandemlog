@@ -1,0 +1,11 @@
+2026-10-09T20:52:38.3417469Z 71b841fe9dba1b46e86de6c055ce56df4a978784
+2026-10-09T20:52:38.5447465Z 71b841fe9dba1b46e86de6c055ce56df4a978784
+2026-10-09T20:55:57.6221998Z Running Gradle task 'assembleRelease'...
+2026-10-09T20:58:23.4811960Z Running Gradle task 'assembleRelease'...                          264.2s
+2026-10-09T20:58:23.9239091Z ✓ Built build/app/outputs/flutter-apk/app-release.apk (65.3MB)
+2026-10-09T20:58:24.7167281Z Verified release certificate, package, version, non-debuggable flag and universal ABIs.
+2026-10-09T20:58:24.9596655Z Packaged native library and exact notices verified: dist/tandemlog-android.apk
+2026-10-09T20:58:25.1401089Z With the provided path, there will be 4 files uploaded
+2026-10-09T20:58:27.4886043Z Uploaded bytes 30370014
+2026-10-09T20:58:27.5264704Z SHA256 digest of uploaded artifact is c433a70f745a85d5fe4d2303f539705bcebd9befa7f45b545c51138e26e06143
+2026-10-09T20:58:27.8560858Z Artifact android-release successfully finalized. Artifact ID 11645201303

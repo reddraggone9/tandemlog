@@ -1,0 +1,98 @@
+{
+  "reviewer": "independent toolchain_review",
+  "recorded_at_utc": "2026-10-09T20:29:27.074824+00:00",
+  "decision": "Focused exact upstream execution/source/provenance review supports reviewed AGP9.2.1/Gradle9.4.1 integration; larger held bot versions remain outside retained KGP published fully supported matrix; application signed-release and native acceptance remain pending",
+  "evidence_sha256": {
+    "independent-source-review.json": "2955c46b6c387cbcd7a43efd0aa22c40522202fb61afcf4666a0dbdd9f09f100",
+    "agp-source-changes.json": "36fa2839ac08676480e3e000345011154da1a75167c51d7327b1eaf14ae2e151",
+    "agp-critical-source.diff": "4c54e59cf43d5f1797660d24f5bb04129ac03af0603b777b7784c9d5454f55c1",
+    "agp-transitive-source-change-counts.json": "43cc1d1d64826120a851471264e0b437f212dde674755936ea9e8d061f47591a",
+    "agp-transitive-artifact-inventory.json": "7db28c3d60ede11a26935c82f95af48554e89918a74a08f85f68370bfd0fc2ce",
+    "gradle-native-inventory.json": "4f74e22518abde21075e6f9452d9136bebaffe308ea29f152433e417783cc33f",
+    "kotlin-2.3.0-artifact-inventory.json": "564e09f77bba6c552e05761a0352dc5bd80f8b822db6097022cab07186fd8b33",
+    "kotlin-dsl-compiler-artifact-inventory.json": "5ae272a5d48a423900e7f3f5bbd22bbed7cf70678dfa4ca755b81ce696096e3e",
+    "kotlin-dsl-gradle-plugin-artifact-inventory.json": "18b8644082dcdefec368c102c071aee179786a58cbd4a4814988050cd0dc71f8",
+    "lint-source-change-counts.json": "e995d4c79986bdbd4ea0c99db96e94ae4c3a1703630a35b333897e1567149156",
+    "lint-focused-review.json": "326a4cd2d3c10a3b1a59fbb1b76c6c44804fbc4213995a109110b02368b24bfc",
+    "lint-external-native-inventory.json": "20fa30bc0e571e4355fbdefbf30dd9ba5881dc8ccc668d9c5f153c643a871f1a",
+    "lint-loader-service-inventory.json": "598d8cf3eafb4122475487bb2a4d02559096363c822f9347fe314f3a1bd62ee2",
+    "independent-release-gap-review.json": "69b81e89743fc0792cfd02881d22269e910ec8972d837526e48f8cdbd86b1f3a",
+    "independent-release-followup-final-review.json": "19c04bb2f4685edfdabd524f672242bd2864e201f82cfb47320d58676fa81f48",
+    "independent-integration-version-review.json": "4c77af0f6d7af05d53dca7fa5705fde978db5c31589410946b6e150ac9dfef53"
+  },
+  "review_breadth": {
+    "AGP_9_1_to_9_2_1": {
+      "upstream_not_only_repository_diff": true,
+      "changed_source_entries_in_main_plugin": 287,
+      "independent_focus": [
+        "native process ValueSource argument-array refactor and tool version invocation",
+        "SourceSet/JNI merge producer and task wiring",
+        "legacy AppPlugin/Kotlin task and lint environment creation",
+        "R8 keep-rule/service wiring",
+        "changed-source network/process/native-load callsite scan"
+      ],
+      "coordinator_complement": "29 main Google-component source archive comparisons plus additional signflinger/zipflinger and deferred22-component lint closure; changed direct/transitive metadata and exact binary hashes inventoried."
+    },
+    "Gradle_9_3_1_to_9_4_1": {
+      "independent_exact_new_source_inspection": [
+        "WrapperExecutor/Install/Download checksum verification, ZIP extraction/bootstrap",
+        "embedded Kotlin2.3.0 constraints/compiler and BTA execution",
+        "NativeServices initialization",
+        "exact official native-platform/fileevents tag Java loaders and relevant JNI/startup paths"
+      ],
+      "native_payload_scope": "Distribution native resource inventories and exact source bindings reviewed; fresh private extraction mitigates existing completion marker reuse without rehash.",
+      "explicit_limit": "Not a complete old/new line-by-line diff or exhaustive audit of all Gradle core, daemons, workers, cache internals or bundled native C/C++."
+    },
+    "selected_Kotlin_transitives": {
+      "main_KGP": "Retained previously reviewed2.4.20, not reaudited as a new update",
+      "included_KGP": "2.2.21-to2.3.0 source change inventory262 entries and focused JVM execution/classloader/snapshot/reporting/FUS paths",
+      "BTA": "Exact2.3.0 API/impl/compat ServiceLoader, adapter, JVM invocation, lifecycle reviewed",
+      "DSL_plugins": "Exact SAM/assignment compiler registrars/options/K1/K2 transformations and complete small Gradle subplugin sources reviewed",
+      "compiler_native": "20 bundled native resource hashes equal earlier reviewed2.4.20; no rebuilt-binary proof"
+    },
+    "deferred_lint_and_kxml": {
+      "lint_changed_entry_comparison": "All changed entries compared in lint-gradle(1), lint(16), lint-api(7), lint-checks(22); source execution traversal/CLI/registry/typedef/reporters and callsite scan reviewed",
+      "external_source_comparison": "IntelliJ one change; compiler three code changes plus two source service entries; UAST unchanged. Actual binary service entries identical despite source archive service differences.",
+      "native_loader_receipts": "Independent rehash:34 IntelliJ native resources and41/16 IntelliJ/compiler loader-service entries equal baseline; compiler/UAST contain no native resources.",
+      "unchanged_kxml": "11 published Java sources plus exact binary XmlPullParserFactory inspected after version-filter collision; exact hash allowed without loosening observer"
+    },
+    "R8_9_2_14": {
+      "official_revision": "b159b01e1cdc38c1106be42aeebfb7f44397dad1",
+      "binary_binding": "Exact R8 embedded in reviewed builder9.2.1, not arbitrary downloaded compiler",
+      "independent_source_paths": [
+        "R8 main/run",
+        "R8Command/Parser and BaseCompilerCommandParser",
+        "FlagFile",
+        "AndroidApp/ArchiveResourceProvider",
+        "ProguardConfigurationParser/SourceFile",
+        "ClassFileConsumer",
+        "DumpInputFlags",
+        "ThreadUtils/ExceptionUtils",
+        "wildcard attribute default/property and protected record smoke paths"
+      ],
+      "actual_synthetic_result_review": "Four parent runs CF/DEX wildcard/explicit; independently verified27 file hashes, CF output attributes, typed DEX annotations and checksum/header/dead-class/mapping evidence.",
+      "explicit_limit": "No exhaustive R8 optimizer/D8 algorithm old/new diff, no reproduction of every upstream defect; fixture full record keep constrains optimizer coverage; no actual app-generated keep-rule/resource shrinking or JNI reflection acceptance."
+    }
+  },
+  "remaining_limits": [
+    "Official binary/source artifact provenance and hashes are not reproducible-build attestation.",
+    "Callsite scans and targeted reads cannot prove absence of malicious or faulty code throughout every transitive artifact.",
+    "Selected artifacts/task graphs do not prove every lint/typedef/compiler worker ran.",
+    "Debug APK cold label follows setup/guard retries and does not attest pristine empty-cache state.",
+    "KGP2.3.0 Flutter included build lies outside its own published fully supported Gradle ceiling; bounded actual local/hosted builds provide scoped evidence, not blanket vendor support.",
+    "Exact owner-signed application release/R8/resource/JNI/native startup/update/SAF/provider acceptance is still pending."
+  ],
+  "held_bot_handling": {
+    "as_of_utc": "2026-10-09T20:29:27.076788+00:00",
+    "official_matrix_url": "https://kotlinlang.org/docs/gradle-configure-project.html",
+    "retained_KGP": "2.4.20",
+    "fully_supported_AGP_max": "9.3.1",
+    "fully_supported_Gradle_max": "9.7.0",
+    "PR1_requested_AGP": "9.4.1",
+    "PR2_requested_Gradle": "9.8.0",
+    "recommendation": "Keep both requested versions held. PR4 supplies a narrower coordinated maintenance step and does not validate or complete those requested upgrades. Tidy any stale explanatory state to distinguish merged9.2.1/9.4.1 from still-held9.4.1/9.8.0; do not automatically unlock, retarget, merge or close either PR.",
+    "future_unlock_gate": "Fresh retained Kotlin and pinned Flutter compatibility assessment, exact new-version direct/transitive/source/native/hook review, applicable actual application build and native checks; no inference of approval from current candidate success.",
+    "outside_published_fully_supported_range_is_not": "Proof that the versions cannot execute."
+  },
+  "actions_by_reviewer": "Private evidence only; no upstream downloads/execution beyond read-only official documentation retrieval in this followup, no repo edits/external actions."
+}

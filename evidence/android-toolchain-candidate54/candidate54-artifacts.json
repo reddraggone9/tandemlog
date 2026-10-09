@@ -1,0 +1,85 @@
+{
+  "total_count": 4,
+  "artifacts": [
+    {
+      "id": 11645201303,
+      "node_id": "MDg6QXJ0aWZhY3QxMTY0NTIwMTMwMw==",
+      "name": "android-release",
+      "size_in_bytes": 30370014,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11645201303",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11645201303/zip",
+      "expired": false,
+      "digest": "sha256:c433a70f745a85d5fe4d2303f539705bcebd9befa7f45b545c51138e26e06143",
+      "created_at": "2026-10-09T20:58:27Z",
+      "updated_at": "2026-10-09T20:58:27Z",
+      "expires_at": "2026-10-14T20:58:25Z",
+      "workflow_run": {
+        "id": 37987187103,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784"
+      }
+    },
+    {
+      "id": 11645106074,
+      "node_id": "MDg6QXJ0aWZhY3QxMTY0NTEwNjA3NA==",
+      "name": "linux",
+      "size_in_bytes": 9021290,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11645106074",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11645106074/zip",
+      "expired": false,
+      "digest": "sha256:a7a6dd7d5e05e819830147197674ebe158786b157a589cd7b02dc14258752b9b",
+      "created_at": "2026-10-09T20:52:27Z",
+      "updated_at": "2026-10-09T20:52:27Z",
+      "expires_at": "2026-10-14T20:52:26Z",
+      "workflow_run": {
+        "id": 37987187103,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784"
+      }
+    },
+    {
+      "id": 11643413900,
+      "node_id": "MDg6QXJ0aWZhY3QxMTY0MzQxMzkwMA==",
+      "name": "windows",
+      "size_in_bytes": 25803957,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11643413900",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11643413900/zip",
+      "expired": false,
+      "digest": "sha256:bf9c7bdd2768db9e1172042b92926aa0dd6cde7376b3136e233a111a10b12d23",
+      "created_at": "2026-10-09T20:36:42Z",
+      "updated_at": "2026-10-09T20:36:42Z",
+      "expires_at": "2026-10-14T20:36:41Z",
+      "workflow_run": {
+        "id": 37987187103,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784"
+      }
+    },
+    {
+      "id": 11643139043,
+      "node_id": "MDg6QXJ0aWZhY3QxMTY0MzEzOTA0Mw==",
+      "name": "android",
+      "size_in_bytes": 80453345,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11643139043",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11643139043/zip",
+      "expired": false,
+      "digest": "sha256:792b752c8d77559320ba6e340a466f049cd6a5df4db4030ef629c96c9abe264e",
+      "created_at": "2026-10-09T20:34:58Z",
+      "updated_at": "2026-10-09T20:34:58Z",
+      "expires_at": "2026-10-14T20:34:52Z",
+      "workflow_run": {
+        "id": 37987187103,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784"
+      }
+    }
+  ]
+}

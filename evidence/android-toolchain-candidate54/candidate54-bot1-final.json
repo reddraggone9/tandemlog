@@ -1,0 +1,9 @@
+{
+  "number": 1,
+  "state": "open",
+  "title": "build(deps): bump com.android.application from 9.2.1 to 9.4.1 in /android",
+  "head": "998b1337afce8a2cd871f6565b38dc9502f73510",
+  "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+  "url": "https://github.com/reddraggone9/tandemlog/pull/1",
+  "closed_by_cloud": false
+}

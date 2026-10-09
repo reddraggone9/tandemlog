@@ -1,0 +1,146 @@
+[
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/DummyContent.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/DummyContent.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/LinkedResourcesFormat.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/LinkedResourcesFormat.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/PossibleResourcesMarker.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/PossibleResourcesMarker.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ResourceShrinker.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ResourceShrinker.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ResourceShrinkerCli.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ResourceShrinkerCli.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ResourceShrinkerImpl.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ResourceShrinkerImpl.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ResourceShrinkerModel.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ResourceShrinkerModel.java",
+    "equal_after_package_rename": false,
+    "diff_lines": 14
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ResourceTableUtil.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ResourceTableUtil.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/ShrinkerDebugReporter.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/ShrinkerDebugReporter.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/gatherer/ProtoResourceTableGatherer.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/gatherer/ProtoResourceTableGatherer.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/gatherer/ResourcesGatherer.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/gatherer/ResourcesGatherer.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/graph/ProtoResourcesGraphBuilder.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/graph/ProtoResourcesGraphBuilder.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/graph/ResourcesGraphBuilder.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/graph/ResourcesGraphBuilder.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/obfuscation/ObfuscatedClasses.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/obfuscation/ObfuscatedClasses.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/obfuscation/ObfuscationMappingsRecorder.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/obfuscation/ObfuscationMappingsRecorder.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/obfuscation/ProguardMappingsRecorder.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/obfuscation/ProguardMappingsRecorder.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/r8integration/LegacyResourceShrinker.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/r8integration/LegacyResourceShrinker.java",
+    "equal_after_package_rename": false,
+    "diff_lines": 30
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/r8integration/R8ResourceShrinkerState.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/r8integration/R8ResourceShrinkerState.java",
+    "equal_after_package_rename": false,
+    "diff_lines": 32
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/AppCompat.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/AppCompat.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/DexUsageRecorder.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/DexUsageRecorder.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/ProtoAndroidManifestUsageRecorder.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/ProtoAndroidManifestUsageRecorder.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/ResourceUsageRecorder.java",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/ResourceUsageRecorder.java",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/ToolsAttributeUsageRecorder.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/ToolsAttributeUsageRecorder.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  },
+  {
+    "old_path": "src/resourceshrinker/java/com/android/build/shrinker/usages/r8ResourceShrinker.kt",
+    "new_path": "src/resourceshrinker/java/com/android/tools/r8/resourceshrinker/usages/r8ResourceShrinker.kt",
+    "equal_after_package_rename": true,
+    "diff_lines": 0
+  }
+]

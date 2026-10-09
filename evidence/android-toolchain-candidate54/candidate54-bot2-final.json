@@ -1,0 +1,9 @@
+{
+  "number": 2,
+  "state": "open",
+  "title": "build(deps): bump gradle-wrapper from 9.4.1 to 9.8.0 in /android",
+  "head": "e4f14e84fc8a14f91c55d6191450a79686de346d",
+  "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+  "url": "https://github.com/reddraggone9/tandemlog/pull/2",
+  "closed_by_cloud": false
+}

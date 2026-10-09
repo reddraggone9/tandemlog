@@ -1,0 +1,30 @@
+{
+  "current": [
+    {
+      "pr": 1,
+      "state": "open",
+      "title": "build(deps): bump com.android.application from 9.2.1 to 9.4.1 in /android",
+      "head": "998b1337afce8a2cd871f6565b38dc9502f73510",
+      "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "updated_at": "2026-10-09T20:28:31Z"
+    },
+    {
+      "pr": 2,
+      "state": "open",
+      "title": "build(deps): bump gradle-wrapper from 9.4.1 to 9.8.0 in /android",
+      "head": "e4f14e84fc8a14f91c55d6191450a79686de346d",
+      "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "updated_at": "2026-10-09T20:28:48Z"
+    }
+  ],
+  "recommendation": "Retain both open as compatibility reminders; no manual rerun while requested versions/constraints unchanged; no close without coordination. Their old green/red CI is not acceptance against current source.",
+  "unlock": {
+    "1": "AGP9.4.1 requires paired Gradle>=9.6; retained KGP2.4.20 fully supported maximumAGP9.3.1 excludes it. Need an audited Kotlin/Flutter/Gradle combination that covers9.4.1, its exact upstream/transitive/R8 changes and full signed/native gates. Applying it alone to currentGradle9.4.1 is still incompatible.",
+    "2": "Gradle9.8.0 exceeds retained KGP2.4.20 fully supported maximumGradle9.7.0. Need audited Kotlin/Flutter included-scope support for9.8.0, exact upstream execution/transitive source review, correct official distribution checksum and all gates."
+  },
+  "official_sources": [
+    "https://kotlinlang.org/docs/gradle-configure-project.html",
+    "https://developer.android.com/build/releases/agp-9-4-0-release-notes"
+  ],
+  "actions": "Read-only PR/source/CI inspection; no close/comment/manual bot rerun/label change"
+}

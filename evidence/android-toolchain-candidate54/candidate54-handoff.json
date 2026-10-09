@@ -1,0 +1,128 @@
+{
+  "status": "Signed candidate54 successful; no duplicate54 native run. Parent validates exact combined migration+dependency candidate>=55 before publication.",
+  "source_commit": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+  "merged_pr": 4,
+  "integrated_dependency_commit": "912a4a28fda84399294ed15717ca181f0140d6eb",
+  "version": "2026.10.3",
+  "version_code": 54,
+  "candidate_run": 37987187103,
+  "candidate_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103",
+  "push_ci_run": 37987154935,
+  "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "baseline": {
+    "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "candidate_run_id": 37960853538,
+    "artifact_id": 11632728225,
+    "owner_signed_apk_sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+    "archive_sha256": "8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7",
+    "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "bounded_checks": 36,
+    "reused_rc7_checks": 56,
+    "origin": "Parent native acceptance; retain original source/device attribution. No rerun claimed by cloud worker.",
+    "evidence": "evidence/stable-2026.10.2/native-acceptance-attestation.json",
+    "unchanged_application_native_platform_pin_tool_test_scopes": [
+      "lib",
+      "native/text_engine",
+      "pubspec.lock",
+      "assets",
+      "android/app/src",
+      "android/app/build.gradle.kts",
+      "android/gradle.properties",
+      "tool",
+      "test",
+      "integration_test"
+    ],
+    "unchanged_scope_diff_empty": true,
+    "reuse_limit": "Retain domain/UI/geometry and historical fixture expectations, not exact new APK/Dex/R8/installation or provider acceptance.",
+    "pubspec_yaml_only_difference": "version: 2026.10.2+53 -> 2026.10.3+54; dependencies unchanged"
+  },
+  "application_native_workflow_lock_scopes_unchanged": [
+    "lib",
+    "native/text_engine",
+    "assets",
+    "android/app",
+    "android/gradle.properties",
+    "tool",
+    "test",
+    "integration_test",
+    ".github",
+    "pubspec.lock"
+  ],
+  "signed_artifact": {
+    "id": 11645201303,
+    "name": "android-release",
+    "size_in_bytes": 30370014,
+    "digest": "sha256:c433a70f745a85d5fe4d2303f539705bcebd9befa7f45b545c51138e26e06143",
+    "expired": false,
+    "expires_at": "2026-10-14T20:58:25Z",
+    "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37987187103/artifacts/11645201303",
+    "run_id": 37987187103,
+    "job_id": 114021013014,
+    "source_commit": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+    "version": "2026.10.3",
+    "version_code": 54,
+    "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "reported_archive_digest_independently_bound_to_upload_log": true,
+    "archive_bytes_downloaded_or_hashed_in_cloud": false,
+    "apk_sha256": null,
+    "download_blocker": "Connector obtained reusable ZIP file reference, but materializing returned HTTP403; no cloud archive/APK byte verification claimed.",
+    "required_parent_verification": [
+      "Download exact artifactID11645201303; match archive30370014bytes and reportedSHA256c433a70f745a85d5fe4d2303f539705bcebd9befa7f45b545c51138e26e06143 before extraction.",
+      "Check exactly four expected ZIP members and CRC; compare APK SHA256 to android-SHA256SUMS.txt and android-release-metadata.json.",
+      "If examining historical candidate54 bytes, verify metadata source71b841fe9dba1b46e86de6c055ce56df4a978784/version2026.10.3/code54/certificate0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d. No candidate54 lab install requested; independently verify the exact combined candidate before installation."
+    ],
+    "expected_members": [
+      "tandemlog-android.apk",
+      "android-SHA256SUMS.txt",
+      "android-signature.txt",
+      "android-release-metadata.json"
+    ]
+  },
+  "native_checks": [
+    {
+      "id": "N1",
+      "check": "Prepare isolated synthetic stable53 fixtures using the four accepted profiles when parent can access them; snapshot canonical bytes/hashes, task/checklist/shared-text/order state, writer/guards/settings and granted URI capability. Do not use live synced data, reset logs or regenerate frozen fixtures."
+    },
+    {
+      "id": "N2",
+      "check": "In-place upgrade the exact stable53 owner-signed synthetic installation to exact candidate54 without uninstall or data clearing; verify complete before/after retained state and integrity."
+    },
+    {
+      "id": "N3",
+      "check": "Record process-to-loaded-frame cold-process and warm-process startup on exact APK, using retained synthetic folder; verify SQLite and native JNI/text engine load, representative edit/checklist/shared-text/Undo and full integrity. Distinguish process restart from device cold boot/input-ready/physical presentation; compare within same device/provider without inferring performance from hosted timings."
+    },
+    {
+      "id": "N4",
+      "check": "Force-stop/relaunch and reboot controlled lab device; verify persisted SAF grant, tree enumeration/read/write and retained identities/state. Actual provider/version must be recorded."
+    },
+    {
+      "id": "N5",
+      "check": "Through actual test sync/provider, atomically replace a remote test writer log with independently generated valid reviewed fixture bytes; resume/refresh observes new document and imports once. Repeat unchanged refresh yields no duplicate receipts; reopen current descriptor rather than stale handle. Never replace owned/live history."
+    },
+    {
+      "id": "N6",
+      "check": "Revoke only the synthetic tree grant or remove dedicated test folder; failed write must be visible with no false save acknowledgment or canonical-history overwrite. Regrant/reselect controlled capability and verify recovery without resetting preserved evidence."
+    },
+    {
+      "id": "N7",
+      "check": "Restore lab settings and stop bounded services. Keep preexisting fixtures and failure evidence; record passed/unrun cases, exact APK/device/provider and reused stable evidence attribution. Parent performs native work; cloud does not operate user computers."
+    }
+  ],
+  "full_bounded_check_reference": "release-followup/native-handoff.json",
+  "release_authorized_by_this_execution": false,
+  "standing_rule": "Parent confirms saved dependency-only rule revision3; publication still waits parent-coordinated exact native acceptance and fresh quota",
+  "all_platform_checks": "Android, Linux, Windows and owner-signed release passed; all five candidate jobs successful",
+  "actual_release_evidence": {
+    "assembleRelease_seconds": 264.2,
+    "assembleRelease_success": true,
+    "owner_identity_package_version_non_debuggable_universal_abis": true,
+    "native_payload_and_exact_notices": true,
+    "signing_material_cleanup_step_success": true,
+    "actual_release_shrinking": "Successful unchanged flutter release route with Flutter default minification/resource shrinking enabled; quiet logs do not enumerate individual R8 tasks. Runtime acceptance will be on exact combined migration+dependency candidate>=55.",
+    "log_path": "candidate54-signed-job.log",
+    "log_sha256": "e4d296048a0503c9691d468fcc82e63fb422002efc2fb80c1aea1c87bf42a53d"
+  },
+  "parent_release_plan": "Latest user request: one combined storage-migration plus dependency release first; food deferred. No standalone dependency publication. Parent isolated migration source44d0577 will integrate onto accepted dependency base and prepare build55 or greater, requiring exact combined-source candidate/platform/native acceptance.",
+  "combined_release_native_reuse_limit": "Candidate54 exact APK acceptance may establish toolchain behavior only; does not attest migration preservation or exact combined APK. Parent coordinates those checks.",
+  "native_checks_status": "N1\u2013N7 below are historical candidate54 toolchain acceptance references, deferred/superseded by combined candidate>=55. No candidate54 installation/native run is requested. Rebind relevant checks plus migration preservation gates to exact combined source/APK/device/provider."
+}

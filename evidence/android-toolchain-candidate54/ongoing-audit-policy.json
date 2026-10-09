@@ -1,0 +1,24 @@
+{
+  "status": "Proposed operational audit policy within parent-confirmed standing dependency-only rule revision3; exact native acceptance and parent quota clearance still gate publication",
+  "trigger": "Review each new dependency proposal or changed resolved closure. Keep held proposals as reminders; do not re-run unchanged unsupported proposals merely because main advanced.",
+  "audit_before_execution": [
+    "Resolve complete changed direct/transitive coordinates, artifact variants and effective toolchain scopes; verify official distribution/artifact hashes and source/tag/commit identity.",
+    "Inventory actual upstream source differences against previously accepted exact versions. Manually inspect changed exercised entry points, build/install hooks, network/download/authentication, subprocess/native-loader paths, signing/archive and shrinker behavior, and any application data/API/security effect.",
+    "Trace new selected artifacts or code paths discovered during resolution before allowing execution; retain exact reviewed hashes and explicit loader/task observations. Do not treat a compatibility page, lockfile diff or tests as upstream source audit.",
+    "Use a focused risk-based review, not a claim of exhaustive third-party certification; document unread modules/generated code/native optimizer or inaccessible source. Official source provenance does not prove reproducible binary equivalence."
+  ],
+  "routine_action": [
+    "Choose a compatible coordinated maintenance pair within current project/support boundaries; use isolated local changes, applicable tests/analysis/package gates and independent review.",
+    "Integrate audited/tested dependency-only updates under saved standing permission without repeated approval prompts. Keep product/storage/food work out of the candidate.",
+    "Prepare a monotonic unpublished development candidate through existing trusted signing workflow, verify exact artifacts and all existing native/release gates. Parent coordinates native acceptance and fresh quota before publication.",
+    "Stop publication on attributable failure and use reviewed scoped revert/follow-up, preserving build floors, evidence, keys, release assets and all canonical data."
+  ],
+  "user_decision_exceptions": [
+    "Confirmed security or user-facing product change, durable-format/history/storage semantics, or substantive architecture/stack change.",
+    "Signing/security policy, protection/permissions/credential changes, new external secret access, paid runner/billing changes or user-computer/live-data operations.",
+    "Proceeding outside supported compatibility bounds or with unresolved source/provenance/critical behavioral uncertainty instead of keeping update held.",
+    "Destructive actions or release scope that exceeds dependency-only standing permission; parent retains exact native/quota/publication coordination."
+  ],
+  "hold_policy": "Retain PR1/2 open without manual reruns/close/merge. Reassess when requested version/source changes, official compatibility/toolchain support changes, an urgent security advisory warrants different risk, or a relevant upstream fix appears. Optional existing blocked labels/tracker consolidation is for parent coordination; no new scheduler or comments created.",
+  "limits": "Source review is bounded; build success is not security proof. Exact native behavior remains device/API/provider/artifact attributed, and unrun checks stay pending."
+}

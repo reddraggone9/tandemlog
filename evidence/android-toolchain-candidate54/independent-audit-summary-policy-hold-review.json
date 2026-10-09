@@ -1,0 +1,29 @@
+{
+  "reviewer": "independent toolchain_review",
+  "reviewed_at_utc": "2026-10-09T20:45:11.247621+00:00",
+  "decision": "Approved final private audit summary, proposed ongoing policy and held-PR interpretation after source-phase/compiler wording corrections. No remaining source-audit/product/security wording must-fix; candidate/native/publication gates remain pending.",
+  "inputs_sha256": {
+    "audit-summary.json": "4e277844af3200e362e5d7fc6315599e77de44b45a8e18e0442ef1ce20f6f841",
+    "ongoing-audit-policy.json": "4e72c702034187f2b6d92071c23736cd2e66a8d932ab479e34eacf047da92e95",
+    "bot-holds.json": "80d59161d670ebd126c12495d17b6e6ae68251a2ed86ee489dbe6777836669e3"
+  },
+  "supporting_review_sha256": {
+    "independent-upstream-review-breadth.json": "fb8a31caca04991b48c369e374950df6cf0976cb0b5afa3744267bb94df585fa",
+    "independent-gradle-upstream-diff-review.json": "8fe13eab5d923131a6f92c94532e04762f111c3cd3c9d46a9dc4d5964a7e3243",
+    "independent-r8-upstream-diff-review.json": "44f6faf1d7fe7a9ffe7c3e6c1aa2851096cb561bfe78936f893081151f8e40da"
+  },
+  "accuracy_checks": {
+    "phase_timing": "Four phases accurately distinguish initial pre-consumption gate, deferred discovered artifacts before their consumers, effective graph/payload review after execution and post-dispatch upstream old/new comparison extensions. No retroactive full-before-first-run claim.",
+    "Gradle": "Verified75 exact files/42paths and complete2584-path inventory; manual review remains explicitly focused, whole NodeState/all tree unclaimed. Dormant wrapper versus distribution source-resolver credential-helper distinction preserved. Concrete compiler ceiling/default/helper changes reflect reviewed source.",
+    "R8": "167-entry inventory and39focused diffs,21 unchanged record-focused paths and24 resource-shrinker comparisons correctly scoped; atomic/refinement/annotation differences and application shrinking/native limits retained.",
+    "policy": "Operational proposal sits within parent-confirmed revision3 dependency-only standing rule; exceptions preserve security/product/storage/signing/permissions/billing/live-data and unsupported/unresolved-critical-boundary decisions. Does not turn green CI/source review into publication/native approval.",
+    "bot_holds": "Fresh parent-provided snapshots identify PR1/2 auto-rebased to version71b841 base while requested9.4.1/9.8.0 stay outside retained KGP fully supported maxima9.3.1/9.7.0. PR1 also requires Gradle>=9.6, excluding current9.4.1. New heads are not accepted by old CI. No manual rerun/close is recommended."
+  },
+  "confirmed_snapshot_heads": {
+    "1": "998b1337afce8a2cd871f6565b38dc9502f73510",
+    "2": "e4f14e84fc8a14f91c55d6191450a79686de346d"
+  },
+  "metadata_provenance_limit": "PR state/head/base snapshots and saved standing-rule confirmation were supplied/read by parent; reviewer did not independently requery GitHub or Personal Context in this followup. Compatibility and review claims cross-checked against inspected official source/earlier receipts.",
+  "candidate_limit": "Parent reports candidate37987187103 source71b841fe9dba1b46e86de6c055ce56df4a978784 progressing; no actual signed artifact was supplied or reviewed here. Do not infer all candidate jobs, artifact/signature/native gates or publication clearance from this approval.",
+  "actions": "Private read-only checks and review receipt only; no repository edits/external writes/comments/closures/dispatch, dependency execution, policy activation or secrets access."
+}

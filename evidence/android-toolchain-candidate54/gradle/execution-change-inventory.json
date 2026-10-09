@@ -1,0 +1,1852 @@
+[
+  {
+    "path": "build-logic/kotlin-dsl/src/main/kotlin/gradlebuild.kotlin-dsl-dependencies-embedded.gradle.kts",
+    "old_sha": "9cea5d991ea73994b3b54bc9b29236c02797e1a6",
+    "new_sha": "e6add75f4155fb4527df5057fe85558ccf250d6e"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/accessors/runtime/Runtime.kt",
+    "old_sha": "1bd92c96d037acc01fb643f8e84514d13cb1bbf8",
+    "new_sha": "e992a947570218791b8c21a5a600037eac201eba"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/cache/KotlinDslWorkspaceProvider.kt",
+    "old_sha": "753cb780b0f2d584ed0577721e69c8acd57a0543",
+    "new_sha": "ec602b8e06186279f4ce209c89010ba59d20dc6a"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/DefaultKotlinMetadataCompatibilityChecker.kt",
+    "old_sha": null,
+    "new_sha": "349a489efac9f337941a08b26431d6670ddb39aa"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/GradleUserHomeServices.kt",
+    "old_sha": null,
+    "new_sha": "f9f25ea80634b7a3108bcf07cad2c86a41d4a59c"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/Interpreter.kt",
+    "old_sha": "a4576ad125fac58e13a0ef731e66a2d9e0a66990",
+    "new_sha": "873a94ac115abaf1ebab7a70fc6e1b07e34e0b54"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/KotlinMetadataCompatibilityCache.kt",
+    "old_sha": null,
+    "new_sha": "98597182599757b9f3e94344b2ac905380503e72"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/KotlinMetadataCompatibilityChecker.kt",
+    "old_sha": null,
+    "new_sha": "8cfe16ad56901a3a4a94d8803ff0b62b75ebb123"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/ProgramId.kt",
+    "old_sha": "702fb622f7ebc01d6e6ebbc3a561f6d73d28d674",
+    "new_sha": "1ae03ec9fc1575ee17531342bb7c91a104325125"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/ResidualProgramCompiler.kt",
+    "old_sha": "f28f53a56a0e048eb2a815e82fe6c3d0cc088ce7",
+    "new_sha": "a622a6f170e730c6b8472b6c3504b6237d37ccfa"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/TemporaryScriptFiles.kt",
+    "old_sha": "a245c3cd13559b2474511bde2c0b58229a2d5121",
+    "new_sha": "20fd50eebcc474f4723b7ee8fd587d3db247bc34"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/execution/metadataCompatibilityCheck.kt",
+    "old_sha": null,
+    "new_sha": "984f5b451bd87592f2f6df34b6e3b675c46ee1f2"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/normalization/KotlinCompileClasspathFingerprinter.kt",
+    "old_sha": "21b249e435d0b9efb999eceac651c2ef50e3e592",
+    "new_sha": "6125f944500be7b7f7b466e6236b47e39f174a2a"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/provider/BuildServices.kt",
+    "old_sha": "05b776cbb4ff3ebceef5943c0330b92b06024f99",
+    "new_sha": "e7554783a55159438c5fcd7d411059be2a461b55"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/provider/KotlinScriptClassPathProvider.kt",
+    "old_sha": "3a3e9dfa881b0d64759fecfd700a24e4c232b0d5",
+    "new_sha": "3bd3aa0f45d2eb98430c287a89d1bef6603dec2d"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/provider/KotlinScriptEvaluator.kt",
+    "old_sha": "5b2f831bddc4a6928e31a2b30573f8abb61fa07b",
+    "new_sha": "2f6c96e0c101b451c8601f3555d8ff696067e622"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/KotlinBuildScriptDependenciesResolver.kt",
+    "old_sha": "b34777295736be12fd8f16d7e7e559a4f74ab552",
+    "new_sha": "de13d71f8cae1b09c871f2658867f78ce75d4ef3"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/KotlinBuildScriptModelRequest.kt",
+    "old_sha": "e3dc892ad50341067e2d198832b0f5f3986bdd06",
+    "new_sha": "eac2e29a515352263ff840f7b7b2a54d8f939162"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/SourceDistributionProvider.kt",
+    "old_sha": "73dea74bddcc9c2b2a767f1c9f96de225ac05b98",
+    "new_sha": "bad47ccacdd1784a2c0cebc39febbcb496924a3b"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/internal/GradleDistRepoDescriptorLocator.kt",
+    "old_sha": null,
+    "new_sha": "ea38619cc0214431e0764c5bdecef974cde79ec4"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/services/KotlinScriptServices.kt",
+    "old_sha": "b72a2eea9a9338e5e396f50611a513173af0eee5",
+    "new_sha": "03e1357b578d4910145916a915b5f86a02bd1d74"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompiler.kt",
+    "old_sha": "8c3c21eba0a546eeb37329a6256dacceab9c93fd",
+    "new_sha": "c86432e47a8e92fbe979f9b9e87927c59aa1d0a3"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompilerOptions.kt",
+    "old_sha": "f5421f41d2a141c6ca2885881740032658eb297d",
+    "new_sha": "d24e36e3ebfe56b731bca8902e829e44e2834016"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinDslOptions.kt",
+    "old_sha": "ce63a6dccd2dcf60554bcbfefb6a1278c815793d",
+    "new_sha": "339c330df29fb992f58c56d0be1a364b5987f83b"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinScriptHost.kt",
+    "old_sha": "5409583a62f5ef44c352cd442e11124f8bb4455e",
+    "new_sha": "1c3f3407941c8eba053aff592306002581794803"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/delegates/GradleDelegate.kt",
+    "old_sha": "1d2792dd521f386d5863eb65173ec4a85e7d8062",
+    "new_sha": "c34b82157c481b4cdb4efbf2bd8ac0c17e08c8d0"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/delegates/NamedDomainObjectContainerDelegate.kt",
+    "old_sha": "e628d78cf5635536bf950a1060e55a153e14e70c",
+    "new_sha": "77a4d84ad717b81d23bb3bd04765a2cf1b817586"
+  },
+  {
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/delegates/TaskContainerDelegate.kt",
+    "old_sha": "1a995ba3a35f848a075ecfe2563f57ce1c4bb9e8",
+    "new_sha": "e28bd763ad7a8b81195d8ca91885bb6940561c3d"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/ImmutableUnitOfWork.java",
+    "old_sha": "cbdc34ab817977838bc9bfd4762f4084de1fc293",
+    "new_sha": "06da0fba4ed005e0732556dda55282f6fa8576c1"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/MutableUnitOfWork.java",
+    "old_sha": "5e910729ba2c718303380492d2f2f3901a60cb05",
+    "new_sha": "787cad7eb931761e3c8615d25e0796622f4893c5"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/OutputVisitor.java",
+    "old_sha": "f7b7db0b9d45330f21ff2a5141717d153db03310",
+    "new_sha": "a9c6826e06d5024a8ad1fa879c81cf82550ac34f"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/UnitOfWork.java",
+    "old_sha": "b1972aa40a33e34e59b99a893c12ff1712754758",
+    "new_sha": "02d2e400103913373a551142c017f727bee3ad8e"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/WorkInputListener.java",
+    "old_sha": "1ec843cd25dd645ba8060a60015c05e2a7eb69f2",
+    "new_sha": "1f98e1038881ea43d77fb5579205bf24c5e5486a"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/history/BeforeExecutionState.java",
+    "old_sha": "24c9755e94a4b6e08142cd435d6437baa879e800",
+    "new_sha": "6fd00d2b9fac0ed94cd3fa75e163fb55a376f366"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/history/changes/DefaultExecutionStateChangeDetector.java",
+    "old_sha": "6b4e19ee734a403cd580ca3ff8d605bb1a7d2d77",
+    "new_sha": "fd63af5fb76aedd967261a1b798917589559b67b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/history/changes/ExecutionStateChangeDetector.java",
+    "old_sha": "07412d69c3f4ff64687b88b4778d5a5a1a61a0d9",
+    "new_sha": "3df74017f16a3c1120c01b6e63799244478a187a"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/history/impl/DefaultBeforeExecutionState.java",
+    "old_sha": "c3ecbda5b749dfa7bac574bc65ec68394d78724b",
+    "new_sha": "71d6e8ad52def3b849b1021ff7167958b7907c4f"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/history/impl/DefaultImmutableWorkspaceMetadataStore.java",
+    "old_sha": "9fb0b14ceb7907af8f9b3776b2b0451d73d9be97",
+    "new_sha": "c1198cbf90f6a5ff9e3ace3d418e366ba03d3b9f"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AbstractCaptureStateBeforeExecutionStep.java",
+    "old_sha": "edaa1abbed97c66ffee5e567fcb41414da0c5df4",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AbstractResolveCachingStateStep.java",
+    "old_sha": "aa96e513a2d59db22c394876bcc27292af038f54",
+    "new_sha": "8574a6643314abc2259e4ff120f185b672d5e2a7"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AbstractSkipEmptyWorkStep.java",
+    "old_sha": "cb7e257c457adff0bc297c757cab6ab2f2525362",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AfterExecutionOutputFilter.java",
+    "old_sha": "8d18c0a2ec4f189a1cd1ec22cfb8ef5af1901c4c",
+    "new_sha": "a316f24f45b89a6ba8dc71962260a76fada805f2"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AssignImmutableWorkspaceStep.java",
+    "old_sha": "45688be892ed264491427e93b08cfa20f1770bf0",
+    "new_sha": "94f45f392111db49793beb1bfecce84069b9977b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/AssignMutableWorkspaceStep.java",
+    "old_sha": "f57be6a4e1fb400eba1ace2c1a1deb4e223d72a5",
+    "new_sha": "7721d58071b2db3a38704c7d04b5a72d083efbe0"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/BeforeExecutionContext.java",
+    "old_sha": "10bab09d0372c4400f849c03b40d7ba91635358b",
+    "new_sha": "59a1104df60ad85465d2035b88c17244cb445a82"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/BroadcastChangingOutputsStep.java",
+    "old_sha": "6f32033e716dff7f1055e97522f36c2d1545530a",
+    "new_sha": "9458e14df59bbc0570847e4f23fbde61c526fbd8"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/BuildCacheStep.java",
+    "old_sha": "f59222712d816911a9fd17b033f9b483c689d321",
+    "new_sha": "4a8a18654e7261c5c20ea4386eb4d25f004b57d4"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/CaptureImmutableStateBeforeExecutionStep.java",
+    "old_sha": null,
+    "new_sha": "81377fa3512aa47674e9c7f2e5098fa64c64f045"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/CaptureIncrementalStateBeforeExecutionStep.java",
+    "old_sha": "5c7f01dcc44c6d99e9e38bced2c596498ed1977e",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/CaptureMutableStateBeforeExecutionStep.java",
+    "old_sha": null,
+    "new_sha": "5f82d19eed03ca7b90150a83ec10b70088c16403"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/CaptureNonIncrementalStateBeforeExecutionStep.java",
+    "old_sha": "65db73c37b22b4e04c6564e985be312afb3e2f64",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/CaptureOutputsAfterExecutionStep.java",
+    "old_sha": "b0633b120be98cca3f7583846dc3ab52a57f3c70",
+    "new_sha": "ff088f584958b13faa199e8c2dd6b7bb03f89827"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ChangingOutputsContext.java",
+    "old_sha": "87f00e1e5cf7625072fa10f50223bc326ca76910",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ExecuteStep.java",
+    "old_sha": "0d4e48b95c409357e0f819b4d2b10db76a8efee8",
+    "new_sha": "f83f4cabed4220c920528ec4bf654ade1c75ff97"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ExecutionRequestContext.java",
+    "old_sha": "fa2580dc69e2bf0b9269544e453796df89f25657",
+    "new_sha": "856fd229d5521b3e0c97ee666565d2e63583ad1b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/IdentifyStep.java",
+    "old_sha": "7e3233b9669449ce79601757bd1a2c38c85f0878",
+    "new_sha": "b7b9cdc384e2f36c5ada23ba87f8e0b9ea290c6d"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/IdentifyingContext.java",
+    "old_sha": null,
+    "new_sha": "2516fa2ccfca238e9c126689e5aed8130dc844b5"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/IdentityContext.java",
+    "old_sha": "b1117babe56e074cb1f092a05fcdcedec5710493",
+    "new_sha": "2ed78293bf1515d0195b279ca197b49be49e0e4d"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ImmutableBeforeExecutionContext.java",
+    "old_sha": null,
+    "new_sha": "64bfe192ca96d0524874d657068986305327d19b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ImmutableCachingContext.java",
+    "old_sha": null,
+    "new_sha": "f340099bb4b51daf72d7ecc4c39b0c06905d7ed9"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ImmutableValidationFinishedContext.java",
+    "old_sha": null,
+    "new_sha": "36ac0bf9ef8c9c31c5d64a2f4b8e8edc1d9a7d6a"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/IncrementalCachingContext.java",
+    "old_sha": "6da2e4cabbed61240b56eb9aa2bb5f74ea6fddec",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/IncrementalChangesContext.java",
+    "old_sha": "9cbdf5f7babf065aaa772a34a40ab0a5fc07e59f",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/InputChangesContext.java",
+    "old_sha": "d55a194db4f055ab9a23aea9f436b5032ee4f14e",
+    "new_sha": "41ba717fc390754c8e382089a106a4489f68d326"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/LoadPreviousExecutionStateStep.java",
+    "old_sha": "072dc74b031fadb268ee17fb324684a1d4c3a4a6",
+    "new_sha": "18d04171fc7aa3b416290f49781fe41fb13315ad"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/MutableBeforeExecutionContext.java",
+    "old_sha": null,
+    "new_sha": "160b1af199b245ae16e740829f2731269130bb95"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/MutableCachingContext.java",
+    "old_sha": null,
+    "new_sha": "5112e894f1f46dbd74c5be7339e98dc4d5531c19"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/MutableChangesContext.java",
+    "old_sha": null,
+    "new_sha": "ad366c942364ace581468ad1cfa8bfa1ae0855d3"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/MutableStep.java",
+    "old_sha": "51a6a063a5cb6cfa35fcb22f4f7dbe1dc2a5a22d",
+    "new_sha": "0404e596eb93b2ae920241348e307e5e47948e72"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/MutableValidationFinishedContext.java",
+    "old_sha": null,
+    "new_sha": "6786213087615748bab96c1c19f624aca7cac83b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/NeverUpToDateStep.java",
+    "old_sha": "b9989cba00d84f16848f0d4d060a857ef7b689c1",
+    "new_sha": "087b8b9b144f126f8f5bfc219af12dd5d8b4f242"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/NoInputChangesStep.java",
+    "old_sha": "996d0681c4ed7a7a0996fbfcaad8334290f83ac7",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/NonIncrementalCachingContext.java",
+    "old_sha": "f02766d72754476048a6c9de51e9c3cd3ff351b8",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/OverlappingOutputsFilter.java",
+    "old_sha": "aad428dac1b0c967cbce4652c070412282df40b6",
+    "new_sha": "f7bb9109ecff4802760f73acc727c20097719ec3"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/PreCreateOutputParentsStep.java",
+    "old_sha": "7803c81eccbccab28e7d4770f102b74195e0084d",
+    "new_sha": "606aeec58d5f9a0001465c1b7da12f47ebd045f4"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/RemovePreviousOutputsStep.java",
+    "old_sha": "4bfd8b43212a5cd4514fef76ea0d7bdf7b178636",
+    "new_sha": "14c835e8fa1b6633f49276fd2b10614307041c76"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveChangesStep.java",
+    "old_sha": "bdc15c34a49562728d62aeba9ec39c364bcafcfe",
+    "new_sha": "bdf5f59f62c50d4bdd892696ff5e18d0d8c2382d"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveImmutableCachingStateStep.java",
+    "old_sha": null,
+    "new_sha": "b212457a70536ab1fb9e1e2660f20f389ddbafa1"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveIncrementalCachingStateStep.java",
+    "old_sha": "94ed965906cefdc6219a8dd0d549f460a4c97469",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveInputChangesStep.java",
+    "old_sha": "a762987ab1879f43b00de59939830e3d411ae336",
+    "new_sha": "76319f21e5a7a1021660569a69f302bde75a3038"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveMutableCachingStateStep.java",
+    "old_sha": null,
+    "new_sha": "9d1eff7346bfd9ceffaa8f706723371805a9efeb"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ResolveNonIncrementalCachingStateStep.java",
+    "old_sha": "38a40643b8fccc732e5b9ac2aa96947079bceb64",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/SkipEmptyIncrementalWorkStep.java",
+    "old_sha": "b539048169f9612c07de67defc42206aa3c794b6",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/SkipEmptyMutableWorkStep.java",
+    "old_sha": null,
+    "new_sha": "df9e41d740c0fc7c37c9c6766e523bec444ad1de"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/SkipUpToDateStep.java",
+    "old_sha": "9b84ec983dc333fa2f75ca4a036ea8328ed7d5c0",
+    "new_sha": "70580ccf33271944e1e8554985a08c9af45d5cd6"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/StoreExecutionStateStep.java",
+    "old_sha": "4d8aff87798af10c0ce3d61f6e80404f8b0e3923",
+    "new_sha": "4256c528b13cdd201122156babd8cbf6cedfb83b"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ValidateStep.java",
+    "old_sha": "77a939ed563a48d703e9de8f4563e3c2a02597d3",
+    "new_sha": "136dff099c57bccdbf47ce333cd7c2184b487e18"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ValidatingContext.java",
+    "old_sha": null,
+    "new_sha": "12b498adb037cfcdaa4ddc4c4994fcb85a4c14cf"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/ValidationFinishedContext.java",
+    "old_sha": "4a46692c729cc69cc1dc729129a599beae414a3c",
+    "new_sha": "e585800951949937a89c5ce8e904985b963e84d7"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/steps/WorkspaceContext.java",
+    "old_sha": "ab89a6f1b3fd5260b1f815f7d16a35783494d030",
+    "new_sha": "c24cc19085302063022daa877c78a0a22b3216e1"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/workspace/ImmutableWorkspaceProvider.java",
+    "old_sha": "2c4d0bb5292715d907746b1ec7904c51ffa6996d",
+    "new_sha": "0f651ef2cb5fdcc6df124880c5a55b63d8f204ad"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/workspace/MutableWorkspaceProvider.java",
+    "old_sha": "ac2fa005ce9500749be5dee480f2fe4572c610f3",
+    "new_sha": "1d9f98f67bf866ec8d00f1ebcaa9f5c751e1a166"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/workspace/impl/CacheBasedImmutableWorkspaceProvider.java",
+    "old_sha": "bc6552a314e25da3472201c9ccf3d62d7f228956",
+    "new_sha": "c6f69cc20b89ba1059e7f2c7cc5045997025bdbc"
+  },
+  {
+    "path": "platforms/core-execution/execution/src/main/java/org/gradle/internal/execution/workspace/impl/NonLockingMutableWorkspaceProvider.java",
+    "old_sha": "2962ce6dbcb949683295529221aa673299f0e8af",
+    "new_sha": "b90f10ce86db4104ff1455151994b77f6dc82524"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/api/Named.java",
+    "old_sha": "b5cf4a412e64e4d9460022596cc337ab2ad861a4",
+    "new_sha": "17c7c306d5f377a39e24f21884c0ae77844e0c48"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/api/internal/cache/StringInterner.java",
+    "old_sha": "bf77b0a9d8a1f444f216d504ed771c5449c905ce",
+    "new_sha": "38f87d10878d2e892641ce1b1eb18fa0517a9b28"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/api/reflect/ObjectInstantiationException.java",
+    "old_sha": "cbff0a33a235e581c04f132a27fe9c567a87d393",
+    "new_sha": "082f9730925c56123d78c914e659ba870e45102d"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/initialization/BuildCancellationToken.java",
+    "old_sha": "b89fe725edd92ceda149ddb563b8bb4ef54b2d7d",
+    "new_sha": "cd182a087579c057fd9cf0e298d9dff18c455a4e"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/Actions.java",
+    "old_sha": "32181f774641264306f3cf7a2ebab8d9976129a2",
+    "new_sha": "1e448d508e4b985f05ee592ffa4c77e1a7fd347c"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/Describables.java",
+    "old_sha": "a848303e5c8b6e0fa8b49b2791f2a46fe5671d43",
+    "new_sha": "13aa1af586325bd551a7948753e51a3dbdfaa43a"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/FileUtils.java",
+    "old_sha": "121cc5dc773dd6bd8193515960155d89b8926be1",
+    "new_sha": "1ecd44f8e8cfff8cda3ec116d0962b0da9024921"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/MutableReference.java",
+    "old_sha": "b857ea2ae2996cae02f618146a41154d85eabc2f",
+    "new_sha": "f646ba99ddfe822cd1e67b742dceed5b1b4e7472"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/buildtree/BuildModelParameters.java",
+    "old_sha": "f13fb4e94a5788142d439df51605d364c4dd0ceb",
+    "new_sha": "5ceaac8abaca0a1c75846021b09130717efa8f6f"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultClassLoaderFactory.java",
+    "old_sha": "1b2d7b0b14dae147b1b728a572d49bfa4abfa0f9",
+    "new_sha": "300ecb0aba99edb14c5b98f548de0ddb6fc252e9"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultHashingClassLoaderFactory.java",
+    "old_sha": "ae8ac7fd0809874ce21d738ce32f0677d870b4f8",
+    "new_sha": "3c60695ff4d255ad9dc2a92068168df3c90a6818"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/code/DefaultUserCodeSource.java",
+    "old_sha": "43023325683069089a051d8cb1a77007cb35f941",
+    "new_sha": "f7d55043ae45ae2a178ffe7b5d4568e789d6cb74"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/exceptions/FormattingDiagnosticsVisitor.java",
+    "old_sha": "ee50772a9f83772c7406dd72dde20697bb44cf85",
+    "new_sha": "8d4f51c31daf9014852432bbe92ef2a7acfea6a1"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/graph/CachingDirectedGraphWalker.java",
+    "old_sha": "b20a905f3f956c3a57a5226754617936c5f533ad",
+    "new_sha": "d93e6728a732728eec01943e4a75e7faf0d61f45"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/jvm/Jvm.java",
+    "old_sha": "7fdb66ca2c9e476de67279bd57724a52755ffdab",
+    "new_sha": "333a3308aa891f5ce8329404c4082fddcf2d01ff"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/operations/BuildOperationConstraint.java",
+    "old_sha": "89f58242472a1ad05ffcfdee2f55bd52e1e2ebf8",
+    "new_sha": "3fa5fc01b6c7028444609921db6d7f7e5d1ab4ff"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/os/OperatingSystem.java",
+    "old_sha": "d2faaa75817245208763eb9d8ce34983f4a768c1",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/reflect/ReflectionCache.java",
+    "old_sha": "f62e283218606eb72a47bb2fedbbbcba29d5c6b4",
+    "new_sha": "a68874136cfaac5af3b3fc556ea2ee2b69ea0471"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/AbstractResourceLockRegistry.java",
+    "old_sha": "4cb13af832b805f14fca0e9558ef3f01b0ce7300",
+    "new_sha": "df9ad7c47207a99e5362bb59ad33f5f8ed235029"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/AbstractTrackedResourceLock.java",
+    "old_sha": "4ae3561ae660090a3b5ddc43f6af9edba3df9e8f",
+    "new_sha": "5757e4c27ff75b9638cd372fe76d9c34e4eeae7d"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/DefaultLease.java",
+    "old_sha": "c9b3c4ed2ca46cffeafb9aca6cf147a21197270f",
+    "new_sha": "410fe7ab3112c1a62e8fc2410ad7aab5f4fb2657"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/DefaultResourceLockCoordinationService.java",
+    "old_sha": "a930f50ae6c7acb87126c75c3d01a13aa99b380e",
+    "new_sha": "1e3884f4ce605a221d4ba19cdaea2aede972424d"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/ExclusiveAccessResourceLock.java",
+    "old_sha": "8b879376c4a000af136e99efdb4df33bf078e0be",
+    "new_sha": "e9f6943ac90a468d0ce879d28ed08ba6d52f7f33"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/ProjectLeaseRegistry.java",
+    "old_sha": "f4c2acd584187eed887c2fff272e73ad5ab9a0cb",
+    "new_sha": "d578745dac3bdf7d7d0b4537599a7a45053109b7"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/ResourceLockCoordinationService.java",
+    "old_sha": "a422e2d593878ac5e40a08403642996affc9b273",
+    "new_sha": "e0e6047ac8976598fa8cbdd7ca53c622a3a3a33d"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/resources/SharedResourceLeaseRegistry.java",
+    "old_sha": "fe4a365c920da7609fa0f5c0a385e55b86178248",
+    "new_sha": "7e5e5718609afda40b2cd9a38fc1245a01606619"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/service/CachingServiceLocator.java",
+    "old_sha": "c2658beb331236a7757998734d911d1b25691893",
+    "new_sha": "71e66aa0180efe9e0ad81b49d294aa5c7fd363cf"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/service/DefaultServiceLocator.java",
+    "old_sha": "1cb0c0f14a03a07ade84e3f4fa489ade50c9b07e",
+    "new_sha": "aba1f48502ba5f2b08da4e9e5d179472d583e5ed"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/typeconversion/UnsupportedNotationException.java",
+    "old_sha": "2743236bdfbb18f374a0a064db16fa473b623210",
+    "new_sha": "ab5aa0667fb2cad12d07995c9e3136d428042c11"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/AbstractConditionalExecution.java",
+    "old_sha": "620a12220178003f1eda54b4ceaa1dc06064ff32",
+    "new_sha": "fc4b954668e2b436a707c5de28631c7d29079db5"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/DefaultConditionalExecutionQueue.java",
+    "old_sha": "46567747b70b6a33a2ab119fde17b0d28e8af329",
+    "new_sha": "6e1b004d1a1a06d6e54b7baff208edaf12c9f430"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/DefaultResourceLockStatistics.java",
+    "old_sha": "cf38ebf410423cec805d382f64a8d6a63058b0c0",
+    "new_sha": "c7714370ef08c139c710b42f9af620d22daea92b"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/DefaultSynchronizer.java",
+    "old_sha": "0f24992924f688910fba1ac111d3044caa49d5e7",
+    "new_sha": "944a2dec52c669a1207ddab5b72fce7c30ca1c3e"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/DefaultWorkerLeaseService.java",
+    "old_sha": "a21ac7bdf465894e665f3d17f339d0e9ef824aa5",
+    "new_sha": "6e2ffeb251b7f7a0db83ad4ef9e5b87db197f8cc"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/ResourceLockStatistics.java",
+    "old_sha": "ddc8ad79ed1e4e517b8d6e8afa634b3bf723886f",
+    "new_sha": "93fcb64df035dece78e045c7b249f7486fb7b02a"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/Synchronizer.java",
+    "old_sha": "df9bea80d8faa5a4bafd951d12402cf224c77fbd",
+    "new_sha": "34b63e6e9035097cbea89edb326a217cb5919e93"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/WaitBuildOperationFiringSynchronizer.java",
+    "old_sha": "45654cd71decafc00cd917c0e08c484aac998a82",
+    "new_sha": "c03f43a20a52437d68837645b83bfbcd81244a7a"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/work/WorkerLeaseService.java",
+    "old_sha": "615d244f6edb524785d4d16bd69c8263f48cba86",
+    "new_sha": "eff66ca2caaa102d742ae15c1b317beda94206cb"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/Path.java",
+    "old_sha": "e2111a0c11d110a2e24efdf56d55e5cab9613d4f",
+    "new_sha": "ca49dbe4c88d6c388bc00b42dfbfad6fcca634cb"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/internal/DefaultGradleVersion.java",
+    "old_sha": "e9ffe196a7a7f272f4202d518cd7f4760c74cb73",
+    "new_sha": "15eda8ea4a69981c4e7796e84900b27f085a0f65"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/internal/GUtil.java",
+    "old_sha": "676753164f1035d9bae8d662c385bfea29b494d2",
+    "new_sha": "6406ecdfc6a23bc2e645e57c08b48d3d00282e96"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/internal/KotlinDslVersion.java",
+    "old_sha": null,
+    "new_sha": "4f46502024ea1c19a727c0747311eed64184786e"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/internal/TextUtil.java",
+    "old_sha": "807933e6ff82424bbb26eb7701731a10cce9134d",
+    "new_sha": "64caf518e72d4224e0dfae572280826c773f61b6"
+  },
+  {
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/util/internal/VersionNumber.java",
+    "old_sha": "68d794c8df1b9af4b3ed85d2c07ec3a150878522",
+    "new_sha": "a41ce749e05a76d655b793d820688bc89c8254ba"
+  },
+  {
+    "path": "platforms/core-runtime/build-process-services/src/main/java/org/gradle/launcher/bootstrap/ProcessBootstrap.java",
+    "old_sha": "d53b6aba58d738ad2c39cea50e26bbb8e4afcf81",
+    "new_sha": "5341312f6b296175d6ba27b6db4fe5c37be511c7"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/bootstrap/DaemonOutputConsumer.java",
+    "old_sha": "addb90d8f46081ec5b803615b9cae050d7138e61",
+    "new_sha": "2b09588857e4ca7cacfd398071bb8621b255a5f7"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DaemonClientMessageServices.java",
+    "old_sha": "7939248c686f747160a82e45e54dfb38bd7f9152",
+    "new_sha": "a30ead717e08061d6e6d29b3d03839e885a9be02"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java",
+    "old_sha": "e840b0b781877932453accfdfb26d9e462bc6510",
+    "new_sha": "904ec646f7501b99ea27321385d036de54b7c36b"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/configuration/DaemonParameters.java",
+    "old_sha": "b589a97d848905743848a73259ca1198c975ef3c",
+    "new_sha": "1ade7fa4c86bf5be0ec1da0804dbf5dcb82b29b9"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonClientToolchainServices.java",
+    "old_sha": "1fc5b78f3330a875a6afea72da790ba681e4793e",
+    "new_sha": "1d5d5d88d468f454bee0fb1ada8ad4a2b68488b3"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonToolchainExternalResourceFactory.java",
+    "old_sha": "1fb99fe2fa33e04a8c569ea755796044ceeb610f",
+    "new_sha": "cbd09756f9570732100c9727a9858ed4cce3449f"
+  },
+  {
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainExternalResourceAccessor.java",
+    "old_sha": "8875ecc428de1d0b3e2b4aa329127ea45d5994e3",
+    "new_sha": "04fc7900549ff16326a8ac7e9f0bac53b5a27844"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-logging/src/main/java/org/gradle/launcher/daemon/logging/DaemonLogConstants.java",
+    "old_sha": null,
+    "new_sha": "238f3ab57a41b97b606accfbd26684f0b5f7d7cb"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-logging/src/main/java/org/gradle/launcher/daemon/logging/DaemonMessages.java",
+    "old_sha": null,
+    "new_sha": "de8b6050c4972c92f9033ed2e4cfe4fb9090634c"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-logging/src/main/java/org/gradle/launcher/daemon/logging/package-info.java",
+    "old_sha": null,
+    "new_sha": "fa67585bb7440a69a7dce87bc2ff07ccb8b4852f"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-logging/src/main/java/org/gradle/launcher/daemon/server/DaemonLogFile.java",
+    "old_sha": null,
+    "new_sha": "f5dc0db7756ee0f25ab7c6e47c30105103d79be0"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-logging/src/main/java/org/gradle/launcher/daemon/server/package-info.java",
+    "old_sha": null,
+    "new_sha": "270dda73c3234dd89b86fda4f1cf46fb7cc2e6f9"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-protocol/src/main/java/org/gradle/launcher/daemon/bootstrap/DaemonStartupCommunication.java",
+    "old_sha": "5aac89db0784a845e824b079bf3fd7e90045a4c6",
+    "new_sha": "f5c1c0e54408e4aade26d6b6563ffe850cad06e8"
+  },
+  {
+    "path": "platforms/core-runtime/daemon-protocol/src/main/java/org/gradle/launcher/daemon/logging/DaemonMessages.java",
+    "old_sha": "52d637dbcbc14c143bd07fe04bd3f2818825d813",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-runtime/daemon-server/src/main/java/org/gradle/launcher/daemon/bootstrap/DaemonMain.java",
+    "old_sha": "f567005bdee60a39260564ee1139d7ffcca70fa4",
+    "new_sha": "50c3aade7976094d4a2481cad1170c71112dd2ad"
+  },
+  {
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/BuildActionsFactory.java",
+    "old_sha": "1901fae5815da4ee495acba20da29c780ddca836",
+    "new_sha": "c145cc9235acd65fd22ef03f6e108b41404ea432"
+  },
+  {
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/DefaultCommandLineActionFactory.java",
+    "old_sha": "5a7e1f792e8deb51f86a4bd8beee1dd7a8f3ba7b",
+    "new_sha": "98a2082810415fc5089bd48574aba2b46e50cd93"
+  },
+  {
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/KotlinDslVersion.java",
+    "old_sha": "6646153c67d451b70d74fe6f43fd3793f38a852e",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/NativeServicesInitializingAction.java",
+    "old_sha": "2eb05990bccd21fcef1f119de9260d623341c36c",
+    "new_sha": "9572cd271b01e039bf0bdfe67dbc95823dbb31ef"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/cli/internal/HelpRenderer.java",
+    "old_sha": null,
+    "new_sha": "280236de2c706d1fd71d01f06e3ec4473a4f0ce4"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/cli/internal/VersionInfoRenderer.java",
+    "old_sha": null,
+    "new_sha": "fa913e113abbf80c12c423c931330282d1b04dc2"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/bootstrap/ForegroundDaemonAction.java",
+    "old_sha": "c460b80c28569e98dedeaaf8810118c97a369f62",
+    "new_sha": "2673e5ea52ad4609f57784bff2ba9a6a525114bf"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/server/DaemonLogFile.java",
+    "old_sha": "6e905d24551ff1fbd7c83dd387fbe0040e4102de",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/server/DaemonProcessState.java",
+    "old_sha": "6577ac9da29833b386bb202d66d4512d0232afce",
+    "new_sha": "7a34372f9345e0fcdf2ed9525e7596d1378d661e"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/server/DaemonServices.java",
+    "old_sha": "8ed9e41c1ad73d0eb131ed122f0f9529f3321885",
+    "new_sha": "e790996e322f2d1744bae7a63328d91ed4a3875e"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainBuildOptions.java",
+    "old_sha": "dd029a6fcaa1c6f89f40c0f1cd35bb5165a9f0d4",
+    "new_sha": "4fbaeb8d249d3c061fc177a6861440ecf4eb0c58"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/launcher/exec/BuildTreeLifecycleBuildActionExecutor.java",
+    "old_sha": "6de04bc82183be89f4dcc170989f837d8f8c0b0a",
+    "new_sha": "92b3dd7f9dbc347f26b0a5527f2f5ad29539a316"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/tooling/internal/provider/LauncherServices.java",
+    "old_sha": "80870979dc277b9b8309a6c309ef4831dd114fae",
+    "new_sha": "24d900983883faabba2b78d4ea2f32dfcf9f7a33"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/tooling/internal/provider/ProviderConnection.java",
+    "old_sha": "800470894b2262832aafe21e8797304cdaf7003e",
+    "new_sha": "fce727b8d1c871c8ec98c32af42161761b6516dd"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/tooling/internal/provider/action/BuildActionSerializer.java",
+    "old_sha": "274742b1eb92b3725029fda3fe616dc99d731f31",
+    "new_sha": "f0e134cf3a2a4b845f0c2e42204e11feded2752d"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/java/org/gradle/tooling/internal/provider/test/ProviderInternalTestExecutionRequest.java",
+    "old_sha": "406c17e452c5cc38b79898e5649b56724acb863e",
+    "new_sha": "3398c3b1123bc33b07bfa5ffbdb3407a812c5a45"
+  },
+  {
+    "path": "platforms/core-runtime/launcher/src/main/resources/release-features.txt",
+    "old_sha": "8f78ac6374f11eb24ee902c45c59c035d69f1751",
+    "new_sha": "4d973af89672fcabe269d974868bd550b9e8f280"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/console/ConsoleMetaData.java",
+    "old_sha": "34e8692557e4119c45dc9a8d3a43f22eb509be4a",
+    "new_sha": "b422460e5568784f09f4c3acf1afd9b02919816d"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/console/NativePlatformConsoleDetector.java",
+    "old_sha": "fc1feaa153030e47cc78d02a1a06eb3a54261ac8",
+    "new_sha": "da3dc48489138eae83c86ffa6b7dd18748b6a741"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/console/NativePlatformConsoleMetaData.java",
+    "old_sha": "422fc88b043369a8a86bc4c6a0c2050625cbf511",
+    "new_sha": "8a0097ac00629c1b15f75c3d0a6336ea47c1d53b"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/console/UnicodeProxyConsoleMetaData.java",
+    "old_sha": null,
+    "new_sha": "31ae3e70bba80a15ce88371447c72ded27908eed"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/console/WindowsConsoleDetector.java",
+    "old_sha": "fc91ec8261eabf349b4ab4d6d6bbca994abe42f6",
+    "new_sha": "562984ca3fdf0a2f920bad6b13f6af23612a9425"
+  },
+  {
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/filesystem/jdk7/WindowsJdk7Symlink.java",
+    "old_sha": "075b8f1a654b194fc03ebcf8fb30a2f2742718cf",
+    "new_sha": "9650f642409f1d6227b2cd864d648022d7f2542b"
+  },
+  {
+    "path": "platforms/core-runtime/process-services/src/main/java/org/gradle/process/internal/ExecHandle.java",
+    "old_sha": "ae2786872a745f2edece2ef1f95604114e8e60e3",
+    "new_sha": "fae2147cf6533c1c716d20eba040803e3c3990c7"
+  },
+  {
+    "path": "platforms/core-runtime/wrapper-main/src/main/java/org/gradle/wrapper/GradleWrapperMain.java",
+    "old_sha": "1935b04fde3df2d35ac49520ef03f4188270e727",
+    "new_sha": "963d4c30fdcbd23dbe5914bec800d778a903ebc3"
+  },
+  {
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Download.java",
+    "old_sha": "d4b2fd3ef6df1056dd1cb29c719d780d5825d43d",
+    "new_sha": "3d0d658e7d5ffb7134278d0d7569c9c2fa14b8f3"
+  },
+  {
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/WrapperExecutor.java",
+    "old_sha": "9bb1e2047f0b0ec0c5696358b785fc41a3022fca",
+    "new_sha": "69844d2400d3cf31e990d2e0e642c93677b160d1"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/internal/jvm/inspection/DefaultJavaInstallationRegistry.java",
+    "old_sha": "fa697784893203ef051757580709d064c0599b68",
+    "new_sha": "b8d8a50554ce3bcf86d304c89f4830e331886c9b"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/internal/jvm/inspection/DefaultJvmMetadataDetector.java",
+    "old_sha": "4a6595d8b69b6cf587016ba2389b9eb964ed89d7",
+    "new_sha": "2fd53a629aa092fc51047504b616d86f380a1dd3"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/internal/jvm/inspection/JvmInstallationProblemReporter.java",
+    "old_sha": "15d6f8281c844ff05c076813c9b61d7d87c71e91",
+    "new_sha": "b935772dbf430906f36bd62f74e44bf32b566afc"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/internal/jvm/inspection/MetadataProbe.java",
+    "old_sha": "8e850c8fc8f04f64af138e75e01ededfe8aaf572",
+    "new_sha": "938f863c56ff8954f81a6d0635f44ca250e6f891"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/internal/jvm/inspection/PersistentJvmMetadataDetector.java",
+    "old_sha": "a4478bd255fd4f51ae3088d514acd955d910f318",
+    "new_sha": "e13e001ba8e9a1b8e2bb3b97a8c44c5d8f536ad7"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/jvm/toolchain/internal/DefaultJavaLanguageVersion.java",
+    "old_sha": "ebaf3b0146d522924bc5c549eb2a59ffef58454e",
+    "new_sha": "c31b4960aa96aca74e1deb6ca07bd375dcfea0ba"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/jvm/toolchain/internal/DefaultOsXJavaHomeCommand.java",
+    "old_sha": "5b7355e2ddef785668d474e4c6af3dffceda184f",
+    "new_sha": "5a3d0299ddce49c1d1d225c4a594bdbc94e5fefa"
+  },
+  {
+    "path": "platforms/jvm/jvm-services/src/main/java/org/gradle/jvm/toolchain/internal/LocationListInstallationSupplier.java",
+    "old_sha": "b262e412e225b7c7241a8e66207cc49c1e1cb766",
+    "new_sha": "f14ce39ffea6a0deab9bcd449445087e19adfd0c"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/assembler/plugins/AssemblerPlugin.java",
+    "old_sha": "c4e19c03d9abe379b73ac0bfe09095350661a970",
+    "new_sha": "7d22dad5ec58264b1c4db11404ca89bf38b1e066"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/c/plugins/CPlugin.java",
+    "old_sha": "a74942105123f8aec5df532863af24061eb56086",
+    "new_sha": "998fc637d36ea79cef19ca99d09a57409b2fb78c"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/cpp/internal/DefaultCppBinary.java",
+    "old_sha": "1229815c9ef985a378b350ca3302450f03848a1e",
+    "new_sha": "a6ea9504dfd71ced4a23e6c42334a6416362ed27"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/cpp/internal/DefaultCppLibrary.java",
+    "old_sha": "e62cd13b48710c47a81f5f808c952e3eae0644f9",
+    "new_sha": "2c0c603b45c539c4ba388b574732854e53be3642"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/cpp/plugins/CppApplicationPlugin.java",
+    "old_sha": "c0a106b2764c354f163841e9226e635d69b522f3",
+    "new_sha": "f3cd44c6eb24a3711b6391f61c5585275cd61549"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/cpp/plugins/CppLibraryPlugin.java",
+    "old_sha": "005b19df8b35e5d38a8754889803399528747458",
+    "new_sha": "60878b1bb36a265b9ad9dfcd19ee2064666f2419"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/cpp/plugins/CppPlugin.java",
+    "old_sha": "8c92c12993ef5600ea8998b439d3b9f68c91712e",
+    "new_sha": "f7f63b457384078e91ec048959dcc0e5bd6b893f"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/nativeplatform/internal/Dimensions.java",
+    "old_sha": "230ac9491d438188b89010aa92be572c55131c4d",
+    "new_sha": "b331b4e074fae1321f1d0046a1c10b3c914a182d"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/nativeplatform/internal/incremental/DefaultSourceIncludesResolver.java",
+    "old_sha": "76dec32e7868a043c9991dfbbb5a016f7c53968d",
+    "new_sha": "74e6f93ef3baecc19482480a0ec41c4a8eaf53c5"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/objectivec/plugins/ObjectiveCPlugin.java",
+    "old_sha": "fec35ad188d8ee444964b364950d63a5e650286d",
+    "new_sha": "a972b9149cd4a3034d6619f488e92f1f7aaa0854"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/objectivecpp/plugins/ObjectiveCppPlugin.java",
+    "old_sha": "b6769c60868c31f80dcc66f33881e2d7a6d3f8c6",
+    "new_sha": "e0f6fa774360880d0b50d4925faa031503da25b4"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/plugins/NativeBasePlugin.java",
+    "old_sha": "415319cdeb7bc797d009a91834a2fe1bd62c4340",
+    "new_sha": "ebfd62fb3321cde3c7970a30d5b2b298ce7dbd7c"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/rc/plugins/WindowsResourcesPlugin.java",
+    "old_sha": "1192befac8a24d72eff9a8f952901c69aeb75cf9",
+    "new_sha": "c31331b06623bf44dc527f746f8f30937d7164e6"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/swift/internal/DefaultSwiftBinary.java",
+    "old_sha": "e8db025ddfdc1ca9c1d1d611ee496a4aee688d18",
+    "new_sha": "5398ae7cecfa10b27e3af1cafcb4a768212ad88f"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/swift/plugins/SwiftApplicationPlugin.java",
+    "old_sha": "cb59340593c2cd03dda2b0450f25c4542cb84734",
+    "new_sha": "8f5a41357f3138a2f0acd060592cb8a6f073c711"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/language/swift/plugins/SwiftLibraryPlugin.java",
+    "old_sha": "3ad9bf2e44cd53dcfac080a63aa8b9bc7738ba1b",
+    "new_sha": "e4e3033b2a195d5673f4acd9f59bdffc8aa1a2e3"
+  },
+  {
+    "path": "platforms/native/language-native/src/main/java/org/gradle/swiftpm/Package.java",
+    "old_sha": "97c1220da33c4179ea1c4ddb2ee4ce929c122125",
+    "new_sha": "98d909bc03c63dd59df7e19d090c5f2d9dcaf96f"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/internal/resolve/CachingLibraryBinaryLocator.java",
+    "old_sha": "a3d230394d7168b279193f9cdd5e25a1c1c6d805",
+    "new_sha": "597002f1d4ab9f8192bf72ac3c4ef21ae3010a4e"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/plugins/NativeComponentModelPlugin.java",
+    "old_sha": "ca637f69830333391a01346e3b3c2d2e32d51503",
+    "new_sha": "62c1f39b38c57b9fc29967909614045252b18412"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/plugins/NativeComponentPlugin.java",
+    "old_sha": "455179d0190c69de55d7cd3134bee517868891a9",
+    "new_sha": "4f0cd52f8809d6a5d70f4ddc79dddd923f7c9320"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/AbstractPlatformToolProvider.java",
+    "old_sha": "8012461f03d39774035bc2fb40bf4f37a25ee10d",
+    "new_sha": "3d8bb1905a5ef82782a2dc97ded7d23d3c256b10"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/metadata/CompilerMetaDataProviderFactory.java",
+    "old_sha": "b077b3b6b762e7e2ac532aebce130824db64b36b",
+    "new_sha": "63bcab6b405a184495d1dbb36df39f6c615a2e7e"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/msvcpp/DefaultVisualStudioLocator.java",
+    "old_sha": "5d93161252bb4596117c4dc10abd5920d46373e8",
+    "new_sha": "a9fe2f986ad034b482c51985fe5a0cf9e19c1a2e"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/swift/SwiftCompiler.java",
+    "old_sha": "5b8203e4534d368c0893510ee9ab13782ddf9ee3",
+    "new_sha": "ae4552ebce0333e7c3a7eef8c2e65b91d7a7e35c"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/tools/ToolSearchPath.java",
+    "old_sha": "a8b4fcad3b78bbfd2b754c07062d515e15c79e17",
+    "new_sha": "1235e4de78a5a61be62442249213a261d955e1a9"
+  },
+  {
+    "path": "platforms/native/platform-native/src/main/java/org/gradle/nativeplatform/toolchain/internal/xcode/AbstractLocator.java",
+    "old_sha": "55ff6ab380e4644e2f826781110d309f4f486b84",
+    "new_sha": "6fda533e8128acf52f9f0ec318368f837bf022c4"
+  },
+  {
+    "path": "platforms/native/testing-native/src/main/java/org/gradle/nativeplatform/test/cpp/plugins/CppUnitTestPlugin.java",
+    "old_sha": "dd4423cecb0a6eb1d6d21841741f96913762996d",
+    "new_sha": "70d0198bc3fc8dbf6cf263dfbb64b042208c4df5"
+  },
+  {
+    "path": "platforms/native/testing-native/src/main/java/org/gradle/nativeplatform/test/xctest/plugins/XCTestConventionPlugin.java",
+    "old_sha": "80d761ec6c064b6273b600808093824fb3f0f434",
+    "new_sha": "a23ff39e9769f70879a805f1db0e927ab821e719"
+  },
+  {
+    "path": "platforms/software/build-init/src/main/java/org/gradle/api/tasks/wrapper/internal/WrapperGenerator.java",
+    "old_sha": "e976a22e692eafc540f5a3d9d6f6308876dfa3fa",
+    "new_sha": "b9d2916ea5d058b0dbb9bdbdebcf7cab749ff6e3"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/ConfigurationServicesBundle.java",
+    "old_sha": "595c98f7ce0c560dae4b24a9772f4092f2de28e1",
+    "new_sha": "b1f45d89a6186b142f669ff0d81ff80cf5c7a26c"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/DefaultDependencyManagementServices.java",
+    "old_sha": "10d0cc45b32a85348c981b59f2e001ef07bf7328",
+    "new_sha": "978c3829e18644066618ca6d285b18e7b9abeeb5"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/DependencyManagementBuildScopeServices.java",
+    "old_sha": "285532b74b30f38082f30c42751f1542f6c70bfb",
+    "new_sha": "76454e7068ad8e731c1aebe2d55549a586ed551d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/DependencyManagementGradleUserHomeScopeServices.java",
+    "old_sha": "60a0a143dafed38cceed2f93afbdb9f2d869c20b",
+    "new_sha": "92d11c723ee3eb544efc6037abd6d8cd83542a85"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/DependencyManagementValueSnapshotterSerializerRegistry.java",
+    "old_sha": "9fbdb95a047da6c6c568b7222fc08a1ade3f2af6",
+    "new_sha": "fcf18baa9d84466b30280356fda708ef418343ae"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/ConfigurationInternal.java",
+    "old_sha": "c5863cdccee4851e6ced0f07463127ebeccf6763",
+    "new_sha": "32d188d6cea7dd22b0a730bc148f1eeab0947ef7"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/DefaultConfiguration.java",
+    "old_sha": "4cef21cfbe8189edf7bdd18bd5a2dbe3da9f6860",
+    "new_sha": "0a99873db6633a8d4a945af348067b634452cbdf"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/DefaultConfigurationServicesBundle.java",
+    "old_sha": "65c3c9b72f998f5b12dfabec5da5134471356ada",
+    "new_sha": "eebe7f3ce5863039e665936accf0105a8045821e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/ExtendedConfiguration.java",
+    "old_sha": null,
+    "new_sha": "96d49a2690331f84e7e0f8c7b49d7021e3af4d22"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/ExtendedConfigurations.java",
+    "old_sha": null,
+    "new_sha": "126f4430751c4f774b68998982cb8721950e3a94"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/configurations/ResolveConfigurationResolutionBuildOperationResult.java",
+    "old_sha": "4befa852d70414b10358b61f239939b909d2901a",
+    "new_sha": "15f997a2234dc467735ea3fd4776f890295d6b54"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/DefaultComponentMetadataProcessor.java",
+    "old_sha": "04f6272780bb3ea4cce899aa8561b19f556aa6c7",
+    "new_sha": "939804c70fc10e043e0706b673117d097c93b926"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/DefaultDependencyConstraintHandler.java",
+    "old_sha": "8aa1fdd8a9432d4182cb0d1e65f5eaa618defe18",
+    "new_sha": "34ce38c6ff5456c98376e7cbf03602639aff2aa2"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/DefaultDependencyHandler.java",
+    "old_sha": "8237dc39edd5360fc6049c6e29f4f9025cab1939",
+    "new_sha": "f2e50810cd2ebc6362df8f9833bb6809dba46691"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/NewerGradleNeededByPluginFailureDescriber.java",
+    "old_sha": "329cb4ba58c1a5dbf59901a028f405bf4e6c821b",
+    "new_sha": "06983f0a12557775e1a747df592866f27ce34e3d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/PlatformSupport.java",
+    "old_sha": "5b95a61cf4d7a089c3f3a47265ed6784ad332126",
+    "new_sha": "c8778812733366c421eef50ea41956decb3bc740"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/TargetJVMVersionOnLibraryTooNewFailureDescriber.java",
+    "old_sha": "308d52a41521c756ac8cb2a4411e8a79279a889b",
+    "new_sha": "99a5ee98b76a38f9645d3efd7f87502966e2491b"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/dsl/dependencies/TargetJVMVersionOnPluginTooNewFailureDescriber.java",
+    "old_sha": "1fba63521aab9999ffa7db10eb6e94c6df7da433",
+    "new_sha": "277e4e68eaf7441834bae3cf2fe5b0ea28f4831a"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/DefaultCacheExpirationControl.java",
+    "old_sha": "279bf3705ad605c96a735e84433f2ec288435f82",
+    "new_sha": "b5f70e6c4aa873c8a4208724c74a64983cc128ed"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/DefaultConfigurationResolver.java",
+    "old_sha": "6709440a90614b51b375df107791c84e47a1dc65",
+    "new_sha": "9235931df48bbf9ae818655130f03309cb3576d0"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/dependencysubstitution/DefaultDependencySubstitutionApplicator.java",
+    "old_sha": "601d8ddb83be9ff42b722e13023417ca913e36b0",
+    "new_sha": "98c4d7feae3258059b0adaf95d243ea75dc0cffb"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/dependencysubstitution/DefaultDependencySubstitutions.java",
+    "old_sha": "54af4d7b54092c57993eb71bb03fa04accb8029e",
+    "new_sha": "b1260554625779a1ff66760a5a3ea8200f69a918"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/dependencysubstitution/DependencySubstitutionApplicator.java",
+    "old_sha": "79927c84d02382f6e1de6b797ee6441b9deb2f00",
+    "new_sha": "29ca885aec41a38ea5e687c1e3ade980d10f11a2"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/dependencysubstitution/SubstitutionResult.java",
+    "old_sha": null,
+    "new_sha": "a2104372f888b01db879b733d4e0e89054be7ede"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/ChangingValueDependencyResolutionListener.java",
+    "old_sha": "a9bee7669ddd3515192957605250140000f666bc",
+    "new_sha": "b35c3704480b45a8a935c92227f16eb0466273e9"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/DynamicVersionResolver.java",
+    "old_sha": "1f5be6b3c9c0e259f01664033f9c28ab69899cfe",
+    "new_sha": "b42abf1200e58c0be0f97605a33c3ff060ad8b57"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/ExternalModuleComponentResolverFactory.java",
+    "old_sha": "5e22a00bedecef67a9e5729362a812c1be90fb98",
+    "new_sha": "a8b6ee97d34a1001a601e6a48ddd47987c3ef199"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/FilteredModuleComponentRepository.java",
+    "old_sha": "f0164dffaea45ac9c3fb4c250065967ce0400741",
+    "new_sha": "113ca64d965ecff010ef0ca52906cee8bc9f3ea8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/RepositoryChainComponentMetaDataResolver.java",
+    "old_sha": "2ab243c0cf86639093cfc6fc85e0296d2f9d4dd4",
+    "new_sha": "91a3791fb810747340ff3dd0f5775c31ee6fb2cf"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/MetaDataParser.java",
+    "old_sha": "0770adee3c1f1e395c6fe0fd240ef3f7464cae70",
+    "new_sha": "00efd1da65c873447f6d17bd569015d63806fbba"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/parser/PomDomParser.java",
+    "old_sha": "63f0ffa89d5fac75a75562adc5b23b33578a87e5",
+    "new_sha": "36bc063e333c139d0613d8ece4ed949616055bf8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/strategy/VersionParser.java",
+    "old_sha": "75c7367f0ddb411051e4058c844afb59ad322239",
+    "new_sha": "05eac92673ae61190415f51141e6eb250822aa0d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/modulecache/ReadOnlyModuleMetadataCache.java",
+    "old_sha": "1503611f99e06254240f8a237ab31601b8d3d315",
+    "new_sha": "952c6369bbe0420f5a88d90a2a3cb4cd78b012e9"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/modulecache/artifacts/ReadOnlyModuleArtifactsCache.java",
+    "old_sha": "db010f13669326afb8cab4c0097b391a19768110",
+    "new_sha": "16f76f0d16c1bfa673d7faf739d2e736a150a620"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/moduleconverter/dependencies/LocalVariantGraphResolveStateBuilder.java",
+    "old_sha": "5ac1b00af5fe2d87a7ecc695e4c1a0d76e3db9c9",
+    "new_sha": "cf1791d96c62aed668603147e313cf9310f2f7f5"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolutionstrategy/DefaultComponentSelectionRules.java",
+    "old_sha": "99a5cade1ef45b4b0063cd0d40a898732fb507b3",
+    "new_sha": "05c759a0b42fe65f98d2c8f7e07aa3b1feb5175b"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/artifact/ParallelResolveArtifactSet.java",
+    "old_sha": "c633b0e8175e9970c0eefaec7ff8ce5c29017bc8",
+    "new_sha": "687beddf20484effe8c6689a3cbd7eb682a158fc"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/ModuleExclusions.java",
+    "old_sha": "98d10f99108097841bcd911a3c92d8e5b7266649",
+    "new_sha": "c85ebf35c58d2f015eb910dfdf359fac293ea0b1"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/CachingExcludeFactory.java",
+    "old_sha": "45e6f4656f99cc574c048165519318797e3201fc",
+    "new_sha": "e3c07464ee9c41288556111236cf771945c8c1b3"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/DelegatingExcludeFactory.java",
+    "old_sha": "4e3c01753bf33f927a4ba111d84f107782802900",
+    "new_sha": "93d7b0a1980286be28272c29bf238178fb99fbed"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/ExcludeFactory.java",
+    "old_sha": "10c99100bd4f0095fc405d1e1626979ab922a321",
+    "new_sha": "131ec90d7b78da70e84dbbbc9333d89df0abb6fb"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/Intersections.java",
+    "old_sha": "d16e5e1281ed1e4fb279c2b2cf5a4fc657bf5b6b",
+    "new_sha": "ca2b34acc627cb5159b8c3b25d2c40cd1d157d61"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/LoggingExcludeFactory.java",
+    "old_sha": "bf95c7977df6c5b94a8347616b788128484d5e4b",
+    "new_sha": "af5b8b2b7554e64dae7b536bb5a00ebc6a908861"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/NormalizingExcludeFactory.java",
+    "old_sha": "996d671e58f08f55205aa7f791956ccc08d5e405",
+    "new_sha": "d7761e5ca44dd52109655d79c8a23b9d14f1a6d6"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/Optimizations.java",
+    "old_sha": "ab6aa5254bbbe7f1ef8a4ee07c80a21167e77d47",
+    "new_sha": "1d54c58f3a1f2ac4c99556b5ec8e051ca0d5680e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/OptimizingExcludeFactory.java",
+    "old_sha": "0b7ffa6c744515f1be0a3b2d75ffccf9217c8547",
+    "new_sha": "8112ac739b6538275a85a2df9655870bbadc21fb"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/factories/Unions.java",
+    "old_sha": "07fb44b51d7463a38ac3a56809f885cc1e417ccc",
+    "new_sha": "9056f8d729f8c6592c9e0bfb5e080bd0b8e50821"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultCompositeExclude.java",
+    "old_sha": "75201ba63c899d5db7fc0fd5561783cc85f142dd",
+    "new_sha": "4ad0c792672021f89d4340c05d39a3374ef801d8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultExcludeAllOf.java",
+    "old_sha": "3de8a2302750de6beb7c9858c9ee44003559bc78",
+    "new_sha": "780fe8e1ae70e5cde7cbaed7ccc8220cb0243550"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultExcludeAnyOf.java",
+    "old_sha": "dd17b547bc2b5d8287c013d544dc0fd6299d24db",
+    "new_sha": "340d5cce5dcfe216d633c2b778a0c17df07ea19c"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultExcludeFactory.java",
+    "old_sha": "1323b38495bd06e4dc6251d8114bd8707d67e089",
+    "new_sha": "ed8bacf230214e12ce2b91399c7b24e6f4844849"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultGroupSetExclude.java",
+    "old_sha": "50ba0c34ad209e017348d4280bfbc1bb8a0634d2",
+    "new_sha": "0c1993a7912c9971a456560d47458aadc70c2d52"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultIvyPatternMatcherExcludeRuleSpec.java",
+    "old_sha": "b8363e41458ce65cb38efe06b56f0e0f37c1e33f",
+    "new_sha": "02bc152631a36841e5d2a9dd4bf41f38204a416e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultModuleIdSetExclude.java",
+    "old_sha": "b821f7f1719a80b52d7237ec34d9d06611222b3f",
+    "new_sha": "0604ebbf5ccfa6f70c149d8ccd70624c802ace46"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/DefaultModuleSetExclude.java",
+    "old_sha": "1c1cfa9e4864b6ddf4600b3e18cb209482adc7c9",
+    "new_sha": "1e57109fec4e61f2e8ee3e2ebc5a62762a53dc8a"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/simple/ExcludeJsonHelper.java",
+    "old_sha": "8e9373b8c9f356cb2fccb6ac97eb8f482e34a0c7",
+    "new_sha": "97180bcd865ac211504f91dfea8eaa5045ef62ec"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/specs/CompositeExclude.java",
+    "old_sha": "ebed260e0a09c5f432bc54ee85e0c9c23d0b5379",
+    "new_sha": "13990745dc58c9186673b1e6784d7d9d7304d369"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/specs/GroupSetExclude.java",
+    "old_sha": "78c628bd5f936478baa7846a07b552ae566112b2",
+    "new_sha": "4173f7ff9373db143ec11ae650cacbf9f2a1f26a"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/specs/ModuleIdSetExclude.java",
+    "old_sha": "ba4dc48d49e874f7d5d90ec6c0367e937fac36eb",
+    "new_sha": "397e27c7172fefb2f2a8c6085340feaef251d9b9"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/excludes/specs/ModuleSetExclude.java",
+    "old_sha": "064568f5f8e2936b4c71efaef4b8d7c92e7f9b75",
+    "new_sha": "ed0e7c85df44faa0435c1131dadd0e0dfd7fad06"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/DependencyGraphEdge.java",
+    "old_sha": "b0050996b3e317a8380b84849e8897b06ea52396",
+    "new_sha": "563cd386c0b9351144cc4ed0f500a573c03f243c"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/ResolvedGraphComponent.java",
+    "old_sha": "1e4d672a50c16b5d47a5ac435eaaee26e792fd21",
+    "new_sha": "7c8b19afa049dfcdd9bd377b9b0fbbd2a2d06aab"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/ResolvedGraphDependency.java",
+    "old_sha": "024368ca0bb3f7291e1093313037a88ef2d28bd8",
+    "new_sha": "e60c96e2eb72945afe69074d21d196709a434956"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/ResolvedGraphVariant.java",
+    "old_sha": "9c3aec5edd902545c5d48a8ed8ca49f665f82c9e",
+    "new_sha": "48697b9721cb281882e6d4ea61b53990fab77ffb"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ComponentRejectedMessageBuilder.java",
+    "old_sha": "614cd7980933d15c682fa2f84160c707a127ba33",
+    "new_sha": "e63fa7c076f9fe0ca0f9b2e5bd6dba24b54d24c4"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ComponentState.java",
+    "old_sha": "fbcd6c92a1b96c75bd1e9304abc1b30148734675",
+    "new_sha": "37d6864bc044a4b7f8dd22dcc8a4f7b5cd2c6ad8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/DefaultPendingDependenciesVisitor.java",
+    "old_sha": "bd2e917f2e7e4b2bf0410963aab7f46a4372e2f2",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/DependencyGraphBuilder.java",
+    "old_sha": "ed925b2a2decd684736d901c8f5444aa7632b3ea",
+    "new_sha": "a9fea5aff3c0af8086a23ede4a8659f4425f9f6a"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/DependencyState.java",
+    "old_sha": "5ae20cd22ff9f2506de8fd2d86b5d7ae71c6b92d",
+    "new_sha": "fdcaea71fc24546c416c82956ee1258e3fff4589"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/EdgeState.java",
+    "old_sha": "2627565f03b634b78f2a8fcf8a1bef8fba31510d",
+    "new_sha": "2cc859651428ec3460df604109628c707cc7e8b1"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/LenientPlatformDependencyMetadata.java",
+    "old_sha": "06b899fb58bd50a2e82849d127f4956e6e1ca2b0",
+    "new_sha": "49bc28214d171f388e1a2d4ac538eb6b10335a65"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/LenientPlatformGraphResolveState.java",
+    "old_sha": "8735460aa7016afaa4bbfd7af641179e9ace7643",
+    "new_sha": "66cf64b48bb408e2763f1b1c10d37163bf8d5adc"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/MessageBuilderHelper.java",
+    "old_sha": "3947d4b330d70bd2c3ea2760f7c31832bc8e569a",
+    "new_sha": "1699a1c10aa3d24bde66ac76960b3b65e5b4794c"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleResolveState.java",
+    "old_sha": "859759b9bef903c575dff8b7f222fcd932544303",
+    "new_sha": "4deff7c6fb792fcc473264921e87903ddecb3695"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleSelectors.java",
+    "old_sha": "ce8ab415715ab039abdef0555275cf4509d9afd7",
+    "new_sha": "2929072b5dac0b822e12b05e666d10cc263be83d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/NodeState.java",
+    "old_sha": "e4f6799824c8005a2b4270a6d999a72e4d1ffde6",
+    "new_sha": "698529769fecfb32a8e6f54a2aae7931661c7b49"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/PendingDependencies.java",
+    "old_sha": "ae8ce5f376b1e95285a2b717ba0faebd82a0efd8",
+    "new_sha": "5b2d0f8cc0b845e518b39afc0adacbcc85141116"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/PendingDependenciesVisitor.java",
+    "old_sha": "31decb395afbd67c979143d51d3f95dc200d39cc",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ResolveState.java",
+    "old_sha": "cfe0b863fe9e307f2286a0dcaa13957255219c99",
+    "new_sha": "c19c78cc708445253008f3e2b402eec376a5a084"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/SelectorState.java",
+    "old_sha": "d8ed05b3af5f9737d39faebebaceec78d7193114",
+    "new_sha": "22f267cde99b1472288a88345c6825601dd5d772"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CandidateModule.java",
+    "old_sha": "94ee072ed4849a48c0b506ff224fec3340d3889d",
+    "new_sha": "afe1389d8874618e984a5662a4d67ec80fc3b597"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CapabilityConflictResolver.java",
+    "old_sha": "27b65b7ba4e253ba2ebfeef985aa2db4be83620f",
+    "new_sha": "e5784d59ac867df4e775e07e1eeb16369bc1ea89"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/DefaultModuleConflictHandler.java",
+    "old_sha": "c73487459652fb78aad40b1a387d29e9de3a0303",
+    "new_sha": "6d13e35a73aad9dced02b1be35c3c41960d9b424"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/selectors/SelectorStateResolver.java",
+    "old_sha": "531724399e9fc96b22f1e83ed9b5b1fe9372b833",
+    "new_sha": "49bb668dcaee9feb29c346c0b1ab92e4b9dcf4bd"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/oldresult/TransientConfigurationResultsBuilder.java",
+    "old_sha": "79ae0874d29091c31945e5f625c0b53088cec045",
+    "new_sha": "336afc65a2754fb35215bbea664691152c306da8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/CachingComponentSelectionDescriptorFactory.java",
+    "old_sha": "71b46ade92502bf8385ef4fb6d287f09383c4408",
+    "new_sha": "ba8646048027a31846b027f19bcc3c7d69f2b268"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/CompleteComponentResultSerializer.java",
+    "old_sha": "c1f5a01c2ba99d5b3d6c7e07ce7d3b8d61109a49",
+    "new_sha": "f770b18fab0401a710e6790dfcf9ee75e75365c3"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ComponentSelectionDescriptorFactory.java",
+    "old_sha": "9000e0fc717bd8924c6d2e4e31422afb4d40683e",
+    "new_sha": "17d3a76822c9ba1a516d727cc11ee21ce6850753"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ComponentSelectionDescriptorSerializer.java",
+    "old_sha": "73f4f7f5c0047cfd3e68d1e1958326cd7aee9153",
+    "new_sha": "3885745533acf640a9a41176e2cc889ce70d706d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ComponentSelectionReasonInternal.java",
+    "old_sha": "3add770aa541b25dbd2b7d580d687ae16d4e5249",
+    "new_sha": "2396893b5a04f1d6e8f4a839e8724e1628045ac8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ComponentSelectionReasonSerializer.java",
+    "old_sha": "c315ff1aabb0c78376f1beea6fef3ecb2b603847",
+    "new_sha": "11529c674e4e0028c347f4fde5c12edd1471cd97"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ComponentSelectionReasons.java",
+    "old_sha": "c973cbbd119c48f3b926de316fa0168facb242fc",
+    "new_sha": "d63baec8cead137f6e8d6524d9bf80f33b9a1528"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/DependencyResultSerializer.java",
+    "old_sha": "0cd75ab6b323f23438cc1ffab5e5ae2a11db889a",
+    "new_sha": "c7f0b9e93a981b1b938002ba9596e63bdfd6445f"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/DetachedFailedResolvedGraphDependency.java",
+    "old_sha": null,
+    "new_sha": "b140cce332579faaa965c3eb2a2ef22a9d51d7e0"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/DetachedResolvedGraphDependency.java",
+    "old_sha": "e4774e7abbc1c9c111e5b1f9c8bd4e10f1e4767a",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/DetachedSuccessfulResolvedGraphDependency.java",
+    "old_sha": null,
+    "new_sha": "67cf8c5178be6c0ed54374755cf81b8949858d9b"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ResolutionResultGraphBuilder.java",
+    "old_sha": "a6899f316727fe1840431cecae9dcc4e01bf4a2f",
+    "new_sha": "970a102663eb7014f19f3de20c2a7897ec184413"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ResolvedComponentResultSerializer.java",
+    "old_sha": "d34d6f84fd622ff2c03a6aa33627ae2e4afade89",
+    "new_sha": "ad1162cf88fb1e577f9705c625dc69653c0154d0"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ResolvedComponentVisitor.java",
+    "old_sha": "1dfd8dab59177d2772cf05a3936a2398e53b5577",
+    "new_sha": "c50650e28cce9e89cc67b5bef1031528efa3d09f"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/StreamingResolutionResultBuilder.java",
+    "old_sha": "b62aa16ef276e28a92c29f688aae312715d914b1",
+    "new_sha": "b151520c809d9004c6a57c1edb56a27c67f18f80"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/result/ThisBuildTreeOnlyComponentResultSerializer.java",
+    "old_sha": "49a02747d1c9cdb4a14901c61b24c7fa71371eba",
+    "new_sha": "466ca9233d920547c0766376ba2febec5005bbb8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/strict/StrictVersionConstraints.java",
+    "old_sha": "074d23f80f31774cc8a503a74f8774e9d17358df",
+    "new_sha": "4f908a03df08d07f9b75306e33f63de4fe924512"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/AbstractAuthenticationSupportedRepository.java",
+    "old_sha": "760fb143312c4f6297e682084314b2b91cf1ca9e",
+    "new_sha": "6506d75e4a3ac6428dcd2deb4c8fba0528122d39"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/DefaultMavenRepositoryContentDescriptor.java",
+    "old_sha": "dab3d3c85735afd407e3c057376633f59481c024",
+    "new_sha": "ed5d4f390ba14311ba3944ccc4b70b38090fc2fd"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/resolver/ExternalResourceResolver.java",
+    "old_sha": "deb0d1fa604aa545f30ab7a366acc951a4273bd2",
+    "new_sha": "b095ee03e7f6054d4c903662c24ce053424780e8"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/resolver/ResourceVersionLister.java",
+    "old_sha": "e32035c293dc7dfdf5a521be8f745286ae2bf096",
+    "new_sha": "e4eefc76b99d4a2d221a9fe60bc7615a5881afdd"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/result/DefaultResolvedComponentResult.java",
+    "old_sha": "714d1ba4f57fdeb07794320551328558375cbf19",
+    "new_sha": "3ca9e4bfab8ccea02c1c9e33c8b734363f29457b"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/result/ResolvedComponentResultInternal.java",
+    "old_sha": "e41754b4485f0324825f46d5033d6a1d68e3cc58",
+    "new_sha": "38da7fbb71f4102d0b365e9d5d57cf6e0a467293"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/DefaultTransformInvocationFactory.java",
+    "old_sha": "a68a0222293cbb4358b9b72078b2396c70963a1b",
+    "new_sha": "45a84f6abbd0e2282a0fc6c8f2a637cc85d57c2a"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/DefaultVariantTransformRegistry.java",
+    "old_sha": "eb240044c0ced45436e0f09ad4246bc0472bdfba",
+    "new_sha": "5539358b6f145ac97da59d0b478d6c9fd044ca60"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/ImmutableTransformExecution.java",
+    "old_sha": null,
+    "new_sha": "af5543019cf358a72773ab0894480f17f927857e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/MutableTransformExecution.java",
+    "old_sha": "ff7a9dff0251e018c1ecfbd2323121728f8ab021",
+    "new_sha": "288a1ccd083dfe8878b20f7294737f54458e20a6"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/MutableTransformWorkspaceServices.java",
+    "old_sha": "549d67fd9c965d66ef4b4213725a421132b40ed8",
+    "new_sha": "c1d7906b72eb1edde34004370bb6ed6cd6a2a69f"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/NonNormalizedIdentityImmutableTransformExecution.java",
+    "old_sha": "57cc1c4ecfe4fae22f35bcc4c346c3cff617a487",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/transform/NormalizedIdentityImmutableTransformExecution.java",
+    "old_sha": "fb8b4421810426b269028a76dd7f853b8e10be27",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/verification/serializer/DependencyVerificationsXmlReader.java",
+    "old_sha": "7c300091fc5f40e0a6e66d3723b68a092f930958",
+    "new_sha": "ef16a17fa15a03fb6c0dff70a3a4462adee72fde"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/verification/verifier/DependencyVerificationConfiguration.java",
+    "old_sha": "45a5e93c2eec7cd9922113987459834f69d633ea",
+    "new_sha": "a77df3052479363ec408f17b6c0d7f9705840b18"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/attributes/immutable/ImmutableAttributesSchemaFactory.java",
+    "old_sha": "382de2a1b29fc8065aff70fe2487955e124e1bc2",
+    "new_sha": "50cd7e939e14c725f469f4174f7593cf4a907e10"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/attributes/matching/AttributeSelectionSchema.java",
+    "old_sha": "128620ebbcc63ca85dc3245b9022b9c33b7da5be",
+    "new_sha": "75bf764ac6adf980b528d6ad70fafd3c363b486e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/catalog/DefaultDependenciesAccessors.java",
+    "old_sha": "640db8dfb7a5bb60fb8abf8ddf10e7d9c9a9a66a",
+    "new_sha": "4e133fbfdb0f6a70a165f2da93c2847f8fee5ab7"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/catalog/DefaultVersionCatalogBuilder.java",
+    "old_sha": "9e4de33181f3c691d2a9336d22ec01069d0b645e",
+    "new_sha": "f1dc2fc7e225aad76b3bbd7d0a3dbe061beee4f0"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/catalog/DependenciesAccessorsWorkspaceProvider.java",
+    "old_sha": "b4e06c61e409b7e380ab72dced85c291c6ddf0d6",
+    "new_sha": "4d4d27b5d37af1f6694a53d2d43ff97aec35960b"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/notations/DependencyStringNotationConverter.java",
+    "old_sha": "e5247e789994de73f75fe0fd483974c7a53e989d",
+    "new_sha": "cf88c071ab184a8e7872cf6f5927b96876c3755d"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/runtimeshaded/ImplementationDependencyRelocator.java",
+    "old_sha": "35c6b6c1333d2f7860de70e3ae5e6c2ef0abf09f",
+    "new_sha": "49f3167089a651ee77430c732542ab1dfe681396"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/runtimeshaded/RuntimeShadedJarFactory.java",
+    "old_sha": "bc3a4909dd5a87989c323b525488895feca5bc92",
+    "new_sha": "d7ca4a3eaf70fa8b661970bdbc851953be7aaf6e"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/component/local/model/LocalComponentGraphResolveStateFactory.java",
+    "old_sha": "67e0c4c2d97b827a54a6bbe7e2e32336b6c08430",
+    "new_sha": "0b74bf5de7e85598e0edcb29c02a19b888fef380"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/component/resolution/failure/SelectionReasonAssessor.java",
+    "old_sha": "dbae76894c4ffb120ff17393e3abe2f7fcf15c01",
+    "new_sha": "aaa4f0ebaf17e562b4db8c76c976d9d9bff98440"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/component/resolution/failure/describer/ModuleRejectedIncompatibleConstraintsFailureDescriber.java",
+    "old_sha": "4e51e03deaa20fa6246793a074f3b542ad4b6106",
+    "new_sha": "f80f70406f847462843314855791af51a9d66e1c"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/component/resolution/failure/describer/NoVariantsWithMatchingCapabilitiesFailureDescriber.java",
+    "old_sha": "ae761a73a788efe15820289a9a901e66372e5db9",
+    "new_sha": "050ed5a9fce7b3d12cd995504589f4a677039b34"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/resolver/ResolvedVariantCache.java",
+    "old_sha": "4658308fdfeeeed2356227c97bd3d31b1d1eb9c9",
+    "new_sha": "9c47e4fe9a3cfff55b0e366cdd7e28bee91604e6"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/result/ComponentIdResolveResult.java",
+    "old_sha": "5399362beaee84bf729d353b1364c950284a81f6",
+    "new_sha": "271255252839d2cfac53c7b7ad4d1ce9bc77ee25"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/result/DefaultBuildableComponentIdResolveResult.java",
+    "old_sha": "e098a8034d8491602c03ae75fdf3d37396ab1ada",
+    "new_sha": "8e1ef1215980fb90df80cbee7604fe540543b558"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/rules/DefaultRuleActionAdapter.java",
+    "old_sha": "7892dc087ea2762ba8a7bf793fc7284911c21c99",
+    "new_sha": "f9c3ad38fe2aca9f04ce5c15b4666d11dea4246f"
+  },
+  {
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/rules/DefaultRuleActionValidator.java",
+    "old_sha": "1c7cc5166db81b021e8f4f32bbbf2d7a7de88e83",
+    "new_sha": "73d0169e73a714cc4eae4a1379e661b55e6717e1"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClient.java",
+    "old_sha": null,
+    "new_sha": "97d4b78d2f9134bfa4d058d359290ca32cd15ddd"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClientFactory.java",
+    "old_sha": null,
+    "new_sha": "72595dce1d08437c7a4868dbef29f54bda647a24"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheHttpResponse.java",
+    "old_sha": null,
+    "new_sha": "c55ffbabf60cff13455cfdeb187750c4c05c1ec2"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultHttpSettings.java",
+    "old_sha": "f28432a10876a97f8ed0d48e6eb3c9710d6ae7f1",
+    "new_sha": "461a17deeb67caa9feafa96ed5395d39c8e3595f"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultSslContextFactory.java",
+    "old_sha": "331f1a444102c131b725532b1c997e89cef45ea9",
+    "new_sha": "3b6a0ca3c751b940e7e94bf2e94cff5c04939597"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClient.java",
+    "old_sha": null,
+    "new_sha": "1912413af2bbf111d327eddc3ffdc2cc8681ff56"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientFactory.java",
+    "old_sha": null,
+    "new_sha": "25ebb4d1e6b96dceebf770e11dc0d339d14e6b47"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientHelper.java",
+    "old_sha": "47b4ab2f8266f6360451a4ad76dee1a7ba58df5a",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientResponse.java",
+    "old_sha": "578fde5f50b63df77be16b693838b40bc5f2ddbe",
+    "new_sha": null
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpConnectorFactory.java",
+    "old_sha": "9c769f80d44178792bfb19d68fa15932e34ce1a6",
+    "new_sha": "9778f53ca053b44f410eaa1b74fdeda045948d5f"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceAccessor.java",
+    "old_sha": "320003b1ad64416953ca7738efdfad6016a9a76d",
+    "new_sha": "a80024982290590646885c8b3b648cad3189d21d"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceUploader.java",
+    "old_sha": "c8924a50658c4bf1bb6715a3b8161765240cbb92",
+    "new_sha": "88c50170d44436a2efa5ff5380bc6df7982248e2"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourcesServices.java",
+    "old_sha": "a7823d1bd32d16fb5c0738a4a15a68a850ef81f9",
+    "new_sha": "93a07dda7a06fc8afd276252cbaf515a5ad7f582"
+  },
+  {
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResponseResource.java",
+    "old_sha": "556770be9bb96e1ce8c61721fb0cb2b6e49ce779",
+    "new_sha": "38d47135a117a844f076709a2d53b510746cafcc"
+  },
+  {
+    "path": "subprojects/core/src/main/java/org/gradle/api/internal/tasks/execution/TaskExecution.java",
+    "old_sha": "3e2478cff66a235b6abee791004cdf2634f7505c",
+    "new_sha": "cb4f464d31b14a3250e30ccb11454203fdab3888"
+  },
+  {
+    "path": "subprojects/core/src/main/java/org/gradle/execution/ProjectExecutionServices.java",
+    "old_sha": "3cd4cd712e6d5b74cc016c938c2667a04ed6259e",
+    "new_sha": "ecd3fa829b5b30f7cf01a4a3527ecbe9470c01b4"
+  },
+  {
+    "path": "subprojects/core/src/main/java/org/gradle/execution/plan/DefaultExecutionPlan.java",
+    "old_sha": "be1214dd2198c525d98cdf8ac6ab22cadf7ec02a",
+    "new_sha": "b52bdef2faee3ed2536beb92cfc36ec2d8b5c1f2"
+  },
+  {
+    "path": "subprojects/core/src/main/java/org/gradle/execution/plan/SingleFileTreeElementMatcher.java",
+    "old_sha": "6c35bf526e7662310a2f5155b4a1302b13965d41",
+    "new_sha": "3d4ce9be8c6fa510392d7c0a5a8a9ee35a573304"
+  }
+]

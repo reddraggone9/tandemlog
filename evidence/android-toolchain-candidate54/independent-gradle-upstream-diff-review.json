@@ -1,0 +1,131 @@
+{
+  "reviewer": "independent toolchain_review",
+  "reviewed_at_utc": "2026-10-09T20:37:15.266584+00:00",
+  "decision": "No scoped security/product must-fix found in reviewed Gradle9.3.1-to9.4.1 bootstrap/compiler/repository/HTTP/conflict-retarget delta. Evidence is a substantive focused upstream comparison, not exhaustive2584-change audit or release/native acceptance.",
+  "official_source_bindings": {
+    "old_tag": "v9.3.1",
+    "old_commit": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "new_tag": "v9.4.1",
+    "new_commit": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "old_tag_url": "https://github.com/gradle/gradle/tree/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "new_tag_url": "https://github.com/gradle/gradle/tree/2d6327017519d23b96af35865dc997fcb544fb40",
+    "new_distribution_build_receipt": "baseVersion=9.4.1\nbuildTimestamp=20260319084628+0000\nbuildTimestampIso=2026-03-19 08\\:46\\:28 UTC\ncommitId=2d6327017519d23b96af35865dc997fcb544fb40\nisSnapshot=false\nversionNumber=9.4.1\n",
+    "new_commit_matches_actual_distribution": true,
+    "distribution_SHA256": "708d2c6ecc97ca9a11838ef64a6c2301151b8dd10387e22dc1a12c30557cab5b"
+  },
+  "independent_provenance_checks": {
+    "old_blob_paths": 26308,
+    "new_blob_paths": 26579,
+    "both_tree_responses_nontruncated": true,
+    "full_changed_path_count": 2584,
+    "full_inventory_independently_reconstructed_equal": true,
+    "compare_API_file_count": 300,
+    "compare_API_not_treated_as_complete": true,
+    "downloaded_files_all_SHA256_size_git_blob_and_official_tree_bindings_verified": 75,
+    "downloaded_distinct_paths": 42
+  },
+  "reviewed_focus": [
+    "bootstrap.diff: daemon start/toolchain HTTP factory/native initialization/process signal API/new wrapper precedence and downloader credential delta",
+    "compiler-resolver.diff: source distribution resolver, Kotlin compiler/options, classloader nullability, capability conflict and repository-content metadata changes",
+    "Complete new WrapperCredentials helper and GradleDistRepoDescriptorLocator source",
+    "Complete HTTP implementation-move-normalized diff",
+    "HTTP diff sections: client factory/default settings/resource accessor/uploader/connector/services",
+    "ModuleResolveState changed-file diff",
+    "NodeState selected constraint/replacement/restart/retarget hunks, not complete835-line changed-file diff",
+    "DefaultExecHandle changed-file diff",
+    "Exact Install/NativeServices/HttpClientConfigurer old/new bytes"
+  ],
+  "findings": [
+    {
+      "paths": [
+        "Install",
+        "NativeServices",
+        "HttpClientConfigurer"
+      ],
+      "finding": "All three downloaded old/new files byte-identical. Prior focused native loader/bootstrap review remains applicable to these source paths, not blanket trust of all core code."
+    },
+    {
+      "paths": [
+        "DefaultDaemonStarter",
+        "NativeServicesInitializingAction",
+        "ExecHandle",
+        "DefaultExecHandle"
+      ],
+      "finding": "Distribution daemon bootstrap still resolves daemon-main implementation classpath; obsolete non-distribution additional classpath serialization removed. Native initialization adds console Unicode setting. Signal API delegates to existing exec runner; selected changed invocation paths do not rewrite process command construction."
+    },
+    {
+      "paths": [
+        "GradleWrapperMain",
+        "Download",
+        "WrapperExecutor",
+        "WrapperCredentials"
+      ],
+      "finding": "New wrapper merges project<user<CLI system properties, blocks Gradle-home redefinition from its own home, supports explicit bearer or host-specific/basic credentials and factors wrapper property path. Exact retained Flutter-generated old wrapperJAR remains actual bootstrap; these new wrapper-main/downloader paths are dormant for current task.",
+      "required_nuance": "WrapperCredentials is also callable by distribution source resolver; the helper as a whole must not be described as dormant."
+    },
+    {
+      "paths": [
+        "SourceDistributionProvider",
+        "GradleDistRepoDescriptorLocator"
+      ],
+      "finding": "Source resolver infers optional custom wrapper distribution repository and then falls back to official service; supports explicit credential and testing override inputs. Current wrapper is services.gradle.org with no query/fragment/user info, so custom inference declines and default fallback remains official, credential-free.",
+      "limits": "This review does not inspect secret values or attest arbitrary ambient system-property configuration; local guarded setup input restrictions and unchanged workflow remain relevant."
+    },
+    {
+      "paths": [
+        "ApacheCommonsHttpClient",
+        "HttpClientConfigurer",
+        "DefaultHttpSettings",
+        "HttpResourceAccessor",
+        "HttpConnectorFactory",
+        "HttpResourceUploader"
+      ],
+      "finding": "Apache implementation split preserves settings/authentication context reuse, redirect-chain validation and SSL hostname/TLS configuration. Revalidation Cache-Control moved to accessor and remains max-age=0. New raw GET/PUT interfaces and local response wrappers preserve normal connector wiring; explicit PUT is an API refactor, not a newly activated publishing task. Total connection pool20->80 while per-route stays20, a resource/concurrency change not a trust-policy relaxation."
+    },
+    {
+      "paths": [
+        "KotlinCompiler",
+        "KotlinCompilerOptions"
+      ],
+      "finding": "Kotlin update raises supported JVM target ceiling24->25, removes testing-only compileToDirectory helper, and makes explicit metadata-skip setting nullable with same true default. Exact included compiler/BTA/plugin provenance and actual effective scope remain separately recorded."
+    },
+    {
+      "paths": [
+        "CapabilityConflictResolver",
+        "ModuleResolveState",
+        "NodeState"
+      ],
+      "finding": "Winning node replacement state and module changeSelection now retarget incoming edges instead of blind eviction/clearing; pending constraint edges reused/disconnected through updated structures. Focused retarget read finds no must-fix; actual selected dependency/class/plugin graphs remain required evidence. No claim every constraint/capability/exclusion combination proved."
+    }
+  ],
+  "overclaim_assessment": {
+    "root_stated_focused_scope_accurate": true,
+    "necessary_precision": "Distinguish dormant new wrapper downloader/main from potentially active in-distribution source resolver credential helper. Complete tree/hash inventories are complete inventories, not proof every source file was substantively audited.",
+    "old_new_75files": "Hash/provenance verified for every file; substantive reading focused on listed source paths, not every line of all42paths."
+  },
+  "evidence_sha256": {
+    "tag-old.json": "8f6dbd818c01375951b8d3053d0cb0300ca66ec9dd53c492a246c58df2fd5361",
+    "tag-new.json": "c6138e7f907c18b87475d2469c14584594b83ee0ff3d2423eefea1b9444fb04f",
+    "tree-old.json": "de32cec212d77b57c6feb252bbf67b7d99dda39ae07f44f969d17c1f1406b8da",
+    "tree-new.json": "23855b9dcc1f0ba7ab5a7e5a22dc035a19b1a75967ae371479beef247beb45fe",
+    "full-change-inventory.json": "1ae7b6b8be06271bd342e3590fafab318fe6ba19fe2eaeee55eec2918b42e0db",
+    "execution-change-inventory.json": "191e78af781e765618399747dd87e4799e13da77ea8cf787ca7a417aae896f65",
+    "focused-downloads.json": "151ba9f604e6b88805be5c0a834a675fe12eff7daa54e8453a91682e27916ee9",
+    "bootstrap.diff": "b411983275774ce48aeee9289712a663a1f4e388aab676cbfba87edf501398cd",
+    "compiler-resolver.diff": "ccb8453ff6e5befee4986f16ea7655481882f7ac72b4486b3879f984ba70e7e8",
+    "http.diff": "f012f0310286f845277e2dbd5de174ea4dff1475baef3f91d0a982d5617c1eac",
+    "http-implementation-move-normalized.diff": "cccb16660bdb90c3720d9f3d656ff96f539c032cf6de42dd04af7b3b333a9c70",
+    "WrapperCredentials.java.diff": "04271eabdd842e7c82db017de6048fe923abb3c1a966930ffa14329aba4c1239",
+    "GradleDistRepoDescriptorLocator.kt.diff": "9f47d93abff2ce3e52adadec7d048aa06bfd4140a2235aa0f80630a405fe9459",
+    "ModuleResolveState.java.diff": "6f172139326691a72935e64903c466450016ef784c53d4414653b064b57c0452",
+    "NodeState.java.diff": "94747aa36885f722caeeb236482847923e31ded0c89e32d887f3f923de94a0ba",
+    "DefaultExecHandle.java.diff": "8f475763d6ae762379af0581e35944acfc8a21f7a41128c4a84079137f7c69b5"
+  },
+  "remaining_limits": [
+    "No exhaustive Gradle core/daemon/workers/cache or2584-entry algorithm audit.",
+    "No rebuilt-binary/source attestation or all indirect security behavior proof.",
+    "Observed local graphs/debug payload do not imply owner-signed application release/native acceptance.",
+    "Actual new versioned trusted candidate and exact Android update/startup/SAF/provider acceptance remain separate publication gates."
+  ],
+  "actions": "Read-only source/diff/hash/archive inspection and private review receipt only; no dependency execution, repository edits, secrets access or external actions."
+}

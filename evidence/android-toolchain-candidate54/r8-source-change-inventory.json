@@ -1,0 +1,1004 @@
+[
+  {
+    "path": "src/main/java/com/android/tools/r8/ArchiveProtoAndroidResourceConsumer.java",
+    "status": "changed",
+    "old_sha256": "92f902bb27211c9389d07606bcbd97cde3609c69b1fcdc4aa564b8834455d180",
+    "new_sha256": "65a7d60cbd1ca03d959d4e7fdb3ea44b63ad9fa41d1da87499bf6677c99d94b9"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/BaseCompilerCommand.java",
+    "status": "changed",
+    "old_sha256": "3608caf4bb08b44d0ab9523f0b5b520f96cea9ba6c79d8ca236f6fd5ee65cb90",
+    "new_sha256": "f304ee8a30acf67206a51d35d1e115429602579bf22d8de086e8c0758aa4367f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/BaseCompilerCommandParser.java",
+    "status": "changed",
+    "old_sha256": "cba79178f3fcf9c66ef00ef9ecefee65d2784bea98e11b18d004c3fe43c24b1b",
+    "new_sha256": "74db96580dbb7e926c393415ddb2cab8a0df9a1a47760c04cbecf09c984f3b14"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/BaseCompilerCommandUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "249e3d34e128aead8dd91fd1e96f8fcca0f1cc28983ec0101c40ddfebd689e34"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ByteArrayConsumer.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "c6adb27d1d980652efbf8844906473f38d9149db716b6f348e07d400078e66c6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ClassFileConsumer.java",
+    "status": "changed",
+    "old_sha256": "933d846f0bc88b275aaf2da1bbcd382682580ac4161424b460ff8b7a1ecff5df",
+    "new_sha256": "ead0924a1c49cc6595c5b6f2d768e46400c216530c230b243be01f8cace8dcc3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ClassFileConsumerUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "8f7e816f4430318bc3ea6a807b317fe45408d93763c0c734f77d6cd2e7aa867b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/D8.java",
+    "status": "changed",
+    "old_sha256": "72667b859bb22117118db1c4fd1929692fdbc7db048ddf0e560b0e5ccce53dc9",
+    "new_sha256": "4ba63b210ec83c50f4e0804775ae3d6d3cad0d005054f54f4342689d599d7f91"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/DataDirectoryResource.java",
+    "status": "changed",
+    "old_sha256": "78b47aaa64be7c53335e23b9fdaeea287a51cd87e6a53d4e1cce189f9068efad",
+    "new_sha256": "19cec04928f6980fc409cf936796f04606f357a7eac1f1bbfbecfe65fe26b977"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/DataEntryResource.java",
+    "status": "changed",
+    "old_sha256": "e051031dbd065e29621c06ef3f74ca11e73bdbfd10c4a88aeecb19d3eb701133",
+    "new_sha256": "7d601962d84c11a2b372f565909578f2b3a7b0cd4cec00e71ceb255ce0c8419c"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/DexFilePerClassFileConsumer.java",
+    "status": "changed",
+    "old_sha256": "6a4fd6b783961969e5928387441674c1d98dddc0bcaebd3d5c0a6ba39b4298d6",
+    "new_sha256": "821c536a206cd4637cad9ee1ca53b9ce4416246524396595d2b777c3d55c1b29"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/DexIndexedConsumer.java",
+    "status": "changed",
+    "old_sha256": "321708ff46dd333bd7ffc069af39a2ede5cd039488ea2faab52c93053b21c416",
+    "new_sha256": "d0ad73e4487b842a7dd75a75c74c4f12e7cb7d35b5d2a5859889ccdb2736fb32"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ExtractR8Rules.java",
+    "status": "changed",
+    "old_sha256": "01e39143854218adfc8ae267dd7ef6ff523403773be17d36f1b3922783a3504e",
+    "new_sha256": "17608b734a79aa9e34b67a761150e1bbb2a1d0410c1a00b9ff2a1fae32b206c3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/GenerateMainDexList.java",
+    "status": "changed",
+    "old_sha256": "4ca78abc47107265d984da267e1f27d324a105c3dcfeb0d6e69f9184146fda0d",
+    "new_sha256": "7d1ebcdaf99ba2367f19e673e84996a2d771784e7a7d3faff26a91d6be8b0b0c"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/InternalProgramOutputPathConsumer.java",
+    "status": "changed",
+    "old_sha256": "d1efdcb52cd6f4db525b03537495c6d64573989b1875da7c08c32e61989ab21e",
+    "new_sha256": "707db913400667c21521284b0dca0a4396fd2a500a1c2faddd2010faaa26e1e6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ProgramResource.java",
+    "status": "changed",
+    "old_sha256": "c9c25f1506d796ccb1ed2dcf17b6af97a259d35a2cc92137232b65c8010b7d42",
+    "new_sha256": "09194c65caf1cd6fc1793250463f95c4ff24c939c22ccf762fb3a6873a158b7f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/R8.java",
+    "status": "changed",
+    "old_sha256": "3e6c5838a36fc06b638f74d5f65facc7d1e0459149fb3eabc558fc1f449a9df1",
+    "new_sha256": "4d2d43105bcc63f6d19d3e5f04892acf258009a550c9642c3099abd86ac84aae"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/R8Command.java",
+    "status": "changed",
+    "old_sha256": "1b04581d34b710b97df844b30b41aae1df21eb65d344fba83a0f9bb4b8aa92cc",
+    "new_sha256": "e0b8fec8119fa8d86d702bb39e2b13e375fce841e1da484b37a927b3b547abdb"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/R8CommandParser.java",
+    "status": "changed",
+    "old_sha256": "f5445884b6bfb08017c15227e0bcb5ffcbc56a4972e61582535efeac0df9ef95",
+    "new_sha256": "77a3aa9f2f8fc75dea4893399832ff388a0907556a0fd6292d6308ba09f6ed62"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/Version.java",
+    "status": "changed",
+    "old_sha256": "098b7abb13d5f85013550a5f165b8050319e22063791bd47ddb02325077ae39f",
+    "new_sha256": "699e77549abda8d13be22e1b2daab4cc418a659b718e3faaa5de4de8ef327e61"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/assistant/AssistantExporter.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "6a0e24d3f61ef9db1789ba9d70aaee1e282a6a517cdaa0e3ddaf8357fdffff45"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/assistant/AssistantOptions.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "75762c376567a3e36a2bfde69d1fd833decb034b335eee29c10a9564c9034da6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/assistant/InstrumentedReflectiveMethodList.java",
+    "status": "changed",
+    "old_sha256": "d1cd1e7c25debd2106d217c027f4f0e30ab2ac055546622fb39e60e1cb463704",
+    "new_sha256": "bbd0a91e50eca22347598ed0a1524286eec5d49b287a820d759c2731464368fa"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/BlastRadiusContainerUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "040a8b81aa14d8c11d74cf768eb760e69ee7cc4cb2842ac20cb34c8c17a870df"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/BlastRadiusKeepRuleClassifier.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "06d774cde6f1eeb1456ed60c42a21eeb66f0af2aaf6ba889314e00330b365774"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/BlastRadiusOptions.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "4839dc39c873b0d64f06f677864774cfa3ed0905213b86cbf7dbf44db7316cb4"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/BlastRadiusOrderedByNumberOfItemsReporter.java",
+    "status": "removed",
+    "old_sha256": "a007d3c29d33d6705667fa354f1b2a49cd951e904ca4a3758544d7c0436ff3f6",
+    "new_sha256": null
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/BlastRadiusReporter.java",
+    "status": "removed",
+    "old_sha256": "272d3b58272e3237caf292ee206fb0d5fd927dbf62552c42d370134f3f85e39b",
+    "new_sha256": null
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/KeepRuleSubsumptionAnalysis.java",
+    "status": "changed",
+    "old_sha256": "c4b693e527a8709b7aeb6232b8bf781007430108de10649a4e4fed54ff8db925",
+    "new_sha256": "839a2e877e4f067a3e5d893db6c1c3f4e9e65f09e70ce018c8f1d82a54637f2a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/RootSetBlastRadius.java",
+    "status": "changed",
+    "old_sha256": "c0ad9320a5ad31942ec1981710e77da3d96d6e670aa7e696b32986b27c765fbc",
+    "new_sha256": "7866891bef1ea3ea48db9e058a316c49fe3d430999bc8e06efe00e27854c41c0"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/RootSetBlastRadiusForRule.java",
+    "status": "changed",
+    "old_sha256": "e5300b1299d610961757eea05b9055de5ce3b467002f4812429a0f53ef35baa2",
+    "new_sha256": "12c9d5ec39a09115cd9d98edf58645731d1d6b19939daaab10bdba027babad9a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/blastradius/RootSetBlastRadiusSerializer.java",
+    "status": "changed",
+    "old_sha256": "1adc8513c71093391ad6bb644fb4f9ed51d18f176c9025e39597a1858d327007",
+    "new_sha256": "4b5790e31ada3e0f829875fa06c2e7f3e08defe3920666014dfcc37c8828f214"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/cf/CfVersion.java",
+    "status": "changed",
+    "old_sha256": "36dfbaac7ff1cefffe78900c4d2571fbe2acc9a0f6c56d69d47850006a15ab54",
+    "new_sha256": "1a8e4ea1dd1d541d2787721f8b56e04b1aa040c8714d3fcbd3aef88ac7e4cfe0"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/dex/distribution/DexDistributionRefinement.java",
+    "status": "changed",
+    "old_sha256": "31d47f8799e2230dc1619f865e6aa6f71d99b04b1b6d84d735dfe7ce58d0a516",
+    "new_sha256": "167df714691868bc5ba5b4c00081a6f063f844ff2ef971cce29429b738efa1a4"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/dex/distribution/IndexedItemTransaction.java",
+    "status": "changed",
+    "old_sha256": "2c5a3d88072a21e68d500634b58bdf46356c9a1857a24aad92bbea82d9a5c463",
+    "new_sha256": "be1dbb90bc357ca3603f8a6257cf68ba49ec475ed76a784a3c8d3be34f5a50fc"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/dex/distribution/PackageSplitPopulator.java",
+    "status": "changed",
+    "old_sha256": "bf66d6f56b0ba4f1c884b49da0855cfb56315115f574bf1d7f0e40832ee862ed",
+    "new_sha256": "fe08f4a663d5c6a9e3776ba40f3e2972b6feacd86d76dd2786a5b3b4561dae0a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/errors/UnsupportedAndroidApiLevelDiagnostic.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "c0e5606c805d77565d2e47c31ff1234a87621f4cb48d8cfd2e304bf4f01d0b63"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/features/ClassToFeatureSplitMap.java",
+    "status": "changed",
+    "old_sha256": "594f2ed276617e690b2ce6306deced81bcadd30682e5396c04c20fee84d66340",
+    "new_sha256": "7280475c92ef730ef9422ecf1538896dc74caf210a03f45a0269aa6b6501dfcc"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/features/FeatureSplitProgramResourceProvider.java",
+    "status": "changed",
+    "old_sha256": "9f6d8a097b93af6318a482f47233a6bef14c0e73eae5a668d77d56bcc4ca5791",
+    "new_sha256": "cd9a8377d3fe1b71e8897735cd70634005c5f8df1e84c2d689b239649a7dc389"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/AppView.java",
+    "status": "changed",
+    "old_sha256": "6e8c996e49b92d39e34640975b60e287116382c9858f8dca9d636a8bd5d1f1e3",
+    "new_sha256": "e487257fb2867e8e8ca67e4f93969cb2c08172fd75a2c2bb29668867a39e3777"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/DexClass.java",
+    "status": "changed",
+    "old_sha256": "477919d76590cebf3f07db123d8ca67a05e0c7370f6fcfa0809f0b6da352fdb9",
+    "new_sha256": "a476ae1445c93c77873b84886c55296a943dae728ccd1fc73931f3664a86a013"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/DexEncodedMember.java",
+    "status": "changed",
+    "old_sha256": "ad602326692cfa308b33f5bdc9992a32052473e9fd31218ef0541a68147644bf",
+    "new_sha256": "6f7e59e716112ba8cf859218b40db59a473fc5d943a961739634c8b67f2c459d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/DexEncodedMethod.java",
+    "status": "changed",
+    "old_sha256": "4649d4c814db160b9270ed40b28a43e1e3209c7ebe79b2eb4051352638f87714",
+    "new_sha256": "5812a8839e6e4b5b0e3cd42908ed84ce79a6c519936bfd8cb2ab0a8793875082"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/DexItemFactory.java",
+    "status": "changed",
+    "old_sha256": "5cafc1872b16256b362f5be5acb303126bde324f79917051d1a909733069cbac",
+    "new_sha256": "e65e5b369fa18e0cfb89bb1e83b74b63b6091adad2a43f14c8fd0475ce20b312"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/DexProgramClass.java",
+    "status": "changed",
+    "old_sha256": "45c4611905f2c3d2e3977941fc3742c84a84f6b6dd01f1c024aac0f97a29e6c0",
+    "new_sha256": "897a60b1fc34b6db984886e0758913f78f354115fc26f96fba81881656566a6c"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/MethodResolutionResult.java",
+    "status": "changed",
+    "old_sha256": "74d2ad39756f6c6c5741c0840610099a6fdf166328f3683b3589c501d1665cd7",
+    "new_sha256": "6009918f206fc5e2c83d19beff93e25be0503ef9ee145bc40aa769b311159c01"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/graph/analysis/ResourceAccessAnalysis.java",
+    "status": "changed",
+    "old_sha256": "5057a58ae89396211322b97ce249108dd8ff04b14169223803d18e9a481340dc",
+    "new_sha256": "81d4da83737c54a5e66637527b372cd1205c674b9d3035b778eadb24c926da54"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/code/Assume.java",
+    "status": "changed",
+    "old_sha256": "f246135491b5bf5082ba832747880bcce3e05d0c14a2748b3680ff3e7de4224a",
+    "new_sha256": "d5923599a5192c2af8f4ee555c23d8cb334b1bb08da3fbd4a99e1607af8b123c"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/code/StringConcat.java",
+    "status": "changed",
+    "old_sha256": "04ad34a111e2b0d00fe932143f6b4e7d3f12974926d1ff6bd37355beb49c4a22",
+    "new_sha256": "a4a5d28d5a2fca8e274b5c49f5a402a4fcb7259b2927a286b0a80554ffdd6580"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/DexToDexCodeOptimizations.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "c86aea708db62307e2a77a92a32037f12a7405c65bffffe34d6d5efe71b29676"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/IRConverter.java",
+    "status": "changed",
+    "old_sha256": "76d3f7a4016d5ce467c90179f503189f89544cbd0e16e73a36ca1c584b22f963",
+    "new_sha256": "de2700f3c90196f5e4b83fb1ac09b83daa3652993c9eb8bcabbc0a21c6bcfbc7"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/MethodProcessorEventConsumer.java",
+    "status": "changed",
+    "old_sha256": "4462bb1d16f991389b035e64968748424bf912f7f0605a69516fbc13c0d669ee",
+    "new_sha256": "c747a6e773914bbdad83001f1f0c211901adac1de207f2b349a656ccc4f0f734"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/PrimaryD8L8IRConverter.java",
+    "status": "changed",
+    "old_sha256": "f8fb388178665bba23015a81bd349d37bd522e4737188f686ea59c6e21398045",
+    "new_sha256": "1a8425d26d0fb1423efc4dc886bfa8e7c1e60dd9005b05cb1dbe4fb40019ce1d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/PrimaryR8IRConverter.java",
+    "status": "changed",
+    "old_sha256": "4dd23b6bb42a699114a2abec930d0ec8cba0abd390ace0493d96bb6c1c3fca72",
+    "new_sha256": "f617279210fc25e5059bab1e984b9ef9aad74631eaa286d6a498cc1d5006638e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/AtomicFieldUpdaterOptimizer.java",
+    "status": "changed",
+    "old_sha256": "af20fb25f8898b66eeddf4828e4953aa1c61e59012147333b99cb2b91e940620",
+    "new_sha256": "246d00200b4a07447e3a5295432e328d541b758bc1244d863d6e6dd0f7deaab7"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/AtomicNewUpdaterRemover.java",
+    "status": "removed",
+    "old_sha256": "ca2ed38bbe30a9c16703fe279f4aec6a87219b6f478ef99d266c6e4720225518",
+    "new_sha256": null
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/AtomicUpdaterInitializationRemover.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "1d5c1310fa2ff6d58da0d53013b9dcdd5b0577e0bbe3ec7baa55ad2236db428a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/AtomicUpdaterMethodProcessorEventConsumer.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "b473005e01d4497a155d19055785f725a54a3573cda3438f7e9a1c662d2aec44"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/CodeRewriterPassCollection.java",
+    "status": "changed",
+    "old_sha256": "8c0c9b256d31aaa3884cebd29db781bdbb34b20b043f14fcf2c68e23c3af879b",
+    "new_sha256": "0d58ef13db50643251556ab844c363928d280d706a2a94c4bf894a49641ede69"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/SplitBranch.java",
+    "status": "changed",
+    "old_sha256": "e060f3e6f028c1a0cbdd24ca81b9f8575a61a96de31a2086a8128689521657e6",
+    "new_sha256": "19e2397f23b342386ea97eb1b77b67e7528ff8cd7ac984ca6dc5c344eddc23e3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/StringConcatOptimizer.java",
+    "status": "changed",
+    "old_sha256": "a5c107ca20e5d4b0cf86f0309a527332e6d8128bcfe9d8f0925825dd7de4f4ab",
+    "new_sha256": "165177281bfd8a1d6af32a5d5b7b841c5e64a3f56eb66dee1d937fef18180148"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/conversion/passes/StringConcatRemover.java",
+    "status": "changed",
+    "old_sha256": "8187ed26c480f4b2ead0069ffad1ed8fdcc4c563b47ce37ac48c4fe9c20501c6",
+    "new_sha256": "467c45cc71590854d4902fe6fc454fdd5c274a9968a5d11a9154366ae80dd6f1"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/desugar/BackportedMethodRewriter.java",
+    "status": "changed",
+    "old_sha256": "2dae7a4d3db3b8e95ea3ff4af7e166fa51e202982c25cf38edc5e63dedb97f4c",
+    "new_sha256": "6c378082189c3a9ec48e2ccf5a7d33fe52fdb55b6ff034c7a2fd44e7a5076579"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/desugar/LambdaClass.java",
+    "status": "changed",
+    "old_sha256": "a295d32a0153c1141627092ceaa29db093379a5d0dd121dc0e4b0b71b0dc8ff3",
+    "new_sha256": "4b8bafa40d112d414dfee5a528d549581a4a585a8ce9a95aa879f53036224a05"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/desugar/LambdaClassConstructorSourceCode.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "ac3352532abc312fd3396f37351928fc805a41997d7ada1273c0228502b842d2"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/desugar/lambda/LambdaInstructionDesugaring.java",
+    "status": "changed",
+    "old_sha256": "3ba147c7089c98afd53e9b878ad23b7204fdfe60573033c007e07751475fd6ae",
+    "new_sha256": "2fa15c95c24f236191500d804a8acb7e6c1c8fbab6548e2d37cae27969e561c1"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/AtomicFieldUpdaterInstrumentor.java",
+    "status": "changed",
+    "old_sha256": "eddd7608e3a6670ef539984ff13b07b6a66ba6537ff7e35358fc24575abbca78",
+    "new_sha256": "132ce5c1fbdce2d082e9b420e74a0785b581d724d751f3648852f6aba8a259a7"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/DeadCodeRemover.java",
+    "status": "changed",
+    "old_sha256": "c37a304553ea3f37fb05b95c4ff42bf642df87d027c0151605f46812684968a4",
+    "new_sha256": "c6a7766549a53c3f5036bbb31046a1637387bee8ace24788909fc218a4e132a0"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/ServiceLoaderRewriter.java",
+    "status": "changed",
+    "old_sha256": "43aaf2eb9d629dc4e35e947925a0933a94603f13b9309393be8f15f5fc512b9b",
+    "new_sha256": "254f70f865b2f4a6df7b2cc0a77e30981abed3cb131cbea12d5073260f72338e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/info/atomicupdaters/eligibility/Event.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "d2c2ac5988740fc0032b69265094d939d852e651a9a29f009810e307a5b3c1b0"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/info/atomicupdaters/eligibility/Reason.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "39ec0cbe59d0b26cd5568934828565d974504d080c18fe352db0478b146601c3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/info/atomicupdaters/eligibility/Reporter.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "c6ab7b319caabee829be50e8f86815bd24a0d29e47c43b7f43eb31efeb71bc25"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/library/ObjectMethodOptimizer.java",
+    "status": "changed",
+    "old_sha256": "f1c287d8462c434d95f370b2e88be4efeed24fbcba8be9a726891cce52e09adc",
+    "new_sha256": "8bab4faf9b8179f29619c1964921eb38f8ca8a57642cba13a964bb20fd8d3512"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/library/ObjectsMethodOptimizer.java",
+    "status": "changed",
+    "old_sha256": "f909e2728ef1e7c64fceb5cf57cdca7641c2127b25c503b300dd5b30cd3f7b41",
+    "new_sha256": "0f421bdb07d6ac1c897f97856e10d6f615443643af31dc64cf909959832799bb"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/library/ResourceGetOptimizer.java",
+    "status": "changed",
+    "old_sha256": "a5ba92b27f0d01bd7e3a7772cfbe52785e0f223907f7b5322556a7ac4026037d",
+    "new_sha256": "d23d36069d97f1b5a628df9f1591e1064543f496744701a8140b227d21d3e07b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/optimize/library/StringMethodOptimizer.java",
+    "status": "changed",
+    "old_sha256": "a37b31349dec624f32c88ef57084f454cd6fcdfcda005b9e458621b63af5d25f",
+    "new_sha256": "df49fff7f32a9476a53c58bab23c6c44e61916754e26cb488a7c3ccf2fb87f2d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/ir/synthetic/AtomicFieldUpdaterOptimizationMethods.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "5cf12f05782ceb8e52c53edbb6d76d4bb85067831b923ecbde0928604a7f7b70"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/jar/CfApplicationClassWriter.java",
+    "status": "changed",
+    "old_sha256": "284531b419fe7309da398e3ef196c602803c3019fc7f85e09bce5037a4d939f6",
+    "new_sha256": "69ffa2a0b26209d2286f4656e35c6133f7023f4e2c70545cdc36601aeb411b4d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/jar/CfApplicationWriter.java",
+    "status": "changed",
+    "old_sha256": "e70f1552340ff1963a391aaac5f09e5f2652c20d320649b9c455ea7c4696539e",
+    "new_sha256": "50978ffdc19ce8ae072123b3b2e87e60850424a98ac34f7d62043e0d10cf08dd"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/kotlin/KotlinMetadataDiagnostic.java",
+    "status": "changed",
+    "old_sha256": "233c08e2ad623620e60fbccfc859aae53157ff99755ed1973ff0ed3f944f805f",
+    "new_sha256": "6c748c2e52d80a8e10a9a7251ef60d75ae46ce94f84c481fe7751f400f396ff3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/kotlin/KotlinMetadataRewriter.java",
+    "status": "changed",
+    "old_sha256": "b05c9893e946db55fa47a2d4f23776e6ab4407263b39ef99fe84f280eb7c4598",
+    "new_sha256": "2f4df7540ba642b3fdefe2a32a558d20bde61bf8018cdeb96ff12aaeeab624b6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/lightir/LirBuilder.java",
+    "status": "changed",
+    "old_sha256": "841ded95d646a5cb011c91d300d5b298e9330a1386c55608acdb900ea0d2d5e1",
+    "new_sha256": "f228aba32468aa769d82b66af2ecfdf6f6569b1e2ee5b22f1b1ac4a575eb72df"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/naming/IdentifierNameStringMarker.java",
+    "status": "changed",
+    "old_sha256": "42b2a3f94f93f40829861150ee131e7b9ec490b72fe678a3136d66a5d7165768",
+    "new_sha256": "42488beaf1fea8f39d560b6380c9695ffdeb6053c478034ec96621e98d153993"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/naming/IdentifierNameStringUtils.java",
+    "status": "changed",
+    "old_sha256": "ffe813f2df99bb1c5b37965b13e7e544efae4f8ff05a6c370f3c847c33914e3e",
+    "new_sha256": "d790ffac890b006a1897aa2af8b4ad96ad396307780408bc15d1b8f0492c3d13"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/origin/BuildSystemProvidedKeepRulesOrigin.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "8519ac0a41a69ba57fbe11f5822c309764c69a2c0ba9244fc2564cd739433796"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/origin/MethodOrigin.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "20eac497caceb08b21b97efdd2b00ba589b06a8cbf5b014ca3c78e69809f25ea"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/origin/PathBasedMavenOrigin.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "e5cb1fed22367281f6001a705eca1e92513cbeee2cb8b27d894b92fcb9bf51e9"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/partial/R8PartialUseCollector.java",
+    "status": "changed",
+    "old_sha256": "ed5b06809780d253c185aebcf1d828a179edbcf08d0b0d955203e161a7a59a7e",
+    "new_sha256": "ab19f73dfdfcd44e8a384437bfb73ac8af33cf58d74cf0e786d9054547c691b2"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/processkeeprules/FilteredKeepRulesBuilder.java",
+    "status": "changed",
+    "old_sha256": "f2f26c20ba3a52980b8a9b966a0d54ecf46c3b98cc2db713075fae4e8169c4a7",
+    "new_sha256": "e95f8bb2c462185c50898d8b4d31601edc2b61204ffc312c95582c0aa552fcda"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/processkeeprules/ValidateLibraryConsumerRulesKeepRuleProcessor.java",
+    "status": "changed",
+    "old_sha256": "1dd05720a4b4fdc6a9a132e9c7fdd978b0cf2eb2a819cf1bd5a2d68e1941f1f1",
+    "new_sha256": "d51e5d2f6216d6b660344f51d6dcfccc9e9b28706c70c27ebde469fe1361d364"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/profile/art/ArtProfileCompletenessChecker.java",
+    "status": "changed",
+    "old_sha256": "9ba87b5d5693959c011f9c3994076143ed7c662462f2620005bbf837dc10d1d3",
+    "new_sha256": "1bb8e569451ca2d3392ecea788eba2bfa3ea3085c7a601a057c6602edf5fc9e7"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/profile/rewriting/ProfileRewritingMethodProcessorEventConsumer.java",
+    "status": "changed",
+    "old_sha256": "7bbd2ccf1569ed93bb1d380c46924e9c4e3eb03464d2feeaa6c24a0516a9af8f",
+    "new_sha256": "914fd55955b95d609125b43930345011e32c9246fa705c28c37d34691e48472b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/profile/startup/profile/NonEmptyStartupProfile.java",
+    "status": "changed",
+    "old_sha256": "58f84f0b1147d615abc8b533b86f5553a4ce96e07295835f2233350b99dd20f6",
+    "new_sha256": "54370ab01ba392aa4543bf82a3bbe24f689b586d9a734f0e44d5a5237eb617a6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/references/Reference.java",
+    "status": "changed",
+    "old_sha256": "db7b395ce2a711a9ee6b240216a033f0b5fbb39792c60a00095c6e0125dfe177",
+    "new_sha256": "0a9cda81c561102c440cdf11901e5773d41ec69a6ce943b3c657d9dc6910bf25"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/relocator/Relocator.java",
+    "status": "changed",
+    "old_sha256": "971e0d88cb35ac2f9985c904af01d39769eeef5019600974384fb6268a0fe21b",
+    "new_sha256": "7cd81478ec4911100f1e890c90ec87f4015ca499c50b994e1aade5ef31a38dd1"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/relocator/RelocatorCommand.java",
+    "status": "changed",
+    "old_sha256": "b8454817cbbe964923f9aed1fa18bd619d21e774406ac1ac7f5f7f8b03e71db3",
+    "new_sha256": "4468efe5902ad95c0a009031ce8153f6e7a63fddef0aea0b039e310e10e93263"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/relocator/RelocatorMapping.java",
+    "status": "changed",
+    "old_sha256": "51515356e42989f6073d4ed5ee9f130bb3eb226ed21ba6c03d1b6a7e56e8e121",
+    "new_sha256": "602be2d13fbb480bbdfb8f4c0468b971863ae22d621179a11dcdd0f82df49d5e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/retrace/Partition.java",
+    "status": "changed",
+    "old_sha256": "5052e2a52fab998e4ee8baebf6c917a4a86c37e9f15dd0f8ac1b3e18b8775dbc",
+    "new_sha256": "8b89dad72aea2692ea2ae43edb5d87c102683951f24bc3ac09aedae699e3aa74"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/retrace/PartitionCommand.java",
+    "status": "changed",
+    "old_sha256": "525e789ff154120d00df2f4d888102d7095a207a880e1d98dbc577705fcc1484",
+    "new_sha256": "a2afe988b647ecdc2971c8db5ffe3cef36674c7c792162c761d3b8d19cd082ea"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/retrace/PartitionCommandParser.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "2754ddcf1310b09f9437bdfbf558c818c938da9c28a9075dd5479ad6644c531b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/AnnotationRemover.java",
+    "status": "changed",
+    "old_sha256": "1e750f96e726f51f5d981fb026bdfdc66cc1bdfe4251967a7d9fc1f27e5d476f",
+    "new_sha256": "837ffe0a75493db0fca3ed54e647683bfe912e66d11cc7cbead644d9c924e057"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/Enqueuer.java",
+    "status": "changed",
+    "old_sha256": "84d66940d0811098c0276a61ffe0316b0a85252748e488ed78781d60ec0c1ec2",
+    "new_sha256": "b4e047185b097adcbf6aac4634b36305a63bbd23fe952c67202974829988ad05"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/IfRuleEvaluator.java",
+    "status": "changed",
+    "old_sha256": "a1da02a69361e42751d647fa007020779fa131016809f8b3b269c13a814daa72",
+    "new_sha256": "b949c8cc72584657ad9bf2569723b6794a9e9112fb54496ed4d2e01dbc3a8fae"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardClassNameList.java",
+    "status": "changed",
+    "old_sha256": "a308e9b01a8ba3c5339203c32fcf1b89f8a29b01b80fe52444fc555520e49fbb",
+    "new_sha256": "7b07e58a699e58ac4168da1e37b915693ba17b74954ff2b8f8298082be847cd2"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardClassSpecification.java",
+    "status": "changed",
+    "old_sha256": "892f76cd97cc819379354079873d60422731dba1dad96dbc49e82630155e88a0",
+    "new_sha256": "1088d77ce2a502de8ab433d711fde34d1e67cb9f6b1704fa0d107ee2b8cf5e10"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfiguration.java",
+    "status": "changed",
+    "old_sha256": "fc3f91fe77cb492c4515b8dc90c89364d1a843289dd8577fe1f44f87cd563399",
+    "new_sha256": "40c2fe0588b14c5d30be51374e600b619b836c8f91a6920dffe751741e3bf570"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfigurationParser.java",
+    "status": "changed",
+    "old_sha256": "4ce45ed7aaa0192790406e38b117553d925e8ba0a1c4f67b879171cedaa684bf",
+    "new_sha256": "79f075e4fcfd096f1a36f5fdbfc436d1d44dfc15b5d0c6453be16631829b3145"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfigurationParserConsumer.java",
+    "status": "changed",
+    "old_sha256": "714b018b85e3808f7d8ad9b34125bb65f02fb1e89cc8217c640fa3b4e20bbcfb",
+    "new_sha256": "e532e0986b81ad8b1a9a9faf8466faf55408ed3e3b74ea4b8e4fa7a45b8087bf"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfigurationParserOptions.java",
+    "status": "changed",
+    "old_sha256": "dac2a740460ec0bb21a46c885a83352356be9dd2d957e80f9b02ddc1a340d509",
+    "new_sha256": "2d396f1a5ba1dfe0014d7837b66c6a0f4dc4c4a26c9f874b467b5c1d5abeb405"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfigurationRule.java",
+    "status": "changed",
+    "old_sha256": "73177fa2b938b2e2adb031b88996d302630130e62c999b95e52f79427fdf7ac5",
+    "new_sha256": "d2e5350892c435fc577698c55b7ac239fba0e295ab14985536fb4c695281592e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardConfigurationUtils.java",
+    "status": "changed",
+    "old_sha256": "dc1fd3acbd227e3fdc3613bcdc2511ce75d05f7cab00a8e149843dcc609a151c",
+    "new_sha256": "2fbc982a8e9d3abe0f1b0e191558d40564abb06096dc717f9be769853e219a04"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardKeepAttributes.java",
+    "status": "changed",
+    "old_sha256": "5b95cc08fc7d506def23946ce45aa54da088da83f3185e0841d9009370bf2e95",
+    "new_sha256": "97aa9d65c9863f0bda41256685d406491ce3e37f01dcfee1bc05089b50364a24"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardMemberRule.java",
+    "status": "changed",
+    "old_sha256": "aabd4ea68fd5a1f5179de12e76d8aaa0bf7a3eea98265b300521f75a37ae840f",
+    "new_sha256": "33bd8be9d108e610fc1af4d2870c289caa367d27b5cfaa4d84ca6de2b4276902"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardNameMatcher.java",
+    "status": "changed",
+    "old_sha256": "6001bf39ed8efec0347ce655c5e084b78a03b455fced1537ce1f46d1d0a41f0f",
+    "new_sha256": "2cb3930a34c5295834bf9bf37a3a4b942a4c256750c0b1be4f5c6b6f7033b336"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardTypeMatcher.java",
+    "status": "changed",
+    "old_sha256": "65f5213d46050c4cb7566ec3ebc8bd1bc1ebfb1a773fed4fde4c85121e97c16f",
+    "new_sha256": "26e52cd83c34e5655c2f1bb204c550db1ceb2fdd527434cec7c62d6113964795"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardTypeMatcherAndNegation.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "221fa9a9a9e55a9a0fcfb7503947d7078788f23d5eff577eda2cb06b0169180d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/ProguardWildcard.java",
+    "status": "changed",
+    "old_sha256": "3c5c4aff26247a8660bf25b896f4b73efc54d8b66e99e75eba129440c6cbd6b3",
+    "new_sha256": "470138b4a6327c8c43eb6d80ea007421d171b830815d932453cf5246c0522eae"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/reflectiveidentification/ReflectiveIdentification.java",
+    "status": "changed",
+    "old_sha256": "6d98701b996a80e05ed07bc2d8962c14205b2a64e572eb7d4c654c5b8a6025a0",
+    "new_sha256": "a6b8424ce515ad94bbf1a718d1cd3cd50bc23d4bc9b9ab8156c249d0b5703874"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/rootset/MainDexRootSetBuilder.java",
+    "status": "changed",
+    "old_sha256": "66bd37daab6ad700238cce8b2213db0fef1d1efa1c31e3f79d97db87e1895292",
+    "new_sha256": "64fd691faa6c2eb03e3afe5b4ba10bec448da2f516ee5e199485f25cd6443b70"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/rootset/RootSetBuilder.java",
+    "status": "changed",
+    "old_sha256": "7f94d9fa7c3d9df893ed149d764bf59824bfbfb420a58ebff6d2634527b63f54",
+    "new_sha256": "44adc2b073004e9dfce35ef4454dc4f7b1e3a91c865de49e84c418c9d5f91d4f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/shaking/rootset/RootSetBuilderAnnotationIndex.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "6c7303c9568b31824ec29f04e45ae35ce3eabd7f9fc9d64a8b72894bb2e553a1"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/synthesis/SyntheticItems.java",
+    "status": "changed",
+    "old_sha256": "53f341abc1e3ce4f8a3cf3710ce76ae80082732736cc649202e56161413d4429",
+    "new_sha256": "023867b5844b18db36f2a6f48dc6ebccf4c424237bb9bdefabd4758c3022be7a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/synthesis/SyntheticItemsOptions.java",
+    "status": "changed",
+    "old_sha256": "0102d7faf86de13cd5ee225254b2d132d3f3a0442705ade66efac93a73e3e11d",
+    "new_sha256": "ec56719ae303def8e8646753eb1d79624c478fb07e6060cce6cb175c4b8f7170"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/synthesis/SyntheticNaming.java",
+    "status": "changed",
+    "old_sha256": "bf58c60de840fd0a2b686c542c39a4350d0cee588b037c706ffc714f283af521",
+    "new_sha256": "cd6f24b247caa2e8d03edfe8f7dabf7349bf6a90b141a149a0246481f971f9a5"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/threading/TaskCollection.java",
+    "status": "changed",
+    "old_sha256": "805eccfda7b8dbf9b5dd6a11968b344f46d18f1228e4e9de2745da163f210e21",
+    "new_sha256": "5f053d6d1afea8864555c5d9dd1d8ca743cba78c7a2461857af77ca7fa6e8287"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/TraceReferences.java",
+    "status": "changed",
+    "old_sha256": "0df4dce55d987e3896afc5c6337773644e5460176d959bf2d0441ba9e0ee414a",
+    "new_sha256": "760b680c9d0ba2ed90d840b76a65b86e66d3d15197865a34976ae9635900d742"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/TraceReferencesCommand.java",
+    "status": "changed",
+    "old_sha256": "3f543c0ca491276f4b4794db5bc7f93e3ca9ac23a62de23798709c76a976e94d",
+    "new_sha256": "6843014e15f216e6a80f5bdc5e8cceef003a32bcbf1d845e5b7670daddd60f22"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/TraceReferencesCommandParser.java",
+    "status": "changed",
+    "old_sha256": "5719fa4e42d57afdae09b3c563ce990912d1a97f8262e95284c771304de54b94",
+    "new_sha256": "957848ffdd243d56eaa5ef319afe47844495ed2e1b83f4b5ef2700336ae1cbcd"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/TraceReferencesNativeReferencesConsumer.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "d23c879537f09faaf52dff975a1459e0eb2384b98e6fcdac4f597da6b4dcccc9"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/Tracer.java",
+    "status": "changed",
+    "old_sha256": "c39343c7535d2b64596300f732b28c6c180108a8d411f504e16addd9597ab848",
+    "new_sha256": "bc090fa2dc054c16e4084698e600b292ce8b8647b51859a76a6a934ab4ea31a2"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/UseCollector.java",
+    "status": "changed",
+    "old_sha256": "b5b421d7767ba5f0cf4fe43585dbce08f42db670da01a545c8c3e520d87f13f7",
+    "new_sha256": "86c7d69e4d403f2d54249300c2950ab1aecf714d4373d90154d67c1babe1488f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/internal/TraceReferencesNativeResult.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "b99ddd0b395f6f79132d5607886fa8b143f59be41471bd0be936282c394801a4"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/tracereferences/internal/TraceReferencesNativesPrinter.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "e69e1ea640fdf40f42d2408825c4555ea5d3e7c7b804ee27ed171c58656943fc"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/AarArchiveResourceProvider.java",
+    "status": "changed",
+    "old_sha256": "de0d96ceb88130dcd3e9019829a1f54bdd855695c35014995a0b9d1e3c9231a5",
+    "new_sha256": "a454b699fcebd9c1722dfc3f53941ec715a3c188ef225626ab7b39110131aef6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/AllEmbeddedRulesExtractor.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "958cecd135e5684b49441c27e3ae923d7cd563d82d126dd7bf257e7d96bf8d63"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/AndroidApiLevel.java",
+    "status": "changed",
+    "old_sha256": "15c5b436605fcf144ed14a3bec76ba7e0cd14ad0a216efe50a1432b782906e11",
+    "new_sha256": "ad7ff3d9e1bcf8dcd30d689e8842c0d8e8e5b710921e53a06efa0cae605710da"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/AndroidApp.java",
+    "status": "changed",
+    "old_sha256": "db6a599a5c0c149601fe8de04beb38c05f0c9336344c724949c009fbcf65b4c1",
+    "new_sha256": "2f5721400674693ede63ecc6ad0316320e1a7cdc5074134b85b744b7db57265b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ArchiveBuilder.java",
+    "status": "changed",
+    "old_sha256": "47cd6921ba1236e0dfb4f82c964daecbb0449ec2334583031bf92864a90b3557",
+    "new_sha256": "233e1c2f29c01fd290d868f41ee3bb5acf6ee0de20624fed8c3f64385178e989"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ArchiveResourceProvider.java",
+    "status": "changed",
+    "old_sha256": "71a17a313e7db866e79f2a471f1afc9c8fe69d0532bf6cfd351da2ffd0d4c5c9",
+    "new_sha256": "15b9bbaf597ecead9e4edcef1e986e8a951c5f0263106a1942e8095394f7fe6d"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ArchiveResourceProviderUtils.java",
+    "status": "changed",
+    "old_sha256": "78a482f6096ea29ee7bd0841769136bf5d94a59320066aa40c9ebecc88c6a9b0",
+    "new_sha256": "4d5f8b7f34db70e596bf6d70c8b52428d5089c262c3dc44a1bb3293cdaa65afa"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ArrayUtils.java",
+    "status": "changed",
+    "old_sha256": "c5164e55f55fc5421b22294b9a0a4cdbd65c27b4c371b4a516e53d624d665632",
+    "new_sha256": "7f637681bd2af23478f7f13482beeb18eb317440fe75b94475e6a76ecc50625f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/DexFilePerClassFileConsumerDataImpl.java",
+    "status": "removed",
+    "old_sha256": null,
+    "new_sha256": null
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/DexFilePerClassFileConsumerUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "c88dfd36f64a4c5a80d94412a715f26fca6a3995f32d950842564299e8fdf68b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/DexIndexedConsumerUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "21e0e31f64d2e0d78289a0a2c48cd1a3766410d1b5c9338bbe42b360af4f432a"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/DexVersion.java",
+    "status": "changed",
+    "old_sha256": "b7ecd1a5c8e3cc4ca1838ae464139579eddcf4cb208970d04e1f0f9264b263a4",
+    "new_sha256": "3bc8f429e96ff63d6632d2a9576e042b91659c0e7e5b9dfb065911c889722546"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/DirectoryProgramResourceProvider.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "f90076f45b549963cc3908bc9e95790a884801339f1872d79bfafa31fe12ae55"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/EmbeddedRulesExtractor.java",
+    "status": "changed",
+    "old_sha256": "403f059e5b158996a1f2c09fa11ea7a36e353d6ab6d77dc2eee4c038f80315a2",
+    "new_sha256": "c00ba9662f7e3b402910354f846c9cac9b3a138ad49a8ce79f0693c32af93fd0"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ExceptionDiagnostic.java",
+    "status": "changed",
+    "old_sha256": "e35c3bae7794b5ac446a63046807c8eb42b6c456312105c18f2234919a49cce5",
+    "new_sha256": "b1c5914b2df22933c6587f0e6ffee1a654f5adb8756538b2cbfb6f28b9e57700"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/FileUtils.java",
+    "status": "changed",
+    "old_sha256": "96a38f73836543f4dbdde3abb9eb6e9e4e72d04f803c8a75f39c91e2643191a0",
+    "new_sha256": "290012d4a8ff221a3bb1c200914eea6687abeeb85f680107a91f410d487c0ce3"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/InternalOptions.java",
+    "status": "changed",
+    "old_sha256": "fc6f94fcebd73dfdde46ce6bf6d0cb6261869b3d4d5a5467d4c8bb59159caf23",
+    "new_sha256": "bbcd1f9d06dc750a23ada806c60e9768f59946f7c3412731948dffb6d1c718c6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ListUtils.java",
+    "status": "changed",
+    "old_sha256": "7fde7894451b11f2ac33d11fcfe2178f2381fc86d61e8ea04895c01c16c7ca48",
+    "new_sha256": "e4eb4154a1f5052733fb270fe818b4d0c32529608aa6d6bdc81c914a7da66734"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/OriginUtils.java",
+    "status": "added",
+    "old_sha256": null,
+    "new_sha256": "9f575d2bb97205d8fd8937f44783dee980fffb7018bf8fa44cd10e89e7116535"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/Reporter.java",
+    "status": "changed",
+    "old_sha256": "5ac91219678e2ffdfd9de8d50ae5e33dfa1a82fdc5d8d9e41e2f21d55b405dcc",
+    "new_sha256": "ee50279fa42bb63b8b1adf70c8a372c3888bae81e44f5fb92ea5155f71756b06"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ResourceShrinkerUtils.java",
+    "status": "changed",
+    "old_sha256": "052e9158e7897e00c4f899ad98a2ae20295e158db7aef930850239fb969b46ee",
+    "new_sha256": "8b8ee9ecb0733ddc78df83253eacf3fb03a155a2d1ab38047f7dc08fdbbbc518"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/SemanticVersionUtils.java",
+    "status": "changed",
+    "old_sha256": "e6c9a81f3dd6c648490d8c8a18fb07e2e43a1116e8d308cfea90396d9f8d0684",
+    "new_sha256": "b1c4d6c44aa4a74e8178d351e168be55e6ed688fbc3af9c23944a15af1ea3ef9"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/SetUtils.java",
+    "status": "changed",
+    "old_sha256": "5ee0e26f6fd9585e076f69265528216e56415e00bfeec89d6dabeab4380ad99f",
+    "new_sha256": "52528611539e0a89a6c156ba898d49b73f27b071ef442ce7cfe6f31f72b1096f"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/SystemPropertyUtils.java",
+    "status": "changed",
+    "old_sha256": "6434a60bb31b54b650c8938bbd02f4a093f8ee38cc973afe5e775c120dac78fd",
+    "new_sha256": "6ede952447b9646a4fc1495366b736e0664107b614b60d07787b3fc00058c34b"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ValueUtils.java",
+    "status": "changed",
+    "old_sha256": "b975d22e456b9d4f53f49b6b4263c8c879c8640bbbc3658eaa7e0ea01c2c4415",
+    "new_sha256": "7a3692d8932d3ab562989a5c8d37d6525188a521939fc03b1dfb2c957f3c7361"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/ZipUtils.java",
+    "status": "changed",
+    "old_sha256": "986f267c4207ea938425cefd7cb4e5c9abf3beadaf75d01cb3dfbea15a6be5b3",
+    "new_sha256": "d25523e6864fed2929f605192b3bf6b30353bbe8532ccc03b27b8e48d4d0dc4e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/PerfettoThreadTiming.java",
+    "status": "changed",
+    "old_sha256": "9e629b4cf441e085339ffdcea0e02bb213263c82e8b2ec489866be81bbcdce14",
+    "new_sha256": "288e992467b112fdae8579f96d0812ef2b50be21f930d83f080815a6ab208732"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/PerfettoTiming.java",
+    "status": "changed",
+    "old_sha256": "88b15a63b8215dba92daa7b69978ad8314d4c520be8f1beae85e720b50e2b404",
+    "new_sha256": "39e0cefd05489d982a01d5d7dfc35136ea505efc267e07fcdb00cab9fad6fe76"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/Timing.java",
+    "status": "changed",
+    "old_sha256": "31fac1ff453b1cd191f205f6fe65cd7e0518d3cbbc2f146f7ee8205bc78b7030",
+    "new_sha256": "c4fb3f230bc63b66f2031f55d3a0bacdac3875bac801cecd41c9dde87bab7e7e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/TimingDelegate.java",
+    "status": "changed",
+    "old_sha256": "99e94e09cacd32fcf0684d9eb2b1846b94c1bd96b578dce02bb5842a722eb283",
+    "new_sha256": "6d25859031eebc57d01586b9775d2c4e4bd34df2f3b1e49129dcb0cbe768ab4e"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/TimingEmpty.java",
+    "status": "changed",
+    "old_sha256": "14d83461377bdf4832481041419612060e7b1577162486c6b96ac0961dcd9c48",
+    "new_sha256": "2640169e2ddb38400b73e6e48d960943415fabbfe8f454bebbf1ec891766df46"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/TimingImpl.java",
+    "status": "changed",
+    "old_sha256": "7fab00948542a6f2d6d99cb896a33db73f716d0b3c67a6289daa56629f7f9486",
+    "new_sha256": "d8c1b8e75a4b2c72bb03fa6b2da768e0bac60e5e6ba7fa36aedc2212524f3ea6"
+  },
+  {
+    "path": "src/main/java/com/android/tools/r8/utils/timing/TimingMerger.java",
+    "status": "changed",
+    "old_sha256": "57c0f168d10256a4536b80b94be0a6e20cf08efa10a671f0bc80f302fe7a3a3c",
+    "new_sha256": "2ba7a4777c9fa03aa7fc6c5732704acb79c0df9e4f6a6d57726d0bbb83953e8c"
+  },
+  {
+    "path": "src/main/keep.txt",
+    "status": "changed",
+    "old_sha256": "4d5f5ae09f4e3e3618f9989f09588e6dc849450eac83c840332c5e6bbde88509",
+    "new_sha256": "350c75bdc093d0f4201e1e7e83421245cf458d89bfee5bf749130a98a5beecc0"
+  }
+]

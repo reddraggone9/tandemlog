@@ -1,0 +1,677 @@
+[
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/SourceDistributionProvider.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/SourceDistributionProvider.kt",
+    "git_blob_sha1": "73dea74bddcc9c2b2a767f1c9f96de225ac05b98",
+    "sha256": "fa4e9857ec416b75ad0cda39981f12b7248ee27262d9b1681c32b31531aab1a0",
+    "size": 5649
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/SourceDistributionProvider.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/SourceDistributionProvider.kt",
+    "git_blob_sha1": "bad47ccacdd1784a2c0cebc39febbcb496924a3b",
+    "sha256": "05a2797db9c8f3230a149ba3ab88c069e6581187c1ad8b221548d601b7c489dd",
+    "size": 6782
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/internal/GradleDistRepoDescriptorLocator.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/resolver/internal/GradleDistRepoDescriptorLocator.kt",
+    "git_blob_sha1": "ea38619cc0214431e0764c5bdecef974cde79ec4",
+    "sha256": "e176d9ca4b56f6ac35501a6a29a2399ba048691329dab8783a42862ff2125a7b",
+    "size": 6410
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompiler.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompiler.kt",
+    "git_blob_sha1": "8c3c21eba0a546eeb37329a6256dacceab9c93fd",
+    "sha256": "db8630794f147ae0afe2d490e2e26df469c83c27bf979734c23163e165b5843e",
+    "size": 21905
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompiler.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompiler.kt",
+    "git_blob_sha1": "c86432e47a8e92fbe979f9b9e87927c59aa1d0a3",
+    "sha256": "f56328b5a1deef17ec1784f9521a60be8ce2685bfba2b0699281188c0766518e",
+    "size": 20349
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompilerOptions.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompilerOptions.kt",
+    "git_blob_sha1": "f5421f41d2a141c6ca2885881740032658eb297d",
+    "sha256": "e07c090f63464643e1057e7fe6c57845aa8ec9f6757d0172a5240930e70b98ae",
+    "size": 1569
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompilerOptions.kt",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-configuration/kotlin-dsl/src/main/kotlin/org/gradle/kotlin/dsl/support/KotlinCompilerOptions.kt",
+    "git_blob_sha1": "d24e36e3ebfe56b731bca8902e829e44e2834016",
+    "sha256": "eb9e95fd170b8dbe8c90e906d22a4c56ac9fe1e748d5f6a699599732f92bb0fa",
+    "size": 1675
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultClassLoaderFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultClassLoaderFactory.java",
+    "git_blob_sha1": "1b2d7b0b14dae147b1b728a572d49bfa4abfa0f9",
+    "sha256": "9108c1ffc4f6bcfc177d9627caa95f1e69a6af64a118066e6273d7eaf91af2d8",
+    "size": 5473
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultClassLoaderFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultClassLoaderFactory.java",
+    "git_blob_sha1": "300ecb0aba99edb14c5b98f548de0ddb6fc252e9",
+    "sha256": "93a46654b55f2fe210d15ec5d6c7165c79b3971444300ddff4d153fc5c696e27",
+    "size": 5525
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultHashingClassLoaderFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultHashingClassLoaderFactory.java",
+    "git_blob_sha1": "ae8ac7fd0809874ce21d738ce32f0677d870b4f8",
+    "sha256": "dc8d33c76f3870a255874fe32efbf40723427d11a9b810187380550ebef976b9",
+    "size": 3870
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultHashingClassLoaderFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/base-services/src/main/java/org/gradle/internal/classloader/DefaultHashingClassLoaderFactory.java",
+    "git_blob_sha1": "3c60695ff4d255ad9dc2a92068168df3c90a6818",
+    "sha256": "d5e29bab75ec32bb70a17542d4bab3168784774b1080299f8a3926b6427d2025",
+    "size": 3932
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java",
+    "git_blob_sha1": "e840b0b781877932453accfdfb26d9e462bc6510",
+    "sha256": "b56ef0e408a6136bcd85c96f4d3c7249c04c3ade8b52a76d7a596c4da9ddd5d8",
+    "size": 14211
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/client/DefaultDaemonStarter.java",
+    "git_blob_sha1": "904ec646f7501b99ea27321385d036de54b7c36b",
+    "sha256": "fe675968ede9052b06f4e2f8d2fa0aed17ea4481278e5fdeea7326b641d69979",
+    "size": 13260
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonToolchainExternalResourceFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonToolchainExternalResourceFactory.java",
+    "git_blob_sha1": "1fb99fe2fa33e04a8c569ea755796044ceeb610f",
+    "sha256": "458505a49cdb51e04077b40eb5751a789cd8d13c081565117a1920fe3272c0e6",
+    "size": 4287
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonToolchainExternalResourceFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/DaemonToolchainExternalResourceFactory.java",
+    "git_blob_sha1": "cbd09756f9570732100c9727a9858ed4cce3449f",
+    "sha256": "4f58d48f3ab58514c3a6719d77d7e3248566fbba9633cb71c0de76fe6053ce0a",
+    "size": 4242
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainExternalResourceAccessor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainExternalResourceAccessor.java",
+    "git_blob_sha1": "8875ecc428de1d0b3e2b4aa329127ea45d5994e3",
+    "sha256": "12bb0e1bdd76941c13cc926687a777c1f57a52f0c4bf77021f1af8f298484e05",
+    "size": 3533
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainExternalResourceAccessor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/client-services/src/main/java/org/gradle/launcher/daemon/toolchain/ToolchainExternalResourceAccessor.java",
+    "git_blob_sha1": "04fc7900549ff16326a8ac7e9f0bac53b5a27844",
+    "sha256": "73b476e9f479567a7ad6962e0ea2c2cda5f70c1128161b396d772f482a5d94d3",
+    "size": 3501
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/NativeServicesInitializingAction.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/NativeServicesInitializingAction.java",
+    "git_blob_sha1": "2eb05990bccd21fcef1f119de9260d623341c36c",
+    "sha256": "7d3697250bfb8154098f230e8abf02dde5199ff13382ed8e12ff089d9426aadd",
+    "size": 2136
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/NativeServicesInitializingAction.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/gradle-cli/src/main/java/org/gradle/launcher/cli/NativeServicesInitializingAction.java",
+    "git_blob_sha1": "9572cd271b01e039bf0bdfe67dbc95823dbb31ef",
+    "sha256": "a4149a9b3344bb2be632a6af1423a851c433abd01d1c2c69a54b02e843824827",
+    "size": 2185
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/services/NativeServices.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/services/NativeServices.java",
+    "git_blob_sha1": "6dffd75083ca37cbff1cd63a31a2ad18869c8ab0",
+    "sha256": "3ab28c109c4dad5b5a5a3777bbd3c357d78f686145a75abf2310768dbeaef8ba",
+    "size": 25234
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/services/NativeServices.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/native/src/main/java/org/gradle/internal/nativeintegration/services/NativeServices.java",
+    "git_blob_sha1": "6dffd75083ca37cbff1cd63a31a2ad18869c8ab0",
+    "sha256": "3ab28c109c4dad5b5a5a3777bbd3c357d78f686145a75abf2310768dbeaef8ba",
+    "size": 25234
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/process-services/src/main/java/org/gradle/process/internal/ExecHandle.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/process-services/src/main/java/org/gradle/process/internal/ExecHandle.java",
+    "git_blob_sha1": "ae2786872a745f2edece2ef1f95604114e8e60e3",
+    "sha256": "dfb6a37761f911175c7e3ebc6d2af1e6da1ba666d61f452846b58a14cb88a38b",
+    "size": 1840
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/process-services/src/main/java/org/gradle/process/internal/ExecHandle.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/process-services/src/main/java/org/gradle/process/internal/ExecHandle.java",
+    "git_blob_sha1": "fae2147cf6533c1c716d20eba040803e3c3990c7",
+    "sha256": "e701f5a47856af9183e56a6d44b6f86951b964346147f3198320a273572d7de8",
+    "size": 2081
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/wrapper-main/src/main/java/org/gradle/wrapper/GradleWrapperMain.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/wrapper-main/src/main/java/org/gradle/wrapper/GradleWrapperMain.java",
+    "git_blob_sha1": "1935b04fde3df2d35ac49520ef03f4188270e727",
+    "sha256": "d0c8bfc9d8888eaac9d012a5bd83cc7f77179ea2a698edf3ffbfe60e64b0cdb3",
+    "size": 4649
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/wrapper-main/src/main/java/org/gradle/wrapper/GradleWrapperMain.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/wrapper-main/src/main/java/org/gradle/wrapper/GradleWrapperMain.java",
+    "git_blob_sha1": "963d4c30fdcbd23dbe5914bec800d778a903ebc3",
+    "sha256": "3a4147add81a3fe7f44dee0b9ccbd72abb21d71016e26b26ba979e23d8b41b8b",
+    "size": 6865
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/util/internal/WrapperCredentials.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/util/internal/WrapperCredentials.java",
+    "git_blob_sha1": "602eb020f4b6d6045a40008965d77979e368ea82",
+    "sha256": "f7435100758efb820f7f6bc9bb4b56e6db59cd13e4556fbb3e5531c32c2681d2",
+    "size": 5749
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Download.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Download.java",
+    "git_blob_sha1": "d4b2fd3ef6df1056dd1cb29c719d780d5825d43d",
+    "sha256": "463723b4995e1f086d49763039d07a8f8d3073c9d1de83ea9f4d441ac1b6cf8b",
+    "size": 14094
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Download.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Download.java",
+    "git_blob_sha1": "3d0d658e7d5ffb7134278d0d7569c9c2fa14b8f3",
+    "sha256": "2a0aa010df85ecdd3a1256dd0d82923811921886884af4a03d2246e613399d3e",
+    "size": 12196
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Install.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Install.java",
+    "git_blob_sha1": "20a3fc8c65009dd0a213e27802888fc4a9fb1847",
+    "sha256": "647df52c3637266d59877ccfbb55df4cba751cd4c360267e3242767465b62c33",
+    "size": 14593
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Install.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/Install.java",
+    "git_blob_sha1": "20a3fc8c65009dd0a213e27802888fc4a9fb1847",
+    "sha256": "647df52c3637266d59877ccfbb55df4cba751cd4c360267e3242767465b62c33",
+    "size": 14593
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/WrapperExecutor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/WrapperExecutor.java",
+    "git_blob_sha1": "9bb1e2047f0b0ec0c5696358b785fc41a3022fca",
+    "sha256": "9e5c0112da8c95f424ed5eea8e77be84a10d066d7f3fe18215a1c551fc726d48",
+    "size": 6047
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/WrapperExecutor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/core-runtime/wrapper-shared/src/main/java/org/gradle/wrapper/WrapperExecutor.java",
+    "git_blob_sha1": "69844d2400d3cf31e990d2e0e642c93677b160d1",
+    "sha256": "779916d884cd7b06b7758a22e3ae0e0f0d0e719723be4de8a2208e2dc8de60f9",
+    "size": 6198
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/FilteredModuleComponentRepository.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/FilteredModuleComponentRepository.java",
+    "git_blob_sha1": "f0164dffaea45ac9c3fb4c250065967ce0400741",
+    "sha256": "07325d551df000afff9d80a5c93afd27c8686f2c3c2f4a22b279a5f37b0314e2",
+    "size": 8306
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/FilteredModuleComponentRepository.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/FilteredModuleComponentRepository.java",
+    "git_blob_sha1": "113ca64d965ecff010ef0ca52906cee8bc9f3ea8",
+    "sha256": "30ab9ae142caa049196da49fa52d04cf6bd9d5a3cc723b79031d540ed19e727a",
+    "size": 8307
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/RepositoryChainComponentMetaDataResolver.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/RepositoryChainComponentMetaDataResolver.java",
+    "git_blob_sha1": "2ab243c0cf86639093cfc6fc85e0296d2f9d4dd4",
+    "sha256": "fe2f7df47905db53e418b394272c399abdf8e62cfcb559045e617c6a0242e14c",
+    "size": 10508
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/RepositoryChainComponentMetaDataResolver.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/ivyresolve/RepositoryChainComponentMetaDataResolver.java",
+    "git_blob_sha1": "91a3791fb810747340ff3dd0f5775c31ee6fb2cf",
+    "sha256": "6f4ad6319bcb81a00a0cda881ba4d62658ab318c005ff460239bee9e66110c5c",
+    "size": 10632
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/moduleconverter/dependencies/LocalVariantGraphResolveStateBuilder.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/moduleconverter/dependencies/LocalVariantGraphResolveStateBuilder.java",
+    "git_blob_sha1": "5ac1b00af5fe2d87a7ecc695e4c1a0d76e3db9c9",
+    "sha256": "31cc70309e5c9cefa1d352e07f34224c550f1f6ac0d37cd244af489bb53c893b",
+    "size": 4539
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/moduleconverter/dependencies/LocalVariantGraphResolveStateBuilder.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/moduleconverter/dependencies/LocalVariantGraphResolveStateBuilder.java",
+    "git_blob_sha1": "cf1791d96c62aed668603147e313cf9310f2f7f5",
+    "sha256": "e8e0bbdcbb83e6f5ccba85512c1db09c8fe8ace3ba9b57a5cc8aa70730947cd1",
+    "size": 4669
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleResolveState.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleResolveState.java",
+    "git_blob_sha1": "859759b9bef903c575dff8b7f222fcd932544303",
+    "sha256": "7b6345630edaef04e914ea28ba291ae7d1b69f2589bde0c3f4d009ed58db6b9b",
+    "size": 22339
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleResolveState.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/ModuleResolveState.java",
+    "git_blob_sha1": "4deff7c6fb792fcc473264921e87903ddecb3695",
+    "sha256": "690c982b0792e69cd856f6c5f38a6ba809fd4a8d6f4825cb377b8f071d0c701a",
+    "size": 21280
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/NodeState.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/NodeState.java",
+    "git_blob_sha1": "e4f6799824c8005a2b4270a6d999a72e4d1ffde6",
+    "sha256": "5e47d985861bdedb9769f7d99dd5c5c82c5df70b38be25567bcdd10d3b36dbcd",
+    "size": 61086
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/NodeState.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/builder/NodeState.java",
+    "git_blob_sha1": "698529769fecfb32a8e6f54a2aae7931661c7b49",
+    "sha256": "691aa31959817f1ba9672d4c660b79d0c20aed1ee7cd7b4c34fddb6c3c251e5e",
+    "size": 61167
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CapabilityConflictResolver.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CapabilityConflictResolver.java",
+    "git_blob_sha1": "27b65b7ba4e253ba2ebfeef985aa2db4be83620f",
+    "sha256": "44a3dc5fdeb4de66ba37b9da281e0acb5b74d137d0dae7b29bdcc493b79d545b",
+    "size": 15332
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CapabilityConflictResolver.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/ivyservice/resolveengine/graph/conflicts/CapabilityConflictResolver.java",
+    "git_blob_sha1": "e5784d59ac867df4e775e07e1eeb16369bc1ea89",
+    "sha256": "6196af43548b6ef03860658cab0a9e359d26242ece06da541383692bfe7c1501",
+    "size": 15340
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/AbstractAuthenticationSupportedRepository.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/AbstractAuthenticationSupportedRepository.java",
+    "git_blob_sha1": "760fb143312c4f6297e682084314b2b91cf1ca9e",
+    "sha256": "c6bcf3208553fdcd8d5999d81f45c0639e36d59ea8ecf6ed4eb1a427c8fa63d5",
+    "size": 6293
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/AbstractAuthenticationSupportedRepository.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/AbstractAuthenticationSupportedRepository.java",
+    "git_blob_sha1": "6506d75e4a3ac6428dcd2deb4c8fba0528122d39",
+    "sha256": "5d7f2606d0cf54b1b252460ec1e595b7ee169cadb07f0ec2294be09193c7d90f",
+    "size": 6293
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/DefaultMavenRepositoryContentDescriptor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/DefaultMavenRepositoryContentDescriptor.java",
+    "git_blob_sha1": "dab3d3c85735afd407e3c057376633f59481c024",
+    "sha256": "03c26b1e0d476bb4ba379563260b1fa3ccab3cc1cdcb8f9f3272d0b0cc3f59fc",
+    "size": 3577
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/DefaultMavenRepositoryContentDescriptor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/api/internal/artifacts/repositories/DefaultMavenRepositoryContentDescriptor.java",
+    "git_blob_sha1": "ed5d4f390ba14311ba3944ccc4b70b38090fc2fd",
+    "sha256": "5f0128e12061e98df460ab01bd4fdb13ac3964b6b96f5d44c5b6c743eb0bed6c",
+    "size": 3704
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/resolver/ResolvedVariantCache.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/resolver/ResolvedVariantCache.java",
+    "git_blob_sha1": "4658308fdfeeeed2356227c97bd3d31b1d1eb9c9",
+    "sha256": "fa88e71294551deafc48af822ac686d14c3f841c099a1c016d2acdf2c2805dea",
+    "size": 4149
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/resolver/ResolvedVariantCache.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/dependency-management/src/main/java/org/gradle/internal/resolve/resolver/ResolvedVariantCache.java",
+    "git_blob_sha1": "9c47e4fe9a3cfff55b0e366cdd7e28bee91604e6",
+    "sha256": "f2ae6744c257afaf22bc4012accd4e257ab4ce1cafed02054f10a0afe9b776f5",
+    "size": 4284
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClient.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClient.java",
+    "git_blob_sha1": "97d4b78d2f9134bfa4d058d359290ca32cd15ddd",
+    "sha256": "f4803f54576c83354fdc1697ba1e947a58f01e53b31dd02939c779dbd8819924",
+    "size": 14721
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClientFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheCommonsHttpClientFactory.java",
+    "git_blob_sha1": "72595dce1d08437c7a4868dbef29f54bda647a24",
+    "sha256": "8c04a9adbcc9798bfd735c99836bee63beb3d328a2d83d8cfcf95a7818d92756",
+    "size": 1337
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheHttpResponse.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/ApacheHttpResponse.java",
+    "git_blob_sha1": "c55ffbabf60cff13455cfdeb187750c4c05c1ec2",
+    "sha256": "5400d35cf94886197a6cc63791b2efe834c7b44fea545a1e0806595e3a4fcb04",
+    "size": 2613
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultHttpSettings.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultHttpSettings.java",
+    "git_blob_sha1": "f28432a10876a97f8ed0d48e6eb3c9710d6ae7f1",
+    "sha256": "72a306abce0fe048fbe4c1cd8e6ebb2fbee81413e585d4ce5ca4322c78eff230",
+    "size": 9318
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultHttpSettings.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultHttpSettings.java",
+    "git_blob_sha1": "461a17deeb67caa9feafa96ed5395d39c8e3595f",
+    "sha256": "bdf58a2103264cecdd0e33f5e064b11469719b3e663a938baf26c785340f6079",
+    "size": 9731
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultSslContextFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultSslContextFactory.java",
+    "git_blob_sha1": "331f1a444102c131b725532b1c997e89cef45ea9",
+    "sha256": "c9aaa4c3d264702ccd302ffeb4ce8f5fd9417c0122f4c3dbb7fc84ff775e097e",
+    "size": 4186
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultSslContextFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/DefaultSslContextFactory.java",
+    "git_blob_sha1": "3b6a0ca3c751b940e7e94bf2e94cff5c04939597",
+    "sha256": "872432c257b8c0364944ca408c006b9afb5ded1d47004cf4b285957617cdecd2",
+    "size": 4170
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClient.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClient.java",
+    "git_blob_sha1": "1912413af2bbf111d327eddc3ffdc2cc8681ff56",
+    "sha256": "c6ab7228cb9d7d66718c9c0cff3c43390385ca23948688fe2e4126f4a73aab1d",
+    "size": 4553
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientConfigurer.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientConfigurer.java",
+    "git_blob_sha1": "7d75a249bb1be2bbf3641e8000e7406539bb7413",
+    "sha256": "3e642825fb102a0782977ac7c8f5a5e9cb336c14cc13ea2a47298bbd44dee1eb",
+    "size": 19267
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientConfigurer.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientConfigurer.java",
+    "git_blob_sha1": "7d75a249bb1be2bbf3641e8000e7406539bb7413",
+    "sha256": "3e642825fb102a0782977ac7c8f5a5e9cb336c14cc13ea2a47298bbd44dee1eb",
+    "size": 19267
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientFactory.java",
+    "git_blob_sha1": "25ebb4d1e6b96dceebf770e11dc0d339d14e6b47",
+    "sha256": "431fed77e19d3f20df93db547df1d372bc325b1228ade01cf6f0ff11e392ddb4",
+    "size": 1247
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientHelper.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientHelper.java",
+    "git_blob_sha1": "47b4ab2f8266f6360451a4ad76dee1a7ba58df5a",
+    "sha256": "a588043bf62e2e098f3bfb40c858e1fdb3499a6cb804221becaae72c62737fe2",
+    "size": 13254
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientResponse.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpClientResponse.java",
+    "git_blob_sha1": "578fde5f50b63df77be16b693838b40bc5f2ddbe",
+    "sha256": "80e2b7251da9893dad1cfc46634f48573c4818e30aa0ca46221f73efdad1b8e8",
+    "size": 2578
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpConnectorFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpConnectorFactory.java",
+    "git_blob_sha1": "9c769f80d44178792bfb19d68fa15932e34ce1a6",
+    "sha256": "e6a64fef287a51720c197498549f8986d559d60bbb95c6f52bc45516e1fc152f",
+    "size": 3151
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpConnectorFactory.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpConnectorFactory.java",
+    "git_blob_sha1": "9778f53ca053b44f410eaa1b74fdeda045948d5f",
+    "sha256": "7ffe618ad7d2c310ebcd6f7ee1c2816f4cd6ad5e0a7d6050192cc32307fec35c",
+    "size": 3113
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceAccessor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceAccessor.java",
+    "git_blob_sha1": "320003b1ad64416953ca7738efdfad6016a9a76d",
+    "sha256": "470470d1d67854b8cf8f889f7916bca69466d896da54ca86ecbf452e3f18824d",
+    "size": 3164
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceAccessor.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceAccessor.java",
+    "git_blob_sha1": "a80024982290590646885c8b3b648cad3189d21d",
+    "sha256": "664c024a326db3d817217abe4b47907681ccb10f7549abd14fcf0e9ca874b089",
+    "size": 2977
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceUploader.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceUploader.java",
+    "git_blob_sha1": "c8924a50658c4bf1bb6715a3b8161765240cbb92",
+    "sha256": "644d0b6a5f6e4b689d85f0cb7523930bd52c14b9f1dac98c5369291160711daa",
+    "size": 1950
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceUploader.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourceUploader.java",
+    "git_blob_sha1": "88c50170d44436a2efa5ff5380bc6df7982248e2",
+    "sha256": "c3ffc8420e21d73be930be0dc0a8a7048cbab0eae7ddacc0655921632b421417",
+    "size": 1609
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourcesServices.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourcesServices.java",
+    "git_blob_sha1": "a7823d1bd32d16fb5c0738a4a15a68a850ef81f9",
+    "sha256": "58a25e3557b055de534fda2fc6b92e2c739babbad75e556571678ccdfac9104a",
+    "size": 3278
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourcesServices.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResourcesServices.java",
+    "git_blob_sha1": "93a07dda7a06fc8afd276252cbaf515a5ad7f582",
+    "sha256": "c4b1e387a820f61ad40a4a6bb167abd0127c44ee231d958fdae4a414a0aea966",
+    "size": 3261
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResponseResource.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResponseResource.java",
+    "git_blob_sha1": "556770be9bb96e1ce8c61721fb0cb2b6e49ce779",
+    "sha256": "df08fb2eda3f2f1155fe5a7ac106ab22d80f507af8d310e7f24a92b7123ef283",
+    "size": 5925
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResponseResource.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/platforms/software/resources-http/src/main/java/org/gradle/internal/resource/transport/http/HttpResponseResource.java",
+    "git_blob_sha1": "38d47135a117a844f076709a2d53b510746cafcc",
+    "sha256": "35022803e49f78069bdf2b176c4a62127b5f15dd225cbbfac942f4a698e4ae8b",
+    "size": 5912
+  },
+  {
+    "revision": "44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3",
+    "side": "old",
+    "path": "subprojects/core/src/main/java/org/gradle/process/internal/DefaultExecHandle.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/44f4e8d3122ee6e7cbf5a248d7e20b4ca666bda3/subprojects/core/src/main/java/org/gradle/process/internal/DefaultExecHandle.java",
+    "git_blob_sha1": "e854dacdb128a66c919590fa44dc48b38f8f347f",
+    "sha256": "282ef0f79bb4dbf967f9e97675e9f6ecf8093a9c4c33b107afdd8ade8b20e7c8",
+    "size": 17425
+  },
+  {
+    "revision": "2d6327017519d23b96af35865dc997fcb544fb40",
+    "side": "new",
+    "path": "subprojects/core/src/main/java/org/gradle/process/internal/DefaultExecHandle.java",
+    "url": "https://raw.githubusercontent.com/gradle/gradle/2d6327017519d23b96af35865dc997fcb544fb40/subprojects/core/src/main/java/org/gradle/process/internal/DefaultExecHandle.java",
+    "git_blob_sha1": "6ecab459f2fc5137332fdd6b43cb076ca38bc2b3",
+    "sha256": "92940d88a0183632a2f5823c1c378c25cc513b46efe99f3fc4cc2c40a00a8674",
+    "size": 17532
+  }
+]
