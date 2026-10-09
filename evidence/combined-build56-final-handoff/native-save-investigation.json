@@ -1,0 +1,76 @@
+{
+  "investigatedAtUtc": "2026-10-09T23:45:13.201101+00:00",
+  "status": "Release hold; source investigation narrows error to Android append/create operation but does not establish cause",
+  "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "stableBaseline": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "stableTag": "v2026.10.2",
+  "dispatchRevision": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "unchangedWholeSourceFileSha256": {
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": "5fe0238b436beb904769af6028121d35595dfa39e91b7733738a00a38aa91e97",
+    "lib/platform/log_folder.dart": "ef621a907e827bc257b188de0449051c0a1f5de064fd01dd263ccc1bad88d750",
+    "lib/presentation/checklist_item_editor.dart": "0bc9ccfe08060f133e4a54e6024cef7254323bd50d0428acb7dc88a1fa42ba46",
+    "lib/application/text_save_command.dart": "6d33ec54c101682c4b8f123ec725ac95592f0785936d6e5a67d66ad999dd26ae",
+    "lib/application/task_text_session.dart": "2a3a07584307b71b471e73914d31efd5ba8eca424a0a925f9d7cf056d9b8efbd"
+  },
+  "mainChecklistEditorSaveCallbackByteIdentical": true,
+  "mainChecklistEditorRegionSha256": "5012eee5fb679565885f5ae9dcc5f3151b78f2e0125c50ddddb0cf8af45c9dae",
+  "changedStorageScope": "New shared profile queue, SQL namespace tables, protected writer/intents transaction and acknowledgement publication. Checklist domain/command data unchanged; checklist_store diff only table references. Exact failing native append bridge unchanged from stable.",
+  "evidence": {
+    "libraryFileId": "libfile_dba5421f97788191b5c2077ac1cf98d7",
+    "latestBundleSha256": "2ec536cde62e93680cb6dadf0e5cd00d2e616983c60fe6054f34681a709f92da",
+    "localBundleReadable": true,
+    "localBundleHashVerified": true,
+    "archiveMembers": 737,
+    "selectedMemberHashes": {
+      "android/evidence/build56-r3-native-saved.png": "8ad07ca49a93316242a44e664ffe1fbcc17aab0ac7d993e79a055066e22fbba7",
+      "android/evidence/build56-r3-native-saved.xml": "52b70b7352d8cc77d01f9ed816c3359cf1596bffe11220c4cb0a99554d9ffc1e",
+      "android/evidence/build56-r3-restore-save.xml": "0c09365024c928df9de1bd0e49e82f2fcc70f2ee3c8368d7d0726f4dc11d946b",
+      "android/evidence/remaining-gates-r2/remaining-gates-acceptance.json": "22484cebaee79be99e6a805c5ad89cf92ddb856c3d387d4bf3383c9fbcf3582f",
+      "android/evidence/remaining-gates-r3/native-save-logcat.txt": "f29645c66efdd967839aa76ece1c38d67ae4f2c87947f13cdd05812814e966ca",
+      "android/evidence/remaining-gates-r3/native-save-diagnosis.json": "773fd6cfc52707a2760e0b6bccdebda2196f8a824272be1c80b779c47e19aad5",
+      "ACCEPTANCE-LIMITS.txt": "0aa2fd745a0448b6bf3d38b099670c82501ae626d5b5118665a482bc18369c40"
+    },
+    "inspectionScope": "Exact bundle hash plus selected native Save screenshots/XML, acceptance JSON, diagnosis, logcat and limits; not complete independent native/ZIP/APK artifact acceptance"
+  },
+  "observedUiError": "Could not finish saving to the data folder. Check that it is available, then retry.",
+  "observedPendingState": "Save is pending. Retry to finish saving this item.",
+  "sourceDetermination": "AndroidLogFolder._invoke emits exact observed error only for non-permission/non-missing/non-duplicate failures of append or create. Existing item native text Save uses append to owned writer JSONL. This distinguishes reported failure from a refresh/read failure or editor session renewal.",
+  "nativeAdapterPath": "MainActivity append: resolve child/create if absent; openFileDescriptor(wa); nested FileOutputStream.write/flush/fd.sync/stream close/PFD close; exception becomes result.error(folder or other code,message,details). Actual failing phase unknown.",
+  "recoveryPath": "Prepared immutable receipt survives append exception; foreground refresh may admit canonical bytes and SQL state. Retry sees confirmed receipt and commits same native save; no duplicate append is required. Existing retry tests deliberately cover unknown outcome; not a claim that repeated error is acceptable.",
+  "underlyingExceptionNotAvailable": "Native bridge catch does not log exception stack; UI catch displays FolderAccessFailure message while underlying PlatformException remains cause. Reviewed PID4123 records lack this cause/stack.",
+  "providerEvidence": "Diagnosis records original provider-owned0700/0600 folder versus root-owned0777/0666 synthetic switch folder. Log includes provider PID1330 StorageManager quota/xattr permission warning for synthetic writer JSONL. Neither establishes the app exception or cause.",
+  "hypothesesUnproven": [
+    "Descriptor-close ownership; source existed in prior stable",
+    "Synthetic folder/provider ownership; local isolation pending",
+    "Any build/dependency interaction; no reproducer establishes it"
+  ],
+  "parentAcceptanceJson": {
+    "requestedAssertions": 25,
+    "allReportedPassed": true,
+    "gateResults": {
+      "realSafSwitchNewNamespacePreservation": "passed",
+      "persistedGrantRevocationRecovery": "passed",
+      "nativeUndoInteraction": "passed"
+    },
+    "releaseAcceptanceComplete": false,
+    "nativeSaveFindingOpen": true
+  },
+  "requiredLocalEvidence": [
+    "Exact underlying PlatformException.code/message/details and stack including suppressed exceptions",
+    "Whether append failed at descriptor open/write/flush/sync/stream-close/PFD-close",
+    "Repro on fresh provider-created synthetic folder with ordinary ownership, under same exact APK",
+    "Same provider/fixture compare against stable2026.10.2+53 while preserving synthetic evidence and data",
+    "PID/method/time/selected URI binding, exact canonical receipt and protected writer/intents snapshot at failure and Retry Save"
+  ],
+  "productionChangesMade": false,
+  "rebuildPerformed": false,
+  "published": false,
+  "newTestsRun": false,
+  "noSpeculativeFixApplied": true,
+  "quotaParentRead": {
+    "weeklyRemainingPercent": 23,
+    "readAtUtc": "2026-10-09T23:38:53Z",
+    "resetAtUtc": "2026-10-14T10:33:41Z",
+    "freshReadRequiredBeforePublication": true
+  }
+}
