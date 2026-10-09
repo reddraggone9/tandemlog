@@ -1,0 +1,37 @@
+{
+  "reviewer": "architecture_review",
+  "captured_at_utc": "2026-10-09T22:18:55.503841+00:00",
+  "worktree": "/workspace/tandemlog-windows-visible56",
+  "state": "uncommitted two-file isolated QA branch, byte-bound below",
+  "candidate_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidate_run": 37995721678,
+  "candidate_artifact": 11646614634,
+  "candidate_zip_sha256": "7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+  "candidate_installer_sha256": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23",
+  "verdict": "accepted bounded one-off hosted Windows OS-visible-window proof preparation; no source architecture must-fix",
+  "must_fix_findings": [],
+  "reviewed_boundaries": [
+    "Read-only contents/actions credentials and pinned existing actions; dedicated fresh Windows runner with no Flutter/native build/dependency execution/signing/publication step.",
+    "Artifact API name/nonexpiry/digest/run/source and exact downloaded ZIP SHA are checked before extraction; ZIP CRC/duplicates/path traversal/link forms rejected; exact installer SHA checked before execution.",
+    "Original candidate smoke/provenance copied unchanged; portable source/run metadata and every installed Release payload SHA checked against candidate map.",
+    "Private frozen-source smoke copy disables Windows stdout readiness, includes Windows route marker in report, and resets visibility timer on each sample lacking an own-PID visible window.",
+    "Success requires explicit Windows visibility marker plus existing fresh synthetic projection/settings/canonical continuity checks after captured process termination; no live DB descriptor or live profile used.",
+    "Exact existing installer/executable bytes exercised without rebuilding candidate; parent retains all other platform/release/manual acceptance gates."
+  ],
+  "proof_scope": "Own launched PID IsWindowVisible OS flag continuously sampled over3seconds, followed by post-stop rebuilt model/settings/canonical verification. Not pixel presentation, occlusion, human interaction, broad UX, process-death migration or publication acceptance.",
+  "source_sha256": {
+    "tool/windows_visible56.py": "832126ca0edbd5d5a2750e93196036cf4b1a0e2cfb84d5fa878f8535018e67ac",
+    ".github/workflows/validate.yml": "ecc68d050c79ee005fca87742b59168d401cd673916b2b2895a0b4b6f63bdc72"
+  },
+  "frozen_original_smoke_sha256": "eb9e6ec47343c6db1e2eba74ed0c77b6395be0f33de91738b5a6cc173431d106",
+  "remaining_gates": [
+    "Freeze reviewed QA inputs and execute authorized one-off Windows job",
+    "Inspect actual raw downloaded artifact/provenance/installed-map/explicit visibility marker before claiming observed Windows proof",
+    "Keep candidate full matrix/signed Android/native migration/SAF/manual and fresh publication quota gates separate"
+  ],
+  "reviewer_actions": {
+    "tests_builds_artifact_downloads": false,
+    "tracked_source_changes": false,
+    "scratch_receipt_only": true
+  }
+}
