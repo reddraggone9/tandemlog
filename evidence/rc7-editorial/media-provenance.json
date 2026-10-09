@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "before_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "before_version": "2026.10.2-rc.6+50",
+  "after_source": "Uncommitted reviewed-source hashes below, final source commit to be bound before publication",
+  "after_version": "2026.10.2-rc.7+51",
+  "platform": "Actual native Linux GTK/Flutter debug, synthetic Alex Example profile, dark,100% text",
+  "viewports": {
+    "spacing": [
+      390,
+      1000
+    ],
+    "pressed_ink": [
+      1200,
+      1000
+    ]
+  },
+  "after_files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "c8b30fd8330bb3ff88e24c3d4e066c055703ea64fd2364a41dba65573585729f"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "117eb252bdc8bf3c9864847e4c59f8e04770eec17aa4fdc8a7f017ae50a56ef5"
+    },
+    {
+      "path": "integration_test/inline_checklist_workflow_test.dart",
+      "sha256": "34d943dbe16998361d30f0b511166e37eb61dd26c000dd113c853d795ee7380a"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9fa7328aa7a95d38cc8f878881e08707d4231eca9ea39d4b182eefe2f34dd32"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "81b765c8ec096f56a6e3fd28770c7a4a161dd93736fe41d4f476a1ce2dde7f84"
+    }
+  ],
+  "before_capture_method": "Neutral native fixture in detached exact released-source worktree; no production source changes; scripted device-source pointer for held ink.",
+  "after_capture_method": "Final focused native integration flow, scripted device-source pointer for held ink; no pointer-cross overlay. Not Android runtime acceptance.",
+  "recipes": [
+    {
+      "output": "evidence/rc7-editorial/disclosure-spacing-before-after.png",
+      "sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef",
+      "canvas_dimensions": [
+        828,
+        264
+      ],
+      "raw_sources": [
+        {
+          "side": "before",
+          "path": "evidence/rc7-editorial/raw/disclosure-spacing-before-after-before.png",
+          "sha256": "ec7f1960f1c8ff51719dc62e5af3bf7496ad39b54826751d0de340c3144465b6",
+          "dimensions": [
+            390,
+            1000
+          ],
+          "crop_box_ltrb": [
+            0,
+            335,
+            390,
+            535
+          ]
+        },
+        {
+          "side": "after",
+          "path": "evidence/rc7-editorial/raw/disclosure-spacing-before-after-after.png",
+          "sha256": "bd7197f1ef6370668747bd4a8e00d477d55a17b8ac9ed37e5bbd5dac22af7cc2",
+          "dimensions": [
+            390,
+            1000
+          ],
+          "crop_box_ltrb": [
+            0,
+            315,
+            390,
+            495
+          ]
+        }
+      ],
+      "operation": "Integer-pixel crop and paste at native1:1 scale; labels only outside app pixels; no rescaling, retouching or app-pixel annotations."
+    },
+    {
+      "output": "evidence/rc7-editorial/disclosure-ink-before-after.png",
+      "sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164",
+      "canvas_dimensions": [
+        736,
+        163
+      ],
+      "raw_sources": [
+        {
+          "side": "before",
+          "path": "evidence/rc7-editorial/raw/disclosure-ink-before-after-before.png",
+          "sha256": "f2c44a9c6a06079e3eb42254db2aa193dc1486a5a8c6f0059613791a79e5ad30",
+          "dimensions": [
+            1200,
+            1000
+          ],
+          "crop_box_ltrb": [
+            16,
+            335,
+            360,
+            434
+          ]
+        },
+        {
+          "side": "after",
+          "path": "evidence/rc7-editorial/raw/disclosure-ink-before-after-after.png",
+          "sha256": "9d6053491c57d4d1e8d8d07c540c20e66696126497164b7a47706ddeb32ea1de",
+          "dimensions": [
+            1200,
+            1000
+          ],
+          "crop_box_ltrb": [
+            16,
+            315,
+            360,
+            394
+          ]
+        }
+      ],
+      "operation": "Integer-pixel crop and paste at native1:1 scale; labels only outside app pixels; no rescaling, retouching or app-pixel annotations."
+    }
+  ]
+}

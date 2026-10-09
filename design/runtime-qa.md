@@ -1,6 +1,18 @@
 # Runtime and visual QA — updated 2026-10-09
 
-## Checklist controls follow-up
+## Compact disclosure — RC7 preparation
+
+Lee approved the compact exception documented in [ADR0011](decisions/0011-one-level-checklists.md).
+Actual Linux GTK/Flutter debug checks pass1200/390px at100/200% text, with/without
+secondary text and expanded/collapsed. All count bottom gaps are6px; normal
+footer height28 grows to48 at200%, with width at least48 and a separate48px body.
+The final flow checks Material paint coverage, lower-corner taps, button/expanded
+semantics and Space/Enter. Retained resizing/safe-inset flow and analysis pass.
+[Evidence, inspected native captures and independent review](../evidence/disclosure-layout/README.md)
+record the earlier clipping/seam finding and accepted actual-pixel correction.
+Signed exact Android acceptance and the full candidate remain pending.
+
+## Historical RC6 checklist controls follow-up
 
 Six affected actual Linux GTK/Flutter flows and23 focused widget tests pass;
 analysis is clean. [Evidence and independent review](../evidence/checklist-controls/README.md)

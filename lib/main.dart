@@ -2670,44 +2670,103 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     )..layout();
     final inkHeight =
         textMetrics.height.clamp(18, double.infinity).toDouble() + 4;
-    final inkWidth = 13 + textMetrics.width + 16;
+    final contentWidth = 13 + textMetrics.width;
+    final targetWidth = contentWidth.clamp(48, double.infinity).toDouble();
+    final targetHeight = inkHeight + 4;
+    final inkWidth = contentWidth + 16;
     textMetrics.dispose();
+    final defaults = TextButton(
+      onPressed: () {},
+      child: const SizedBox(),
+    ).defaultStyleOf(context).merge(TextButtonTheme.of(context).style);
+    final foreground = defaults.foregroundColor!.resolve({
+      if (busy) WidgetState.disabled,
+    });
     return Align(
       alignment: Alignment.centerLeft,
       child: Semantics(
+        container: true,
+        button: true,
+        enabled: !busy,
         expanded: expanded,
         label: label,
-        child: TextButton(
-          key: ValueKey('checklist-disclosure-$id'),
-          onPressed: busy
-              ? null
-              : () => _setChecklistExpansion(origin, {id}, !expanded),
-          style: TextButton.styleFrom(
-            minimumSize: const Size(48, 48),
-            padding: const EdgeInsets.only(top: 2),
-            alignment: Alignment.topLeft,
-            visualDensity: VisualDensity.standard,
-            textStyle: textStyle,
-            shape: ChecklistDisclosureInkBorder(inkWidth, inkHeight),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+        child: SizedBox(
+          width: targetWidth,
+          height: targetHeight,
+          // Material clips ink to its own bounds even with Clip.none. Extend
+          // only its paint host; the Stack and inner InkResponse retain the original
+          // target bounds. The extra paint margin never borrows a hit region.
+          child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              // Remove the Material glyph's left bearing so its visible edge
-              // starts at the same column as the task title and metadata.
-              Align(
-                alignment: Alignment.centerLeft,
-                widthFactor: 0.5,
-                child: Transform.translate(
-                  offset: Offset(expanded ? -4.5 : -6.4425, 0),
-                  child: Icon(
-                    expanded ? Icons.expand_more : Icons.chevron_right,
-                    size: 18,
+              Positioned(
+                left: -8,
+                right: -8,
+                top: 0,
+                bottom: 0,
+                child: Material(
+                  type: MaterialType.transparency,
+                  textStyle: textStyle.copyWith(color: foreground),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: InkResponse(
+                      key: ValueKey('checklist-disclosure-$id'),
+                      onTap: busy
+                          ? null
+                          : () =>
+                                _setChecklistExpansion(origin, {id}, !expanded),
+                      canRequestFocus: !busy,
+                      enableFeedback: defaults.enableFeedback ?? true,
+                      // Rectangle highlights and InkSparkle draw only inside
+                      // the target rect. Circle paint clipped to the rounded
+                      // border fills both margins without expanding the hit area.
+                      containedInkWell: true,
+                      highlightShape: BoxShape.circle,
+                      radius: inkWidth,
+                      splashFactory: InkRipple.splashFactory,
+                      overlayColor: defaults.overlayColor,
+                      highlightColor: Colors.transparent,
+                      customBorder: ChecklistDisclosureInkBorder(
+                        inkWidth,
+                        inkHeight,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 2, bottom: 6),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: IconTheme.merge(
+                            data: IconThemeData(color: foreground),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Retain the glyph's visible title-column edge.
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  widthFactor: 0.5,
+                                  child: Transform.translate(
+                                    offset: Offset(
+                                      expanded ? -4.5 : -6.4425,
+                                      0,
+                                    ),
+                                    child: Icon(
+                                      expanded
+                                          ? Icons.expand_more
+                                          : Icons.chevron_right,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Text(count),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-              const SizedBox(width: 4),
-              Text(count),
             ],
           ),
         ),

@@ -1,4 +1,33 @@
-# Disclosure layout — isolated partial checkpoint
+# Disclosure layout — compact RC7 candidate preparation
+
+Lee approved the disclosure-specific compact target on2026-10-09: approximately
+28 logical pixels at normal text, growing with text (48px at200%), with minimum
+width48. The task body and other controls retain48px targets. The count now has
+6px bottom clearance, matching ordinary secondary text, and starts13px from the
+title column instead of26px. The glyph edge and2px line gap remain unchanged.
+
+The final actual Linux focused flow passes1/0 in30s across1200/390px,100/200%
+text, with/without secondary text and expanded/collapsed. It checks lower-corner
+activation, disjoint targets, paint-host containment, button/expanded semantics,
+and Space/Enter. The retained resize/safe-inset workflow passes1/0 in12s; global
+analysis is clean. The new flow is registered in the full native aggregate.
+[Final log](compact-ripple-final-native.log), [retained resize log](compact-existing-responsive-native.log),
+[analysis](compact-final-analyze.log), and [actual captures](compact-native/) preserve the evidence.
+
+The first compact implementation clipped the left ink margin and then painted it
+more faintly. [Initial independent review](independent-compact-implementation-review-initial.json)
+identified the defect. A wider transparent Material paint host and standard
+InkResponse circle paint clipped to the rounded border resolve both layers,
+without extending the opaque clickable rectangle. Actual held pixels are uniform
+across both margins. [Final independent implementation review](independent-compact-implementation-review-final.json)
+accepts the correction with no must-fix findings.
+
+This source is versioned2026.10.2-rc.7/build51. Full signed-candidate gates, exact
+Android acceptance, independent editorial review and fresh publication quota are
+pending. Native Linux inspection is not Android acceptance. No canonical history,
+cache schema, dependency or live synced user data change is included.
+
+## Preserved earlier partial checkpoint (superseded)
 
 Branch `fix/checklist-disclosure-spacing` starts from documentation checkpoint
 `409c2b9a020f065c686cbddab395601e776106bd`. Published RC6/build50 and stable
@@ -7,8 +36,9 @@ it is not the published candidate or a new releasable build.
 
 The arrow retains its visible title-column edge and vertical position. Its
 reserved width and spacer are reduced, placing the count13px from that column
-instead of26px. A short rounded rectangular ink surface is centered around both
-visible elements. Its paint margins leave the actual opaque button hit rectangle
+instead of26px. The partial source intended a short rounded rectangular ink surface centered
+around both visible elements; the later neutral capture revealed clipping, as
+recorded by the initial compact review above. Its paint margins leave the actual opaque button hit rectangle
 at least48×48px, disjoint from the unchanged48px task body. Row edges and internal
 padding are unchanged.
 

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T13:51:43.449653+00:00",
+  "baseline_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "decision": "changes_requested_for_actual_ink_painting",
+  "scope": "Read-only implementation/correctness/UX review of approved compact disclosure. Reviewer ran no tests and edited no source.",
+  "reviewed_files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "c1afa43ba851e33ad2f4099ab77416b4ae05e590344aefae511a9b5f2ce49f4d"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "ad4f9f0961581ed2781a27f4ebd38c942cd1b462bb8021dbc5119652ecd71cc0"
+    },
+    {
+      "path": "integration_test/inline_checklist_workflow_test.dart",
+      "sha256": "34d943dbe16998361d30f0b511166e37eb61dd26c000dd113c853d795ee7380a"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9fa7328aa7a95d38cc8f878881e08707d4231eca9ea39d4b182eefe2f34dd32"
+    },
+    {
+      "path": "design/decisions/0011-one-level-checklists.md",
+      "sha256": "0e0703b4fd9de0067adfc64d0282b2f9768aa188b71c4b2c224f44a1c12f4352"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "81b765c8ec096f56a6e3fd28770c7a4a161dd93736fe41d4f476a1ce2dde7f84"
+    }
+  ],
+  "accepted_findings": [
+    "Explicit shrinkWrap and minimumwidth48 with top2/bottom6 padding implement the approved content-driven28px normal footer; it grows to48px at2x text and preserves a separate parent body >=48px.",
+    "Disjoint consecutive Column targets and existing callbacks/semantics/busy guard are preserved; no transparent area is borrowed from body or another row.",
+    "The new focused flow is registered in task_flow_test.dart. The prior responsive assertion is narrowly updated for countheight+8, minwidth48, body48 and nonoverlap.",
+    "ADR documents the user-approved disclosure-only exception without changing other targets. Version isRC7+51."
+  ],
+  "must_fix_findings": [
+    {
+      "id": "INK_LEFT_MARGIN_CLIPPED",
+      "source": "ChecklistDisclosureInkBorder.getOuterPath uses rect.left-8, but the enclosing TextButton Material clips its ink features to its own size.",
+      "actual_pixel_evidence": "Neutral held capture: at y371,x60..67 remains background RGB(15,21,18), ink beginsx68 RGB(38,59,50) and continues throughx110. Requested custom path left isx60. Visible left edge is truncated, so intended symmetric rounded ink is not actually painted.",
+      "framework_evidence": "Installed Flutter material.dart _RenderInkFeatures.paint unconditionally calls canvas.clipRect(Offset.zero & size) at line627.",
+      "required_correction": "Provide ink hosting/bounds that actually paint the centered rounded region without borrowing or overlapping another hit target, shifting visible title/arrow/count positions or expanding row height. Verify actual held pixels; custom path bounds alone cannot establish visible result.",
+      "prior_review_correction": "Earlier partial review accepted based on geometry and pointer-cross-obscured capture; neutral actual capture revealed clipped left paint. Preserve that historical receipt and this correction."
+    }
+  ],
+  "owner_test_evidence": [
+    {
+      "name": "compact-final-native.log",
+      "sha256": "f90b05ce2ce880e78375777eab0bb3e6fef9fd20ffbab99ea7c6ee072a9b21e5",
+      "result": "focused1passed0failed"
+    },
+    {
+      "name": "compact-media-native.log",
+      "sha256": "b12a43952ee8e32ef3b4b7752e7867e0c8d1f6b1db4c6014fadc0d990465a0fc",
+      "result": "focused1passed0failed"
+    },
+    {
+      "name": "compact-full-analyze-final.log",
+      "sha256": "7d6944110732445a739e2457176f3a8d030f2c25cf5fe11ed1e71975932537f9",
+      "result": "analyzer clean"
+    }
+  ],
+  "native_scope": "1200/390 widths,1x/2x text,with/without secondary text,expanded/collapsed. Owner-run passes include all6px bottom-gap assertions. Neutral device-source input is scripted Linux evidence and not Android runtime acceptance.",
+  "actual_captures_viewed": [
+    {
+      "name": "compact-media/disclosure-held-ink.png",
+      "sha256": "c472f8f47e131bf9a3b6b49b46a83c557a0d7b23719872c4523f9eae19d258b7"
+    },
+    {
+      "name": "compact-media/disclosure-expanded-390-1-true.png",
+      "sha256": "4fbb2997140f68a0d9054789c406ee14ee305dd8f3e3bdaf25173857d45163e2"
+    },
+    {
+      "name": "compact-media/disclosure-expanded-1200-2-false.png",
+      "sha256": "1ab0642b04fb766764677caf93740d6e45a49ccd60f765b1d3a660782fad12cc"
+    }
+  ],
+  "remaining": [
+    "Fix and boundedly verify actual ink clipping",
+    "Full candidate/native Android acceptance and notes/media/source-range reviews remain separate; no publication approval"
+  ]
+}

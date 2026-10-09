@@ -63,8 +63,17 @@ Android discoverability after bounded native use. The2026-10-09 follow-up matche
 parent/child drag icons, removes child long-hold tooltips, aligns trailing targets,
 and uses the actual available content width for compact rows/dividers below600px.
 Disclosure content starts two pixels after the last body line; its visible arrow
-edge starts at the text column. Separate48px targets bound further vertical
-compression. Follow-up native/independent gates remain required before publication.
+edge starts at the text column. Lee approved a disclosure-specific compact target
+on2026-10-09 to match the ordinary secondary-text bottom gap:2px above the count
+and6px below it. Its minimum width remains48 logical pixels; its content-driven
+height is about28 at normal text and48 at200% text. This is an intentional
+exception to the engineering48px target policy, not a change to parent-body,
+completion, menu, reorder or child-item targets. The arrow's visible left edge and
+shared vertical center are retained; its internal count gap is tighter. Centered
+rounded rectangular ink is painted independently of the nonoverlapping hit
+rectangle. No hit area is borrowed from body text or another row. Revisit the
+exception if native touch use exposes activation difficulty; exact native and
+independent gates remain required before publication.
 
 ## Identity, persistence and recurrence
 

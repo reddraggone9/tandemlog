@@ -331,7 +331,9 @@ void registerInlineChecklistWorkflowTests() {
             reason:
                 'Match the 2px title/secondary line gap without overlapping touch targets.',
           );
-          expect(target.height, greaterThanOrEqualTo(48));
+          expect(target.height, greaterThanOrEqualTo(count.height + 8));
+          expect(body.height, greaterThanOrEqualTo(48));
+          expect(target.width, greaterThanOrEqualTo(48));
           expect(body.bottom, lessThanOrEqualTo(target.top));
         }
         expect(tester.takeException(), isNull);

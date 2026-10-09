@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:00:41.463882+00:00",
+  "reviewer": "independent delegated reviewer",
+  "baseline_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "decision": "accepted_implementation_for_normal_candidate_preparation",
+  "must_fix_findings": [],
+  "scope": "Read-only implementation/correctness/UX review. Reviewer inspected source, actual native pixels and existing owner-run logs; no source edits or tests run by reviewer. Candidate publication remains gated separately.",
+  "reviewed_files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "c8b30fd8330bb3ff88e24c3d4e066c055703ea64fd2364a41dba65573585729f"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "117eb252bdc8bf3c9864847e4c59f8e04770eec17aa4fdc8a7f017ae50a56ef5"
+    },
+    {
+      "path": "integration_test/inline_checklist_workflow_test.dart",
+      "sha256": "34d943dbe16998361d30f0b511166e37eb61dd26c000dd113c853d795ee7380a"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9fa7328aa7a95d38cc8f878881e08707d4231eca9ea39d4b182eefe2f34dd32"
+    },
+    {
+      "path": "design/decisions/0011-one-level-checklists.md",
+      "sha256": "0e0703b4fd9de0067adfc64d0282b2f9768aa188b71c4b2c224f44a1c12f4352"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "81b765c8ec096f56a6e3fd28770c7a4a161dd93736fe41d4f476a1ce2dde7f84"
+    }
+  ],
+  "approved_policy": "User explicitly approved disclosure-specific compact normal28px logical target growing with text; ADR accurately records the exception. Other48px targets remain unchanged.",
+  "source_findings": [
+    "Content-driven target is max48px width and max18px/count line height plus8px height: normal28px,2x48px. Top2/bottom6 preserves visible title/arrow/count placement within row; body remains separate >=48px.",
+    "Outer SizedBox/Stack retains target bounds. Only transparent Material paint host extends8px horizontally; Padding places the opaque InkResponse back at the original target coordinates. RenderBox bounds constrain hit testing, so overflow paint does not add a hit region.",
+    "Standard contained InkResponse with circular highlight and explicit InkRipple uses custom rounded clipping. This avoids Material-host clipping and rectangular-layer clipping; no custom animation or splash factory is introduced.",
+    "Button/enabled/expanded semantics, label, tap action, Space/Enter activation, busy null callback and busy canRequestFocus=false are preserved explicitly or through standard InkResponse. Existing TextButton defaults supply foreground, overlay and feedback; same labelLarge metrics/style and ambient text scale are used.",
+    "Title-column arrow edge, count offset13, row edges/internal padding, source-bound expansion callback and local preference semantics are retained. No storage, domain, recurrence, dependency or live-data change is present in reviewed implementation.",
+    "Focused flow is registered in native aggregate task_flow_test.dart. Prior responsive expectation is narrowly updated for approved compact content+8 target, minwidth48, body48 and nonoverlap. VersionRC7+51 is explicit."
+  ],
+  "resolved_findings": [
+    {
+      "id": "INK_LEFT_MARGIN_CLIPPED",
+      "initial_receipt_sha256": "fee7c0077ec40fd509655fc6dd5fe80b33a937b00bce95e2538f904b44eec527",
+      "resolution": "Extended paint host plus circle highlight/InkRipple custom clipping paints the full rounded rectangle, including left margin.",
+      "actual_pixel_verification": "Final held capture at y371: x59 backgroundRGB(15,21,18); x60,61,64,67,68,103,106,110 uniformly inkRGB(38,59,50); x111 backgroundRGB(15,21,18). Prior left clipping and x68 seam are absent. Rounded corners were visually inspected.",
+      "historical_receipts": "Initial finding and earlier partial source review remain preserved; this final review supersedes their ink acceptance state for the corrected source."
+    }
+  ],
+  "owner_run_evidence": [
+    {
+      "name": "compact-ripple-final-native.log",
+      "sha256": "becf097248178e5f157308796e3b4455607fd68e36772ce9b2d4cf8cbe074f21",
+      "result": "1passed0failed in30s; final corrected source with keyboard/semantics assertions"
+    },
+    {
+      "name": "compact-existing-responsive-native.log",
+      "sha256": "fbccf36fdd3b3c7901ccb9d179d2f3e61d3e813487006e2fc7636068f0832586",
+      "result": "1passed0failed in12s; retained responsive workflow"
+    },
+    {
+      "name": "compact-final-analyze.log",
+      "sha256": "5d3a16e526d784c6b14f1e3df503a0d1596768d5ba4289dd7ea0bd7a90ead57e",
+      "result": "global analyzer clean in1.6s"
+    }
+  ],
+  "focused_scope": "Eight cases:1200/390 widths x1x/2x text xsecondary on/off; expanded/collapsed states, both lower target-corner activation,6px ordinary/disclosure bottom parity,2px top gap,count offset13,body>=48,target>=countheight+8,width>=48,nonoverlap,row edges,paint-host coverage. Representative button/enabled/expanded/tap semantics and Space/Enter assertions also pass.",
+  "actual_captures_viewed": [
+    {
+      "name": "compact-ripple-final/disclosure-held-ink.png",
+      "sha256": "9d6053491c57d4d1e8d8d07c540c20e66696126497164b7a47706ddeb32ea1de"
+    },
+    {
+      "name": "compact-ripple-final/disclosure-expanded-390-1-true.png",
+      "sha256": "4fbb2997140f68a0d9054789c406ee14ee305dd8f3e3bdaf25173857d45163e2"
+    },
+    {
+      "name": "compact-ripple-final/disclosure-expanded-1200-2-false.png",
+      "sha256": "1ab0642b04fb766764677caf93740d6e45a49ccd60f765b1d3a660782fad12cc"
+    }
+  ],
+  "acceptance_attribution": "Linux native tests use synthetic isolated stores; unobstructed device-source held input is scripted. This is not exact Android runtime acceptance.",
+  "remaining": [
+    "Full normal candidate checks and exact Android/native acceptance",
+    "Separate notes/media review against final actual source range",
+    "Exact artifact/provenance and fresh quota gates before any RC publication"
+  ],
+  "privacy": "Public-safe review projection: no private Library identifiers, account quota values, signed storage URLs or local absolute filesystem paths."
+}

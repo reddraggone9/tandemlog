@@ -15,6 +15,8 @@ import 'package:tandemlog/platform/folder_actions.dart';
 import 'package:tandemlog/platform/view_time_source.dart';
 
 import 'native_text_fixtures.dart';
+import 'checklist_disclosure_layout_test.dart'
+    show registerChecklistDisclosureLayoutTests;
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
 import 'start_hints_test.dart' show registerStartHintTests;
 import 'save_acknowledgement_test.dart' show registerSaveAcknowledgementTests;
@@ -191,6 +193,7 @@ void main() {
   registerRecurringTextWorkflowTests();
   registerChecklistWorkflowTests();
   registerInlineChecklistWorkflowTests();
+  registerChecklistDisclosureLayoutTests();
   registerInlineChecklistWorkspaceTests();
   registerChecklistLifecycleTests();
   registerBulkApplySemanticsTests();

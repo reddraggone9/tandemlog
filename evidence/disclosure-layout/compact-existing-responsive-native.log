@@ -1,0 +1,103 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /workspace/tandemlog-checklist-ui-fix/integration_test/inline_checklist_workflow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: task row inset follows available width including desktop resize
+TANDEMLOG_FIRST_FRAME_MS=462
+TANDEMLOG_PHASE identity_lock=28
+TANDEMLOG_PHASE sqlite_open_schema=118
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=78
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1242 FILES_READ=1
+CHECKLIST_DISCLOSURE_GEOMETRY width=599.0 scale=1.0 secondary=true body=Rect.fromLTRB(52.0, 198.0, 499.0, 274.0) target=Rect.fromLTRB(52.0, 274.0, 100.0, 302.0) count=Rect.fromLTRB(65.0, 276.0, 86.5, 296.0) textBottom=274.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=599.0 scale=1.0 secondary=false body=Rect.fromLTRB(52.0, 447.0, 499.0, 501.0) target=Rect.fromLTRB(52.0, 501.0, 100.0, 529.0) count=Rect.fromLTRB(65.0, 503.0, 86.5, 523.0) textBottom=501.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=1200.0 scale=1.0 secondary=true body=Rect.fromLTRB(68.0, 198.0, 774.0, 246.0) target=Rect.fromLTRB(68.0, 246.0, 116.0, 274.0) count=Rect.fromLTRB(81.0, 248.0, 102.5, 268.0) textBottom=246.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=1200.0 scale=1.0 secondary=false body=Rect.fromLTRB(68.0, 419.0, 714.2, 467.0) target=Rect.fromLTRB(68.0, 467.0, 116.0, 495.0) count=Rect.fromLTRB(81.0, 469.0, 102.5, 489.0) textBottom=467.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=600.0 scale=1.0 secondary=true body=Rect.fromLTRB(68.0, 198.0, 484.0, 274.0) target=Rect.fromLTRB(68.0, 274.0, 116.0, 302.0) count=Rect.fromLTRB(81.0, 276.0, 102.5, 296.0) textBottom=274.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=600.0 scale=1.0 secondary=false body=Rect.fromLTRB(68.0, 447.0, 484.0, 501.0) target=Rect.fromLTRB(68.0, 501.0, 116.0, 529.0) count=Rect.fromLTRB(81.0, 503.0, 102.5, 523.0) textBottom=501.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=1.0 secondary=true body=Rect.fromLTRB(52.0, 198.0, 290.0, 298.0) target=Rect.fromLTRB(52.0, 298.0, 100.0, 326.0) count=Rect.fromLTRB(65.0, 300.0, 86.5, 320.0) textBottom=298.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=1.0 secondary=false body=Rect.fromLTRB(52.0, 491.0, 290.0, 569.0) target=Rect.fromLTRB(52.0, 569.0, 100.0, 597.0) count=Rect.fromLTRB(65.0, 571.0, 86.5, 591.0) textBottom=569.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=360.0 scale=2.0 secondary=true body=Rect.fromLTRB(52.0, 190.0, 260.0, 670.0) target=Rect.fromLTRB(52.0, 670.0, 107.7, 718.0) count=Rect.fromLTRB(65.0, 672.0, 107.7, 712.0) textBottom=670.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=360.0 scale=2.0 secondary=false body=Rect.fromLTRB(52.0, 505.0, 260.0, 943.0) target=Rect.fromLTRB(52.0, 943.0, 107.7, 991.0) count=Rect.fromLTRB(65.0, 945.0, 107.7, 985.0) textBottom=943.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=2.0 secondary=true body=Rect.fromLTRB(52.0, 190.0, 290.0, 574.0) target=Rect.fromLTRB(52.0, 574.0, 107.7, 622.0) count=Rect.fromLTRB(65.0, 576.0, 107.7, 616.0) textBottom=574.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=2.0 secondary=false body=Rect.fromLTRB(52.0, 601.0, 290.0, 943.0) target=Rect.fromLTRB(52.0, 943.0, 107.7, 991.0) count=Rect.fromLTRB(65.0, 945.0, 107.7, 985.0) textBottom=943.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=620.0 scale=1.0 secondary=true body=Rect.fromLTRB(64.0, 198.0, 500.0, 274.0) target=Rect.fromLTRB(64.0, 274.0, 112.0, 302.0) count=Rect.fromLTRB(77.0, 276.0, 98.5, 296.0) textBottom=274.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=620.0 scale=1.0 secondary=false body=Rect.fromLTRB(64.0, 447.0, 500.0, 501.0) target=Rect.fromLTRB(64.0, 501.0, 112.0, 529.0) count=Rect.fromLTRB(77.0, 503.0, 98.5, 523.0) textBottom=501.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=1.0 secondary=true body=Rect.fromLTRB(64.0, 198.0, 270.0, 322.0) target=Rect.fromLTRB(64.0, 322.0, 112.0, 350.0) count=Rect.fromLTRB(77.0, 324.0, 98.5, 344.0) textBottom=322.0
+CHECKLIST_DISCLOSURE_GEOMETRY width=390.0 scale=1.0 secondary=false body=Rect.fromLTRB(64.0, 535.0, 270.0, 637.0) target=Rect.fromLTRB(64.0, 637.0, 112.0, 665.0) count=Rect.fromLTRB(77.0, 639.0, 98.5, 659.0) textBottom=637.0
+00:12 +1: (tearDownAll)
+00:12 +1: All tests passed!

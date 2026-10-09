@@ -1,19 +1,24 @@
 # Current status — 2026-10-09
 
-## Disclosure geometry — isolated partial checkpoint
+## Compact checklist disclosure — RC7 candidate preparation
 
-`fix/checklist-disclosure-spacing` carries the requested tighter arrow/count gap
-and centered rounded rectangular ink, retaining the body and disclosure48px
-hit targets, title-column alignment, vertical positions and row padding.
-[Native measurements and independent partial review](../evidence/disclosure-layout/README.md)
-cover normal/enlarged desktop and narrow Linux layouts, with/without secondary
-text and expanded/collapsed. The final density assertion remains red: normal
-count-to-row-bottom clearance26px versus ordinary secondary text6px. The prior
-separate48px-target policy conflicts with a2+20+6=28px compact footer; the
-explicit compact-target choice is pending. No body/next-row hit area is borrowed.
-This source has not been adopted on main, versioned as a new candidate or
-published. Debug version labels remain RC6/build50; published RC6 bytes are
-unchanged. Exact Android acceptance, final demos and release gates remain pending.
+Lee approved the disclosure-specific compact target on2026-10-09. The footer is
+28px at normal text, growing to48px at200%, with minimum width48; other task and
+checklist controls retain48px targets. The count has6px clearance below, matching
+ordinary secondary text, and a tighter13px arrow/count column offset. Its glyph
+edge and2px line gap remain aligned with the task title. Pressed feedback is a
+centered short rounded rectangle, painted independently of the disjoint target.
+
+[Focused actual Linux evidence and independent implementation review](../evidence/disclosure-layout/README.md)
+pass normal/enlarged desktop and narrow, with/without secondary text,
+expanded/collapsed, lower-corner activation, semantics and Space/Enter. The
+retained responsive workflow and analysis also pass. Independent review found
+and verified the correction of clipped/faint left ink in an earlier compact
+attempt. Historical partial reds/reviews remain preserved. This source is
+2026.10.2-rc.7/build51; full signed candidate, exact Android acceptance,
+notes/media review and fresh publication quota remain pending. Published RC6 and
+stable Latest2026.10.1 are unchanged. No storage migration or live synced data
+change is included.
 
 ## Checklist controls follow-up — RC6 published
 
