@@ -52,7 +52,9 @@ All captures here are real Linux GTK production-main pixels on synthetic data.
 [Before](before-editor.png) is a local release build of rc.4 source: items live
 inside the parent editor. [After](after-inline.png) is the local debug build of
 this feature: items live under parents in the list. Both are dark, 1200×850,
-normal text, reading the same synthetic canonical history. This is a source UI
+normal text, and show the same synthetic six-item parent. After also shows a
+library-card item on another parent. The captures come from different points
+in the synthetic demo, so their full histories differ. This is a source UI
 comparison, not signed-installer acceptance.
 
 The actual [menu](dark-menu.png) shows menu/drag separation and labels;

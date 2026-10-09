@@ -48,7 +48,8 @@
   "reviews": {
     "architecture": "accepted d7a732e; no remaining must-fix",
     "correctness": "accepted d7a732e; no remaining must-fix",
-    "visual": "accepted eight actual GTK captures; no clear reversible UX defect"
+    "visual": "accepted eight actual GTK captures; no clear reversible UX defect",
+    "editorial": "Reviewed actual diff and four proposed native Before/After pixels; tightened user-facing copy and qualified differing synthetic capture histories. Final release-range review still required."
   },
   "demo": {
     "file": "inline-checklists-linux-demo.mp4",
@@ -125,7 +126,7 @@
     "dark-collapsed.png": "0ccb1b60c4fd1db4d5c6d66880e7b16b72e8d3c8036f1615ec272035ff4a12ea",
     "unit.txt": "a4207ea8f09875de1b34d05eace2a8a8dcfa03597939f7aafda45cbc84b9e068",
     "before-editor.png": "ffb6bb4a69a3d2a20d8584194694148c5eb5355400b538eaef67444bee0ec518",
-    "README.md": "0b2242bee522215232b858c1719b4681ca4bc6b48e7faf2ef7a54e15ad691458",
+    "README.md": "ffbdde984b5119bc9680ed87729d45551e4623d31c485fa1b6c8274b505ec2a9",
     "native-workflow.txt": "efa4c36d510b7c3fa9dc291a75ea959d276713d20d41d27e0d2ce29872334dff",
     "host-initial-red.txt": "806c384c865427b7f096225f70844b75e62208f8d9533f3143b033e5b0ce533a",
     "demo-pointer-frame.png": "e1a873afa66b578fd5e959b5e06035281ab3022b6e5b0d7823e22befb97dea57"
