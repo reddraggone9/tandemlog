@@ -29,7 +29,8 @@ Further compression would shrink the target or overlap its neighbor. A black
 standalone toggle PNG is explicitly excluded from visual proof.
 
 Signed-candidate/platform checks, exact Android affected-flow/demo acceptance,
-independent notes/media review and fresh quota remain publication gates. This
+fresh quota remain publication gates. The [assembled notes/media review](../rc6-editorial/editorial-review.json)
+is complete, including immutable links and public200/hash verification. This
 receipt does not grant Android/Windows runtime or stable-promotion acceptance.
 
 The18.1-second [actual native Linux desktop demo](native-linux-pointer-demo.mp4)

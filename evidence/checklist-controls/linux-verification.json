@@ -52,10 +52,8 @@
   ],
   "excluded_visual": "direct-toggle-narrow.png decoded black; not evidence of rendering",
   "remaining_gates": [
-    "Desktop pointer demo final inspection",
     "Signed full candidate/platform gates",
     "Exact Android affected-flow/demo acceptance",
-    "Independent release notes/media review against actual commit range",
     "Fresh quota before preview publication"
   ],
   "unchanged": [
@@ -68,5 +66,10 @@
     "before_menu_vs_child_delete_mismatch_px": 48,
     "after_mismatch_px": 0,
     "blank_slot": "Inert48\u00d748 only when checklist is shown and parent has no reorder neighbor"
-  }
+  },
+  "completed_followup_gates": [
+    "Independent source correctness review",
+    "Actual desktop pointer demo inspection",
+    "Independent final release notes/media review"
+  ]
 }

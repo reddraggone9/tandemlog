@@ -1,0 +1,150 @@
+{
+  "reviewer": "independent architecture_review agent",
+  "range": [
+    "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "c8596f22fd56ce0b73c74e1e5010337556b269e1"
+  ],
+  "version": "2026.10.2-rc.6+49",
+  "decision": "Accepted: frozen-range release-note content, all three actual native dark Before/After figures and final assembled Markdown image placement, alt text and immutable links. No editorial must-fix.",
+  "notes_sha256": "aeaaaf00475d2aa4a0df4330f3f8847da66bb4e8aab2d828156e95be703755db",
+  "verified": [
+    "Reviewed exact frozen production diff and four release-note bullets; changes are supported, meaningful and contain no QA/preservation boilerplate.",
+    "Viewed all three actual figures, held-drag reordered/Undo screenshots and supplied pointer frame.",
+    "All three output and six original input SHA256 values match media-source.json.",
+    "All six composited app regions exactly equal original integer crops in RGBA; no scaling or app-pixel changes.",
+    "Dark labels, action text, checklist item titles/notes and control differences are readable; synthetic names and tasks only.",
+    "Controls pair shows same original visible six-item order after Move and Undo; does not claim whole-history byte equality.",
+    "Frozen version is 2026.10.2-rc.6+49; domain/services/storage/text/native/platform/dependency/workflow paths unchanged in covered range.",
+    "after-final-demo.mp4 is 18.100 seconds, 1200x850,20fps; supplied frame visibly includes pointer at Map drag control. Older after-demo.mp4 is excluded.",
+    "Final assembled Markdown preserves the four candidate bullets, places each approved image next to its corresponding change, uses descriptive Before/After alt text and pins all three exact committed media files to 8bd3ef1."
+  ],
+  "media": [
+    {
+      "file": "checklist-controls-before-after.png",
+      "sha256": "001a8ff4cead3a47fe4448d31707d76a1de050ed65f58944c3929503c0fb1344",
+      "original_inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-expanded-narrow-verified.png",
+          "sha256": "b7cf494e953274de109aee2d1eb7cba2a65bad3951bc9de87b7b7f09edfd8f7b"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-expanded-narrow-clean.png",
+          "sha256": "b8abc61eb8736b12f28a053f7331d81dfb10a0660f854132ce5a716844fab5d5"
+        }
+      ],
+      "crop_ltrb": [
+        0,
+        175,
+        390,
+        785
+      ],
+      "destinations_xy": [
+        [
+          0,
+          46
+        ],
+        [
+          410,
+          46
+        ]
+      ],
+      "both_rgba_crops_pixel_equal": true
+    },
+    {
+      "file": "checklist-toggle-before-after.png",
+      "sha256": "87257d1f5b85eda8b87c1d92ed96cf3acaa256c968ff9dd21b46448f021b242b",
+      "original_inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-display-menu-wide.png",
+          "sha256": "d5e55372181cee23bbe4f3c38fa25fac23c6361f5951f0856e6a3046294fba31"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-direct-collapse-wide.png",
+          "sha256": "e664859b17350b5393feef9c04f6ffa62303f474501a1d9f2deb92299b623ff6"
+        }
+      ],
+      "crop_ltrb": [
+        795,
+        0,
+        1200,
+        145
+      ],
+      "destinations_xy": [
+        [
+          0,
+          46
+        ],
+        [
+          425,
+          46
+        ]
+      ],
+      "both_rgba_crops_pixel_equal": true
+    },
+    {
+      "file": "checklist-menu-before-after.png",
+      "sha256": "7dd0123fb72064af008c9993e4a486d343425cff67e849352ec0badae0eb3bd8",
+      "original_inputs": [
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual-before-matched/before-task-menu-wide.png",
+          "sha256": "cd84dc942b8c55f99e38b3fae493783a7527be1279cc55b068a47d5149340ea0"
+        },
+        {
+          "path": "/workspace/recovery/checklist-ui-fix/manual/after-final-task-menu-wide.png",
+          "sha256": "5b0aea0e8611c14855ade8c3d56b7f0ff4faee8ed742e9f12d94f42656bd2d0b"
+        }
+      ],
+      "crop_ltrb": [
+        945,
+        315,
+        1200,
+        550
+      ],
+      "destinations_xy": [
+        [
+          0,
+          46
+        ],
+        [
+          275,
+          46
+        ]
+      ],
+      "both_rgba_crops_pixel_equal": true
+    }
+  ],
+  "limits": [
+    "Actual Linux GTK debug/source visual evidence; no exact signed-artifact, Android, Windows or spoken-accessibility acceptance claim.",
+    "Static image supports drag-handle appearance; held-drag behavior is supported separately by native runtime evidence and reordered/Undo screenshots.",
+    "Reviewed assembled notes are still a working draft above 8bd3ef1; parent must commit/copy these exact approved bytes and preserve media URL/hash bindings."
+  ],
+  "remaining_publication_gates": [
+    "Full signed-candidate terminal success",
+    "Exact final Android/native affected-flow acceptance",
+    "Fresh publication quota",
+    "Parent public immutable-image HTTP/hash verification"
+  ],
+  "assembled_notes": {
+    "reviewed_path": "/workspace/tandemlog-checklist-ui-fix/design/prerelease-notes.md",
+    "status_at_review": "Working draft above media commit; image insertions not yet committed. Exact approved note SHA binds final-copy review.",
+    "media_commit": "8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff",
+    "four_bullets_unchanged_from_candidate": true,
+    "images": [
+      {
+        "alt": "Before: checklist controls use different icons and trailing columns. After: controls align and disclosure spacing is tighter.",
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-controls-before-after.png"
+      },
+      {
+        "alt": "Before: expand and collapse require choosing a menu action. After: one button performs the next action directly.",
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-toggle-before-after.png"
+      },
+      {
+        "alt": "Before: a task with checklist items still offers Add checklist. After: that redundant action is hidden.",
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-menu-before-after.png"
+      }
+    ],
+    "adjacent_to_corresponding_bullets": true,
+    "immutable_committed_media_hashes_match_previous_review": true,
+    "public_http_delivery": "Parent owns public HTTP200/hash verification; not independently fetched in this local review."
+  }
+}

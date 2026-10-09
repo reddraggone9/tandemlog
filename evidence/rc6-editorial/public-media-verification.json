@@ -1,0 +1,20 @@
+[
+  {
+    "file": "checklist-controls-before-after.png",
+    "http": 200,
+    "sha256": "001a8ff4cead3a47fe4448d31707d76a1de050ed65f58944c3929503c0fb1344",
+    "bytes": 40617
+  },
+  {
+    "file": "checklist-toggle-before-after.png",
+    "http": 200,
+    "sha256": "87257d1f5b85eda8b87c1d92ed96cf3acaa256c968ff9dd21b46448f021b242b",
+    "bytes": 15807
+  },
+  {
+    "file": "checklist-menu-before-after.png",
+    "http": 200,
+    "sha256": "7dd0123fb72064af008c9993e4a486d343425cff67e849352ec0badae0eb3bd8",
+    "bytes": 8874
+  }
+]
