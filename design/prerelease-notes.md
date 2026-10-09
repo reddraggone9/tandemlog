@@ -1,14 +1,9 @@
-Experimental 2026.10.2-rc.6 preview.
+Experimental 2026.10.2-rc.7 preview.
 
-- Fixed checklist reordering after holding the drag handle.
-- Aligned checklist controls and tightened disclosure spacing; narrow task rows now use the available content width.
+- Reduced space below checklist counts and tightened the arrow/count gap.
 
-![Before: checklist controls use different icons and trailing columns. After: controls align and disclosure spacing is tighter.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-controls-before-after.png)
+![Before: checklist counts have extra space below and a wide arrow gap. After: the footer is compact and the arrow/count gap is tighter.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-spacing-before-after.png)
 
-- The checklist toolbar button now directly expands or collapses shown checklists.
+- Checklist presses now show a compact, centered rounded highlight.
 
-![Before: expand and collapse require choosing a menu action. After: one button performs the next action directly.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-toggle-before-after.png)
-
-- Add checklist disappears from a task menu once that task has items, including incoming items while the menu is open.
-
-![Before: a task with checklist items still offers Add checklist. After: that redundant action is hidden.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-menu-before-after.png)
+![Before: a circular highlight sits below the checklist label. After: a short rounded rectangular highlight is centered around the arrow and count.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-ink-before-after.png)

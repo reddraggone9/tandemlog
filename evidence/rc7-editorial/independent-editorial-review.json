@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:08:53.090905+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted",
+  "must_fix_findings": [],
+  "covered_range": {
+    "baseline": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+    "source_and_media": "9b6f18b52f1b22b4f8196e4273e5f660056bc726"
+  },
+  "scope": "Independent editorial review of actual RC7 draft notes, editorial guidance, exact range/diff and actual raw/composite media. No source edits, tests, device acceptance, workflow dispatch or publication by reviewer.",
+  "reviewed_notes": {
+    "path": "design/prerelease-notes.md",
+    "sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1",
+    "status": "Actual working-tree draft reviewed after pushed source/media commit; notes are not falsely claimed to be in9b6f18b. Acceptance applies to these exact bytes."
+  },
+  "guidance": {
+    "path": "design/releases.md",
+    "sha256": "b922b71d31ea3a402b463f58d4cec769fdc02de8596d3051806e606225d1af6a",
+    "rules": "Concise actual meaningful changes; no routine QA/preservation/identity boilerplate; one dark labeled native Before/After per change; matching synthetic data/theme/viewport/scale; exact source/raw/crop provenance; independent review before publication."
+  },
+  "range_findings": [
+    "Actual commit range includes RC6 publication evidence and isolated disclosure checkpoints, then approved compact implementation. Executable changes are limited to main.dart disclosure presentation, new rounded ink border and versionRC7+51; no dependency/canonical/domain/storage/recurrence change.",
+    "First bullet accurately combines reduced footer whitespace and tighter arrow/count gap. Second bullet accurately describes corrected compact centered rounded press highlight. No meaningful user-facing change from the executable diff is omitted.",
+    "Notes contain two concise change bullets and descriptive image alt text. They contain no internal implementation/testing transcript, unsupported Android acceptance claim, unchanged behavior assurances, irrelevant compatibility warning or feature promises."
+  ],
+  "media_provenance": {
+    "path": "evidence/rc7-editorial/media-provenance.json",
+    "sha256": "d199f0b101cf0d39b6490b82d1823edf5bf8bc5ef6d4d63524b9052ac0f4f3dc",
+    "before_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+    "after_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+    "immutable_media_commit": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+    "source_hash_validation": "All six recorded after source/test/version hashes match actual9b6f18b blobs and prior independent final implementation receipt."
+  },
+  "media": [
+    {
+      "path": "evidence/rc7-editorial/disclosure-spacing-before-after.png",
+      "sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef",
+      "dimensions": [
+        828,
+        264
+      ],
+      "immutable_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-spacing-before-after.png",
+      "public_url_verification": "Anonymous HTTP200; received bytes equal local reviewed file and actual9b6f18b Git blob.",
+      "raw_sources": [
+        {
+          "side": "before",
+          "path": "evidence/rc7-editorial/raw/disclosure-spacing-before-after-before.png",
+          "sha256": "ec7f1960f1c8ff51719dc62e5af3bf7496ad39b54826751d0de340c3144465b6",
+          "dimensions": [
+            390,
+            1000
+          ],
+          "crop_box_ltrb": [
+            0,
+            335,
+            390,
+            535
+          ]
+        },
+        {
+          "side": "after",
+          "path": "evidence/rc7-editorial/raw/disclosure-spacing-before-after-after.png",
+          "sha256": "bd7197f1ef6370668747bd4a8e00d477d55a17b8ac9ed37e5bbd5dac22af7cc2",
+          "dimensions": [
+            390,
+            1000
+          ],
+          "crop_box_ltrb": [
+            0,
+            315,
+            390,
+            495
+          ]
+        }
+      ],
+      "crop_verification": "Each integer crop is pixel-for-pixel identical to the composite placement at native1:1; spacing placements(16,48)/(422,48), ink placements(16,48)/(376,48). No rescaling or app-pixel retouching."
+    },
+    {
+      "path": "evidence/rc7-editorial/disclosure-ink-before-after.png",
+      "sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164",
+      "dimensions": [
+        736,
+        163
+      ],
+      "immutable_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-ink-before-after.png",
+      "public_url_verification": "Anonymous HTTP200; received bytes equal local reviewed file and actual9b6f18b Git blob.",
+      "raw_sources": [
+        {
+          "side": "before",
+          "path": "evidence/rc7-editorial/raw/disclosure-ink-before-after-before.png",
+          "sha256": "f2c44a9c6a06079e3eb42254db2aa193dc1486a5a8c6f0059613791a79e5ad30",
+          "dimensions": [
+            1200,
+            1000
+          ],
+          "crop_box_ltrb": [
+            16,
+            335,
+            360,
+            434
+          ]
+        },
+        {
+          "side": "after",
+          "path": "evidence/rc7-editorial/raw/disclosure-ink-before-after-after.png",
+          "sha256": "9d6053491c57d4d1e8d8d07c540c20e66696126497164b7a47706ddeb32ea1de",
+          "dimensions": [
+            1200,
+            1000
+          ],
+          "crop_box_ltrb": [
+            16,
+            315,
+            360,
+            394
+          ]
+        }
+      ],
+      "crop_verification": "Each integer crop is pixel-for-pixel identical to the composite placement at native1:1; spacing placements(16,48)/(422,48), ink placements(16,48)/(376,48). No rescaling or app-pixel retouching."
+    }
+  ],
+  "pixel_review": [
+    "Reviewer viewed both actual composites and both full Before raw captures; corrected After captures had also been viewed during independent implementation review. Matching synthetic Clean bedroom bathroom/chore/Tile floor and basin tasks, dark app theme, viewport and100% text are preserved within each comparison.",
+    "Spacing crop shows disclosure and comparable ordinary row, useful divider context and visibly reduced whitespace/gap. Ink crop clearly shows baseline circular reaction below label and final centered rounded rectangle around arrow/count.",
+    "Before/After labels are centered, readable and outside app pixels, with dark subtly contrasting canvas. No pointer cross, extra app annotations, private task data or identifiable real profile appears."
+  ],
+  "native_attribution": {
+    "before": "Detached worktree HEAD2aa46be verified; no diff to lib/pubspec/lock, only untracked neutral fixture. Actual released-rc6-media raw hashes match reviewed Before files; preserved native capture log reports1passing flow.",
+    "after": "Actual corrected compact-ripple-final capture hashes match reviewed After files; synthetic native Linux/scripted held input. No Android runtime acceptance or completed desktop demo is claimed by notes/media."
+  },
+  "remaining": "Editorial gate is accepted for exact notes/media and covered source. Full candidate tests, exact Android/native acceptance, desktop demo and artifact/provenance/quota/publication gates remain separately required."
+}

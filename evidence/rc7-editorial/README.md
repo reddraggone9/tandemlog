@@ -12,6 +12,7 @@ runtime acceptance. [Raw captures](raw/) retain the actual pixels.
 [Spacing comparison](disclosure-spacing-before-after.png) explains the tighter
 arrow/count gap and reduced count-to-divider space.
 [Pressed comparison](disclosure-ink-before-after.png) shows the centered rounded
-rectangle replacing the offset circular feedback. Independent editorial review
-must bind the final actual notes, immutable image URLs and covered source range
-before publication.
+rectangle replacing the offset circular feedback. [Independent editorial review](independent-editorial-review.json) accepts the
+actual concise notes, both anonymously fetched immutable image URLs and source
+range2aa46be..9b6f18b. Full exact candidate/native/publication gates remain
+separate.

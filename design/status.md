@@ -16,7 +16,8 @@ retained responsive workflow and analysis also pass. Independent review found
 and verified the correction of clipped/faint left ink in an earlier compact
 attempt. Historical partial reds/reviews remain preserved. This source is
 2026.10.2-rc.7/build51; full signed candidate, exact Android acceptance,
-notes/media review and fresh publication quota remain pending. Published RC6 and
+and fresh publication quota remain pending. [Independent notes/media review](../evidence/rc7-editorial/independent-editorial-review.json)
+accepts the two concise changes and immutable Before/After images. Published RC6 and
 stable Latest2026.10.1 are unchanged. No storage migration or live synced data
 change is included.
 

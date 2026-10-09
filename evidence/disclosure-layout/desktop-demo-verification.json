@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+  "version": "2026.10.2-rc.7+51",
+  "platform": "Linux GTK/Flutter native debug under private Xvfb:155, synthetic fixture only",
+  "input": "Scripted native integration input; actual desktop mouse visible, test-pointer overlay on scripted edge taps; held ink uses scripted device-source pointer. Space/Enter checked by source-tied integration assertions.",
+  "recording": "evidence/disclosure-layout/native-linux-pointer-demo.mp4",
+  "sha256": "0637ffb385b732e6dcde82a88561758e9e3d1f0cfefa48552ac41b8d7b0eab37",
+  "duration_seconds": 25.8,
+  "dimensions": [
+    1200,
+    1000
+  ],
+  "fps": 20,
+  "codec": "H264/yuv420p",
+  "crop": "Captured1400x1200 private display, integer crop1200x1000 at0,0. Narrow window retains native390px size on the same black desktop canvas. No app-pixel retouching.",
+  "trim": "Raw73.6s video trimmed34.0..59.8s to exclude build/launch/teardown. Raw retained privately.",
+  "flow": "disclosure bottom spacing and ink retain compact row geometry",
+  "result": {
+    "passed": 1,
+    "failed": 0,
+    "duration_seconds": 30
+  },
+  "raw_log_sha256": "f21a899563e8d9c7d952b8c79c376002b537ffc7cc3f577800cf1d4cd20d5aea",
+  "observed_frames": [
+    "pointer-frame.png",
+    "final-narrow-enlarged-frame.png"
+  ],
+  "remaining_gate": "Not Android acceptance; exact signed candidate/device delta and publication gates remain pending."
+}

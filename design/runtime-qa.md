@@ -10,7 +10,11 @@ The final flow checks Material paint coverage, lower-corner taps, button/expande
 semantics and Space/Enter. Retained resizing/safe-inset flow and analysis pass.
 [Evidence, inspected native captures and independent review](../evidence/disclosure-layout/README.md)
 record the earlier clipping/seam finding and accepted actual-pixel correction.
-Signed exact Android acceptance and the full candidate remain pending.
+The [25.8-second native desktop demonstration](../evidence/disclosure-layout/native-linux-pointer-demo.mp4)
+has visible pointer/input, resized native narrow window and enlarged text;
+[receipt](../evidence/disclosure-layout/desktop-demo-verification.json) labels the
+actual Linux debug/scripted evidence. Signed exact Android acceptance and the
+full candidate remain pending.
 
 ## Historical RC6 checklist controls follow-up
 

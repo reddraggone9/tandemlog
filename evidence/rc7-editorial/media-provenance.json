@@ -2,7 +2,7 @@
   "schema_version": 1,
   "before_source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
   "before_version": "2026.10.2-rc.6+50",
-  "after_source": "Uncommitted reviewed-source hashes below, final source commit to be bound before publication",
+  "after_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
   "after_version": "2026.10.2-rc.7+51",
   "platform": "Actual native Linux GTK/Flutter debug, synthetic Alex Example profile, dark,100% text",
   "viewports": {
@@ -126,5 +126,6 @@
       ],
       "operation": "Integer-pixel crop and paste at native1:1 scale; labels only outside app pixels; no rescaling, retouching or app-pixel annotations."
     }
-  ]
+  ],
+  "immutable_media_commit": "9b6f18b52f1b22b4f8196e4273e5f660056bc726"
 }

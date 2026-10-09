@@ -22,9 +22,16 @@ without extending the opaque clickable rectangle. Actual held pixels are uniform
 across both margins. [Final independent implementation review](independent-compact-implementation-review-final.json)
 accepts the correction with no must-fix findings.
 
-This source is versioned2026.10.2-rc.7/build51. Full signed-candidate gates, exact
-Android acceptance, independent editorial review and fresh publication quota are
-pending. Native Linux inspection is not Android acceptance. No canonical history,
+The inspected [25.8-second native desktop demo](native-linux-pointer-demo.mp4)
+shows centered pressed feedback, scripted expand/collapse, desktop/narrow
+resizing and enlarged text, with visible pointer/input. The [demo receipt](desktop-demo-verification.json)
+labels the actual Linux debug build and synthetic scripted flow; a private
+standalone display enabled successful recording after three debug-launch failures
+before assertions, whose logs remain preserved privately.
+
+This source is versioned2026.10.2-rc.7/build51. [Independent editorial review](../rc7-editorial/independent-editorial-review.json)
+accepts the concise notes and two source-bound images. Full signed-candidate
+gates, exact Android acceptance and fresh publication quota are pending. Native Linux inspection is not Android acceptance. No canonical history,
 cache schema, dependency or live synced user data change is included.
 
 ## Preserved earlier partial checkpoint (superseded)
