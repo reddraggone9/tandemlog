@@ -1,0 +1,32 @@
+{
+  "source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "candidate_run_id": 37960853538,
+  "artifact_id": 11632728225,
+  "version": "2026.10.2",
+  "version_code": 53,
+  "accepted_apk_sha256": "b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+  "accepted_artifact_zip_sha256": "8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7",
+  "artifact_zip_bytes": 30362267,
+  "checks_passed": 36,
+  "reused_rc7_checks": 56,
+  "acceptance_blockers": [],
+  "origin": "Parent supplied exact signed native Android acceptance; cloud worker did not rerun device checks.",
+  "validated_by_parent": [
+    "Actual ZIP digest and size matched successful source-bound candidate descriptor",
+    "Official package, stable version/build53, nondebuggable and pinned owner signer verified",
+    "Native payloads and notices match accepted RC7",
+    "Isolated RC7-to-stable upgrade preserved all four profiles' settings, identities, canonical history and complete task/order/text state",
+    "Cold replay and SAF continuity passed",
+    "Lab restored/stopped, no new OOM events; no live synced user data used"
+  ],
+  "evidence_library": {
+    "version": 0,
+    "size_bytes": 2081088,
+    "packet_sha256": "7d47dbd2e9e70bcdc430c6e0a548db961b2907c079e7981ad9dae60cf4064163",
+    "byte_verification_origin": "Parent actual native evidence; no cloud materialization/independent packet byte claim."
+  },
+  "authorization": "Lee explicitly accepted RC7 as next official stable; parent instructed stable2026.10.2 exact accepted candidate promotion without rebuild.",
+  "quota_clearance": "Fresh parent read2026-10-09T17:25:54.451529Z cleared publication threshold; account values retained privately.",
+  "publication_status": "Not dispatched at native acceptance checkpoint; trusted archive/inventory/member/lifecycle/acceptedAPK/checksum gates remain mandatory.",
+  "public_projection": "Private Library identifier and personal account values omitted; complete original retained privately."
+}

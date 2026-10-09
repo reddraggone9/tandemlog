@@ -51,11 +51,18 @@ name/build53, package, non-debuggable flag, all three ABIs and exact native
 payload/notices before upload. The signed artifact is11632728225, ZIP30362267B,
 reported SHA256`8a6b43e6edaa05e13447226d0a6136210c871ccc833addc8de6acd7a4bb749f7`.
 This archive digest is not the inner APK hash. Current supported cloud archive
-materialization returnedHTTP403; actual archive/APK bytes and bounded new-native
-acceptance must come from the parent consumer. No RC7 APK identity is substituted.
+materialization returnedHTTP403. Parent subsequently verified the actual archive
+and accepted36 bounded native checks, reusing56 unchanged RC7 behavioral checks,
+against inner APK SHA256
+`b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd`.
+[Native acceptance attestation](native-acceptance-attestation.json) records
+identity/upgrade, all four retained synthetic profiles, cold replay and SAF
+continuity. Settings/lab were restored/stopped, with no new OOM events or live
+synced user data operation. Packet byte/device checks belong to the parent.
+Fresh parent publication clearance at17:25:54.451529Z passed; account values
+remain private. No RC7 APK identity is substituted.
 
-Remaining: exact bounded stable-native acceptance, retained hosted
-inventory/archive/member/lifecycle/
+Remaining: retained hosted inventory/archive/member/lifecycle/
 APK/checksum gates, stable publication with lee_accepted=true/latest=true, all
 three actual public installer bytes and independent final release review.
 No stable dispatch/tag/release has occurred at this preparation checkpoint.

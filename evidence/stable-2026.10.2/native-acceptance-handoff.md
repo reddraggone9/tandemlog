@@ -48,3 +48,17 @@ Once exact bounded native acceptance passes, stable.yml uses those exact new
 artifacts without rebuilding, lee_accepted=true, prerelease=false/latest=true.
 Fresh parent quota clearance is already supplied; exact new-native acceptance,
 editorial/final reviews and all actual artifact/public-byte gates still apply.
+
+## Accepted result
+
+Parent completed the exact new-artifact bounded acceptance:36 checks passed,
+reusing56 RC7 behavioral checks, with no blockers. Actual archive size/digest
+matched; accepted APK SHA256 is
+`b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd`.
+Stable53 identity/pin/nondebuggable, native payload/notices matching RC7,
+all four synthetic profiles' retained settings/identities/history/full task
+state, cold replay and SAF continuity passed. Lab was restored/stopped with no
+new OOM events. [Parent acceptance](native-acceptance-attestation.json) retains
+accurate evidence origin; cloud does not claim device/packet byte verification.
+Fresh publication threshold clearance passed at17:25:54.451529Z. Stable
+publication remains pending its retained actual hosted byte gates.

@@ -9,15 +9,19 @@ Application/domain/storage/native/platform/dependency/test/workflow source is
 unchanged. RC7 behavior and native acceptance are reused with their exact source
 attribution; fresh stable APK identity/upgrade/native gates remain required.
 The parent supplied fresh publication-threshold clearance at16:34:51UTC.
-Full stable candidate passed; bounded new stable-native acceptance remains
-pending; no stable
+Full stable candidate and bounded new stable-native acceptance passed; no stable
 publication has occurred. Current Latest remains2026.10.1, and RC7 is preserved.
 Candidate37960853538 and pushCI37960786048 completed successfully at exact stable source687163b;
 independent source/notes/README/media preparation review passes with no must-fix.
-Owner-signed Android artifact11632728225 is ready for the parent bounded
-identity/upgrade check; cloud archive materialization returnedHTTP403, so the
-actual inner APK hash is not yet claimed. The handoff binds its actual reported
-ZIP identity and source; stable publication awaits exact new APK acceptance.
+Owner-signed Android artifact11632728225 passed parent's36 bounded native checks,
+reusing56 RC7 behavioral checks. Actual ZIP matched; accepted new stable APK
+SHA256 is`b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd`.
+Upgrade retained all four synthetic profiles' settings/identities/canonical
+history/full task/order/text state; cold replay and SAF continuity passed.
+Cloud archive materialization returnedHTTP403; actual native bytes/device
+evidence belongs to parent. Fresh17:25:54UTC publication clearance passed.
+Stable promotion awaits independent final prepublication review and retained
+actual hosted byte gates; accepted candidate will not be rebuilt.
 
 The [stable preparation record](../evidence/stable-2026.10.2/README.md) binds code
 equivalence, applicable existing evidence, explicit approval, notes/media review
