@@ -1,0 +1,98 @@
+00:00 +0: loading /workspace/tandemlog-inline-checklists/integration_test/header_selection_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[143291]: [session uid=1000 pid=143291 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=143457 comm="/workspace/tandemlog-inline-checklists/build/linux" label="kernel")
+
+(process:143462): dconf-CRITICAL **: 00:07:16.981: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:143462): dconf-CRITICAL **: 00:07:16.981: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:143462): dconf-CRITICAL **: 00:07:16.981: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:143462): dconf-CRITICAL **: 00:07:16.981: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[143291]: [session uid=1000 pid=143291 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:143462): dconf-CRITICAL **: 00:07:16.983: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:143462): dconf-CRITICAL **: 00:07:16.983: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[143468]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=143457 comm="/workspace/tandemlog-inline-checklists/build/linux" label="kernel")
+dbus-daemon[143468]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: combined header and stationary selection 390.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=351
+TANDEMLOG_PHASE identity_lock=11
+TANDEMLOG_PHASE sqlite_open_schema=16
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=253
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1311 FILES_READ=1
+00:21 +1: combined header and stationary selection 320.0 x2.0
+00:29 +1: combined header and stationary selection 390.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=20
+TANDEMLOG_PHASE identity_lock=10
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=19
+TANDEMLOG_PHASE ingest=159
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=426 FILES_READ=1
+00:42 +2: (tearDownAll)
+00:42 +2: All tests passed!

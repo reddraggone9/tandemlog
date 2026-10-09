@@ -1,0 +1,66 @@
+2026-10-08T23:49:28.0655552Z ##[group]❌ combined header and stationary selection 320.0 x2.0 (failed)
+2026-10-08T23:49:28.0657059Z ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+2026-10-08T23:49:28.0658228Z The following StateError was thrown running a test:
+2026-10-08T23:49:28.0658938Z Bad state: No element
+2026-10-08T23:49:28.0659310Z 
+2026-10-08T23:49:28.0659766Z When the exception was thrown, this was the stack:
+2026-10-08T23:49:28.0660420Z #0      Iterable.single (dart:core/iterable.dart:694:25)
+2026-10-08T23:49:28.0661288Z #1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+2026-10-08T23:49:28.0662623Z #2      WidgetController.dragUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2489:38)
+2026-10-08T23:49:28.0663510Z <asynchronous suspension>
+2026-10-08T23:49:28.0664368Z #3      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+2026-10-08T23:49:28.0665537Z <asynchronous suspension>
+2026-10-08T23:49:28.0666483Z #4      WidgetController.scrollUntilVisible.<anonymous closure> (package:flutter_test/src/controller.dart:2439:7)
+2026-10-08T23:49:28.0667544Z <asynchronous suspension>
+2026-10-08T23:49:28.0668583Z #5      TestAsyncUtils.guard.<anonymous closure> (package:flutter_test/src/test_async_utils.dart:130:27)
+2026-10-08T23:49:28.0669254Z <asynchronous suspension>
+2026-10-08T23:49:28.0670509Z #6      registerHeaderSelectionTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/header_selection_test.dart:107:11)
+2026-10-08T23:49:28.0671873Z <asynchronous suspension>
+2026-10-08T23:49:28.0672827Z #7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+2026-10-08T23:49:28.0673939Z <asynchronous suspension>
+2026-10-08T23:49:28.0675321Z #8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+2026-10-08T23:49:28.0676491Z <asynchronous suspension>
+2026-10-08T23:49:28.0676884Z <asynchronous suspension>
+2026-10-08T23:49:28.0677279Z (elided one frame from package:stack_trace)
+2026-10-08T23:49:28.0677617Z 
+2026-10-08T23:49:28.0677836Z The test description was:
+2026-10-08T23:49:28.0678241Z   combined header and stationary selection 320.0 x2.0
+2026-10-08T23:49:28.0678983Z ════════════════════════════════════════════════════════════════════════════════════════════════════
+2026-10-08T23:49:28.0679523Z Test failed. See exception logs above.
+2026-10-08T23:49:28.0680407Z The test description was: combined header and stationary selection 320.0 x2.0
+2026-10-08T23:49:28.0681048Z 
+2026-10-08T23:49:28.0681479Z ##[endgroup]
+
+2026-10-08T23:49:46.0874479Z ##[group]❌ native historical checklist recompletion and Undo keep child text (failed)
+2026-10-08T23:49:46.0875974Z ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+2026-10-08T23:49:46.0876784Z The following TestFailure was thrown running a test:
+2026-10-08T23:49:46.0877278Z Expected: true
+2026-10-08T23:49:46.0877599Z   Actual: <false>
+2026-10-08T23:49:46.0877996Z The expected async UI state did not become ready.
+2026-10-08T23:49:46.0878377Z 
+2026-10-08T23:49:46.0878574Z When the exception was thrown, this was the stack:
+2026-10-08T23:49:46.0879536Z #4      waitForUi (file:///home/runner/work/tandemlog/tandemlog/integration_test/task_flow_test.dart:162:3)
+2026-10-08T23:49:46.0880151Z <asynchronous suspension>
+2026-10-08T23:49:46.0881020Z #5      registerHistoricalChecklistRecompletionTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/historical_checklist_recompletion_test.dart:152:9)
+2026-10-08T23:49:46.0882358Z <asynchronous suspension>
+2026-10-08T23:49:46.0883107Z #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+2026-10-08T23:49:46.0883968Z <asynchronous suspension>
+2026-10-08T23:49:46.0884633Z #7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+2026-10-08T23:49:46.0885721Z <asynchronous suspension>
+2026-10-08T23:49:46.0886128Z <asynchronous suspension>
+2026-10-08T23:49:46.0886563Z (elided one frame from package:stack_trace)
+2026-10-08T23:49:46.0886926Z 
+2026-10-08T23:49:46.0887140Z This was caught by the test expectation on the following line:
+2026-10-08T23:49:46.0887669Z   file:///home/runner/work/tandemlog/tandemlog/integration_test/task_flow_test.dart line 162
+2026-10-08T23:49:46.0888132Z The test description was:
+2026-10-08T23:49:46.0888573Z   native historical checklist recompletion and Undo keep child text
+2026-10-08T23:49:46.0889224Z ════════════════════════════════════════════════════════════════════════════════════════════════════
+2026-10-08T23:49:46.0889615Z Test failed. See exception logs above.
+2026-10-08T23:49:46.0890054Z The test description was: native historical checklist recompletion and Undo keep child text
+2026-10-08T23:49:46.0890410Z 
+2026-10-08T23:49:46.0890681Z ##[endgroup]
+
+2026-10-08T23:46:21.7249292Z 🎉 643 tests passed.
+2026-10-08T23:46:36.4573017Z Ran 107 tests in 4.637s
+2026-10-08T23:46:37.4338784Z Ran 50 tests in 0.793s
+2026-10-09T00:03:22.9444559Z ##[error]81 tests passed, 2 failed.

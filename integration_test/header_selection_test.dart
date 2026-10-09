@@ -104,12 +104,35 @@ void registerHeaderSelectionTests() {
               .first;
           final position = tester.state<ScrollableState>(scrollable).position;
           Finder body(int i) => find.byKey(ValueKey('task-body-${ids[i]}'));
-          await tester.scrollUntilVisible(
-            body(35),
-            160,
-            scrollable: scrollable,
-          );
+          // This is setup for stationary selection, not a fling-speed test.
+          // Wrapped titles/metadata change row height at narrow/large-text
+          // sizes. Seek the lazy row using the actual viewport and extent,
+          // rather than a fixed drag count that can expire before it is built.
+          var seekSteps = 0;
+          while (body(35).evaluate().isEmpty) {
+            expect(
+              seekSteps,
+              lessThan(ids.length * 8),
+              reason: 'Seeking Task 36 exceeded the finite fixture budget.',
+            );
+            final next = (position.pixels + position.viewportDimension / 2)
+                .clamp(position.minScrollExtent, position.maxScrollExtent);
+            expect(
+              next,
+              greaterThan(position.pixels),
+              reason: 'Task 36 was not built by the end of the task list.',
+            );
+            position.jumpTo(next);
+            await tester.pumpAndSettle();
+            seekSteps++;
+          }
+          await tester.ensureVisible(body(35));
           await tester.pumpAndSettle();
+          expect(body(35), findsOneWidget);
+          expect(body(35).hitTestable(), findsOneWidget);
+          debugPrint(
+            'HEADER_SELECTION_SEEK ${jsonEncode({'width': variant.width, 'text_scale': variant.scale, 'steps': seekSteps, 'viewport_height': position.viewportDimension, 'offset': position.pixels, 'max_extent': position.maxScrollExtent, 'row_height': tester.getSize(body(35)).height})}',
+          );
           final rowBefore = tester.getRect(body(35));
           final viewBefore = tester.getRect(viewport);
           final headerBefore = tester.getRect(

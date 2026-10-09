@@ -1,0 +1,83 @@
+{
+  "baseline": "d7a732eba7494589ef66e2ae1629911273c88a3d",
+  "test_path": "integration_test/header_selection_test.dart",
+  "original_test_sha256": "aff9da351c5713d77b9ad52f89c4112ff72688d290a5596158aa2f9c0844a730",
+  "final_test_sha256": "2b7a63cef1c82f40bd152c4ba73193d621bd814f0003bef3728c23ceee067097",
+  "scope": "test setup only; no production, canonical, native, platform, dependencies or workflow edits",
+  "hosted_failure": "37860886439: original default 50-drag setup exhausted, StateError No element at original line107; retained raw hosted log",
+  "local_original_single": {
+    "exit": 0,
+    "passed": 1,
+    "failed": 0,
+    "note": "baseline-red filename is misleading: actual unchanged standalone test passed"
+  },
+  "local_original_pair": {
+    "exit": 0,
+    "passed": 2,
+    "failed": 0,
+    "seconds": 42
+  },
+  "local_final_pair": {
+    "exit": 0,
+    "passed": 2,
+    "failed": 0,
+    "seconds": 46
+  },
+  "diagnostics": [
+    {
+      "width": 390.0,
+      "text_scale": 1.0,
+      "steps": 5,
+      "viewport_height": 618.0,
+      "offset": 2073.0,
+      "max_extent": 3626.461538461538,
+      "row_height": 58.0
+    },
+    {
+      "width": 320.0,
+      "text_scale": 2.0,
+      "steps": 25,
+      "viewport_height": 522.0,
+      "offset": 6693.0,
+      "max_extent": 13599.727272727272,
+      "row_height": 190.0
+    }
+  ],
+  "all_original_assertions_after_setup_byte_identical": true,
+  "independent_source_review": "architecture_review accepted final diff including finite fixture safety cap",
+  "analyze": "No issues found",
+  "diff_check": "passed",
+  "production_diff_vs_baseline": "empty for lib/native/android/windows/linux/pubspec/workflows",
+  "limitations": [
+    "Hosted red not locally reproduced; original local single and paired runs both green.",
+    "Final adaptation has not yet run in hosted aggregate.",
+    "Linux GTK debug runner evidence only; no new Android/Windows/native visual acceptance claim."
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/recovery/inline-checklists/header-selection-baseline-red.log",
+      "bytes": 5415,
+      "sha256": "0e1b477b6914c8f0308d568b4850e4e8a60aa32583c0f589ba1d7c45e6282263"
+    },
+    {
+      "path": "/workspace/recovery/inline-checklists/header-selection-original-both.log",
+      "bytes": 5785,
+      "sha256": "9558b8f4bc471bd2807f75006585264ec5b6a3949fe7f52d34faf14fc754e699"
+    },
+    {
+      "path": "/workspace/recovery/inline-checklists/header-selection-final-both.log",
+      "bytes": 6157,
+      "sha256": "f33431ac69788b74e7c8474a78090efd1446826e56436b869e589629c4ad04e5"
+    },
+    {
+      "path": "/workspace/recovery/inline-checklists/header-selection-analysis-final.log",
+      "bytes": 96,
+      "sha256": "ac067dbd7d05dbfe7d5e26f0d7914899e109edebda90a8eea5f9ef10c36b3e69"
+    },
+    {
+      "path": "/workspace/recovery/inline-checklists/hosted-linux-37860886439-failed.log",
+      "bytes": 416408,
+      "sha256": "54a527fd9700ede18d65de8370046c01a3cd0b7e307c303f7eb8a19a273b0b10"
+    }
+  ]
+}

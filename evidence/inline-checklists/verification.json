@@ -43,13 +43,24 @@
     "migrated_workflow": 2,
     "lifecycle": 7,
     "completion": 5,
-    "existing_raw_log": "12 passed, 2 failed obsolete parent-checkbox selector; both corrected and separately rerun 2 passed. Do not relabel mixed raw log green."
+    "existing_raw_log": "12 passed, 2 failed obsolete parent-checkbox selector; both corrected and separately rerun 2 passed. Do not relabel mixed raw log green.",
+    "post_ci_native_adaptations": {
+      "historical": 1,
+      "header_pair": 2,
+      "historical_original_local": "reproduced failure",
+      "header_original_local": "1/1 and 2/2 passed; hosted failure retained, no local red claimed",
+      "test_source_sha256": {
+        "header_selection_test.dart": "2b7a63cef1c82f40bd152c4ba73193d621bd814f0003bef3728c23ceee067097",
+        "historical_checklist_recompletion_test.dart": "a80181e4487ed0f5ad4524af405f24efba578104dbc65cd437c982f2b3d70afc"
+      }
+    }
   },
   "reviews": {
     "architecture": "accepted d7a732e; no remaining must-fix",
     "correctness": "accepted d7a732e; no remaining must-fix",
     "visual": "accepted eight actual GTK captures; no clear reversible UX defect",
-    "editorial": "Reviewed actual diff and four proposed native Before/After pixels; tightened user-facing copy and qualified differing synthetic capture histories. Final release-range review still required."
+    "editorial": "Reviewed actual diff and four proposed native Before/After pixels; tightened user-facing copy and qualified differing synthetic capture histories. Final release-range review still required.",
+    "post_ci_tests": "Independent architecture accepted preservation of every header downstream assertion and whole-child historical equality; bounded native3/3 and analysis pass; production/platform/native/dependency/workflow diff against d7 empty."
   },
   "demo": {
     "file": "inline-checklists-linux-demo.mp4",
@@ -90,8 +101,21 @@
     "last_observed": {
       "android": "success",
       "windows": "success",
-      "linux": "native aggregate in progress"
-    }
+      "linux": "failure:81 native passed,2 existing flows failed; bounded adaptations3/3 pass; fresh hosted validation pending"
+    },
+    "linux_failed_flows": [
+      "combined header and stationary selection 320.0 x2.0",
+      "native historical checklist recompletion and Undo keep child text"
+    ],
+    "windows_flutter": {
+      "passed": 641,
+      "skipped": 2
+    },
+    "windows_native_contracts": 107,
+    "windows_python": 50,
+    "linux_flutter_passed": 643,
+    "linux_native_contracts": 107,
+    "linux_python": 50
   },
   "remaining": [
     "Composed hosted Linux CI terminal result",
@@ -109,7 +133,7 @@
   "artifacts": {
     "light-desktop-200.png": "fa90df074c5cf5eb23b88ea09671ec0cdeffd8c6e5054d30d294d1751f0bef82",
     "light-narrow-200.png": "f8715cf8736f439cb6f29ef6cd50c4cc244236c3d1d2b8824e1524a81948e10e",
-    ".gitattributes": "28ef6ba93f049a192bdc902a2620d41350df06a75b05f7e77da2b0d4cfd4c2ad",
+    ".gitattributes": "0ccb590116f1631882fa5e0108e294de2a1c7a28e440480d1c05058917fc4e4a",
     "native-host.txt": "f6e810a828088fb9d35c6b8fd9eeab6997cc6dd4e44f19252890d6016338a732",
     "menu-refresh-red.txt": "5b4d42d87fd93432502a10708193cfaad9cf41651cb64df651839fc39c1cd5c5",
     "after-inline.png": "343b2bc4ec83420bb7376e1a6abbe69b134f7e192e4cb918a59f730ab636e415",
@@ -126,10 +150,18 @@
     "dark-collapsed.png": "0ccb1b60c4fd1db4d5c6d66880e7b16b72e8d3c8036f1615ec272035ff4a12ea",
     "unit.txt": "a4207ea8f09875de1b34d05eace2a8a8dcfa03597939f7aafda45cbc84b9e068",
     "before-editor.png": "ffb6bb4a69a3d2a20d8584194694148c5eb5355400b538eaef67444bee0ec518",
-    "README.md": "ffbdde984b5119bc9680ed87729d45551e4623d31c485fa1b6c8274b505ec2a9",
+    "README.md": "7e3ae0a5d9fa6356f58e6bcc7ee0021c45a5186bc47e4d359dacbf2db0cab669",
     "native-workflow.txt": "efa4c36d510b7c3fa9dc291a75ea959d276713d20d41d27e0d2ce29872334dff",
     "host-initial-red.txt": "806c384c865427b7f096225f70844b75e62208f8d9533f3143b033e5b0ce533a",
-    "demo-pointer-frame.png": "e1a873afa66b578fd5e959b5e06035281ab3022b6e5b0d7823e22befb97dea57"
+    "demo-pointer-frame.png": "e1a873afa66b578fd5e959b5e06035281ab3022b6e5b0d7823e22befb97dea57",
+    "hosted-native-failed.txt": "9a00cf7a41f5e5aacbaddb15046c798fe64a71437c4744dba55d07c86a39ea70",
+    "header-original-local-green.txt": "9558b8f4bc471bd2807f75006585264ec5b6a3949fe7f52d34faf14fc754e699",
+    "header-test-review.json": "7530b22579666e6c427951e5976c058f75d39fedf680f56272099eb3c01db62a",
+    "header-adapted-native-green.txt": "f33431ac69788b74e7c8474a78090efd1446826e56436b869e589629c4ad04e5",
+    "demo-linux.mp4": "6f1464a592bc84ff97821aff3aeafe98189a0084407fe3d0df52b3a4c9db3c89",
+    "historical-inline-red.txt": "cdb39b5652057c9647ae123f72d81efa87050487e5edbd9f117f06d32f482e97",
+    "historical-inline-green.txt": "0d6047dd4ab8ac1c53ccaedb535ac9854cd59c04b01a24e6b1ac79f56bfd3d7c",
+    "native-adaptations-analysis.txt": "0aa73c602164f062dd6cdbebe9537526ce564715f8987f6b6f5cf259401cb46e"
   },
   "binary_sha256": "08fbc6c36d41bc085d5b7a13a7c0cb8e7decd3b55ec5b989989933a3b82f1abf",
   "source_main_sha256": "25a473340caaf9074c09045f87834a041196a406b7121223d18a3df3285fd9ad"

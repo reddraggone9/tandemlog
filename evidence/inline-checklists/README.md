@@ -42,9 +42,19 @@ Architecture and correctness independently accept the concrete executable
 commit with no remaining must-fix. Hosted CI is
 [37860886439](https://github.com/reddraggone9/tandemlog/actions/runs/37860886439)
 at that exact source. Android build/native payload checks and Windows automated
-unit/build/installed lifecycle checks were last observed green; composed Linux
-native CI was still running when this packet was written. Terminal verification
-and bounded Android affected-flow acceptance remain separate.
+unit/build/installed lifecycle checks passed. Linux completed with 81 native
+cases passing and two failing: enlarged header-selection scrolling and a
+historical checklist flow still awaiting controls inside the parent editor.
+The original hosted failure is retained. The historical failure reproduced
+locally; its inline adaptation passed (1/1) while retaining all whole-child
+equality checks. The original header pair passed locally (2/2); its setup now
+seeks the same lazy row using measured viewport/extent and a finite fixture
+budget, then keeps every original stationary-selection, draft and history
+assertion. The adapted pair passed (2/2), including a 190px row at 320px/200%
+text. Analysis and independent assertion-preservation review pass. No app,
+native, dependency or workflow code changed after the executable freeze.
+Fresh hosted verification and bounded Android affected-flow acceptance remain
+separate.
 
 ## Actual GTK visual evidence
 
@@ -61,7 +71,8 @@ The actual [menu](dark-menu.png) shows menu/drag separation and labels;
 [empty expansion](dark-empty-focused.png) shows focused bottom Add item;
 [completion consent](dark-consent.png) shows no header pending-write indicator.
 The supplied [pointer frame](demo-pointer-frame.png) verifies visible inputs in
-the 35.8-second desktop video delivered with the review packet. Three recordings
+the [35.8-second native Linux desktop video](demo-linux.mp4), also retained with
+the review packet. Three recordings
 from the same native session were concatenated without changing app pixels.
 The video demonstrates menu activation, empty expansion, independent item Save,
 checking, child drag reorder, Undo and warning Cancel.

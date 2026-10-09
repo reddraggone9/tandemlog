@@ -119,9 +119,18 @@ void registerHistoricalChecklistRecompletionTests() {
         // Establish the actual GTK window geometry before the evidence frames.
         await captureNativeFixtureUi(tester, 'historical-checklist-ready');
         Finder checkbox(String id) => find.descendant(
-          of: find.byKey(ValueKey('task-row-$id')),
+          of: find.byKey(ValueKey('task-drop-$id')),
           matching: find.byType(Checkbox),
         );
+        Future<void> expandChecklist(String id) async {
+          final disclosure = find.byKey(ValueKey('checklist-disclosure-$id'));
+          await flows.waitForUi(tester, () => disclosure.evaluate().isNotEmpty);
+          if (find.byKey(ValueKey('inline-checklist-$id')).evaluate().isEmpty) {
+            await _tap(tester, disclosure);
+          }
+          expect(find.byKey(ValueKey('inline-checklist-$id')), findsOneWidget);
+        }
+
         Future<void> completeParent() async {
           await _tap(tester, checkbox(parent));
           expect(find.text('Unfinished checklist items'), findsOneWidget);
@@ -148,7 +157,9 @@ void registerHistoricalChecklistRecompletionTests() {
           tester,
           () => find.byType(TaskEditor).evaluate().isEmpty,
         );
-        await flows.selectTask(tester, child, control: false);
+        // Parent task editing is only needed for the successor's title Save.
+        // Its independently saved children now live under the list row.
+        await expandChecklist(child);
         await flows.waitForUi(
           tester,
           () => find
@@ -172,8 +183,15 @@ void registerHistoricalChecklistRecompletionTests() {
               .evaluate()
               .isEmpty,
         );
-        await _tap(tester, find.text('Cancel'));
+        expect(find.byType(TaskEditor), findsNothing);
         await peer.refresh();
+        expect(peer.currentTextRow(child)!['title'], 'Pack for a walk ChildA');
+        expect(
+          peer
+              .checklistItems(child)
+              .singleWhere((row) => row['id'] == copiedItem)['title'],
+          'Native item Saved ChildItemA',
+        );
         final before = jsonEncode(peer.currentTextRow(child));
 
         await offline.complete(parent, completionDay: DateTime(2026, 10, 8));
@@ -183,7 +201,7 @@ void registerHistoricalChecklistRecompletionTests() {
         await peer.refresh();
         expect(jsonEncode(peer.currentTextRow(child)), before);
         await flows.filterChoice(tester, 'Completed');
-        await flows.selectTask(tester, parent, control: false);
+        await expandChecklist(parent);
         await flows.waitForUi(
           tester,
           () => find
@@ -204,7 +222,11 @@ void registerHistoricalChecklistRecompletionTests() {
               .evaluate()
               .isEmpty,
         );
-        await _tap(tester, find.text('Cancel'));
+        // Editing the historical item never opens or changes its parent draft.
+        expect(find.byType(TaskEditor), findsNothing);
+        await peer.refresh();
+        expect(peer.currentTextRow(parent)!['title'], 'Pack for a walk');
+        expect(jsonEncode(peer.currentTextRow(child)), before);
         await _tap(tester, checkbox(parent));
         await peer.refresh();
         expect(peer.currentTextRow(parent)!['completed'], false);
@@ -212,7 +234,7 @@ void registerHistoricalChecklistRecompletionTests() {
         await flows.filterChoice(tester, 'Open');
         await completeParent();
         expect(find.textContaining('Next occurrence kept'), findsWidgets);
-        await flows.selectTask(tester, child, control: false);
+        await expandChecklist(child);
         await flows.waitForUi(
           tester,
           () => find
@@ -225,12 +247,12 @@ void registerHistoricalChecklistRecompletionTests() {
           'historical-checklist-recompleted',
         );
         expect(jsonEncode(peer.currentTextRow(child)), before);
-        await _tap(tester, find.text('Cancel'));
+        expect(find.byType(TaskEditor), findsNothing);
         await _tap(tester, find.byKey(const ValueKey('undo-task-action')));
         await peer.refresh();
         expect(peer.currentTextRow(parent)!['completed'], false);
         expect(jsonEncode(peer.currentTextRow(child)), before);
-        await flows.selectTask(tester, child, control: false);
+        await expandChecklist(child);
         await flows.waitForUi(
           tester,
           () => find.text('Native item Saved ChildItemA').evaluate().isNotEmpty,
