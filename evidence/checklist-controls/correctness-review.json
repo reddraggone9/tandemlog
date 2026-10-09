@@ -1,0 +1,214 @@
+{
+  "baseline": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "reviewed_worktree": "/workspace/tandemlog-checklist-ui-fix",
+  "verdict": "Accepted focused UI source including singleton inert-column follow-up; no remaining correctness must-fix identified. Latest native6/0, widgets23/0, clean analyzer.",
+  "source_bindings": [
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/main.dart",
+      "bytes": 171590,
+      "sha256": "732ba18e38b2e91106d642c7592a122be9ad870e315eed9220f054b8f9220d94"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/presentation/checklist_panel.dart",
+      "bytes": 12197,
+      "sha256": "a0b63001cbf9ce3a2e8278f6bf86b555263c6816e8fbd4c763536e06b615ed0a"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/presentation/task_actions_menu.dart",
+      "bytes": 1654,
+      "sha256": "1044e513a8b4dee166463e001e28359be0339a158bd11d4cbf6eb85c8f8dc786"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/inline_checklist_workflow_test.dart",
+      "bytes": 34462,
+      "sha256": "935d01603ebd468849581eabdc358c56317eaed795463c248b6e2d79cb427014"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/test/checklist_presentation_test.dart",
+      "bytes": 33817,
+      "sha256": "22213659fb0cdde5f9d8e5a0d8c5a23086f7801d6ea8b2fc8691e455dba1e75c"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/design/status.md",
+      "bytes": 85498,
+      "sha256": "f209a432b37756c351d0716e0f2fc9c96a56c753a2d49d5c71882d3904cb132d"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/design/decisions/0011-one-level-checklists.md",
+      "bytes": 8548,
+      "sha256": "8edc8310bc15197268cc27578f10287ba32197122600807e2b875f6f6553e37b"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/pubspec.yaml",
+      "bytes": 590,
+      "sha256": "7be8b38bd18b07125eb703432679cff4497da280073cdd8c2c7d7d65cafa7a89"
+    }
+  ],
+  "reviewed_scope": [
+    "Child handle immediate/longhold drag, drag_indicator icon and pointer anchor match parent; no longpress help popup.",
+    "Parent/child trailing48px columns align; child left32-only indentation.",
+    "Live task popup hides Add checklist for nonempty checklist, including open-menu incoming changes; post-choice count and origin/mounted/kind guards.",
+    "Available content width below600 gives0 outer row/divider inset, otherwise16; original internal parent and16 heading text padding preserved.",
+    "Toolbar immediate next-action button collapses currently shown expanded parents when any open, otherwise expands currently shown nonempty checklists; invocation recomputes live sets.",
+    "Disclosure count layout starts2px after last text rectangle; glyph visible left edge aligns with title; body/disclosure touch targets remain separate and48px minimum.",
+    "Singleton/order-bucket parent with shown checklist reserves an inert48x48 trailing slot when no reorder handle exists, keeping its menu above child Delete and child drag at rightmost column."
+  ],
+  "invariants": [
+    "Same-parent, origin identity, snapshot revision, immutable observed order, enabled-state checks retained at drag entry and acceptance.",
+    "Storage move canCommit guard, native private draft/receipt lifecycle, canonical/domain/native/dependency/workflow source unchanged.",
+    "Existing dirty checklist editor close coalescing and post-await mounted/store/busy/live visible intersection guards retained for expansion changes.",
+    "Hidden parents retain local expansion; toolbar and disclosures write cache metadata only, proven canonical folder byte equality in native flow.",
+    "Standard PopupMenuItem semantics/focus/returned values retained; live surviving Delete activated with keyboard ArrowDown/Enter, then confirmation canceled.",
+    "Child semantic Move up/down and Alt+arrow actions retained.",
+    "Reserved slot is plain SizedBox without independent focus/tap/semantic action; no fake Draggable, checkbox/control compensating padding or drag-availability change."
+  ],
+  "observed_terminal_results": {
+    "native": {
+      "passed": 6,
+      "failed": 0,
+      "seconds": 80,
+      "log": "inline-native-green-singleton-final.log"
+    },
+    "widgets": {
+      "passed": 23,
+      "failed": 0,
+      "log": "focused-widgets-final.log"
+    },
+    "analysis": "No issues found in analyze-singleton-final.log",
+    "diff_check": "clean"
+  },
+  "red_qualification": {
+    "live_menu_original": "Rejected as production red: dynamic extension call NoSuchMethodError. Original evidence retained.",
+    "live_menu_corrected": "Meaningful baseline red: expected Add checklist absent after incoming item, actual still present.",
+    "direct_toggle": "Meaningful red: missing immediate toggle control on original popup source.",
+    "disclosure": "Meaningful final red: expected2px last-text/count layout gap, actual16px.",
+    "handle_alignment_responsive": "Meaningful longhold popup/drag/icon and child-column/narrow-inset/menu target geometry reds retained.",
+    "singleton_column": "Meaningful corrected native red after deleting the only reorder neighbor: childDelete x298 versus menu x346; no missing/lazy finder failure."
+  },
+  "earlier_run_qualification": {
+    "first_native": "4pass1fixture failure; not used as all-green proof.",
+    "second_native": "5pass1lazy-row fixture failure; not used as all-green proof."
+  },
+  "visual_review": {
+    "accepted_images": [
+      {
+        "path": "/workspace/recovery/checklist-ui-fix/native-screenshots-final/row-width-390-scale-1-safe-0.png",
+        "bytes": 41656,
+        "sha256": "b352de0c0bb6be134803d9deeabc3441b18a3cb0747102293d9d91a4af07c1b5"
+      },
+      {
+        "path": "/workspace/recovery/checklist-ui-fix/native-screenshots-final/row-width-1200-scale-1-safe-0.png",
+        "bytes": 48023,
+        "sha256": "d261712fe4177ac1d1dd0fe6caa8f205e5db1f984e49ba1b0461caf905eec6b0"
+      },
+      {
+        "path": "/workspace/recovery/checklist-ui-fix/native-screenshots-final/row-width-390-scale-2-safe-0.png",
+        "bytes": 67667,
+        "sha256": "cfc4d49a43d960db92c86b09ac3ff60ae80bf34f3ee929328f92350e274c15fe"
+      }
+    ],
+    "observation": "Actual390/100%,1200/100%,390/200% GTK captures show aligned trailing controls and disclosure arrow left edge, no new control overlap; text/targets remain scrollable for long large-text rows.",
+    "rejected_image": {
+      "path": "/workspace/recovery/checklist-ui-fix/native-screenshots-final/direct-toggle-narrow.png",
+      "bytes": 179,
+      "sha256": "2bd29a3f78610855eca55563638ce0f25ac39dcca0c3c30730f8f92416215484"
+    },
+    "rejection_reason": "Decoded image entirely black; excluded from visual proof. Owner arranging real native demo capture.",
+    "singleton_limit": "Previously viewed multi-neighbor screenshots remain valid for unchanged geometry paths; no new singleton production screenshot claimed. Singleton alignment verified by actual native rect assertions; owner preparing matched synthetic production media."
+  },
+  "remaining_limits": [
+    "Read-only review; no duplicate builds/tests launched.",
+    "Separate48px target leaves26px below20px count label at100% plus2px top; not a claim that all vertical whitespace disappears.",
+    "Runtime facts bind reviewed UI/test code. Current pubspec has subsequent rc.6+49 preparation; focused native test compile/version metadata was not independently established as this new version.",
+    "Linux GTK debug evidence only; Android/Windows/exact signed artifact/manual demo/full candidate/platform CI and publication gates remain separate."
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/hold-icon-red.log",
+      "bytes": 7295,
+      "sha256": "e58210a9e6352a1cc9c5ddd4059e5bc8aa549f69885ecb2a7f249eb7d74c957a"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/alignment-native-red.log",
+      "bytes": 8158,
+      "sha256": "26a22e823614bb04e9e100db3948228eb1cb0de93b99869b6ababe24f1d84c09"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/responsive-inset-native-red.log",
+      "bytes": 7927,
+      "sha256": "f274628398f34942eeb7b739f7013006e36738320dd24abfc1e00567446841d0"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/responsive-native-red.log",
+      "bytes": 7953,
+      "sha256": "c0383d75a360b981c92fbf47e3eee433f6b63938098c7b8ba5db3a9b025428b6"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/live-menu-native-red.log",
+      "bytes": 8183,
+      "sha256": "59d2150ce2c03cf9c73e46c185f5bb4349d939f370888bc1cf42587a97469783"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/live-menu-native-red-corrected.log",
+      "bytes": 6461,
+      "sha256": "639b1e5032bb4872c145acdc54b01ba057757109d0431b5a7a129f7bf331a239"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/direct-toggle-native-red.log",
+      "bytes": 6608,
+      "sha256": "09390a73a645c1ebd3295ac3670a7c6bda21081a4f6a5a7e52bedc99993cd5db"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/disclosure-gap-native-red-final.log",
+      "bytes": 6601,
+      "sha256": "fd38dc73a0f0c4d291854fdaf0be88d152149d6af275a85c2b2dc1a611f42d73"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/inline-native-green-first.log",
+      "bytes": 11081,
+      "sha256": "8d0decb866b6f85d692c30346d894d5166af0276eac8b85308288d530006a10e"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/inline-native-green-second.log",
+      "bytes": 11845,
+      "sha256": "833caf2559ccdf13e6f6e28eec167e2092857f5a7a42727a9611ec071800d9b8"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/inline-native-green-final.log",
+      "bytes": 11322,
+      "sha256": "aaa19b28988a197298e9e2280b7fc0e3374078e4107e86e8b7d0b1619882ee7e"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/focused-widgets-final.log",
+      "bytes": 4298,
+      "sha256": "0f22ca55b6de239692a59b4f13ffc0cd901a60f7c6279bf538919591fd5be422"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/analyze-second.log",
+      "bytes": 686,
+      "sha256": "1004bbb6651881ba203c81e2c545c824a2b9626389cc60d74cc5f6414fe5a11a"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/single-parent-column-native-red-corrected.log",
+      "bytes": 9985,
+      "sha256": "75cd241ec77d1d2fd73cc94ea92cab019393e4082d0c47f8dc39a5991734cdf7"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/inline-native-green-singleton-final.log",
+      "bytes": 11321,
+      "sha256": "4ba99ff5b7635e1f7d19a1332ac5e04f81d8da9f7a55740b559bb04bd28188e4"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/analyze-singleton-final.log",
+      "bytes": 686,
+      "sha256": "9b5cfb110a0b30023ecb359f2a0fa57bfbeb83cee9f65d555b6bcb99d8229490"
+    }
+  ],
+  "previous_accepted_native": {
+    "passed": 6,
+    "failed": 0,
+    "seconds": 80,
+    "log": "inline-native-green-final.log"
+  },
+  "singleton_regression_review": "Fixture awaits peer deletion, verifies other row disappearance, settles task viewport at0, asserts no parent Draggable<String>, then compares actual menu and child Delete centre coordinates."
+}

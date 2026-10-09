@@ -28,6 +28,7 @@ import 'presentation/task_metadata.dart';
 import 'presentation/tag_filter_picker.dart';
 import 'presentation/task_editor.dart';
 import 'presentation/checklist_panel.dart';
+import 'presentation/task_actions_menu.dart';
 import 'presentation/checklist_item_editor.dart';
 import 'presentation/failure_message.dart';
 import 'presentation/release_version_tile.dart';
@@ -221,6 +222,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   DateTime? taskViewInstant;
   String? viewError;
   int viewRevision = 0;
+  final taskMenuRevision = ValueNotifier<int>(0);
   ({
     String id,
     TaskStore? store,
@@ -323,6 +325,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             }
             viewRevision++;
           });
+          if (taskMenuOpen) taskMenuRevision.value++;
           _reportStartupAfterFrame();
         }
       },
@@ -2489,41 +2492,37 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
   }
 
-  Widget? _checklistDisplayMenu() {
+  Widget? _checklistDisplayToggle() {
     final origin = store;
     if (origin == null) return null;
-    final shown = {
+    Set<String> shown({required bool expanded}) => {
       for (final entry in visibleEntries)
-        if (_checklistItems(entry.task).isNotEmpty) entry.task['id'] as String,
-    };
-    final expandedShown = {
-      for (final entry in visibleEntries)
-        if (expandedChecklists.contains(entry.task['id']))
+        if (expanded
+            ? expandedChecklists.contains(entry.task['id'])
+            : _checklistItems(entry.task).isNotEmpty)
           entry.task['id'] as String,
     };
-    if (shown.isEmpty && expandedShown.isEmpty) return null;
-    return PopupMenuButton<bool>(
-      key: const ValueKey('checklist-display-menu'),
-      tooltip: 'Checklist display',
-      enabled: !busy,
-      icon: const Icon(Icons.unfold_more),
-      onSelected: (expand) => _setChecklistExpansion(
-        origin,
-        expand ? shown : expandedShown,
-        expand,
-      ),
-      itemBuilder: (_) => [
-        PopupMenuItem(
-          value: true,
-          enabled: shown.any((id) => !expandedChecklists.contains(id)),
-          child: const Text('Expand shown checklists'),
-        ),
-        PopupMenuItem(
-          value: false,
-          enabled: expandedShown.isNotEmpty,
-          child: const Text('Collapse shown checklists'),
-        ),
-      ],
+    final expandedShown = shown(expanded: true);
+    if (shown(expanded: false).isEmpty && expandedShown.isEmpty) return null;
+    final collapse = expandedShown.isNotEmpty;
+    return IconButton(
+      key: const ValueKey('checklist-display-toggle'),
+      tooltip: '${collapse ? 'Collapse' : 'Expand'} shown checklists',
+      constraints: const BoxConstraints.tightFor(width: 48, height: 48),
+      visualDensity: VisualDensity.standard,
+      icon: Icon(collapse ? Icons.unfold_less : Icons.unfold_more),
+      onPressed: busy
+          ? null
+          : () {
+              if (busy || !identical(store, origin)) return;
+              final currentExpanded = shown(expanded: true);
+              final expand = currentExpanded.isEmpty;
+              _setChecklistExpansion(
+                origin,
+                expand ? shown(expanded: false) : currentExpanded,
+                expand,
+              );
+            },
     );
   }
 
@@ -2551,9 +2550,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           Offset.zero & overlay.size,
         ),
         requestFocus: true,
-        items: const [
-          PopupMenuItem(value: 'checklist', child: Text('Add checklist')),
-          PopupMenuItem(value: 'delete', child: Text('Delete task')),
+        items: [
+          TaskActionsMenuEntry(
+            viewRevision: taskMenuRevision,
+            canAddChecklist: () {
+              if (!mounted || !identical(store, origin)) return false;
+              final current = origin.currentTextRow(id);
+              return current != null &&
+                  current['kind'] == 'task' &&
+                  _checklistItems(current).isEmpty;
+            },
+          ),
         ],
       );
       if (!mounted ||
@@ -2563,6 +2570,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return;
       }
       if (choice == 'checklist') {
+        // A retained callback cannot revive Add checklist after incoming items.
+        if (_checklistItems(origin.currentTextRow(id)!).isNotEmpty) return;
         await _setChecklistExpansion(origin, {id}, true, focusAdd: true);
       } else if (choice == 'delete') {
         await _deleteTaskFromMenu(origin, id);
@@ -2656,21 +2665,32 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       child: Semantics(
         expanded: expanded,
         label: label,
-        child: TextButton.icon(
+        child: TextButton(
           key: ValueKey('checklist-disclosure-$id'),
           onPressed: busy
               ? null
               : () => _setChecklistExpansion(origin, {id}, !expanded),
           style: TextButton.styleFrom(
             minimumSize: const Size(48, 48),
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.only(top: 2),
+            alignment: Alignment.topLeft,
+            visualDensity: VisualDensity.standard,
           ),
-          icon: Icon(
-            expanded ? Icons.expand_more : Icons.chevron_right,
-            size: 18,
-          ),
-          label: Text(
-            items.isEmpty ? 'Checklist' : '$complete/${items.length}',
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Remove the Material glyph's left bearing so its visible edge
+              // starts at the same column as the task title and metadata.
+              Transform.translate(
+                offset: Offset(expanded ? -4.5 : -6.4425, 0),
+                child: Icon(
+                  expanded ? Icons.expand_more : Icons.chevron_right,
+                  size: 18,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(items.isEmpty ? 'Checklist' : '$complete/${items.length}'),
+            ],
           ),
         ),
       ),
@@ -2683,7 +2703,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         revision = jsonEncode(task['checklist'] ?? []);
     return Padding(
       key: ValueKey('inline-checklist-$id'),
-      padding: const EdgeInsets.fromLTRB(32, 0, 16, 8),
+      padding: const EdgeInsets.fromLTRB(32, 0, 0, 8),
       child: ChecklistPanel(
         parentId: id,
         origin: origin,
@@ -3070,6 +3090,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     _stopDragScroll();
     taskScroll.dispose();
     dragScrollTick.dispose();
+    taskMenuRevision.dispose();
     importer?.dispose();
     viewClock.dispose();
     timeSource.dispose();
@@ -3140,7 +3161,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                       Padding(
                         padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
                         child: TaskToolbar(
-                          checklistMenu: _checklistDisplayMenu(),
+                          checklistMenu: _checklistDisplayToggle(),
                           userName:
                               users
                                       .where((entry) => entry['id'] == user)
@@ -3833,7 +3854,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     capture: _captureField(),
   );
 
-  Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) {
+  Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) =>
+      LayoutBuilder(
+        builder: (context, constraints) =>
+            _tasksAtWidth(groups, users, compact: constraints.maxWidth < 600),
+      );
+
+  Widget _tasksAtWidth(
+    List<TaskViewGroup> groups,
+    List<Map<String, dynamic>> users, {
+    required bool compact,
+  }) {
     final entries = groups.expand((group) => group.entries).toList();
     final visibleIds = entries.map((entry) => entry.task['id']).toSet();
     dropKeys.removeWhere((id, _) => !visibleIds.contains(id));
@@ -3948,7 +3979,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           ),
           for (final group in groups.where((group) => group.entries.isNotEmpty))
             SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
+              padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 16),
               sliver: SliverMainAxisGroup(
                 key: ValueKey('task-group-${groupId(group)}'),
                 slivers: [
@@ -3960,7 +3991,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                           )))
                     SliverToBoxAdapter(
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 16),
+                        padding: EdgeInsets.fromLTRB(
+                          compact ? 16 : 0,
+                          16,
+                          compact ? 16 : 0,
+                          0,
+                        ),
                         child: Semantics(
                           header: true,
                           child: Text(
@@ -3972,12 +4008,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         ),
                       ),
                     ),
-                  StickyTaskGroupHeading(
-                    headingKey: groupHeadingKeys.putIfAbsent(
-                      groupId(group),
-                      GlobalKey.new,
+                  SliverPadding(
+                    padding: EdgeInsets.symmetric(horizontal: compact ? 16 : 0),
+                    sliver: StickyTaskGroupHeading(
+                      headingKey: groupHeadingKeys.putIfAbsent(
+                        groupId(group),
+                        GlobalKey.new,
+                      ),
+                      title: groupTitle(group),
                     ),
-                    title: groupTitle(group),
                   ),
                   SliverList.list(
                     children: [
@@ -3988,6 +4027,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                             final task = _displayTask(entry.task);
                             final origin = store!;
                             final id = task['id'] as String;
+                            final showChecklist =
+                                _checklistItems(task).isNotEmpty ||
+                                expandedChecklists.contains(id);
                             final completed = searching
                                 ? task['completed'] == true
                                 : showCompleted;
@@ -4167,16 +4209,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                               minHeight: 48,
                                             ),
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                    vertical: 6,
-                                                  ),
+                                              padding: EdgeInsets.only(
+                                                top: 6,
+                                                bottom: showChecklist ? 0 : 6,
+                                              ),
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 mainAxisSize: MainAxisSize.min,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                mainAxisAlignment: showChecklist
+                                                    ? MainAxisAlignment.end
+                                                    : MainAxisAlignment.center,
                                                 children: [
                                                   _taskTitle(
                                                     task,
@@ -4214,8 +4257,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                             ),
                                           ),
                                         ),
-                                        if (_checklistItems(task).isNotEmpty ||
-                                            expandedChecklists.contains(id))
+                                        if (showChecklist)
                                           _checklistDisclosure(origin, task),
                                       ],
                                     ),
@@ -4229,6 +4271,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                           ),
                                           child: IconButton(
                                             key: ValueKey('task-menu-$id'),
+                                            constraints:
+                                                const BoxConstraints.tightFor(
+                                                  width: 48,
+                                                  height: 48,
+                                                ),
+                                            visualDensity:
+                                                VisualDensity.standard,
                                             tooltip:
                                                 'Actions for ${task['title']}',
                                             onPressed: busy
@@ -4349,7 +4398,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                                 ),
                                               ),
                                             ),
-                                          ),
+                                          )
+                                        else if (showChecklist)
+                                          // Keep the menu above child Delete when this
+                                          // task has no reorder neighbor.
+                                          const SizedBox(width: 48, height: 48),
                                       ],
                                     ),
                                   ),
@@ -4398,13 +4451,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         ],
       ),
     );
-    return LayoutBuilder(
-      builder: (context, constraints) => Column(
-        children: [
-          _entryArea(),
-          Expanded(child: list),
-        ],
-      ),
+    return Column(
+      children: [
+        _entryArea(),
+        Expanded(child: list),
+      ],
     );
   }
 }

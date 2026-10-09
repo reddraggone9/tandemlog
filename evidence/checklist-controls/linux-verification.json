@@ -1,0 +1,72 @@
+{
+  "baseline": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "platform": "Linux native GTK/Flutter debug; synthetic isolated stores only",
+  "native_flows": 6,
+  "native_failures": 0,
+  "widget_tests": 23,
+  "widget_failures": 0,
+  "analysis": "No issues",
+  "disclosure_geometry": {
+    "text_gap_before_px": 16,
+    "text_gap_after_px": 2,
+    "body_min_touch_height_px": 48,
+    "disclosure_touch_height_px": 48,
+    "normal_count_height_px": 20,
+    "normal_remaining_space_below_count_px": 26,
+    "targets_overlap": false
+  },
+  "responsive_rule": "Actual available content width below600px:0px outer row/divider inset;600px or more:16px; SafeArea retained",
+  "evidence": [
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/hold-icon-red.log",
+      "sha256": "e58210a9e6352a1cc9c5ddd4059e5bc8aa549f69885ecb2a7f249eb7d74c957a"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/live-menu-native-red-corrected.log",
+      "sha256": "639b1e5032bb4872c145acdc54b01ba057757109d0431b5a7a129f7bf331a239"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/disclosure-gap-native-red-final.log",
+      "sha256": "fd38dc73a0f0c4d291854fdaf0be88d152149d6af275a85c2b2dc1a611f42d73"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/direct-toggle-native-red.log",
+      "sha256": "09390a73a645c1ebd3295ac3670a7c6bda21081a4f6a5a7e52bedc99993cd5db"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/focused-widgets-final.log",
+      "sha256": "0f22ca55b6de239692a59b4f13ffc0cd901a60f7c6279bf538919591fd5be422"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/inline-native-green-singleton-final.log",
+      "sha256": "4ba99ff5b7635e1f7d19a1332ac5e04f81d8da9f7a55740b559bb04bd28188e4"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/analyze-singleton-final.log",
+      "sha256": "9b5cfb110a0b30023ecb359f2a0fa57bfbeb83cee9f65d555b6bcb99d8229490"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/single-parent-column-native-red-corrected.log",
+      "sha256": "75cd241ec77d1d2fd73cc94ea92cab019393e4082d0c47f8dc39a5991734cdf7"
+    }
+  ],
+  "excluded_visual": "direct-toggle-narrow.png decoded black; not evidence of rendering",
+  "remaining_gates": [
+    "Desktop pointer demo final inspection",
+    "Signed full candidate/platform gates",
+    "Exact Android affected-flow/demo acceptance",
+    "Independent release notes/media review against actual commit range",
+    "Fresh quota before preview publication"
+  ],
+  "unchanged": [
+    "Stable2026.10.1",
+    "Domain/storage/native/protocol/schema/dependencies",
+    "Live synced user data",
+    "Queued storage consolidation"
+  ],
+  "singleton_alignment": {
+    "before_menu_vs_child_delete_mismatch_px": 48,
+    "after_mismatch_px": 0,
+    "blank_slot": "Inert48\u00d748 only when checklist is shown and parent has no reorder neighbor"
+  }
+}

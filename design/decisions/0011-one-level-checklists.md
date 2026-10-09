@@ -39,11 +39,17 @@ with Undo, and a bottom Add item control have separate accessible hit targets.
 The task menu is immediately left of the far-right parent drag handle. The same
 Add checklist/Delete task menu is available through right-click and Context
 Menu/Shift+F10. It always targets the invoked parent, preserving other selected
-rows. Add checklist on an empty parent opens an empty block and focuses bottom
+rows. Add checklist is present only when the parent has no items, including while
+incoming changes arrive with a menu open. On an empty parent it opens an empty
+block and focuses bottom
 Add item, without creating a draft or canonical event. Deletion resolves private
 drafts and confirms the named parent, preserving existing receipt and Undo rules.
 
-Expand/collapse shown checklists uses current parent filters. Sparse expanded-ID
+The toolbar is an immediate next-action toggle: if any currently shown checklist
+is expanded, collapse shown checklists; when all are closed, expand them. Its
+icon and accessible tooltip say Expand shown checklists or Collapse shown
+checklists. It follows filters, individual disclosures and incoming item changes;
+hidden parents retain their local state. Sparse expanded-ID
 entries live in the existing workspace SQLite metadata table; collapse removes
 them, no new settings file/schema/version is introduced, and cache loss resets
 the preference. Broader local-storage consolidation is queued for the next full
@@ -53,8 +59,12 @@ The earlier editor-only location hid item work behind parent editing and implied
 an unnecessary ownership relationship. Always-expanded children would reduce
 list density. A combined menu/drag hit target would make activation ambiguous;
 separate controls keep touch and keyboard intent clear. Revisit density and
-Android discoverability after bounded native use. Inline native/independent
-review gates remain pending for this revision.
+Android discoverability after bounded native use. The2026-10-09 follow-up matches
+parent/child drag icons, removes child long-hold tooltips, aligns trailing targets,
+and uses the actual available content width for compact rows/dividers below600px.
+Disclosure content starts two pixels after the last body line; its visible arrow
+edge starts at the text column. Separate48px targets bound further vertical
+compression. Follow-up native/independent gates remain required before publication.
 
 ## Identity, persistence and recurrence
 

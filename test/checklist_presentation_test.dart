@@ -87,6 +87,63 @@ ChecklistPanel dragPanel({
 );
 
 void main() {
+  testWidgets('holding child reorder handle never opens help popup', (
+    tester,
+  ) async {
+    await mount(tester, dragPanel(onMove: (_, _) {}));
+    final handle = find.byKey(const Key('checklist-drag-0'));
+    final gesture = await tester.startGesture(tester.getCenter(handle));
+    await tester.pump(const Duration(seconds: 1));
+    await tester.pump(const Duration(milliseconds: 300));
+    expect(find.text('Reorder checklist item: Item 0'), findsNothing);
+    await gesture.up();
+    await tester.pumpAndSettle();
+  });
+
+  for (final hold in [Duration.zero, const Duration(seconds: 1)]) {
+    testWidgets('child reorder drag still works after holding $hold', (
+      tester,
+    ) async {
+      final calls = <String>[];
+      await mount(
+        tester,
+        dragPanel(onMove: (item, before) => calls.add('${item['id']}:$before')),
+      );
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byKey(const Key('checklist-drag-0'))),
+      );
+      await tester.pump(hold);
+      await tester.pump(const Duration(milliseconds: 300));
+      await gesture.moveBy(const Offset(0, 12));
+      await tester.pump();
+      await gesture.moveTo(
+        tester.getCenter(find.byKey(const Key('checklist-drop-before-2'))),
+      );
+      await tester.pump();
+      await gesture.up();
+      await tester.pumpAndSettle();
+      expect(calls, ['0:2']);
+      expect(tester.takeException(), isNull);
+    });
+  }
+
+  testWidgets('child handle uses parent reorder icon and retains semantics', (
+    tester,
+  ) async {
+    final semantics = tester.ensureSemantics();
+    await mount(tester, dragPanel(onMove: (_, _) {}));
+    final handle = find.byKey(const Key('checklist-drag-0'));
+    expect(
+      find.descendant(of: handle, matching: find.byIcon(Icons.drag_indicator)),
+      findsOneWidget,
+    );
+    expect(
+      tester.getSemantics(handle).getSemanticsData().label,
+      'Reorder checklist item: Item 0',
+    );
+    semantics.dispose();
+  });
+
   test(
     'title normalization respects composition and selection-only history',
     () {

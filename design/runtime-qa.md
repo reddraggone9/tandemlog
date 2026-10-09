@@ -1,4 +1,17 @@
-# Runtime and visual QA — updated 2026-10-08
+# Runtime and visual QA — updated 2026-10-09
+
+## Checklist controls follow-up
+
+Six affected actual Linux GTK/Flutter flows and23 focused widget tests pass;
+analysis is clean. [Evidence and independent review](../evidence/checklist-controls/README.md)
+cover the hold/drag regression, live Add visibility with keyboard Delete,
+direct toolbar action, filters/incoming state and canonical-byte preservation,
+aligned48px targets, content-width resizing and2px disclosure line gap.
+Actual390/1200px and enlarged390px PNGs were inspected; one black toggle capture
+is excluded. At100% text, the48px disclosure target has26px below its20px count
+plus2px top gap; separate body/disclosure touch areas do not overlap. Exact
+signed Android acceptance, desktop pointer-demo inspection and publication gates
+remain separate from these focused native tests.
 
 ## Pending field-spacing fixes
 

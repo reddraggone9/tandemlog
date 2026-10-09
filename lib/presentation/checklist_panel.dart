@@ -297,6 +297,7 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
               observedOrder: observedOrder,
             ),
             maxSimultaneousDrags: widget.enabled ? 1 : 0,
+            dragAnchorStrategy: pointerDragAnchorStrategy,
             feedback: ExcludeSemantics(
               child: Material(
                 elevation: 4,
@@ -328,14 +329,11 @@ class _ChecklistPanelState extends State<ChecklistPanel> {
                     onTap: () {
                       if (widget.enabled) moveFocus.requestFocus();
                     },
-                    child: Tooltip(
-                      message: 'Reorder checklist item: $title',
-                      child: SizedBox(
-                        key: Key('checklist-drag-$id'),
-                        width: 48,
-                        height: 48,
-                        child: const Icon(Icons.drag_handle),
-                      ),
+                    child: SizedBox(
+                      key: Key('checklist-drag-$id'),
+                      width: 48,
+                      height: 48,
+                      child: const Icon(Icons.drag_indicator),
                     ),
                   ),
                 ),

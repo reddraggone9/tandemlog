@@ -1,14 +1,24 @@
-# Current status — 2026-10-08
+# Current status — 2026-10-09
 
-## Inline checklist follow-up — unpublished
+## Checklist controls follow-up — unpublished
 
-Lee approved the inline checklist/task-menu revision on 2026-10-08. It is
-isolated in `feature/inline-checklists` above the completion-confirmation progress
-fix. The list owns child controls and local sparse expansion preferences; native
-text/domain/event formats are unchanged. Focused tests, independent reviews and
-bounded native workflows are in progress. Broader local-storage consolidation
-is queued for the next full release, requiring migration review. No new release
-or stable promotion has been performed. See [ADR0011](decisions/0011-one-level-checklists.md).
+Preview [2026.10.2-rc.5](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.5)
+build48 is published from `bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b`.
+Stable2026.10.1 remains Latest. Lee approved a focused follow-up on2026-10-09:
+remove the child-handle long-hold tooltip, match parent/child reorder icons and
+trailing columns, hide Add checklist whenever items exist (including incoming
+changes while a menu is open), and use full content-width narrow rows/dividers.
+The toolbar action directly collapses shown checklists if any is open, otherwise
+expands them; its icon and accessible tooltip describe the next action. Disclosure
+content aligns with the title column and its line gap, retaining separate48px
+body/disclosure touch targets. Expansion remains a local cache preference.
+
+Work is isolated in `fix/checklist-handle-menu`. Test-first reds, focused widgets,
+actual native Linux geometry/flows and independent review precede candidate freeze.
+Signed candidate/platform gates and exact-artifact Android acceptance are required
+before the next authorized preview publication; no new release is published yet.
+Broader local-storage consolidation stays queued for the next full release,
+requiring inventory and migration review. See [ADR0011](decisions/0011-one-level-checklists.md).
 
 
 ## Isolated checklist implementation checkpoint
