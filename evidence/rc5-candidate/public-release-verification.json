@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "verified_at_utc": "2026-10-09T02:51:39.052746+00:00",
+  "candidate_run": 37865723987,
+  "candidate_source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "promotion_run": 37876179859,
+  "promotion_conclusion": "success",
+  "release_id": 407443598,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.5",
+  "tag": "v2026.10.2-rc.5",
+  "tag_source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "prerelease": true,
+  "draft": false,
+  "stable_latest": "v2026.10.1",
+  "public_assets": [
+    {
+      "name": "tandemlog-2026.10.2-rc.5-android.apk",
+      "size": 65296877,
+      "sha256": "a6d7912986fe8102089b4a83788d668249c9b977bde1067b68e6ed147503f9e3",
+      "anonymous_http_status": 200,
+      "matches_release_api": true
+    },
+    {
+      "name": "tandemlog-2026.10.2-rc.5-linux-x64.flatpak",
+      "size": 9011304,
+      "sha256": "cd8ee0309d218d5fd9e9dfb3a4b5b171299950ae842c2fdf7e46cb1d629921c4",
+      "anonymous_http_status": 200,
+      "matches_release_api": true
+    },
+    {
+      "name": "tandemlog-2026.10.2-rc.5-windows-x64-setup.exe",
+      "size": 12201392,
+      "sha256": "7d2992c863f89719f737ac4f6fbd55611a56439ea6945c7d5c264a57a755bdad",
+      "anonymous_http_status": 200,
+      "matches_release_api": true
+    }
+  ],
+  "public_download_verification": "All three anonymous public downloads returned HTTP200; computed byte lengths and SHA256 match release API digests. Android also matches exact accepted inner APK SHA256; Windows matches candidate CI checksum.",
+  "actual_public_apk_identity": {
+    "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "candidate_run": 37865723987,
+    "promotion_run": 37876179859,
+    "artifact": "public release APK",
+    "apk_sha256": "a6d7912986fe8102089b4a83788d668249c9b977bde1067b68e6ed147503f9e3",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.5",
+    "version_code": 48,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "universal_abis_verified": true,
+    "apksigner_aapt_byte_verification": "passed",
+    "native_workflow_acceptance": "Parent-reported exact signed Android candidate passed84checks; no cloud device rerun claimed."
+  },
+  "reviewed_notes": "Published notes equal candidate design/prerelease-notes.md after surrounding whitespace normalization.",
+  "media": {
+    "commit": "c11441353a919f21cc54234685ed3a52a509ab2c",
+    "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/c11441353a919f21cc54234685ed3a52a509ab2c/evidence/rc5-editorial/inline-checklist-before-after.png",
+    "bytes": 53464,
+    "sha256": "cbe93869b0d483c00cf74b4c7ce472ed323d012bf268407a6295e024037157c0",
+    "public_http_status": 200,
+    "matches_reviewed_bytes": true
+  },
+  "promotion_log_sha256": "eb9d4abeb4551eeb7d7a63b4726be3a74ee5cac57e182e55a7b04b9fa02ccbe2",
+  "promotion_evidence": "Completed job113645251141 downloaded artifacts11588418958,11588334801,11588267705 from accepted candidate and passed existing APK/source/signer/version/inventory/desktop lifecycle/checksum gates. Only staged installer copies were published; no compilation or signing step.",
+  "independent_final_review": "Recorded separately in independent-post-publication-review.json; its scope and receipt hashes are authoritative.",
+  "no_stable_promotion": true,
+  "live_synced_data": "untouched"
+}

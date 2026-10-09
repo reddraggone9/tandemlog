@@ -1,0 +1,83 @@
+{
+  "reviewed_at_utc": "2026-10-09T02:51:46.370007+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent",
+  "result": "accepted; no must-fix findings; published release and final concrete receipt documents independently reviewed",
+  "release_id": 407443598,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.5",
+  "tag": "v2026.10.2-rc.5",
+  "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "candidate_run": 37865723987,
+  "promotion_run": 37876179859,
+  "promotion_result": "success",
+  "prerelease": true,
+  "draft": false,
+  "latest_stable_unchanged": "v2026.10.1",
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.2-rc.5-android.apk",
+      "id": 623695460,
+      "bytes": 65296877,
+      "actual_sha256": "a6d7912986fe8102089b4a83788d668249c9b977bde1067b68e6ed147503f9e3",
+      "matches_fresh_release_api": true
+    },
+    {
+      "name": "tandemlog-2026.10.2-rc.5-linux-x64.flatpak",
+      "id": 623695463,
+      "bytes": 9011304,
+      "actual_sha256": "cd8ee0309d218d5fd9e9dfb3a4b5b171299950ae842c2fdf7e46cb1d629921c4",
+      "matches_fresh_release_api": true
+    },
+    {
+      "name": "tandemlog-2026.10.2-rc.5-windows-x64-setup.exe",
+      "id": 623695457,
+      "bytes": 12201392,
+      "actual_sha256": "7d2992c863f89719f737ac4f6fbd55611a56439ea6945c7d5c264a57a755bdad",
+      "matches_fresh_release_api": true
+    }
+  ],
+  "notes_equal_reviewed_candidate_source": true,
+  "media": {
+    "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/c11441353a919f21cc54234685ed3a52a509ab2c/evidence/rc5-editorial/inline-checklist-before-after.png",
+    "anonymous_http_status": 200,
+    "bytes": 53464,
+    "actual_sha256": "cbe93869b0d483c00cf74b4c7ce472ed323d012bf268407a6295e024037157c0",
+    "equals_reviewed_git_blob": true
+  },
+  "actual_apk_verification": {
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.5",
+    "version_code": 48,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "nondebuggable": true,
+    "universal_abis": true,
+    "apksigner_aapt": "passed independently against actual public APK bytes",
+    "matches_parent_accepted_inner_sha256": true
+  },
+  "native_acceptance": "Parent/operator reports84checks on exact signed candidate; reviewer did not run device/emulator workflows",
+  "parent_packet_byte_verification": "not performed by reviewer; current materialization403 reported",
+  "publication_scope": "experimental preview only, no stable promotion",
+  "remaining_review": null,
+  "fresh_promotion_job_log": {
+    "job_id": 113645251141,
+    "sha256": "521200b42ca84ca3b483a13dd424e87b0f1a08f257c162af9ae12136289fc13e",
+    "matches_root_receipt": "equal after trailing EOF newline normalization",
+    "confirms_exact_candidate_artifact_ids_and_all_publication_gates": true,
+    "rebuild": false,
+    "root_raw_log_sha256": "eb9d4abeb4551eeb7d7a63b4726be3a74ee5cac57e182e55a7b04b9fa02ccbe2"
+  },
+  "final_document_review": {
+    "reviewed_at_utc": "2026-10-09T02:52:54.016590+00:00",
+    "result": "accepted; no must-fix findings",
+    "file_sha256": {
+      "README.md": "8864da205bc0cb347a441392962062d4cf94d25438e934b3c2925495f0004809",
+      "final-native-acceptance.json": "ce9e3844243fcda90360b5bce0f8873513e84f551ee139e2bfec71e35e249d91",
+      "public-release-verification.json": "1699c88c53502ead8749c5ad01f3f69f651f0eb7905169bcf1d9ba85e5aa9260"
+    },
+    "findings": [
+      "README correctly preserves original preparation snapshots and states their holds are superseded; no repeat dispatch",
+      "Final native receipt attributes84checks and artifact archive hash to parent/local worker; native bar not captured and cloud packet403 limits remain explicit",
+      "Public receipt source/tag/flags/latest/installer bytes/APKidentity/notes/media match independent completed checks",
+      "Promotion log receipt raw SHA matches root log; independent fresh MCP copy differs only trailing EOF newlines and substantive content matches"
+    ]
+  }
+}

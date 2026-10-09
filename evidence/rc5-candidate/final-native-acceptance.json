@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "recorded_at_utc": "2026-10-09T02:51:37.834362+00:00",
+  "candidate_source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "candidate_run": 37865723987,
+  "version": "2026.10.2-rc.5+48",
+  "accepted_apk_sha256": "a6d7912986fe8102089b4a83788d668249c9b977bde1067b68e6ed147503f9e3",
+  "native_platform": "Android exact owner-signed candidate, dedicated synthetic acceptance fixture",
+  "native_checks_passed": 84,
+  "status": "accepted by parent/local worker before promotion",
+  "results": [
+    "Consent/Cancel append no records",
+    "Confirm appends exactly one completion and initializes a fresh unchecked successor with preserved title/notes",
+    "Undo restores parent and suppresses untouched successor",
+    "Final replay preserves canonical bytes, views and order"
+  ],
+  "transient_processing_bar": "Not captured natively; hosted held-append tests separately cover this transient state.",
+  "native_evidence": {
+    "archive_name": "tandemlog-rc5-signed-android-acceptance.zip",
+    "version": 1,
+    "archive_sha256_reported_by_parent": "dca6dee0d1ff033bab14579c8c7d82963cd29457a81a93e02d9b8bb4d4b190ec",
+    "cloud_materialization_result": "HTTP403; cloud did not inspect or byte-verify this archive"
+  },
+  "attestation_scope": "Native checks were performed by the parent/local worker. The cloud operator records their accepted exact APK hash; no cloud device check or native archive byte verification is claimed.",
+  "preview_authorization": "Explicit user permission to publish RCs when ready confirmed by parent transcript.",
+  "quota_gate": "Parent supplied fresh threshold-clearing quota before dispatch.",
+  "publication_scope": "Experimental RC5 only, exact accepted artifacts without rebuild; stable remains unchanged."
+}
