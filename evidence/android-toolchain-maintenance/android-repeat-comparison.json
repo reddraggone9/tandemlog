@@ -1,0 +1,10 @@
+{
+  "source_commit": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+  "native_entry_count": 13,
+  "native_libraries_identical": true,
+  "notice_hash_identical": true,
+  "debug_signer_identical": true,
+  "full_apk_identical": true,
+  "cold_apk_sha256": "1c375fc768f1d958f497519aa1570fb2957596584a1254e908628f0e3bc2bea9",
+  "warm_apk_sha256": "1c375fc768f1d958f497519aa1570fb2957596584a1254e908628f0e3bc2bea9"
+}

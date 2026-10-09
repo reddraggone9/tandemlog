@@ -1,0 +1,182 @@
+[
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/linux/aarch64/liblz4-java.so",
+    "sha256": "a732552e3855c4f81d70f34a7468c26ffd4f3babcf20a06fa309082905ec4e81"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/linux/amd64/liblz4-java.so",
+    "sha256": "108157738367c0a972c2228dead1af896bf5d5a7fc7f58fcbf855aa2b67049ea"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/linux/i386/liblz4-java.so",
+    "sha256": "f72fff01f82b13bf54e945d1d9158a4b6c10caabca0a102fba5477c8d8baa8b4"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/linux/ppc64le/liblz4-java.so",
+    "sha256": "c6dd51e13b98853688589828e6760f334088bec00a143197c05486bb94fd8495"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/linux/s390x/liblz4-java.so",
+    "sha256": "9584dad637d5241fdb649f1db07835623a7c567c43f0c9450249c72a81657990"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/net/jpountz/util/win32/amd64/liblz4-java.so",
+    "sha256": "1ba944ded629f0ea2c7669c9cb4b3a39b2d773142a0b5f8fce8e11d6a50800fd"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/FreeBSD/x86/libjansi.so",
+    "sha256": "71d4e610ba70854a344078512afd3ca42676107e48cd753ecd91e806abb45569"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/FreeBSD/x86_64/libjansi.so",
+    "sha256": "8c56980e59f79e7a95b8edcbfe0a4f6b54bb6964aa9034efa7617725179d1d52"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/arm/libjansi.so",
+    "sha256": "fc3bb7c1178369ae6d3b07e51b0590eb8a6bb6dd6acd90115afeb18c65d85ad6"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/arm64/libjansi.so",
+    "sha256": "a807b7b420a15ee48e13c694f1e4d84b0d69c8857c2f0008c484328522bc69e5"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/armv6/libjansi.so",
+    "sha256": "402a6ee45d724e95eacace01e4e17029e10869ddaa5f5f4b45e13eed33d016d7"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/armv7/libjansi.so",
+    "sha256": "f01f068c1be78380c36868b4f47f8f24877a17a3e2269cc43c43615f9aee3ecb"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/ppc64/libjansi.so",
+    "sha256": "8d97571bb654005984c4d7595062f94a7bdb8f11203abc9efe005c22571def43"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/x86/libjansi.so",
+    "sha256": "8bdd29ef7e167116e848594760fe49546cd7a3e45f130bc30766ba1490193653"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so",
+    "sha256": "4bf8600bdeee40175ee1f5978c76bc9caa5083c35d6a7844d5ede74a669fb234"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib",
+    "sha256": "a2d8080e97424ddc0c21b6c16326eaa8b5e5c7a6aca0de2113da3ea1aa6726aa"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/x86/libjansi.jnilib",
+    "sha256": "ea7ceaf2b63f95ac34822fed2f4cdfd436599c682e04383fac3736dd4c4a41a6"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Mac/x86_64/libjansi.jnilib",
+    "sha256": "537d38ad49b9d159eef64ed0a774c816e679606d9c37266776b74c2cd6074f3f"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Windows/x86/jansi.dll",
+    "sha256": "1d6314da4b3a7a5e9dded6b0cc1b83f15f8f603897ae00cfe98ef171285620f3"
+  },
+  {
+    "container": "kotlin-compiler-embeddable-2.3.0.jar",
+    "resource": "org/jetbrains/kotlin/org/fusesource/jansi/internal/native/Windows/x86_64/jansi.dll",
+    "sha256": "d23fc9293b68781d43314403048d6dc655fa4620b6b4db3dcd345c52c332a2f4"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/FreeBSD/x86/libjansi.so",
+    "sha256": "af40370e582dba5d1e81ae41ddc34cd7040e3d97eb3a8e8acaa1f22122afff2b"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/FreeBSD/x86_64/libjansi.so",
+    "sha256": "ee1a719fc65d4e7830cfd3bd605fd1ea328cf84e6e76ac3a901c87d8ebd682bf"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/arm/libjansi.so",
+    "sha256": "4a56efedfb60bf211d63cf1ad68bec5debb3147145b4decca93919a6367f8b90"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/arm64/libjansi.so",
+    "sha256": "fff11e2c117f1325670587b654f07e663e80dc912cdbc81dc65af9edcee5684d"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/armv6/libjansi.so",
+    "sha256": "e3b4d8e7c8559f18c3a3364ecf23267438e7e02acca7eee42fd1962d1df7640c"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/armv7/libjansi.so",
+    "sha256": "d42832e4679f80ca7949013ff3c681b98b8fb85ae7e54f4679beb4e2ba6c92a6"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/ppc64/libjansi.so",
+    "sha256": "5c84e6b6be45d799992d0bb64105f6656da9554ac52bdf22ad4318012d3a534b"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/x86/libjansi.so",
+    "sha256": "96f650ecbb00059fc2f6fb629f8feadd5879032a58c70a7ac8f169775239ee5b"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Linux/x86_64/libjansi.so",
+    "sha256": "249095f2a73e3d2ab348d9f1de659947d253c18cf6a2049f75296b5a0d6ee079"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Mac/arm64/libjansi.jnilib",
+    "sha256": "56928bfe57da94d49490e237264e143a7e19713e68f6c653158f860f70de6dc8"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Mac/x86/libjansi.jnilib",
+    "sha256": "13347f218b0888db403234b0f13b3ad5beb3809a0469b8213afd9fdd5c86cd90"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Mac/x86_64/libjansi.jnilib",
+    "sha256": "65dd54cec4bc003d9623de13195845164cf607897b5287f8250209008d73c051"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Windows/arm64/jansi.dll",
+    "sha256": "470e6dfc44b28d628e404d5d6bfbb14728c7973e2397d9149430c85171389a19"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Windows/x86/jansi.dll",
+    "sha256": "9e6409c3264a6f33f5f97c58265c06e95bf91a896e8e179ebaeb8204c5d19ed3"
+  },
+  {
+    "container": "jansi-2.4.2.jar",
+    "resource": "org/fusesource/jansi/internal/native/Windows/x86_64/jansi.dll",
+    "sha256": "7020260c8db5116042315ea73714ac36ad94acdc330852280e889212506085c0"
+  },
+  {
+    "container": "native-platform-linux-amd64-0.22-milestone-29.jar",
+    "resource": "net/rubygrapefruit/platform/linux-amd64/libnative-platform.so",
+    "sha256": "a3e9f9ff695889d1bfee4928851b218bc9c6e64e58ebe32349214f68ddcf4fb9"
+  }
+]

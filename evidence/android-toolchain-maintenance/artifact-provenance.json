@@ -1,0 +1,2130 @@
+[
+  {
+    "filename": "signflinger-9.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.1.0/signflinger-9.1.0.pom",
+    "sha256": "78282b9711e7552c75140a82c991c0b02b568533c7187fb4e18b35cd136f4e5a",
+    "size": 1437
+  },
+  {
+    "filename": "signflinger-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.1.0/signflinger-9.1.0.jar",
+    "sha256": "bde5760f4ae032cf02851b3725e22ac391fc55792826c0258c9361378672692c",
+    "size": 15337
+  },
+  {
+    "filename": "signflinger-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.1.0/signflinger-9.1.0-sources.jar",
+    "sha256": "6ea6551350faf30f27845283e2961eed980228efaa1899f1839303b648ac50bb",
+    "size": 10023
+  },
+  {
+    "filename": "signflinger-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.2.1/signflinger-9.2.1.pom",
+    "sha256": "8f88276534a9b1a3e45693bf9636d047a555195cc7bf810a8a0299086d306b21",
+    "size": 1437
+  },
+  {
+    "filename": "signflinger-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.2.1/signflinger-9.2.1.jar",
+    "sha256": "bde5760f4ae032cf02851b3725e22ac391fc55792826c0258c9361378672692c",
+    "size": 15337
+  },
+  {
+    "filename": "signflinger-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/signflinger/9.2.1/signflinger-9.2.1-sources.jar",
+    "sha256": "6ea6551350faf30f27845283e2961eed980228efaa1899f1839303b648ac50bb",
+    "size": 10023
+  },
+  {
+    "filename": "zipflinger-9.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.1.0/zipflinger-9.1.0.pom",
+    "sha256": "1707b75f7467121acb2a45c112879529a1f279c75844907eb6c5b80b13aae6db",
+    "size": 1110
+  },
+  {
+    "filename": "zipflinger-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.1.0/zipflinger-9.1.0.jar",
+    "sha256": "d2ad6ddec6da2ae142a8fe3af2f2529f3fbf77852e2db7ff261ad7b924b119fa",
+    "size": 67038
+  },
+  {
+    "filename": "zipflinger-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.1.0/zipflinger-9.1.0-sources.jar",
+    "sha256": "7271e8c351e78fedc8a57069529ce3941064515c76de648273b705af71cfdf80",
+    "size": 49912
+  },
+  {
+    "filename": "zipflinger-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.2.1/zipflinger-9.2.1.pom",
+    "sha256": "35753ef76bdc330f35ff8d682beffe576596b189b2f1067e635ffe3d2ebd11cf",
+    "size": 1110
+  },
+  {
+    "filename": "zipflinger-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.2.1/zipflinger-9.2.1.jar",
+    "sha256": "8fdfbfe51a4eaf6d8be012f37e0287e93b3ba9240e6b166937c27056bd6d67cb",
+    "size": 67037
+  },
+  {
+    "filename": "zipflinger-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/zipflinger/9.2.1/zipflinger-9.2.1-sources.jar",
+    "sha256": "2516f5ce35477329e2ba9e2a99f36b5bc06d6c454ff9a4ce0601826a74424547",
+    "size": 49910
+  },
+  {
+    "filename": "r8-source.tar.gz",
+    "url": "https://r8.googlesource.com/r8/+archive/b159b01e1cdc38c1106be42aeebfb7f44397dad1.tar.gz",
+    "sha256": "fdc012d2673b966d4b9ff3d174f0e0152d51759b73edf4f58405b83a9e4cad6a",
+    "size": 7814244
+  },
+  {
+    "coordinate": "com.android.tools.build:builder",
+    "filename": "builder-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.2.1/builder-9.2.1.pom",
+    "size": 5306,
+    "sha256": "5eac8811dd449a0440951a70005d1dc541bbc8aaffe9137c9b1526353ad934d0"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder",
+    "filename": "builder-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.2.1/builder-9.2.1.jar",
+    "size": 17596356,
+    "sha256": "091274bf71a4e29d823a54fefb4b59643f4abc23ef15b652b787d1565280bdb0"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder",
+    "filename": "builder-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.2.1/builder-9.2.1-sources.jar",
+    "size": 287160,
+    "sha256": "0b5a4d82c0a6cdbbad271f35b0a95c13361f94182b8f5285e15eb86d69236d4b"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-model",
+    "filename": "builder-model-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-model/9.2.1/builder-model-9.2.1.pom",
+    "size": 1840,
+    "sha256": "a16e78ff2506d06436c03a08bfae979e3ca41d297fc3f623ccc6a268aa87efa7"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-model",
+    "filename": "builder-model-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-model/9.2.1/builder-model-9.2.1.jar",
+    "size": 139479,
+    "sha256": "53800e79d6ffc6ea8b8c4437058fb8a3c97cc5c29f54b76aa4cbddf14470b063"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-model",
+    "filename": "builder-model-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-model/9.2.1/builder-model-9.2.1-sources.jar",
+    "size": 150479,
+    "sha256": "a36a5de610ce6809649b130749ff0fa36af24521020bc72bbe2d66ac0d1081f7"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-api",
+    "filename": "gradle-api-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/9.2.1/gradle-api-9.2.1.pom",
+    "size": 2770,
+    "sha256": "e54353ae5a4c58dbd8d2fcb0f234027bcc95cf717f08ecc5bc19bf918440c6bb"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-api",
+    "filename": "gradle-api-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/9.2.1/gradle-api-9.2.1.jar",
+    "size": 411070,
+    "sha256": "fdb67e10cd147dcddede285e6258f586574370fdbbe440bab5e8283e41c3d881"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-api",
+    "filename": "gradle-api-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/9.2.1/gradle-api-9.2.1-sources.jar",
+    "size": 383720,
+    "sha256": "c50d6746ddb5dc74205043ddab77b5d76bd448a4731f012ab5061a89dc86da5c"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-settings-api",
+    "filename": "gradle-settings-api-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-settings-api/9.2.1/gradle-settings-api-9.2.1.pom",
+    "size": 1883,
+    "sha256": "f1373c02a00630f2c571a114440595b6a4197fd98614faeb3cfaa20e59ce8225"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-settings-api",
+    "filename": "gradle-settings-api-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-settings-api/9.2.1/gradle-settings-api-9.2.1.jar",
+    "size": 10122,
+    "sha256": "eaf668f7b1ec4f2975abdc6c6e2fbfb2c16471a50b5a01dabb09a00c36f98d8e"
+  },
+  {
+    "coordinate": "com.android.tools.build:gradle-settings-api",
+    "filename": "gradle-settings-api-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-settings-api/9.2.1/gradle-settings-api-9.2.1-sources.jar",
+    "size": 9547,
+    "sha256": "e540c7cf0045dc71bc09ee82bc7771e41c9286b5e1a2a20e3ed0c0496d81f630"
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.2.1",
+    "filename": "sdk-common-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.2.1/sdk-common-32.2.1.pom",
+    "size": 4063,
+    "sha256": "9607f02187c03cf23da8c509c8e3ce2d1d983a4342eabe9fd97fa6507ba18240"
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.2.1",
+    "filename": "sdk-common-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.2.1/sdk-common-32.2.1.jar",
+    "size": 1806320,
+    "sha256": "d95030eb74d9f8ee954c59fef895b8795e289b429aea4e7423cbf70d5075c547"
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.2.1",
+    "filename": "sdk-common-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.2.1/sdk-common-32.2.1-sources.jar",
+    "size": 712515,
+    "sha256": "fa6a65b1457ccc7f938e3dbdf4e3c9ced480a897338df8625a3602c6f079f56b"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.2.1",
+    "filename": "sdklib-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.2.1/sdklib-32.2.1.pom",
+    "size": 2575,
+    "sha256": "785eff59677538b01dbc63d65a2afe879b3f8b0fec24e691c0d5b7bc49f6684c"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.2.1",
+    "filename": "sdklib-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.2.1/sdklib-32.2.1.jar",
+    "size": 1874431,
+    "sha256": "23bb6b5b4db79bcd16e71c656f8005ba8730005880ae4c253dcc7642016f0198"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.2.1",
+    "filename": "sdklib-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.2.1/sdklib-32.2.1-sources.jar",
+    "size": 568934,
+    "sha256": "3a508b6bbc9c4bcc0f7ef2a6593d0434af8a216155b41ccf39a20ccafdf7c6bb"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.2.1",
+    "filename": "repository-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.2.1/repository-32.2.1.pom",
+    "size": 2248,
+    "sha256": "5df98b0be251645da7a5acb772db1256d87499345fc24bf72e0f9e8e0335b653"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.2.1",
+    "filename": "repository-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.2.1/repository-32.2.1.jar",
+    "size": 267495,
+    "sha256": "6a63ca24481b1fb5acbdf3aaab5c39eef1a1e24c3c4f59147000791e0f67d8dc"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.2.1",
+    "filename": "repository-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.2.1/repository-32.2.1-sources.jar",
+    "size": 204801,
+    "sha256": "e7d0095f96f03bfec55cb26e34c3c81b34a1b3f2e1c93af72ee5f23a5325bf7c"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.2.1",
+    "filename": "ddmlib-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.2.1/ddmlib-32.2.1.pom",
+    "size": 1637,
+    "sha256": "fdf1e17c967b99941ef56d1293e167ff68e78572836a69a8e89d80690c34ba55"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.2.1",
+    "filename": "ddmlib-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.2.1/ddmlib-32.2.1.jar",
+    "size": 683194,
+    "sha256": "a780ddae2a198f413dcad890b8dc404e4d94c35f5aac64a282cefdaf01260a15"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.2.1",
+    "filename": "ddmlib-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.2.1/ddmlib-32.2.1-sources.jar",
+    "size": 438169,
+    "sha256": "f42b1724ab2a35a9dbf7d5d23d8875211191c318baf2fc262b547b6c3bb43221"
+  },
+  {
+    "coordinate": "com.android.tools.build:aapt2-proto",
+    "filename": "aapt2-proto-9.2.1-15009934.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2-proto/9.2.1-15009934/aapt2-proto-9.2.1-15009934.pom",
+    "size": 1685,
+    "sha256": "78c989751e91958168b9b7aa6ab75b0ee2e31d743959ca88fa1fccac4595d00f"
+  },
+  {
+    "coordinate": "com.android.tools.build:aapt2-proto",
+    "filename": "aapt2-proto-9.2.1-15009934.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2-proto/9.2.1-15009934/aapt2-proto-9.2.1-15009934.jar",
+    "size": 721157,
+    "sha256": "2335bab7fd8269ee98d3843410c4a5553d31dd71f9a22f49b21a676d3139c882"
+  },
+  {
+    "coordinate": "com.android.tools.build:aapt2-proto",
+    "filename": "aapt2-proto-9.2.1-15009934-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2-proto/9.2.1-15009934/aapt2-proto-9.2.1-15009934-sources.jar",
+    "size": 408846,
+    "sha256": "29cc59746f656f875173f4a223734514594f99a8407e5a7f5ee33fcba4f90c08"
+  },
+  {
+    "coordinate": "com.android.tools.build:aaptcompiler",
+    "filename": "aaptcompiler-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aaptcompiler/9.2.1/aaptcompiler-9.2.1.pom",
+    "size": 2610,
+    "sha256": "4027a9ce1d50c0987afa4f02da9ebc8ea4e6589b5ed04ccb5e8f06cdcc8c4158"
+  },
+  {
+    "coordinate": "com.android.tools.build:aaptcompiler",
+    "filename": "aaptcompiler-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aaptcompiler/9.2.1/aaptcompiler-9.2.1.jar",
+    "size": 493910,
+    "sha256": "45c46bfd758de568b8118a168d56863f87566188692c9e80c1b77fff8c6a3620"
+  },
+  {
+    "coordinate": "com.android.tools.build:aaptcompiler",
+    "filename": "aaptcompiler-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aaptcompiler/9.2.1/aaptcompiler-9.2.1-sources.jar",
+    "size": 152179,
+    "sha256": "60237e90334d6db447c37a825e35f7ff83337c1542ea0e9f0aee06b6e0484336"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:crash",
+    "filename": "crash-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/crash/32.2.1/crash-32.2.1.pom",
+    "size": 1873,
+    "sha256": "737ae2730b4bfadb2b64d727d482af71d3fc35708282acd3ddea6c4317036b55"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:crash",
+    "filename": "crash-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/crash/32.2.1/crash-32.2.1.jar",
+    "size": 14886,
+    "sha256": "3cf8a9e451280669666041b468e8de506abaef57757713a9b9aa8c215d039c07"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:crash",
+    "filename": "crash-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/crash/32.2.1/crash-32.2.1-sources.jar",
+    "size": 18218,
+    "sha256": "19b696222be9f571e337ca66ed1b2728110439d896e86410fb3530a07a874816"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.2.1",
+    "filename": "shared-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.2.1/shared-32.2.1.pom",
+    "size": 2237,
+    "sha256": "b6047af9373c7408ba5c9857e48cb0f91e5079f25a4f162dd3d7e305613be96d"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.2.1",
+    "filename": "shared-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.2.1/shared-32.2.1.jar",
+    "size": 128512,
+    "sha256": "dc37f6e562ec34a69b151337a58fd789d3921ef46375c6e7144e23ae8d37f237"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.2.1",
+    "filename": "shared-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.2.1/shared-32.2.1-sources.jar",
+    "size": 30431,
+    "sha256": "001762d102679f040e2ba994f8a6eb30e7bca2085363d37553335ba472165334"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.2.1",
+    "filename": "lint-model-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.2.1/lint-model-32.2.1.pom",
+    "size": 2184,
+    "sha256": "1ebf1ef5b2365d185163a08774d50319fc23a0864e9b552716814e2a78b82b90"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.2.1",
+    "filename": "lint-model-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.2.1/lint-model-32.2.1.jar",
+    "size": 175279,
+    "sha256": "233a34d760b442b8cf38a1f9a84d64b11d98df06f3667165b060678c1cf06a01"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.2.1",
+    "filename": "lint-model-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.2.1/lint-model-32.2.1-sources.jar",
+    "size": 47974,
+    "sha256": "5115d9c0f16a564add5e1eae155debd3e1b8b4004a4df6851285d2310c9dc056"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.2.1",
+    "filename": "lint-typedef-remover-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.2.1/lint-typedef-remover-32.2.1.pom",
+    "size": 1491,
+    "sha256": "4d39dbf2923840ba1d077cb5d91955f95535163115d4c6c9cc92dd134fcd9a01"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.2.1",
+    "filename": "lint-typedef-remover-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.2.1/lint-typedef-remover-32.2.1.jar",
+    "size": 9586,
+    "sha256": "60a873fe70d4787c1342ae753aaf2cce23369e60d66fbf6ef6952cb110f960e6"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.2.1",
+    "filename": "lint-typedef-remover-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.2.1/lint-typedef-remover-32.2.1-sources.jar",
+    "size": 14617,
+    "sha256": "d9519caf32cacd176d06ee35adf0a9eec6a7c3e8d4d4e11c31e6c0e264529c55"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-compiler-common",
+    "filename": "databinding-compiler-common-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-compiler-common/9.2.1/databinding-compiler-common-9.2.1.pom",
+    "size": 3034,
+    "sha256": "7e3dd0e28a364dab896628911068f91316d903c2402ae9e367fb72a7ac241c0f"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-compiler-common",
+    "filename": "databinding-compiler-common-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-compiler-common/9.2.1/databinding-compiler-common-9.2.1.jar",
+    "size": 835931,
+    "sha256": "68ab090ddb4d1f411b7defa90c021e068d1aa46878b5beb94de87ff971106dcb"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-compiler-common",
+    "filename": "databinding-compiler-common-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-compiler-common/9.2.1/databinding-compiler-common-9.2.1-sources.jar",
+    "size": 106756,
+    "sha256": "98318225ff63edc652d147700d6d9f3e817e23e15e75b99a137d713797038913"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-common",
+    "filename": "databinding-common-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-common/9.2.1/databinding-common-9.2.1.pom",
+    "size": 931,
+    "sha256": "d0633857870ae3157d29dc83eec48fe50b219db7524b05ae99d58e3cd92fa1d3"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-common",
+    "filename": "databinding-common-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-common/9.2.1/databinding-common-9.2.1.jar",
+    "size": 16827,
+    "sha256": "82816382a2a9dec4f0ab17c79cef08a9e4fe4b97d896ac20d7f215b6dd788b18"
+  },
+  {
+    "coordinate": "androidx.databinding:databinding-common",
+    "filename": "databinding-common-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-common/9.2.1/databinding-common-9.2.1-sources.jar",
+    "size": 32115,
+    "sha256": "1fffe5f560c73547df8c451fe47a7943463be3a8bbe72b9c49683fde9ab2fe21"
+  },
+  {
+    "coordinate": "com.android.databinding:baseLibrary",
+    "filename": "baseLibrary-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/databinding/baseLibrary/9.2.1/baseLibrary-9.2.1.pom",
+    "size": 923,
+    "sha256": "8ddbc65e26b82a4d56c2137717e9041b96159b691cfc65395fefdda85204b58b"
+  },
+  {
+    "coordinate": "com.android.databinding:baseLibrary",
+    "filename": "baseLibrary-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/databinding/baseLibrary/9.2.1/baseLibrary-9.2.1.jar",
+    "size": 16749,
+    "sha256": "96ba2a5f000846d317acdd90de6a7429701ac56573de2ccc8423d2ba40446fd9"
+  },
+  {
+    "coordinate": "com.android.databinding:baseLibrary",
+    "filename": "baseLibrary-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/databinding/baseLibrary/9.2.1/baseLibrary-9.2.1-sources.jar",
+    "size": 32068,
+    "sha256": "ad96bfd215758fe334d3ad7f33f9bbdb6cf931878aeaeb679c9b3e362d00419c"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-test-api",
+    "filename": "builder-test-api-9.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-test-api/9.2.1/builder-test-api-9.2.1.pom",
+    "size": 2223,
+    "sha256": "184b3691a6bc8186e7e1164dcf9d88a0deda14466490aef86f40a6d1df92c1a6"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-test-api",
+    "filename": "builder-test-api-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-test-api/9.2.1/builder-test-api-9.2.1.jar",
+    "size": 15193,
+    "sha256": "2137becb43a082444fb70052b2ddeb3ef8c2942d70c6be8390f00fade528fb37"
+  },
+  {
+    "coordinate": "com.android.tools.build:builder-test-api",
+    "filename": "builder-test-api-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-test-api/9.2.1/builder-test-api-9.2.1-sources.jar",
+    "size": 13707,
+    "sha256": "0a3772d5aa670cd5f732a784524af66a898d18896f14fa8197dd9ea178f5eba3"
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.2.1",
+    "filename": "layoutlib-api-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.2.1/layoutlib-api-32.2.1.pom",
+    "size": 1670,
+    "sha256": "ee16c4de1cf7607e50a95d33a0b6c11ec18fe9d2bfe924f406d715536ee7dd85"
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.2.1",
+    "filename": "layoutlib-api-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.2.1/layoutlib-api-32.2.1.jar",
+    "size": 122402,
+    "sha256": "c3445bef3e5daa94e32608a6156c9ab0925210488d3bf2350aef9f68afd97d3e"
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.2.1",
+    "filename": "layoutlib-api-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.2.1/layoutlib-api-32.2.1-sources.jar",
+    "size": 117870,
+    "sha256": "b48f28b34e5d5eb029713bfe7dff17e1b1cc62f99ca274626a0c94a3333f7a60"
+  },
+  {
+    "coordinate": "com.android.tools.utp:gradle-work-action-api",
+    "filename": "gradle-work-action-api-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/utp/gradle-work-action-api/32.2.1/gradle-work-action-api-32.2.1.pom",
+    "size": 1733,
+    "sha256": "7b20364450f85e1121c63bf89d456c6feea500d1f95d806b5b86e5616a67b388"
+  },
+  {
+    "coordinate": "com.android.tools.utp:gradle-work-action-api",
+    "filename": "gradle-work-action-api-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/utp/gradle-work-action-api/32.2.1/gradle-work-action-api-32.2.1.jar",
+    "size": 32078,
+    "sha256": "3268fda5be9ecbf4d621adbedb71a972e066fd56fae49a9359bd9df7f20a5d9b"
+  },
+  {
+    "coordinate": "com.android.tools.utp:gradle-work-action-api",
+    "filename": "gradle-work-action-api-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/utp/gradle-work-action-api/32.2.1/gradle-work-action-api-32.2.1-sources.jar",
+    "size": 9617,
+    "sha256": "d7281a4fee6c4308568590f9ca5c4d797a79d45e297939af00f4e84ca6aceddc"
+  },
+  {
+    "coordinate": "com.android.tools.build:aapt2",
+    "filename": "aapt2-9.2.1-15009934-linux.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2/9.2.1-15009934/aapt2-9.2.1-15009934-linux.jar",
+    "size": 2347854,
+    "sha256": "755f6727fb3f4cce5e319eac0f3618ed4b36b49a46d4bb2cbb6fa8e9175a54d6"
+  },
+  {
+    "filename": "gradle-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0.jar",
+    "sha256": "74b47a2a57349371273fb0893f61977a68dc40d5fb5e012a71d9e00c76ad728d",
+    "size": 12671948
+  },
+  {
+    "filename": "gradle-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.1.0/gradle-9.1.0-sources.jar",
+    "sha256": "48d1ba4f8096c9bff57a684c7dcb00044e94fbf3a7f1b605f1941da788de3709",
+    "size": 3802564
+  },
+  {
+    "filename": "gradle-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.2.1/gradle-9.2.1.jar",
+    "sha256": "582e85078b60eb80669223b34b58200ba034654b2edb1cf9621e62fde7dfc0a3",
+    "size": 12974080
+  },
+  {
+    "filename": "gradle-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle/9.2.1/gradle-9.2.1-sources.jar",
+    "sha256": "2b6fbf6fa80642759fa0ac32ccc6bfae2aa1d9ce27051162635dcae36eb5adcc",
+    "size": 3890524
+  },
+  {
+    "filename": "builder-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0.jar",
+    "sha256": "0670034adae63a4fabc25d42c1173d11b4e083021ff95c4bcee6f9e3945f9ae9",
+    "size": 15839059
+  },
+  {
+    "filename": "builder-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder/9.1.0/builder-9.1.0-sources.jar",
+    "sha256": "bf7e06bcb4e2b64e6ff69f0ae987d5011041c93bbdaa30b0d9d4f941e485d2b5",
+    "size": 283735
+  },
+  {
+    "filename": "builder-model-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-model/9.1.0/builder-model-9.1.0.jar",
+    "sha256": "e3101993b6d877e83fc87381c50d78e731684b891de8d54bd1590509ac998530",
+    "size": 139515
+  },
+  {
+    "filename": "builder-model-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-model/9.1.0/builder-model-9.1.0-sources.jar",
+    "sha256": "7ef5d449cfeb65aadc8d3a8e74dd17a7da9c2e5fde1354676c11c45041484278",
+    "size": 150490
+  },
+  {
+    "filename": "gradle-api-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/9.1.0/gradle-api-9.1.0.jar",
+    "sha256": "544327bc6207295019658f6644525e5e63ec58e4b88558d16731dad0eaab2373",
+    "size": 389197
+  },
+  {
+    "filename": "gradle-api-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-api/9.1.0/gradle-api-9.1.0-sources.jar",
+    "sha256": "7d92d30b694048d690e1c7354e0f4895bd5bf48bb74f661e817f6fd16bdcdd5f",
+    "size": 372049
+  },
+  {
+    "filename": "gradle-settings-api-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-settings-api/9.1.0/gradle-settings-api-9.1.0.jar",
+    "sha256": "7b1cb2709737656e21e50d2e1b64258a0f2f1c5c49710c521a83e8c9163f2b63",
+    "size": 10057
+  },
+  {
+    "filename": "gradle-settings-api-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-settings-api/9.1.0/gradle-settings-api-9.1.0-sources.jar",
+    "sha256": "4c8faa0e93ac5171d0b1a34a052aadc7c09b9d123adddca77a16eb1a07e586cb",
+    "size": 9521
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.1.0",
+    "filename": "sdk-common-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.1.0/sdk-common-32.1.0.jar",
+    "size": 1806017,
+    "sha256": "0a0513fac4388e0ff2d61a92b5b3ffb435f97fcce4b557a4455f3e217d012b32"
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.1.0",
+    "filename": "sdk-common-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.1.0/sdk-common-32.1.0-sources.jar",
+    "size": 712537,
+    "sha256": "c6e3e666292c354581e8b60f88856d76f4ab05e13ff34248875cf4d3fc44b128"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.1.0",
+    "filename": "sdklib-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.1.0/sdklib-32.1.0.jar",
+    "size": 1795950,
+    "sha256": "99924e2f3e78070429da20e40050779e564db6efc00bee03841574dbc7475c5e"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.1.0",
+    "filename": "sdklib-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.1.0/sdklib-32.1.0-sources.jar",
+    "size": 532290,
+    "sha256": "60bf50886bbdd41bb37215d900af31cff07de9e0c3cbcb0c26e6532419131953"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.1.0",
+    "filename": "repository-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.1.0/repository-32.1.0.jar",
+    "size": 267516,
+    "sha256": "ef3691e582cd8f9901502b679bb8f709a095cecb44b64fffdcb266a03df6b690"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.1.0",
+    "filename": "repository-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.1.0/repository-32.1.0-sources.jar",
+    "size": 204801,
+    "sha256": "e7d0095f96f03bfec55cb26e34c3c81b34a1b3f2e1c93af72ee5f23a5325bf7c"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.1.0",
+    "filename": "ddmlib-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.1.0/ddmlib-32.1.0.jar",
+    "size": 683153,
+    "sha256": "0db6316457073eaa41422a106737672559e7ce0e703427ee09bf99459e007b7f"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.1.0",
+    "filename": "ddmlib-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.1.0/ddmlib-32.1.0-sources.jar",
+    "size": 438123,
+    "sha256": "2219a3d523ed65ec41c51c47b74f7668ef97e33cd9de87bea78bcc8a83b310a6"
+  },
+  {
+    "filename": "aapt2-proto-9.1.0-14792394.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2-proto/9.1.0-14792394/aapt2-proto-9.1.0-14792394.jar",
+    "sha256": "2335bab7fd8269ee98d3843410c4a5553d31dd71f9a22f49b21a676d3139c882",
+    "size": 721157
+  },
+  {
+    "filename": "aapt2-proto-9.1.0-14792394-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aapt2-proto/9.1.0-14792394/aapt2-proto-9.1.0-14792394-sources.jar",
+    "sha256": "29cc59746f656f875173f4a223734514594f99a8407e5a7f5ee33fcba4f90c08",
+    "size": 408846
+  },
+  {
+    "filename": "aaptcompiler-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aaptcompiler/9.1.0/aaptcompiler-9.1.0.jar",
+    "sha256": "05a74fd429ff802c42309a54fba9a4397bd3385793260f4bcb1fc7ad43ebba7f",
+    "size": 493982
+  },
+  {
+    "filename": "aaptcompiler-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/aaptcompiler/9.1.0/aaptcompiler-9.1.0-sources.jar",
+    "sha256": "c3f4dad12f6eee1f93fa7db29baf2bba7159be9e9b6ad3e77b7cb8a07170279f",
+    "size": 152179
+  },
+  {
+    "filename": "crash-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/crash/32.1.0/crash-32.1.0.jar",
+    "sha256": "1589c55563c8f595858cb478708d9d3043969c18b784170bb0fbdfffdb44c7bc",
+    "size": 14886
+  },
+  {
+    "filename": "crash-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/crash/32.1.0/crash-32.1.0-sources.jar",
+    "sha256": "19b696222be9f571e337ca66ed1b2728110439d896e86410fb3530a07a874816",
+    "size": 18218
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.1.0",
+    "filename": "shared-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.1.0/shared-32.1.0.jar",
+    "size": 128420,
+    "sha256": "d82051937b390056af6dadc242923e2cd7794bdee217d276501f8aee151af446"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.1.0",
+    "filename": "shared-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.1.0/shared-32.1.0-sources.jar",
+    "size": 30377,
+    "sha256": "c663e7a34d9dd66f97f8b5ac1410c299a360e8d0a6daec4cb4b5e39f91562ffe"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.1.0",
+    "filename": "lint-model-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.1.0/lint-model-32.1.0.jar",
+    "size": 175158,
+    "sha256": "f211988e110edcbc02818343b015fdc98e83871d4a9969ef225047cb2d21e1d0"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.1.0",
+    "filename": "lint-model-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.1.0/lint-model-32.1.0-sources.jar",
+    "size": 47957,
+    "sha256": "976adc690d9e4e6ad27816bc2cec1e8544c232349436aa1f27cf98af183c478f"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.1.0",
+    "filename": "lint-typedef-remover-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.1.0/lint-typedef-remover-32.1.0.jar",
+    "size": 9554,
+    "sha256": "0710eba41387b5d9fbdaaf061e52cb9a56e40cdda5a01db37d1497fee019aa78"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.1.0",
+    "filename": "lint-typedef-remover-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.1.0/lint-typedef-remover-32.1.0-sources.jar",
+    "size": 14598,
+    "sha256": "e719d951f9011ea40949fecb3d934e4d0ee123d1d94cec05316d8b22f25d2d83"
+  },
+  {
+    "filename": "databinding-compiler-common-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-compiler-common/9.1.0/databinding-compiler-common-9.1.0.jar",
+    "sha256": "50e99bf047b5c4d3f59d1ab7a8d8f2429bc18b8195f0079e78d7c7f594be1302",
+    "size": 835822
+  },
+  {
+    "filename": "databinding-compiler-common-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-compiler-common/9.1.0/databinding-compiler-common-9.1.0-sources.jar",
+    "sha256": "98318225ff63edc652d147700d6d9f3e817e23e15e75b99a137d713797038913",
+    "size": 106756
+  },
+  {
+    "filename": "databinding-common-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-common/9.1.0/databinding-common-9.1.0.jar",
+    "sha256": "66cab82639dac0f6c2433464c093b074d608c4bb887ec38a9b8bc4ac98126732",
+    "size": 16827
+  },
+  {
+    "filename": "databinding-common-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/androidx/databinding/databinding-common/9.1.0/databinding-common-9.1.0-sources.jar",
+    "sha256": "1fffe5f560c73547df8c451fe47a7943463be3a8bbe72b9c49683fde9ab2fe21",
+    "size": 32115
+  },
+  {
+    "filename": "baseLibrary-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/databinding/baseLibrary/9.1.0/baseLibrary-9.1.0.jar",
+    "sha256": "794113709dab21b06c262b3795e73cb708fbacae61715f34361e1af6237a1870",
+    "size": 16749
+  },
+  {
+    "filename": "baseLibrary-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/databinding/baseLibrary/9.1.0/baseLibrary-9.1.0-sources.jar",
+    "sha256": "ad96bfd215758fe334d3ad7f33f9bbdb6cf931878aeaeb679c9b3e362d00419c",
+    "size": 32068
+  },
+  {
+    "filename": "builder-test-api-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-test-api/9.1.0/builder-test-api-9.1.0.jar",
+    "sha256": "b29491ec6d11a8012989fdbb548f16c664fbdd93b3399f13e670aee82419f0fc",
+    "size": 15329
+  },
+  {
+    "filename": "builder-test-api-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/builder-test-api/9.1.0/builder-test-api-9.1.0-sources.jar",
+    "sha256": "5b90fe0058a7dab5c19624bf1fb18522ce758695f33bc9d2b7d159ce07ba5392",
+    "size": 13848
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.1.0",
+    "filename": "layoutlib-api-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.1.0/layoutlib-api-32.1.0.jar",
+    "size": 122402,
+    "sha256": "1b37af4dc07dda96ecddae553a97d3053402db2c4b420ab937ab41c4e2597f51"
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.1.0",
+    "filename": "layoutlib-api-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.1.0/layoutlib-api-32.1.0-sources.jar",
+    "size": 117870,
+    "sha256": "b48f28b34e5d5eb029713bfe7dff17e1b1cc62f99ca274626a0c94a3333f7a60"
+  },
+  {
+    "filename": "gradle-work-action-api-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/utp/gradle-work-action-api/32.1.0/gradle-work-action-api-32.1.0.jar",
+    "sha256": "f2a06a10b038f20d24f39f8b2ab94a5939b7a480fa5b1de7f9cd0502b15882b0",
+    "size": 32084
+  },
+  {
+    "filename": "gradle-work-action-api-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/utp/gradle-work-action-api/32.1.0/gradle-work-action-api-32.1.0-sources.jar",
+    "sha256": "dddfec67a280325aa3fc8e4b886411d7c59bfd1144a8c68dcc433964492f5f5b",
+    "size": 9625
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.1.0",
+    "filename": "manifest-merger-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.1.0/manifest-merger-32.1.0.jar",
+    "size": 267239,
+    "sha256": "ab66e82f8656f884e13559deb7137c744db499c42cc27e71f9057a62d6984324"
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.1.0",
+    "filename": "manifest-merger-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.1.0/manifest-merger-32.1.0-sources.jar",
+    "size": 240457,
+    "sha256": "8249d70ca31fb57fba62278434aa19d45ac12337a85a5990f1ed0d0da3b08dce"
+  },
+  {
+    "filename": "apksig-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apksig/9.1.0/apksig-9.1.0.jar",
+    "sha256": "562cd0a88890960d2ece48e116c61f12872222f1dcc306890799382bc019b201",
+    "size": 506620
+  },
+  {
+    "filename": "apksig-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apksig/9.1.0/apksig-9.1.0-sources.jar",
+    "sha256": "c7a0f43d1e40fdf39725ac090f5c7bbaeae82d1e0bfd9cf2ee507a70eb5136b5",
+    "size": 342169
+  },
+  {
+    "filename": "apkzlib-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apkzlib/9.1.0/apkzlib-9.1.0.jar",
+    "sha256": "dd9c4a5f8df807e6e23a11f61722e35335275e6dd92df10ecee4b42074a93f84",
+    "size": 209197
+  },
+  {
+    "filename": "apkzlib-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apkzlib/9.1.0/apkzlib-9.1.0-sources.jar",
+    "sha256": "6a6b5982b18e3646a1d1ddd1ab1538798909af3240d87ea4d07465317e2cb0e6",
+    "size": 182852
+  },
+  {
+    "coordinate": "com.android.tools:common:32.1.0",
+    "filename": "common-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.1.0/common-32.1.0.jar",
+    "size": 595404,
+    "sha256": "2fce68ff4ffb953aa84d1d9ab12e7f935e335b979bbc8e552986eb2c0b46294a"
+  },
+  {
+    "coordinate": "com.android.tools:common:32.1.0",
+    "filename": "common-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.1.0/common-32.1.0-sources.jar",
+    "size": 283424,
+    "sha256": "4c83168a83bc1bb0b8d904b1c5c34155179d621321e08788bd36fc7db6ac00c3"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.1.0",
+    "filename": "protos-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.1.0/protos-32.1.0.jar",
+    "size": 10110081,
+    "sha256": "b2fa8773cfba157b70f76685227ad465db5ce2e2d4ba61b12444e42ba4ee2da1"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.1.0",
+    "filename": "protos-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.1.0/protos-32.1.0-sources.jar",
+    "size": 3885423,
+    "sha256": "86b1f04a0fb0610f3a06349e9984d4054a3dd19f09c70167694420e06f48fb25"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.1.0",
+    "filename": "tracker-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.1.0/tracker-32.1.0.jar",
+    "size": 61152,
+    "sha256": "73617eee0208d1256736165c68c557f8e2be6c08de7e3056c2d1e74a66eedfd1"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.1.0",
+    "filename": "tracker-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.1.0/tracker-32.1.0-sources.jar",
+    "size": 30072,
+    "sha256": "71bd36b4828bdab21ca39a0ebeb95cd735751c06ce11d1580df1925ccda5735c"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.1.0",
+    "filename": "annotations-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.1.0/annotations-32.1.0.jar",
+    "size": 10680,
+    "sha256": "3b4bb9620c17d19e5bd91ac1988080553573b4c3b739fdd92416f42f2daf3e78"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.1.0",
+    "filename": "annotations-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.1.0/annotations-32.1.0-sources.jar",
+    "size": 20791,
+    "sha256": "ed67d455a1b4b0ce47d32b546f19f6114e990d574b6bbf276068e79ccf92fbd7"
+  },
+  {
+    "filename": "gradle-common-api-9.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-common-api/9.1.0/gradle-common-api-9.1.0.jar",
+    "sha256": "fbc8e90c270cfcab9cb4de6e948180870435971201f487c0355d589c64b1fb36",
+    "size": 10974
+  },
+  {
+    "filename": "gradle-common-api-9.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-common-api/9.1.0/gradle-common-api-9.1.0-sources.jar",
+    "sha256": "efcbfc3f795af229d253a2e1fd9b7e4df141d8154adac5e144e33780db127414",
+    "size": 9525
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.1.0",
+    "filename": "dvlib-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.1.0/dvlib-32.1.0.jar",
+    "size": 68121,
+    "sha256": "8abf798174efbf6bc282ee5c7791182e73712ccf98de053f8a8a7fb9a36b8542"
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.1.0",
+    "filename": "dvlib-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.1.0/dvlib-32.1.0-sources.jar",
+    "size": 17355,
+    "sha256": "b0edda268898c252b931071b1bdd37882d7413c823332330ea8df59c468413eb"
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.2.1",
+    "filename": "manifest-merger-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.2.1/manifest-merger-32.2.1.jar",
+    "size": 269485,
+    "sha256": "a21fdf8d76f3627391c92c75746a8bff9e1fb8e53a1a3cce384edd81bae687b2"
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.2.1",
+    "filename": "manifest-merger-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.2.1/manifest-merger-32.2.1-sources.jar",
+    "size": 235996,
+    "sha256": "b7f3deb356146cb650afe011113fbc05ecaeea5c10c5400059cc25e4304aaa2f"
+  },
+  {
+    "filename": "apksig-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apksig/9.2.1/apksig-9.2.1.jar",
+    "sha256": "562cd0a88890960d2ece48e116c61f12872222f1dcc306890799382bc019b201",
+    "size": 506620
+  },
+  {
+    "filename": "apksig-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apksig/9.2.1/apksig-9.2.1-sources.jar",
+    "sha256": "c7a0f43d1e40fdf39725ac090f5c7bbaeae82d1e0bfd9cf2ee507a70eb5136b5",
+    "size": 342169
+  },
+  {
+    "filename": "apkzlib-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apkzlib/9.2.1/apkzlib-9.2.1.jar",
+    "sha256": "8fcca129e47447f2c771a33b78981074814229249bc2d1e77ffd6bec8d0ff3ef",
+    "size": 209197
+  },
+  {
+    "filename": "apkzlib-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/apkzlib/9.2.1/apkzlib-9.2.1-sources.jar",
+    "sha256": "6a6b5982b18e3646a1d1ddd1ab1538798909af3240d87ea4d07465317e2cb0e6",
+    "size": 182852
+  },
+  {
+    "coordinate": "com.android.tools:common:32.2.1",
+    "filename": "common-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.2.1/common-32.2.1.jar",
+    "size": 596050,
+    "sha256": "85ba2d79bbb553a9075f2710dca7eff504799b8338c7037c9971227b9cf01dc0"
+  },
+  {
+    "coordinate": "com.android.tools:common:32.2.1",
+    "filename": "common-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.2.1/common-32.2.1-sources.jar",
+    "size": 283827,
+    "sha256": "bb18b33ce5b638f713b65969dc0bad840e21209b5f4038d9dbc4ede509e0342d"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.2.1",
+    "filename": "protos-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.2.1/protos-32.2.1.jar",
+    "size": 10262623,
+    "sha256": "9731cac86a0cd1b77fb646c40744f34bb07b0e9934a3ac3a8a457137048a555c"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.2.1",
+    "filename": "protos-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.2.1/protos-32.2.1-sources.jar",
+    "size": 3944666,
+    "sha256": "fb3d48102428a6f83774defd285c6a5f9da5f39a29e6a1efe1d74747f8500ba0"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.2.1",
+    "filename": "tracker-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.2.1/tracker-32.2.1.jar",
+    "size": 60978,
+    "sha256": "67445ba419cffa2e94cc4289f3cf7acaa624bf3711879a0c7fb769652175a0e1"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.2.1",
+    "filename": "tracker-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.2.1/tracker-32.2.1-sources.jar",
+    "size": 31036,
+    "sha256": "468251beffd34b2a831e311d805225bbaceaba93ca3cd51c408dd38b182ee3a2"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.2.1",
+    "filename": "annotations-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.2.1/annotations-32.2.1.jar",
+    "size": 10680,
+    "sha256": "549717934c89945f9fe734f880d73473ef79336ab3517acf0e4d2851d97c5dce"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.2.1",
+    "filename": "annotations-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.2.1/annotations-32.2.1-sources.jar",
+    "size": 20791,
+    "sha256": "ed67d455a1b4b0ce47d32b546f19f6114e990d574b6bbf276068e79ccf92fbd7"
+  },
+  {
+    "filename": "gradle-common-api-9.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-common-api/9.2.1/gradle-common-api-9.2.1.jar",
+    "sha256": "2d5ba2e0f5f0ca8bf620ddd2b8a5a1493582c5e7d6966f7070974aa2da714948",
+    "size": 15683
+  },
+  {
+    "filename": "gradle-common-api-9.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/gradle-common-api/9.2.1/gradle-common-api-9.2.1-sources.jar",
+    "sha256": "5803bbafaf63739d6d26bdd02afb3a3400e26c7cb00e33369944aeb9860081c1",
+    "size": 15295
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.2.1",
+    "filename": "dvlib-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.2.1/dvlib-32.2.1.jar",
+    "size": 68121,
+    "sha256": "f91ff66003800ec83009f18f8b45096de4cd87824d0ad9897018376c82e840a3"
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.2.1",
+    "filename": "dvlib-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.2.1/dvlib-32.2.1-sources.jar",
+    "size": 17355,
+    "sha256": "b0edda268898c252b931071b1bdd37882d7413c823332330ea8df59c468413eb"
+  },
+  {
+    "filename": "kotlin-build-tools-api-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-api/2.3.0/kotlin-build-tools-api-2.3.0.pom",
+    "sha256": "1734c8be0e271572770245b4d606ce5bb8816e8b0d1c0f7e7ae11c10c2ca175b",
+    "size": 1136
+  },
+  {
+    "filename": "kotlin-build-tools-api-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-api/2.3.0/kotlin-build-tools-api-2.3.0.jar",
+    "sha256": "c6c09cf2853457249f707c86382112409d5a55f50b6b8568ba4f530dd003fedc",
+    "size": 109151
+  },
+  {
+    "filename": "kotlin-build-tools-api-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-api/2.3.0/kotlin-build-tools-api-2.3.0-sources.jar",
+    "sha256": "6a8bbaff207851eb46110a59b7ee70596852b32cc66344a5788403a43fa79433",
+    "size": 51484
+  },
+  {
+    "filename": "kotlin-build-tools-impl-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-impl/2.3.0/kotlin-build-tools-impl-2.3.0.pom",
+    "sha256": "00a7a53cd82be70b36df8a0223a5ab861a2a6ffb719d9b773375c877c89dba04",
+    "size": 1949
+  },
+  {
+    "filename": "kotlin-build-tools-impl-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-impl/2.3.0/kotlin-build-tools-impl-2.3.0.jar",
+    "sha256": "93a5e8ffb1000801c832a862b23bd9766f444e6f6c185c32b1fb57877fb5cea3",
+    "size": 1378715
+  },
+  {
+    "filename": "kotlin-build-tools-impl-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-impl/2.3.0/kotlin-build-tools-impl-2.3.0-sources.jar",
+    "sha256": "9d3b4b2c935e1bc2c0d0f9519b5ffd7e084498736657cb18430bc2e10d4162ed",
+    "size": 106922
+  },
+  {
+    "filename": "kotlin-build-tools-compat-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-compat/2.3.0/kotlin-build-tools-compat-2.3.0.pom",
+    "sha256": "6b23164e228163fd63f817fb2c5de27d6e9c3403b763ccba0680584f217f8e32",
+    "size": 1372
+  },
+  {
+    "filename": "kotlin-build-tools-compat-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-compat/2.3.0/kotlin-build-tools-compat-2.3.0.jar",
+    "sha256": "009493e1caf04c8285f1fed157bbab688355db04d2deaec4f5a0f9b635f866e5",
+    "size": 96765
+  },
+  {
+    "filename": "kotlin-build-tools-compat-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-tools-compat/2.3.0/kotlin-build-tools-compat-2.3.0-sources.jar",
+    "sha256": "f838a53119c2c588bda649b420499d6d636d4edb176bc78c17a990b291e8a5e7",
+    "size": 20649
+  },
+  {
+    "filename": "kotlin-compiler-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.3.0/kotlin-compiler-embeddable-2.3.0.pom",
+    "sha256": "cce9b111f211660c5c45393e748df46950b61c01147e0773b6dc719ee8bb77a8",
+    "size": 2447
+  },
+  {
+    "filename": "kotlin-compiler-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.3.0/kotlin-compiler-embeddable-2.3.0.jar",
+    "sha256": "8dbd882fa58c3d17e683a27390288315f8b490f8e3e3b1be4dc3e280d37e285a",
+    "size": 57669576
+  },
+  {
+    "filename": "kotlin-compiler-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-embeddable/2.3.0/kotlin-compiler-embeddable-2.3.0-sources.jar",
+    "sha256": "ddb5d730d864f4ecbfe60e31fa8a9f89eb976fa8bba0107ab0b4b44c3747039b",
+    "size": 11353107
+  },
+  {
+    "filename": "kotlin-gradle-plugin-api-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-api/2.3.0/kotlin-gradle-plugin-api-2.3.0.pom",
+    "sha256": "19e4f0abfb5cbf011d2593f565157c8ebf4592f3008614ba2edb048a7851175d",
+    "size": 6405
+  },
+  {
+    "filename": "kotlin-gradle-plugin-api-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-api/2.3.0/kotlin-gradle-plugin-api-2.3.0.jar",
+    "sha256": "fd0621943d69c3b66902ff89b98689387c6a3fcb5f868f16c377156ec656f89a",
+    "size": 290347
+  },
+  {
+    "filename": "kotlin-gradle-plugin-api-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-api/2.3.0/kotlin-gradle-plugin-api-2.3.0-sources.jar",
+    "sha256": "60a3e9375d396a7059951889e42545f112a34e2429af9e8b865d3b33e55bed28",
+    "size": 95017
+  },
+  {
+    "filename": "kotlin-gradle-plugin-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.3.0/kotlin-gradle-plugin-2.3.0.pom",
+    "sha256": "878727bf21a83adad89d4e6088484ddbf39f6a84a94280221a6e1c2f8841303e",
+    "size": 11918
+  },
+  {
+    "filename": "kotlin-gradle-plugin-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.3.0/kotlin-gradle-plugin-2.3.0.jar",
+    "sha256": "74a2fba15b75b344d1c8c5b5e947d2349e642a88f15f0a7fdda207d345b707cc",
+    "size": 24224627
+  },
+  {
+    "filename": "kotlin-gradle-plugin-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.3.0/kotlin-gradle-plugin-2.3.0-sources.jar",
+    "sha256": "5ab0c9b05827c0ab7e8ce4d3d52de126b6d53d2a9b15d8340e5994aaed723980",
+    "size": 1584418
+  },
+  {
+    "filename": "kotlin-compiler-runner-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-runner/2.3.0/kotlin-compiler-runner-2.3.0.pom",
+    "sha256": "a2ff336678a7f53a44392bfc6c52b6812eddc73e40821c907f2a2641679e0ebb",
+    "size": 1921
+  },
+  {
+    "filename": "kotlin-compiler-runner-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-runner/2.3.0/kotlin-compiler-runner-2.3.0.jar",
+    "sha256": "870977f29605436c5eb2257b9c8e5d64f3282f2a88edee4544d34ec45f16a6a7",
+    "size": 19870
+  },
+  {
+    "filename": "kotlin-compiler-runner-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-compiler-runner/2.3.0/kotlin-compiler-runner-2.3.0-sources.jar",
+    "sha256": "67a07d0bf582dd860e3ca0d0959bbfb3a71ee3162231292ccd5f2f23a66e120a",
+    "size": 6454
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver-compiler-plugin-embeddable/2.3.0/kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0.pom",
+    "sha256": "067cc810e09a61e16e7e87b52a4dd647e15f60b77e3da0d1b153f3f80eebf303",
+    "size": 1223
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver-compiler-plugin-embeddable/2.3.0/kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0.jar",
+    "sha256": "40e3e18bb8c55232ee6525ce57d17b865e56728b052bf0c10e7bec1d084998ca",
+    "size": 18696
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver-compiler-plugin-embeddable/2.3.0/kotlin-sam-with-receiver-compiler-plugin-embeddable-2.3.0-sources.jar",
+    "sha256": "75e0c794c3f9c5cc32b157f2dff55508eac98e7a2146aa9209d5d53f02926039",
+    "size": 5637
+  },
+  {
+    "filename": "kotlin-assignment-compiler-plugin-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment-compiler-plugin-embeddable/2.3.0/kotlin-assignment-compiler-plugin-embeddable-2.3.0.pom",
+    "sha256": "52db69214751035f3f2d852f243082e71e7aeb07a716cd9e087b24b9827a522a",
+    "size": 1204
+  },
+  {
+    "filename": "kotlin-assignment-compiler-plugin-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment-compiler-plugin-embeddable/2.3.0/kotlin-assignment-compiler-plugin-embeddable-2.3.0.jar",
+    "sha256": "d43faab337f3698e8dace6525d2cd7c2aeba7b035938485864164fe702e733bd",
+    "size": 51562
+  },
+  {
+    "filename": "kotlin-assignment-compiler-plugin-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment-compiler-plugin-embeddable/2.3.0/kotlin-assignment-compiler-plugin-embeddable-2.3.0-sources.jar",
+    "sha256": "d3e6cc5870c58b17f1dea0ced24197b625d8385c0196d03e5805feba7147d3b1",
+    "size": 15881
+  },
+  {
+    "filename": "kotlin-scripting-compiler-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-embeddable/2.3.0/kotlin-scripting-compiler-embeddable-2.3.0.pom",
+    "sha256": "16347ad7123c06e89a52efadc318d96a2724f54a81c7ec594c0d402e1f1e6459",
+    "size": 2026
+  },
+  {
+    "filename": "kotlin-scripting-compiler-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-embeddable/2.3.0/kotlin-scripting-compiler-embeddable-2.3.0.jar",
+    "sha256": "67145dbea93194dbb2253e2f35a0a9fe78017c2cbce3ecdb4b1ff43fff4718d5",
+    "size": 589059
+  },
+  {
+    "filename": "kotlin-scripting-compiler-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-embeddable/2.3.0/kotlin-scripting-compiler-embeddable-2.3.0-sources.jar",
+    "sha256": "6baace68ea08d98f77759aa44cb2a4e821f6c0117a9297134bb5f8a8adaa16a3",
+    "size": 126035
+  },
+  {
+    "filename": "kotlin-scripting-compiler-impl-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-impl-embeddable/2.3.0/kotlin-scripting-compiler-impl-embeddable-2.3.0.pom",
+    "sha256": "4cf1b9bf9ae69c76f3ea75a7856dc66de44678a7c741715ae9c15db40ecd7efd",
+    "size": 1834
+  },
+  {
+    "filename": "kotlin-scripting-compiler-impl-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-impl-embeddable/2.3.0/kotlin-scripting-compiler-impl-embeddable-2.3.0.jar",
+    "sha256": "32c7427f105e62d4f4eff3035da1e4280b27771be4ad6143ba8655d1887720cd",
+    "size": 230242
+  },
+  {
+    "filename": "kotlin-scripting-compiler-impl-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-compiler-impl-embeddable/2.3.0/kotlin-scripting-compiler-impl-embeddable-2.3.0-sources.jar",
+    "sha256": "d73079e2957b30d8e8cd6312096cdccd05c17e8ffe1ffdeb97b67eabb8ebd787",
+    "size": 49609
+  },
+  {
+    "filename": "kotlin-scripting-common-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-common/2.3.0/kotlin-scripting-common-2.3.0.pom",
+    "sha256": "f40b8aad5df1ebcae25092cc33b8693fa430e534420ba5aea7f006b2f32b430e",
+    "size": 1360
+  },
+  {
+    "filename": "kotlin-scripting-common-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-common/2.3.0/kotlin-scripting-common-2.3.0.jar",
+    "sha256": "4252b782cda53fcbfd953b90af03250e2197ffef6e55abd9b0a2e48f93eff253",
+    "size": 197599
+  },
+  {
+    "filename": "kotlin-scripting-common-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-common/2.3.0/kotlin-scripting-common-2.3.0-sources.jar",
+    "sha256": "f35d6e3213353fd4a115986e56fe222dbaddab56510c6c96b2bd2d9bd5e130de",
+    "size": 32219
+  },
+  {
+    "filename": "kotlin-scripting-jvm-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-jvm/2.3.0/kotlin-scripting-jvm-2.3.0.pom",
+    "sha256": "a9e9ac353b4805403b037b29999a549f1bc44804e78959d84ffb1bc33045f247",
+    "size": 1741
+  },
+  {
+    "filename": "kotlin-scripting-jvm-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-jvm/2.3.0/kotlin-scripting-jvm-2.3.0.jar",
+    "sha256": "36933eb83619a8a65e041dfa9b692d34e07d57c6fd62fe371c8bbf05880bec47",
+    "size": 149111
+  },
+  {
+    "filename": "kotlin-scripting-jvm-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-scripting-jvm/2.3.0/kotlin-scripting-jvm-2.3.0-sources.jar",
+    "sha256": "2a647e6f709da1792192b264c5742b95147d8287d3354e61a020b4f715408c0c",
+    "size": 29339
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver/2.3.0/kotlin-sam-with-receiver-2.3.0.pom",
+    "sha256": "0c82e6117a46361bd4cc5e62655f2b802f10f4b7d9256a63683d034afd0c0d43",
+    "size": 2960
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-2.3.0.module",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver/2.3.0/kotlin-sam-with-receiver-2.3.0.module",
+    "sha256": "0c20f681d36f4a79916221580989291794e656582f949c0679dfa434a026f6ca",
+    "size": 75326
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-2.3.0-gradle813.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver/2.3.0/kotlin-sam-with-receiver-2.3.0-gradle813.jar",
+    "sha256": "afc89394a52b52ef0ba7a8296a4262d0d3a8a3ce740915d87d713b0a01613298",
+    "size": 9615
+  },
+  {
+    "filename": "kotlin-sam-with-receiver-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-sam-with-receiver/2.3.0/kotlin-sam-with-receiver-2.3.0-sources.jar",
+    "sha256": "4bc9f897c8ea141112e151b6f598b1d2cb1c686153b7bb7179e9797ee66fe96a",
+    "size": 3565
+  },
+  {
+    "filename": "kotlin-assignment-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment/2.3.0/kotlin-assignment-2.3.0.pom",
+    "sha256": "1aac22182d2c9c954fffc16b5765ead238e2030f4784872d46bc5f39ca33965d",
+    "size": 2939
+  },
+  {
+    "filename": "kotlin-assignment-2.3.0.module",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment/2.3.0/kotlin-assignment-2.3.0.module",
+    "sha256": "96344f19d8f19eaa5bc441e33f6501f7e73da3c7a5d57d44bc7c16eaa457565b",
+    "size": 74591
+  },
+  {
+    "filename": "kotlin-assignment-2.3.0-gradle813.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment/2.3.0/kotlin-assignment-2.3.0-gradle813.jar",
+    "sha256": "3ca21ac8791672175b8273de995f024f35992df0300a28c27549cf7770cc9ce6",
+    "size": 9413
+  },
+  {
+    "filename": "kotlin-assignment-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-assignment/2.3.0/kotlin-assignment-2.3.0-sources.jar",
+    "sha256": "4f771b60b88762d236c7c54fab1bcc0aba78b235272b2f7e7e140bc0b269dfa6",
+    "size": 3348
+  },
+  {
+    "filename": "abi-tools-api-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/abi-tools-api/2.3.0/abi-tools-api-2.3.0.pom",
+    "sha256": "a8922144097186e7548d7147dc8dced5e60e3069d4635ba551ef2e5775ab9809",
+    "size": 1109
+  },
+  {
+    "filename": "abi-tools-api-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/abi-tools-api/2.3.0/abi-tools-api-2.3.0.jar",
+    "sha256": "4017bcc1f5d3285b17e6b6220d16a468c8715930f0df96396d764b57f0a6d365",
+    "size": 13341
+  },
+  {
+    "filename": "abi-tools-api-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/abi-tools-api/2.3.0/abi-tools-api-2.3.0-sources.jar",
+    "sha256": "bb00fdbc8da543d5fd6f07ba2d70216b137c99772497990c22d5fc4e40471284",
+    "size": 9144
+  },
+  {
+    "filename": "fus-statistics-gradle-plugin-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/fus-statistics-gradle-plugin/2.3.0/fus-statistics-gradle-plugin-2.3.0.pom",
+    "sha256": "93cfeb154591c3701e9e04350bd005d1956a9ae647147d6fb2a7c5783e1f909a",
+    "size": 2648
+  },
+  {
+    "filename": "fus-statistics-gradle-plugin-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/fus-statistics-gradle-plugin/2.3.0/fus-statistics-gradle-plugin-2.3.0.jar",
+    "sha256": "0fe72fdc6e51be2b274b0e64b84401f525036afb206162a4458214f11ebad787",
+    "size": 84949
+  },
+  {
+    "filename": "fus-statistics-gradle-plugin-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/fus-statistics-gradle-plugin/2.3.0/fus-statistics-gradle-plugin-2.3.0-sources.jar",
+    "sha256": "25225642ec723c9ea8e4c493e6362d84a796476e37df6e688d9de8fb415d9048",
+    "size": 16568
+  },
+  {
+    "filename": "kotlin-build-statistics-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-statistics/2.3.0/kotlin-build-statistics-2.3.0.pom",
+    "sha256": "41390a5eb2311493b1a45b9b3972c3a0bf1da847e845a34ab6840aaf41264de2",
+    "size": 1550
+  },
+  {
+    "filename": "kotlin-build-statistics-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-statistics/2.3.0/kotlin-build-statistics-2.3.0.jar",
+    "sha256": "6778559700e72d764e9e24d958f16ec0cc75e76b75b3814c2bcde144a6274f4e",
+    "size": 128565
+  },
+  {
+    "filename": "kotlin-build-statistics-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-build-statistics/2.3.0/kotlin-build-statistics-2.3.0-sources.jar",
+    "sha256": "e22ca871151a592f8865a1d47f8d8037f6667abfec7aba62df4fadfea8502f5e",
+    "size": 25774
+  },
+  {
+    "filename": "kotlin-script-runtime-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.3.0/kotlin-script-runtime-2.3.0.pom",
+    "sha256": "db408de6dba6690795bc53a4a0f85b33c7a7d6accb67de1902640faf541f2f5b",
+    "size": 1133
+  },
+  {
+    "filename": "kotlin-script-runtime-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.3.0/kotlin-script-runtime-2.3.0.jar",
+    "sha256": "db826961371d6605318d9c4e4bfcdbfac94c3a0892cdcabd55224870fead57f1",
+    "size": 44940
+  },
+  {
+    "filename": "kotlin-script-runtime-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-script-runtime/2.3.0/kotlin-script-runtime-2.3.0-sources.jar",
+    "sha256": "d9d6b416bf1267d5d9a2fffb309c8d02fa707608154d7b0d7dd318d2dd7daa96",
+    "size": 9912
+  },
+  {
+    "filename": "kotlin-util-klib-metadata-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib-metadata/2.3.0/kotlin-util-klib-metadata-2.3.0.pom",
+    "sha256": "e0407d62691d5a3416161fd8373b4db74a3bd786f1b482e08461975102f9f3eb",
+    "size": 1755
+  },
+  {
+    "filename": "kotlin-util-klib-metadata-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib-metadata/2.3.0/kotlin-util-klib-metadata-2.3.0.jar",
+    "sha256": "2598c26c34cc5c69eb00473463e950ae67e9b80967f43a0183c567ede66a9717",
+    "size": 98749
+  },
+  {
+    "filename": "kotlin-util-klib-metadata-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib-metadata/2.3.0/kotlin-util-klib-metadata-2.3.0-sources.jar",
+    "sha256": "fbec058b62ac33dea23c079cadd853128775fd20eab37efeb1fcf5b9cb16a4de",
+    "size": 27851
+  },
+  {
+    "filename": "kotlin-stdlib-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.3.0/kotlin-stdlib-2.3.0.pom",
+    "sha256": "4d5256d3e4844e656b0ca405f6350d6f21795c24375b3452526c5467dd99b5a2",
+    "size": 2299
+  },
+  {
+    "filename": "kotlin-stdlib-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.3.0/kotlin-stdlib-2.3.0.jar",
+    "sha256": "887587c91713250ad52fe14ad9166d042c33835049890e9437f355ffc5a195b1",
+    "size": 1796996
+  },
+  {
+    "filename": "kotlin-stdlib-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-stdlib/2.3.0/kotlin-stdlib-2.3.0-sources.jar",
+    "sha256": "326423198a2ad721c9c075e20db7537ad655f21bfe342a5241d874987e434531",
+    "size": 727775
+  },
+  {
+    "filename": "kotlin-daemon-embeddable-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.3.0/kotlin-daemon-embeddable-2.3.0.pom",
+    "sha256": "4c8ddab9c40b30d01b85cfea1f1777d73525c9b71643e6250c6576fc7d1fc112",
+    "size": 1172
+  },
+  {
+    "filename": "kotlin-daemon-embeddable-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.3.0/kotlin-daemon-embeddable-2.3.0.jar",
+    "sha256": "39bcb02d8c293aa678554c8b49d7ff84657021709283c6186e3a40806af9bd10",
+    "size": 348228
+  },
+  {
+    "filename": "kotlin-daemon-embeddable-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-embeddable/2.3.0/kotlin-daemon-embeddable-2.3.0-sources.jar",
+    "sha256": "45b299ab720e06c0b341b17f925d2b19dbabfedeb954a9e41d8d8302e4f6bfc6",
+    "size": 38834
+  },
+  {
+    "filename": "kotlin-daemon-client-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-client/2.3.0/kotlin-daemon-client-2.3.0.pom",
+    "sha256": "b5e2e74ee5c2f88fd08bf83eec6471f6bbca7aa121598802b6c32c56e8706026",
+    "size": 1352
+  },
+  {
+    "filename": "kotlin-daemon-client-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-client/2.3.0/kotlin-daemon-client-2.3.0.jar",
+    "sha256": "b2be67688caf11a138d5ae0ce1235381ad9ab0ddb9395ab06f8d846a0b466017",
+    "size": 242858
+  },
+  {
+    "filename": "kotlin-daemon-client-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-daemon-client/2.3.0/kotlin-daemon-client-2.3.0-sources.jar",
+    "sha256": "f5d5f456c2b37c7378dfb97b63030635179f92aa2cab8cd7b3601937d68a22e2",
+    "size": 44824
+  },
+  {
+    "filename": "kotlin-tooling-core-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-tooling-core/2.3.0/kotlin-tooling-core-2.3.0.pom",
+    "sha256": "b50e85b4b118c1222381ed1cebb2ba96a7de2ddaedb62dda67d4ae06a1a25d37",
+    "size": 1127
+  },
+  {
+    "filename": "kotlin-tooling-core-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-tooling-core/2.3.0/kotlin-tooling-core-2.3.0.jar",
+    "sha256": "367142781299bc0f9120c1deec0e62934a1af9ea7f01aaa9c5a5354dc5d8d7d9",
+    "size": 99749
+  },
+  {
+    "filename": "kotlin-tooling-core-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-tooling-core/2.3.0/kotlin-tooling-core-2.3.0-sources.jar",
+    "sha256": "a19867e8faa77b57dea45b2c7d458cea3e3875641d47c2816854cff7e1f680b9",
+    "size": 13427
+  },
+  {
+    "filename": "kotlin-util-klib-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib/2.3.0/kotlin-util-klib-2.3.0.pom",
+    "sha256": "9735a33cb64983baa0d12dc0c8e1934b0e552e6bcc876721ac558a9822850bfe",
+    "size": 1540
+  },
+  {
+    "filename": "kotlin-util-klib-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib/2.3.0/kotlin-util-klib-2.3.0.jar",
+    "sha256": "64bba009966a028186d9ee706b0dc80fea61c0ae6eb1725ed1d7d70ef22b52e1",
+    "size": 704020
+  },
+  {
+    "filename": "kotlin-util-klib-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-klib/2.3.0/kotlin-util-klib-2.3.0-sources.jar",
+    "sha256": "56805f6be629c9f0c363c6d7e57d81dd3899ce9550f5d351ecb9a56110f6686d",
+    "size": 191925
+  },
+  {
+    "filename": "kotlin-util-io-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-io/2.3.0/kotlin-util-io-2.3.0.pom",
+    "sha256": "86f9ae347d987ccc18d9a109eed2e5543be38ff48c81d52d28c7fa1f205aacaf",
+    "size": 1334
+  },
+  {
+    "filename": "kotlin-util-io-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-io/2.3.0/kotlin-util-io-2.3.0.jar",
+    "sha256": "1c91203f27e73b9688ddfe1a8802328d35eb70fa55f5e13deadb721e78f92aa4",
+    "size": 55396
+  },
+  {
+    "filename": "kotlin-util-io-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-util-io/2.3.0/kotlin-util-io-2.3.0-sources.jar",
+    "sha256": "647f88bc1f66bc6a7a808ea340bb9b25c49bb7263f1e4daa583dcba30d78e5d7",
+    "size": 11628
+  },
+  {
+    "filename": "kotlin-native-utils-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-native-utils/2.3.0/kotlin-native-utils-2.3.0.pom",
+    "sha256": "469e8f601fdbdf890ffa8cd748e110702aa4531bbb29b64e5e7503f0efe50d90",
+    "size": 1862
+  },
+  {
+    "filename": "kotlin-native-utils-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-native-utils/2.3.0/kotlin-native-utils-2.3.0.jar",
+    "sha256": "ee4bf2833d10e5f37dd216a83129f59f3c7cbef5ebac130f70664839708c80b7",
+    "size": 409963
+  },
+  {
+    "filename": "kotlin-native-utils-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-native-utils/2.3.0/kotlin-native-utils-2.3.0-sources.jar",
+    "sha256": "f0598296f18696f470fee3cea49fec20b8dcc5d9fa70624bef48a5c8937a2f44",
+    "size": 62836
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea/2.3.0/kotlin-gradle-plugin-idea-2.3.0.pom",
+    "sha256": "04b495ae0663edadda48406464acd39431a3cac7b3e8e8c094b76996ed4149a0",
+    "size": 2606
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea/2.3.0/kotlin-gradle-plugin-idea-2.3.0.jar",
+    "sha256": "952e73948e2a20d398c26b87a6bb70ccf66418fbaf1527c3515b188ea9d4bd60",
+    "size": 94795
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea/2.3.0/kotlin-gradle-plugin-idea-2.3.0-sources.jar",
+    "sha256": "7d2c62633e1d654bb9400253d8e510e3744a109e403939423c74768e2b2fe062",
+    "size": 19666
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-proto-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea-proto/2.3.0/kotlin-gradle-plugin-idea-proto-2.3.0.pom",
+    "sha256": "d9b08e1ee338a6346149a9d0218f851ee3d47d8bb77d6103260f2a8726ae525e",
+    "size": 1396
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-proto-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea-proto/2.3.0/kotlin-gradle-plugin-idea-proto-2.3.0.jar",
+    "sha256": "7a90503c9d787f9bcd2c1776e4cc527eb9de7912ef79c6c958f1305a2d1c43ba",
+    "size": 2675536
+  },
+  {
+    "filename": "kotlin-gradle-plugin-idea-proto-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-idea-proto/2.3.0/kotlin-gradle-plugin-idea-proto-2.3.0-sources.jar",
+    "sha256": "65673fb356b7d7ad49d3404ceb038d1810b552ec4b988261bfc2f90c0146997f",
+    "size": 96058
+  },
+  {
+    "filename": "kotlin-gradle-plugins-bom-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugins-bom/2.3.0/kotlin-gradle-plugins-bom-2.3.0.pom",
+    "sha256": "7186092a69f3688432c5c0acb90b4a671fd8ee800d84fe584fae8fd533babf8a",
+    "size": 4588
+  },
+  {
+    "filename": "kotlin-gradle-plugin-annotations-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-annotations/2.3.0/kotlin-gradle-plugin-annotations-2.3.0.pom",
+    "sha256": "69084344586f52434d1fbb51666960affb876c643e8086245eb80ba5e4449bb5",
+    "size": 1490
+  },
+  {
+    "filename": "kotlin-gradle-plugin-annotations-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-annotations/2.3.0/kotlin-gradle-plugin-annotations-2.3.0.jar",
+    "sha256": "fc7298c36b45f36d1652c703bab693f5fe9b11598ecd9ac7ec9fdfe88a6db0f0",
+    "size": 4689
+  },
+  {
+    "filename": "kotlin-gradle-plugin-annotations-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-annotations/2.3.0/kotlin-gradle-plugin-annotations-2.3.0-sources.jar",
+    "sha256": "9c47f31d1fc95cae98764339ea43064074696be18a93b15b3a755426350053e3",
+    "size": 3444
+  },
+  {
+    "filename": "kotlin-klib-commonizer-api-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-klib-commonizer-api/2.3.0/kotlin-klib-commonizer-api-2.3.0.pom",
+    "sha256": "cd31f0ecda82a65122ffc6a55de8711394b6184b514402b7e119191aa8091a82",
+    "size": 1569
+  },
+  {
+    "filename": "kotlin-klib-commonizer-api-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-klib-commonizer-api/2.3.0/kotlin-klib-commonizer-api-2.3.0.jar",
+    "sha256": "9ba57d91abdeab9acd588a14b5f42209b99644c53416dff9e97ecb4bf97f5248",
+    "size": 73550
+  },
+  {
+    "filename": "kotlin-klib-commonizer-api-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-klib-commonizer-api/2.3.0/kotlin-klib-commonizer-api-2.3.0-sources.jar",
+    "sha256": "a89cbb7f4f5719b25d1747e7674bb4802c887307a27187c1cfb5cd48d3ab5e55",
+    "size": 10773
+  },
+  {
+    "filename": "kotlin-gradle-plugin-2.3.0.module",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.3.0/kotlin-gradle-plugin-2.3.0.module",
+    "sha256": "bdb32db3aa27805f3479ec033ec63d3ccabeb13b889d86dabda742bbef53c09a",
+    "size": 152108
+  },
+  {
+    "filename": "kotlin-gradle-plugin-2.3.0-gradle813.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin/2.3.0/kotlin-gradle-plugin-2.3.0-gradle813.jar",
+    "sha256": "3acf97d73a2581b032873fa89f56750d36b3b76d40d692d9839f2467ddae4d69",
+    "size": 24191082
+  },
+  {
+    "filename": "kotlin-gradle-plugin-api-2.3.0.module",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-api/2.3.0/kotlin-gradle-plugin-api-2.3.0.module",
+    "sha256": "050f1e10220900e47a30891dd5cfea837a65dbbb0d9a3cb1b85291aba326ca41",
+    "size": 128080
+  },
+  {
+    "filename": "kotlin-gradle-plugin-api-2.3.0-gradle813.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/kotlin-gradle-plugin-api/2.3.0/kotlin-gradle-plugin-api-2.3.0-gradle813.jar",
+    "sha256": "ca1ead149a8c8f41ba60a839a83b23c3a06227c46c62124c51be999035deac31",
+    "size": 287297
+  },
+  {
+    "filename": "fus-statistics-gradle-plugin-2.3.0.module",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/fus-statistics-gradle-plugin/2.3.0/fus-statistics-gradle-plugin-2.3.0.module",
+    "sha256": "77c203486fd792b580572069e5c442d180c0ef055ba734505da28d197ec12ff7",
+    "size": 56621
+  },
+  {
+    "filename": "fus-statistics-gradle-plugin-2.3.0-gradle813.jar",
+    "url": "https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/fus-statistics-gradle-plugin/2.3.0/fus-statistics-gradle-plugin-2.3.0-gradle813.jar",
+    "sha256": "0fe72fdc6e51be2b274b0e64b84401f525036afb206162a4458214f11ebad787",
+    "size": 84949
+  },
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0.pom",
+    "sha256": "31ce606f4e9518936299bb0d27c978fa61e185fd1de7c9874fe959a53e34a685",
+    "size": 1490
+  },
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0.jar",
+    "sha256": "f264dd9f79a1fde10ce5ecc53221eff24be4c9331c830b7d52f2f08a7b633de2",
+    "size": 43858
+  },
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0-sources.jar",
+    "sha256": "85495366666158b58961e8911ced0f6f3bc92f1ebee865518b493fdb90760250",
+    "size": 44383
+  },
+  {
+    "filename": "lint-gradle-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.1.0/lint-gradle-32.1.0.pom",
+    "size": 2276,
+    "sha256": "8086683af428d7e9f8a2ba80dbbbbf33eb1019cd036ee8fb9b97cdab39d51179"
+  },
+  {
+    "filename": "lint-gradle-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.1.0/lint-gradle-32.1.0.jar",
+    "size": 66373,
+    "sha256": "0abdb1b1cd9a0bb7b9488500646a016f2c053bb31ba427645d6bf563feb93821"
+  },
+  {
+    "filename": "lint-gradle-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.1.0/lint-gradle-32.1.0-sources.jar",
+    "size": 41345,
+    "sha256": "296376d1f0d0a8ff0776fb50bdf4d14dc50b932b660a52dccca4449f2ff88da1"
+  },
+  {
+    "filename": "lint-gradle-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.2.1/lint-gradle-32.2.1.pom",
+    "size": 2276,
+    "sha256": "cf86e0e833ddd44f500d4bfcba10baef1e3bcded59b4ab744d161a5ea4b5367e"
+  },
+  {
+    "filename": "lint-gradle-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.2.1/lint-gradle-32.2.1.jar",
+    "size": 66368,
+    "sha256": "3f3efde5ebf8d1eb83d436dda12d7340895a7e9d6af62abb3e2973a27942912c"
+  },
+  {
+    "filename": "lint-gradle-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-gradle/32.2.1/lint-gradle-32.2.1-sources.jar",
+    "size": 41361,
+    "sha256": "f3ec807f2b95d8dd0dadcaa1204fa629c3c06a9ba19ea2c10de470ed5b6f1635"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.2.1",
+    "filename": "intellij-core-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.2.1/intellij-core-32.2.1.pom",
+    "size": 918,
+    "sha256": "27b7d0585ca46ce545f3623b8236ef85d4408c94158f24a897fbb63032ad9664"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.2.1",
+    "filename": "kotlin-compiler-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.2.1/kotlin-compiler-32.2.1.pom",
+    "size": 919,
+    "sha256": "7b65b3a2a6f62649c1e501e7d5048429bbe751e89a7b32da7bd0baeac07455d4"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.2.1",
+    "filename": "uast-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.2.1/uast-32.2.1.pom",
+    "size": 895,
+    "sha256": "46b2be94f7fb2ff11cb24d53034c8e9fc32b23bc8b33dc3c4c3e6f985a8b73f0"
+  },
+  {
+    "coordinate": "com.android.tools:common:32.2.1",
+    "filename": "common-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.2.1/common-32.2.1.pom",
+    "size": 1664,
+    "sha256": "2de83a285e21abc38fdcf1a74edd6310aad4bd2bfd98d1cf9036b263aa50c54f"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.2.1",
+    "filename": "lint-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.2.1/lint-32.2.1.pom",
+    "size": 4018,
+    "sha256": "fb585be9dfa2c842341448af02133955538ec5286e82550bdfc71294e9c02f71"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.2.1",
+    "filename": "annotations-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.2.1/annotations-32.2.1.pom",
+    "size": 822,
+    "sha256": "9f3a8890f9a80d8928d8a2ca8b540c82b062a33d17339b1265b2c47177738cc9"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.2.1",
+    "filename": "lint-api-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.2.1/lint-api-32.2.1.pom",
+    "size": 4233,
+    "sha256": "6cf8beafd0746b96ad470513241f12e6396af16eb409845ef44b7e6d63bcf216"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.2.1",
+    "filename": "lint-checks-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.2.1/lint-checks-32.2.1.pom",
+    "size": 3708,
+    "sha256": "c2a2bbc4ad28b7b4e57408bec5082e460bcf0335c8cbfc75aa387a6eff3fb3de"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.2.1",
+    "filename": "protos-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.2.1/protos-32.2.1.pom",
+    "size": 1139,
+    "sha256": "99b685a2df455828ed3d84ada36c6ac6a00091c65e7525bc49fc6a74404d0b73"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.2.1",
+    "filename": "tracker-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.2.1/tracker-32.2.1.pom",
+    "size": 2246,
+    "sha256": "1d0af5e4898bafdf0bc8f127f215fd0ec59faa7a9a7c9d37e04e2c9bd54161db"
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.2.1",
+    "filename": "manifest-merger-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.2.1/manifest-merger-32.2.1.pom",
+    "size": 2383,
+    "sha256": "75a5cbcd30900440d7250978dd1978fd5f4becfeca6f5cbc6d415019216099f5"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.2.1",
+    "filename": "play-sdk-proto-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.2.1/play-sdk-proto-32.2.1.pom",
+    "size": 1128,
+    "sha256": "57bdaf89f51bc1368b6291e2353de2e8214bd6181caf8e036c2b6bcada587f0d"
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.2.1",
+    "filename": "dvlib-32.2.1.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.2.1/dvlib-32.2.1.pom",
+    "size": 1110,
+    "sha256": "8b9fbc44215390c86c3a3312ba351eac70f26d59a82253f9d0ed2017cd0f2366"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.2.1",
+    "filename": "play-sdk-proto-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.2.1/play-sdk-proto-32.2.1.jar",
+    "size": 186631,
+    "sha256": "4dadc9fdf87be84b82113357ec2a1e668be8b67c734f001e655a05281a0d7cc8"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.2.1",
+    "filename": "play-sdk-proto-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.2.1/play-sdk-proto-32.2.1-sources.jar",
+    "size": 84908,
+    "sha256": "36bc2851486d95924d4bd7d079c29d06fd53c306421d4954986e3d6bea7aeef7"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.2.1",
+    "filename": "intellij-core-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.2.1/intellij-core-32.2.1.jar",
+    "size": 32197058,
+    "sha256": "9d56accbf509f6ee4874f9def0c29b99b5702f4354c998e9755dc91df74bdcf6"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.2.1",
+    "filename": "intellij-core-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.2.1/intellij-core-32.2.1-sources.jar",
+    "size": 27275326,
+    "sha256": "b12be7b50fce4fc19940ddd79b70d937095661637956591671232ca237c761b0"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.2.1",
+    "filename": "kotlin-compiler-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.2.1/kotlin-compiler-32.2.1.jar",
+    "size": 53668950,
+    "sha256": "dc7779cfb581591ca2b6f478f0a952c0e918dee76b5c15dd6f6819367b3eb1cf"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.2.1",
+    "filename": "kotlin-compiler-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.2.1/kotlin-compiler-32.2.1-sources.jar",
+    "size": 14152288,
+    "sha256": "47eea057f5069c9455a3c848574355e48c5ba46ab55c9c181947a54c0f605fbc"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.2.1",
+    "filename": "uast-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.2.1/uast-32.2.1.jar",
+    "size": 1893814,
+    "sha256": "b75a953d4dc82baaec5d79b84b5910fd10c58c0bf0ef664e66441356ff15bf4d"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.2.1",
+    "filename": "uast-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.2.1/uast-32.2.1-sources.jar",
+    "size": 379110,
+    "sha256": "cc736dacc124592bc24a8977987741c3707cbff1c75adaa25dba7520a8e4378d"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.2.1",
+    "filename": "lint-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.2.1/lint-32.2.1.jar",
+    "size": 1064295,
+    "sha256": "137408c526de7a645e4f380559b29f4b85dd1ac1f374c1d33eec450afb6b415c"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.2.1",
+    "filename": "lint-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.2.1/lint-32.2.1-sources.jar",
+    "size": 381452,
+    "sha256": "04949e2e2c35e00c26d8051a527d70ef401621898d3747adcac205b43c2bade4"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.2.1",
+    "filename": "lint-api-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.2.1/lint-api-32.2.1.jar",
+    "size": 1505597,
+    "sha256": "3e26a25edc47963b005f92bc55d25e0817d7e005008e0ebce91c423c18d4e3ce"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.2.1",
+    "filename": "lint-api-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.2.1/lint-api-32.2.1-sources.jar",
+    "size": 527837,
+    "sha256": "843573e4fab5f09895d32884882e23c085b5a8ea9ddb014e89f43f09463fd2c8"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.2.1",
+    "filename": "lint-checks-32.2.1.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.2.1/lint-checks-32.2.1.jar",
+    "size": 7739745,
+    "sha256": "a14365c986c65d186eaf3399927f96182171ae58af6a09e80dcbf1983ec21bc5"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.2.1",
+    "filename": "lint-checks-32.2.1-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.2.1/lint-checks-32.2.1-sources.jar",
+    "size": 1430768,
+    "sha256": "83efd0e215318bb5a7ca61127028d5fd1560872988112a0adc8dcf6c3eef3636"
+  },
+  {
+    "coordinate": "com.android.tools:annotations:32.1.0",
+    "filename": "annotations-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/annotations/32.1.0/annotations-32.1.0.pom",
+    "size": 822,
+    "sha256": "7049f7cb1821c6d46f57bafef334376cbc978ada704a16dd8106a9d148d3e237"
+  },
+  {
+    "coordinate": "com.android.tools:common:32.1.0",
+    "filename": "common-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/common/32.1.0/common-32.1.0.pom",
+    "size": 1664,
+    "sha256": "3cd16de64f53b5f1d9ff0446a247d74d1e2289797c338a4de6f75c2f7bbf37b2"
+  },
+  {
+    "coordinate": "com.android.tools:dvlib:32.1.0",
+    "filename": "dvlib-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/dvlib/32.1.0/dvlib-32.1.0.pom",
+    "size": 1110,
+    "sha256": "99183eca03ac7ec14a65ce9834407a0452933fd83ad478e1ec4fbd583ed8baf0"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.1.0",
+    "filename": "play-sdk-proto-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.1.0/play-sdk-proto-32.1.0.pom",
+    "size": 1128,
+    "sha256": "e4018ba1a9b30c406be10cc91d61f241c9751fca0773a8457b87c8914230fa2b"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.1.0",
+    "filename": "play-sdk-proto-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.1.0/play-sdk-proto-32.1.0.jar",
+    "size": 186631,
+    "sha256": "c6fc15a5c203064cfd2c8a176fdeac72ae0a2d743ec47a2e66a0238d8d870b6b"
+  },
+  {
+    "coordinate": "com.android.tools:play-sdk-proto:32.1.0",
+    "filename": "play-sdk-proto-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/play-sdk-proto/32.1.0/play-sdk-proto-32.1.0-sources.jar",
+    "size": 84908,
+    "sha256": "36bc2851486d95924d4bd7d079c29d06fd53c306421d4954986e3d6bea7aeef7"
+  },
+  {
+    "coordinate": "com.android.tools:repository:32.1.0",
+    "filename": "repository-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/repository/32.1.0/repository-32.1.0.pom",
+    "size": 2248,
+    "sha256": "376991d270e957e50a954de4ec98a3b0c33cd3716db27e46dfa0c97340601012"
+  },
+  {
+    "coordinate": "com.android.tools:sdk-common:32.1.0",
+    "filename": "sdk-common-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdk-common/32.1.0/sdk-common-32.1.0.pom",
+    "size": 4063,
+    "sha256": "97c221438d8fcb3369af1a33f31994f319d9f574c2daec18f8b4eec407f343c1"
+  },
+  {
+    "coordinate": "com.android.tools:sdklib:32.1.0",
+    "filename": "sdklib-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/sdklib/32.1.0/sdklib-32.1.0.pom",
+    "size": 2575,
+    "sha256": "8b12149fe8678617123ba574b86a2eedead8fc84109f896d3d2ea81a115eb145"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:protos:32.1.0",
+    "filename": "protos-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/protos/32.1.0/protos-32.1.0.pom",
+    "size": 1139,
+    "sha256": "a51daa72ef1fa3fd859230f5dcec90ef9f4429584292fcc929d780e062b49866"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:shared:32.1.0",
+    "filename": "shared-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/shared/32.1.0/shared-32.1.0.pom",
+    "size": 2237,
+    "sha256": "3f0a95c921e84fa12e73f8ad567f4b16a427d9992f03f38760a1b33b741bbed1"
+  },
+  {
+    "coordinate": "com.android.tools.analytics-library:tracker:32.1.0",
+    "filename": "tracker-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/analytics-library/tracker/32.1.0/tracker-32.1.0.pom",
+    "size": 2246,
+    "sha256": "22bc2f5808645d260a2edcc6a5db43134e3887f5fef0f9da58a3a76bd554d383"
+  },
+  {
+    "coordinate": "com.android.tools.build:manifest-merger:32.1.0",
+    "filename": "manifest-merger-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/build/manifest-merger/32.1.0/manifest-merger-32.1.0.pom",
+    "size": 2383,
+    "sha256": "4a1ea0a9becb1913f2b6d3d77ea81a78547bacaf838ce8f7f3526ac6115f0c29"
+  },
+  {
+    "coordinate": "com.android.tools.ddms:ddmlib:32.1.0",
+    "filename": "ddmlib-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/ddms/ddmlib/32.1.0/ddmlib-32.1.0.pom",
+    "size": 1637,
+    "sha256": "cdaf619177ef95510c47c6705776ef98347100d2fc7540f08fcb85ad978aedaf"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.1.0",
+    "filename": "intellij-core-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.1.0/intellij-core-32.1.0.pom",
+    "size": 918,
+    "sha256": "9f06b17e497879b8e908d8f68b4f6b34011845f6e1e856d4ce74d3f53def8766"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.1.0",
+    "filename": "intellij-core-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.1.0/intellij-core-32.1.0.jar",
+    "size": 32196947,
+    "sha256": "975b9eeca60ff222f2f38524d05f02da3b8ccfd1a7449fa211d6e88423888cb6"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:intellij-core:32.1.0",
+    "filename": "intellij-core-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/intellij-core/32.1.0/intellij-core-32.1.0-sources.jar",
+    "size": 27275243,
+    "sha256": "6488f63406841ffb8e3d6d0aa6af358019cbfa5df6f7ba22c0354819c605b538"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.1.0",
+    "filename": "kotlin-compiler-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.1.0/kotlin-compiler-32.1.0.pom",
+    "size": 919,
+    "sha256": "aeeac8c7f9a262c77809eff6d6204dde7f25c709c1aac4d5d851d95ba35cc337"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.1.0",
+    "filename": "kotlin-compiler-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.1.0/kotlin-compiler-32.1.0.jar",
+    "size": 53667891,
+    "sha256": "9351e61defe2f25e632e2cbc34ee864a7b017d193c99cadf05650a061c843297"
+  },
+  {
+    "coordinate": "com.android.tools.external.com-intellij:kotlin-compiler:32.1.0",
+    "filename": "kotlin-compiler-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/com-intellij/kotlin-compiler/32.1.0/kotlin-compiler-32.1.0-sources.jar",
+    "size": 14152131,
+    "sha256": "dd239f467e291fcf4a898164f8441291f3b64c5bc37139b9996312764f254035"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.1.0",
+    "filename": "uast-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.1.0/uast-32.1.0.pom",
+    "size": 895,
+    "sha256": "da9fee92726022ef5466033952d137f4a39b76ccf9e9844f7ff501834ff5146a"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.1.0",
+    "filename": "uast-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.1.0/uast-32.1.0.jar",
+    "size": 1893814,
+    "sha256": "b75a953d4dc82baaec5d79b84b5910fd10c58c0bf0ef664e66441356ff15bf4d"
+  },
+  {
+    "coordinate": "com.android.tools.external.org-jetbrains:uast:32.1.0",
+    "filename": "uast-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/external/org-jetbrains/uast/32.1.0/uast-32.1.0-sources.jar",
+    "size": 379110,
+    "sha256": "cc736dacc124592bc24a8977987741c3707cbff1c75adaa25dba7520a8e4378d"
+  },
+  {
+    "coordinate": "com.android.tools.layoutlib:layoutlib-api:32.1.0",
+    "filename": "layoutlib-api-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/layoutlib/layoutlib-api/32.1.0/layoutlib-api-32.1.0.pom",
+    "size": 1670,
+    "sha256": "72c36b37bf20ca76125420f21a64d61da70b34224f57aafb489fcc97ae56a661"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.1.0",
+    "filename": "lint-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.1.0/lint-32.1.0.pom",
+    "size": 4018,
+    "sha256": "309ac76b300264a79e045ab09340e26d4e0bee03e7503570f4e45e296661f901"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.1.0",
+    "filename": "lint-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.1.0/lint-32.1.0.jar",
+    "size": 1043796,
+    "sha256": "1299a6551416dc953ef88000c5bf4f7db504162b3e65ce9d63f9c9048b5e2f8a"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint:32.1.0",
+    "filename": "lint-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint/32.1.0/lint-32.1.0-sources.jar",
+    "size": 374900,
+    "sha256": "e39d6ad6e5f9eff8378633db48c380cb72075940c53b9d12283ac4e334827cbb"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.1.0",
+    "filename": "lint-api-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.1.0/lint-api-32.1.0.pom",
+    "size": 4233,
+    "sha256": "050140b490170d70727a542e8138a774fde389b49ca22894006fa04eeb78779b"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.1.0",
+    "filename": "lint-api-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.1.0/lint-api-32.1.0.jar",
+    "size": 1501736,
+    "sha256": "e5fadcb6d525fc9fcdcb86abe89a5865d36f79070e18ca2d50dc8bcf83bda4b0"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-api:32.1.0",
+    "filename": "lint-api-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-api/32.1.0/lint-api-32.1.0-sources.jar",
+    "size": 527542,
+    "sha256": "1a702f250857b91ffd445d72f79dec934e3ddd7cf7c77c87c693c11684e85ce2"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.1.0",
+    "filename": "lint-checks-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.0/lint-checks-32.1.0.pom",
+    "size": 3708,
+    "sha256": "c4bf026f9996fe79f17bf789ea83209a13d67e1046c920b717117ab1351d0c4a"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.1.0",
+    "filename": "lint-checks-32.1.0.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.0/lint-checks-32.1.0.jar",
+    "size": 7694649,
+    "sha256": "4bf382af26feffb5b06b4ed7506ab296bd8b6aa392634fcac129073d6ec0f0c4"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-checks:32.1.0",
+    "filename": "lint-checks-32.1.0-sources.jar",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-checks/32.1.0/lint-checks-32.1.0-sources.jar",
+    "size": 1416938,
+    "sha256": "864943a1c096806b77b1719d2016866b1f5baea8bdac405cd43d5f6ba76f71fa"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-model:32.1.0",
+    "filename": "lint-model-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-model/32.1.0/lint-model-32.1.0.pom",
+    "size": 2184,
+    "sha256": "fc6fcdd6ae7f119ee57a571a80c735503613768781e57587ae8034b002d25e6a"
+  },
+  {
+    "coordinate": "com.android.tools.lint:lint-typedef-remover:32.1.0",
+    "filename": "lint-typedef-remover-32.1.0.pom",
+    "url": "https://dl.google.com/dl/android/maven2/com/android/tools/lint/lint-typedef-remover/32.1.0/lint-typedef-remover-32.1.0.pom",
+    "size": 1491,
+    "sha256": "9783b02681ebd66dd33d077422044d796650aaf06bcfdba08e763b70953e9501"
+  }
+]

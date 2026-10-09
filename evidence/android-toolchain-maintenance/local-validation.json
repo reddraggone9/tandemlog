@@ -1,0 +1,70 @@
+{
+  "source_commit": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+  "baseline": "d93b6329c91559051d46915fc7a8114d17565cb8",
+  "application_stable_source": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "platform": "isolated Linux cloud checkout",
+  "tests": {
+    "flutter_production_native_backed": {
+      "passed": 647,
+      "log": "flutter-test.log"
+    },
+    "rust_locked_offline": {
+      "passed": 4,
+      "log": "cargo-test.log"
+    },
+    "native_contract": {
+      "passed": 107,
+      "log": "native-contract-tests.log"
+    },
+    "packaging_helpers": {
+      "passed": 50,
+      "skipped": 0,
+      "log": "python-tests.log"
+    },
+    "analysis": {
+      "passed": true,
+      "log": "analyze.log"
+    },
+    "format": {
+      "passed": true,
+      "changed_files": 0,
+      "log": "format.log"
+    },
+    "pub_resolution": {
+      "passed": true,
+      "enforce_lockfile": true,
+      "log": "pub-get.log"
+    },
+    "wrapper_wrong_checksum_control": {
+      "rejected_before_execution": true,
+      "log": "wrapper-negative.log"
+    },
+    "android_debug_packaging": {
+      "passed": true,
+      "phases": [
+        "cold",
+        "warm"
+      ],
+      "native_payload_gates_passed": true,
+      "full_apks_identical": true,
+      "cache_limitation": "Cold labels first successful application build after private bootstrap/setup/guard retries"
+    }
+  },
+  "pins": [
+    {
+      "path": "pubspec.lock",
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+      "unchanged_from_baseline": true
+    },
+    {
+      "path": "native/text_engine/Cargo.lock",
+      "sha256": "b09d300c305bd78d7689aad3e91effaeebc51a0f4da1c10dcae253b814104244",
+      "unchanged_from_baseline": true
+    }
+  ],
+  "remaining_acceptance": [
+    "Owner-signed release shrinking/R8 behavior",
+    "Exact Android runtime ABI/SAF/UI/provider workflows",
+    "Hosted all-platform CI"
+  ]
+}

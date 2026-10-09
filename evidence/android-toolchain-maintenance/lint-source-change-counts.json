@@ -1,0 +1,350 @@
+[
+  {
+    "artifact": "annotations-32.2.1-sources.jar",
+    "entry_count": 13,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  },
+  {
+    "artifact": "common-32.2.1-sources.jar",
+    "entry_count": 114,
+    "changed_entry_count": 8,
+    "changed_entries": [
+      "com/android/AndroidProjectTypes.java",
+      "com/android/SdkConstants.java",
+      "com/android/sdklib/AndroidVersion.java",
+      "com/android/sdklib/AndroidVersionUtil.kt",
+      "com/android/utils/GrabProcessOutput.java",
+      "com/android/utils/PositionXmlParser.java",
+      "com/android/utils/cxx/ninja/StreamNinjaBuildCommands.kt",
+      "com/android/xml/AndroidManifest.java"
+    ]
+  },
+  {
+    "artifact": "ddmlib-32.2.1-sources.jar",
+    "entry_count": 185,
+    "changed_entry_count": 1,
+    "changed_entries": [
+      "com/android/ddmlib/AndroidDebugBridge.java"
+    ]
+  },
+  {
+    "artifact": "dvlib-32.2.1-sources.jar",
+    "entry_count": 3,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  },
+  {
+    "artifact": "intellij-core-32.2.1-sources.jar",
+    "entry_count": 16635,
+    "changed_entry_count": 1,
+    "changed_entries": [
+      "com/intellij/ide/plugins/NonShareableJavaZipFilePool.kt"
+    ]
+  },
+  {
+    "artifact": "kotlin-compiler-32.2.1-sources.jar",
+    "entry_count": 8394,
+    "changed_entry_count": 5,
+    "changed_entries": [
+      "META-INF/services/org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor",
+      "META-INF/services/org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar",
+      "org/jetbrains/kotlin/analysis/api/fir/symbols/KaFirValueParameterSymbol.kt",
+      "org/jetbrains/kotlin/analyzer/common/CommonPlatform.kt",
+      "org/jetbrains/kotlin/util/vavr/vavrAdapters.kt"
+    ]
+  },
+  {
+    "artifact": "layoutlib-api-32.2.1-sources.jar",
+    "entry_count": 71,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  },
+  {
+    "artifact": "lint-32.2.1-sources.jar",
+    "entry_count": 136,
+    "changed_entry_count": 16,
+    "changed_entries": [
+      "com/android/tools/lint/FirUastEnvironment.kt",
+      "com/android/tools/lint/HtmlReporter.kt",
+      "com/android/tools/lint/HtmlReporterV2.kt",
+      "com/android/tools/lint/LintCliClient.kt",
+      "com/android/tools/lint/LintCliFlags.java",
+      "com/android/tools/lint/LintIssueDocGenerator.kt",
+      "com/android/tools/lint/Main.java",
+      "com/android/tools/lint/Reporter.kt",
+      "com/android/tools/lint/SarifReporter.kt",
+      "com/android/tools/lint/SyncOptions.kt",
+      "com/android/tools/lint/UastEnvironment.kt",
+      "com/android/tools/lint/UastEnvironmentUtils.kt",
+      "com/android/tools/lint/renderer/LintReportRenderer.kt",
+      "com/android/tools/lint/renderer/LintReportStyle.kt",
+      "com/android/tools/lint/renderer/data/LintReportModel.kt",
+      "com/android/tools/lint/uast/klib/KlibLightFieldForEnumEntry.kt"
+    ]
+  },
+  {
+    "artifact": "lint-api-32.2.1-sources.jar",
+    "entry_count": 111,
+    "changed_entry_count": 7,
+    "changed_entries": [
+      "com/android/tools/lint/client/api/AnnotationHandler.kt",
+      "com/android/tools/lint/client/api/LintClient.kt",
+      "com/android/tools/lint/client/api/LintDriver.kt",
+      "com/android/tools/lint/detector/api/LintModelModuleProject.kt",
+      "com/android/tools/lint/detector/api/LintUtils.kt",
+      "com/android/tools/lint/detector/api/Project.java",
+      "com/android/tools/lint/detector/api/interprocedural/CallGraph.kt"
+    ]
+  },
+  {
+    "artifact": "lint-checks-32.2.1-sources.jar",
+    "entry_count": 368,
+    "changed_entry_count": 22,
+    "changed_entries": [
+      "com/android/tools/lint/checks/AnalysisApiLintUtils.kt",
+      "com/android/tools/lint/checks/ApiDetector.kt",
+      "com/android/tools/lint/checks/BlockingDetector.kt",
+      "com/android/tools/lint/checks/BuiltinIssueRegistry.kt",
+      "com/android/tools/lint/checks/ChromeOsDetector.java",
+      "com/android/tools/lint/checks/ControlFlowGraph.kt",
+      "com/android/tools/lint/checks/GradleDetector.kt",
+      "com/android/tools/lint/checks/InferredThreadDetector.kt",
+      "com/android/tools/lint/checks/InteroperabilityDetector.kt",
+      "com/android/tools/lint/checks/PackageManagerDetector.kt",
+      "com/android/tools/lint/checks/PrivateComputeCoreDetector.kt",
+      "com/android/tools/lint/checks/ProguardAndroidTxtDetector.kt",
+      "com/android/tools/lint/checks/R8GradleConfigDetector.kt",
+      "com/android/tools/lint/checks/RelativeClassAttributeDetector.kt",
+      "com/android/tools/lint/checks/RestrictedEnvironmentBlockedCallDetector.kt",
+      "com/android/tools/lint/checks/SelectedPhotoAccessDetector.kt",
+      "com/android/tools/lint/checks/ThreadDetector.kt",
+      "com/android/tools/lint/checks/TypedefDetector.kt",
+      "com/android/tools/lint/checks/UnusedResourceDetector.kt",
+      "com/android/tools/lint/checks/fx/JoinEffectDetector.kt",
+      "com/android/tools/lint/checks/fx/analysis/Analysis.kt",
+      "com/android/tools/lint/checks/fx/result/Env.kt"
+    ]
+  },
+  {
+    "artifact": "lint-gradle-32.2.1-sources.jar",
+    "entry_count": 5,
+    "changed_entry_count": 1,
+    "changed_entries": [
+      "com/android/tools/lint/annotations/ExtractAnnotationsDriver.java"
+    ]
+  },
+  {
+    "artifact": "lint-model-32.2.1-sources.jar",
+    "entry_count": 16,
+    "changed_entry_count": 3,
+    "changed_entries": [
+      "com/android/tools/lint/model/LintModelModuleType.kt",
+      "com/android/tools/lint/model/LintModelSerialization.kt",
+      "com/android/tools/lint/model/LintModelSourceProvider.kt"
+    ]
+  },
+  {
+    "artifact": "lint-typedef-remover-32.2.1-sources.jar",
+    "entry_count": 3,
+    "changed_entry_count": 1,
+    "changed_entries": [
+      "com/android/tools/lint/typedefs/TypedefRemover.java"
+    ]
+  },
+  {
+    "artifact": "manifest-merger-32.2.1-sources.jar",
+    "entry_count": 43,
+    "changed_entry_count": 16,
+    "changed_entries": [
+      "com/android/manifmerger/AttributeOperationType.java",
+      "com/android/manifmerger/AttributeOperationType.kt",
+      "com/android/manifmerger/ConvertibleName.java",
+      "com/android/manifmerger/ConvertibleName.kt",
+      "com/android/manifmerger/KeyResolver.java",
+      "com/android/manifmerger/KeyResolver.kt",
+      "com/android/manifmerger/ManifestMerger2.java",
+      "com/android/manifmerger/ManifestModel.java",
+      "com/android/manifmerger/ManifestProvider.java",
+      "com/android/manifmerger/ManifestProvider.kt",
+      "com/android/manifmerger/MergeType.java",
+      "com/android/manifmerger/MergeType.kt",
+      "com/android/manifmerger/OtherOperationType.java",
+      "com/android/manifmerger/OtherOperationType.kt",
+      "com/android/manifmerger/XmlAttribute.java",
+      "com/android/manifmerger/XmlDocument.java"
+    ]
+  },
+  {
+    "artifact": "play-sdk-proto-32.2.1-sources.jar",
+    "entry_count": 23,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  },
+  {
+    "artifact": "protos-32.2.1-sources.jar",
+    "entry_count": 830,
+    "changed_entry_count": 74,
+    "changed_entries": [
+      "com/android/tools/build/gradle/internal/profile/AnalyticsEnums.java",
+      "com/android/tools/build/gradle/internal/profile/BooleanOption.java",
+      "com/android/tools/build/gradle/internal/profile/GradleTaskExecutionType.java",
+      "com/android/tools/build/gradle/internal/profile/OptionalBooleanOption.java",
+      "com/android/tools/build/gradle/internal/profile/VariantApiArtifactType.java",
+      "com/android/tools/build/gradle/internal/profile/VariantPropertiesMethodType.java",
+      "com/google/wireless/android/play/playlog/proto/ClientAnalytics.java",
+      "com/google/wireless/android/sdk/stats/AlwaysRunTasksAnalyzerData.java",
+      "com/google/wireless/android/sdk/stats/AndroidCliInvocation.java",
+      "com/google/wireless/android/sdk/stats/AndroidCliInvocationOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/AndroidProfilerEvent.java",
+      "com/google/wireless/android/sdk/stats/AndroidProfilerEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/AndroidStudioEvent.java",
+      "com/google/wireless/android/sdk/stats/AndroidStudioEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/AndroidStudioStats.java",
+      "com/google/wireless/android/sdk/stats/AppQualityInsightsUsageEvent.java",
+      "com/google/wireless/android/sdk/stats/AppQualityInsightsUsageEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/BackupUsageEvent.java",
+      "com/google/wireless/android/sdk/stats/DebuggerEvent.java",
+      "com/google/wireless/android/sdk/stats/DeviceInfo.java",
+      "com/google/wireless/android/sdk/stats/DeviceInfoOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/DirectAccessUsageEvent.java",
+      "com/google/wireless/android/sdk/stats/DynamicLayoutInspectorAutoConnectInfo.java",
+      "com/google/wireless/android/sdk/stats/DynamicLayoutInspectorAutoConnectInfoOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/EmulatorAvdInfo.java",
+      "com/google/wireless/android/sdk/stats/EmulatorAvdInfoOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/EmulatorFeatures.java",
+      "com/google/wireless/android/sdk/stats/EmulatorFeaturesOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/EmulatorWindowsHypervisorMigrationEvent.java",
+      "com/google/wireless/android/sdk/stats/EmulatorWindowsHypervisorMigrationEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GeminiAdvertiserEvent.java",
+      "com/google/wireless/android/sdk/stats/GlassesPairingEvent.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildMemorySample.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildMemorySampleOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildProfile.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildProfileOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildProject.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildProjectOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildSplits.java",
+      "com/google/wireless/android/sdk/stats/GradleBuildSplitsOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleSyncStats.java",
+      "com/google/wireless/android/sdk/stats/GradleSyncStatsOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleTaskExecution.java",
+      "com/google/wireless/android/sdk/stats/GradleTaskExecutionOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/GradleTransformExecution.java",
+      "com/google/wireless/android/sdk/stats/GradleTransformExecutionOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/InstantRun.java",
+      "com/google/wireless/android/sdk/stats/InstantRunOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/InteractivePreviewEvent.java",
+      "com/google/wireless/android/sdk/stats/InteractivePreviewEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/LeakCanaryTaskMetadata.java",
+      "com/google/wireless/android/sdk/stats/LeakCanaryTaskMetadataOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/LogcatUsageEvent.java",
+      "com/google/wireless/android/sdk/stats/LogcatUsageEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/MemoryUsageReportEvent.java",
+      "com/google/wireless/android/sdk/stats/NextEditPredictionEvent.java",
+      "com/google/wireless/android/sdk/stats/ProductDetails.java",
+      "com/google/wireless/android/sdk/stats/ProductDetailsOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/ResizeComposePreviewEvent.java",
+      "com/google/wireless/android/sdk/stats/ResizeComposePreviewEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/ScreenshotTestComposePreviewEvent.java",
+      "com/google/wireless/android/sdk/stats/SmlChatBotEvent.java",
+      "com/google/wireless/android/sdk/stats/SmlCompletionEvent.java",
+      "com/google/wireless/android/sdk/stats/SmlCompletionEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/SmlConfigurationEvent.java",
+      "com/google/wireless/android/sdk/stats/SmlConfigurationEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/SmlTransformEvent.java",
+      "com/google/wireless/android/sdk/stats/TaskFailedMetadata.java",
+      "com/google/wireless/android/sdk/stats/TaskMetadata.java",
+      "com/google/wireless/android/sdk/stats/TestRun.java",
+      "com/google/wireless/android/sdk/stats/TestScenarioEvent.java",
+      "com/google/wireless/android/sdk/stats/TestScenarioEventOrBuilder.java",
+      "com/google/wireless/android/sdk/stats/UnitTestGenerationEvent.java",
+      "com/google/wireless/android/sdk/stats/UnitTestGenerationEventOrBuilder.java"
+    ]
+  },
+  {
+    "artifact": "repository-32.2.1-sources.jar",
+    "entry_count": 115,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  },
+  {
+    "artifact": "sdk-common-32.2.1-sources.jar",
+    "entry_count": 298,
+    "changed_entry_count": 4,
+    "changed_entries": [
+      "com/android/ide/common/rendering/HardwareConfigHelper.java",
+      "com/android/ide/common/repository/GoogleMavenArtifactId.kt",
+      "com/android/ide/common/resources/FileResourceNameValidator.java",
+      "com/android/ide/common/resources/NodeUtils.java"
+    ]
+  },
+  {
+    "artifact": "sdklib-32.2.1-sources.jar",
+    "entry_count": 278,
+    "changed_entry_count": 35,
+    "changed_entries": [
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/AddonDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/ExtraDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/LibrariesType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/MavenType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/ObjectFactory.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-addon-4-java/com/android/sdklib/repository/generated/addon/v4/package-info.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-common-4-java/com/android/sdklib/repository/generated/common/v4/ApiDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-common-4-java/com/android/sdklib/repository/generated/common/v4/IdDisplayType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-common-4-java/com/android/sdklib/repository/generated/common/v4/LibraryType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-common-4-java/com/android/sdklib/repository/generated/common/v4/ObjectFactory.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-common-4-java/com/android/sdklib/repository/generated/common/v4/package-info.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-repository-4-java/com/android/sdklib/repository/generated/repository/v4/LayoutlibType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-repository-4-java/com/android/sdklib/repository/generated/repository/v4/ObjectFactory.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-repository-4-java/com/android/sdklib/repository/generated/repository/v4/PlatformDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-repository-4-java/com/android/sdklib/repository/generated/repository/v4/SourceDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-repository-4-java/com/android/sdklib/repository/generated/repository/v4/package-info.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sites-list-7-java/com/android/sdklib/repository/sources/generated/v7/AddonSiteType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sites-list-7-java/com/android/sdklib/repository/sources/generated/v7/ObjectFactory.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sites-list-7-java/com/android/sdklib/repository/sources/generated/v7/SysImgSiteType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sites-list-7-java/com/android/sdklib/repository/sources/generated/v7/package-info.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sysimg-5-java/com/android/sdklib/repository/generated/sysimg/v5/ObjectFactory.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sysimg-5-java/com/android/sdklib/repository/generated/sysimg/v5/SysImgDetailsType.java",
+      "bazel-out/k8-opt/bin/tools/base/sdklib/sdk-sysimg-5-java/com/android/sdklib/repository/generated/sysimg/v5/package-info.java",
+      "com/android/sdklib/AndroidTargetHash.java",
+      "com/android/sdklib/SdkVersionInfo.java",
+      "com/android/sdklib/devices/DeviceManager.java",
+      "com/android/sdklib/internal/avd/AiGlassesDisplayMode.kt",
+      "com/android/sdklib/internal/avd/AvdBuilder.kt",
+      "com/android/sdklib/internal/avd/AvdInfo.kt",
+      "com/android/sdklib/internal/avd/AvdManager.kt",
+      "com/android/sdklib/internal/avd/ConfigKey.kt",
+      "com/android/sdklib/internal/avd/UserSettingsKey.kt",
+      "com/android/sdklib/repository/legacy/remote/internal/DownloadCache.java",
+      "com/android/sdklib/repository/meta/DetailsTypes.java",
+      "com/android/sdklib/repository/targets/SystemImageManager.java"
+    ]
+  },
+  {
+    "artifact": "shared-32.2.1-sources.jar",
+    "entry_count": 11,
+    "changed_entry_count": 1,
+    "changed_entries": [
+      "com/android/tools/analytics/AnalyticsPaths.kt"
+    ]
+  },
+  {
+    "artifact": "tracker-32.2.1-sources.jar",
+    "entry_count": 11,
+    "changed_entry_count": 5,
+    "changed_entries": [
+      "com/android/tools/analytics/AnonymousUsageTrackerWriter.kt",
+      "com/android/tools/analytics/EventTranslator.kt",
+      "com/android/tools/analytics/JournalingUsageTracker.kt",
+      "com/android/tools/analytics/LoggedInUsageTrackerWriter.kt",
+      "com/android/tools/analytics/UsageTracker.kt"
+    ]
+  },
+  {
+    "artifact": "uast-32.2.1-sources.jar",
+    "entry_count": 313,
+    "changed_entry_count": 0,
+    "changed_entries": []
+  }
+]

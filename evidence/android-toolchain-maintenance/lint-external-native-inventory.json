@@ -1,0 +1,435 @@
+[
+  {
+    "new": {
+      "filename": "intellij-core-32.2.1.jar",
+      "native_entries": [
+        {
+          "entry": "com/sun/jna/win32-x86/jnidispatch.dll",
+          "sha256": "752d597cee7e95cb517327146bf42f124c0d6c0bc48b3ecc3b1b3b0531a52f44",
+          "size": 226304
+        },
+        {
+          "entry": "com/sun/jna/darwin-x86-64/libjnidispatch.jnilib",
+          "sha256": "69cca8bbe2f0ff3fc412481e73333d5b49fc3a1ba2ff564a0af9495d7e6b531d",
+          "size": 109824
+        },
+        {
+          "entry": "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib",
+          "sha256": "70c9af22ba3ce12128881b4654422ce69a6f96fc238333731cf718601b536245",
+          "size": 159800
+        },
+        {
+          "entry": "com/sun/jna/linux-x86/libjnidispatch.so",
+          "sha256": "546ec7cc6548de411cc52a1069295301308437080be014cda2346ccd0f99bf55",
+          "size": 123384
+        },
+        {
+          "entry": "com/sun/jna/linux-x86-64/libjnidispatch.so",
+          "sha256": "ca07953d595210082339753d9e818a1fdb40509a17a41914d9a2cb0d2df6b6af",
+          "size": 134447
+        },
+        {
+          "entry": "com/sun/jna/linux-arm/libjnidispatch.so",
+          "sha256": "b2a32135dea251fde4027f536345420001bc921e21baf82b2e01ce2753da2097",
+          "size": 130788
+        },
+        {
+          "entry": "com/sun/jna/linux-armel/libjnidispatch.so",
+          "sha256": "d9db010b0336cdbf643c38921c1c04519f811bee0f45824b6872661a25d64ed2",
+          "size": 139472
+        },
+        {
+          "entry": "com/sun/jna/linux-aarch64/libjnidispatch.so",
+          "sha256": "f18fa2c973b2b9ea2dfa6d36d397e0bb743aa2aa09876e2a3b8c87a5e67bf8b6",
+          "size": 162288
+        },
+        {
+          "entry": "com/sun/jna/linux-ppc/libjnidispatch.so",
+          "sha256": "fbde8c5b108934e75c7008562e95b209535bf4996b3bc246ec5e425a0757a903",
+          "size": 127724
+        },
+        {
+          "entry": "com/sun/jna/linux-ppc64le/libjnidispatch.so",
+          "sha256": "aaa31a2220e270f69259d930540c5682b1bd662a6d774918605e62cd562d5d11",
+          "size": 145072
+        },
+        {
+          "entry": "com/sun/jna/linux-mips64el/libjnidispatch.so",
+          "sha256": "0025cd4345faec5a7d9fc8c88f187016dbaf4a6ef411cd6c8907e199d952528d",
+          "size": 144056
+        },
+        {
+          "entry": "com/sun/jna/linux-loongarch64/libjnidispatch.so",
+          "sha256": "6c55d9ec3efaaee1843795648246b3fe52de09d3990984c5b8a580cc803c6bc9",
+          "size": 341968
+        },
+        {
+          "entry": "com/sun/jna/linux-s390x/libjnidispatch.so",
+          "sha256": "b31df7050aa22907e5caae2ef81db83e2900b7b6e683080f6f5681373a71e400",
+          "size": 136976
+        },
+        {
+          "entry": "com/sun/jna/linux-riscv64/libjnidispatch.so",
+          "sha256": "f817ac611184e31fd84ac2d223ff8f9312300fbc025adfb5cadbfefb8d1a2c13",
+          "size": 100064
+        },
+        {
+          "entry": "com/sun/jna/sunos-x86/libjnidispatch.so",
+          "sha256": "fdba3f2f4220fb407c7841b2f49efd4fe1c06dca26c9768513e13461ed1520c5",
+          "size": 153152
+        },
+        {
+          "entry": "com/sun/jna/sunos-x86-64/libjnidispatch.so",
+          "sha256": "4a0b0b11369d4f88437700e8ee3557cb518ec017bfe2df3bd49faf82e60e8f8e",
+          "size": 169992
+        },
+        {
+          "entry": "com/sun/jna/sunos-sparc/libjnidispatch.so",
+          "sha256": "5ae26c1d50dd6836d0bafb1af2a6c39eb4084be42f0a05da0645d31feed1efad",
+          "size": 231108
+        },
+        {
+          "entry": "com/sun/jna/sunos-sparcv9/libjnidispatch.so",
+          "sha256": "ccd720895968a885d423facf63615c7f16490f94d946ecb5fefdd4951c62297c",
+          "size": 166976
+        },
+        {
+          "entry": "com/sun/jna/dragonflybsd-x86-64/libjnidispatch.so",
+          "sha256": "c0c6e64b476d726d86e996af1397491bbff9ccadcba1e0c4639a8f1ae5454062",
+          "size": 116880
+        },
+        {
+          "entry": "com/sun/jna/freebsd-x86/libjnidispatch.so",
+          "sha256": "784b2a955b1504dec96fa8b87972bcb2815ecfa818fe5c2e57ed9073cab0592c",
+          "size": 105372
+        },
+        {
+          "entry": "com/sun/jna/freebsd-x86-64/libjnidispatch.so",
+          "sha256": "3c4d14c74bb6798c76b43cad4395b8bdaa9181a7991e160a376f87bb1ab13ced",
+          "size": 121040
+        },
+        {
+          "entry": "com/sun/jna/freebsd-aarch64/libjnidispatch.so",
+          "sha256": "bca4aece4b834fd04301d5896482f657d06d6860e2d03089c0cc78eea65dd492",
+          "size": 116008
+        },
+        {
+          "entry": "com/sun/jna/openbsd-x86/libjnidispatch.so",
+          "sha256": "c1837623157a7b51d586423b2500554634150d17a0b3f369ca9333af1189f9d4",
+          "size": 108073
+        },
+        {
+          "entry": "com/sun/jna/openbsd-x86-64/libjnidispatch.so",
+          "sha256": "d0eda029037f25c4b3d63923a3875345ecd1922de1e6e5df4162cc5631dc0deb",
+          "size": 122942
+        },
+        {
+          "entry": "com/sun/jna/win32-x86-64/jnidispatch.dll",
+          "sha256": "5a7ff949f6d93d86491eb5b26b1cfc60051168a60622650224b89995ac420023",
+          "size": 273408
+        },
+        {
+          "entry": "com/sun/jna/win32-aarch64/jnidispatch.dll",
+          "sha256": "b8f98be314234cf12b5b46c29652f70c0f6abb93ae19b63d3fe2692062aa699d",
+          "size": 274432
+        },
+        {
+          "entry": "net/jpountz/util/darwin/aarch64/liblz4-java.dylib",
+          "sha256": "8f6ac280612c460d4097627578ff976b7e1662fa37ee7676eee70113417168d1",
+          "size": 173774
+        },
+        {
+          "entry": "net/jpountz/util/darwin/x86_64/liblz4-java.dylib",
+          "sha256": "94f871914b90c56c216404b3ff66c8ab20da99b8fbec0786d23e9568e1ab91e3",
+          "size": 205000
+        },
+        {
+          "entry": "net/jpountz/util/linux/aarch64/liblz4-java.so",
+          "sha256": "25f2e16f54b0232d281fc882ba88c3fb6a4d4ae80c9df35d3c3e19457be8b7cc",
+          "size": 86081
+        },
+        {
+          "entry": "net/jpountz/util/linux/amd64/liblz4-java.so",
+          "sha256": "9008c9b9ae43485c1b6a2c87e3109b1b6ec99684f5f6b3b935026dc001fed77f",
+          "size": 154886
+        },
+        {
+          "entry": "net/jpountz/util/linux/i386/liblz4-java.so",
+          "sha256": "f72fff01f82b13bf54e945d1d9158a4b6c10caabca0a102fba5477c8d8baa8b4",
+          "size": 68840
+        },
+        {
+          "entry": "net/jpountz/util/linux/ppc64le/liblz4-java.so",
+          "sha256": "92a09b1f08e94416641b573416fafd95861d7d99585bb5e1041f27b958529048",
+          "size": 208664
+        },
+        {
+          "entry": "net/jpountz/util/linux/s390x/liblz4-java.so",
+          "sha256": "88f490d7b1de453830b04a527d4fea48276652a15052446414bb16024759722f",
+          "size": 97208
+        },
+        {
+          "entry": "net/jpountz/util/win32/amd64/liblz4-java.so",
+          "sha256": "885eca7cafb15f380271af76bd69f9fc2899b356ac2943894ccaad6eb729b391",
+          "size": 520219
+        }
+      ],
+      "versions": {
+        "META-INF/maven/jaxen/jaxen/pom.properties": "#Generated by org.apache.felix.bundleplugin\n#Sun Apr 14 19:46:31 EDT 2019\nversion=1.2.0\ngroupId=jaxen\nartifactId=jaxen\n",
+        "META-INF/maven/org.slf4j/log4j-over-slf4j/pom.properties": "artifactId=log4j-over-slf4j\r\ngroupId=org.slf4j\r\nversion=1.7.36\r\n",
+        "META-INF/maven/org.apache.commons/commons-compress/pom.properties": "artifactId=commons-compress\ngroupId=org.apache.commons\nversion=1.27.1\n",
+        "META-INF/maven/com.fasterxml/aalto-xml/pom.properties": "version=1.3.3\ngroupId=com.fasterxml\nartifactId=aalto-xml\n",
+        "META-INF/maven/org.codehaus.woodstox/stax2-api/pom.properties": "version=4.2.2\ngroupId=org.codehaus.woodstox\nartifactId=stax2-api\n",
+        "META-INF/maven/commons-io/commons-io/pom.properties": "artifactId=commons-io\ngroupId=commons-io\nversion=2.18.0\n",
+        "META-INF/maven/commons-codec/commons-codec/pom.properties": "artifactId=commons-codec\ngroupId=commons-codec\nversion=1.18.0\n",
+        "META-INF/maven/org.apache.commons/commons-lang3/pom.properties": "artifactId=commons-lang3\ngroupId=org.apache.commons\nversion=3.18.0\n",
+        "META-INF/maven/org.jctools/jctools-core/pom.properties": "version=4.0.5\ngroupId=org.jctools\nartifactId=jctools-core\n",
+        "META-INF/maven/one.util/streamex/pom.properties": "#Generated by Maven\r\n#Thu Aug 07 15:17:35 CEST 2025\r\ngroupId=one.util\r\nartifactId=streamex\r\nversion=0.8.4\r\n"
+      }
+    },
+    "baseline": {
+      "filename": "intellij-core-32.1.0.jar",
+      "native_entries": [
+        {
+          "entry": "com/sun/jna/win32-x86/jnidispatch.dll",
+          "sha256": "752d597cee7e95cb517327146bf42f124c0d6c0bc48b3ecc3b1b3b0531a52f44",
+          "size": 226304
+        },
+        {
+          "entry": "com/sun/jna/darwin-x86-64/libjnidispatch.jnilib",
+          "sha256": "69cca8bbe2f0ff3fc412481e73333d5b49fc3a1ba2ff564a0af9495d7e6b531d",
+          "size": 109824
+        },
+        {
+          "entry": "com/sun/jna/darwin-aarch64/libjnidispatch.jnilib",
+          "sha256": "70c9af22ba3ce12128881b4654422ce69a6f96fc238333731cf718601b536245",
+          "size": 159800
+        },
+        {
+          "entry": "com/sun/jna/linux-x86/libjnidispatch.so",
+          "sha256": "546ec7cc6548de411cc52a1069295301308437080be014cda2346ccd0f99bf55",
+          "size": 123384
+        },
+        {
+          "entry": "com/sun/jna/linux-x86-64/libjnidispatch.so",
+          "sha256": "ca07953d595210082339753d9e818a1fdb40509a17a41914d9a2cb0d2df6b6af",
+          "size": 134447
+        },
+        {
+          "entry": "com/sun/jna/linux-arm/libjnidispatch.so",
+          "sha256": "b2a32135dea251fde4027f536345420001bc921e21baf82b2e01ce2753da2097",
+          "size": 130788
+        },
+        {
+          "entry": "com/sun/jna/linux-armel/libjnidispatch.so",
+          "sha256": "d9db010b0336cdbf643c38921c1c04519f811bee0f45824b6872661a25d64ed2",
+          "size": 139472
+        },
+        {
+          "entry": "com/sun/jna/linux-aarch64/libjnidispatch.so",
+          "sha256": "f18fa2c973b2b9ea2dfa6d36d397e0bb743aa2aa09876e2a3b8c87a5e67bf8b6",
+          "size": 162288
+        },
+        {
+          "entry": "com/sun/jna/linux-ppc/libjnidispatch.so",
+          "sha256": "fbde8c5b108934e75c7008562e95b209535bf4996b3bc246ec5e425a0757a903",
+          "size": 127724
+        },
+        {
+          "entry": "com/sun/jna/linux-ppc64le/libjnidispatch.so",
+          "sha256": "aaa31a2220e270f69259d930540c5682b1bd662a6d774918605e62cd562d5d11",
+          "size": 145072
+        },
+        {
+          "entry": "com/sun/jna/linux-mips64el/libjnidispatch.so",
+          "sha256": "0025cd4345faec5a7d9fc8c88f187016dbaf4a6ef411cd6c8907e199d952528d",
+          "size": 144056
+        },
+        {
+          "entry": "com/sun/jna/linux-loongarch64/libjnidispatch.so",
+          "sha256": "6c55d9ec3efaaee1843795648246b3fe52de09d3990984c5b8a580cc803c6bc9",
+          "size": 341968
+        },
+        {
+          "entry": "com/sun/jna/linux-s390x/libjnidispatch.so",
+          "sha256": "b31df7050aa22907e5caae2ef81db83e2900b7b6e683080f6f5681373a71e400",
+          "size": 136976
+        },
+        {
+          "entry": "com/sun/jna/linux-riscv64/libjnidispatch.so",
+          "sha256": "f817ac611184e31fd84ac2d223ff8f9312300fbc025adfb5cadbfefb8d1a2c13",
+          "size": 100064
+        },
+        {
+          "entry": "com/sun/jna/sunos-x86/libjnidispatch.so",
+          "sha256": "fdba3f2f4220fb407c7841b2f49efd4fe1c06dca26c9768513e13461ed1520c5",
+          "size": 153152
+        },
+        {
+          "entry": "com/sun/jna/sunos-x86-64/libjnidispatch.so",
+          "sha256": "4a0b0b11369d4f88437700e8ee3557cb518ec017bfe2df3bd49faf82e60e8f8e",
+          "size": 169992
+        },
+        {
+          "entry": "com/sun/jna/sunos-sparc/libjnidispatch.so",
+          "sha256": "5ae26c1d50dd6836d0bafb1af2a6c39eb4084be42f0a05da0645d31feed1efad",
+          "size": 231108
+        },
+        {
+          "entry": "com/sun/jna/sunos-sparcv9/libjnidispatch.so",
+          "sha256": "ccd720895968a885d423facf63615c7f16490f94d946ecb5fefdd4951c62297c",
+          "size": 166976
+        },
+        {
+          "entry": "com/sun/jna/dragonflybsd-x86-64/libjnidispatch.so",
+          "sha256": "c0c6e64b476d726d86e996af1397491bbff9ccadcba1e0c4639a8f1ae5454062",
+          "size": 116880
+        },
+        {
+          "entry": "com/sun/jna/freebsd-x86/libjnidispatch.so",
+          "sha256": "784b2a955b1504dec96fa8b87972bcb2815ecfa818fe5c2e57ed9073cab0592c",
+          "size": 105372
+        },
+        {
+          "entry": "com/sun/jna/freebsd-x86-64/libjnidispatch.so",
+          "sha256": "3c4d14c74bb6798c76b43cad4395b8bdaa9181a7991e160a376f87bb1ab13ced",
+          "size": 121040
+        },
+        {
+          "entry": "com/sun/jna/freebsd-aarch64/libjnidispatch.so",
+          "sha256": "bca4aece4b834fd04301d5896482f657d06d6860e2d03089c0cc78eea65dd492",
+          "size": 116008
+        },
+        {
+          "entry": "com/sun/jna/openbsd-x86/libjnidispatch.so",
+          "sha256": "c1837623157a7b51d586423b2500554634150d17a0b3f369ca9333af1189f9d4",
+          "size": 108073
+        },
+        {
+          "entry": "com/sun/jna/openbsd-x86-64/libjnidispatch.so",
+          "sha256": "d0eda029037f25c4b3d63923a3875345ecd1922de1e6e5df4162cc5631dc0deb",
+          "size": 122942
+        },
+        {
+          "entry": "com/sun/jna/win32-x86-64/jnidispatch.dll",
+          "sha256": "5a7ff949f6d93d86491eb5b26b1cfc60051168a60622650224b89995ac420023",
+          "size": 273408
+        },
+        {
+          "entry": "com/sun/jna/win32-aarch64/jnidispatch.dll",
+          "sha256": "b8f98be314234cf12b5b46c29652f70c0f6abb93ae19b63d3fe2692062aa699d",
+          "size": 274432
+        },
+        {
+          "entry": "net/jpountz/util/darwin/aarch64/liblz4-java.dylib",
+          "sha256": "8f6ac280612c460d4097627578ff976b7e1662fa37ee7676eee70113417168d1",
+          "size": 173774
+        },
+        {
+          "entry": "net/jpountz/util/darwin/x86_64/liblz4-java.dylib",
+          "sha256": "94f871914b90c56c216404b3ff66c8ab20da99b8fbec0786d23e9568e1ab91e3",
+          "size": 205000
+        },
+        {
+          "entry": "net/jpountz/util/linux/aarch64/liblz4-java.so",
+          "sha256": "25f2e16f54b0232d281fc882ba88c3fb6a4d4ae80c9df35d3c3e19457be8b7cc",
+          "size": 86081
+        },
+        {
+          "entry": "net/jpountz/util/linux/amd64/liblz4-java.so",
+          "sha256": "9008c9b9ae43485c1b6a2c87e3109b1b6ec99684f5f6b3b935026dc001fed77f",
+          "size": 154886
+        },
+        {
+          "entry": "net/jpountz/util/linux/i386/liblz4-java.so",
+          "sha256": "f72fff01f82b13bf54e945d1d9158a4b6c10caabca0a102fba5477c8d8baa8b4",
+          "size": 68840
+        },
+        {
+          "entry": "net/jpountz/util/linux/ppc64le/liblz4-java.so",
+          "sha256": "92a09b1f08e94416641b573416fafd95861d7d99585bb5e1041f27b958529048",
+          "size": 208664
+        },
+        {
+          "entry": "net/jpountz/util/linux/s390x/liblz4-java.so",
+          "sha256": "88f490d7b1de453830b04a527d4fea48276652a15052446414bb16024759722f",
+          "size": 97208
+        },
+        {
+          "entry": "net/jpountz/util/win32/amd64/liblz4-java.so",
+          "sha256": "885eca7cafb15f380271af76bd69f9fc2899b356ac2943894ccaad6eb729b391",
+          "size": 520219
+        }
+      ],
+      "versions": {
+        "META-INF/maven/jaxen/jaxen/pom.properties": "#Generated by org.apache.felix.bundleplugin\n#Sun Apr 14 19:46:31 EDT 2019\nversion=1.2.0\ngroupId=jaxen\nartifactId=jaxen\n",
+        "META-INF/maven/org.slf4j/log4j-over-slf4j/pom.properties": "artifactId=log4j-over-slf4j\r\ngroupId=org.slf4j\r\nversion=1.7.36\r\n",
+        "META-INF/maven/org.apache.commons/commons-compress/pom.properties": "artifactId=commons-compress\ngroupId=org.apache.commons\nversion=1.27.1\n",
+        "META-INF/maven/com.fasterxml/aalto-xml/pom.properties": "version=1.3.3\ngroupId=com.fasterxml\nartifactId=aalto-xml\n",
+        "META-INF/maven/org.codehaus.woodstox/stax2-api/pom.properties": "version=4.2.2\ngroupId=org.codehaus.woodstox\nartifactId=stax2-api\n",
+        "META-INF/maven/commons-io/commons-io/pom.properties": "artifactId=commons-io\ngroupId=commons-io\nversion=2.18.0\n",
+        "META-INF/maven/commons-codec/commons-codec/pom.properties": "artifactId=commons-codec\ngroupId=commons-codec\nversion=1.18.0\n",
+        "META-INF/maven/org.apache.commons/commons-lang3/pom.properties": "artifactId=commons-lang3\ngroupId=org.apache.commons\nversion=3.18.0\n",
+        "META-INF/maven/org.jctools/jctools-core/pom.properties": "version=4.0.5\ngroupId=org.jctools\nartifactId=jctools-core\n",
+        "META-INF/maven/one.util/streamex/pom.properties": "#Generated by Maven\r\n#Thu Aug 07 15:17:35 CEST 2025\r\ngroupId=one.util\r\nartifactId=streamex\r\nversion=0.8.4\r\n"
+      }
+    },
+    "native_entries_equal": true
+  },
+  {
+    "new": {
+      "filename": "kotlin-compiler-32.2.1.jar",
+      "native_entries": [],
+      "versions": {
+        "META-INF/compiler.version": "2.3.20-ij253-87-for-lint",
+        "META-INF/maven/com.google.protobuf/protobuf-java/pom.properties": "#Generated by org.apache.felix.bundleplugin\n#Wed Oct 22 16:36:24 PDT 2014\nversion=2.6.1\ngroupId=com.google.protobuf\nartifactId=protobuf-java\n",
+        "META-INF/maven/io.vavr/vavr/pom.properties": "#Created by Apache Maven 3.6.3\nversion=0.10.4\ngroupId=io.vavr\nartifactId=vavr\n",
+        "META-INF/maven/org.jline/jline-builtins/pom.properties": "artifactId=jline-builtins\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-reader/pom.properties": "artifactId=jline-reader\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-remote-ssh/pom.properties": "artifactId=jline-remote-ssh\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-remote-telnet/pom.properties": "artifactId=jline-remote-telnet\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-style/pom.properties": "artifactId=jline-style\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jansi/pom.properties": "artifactId=jline-terminal-jansi\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jna/pom.properties": "artifactId=jline-terminal-jna\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jni/pom.properties": "artifactId=jline-terminal-jni\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal/pom.properties": "artifactId=jline-terminal\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline/pom.properties": "artifactId=jline\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/io.vavr/vavr-match/pom.properties": "#Created by Apache Maven 3.6.3\nversion=0.10.4\ngroupId=io.vavr\nartifactId=vavr-match\n"
+      }
+    },
+    "baseline": {
+      "filename": "kotlin-compiler-32.1.0.jar",
+      "native_entries": [],
+      "versions": {
+        "META-INF/compiler.version": "2.3.20-ij253-87-for-lint",
+        "META-INF/maven/com.google.protobuf/protobuf-java/pom.properties": "#Generated by org.apache.felix.bundleplugin\n#Wed Oct 22 16:36:24 PDT 2014\nversion=2.6.1\ngroupId=com.google.protobuf\nartifactId=protobuf-java\n",
+        "META-INF/maven/io.vavr/vavr/pom.properties": "#Created by Apache Maven 3.6.3\nversion=0.10.4\ngroupId=io.vavr\nartifactId=vavr\n",
+        "META-INF/maven/org.jline/jline-builtins/pom.properties": "artifactId=jline-builtins\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-reader/pom.properties": "artifactId=jline-reader\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-remote-ssh/pom.properties": "artifactId=jline-remote-ssh\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-remote-telnet/pom.properties": "artifactId=jline-remote-telnet\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-style/pom.properties": "artifactId=jline-style\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jansi/pom.properties": "artifactId=jline-terminal-jansi\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jna/pom.properties": "artifactId=jline-terminal-jna\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal-jni/pom.properties": "artifactId=jline-terminal-jni\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline-terminal/pom.properties": "artifactId=jline-terminal\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/org.jline/jline/pom.properties": "artifactId=jline\ngroupId=org.jline\nversion=3.24.1\n",
+        "META-INF/maven/io.vavr/vavr-match/pom.properties": "#Created by Apache Maven 3.6.3\nversion=0.10.4\ngroupId=io.vavr\nartifactId=vavr-match\n"
+      }
+    },
+    "native_entries_equal": true
+  },
+  {
+    "new": {
+      "filename": "uast-32.2.1.jar",
+      "native_entries": [],
+      "versions": {}
+    },
+    "baseline": {
+      "filename": "uast-32.1.0.jar",
+      "native_entries": [],
+      "versions": {}
+    },
+    "native_entries_equal": true
+  }
+]
