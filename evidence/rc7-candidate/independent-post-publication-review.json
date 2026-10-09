@@ -1,0 +1,127 @@
+{
+  "reviewed_at_utc": "2026-10-09T16:11:51.641488+00:00",
+  "decision": "ACCEPTED: exact published RC7 prerelease, actual public installer bytes, hosted mandatory gates and final documentation checkpoint",
+  "release_id": 408086549,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.7",
+  "published_at": "2026-10-09T16:05:07Z",
+  "tag": "v2026.10.2-rc.7",
+  "tag_source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+  "candidate_run_id": 37945597400,
+  "version": "2026.10.2-rc.7+52",
+  "promotion": {
+    "id": 37956467233,
+    "head_sha": "098e14f4d82f158d25e4697a82286f1230a74aee",
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/prerelease.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1
+  },
+  "release_flags": {
+    "prerelease": true,
+    "draft": false,
+    "latest_requested": false
+  },
+  "assets": [
+    {
+      "id": 625458452,
+      "name": "tandemlog-2026.10.2-rc.7-android.apk",
+      "size_bytes": 65313253,
+      "actual_local_sha256": "bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-android.apk"
+    },
+    {
+      "id": 625458467,
+      "name": "tandemlog-2026.10.2-rc.7-linux-x64.flatpak",
+      "size_bytes": 9016416,
+      "actual_local_sha256": "6e482505ffedd604d8f9b98bfdf2bc2e2a4a0971b67fba9beae83b7eb75a7734",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-linux-x64.flatpak"
+    },
+    {
+      "id": 625458456,
+      "name": "tandemlog-2026.10.2-rc.7-windows-x64-setup.exe",
+      "size_bytes": 12205429,
+      "actual_local_sha256": "72ce363cfc2c1181622f27e7a3473ade7c1e9a7f07c3af3d7fdc2f40fece8b33",
+      "matches_release_api": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-windows-x64-setup.exe"
+    }
+  ],
+  "hosted_gate_proof": {
+    "job_id": 113908183862,
+    "actual_log_sha256": "68ca26dad985bae487db79353a6f8348ff4b13cb1c567ddefee3216506398186",
+    "strict_download_digest_mismatch_policy": "error",
+    "artifact_ids": [
+      11626160033,
+      11625195361,
+      11624371832
+    ],
+    "all_three_downloaded_zip_digests_match_expected": true,
+    "inventory_portable_member_desktop_lifecycle_and_accepted_apk_gate_passed_at": "2026-10-09T16:05:03.0888738Z",
+    "all_three_installer_checksum_manifests_passed_before_create": true,
+    "reviewed_trusted_dispatch_policy_unchanged": true,
+    "no_rebuild": true,
+    "no_private_draft_path_used": true
+  },
+  "public_apk_independent_checks": {
+    "official_sdk": "/workspace/toolchains/android-sdk/build-tools/36.0.0",
+    "apksigner_verify_and_aapt_executed_by_reviewer": true,
+    "source_verify_apk_passed": true,
+    "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.7",
+    "version_code": 52,
+    "nondebuggable": true,
+    "abis": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "full_79_member_crc_verified_by_reviewer": true,
+    "matches_parent_accepted_inner_apk_hash": true,
+    "native_payload_notices": "Actual root successful public-APK verifier log inspected; no device execution by independent reviewer."
+  },
+  "notes_media": {
+    "reviewed_notes_byte_equal": true,
+    "notes_sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1",
+    "immutable_images_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+    "spacing_image_sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef",
+    "ink_image_sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164",
+    "prior_actual_pixel_editorial_review_reused": true
+  },
+  "protected_releases": {
+    "prior_count": 19,
+    "fresh_all_prior_metadata_and_asset_identity_comparison_passed": true,
+    "stable_latest_id": 403030558,
+    "stable_latest_tag": "v2026.10.1"
+  },
+  "limits": [
+    "Parent56 exact Android acceptance remains trusted parent actual byte/device/pixel attestation; independent reviewer did not rerun device checks or inspect blocked private packet.",
+    "Private candidate/packet cloud transfer403 did not bypass hosted actual publication gates. Public installers were locally hashed independently.",
+    "SDK ShowTouches dots absent, actual ink/state recorded; parent accepted cosmetic limitation."
+  ],
+  "reviewed_final_public_receipt": {
+    "path": "evidence/rc7-candidate/public-download-verification.json",
+    "sha256": "3bc616d99dfa38885559fcc8337295ed6be37437080b470b9fa9fa1eea0c8b7c",
+    "claims_consistent_with_independent_actual_checks": true
+  },
+  "must_fix": [],
+  "remaining": [],
+  "final_documentation_review": {
+    "decision": "ACCEPTED",
+    "reviewed_files_sha256": {
+      "design/status.md": "d68735c0ead39ba7a7b5a02a0f886adff1998426e99c842fcf7f3fe4081efcca",
+      "design/runtime-qa.md": "8c61878e00d4133c1e88d0fffeeeca832e10cc86456b7cdbed48c848135e816d",
+      "evidence/rc7-candidate/README.md": "88bb748b40a0629b0bffa5bd61dd0b1ad400d0c27edb8f30b532bee1a34f2860",
+      "evidence/rc7-candidate/public-download-verification.json": "3bc616d99dfa38885559fcc8337295ed6be37437080b470b9fa9fa1eea0c8b7c",
+      "evidence/rc7-candidate/promotion-hosted-byte-gates.log": "0a7283caaefb1d309335f97e5a837ba7fe123102a8ed92605e652273785b9334"
+    },
+    "accuracy": "Published exact source/run/tag/three installers and stable Latest accurately recorded. Historical preparation/403 checkpoint preserved explicitly; parent runtime/packet/pixel attribution and SDK cosmetic limitation retained. No claim of local Windows/Android runtime rerun.",
+    "relative_links": "All existing destinations resolve. New independent-post-publication-review.json links intentionally resolve after root copies this exact reviewed receipt; no cyclic receipt hash required.",
+    "new_public_sections_and_receipt_contain_no_private_library_identifier": true,
+    "hosted_excerpt": "All14 lines exactly match actual retained private hosted log; contains only immutable artifact bindings/digests/gate outcomes and public release URL.",
+    "production_notes_media_unchanged": true
+  }
+}

@@ -1,6 +1,6 @@
 # Runtime and visual QA — updated 2026-10-09
 
-## Compact disclosure — RC7 preparation
+## Compact disclosure — RC7 published
 
 Lee approved the compact exception documented in [ADR0011](decisions/0011-one-level-checklists.md).
 Actual Linux GTK/Flutter debug checks pass1200/390px at100/200% text, with/without
@@ -32,7 +32,20 @@ preservation and cold replay; settings restored and capped lab stopped. Actual
 recording shows ink/state changes, while SDK taps do not show Show Touches dots;
 parent accepted this cosmetic limitation. Packet bytes/pixels were inspected by
 parent, not this cloud worker, whose supported packet materialization also403.
-Public promotion/actual download verification remain pending.
+[Promotion37956467233](https://github.com/reddraggone9/tandemlog/actions/runs/37956467233)
+passed trusted source098e14f at16:05UTC, reused accepted candidate37945597400
+without rebuilding and verified actual candidate ZIP digests, portable members,
+installed lifecycle, exact accepted APK identity and installer checksums before
+creation. [Public receipt](../evidence/rc7-candidate/public-download-verification.json)
+records all three actual anonymous installer downloads matching GitHub digests
+and sizes, official public APK signer/package/version52/nondebuggable/ABI checks,
+full APK CRC and native payload/notices, exact reviewed notes and tag/source.
+Preview2026.10.2-rc.7 is prerelease/non-Latest; stable2026.10.1 and all19 prior
+release/asset identities are unchanged. These byte checks do not claim another
+local Windows or Android runtime acceptance.
+[Independent final release review](../evidence/rc7-candidate/independent-post-publication-review.json)
+separately verifies the actual public installer bytes, official APK identity/CRC,
+hosted gate order, notes/metadata and prior release/stable Latest preservation.
 
 ## Historical RC6 checklist controls follow-up
 

@@ -1,6 +1,6 @@
 # Current status — 2026-10-09
 
-## Compact checklist disclosure — RC7 candidate preparation
+## Compact checklist disclosure — RC7 published
 
 Lee approved the disclosure-specific compact target on2026-10-09. The footer is
 28px at normal text, growing to48px at200%, with minimum width48; other task and
@@ -23,7 +23,16 @@ identity/bytes and accepted56 bounded Android checks against SHA256
 `bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d`.
 [Exact native attestation](../evidence/rc7-candidate/native-acceptance-attestation.json)
 records the cosmetic Show Touches recording limit and fresh publication quota
-clearance. Promotion and public-byte/final release review remain pending.
+clearance. [Preview2026.10.2-rc.7](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.7)
+was published by successful promotion37956467233 from trusted dispatch098e14f,
+reusing the accepted candidate without rebuilding. [Public verification receipt](../evidence/rc7-candidate/public-download-verification.json)
+records exact anonymous installer bytes, public APK signature/build/native payload,
+reviewed notes and source/tag. Exactly three versioned installers are public;
+prerelease=true/latest=false. Stable2026.10.1 remains Latest and all19 prior
+release/asset identities are unchanged.
+[Independent final release review](../evidence/rc7-candidate/independent-post-publication-review.json)
+accepts actual bytes, signature, metadata and hosted gate order with no must-fix
+findings.
 [Independent notes/media review](../evidence/rc7-editorial/independent-editorial-review.json)
 accepts the two concise changes and immutable Before/After images. Published RC6 and
 stable Latest2026.10.1 are unchanged. No storage migration or live synced data
@@ -38,7 +47,8 @@ the build counter. Production UI and reviewed RC7 notes/images/demo are
 unchanged; media remains attributed to actual build51 debug source. The focused
 replacement flow passes1/0 in19s with clean analysis. [Independent correction review](../evidence/rc7-candidate/independent-build52-correction-review.json)
 accepts the bounded fix; the replacement full hosted candidate now passes.
-Parent exact actual-byte Android acceptance now passes; publication gates remain pending.
+Parent exact actual-byte Android acceptance and retained actual hosted publication
+gates now pass; all three public installer downloads are verified.
 
 ## Checklist controls follow-up — RC6 published
 

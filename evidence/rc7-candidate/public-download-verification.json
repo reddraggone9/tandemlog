@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "verified_at_utc": "2026-10-09T16:08:22.124315+00:00",
+  "release_id": 408086549,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.7",
+  "tag": "v2026.10.2-rc.7",
+  "tag_and_source_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+  "published_at": "2026-10-09T16:05:07Z",
+  "candidate_run_id": 37945597400,
+  "version": "2026.10.2-rc.7+52",
+  "promotion_run_id": 37956467233,
+  "promotion_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37956467233",
+  "trusted_dispatch_commit": "098e14f4d82f158d25e4697a82286f1230a74aee",
+  "promotion_conclusion": "success",
+  "no_rebuild": true,
+  "prerelease": true,
+  "draft": false,
+  "latest_requested": false,
+  "assets": [
+    {
+      "id": 625458452,
+      "name": "tandemlog-2026.10.2-rc.7-android.apk",
+      "size_bytes": 65313253,
+      "sha256": "bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-android.apk",
+      "anonymous_download": true
+    },
+    {
+      "id": 625458467,
+      "name": "tandemlog-2026.10.2-rc.7-linux-x64.flatpak",
+      "size_bytes": 9016416,
+      "sha256": "6e482505ffedd604d8f9b98bfdf2bc2e2a4a0971b67fba9beae83b7eb75a7734",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-linux-x64.flatpak",
+      "anonymous_download": true
+    },
+    {
+      "id": 625458456,
+      "name": "tandemlog-2026.10.2-rc.7-windows-x64-setup.exe",
+      "size_bytes": 12205429,
+      "sha256": "72ce363cfc2c1181622f27e7a3473ade7c1e9a7f07c3af3d7fdc2f40fece8b33",
+      "matches_github_digest": true,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.2-rc.7/tandemlog-2026.10.2-rc.7-windows-x64-setup.exe",
+      "anonymous_download": true
+    }
+  ],
+  "metadata_checks": {
+    "release_id": 408086549,
+    "prerelease": true,
+    "draft": false,
+    "exact_three_versioned_installers": true,
+    "reviewed_notes_byte_equal": true,
+    "notes_sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1",
+    "target_commit": "74afbe294065f462b742b4570d4095e690e54b04",
+    "prior_release_count": 19,
+    "all_prior_metadata_and_asset_identity_unchanged": true,
+    "stable_latest_tag": "v2026.10.1",
+    "stable_latest_id": 403030558
+  },
+  "public_apk_checks": {
+    "apk_sha256": "bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+    "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.2-rc.7",
+    "version_code": 52,
+    "nondebuggable": true,
+    "official_apksigner_aapt_passed": true,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "apk_member_crc_passed": true,
+    "native_payload_notices_passed": true
+  },
+  "notes_media": {
+    "notes_sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1",
+    "notes_byte_equal_reviewed_dispatch": true,
+    "images_immutable_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+    "spacing_before_after_sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef",
+    "ink_before_after_sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164",
+    "editorial_review": "../rc7-editorial/editorial-review-build52.json"
+  },
+  "actual_hosted_publication_log": {
+    "job_id": 113908183862,
+    "sha256": "68ca26dad985bae487db79353a6f8348ff4b13cb1c567ddefee3216506398186",
+    "normalization": "LF line endings",
+    "artifact_ids": [
+      11626160033,
+      11625195361,
+      11624371832
+    ],
+    "gate_verified_at": "2026-10-09T16:05:03.0888738Z",
+    "installer_checksums_passed_before_create": true,
+    "actual_inventory_portable_members_and_desktop_installed_lifecycle_verified": true,
+    "accepted_apk_identity_verified": true,
+    "outer_archive_digest_matches": [
+      {
+        "artifact_id": 11626160033,
+        "sha256": "708b1b0e56f75441ec570441ac3a5f4fec913b279fbe6b88ff38d8ac00b8a4d8"
+      },
+      {
+        "artifact_id": 11625195361,
+        "sha256": "cdec9f4c6dc78a8b7a256e4edeb344713ee76c6083d293b80e0750e69b352788"
+      },
+      {
+        "artifact_id": 11624371832,
+        "sha256": "c87b7e51b441985792baeb15d4f0d4f6bc872cdff28b727b51050f576429aa8a"
+      }
+    ]
+  },
+  "native_acceptance": "native-acceptance-attestation.json",
+  "limits": [
+    "Cloud private candidate/Android evidence packet materialization remainedHTTP403; parent performed exact Android byte/device acceptance.",
+    "SDK taps lack ShowTouches dots in parent recording; actual ink/state changes visible and cosmetic limit accepted.",
+    "Public downloaded installers are verified actual local bytes; hosted lifecycle/member gates are attributed to successful hosted jobs, not local Windows/Android runtime."
+  ],
+  "stable_promotion": false,
+  "live_synced_data_modified": false,
+  "independent_final_release_review": "independent-post-publication-review.json"
+}

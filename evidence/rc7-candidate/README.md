@@ -1,4 +1,29 @@
-# RC7 replacement candidate and bounded Android handoff
+# RC7 published — replacement candidate and exact acceptance evidence
+
+Preview [2026.10.2-rc.7](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2-rc.7)
+build52 was published at2026-10-09T16:05:07Z from exact source
+`74afbe294065f462b742b4570d4095e690e54b04`, reusing signed candidate37945597400.
+[Promotion37956467233](https://github.com/reddraggone9/tandemlog/actions/runs/37956467233)
+passed at trusted dispatch098e14f without rebuilding. Actual hosted downloads
+matched all three candidate ZIP digests; closed inventory, Windows portable
+member hashes/CRC, desktop installed lifecycle, accepted APK identity and all
+three installer checksums passed before creation. Exactly three versioned
+installers are public, prerelease=true/draft=false/latest=false. Stable2026.10.1
+remains Latest; all19 prior release/asset identities are unchanged.
+
+[Public-byte/signature/metadata receipt](public-download-verification.json)
+records actual anonymous downloads and exact hashes/sizes. The public APK passes
+official signature/package/version52/nondebuggable/three-ABI checks, complete
+member CRC and native payload/notices; its hash matches parent's accepted APK.
+Windows matches the source-bound hosted installer hash. Reviewed notes/media
+bytes are unchanged. Cloud private artifact/packet placement403 is preserved
+below and does not imply a public-download failure or local native recheck.
+[Independent final release review](independent-post-publication-review.json)
+separately verifies actual downloaded hashes, APK signature/CRC, fresh release/
+tag/notes/asset metadata, hosted gate order and preservation of prior releases
+and stable Latest; no must-fix findings remain.
+
+## Historical candidate preparation and bounded Android handoff
 
 Replacement version2026.10.2-rc.7/build52 changes only the new native test's
 paint-host/path coverage inequalities to use the existing0.01px geometry
@@ -36,7 +61,8 @@ pressed ink/state changes are visible, while SDK taps lack Show Touches dots.
 The parent accepted that cosmetic limit. Cloud packet materialization also
 returned403; parent byte/device/pixel verification is explicitly attributed,
 not claimed as cloud inspection. Fresh parent quota at2026-10-09T15:50:37Z clears
-the publication threshold. Promotion remains undispatched at this checkpoint.
+the publication threshold. This acceptance checkpoint preceded the successful
+promotion recorded above.
 
 Candidate51 source`aaf06bd17beb109a89e97aff402595f5e7c49ae2`,
 [signed candidate37942135402](https://github.com/reddraggone9/tandemlog/actions/runs/37942135402)
@@ -99,14 +125,12 @@ Show-taps video and inspect representative frames; the supplied Linux demo does
 not satisfy this Android gate. Keep this delta bounded; no additional optional
 matrix, dependency upgrade, persistence migration or live-data test is implied.
 
-## Remaining publication gates
+## Verified publication gates
 
-Terminal successful candidate/full hosted checks are recorded above. Still require
-the trusted promotion's actual archive/inventory/portable-member/lifecycle/checksum
-verification, public installer-byte verification and independent final release
-review. Exact parent native acceptance, notes/media reviews and fresh parent
-quota clearance are recorded above. Keep the reviewed trusted publication path's
-actual archive/inventory/portable-member/lifecycle/checksum gates intact. Publish
-only the three versioned installers as a prerelease with latest=false; verify
-actual public download bytes afterwards. Stable2026.10.1 stays Latest. Stable
-feature promotion and broader storage consolidation remain outside this scope.
+Terminal candidate/full hosted checks, exact parent native acceptance,
+independent notes/media reviews and fresh parent quota clearance preceded the
+retained trusted promotion's actual archive/inventory/portable-member/lifecycle/
+checksum gates. Root then verified every actual public installer byte, APK signer,
+tag/source, notes, prerelease/non-Latest metadata and prior release preservation.
+Stable feature promotion and broader storage consolidation remain outside this
+scope. No live synced user data was changed.
