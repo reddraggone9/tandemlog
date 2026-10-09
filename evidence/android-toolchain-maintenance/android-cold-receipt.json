@@ -1,0 +1,86 @@
+{
+  "phase": "cold",
+  "source_commit": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+  "variant": "debug",
+  "required_native_dart_define": true,
+  "apk_sha256": "1c375fc768f1d958f497519aa1570fb2957596584a1254e908628f0e3bc2bea9",
+  "apk_size": 164971263,
+  "native_libraries": {
+    "lib/arm64-v8a/libVkLayer_khronos_validation.so": {
+      "sha256": "ae445f7e74d402e3a367adb230b1edd9841899fcb3310166e5cc96a09ad37a3f",
+      "size": 15240080
+    },
+    "lib/arm64-v8a/libdartjni.so": {
+      "sha256": "5e33b95d68a49f0edc70de51d876875575aea49b3d8989393d9fde87ae8e4631",
+      "size": 97768
+    },
+    "lib/arm64-v8a/libflutter.so": {
+      "sha256": "047acc6348bb5094466b42c3b060d9c9ae18c5a55c7191567f5ed6d4599ef0c5",
+      "size": 38828704
+    },
+    "lib/arm64-v8a/libsqlite3.so": {
+      "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "size": 1732360
+    },
+    "lib/arm64-v8a/libtandemlog_text.so": {
+      "sha256": "f27b60ca632d22afd5ff0be68ab2f9fa6e0b6fb201cb1d3de3bd6585ac25aca2",
+      "size": 1044120
+    },
+    "lib/armeabi-v7a/libdartjni.so": {
+      "sha256": "475c5d16db288eea539ffc1a5ed94713cd3a41489e649ad59a61a8f3f24fc199",
+      "size": 57416
+    },
+    "lib/armeabi-v7a/libflutter.so": {
+      "sha256": "572df43976e7a3a012ee861881aa1406d82db8c0ff1eb74ef5f0a7d0da0a9928",
+      "size": 33150308
+    },
+    "lib/armeabi-v7a/libsqlite3.so": {
+      "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "size": 1713736
+    },
+    "lib/armeabi-v7a/libtandemlog_text.so": {
+      "sha256": "72c047a7d7ede1014d5d046eefe0cbb11dbf0958a87bf8123f47e4af018aff14",
+      "size": 793364
+    },
+    "lib/x86_64/libdartjni.so": {
+      "sha256": "fbf642c9cbc5ba01ab9f68ccbb6ce9946b000314cd4b91821d0c33681148be62",
+      "size": 99784
+    },
+    "lib/x86_64/libflutter.so": {
+      "sha256": "a690ac9970296a0004baa0e87717fb57e0af69a4e53ededea02f02679bbf0cd5",
+      "size": 40083280
+    },
+    "lib/x86_64/libsqlite3.so": {
+      "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "size": 1709544
+    },
+    "lib/x86_64/libtandemlog_text.so": {
+      "sha256": "6e53fdab15e97d7cd419cdfc64de9ed71f6fcd05fa7033a38dd1e986e6874995",
+      "size": 1192968
+    }
+  },
+  "notice_sha256": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c",
+  "package_badging": "package: name='com.reddraggone9.tandemlog' versionCode='53' versionName='2026.10.2' platformBuildVersionName='16' platformBuildVersionCode='36' compileSdkVersion='36' compileSdkVersionCodename='16'",
+  "debug_signer_sha256": "f841e339ef470d8116c9e4754725e37f387ca3ba22308fa551003c5dd176c8d4",
+  "signature_verification": true,
+  "cache_note": "First successful application build after source-gated private bootstrap/setup retries; not a pristine empty-cache proof",
+  "runtime_acceptance": false,
+  "release_shrinking_acceptance": false,
+  "native_payload_gate": {
+    "passed": true,
+    "abis": [
+      "arm64-v8a",
+      "armeabi-v7a",
+      "x86_64"
+    ],
+    "checks": [
+      "Exact notices",
+      "Required text-engine native files",
+      "ELF machines",
+      "Exported ABI symbols",
+      "16KiB ELF segment alignment",
+      "16KiB uncompressed ZIP alignment"
+    ],
+    "log": "android-cold-native-gate.log"
+  }
+}

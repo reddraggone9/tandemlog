@@ -1,0 +1,4 @@
+Running Gradle task 'assembleDebug'...
+Picked up JAVA_TOOL_OPTIONS: -Djava.home=/workspace/toolchains/jdk21 -Duser.home=/workspace/toolchains/home -Djava.io.tmpdir=/workspace/toolchain-eval/tmp -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080
+Running Gradle task 'assembleDebug'...                             24.3s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk

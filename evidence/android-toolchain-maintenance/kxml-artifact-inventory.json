@@ -1,0 +1,23 @@
+[
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0.pom",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0.pom",
+    "sha256": "31ce606f4e9518936299bb0d27c978fa61e185fd1de7c9874fe959a53e34a685",
+    "size": 1490
+  },
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0.jar",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0.jar",
+    "sha256": "f264dd9f79a1fde10ce5ecc53221eff24be4c9331c830b7d52f2f08a7b633de2",
+    "size": 43858
+  },
+  {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "filename": "kxml2-2.3.0-sources.jar",
+    "url": "https://repo.maven.apache.org/maven2/net/sf/kxml/kxml2/2.3.0/kxml2-2.3.0-sources.jar",
+    "sha256": "85495366666158b58961e8911ced0f6f3bc92f1ebee865518b493fdb90760250",
+    "size": 44383
+  }
+]

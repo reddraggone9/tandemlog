@@ -1,0 +1,28 @@
+{
+  "reviewer": "coordinator, complemented by independent toolchain_review",
+  "candidate": "AGP9.2.1 deferred lint32.2.1",
+  "provenance": "Exact official Google Maven POM/source/binary closure22 components; all nonGoogle version requests unchanged",
+  "external_source_review": {
+    "intellij_core": "16635 entries; only ZIP reader changes to explicit UTF8, read-only mode, ZIP64 detection; no new downloader/process/native loader",
+    "kotlin_compiler": "8394 file entries; three code changes are inherited/expect default-value analysis, common-platform analyzer services and public Vavr API aliases. Source JAR service entries differ (assignment versus scripting); actual binary service entries remain identical scripting providers. Source archive metadata is not a binary service-activation claim.",
+    "uast": "313 source entries identical",
+    "compiler_version": "2.3.20-ij253-87-for-lint"
+  },
+  "native_review": {
+    "intellij_bundled_resource_count": 34,
+    "resources_equal_baseline": true,
+    "compiler_and_uast_native_payload_count": 0,
+    "intellij_loader_service_binary_entries": 41,
+    "compiler_loader_service_binary_entries": 16,
+    "all_loader_service_entries_equal_baseline": true
+  },
+  "scope_limitation": "Focused changed source/loader/resource review, no full upstream audit or rebuilt-binary attestation",
+  "selected_input_limitation": "Resolving lint inputs does not prove typedef worker or every lint/compiler code path executes",
+  "receipt_files": [
+    "lint-artifact-inventory.json",
+    "lint-source-change-counts.json",
+    "lint-external-native-inventory.json",
+    "lint-loader-service-inventory.json",
+    "lint-other-dependency-changes.json"
+  ]
+}

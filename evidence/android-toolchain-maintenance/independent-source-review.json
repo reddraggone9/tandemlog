@@ -1,0 +1,299 @@
+{
+  "reviewer": "independent toolchain_review agent",
+  "decision": "Approved scoped local AGP9.2.1/Gradle9.4.1 proposal: no code/source-path must-fix after independent final diff, effective graph and exact cold/warm debug payload review",
+  "scope": "Focused execution-boundary and native loader/startup review, not exhaustive C/Java source audit, reproducible-binary attestation or release acceptance",
+  "candidate": {
+    "agp": "9.2.1",
+    "gradle": "9.4.1",
+    "main_kgp": "2.4.20",
+    "expected_flutter_included_kgp": "2.3.0",
+    "flutter_commit": "6a19cca56475dbfba1478ee68d7bd0c2ef891da1"
+  },
+  "inputs": [
+    {
+      "filename": "agp-9.1.0-sources.jar",
+      "sha256": "48d1ba4f8096c9bff57a684c7dcb00044e94fbf3a7f1b605f1941da788de3709"
+    },
+    {
+      "filename": "agp-9.2.1-sources.jar",
+      "sha256": "2b6fbf6fa80642759fa0ac32ccc6bfae2aa1d9ce27051162635dcae36eb5adcc"
+    },
+    {
+      "filename": "kgp-2.2.21-sources.jar",
+      "sha256": "f79965870973bf7cc2b5ec9e762077b82dfb190b6452f43d4d91618a8311f263"
+    },
+    {
+      "filename": "kgp-2.3.0-sources.jar",
+      "sha256": "5ab0c9b05827c0ab7e8ce4d3d52de126b6d53d2a9b15d8340e5994aaed723980"
+    },
+    {
+      "filename": "gradle-9.4.1-all.zip",
+      "sha256": "708d2c6ecc97ca9a11838ef64a6c2301151b8dd10387e22dc1a12c30557cab5b"
+    }
+  ],
+  "source_review": [
+    "AGP source-change inventory (287 entries) and focused critical diff: native process ValueSource refactor, native tool --version invocation, SourceSet/JNI merge refactor, legacy AppPlugin and Kotlin task creation, lint settings, R8 keep-rule/service changes; scanned changed AGP source for new network/native-load/process call sites",
+    "KGP2.2.21 to2.3.0 source-change inventory (262 entries) and focused execution diff: JVM compiler defaults/configuration, BTA dispatch, snapshot transforms, build-session service/classloaders, metrics/HTTP/FUS applicability and dormant platform setup",
+    "Exact2.3.0 BTA API/impl/compat sources: exactly-one ServiceLoader selection, compat adapter, JVM-only toolchain, in-process/daemon execution and cleanup",
+    "Gradle9.4.1 bundled source: WrapperExecutor/Install/Download checksum and unzip/bootstrap paths, embedded Kotlin constraints/compiler setup, NativeServices initialization"
+  ],
+  "observations": [
+    "Gradle embedded2.3.0 compiler and BTA impl byte-equal official Maven artifacts",
+    "All20 Kotlin2.3.0 compiler embedded native-resource hashes equal prior-reviewed2.4.20 native-resource hashes",
+    "New BTA metrics ObjectInputStream consumes compiler-provided bytes only with nonempty reporting outputs; reporting disabled in bounded evaluation",
+    "AGP Cxx process ValueSource retains executable/argument-array and existing optional command-script paths; no new downloader found in focused changes",
+    "AGP JNI source-folder producer/merger wiring changed and warrants cold/warm packaging checks"
+  ],
+  "execution_constraints": [
+    "Fresh private Gradle home/project cache/tmp and synthetic app profiles",
+    "No owner signing or publication inputs",
+    "No remote caches, build scans, HTTP/FUS/build reports",
+    "Measure and compare actual selected artifact coordinates/variants/hashes and plugin class origins against reviewed inventory before compilation consumers; extend review for unexpected selection",
+    "Inspect actual selected task classes; JVM/Android only, no KAPT/KotlinNative/JS/Node/ABI activation",
+    "Keep Flutter/pub/Cargo/NDK pins and legacyDSL/builtInKotlin opt-outs"
+  ],
+  "pending": [
+    "Hosted all-platform CI",
+    "Owner-signed release shrinking/R8 behavior",
+    "Exact Android runtime ABI/SAF/UI/provider/native workflow acceptance"
+  ],
+  "bootstrap_source_gate": "Closed: focused exact source/native/transitive gate completed before bounded consumption; unexpected selected lint and unchanged kxml artifacts were reviewed before guard extension",
+  "native_loader_reviews": [
+    {
+      "repository": "https://github.com/gradle/native-platform.git",
+      "tag": "0.22-milestone-29",
+      "commit": "e999afaf8692fb66e9016e0a3b0519a05981753e",
+      "paths": [
+        "Native.java",
+        "internal/NativeLibraryLoader.java",
+        "internal/NativeLibraryLocator.java",
+        "internal/Platform.java",
+        "native-platform/src/main/cpp/posix.cpp JNI_OnLoad"
+      ],
+      "findings": "Fixed OS/arch embedded-resource paths; exclusive extraction lock/completion marker; canonical System.load; native version equality; no network/installer. Fresh private extraction directory required because existing completion marker does not rehash bytes."
+    },
+    {
+      "repository": "https://github.com/gradle/gradle-fileevents.git",
+      "tag": "0.2.8",
+      "tag_object": "d50d94400e4ce8e7508684eb296e6351b86593a8",
+      "commit": "cd90e974edf4adf83a1b4503e0af0a7cd220da55",
+      "paths": [
+        "src/main/java/org/gradle/fileevents/FileEvents.java",
+        "src/main/cpp/services.cpp",
+        "src/main/cpp/jni_support.cpp",
+        "src/main/cpp/logging.cpp",
+        "src/main/cpp/linux_fsnotifier.cpp"
+      ],
+      "findings": "Reuses reviewed NativeLibraryLocator with fixed OS/arch/libc resource identifiers; canonical System.load/native version equality. Linux startup binds JNI methods/logger; watch uses inotify/eventfd. No downloader/installer found in loader/startup paths."
+    }
+  ],
+  "actual_flutter_wrapper_review": {
+    "sha256": "16caeaf66d57a0d1d2087fef6a97efa62de8da69afa5b908f40db35afc4342da",
+    "size": 53636,
+    "method": "Read-only javap bytecode inspection using pinned JDK21",
+    "findings": "WrapperExecutor parses distributionSha256Sum; Install computes SHA256/deletesZIP and throws onmismatch; Install$1 invokes checksumverification before unzip. Cached distribution+.ok bypasses initial downloadverification, so use freshprivate coldcache. No wrapperJAR/scripts/ignore changes needed.",
+    "receipts": [
+      "flutter-wrapper-checksum-bytecode.txt",
+      "flutter-wrapper-install-bytecode.txt"
+    ]
+  },
+  "dsl_compiler_plugin_review": {
+    "decision": "Approve exact SAM/assignment compiler-plugin2.3.0 binaries for bounded JVM compiler consumption",
+    "sam_sha256": "40e3e18bb8c55232ee6525ce57d17b865e56728b052bf0c10e7bec1d084998ca",
+    "assignment_sha256": "d43faab337f3698e8dace6525d2cd7c2aeba7b035938485864164fe702e733bd",
+    "sources": "Exact published2.3.0 SAM/assignment sources from inventory kotlin-dsl-compiler-artifact-inventory.json",
+    "reviewed_paths": [
+      "SAM CLI options and CompilerPluginRegistrar, K1resolver, K2convention transformer/registrar",
+      "Assignment CLI options and CompilerPluginRegistrar, K1assignresolution, K2rewrite/annotationmatching/checkers"
+    ],
+    "observations": [
+      "No source IO/network/process/nativeinstaller found in reviewed paths",
+      "Binaryservice descriptors match inspectedregistrar and processor names; no nativepayload in either archive",
+      "Assignmentbinary equals Gradle distribution; selectedSAM is embeddable while distributionSAM differs in variant, so no SAMbinary equality claim"
+    ],
+    "actual_included_plugin_observation": {
+      "sourceCommit": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+      "phase": "cold",
+      "implementationVersion": "2.3.0-release-356",
+      "variant": "gradle813",
+      "sha256": "3acf97d73a2581b032873fa89f56750d36b3b76d40d692d9839f2467ddae4d69",
+      "receipt": "runtime/cold-selected-scopes-73a98dd2348262fc.jsonl"
+    }
+  },
+  "dsl_runtime_subplugin_review": {
+    "decision": "Approved exact Kotlin 2.3.0 SAM and assignment Gradle runtime subplugins for bounded included-build execution",
+    "inventory": "kotlin-dsl-gradle-plugin-artifact-inventory.json",
+    "sam_gradle813_sha256": "afc89394a52b52ef0ba7a8296a4262d0d3a8a3ce740915d87d713b0a01613298",
+    "assignment_gradle813_sha256": "3ca21ac8791672175b8273de995f024f35992df0300a28c27549cf7770cc9ce6",
+    "reviewed": "Read exact published source JARs in full: both extensions and subplugins",
+    "findings": "Annotation lists, project providers and fixed JetBrains compiler-plugin artifact selection; no IO, process, network or native bootstrap. SAM source entry retains legacy noarg path but declared package/classes match runtime."
+  },
+  "preliminary_repository_review": {
+    "baseline": "d93b6329c91559051d46915fc7a8114d17565cb8",
+    "compiled_source": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+    "code_scope": [
+      "android/settings.gradle.kts",
+      "android/gradle/wrapper/gradle-wrapper.properties"
+    ],
+    "decision": "Two-file executable scope is appropriate; no feature/storage edits; documentation accurately preserves support, R8 and acceptance limitations",
+    "task_graph": {
+      "phase": "cold",
+      "task_count": 246,
+      "distinct_implementation_classes": 60,
+      "inspection": "All actual recorded implementation classes inspected: expected Android/JVM/Flutter/CMake/Rust execution paths, no KAPT/Kotlin Native/ABI plugin/JS/Node/browser activation"
+    },
+    "observer_limitations": "Filtered filename/hash verification does not bind repository/group provenance or all dependencies; loaded plugin observation is after evaluation; source gate provides initial authorization. Documentation explicitly states these limits."
+  },
+  "deferred_lint_review": {
+    "decision": "No focused source-path blocker; approve bounded selected artifacts after coordinator external compiler/UAST/native/transitive provenance closure",
+    "inputs": [
+      {
+        "filename": "lint-gradle-32.2.1.jar",
+        "sha256": "3f3efde5ebf8d1eb83d436dda12d7340895a7e9d6af62abb3e2973a27942912c"
+      },
+      {
+        "filename": "lint-gradle-32.2.1-sources.jar",
+        "sha256": "f3ec807f2b95d8dd0dadcaa1204fa629c3c06a9ba19ea2c10de470ed5b6f1635"
+      },
+      {
+        "filename": "lint-gradle-32.2.1.pom",
+        "sha256": "cf86e0e833ddd44f500d4bfcba10baef1e3bcded59b4ab744d161a5ea4b5367e"
+      },
+      {
+        "filename": "lint-32.2.1.jar",
+        "sha256": "137408c526de7a645e4f380559b29f4b85dd1ac1f374c1d33eec450afb6b415c"
+      },
+      {
+        "filename": "lint-32.2.1-sources.jar",
+        "sha256": "04949e2e2c35e00c26d8051a527d70ef401621898d3747adcac205b43c2bade4"
+      },
+      {
+        "filename": "lint-32.2.1.pom",
+        "sha256": "fb585be9dfa2c842341448af02133955538ec5286e82550bdfc71294e9c02f71"
+      },
+      {
+        "filename": "lint-api-32.2.1.jar",
+        "sha256": "3e26a25edc47963b005f92bc55d25e0817d7e005008e0ebce91c423c18d4e3ce"
+      },
+      {
+        "filename": "lint-api-32.2.1-sources.jar",
+        "sha256": "843573e4fab5f09895d32884882e23c085b5a8ea9ddb014e89f43f09463fd2c8"
+      },
+      {
+        "filename": "lint-api-32.2.1.pom",
+        "sha256": "6cf8beafd0746b96ad470513241f12e6396af16eb409845ef44b7e6d63bcf216"
+      },
+      {
+        "filename": "lint-checks-32.2.1.jar",
+        "sha256": "a14365c986c65d186eaf3399927f96182171ae58af6a09e80dcbf1983ec21bc5"
+      },
+      {
+        "filename": "lint-checks-32.2.1-sources.jar",
+        "sha256": "83efd0e215318bb5a7ca61127028d5fd1560872988112a0adc8dcf6c3eef3636"
+      },
+      {
+        "filename": "lint-checks-32.2.1.pom",
+        "sha256": "c2a2bbc4ad28b7b4e57408bec5082e460bcf0335c8cbfc75aa387a6eff3fb3de"
+      }
+    ],
+    "source_changes": {
+      "lint-gradle": 1,
+      "lint": 16,
+      "lint-api": 7,
+      "lint-checks": 22
+    },
+    "review": "Compared all changed entries; inspected changed execution environment, source traversal, CLI, reporter, detector registry/thread/type-def paths; scanned changes for network/process/native-loader calls",
+    "findings": [
+      "New UAST factory always selects FIR/K2; existing K1 compatibility API deprecated; ProgressManager and language-level registration reordered",
+      "New local AAR keep-rule source traversal; no new downloader/process/native loader call site in changed paths",
+      "New report URLs produce HTML resource links, not build-time downloads; no reports requested",
+      "ExtractAnnotations scans local sources for typedefs before worker submission; selected classpath does not prove compiler worker ran"
+    ],
+    "receipts": [
+      "lint-gradle-source.diff",
+      "lint-source.diff",
+      "lint-api-source.diff",
+      "lint-checks-source.diff"
+    ],
+    "remaining": "Actual successful packaging and selected artifact observations",
+    "external_closure_review": {
+      "decision": "Closed: exact additional lint hashes acceptable for bounded guarded retry",
+      "source_diffs": "Independently compared all external source entries: IntelliJ one ZIP option change; compiler three code changes and two source service changes; UAST no change",
+      "compiler_version": "2.3.20-ij253-87-for-lint",
+      "native_payloads": "Independently recomputed: all 34 IntelliJ native resources equal baseline32.1.0; compiler and UAST contain none",
+      "loader_service_inventory": "All 41 IntelliJ and16 compiler inventoried loader/service binary entries equal baseline; no UAST entries",
+      "source_binary_service_difference": "Compiler source archive services change assignment to scripting providers. Both actual binary archives already contain byte-identical scripting providers; no new binary service activation. Source service change is not merely whitespace.",
+      "non_google_requests": "lint-other-dependency-changes.json empty",
+      "constraints": "No Android plugin sources contain typedef markers, so selected annotation-analysis closure does not imply actual lint/compiler worker execution"
+    }
+  },
+  "unchanged_kxml_filter_review": {
+    "coordinate": "net.sf.kxml:kxml2:2.3.0",
+    "sha256": "f264dd9f79a1fde10ce5ecc53221eff24be4c9331c830b7d52f2f08a7b633de2",
+    "decision": "Accept exact unchanged artifact after broad version filter collision; no scope expansion",
+    "review": "11 published Java sources scanned; KXmlParser construction/input/entity/DOCTYPE paths inspected; XmlPullParserFactory exact binary inspected with read-only javap because org.xmlpull API is omitted from source JAR",
+    "findings": "Caller-provided streams/writers, DOCTYPE scanned without external resolution, no source network/process/native downloader; no POM dependencies or native resources. Default factory loads reviewed parser/serializer from packaged services resource through reflection; static initialization only creates factory."
+  },
+  "final_review": {
+    "baseline": "d93b6329c91559051d46915fc7a8114d17565cb8",
+    "compiled_source": "43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce",
+    "code_files": [
+      "android/settings.gradle.kts",
+      "android/gradle/wrapper/gradle-wrapper.properties"
+    ],
+    "must_fix_code_findings": [],
+    "documentation_review": "Rationale, embedded/included Kotlin support limits, known shared R8/D8 issue, observer limitation, debug-only and cold-cache limitations accurately stated",
+    "runtime_summary": [
+      {
+        "phase": "cold",
+        "receipt": "cold-selected-scopes-73a98dd2348262fc.jsonl",
+        "rows": 37,
+        "artifact_rows": 24,
+        "distinct_artifacts": 17,
+        "loaded_plugins": 12,
+        "task_count": 8,
+        "task_classes": 8
+      },
+      {
+        "phase": "cold",
+        "receipt": "cold-selected-scopes-b71859d1100f4421.jsonl",
+        "rows": 218,
+        "artifact_rows": 170,
+        "distinct_artifacts": 36,
+        "loaded_plugins": 41,
+        "task_count": 246,
+        "task_classes": 60
+      },
+      {
+        "phase": "warm",
+        "receipt": "warm-selected-scopes-73a98dd2348262fc.jsonl",
+        "rows": 37,
+        "artifact_rows": 24,
+        "distinct_artifacts": 17,
+        "loaded_plugins": 12,
+        "task_count": 8,
+        "task_classes": 8
+      },
+      {
+        "phase": "warm",
+        "receipt": "warm-selected-scopes-b71859d1100f4421.jsonl",
+        "rows": 218,
+        "artifact_rows": 170,
+        "distinct_artifacts": 36,
+        "loaded_plugins": 41,
+        "task_count": 246,
+        "task_classes": 60
+      }
+    ],
+    "cold_warm_runtime_equal_ignoring_phase_runId": true,
+    "apk_sha256": "1c375fc768f1d958f497519aa1570fb2957596584a1254e908628f0e3bc2bea9",
+    "apk_size": 164971263,
+    "actual_native_entry_count": 13,
+    "actual_payload_review": "Independently rehashed both actual APKs and every packaged native entry; receipt sizes/hashes and exact notices agree. Gate implementation and passing cold/warm logs inspected. Signature logs and package identities checked.",
+    "acceptance_limit": "First successful guarded package followed private bootstrap/setup/guard retries; no pristine-empty-cache attestation. No release shrinking or device runtime acceptance.",
+    "evidence_completion_notes": {
+      "status": "Resolved",
+      "details": "Referenced lint and kxml inventories and factory bytecode copied; reviewed ignored raw logs explicitly staged with documented whitespace normalization, private raw originals retained; final-review documentation marked completed and receipt refreshed."
+    }
+  }
+}

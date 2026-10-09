@@ -1,0 +1,8 @@
+{
+  "coordinate": "net.sf.kxml:kxml2:2.3.0",
+  "sha256": "f264dd9f79a1fde10ce5ecc53221eff24be4c9331c830b7d52f2f08a7b633de2",
+  "request_unchanged_baseline": true,
+  "reason_for_guard_stop": "Version-only filter collision with Kotlin2.3.0",
+  "source_review": "Published XML pull parser takes caller-provided streams/readers; doctype parser consumes text without external fetch; no process/network/native installer call site found. No native payload. POM has no dependencies.",
+  "source_review_scope": "Focused input/doctype/entity and execution-hook inspection, not full XML correctness audit"
+}

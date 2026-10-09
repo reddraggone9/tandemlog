@@ -1,0 +1,301 @@
+[
+  {
+    "artifact": "intellij-core",
+    "loader_and_service_entries": [
+      {
+        "entry": "META-INF/services/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$1.class",
+        "sha256": "4412a700e43eae9e9119149ce2c395e16e8c780800bc08b8c7b55013bd059d83",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$2.class",
+        "sha256": "6d894df369199dcd5288011ad06e37a35136fccf53cde1496b1318fbeef19100",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$3.class",
+        "sha256": "44b9390bb0af96520d3ba095573fb433fc1a70bc81c555dd687e42dbff518203",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$4.class",
+        "sha256": "b1e1a4aad1d33f263ce74d266516d901df244609c877dd30c302e1634101251d",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$5.class",
+        "sha256": "8dfe2f688addaa1effe86dccc796849141bbad53dd4f18b928e64de62d512843",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$6.class",
+        "sha256": "f6b8718a7a79bec2cb1f31115ab22f4e8d5e72cc06409094fa9d9b46e90460ea",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$7.class",
+        "sha256": "99a0bf07bd7913e274cfcef69d990a1a2ab8cf9f11b289085ad702b311c129b0",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$AWT.class",
+        "sha256": "035a4e978b1a4ad7887ff1fe4798b96fe30b5c1a0002151c555f6a1d05a317b2",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$Buffers.class",
+        "sha256": "c9e04f14723f34da6de8db386c1afa103c66e791273b906d383ead84bd4b6cfd",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native$ffi_callback.class",
+        "sha256": "147feb3a1c22683dbb8d06fbcd2207071cd2dc0bf93b2eb7168be6e2fb8ee9c6",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/Native.class",
+        "sha256": "3a21f042c323125ee2c123c9c0ce560abfd0116d6935b03405783d96bfa71c31",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLibrary$1.class",
+        "sha256": "3739ce4b8ac4b0f41f526e7794b6b72e310afcafff5a2f5ee42f70854f596d4e",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLibrary$2.class",
+        "sha256": "629a00f7f5174220f6688a3143304eef21fc6db18ee3e959ec34cfcb19106caf",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLibrary$3.class",
+        "sha256": "482379486052e50488e5ca81046144e40e8aaaf6682e00fdbddbba065e8939bd",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLibrary$NativeLibraryDisposer.class",
+        "sha256": "9291653902cab9772da8230a969f9ebd0b1b4caa38ee1041290aa0b70731253d",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLibrary.class",
+        "sha256": "74eef7400f007fabef14cd50f5ea26993c6a7ce82e2dc9ee20dfea4bb72fef32",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeLong.class",
+        "sha256": "40e9abaaa0491f36e15b7db00a14f5bfcd5f739099770b382c76f17f5aa4ef8b",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeMapped.class",
+        "sha256": "05950bb5ae9bbd576623e9a7837ab9f403cf33e630ccd10f11a7adc747b6a4c2",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeMappedConverter.class",
+        "sha256": "67d3ca882747a734a8093e2efd48e470e18a1b87a7a70ca98d787a8026b63fc7",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeString$StringMemory.class",
+        "sha256": "0e5fdb2109a7b52a685e4eb32ae293d293e2fce6eeb2d9229f8b3c92f8ebab5b",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "com/sun/jna/NativeString.class",
+        "sha256": "e3cc129410fdd3c8812f08147a5db5a2e223e6cebb6e5b26e702615a37ebc97d",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "net/jpountz/util/Native$1.class",
+        "sha256": "0a03edd1f0924ebafa2110875965a3453f009c91092345fa792868eae72fcb61",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "net/jpountz/util/Native$OS.class",
+        "sha256": "18582407cf917b8694e02e4c227abdaa1f598ab5c7040fcce627024df2a9029c",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "net/jpountz/util/Native.class",
+        "sha256": "941c9c9b00d789d296af18e4dd60aba8df04801383d5264599aae9cabcbe8a4f",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/reactor.blockhound.integration.BlockHoundIntegration",
+        "sha256": "fce5689064b3005c0c08eddc73f6146ee6cebfb8bcdaa5dd30cf9c1ebcb63083",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/javax.xml.stream.XMLEventFactory",
+        "sha256": "944fe69b77005be85ea10881feff7cea57e21212dc2ff2021a928adea4752a15",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/javax.xml.stream.XMLInputFactory",
+        "sha256": "9bb17eb2cfdf6a19b466d999f3352483ec0e8037303f7b3b32adbebc7203da58",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/javax.xml.stream.XMLOutputFactory",
+        "sha256": "820e6c6d72d785c12141b6ecbc3e0e8163f0dc4d79d33c972f5ab3af8f82876f",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/com.intellij.platform.jps.model.resolver.JpsDependencyResolverConfigurationService",
+        "sha256": "4167c5e91a71325a42dbdee50fd4aa7ced523183f46e66df6740e48a840b1458",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.JpsElementFactory",
+        "sha256": "cb046b3c81d9200e629487cd966892c3c55d72b8d9808661dcef8d48c68f8788",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.JpsEncodingConfigurationService",
+        "sha256": "3cfba00f6aca81c8c7dc7bce75120e098c52affec14ce805246ba20bc5845557",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.artifact.JpsArtifactService",
+        "sha256": "ee99b315fc814526b19c998208b4c6f89ed988f6cf796e44732bf56cda1ce8b8",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.artifact.elements.JpsPackagingElementFactory",
+        "sha256": "70cb152561348b70e407f52078dfebf0f5dffc7a6cf97121b7caf3e0de8b5dff",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.ex.JpsExElementFactory",
+        "sha256": "20c2325e702f61538a778a24fc1fd48388286ecac3b2760675c53a6d53eb577f",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.fileTypes.FileNameMatcherFactory",
+        "sha256": "a9e0fd5d5e7e42002d0f62dc9087427de36b907f0781868c6b1c3e9ed771cc72",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.jarRepository.JpsRemoteRepositoryService",
+        "sha256": "4ca0f4217d37a67fa3a24982a71c4e362d7b4155b01cf98c8e5e72f3ae6c0f33",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.java.JdkVersionDetector",
+        "sha256": "73ada20c6953a72282037539e37cb8b68d7fc31d3d498fd679f02c5e5f3b4b08",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.model.java.JpsJavaExtensionService",
+        "sha256": "a59855aca8008b9ee9317abf8078267e2807db9a2c15c113a6a9922115a4d758",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.service.JpsServiceManager",
+        "sha256": "f19a30f4cb3eb7693dadbe6b93cea425d30bdb706bba0d1d1e784e929de91990",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.jps.service.SharedThreadPool",
+        "sha256": "a11b926f37226ac3999765324b995681417d5bbdf5127e66fc68e600c1516751",
+        "equal_to_baseline": true
+      }
+    ]
+  },
+  {
+    "artifact": "kotlin-compiler",
+    "loader_and_service_entries": [
+      {
+        "entry": "META-INF/services/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.builtins.BuiltInsLoader",
+        "sha256": "d9cca2e389bace3576b8c8389f2fd352e25f30c695afb5636585aa5113e146ef",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.resolve.ExternalOverridabilityCondition",
+        "sha256": "d5b57fbb5b5f040a00a7f2e263bb40e7675f60a24774917819e52a41d2a6c498",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.resolve.jvm.KotlinToJvmSignatureMapper",
+        "sha256": "6544eefa747b0c0b0a8d5cad48fbd102873c32379f72233c92975452b39c5389",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.util.ModuleVisibilityHelper",
+        "sha256": "e076c74c1194aa7f8872f1fe13409f6a58ad8535814ff62e2310e17792fda037",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.compiler.plugin.CommandLineProcessor",
+        "sha256": "0d3ea4d3aa368ce2dd6f3d39eb1f9ac291de913a2f1100a93021ea915bcf322e",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar",
+        "sha256": "122833929f8c2b2a6b82a5299f177a4990bbd2646586c29f2a4f7a750c5fdc16",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org.jetbrains.kotlin.compiler.plugin.ComponentRegistrar",
+        "sha256": "74fdc13117ccc7421b4dcb076b634c76f26f361ec8f3a3d4e53919aac957a96f",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/exec",
+        "sha256": "bc851f293bae6c9415a7af4ce7cca155c36edcd86c08682d75e660855027f0eb",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jansi",
+        "sha256": "558d30e74e88e0b4e196d3aa0860c60eeaf1e764ed63d3e18e3dd6089d0642fd",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jna",
+        "sha256": "69e2f18eb11c285b5784ac86f479f7b6757f4914a02a9303e40931d85ebe2580",
+        "equal_to_baseline": true
+      },
+      {
+        "entry": "META-INF/services/org/jline/terminal/provider/jni",
+        "sha256": "bb08bf2e083cc6ffd27992818bf6c4d1ed6f54546d2c4f75a5e530164202f2c8",
+        "equal_to_baseline": true
+      }
+    ]
+  },
+  {
+    "artifact": "uast",
+    "loader_and_service_entries": []
+  }
+]
