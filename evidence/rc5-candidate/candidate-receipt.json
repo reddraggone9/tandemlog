@@ -1,0 +1,165 @@
+{
+  "schema": 1,
+  "recorded_at_utc": "2026-10-09T01:14:01Z",
+  "candidate_run": {
+    "conclusion": "success",
+    "created_at": "2026-10-09T00:37:31Z",
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "head_repository": {
+      "full_name": "reddraggone9/tandemlog"
+    },
+    "head_sha": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/37865723987",
+    "id": 37865723987,
+    "path": ".github/workflows/android-candidate.yml",
+    "repository": {
+      "full_name": "reddraggone9/tandemlog"
+    },
+    "run_attempt": 1,
+    "status": "completed",
+    "updated_at": "2026-10-09T01:08:17Z"
+  },
+  "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "version": "2026.10.2-rc.5",
+  "version_code": 48,
+  "main_ci": {
+    "run_id": 37865700112,
+    "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "earlier_source_ci": {
+    "run_id": 37863550126,
+    "source": "66d031eaf08b47fb033adb49d538182f7eff9c01",
+    "conclusion": "success",
+    "distinction": "This earlier run did not compile the version/editorial RC5 closure. Main CI and the signed candidate compiled bc1fc99."
+  },
+  "artifacts": [
+    {
+      "id": 11588418958,
+      "name": "android-release",
+      "size_in_bytes": 30350179,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588418958",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588418958/zip",
+      "expired": false,
+      "created_at": "2026-10-09T01:08:12Z",
+      "expires_at": "2026-10-14T01:08:09Z",
+      "updated_at": "2026-10-09T01:08:12Z",
+      "digest": "sha256:886ee34f069efa18615e77b7c2165f95a1055ded5dac82dc18a6a5893df286a4",
+      "workflow_run": {
+        "id": 37865723987,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b"
+      }
+    },
+    {
+      "id": 11588334801,
+      "name": "linux",
+      "size_in_bytes": 9016088,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588334801",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588334801/zip",
+      "expired": false,
+      "created_at": "2026-10-09T01:01:13Z",
+      "expires_at": "2026-10-14T01:01:12Z",
+      "updated_at": "2026-10-09T01:01:13Z",
+      "digest": "sha256:0d2ef7fe55f1f3d934dd065644bef76a709875707609abe3b5464430a31f547c",
+      "workflow_run": {
+        "id": 37865723987,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b"
+      }
+    },
+    {
+      "id": 11588267705,
+      "name": "windows",
+      "size_in_bytes": 25789912,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588267705",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11588267705/zip",
+      "expired": false,
+      "created_at": "2026-10-09T00:44:10Z",
+      "expires_at": "2026-10-14T00:44:08Z",
+      "updated_at": "2026-10-09T00:44:10Z",
+      "digest": "sha256:02b3cbcfc78c0c096ef586a90a31ca27152cd035499e89caae150bac5fc1db75",
+      "workflow_run": {
+        "id": 37865723987,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b"
+      }
+    }
+  ],
+  "ci_receipts": {
+    "linux": {
+      "flutter_tests_passed": 643,
+      "native_contract_tests": 107,
+      "python_policy_tests": 50,
+      "native_workflows_passed": 83,
+      "native_payload_startup_flatpak_lifecycle": "passed"
+    },
+    "windows": {
+      "flutter_tests_passed": 641,
+      "flutter_tests_skipped": 2,
+      "native_contract_tests": 107,
+      "python_policy_tests": 50,
+      "native_payload_installer_lifecycle": "passed"
+    },
+    "signed_android": {
+      "job_id": 113618288866,
+      "conclusion": "success",
+      "verification": [
+        "owner certificate",
+        "package",
+        "version/code",
+        "nondebuggable",
+        "universal ABIs",
+        "native payload",
+        "exact notices"
+      ],
+      "signing_material_cleanup": "completed"
+    }
+  },
+  "expected_android": {
+    "package": "com.reddraggone9.tandemlog",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "version": "2026.10.2-rc.5",
+    "version_code": 48,
+    "nondebuggable": true
+  },
+  "actual_apk_sha256": null,
+  "actual_apk_hash_source": "Pending the prepared local worker's actual archive/member verification; no cloud local APK byte verification claimed.",
+  "cloud_final_download": {
+    "method": "gh run download android-release from run37865723987",
+    "result": "HTTP403",
+    "bytes_verified": false
+  },
+  "native_acceptance": {
+    "status": "in_progress_on_local_worker",
+    "fixture": "Dedicated synthetic RC4 upgrade profile; live synced user data untouched.",
+    "receipt_pending": true
+  },
+  "editorial": {
+    "range_from": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "range_to": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "notes_path": "design/prerelease-notes.md",
+    "review": "Independent actual-change notes and media review accepted; see ../rc5-editorial/independent-review.json.",
+    "media_commit": "c11441353a919f21cc54234685ed3a52a509ab2c",
+    "media_sha256": "cbe93869b0d483c00cf74b4c7ce472ed323d012bf268407a6295e024037157c0"
+  },
+  "publication": {
+    "status": "held",
+    "requires": [
+      "Exact final local artifact byte/signer verification and native acceptance with APK SHA256",
+      "Independent artifact/promotion review",
+      "Fresh parent quota clearance"
+    ],
+    "tag": "v2026.10.2-rc.5",
+    "no_rebuild": true,
+    "stable_promotion": false
+  }
+}

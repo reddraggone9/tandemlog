@@ -1,0 +1,120 @@
+{
+  "reviewed_at_utc": "2026-10-09T01:13:55.686471+00:00",
+  "reviewer": "independent rc5_artifact_promotion_review agent",
+  "scope": "Final immutable CI/source/archive metadata bindings and no-rebuild preview promotion policy; no local artifact bytes or native acceptance attested",
+  "result": "accepted for exact artifact native acceptance and preparation; publication still held",
+  "candidate_run": 37865723987,
+  "candidate_source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "candidate_version": "2026.10.2-rc.5+48",
+  "candidate_provenance": {
+    "event": "workflow_dispatch",
+    "head_branch": "main",
+    "path": ".github/workflows/android-candidate.yml",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1
+  },
+  "main_ci": {
+    "id": 37865700112,
+    "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "conclusion": "success"
+  },
+  "jobs": [
+    {
+      "id": 113611864540,
+      "name": "candidate",
+      "conclusion": "success"
+    },
+    {
+      "id": 113611913680,
+      "name": "checks / android",
+      "conclusion": "success"
+    },
+    {
+      "id": 113611913728,
+      "name": "checks / windows",
+      "conclusion": "success"
+    },
+    {
+      "id": 113611913795,
+      "name": "checks / linux",
+      "conclusion": "success"
+    },
+    {
+      "id": 113618288866,
+      "name": "signed-android",
+      "conclusion": "success"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 11588418958,
+      "name": "android-release",
+      "size_in_bytes": 30350179,
+      "digest": "sha256:886ee34f069efa18615e77b7c2165f95a1055ded5dac82dc18a6a5893df286a4",
+      "expired": false,
+      "expires_at": "2026-10-14T01:08:09Z"
+    },
+    {
+      "id": 11588334801,
+      "name": "linux",
+      "size_in_bytes": 9016088,
+      "digest": "sha256:0d2ef7fe55f1f3d934dd065644bef76a709875707609abe3b5464430a31f547c",
+      "expired": false,
+      "expires_at": "2026-10-14T01:01:12Z"
+    },
+    {
+      "id": 11588267705,
+      "name": "windows",
+      "size_in_bytes": 25789912,
+      "digest": "sha256:02b3cbcfc78c0c096ef586a90a31ca27152cd035499e89caae150bac5fc1db75",
+      "expired": false,
+      "expires_at": "2026-10-14T00:44:08Z"
+    }
+  ],
+  "fresh_supported_mcp_log_sha256": {
+    "linux": "66b0f610ae8b27736e470d38bfcfa14b3d1d9c8a4e5c18e0a84b75d8b14b06cf",
+    "windows": "578ad9e3af465af06ad2cdca61236951e2d3cf783131888d3c58457ab389e8eb",
+    "android": "79b706f4986b79dba9c2a1c734d54e937529753712ad5b4502855d66bc860c77"
+  },
+  "logs_match_existing_receipts": true,
+  "linux_test_counts": {
+    "flutter": 643,
+    "native_contract": 107,
+    "python_policy": 50,
+    "native_workflows": 83,
+    "python_policy_skipped": 0
+  },
+  "signed_android_ci_verification": [
+    "owner certificate pin",
+    "package/version",
+    "nondebuggable",
+    "universal ABIs",
+    "native library and exact notices",
+    "temporary signing material removed"
+  ],
+  "apk_sha256": null,
+  "byte_verification": "pending local worker; no artifact download attempted by this reviewer",
+  "promotion_policy_file_sha256": {
+    ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab"
+  },
+  "promotion_policy_result": "prerelease workflow resolves successful main signed candidate, downloads same run artifacts, verifies accepted inner APK hash/metadata/source/signer/version/inventory/checksums/desktop lifecycle, stages three installers by copying and publishes prerelease=true latest=false without build/signing",
+  "concrete_recipe_review": "accepted; exact candidate, held publication, actual inner APK hash distinct from archive, no rebuild, main policy/notes revision check, unexpired artifacts, tag/release absence and fresh quota required",
+  "publication_holds": [
+    "exact final local native acceptance with inner APK SHA256",
+    "fresh quota check"
+  ],
+  "mutations": "none; no dispatch, build, release, tag, stable promotion or live data changes",
+  "tag_absent_as_observed": true,
+  "windows_test_counts": {
+    "flutter_passed": 641,
+    "flutter_skipped": 2,
+    "native_contract": 107,
+    "python_policy": 50,
+    "python_policy_skipped": 0
+  }
+}

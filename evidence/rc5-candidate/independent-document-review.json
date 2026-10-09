@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "reviewed_at_utc": "2026-10-09T01:15:09.565557+00:00",
+  "reviewer": "rc5_artifact_promotion_review independent agent",
+  "result": "accepted; no must-fix findings",
+  "candidate_source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+  "candidate_run": 37865723987,
+  "version": "2026.10.2-rc.5+48",
+  "reviewed_files_sha256": {
+    "candidate-receipt.json": "0e9c72bff06c66c0978d86c134c547f79a90deee4ec9df00c679cb87fa54030f",
+    "native-acceptance.md": "81101ca678f80be094cac7d5725991e63ef27f971afc8e571cec5520e33f2abe",
+    "promotion-recipe.md": "f4e724e29243a2e9e9c0bfed2626b766f845dba00c9e5280f9f3894462cc3ad0"
+  },
+  "independent_verification": [
+    "Fresh GitHub API: successful workflow_dispatch/main/android-candidate.yml candidate attempt1 from same repository/head repository at exact bc1fc99",
+    "Fresh API: main CI37865700112 success at exact same source; current main bc1fc99",
+    "Fresh API: Android/Linux/Windows artifact IDs, sizes, digests, expiries and workflow/source bindings match all recorded fields",
+    "Fresh supported GitHub MCP logs for Linux113611913795, Windows113611913728 and signed Android113618288866 match saved CI receipts exactly",
+    "Linux643 Flutter tests,107 native contracts,50 Python policies (no skipped),83 native workflows; Windows641 Flutter tests with2 Linux-specific skips,107contracts,50policies",
+    "CI signed Android owner signer/package/version/nondebuggable/universalABI/native notices gates succeeded and temporary signing material cleanup succeeded",
+    "Source closure66d031e tobc1fc99 only version, notes and editorial evidence; reviewed five unchanged publication policy files",
+    "Absent RC5 tag freshly verified by API404"
+  ],
+  "concrete_documents": [
+    "Candidate receipt preserves actual GitHub source/run/archive binding and distinguishes prior66d031e CI from exactbc1fc99 CI",
+    "Acceptance handoff uses final signed artifact and explicitly separates archive digest from actual inner APK SHA; bounded four workflows, no expanded matrix or live synced data",
+    "Promotion recipe requires completed native acceptance, actual computed/metadata-matched APK SHA, independent review and fresh quota before guarded prerelease dispatch",
+    "Main must match reviewed bc1fc99 policy/notes revision or receive fresh review; artifacts unexpired and tag/release absent; SHA missing/invalid fails shell guard",
+    "Existing workflow uses same candidate artifacts, exact source checkout, signer/version/source/hash/inventory/lifecycle/checksum gates, then copies exactly three installers with no build/signing; prerelease=true latest=false",
+    "Optional private draft path remains conditional on separate reviewed historical dispatch and existing owner authorization; no gate bypass or permission change"
+  ],
+  "fresh_job_log_sha256": {
+    "linux": "66b0f610ae8b27736e470d38bfcfa14b3d1d9c8a4e5c18e0a84b75d8b14b06cf",
+    "windows": "578ad9e3af465af06ad2cdca61236951e2d3cf783131888d3c58457ab389e8eb",
+    "android": "79b706f4986b79dba9c2a1c734d54e937529753712ad5b4502855d66bc860c77"
+  },
+  "actual_apk_sha256": null,
+  "byte_verification": "No final APK bytes downloaded or independently hashed by cloud reviewer; parent local worker verification/hash/acceptance pending",
+  "publication_status": "held",
+  "remaining_gates": [
+    "exact final local archive/member/APK/signature/native acceptance receipt with actual APK SHA256",
+    "fresh parent quota clearance",
+    "fresh run/artifact-expiry/main-policy/tag-release rechecks at dispatch"
+  ],
+  "mutations": "none; no workflow dispatch, rebuild, signing, release, tag, stable promotion, credential or live user-data changes"
+}
