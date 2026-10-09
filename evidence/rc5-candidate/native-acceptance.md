@@ -14,4 +14,3 @@ Use the existing dedicated synthetic RC4 profile/tree and established exact-arti
 Retain existing automated historical recompletion/offline convergence coverage without adding a manual device matrix. Cloud GTK evidence already covers parent-menu/right-click/keyboard, single-row deletion, stale workspace callbacks, changed-parent/order guards, recurrence, drafts and Undo. The candidate passed all 83 Linux native workflows, startup and installed lifecycle gates; Windows uses Lee's existing automated RC exception.
 
 The local worker's exact final artifact receipt, native result and actual APK hash remain pending. Publication requires that acceptance and fresh parent quota clearance. No publication or stable promotion is authorized by this plan.
-

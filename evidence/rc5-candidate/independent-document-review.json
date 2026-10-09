@@ -8,8 +8,8 @@
   "version": "2026.10.2-rc.5+48",
   "reviewed_files_sha256": {
     "candidate-receipt.json": "0e9c72bff06c66c0978d86c134c547f79a90deee4ec9df00c679cb87fa54030f",
-    "native-acceptance.md": "81101ca678f80be094cac7d5725991e63ef27f971afc8e571cec5520e33f2abe",
-    "promotion-recipe.md": "f4e724e29243a2e9e9c0bfed2626b766f845dba00c9e5280f9f3894462cc3ad0"
+    "native-acceptance.md": "f92a00ffd06fbbf8eaa7e6d71af008dc724697992237602503dcde18fc723007",
+    "promotion-recipe.md": "259ed69f562f020f13698ab85d3f09cbb2b99c6096ee47db7b3b53882943c1cf"
   },
   "independent_verification": [
     "Fresh GitHub API: successful workflow_dispatch/main/android-candidate.yml candidate attempt1 from same repository/head repository at exact bc1fc99",
@@ -42,5 +42,10 @@
     "fresh parent quota clearance",
     "fresh run/artifact-expiry/main-policy/tag-release rechecks at dispatch"
   ],
-  "mutations": "none; no workflow dispatch, rebuild, signing, release, tag, stable promotion, credential or live user-data changes"
+  "mutations": "none; no workflow dispatch, rebuild, signing, release, tag, stable promotion, credential or live user-data changes",
+  "normalization_review": {
+    "reviewed_at_utc": "2026-10-09T01:16:21.216759+00:00",
+    "change": "Removed one trailing blank line at EOF from native-acceptance.md and promotion-recipe.md; all substantive bytes unchanged",
+    "result": "accepted; hashes updated; no additional gates"
+  }
 }

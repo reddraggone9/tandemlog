@@ -44,4 +44,3 @@ The reviewed current dispatch supplies the trusted release policy and reviewed n
 The release must be experimental prerelease, `latest=false`, with tag target equal to the candidate source. Monitor through terminal success, then independently verify public source/tag, the three download bytes/digests/sizes, reviewed notes/image link, prerelease status and unchanged stable Latest `v2026.10.1`.
 
 No private draft is presently needed because main and candidate policy are identical. If a separately reviewed later dispatch cannot create a release at a historical workflow-different commit, use only the existing owner-authorized private-draft path described in [releases.md](../../design/releases.md). Bind that draft's tag/source/numeric ID, validate exact three asset digests, attach without clobbering, and finalize through the authorized connection after every gate. Do not weaken a gate or change permissions to bypass a failure.
-
