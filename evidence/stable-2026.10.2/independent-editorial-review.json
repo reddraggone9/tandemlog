@@ -1,0 +1,33 @@
+{
+  "reviewed_at_utc": "2026-10-09T16:43:05.857884+00:00",
+  "decision": "ACCEPTED: full stable-range editorial gate only",
+  "covered_range": {
+    "prior_stable": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "stable_candidate": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "accepted_behavior_endpoint": "74afbe294065f462b742b4570d4095e690e54b04"
+  },
+  "stable_version": "2026.10.2+53",
+  "candidate_run_id": 37960853538,
+  "notes_sha256": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+  "README_sha256": "68ec94277b67a0dfb8876d14c82794457ba3fad123b227b902d65487936f2870",
+  "editorial_guidance_sha256": "b922b71d31ea3a402b463f58d4cec769fdc02de8596d3051806e606225d1af6a",
+  "actual_diff_review": "Full stable baseline\u2192RC7 production/test change inventory and commit history reviewed; RC7\u2192stable executable delta is version only. Eight concise bullets cover shared text/existing-task setup, checklists/recurrence, tags, Date/Time/editor order, initial manual order, bulk semantics/save failures, narrow rows/checklist feedback and Settings version/copy. No QA/preservation boilerplate or future-feature promises.",
+  "README_review": "Accurate immediately visible inline checklist and collaborative title/notes capabilities added; existing concise sync explanation and installation links retained.",
+  "media": {
+    "immutable_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/89cec5a13900291df9f1cb841c5351277f38f4ff/evidence/rc4-editorial/tag-control-before-after.png",
+    "image_sha256": "8a635aecffc81584d3153d77fbb0c8480a10b805df19ebf7b966e464179e3a90",
+    "actual_pixels_viewed": true,
+    "remote_http200_bytes9566_equal_local": true,
+    "provenance_sha256": "95676aae36b2d9a9957ffec16dd74b4c642276fedb2243a761871d15680dd5d3",
+    "prior_independent_pixel_crop_review_sha256": "f9cddece5b3dad936e4dc6fdfa822e9b62477beb243e0de1de952d1f434f9bcf",
+    "actual_capture_range": {
+      "before": "5ac35da50acca69ab196a54312efc8ccef1452da",
+      "after": "e205e650b5614935a73cf5acb96ca9b36fda8e4e"
+    },
+    "platform": "Actual Linux GTK debug1200x850 Dark scale1, matched synthetic content; prior raw/crop pixel review reused.",
+    "stable_appropriateness": "Accepted as illustration of real tag UI change included in full stable range. Existing receipt explicitly attributes earlier-preview5ac\u2192e205 capture; no claim of screenshots taken on stable2026.10.1 or new candidate687.",
+    "visual_review": "Useful readable tightly cropped plain tag\u2192selected chip/input comparison; centered Before/After labels, descriptive alt, immutable media source, no private data. Prose sufficiently explains other changes."
+  },
+  "must_fix": [],
+  "limits": "Editorial only; full candidate/new exact native/artifact/publication acceptance still required. Hash-bound notes/media changes require new review."
+}

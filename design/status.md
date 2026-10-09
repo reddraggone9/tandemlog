@@ -11,6 +11,8 @@ attribution; fresh stable APK identity/upgrade/native gates remain required.
 The parent supplied fresh publication-threshold clearance at16:34:51UTC.
 Full stable candidate and bounded native acceptance remain pending; no stable
 publication has occurred. Current Latest remains2026.10.1, and RC7 is preserved.
+Candidate37960853538 and pushCI37960786048 run exact stable source687163b;
+independent source/notes/README/media preparation review passes with no must-fix.
 
 The [stable preparation record](../evidence/stable-2026.10.2/README.md) binds code
 equivalence, applicable existing evidence, explicit approval, notes/media review

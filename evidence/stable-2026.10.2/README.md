@@ -1,5 +1,14 @@
 # Stable2026.10.2 preparation
 
+Exact stable candidate source is`687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`.
+[Signed candidate37960853538](https://github.com/reddraggone9/tandemlog/actions/runs/37960853538)
+and [pushCI37960786048](https://github.com/reddraggone9/tandemlog/actions/runs/37960786048)
+are running that source. [Independent source preparation](independent-source-preparation-review.json)
+and [full-range editorial review](independent-editorial-review.json) accept code
+equivalence, stable policy/gates and actual notes/README/immutable tag media,
+with no must-fix findings. [Bounded new-artifact native handoff](native-acceptance-handoff.md)
+defines required identity/upgrade/retained-data checks and reuse limits.
+
 Lee explicitly accepted released RC7 as the next official release on2026-10-09:
 “That build seems fine to me. Let's publish it as the next official release!”
 This supplies behavior-changing stable acceptance. The parent supplied fresh
@@ -33,7 +42,7 @@ describes the other meaningful changes; no new app pixels or comparisons are
 invented. Separate editorial review must assess the full stable range and actual
 notes/media/README before publication.
 
-Remaining: reviewed preparation, successful stable signed candidate, exact bounded
+Remaining: successful stable signed candidate, exact bounded
 stable-native acceptance, retained hosted inventory/archive/member/lifecycle/
 APK/checksum gates, stable publication with lee_accepted=true/latest=true, all
 three actual public installer bytes and independent final release review.

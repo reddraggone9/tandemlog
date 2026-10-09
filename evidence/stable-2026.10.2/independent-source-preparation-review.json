@@ -1,0 +1,45 @@
+{
+  "reviewed_at_utc": "2026-10-09T16:43:05.857884+00:00",
+  "decision": "ACCEPTED: source/metadata preparation only",
+  "stable_source_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+  "accepted_rc7_source": "74afbe294065f462b742b4570d4095e690e54b04",
+  "stable_version": "2026.10.2+53",
+  "candidate_run_id": 37960853538,
+  "push_ci_run_id": 37960786048,
+  "candidate_api_status_at_review": "in_progress",
+  "authorization": "User explicitly accepted RC7 as next official stable. Parent fresh2026-10-09T16:34:51.726011Z quota clears publication threshold; account values private.",
+  "equivalence": {
+    "all11_source_dependency_native_platform_test_tool_workflow_git_objects_and_working_bytes_equal_rc7": true,
+    "only_executable_delta": "pubspec version2026.10.2-rc.7+52 ->2026.10.2+53",
+    "six_frozen_v3_fixtures_independently_byte_and_hash_equal_prior_stable": true,
+    "prior_stable_source": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "code_equivalence_json_sha256": "cdbcc7837516b091842cd23b3cd0df7b6d60d9222b7f905a95915117a6769b0f",
+    "artifact_bytes_equal": false
+  },
+  "reviewed_files_sha256": {
+    "README.md": "68ec94277b67a0dfb8876d14c82794457ba3fad123b227b902d65487936f2870",
+    "design/stable-notes.md": "e16ad703f056a2e0de87fc52bbaa848b345c04cb3b0b03ff6d18f122414c5657",
+    "design/status.md": "3537805688a9fdf972a5fff32ccedcc4b8dc24b3e249d97343ecacc77753094e",
+    "evidence/stable-2026.10.2/README.md": "8d1fcce61abe741e6b5bf2bedc9a825320a675e331711f3c0cd270516f123ef7",
+    "evidence/stable-2026.10.2/code-equivalence.json": "cdbcc7837516b091842cd23b3cd0df7b6d60d9222b7f905a95915117a6769b0f",
+    "pubspec.yaml": "e5b0d71f7eec28ba96223149929c9f5507faa95893d361c492a7a4fbe2416536"
+  },
+  "policy_sha256": {
+    "design/decisions/0008-calver-and-release-promotion.md": "42aa75429ac1b908e74e6c6c170dc8cfef43e9f38bc611e06a03254d6ab76fcf",
+    ".github/workflows/stable.yml": "40034bea2b65a5a67a9b17e3264624ab5214a625df10d93927dcc93f5c1300c5",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95"
+  },
+  "required_gates": [
+    "Successful exact687 main stable-name full signed candidate/all target unit-contract-policy-native/package/lifecycle gates; currently running.",
+    "New actual stable APK owner pin/package/stable version/code53/nondebuggable/3ABIs and exact accepted inner hash; RC7 bytes cannot be relabeled.",
+    "Bounded exact stable native install/launch/upgrade-retained data/cold replay/SAF continuity/loaded workflows and startup; unchanged feature coverage reused only with accurate RC7 attribution.",
+    "Trusted main stable.yml lee_accepted=true; successful exact candidate/run, absent stable tag and unexpired artifacts.",
+    "Actual archive digests, closed inventory, portable member safety/full hashes, desktop lifecycle, accepted actual APK hash/source/version/signer metadata and installer checksums before release create.",
+    "No rebuild during promotion; exactly3 versioned installers, stable prereleasefalse/draftfalse/latesttrue; preserve older releases and independent actual public installer bytes/signature/tag/source/notes verification."
+  ],
+  "limits": "Source closure reuse avoids unrelated native/vendor re-audit and runtime matrix. Metadata rebuild produces new binaries requiring exact new-artifact acceptance. No reviewer tests/builds/device/data/publication operations.",
+  "must_fix": [],
+  "publication_acceptance": false
+}
