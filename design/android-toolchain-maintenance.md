@@ -1,6 +1,10 @@
 # Coordinated Android toolchain maintenance — 2026-10-09
 
-Status: isolated evaluation; no merge or release acceptance. Baseline is
+Status: reviewed dependency integration approved by Lee; PR #4 rebase-merged
+at `912a4a28fda84399294ed15717ca181f0140d6eb`. Development candidate
+2026.10.3/build54 is unpublished; actual signed release/R8 and exact Android
+native acceptance remain pending. The integrated tree equals reviewed PR head
+`c4a155f18b1fc157ba71a58e79123aa619fb8ff7`. Baseline is
 `d93b6329c91559051d46915fc7a8114d17565cb8`, whose application remains stable
 2026.10.2/build53 from `687163b1f9c95fe8dee1dffa0775ee7fe4cd3884`.
 The executable proposal at `43d49d9b027aad099a7aa8e3e77ba4c01ab2b3ce` changes
@@ -110,7 +114,9 @@ Effective selected graphs contain 246 app tasks across 60 implementation
 classes, plus the eight-task Flutter included build. Independent review finds
 no KAPT, Kotlin Native, JS/Node/browser or ABI-plugin activation. Independent
 final code, documentation, effective-artifact and package review finds no
-must-fix. Hosted all-platform CI remains a separate submission gate.
+must-fix. Hosted all-platform PR CI37981318103 passed at reviewed head
+`c4a155f18b1fc157ba71a58e79123aa619fb8ff7`; the versioned signed candidate
+requires the unchanged trusted-main workflow's full validation matrix.
 
 Local setup uses a private Java21 module-launcher overlay because this cloud
 JDK lacks javac, jar, jlink, javap and jmod launchers. Explicit Java proxy
@@ -120,8 +126,16 @@ and exact NDK28.2 are host accommodations; repository selections are unchanged.
 Release shrinking and exact Android runtime/ABI/SAF workflow acceptance remain
 separate gates. AGP 9.2 changes R8 wildcard keep-attribute semantics, so debug
 packaging cannot establish release shrinking behavior. The existing release
-signing guard is retained; no stable-version bump, live-data access, merge,
-release, or native-lab operation belongs to this preparation.
+signing guard is retained. Lee authorized dependency integration and unpublished
+candidate validation separately from release acceptance. Published tags and
+successful signed candidates both have build floor53, selecting development
+2026.10.3+54. The unchanged trusted-main candidate workflow must build and verify
+the actual release package, followed by exact owner-signed update/startup/SAF/
+provider native checks before any publication. Optional mapping/configuration
+diagnostics do not replace those gates. On attributable verification failure,
+stop publication and make a scoped ordinary dependency revert, retaining Kotlin
+2.4.20, failure evidence and consumed build-number floors. No signing-policy
+change, live-data access or publication is authorized by this integration.
 
 Owner: Android toolchain maintainers. Revisit after newer Kotlin/Flutter
 support matrices cover the held bot versions, and after exact platform gates.

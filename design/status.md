@@ -1,5 +1,14 @@
 # Current status — 2026-10-09
 
+## Android toolchain maintenance — unpublished development candidate
+
+Lee approved reviewed AGP9.2.1/Gradle9.4.1 integration and candidate validation.
+PR #4 merged at `912a4a2`, retaining Kotlin2.4.20 and application/storage source.
+Development version2026.10.3/build54 exceeds fresh published and successful
+candidate floors53. The unchanged trusted-main signed candidate and exact Android
+release/R8/update/startup/SAF/provider acceptance remain pending; no publication
+is authorized here. [Review, gates and rollback](android-toolchain-maintenance.md).
+
 ## Stable2026.10.2 — official release published
 
 Lee explicitly accepted RC7 for the next official release on2026-10-09.

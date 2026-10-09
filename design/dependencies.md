@@ -6,15 +6,18 @@ Observed app source: `fa4b166a5fb2ea43fe44cd2c8117cc91993f3921`. App version `20
 
 The isolated remediation branch changes the main Android KGP request from 2.4.0 to 2.4.20, keeping AGP 9.1.0 and Gradle 9.3.1. [Per-version review and effective scope evidence](kotlin-2.4.20-remediation.md) record the KAPT advisory, signed artifacts, bundled hooks/native payloads and retained older Flutter/subproject scopes. The proposal passes independent static review, targeted resolution, local native-backed source tests and all-platform first CI at ac20d4e. Hosted cold/warm Android builds at 45eb9e8 and independent actual artifact/selected-graph review pass; all-platform follow-up CI at 45eb9e8 also passes. Final integration, Android runtime ABI/UI/provider acceptance and publication remain separate. Compiled-source receipts are distinct from later evidence-only commits. The historical inventory below is not rewritten as a claim that every Kotlin scope has upgraded.
 
-## Coordinated Android tooling proposal — 2026-10-09
+## Coordinated Android tooling integration — 2026-10-09
 
-The isolated [AGP/Gradle review](android-toolchain-maintenance.md) prepares AGP
+The independently reviewed [AGP/Gradle change](android-toolchain-maintenance.md)
+was approved by Lee and merged through PR #4 at `912a4a2`. It integrates AGP
 9.2.1 with its required Gradle 9.4.1 and an official distribution checksum,
 retaining Kotlin 2.4.20. Bot proposals AGP 9.4.1 and Gradle 9.8.0 remain held
 outside the retained KGP's published fully supported range. Exact source,
 transitive/native provenance, included Flutter Kotlin scope, local gates and
 remaining acceptance are recorded there. The historical inventory below is
-not a claim that this proposal has merged or been released.
+not a claim of release acceptance. Unpublished development candidate
+2026.10.3/build54 requires the actual trusted-main release/R8 package and bounded
+exact-artifact Android checks before any publication; signing policy is unchanged.
 
 ## Direct application dependencies
 
