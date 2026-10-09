@@ -1,0 +1,46 @@
+{
+  "recordedAtUtc": "2026-10-09T22:58:47.139400+00:00",
+  "source": "Parent thread01a118df-0916-77c7-8253-b440044e00c7 supplied nativepartial results; cloud did not independently inspect archive bytes",
+  "candidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidateRunId": 37995721678,
+  "dispatchRevision": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "productionVersion": "2026.10.3+56",
+  "parentObservedArtifactInnerHashes": {
+    "androidApk": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+    "windowsInstaller": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23"
+  },
+  "parentReportedPassed": [
+    "Windows eleven compiled migration cuts and competing-process lock",
+    "Android eleven force-stop/same-root migration cuts and SQLite-full rollback/recovery",
+    "Exact production APK upgrade from2026.10.2+53 preserved four synthetic profiles canonical bytes/settings/writers/tasks/text/order/UI preferences",
+    "Scoped SQL replay and SAF folder unavailability/recovery",
+    "Runtime API30 Android11 x86_64; capabilities cleanup verified"
+  ],
+  "remainingParentNativeChecks": [
+    "Real SAF folder switch/new namespace",
+    "Persisted grant revoke",
+    "Native Undo"
+  ],
+  "parentDiagnosis": "No production code bug identified; supported picker automation interaction needed to finish remaining checks",
+  "partialEvidence": {
+    "libraryFileId": "libfile_dba5421f97788191b5c2077ac1cf98d7",
+    "resolvedFileName": "tandemlog-build56-native-acceptance-partial.zip",
+    "parentSuppliedSha256": "6635c215c2571c4a217c18ce1d5625b9f9ebe1f716690a9619bcc68c4654c0ff",
+    "cloudLocalMaterialization": "Failed HTTP403 using current supported resolved-reference Library workflow",
+    "cloudArchiveHashVerified": false,
+    "cloudArchiveContentsReviewed": false,
+    "approvalReviewRejected": false
+  },
+  "parentQuotaRead": {
+    "weeklyRemainingPercent": 25,
+    "readAtUtc": "2026-10-09T22:56:51Z",
+    "resetAtUtc": "2026-10-14T10:33:41Z",
+    "publicationThresholdOutsideFinal12HoursPercent": 20,
+    "freshPublicationReadStillRequired": true
+  },
+  "notesRoutingGate": "Closed by independent remote review atdispatch0ae; candidate/artifact metadata remain unchanged",
+  "publicationReady": false,
+  "publicationPerformed": false,
+  "rebuildPerformed": false,
+  "finalArtifactNativeIndependentReview": "Pending completed evidence and parent coordination; partial attestation does not close final gates"
+}
