@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:22:35.133707+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_bounded_evidence_accuracy_and_handoff_docs",
+  "must_fix_findings": [],
+  "scope": "Read-only review of three documentation files. No tests, API status lookup, source edits, new acceptance matrix or publication by reviewer.",
+  "reviewed_files": [
+    {
+      "path": "evidence/disclosure-layout/README.md",
+      "sha256": "5f5ab73289cca559cc3d38d2d301a7aa738aa3908fc8bf9cccd33168a870ca4a"
+    },
+    {
+      "path": "evidence/disclosure-layout/desktop-demo-verification.json",
+      "sha256": "bc8244d925f94a6d2b729378e11ff6da3d4d7b455d7e434673dd9a39dffe5ae1"
+    },
+    {
+      "path": "evidence/rc7-candidate/README.md",
+      "sha256": "70fe3bf0cb97077aa34eeb469ea0c17c203d28e47645e4423f4c1997d718f580"
+    }
+  ],
+  "accuracy_checks": [
+    "Reviewer inspected actual disclosure-unpressed.png: it is a Test Starting harness frame, correctly excluded from UI proof. Directory has18 PNGs:17 workflow/held frames plus the excluded harness. All copies match preserved final native output.",
+    "Reviewer independently decoded and inspected video frame0: it briefly shows Test Starting harness. Revised trim attribution accurately says build and teardown omitted with brief harness before app workflow; it does not claim every launch frame was removed.",
+    "Demo file bytes and SHA256 remain unchanged from prior review. Actual notes/media and all reviewed implementation/test/ADR/version hashes remain unchanged.",
+    "Android handoff is bounded to actual narrow phone normal/200% text and existing secondary/expanded states, approved compact target, requested ink correction, target separation and keyboard/accessibility where available. It explicitly excludes an optional tablet matrix and preserves synthetic-only/live-data restriction.",
+    "Handoff pins candidate37942135402/sourceaaf06bd/versionRC7+51 and requires actual successful owner-signed artifact bytes/hash/package/version/certificate and exact device delta acceptance. RC6 coverage reuse is attributed and does not substitute for new behavior.",
+    "Terminal full candidate closure, artifact identity, native acceptance, fresh quota, gated no-rebuild publication and public-download verification remain pending requirements. Parent reports Windows/debugAndroid completed while overall candidate/nativeLinux is still running; this document is not an acceptance attestation.",
+    "Relative documentation links resolve; no private Library identifier, storage URL or account quota value is included in these docs."
+  ],
+  "supersession": "This accuracy receipt supplements retained earlier demo receipt with the explicit harness-frame limitation; earlier successful workflow/frame/hash verification remains valid.",
+  "remaining": "Exact signed APK/artifact/native acceptance, terminal candidate/full hosted checks, fresh quota and publication gates. This is not release acceptance."
+}

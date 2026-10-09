@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:11:14.694209+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_docs_only_range_extension",
+  "baseline": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+  "reviewed_production_media_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+  "final_candidate_source": "aaf06bd17beb109a89e97aff402595f5e7c49ae2",
+  "extension": "9b6f18b..aaf06bd adds notes/evidence/docs/demo only; no production,test,dependency,version or workflow change.",
+  "extension_changed_files": [
+    "design/prerelease-notes.md",
+    "design/runtime-qa.md",
+    "design/status.md",
+    "evidence/disclosure-layout/README.md",
+    "evidence/disclosure-layout/desktop-demo-verification.json",
+    "evidence/disclosure-layout/final-narrow-enlarged-frame.png",
+    "evidence/disclosure-layout/native-linux-pointer-demo.mp4",
+    "evidence/disclosure-layout/pointer-frame.png",
+    "evidence/rc7-editorial/README.md",
+    "evidence/rc7-editorial/independent-editorial-review.json",
+    "evidence/rc7-editorial/media-provenance.json"
+  ],
+  "unchanged_reviewed_bytes": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "c8b30fd8330bb3ff88e24c3d4e066c055703ea64fd2364a41dba65573585729f"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "117eb252bdc8bf3c9864847e4c59f8e04770eec17aa4fdc8a7f017ae50a56ef5"
+    },
+    {
+      "path": "integration_test/inline_checklist_workflow_test.dart",
+      "sha256": "34d943dbe16998361d30f0b511166e37eb61dd26c000dd113c853d795ee7380a"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9fa7328aa7a95d38cc8f878881e08707d4231eca9ea39d4b182eefe2f34dd32"
+    },
+    {
+      "path": "design/decisions/0011-one-level-checklists.md",
+      "sha256": "0e0703b4fd9de0067adfc64d0282b2f9768aa188b71c4b2c224f44a1c12f4352"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "81b765c8ec096f56a6e3fd28770c7a4a161dd93736fe41d4f476a1ce2dde7f84"
+    },
+    {
+      "path": "design/prerelease-notes.md",
+      "sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1"
+    },
+    {
+      "path": "evidence/rc7-editorial/disclosure-spacing-before-after.png",
+      "sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef"
+    },
+    {
+      "path": "evidence/rc7-editorial/disclosure-ink-before-after.png",
+      "sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164"
+    }
+  ],
+  "review_receipts": [
+    {
+      "name": "independent-compact-implementation-review-final.json",
+      "sha256": "d22955130eeb0a2d2104466c93ce70d7fd192805eedb08ea4862f36e353fbe26"
+    },
+    {
+      "name": "independent-rc7-editorial-review.json",
+      "sha256": "95fbc746661682476652aff9f5ceb3ff67930d70d89c9f5c04a8a61a67ea5850"
+    },
+    {
+      "name": "independent-rc7-desktop-demo-review.json",
+      "sha256": "4194f31d2295ff24452ccddc8a6177c53793151f5ef0e457aa9dc1f650c74806"
+    }
+  ],
+  "must_fix_findings": [],
+  "remaining": "Full exact candidate matrix, signed Android/device acceptance, artifact/provenance and fresh quota/publication gates remain pending; no publication or stable authorization implied."
+}

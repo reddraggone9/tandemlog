@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:10:36.708546+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_as_scripted_native_linux_demo_evidence",
+  "must_fix_findings": [],
+  "scope": "Bounded independent inspection of actual requested demo frames/receipt, video metadata/hash and decoded-frame equality. No app tests, source edits or Android acceptance by reviewer; not a claim to have watched every video frame.",
+  "source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+  "version": "2026.10.2-rc.7+51",
+  "source_binding": "Current lib/integration_test/pubspec/lock has no diff to9b6f18b; docs/media-only changes pending. Prior source review remains applicable.",
+  "reviewed_receipt": {
+    "path": "evidence/disclosure-layout/desktop-demo-verification.json",
+    "sha256": "544952a6e8845cf761f9528dc723a165ebd5b13fb1cfa1d1e3c8cdbd4e10d807"
+  },
+  "recording": {
+    "path": "evidence/disclosure-layout/native-linux-pointer-demo.mp4",
+    "sha256": "0637ffb385b732e6dcde82a88561758e9e3d1f0cfefa48552ac41b8d7b0eab37",
+    "duration_seconds": 25.8,
+    "codec": "h264",
+    "pixel_format": "yuv420p",
+    "dimensions": [
+      1200,
+      1000
+    ],
+    "fps": 20,
+    "verified_by": "Actual ffprobe metadata and actual file SHA256"
+  },
+  "actual_frames": [
+    {
+      "path": "evidence/disclosure-layout/pointer-frame.png",
+      "sha256": "76550c25968af3977d7cbccc4a64e864701fd99dd8a30a74ef97c2a34b168be2",
+      "video_time_seconds": 2,
+      "decoded_pixel_match": true
+    },
+    {
+      "path": "evidence/disclosure-layout/final-narrow-enlarged-frame.png",
+      "sha256": "e35139f8ecd2614ad14b0280223eef9dec500014f178ba16741054ffeb2f56b0",
+      "video_time_seconds": 23.5,
+      "decoded_pixel_match": true
+    }
+  ],
+  "findings": [
+    "Pointer frame shows real app dark synthetic tasks and visible desktop pointer over the count, with corrected symmetric rounded ink. It contains no large orange test-pointer cross.",
+    "Final frame shows actual narrow390px enlarged-text expanded checklist on black1200px recording canvas; black remainder is desktop background, not scaled or fabricated app pixels.",
+    "Receipt truthfully attributes scripted native integration/device-source input, hardware-pointer presence, occasional scripted tap overlay and source-tied keyboard assertions. It makes no manual-user or Android acceptance claim.",
+    "Matching owner native log hash reports1passed0failed in30s. Earlier debug-launch failures were pre-assertion startup failures and remain separately preserved; they are not counted as behavior passes.",
+    "No private user data observed: Alex Example and task/item text are synthetic fixture data. Video proof supports the requested local desktop demonstration only."
+  ],
+  "relationship_to_editorial_review": {
+    "receipt": "independent-rc7-editorial-review.json",
+    "sha256": "95fbc746661682476652aff9f5ceb3ff67930d70d89c9f5c04a8a61a67ea5850",
+    "status": "Notes/media remain accepted; this later receipt closes the desktop-demo evidence item recorded pending by editorial review."
+  },
+  "remaining": [
+    "Full normal candidate matrix",
+    "Exact signed Android/device delta acceptance",
+    "Exact artifact/provenance and fresh quota/publication gates"
+  ],
+  "not_authorized_by_review": "No dispatch, publication, stable promotion or live-data operation."
+}

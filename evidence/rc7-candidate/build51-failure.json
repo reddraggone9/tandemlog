@@ -1,0 +1,27 @@
+{
+  "candidate_source": "aaf06bd17beb109a89e97aff402595f5e7c49ae2",
+  "version": "2026.10.2-rc.7+51",
+  "candidate_run_id": 37942135402,
+  "push_ci_run_id": 37942135365,
+  "candidate_conclusion": "failure",
+  "push_ci_conclusion": "failure",
+  "linux_job_id": 113859037642,
+  "native_result": {
+    "passed": 86,
+    "failed": 1,
+    "failure": "disclosure bottom spacing and ink retain compact row geometry",
+    "assertion": "paintHost.right >= ink.right",
+    "expected": 134.3625030517578,
+    "actual": 134.36249923706055,
+    "absolute_difference": 3.814697265625e-06
+  },
+  "preceding_application_contract_policy_gates": "success",
+  "windows": "success",
+  "android_debug": "success",
+  "linux_release_flatpak": "skipped",
+  "signed_android": "skipped",
+  "signed_build51_apk_exists": false,
+  "replacement": "Only four host/path inequalities adopt the established0.01px tolerance; production UI unchanged; version increment52.",
+  "old_windows_materialization": "Supported GitHub resolved reference + current Library prepare/helper attempted; HTTP403; actual ZIP locally unavailable.",
+  "release_status": "No RC7 draft/publication; stable and released RC6 unchanged."
+}

@@ -13,6 +13,9 @@ and Space/Enter. The retained resize/safe-inset workflow passes1/0 in12s; global
 analysis is clean. The new flow is registered in the full native aggregate.
 [Final log](compact-ripple-final-native.log), [retained resize log](compact-existing-responsive-native.log),
 [analysis](compact-final-analyze.log), and [actual captures](compact-native/) preserve the evidence.
+The17 workflow captures show the app. `disclosure-unpressed.png` retains only
+the native test harness’s Test Starting frame and is excluded from UI proof;
+the final held and subsequent collapsed/expanded snapshots provide that proof.
 
 The first compact implementation clipped the left ink margin and then painted it
 more faintly. [Initial independent review](independent-compact-implementation-review-initial.json)
@@ -25,11 +28,17 @@ accepts the correction with no must-fix findings.
 The inspected [25.8-second native desktop demo](native-linux-pointer-demo.mp4)
 shows centered pressed feedback, scripted expand/collapse, desktop/narrow
 resizing and enlarged text, with visible pointer/input. The [demo receipt](desktop-demo-verification.json)
-labels the actual Linux debug build and synthetic scripted flow; a private
+labels the actual Linux debug build and synthetic scripted flow. The recording
+begins with a brief native Test Starting harness frame before the app workflow; a private
 standalone display enabled successful recording after three debug-launch failures
 before assertions, whose logs remain preserved privately.
 
-This source is versioned2026.10.2-rc.7/build51. [Independent editorial review](../rc7-editorial/independent-editorial-review.json)
+Actual screenshots/demo use2026.10.2-rc.7/build51 debug source. Candidate51
+failed only a subpixel path-bound coverage inequality; no owner-signed APK was
+produced. Replacement build52 keeps production UI unchanged, uses the existing
+0.01px geometry tolerance for host coverage and advances the build counter.
+Its focused native flow passes1/0 in19s. [Failure and replacement status](../rc7-candidate/README.md)
+retain the exact earlier red and pending replacement gates. [Independent editorial review](../rc7-editorial/independent-editorial-review.json)
 accepts the concise notes and two source-bound images. Full signed-candidate
 gates, exact Android acceptance and fresh publication quota are pending. Native Linux inspection is not Android acceptance. No canonical history,
 cache schema, dependency or live synced user data change is included.

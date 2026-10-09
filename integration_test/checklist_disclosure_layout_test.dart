@@ -158,10 +158,12 @@ void registerChecklistDisclosureLayoutTests() {
                 .ancestor(of: disclosure, matching: find.byType(Material))
                 .first,
           );
-          expect(paintHost.left, lessThanOrEqualTo(ink.left));
-          expect(paintHost.right, greaterThanOrEqualTo(ink.right));
-          expect(paintHost.top, lessThanOrEqualTo(ink.top));
-          expect(paintHost.bottom, greaterThanOrEqualTo(ink.bottom));
+          // Native path bounds use float precision. Keep the established0.01px
+          // geometry tolerance; an8px clipped margin must still fail this guard.
+          expect(paintHost.left, lessThanOrEqualTo(ink.left + 0.01));
+          expect(paintHost.right, greaterThanOrEqualTo(ink.right - 0.01));
+          expect(paintHost.top, lessThanOrEqualTo(ink.top + 0.01));
+          expect(paintHost.bottom, greaterThanOrEqualTo(ink.bottom - 0.01));
           expect(countRect.left - tester.getRect(body).left, closeTo(13, 0.01));
           expect(target.width, greaterThanOrEqualTo(48));
           expect(target.height, greaterThanOrEqualTo(countRect.height + 8));

@@ -1,0 +1,29 @@
+2026-10-09T14:20:41.2950220Z ##[group]❌ disclosure bottom spacing and ink retain compact row geometry (failed)
+2026-10-09T14:20:41.2951549Z DISCLOSURE_LAYOUT width=1200.0 scale=1.0 secondary=true ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 315.0, 348.3, 365.0) target=Rect.fromLTRB(68.0, 365.0, 116.0, 393.0) count=Rect.fromLTRB(81.0, 367.0, 103.8, 387.0) shape=ChecklistDisclosureInkBorder()
+2026-10-09T14:20:41.2953476Z DISCLOSURE_LAYOUT width=1200.0 scale=1.0 secondary=false ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 198.0, 283.9, 246.0) target=Rect.fromLTRB(68.0, 246.0, 116.0, 274.0) count=Rect.fromLTRB(81.0, 248.0, 103.8, 268.0) shape=ChecklistDisclosureInkBorder()
+2026-10-09T14:20:41.2956021Z ══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+2026-10-09T14:20:41.2956823Z The following TestFailure was thrown running a test:
+2026-10-09T14:20:41.2957439Z Expected: a value greater than or equal to <134.3625030517578>
+2026-10-09T14:20:41.2957954Z   Actual: <134.36249923706055>
+2026-10-09T14:20:41.2958458Z    Which: is not a value greater than or equal to <134.3625030517578>
+2026-10-09T14:20:41.2958902Z 
+2026-10-09T14:20:41.2959102Z When the exception was thrown, this was the stack:
+2026-10-09T14:20:41.2960362Z #4      registerChecklistDisclosureLayoutTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/checklist_disclosure_layout_test.dart:162:11)
+2026-10-09T14:20:41.2961377Z <asynchronous suspension>
+2026-10-09T14:20:41.2962038Z #5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+2026-10-09T14:20:41.2962748Z <asynchronous suspension>
+2026-10-09T14:20:41.2963346Z #6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+2026-10-09T14:20:41.2963983Z <asynchronous suspension>
+2026-10-09T14:20:41.2964322Z <asynchronous suspension>
+2026-10-09T14:20:41.2964699Z (elided one frame from package:stack_trace)
+2026-10-09T14:20:41.2965019Z 
+2026-10-09T14:20:41.2965398Z This was caught by the test expectation on the following line:
+2026-10-09T14:20:41.2966082Z   file:///home/runner/work/tandemlog/tandemlog/integration_test/checklist_disclosure_layout_test.dart line 162
+2026-10-09T14:20:41.2966573Z The test description was:
+2026-10-09T14:20:41.2966875Z   disclosure bottom spacing and ink retain compact row geometry
+2026-10-09T14:20:41.2967684Z ════════════════════════════════════════════════════════════════════════════════════════════════════
+2026-10-09T14:20:41.2968046Z Test failed. See exception logs above.
+2026-10-09T14:20:41.2968447Z The test description was: disclosure bottom spacing and ink retain compact row geometry
+2026-10-09T14:20:41.2968778Z 
+2026-10-09T14:20:41.2969058Z ##[endgroup]
+

@@ -13,8 +13,12 @@ record the earlier clipping/seam finding and accepted actual-pixel correction.
 The [25.8-second native desktop demonstration](../evidence/disclosure-layout/native-linux-pointer-demo.mp4)
 has visible pointer/input, resized native narrow window and enlarged text;
 [receipt](../evidence/disclosure-layout/desktop-demo-verification.json) labels the
-actual Linux debug/scripted evidence. Signed exact Android acceptance and the
-full candidate remain pending.
+actual Linux debug/scripted evidence, source-attributed to build51. Candidate51
+failed one float-bound coverage inequality by0.000003815px, with86 other native
+flows passing. Replacement build52 retains production UI/media unchanged and
+applies the existing0.01px tolerance only to that test's coverage inequalities;
+the focused replacement flow passes1/0 in19s. Signed exact Android acceptance
+and the replacement full candidate remain pending.
 
 ## Historical RC6 checklist controls follow-up
 

@@ -14,7 +14,7 @@
   "fps": 20,
   "codec": "H264/yuv420p",
   "crop": "Captured1400x1200 private display, integer crop1200x1000 at0,0. Narrow window retains native390px size on the same black desktop canvas. No app-pixel retouching.",
-  "trim": "Raw73.6s video trimmed34.0..59.8s to exclude build/launch/teardown. Raw retained privately.",
+  "trim": "Raw73.6s video trimmed34.0..59.8s to omit the build and teardown. The beginning briefly retains the native Test Starting harness before the actual app workflow. Raw retained privately.",
   "flow": "disclosure bottom spacing and ink retain compact row geometry",
   "result": {
     "passed": 1,
