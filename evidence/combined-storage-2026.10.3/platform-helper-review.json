@@ -1,0 +1,68 @@
+{
+  "reviewer": "/root/correctness_review",
+  "captured_utc": "2026-10-09T21:32:32.443486+00:00",
+  "worktree": "/workspace/tandemlog-storage-release",
+  "source": "61d1e6a1f7d26be24b6e1597423a594ceda136a4",
+  "base": "c153f56187ab5083722ef8702700eeb259fe0a37",
+  "verdict": "accepted bounded platform-helper correction; no must-fix",
+  "changed_files": [
+    "pubspec.yaml",
+    "tool/test_linux_profile_discovery.py",
+    "tool/test_installer_smoke.py"
+  ],
+  "reviewed_bindings": {
+    "pubspec.yaml": {
+      "bytes": 585,
+      "sha256": "234f53d48d159c9228344b1f284bd539d748b5b572adea6553a460cbfcd6d407"
+    },
+    "tool/test_linux_profile_discovery.py": {
+      "bytes": 2504,
+      "sha256": "ed913a8eacd341c2f31e88347133c2424055df8f46bfbd19c5bfe4f7e82008f5"
+    },
+    "tool/test_installer_smoke.py": {
+      "bytes": 4498,
+      "sha256": "094ed426fea38df7365c74b99d470c00ec13c9d6f02d69124ee7cf887bcb80fb"
+    }
+  },
+  "source_qualification": "Production runtime/native/storage/dependencies/workflows unchanged; pubspec only version metadata 2026.10.3+55 to +56. The only code change is sys import and class-level Linux-only decorator.",
+  "platform_semantics": {
+    "scoped_class": "ProfileDiscovery",
+    "tests": 5,
+    "scope": "Only packaging/linux/tandemlog discovery behavior invoking /bin/sh; not storage, lock, migration, canonical, native or Windows-specific assertions",
+    "linux": "All five assertions remain executable and unchanged",
+    "non_linux": "Class is explicitly skipped with Linux /bin/sh reason; no swallowed exceptions or broadened test skips"
+  },
+  "owner_linux_tool_run_reviewed": {
+    "ran": 57,
+    "passed": 56,
+    "skipped": 1,
+    "failed": 0,
+    "log": "/workspace/recovery/storage-release/python-platform-fix-final.log",
+    "binding": {
+      "bytes": 592,
+      "sha256": "1cc44bd53e5938eb4016fd41beac58a6e968a6ce1edf11fb2c89d11bdc258562"
+    }
+  },
+  "ci_qualification": {
+    "prior_runs": [
+      37992570139,
+      37992570285
+    ],
+    "failure": "Parent reports GH job API confirms Windows Flutter and native-contract steps SUCCESS; only Python step failed. Raw Azure job logs remain unavailable to reviewer. Unconditional /bin/sh and unclosed TemporaryDirectory fixture SQLite handles are concrete source portability defects; complete actual failure causes remain unconfirmed from logs.",
+    "replacement": "No Windows green claim; new hosted platform run and retrieved failed logs still needed",
+    "native_proof_scope": "Active Windows-hosted Dart/SQLite storage/crash/process tests provide supported native evidence within their exercised scope. This bounded source review does not independently establish exact counts or installed signed-package/app workflow acceptance."
+  },
+  "review_execution": "Read-only source/evidence inspection only. No test matrix/build/dispatch/push or tracked edits. Receipt written in recovery folder.",
+  "remaining_gates": [
+    "Parent retrieval of failing Windows logs to confirm no additional cause",
+    "Replacement platform CI terminal checks",
+    "Exact Windows/Android migration/provider/artifact acceptance remains pending"
+  ],
+  "previous_reviewed_source": "238c209ffc5ba1f779cd2be6aeeedd257752f073",
+  "sqlite_context_review": {
+    "verdict": "accepted both synthetic fixture handles close deterministically before TemporaryDirectory cleanup",
+    "source_change": "contextlib.closing import and two with closing(sqlite3.connect(...)) as db, db contexts only",
+    "order": "Context managers enter left-to-right and exit right-to-left: sqlite Connection __exit__ commits on success or rolls back on exception; outer closing then calls close even if commit/rollback raises. TemporaryDirectory cleanup runs later.",
+    "assertions": "All scoped reset/protected-state/other-namespace expectations remain unchanged; no application or production helper changes."
+  }
+}

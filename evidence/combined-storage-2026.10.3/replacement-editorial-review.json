@@ -1,0 +1,46 @@
+{
+  "reviewed_at_utc": "2026-10-09T21:36:52.087611+00:00",
+  "decision": "ACCEPTED: replacement stable2026.10.3+56 editorial range extension only",
+  "covered_range": {
+    "baseline_tag": "v2026.10.2",
+    "baseline_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "final_commit": "e1d7c1b1efc85ec1fd44d59c56f543ac0d65c66b"
+  },
+  "prior_editorially_accepted_source": "bfb65b57faba86303272b1599f2abf24fe591773",
+  "prior_editorial_receipt_sha256": "039d3583e230c174c2a86609540446e5a586f4dfacd5f8c20f8d733ba97a1ea0",
+  "notes_path": "design/release-notes-2026.10.3.md",
+  "notes_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "notes_exact_text": "- Consolidated local app data, with automatic migration for existing installations.\n- Updated Android build dependencies.\n",
+  "notes_unchanged_from_prior_review": true,
+  "replacement_version": "2026.10.3+56",
+  "extension_changed_files": [
+    ".github/workflows/validate.yml",
+    "design/local-db-native-acceptance.md",
+    "design/status.md",
+    "evidence/combined-storage-2026.10.3/README.md",
+    "evidence/combined-storage-2026.10.3/combined-architecture-review.json",
+    "evidence/combined-storage-2026.10.3/combined-correctness-review.json",
+    "evidence/combined-storage-2026.10.3/combined-editorial-review.json",
+    "evidence/combined-storage-2026.10.3/preparation.json",
+    "pubspec.yaml",
+    "tool/package_storage_harness.py",
+    "tool/test_installer_smoke.py",
+    "tool/test_linux_profile_discovery.py"
+  ],
+  "actual_extension_review": "Read exact bfb\u2192e1d diff: version counter55\u219256; Python tests close synthetic SQLite handles before Windows fixture deletion and scope Linux launcher tests to Linux; CI compiles unchanged frozen migration child and packages exact-source SQLite-matching TEST-ONLY Windows harness in separate QA artifact; rollout/native guidance and review evidence updated. No app/lib/native/platform product/child or note bytes changed.",
+  "editorial_verdict": "Existing two bullets still accurately cover actual full stable range: consolidated local app data/automatic existing-installation migration and updated Android build dependencies. Replacement-only QA/tool portability/provenance details do not need an end-user note. No security-fix or extra preservation/QA claim.",
+  "media_README_verdict": {
+    "new_media_needed": false,
+    "new_demo_requirement_added": false,
+    "README_change_needed": false,
+    "README_sha256": "68ec94277b67a0dfb8876d14c82794457ba3fad123b227b902d65487936f2870",
+    "reason": "No user-visible layout or capability change in extension; release prose sufficiently describes maintenance. README remains unchanged from stable2026.10.2."
+  },
+  "editorial_guidance_sha256": "b922b71d31ea3a402b463f58d4cec769fdc02de8596d3051806e606225d1af6a",
+  "must_fix": [],
+  "limits": [
+    "Editorial gate only, no source-correctness/native/artifact/publication approval inferred.",
+    "No tests/builds/device checks or publication performed by reviewer.",
+    "Actual combined replacement candidate/native/final release gates remain required; publish exact reviewed note bytes or obtain editorial amendment."
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "source": "abc6a6af44f7d5bdf485cff213349a1f9db6fbc0",
+  "version": "2026.10.3",
+  "build": 56,
+  "utc": "2026-10-09T21:45:28.160199+00:00",
+  "prior_source": "c153f56187ab5083722ef8702700eeb259fe0a37",
+  "prior_candidate": {
+    "id": 37992570139,
+    "conclusion": "failure"
+  },
+  "prior_push_ci": {
+    "id": 37992570285,
+    "conclusion": "failure"
+  },
+  "actual_failure_causes": {
+    "windows": "57 Python checks: five Linux /bin/sh invocation errors and one WinError32 retained fixture connection. Flutter: 723 passed, two named Linux-only skips. Frozen native contracts: 4 Cargo and 107 Python passed.",
+    "linux": "86 native integration flows passed, one failed: interrupted-startup fixture entered the name before asynchronous profile/UI readiness."
+  },
+  "fixes": [
+    "Linux launcher tests run on Linux only.",
+    "Synthetic SQLite fixture transaction exit is followed by close before directory cleanup.",
+    "Native capture fixture waits for retired profile closure and actual new UI readiness; all original assertions remain."
+  ],
+  "production_bytes": "lib/native/android/pubspec.lock unchanged from55 source",
+  "owner_checks": {
+    "python": "56pass1skip onLinux",
+    "format": "182files0changes",
+    "native_capture_recovery": "actualGTK1/1pass24sec afterfailingCIflow",
+    "compiled_child": "Actual compiled Linux child: fresh one-DB creation and writer-stable reopen; committed legacy WAL, activation process kill, competing-process exclusion and canonical/identity-stable recovery passed. This is not Windows or Android evidence.",
+    "harness_packaging": "syntheticnativehashmatchaccepted/nativemismatchrejected"
+  },
+  "log_sha256": {
+    "push-ci-failure-logs.zip": "06ac238423e3aae51b44f5e4f3773ec39ec04137ff75f9555a6c7aae5bf719f9",
+    "candidate55-failure-logs.zip": "530ba76f7e07bc11a0e075255febd093e2ac501634ccdb8f79dc9b68ec30ceda",
+    "replacement-python-final.log": "711ce839ad0b87be159960d66a78b9413074d92b87fa6fba4d43e5663ba406fe",
+    "replacement-format.log": "5818cee40dcb7b4be77f1a4083350cbec59091d38bb1fe19a2347b767c05f8c1",
+    "native-capture-recovery-fix.log": "47231fb156829e82336112244f7e8c8f0132ef1acc724492f19aec01d8b0a15e",
+    "native-cli-build-linux.log": "bad1b80dde76d66e300d3ab5e293a0b32352de3e497f8c4e14cd2e7128bd225f"
+  },
+  "windows_harness": {
+    "artifact": "windows-storage-harness",
+    "target": "test/support/local_profile_migration_child.dart",
+    "target_sha256": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd",
+    "native_sqlite_match": "Packaging must find exactly one actual app Release DLL with the same SHA256 as the harness SQLite DLL.",
+    "publisher": "unchanged downloadpatternexcludesQAartifact"
+  },
+  "remaining": [
+    "Replacement candidate full matrix.",
+    "Actual Windows compiled harness/installer artifacts and native acceptance.",
+    "Exact Android owner-signed APK startup/update/SAF/provider and source-bound process-death proof.",
+    "Final independent review and fresh publication quota.",
+    "Food remains deferred; no live-data operation."
+  ],
+  "independent_reviews": {
+    "replacement-harness-architecture-review.json": "f24b60dcc16e093d997d2dc07e8517517845091aed76f16a005d2d1ac9e91a7e",
+    "replacement-harness-correctness-review.json": "0bf6e76d01daf409e61236fc800f180d356113ff640c390847e85b94253f6a80",
+    "replacement-editorial-review.json": "a3350fea2822e6038fa35c066ab3f15b2f90fbb7de901e4b6921a331c4b691ba",
+    "platform-helper-review.json": "a1eb242b0a8c8a47b6b9e19b893ff92edb65eb72e20a65d347bdbc9a6bffd5ec"
+  }
+}

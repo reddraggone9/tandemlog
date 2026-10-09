@@ -1,0 +1,224 @@
+{
+  "reviewer": "/root/correctness_review",
+  "captured_utc": "2026-10-09T21:45:47.153416+00:00",
+  "worktree": "/workspace/tandemlog-storage-release",
+  "source": "abc6a6af44f7d5bdf485cff213349a1f9db6fbc0",
+  "base": "61d1e6a1f7d26be24b6e1597423a594ceda136a4",
+  "verdict": "accepted bounded Windows storage-harness route; no remaining must-fix found",
+  "clean_worktree": true,
+  "runtime_equivalence": {
+    "scopes": [
+      "lib",
+      "native",
+      "test",
+      "integration_test",
+      "pubspec.yaml",
+      "pubspec.lock",
+      "android"
+    ],
+    "git_diff_exit_code": 0,
+    "diff_bytes": 0,
+    "meaning": "Application/native/frozen migration child/dependencies unchanged; prior Python fixes preserved."
+  },
+  "reviewed_bindings": {
+    ".github/workflows/validate.yml": {
+      "bytes": 10796,
+      "sha256": "e3194eae1a0071795da06a3174d09e6a40fab7b977a63a5e482433d4e0385c25"
+    },
+    "tool/package_storage_harness.py": {
+      "bytes": 3614,
+      "sha256": "67822c5fa6ac9c96552e6699d2d9264c2f73eab85db54fc9ed27b11714a66d59"
+    },
+    "design/local-db-native-acceptance.md": {
+      "bytes": 9319,
+      "sha256": "0efabeae5e846e38ee28ded1f8dd5853f98bbb8f7c797eca8f1ff555bb186758"
+    },
+    "design/status.md": {
+      "bytes": 96057,
+      "sha256": "b565587d66e3177fd778bf2087bfbb0258bbee5e1e20d0347d01bb53f0ba758e"
+    },
+    "test/support/local_profile_migration_child.dart": {
+      "bytes": 1777,
+      "sha256": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 11528,
+      "sha256": "3157faa5312e030d889b626be942e82873dc426836af2927862d3e7f30c63119"
+    },
+    "lib/storage/local_profile_migration.dart": {
+      "bytes": 22404,
+      "sha256": "4d123a2432b1269f0e4ea576cd00d91105d142c7496dd033c996a21c7aacebda"
+    },
+    "lib/storage/legacy_cache_import.dart": {
+      "bytes": 22298,
+      "sha256": "b80a0f19a4d98ed6f93ceba218a9727ebfc7c3b43615a60e92dbf757eec52a1d"
+    },
+    "lib/storage/profile_text_intents.dart": {
+      "bytes": 7505,
+      "sha256": "c5dba0698819c26670cfff24326fcd5ed3bf5e9744b7ba8ecadd5aa5ff6e9ea0"
+    },
+    ".github/actions/setup-flutter/action.yml": {
+      "bytes": 530,
+      "sha256": "d0b94d3f1eea9e4cc260eeabe008df39ef2aab9290fd29fb895481dca5896c22"
+    },
+    ".github/workflows/stable.yml": {
+      "bytes": 3223,
+      "sha256": "40034bea2b65a5a67a9b17e3264624ab5214a625df10d93927dcc93f5c1300c5"
+    },
+    ".github/workflows/prerelease.yml": {
+      "bytes": 3821,
+      "sha256": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 169561,
+      "sha256": "9734cb4a73bf10cce01678861e9aa91d819c5bc11fe6829bca483cabd7a0630a"
+    }
+  },
+  "workflow_review": [
+    "Trusted Windows job compiles exact frozen child with pinned Dart build cli after actual app Release payload validation",
+    "Compile and provenance failures explicitly fail the step via LASTEXITCODE checks",
+    "TEST-ONLY archive/provenance upload has separate windows-storage-harness name, missing-file failure and5-day retention",
+    "Stable/prerelease download patterns remain {linux,windows,android-release}; separate QA artifact excluded"
+  ],
+  "package_review": [
+    "Checked-out Git HEAD must equal provided source",
+    "Exact compiled child path and exactly one named SQLite DLL required",
+    "SQLite digest must match exactly one actual Release app DLL",
+    "All payload member hashes recorded; archive CRC/member set and every archived member hash reverified",
+    "Source/run/target source SHA/lockfile SHA/Dart version/archive SHA/native DLL match recorded; no loaded-module enumeration claimed",
+    "Dart executable resolved by shutil.which; Flutter .bat wrapper maps to adjacent cache/dart-sdk/bin/dart.exe; file existence required before invocation"
+  ],
+  "resolved_source_finding": {
+    "issue": "Unqualified Python dart lookup under Flutter/bin-only Windows PATH could fail to locate SDK executable",
+    "fix_commit": "5658a285e1e55ccf763115ec4b55639fd05324ed",
+    "status": "source corrected; not represented as an observed hosted Windows failure",
+    "primary_references": [
+      "https://docs.python.org/3.10/library/subprocess.html",
+      "https://learn.microsoft.com/en-us/windows/win32/api/processthreadsapi/nf-processthreadsapi-createprocessa"
+    ]
+  },
+  "handoff_review": [
+    "Exact11 checkpoint strings match production LocalProfileMigration; no ready marker or misspelled cut cannot count; resume intentionally unmatched",
+    "Synthetic-only private roots, exact process-alive/kill/exited/restart and second-process admission checks specified",
+    "CLI process/storage proof explicitly distinct from actual visible installed-app model and lifecycle gates",
+    "Old Android harness labelled orderly recovery only; separate debug force-stop overlay is proposed contract, not delivered/executed proof",
+    "Windows/Android native file flush not presented as Linux directory-barrier or physical power-failure proof"
+  ],
+  "owner_evidence": {
+    "native_cli_linux_build_log": {
+      "bytes": 257,
+      "sha256": "bad1b80dde76d66e300d3ab5e293a0b32352de3e497f8c4e14cd2e7128bd225f"
+    },
+    "qualification": "Linux compilation log inspected. Parent reports actual compiled Linux fresh/reopen stable writer and synthetic valid-match/rejected-mismatch packaging; reviewer did not re-execute them. No hosted Windows compiled-harness artifact/result exists in this bounded review."
+  },
+  "limits": [
+    "Original build55 actual Windows Flutter/native-contract successes and exact Python failure causes now verified from retrieved logs; full source-level native evidence does not establish installed package/GUI coverage.",
+    "New Windows CLI compilation/native artifact/hash matching execution pending actual hosted run",
+    "Exact installed-package/Windows GUI/signing and Android source-bound device/provider/process-death acceptance remain separate",
+    "No app matrix/build/download/dispatch/push or live data access by reviewer"
+  ],
+  "previous_reviewed_source": "5658a285e1e55ccf763115ec4b55639fd05324ed",
+  "retrieved_failure_logs": {
+    "candidate55-failure-logs.zip": {
+      "binding": {
+        "bytes": 386403,
+        "sha256": "530ba76f7e07bc11a0e075255febd093e2ac501634ccdb8f79dc9b68ec30ceda"
+      },
+      "crc_check": null,
+      "reviewed_member_bindings": {
+        "checks _ windows/7_Run flutter test.txt": {
+          "bytes": 123810,
+          "sha256": "a9bd39e99d6a43f0f7c1388652c0e268f319abc7eb3a140a3c7f1d3576347aff"
+        },
+        "checks _ windows/8_Verify frozen native admission and worker contracts.txt": {
+          "bytes": 64168,
+          "sha256": "33814d404389ab8e3b38b3a8585ba01febcfe2822450121492b1ec46d518051c"
+        },
+        "checks _ windows/9_Run python -m unittest discover -s tool -p 'test_.py'.txt": {
+          "bytes": 15551,
+          "sha256": "e969c0ef444c74812ddb75815690ce3a066f4a333c76e023d430ae70fd4b3a21"
+        },
+        "checks _ linux/13_Run xvfb-run -a dbus-run-session -- flutter test integration_test_task_flow_test.dart -d linux.txt": {
+          "bytes": 82417,
+          "sha256": "1e5801f0f1466cf81757e3510732b73008c7a5245ef7041fce3c8984b2ba7287"
+        }
+      },
+      "checkout_source_verified": "c153f56187ab5083722ef8702700eeb259fe0a37"
+    },
+    "push-ci-failure-logs.zip": {
+      "binding": {
+        "bytes": 374434,
+        "sha256": "06ac238423e3aae51b44f5e4f3773ec39ec04137ff75f9555a6c7aae5bf719f9"
+      },
+      "crc_check": null,
+      "reviewed_member_bindings": {
+        "checks _ linux/13_Run xvfb-run -a dbus-run-session -- flutter test integration_test_task_flow_test.dart -d linux.txt": {
+          "bytes": 82396,
+          "sha256": "05e68f8c28be89993d090b818c77c782c831924d8a5953c74559d2c1a9456da3"
+        },
+        "checks _ windows/7_Run flutter test.txt": {
+          "bytes": 123810,
+          "sha256": "980f7786f0a8bfb84b270f06bfd3478aae8deb25429b21c365d27a12a3051e57"
+        },
+        "checks _ windows/8_Verify frozen native admission and worker contracts.txt": {
+          "bytes": 64168,
+          "sha256": "470eb0b3762a936a7be91cd1578843940508711d382bf951385c11c77849ceb9"
+        },
+        "checks _ windows/9_Run python -m unittest discover -s tool -p 'test_.py'.txt": {
+          "bytes": 15551,
+          "sha256": "5b2ab7a1aa92b05e16e46b712baa0f58423bf7552aa4cd74076c2aeece774fc9"
+        }
+      },
+      "checkout_source_verified": "c153f56187ab5083722ef8702700eeb259fe0a37"
+    }
+  },
+  "retrieved_failure_verdict": {
+    "runs": [
+      37992570139,
+      37992570285
+    ],
+    "status": "Both prior build55 runs failed; no usable accepted replacement installer implied",
+    "windows": {
+      "flutter_passed": 723,
+      "flutter_skipped": 2,
+      "skip_names": [
+        "real Linux FFI smoke: manifest creation, append, replacement and missing-directory error",
+        "Linux zone files honor localtime symlink and copied-file identity"
+      ],
+      "native_contracts": {
+        "cargo_passed": 4,
+        "cargo_failed": 0,
+        "python_passed": 107,
+        "python_failed": 0
+      },
+      "python_tool_errors": 6,
+      "causes": "Exactly five ProfileDiscovery /bin/sh WinError2 invocations and one SharedProfileProjection temporary local.sqlite WinError32 retained-handle error. Corrected by previously reviewed Linux-only class scope and deterministic context closing."
+    },
+    "linux": {
+      "native_passed": 86,
+      "native_failed": 1,
+      "failure": "Interrupted-startup flow enterText at original task_flow_test.dart:1215 before actual field appeared; Bad state No element. Same failure in both log archives."
+    },
+    "scope": "Actual ZIP member bytes independently inspected, checkout source and failure counts verified. This replaces earlier blocked/raw-cause qualification; replacement Windows build/native/install acceptance remains pending."
+  },
+  "interrupted_startup_fixture_review": {
+    "verdict": "accepted bounded async readiness correction; no must-fix",
+    "changes": "Captures retired TasksPage before unmount; bounded wait for actual profile getter closed before remount/delete; awaits actual TextField and persisted Buy oats on restart",
+    "preservation": "Startup still intentionally interrupted before settling. Original task creation/edit/detail/draft persistence/periodic ingestion/invalid-event error-and-recovery assertions remain unchanged. No application, storage/native/dependencies/helper/workflow changes in this final delta.",
+    "owner_focused_native": {
+      "passed": 1,
+      "failed": 0,
+      "duration_seconds": 24,
+      "log": "/workspace/recovery/storage-release/native-capture-recovery-fix.log",
+      "binding": {
+        "bytes": 6291,
+        "sha256": "47231fb156829e82336112244f7e8c8f0132ef1acc724492f19aec01d8b0a15e"
+      },
+      "qualification": "Reviewed actual retained GTK log; not rerun by reviewer. This is focused local evidence, not replacement full CI."
+    }
+  }
+}
