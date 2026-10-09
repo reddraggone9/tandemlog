@@ -1,0 +1,120 @@
+{
+  "scope": "combined storage and reviewed Android toolchain source preparation; exact Windows/Android acceptance and publication pending",
+  "verified_utc": "2026-10-09T21:15:48.246118+00:00",
+  "source_commit": "bfb65b57faba86303272b1599f2abf24fe591773",
+  "dependency_base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+  "isolated_checkpoint": "18ee0191c199b5351440a0182078993d16992e5e",
+  "version": "2026.10.3",
+  "build": 55,
+  "authorization": "Lee explicitly asked to finish and publish storage migration and dependencies together first; parent verifies final gates before publishing; food remains deferred",
+  "floor": {
+    "fresh_read": "published stable2026.10.2/build53; successful signed candidate37987187103/build54; 2026.10.3 absent from releases"
+  },
+  "composition": {
+    "lib_native_packaging_tool_test_bytes": "identical to isolated reviewed checkpoint",
+    "integration_test_delta": "task_flow_test.dart formatting only",
+    "android_workflow_lockfile_bytes": "identical to accepted dependency base",
+    "food_diff": "none relative to dependency base"
+  },
+  "checks": {
+    "format": "182files0changes",
+    "analysis": "0issues",
+    "full_flutter": "726/726 passed including29migration tests and real SIGKILL boundaries",
+    "python": "57tests1skipOK",
+    "native_linux": "actual GTK/Flutter debug switch/restart1/1passed; not Windows/Android or installed-package acceptance"
+  },
+  "changed_source_sha256": {
+    "design/README.md": "7451b427dbd6937a2a48c9d716b78342effa97d276eba2eebbe5d7eac15eebec",
+    "design/architecture.md": "3b587b2bff05826d56d28486b2a0d0d5d801d090c0bc66ee850ce0192e588c27",
+    "design/decisions/0013-app-wide-local-database.md": "7cba2543d8457031f23beb04366b01d3acb5c3f94c7a1f7707574ae888a06ba0",
+    "design/local-db-native-acceptance.md": "6336f629bea98a37f7524899e39f76549b0c9908ec1517b37dea9d9d4db60a4d",
+    "design/release-notes-2026.10.3.md": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "design/status.md": "435fded25cb22890b90b4b67ea76f0f14bc24de2abf5990510777b8c197666ce",
+    "design/storage-and-sync.md": "c3cbd0855107d0eb4b4d297ba2082b28411cca1349d803f2c90c1f59c03f6d62",
+    "evidence/local-db-proof/correctness-review.json": "af1a9b0411db0f416f4f620afa55fc13dcb1896739aace280727d94ff2414123",
+    "evidence/local-db-proof/integrated-architecture-review.json": "809d09d6cc5ac82e62d60915e565f3a8b035605c0ff2647421dc84c4de999c6a",
+    "evidence/local-db-proof/integrated-correctness-review.json": "27210e2d135d2b95ec5f7e68e243f48dbe2a8163118de10ea7b4f892128e905d",
+    "evidence/local-db-proof/integrated-linux-dark.png": "1ca6cb5d6667197684c35944c13b81196f44d9b07ccb7bab836fd0a9272b5150",
+    "evidence/local-db-proof/integrated-verification.json": "9d2fcf562c6594076280cf89bbb85787e77812d9e13c4f0693bbf7676d1b4558",
+    "evidence/local-db-proof/shared-store-architecture-review.json": "7817f228395bf7890ba8bee4b24ea812f74ab51397c5eaf48bbe1253598286d2",
+    "evidence/local-db-proof/shared-store-correctness-review.json": "031c1ac429878ef8a7479d900d9e583710345b934aab162cf00205ac0fd25e7f",
+    "evidence/local-db-proof/shared-store-handoff.txt": "e83eada5f4edb33599d7a3e1e9232d93c9673beaa6c0689a2636414990ee311a",
+    "evidence/local-db-proof/shared-store-verification.json": "9b1655dbf5a0edb1a1bcce7407550dca2ad1d9f06bf2b13172f58275554d0141",
+    "evidence/local-db-proof/verification.json": "300b6b8a20790928ee5f6f13d1e5622a1b2ebba0136d1977a8bd17c020f0b2cb",
+    "integration_test/data_integrity_test.dart": "129d1bd0c0fe68402fb2072c86f744312610c2a3d8cc2b0a7a4aef2a1a58b86a",
+    "integration_test/inbox_flow_test.dart": "84caaffa843015e02c9004f3c6564053947dc77540a661afa5796658b5dcf035",
+    "integration_test/local_profile_workflow_test.dart": "ce14fdf0f6b23d87f18cb36a8252bab6b4f80156eafb98a542acc426b6101869",
+    "integration_test/task_flow_test.dart": "83aec0049aeacf98b960507c1ccd53de9d7dc28b87d327650ffd535afd53ca17",
+    "lib/domain/event.dart": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401",
+    "lib/main.dart": "2bbeaa400d67702891fc30bab20a9e825803cda4cccb1cbecd21b42d5bd8cda7",
+    "lib/storage/checklist_expansion_store.dart": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250",
+    "lib/storage/checklist_store.dart": "866be0a1c1b226c32ec9bd9e79880c0390dcd3fcdfd00089e74432ea27ca2896",
+    "lib/storage/legacy_cache_import.dart": "b80a0f19a4d98ed6f93ceba218a9727ebfc7c3b43615a60e92dbf757eec52a1d",
+    "lib/storage/legacy_profile_lease.dart": "ded9665978486358e8f87e72a002d1dd40b52754bf6d82dda215752aab2fa6c6",
+    "lib/storage/legacy_protected_files_import.dart": "5852aff41d8f249673210e5e81821f0c4ba43bfd6f19e5da666377e0953006af",
+    "lib/storage/local_profile_database.dart": "3157faa5312e030d889b626be942e82873dc426836af2927862d3e7f30c63119",
+    "lib/storage/local_profile_migration.dart": "4d123a2432b1269f0e4ea576cd00d91105d142c7496dd033c996a21c7aacebda",
+    "lib/storage/local_settings.dart": "166e0722aacdd37236b03a306e42f38d06dda683b3edb8cdc2322a20547b8561",
+    "lib/storage/profile_text_intents.dart": "c5dba0698819c26670cfff24326fcd5ed3bf5e9744b7ba8ecadd5aa5ff6e9ea0",
+    "lib/storage/task_store.dart": "c12d6427033068687f8a41e77fc29f86eea6b1d02db569aab3a843f2192d4326",
+    "lib/storage/task_tables.dart": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f",
+    "lib/storage/text_cache.dart": "b97b02d07a9475f4e4fcaa390a376b2c8cd834af020bfc7f1c2b12192ac976ed",
+    "lib/storage/writer_guard.dart": "ba4ee68e9cef515581c9f6d01e2b76f22f55c6b1053aa3c59627d04b3fc82984",
+    "packaging/linux/tandemlog": "18b831b2053db841bd9a34f880ba7309ab1e4bfdda710b8b45ade22204bc062b",
+    "packaging/smoke.py": "eb9e6ec47343c6db1e2eba74ed0c77b6395be0f33de91738b5a6cc173431d106",
+    "pubspec.yaml": "6887bb7a4faaca8b7e719cce38adbdab6b6bc4425138a55628a19d6964f20e13",
+    "test/checklist_completion_command_test.dart": "38f1cae972fbcbb46c2f48379bbc34fae24057336ce84f2dc026f4723dd9b70b",
+    "test/legacy_cache_import_test.dart": "b21ee1b19094bebd66a5e89808e5536ec13d237c6cf2e6cf6e2e4a02b60dbcb2",
+    "test/legacy_protected_files_import_test.dart": "2688885a8bd3171f183591371596380a080494d9fd5a20b783fd2e848e138277",
+    "test/local_profile_database_test.dart": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e",
+    "test/local_profile_migration_test.dart": "85f25ca6441243f49d19562fe2fae22a454206885a89d4ffcdea4982aa31c428",
+    "test/profile_safety_store_test.dart": "66af7e1d83ff34618cf257d82d7ea734a1cc66f5ff9822a6cab38bdb2e99621e",
+    "test/profile_task_store_test.dart": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890",
+    "test/support/local_profile_database_child.dart": "be98c43fae081701625a36d52336d99773557eadb88ede6383889908f07d26ff",
+    "test/support/local_profile_migration_child.dart": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd",
+    "tool/measure_startup.py": "c6c7e1004a70fb5cf67b43bc94ed995eeedd914c06b720626ae1d24efcb58164",
+    "tool/test_installer_smoke.py": "70d2a51461dd33d40d5090bfd424d45d6f3e5a8de29a097975a48fabd8dd3264",
+    "tool/test_linux_profile_discovery.py": "a328f1289bf46cb91f653da90dad94afbab3729b7ac2c4b223c8d72227bbe88f",
+    "tool/test_startup_fixture_guard.py": "2a66c797c70bdfe14d0f80a8a7c21afeed649786e1ab47c12409bb22ee8ca238"
+  },
+  "log_sha256": {
+    "pubget.log": "0c87d9dd384adbd41b8558d5a760730016521e5467d6323ef98b3e39c2712967",
+    "flutter-tests.log": "4f92c938a939aad863d0a1d0049f793d47a836a84225fc5f486bf979079b3069",
+    "format-final.log": "ff74cca1f74796c4c922b84d7cfdb77354493051381ca901e4345b6d4ec14bdb",
+    "analyze.log": "63357014c14f1210f3770861a76ae8cebdbdf10face837c741ee32d7f43a2810",
+    "python-tests.log": "564263564514178e5865723e8b5ffbf8a556244ad73b1091d28110cfe6940bb7",
+    "native-local-profile.log": "3b82f08ba92cd05453d1a5a69d70ab94131833a00a5e81ab053f9dac2cae89a2"
+  },
+  "native_unit_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+  "remaining": [
+    "full trusted candidate matrix and exact installer/APK receipt",
+    "exact combined Windows/Android startup migration locking death disk flush SAF/provider acceptance",
+    "parent final review and fresh publication quota",
+    "post-publication anonymous byte/signature/metadata verification"
+  ],
+  "independent_reviews": {
+    "correctness": {
+      "file": "combined-correctness-review.json",
+      "sha256": "5291ac31893ee3382c36cd964f0acfdca1a9a394f056a133706d26be10e6be3a",
+      "verdict": "accepted; no must-fix",
+      "reviewed_source": "bfb65b57faba86303272b1599f2abf24fe591773"
+    },
+    "editorial": {
+      "file": "combined-editorial-review.json",
+      "sha256": "039d3583e230c174c2a86609540446e5a586f4dfacd5f8c20f8d733ba97a1ea0",
+      "verdict": "accepted; no must-fix",
+      "reviewed_source": "bfb65b57faba86303272b1599f2abf24fe591773"
+    },
+    "architecture": {
+      "file": "combined-architecture-review.json",
+      "sha256": "c6a331ad72ec7f126858b0638d529e11a1251c6551efe4f2e54d114a9a66a703",
+      "verdict": "accepted; no must-fix",
+      "reviewed_source": "bfb65b57faba86303272b1599f2abf24fe591773"
+    }
+  },
+  "dependency_final_review": {
+    "evidence_commit": "7a39b190846cf769e75e5a9ffd20cb13939a38fa",
+    "index": "https://github.com/reddraggone9/tandemlog/blob/7a39b190846cf769e75e5a9ffd20cb13939a38fa/evidence/android-toolchain-candidate54/README.md",
+    "parent_receipt": "independent source/audit/artifact-provenance accepted with no must-fix;25payloadhashesverified;54native superseded by combined55 acceptance"
+  }
+}

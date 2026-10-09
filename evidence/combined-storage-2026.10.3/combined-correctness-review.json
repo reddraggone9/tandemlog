@@ -1,0 +1,408 @@
+{
+  "reviewer": "/root/correctness_review",
+  "captured_utc": "2026-10-09T21:16:23.756116+00:00",
+  "worktree": "/workspace/tandemlog-storage-release",
+  "source": "bfb65b57faba86303272b1599f2abf24fe591773",
+  "initial_combined_source": "39da50d9cbf1ac1a5a98753c12bd409a719b7179",
+  "reviewed_storage_source": "44d0577c4034cdb082b0e5f05996f367da5b19f3",
+  "storage_checkpoint": "18ee019",
+  "accepted_dependency_base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+  "verdict": "accepted bounded correctness/integration review; no must-fix found",
+  "clean_worktree": false,
+  "source_equivalence": [
+    {
+      "name": "reviewed_storage_runtime_and_gates",
+      "base": "44d0577c4034cdb082b0e5f05996f367da5b19f3",
+      "scopes": [
+        "lib",
+        "native",
+        "packaging",
+        "tool",
+        "test"
+      ],
+      "git_diff_exit_code": 0,
+      "diff_bytes": 0,
+      "git_object_bindings": {
+        "lib": {
+          "base": "9fdb344faf3b20c6d6b59bd8f9c85fb556c088f9",
+          "candidate": "9fdb344faf3b20c6d6b59bd8f9c85fb556c088f9"
+        },
+        "native": {
+          "base": "4789f2601ea2958d892aea928368348c106295aa",
+          "candidate": "4789f2601ea2958d892aea928368348c106295aa"
+        },
+        "packaging": {
+          "base": "98d2c9753fda32ba6e0660be73c8f13883ecc191",
+          "candidate": "98d2c9753fda32ba6e0660be73c8f13883ecc191"
+        },
+        "tool": {
+          "base": "7af83f001ef222d8f4489658568105b4aff1448b",
+          "candidate": "7af83f001ef222d8f4489658568105b4aff1448b"
+        },
+        "test": {
+          "base": "a29718663cd3e67d8de91d2dfa2d965472d88c10",
+          "candidate": "a29718663cd3e67d8de91d2dfa2d965472d88c10"
+        }
+      }
+    },
+    {
+      "name": "accepted_dependency_platform_inputs",
+      "base": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "scopes": [
+        "android",
+        "windows",
+        "linux",
+        "macos",
+        "ios",
+        "pubspec.lock",
+        ".github"
+      ],
+      "git_diff_exit_code": 0,
+      "diff_bytes": 0,
+      "git_object_bindings": {
+        "android": {
+          "base": "082c78374a539a2542a2c7fa43c0d9814a6605b9",
+          "candidate": "082c78374a539a2542a2c7fa43c0d9814a6605b9"
+        },
+        "windows": {
+          "base": "f3eeb9a5554b1809534b352d153ffde147a14a84",
+          "candidate": "f3eeb9a5554b1809534b352d153ffde147a14a84"
+        },
+        "linux": {
+          "base": "e5d4b704c4f9afc0fef77ca7bfccd5f3e1a12bcd",
+          "candidate": "e5d4b704c4f9afc0fef77ca7bfccd5f3e1a12bcd"
+        },
+        "pubspec.lock": {
+          "base": "7da065a372a1c3c717b4e339a66815422ff158c0",
+          "candidate": "7da065a372a1c3c717b4e339a66815422ff158c0"
+        },
+        ".github": {
+          "base": "f16fe82697d7f0540db60a05f77ca4c6bf259e7b",
+          "candidate": "f16fe82697d7f0540db60a05f77ca4c6bf259e7b"
+        }
+      }
+    },
+    {
+      "name": "docs_only_final_closure",
+      "base": "39da50d9cbf1ac1a5a98753c12bd409a719b7179",
+      "scopes": [
+        "lib",
+        "native",
+        "packaging",
+        "tool",
+        "test",
+        "integration_test",
+        "android",
+        "windows",
+        "linux",
+        "macos",
+        "ios",
+        "pubspec.yaml",
+        "pubspec.lock",
+        ".github"
+      ],
+      "git_diff_exit_code": 0,
+      "diff_bytes": 0,
+      "git_object_bindings": {
+        "lib": {
+          "base": "9fdb344faf3b20c6d6b59bd8f9c85fb556c088f9",
+          "candidate": "9fdb344faf3b20c6d6b59bd8f9c85fb556c088f9"
+        },
+        "native": {
+          "base": "4789f2601ea2958d892aea928368348c106295aa",
+          "candidate": "4789f2601ea2958d892aea928368348c106295aa"
+        },
+        "packaging": {
+          "base": "98d2c9753fda32ba6e0660be73c8f13883ecc191",
+          "candidate": "98d2c9753fda32ba6e0660be73c8f13883ecc191"
+        },
+        "tool": {
+          "base": "7af83f001ef222d8f4489658568105b4aff1448b",
+          "candidate": "7af83f001ef222d8f4489658568105b4aff1448b"
+        },
+        "test": {
+          "base": "a29718663cd3e67d8de91d2dfa2d965472d88c10",
+          "candidate": "a29718663cd3e67d8de91d2dfa2d965472d88c10"
+        },
+        "integration_test": {
+          "base": "c5b2dde384af1530491a087b913da202e6a7a2b6",
+          "candidate": "c5b2dde384af1530491a087b913da202e6a7a2b6"
+        },
+        "android": {
+          "base": "082c78374a539a2542a2c7fa43c0d9814a6605b9",
+          "candidate": "082c78374a539a2542a2c7fa43c0d9814a6605b9"
+        },
+        "windows": {
+          "base": "f3eeb9a5554b1809534b352d153ffde147a14a84",
+          "candidate": "f3eeb9a5554b1809534b352d153ffde147a14a84"
+        },
+        "linux": {
+          "base": "e5d4b704c4f9afc0fef77ca7bfccd5f3e1a12bcd",
+          "candidate": "e5d4b704c4f9afc0fef77ca7bfccd5f3e1a12bcd"
+        },
+        "pubspec.yaml": {
+          "base": "adabc896648ea4d201b19ad6e11736c400838780",
+          "candidate": "adabc896648ea4d201b19ad6e11736c400838780"
+        },
+        "pubspec.lock": {
+          "base": "7da065a372a1c3c717b4e339a66815422ff158c0",
+          "candidate": "7da065a372a1c3c717b4e339a66815422ff158c0"
+        },
+        ".github": {
+          "base": "f16fe82697d7f0540db60a05f77ca4c6bf259e7b",
+          "candidate": "f16fe82697d7f0540db60a05f77ca4c6bf259e7b"
+        }
+      }
+    }
+  ],
+  "fixture_format_proof": {
+    "file": "integration_test/task_flow_test.dart",
+    "normalized_sources_identical": true,
+    "normalization": "Pinned Dart formatter applied only to scratch copies, preserving repository files",
+    "normalized_sha256": "74878264e200e867acac13b11e7c32887860435df954bec3bf5c5a2b390d22c7",
+    "evidence": {
+      "/workspace/recovery/storage-release/correctness-format-proof/task-flow-storage.dart": {
+        "bytes": 170174,
+        "sha256": "74878264e200e867acac13b11e7c32887860435df954bec3bf5c5a2b390d22c7"
+      },
+      "/workspace/recovery/storage-release/correctness-format-proof/task-flow-composed.dart": {
+        "bytes": 170174,
+        "sha256": "74878264e200e867acac13b11e7c32887860435df954bec3bf5c5a2b390d22c7"
+      },
+      "/workspace/recovery/storage-release/correctness-format-proof/format.log": {
+        "bytes": 236,
+        "sha256": "ca624de852cf0053a2e55163161702dd9bc5e928ddf36d28bf8926f83128bad0"
+      }
+    }
+  },
+  "allowed_delta": {
+    "pubspec": "2026.10.3+55; dependency declarations unchanged; accepted dependency base was build54",
+    "fixture": "task_flow formatting only; all assertions and behavior retained",
+    "final_closure": "ADR rollout clarification and release notes only; no runtime change"
+  },
+  "invariants_reviewed": [
+    "Single profile owner and operation queue retain workspace exclusion and lifetime admission",
+    "Protected schema missing/weakened authority rejects; rollback cleanup failure poisons owner",
+    "Source hashes, immutable writer/guard/intent obligations and canonical bindings remain unchanged from reviewed implementation",
+    "Migration activation before adapters; cleanup checks complete target obligations after marked/before unlink and before completion",
+    "Resumable exact allowlist cleanup excludes canonical/unknown files; actual hot-WAL/SHM and crash cuts retained",
+    "Shared ingestion atomically admits canonical receipt, acknowledges guard, retires exact protected intent and publishes after commit",
+    "Disposable namespaces and display state remain isolated; failed workspace switches preserve prior store/importer/Undo ownership",
+    "Released scalar v3 bytes, hashes, IDs, clocks and Undo meanings not changed by composition",
+    "QA readers close owned handles and verify stopped processes; benchmark rejects nonempty roots before writes"
+  ],
+  "owner_checks_reviewed": {
+    "flutter": {
+      "passed": 726,
+      "failed": 0,
+      "terminal": true
+    },
+    "native_linux_local_profile": {
+      "passed": 1,
+      "failed": 0,
+      "terminal": true,
+      "scope": "migration, failed/successful workspace switch, restart"
+    },
+    "python": {
+      "ran": 57,
+      "passed": 56,
+      "skipped": 1,
+      "failed": 0
+    },
+    "analysis": "No issues found",
+    "format": "182 files,0 changed",
+    "qualification": "Actual retained owner logs reviewed; reviewer did not re-execute these suites. App/test inputs identical across initial combined source and final docs-only closure."
+  },
+  "log_bindings": {
+    "/workspace/recovery/storage-release/flutter-tests.log": {
+      "bytes": 116135,
+      "sha256": "4f92c938a939aad863d0a1d0049f793d47a836a84225fc5f486bf979079b3069"
+    },
+    "/workspace/recovery/storage-release/native-local-profile.log": {
+      "bytes": 6641,
+      "sha256": "3b82f08ba92cd05453d1a5a69d70ab94131833a00a5e81ab053f9dac2cae89a2"
+    },
+    "/workspace/recovery/storage-release/python-tests.log": {
+      "bytes": 592,
+      "sha256": "564263564514178e5865723e8b5ffbf8a556244ad73b1091d28110cfe6940bb7"
+    },
+    "/workspace/recovery/storage-release/analyze.log": {
+      "bytes": 686,
+      "sha256": "63357014c14f1210f3770861a76ae8cebdbdf10face837c741ee32d7f43a2810"
+    },
+    "/workspace/recovery/storage-release/format-final.log": {
+      "bytes": 49,
+      "sha256": "ff74cca1f74796c4c922b84d7cfdb77354493051381ca901e4345b6d4ec14bdb"
+    }
+  },
+  "reviewed_file_bindings": {
+    "android/gradle/wrapper/gradle-wrapper.properties": {
+      "bytes": 289,
+      "sha256": "5fae3ec3252de35dfb3b676fb1f915827aac6d8b9f059783551ea8a31ec8170c"
+    },
+    "android/settings.gradle.kts": {
+      "bytes": 771,
+      "sha256": "f36ce862e73b9afe72900a0d7d75e34d8eaf6f414f80732d14f9dd28e12008af"
+    },
+    "design/decisions/0013-app-wide-local-database.md": {
+      "bytes": 9422,
+      "sha256": "7cba2543d8457031f23beb04366b01d3acb5c3f94c7a1f7707574ae888a06ba0"
+    },
+    "design/local-db-native-acceptance.md": {
+      "bytes": 3621,
+      "sha256": "6336f629bea98a37f7524899e39f76549b0c9908ec1517b37dea9d9d4db60a4d"
+    },
+    "integration_test/data_integrity_test.dart": {
+      "bytes": 9723,
+      "sha256": "129d1bd0c0fe68402fb2072c86f744312610c2a3d8cc2b0a7a4aef2a1a58b86a"
+    },
+    "integration_test/inbox_flow_test.dart": {
+      "bytes": 12069,
+      "sha256": "84caaffa843015e02c9004f3c6564053947dc77540a661afa5796658b5dcf035"
+    },
+    "integration_test/local_profile_workflow_test.dart": {
+      "bytes": 6824,
+      "sha256": "ce14fdf0f6b23d87f18cb36a8252bab6b4f80156eafb98a542acc426b6101869"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 169085,
+      "sha256": "83aec0049aeacf98b960507c1ccd53de9d7dc28b87d327650ffd535afd53ca17"
+    },
+    "lib/domain/event.dart": {
+      "bytes": 27584,
+      "sha256": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401"
+    },
+    "lib/main.dart": {
+      "bytes": 175870,
+      "sha256": "2bbeaa400d67702891fc30bab20a9e825803cda4cccb1cbecd21b42d5bd8cda7"
+    },
+    "lib/storage/checklist_expansion_store.dart": {
+      "bytes": 2237,
+      "sha256": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250"
+    },
+    "lib/storage/checklist_store.dart": {
+      "bytes": 13798,
+      "sha256": "866be0a1c1b226c32ec9bd9e79880c0390dcd3fcdfd00089e74432ea27ca2896"
+    },
+    "lib/storage/legacy_cache_import.dart": {
+      "bytes": 22298,
+      "sha256": "b80a0f19a4d98ed6f93ceba218a9727ebfc7c3b43615a60e92dbf757eec52a1d"
+    },
+    "lib/storage/legacy_profile_lease.dart": {
+      "bytes": 3128,
+      "sha256": "ded9665978486358e8f87e72a002d1dd40b52754bf6d82dda215752aab2fa6c6"
+    },
+    "lib/storage/legacy_protected_files_import.dart": {
+      "bytes": 18001,
+      "sha256": "5852aff41d8f249673210e5e81821f0c4ba43bfd6f19e5da666377e0953006af"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 11528,
+      "sha256": "3157faa5312e030d889b626be942e82873dc426836af2927862d3e7f30c63119"
+    },
+    "lib/storage/local_profile_migration.dart": {
+      "bytes": 22404,
+      "sha256": "4d123a2432b1269f0e4ea576cd00d91105d142c7496dd033c996a21c7aacebda"
+    },
+    "lib/storage/local_settings.dart": {
+      "bytes": 7325,
+      "sha256": "166e0722aacdd37236b03a306e42f38d06dda683b3edb8cdc2322a20547b8561"
+    },
+    "lib/storage/profile_text_intents.dart": {
+      "bytes": 7505,
+      "sha256": "c5dba0698819c26670cfff24326fcd5ed3bf5e9744b7ba8ecadd5aa5ff6e9ea0"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 156237,
+      "sha256": "c12d6427033068687f8a41e77fc29f86eea6b1d02db569aab3a843f2192d4326"
+    },
+    "lib/storage/task_tables.dart": {
+      "bytes": 1223,
+      "sha256": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f"
+    },
+    "lib/storage/text_cache.dart": {
+      "bytes": 19580,
+      "sha256": "b97b02d07a9475f4e4fcaa390a376b2c8cd834af020bfc7f1c2b12192ac976ed"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 10763,
+      "sha256": "ba4ee68e9cef515581c9f6d01e2b76f22f55c6b1053aa3c59627d04b3fc82984"
+    },
+    "packaging/linux/tandemlog": {
+      "bytes": 1155,
+      "sha256": "18b831b2053db841bd9a34f880ba7309ab1e4bfdda710b8b45ade22204bc062b"
+    },
+    "packaging/smoke.py": {
+      "bytes": 12940,
+      "sha256": "eb9e6ec47343c6db1e2eba74ed0c77b6395be0f33de91738b5a6cc173431d106"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    },
+    "pubspec.yaml": {
+      "bytes": 585,
+      "sha256": "6887bb7a4faaca8b7e719cce38adbdab6b6bc4425138a55628a19d6964f20e13"
+    },
+    "test/legacy_cache_import_test.dart": {
+      "bytes": 9138,
+      "sha256": "b21ee1b19094bebd66a5e89808e5536ec13d237c6cf2e6cf6e2e4a02b60dbcb2"
+    },
+    "test/legacy_protected_files_import_test.dart": {
+      "bytes": 9687,
+      "sha256": "2688885a8bd3171f183591371596380a080494d9fd5a20b783fd2e848e138277"
+    },
+    "test/local_profile_database_test.dart": {
+      "bytes": 8390,
+      "sha256": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e"
+    },
+    "test/local_profile_migration_test.dart": {
+      "bytes": 18544,
+      "sha256": "85f25ca6441243f49d19562fe2fae22a454206885a89d4ffcdea4982aa31c428"
+    },
+    "test/profile_safety_store_test.dart": {
+      "bytes": 10657,
+      "sha256": "66af7e1d83ff34618cf257d82d7ea734a1cc66f5ff9822a6cab38bdb2e99621e"
+    },
+    "test/profile_task_store_test.dart": {
+      "bytes": 14230,
+      "sha256": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890"
+    },
+    "test/support/local_profile_migration_child.dart": {
+      "bytes": 1777,
+      "sha256": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd"
+    },
+    "tool/measure_startup.py": {
+      "bytes": 5034,
+      "sha256": "c6c7e1004a70fb5cf67b43bc94ed995eeedd914c06b720626ae1d24efcb58164"
+    },
+    "tool/test_installer_smoke.py": {
+      "bytes": 4441,
+      "sha256": "70d2a51461dd33d40d5090bfd424d45d6f3e5a8de29a097975a48fabd8dd3264"
+    },
+    "tool/test_linux_profile_discovery.py": {
+      "bytes": 2397,
+      "sha256": "a328f1289bf46cb91f653da90dad94afbab3729b7ac2c4b223c8d72227bbe88f"
+    },
+    "tool/test_startup_fixture_guard.py": {
+      "bytes": 1094,
+      "sha256": "2a66c797c70bdfe14d0f80a8a7c21afeed649786e1ab47c12409bb22ee8ca238"
+    }
+  },
+  "prior_independent_proof": {
+    "receipt": "/workspace/recovery/local-db-correctness/migration-startup-review.json",
+    "binding": {
+      "bytes": 13868,
+      "sha256": "27210e2d135d2b95ec5f7e68e243f48dbe2a8163118de10ea7b4f892128e905d"
+    },
+    "scope": "Independent34/0 focused gates; settings-loss red/safe rejection; real killed legacy TaskStore WAL292552/SHM32768 import cleanup and exact canonical preservation; all independently recorded at prior reviewed storage source"
+  },
+  "limits": [
+    "Dependency artifact/provenance final audit separate; accepted dependency source reused, not re-audited here",
+    "Exact Windows/Android native lease/migration/process-death/SAF acceptance pending",
+    "No signed candidate or installer bytes verified here; no release/publication acceptance",
+    "No live user-data migration, cleanup or raw live DB access performed",
+    "Linux SIGKILL does not prove physical power-loss or every disk/VFS failure behavior",
+    "No food implementation/import included; no optional video scope added"
+  ]
+}

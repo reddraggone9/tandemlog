@@ -1,0 +1,35 @@
+{
+  "reviewed_at_utc": "2026-10-09T21:16:13.094766+00:00",
+  "decision": "ACCEPTED: combined stable2026.10.3 editorial gate only",
+  "covered_range": {
+    "baseline_tag": "v2026.10.2",
+    "baseline_commit": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "final_commit": "bfb65b57faba86303272b1599f2abf24fe591773"
+  },
+  "earlier_reviewed_endpoint": "ec8298cfc137026eb43ad5cec46ec1f307d34e21",
+  "final_extension": "ADR rollout wording only; production source and actual note bytes unchanged",
+  "notes_path": "design/release-notes-2026.10.3.md",
+  "notes_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "notes_exact_text": "- Consolidated local app data, with automatic migration for existing installations.\n- Updated Android build dependencies.\n",
+  "editorial_guidance_path": "design/releases.md",
+  "editorial_guidance_sha256": "b922b71d31ea3a402b463f58d4cec769fdc02de8596d3051806e606225d1af6a",
+  "actual_covered_diff_assessed": [
+    "Integrated app-wide private profile database/shared TaskStore ownership and workspace scopes; startup automatic verified legacy settings/safety/cache import and resumable cleanup. The first bullet describes this concrete storage migration without inventing a user-facing feature or data-preservation guarantee.",
+    "Android AGP9.1.0\u21929.2.1 and Gradle9.3.1\u21929.4.1 with pinned wrapper checksum. Kotlin2.4.20 and pub dependency versions unchanged. The second bullet accurately says Android build dependencies updated; no security remediation claim.",
+    "Version stable2026.10.3+55 and source-bound migration/toolchain evidence/tests/packaging fixture changes; QA and preservation details stay engineering-side."
+  ],
+  "notes_assessment": "Two concise meaningful change bullets, no security-fix claim, no preservation/QA boilerplate, no unrelated features or prior RC delta repeated. Automatic migration describes implemented normal startup path; failure/unsupported-source handling remains detailed in engineering evidence.",
+  "media_assessment": "No media proposed. No user-visible layout change in this range, lib/presentation unchanged, and prose sufficiently explains these maintenance changes. No new demonstration-video requirement added.",
+  "README_assessment": {
+    "unchanged_from_stable_baseline": true,
+    "sha256": "68ec94277b67a0dfb8876d14c82794457ba3fad123b227b902d65487936f2870",
+    "decision": "No update required: no meaningful new immediately visible feature/workflow to add to existing overview."
+  },
+  "supporting_source_scope": "Read actual commit log/diff inventory, storage bootstrap/local-settings integration changes, ADR0013 and native handoff, dependency/toolchain changes and evidence descriptions. This editorial review does not re-audit implementation correctness or dependencies, rerun tests, or substitute for independent implementation/native/artifact/publication gates.",
+  "must_fix": [],
+  "limits": [
+    "Exact combined candidate/artifact/native/final release gates remain required before publication.",
+    "Publish this hash-identical reviewed note content; materially revised copy/media or executable range extension requires editorial amendment.",
+    "No build, runtime/device check, publication or source edit performed by reviewer."
+  ]
+}
