@@ -1,0 +1,86 @@
+{
+  "verdict": "Accepted bounded test navigation correction; no remaining must-fix in exact three-helper diff.",
+  "baseline_source": "c8596f22fd56ce0b73c74e1e5010337556b269e1",
+  "failed_ci_run": 37887365667,
+  "original_aggregate_result": {
+    "native_passed": 80,
+    "native_failed": 6,
+    "signed_build49": "not accepted; no signed49 claim"
+  },
+  "diagnosis": {
+    "observed": "Phone IME, tag selected-block and compact selection logs show gesture centres hitting the pinned group header. Header and historical flows fail existing hitTestable checks after default top-aligned ensureVisible. Local unmodified compact reproduction hits same pinned header and fails2-selected.",
+    "inference": "Failure setup positions the intended task/control underneath a legitimate pinned heading; centering before the gesture corrects fixture navigation. Raw logs do not alone prove the precise layout delta that changed prior success.",
+    "production_comparison": "No executable UI/domain/native/platform/dependency/workflow changes from failed candidate. Existing real keyboard navigation already detects heading overlap and uses alignment.5 (main1544\u20131552)."
+  },
+  "approved_change": "Centre the same actual task/control via Scrollable.ensureVisible(alignment:.5), settle, retain existing hit-test assertions and add one for shared selectTask before real pointer action.",
+  "assertion_preservation": "For each file, full current bytes equal baseline bytes with exactly the reviewed helper substitution. All stationary viewport/header/row/scroll/draft, IME/caret, recurrence/Undo/cold child preservation, selected block drag/cancel/order, resize and canonical byte assertions remain unchanged. No skipped assertions, warning suppression, forced pointer target, delayed retries or production reset.",
+  "stationary_and_drag_scope": "Header geometry snapshots are taken after setup centering. Existing selection gestures, keyboard range, fixed toolbar/viewport checks, drag gestures, auto-scroll/cancel and persisted order assertions run unchanged.",
+  "source_bindings": [
+    {
+      "baseline_sha256": "2b7a63cef1c82f40bd152c4ba73193d621bd814f0003bef3728c23ceee067097",
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/header_selection_test.dart",
+      "bytes": 12412,
+      "sha256": "76949fb78ceadd1875a8fcd9c4730405c88cb5bd561d5bca5a70d84b69fee415",
+      "only_exact_reviewed_replacement": true
+    },
+    {
+      "baseline_sha256": "a80181e4487ed0f5ad4524af405f24efba578104dbc65cd437c982f2b3d70afc",
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/historical_checklist_recompletion_test.dart",
+      "bytes": 10377,
+      "sha256": "3eb3dd1213ddc45901eeebe5a47b3bdf47287be255e03707e624284be6659d2d",
+      "only_exact_reviewed_replacement": true
+    },
+    {
+      "baseline_sha256": "6f8d3775770e1f34b066ed0caddfca19298d5c23d236ae7061a4d8014cc7eb54",
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/task_flow_test.dart",
+      "bytes": 169059,
+      "sha256": "3c92e86416b748b1ce9f2d8980d5decae76c628ffea2de4963229604544a2549",
+      "only_exact_reviewed_replacement": true
+    }
+  ],
+  "runtime_result": {
+    "native_passed": 6,
+    "native_failed": 0,
+    "seconds": 168,
+    "flow_names": [
+      "combined header and stationary selection 390.0 x1.0",
+      "combined header and stationary selection 320.0 x2.0",
+      "native historical checklist recompletion and Undo keep child text",
+      "phone single and bulk editors keep fields usable with the IME",
+      "native tag filters preserve drafts and selected block drag scrolls offscreen",
+      "compact selection commands stay reachable through scrolling and resize"
+    ],
+    "log": "aggregate-six-green.log",
+    "hit_test_warnings": 0,
+    "skipped_flow_claim": false
+  },
+  "analysis": "No issues found in aggregate-test-helper-analyze.log; diff-check clean.",
+  "candidate_metadata": "Current pubspec is preparatory2026.10.2-rc.6+50. Version change is separate from the reviewed test setup; unchanged UI permits attributable prior build49 debug media, not build50 artifact acceptance.",
+  "limits": [
+    "Review-only, no duplicate test builds launched.",
+    "Focused Linux GTK native result covers six formerly failed flows; full replacement candidate matrix remains required and is not claimed green here.",
+    "No Android/Windows/signed package/publication acceptance inferred."
+  ],
+  "artifacts": [
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/rc6-candidate-linux-decoded.log",
+      "bytes": 459922,
+      "sha256": "626d7d0c3dc441f1c4e07a8f2beb2125e46831f767d84d87ee2828d1fea8b1ab"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-selection-local-red.log",
+      "bytes": 17987,
+      "sha256": "1f0ef8294c30e7f27859958f12933093961166b4fb4ec13803e78401cd9eaca6"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-six-green.log",
+      "bytes": 8529,
+      "sha256": "1c9a8df7dc191a835bef041b6ace0da63cb90048ff907451eec244fb758bcf3c"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-test-helper-analyze.log",
+      "bytes": 686,
+      "sha256": "6c8bf7857bea4eb5578db37a4a42d76820fb77a81040e9eac94f9f4bb88ebfd2"
+    }
+  ]
+}

@@ -38,3 +38,15 @@ shows a1.2-second held drag moving Map above Water bottle and Undo restoring it,
 menus, immediate collapse/expand and390px layout. [Observed source/inputs](desktop-demo-verification.json)
 bind the prepared RC6 source/version. The [7s frame](native-linux-pointer-frame.png)
 shows the desktop pointer at the Map handle. This is not Android acceptance.
+
+Candidate37887365667 at `c8596f22fd56ce0b73c74e1e5010337556b269e1`
+failed the full Linux native aggregate (80 passed,6 failed), so build49 has no
+signed APK. Three test-navigation helpers now centre gesture targets clear of
+pinned group headings; existing assertions remain and shared selection requires
+a real hit before acting. Replacement build50 retains the same production UI
+sources. The build49 debug demo and figures remain evidence for those unchanged
+UI sources, with their original source/version attribution.
+The [aggregate navigation receipt](aggregate-test-navigation-verification.json)
+binds the hosted failure, local reproduction and six formerly failing native
+flows passing in2m48s with clean analysis. Full replacement platform gates remain
+required.

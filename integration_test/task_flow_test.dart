@@ -130,8 +130,11 @@ Future<void> selectTask(
   bool longPress = false,
 }) async {
   final body = find.byKey(ValueKey('task-body-$id'));
-  await tester.ensureVisible(body);
+  // Top alignment can put this target beneath a pinned group heading.
+  // Centre the intended gesture target, then require a real hit before acting.
+  await Scrollable.ensureVisible(tester.element(body), alignment: .5);
   await tester.pumpAndSettle();
+  expect(body.hitTestable(), findsOneWidget);
   if (control) await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
   if (shift) await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
   if (longPress) {

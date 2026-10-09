@@ -1,0 +1,82 @@
+{
+  "failed_candidate": {
+    "run_id": 37887365667,
+    "source": "c8596f22fd56ce0b73c74e1e5010337556b269e1",
+    "version": "2026.10.2-rc.6+49",
+    "linux_native_passed": 80,
+    "linux_native_failed": 6,
+    "signed_apk_produced": false
+  },
+  "cause": "Top-aligned test navigation placed real row gesture targets behind pinned group headings. Local unchanged-source compact selection reproduces the same miss.",
+  "correction": "Three test helpers centre the gesture target before acting. Existing workflow assertions remain; shared selectTask adds a hit-test assertion. No production UI change.",
+  "local_validation": {
+    "platform": "actual Linux GTK integration target, synthetic isolated fixtures",
+    "formerly_failed_native_flows": 6,
+    "failures": 0,
+    "duration_seconds": 168,
+    "analyze": "No issues",
+    "format": "clean",
+    "replacement_version": "2026.10.2-rc.6+50"
+  },
+  "logs": [
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/rc6-candidate-linux-decoded.log",
+      "bytes": 459922,
+      "sha256": "626d7d0c3dc441f1c4e07a8f2beb2125e46831f767d84d87ee2828d1fea8b1ab"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-selection-local-red.log",
+      "bytes": 17987,
+      "sha256": "1f0ef8294c30e7f27859958f12933093961166b4fb4ec13803e78401cd9eaca6"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-six-green.log",
+      "bytes": 8529,
+      "sha256": "1c9a8df7dc191a835bef041b6ace0da63cb90048ff907451eec244fb758bcf3c"
+    },
+    {
+      "path": "/workspace/recovery/checklist-ui-fix/aggregate-test-helper-analyze.log",
+      "bytes": 686,
+      "sha256": "6c8bf7857bea4eb5578db37a4a42d76820fb77a81040e9eac94f9f4bb88ebfd2"
+    }
+  ],
+  "protected_ui_files": [
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/main.dart",
+      "bytes": 171590,
+      "sha256": "732ba18e38b2e91106d642c7592a122be9ad870e315eed9220f054b8f9220d94"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/presentation/checklist_panel.dart",
+      "bytes": 12197,
+      "sha256": "a0b63001cbf9ce3a2e8278f6bf86b555263c6816e8fbd4c763536e06b615ed0a"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/lib/presentation/task_actions_menu.dart",
+      "bytes": 1654,
+      "sha256": "1044e513a8b4dee166463e001e28359be0339a158bd11d4cbf6eb85c8f8dc786"
+    }
+  ],
+  "test_files": [
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/task_flow_test.dart",
+      "bytes": 169059,
+      "sha256": "3c92e86416b748b1ce9f2d8980d5decae76c628ffea2de4963229604544a2549"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/header_selection_test.dart",
+      "bytes": 12412,
+      "sha256": "76949fb78ceadd1875a8fcd9c4730405c88cb5bd561d5bca5a70d84b69fee415"
+    },
+    {
+      "path": "/workspace/tandemlog-checklist-ui-fix/integration_test/historical_checklist_recompletion_test.dart",
+      "bytes": 10377,
+      "sha256": "3eb3dd1213ddc45901eeebe5a47b3bdf47287be255e03707e624284be6659d2d"
+    }
+  ],
+  "remaining_gates": [
+    "full replacement candidate matrix and signed APK",
+    "exact Android affected-flow/demo acceptance",
+    "fresh quota before preview publication"
+  ]
+}

@@ -126,7 +126,11 @@ void registerHeaderSelectionTests() {
             await tester.pumpAndSettle();
             seekSteps++;
           }
-          await tester.ensureVisible(body(35));
+          // Keep the gesture target clear of the pinned group heading.
+          await Scrollable.ensureVisible(
+            tester.element(body(35)),
+            alignment: .5,
+          );
           await tester.pumpAndSettle();
           expect(body(35), findsOneWidget);
           expect(body(35).hitTestable(), findsOneWidget);

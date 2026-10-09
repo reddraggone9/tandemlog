@@ -32,7 +32,8 @@ Future<void> _settle(WidgetTester tester) async {
 }
 
 Future<void> _tap(WidgetTester tester, Finder finder) async {
-  await tester.ensureVisible(finder);
+  // A row control aligned at the viewport top can sit behind its sticky heading.
+  await Scrollable.ensureVisible(tester.element(finder), alignment: .5);
   await _settle(tester);
   expect(finder.hitTestable(), findsOneWidget);
   await tester.tap(finder);

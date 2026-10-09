@@ -13,12 +13,17 @@ expands them; its icon and accessible tooltip describe the next action. Disclosu
 content aligns with the title column and its line gap, retaining separate48px
 body/disclosure touch targets. Expansion remains a local cache preference.
 
-Reviewed source is frozen at `c8596f22fd56ce0b73c74e1e5010337556b269e1`,
-prepared2026.10.2-rc.6 build49. Six affected actual native Linux flows and23 focused
+The reviewed UI source is `c8596f22fd56ce0b73c74e1e5010337556b269e1`.
+Six affected actual native Linux flows and23 focused
 widget tests pass with clean analysis; source and final notes/media review are
 accepted. The18.1-second pointer-visible demo covers held drag/Undo, menus,
-direct display actions and narrow layout. [Signed candidate37887365667](https://github.com/reddraggone9/tandemlog/actions/runs/37887365667)
-is in progress. Signed platform gates, exact Android acceptance and fresh quota
+direct display actions and narrow layout. [Candidate37887365667](https://github.com/reddraggone9/tandemlog/actions/runs/37887365667)
+failed its full Linux native workflow with80 passing and6 failing flows; no signed
+build49 APK was produced. Gesture setup aligned row controls beneath pinned
+headings. A reviewed test-only correction centres those targets and retains all
+workflow assertions, with an explicit hit-test guard. All six formerly failing
+flows pass locally in2m48s with clean analysis. Replacement RC6 build50 keeps the
+production UI unchanged. Signed platform gates, exact Android acceptance and fresh quota
 remain required before authorized preview publication; no new release is published yet.
 Broader local-storage consolidation stays queued for the next full release,
 requiring inventory and migration review. See [ADR0011](decisions/0011-one-level-checklists.md).
