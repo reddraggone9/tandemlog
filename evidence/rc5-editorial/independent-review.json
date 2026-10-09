@@ -13,6 +13,6 @@
     "six items readable, context useful, labels and alt text accurate",
     "synthetic data only; mode/full-history limits accurately disclosed"
   ],
-  "remaining_editorial": "replace intermediate relative notes URL with an exact committed-media URL; reviewer must check final link before publication",
-  "release_gates": "signed exact-artifact native acceptance and fresh quota remain separate; no publication performed"
+  "release_gates": "signed exact-artifact native acceptance and fresh quota remain separate; no publication performed",
+  "final_editorial": "Accepted independently: final notes wording/alt unchanged; image link pinned to c11441353a919f21cc54234685ed3a52a509ab2c; publicHTTP200 image/png 53464bytes; SHA256cbe93869b0d483c00cf74b4c7ce472ed323d012bf268407a6295e024037157c0 exactlyequals local and git-show media PNG."
 }

@@ -22,6 +22,8 @@ coordinates and displays at 1:1 scale, with only centered Before/After labels an
 a dark canvas. Inkscape rasterization preserves both crops byte-for-byte in RGBA.
 `media-receipt.json` binds source hashes, crop geometry and output hashes.
 
-Independent editorial review, immutable publication link, fresh hosted CI,
+Independent editorial review and the immutable publication link are accepted.
+The reviewer independently fetched the pinned public image and matched its
+53,464 bytes to both the reviewed file and committed PNG. Fresh hosted CI,
 main-only signed-candidate gates, exact final native acceptance and fresh quota
 remain distinct prerequisites. This media adds no native acceptance scope.
