@@ -23,7 +23,11 @@ build49 APK was produced. Gesture setup aligned row controls beneath pinned
 headings. A reviewed test-only correction centres those targets and retains all
 workflow assertions, with an explicit hit-test guard. All six formerly failing
 flows pass locally in2m48s with clean analysis. Replacement RC6 build50 keeps the
-production UI unchanged. Signed platform gates, exact Android acceptance and fresh quota
+production UI unchanged. Exact replacement source is
+`2aa46be9043251c8ed4e21b2ad00d41aa054dffc`; [candidate37889870105](https://github.com/reddraggone9/tandemlog/actions/runs/37889870105)
+is in progress. [Replacement editorial review](../evidence/rc6-editorial/editorial-review-build50.json)
+accepts unchanged notes and source-attributed media through this exact range.
+Signed platform gates, exact Android acceptance and fresh quota
 remain required before authorized preview publication; no new release is published yet.
 Broader local-storage consolidation stays queued for the next full release,
 requiring inventory and migration review. See [ADR0011](decisions/0011-one-level-checklists.md).
