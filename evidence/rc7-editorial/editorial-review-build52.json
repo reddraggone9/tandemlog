@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-09T14:45:59.505445+00:00",
+  "reviewer": "independent delegated reviewer",
+  "decision": "accepted_final_build52_range_for_unchanged_notes_media_and_attributed_demo",
+  "must_fix_findings": [],
+  "covered_range": {
+    "baseline": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+    "final_source": "74afbe294065f462b742b4570d4095e690e54b04",
+    "version": "2026.10.2-rc.7+52",
+    "prior_reviewed_source": "9b6f18b52f1b22b4f8196e4273e5f660056bc726",
+    "prior_build51_candidate": "aaf06bd17beb109a89e97aff402595f5e7c49ae2"
+  },
+  "actual_final_source_files": [
+    {
+      "path": "lib/main.dart",
+      "sha256": "c8b30fd8330bb3ff88e24c3d4e066c055703ea64fd2364a41dba65573585729f"
+    },
+    {
+      "path": "lib/presentation/checklist_disclosure_ink_border.dart",
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    {
+      "path": "integration_test/checklist_disclosure_layout_test.dart",
+      "sha256": "b52148d6b43df1448c2b9075fbcdd5d1514bbbe7decca7767abdaee5c3ae6a29"
+    },
+    {
+      "path": "integration_test/inline_checklist_workflow_test.dart",
+      "sha256": "34d943dbe16998361d30f0b511166e37eb61dd26c000dd113c853d795ee7380a"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9fa7328aa7a95d38cc8f878881e08707d4231eca9ea39d4b182eefe2f34dd32"
+    },
+    {
+      "path": "design/decisions/0011-one-level-checklists.md",
+      "sha256": "0e0703b4fd9de0067adfc64d0282b2f9768aa188b71c4b2c224f44a1c12f4352"
+    },
+    {
+      "path": "pubspec.yaml",
+      "sha256": "4c8f88506f59ba15722b7c2298d26b93d0865182c0dcdee7f71b5e014ec76e8b"
+    },
+    {
+      "path": "design/prerelease-notes.md",
+      "sha256": "a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1"
+    },
+    {
+      "path": "evidence/rc7-editorial/disclosure-spacing-before-after.png",
+      "sha256": "ac0a36f517da0c1e5b873fab112ffdf37be498171669a08d83916cfc1257d4ef"
+    },
+    {
+      "path": "evidence/rc7-editorial/disclosure-ink-before-after.png",
+      "sha256": "a58570bfcaaa9f2a91723e35810c66be0af03812b95dcf11e9ddcf5afa299164"
+    },
+    {
+      "path": "evidence/disclosure-layout/native-linux-pointer-demo.mp4",
+      "sha256": "0637ffb385b732e6dcde82a88561758e9e3d1f0cfefa48552ac41b8d7b0eab37"
+    },
+    {
+      "path": "evidence/disclosure-layout/pointer-frame.png",
+      "sha256": "76550c25968af3977d7cbccc4a64e864701fd99dd8a30a74ef97c2a34b168be2"
+    },
+    {
+      "path": "evidence/disclosure-layout/final-narrow-enlarged-frame.png",
+      "sha256": "e35139f8ecd2614ad14b0280223eef9dec500014f178ba16741054ffeb2f56b0"
+    },
+    {
+      "path": "evidence/rc7-editorial/media-provenance.json",
+      "sha256": "d199f0b101cf0d39b6490b82d1823edf5bf8bc5ef6d4d63524b9052ac0f4f3dc"
+    },
+    {
+      "path": "evidence/disclosure-layout/desktop-demo-verification.json",
+      "sha256": "bc8244d925f94a6d2b729378e11ff6da3d4d7b455d7e434673dd9a39dffe5ae1"
+    }
+  ],
+  "build52_extension_files": [
+    "design/runtime-qa.md",
+    "design/status.md",
+    "evidence/disclosure-layout/README.md",
+    "evidence/disclosure-layout/desktop-demo-verification.json",
+    "evidence/disclosure-layout/independent-desktop-demo-review.json",
+    "evidence/rc7-candidate/README.md",
+    "evidence/rc7-candidate/build51-failure.json",
+    "evidence/rc7-candidate/build51-native-containment-red.log",
+    "evidence/rc7-candidate/build52-analyze.log",
+    "evidence/rc7-candidate/build52-focused-native.log",
+    "evidence/rc7-candidate/independent-build52-correction-review.json",
+    "evidence/rc7-candidate/independent-evidence-accuracy-doc-review.json",
+    "evidence/rc7-candidate/independent-reviewed-range-extension.json",
+    "integration_test/checklist_disclosure_layout_test.dart",
+    "pubspec.yaml"
+  ],
+  "findings": [
+    "Actual full baseline2aa..74 source range introduces only the previously reviewed compact disclosure/rounded ink presentation and version metadata; registered focused flow and prior responsive assertion remain. No additional meaningful user-facing change, dependency, canonical/domain/storage, recurrence or workflow change is present.",
+    "Actualaaf..74 executable-source delta is exactly the reviewed four0.01logicalpx host/path inequalities plus comment and monotonic build51to52 increment. All production UI, ADR and other reviewed test hashes match prior implementation review; changed test/pubspec hashes match independent build52 correction review.",
+    "Actual final source contains exact reviewed draft notes SHAa4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1, both exact approved media bytes and immutable9b6f18b image URLs. Two concise bullets still accurately cover the actual visible diff.",
+    "Reviewed desktop video and two independently decoded frames are byte-identical at finalsource74. Media and demo provenance correctly retains actual debug source9b6f18b/build51; unchanged production UI makes this reuse valid. No build52 capture or Android runtime acceptance is fabricated.",
+    "Demo trim wording retains the independently confirmed brief Test Starting opening, and harness-only unpressed capture remains excluded from UI proof.",
+    "Current Android handoff pins exact74 source and replacement run37945597400/build52; failed51 is explicitly not available for signed acceptance. It preserves the bounded actual-phone/device delta and requires successful exact signed artifact identity, terminal checks, fresh quota and gated publication. Relative links resolve."
+  ],
+  "candidate_binding_only": {
+    "id": 37945597400,
+    "fresh_api_observed": {
+      "head_sha": "74afbe294065f462b742b4570d4095e690e54b04",
+      "head_branch": "main",
+      "event": "workflow_dispatch",
+      "path": ".github/workflows/android-candidate.yml",
+      "workflow_id": 371459905,
+      "run_attempt": 1,
+      "status": "in_progress",
+      "conclusion": null
+    },
+    "purpose": "Fresh exactsource/run association only; not candidate result or artifact acceptance."
+  },
+  "current_handoff": {
+    "path": "evidence/rc7-candidate/README.md",
+    "sha256": "08307f176ef3b3d28525368161258b1c4f09ec6b8c9a9cee8d94fa0fa234824e",
+    "status": "Current documentation amendment reviewed; not falsely claimed already in candidate source74."
+  },
+  "prior_receipts": [
+    {
+      "name": "independent-compact-implementation-review-final.json",
+      "sha256": "d22955130eeb0a2d2104466c93ce70d7fd192805eedb08ea4862f36e353fbe26"
+    },
+    {
+      "name": "independent-rc7-editorial-review.json",
+      "sha256": "95fbc746661682476652aff9f5ceb3ff67930d70d89c9f5c04a8a61a67ea5850"
+    },
+    {
+      "name": "independent-rc7-desktop-demo-review.json",
+      "sha256": "4194f31d2295ff24452ccddc8a6177c53793151f5ef0e457aa9dc1f650c74806"
+    },
+    {
+      "name": "independent-rc7-evidence-accuracy-doc-review.json",
+      "sha256": "ed4e1896449f82a19899a1c207c92f20ab5cfda21be45112ded23d074de509b2"
+    },
+    {
+      "name": "independent-rc7-build52-correction-review.json",
+      "sha256": "f9c409f5428ea071d93cf705962f06d832d770a99e605edf88678af5e5132c12"
+    }
+  ],
+  "scope": "Read-only actual-final-range editorial/provenance amendment. No tests, source edits, dispatch, device acceptance or publication by reviewer.",
+  "remaining": "Terminal full exact candidate, actual signed artifact/platform-byte checks, exact Android/native acceptance and fresh quota/publication gates remain pending. This receipt grants editorial/demo-range acceptance only."
+}

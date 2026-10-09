@@ -4,8 +4,10 @@ Replacement version2026.10.2-rc.7/build52 changes only the new native test's
 paint-host/path coverage inequalities to use the existing0.01px geometry
 tolerance and advances the build counter. Production UI and reviewed notes,
 images and demo bytes are unchanged; screenshots/demo remain accurately
-attributed to actual build51 debug source. Exact replacement source/run will be
-bound after independent correction review and main-only dispatch.
+attributed to actual build51 debug source. Exact replacement source is`74afbe294065f462b742b4570d4095e690e54b04`
+on main. [Replacement signed candidate37945597400](https://github.com/reddraggone9/tandemlog/actions/runs/37945597400)
+and [pushCI37945597874](https://github.com/reddraggone9/tandemlog/actions/runs/37945597874)
+are running that exact source; their full terminal results remain pending.
 
 Candidate51 source`aaf06bd17beb109a89e97aff402595f5e7c49ae2`,
 [signed candidate37942135402](https://github.com/reddraggone9/tandemlog/actions/runs/37942135402)
@@ -26,8 +28,9 @@ verification is claimed.
 [editorial](../rc7-editorial/independent-editorial-review.json),
 [actual desktop demo](../disclosure-layout/independent-desktop-demo-review.json)
 and [final source-range extension](independent-reviewed-range-extension.json)
-are independently accepted. Reviewed code/test/version hashes are unchanged
-between media source9b6f18b and exact candidateaaf06bd. Notes images use immutable
+are independently accepted. Build51's reviewed code/test/version hashes are unchanged between media source
+9b6f18b and aaf06bd. Build52 retains production/ADR/other tests unchanged; the
+bounded tolerance/version change is covered by its independent correction review. Notes images use immutable
 9b6f18b URLs. Reviewed notes SHA256 is
 `a4ec1b294c04acabfcf02c7a607c6ff225afdb6f02060eb74d878e501b6fc0a1`.
 
