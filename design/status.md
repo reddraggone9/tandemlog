@@ -1,17 +1,10 @@
 # Current status — 2026-10-09
 
-## Android toolchain maintenance — unpublished development candidate
+## Combined storage and dependency release preparation
 
-Lee approved reviewed AGP9.2.1/Gradle9.4.1 integration and candidate validation.
-PR #4 merged at `912a4a2`, retaining Kotlin2.4.20 and application/storage source.
-Development version2026.10.3/build54 exceeds fresh published and successful
-candidate floors53. The unchanged trusted-main signed candidate and exact Android
-release/R8/update/startup/SAF/provider acceptance remain pending; no publication
-is authorized here. [Review, gates and rollback](android-toolchain-maintenance.md).
+Lee explicitly authorized finishing and publishing storage migration together with the reviewed Android dependency maintenance before revisiting food inventory. The combined branch starts from accepted dependency source `71b841fe9dba1b46e86de6c055ce56df4a978784` (AGP9.2.1/Gradle9.4.1, Kotlin2.4.20) and preserves the isolated migration checkpoint `18ee0191c199b5351440a0182078993d16992e5e`. One private local DB now owns preferences, guards, pending receipts and scoped workspace projections, with verified legacy capture, durable activation and resumable allowlist cleanup. Released v3 canonical bytes and meanings remain unchanged.
 
-## Isolated app-wide persistence integration
-
-Branch `experiment/app-wide-local-db` prepares one private local DB, verified legacy file/cache/outbox import, durable activation, resumable allowlist cleanup, DB-backed preferences and startup/switch/shutdown wiring. Linux launcher discovery keeps migrated profiles selected. Synthetic Linux storage/process-death and native switch/restart evidence is separate from Windows/Android acceptance. No live user-data operations, push or release; the parent's dependency-only candidate is a separate task. [ADR0013](decisions/0013-app-wide-local-database.md) and [integrated handoff](local-db-native-acceptance.md) record source-bound gates.
+Fresh GitHub reads confirmed version2026.10.3 is unpublished and successful candidate37987187103 consumed build54. The combined candidate uses build55. Isolated Linux evidence remains attributed to its original source; combined checks, independent review and exact Windows/Android artifact acceptance must pass before publication. Parent verifies final gates and a fresh publication quota read. No live-data operation is authorized. Food implementation is deferred until Lee is asked again after this release. [Dependency review](android-toolchain-maintenance.md), [ADR0013](decisions/0013-app-wide-local-database.md) and [combined native handoff](local-db-native-acceptance.md).
 
 ## Stable2026.10.2 — official release published
 
