@@ -1,4 +1,10 @@
-# Build56 hosted artifact handoff
+# Build56 final published handoff
+
+Stable2026.10.3/build56 is published and Latest: https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3. Promotion38008637367 reused candidate37995721678/source76 and all three original installers without rebuilding. [Final independent publication review](independent-post-publication-review.json) ACCEPTS actual public bytes, hosted gates, source/tag/notes/Latest and unchanged21 prior releases. [Public verification](public-download-verification.json) and owner APK signature/badging receipts are saved alongside the final native/artifact ACCEPT. No release blockers remain. Food and the minor icon seam remain deferred; no live data or old executor files were touched.
+
+The records below describe earlier preparation checkpoints. Their pending/materialization/hold statements are historical and are superseded by final native/artifact acceptance and finalPublication in the handoff JSON. Original receipts are preserved.
+
+## Historical hosted artifact handoff
 
 All four runs completed successfully. Production source is `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9`, version2026.10.3/build56. [The handoff JSON](hosted-evidence-handoff.json) records exact API artifact IDs/ZIP digests/expiry/source/run bindings, actual original installed lifecycle reports, strict own-PID visible-window proof and Android QA APK/source/tool/native provenance extracted from successful job logs.
 

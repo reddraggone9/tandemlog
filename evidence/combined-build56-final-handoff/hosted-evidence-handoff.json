@@ -2073,11 +2073,7 @@
       "url": "https://github.com/reddraggone9/tandemlog/actions/runs/37998546954"
     }
   },
-  "remainingGates": [
-    "Normal trusted hosted exact-source/artifact/checksum/inventory/lifecycle publication gates",
-    "Actual public three-installer byte/signature/tag/source/notes/Latest/prior-release verification after authorized promotion",
-    "Food and minor icon seam remain deferred; no live synced user-data operations"
-  ],
+  "remainingGates": [],
   "independentHostedHandoffReview": {
     "file": "independent-hosted-handoff-review.json",
     "sha256": "284753c0179ec1f3618c2df8114a2d558d10800af232de2bb3859879c83a3c67",
@@ -2112,5 +2108,24 @@
     "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
     "saveFindingResolved": true,
     "qualification": "Earlier partial/unresolved receipts retained historically; final actual diagnosis/restoration/native/artifact review supersedes their pending status. No appfix or waiver."
-  }
+  },
+  "finalPublication": {
+    "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3",
+    "releaseId": 408448633,
+    "publishedAtUtc": "2026-10-10T00:21:08Z",
+    "promotionRun": 38008637367,
+    "stableLatest": true,
+    "noRebuild": true,
+    "threePublicInstallerBytesVerified": true,
+    "priorReleasesPreserved": 21,
+    "independentReview": "independent-post-publication-review.json",
+    "independentReviewSha256": "6e8b41228f840adc54887d1d1c60448e041e3bea8cdc43426063ca1aadbd7b3f",
+    "verdict": "ACCEPT",
+    "remainingReleaseBlockers": [],
+    "historicalQualification": "Earlier prepublication status remains historical; final publication and native/artifact review supersede pending/hold status."
+  },
+  "deferredWork": [
+    "Food",
+    "Minor icon seam; no live synced user-data operations"
+  ]
 }

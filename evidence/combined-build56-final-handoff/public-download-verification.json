@@ -1,0 +1,39 @@
+{
+  "verifiedAtUtc": "2026-10-10T00:21:25.011973+00:00",
+  "releaseId": 408448633,
+  "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3",
+  "tag": "v2026.10.3",
+  "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "version": "2026.10.3+56",
+  "stable": true,
+  "latest": true,
+  "draft": false,
+  "tagCommitVerified": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "notesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "assets": [
+    {
+      "id": 626558999,
+      "name": "tandemlog-2026.10.3-android.apk",
+      "bytes": 66116061,
+      "sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+      "anonymousPublicDownloadVerified": true,
+      "ownerSignaturePackageVersionNonDebuggableVerified": true
+    },
+    {
+      "id": 626559000,
+      "name": "tandemlog-2026.10.3-linux-x64.flatpak",
+      "bytes": 9088568,
+      "sha256": "592f435134fe1059efa547262cffb03508299583e85c8f6624936f2f74de5fce",
+      "anonymousPublicDownloadVerified": true
+    },
+    {
+      "id": 626558998,
+      "name": "tandemlog-2026.10.3-windows-x64-setup.exe",
+      "bytes": 12285359,
+      "sha256": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23",
+      "anonymousPublicDownloadVerified": true
+    }
+  ],
+  "priorReleasesUnchanged": 21,
+  "rebuilt": false
+}
