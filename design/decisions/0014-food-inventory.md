@@ -164,6 +164,19 @@ and preserve draft, error and observed-target Save behavior. A disconnected focu
 element is rejected before ancestor traversal. Revisit this bounded mechanism if
 real keyboard timing or pending-save/recovery overlay evidence reveals a gap.
 
+Actual build59 Android320dp/200% acceptance found that fixed Inbox guidance
+could exhaust the entire list after a saved blank-date container cold-replayed.
+The title remains fixed while view controls/search, retention filters, notices
+and guidance now share one lazy container scroller. Keeping view/search pinned
+separately also reproduced a search-IME overflow, so the same viewport releases
+their space. This preserves every control, text size, retained section key and
+observed command target while making guidance, filters and rows reachable.
+An empty view uses the remaining sliver space and can scroll with long guidance.
+Stock/Retained/Deleted receive the same layout so another fixed filter or notice
+cannot recreate the Inbox failure. The host's pending-save/recovery notice and
+editor inset policy remain separate and retain their existing coverage.
+Revisit if native search/filter or unusually short viewport evidence shows a gap.
+
 ## Validation and remaining gates
 
 Focused domain/widget regressions cover physical identity, partial grouping,

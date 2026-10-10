@@ -1,0 +1,95 @@
+{
+  "review": "Independent architecture, source, test strength, Linux native evidence and documentation closure for bounded Food viewport replacement",
+  "reviewer": "architecture_review",
+  "reviewedAtUtc": "2026-10-10T20:48:33.399385+00:00",
+  "verdict": "ACCEPTED_SCOPED",
+  "mustFix": [],
+  "worktree": "/tmp/tandemlog-food-date-readability",
+  "preCommitBase": "2c4312c3b9a4b755518affa856635b77108e4a16",
+  "version": "2026.10.4-rc.1+60",
+  "replacedExecutableSource": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "sourceSha256": {
+    "lib/food/food_page.dart": "d594e4acbdc0ef2bdfd09e7cbb47409cc1b567c9d8e7fc2833f1446d03815988",
+    "lib/main.dart": "237b3b5b91d17f2314fe85afd7e8b2ef49a18235c1fd0b2ddef09aee0d181f4f",
+    "pubspec.yaml": "c54868464e23b2c588aa3341fb15448c87689b374081910576d706740aaeb07c",
+    "test/food_view_reachability_test.dart": "27eb21161d5d0abbed1645a3c99fa76bfbb32218258d8016b5c63267c7ae0fb1",
+    "integration_test/food_view_reachability_workflow_test.dart": "680a648d6933141eed1d0f8e2b8e0647a39caa8c202c41ec1c3bf0e8fad3ec78",
+    "integration_test/task_flow_test.dart": "8b2dc77fe400499ed276962bff4ae8b1635f64ed56fbed0023d0a6f71f7d6a78",
+    "integration_test/food_density_workflow_test.dart": "ba040d948ae5f117e12a07b5de1bacecf42b82fa025327fd8e5295fb64e393c7",
+    "lib/food/food_store.dart": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+    "lib/storage/local_profile_database.dart": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04",
+    "pubspec.lock": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+    "design/decisions/0014-food-inventory.md": "251fcfa86a76cf1ab5718ca1a4b79dc44a877de7a41345555280fe57ed7cceb6",
+    "design/food-native-acceptance.md": "d422595d7ea5d119d4abe3d7b0d92545cd1ec9db9db0ee4f912f509a2f5f7e6e",
+    "design/status.md": "349db6795a58cb9d371b7ce83a55371e3fbf7ac654013780fd2447562bb04b84",
+    "evidence/food-2026.10.4-rc.1/README.md": "9f781021a1128994dc1847d4d5bbee22483e28439a39887894fe82c391dd1ca3",
+    "evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md": "eca51e5ed08482dbf1a96df8076590e5f2cc5cd2e437c215519e2f94a61c5a58"
+  },
+  "sourceScope": {
+    "productionChange": "Only FoodInventoryPage layout: fixed title and one lazy CustomScrollView containing original view/search/filter/notices/guidance header and lazy rows or empty remaining sliver.",
+    "unchanged": "Main module inset policy, domain/store/profile authority, native/platform code, dependencies/lockfiles and workflows unchanged relative to build59 executable source. Exact _group-and-editor suffix byte-identical to build59. Original observed command targets, state controllers, callbacks and retained section keys preserved.",
+    "testChanges": "Add actual vertical-scroll reachability cases to normal CI registration; existing density finder changes ListView to CustomScrollView with thresholds/assertions retained.",
+    "versionChange": "Build59 to build60 only."
+  },
+  "architectureConclusions": [
+    "Single lazy viewport removes fixed guidance/filter/notice starvation without loading all inventory rows eagerly or introducing nested row scrollers.",
+    "Search and retention controls move with their existing state ownership and callbacks; existing TagInput ancestor-scroll overlay handling remains compatible.",
+    "No data/format/migration/save or receipt ownership changes. Deleted Restore still carries exact observed physical ID.",
+    "Separate host pending-save/recovery notice is unchanged and outside this page-layout proof.",
+    "Empty-view SliverFillRemaining keeps original messages reachable alongside long headers."
+  ],
+  "verification": {
+    "performedByReviewer": "Read-only source/test/docs/log inspection, actual image viewing, SHA and size validation; no build, test rerun, private input read, tracked source edit or publication.",
+    "finalWidget": "40/40 PASS, 11 seconds, strongest current assertion fixture.",
+    "finalNative": "2/2 PASS, 4:08: production synthetic Save/restart/Restore and full 40-variant GTK matrix. Seven source/test bindings identical before/after and equal current bytes.",
+    "densityNative": "1/1 PASS, 8 seconds, eight theme/scale/width variants; 48px actions retained. Header now belongs to measured viewport, so old rows-only viewport metric is not directly comparable.",
+    "analysis": "No issues found, 1.3 seconds.",
+    "formatQualification": "Recorded final-format run formatted two files and changed one fixture before the final source binding; no false zero-change claim.",
+    "baseline": "Original755 corrected vertical selector is genuine RED: widget viewport 2px and native viewport 26px, each below 48px target bound. Earlier invalid-selector probes excluded. Baseline fixture hashes qualified separately from later strengthened GREEN fixture.",
+    "earlier149": "Accepted earlier focused Food regression result retains earlier assertion-fixture binding; not claimed as final40 fixture execution.",
+    "searchIme": "Fixture assists reveal via ensureVisible after simulated insets. It verifies reachability, retained draft and absence of overflow; not automatic Android caret behavior.",
+    "glyphAssertions": "Nonempty unclipped first/last guidance and notice glyph bounds; complete last Inbox saved name and Needs expiration simultaneously visible before Inspect; original immutable state and command assertions preserved."
+  },
+  "evidence": {
+    "publicBundleManifest": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/inbox-build60/manifest.json",
+    "manifestSha256": "6b7fe698f0e1f47bf3e8bbbde14227e7f59fe61ed6676fa39237b10931872e3f",
+    "verifiedManifestMembers": 223,
+    "allMemberSizesAndHashesVerified": true,
+    "logsAndDemoSha256": {
+      "baseline-red-source.json": "eff71be5f6720e126fe88ca10982848091042bf22e6524a01440b638a2837c0e",
+      "baseline-red-widget.log": "447a6ef4197430bad915086fe46cd7be6b7d5077e59dca1a965b8a2f405052dc",
+      "baseline-red-native.log": "9b6de910ef7d1bdac32abc1293f38557e567bc6298901e9e0eed3c7fcee31f1d",
+      "baseline-red-exit.json": "3886f55ec7538d62f3d00e915256bd2870647f1d0b3cc25094411c5d1910096c",
+      "fixed-controls-ime-probe.log": "ae2fb80ff083c1d881c5be2e48225c6037fc7fbd2685e9c44dce457b87d4b450",
+      "final-widget.log": "d8855fff04c8b0f9140ad5676bccb8ea3b5ce9aadf68c5f73dbc5fb98d4753c8",
+      "final-native.log": "a9244dc00f726705c68d1baae677b752738bade310b3b0fdefadb4a9a9b579cb",
+      "density-native.log": "cd09aab87001791672842f6a015dbcdbaa7a69e66526279dbcbaceaaf98ebe2c",
+      "final-analyze.log": "0430c3249fc1e1da5a7d94460ac9dd55b5ce359dcdfb600220dd21ea8c729402",
+      "final-format.log": "0c9af9ce94a3c3a7a34957ff7e4ad7b84e5b921c1dbbdbddf878e87067554d37",
+      "final-native-source-before.sha256": "4ef41dc93d12839ddda723fef6679287e82d71d1c02a9eb8ab42da6b333b235f",
+      "final-native-source-after.sha256": "4ef41dc93d12839ddda723fef6679287e82d71d1c02a9eb8ab42da6b333b235f",
+      "density-native-screens/density-measurements.json": "75bdc38e31ed2a938a0c5c7b49a3b9f0e5ab0cdba4e26f6fd96aa70e2bfa88d7",
+      "native-linux-build60-inbox-pointer-demo.mp4": "7ddc4815ed9f2b518bd23096e5a5440bdd23cefa2843047cf074dc6077c6eb9e"
+    },
+    "personallyViewedImagesSha256": {
+      "final-native-screens/reachability-dark-2x-inbox-saved-name-and-expiration-reached.png": "eef8c5da16fcb34a6ce588e3aba0f56d5c0e41c505d65b175cde0aa31563d521",
+      "final-native-screens/reachability-light-2x-inventory-error-notice-end-readable.png": "19cb806388afba59a5930b581b35bae3dc249e53a63de8fcdeafe8d192e6e6ad",
+      "final-native-screens/reachability-light-2x-deleted-restore-reached.png": "2a3069153f91040d5b301a712eb64f2741375798a8d28930679d03278373379f",
+      "final-native-screens/reachability-light-2x-retained-retention-filter-cleared.png": "bde780a3ca468b302826299f7127e99f3aafb660ba092e01104f19752971c217",
+      "demo-frames/2s.png": "5febc21e024a772a4c5dccfe41951c10dc57a3bdd0b283a08180e654d0ba25a5",
+      "demo-frames/14s.png": "3329a0d6af921822511a882090c1d42291c5b2580891701b9f1fe4a86830fe0d",
+      "demo-frames/26s.png": "f3dcdbe6b69a5b60fb1bdd046222795034a8a32750938f44f534e0b649929d65"
+    },
+    "visualFindings": "Actual final dark 200% Inbox frame shows complete saved name and Needs expiration; light 200% long notice reaches its end; Deleted Restore and cleared Retained filter remain reachable. Demo decoded frames show recorded pointer and scripted fixture transitions; no continuous Save/replay or physical touch claim.",
+    "demoQualification": "35-second GTK crop/excerpt, scripted independent synthetic transitions, dark 200% Inbox followed by dark 100% variants; actual X pointer visible. Not Android or Windows.",
+    "privacy": "Only synthetic public evidence examined; private parent Android images, packets/profile records and transfer/quota metadata excluded."
+  },
+  "remainingGates": [
+    "Fresh full build60 hosted candidate and exact package/source/signer/artifact gates.",
+    "Parent actual replacement Android 320dp/200% Inbox guidance, saved full name/Needs expiration, Inspect/Edit and sibling Retained/Deleted/search keyboard access.",
+    "Previously deferred valid-date native UI Save/restart replay and Tasks/settings/container/canonical preservation checks.",
+    "Retain old build59 editor/upgrade/storage passes with original source/APK attribution; no new Android or Windows runtime claim from GTK.",
+    "Fresh private publication clearance and exact accepted-artifact delivery; stable promotion still separately approved. Build58/59 remain blocked from publication."
+  ],
+  "documentation": "ADR14, status, native handoff and evidence README consistently separate bounded build60 replacement, historical build59 passes/blocker, current Linux acceptance and pending exact candidate/Android gates. No architecture must-fix."
+}

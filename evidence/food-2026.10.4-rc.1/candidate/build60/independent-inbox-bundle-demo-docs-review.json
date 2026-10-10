@@ -1,0 +1,86 @@
+{
+  "status": "ACCEPT_SCOPED_SYNTHETIC_BUNDLE_DEMO_AND_DOC_CLAIMS; EXACT_BUILD60_ANDROID_CANDIDATE_GATES_PENDING",
+  "created_utc": "2026-10-10T20:49:47.516903+00:00",
+  "review_scope": "Additive independent provenance/demo/README/documentation closure; no source edits, tests, builds, commits or publication performed",
+  "source_native_review": {
+    "path": "/tmp/food60-inbox-ux-review/final-source-native-ux-review.json",
+    "bytes": 77772,
+    "sha256": "9eee7ac654e9334d47a02e7637a86ac087b1f54fd747c0b38086cfe05b8921aa"
+  },
+  "immutable_manifest": {
+    "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/inbox-build60/manifest.json",
+    "bytes": 45456,
+    "sha256": "6b7fe698f0e1f47bf3e8bbbde14227e7f59fe61ed6676fa39237b10931872e3f"
+  },
+  "manifest_verification": {
+    "members_rehashed": 223,
+    "source_bindings_rehashed": 7,
+    "safe_resolved_member_paths": true,
+    "errors": 0,
+    "manifest_unchanged": true
+  },
+  "documentation_bindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/decisions/0014-food-inventory.md",
+      "bytes": 13575,
+      "sha256": "251fcfa86a76cf1ab5718ca1a4b79dc44a877de7a41345555280fe57ed7cceb6"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/food-native-acceptance.md",
+      "bytes": 10207,
+      "sha256": "d422595d7ea5d119d4abe3d7b0d92545cd1ec9db9db0ee4f912f509a2f5f7e6e"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/status.md",
+      "bytes": 104818,
+      "sha256": "349db6795a58cb9d371b7ce83a55371e3fbf7ac654013780fd2447562bb04b84"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/README.md",
+      "bytes": 20031,
+      "sha256": "9f781021a1128994dc1847d4d5bbee22483e28439a39887894fe82c391dd1ca3"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md",
+      "bytes": 3076,
+      "sha256": "eca51e5ed08482dbf1a96df8076590e5f2cc5cd2e437c215519e2f94a61c5a58"
+    }
+  ],
+  "claims_review": "README and current scoped ADR/handoff/status accurately state fixed title plus shared control/notice/lazy-row scrolling; meaningful vertical RED2px widget/26px native is qualified with executed earlier fixture; final40 widgets/two native4:08/density8 accepted. Earlier149 source-qualified tests are not called final assertion execution. GTK/synthetic/fakeIME/assisted search reveal and pending new exact Android/native UI replay/candidate gates remain explicit. Density viewport metric now shared header+rows, not old rows-only height. Private parent Android packet/images/profile/Library transfer excluded. Stable56 remains Latest; no build59/60 publication claimed.",
+  "demo": {
+    "raw": {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/inbox-build60/screens/native-linux-scripted-preview.mp4",
+      "bytes": 2667037,
+      "sha256": "41cccfbad5aa355adfc564730dfbe4e6ceb71fb24ab8eedc175c1fb818d05a64"
+    },
+    "reviewed_output": {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/inbox-build60/native-linux-build60-inbox-pointer-demo.mp4",
+      "bytes": 337747,
+      "sha256": "7ddc4815ed9f2b518bd23096e5a5440bdd23cefa2843047cf074dc6077c6eb9e"
+    },
+    "format": "H264,320x640,15fps,525frames,35.000000s,337747B; no audio",
+    "recipe_author_attestation": "ffmpeg -y -loglevel error -i final-native-screens/native-linux-scripted-preview.mp4 -t 35 -vf crop=320:640:0:0 -an -c:v libx264 -preset veryfast -crf 20 -pix_fmt yuv420p native-linux-build60-inbox-pointer-demo.mp4",
+    "recipe_scope": "Starts0 seconds; first35 seconds of actual matrix recording after production/warmup; crop top-left actual320x640 window, recompression only. Recipe reviewed as author-executed, not independently re-encoded. Raw and output both verified byte-equal to public bundle.",
+    "independent_actual_decoded_samples": [
+      {
+        "path": "/tmp/food60-inbox-ux-review/demo-frames/demo-4.png",
+        "bytes": 67689,
+        "sha256": "14b534953ee4f8a1b2a23e7c9e69a378b1cae6775cd897ba8334311eef24d47f"
+      },
+      {
+        "path": "/tmp/food60-inbox-ux-review/demo-frames/demo-17.png",
+        "bytes": 68723,
+        "sha256": "2bbede62b372b8356c7533cd479ede5d67bff9ba52d583cc87c7e8b10d01f528"
+      },
+      {
+        "path": "/tmp/food60-inbox-ux-review/demo-frames/demo-31.png",
+        "bytes": 87007,
+        "sha256": "63b0737b806f2c95849e0989b0b1a7477bbe1925f951e1db424bbc66d7988868"
+      }
+    ],
+    "pixel_observations": "Actual white X pointer clearly visible at4s over dark200 saved Inbox row,17s over dark100 Stock filter,31s over dark100 Inbox filter. Saved name/Needs expiration, real popup/search states and independent synthetic fixture transitions are visible. No input/pixels invented.",
+    "accepted_limitations": "Scripted synthetic Linux GTK matrix excerpt, not continuous user Save/replay, physical touch, Android/Gboard/Windows or full AT acceptance. Root sample4 frames retained in manifest; this reviewer additionally decoded three from actual final video."
+  },
+  "final_verdict": "No material source/UX/media/claims must-fix found in bounded build60 correction. Candidate artifacts and actual Android Inbox/Retained/Deleted/search plus remaining valid-date native UI replay are still parent gates; unaffected build59 editor/upgrade/storage proof carries only original source/APK attribution.",
+  "private_evidence_policy": "This public-safe receipt excludes all private parent Android raw images/packet content and the initial private screenshot disposition; reviewed synthetic GTK-only bindings are included."
+}

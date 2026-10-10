@@ -2,6 +2,29 @@
 
 ## Food inventory — durable source checkpoint
 
+Build60 is the current bounded replacement after build59 Android acceptance
+passed all twelve Add/Edit Gboard cases but found an inaccessible Inbox at320dp/
+200% in both themes. Keyboard-dismissed native swipes could not reveal the saved
+blank-expiry container because fixed guidance exhausted the row viewport.
+Build59 remains blocked from publication. Its stable56 upgrade, eighteen prior
+Task tables/nine physical containers, navigation, blank-date native replay and
+valid-date canonical replay passed at source755/APK689bd; final valid-date native
+UI replay was deferred. The [current native handoff](food-native-acceptance.md)
+records minimal affected replacement checks and source-qualified reuse.
+
+The Food title stays fixed; view controls, search, retention filters, page errors
+and Inbox guidance share one lazy row scroller. A fixed-controls search-IME probe
+also reproduced110px overflow at200%, motivating the same bounded reflow.
+Forty focused widget cases pass: all four views, both themes,100/200% text,
+long errors, eight empty views, actual vertical swipes, guidance/error glyph
+endpoints, Retained filter/expansion and Deleted Restore identity. Native GTK passes the40-case matrix and production save/restart/Restore in4:08;
+eight density variants pass. The synthetic matrix excerpt has a visible pointer.
+[Source-bound evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
+is frozen; independent final review and fresh build60 artifacts are in progress.
+No domain/storage/host inset/dependency or live-data changes are included.
+
+### Historical build58/59 checkpoints
+
 RC preparation proceeds under the existing Food authorization and quota
 override. Build58 source `432784d0181af5b97fd89bfb3ef8d5c83212f92e` passed
 its hosted candidate and exact artifact gates, but focused Android acceptance
@@ -34,7 +57,7 @@ and Windows835 unit cases pass; both exact desktop installed lifecycles pass.
 accepts the three new archives and14 original members. Android artifact11679079347
 contains APK SHA256 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`.
 Owner signer/package/version59/native-payload checks pass; exact parent Android
-Gboard acceptance remains pending.
+Gboard/editor acceptance passed; the Inbox blocker above prevents publication.
 Independent code, UX/pixels, demo and
 actual-range editorial reviews accept the scoped correction. The recorded native
 GTK matrix passes twelve combinations with120 actual captures; final12 widget
@@ -45,9 +68,8 @@ retains executed-fixture and platform qualifications.
 The [corrected-source native rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
 passes production Food Save/restart/restore and all twelve editor combinations
 in5:38, including the final glyph-box assertion; its source and120 captures are
-bound separately from the original checkpoint. Exact Android acceptance is still
-required; simulated GTK metrics are not Gboard
-acceptance. Windows manual GUI remains RC-waived; both exact hosted installed
+bound separately from the original checkpoint. Build59 actual editor acceptance passed with the separate Inbox blocker above;
+simulated GTK metrics are not Gboard acceptance. Windows manual GUI remains RC-waived; both exact hosted installed
 lifecycle proofs passed. The [current handoff](food-native-acceptance.md)
 records that scope. Stable2026.10.3/build56 remains Latest. Food stable promotion
 requires Lee's approval; publication also awaits the parent's fresh private quota

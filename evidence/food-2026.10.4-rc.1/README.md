@@ -1,19 +1,28 @@
 # Food RC1 preparation
 
-Replacement preview:2026.10.4-rc.1/build59 is in preparation. Build58 passed
-its hosted and artifact gates below, but exact320dp/200% Android acceptance found
-that its two-line Edit1 title plus actions left no editor fields while Gboard was
-open. Build58 is blocked from publication. The replacement shares title and
-fields in one scrollable viewport above actions, retains typography/count scope,
-and covers the combined Add/Edit1/Edit100, theme, large-text, IME and error matrix.
-Fresh full candidate/provenance gates passed; exact Android acceptance remains required.
+Current replacement:2026.10.4-rc.1/build60 addresses the proven build59 Inbox
+scroll-access blocker at320dp/200% in both themes. The title remains fixed while
+view controls, search, retention filters, errors, guidance and lazy rows share
+one scroller. The same layout covers Stock, Retained, Deleted and empty states;
+a search-IME probe requires view/search to yield space too. Forty focused widget
+cases pass. Final GTK passes the40-case matrix and production save/restart/Restore in4:08;
+eight density variants also pass. [Native evidence](native/inbox-build60/README.md) is frozen with223 original
+members/seven source bindings; final review and fresh exact candidate gates remain
+pending.
+No build59 or58 binary will be published.
+
+The parent's build59 twelve-case actual Gboard editor matrix, stable56 upgrade,
+navigation, eighteen Task tables/nine physical containers, blank-expiry native
+cold replay and valid-date canonical replay passed at source755/APK689bd. Final
+valid-date native UI replay was deferred. These are reused only with their original
+source/OS/APK attribution; the new Inbox and remaining UI replay require60 checks.
 
 The original build57 [version floor](version-floor.json) comes
 from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
-## Corrected build59 source — exact Android acceptance pending
+## Historical corrected build59 — editor passed; Inbox blocked
 
 Executable source `75557b100bdb17aeb76deb41fad646d95a9cc898` declares
 2026.10.4-rc.1/build59. [Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
@@ -27,13 +36,13 @@ retains its earlier checkpoint. [Exact artifact handoff](candidate/build59/task-
 records three independently/root-verified original archives,14 original members,
 both hosted installed lifecycles and Android artifact11679079347/APK SHA256
 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`.
-Owner signature/package/code59/native-payload checks pass. Exact parent Gboard,
-combined fields/title/error/draft/Save/upgrade/cold-replay acceptance remains open.
+Owner signature/package/code59/native-payload checks pass. Parent actual editor,
+upgrade and replay passes retain their59 attribution; the Inbox blocker and final
+valid-date native UI replay are described above.
 The corrected
 local native evidence has148 verified members and ten source bindings; original
-145-member Food and failed source87 evidence remain unchanged. Android runtime
-acceptance and publication readiness await the remaining native
-and private clearance gates pass.
+145-member Food and failed source87 evidence remain unchanged. Build59 remains blocked from publication. Replacement60 needs its own native
+Inbox/UI replay acceptance and remaining exact-artifact/private clearance gates.
 
 ## Initial build59 source — native gate failed
 

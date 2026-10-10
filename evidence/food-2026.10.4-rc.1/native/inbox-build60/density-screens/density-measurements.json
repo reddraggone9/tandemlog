@@ -1,0 +1,154 @@
+[
+  {
+    "name": "density-dark-1x-390",
+    "viewport": "390x850",
+    "theme": "dark",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 10,
+    "rowHeights": [
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0
+    ],
+    "listViewportHeight": 786.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-dark-1x-1200",
+    "viewport": "1200x850",
+    "theme": "dark",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 10,
+    "rowHeights": [
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0
+    ],
+    "listViewportHeight": 786.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-dark-2x-390",
+    "viewport": "390x850",
+    "theme": "dark",
+    "textScale": 2.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 3,
+    "rowHeights": [
+      136.0,
+      136.0,
+      136.0
+    ],
+    "listViewportHeight": 708.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-dark-2x-1200",
+    "viewport": "1200x850",
+    "theme": "dark",
+    "textScale": 2.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 5,
+    "rowHeights": [
+      104.0,
+      104.0,
+      104.0,
+      104.0,
+      104.0
+    ],
+    "listViewportHeight": 771.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-light-1x-390",
+    "viewport": "390x850",
+    "theme": "light",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 10,
+    "rowHeights": [
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0
+    ],
+    "listViewportHeight": 786.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-light-1x-1200",
+    "viewport": "1200x850",
+    "theme": "light",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 10,
+    "rowHeights": [
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0,
+      64.0
+    ],
+    "listViewportHeight": 786.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-light-2x-390",
+    "viewport": "390x850",
+    "theme": "light",
+    "textScale": 2.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 3,
+    "rowHeights": [
+      136.0,
+      136.0,
+      136.0
+    ],
+    "listViewportHeight": 708.0,
+    "minimumActionTarget": 48
+  },
+  {
+    "name": "density-light-2x-1200",
+    "viewport": "1200x850",
+    "theme": "light",
+    "textScale": 2.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 5,
+    "rowHeights": [
+      104.0,
+      104.0,
+      104.0,
+      104.0,
+      104.0
+    ],
+    "listViewportHeight": 771.0,
+    "minimumActionTarget": 48
+  }
+]

@@ -76,7 +76,7 @@ void main() {
             );
             await tester.pumpAndSettle();
             await pixels.capture(tester, name);
-            final viewport = tester.getRect(find.byType(ListView));
+            final viewport = tester.getRect(find.byType(CustomScrollView));
             final cards = find
                 .byType(Card)
                 .evaluate()

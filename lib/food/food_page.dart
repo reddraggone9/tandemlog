@@ -138,139 +138,173 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 4,
-                    ),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: [
-                        for (final mode in FoodView.values)
-                          ChoiceChip(
-                            label: Text(switch (mode) {
-                              FoodView.inventory => 'Stock',
-                              FoodView.inbox => 'Inbox',
-                              FoodView.retained => 'Retained',
-                              FoodView.deleted => 'Deleted',
-                            }),
-                            selected: view == mode,
-                            onSelected: (_) => setState(() => view = mode),
+                  Expanded(
+                    // Controls and guidance yield space to rows and focused
+                    // inputs at large text sizes, instead of exhausting it.
+                    child: CustomScrollView(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Column(
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 4,
+                                ),
+                                child: Wrap(
+                                  spacing: 8,
+                                  runSpacing: 4,
+                                  children: [
+                                    for (final mode in FoodView.values)
+                                      ChoiceChip(
+                                        label: Text(switch (mode) {
+                                          FoodView.inventory => 'Stock',
+                                          FoodView.inbox => 'Inbox',
+                                          FoodView.retained => 'Retained',
+                                          FoodView.deleted => 'Deleted',
+                                        }),
+                                        selected: view == mode,
+                                        onSelected: (_) =>
+                                            setState(() => view = mode),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  16,
+                                  8,
+                                  16,
+                                  8,
+                                ),
+                                child: TextField(
+                                  key: const ValueKey('food-search'),
+                                  controller: search,
+                                  onChanged: (_) => setState(() {}),
+                                  decoration: InputDecoration(
+                                    labelText: view == FoodView.deleted
+                                        ? 'Search deleted food'
+                                        : 'Search all active food',
+                                    prefixIcon: const Icon(Icons.search),
+                                    suffixIcon: search.text.isEmpty
+                                        ? null
+                                        : IconButton(
+                                            tooltip: 'Clear food search',
+                                            onPressed: () =>
+                                                setState(() => search.clear()),
+                                            icon: const Icon(Icons.close),
+                                          ),
+                                  ),
+                                ),
+                              ),
+                              if (view == FoodView.retained &&
+                                  search.text.trim().isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                    16,
+                                    0,
+                                    16,
+                                    8,
+                                  ),
+                                  child: TagInput(
+                                    tags: widget.state.reasons,
+                                    selected: reasons,
+                                    onChanged: (value) =>
+                                        setState(() => reasons = value),
+                                    queryController: reasonQuery,
+                                    onDropdownChanged: (_) {},
+                                    queryLabel: 'Retention reasons',
+                                    hint: 'Find retention reasons',
+                                    clearLabel: 'Clear retention filters',
+                                    chipContext: 'retention filters',
+                                    expandLabel: 'Show retention reasons',
+                                    collapseLabel: 'Hide retention reasons',
+                                  ),
+                                ),
+                              if (widget.error != null || _actionError != null)
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Text(
+                                    widget.error ?? _actionError!,
+                                    style: TextStyle(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.error,
+                                    ),
+                                  ),
+                                ),
+                              if (view == FoodView.inbox && search.text.isEmpty)
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
+                                  child: Text(
+                                    'Needs an expiration date. A known or estimated date moves food into stock.',
+                                  ),
+                                ),
+                            ],
+                          ),
+                        ),
+                        if (groups.isEmpty)
+                          SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: Text(
+                                search.text.isNotEmpty
+                                    ? 'No matching food'
+                                    : switch (view) {
+                                        FoodView.inventory => 'No dated stock',
+                                        FoodView.inbox =>
+                                          'Everything has an expiration date',
+                                        FoodView.retained => 'No retained food',
+                                        FoodView.deleted =>
+                                          'No deleted containers',
+                                      },
+                              ),
+                            ),
+                          )
+                        else
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                            sliver: SliverList.builder(
+                              itemCount:
+                                  view == FoodView.retained &&
+                                      search.text.trim().isEmpty
+                                  ? groups
+                                        .map((e) => e.details.retention)
+                                        .toSet()
+                                        .length
+                                  : groups.length,
+                              itemBuilder: (_, index) {
+                                if (view != FoodView.retained ||
+                                    search.text.trim().isNotEmpty) {
+                                  return _group(groups[index]);
+                                }
+                                final labels =
+                                    groups
+                                        .map((e) => e.details.retention)
+                                        .toSet()
+                                        .toList()
+                                      ..sort();
+                                final label = labels[index];
+                                final section = groups
+                                    .where((e) => e.details.retention == label)
+                                    .toList();
+                                final count = section.fold<int>(
+                                  0,
+                                  (total, e) => total + e.containers.length,
+                                );
+                                return ExpansionTile(
+                                  key: PageStorageKey('food-retention:$label'),
+                                  title: Text(label),
+                                  subtitle: Text(
+                                    '$count ${count == 1 ? 'container' : 'containers'}',
+                                  ),
+                                  children: section.map(_group).toList(),
+                                );
+                              },
+                            ),
                           ),
                       ],
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
-                    child: TextField(
-                      key: const ValueKey('food-search'),
-                      controller: search,
-                      onChanged: (_) => setState(() {}),
-                      decoration: InputDecoration(
-                        labelText: view == FoodView.deleted
-                            ? 'Search deleted food'
-                            : 'Search all active food',
-                        prefixIcon: const Icon(Icons.search),
-                        suffixIcon: search.text.isEmpty
-                            ? null
-                            : IconButton(
-                                tooltip: 'Clear food search',
-                                onPressed: () => setState(() => search.clear()),
-                                icon: const Icon(Icons.close),
-                              ),
-                      ),
-                    ),
-                  ),
-                  if (view == FoodView.retained && search.text.trim().isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: TagInput(
-                        tags: widget.state.reasons,
-                        selected: reasons,
-                        onChanged: (value) => setState(() => reasons = value),
-                        queryController: reasonQuery,
-                        onDropdownChanged: (_) {},
-                        queryLabel: 'Retention reasons',
-                        hint: 'Find retention reasons',
-                        clearLabel: 'Clear retention filters',
-                        chipContext: 'retention filters',
-                        expandLabel: 'Show retention reasons',
-                        collapseLabel: 'Hide retention reasons',
-                      ),
-                    ),
-                  if (widget.error != null || _actionError != null)
-                    Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Text(
-                        widget.error ?? _actionError!,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                      ),
-                    ),
-                  if (view == FoodView.inbox && search.text.isEmpty)
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                      child: Text(
-                        'Needs an expiration date. A known or estimated date moves food into stock.',
-                      ),
-                    ),
-                  Expanded(
-                    child: groups.isEmpty
-                        ? Center(
-                            child: Text(
-                              search.text.isNotEmpty
-                                  ? 'No matching food'
-                                  : switch (view) {
-                                      FoodView.inventory => 'No dated stock',
-                                      FoodView.inbox =>
-                                        'Everything has an expiration date',
-                                      FoodView.retained => 'No retained food',
-                                      FoodView.deleted =>
-                                        'No deleted containers',
-                                    },
-                            ),
-                          )
-                        : ListView.builder(
-                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
-                            itemCount:
-                                view == FoodView.retained &&
-                                    search.text.trim().isEmpty
-                                ? groups
-                                      .map((e) => e.details.retention)
-                                      .toSet()
-                                      .length
-                                : groups.length,
-                            itemBuilder: (_, index) {
-                              if (view != FoodView.retained ||
-                                  search.text.trim().isNotEmpty) {
-                                return _group(groups[index]);
-                              }
-                              final labels =
-                                  groups
-                                      .map((e) => e.details.retention)
-                                      .toSet()
-                                      .toList()
-                                    ..sort();
-                              final label = labels[index];
-                              final section = groups
-                                  .where((e) => e.details.retention == label)
-                                  .toList();
-                              final count = section.fold<int>(
-                                0,
-                                (total, e) => total + e.containers.length,
-                              );
-                              return ExpansionTile(
-                                key: PageStorageKey('food-retention:$label'),
-                                title: Text(label),
-                                subtitle: Text(
-                                  '$count ${count == 1 ? 'container' : 'containers'}',
-                                ),
-                                children: section.map(_group).toList(),
-                              );
-                            },
-                          ),
                   ),
                 ],
               ),

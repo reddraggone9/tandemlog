@@ -1,0 +1,156 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +1: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +2: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: pending receipt prevents opening a different Add editor
+00:01 +3: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+00:01 +4: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:01 +5: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:02 +6: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:02 +7: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:02 +8: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a retained rendered removal callback keeps its workspace origin
+00:02 +9: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: (setUpAll)
+00:02 +9: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:05 +10: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 1.0x date guidance and saving
+00:06 +11: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:07 +12: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 2.0x date guidance and saving
+00:07 +13: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:08 +14: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:09 +15: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:10 +16: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +17: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +18: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +19: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+00:11 +20: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:11 +21: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +22: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +23: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +24: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +25: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +26: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +27: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:12 +28: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: missing index with retained attempt refuses a new source namespace
+00:12 +29: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:12 +30: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:12 +31: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:12 +32: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:13 +33: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:15 +34: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +35: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +36: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +37: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +38: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +39: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +40: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +41: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +42: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +43: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:16 +44: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:17 +45: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +46: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +47: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +48: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +49: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +50: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +51: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +52: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +53: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +54: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +55: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +56: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +57: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +58: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +59: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +60: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +61: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +62: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:17 +63: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors
+00:18 +64: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: collapsed summary preserves single known full
+00:19 +65: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:19 +66: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:19 +67: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:19 +68: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:19 +69: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:19 +70: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:20 +71: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:20 +72: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +73: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +74: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +75: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +76: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +77: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +78: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +79: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +80: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +81: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +82: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:22 +83: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+00:23 +84: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:23 +85: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+FOOD_REPLAY_BUDGET bytes=12418562 records=1002 targets=100 refs=1000 elapsed_ms=2382
+00:26 +86: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:26 +87: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: (tearDownAll)
+00:27 +87: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:28 +88: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:28 +89: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:29 +90: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:29 +91: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:29 +92: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: repeated dialog Cancel callback cannot pop food page
+00:29 +93: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: repeated dialog Cancel callback cannot pop food page
+00:29 +94: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: repeated dialog Cancel callback cannot pop food page
+00:29 +95: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: repeated dialog Cancel callback cannot pop food page
+00:29 +96: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.sync-conflict-synthetic.foodlog
+00:29 +97: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.sync-conflict-synthetic.foodlog
+00:29 +98: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: active retention composition is not staged by submit
+00:29 +99: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: active retention composition is not staged by submit
+00:30 +100: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: active retention composition is not staged by submit
+00:30 +101: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: active retention composition is not staged by submit
+00:30 +102: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: active retention composition is not staged by submit
+00:30 +103: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: partial first record is resumed exactly from protected bytes across restart
+00:30 +104: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: uncertain successful append admits once and retires exact receipt
+00:30 +105: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: acknowledged missing stream fails closed and retains last view
+00:30 +106: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: food refresh SQL fault preserves state and receipts together
+00:30 +107: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: missing own reservation after initialization cannot reuse a sequence
+00:30 +108: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: food handle releases its lease when the profile owner is poisoned
+00:30 +109: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: (setUpAll)
+00:30 +109: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/1.0x/error=false
+00:32 +110: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/1.0x/error=true
+00:32 +111: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/dark/1.0x/error=false
+00:32 +112: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/dark/1.0x/error=true
+00:33 +113: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/dark/1.0x/error=false
+00:33 +114: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/dark/1.0x/error=true
+00:34 +115: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/dark/1.0x/error=false
+00:34 +116: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/dark/1.0x/error=true
+00:34 +117: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/2.0x/error=false
+00:35 +118: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/2.0x/error=true
+00:35 +119: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food inventory remains reachable at320/dark/2x
+00:35 +120: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/dark/2.0x/error=false
+00:35 +121: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/dark/2.0x/error=true
+00:36 +122: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food inbox remains reachable at320/dark/2x
+00:36 +123: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/dark/2.0x/error=false
+00:36 +124: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/dark/2.0x/error=true
+00:37 +125: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food retained remains reachable at320/dark/2x
+00:37 +126: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/dark/2.0x/error=false
+00:37 +127: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/dark/2.0x/error=true
+00:37 +128: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food deleted remains reachable at320/dark/2x
+00:37 +129: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/light/1.0x/error=false
+00:38 +130: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/light/1.0x/error=true
+00:38 +131: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/light/1.0x/error=false
+00:38 +132: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/light/1.0x/error=true
+00:38 +133: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/1.0x/error=false
+00:39 +134: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/1.0x/error=true
+00:39 +135: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/light/1.0x/error=false
+00:39 +136: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/light/1.0x/error=true
+00:39 +137: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/light/2.0x/error=false
+00:40 +138: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/light/2.0x/error=true
+00:40 +139: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food inventory remains reachable at320/light/2x
+00:40 +140: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/light/2.0x/error=false
+00:40 +141: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inbox reachable at320/light/2.0x/error=true
+00:40 +142: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food inbox remains reachable at320/light/2x
+00:41 +143: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/2.0x/error=false
+00:41 +144: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/2.0x/error=true
+00:41 +145: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food retained remains reachable at320/light/2x
+00:41 +146: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/light/2.0x/error=false
+00:42 +147: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food deleted reachable at320/light/2.0x/error=true
+00:42 +148: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: empty Food deleted remains reachable at320/light/2x
+00:42 +149: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: (tearDownAll)
+00:42 +149: All tests passed!

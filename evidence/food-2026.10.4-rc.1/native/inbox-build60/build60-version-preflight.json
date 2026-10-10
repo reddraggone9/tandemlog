@@ -1,0 +1,230 @@
+{
+  "atUtc": "2026-10-10T20:35:28Z",
+  "previousSuccessfulCandidates": 44,
+  "maxSuccessfulCandidateBuild": 59,
+  "currentBuild": 60,
+  "publishedReleases": 22,
+  "source": [
+    {
+      "source": "02f32695bc776e7ac68c6796ac3a4c4c201a3a9c",
+      "version": "0.1.0-rc.3+16",
+      "build": 16
+    },
+    {
+      "source": "0547f4cf3182fb0381c9b31425b205dee320250f",
+      "version": "0.1.0-rc.8+34",
+      "build": 34
+    },
+    {
+      "source": "09bb3cf1cd7d9804a2fc7199b2349d80e29bae62",
+      "version": "0.1.0-rc.3+10",
+      "build": 10
+    },
+    {
+      "source": "11c0bd73429ccf721a19cca1becedab48ef8a4fb",
+      "version": "0.1.0-rc.10+37",
+      "build": 37
+    },
+    {
+      "source": "134c8b9e8006abaa07e596f4e91d32b0f2b8edd6",
+      "version": "0.1.0-rc.5+25",
+      "build": 25
+    },
+    {
+      "source": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "version": "2026.10.2-rc.1+43",
+      "build": 43
+    },
+    {
+      "source": "249cfbdf853ceb4ee264510171e3bb051b0f3612",
+      "version": "2026.10.1-rc.1+40",
+      "build": 40
+    },
+    {
+      "source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+      "version": "2026.10.2-rc.6+50",
+      "build": 50
+    },
+    {
+      "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+      "version": "2026.10.4-rc.1+58",
+      "build": 58
+    },
+    {
+      "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+      "version": "2026.10.2-rc.4+47",
+      "build": 47
+    },
+    {
+      "source": "46bcb5a981cd7c8d751a187dd463b898c316835f",
+      "version": "0.1.0-rc.3+7",
+      "build": 7
+    },
+    {
+      "source": "4d255e2b06187d6d6ad383d9142bfb2b3454c6b4",
+      "version": "0.1.0-rc.3+11",
+      "build": 11
+    },
+    {
+      "source": "5ac35da50acca69ab196a54312efc8ccef1452da",
+      "version": "2026.10.2-rc.3+45",
+      "build": 45
+    },
+    {
+      "source": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+      "version": "0.1.0-rc.7+32",
+      "build": 32
+    },
+    {
+      "source": "5f615f536ad89eef835c828b77cdd200c08d4541",
+      "version": "0.1.0-rc.6+30",
+      "build": 30
+    },
+    {
+      "source": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+      "version": "2026.10.2+53",
+      "build": 53
+    },
+    {
+      "source": "6d9726b6a68fd8e91a639216ac33d923ad619273",
+      "version": "0.1.0-rc.7+31",
+      "build": 31
+    },
+    {
+      "source": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+      "version": "0.1.0-rc.8+35",
+      "build": 35
+    },
+    {
+      "source": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "version": "2026.10.3+54",
+      "build": 54
+    },
+    {
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "version": "2026.10.2-rc.7+52",
+      "build": 52
+    },
+    {
+      "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+      "version": "2026.10.4-rc.1+59",
+      "build": 59
+    },
+    {
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "version": "2026.10.3+56",
+      "build": 56
+    },
+    {
+      "source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+      "version": "2026.10.2-rc.4+46",
+      "build": 46
+    },
+    {
+      "source": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+      "version": "0.1.0-rc.3+17",
+      "build": 17
+    },
+    {
+      "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+      "version": "2026.10.4-rc.1+57",
+      "build": 57
+    },
+    {
+      "source": "9c58e744d1e5ca093f3a7fe7895afa8b2d9ba2ca",
+      "version": "0.1.0-rc.3+8",
+      "build": 8
+    },
+    {
+      "source": "9cb10d027fe05ccbc21059b2a8656459965191c5",
+      "version": "0.1.0-rc.8+33",
+      "build": 33
+    },
+    {
+      "source": "a742f3325dce0b8d2340ba893ab4ea58e3cef0b6",
+      "version": "0.1.0-rc.4+22",
+      "build": 22
+    },
+    {
+      "source": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "version": "2026.10.0+39",
+      "build": 39
+    },
+    {
+      "source": "b501dc64766be078d327ae778c09952995acd84e",
+      "version": "0.1.0-rc.5+28",
+      "build": 28
+    },
+    {
+      "source": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+      "version": "0.1.0-rc.5+29",
+      "build": 29
+    },
+    {
+      "source": "b9e445da917e58fef18f4e8fe45607eda4eab090",
+      "version": "0.1.0-rc.4+23",
+      "build": 23
+    },
+    {
+      "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+      "version": "2026.10.2-rc.5+48",
+      "build": 48
+    },
+    {
+      "source": "bd02aa6fc58b6f82488cc0a005c989effa6d8c0c",
+      "version": "0.1.0-rc.3+12",
+      "build": 12
+    },
+    {
+      "source": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+      "version": "2026.10.0-rc.1+38",
+      "build": 38
+    },
+    {
+      "source": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "version": "0.1.0-rc.9+36",
+      "build": 36
+    },
+    {
+      "source": "d7dd98124f2bab09b05c39ca7df4c8506fa37f08",
+      "version": "0.1.0-rc.5+27",
+      "build": 27
+    },
+    {
+      "source": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+      "version": "0.1.0-rc.2+5",
+      "build": 5
+    },
+    {
+      "source": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "version": "2026.10.1+42",
+      "build": 42
+    },
+    {
+      "source": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+      "version": "0.1.0-rc.4+24",
+      "build": 24
+    },
+    {
+      "source": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+      "version": "2026.10.2-rc.2+44",
+      "build": 44
+    },
+    {
+      "source": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "version": "2026.10.1-rc.1+41",
+      "build": 41
+    },
+    {
+      "source": "f503ad923a2d7d14dea9ab986af2b7950ad7ac89",
+      "version": "0.1.0-rc.3+9",
+      "build": 9
+    },
+    {
+      "source": "f5f3d025841ae64da13af3ba3f615309e00221df",
+      "version": "0.1.0-rc.3+13",
+      "build": 13
+    }
+  ],
+  "noPublicationRequested": true
+}

@@ -1,25 +1,45 @@
 # Food RC native acceptance
 
-Replacement RC2026.10.4-rc.1/build59 is being prepared for authorized
-exact-artifact preview delivery. Build58 is blocked and must not be published:
-actual Android320dp/200% Gboard-open pixels showed its two-line Edit1 title and
-actions consuming the entire field viewport. Build59 shares the title and form
-in one constrained scrollable area above Cancel/Save, keeps the obscured page
-stable during modal and closing keyboard transitions, and reveals focused input
-after inset animation. Dirty-close confirmation also scrolls. Full target-count
-titles, font scaling, editable name, all field values and durable Save semantics
-remain required.
+Replacement RC2026.10.4-rc.1/build60 is being prepared. Build59 at
+`75557b100bdb17aeb76deb41fad646d95a9cc898`, APK SHA256
+`689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`,
+passed the parent's twelve actual Android Add/Edit Gboard cases at320dp,
+both themes and100/200% text. Focused fields were visible/editable and complete
+guidance/errors reachable. Stable56 upgrade, Tasks/Food navigation, all18 prior
+Task tables and nine physical Food containers passed, along with blank-expiry
+Save/native cold replay and valid-date Save/canonical cold replay. Final valid-date
+native UI replay was deferred. Those passes retain their exact build59 attribution.
 
-Fresh exact build59 Android acceptance must cover the combined matrix, not only
-individual easy states: both themes;320dp/100% and200%; Add, Edit1 and a wrapped
-plural title; actual Gboard open/closed and dismissal/reopening; automatically
-visible focused name/date; every field reachable; complete date/Inbox helper and
-invalid-calendar error readable by scrolling; Cancel/Back/Keep editing retaining
-the same draft; valid date and blank Inbox Save plus cold replay. Confirm that
-Save/Cancel remain usable while typing and that closing the keyboard/modal does
-not overflow the underlying page. Record actual titles, insets and focused field.
-Repeat synthetic stable56 upgrade and compare exact Tasks/settings/physical
-container identities. Do not attribute Linux simulated IME checks to Android.
+Build59 must not be published: actual Android Inbox at320dp/200%, with keyboard
+dismissed and search empty, leaves no reachable saved container after cold replay
+and native swipes in either theme. Its fixed guidance consumes the list viewport.
+The replacement keeps the Food title fixed and lets view controls, search,
+retention filters, errors and Inbox guidance scroll with lazy container rows.
+Keeping view/search fixed independently reproduced a110px overflow with a search
+keyboard at enlarged text; they therefore share the same bounded scroller.
+Retained sections and Deleted use that same viewport. No editor, host inset,
+command, schema, canonical data or dependency behavior changes.
+
+Minimal replacement Android acceptance: verify exact new APK/package/build/signer,
+then at320dp/200% in both themes use actual swipes to read full Inbox guidance,
+reach the saved name/Needs expiration and open Inspect/Edit; check Retained
+reason selection/clearing/expansion and Deleted Restore access for sibling layout
+coverage. Keep keyboard-dismissed/search-empty checks explicit. Complete the
+valid-date native Save/restart/UI replay left unfinished on59 and compare retained
+Tasks/settings/container IDs and canonical bytes. Reuse the unaffected build59
+editor, upgrade and storage passes with their original attribution; do not call
+them freshly executed on60. Search input/retention filters must remain reachable
+when their keyboard is open, without text loss. The host's separate pending-save
+recovery notice retains its existing coverage, outside this page viewport change.
+Exact candidate artifacts, full hosted gates and parent native acceptance remain
+required; simulated GTK insets are not actual Gboard evidence.
+
+[Source-bound build60 evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
+records40 final widget cases,149 earlier qualified Food regressions, final native
+40-case scrolling matrix plus production Save/restart/Restore in4:08, eight
+density variants and the actual pointer-visible synthetic GTK matrix excerpt.
+All seven final native source bindings stayed identical. Fresh candidate artifacts
+and exact affected Android acceptance remain pending.
 
 Build58's signed candidate38064595888, source
 `432784d0181af5b97fd89bfb3ef8d5c83212f92e`, original Android artifact11674984580
@@ -55,9 +75,8 @@ reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-202
 records120 captures and the earlier fixture qualification. The separate
 [corrected-source rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
 passes production Food persistence and the twelve-case matrix in5:38, executing
-the final glyph assertion without rewriting the original evidence. Exact Android
-runtime acceptance remains pending for this APK; static identity checks do not
-replace actual Gboard testing. Windows manual GUI remains RC-waived by the parent;
+the final glyph assertion without rewriting the original evidence. Parent actual Gboard/editor passes and the blocking Inbox finding for this APK
+are recorded above; static identity checks do not replace Android acceptance. Windows manual GUI remains RC-waived by the parent;
 the fresh hosted Linux/Windows installed lifecycle proofs passed. Prior local CLI/storage evidence
 retains its original build57 or stable56 attribution.
 

@@ -1,0 +1,44 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: Food inventory reachable at320/dark/1.0x/error=false
+00:01 +1: Food inventory reachable at320/dark/1.0x/error=true
+00:01 +2: Food inbox reachable at320/dark/1.0x/error=false
+00:01 +3: Food inbox reachable at320/dark/1.0x/error=true
+00:02 +4: Food retained reachable at320/dark/1.0x/error=false
+00:02 +5: Food retained reachable at320/dark/1.0x/error=true
+00:03 +6: Food deleted reachable at320/dark/1.0x/error=false
+00:03 +7: Food deleted reachable at320/dark/1.0x/error=true
+00:03 +8: Food inventory reachable at320/dark/2.0x/error=false
+00:04 +9: Food inventory reachable at320/dark/2.0x/error=true
+00:04 +10: empty Food inventory remains reachable at320/dark/2x
+00:04 +11: Food inbox reachable at320/dark/2.0x/error=false
+00:04 +12: Food inbox reachable at320/dark/2.0x/error=true
+00:05 +13: empty Food inbox remains reachable at320/dark/2x
+00:05 +14: Food retained reachable at320/dark/2.0x/error=false
+00:05 +15: Food retained reachable at320/dark/2.0x/error=true
+00:06 +16: empty Food retained remains reachable at320/dark/2x
+00:06 +17: Food deleted reachable at320/dark/2.0x/error=false
+00:06 +18: Food deleted reachable at320/dark/2.0x/error=true
+00:06 +19: empty Food deleted remains reachable at320/dark/2x
+00:06 +20: Food inventory reachable at320/light/1.0x/error=false
+00:07 +21: Food inventory reachable at320/light/1.0x/error=true
+00:07 +22: Food inbox reachable at320/light/1.0x/error=false
+00:07 +23: Food inbox reachable at320/light/1.0x/error=true
+00:07 +24: Food retained reachable at320/light/1.0x/error=false
+00:08 +25: Food retained reachable at320/light/1.0x/error=true
+00:08 +26: Food deleted reachable at320/light/1.0x/error=false
+00:08 +27: Food deleted reachable at320/light/1.0x/error=true
+00:08 +28: Food inventory reachable at320/light/2.0x/error=false
+00:09 +29: Food inventory reachable at320/light/2.0x/error=true
+00:09 +30: empty Food inventory remains reachable at320/light/2x
+00:09 +31: Food inbox reachable at320/light/2.0x/error=false
+00:09 +32: Food inbox reachable at320/light/2.0x/error=true
+00:09 +33: empty Food inbox remains reachable at320/light/2x
+00:09 +34: Food retained reachable at320/light/2.0x/error=false
+00:10 +35: Food retained reachable at320/light/2.0x/error=true
+00:10 +36: empty Food retained remains reachable at320/light/2x
+00:10 +37: Food deleted reachable at320/light/2.0x/error=false
+00:10 +38: Food deleted reachable at320/light/2.0x/error=true
+00:11 +39: empty Food deleted remains reachable at320/light/2x
+00:11 +40: (tearDownAll)
+00:11 +40: All tests passed!

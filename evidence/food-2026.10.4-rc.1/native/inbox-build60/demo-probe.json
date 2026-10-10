@@ -1,0 +1,19 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "width": 320,
+            "height": 640,
+            "r_frame_rate": "15/1"
+        }
+    ],
+    "format": {
+        "duration": "35.000000",
+        "size": "337747"
+    }
+}

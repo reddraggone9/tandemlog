@@ -1,0 +1,43 @@
+{
+  "reviewed_at_utc": "2026-10-10T20:39:14.829139+00:00",
+  "verdict": "ACCEPT_PRELIMINARY_BUILD60_FLOOR_AND_UNCHANGED_EDITORIAL_SCOPE; SOURCE_FREEZE_AND_NATIVE_REVIEW_PENDING",
+  "baseline_stable_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "prior_build59_source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "working_head_docs_checkpoint": "2c4312c3b9a4b755518affa856635b77108e4a16",
+  "replacement_frozen_source": null,
+  "version": "2026.10.4-rc.1+60",
+  "tracked_executable_delta": [
+    "lib/food/food_page.dart",
+    "pubspec.yaml"
+  ],
+  "tracked_executable_patch_sha256": "af8f6f0aa0cbf063e2d1d365bc2fe2241f02a0082ff8c3bd53db855cbc121881",
+  "patch_qualification": "Tracked working diff only; new currently untracked test files require inclusion/bytebinding in final frozen source. No blank workingdiff mistaken as full source patch.",
+  "architecture_scope": "Food-only shared scroller for view/search/retention/errors/guidance with lazy group rows and fixedtitle. Main/domains/storage/dependencies/workflow/tool bytes unchanged; architecture/UX implementation reviewers separately active. No independent final mutable UI endorsement implied.",
+  "floor": {
+    "fresh_successful_main_candidates": 44,
+    "previous43_floor": 58,
+    "new_successful_exact755_floor": 59,
+    "required_next_build": 60,
+    "latest_stable": "v2026.10.3"
+  },
+  "notes": {
+    "sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+    "three_bullets_appropriate": true,
+    "finding": "Unreleased Food Inbox/sibling reachability fix remains covered by new Food feature bullet. Existing recurring-checkbox/error-scroll bullets unchanged and still accurate for stable76-to-current cumulative range. No QA assurances or extra image needed."
+  },
+  "media": {
+    "immutable_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "qualification": "Previously independently viewed actual dark synthetic repeat comparison; renderer unchanged by Food-only delta. No new Android60 media or acceptance claimed."
+  },
+  "native_attribution": "Parent build59 editor/upgrade/storage passes retain755/APK689bd...da51 source/device attribution; build59 blocked by actualInbox320/200 layout. Replacement60 affected checks plus validdate native UI replay remain required; no59 binary publication.",
+  "must_fix": [],
+  "remaining": [
+    "Terminal current nativeGTK40-case evidence and independentUX/architecture closure",
+    "Exact source freeze and finalstable76-to-newSHA/editorial/sourcebinding",
+    "Fresh full signedcandidate/push/all3originalartifacts/member/lifecycle/signature gates",
+    "Parent newexactAPK affectedInbox/sibling/search/validSave UI replay/native acceptance and private fresh clearance"
+  ],
+  "publication_ready": false,
+  "privacy": "No numeric private account quota or Library IDs."
+}
