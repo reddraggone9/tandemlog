@@ -3,6 +3,16 @@ import 'dart:typed_data';
 
 import 'local_durability.dart';
 
+/// Only the newly introduced Food canonical family is module-scoped. Existing
+/// task/manifest and unclassified conflict names retain their released policy.
+bool isFoodConflictName(String name) =>
+    RegExp(
+      r'^food-[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}\.',
+    ).hasMatch(name) &&
+    name.contains('sync-conflict') &&
+    name.contains('.foodlog') &&
+    !name.endsWith('.jsonl');
+
 class LogFileInfo {
   final String name, stamp;
 
@@ -36,7 +46,12 @@ abstract class RangeLogFolder {
   Future<Uint8List?> readFrom(String name, int offset);
 }
 
-class LocalLogFolder implements LogFolder, RangeLogFolder {
+/// Enforce the caller's byte bound while reading, including unknown lengths.
+abstract class BoundedLogFolder {
+  Future<Uint8List> readBounded(String name, int maximumBytes);
+}
+
+class LocalLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   @override
   final String location;
   LocalLogFolder(this.location, {LocalDurability? durability})
@@ -69,6 +84,29 @@ class LocalLogFolder implements LogFolder, RangeLogFolder {
 
   @override
   Future<Uint8List> read(String name) => file(name).readAsBytes();
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) async {
+    if (maximumBytes < 0) throw ArgumentError.value(maximumBytes);
+    final handle = await file(name).open();
+    try {
+      if (await handle.length() > maximumBytes) {
+        throw const FormatException('Input exceeds safe read limits.');
+      }
+      final bytes = BytesBuilder(copy: false);
+      while (true) {
+        final chunk = await handle.read(64 * 1024);
+        if (chunk.isEmpty) break;
+        if (bytes.length + chunk.length > maximumBytes) {
+          throw const FormatException('Input exceeds safe read limits.');
+        }
+        bytes.add(chunk);
+      }
+      return bytes.takeBytes();
+    } finally {
+      await handle.close();
+    }
+  }
+
   @override
   Future<Uint8List> readFrom(String name, int offset) async {
     final handle = await file(name).open();

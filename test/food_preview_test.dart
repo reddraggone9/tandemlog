@@ -30,8 +30,10 @@ void main() {
         tester.view.devicePixelRatio = 1;
         await tester.pumpWidget(FoodPreviewApp(key: ValueKey(width)));
         await tester.pumpAndSettle();
-        expect(find.text('7 full + ⅓ remaining'), findsOneWidget);
-        expect(find.text('8 containers'), findsOneWidget);
+        expect(find.text('7 full + 1 container ⅓ full'), findsOneWidget);
+        await tester.tap(find.byTooltip('Inspect Rice containers'));
+        await tester.pumpAndSettle();
+        expect(find.text('8 containers · 1 lb'), findsOneWidget);
         expect(tester.takeException(), isNull);
       }
       addTearDown(tester.view.resetPhysicalSize);

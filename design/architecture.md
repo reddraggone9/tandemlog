@@ -42,7 +42,7 @@ Domain context/actor claims and required event validation stay in Dart. See
 [ADR 0010](decisions/0010-collaborative-text-adoption.md) for the legacy baseline,
 offline new-task exception and remaining release gates.
 
-Future games, nutrition and inventory are separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
+The approved [Food inventory module](decisions/0014-food-inventory.md) uses its own canonical Food streams and pure physical-container projection, with recovery authority on the same app-owned SQLite connection and queue. Tasks retain their released v3 history. Future games and nutrition remain separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
 
 The isolated checklist component keeps membership/order, item kind and durable
 descendant protection in `domain/checklist.dart`. `storage/checklist_store.dart`

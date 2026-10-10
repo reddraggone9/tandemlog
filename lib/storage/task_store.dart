@@ -1099,7 +1099,9 @@ class TaskStore {
         'Previously imported log for the acknowledged owned writer is missing. Restore the workspace history before writing.',
       );
     }
-    if (files.any((f) => f.name.contains('sync-conflict'))) {
+    if (files.any(
+      (f) => f.name.contains('sync-conflict') && !isFoodConflictName(f.name),
+    )) {
       throw FormatFailure(
         'A folder-sync conflict copy needs recovery. No history was discarded.',
       );

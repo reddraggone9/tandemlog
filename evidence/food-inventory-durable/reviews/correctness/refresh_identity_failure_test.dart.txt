@@ -1,0 +1,50 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const installation='00000000-0000-4000-8000-000000000010';
+class PartialFolder implements LogFolder,BoundedLogFolder{
+ PartialFolder(this.inner);final LocalLogFolder inner;bool cut=false;bool switchIdentity=false;
+ @override String get location=>inner.location;
+ @override Future<List<LogFileInfo>> list()async{if(switchIdentity){switchIdentity=false;await inner.file('tandemlog-space.json').writeAsString(jsonEncode({'v':3,'id':'00000000-0000-4000-8000-000000000099'}),flush:true);}return inner.list();}
+ @override Future<Uint8List> read(String n)=>inner.read(n);
+ @override Future<Uint8List> readBounded(String n,int limit)=>inner.readBounded(n,limit);
+ Future<void> write(String n,Uint8List b,bool create)async{
+ final failing=cut;cut=false;final bytes=failing?Uint8List.sublistView(b,0,71):b;
+ if(create){await inner.create(n,bytes);}else{await inner.append(n,bytes);}
+ if(failing)throw StateError('synthetic partial append');
+ }
+ @override Future<void> create(String n,Uint8List b)=>write(n,b,true);
+ @override Future<void> append(String n,Uint8List b)=>write(n,b,false);
+}
+void main(){
+ late Directory root;late LocalProfileDatabase profile;late PartialFolder folder;FoodStore? store;
+ setUp(()async{
+ root=await Directory.systemTemp.createTemp('food-review-durable-');
+ profile=await LocalProfileDatabase.open('${root.path}/profile');
+ final data=await Directory('${root.path}/data').create();
+ folder=PartialFolder(LocalLogFolder(data.path));
+ await folder.inner.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));
+ });
+ tearDown(()async{
+ await store?.close();store=null;
+ // Cleanup only reviewer synthetic failed-open lease, so red cannot leak fixture.
+ profile.releaseWorkspace('food:${sha256.convert(utf8.encode(folder.location))}');
+ await profile.close();await root.delete(recursive:true);
+ });
+ test('malformed remote Food cannot mask simultaneous manifest change during refresh',()async{
+ store=await FoodStore.open(folder,profile:profile,installationWriter:installation,space:space);
+ await folder.inner.create(foodLogName('00000000-0000-4000-8000-000000000099'),Uint8List.fromList(utf8.encode('not-json\n')));
+ folder.switchIdentity=true;
+ await expectLater(store!.refresh(),throwsA(isA<FormatException>().having((e)=>e is FoodHistoryFailure,'isolated history',false)));
+ expect(store!.state.active,isEmpty);
+ });
+}

@@ -1,0 +1,55 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:crypto/crypto.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const installation='00000000-0000-4000-8000-000000000010';
+class PartialFolder implements LogFolder,BoundedLogFolder{
+ PartialFolder(this.inner);final LocalLogFolder inner;bool cut=false;bool failBefore=false;
+ @override String get location=>inner.location;
+ @override Future<List<LogFileInfo>> list()=>inner.list();
+ @override Future<Uint8List> read(String n)=>inner.read(n);
+ @override Future<Uint8List> readBounded(String n,int limit)=>inner.readBounded(n,limit);
+ Future<void> write(String n,Uint8List b,bool create)async{
+ if(failBefore){failBefore=false;throw StateError('synthetic no-byte append');}final failing=cut;cut=false;final bytes=failing?Uint8List.sublistView(b,0,71):b;
+ if(create){await inner.create(n,bytes);}else{await inner.append(n,bytes);}
+ if(failing)throw StateError('synthetic partial append');
+ }
+ @override Future<void> create(String n,Uint8List b)=>write(n,b,true);
+ @override Future<void> append(String n,Uint8List b)=>write(n,b,false);
+}
+void main(){
+ late Directory root;late LocalProfileDatabase profile;late PartialFolder folder;FoodStore? store;
+ setUp(()async{
+ root=await Directory.systemTemp.createTemp('food-review-durable-');
+ profile=await LocalProfileDatabase.open('${root.path}/profile');
+ final data=await Directory('${root.path}/data').create();
+ folder=PartialFolder(LocalLogFolder(data.path));
+ await folder.inner.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));
+ });
+ tearDown(()async{
+ await store?.close();store=null;
+ // Cleanup only reviewer synthetic failed-open lease, so red cannot leak fixture.
+ profile.releaseWorkspace('food:${sha256.convert(utf8.encode(folder.location))}');
+ await profile.close();await root.delete(recursive:true);
+ });
+ test('regressed valid guard cannot erase a later protected reservation',()async{
+ store=await FoodStore.open(folder,profile:profile,installationWriter:installation,space:space);
+ final writer=foodWriter(installation);
+ final oldRaw=List<int>.from(profile.database.select('SELECT raw FROM protected_writer_guards WHERE space=? AND writer=?',[space,writer]).single['raw'] as List<int>);
+ await store!.add(const FoodDetails(name:'Rice'),1);
+ folder.failBefore=true;await expectLater(store!.add(const FoodDetails(name:'Tea'),1),throwsStateError);
+ final prepared=ProfileFoodIntents(profile).pending(space,writer);expect(prepared,hasLength(1));expect(FoodRecord.decode(utf8.decode(prepared.single)).sequence,2);
+ await store!.close();store=null;
+ profile.database.execute('UPDATE protected_writer_guards SET raw=? WHERE space=? AND writer=?',[oldRaw,space,writer]);
+ profile.database.execute('DELETE FROM protected_food_intents WHERE space=? AND writer=?',[space,writer]);
+ await expectLater(FoodStore.open(folder,profile:profile,installationWriter:installation,space:space).then((value){store=value;return value;}),throwsFormatException);
+ });
+}

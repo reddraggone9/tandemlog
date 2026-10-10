@@ -15,7 +15,7 @@ import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
-class _LateAcknowledgementFolder implements LogFolder {
+class _LateAcknowledgementFolder implements LogFolder, BoundedLogFolder {
   _LateAcknowledgementFolder(this.inner);
   final LocalLogFolder inner;
   bool loseNextAcknowledgement = false;
@@ -28,6 +28,9 @@ class _LateAcknowledgementFolder implements LogFolder {
   Future<List<LogFileInfo>> list() async => [
     for (final entry in await inner.list()) LogFileInfo(entry.name, ''),
   ];
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override

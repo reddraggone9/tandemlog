@@ -14,7 +14,7 @@ import 'package:uuid/uuid.dart';
 
 import 'native_text_fixtures.dart';
 
-class _ControlledCompletionFolder implements LogFolder {
+class _ControlledCompletionFolder implements LogFolder, BoundedLogFolder {
   _ControlledCompletionFolder(this.inner);
   final LocalLogFolder inner;
   Completer<void>? appendStarted, releaseAppend;
@@ -26,6 +26,9 @@ class _ControlledCompletionFolder implements LogFolder {
   Future<List<LogFileInfo>> list() async => [
     for (final file in await inner.list()) LogFileInfo(file.name, ''),
   ];
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override

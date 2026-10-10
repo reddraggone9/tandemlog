@@ -1,0 +1,5 @@
+Analyzing tandemlog-food-implementation...                      
+
+   info • Statements in an if should be enclosed in a block. Try wrapping the statement in a block • lib/main.dart:1664:7 • curly_braces_in_flow_control_structures
+
+1 issue found. (ran in 2.0s)

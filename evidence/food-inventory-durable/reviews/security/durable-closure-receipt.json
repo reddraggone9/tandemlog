@@ -1,0 +1,172 @@
+{
+  "schema": 1,
+  "reviewer": "security_review",
+  "reviewed_at_utc": "2026-10-10T02:36:25.160380+00:00",
+  "base_commit": "a47015d799f575616f5b80222d8435dd351836b1",
+  "source_status": "Uncommitted durable implementation; acceptance binds exact file hashes below, not a commit or released artifact. Any later byte change requires applicable delta review.",
+  "verdict": "hold_shared_safety_queued_callback_race",
+  "must_fix": [
+    {
+      "severity": "P2",
+      "location": "lib/main.dart:_act and _foodAct immediately after await syncing",
+      "issue": "Both guards run before waiting for an in-flight refresh. That refresh can set sharedSafetyError due to a hard protected Food/profile fault, yet the waiting action still invokes its command callback; _foodAct post-await checks only origin identity.",
+      "reproduction_by_inspection": "Pause background refresh, queue a task or Food action while sharedSafetyError is null, finish refresh with a hard Food protected-authority fault, then observe callback runs despite sharedSafetyError. Reviewer did not execute this reproduction.",
+      "fix": "Recheck shared safety and mounted/origin after await syncing before invoking callback; fail explicitly for Food save so editor remains pending/error. Freeze a no-append regression."
+    }
+  ],
+  "files": {
+    "lib/food/food_store.dart": {
+      "bytes": 26867,
+      "sha256": "bba591a863bda931b69a1e48b8a99d4a619a7099074f774dc938e7adbd9bdea5"
+    },
+    "lib/food/food_record.dart": {
+      "bytes": 5623,
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    "lib/food/inventory.dart": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 37520,
+      "sha256": "a1bd4b043c2e024278029c8b871cd11c72e17d4037d9181604fc0b78ee7bedea"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12220,
+      "sha256": "84af00560ba8e2cefa2649712de1b9811c1e7017688f76e5cd8489c7a4a8ca9d"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 11161,
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 156281,
+      "sha256": "a8435c136297402927add4085e5aa871459c9d30cba5ce7698e6ac6ca0284558"
+    },
+    "lib/storage/log_folder.dart": {
+      "bytes": 4520,
+      "sha256": "3652a6dee2867a39453f20683d8661619697b65d1c5d9146c273f7d84913807a"
+    },
+    "lib/platform/log_folder.dart": {
+      "bytes": 7534,
+      "sha256": "49b59f9b82d21c1c333c993f3b2f0f80cd6318ea490a286cd8bdba32f5c06899"
+    },
+    "lib/main.dart": {
+      "bytes": 191547,
+      "sha256": "80b32ab97aff1e489e9d15a9c2454daf26e5b219ef0441eb5ae63c959332a0c6"
+    },
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": {
+      "bytes": 19721,
+      "sha256": "4a40628a02f781a4221e095e2acef541de7c29534068efa8d9d043002f383bce"
+    },
+    "test/food_store_test.dart": {
+      "bytes": 11771,
+      "sha256": "729f24882e0ebb6f2c74d921b9dddf2df85606f2bf96731ecaffe8a5bf56e96c"
+    },
+    "test/food_record_test.dart": {
+      "bytes": 5661,
+      "sha256": "4dd5268d24f5c8c76bc72db066a981a18bade99e5d1599a5be37ef0f38856f8d"
+    },
+    "test/food_intents_test.dart": {
+      "bytes": 4105,
+      "sha256": "cc540db665288d84b5f2d8a3c1559c2ec66f78b9152faf99d93e3936f62bb3ac"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "bytes": 6185,
+      "sha256": "541a4a5deb80015057cc121ececf36b3d82a2c4b8e5b09c9da597b4245cfad8b"
+    },
+    "test/food_replay_budget_test.dart": {
+      "bytes": 3771,
+      "sha256": "da2c644666fcec8439e640a61116717bcdf68f11c0cc95198ad68b8d54aa4764"
+    },
+    "test/food_durable_editor_test.dart": {
+      "bytes": 5762,
+      "sha256": "b03a6c26485bfdcca1119aaa2676369057b51706729752fbc115e4c857aa0859"
+    },
+    "test/android_log_folder_test.dart": {
+      "bytes": 19681,
+      "sha256": "614448f5c0a7223d9024249f960853ace382b10ff815176139caa257dcab5a1a"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 7748,
+      "sha256": "223effc05095650cc23b0d424e0ea83d4ec47d7c3d330d4d1f82fb55cb97a95b"
+    }
+  },
+  "evidence_logs": {
+    "/tmp/tandemlog-food-retire-binding-red.log": {
+      "bytes": 798,
+      "sha256": "1a6bd6bc60cb5b04b1f024c910ac0154fb1c4110ce794a8a5b87b4fa10e43ed3"
+    },
+    "/tmp/tandemlog-food-missing-guard-red.log": {
+      "bytes": 946,
+      "sha256": "195327df1434ead4ec314f1d9d763464bca1dce0ba9ba712d01de7ed27105efa"
+    },
+    "/tmp/tandemlog-food-isolation-core.log": {
+      "bytes": 9458,
+      "sha256": "5dc3b8e1c0eca51240ed2bf7db737e8319fe1a31ad32bfef0f80944c0878f3d6"
+    },
+    "/tmp/tandemlog-food-replay-budget.log": {
+      "bytes": 277,
+      "sha256": "1b0d1b8f402a4053fcf62cf4a3da0c5149920eb613bd2787a1eb7680e21980d9"
+    }
+  },
+  "closed_findings": [
+    {
+      "finding": "Receipt retirement accepted mismatching FoodRecord with saved old bytes",
+      "closure": "ProfileFoodIntents._bind now runs on staging and retirement, validates size before UTF8 decode, and binds decoded ID/hash/space before exact saved-byte deletion. Original red log preserves the mismatch assertion failure."
+    },
+    {
+      "finding": "Missing own guard and receipt could be regenerated as fresh after initialization",
+      "closure": "Initial successful admission records own sequence0/genesis head atomically with the guard. Trusted head identities/counters/hashes validate; missing initialized own guard throws a hard shared-authority error before ack or new append. Original red shows incorrect successful reopen; current regression retains zero-byte canonical stream and expects rejection."
+    },
+    {
+      "finding": "Frozen fully read-back UI intent had no page Retry and could be cleared before admission",
+      "closure": "Host banner includes matching pendingFoodCommand even without remaining append bytes; recovery requires matching origin plus every prepared record.isAdmitted before intent clearing. Editor Retry retains original fingerprint/records and input controls freeze on pending state."
+    },
+    {
+      "finding": "Food-only SAF duplicates globally blocked Tasks",
+      "closure": "Original task/manifest duplicate gates remain global; Food duplicate listings reach FoodStore, while Kotlin child selects exact requested name and rejects multiple matches before returning URI. FoodStore rejects duplicate/ambiguous Food names independently."
+    },
+    {
+      "finding": "Food conflict copies could block Tasks or be ignored by Food",
+      "closure": "isFoodConflictName recognizes only lowercase Food UUID prefix, contains Food extension and sync-conflict, excludes .jsonl suffix. Both tested conflict naming variants fail Food admission; TaskStore exempts only this new family and retains task/manifest/unclassified conflict rejection."
+    },
+    {
+      "finding": "Repeated linear target/ref checks made wide-group admission needlessly expensive",
+      "closure": "FoodStore and projector precompute target sets, classify ref kind once, validate global refs before per-container replay; repeated per-container target checks removed. Existing malformed-reference validation remains in global admission."
+    }
+  ],
+  "authority_review": [
+    "Distinct food-record hash domain and deterministic UUID-v5 module writer; .foodlog namespace leaves released task .jsonl records/hash domains untouched. Hashes establish integrity against retained heads, not household writer authentication.",
+    "Closed/canonical record decoder derives operation ID/order from envelope, rejects caller payload overrides and requires exact encoded bytes/hash; counters and signed64 string clock are bounded. Creation basis must match known unique container birth, target and earlier clock. Wrong-kind/cross-container/noncausal refs reject regardless target projection readiness. Missing refs and transitive dependencies remain explicit pending and are excluded from ready projection.",
+    "Actual bounded file/SAF reads enforce unknown/growing size limits; record256KiB, stream16MiB,total32MiB,streams256,records50k,containers100k. Protected receipt COUNT/SUM/MAX are checked before BLOB loads, per-row bytes before decoding;1000records/8MiB pending authority limits. Local regular-file checks reject static links; not a malicious same-account OS TOCTOU isolation guarantee.",
+    "Guard reservation plus exact raw receipt stage share one owning short SQL transaction before provider append. No provider I/O inside SQL txn. Readback checks admitted chain plus trusted heads, exact reserved prefix and incomplete-tail byte prefix; acknowledgement/receipt retirement/heads/location commit together before memory publication. Missing/truncated/changed admitted stream and reservation mismatches fail closed.",
+    "Schema3 adds Food tables after exact prior schema checks; released protected task/settings/import rows are not reconstructed. Shared profile queue, module location lease and close drain preserve owner exclusion/poison-safe release. Only derived Food state is replayed; protected authority survives.",
+    "Expected Food history/semantic/stream scan faults have FoodHistoryFailure; startup catches only that type after shared manifest/profile revalidation and independently rechecks Tasks. Shared profile/manifest/guard/receipt errors remain hard. Runtime hard Food refresh faults stop importer and gate host writes, while module history faults retain last valid Food view and Tasks availability. Final caveat: already waiting host actions currently lack a post-sync sharedSafetyError guard; this race holds final closure."
+  ],
+  "validation_inspected": {
+    "core_log": "Producer log reports64passes; reviewer did not execute them.",
+    "resource_gate": {
+      "fixture_bytes": 12418562,
+      "records": 1002,
+      "targets": 100,
+      "observed_delete_refs": 1000,
+      "linux_elapsed_ms": 2112,
+      "regression_budget_ms": 12000,
+      "meaning": "Actual FoodStore.open replay validates100restored identities and zero pending refs; excludes fixture construction from timing. Linux-only bounded regression; not a mobile responsiveness or worst-case cap benchmark."
+    },
+    "red_negative_controls": "Actual producer logs show pre-fix wrong-record retirement returned normally and lost-reservation reopen succeeded; preserved as red evidence."
+  },
+  "remaining_gates": [
+    "Full applicable tests and independent final correctness/architecture review",
+    "Actual production native workflow results, Android compilation/SAF bound/alias and affected UI-data acceptance, Windows affected flows",
+    "Exact candidate artifacts and source binding before release; no publication acceptance from this receipt",
+    "Private import contract and controlled idempotent cutover remain separate; no live import authorized here",
+    "Larger maximum-cap/phone resource behavior remains unmeasured; current gate exercises the concrete previously identified fanout pattern only"
+  ],
+  "reviewer_limits": "Static source and producer-log inspection only. No builds/tests/downloads/dependency execution/live profile/import/secret access, no source changes. Receipt only written outside repository under /tmp/food-security-review. Reviewed synthetic test labels; not a repository-wide secret scan."
+}

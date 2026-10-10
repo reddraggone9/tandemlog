@@ -20,7 +20,7 @@ class LocalProfileDatabase {
   static const fileName = 'local.sqlite';
   static const _applicationId =
       0x544c4442; // TLDB; local, not canonical format.
-  static const schemaVersion = 2;
+  static const schemaVersion = 3;
   static const _version = schemaVersion;
   static const _schema = {
     'profile_metadata':
@@ -37,6 +37,19 @@ class LocalProfileDatabase {
         'CREATE TABLE protected_cache_imports (path TEXT PRIMARY KEY, location TEXT NOT NULL, space TEXT NOT NULL, raw BLOB NOT NULL, hash TEXT NOT NULL)',
     'migration_cleanup':
         "CREATE TABLE migration_cleanup (path TEXT PRIMARY KEY, kind TEXT NOT NULL, hash TEXT NOT NULL, state TEXT NOT NULL CHECK(state IN ('ready','deleting','deleted')))",
+    'protected_food_intents':
+        'CREATE TABLE protected_food_intents (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, id TEXT NOT NULL, raw BLOB NOT NULL, PRIMARY KEY(space,writer,sequence), UNIQUE(space,id))',
+    'protected_food_heads':
+        'CREATE TABLE protected_food_heads (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(space,writer))',
+    'protected_food_locations':
+        'CREATE TABLE protected_food_locations (location TEXT PRIMARY KEY, space TEXT NOT NULL)',
+  };
+  static const _introduced = {
+    'protected_cache_imports': 2,
+    'migration_cleanup': 2,
+    'protected_food_intents': 3,
+    'protected_food_heads': 3,
+    'protected_food_locations': 3,
   };
   static final _held = <String>{};
   final String root;
@@ -135,20 +148,23 @@ class LocalProfileDatabase {
         );
         db.execute('PRAGMA application_id=$_applicationId');
         db.execute('PRAGMA user_version=$_version');
-      } else if (version == 1 && application == _applicationId) {
-        // Only the exact known unpublished proof schema may advance. Never
+      } else if ((version == 1 || version == 2) &&
+          application == _applicationId) {
+        // Only an exact known schema may advance. Never
         // rebuild missing authority tables as an empty new installation.
-        _verifyOwnedSchema(db, version: 1);
+        _verifyOwnedSchema(db, version: version as int);
         final prior = db.select(
           "SELECT value FROM profile_metadata WHERE key='schema'",
         );
-        if (prior.length != 1 || prior.single['value'] != '1') {
+        if (prior.length != 1 || prior.single['value'] != '$version') {
           throw const LocalDatabaseFailure(
-            'Invalid proof database metadata; retained.',
+            'Invalid local database metadata; retained.',
           );
         }
-        for (final name in ['protected_cache_imports', 'migration_cleanup']) {
-          db.execute(_schema[name]!);
+        for (final entry in _schema.entries) {
+          if ((_introduced[entry.key] ?? 1) > version) {
+            db.execute(entry.value);
+          }
         }
         db.execute(
           "UPDATE profile_metadata SET value='$_version' WHERE key='schema'",
@@ -214,18 +230,12 @@ class LocalProfileDatabase {
 
   static void _verifyOwnedSchema(Database db, {int version = _version}) {
     for (final entry in _schema.entries) {
-      if (version == 1 &&
-          {
-            'protected_cache_imports',
-            'migration_cleanup',
-          }.contains(entry.key)) {
-        continue;
-      }
+      if ((_introduced[entry.key] ?? 1) > version) continue;
       final actual = db.select(
         "SELECT sql FROM sqlite_schema WHERE type='table' AND name=?",
         [entry.key],
       );
-      // Local proof schema is frozen in this unpublished version. Checking the
+      // Each admitted local schema is frozen. Checking the
       // complete definition also catches dropped PK/UNIQUE/NOT NULL checks.
       if (actual.length != 1 || actual.single['sql'] != entry.value) {
         throw const LocalDatabaseFailure(

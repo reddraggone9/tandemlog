@@ -1,0 +1,1576 @@
+{
+  "nativeUnitAbi": {
+    "path": "/tmp/tandemlog-food-native-unit/libtandemlog_text.so",
+    "bytes": 1167040,
+    "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+    "qualification": "Explicit configured test ABI; not a distributable artifact"
+  },
+  "schema": 1,
+  "createdUtc": "2026-10-10T04:03:11.254727+00:00",
+  "branch": "feature/food-inventory-implementation",
+  "sourceBase": "a47015d799f575616f5b80222d8435dd351836b1",
+  "stableMainBase": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "earlyDensityMediaCommit": "f1db9f5b1f06c4e8b328d18010cad3e92c184b1b",
+  "scope": "Unreleased synthetic Food durable source checkpoint; no candidate, release or live data action",
+  "sources": {
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": {
+      "bytes": 19721,
+      "sha256": "4a40628a02f781a4221e095e2acef541de7c29534068efa8d9d043002f383bce"
+    },
+    "design/architecture.md": {
+      "bytes": 8376,
+      "sha256": "5180a680768cbef92c0c8053c31b7fb10ef740545fd52d2bf53ec9f16ca92b8d"
+    },
+    "design/decisions/0014-food-inventory.md": {
+      "bytes": 11042,
+      "sha256": "a6ac5b7d0bf9b3e43af60d35f18445a590d9280bde320f94249b184a7305869a"
+    },
+    "design/product-behavior.md": {
+      "bytes": 31516,
+      "sha256": "dcfddb59d4c30a874dbbe34a5013ea91adfe85a33a9a8e84b0727eb215fef47b"
+    },
+    "design/recovery.md": {
+      "bytes": 7975,
+      "sha256": "9e853d7b5f0d6b70552d0430541bf701cc7c4aeae913c91a2c66497cdcfba3d5"
+    },
+    "design/schema.md": {
+      "bytes": 29395,
+      "sha256": "819938cbb1499ae628540a457183e01f4ae3142339da28df57976c370e9e659f"
+    },
+    "design/status.md": {
+      "bytes": 97921,
+      "sha256": "16387f7a2280ec77ee25c3a4f4688b28a57c8b324fd682edf860467f6d268021"
+    },
+    "design/storage-and-sync.md": {
+      "bytes": 12885,
+      "sha256": "2dfc3e494d52856e27a06008ce4f4e76f5634faba44d9bd3f1718c31a1b42ad1"
+    },
+    "integration_test/checklist_lifecycle_test.dart": {
+      "bytes": 17758,
+      "sha256": "3ff295bdca91b9e3b9ec6823c5fcccd77c24d5d89951e6bdbde95424fba26760"
+    },
+    "integration_test/completion_confirmation_progress_test.dart": {
+      "bytes": 9619,
+      "sha256": "360c7d8092059e3d87dea6a5255ccb835b8aa5ec5d79c0b54346428e6090dc8b"
+    },
+    "integration_test/food_density_workflow_test.dart": {
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "integration_test/food_inspect_accessibility_test.dart": {
+      "bytes": 5915,
+      "sha256": "1567aec41a2d191a564f89e32d7fc26cc7897574b5a524efbf8d27863c0d7919"
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 20126,
+      "sha256": "c9dc531f5fee6e771774c103a9f7fad4f3976e0d738b8be03855fe9b8866b8da"
+    },
+    "integration_test/inline_checklist_workflow_test.dart": {
+      "bytes": 34732,
+      "sha256": "ad359cdc2fe4fef7cd9e4e7b7fbecb317690f283a3f3ea8018a97d0f67dab936"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 170224,
+      "sha256": "95b3dc4bdbd6d8f55dff76c35fb92b2c57d25087fc87bdd0603ccb7eb048e498"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 38673,
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50"
+    },
+    "lib/food/food_record.dart": {
+      "bytes": 5623,
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "lib/food/inventory.dart": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "lib/main.dart": {
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "lib/platform/log_folder.dart": {
+      "bytes": 7534,
+      "sha256": "49b59f9b82d21c1c333c993f3b2f0f80cd6318ea490a286cd8bdba32f5c06899"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12220,
+      "sha256": "84af00560ba8e2cefa2649712de1b9811c1e7017688f76e5cd8489c7a4a8ca9d"
+    },
+    "lib/storage/log_folder.dart": {
+      "bytes": 4520,
+      "sha256": "3652a6dee2867a39453f20683d8661619697b65d1c5d9146c273f7d84913807a"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 156281,
+      "sha256": "a8435c136297402927add4085e5aa871459c9d30cba5ce7698e6ac6ca0284558"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 11161,
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "test/android_log_folder_test.dart": {
+      "bytes": 19681,
+      "sha256": "614448f5c0a7223d9024249f960853ace382b10ff815176139caa257dcab5a1a"
+    },
+    "test/batch_storage_test.dart": {
+      "bytes": 12937,
+      "sha256": "89ffdcf03368fbb852242cb33e45455b2841702a00deb2510c39cb8c717e68c1"
+    },
+    "test/food_durable_editor_test.dart": {
+      "bytes": 5762,
+      "sha256": "b03a6c26485bfdcca1119aaa2676369057b51706729752fbc115e4c857aa0859"
+    },
+    "test/food_intents_test.dart": {
+      "bytes": 4105,
+      "sha256": "cc540db665288d84b5f2d8a3c1559c2ec66f78b9152faf99d93e3936f62bb3ac"
+    },
+    "test/food_inventory_test.dart": {
+      "bytes": 13701,
+      "sha256": "8ae29133d175462396897eea76036e84f36222406cc418e21dbc44e940a22df0"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 2920,
+      "sha256": "f62e5eabe1b6797e97f10105a4226e0da3440a12ee122edc6d91ba219a76058c"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "bytes": 6185,
+      "sha256": "541a4a5deb80015057cc121ececf36b3d82a2c4b8e5b09c9da597b4245cfad8b"
+    },
+    "test/food_record_test.dart": {
+      "bytes": 5661,
+      "sha256": "4dd5268d24f5c8c76bc72db066a981a18bade99e5d1599a5be37ef0f38856f8d"
+    },
+    "test/food_replay_budget_test.dart": {
+      "bytes": 3818,
+      "sha256": "93014c6510d5a34c6a697aedcb8571db31f1c4af6236b9d154f5ebf33b6686e0"
+    },
+    "test/food_store_test.dart": {
+      "bytes": 11779,
+      "sha256": "90b7a9713492c9a4bc38d3448f85daa80b4ac2501d403e070d0cf4141e863c37"
+    },
+    "tool/food_preview.dart": {
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    }
+  },
+  "unchangedSinceBase": [
+    "lib/domain",
+    "lib/text",
+    "native",
+    "pubspec.yaml",
+    "pubspec.lock",
+    "android/settings.gradle.kts",
+    "android/app/build.gradle.kts",
+    "android/gradle",
+    "packaging",
+    ".github/workflows"
+  ],
+  "checks": {
+    "unit": {
+      "log": "logs/tandemlog-food-final-unit.log",
+      "passed": 788,
+      "qualification": "Configured native ABI; before final host changes and FoodStore diagnostic-only message delta, subsequently checked by53focusedcore plus finalnative"
+    },
+    "focusedCore": {
+      "log": "logs/tandemlog-food-core-checkpoint.log",
+      "passed": 53
+    },
+    "productionFood": {
+      "log": "logs/tandemlog-food-production-recovery-final-native.log",
+      "passed": 5,
+      "sourceSha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+      "rendererSha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "existingTasks": {
+      "log": "logs/tandemlog-food-task-checkpoint-native.log",
+      "passed": 87,
+      "sourceSha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+      "rendererSha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "preview": {
+      "log": "logs/tandemlog-food-preview-accepted-native.log",
+      "passed": 1,
+      "qualification": "Synthetic process-local preview; accepted unchanged FoodPage source"
+    },
+    "densityAfterHistorical": {
+      "log": "logs/tandemlog-food-density-final-native.log",
+      "passed": 1,
+      "qualification": "Pre-copy renderer821"
+    },
+    "densityAfterFinal": {
+      "log": "logs/tandemlog-food-density-checkpoint-final-native.log",
+      "passed": 1,
+      "sourceSha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50"
+    },
+    "inspectKeyboardFinal": {
+      "log": "logs/tandemlog-food-inspect-keyboard-final-native.log",
+      "passed": 1,
+      "qualification": "Four viewport/scale cases; synthetic shared presentation and real Tab/ShiftTab/Enter/Escape plus dispatched Back. Final fixture has independently verified diagnostic-only getter delta."
+    },
+    "densityBefore": {
+      "log": "logs/tandemlog-food-density-before-native-real.log",
+      "passed": 1,
+      "qualification": "Frozen uncommitted pre-density source snapshots; native GTK, not released commit"
+    },
+    "androidKotlin": {
+      "log": "logs/tandemlog-food-android-kotlin-isolated-sdk.log",
+      "qualification": "CompileDebugKotlin64tasks only; no APK/device/SAF or candidate acceptance"
+    },
+    "analyzer": {
+      "log": "logs/tandemlog-food-analysis-checkpoint.log",
+      "qualification": "No issues"
+    },
+    "format": {
+      "log": "logs/tandemlog-food-format-checkpoint.log",
+      "qualification": "202files zero changes"
+    }
+  },
+  "evidenceFiles": {
+    "README.md": {
+      "bytes": 9949,
+      "sha256": "53df83dd8d8987b680c7a8ec9da9a3795c14ea6928d373de4e3fdc27f3d77ea4"
+    },
+    "android-kotlin-compile.json": {
+      "bytes": 3413,
+      "sha256": "3309134f0f3b5d7566c3f2f333c6e83a44706d58025eb97f941a4ec9ae9d1a48"
+    },
+    "android-toolchain-provenance.json": {
+      "bytes": 569,
+      "sha256": "f4fad50d49978cbb615e821dde82e2d694825650a7ae2295ae005f417c039b60"
+    },
+    "denser-public-media-verification.json": {
+      "bytes": 1288,
+      "sha256": "67ea785b77845bfbfa420c031a82b762f31a2f7df7c90154220ccbb15c95ef31"
+    },
+    "density-before/density-dark-1x-1200.png": {
+      "bytes": 59601,
+      "sha256": "0a94307bff1de34b159ebb36ff53e53595bbfddf142b5ce471ff81dc5d79ea5a"
+    },
+    "density-before/density-dark-1x-390.png": {
+      "bytes": 54386,
+      "sha256": "5e115c42b2556f53b6d87a1aa1c33139d5e7234b8b8ddafdbf71eb0a467ed549"
+    },
+    "density-before/density-measurements.json": {
+      "bytes": 662,
+      "sha256": "070a82f6215aadfb227df7ddefd8a8113a0854cd678b5d87c27592368613c8e7"
+    },
+    "density-before-source/density_before_test.dart.txt": {
+      "bytes": 4024,
+      "sha256": "cdbc9d110514ecede899c9da080a1e3a75ff6610b3499db191174b75ed0a7fc8"
+    },
+    "density-before-source/executed_before_workflow_test.dart.txt": {
+      "bytes": 4024,
+      "sha256": "cdbc9d110514ecede899c9da080a1e3a75ff6610b3499db191174b75ed0a7fc8"
+    },
+    "density-before-source/food_page.dart.txt": {
+      "bytes": 37194,
+      "sha256": "ee52612d565748a1967a0d488ed1341d7989da7d213becfc0003b4ba8f6fcbac"
+    },
+    "density-before-source/food_preview.dart.txt": {
+      "bytes": 5721,
+      "sha256": "f53c6adb0e38ded2158941621bcecdede6ef612fd69f6e4214d286d259c47e32"
+    },
+    "density-checkpoint-final/density-dark-1x-1200.png": {
+      "bytes": 73991,
+      "sha256": "300fa1d8a555be986c6784cf899ef8655cc239a28a86e548a3682b959d9efe45"
+    },
+    "density-checkpoint-final/density-dark-1x-390.png": {
+      "bytes": 66601,
+      "sha256": "9be1772365e2c811691747905179c1af83d7139e2b35c2b3c196dc1f5eb750b2"
+    },
+    "density-checkpoint-final/density-dark-2x-1200.png": {
+      "bytes": 91559,
+      "sha256": "0e0cd2d4713bf7466b617661e288fd3c1da7268994541a7dd9bed67246d769ce"
+    },
+    "density-checkpoint-final/density-dark-2x-390.png": {
+      "bytes": 60441,
+      "sha256": "3ba3701bf6c8e6128b1b53c2e78c43b688c227b39c532ec52f73ccb9fa667174"
+    },
+    "density-checkpoint-final/density-light-1x-1200.png": {
+      "bytes": 76174,
+      "sha256": "22c4d454bb65360d0535e1af586f3e7e1cc9944f3ff89b60bc447c6e899530a4"
+    },
+    "density-checkpoint-final/density-light-1x-390.png": {
+      "bytes": 68249,
+      "sha256": "e18a5865e91bb57d4611ce5cdb57c5fcc08ec095ed9d8f53ceca19e8e5407e42"
+    },
+    "density-checkpoint-final/density-light-2x-1200.png": {
+      "bytes": 93290,
+      "sha256": "1b107dabe5ea290ac225b944876a559a027d2a0c8c46ed7dc29edc57daab59b8"
+    },
+    "density-checkpoint-final/density-light-2x-390.png": {
+      "bytes": 61454,
+      "sha256": "c8e8e033d60cb41e0b498d13bc3d26d9957fd057069497a5a7c75d590ee83373"
+    },
+    "density-checkpoint-final/density-measurements.json": {
+      "bytes": 2767,
+      "sha256": "a8077ab6b701f6afd1c3f551d889fd4b280e3d6900da46953fe436c4b74a9235"
+    },
+    "density-final/density-dark-1x-1200.png": {
+      "bytes": 73991,
+      "sha256": "300fa1d8a555be986c6784cf899ef8655cc239a28a86e548a3682b959d9efe45"
+    },
+    "density-final/density-dark-1x-390.png": {
+      "bytes": 66601,
+      "sha256": "9be1772365e2c811691747905179c1af83d7139e2b35c2b3c196dc1f5eb750b2"
+    },
+    "density-final/density-dark-2x-1200.png": {
+      "bytes": 91559,
+      "sha256": "0e0cd2d4713bf7466b617661e288fd3c1da7268994541a7dd9bed67246d769ce"
+    },
+    "density-final/density-dark-2x-390.png": {
+      "bytes": 60441,
+      "sha256": "3ba3701bf6c8e6128b1b53c2e78c43b688c227b39c532ec52f73ccb9fa667174"
+    },
+    "density-final/density-light-1x-1200.png": {
+      "bytes": 76174,
+      "sha256": "22c4d454bb65360d0535e1af586f3e7e1cc9944f3ff89b60bc447c6e899530a4"
+    },
+    "density-final/density-light-1x-390.png": {
+      "bytes": 68249,
+      "sha256": "e18a5865e91bb57d4611ce5cdb57c5fcc08ec095ed9d8f53ceca19e8e5407e42"
+    },
+    "density-final/density-light-2x-1200.png": {
+      "bytes": 93290,
+      "sha256": "1b107dabe5ea290ac225b944876a559a027d2a0c8c46ed7dc29edc57daab59b8"
+    },
+    "density-final/density-light-2x-390.png": {
+      "bytes": 61454,
+      "sha256": "c8e8e033d60cb41e0b498d13bc3d26d9957fd057069497a5a7c75d590ee83373"
+    },
+    "density-final/density-measurements.json": {
+      "bytes": 2767,
+      "sha256": "a8077ab6b701f6afd1c3f551d889fd4b280e3d6900da46953fe436c4b74a9235"
+    },
+    "density-preview.md": {
+      "bytes": 1434,
+      "sha256": "73bf2ca26a0bcd41cb7ae36a668eff4c49b777f55c4d26417d5fc6612f3dba8b"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-1200-actions.png": {
+      "bytes": 76706,
+      "sha256": "5b03b31736ff2d24a04660c8915fd2abe8782678d9d22e40692d9cc543647d56"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-1200-editor.png": {
+      "bytes": 96032,
+      "sha256": "de0e2ac2d12a85a145ff80bf26e91af0db640a1657a17626464cf6d13c7a90a6"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-1200.png": {
+      "bytes": 73969,
+      "sha256": "45d2378fb09a78bc39958ffdbbee2f1696eeef2cd3a3fcf1d28ff9e35e98ea1c"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-390-actions.png": {
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-390-editor.png": {
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    "inspect-keyboard-final/inspect-dark-1x-390.png": {
+      "bytes": 64455,
+      "sha256": "2123dcd1c3b61da2c0645b2f047db0a7be342fb8bb77a1e0a7a951526e8c3336"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-1200-actions.png": {
+      "bytes": 102541,
+      "sha256": "7ba615614102716d7be4c036f24b0985ed0caaa98b31269b589527ec236e4c65"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-1200-editor.png": {
+      "bytes": 118687,
+      "sha256": "29a8c88b2c403743ef257772c6132885f7dbdc5f34373c127a4d55f4dc121a85"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-1200.png": {
+      "bytes": 91667,
+      "sha256": "b726aabd7536510faf47b8e7245ad460ee0770e04b31a54023186a63ee3d0c4c"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-390-actions.png": {
+      "bytes": 66848,
+      "sha256": "33f565014ddf8f448fa1d49c0c07748868bec34eaaf57080a25956690eead521"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-390-editor.png": {
+      "bytes": 61941,
+      "sha256": "31113cad4b5a634215f61fd6882df80ea428cc671949a4b4e20dd09b4c7a1e4b"
+    },
+    "inspect-keyboard-final/inspect-dark-2x-390.png": {
+      "bytes": 60451,
+      "sha256": "82ce30caf328f8d37aa8ff49d5636960182b3c42d603b302ba908ac90a19ef0d"
+    },
+    "inspector-fixture-diagnostic-delta.json": {
+      "bytes": 549,
+      "sha256": "dbc0882e6dca40443a8b56881ede138ee1187d327e36fe501077afefaedf5783"
+    },
+    "logs/tandemlog-food-analysis-accepted.log": {
+      "bytes": 96,
+      "sha256": "1c8ef6b8f7fd28721489f88afe93b4aed818450c4d72a02f7d45ffd3476e4669"
+    },
+    "logs/tandemlog-food-analysis-checkpoint.log": {
+      "bytes": 96,
+      "sha256": "919dbee6bf14f23c855d8f8f8e8edfc6a045f6151f96c003ec378d23099c5e0b"
+    },
+    "logs/tandemlog-food-analysis-recovery-pre-lint-fix.log": {
+      "bytes": 266,
+      "sha256": "010968dbe95b1d3a5388452e66a0cf26814ede50339b58ca36b1056144bec1e8"
+    },
+    "logs/tandemlog-food-android-debug-build.log": {
+      "bytes": 3050,
+      "sha256": "75ce83dc6f6908f203238ea2e9487c75a110ea064c022da3aa7bd64c435d981a"
+    },
+    "logs/tandemlog-food-android-kotlin-isolated-sdk.log": {
+      "bytes": 81269,
+      "sha256": "2f9e8dd22e9ff3700d12b71e95a882c7ed3a0e5717954b12487df1c3ee820d0f"
+    },
+    "logs/tandemlog-food-android-kotlin-offline.log": {
+      "bytes": 1392,
+      "sha256": "18ee09e03cebd6674343789a3cab9e9f5b7bfb85ec966c3afa611de29a92a6d7"
+    },
+    "logs/tandemlog-food-android-kotlin-proxy.log": {
+      "bytes": 12224,
+      "sha256": "d03754a3fbe7d3b4e65b6e2fea4877fa006eeb18954d63e3c2d20ba9ce225b30"
+    },
+    "logs/tandemlog-food-android-kotlin-restored-jdk.log": {
+      "bytes": 30987,
+      "sha256": "ae794e05253e8e7c7195e8df8c4a82ad71c7f54d4a6e6ec28b4e551215c14073"
+    },
+    "logs/tandemlog-food-certainty-green.log": {
+      "bytes": 3390,
+      "sha256": "3ea5e77ea6bd551bcc30ae938fcd7ec95b3478dff032ab7e01942e927c7bbc47"
+    },
+    "logs/tandemlog-food-certainty-red.log": {
+      "bytes": 659,
+      "sha256": "9f29d6dabb827095c70963d6e4dfd15c642102c5ab213af6420c406328197d9c"
+    },
+    "logs/tandemlog-food-core-checkpoint.log": {
+      "bytes": 7881,
+      "sha256": "2f884f08ee302e5021b5f87b19546b3e7a8c7ff8bfb0343ce05956560f0affb6"
+    },
+    "logs/tandemlog-food-density-before-native-real.log": {
+      "bytes": 5254,
+      "sha256": "647877fca5bb6a5eed2533ff415850d89b1aab27c00e6ab78c2bf0f7a4b8c76a"
+    },
+    "logs/tandemlog-food-density-checkpoint-final-native.log": {
+      "bytes": 3562,
+      "sha256": "228bf4328f0b0330c21fa6a4f3cb818d3c5d10abb0d6b0d3ebc961b2e4b00f5c"
+    },
+    "logs/tandemlog-food-density-final-native.log": {
+      "bytes": 5187,
+      "sha256": "822f5e860eb0720b36bec07032d36037041cf63b07e29e249b21cc39389fe73a"
+    },
+    "logs/tandemlog-food-discard-green.log": {
+      "bytes": 256,
+      "sha256": "10423ea033c6ae39220a275613b89bf6724b2be2f420a04610b9b06a3cb665c2"
+    },
+    "logs/tandemlog-food-discard-red.log": {
+      "bytes": 2378,
+      "sha256": "6aa2088b9f31150f554361b38d1bb787b23705868dfb1f5a43f9a6941a742126"
+    },
+    "logs/tandemlog-food-final-unit.log": {
+      "bytes": 122268,
+      "sha256": "2f3f7c0a3406bf4a9c1b91e31e4b7e6e9389b65b87373821bbd7d1dd6be3b76e"
+    },
+    "logs/tandemlog-food-format-checkpoint.log": {
+      "bytes": 49,
+      "sha256": "7713164bcecfffb3b0a4c383c262a6f31d15fc57f6b8b12de3ea09d5ff3e54ad"
+    },
+    "logs/tandemlog-food-format-final.log": {
+      "bytes": 49,
+      "sha256": "e7623abcb5ce7ef56536d62fcdb2ef69507e08fe37a4601bb81b7833261cc9ba"
+    },
+    "logs/tandemlog-food-initial-task-native-failed.log": {
+      "bytes": 63470,
+      "sha256": "310c313f9d96c69e22a4c8cb202b4986559631ad6740c60270c124d1ce97c213"
+    },
+    "logs/tandemlog-food-inspect-final-native.log": {
+      "bytes": 4026,
+      "sha256": "5842527fc48f12332c386d007d3c5dca101d8c49a7cf64c803a0d324535da6d2"
+    },
+    "logs/tandemlog-food-inspect-final-retry-native.log": {
+      "bytes": 5601,
+      "sha256": "c79d66b4daacbe4e3bc3101f3630a8c84f3ca2f0fea459345e8a42ef97cf2ecb"
+    },
+    "logs/tandemlog-food-inspect-focus-diagnostic-native.log": {
+      "bytes": 6319,
+      "sha256": "5515872269cb6ea6299a33a61ca0e64b0b2afd49199ccd35253e2b01a1c7568a"
+    },
+    "logs/tandemlog-food-inspect-keyboard-final-native.log": {
+      "bytes": 3566,
+      "sha256": "ca252fab7b260f1c9ea79f0e3d04c759cc53b7a7783b7016a9ea9f3f02e2b601"
+    },
+    "logs/tandemlog-food-inspect-red-native.log": {
+      "bytes": 5598,
+      "sha256": "a6a2a0ef6ebd463719d0177364e66013ea8ef5afff43e6299919a026d44350ec"
+    },
+    "logs/tandemlog-food-intents-green.log": {
+      "bytes": 254,
+      "sha256": "fdbc64965e828269352c3e8912b4a63f9cc0577cf4a8768885003b1136e8f5e4"
+    },
+    "logs/tandemlog-food-isolation-core.log": {
+      "bytes": 9458,
+      "sha256": "5dc3b8e1c0eca51240ed2bf7db737e8319fe1a31ad32bfef0f80944c0878f3d6"
+    },
+    "logs/tandemlog-food-pending-new-editor-green.log": {
+      "bytes": 461,
+      "sha256": "a685b080bab886ec713ccd5bcb19fa50526ee7c7e4d1e11da71365d35e472191"
+    },
+    "logs/tandemlog-food-pending-new-editor-red.log": {
+      "bytes": 2748,
+      "sha256": "cef22fd93185fea56a1cbe8bee0c60c9e825a3daac85e9c0d9ddba842707ba5f"
+    },
+    "logs/tandemlog-food-poison-green.log": {
+      "bytes": 586,
+      "sha256": "4a0f43381e55e23966fbc4b2863f390e64942e8e0ee2f6d198cd5dd4bc54aa64"
+    },
+    "logs/tandemlog-food-poison-red.log": {
+      "bytes": 1913,
+      "sha256": "0add1f0b37c4451acdf581439cc090e76ff555724b385c2f88210da9b5e27a12"
+    },
+    "logs/tandemlog-food-preview-accepted-native.log": {
+      "bytes": 5180,
+      "sha256": "837a5768161068db8cee5a1ba64429e9bbab7bd6c493372b320b90a55b14b83c"
+    },
+    "logs/tandemlog-food-production-accepted-native.log": {
+      "bytes": 9479,
+      "sha256": "2f89040bf344f3c6cf503f7e3e77f8f973918705e7a0958b0b7c7cc5bb5a6bbb"
+    },
+    "logs/tandemlog-food-production-recovery-final-native.log": {
+      "bytes": 5772,
+      "sha256": "f48cd02f4875c3fc6b26e2feddb98d0257c82e87ed1ac7d6ad13b212444dc1f4"
+    },
+    "logs/tandemlog-food-production-red.log": {
+      "bytes": 5815,
+      "sha256": "05202cce6dda53d01c32dedd0dab73452fb17603835370ea200d7a1b3ff1d636"
+    },
+    "logs/tandemlog-food-production-verified-native.log": {
+      "bytes": 6971,
+      "sha256": "3c6c674098d4a01592c2634770e8a5275ebb0353778fd155ac7f21dbae8b6149"
+    },
+    "logs/tandemlog-food-protected-authority-final.log": {
+      "bytes": 2747,
+      "sha256": "e4cadcd4b67ff0895e4f99931fc4bd680f8ec4365afd0ecf60e702cee2715d1c"
+    },
+    "logs/tandemlog-food-recovery-initial-fixed-native-failed.log": {
+      "bytes": 9667,
+      "sha256": "add77ef6adfc26ef9ba520c2bef51f1bf7954323f932403dbf055b7d8f79554d"
+    },
+    "logs/tandemlog-food-recovery-name-diagnostic-retry-native.log": {
+      "bytes": 6313,
+      "sha256": "572d0b75b7bc7edc02ec00f153be7572159ecc9c30fb0e434d4726c840f9eb6a"
+    },
+    "logs/tandemlog-food-refresh-identity-final.log": {
+      "bytes": 2430,
+      "sha256": "8f0dee10d95d6a67f8a168bc62ece5ad4f6d717e9fbb8d3cebde8895d97be46c"
+    },
+    "logs/tandemlog-food-rendered-origin-valid-green.log": {
+      "bytes": 330,
+      "sha256": "e4e996c13862f8023771d83926154d17b71d4ffe0b8fe02d6f7cd155e93ae256"
+    },
+    "logs/tandemlog-food-rendered-origin-valid-red.log": {
+      "bytes": 1964,
+      "sha256": "b299329c5e55d681abf11373b66da82927f96e7b0f6707d9e3c1f77ec50d5324"
+    },
+    "logs/tandemlog-food-replay-budget.log": {
+      "bytes": 277,
+      "sha256": "1b0d1b8f402a4053fcf62cf4a3da0c5149920eb613bd2787a1eb7680e21980d9"
+    },
+    "logs/tandemlog-food-retire-binding-red.log": {
+      "bytes": 798,
+      "sha256": "1a6bd6bc60cb5b04b1f024c910ac0154fb1c4110ce794a8a5b87b4fa10e43ed3"
+    },
+    "logs/tandemlog-food-setup-preserved-focus-native.log": {
+      "bytes": 4151,
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78"
+    },
+    "logs/tandemlog-food-shared-retry-analysis-final.log": {
+      "bytes": 96,
+      "sha256": "62b299efdb1cb5aa04114d3b20cbd7e15fa0cce242e227b193941fd83e9c6832"
+    },
+    "logs/tandemlog-food-shared-retry-analysis.log": {
+      "bytes": 147939,
+      "sha256": "b7ce54de1bebef064b550d2b54113f10f9e93a262dd722119e54291f5c262325"
+    },
+    "logs/tandemlog-food-task-checkpoint-native.log": {
+      "bytes": 47441,
+      "sha256": "4a9f1d56baf3eab6783cf2df49cc6083530e017e44f8a900fceeb291a222e432"
+    },
+    "preview-accepted/narrow-deleted.png": {
+      "bytes": 26615,
+      "sha256": "156ba01c72747293d049e6bd0863427620cc5a592d4cae255e2eaaa211871153"
+    },
+    "preview-accepted/narrow-editor.png": {
+      "bytes": 40082,
+      "sha256": "cf2ee359f55a4bc133a5c325eb9c28ebcdba4926b2cddfd0c0995072e43a8b3c"
+    },
+    "preview-accepted/narrow-inbox.png": {
+      "bytes": 25575,
+      "sha256": "7721a6ff836de2595070a56afb58c52182728dfc0dffb352b3624c1c0039ffb3"
+    },
+    "preview-accepted/narrow-inspect.png": {
+      "bytes": 58020,
+      "sha256": "d52e2e16dd5d36f9d044bae68b31e0731849d7cbce3f416cc30074f5eb802033"
+    },
+    "preview-accepted/narrow-retained-collapsed.png": {
+      "bytes": 21543,
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85"
+    },
+    "preview-accepted/narrow-retained-expanded.png": {
+      "bytes": 26127,
+      "sha256": "097178479d3bdd39a0f596380b3d17543f2a5a857a39fbdcb8b25b923756024c"
+    },
+    "preview-accepted/narrow-selected-partial.png": {
+      "bytes": 57883,
+      "sha256": "b9932f66089d6a98003cd818ab98ba1189fdc2bad41664c55f02dc97783bb2f0"
+    },
+    "preview-accepted/narrow-stock.png": {
+      "bytes": 30978,
+      "sha256": "bf7056cbb0df02a892d4ad9de3e0e812eea16107a8858ea3dc9d334538690362"
+    },
+    "preview-accepted/native-linux-scripted-preview.mp4": {
+      "bytes": 181530,
+      "sha256": "020da824c67e99534504b6f1673e7f66df311b941000b263323c0d9d924b4187"
+    },
+    "preview-accepted/wide-stock-after-restore.png": {
+      "bytes": 62690,
+      "sha256": "d7bbd8705977f085523b2c47f01def798d8640c3ca479fa85cb8120eb3ff33fd"
+    },
+    "preview-accepted/wide-stock.png": {
+      "bytes": 33945,
+      "sha256": "c5cdf21c8866aa571d08b55acdcbd56f1a52c80aeb1ca3c7acea6a66e62a964f"
+    },
+    "production-recovery-final/production-narrow-shared-recovery-2x.png": {
+      "bytes": 64854,
+      "sha256": "293a168438560d79a92e622afa9cdb7532921dfec9a20e5adc0361c5da51d0ac"
+    },
+    "production-recovery-final/production-narrow-stock.png": {
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    "production-recovery-final/production-wide-stock.png": {
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    "production-verified/production-narrow-stock.png": {
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    "production-verified/production-wide-stock.png": {
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    "renderer-copy-delta.json": {
+      "bytes": 1132,
+      "sha256": "f5735107b87aada74737e005709ec1b320fb9dbb56798a050e47cf3ff33070d4"
+    },
+    "reviews/architecture/durable-food-final-diagnostic-supplement.json": {
+      "bytes": 3085,
+      "sha256": "2c47ac2eb2c4495de250d3d0279b1235cb3c7a7201551b241cb6f5e28d70eee7"
+    },
+    "reviews/architecture/durable-food-final-milestone-closure.json": {
+      "bytes": 19468,
+      "sha256": "f59fbd400adf7554b26f5d91b88f08b25e9c9b0739e77600d22c7277d14c32e2"
+    },
+    "reviews/architecture/durable-host-architecture-closure.json": {
+      "bytes": 17645,
+      "sha256": "044c6548d8e38527f66ceab705a2d905ef6e15a811dc5bfef3c6d4b0d56b605d"
+    },
+    "reviews/architecture/durable-host-architecture-snapshot.json": {
+      "bytes": 14478,
+      "sha256": "8f5734ea008cc8f1d82485f7073b4c7c68c82d9fb8a970fc9e2d8a324b88b160"
+    },
+    "reviews/architecture/shared-read-recovery-closure.json": {
+      "bytes": 16075,
+      "sha256": "c3d03bcf62c64930f27b2a024307d1d26907ebba667015e0f04a94954b3c6109"
+    },
+    "reviews/architecture/shared-read-recovery-delta.json": {
+      "bytes": 14665,
+      "sha256": "33c57bf0f6781fb5dabae3327f09f68e8804b8d1b06235fe7a32b8b812a545a6"
+    },
+    "reviews/correctness/boundaries-green.log": {
+      "bytes": 1765,
+      "sha256": "21ad69a38e1df6875b03d6e90e7ae175cc09fc9ae6efab07d9db012b2845e722"
+    },
+    "reviews/correctness/capacity-frozen-red.log": {
+      "bytes": 338,
+      "sha256": "b1091362579b15462491dcf34611517fbc902586f16dcc6e8407e72e3fb96057"
+    },
+    "reviews/correctness/capacity-green.log": {
+      "bytes": 331,
+      "sha256": "c03af6aacefdc3e793f384cedafbf754626c53d5655f33a4fab954b405dc05fe"
+    },
+    "reviews/correctness/capacity-red.log": {
+      "bytes": 331,
+      "sha256": "c03af6aacefdc3e793f384cedafbf754626c53d5655f33a4fab954b405dc05fe"
+    },
+    "reviews/correctness/capacity_final_test.dart.txt": {
+      "bytes": 3979,
+      "sha256": "36df3daff716faa6613d19f8db402f69b5f3abadec491f00cd0d28a6e5476bd3"
+    },
+    "reviews/correctness/capacity_frozen_test.dart.txt": {
+      "bytes": 3988,
+      "sha256": "acf19b61d04b19dabde923471d96c2dad67ceb73d2de2e0319155d01bb00dda5"
+    },
+    "reviews/correctness/capacity_test.dart.txt": {
+      "bytes": 3963,
+      "sha256": "d48ffde07fdcb6af04a860d4e24fae1efa5031bebd0841a5a41fcc1516209500"
+    },
+    "reviews/correctness/dependency.log": {
+      "bytes": 531,
+      "sha256": "fd34983548a8b7cfc752ad29db776833b44b043b0201962e64930ac00ee936ff"
+    },
+    "reviews/correctness/dependency_final_test.dart.txt": {
+      "bytes": 6233,
+      "sha256": "b333723d7c16d1bc71453873484a1ce1838a301516f9d014f57dc349e980ef8d"
+    },
+    "reviews/correctness/dependency_test.dart.txt": {
+      "bytes": 6233,
+      "sha256": "3777397aa1baf40058b96557ed179a26624c0057628539023b0cf00f723447d2"
+    },
+    "reviews/correctness/diagnostic-only-addendum.json": {
+      "bytes": 2228,
+      "sha256": "f0e8c7eac10a7ea6c67683b118034b942e085a863e9b035d9489e6714870bed4"
+    },
+    "reviews/correctness/diagnostic-only.diff": {
+      "bytes": 454,
+      "sha256": "4e605239e501e2fb5b85e34ba65e0331a3c1b0468fe28eed919f478376653d97"
+    },
+    "reviews/correctness/empty-stream-cap-red.log": {
+      "bytes": 1859,
+      "sha256": "b53b63fd740c409da24dc7d4bdf2294e54356834c75443f47705488d3f8720d5"
+    },
+    "reviews/correctness/empty_stream_capacity_test.dart.txt": {
+      "bytes": 2934,
+      "sha256": "e392418545a56a17efae6ab7a4f79020c079855db416894a96b660bc034a5fb4"
+    },
+    "reviews/correctness/final-core-green.log": {
+      "bytes": 2508,
+      "sha256": "e4e7fc47f4246bb475d0984fdf785eadf5a74d73a2abcc33e588d8f1141f17cd"
+    },
+    "reviews/correctness/final-durable-core-review.json": {
+      "bytes": 9902,
+      "sha256": "611ec6e4d7f295b232d9c23c82b69d760606248b62cc4ccd11d38b0a7123455b"
+    },
+    "reviews/correctness/final-durable-isolation-core-review.json": {
+      "bytes": 14999,
+      "sha256": "7af16b934eda6d10446febe9be8c4dca21a63dee480c639be20f911fa99f5d76"
+    },
+    "reviews/correctness/final-isolation-boundary-green.log": {
+      "bytes": 1790,
+      "sha256": "8bd7f9c4c2f16261a7cffc6325d14bac286aa3f033856f9f5668f169e2d53c09"
+    },
+    "reviews/correctness/final-isolation-core-green.log": {
+      "bytes": 3256,
+      "sha256": "174d69e7d06ab3abb0454119a5c926c8bad60002fba3b1c19979852d856fbac1"
+    },
+    "reviews/correctness/final-lifecycle-green.log": {
+      "bytes": 1320,
+      "sha256": "588fb2fe86835eaffd9186b18b43aed6b7b4f1e299088130022762eece657717"
+    },
+    "reviews/correctness/food_durable_review_test.dart.txt": {
+      "bytes": 3098,
+      "sha256": "bac93f956a6aa82039f61eaa52c8a19b2cd4b5606983003b4d060c2221cba13f"
+    },
+    "reviews/correctness/food_store-accepted-isolation-source.dart.txt": {
+      "bytes": 27563,
+      "sha256": "2a7ba64a705e4314536d581adfc0142bfdea7ab69a54defaeff13d596384efe7"
+    },
+    "reviews/correctness/food_store-before-cap.dart.txt": {
+      "bytes": 22869,
+      "sha256": "20dca8ee3324c9c5274340ee3c2cd54e570c5e3dd9317c561cd3c32474c78884"
+    },
+    "reviews/correctness/food_store-diagnostic-source.dart.txt": {
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "reviews/correctness/food_store-empty-cap-red.dart.txt": {
+      "bytes": 22869,
+      "sha256": "20dca8ee3324c9c5274340ee3c2cd54e570c5e3dd9317c561cd3c32474c78884"
+    },
+    "reviews/correctness/food_store-initialization-failure-source.dart.txt": {
+      "bytes": 26182,
+      "sha256": "c6e3f95e3ecb949bcb944fc0826affa15d9874f740e669b5b7f8af7d7f194e90"
+    },
+    "reviews/correctness/food_store-observed-snapshot-red.dart.txt": {
+      "bytes": 22876,
+      "sha256": "435bd2348d55fc9ae2a7ebb81e819f241af2d71b70d52405216a96d67b8c6531"
+    },
+    "reviews/correctness/guard-regression-red.log": {
+      "bytes": 1049,
+      "sha256": "d919f5a17c91ee1326d071b73e51110286c6440d001755020362e9f1cd2777d7"
+    },
+    "reviews/correctness/guard_regression_test.dart.txt": {
+      "bytes": 3417,
+      "sha256": "2ce4fb006336f6f4a83c4aa1472dcf4a797650de483ecd7c18f006ed6380595a"
+    },
+    "reviews/correctness/identity-race-red.log": {
+      "bytes": 729,
+      "sha256": "6ab718ed2f32097b9a85915381ea25aadee6517a9cb5386da95178585ce39e5c"
+    },
+    "reviews/correctness/identity_race_test.dart.txt": {
+      "bytes": 2842,
+      "sha256": "8e7dfd3e9cd49cff3180e3981e22df103dd82d2cfd950d7bb3b8e738cafd1d2e"
+    },
+    "reviews/correctness/initialization-failure.log": {
+      "bytes": 2158,
+      "sha256": "734ac8fd7736c1dd24aa93b79df6d7f6ff10400e37e4caa77b8104cd1a12710a"
+    },
+    "reviews/correctness/initialization_failure_test.dart.txt": {
+      "bytes": 3974,
+      "sha256": "6d89967d6afbc30fe14d34b11c0d4dc26941ec7f73d1f182810b871712f8f15e"
+    },
+    "reviews/correctness/lease-readiness-empty-cap-green.log": {
+      "bytes": 548,
+      "sha256": "ab882185c7f519893be1279aa2efb020269d4cff537f13702c577fe6a4774eb9"
+    },
+    "reviews/correctness/lease-readiness-red.log": {
+      "bytes": 1356,
+      "sha256": "609d344a6250460a5a215194a288ea228d31bbda581a5c48c12419577f9a818b"
+    },
+    "reviews/correctness/negative_reference_test.dart.txt": {
+      "bytes": 4476,
+      "sha256": "127f48985346b014b389d6c5d20a700464b2e8cb27c23a717b67189cabb33c71"
+    },
+    "reviews/correctness/observed-snapshot-red.log": {
+      "bytes": 1414,
+      "sha256": "b1340879df8adf9e77bc5839fde240d6f68829357fe92b44eecefb0f9b2dae20"
+    },
+    "reviews/correctness/observed_snapshot_green_test.dart.txt": {
+      "bytes": 3670,
+      "sha256": "3d35836538d3a8a22a8a4c8dd30da75d13d1838c12441dfbd8e4a38fd8c256c0"
+    },
+    "reviews/correctness/observed_snapshot_test.dart.txt": {
+      "bytes": 3676,
+      "sha256": "8f308c4d4e9d5232a38baedcb96f0f2d7bef461c68485f6da34dac08f8036655"
+    },
+    "reviews/correctness/old_food_store.dart.txt": {
+      "bytes": 22990,
+      "sha256": "42c3f3198c8a5a6e4bcb3304c88ab030767f1bac2d9e27bbcd4763671abf0ce6"
+    },
+    "reviews/correctness/recovery-cap-red.log": {
+      "bytes": 749,
+      "sha256": "57209c5fc8d7d921ee5fcaa893a5dcbb4365731d32a86bd9473a958c5e09ee50"
+    },
+    "reviews/correctness/recovery_capacity_test.dart.txt": {
+      "bytes": 3145,
+      "sha256": "96819654e407655b9e18e7f37b9f1e6595c582c78de8cffb4769bd3d0b5316e8"
+    },
+    "reviews/correctness/reference-cap-red.log": {
+      "bytes": 1389,
+      "sha256": "0dd5f20d408dd9a873e0a574b751df4c0d8ace11d6aee8bc5dacddc0d48e5d7d"
+    },
+    "reviews/correctness/reference_capacity_green_test.dart.txt": {
+      "bytes": 3851,
+      "sha256": "2427bd59780403845c08fbe57576d4d8d3d939a575d228b5ba12d73d26b72cd5"
+    },
+    "reviews/correctness/reference_capacity_test.dart.txt": {
+      "bytes": 3806,
+      "sha256": "46076893263397e9d8710812474cc566fde6b61266ab4ef006f09ba08e397378"
+    },
+    "reviews/correctness/refresh-identity-failure-red.log": {
+      "bytes": 2080,
+      "sha256": "d0dc5c46d9386003b86152f5d9c1f7f0bc004b608ddd204e65532fefdd73e6af"
+    },
+    "reviews/correctness/refresh_identity_failure_test.dart.txt": {
+      "bytes": 2909,
+      "sha256": "5ea76e94fede3a42930969c1491ba84ec68e0e7131df35ee8930a63238038657"
+    },
+    "reviews/security/durable-closure-receipt.json": {
+      "bytes": 11528,
+      "sha256": "1e9ed722a5583e253bacd61323efc415357d7e14c2b32986d4b406b5eb465d35"
+    },
+    "reviews/security/durable-final-security-receipt.json": {
+      "bytes": 14528,
+      "sha256": "44ea34bc3a5c219c30143f21d51e8bc0584d38508d596cf5cf1c4865d802e97f"
+    },
+    "reviews/security/durable-recovery-final-security-receipt.json": {
+      "bytes": 16381,
+      "sha256": "a0b7ac765baee7ff6802cc0343ec70ba2f924b97fcbf45ad54f3d0188edbe919"
+    },
+    "reviews/ux/README-draft.md": {
+      "bytes": 3320,
+      "sha256": "2d544064d135c1f5d2881b63e2539a280c2822c9695fa7c5954f471afa8b9e0e"
+    },
+    "reviews/ux/README.md": {
+      "bytes": 4025,
+      "sha256": "14ebd0f8c90b9379016d225e1a5f55338029e83035ca254ed1b1df906f6e8ad9"
+    },
+    "reviews/ux/demo-frames/final-frame-03.5.png": {
+      "bytes": 99259,
+      "sha256": "cbac342ca57762dcf0a1a3e8776c1df857440ba603797e3f01c1984da4331b7e"
+    },
+    "reviews/ux/demo-frames/final-frame-08.5.png": {
+      "bytes": 51637,
+      "sha256": "02bc70a701b5451ceb3c4cd52884560f7f42bf2b63f622a94b6512c406698f28"
+    },
+    "reviews/ux/demo-frames/frame-03.5.png": {
+      "bytes": 97577,
+      "sha256": "e9da00f37c02ed85d0fdacdf1e78dfc33613279fe81d69d83b14856908c9356c"
+    },
+    "reviews/ux/demo-frames/frame-08.5.png": {
+      "bytes": 54667,
+      "sha256": "2922f28bfd35d37081a1b9371753cb2aa8366fb7515153b6a367af7b6baf0c65"
+    },
+    "reviews/ux/final-density-doc-supplement/README.md": {
+      "bytes": 2868,
+      "sha256": "fd9130668b6634ef2dfb3cdaacaf99d3b3b6ff078b70e9e9147226c822b275f3"
+    },
+    "reviews/ux/final-density-doc-supplement/density-measurements.json": {
+      "bytes": 2767,
+      "sha256": "a8077ab6b701f6afd1c3f551d889fd4b280e3d6900da46953fe436c4b74a9235"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-dark-1x-1200.png": {
+      "bytes": 73991,
+      "sha256": "300fa1d8a555be986c6784cf899ef8655cc239a28a86e548a3682b959d9efe45"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-dark-1x-390.png": {
+      "bytes": 66601,
+      "sha256": "9be1772365e2c811691747905179c1af83d7139e2b35c2b3c196dc1f5eb750b2"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-dark-2x-1200.png": {
+      "bytes": 91559,
+      "sha256": "0e0cd2d4713bf7466b617661e288fd3c1da7268994541a7dd9bed67246d769ce"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-dark-2x-390.png": {
+      "bytes": 60441,
+      "sha256": "3ba3701bf6c8e6128b1b53c2e78c43b688c227b39c532ec52f73ccb9fa667174"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-light-1x-1200.png": {
+      "bytes": 76174,
+      "sha256": "22c4d454bb65360d0535e1af586f3e7e1cc9944f3ff89b60bc447c6e899530a4"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-light-1x-390.png": {
+      "bytes": 68249,
+      "sha256": "e18a5865e91bb57d4611ce5cdb57c5fcc08ec095ed9d8f53ceca19e8e5407e42"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-light-2x-1200.png": {
+      "bytes": 93290,
+      "sha256": "1b107dabe5ea290ac225b944876a559a027d2a0c8c46ed7dc29edc57daab59b8"
+    },
+    "reviews/ux/final-density-doc-supplement/images/density-checkpoint-final/density-light-2x-390.png": {
+      "bytes": 61454,
+      "sha256": "c8e8e033d60cb41e0b498d13bc3d26d9957fd057069497a5a7c75d590ee83373"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-1200-actions.png": {
+      "bytes": 76706,
+      "sha256": "5b03b31736ff2d24a04660c8915fd2abe8782678d9d22e40692d9cc543647d56"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-1200-editor.png": {
+      "bytes": 96032,
+      "sha256": "de0e2ac2d12a85a145ff80bf26e91af0db640a1657a17626464cf6d13c7a90a6"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-1200.png": {
+      "bytes": 73969,
+      "sha256": "45d2378fb09a78bc39958ffdbbee2f1696eeef2cd3a3fcf1d28ff9e35e98ea1c"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-390-actions.png": {
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-390-editor.png": {
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-1x-390.png": {
+      "bytes": 64455,
+      "sha256": "2123dcd1c3b61da2c0645b2f047db0a7be342fb8bb77a1e0a7a951526e8c3336"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-1200-actions.png": {
+      "bytes": 102541,
+      "sha256": "7ba615614102716d7be4c036f24b0985ed0caaa98b31269b589527ec236e4c65"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-1200-editor.png": {
+      "bytes": 118687,
+      "sha256": "29a8c88b2c403743ef257772c6132885f7dbdc5f34373c127a4d55f4dc121a85"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-1200.png": {
+      "bytes": 91667,
+      "sha256": "b726aabd7536510faf47b8e7245ad460ee0770e04b31a54023186a63ee3d0c4c"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-390-actions.png": {
+      "bytes": 66848,
+      "sha256": "33f565014ddf8f448fa1d49c0c07748868bec34eaaf57080a25956690eead521"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-390-editor.png": {
+      "bytes": 61941,
+      "sha256": "31113cad4b5a634215f61fd6882df80ea428cc671949a4b4e20dd09b4c7a1e4b"
+    },
+    "reviews/ux/final-density-doc-supplement/images/inspect-keyboard-final/inspect-dark-2x-390.png": {
+      "bytes": 60451,
+      "sha256": "82ce30caf328f8d37aa8ff49d5636960182b3c42d603b302ba908ac90a19ef0d"
+    },
+    "reviews/ux/final-density-doc-supplement/inspect-fixture-diagnostic-only.diff": {
+      "bytes": 298,
+      "sha256": "53fd16cb1d10782cabab4db9b91d66026457807dbcabedeaefe5b760c38a0796"
+    },
+    "reviews/ux/final-density-doc-supplement/logs/final-analyzer.log": {
+      "bytes": 96,
+      "sha256": "919dbee6bf14f23c855d8f8f8e8edfc6a045f6151f96c003ec378d23099c5e0b"
+    },
+    "reviews/ux/final-density-doc-supplement/logs/final-density-native.log": {
+      "bytes": 3562,
+      "sha256": "228bf4328f0b0330c21fa6a4f3cb818d3c5d10abb0d6b0d3ebc961b2e4b00f5c"
+    },
+    "reviews/ux/final-density-doc-supplement/logs/final-inspect-native.log": {
+      "bytes": 3566,
+      "sha256": "ca252fab7b260f1c9ea79f0e3d04c759cc53b7a7783b7016a9ea9f3f02e2b601"
+    },
+    "reviews/ux/final-density-doc-supplement/prior-receipts/density-d92.json": {
+      "bytes": 27024,
+      "sha256": "d92bcdfa4e93f91fe2af55e9f4b192ed6dfd7517fc1654dd8da8852adc430cb9"
+    },
+    "reviews/ux/final-density-doc-supplement/prior-receipts/inspect-access-fd2d.json": {
+      "bytes": 16510,
+      "sha256": "fd2d6e03074b7a82003a62582ee5fcc43465181ca8d2b2360869614d6f0f9d8e"
+    },
+    "reviews/ux/final-density-doc-supplement/review-receipt.json": {
+      "bytes": 25959,
+      "sha256": "c7a9f97f330d9dfd014487079cfa0e83c89fafcf42a0dc712436b5b1ac037547"
+    },
+    "reviews/ux/final-density-doc-supplement/source/design/status.md": {
+      "bytes": 97921,
+      "sha256": "16387f7a2280ec77ee25c3a4f4688b28a57c8b324fd682edf860467f6d268021"
+    },
+    "reviews/ux/final-density-doc-supplement/source/evidence/food-inventory-durable/README.md": {
+      "bytes": 9949,
+      "sha256": "53df83dd8d8987b680c7a8ec9da9a3795c14ea6928d373de4e3fdc27f3d77ea4"
+    },
+    "reviews/ux/final-density-doc-supplement/source/integration_test/food_density_workflow_test.dart.txt": {
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "reviews/ux/final-density-doc-supplement/source/integration_test/food_inspect_accessibility_test.dart.txt": {
+      "bytes": 5915,
+      "sha256": "1567aec41a2d191a564f89e32d7fc26cc7897574b5a524efbf8d27863c0d7919"
+    },
+    "reviews/ux/final-density-doc-supplement/source/lib/food/food_page.dart.txt": {
+      "bytes": 38673,
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50"
+    },
+    "reviews/ux/final-density-doc-supplement/source/lib/food/food_store.dart.txt": {
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "reviews/ux/final-density-doc-supplement/source/lib/food/inventory.dart.txt": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "reviews/ux/final-density-doc-supplement/source/lib/main.dart.txt": {
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "reviews/ux/final-density-doc-supplement/source/tool/food_preview.dart.txt": {
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    "reviews/ux/final-density-doc-supplement/source-history/native-passed-inspect-fixture.dart.txt": {
+      "bytes": 5916,
+      "sha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b"
+    },
+    "reviews/ux/images/density-before/density-dark-1x-1200.png": {
+      "bytes": 59601,
+      "sha256": "0a94307bff1de34b159ebb36ff53e53595bbfddf142b5ce471ff81dc5d79ea5a"
+    },
+    "reviews/ux/images/density-before/density-dark-1x-390.png": {
+      "bytes": 54386,
+      "sha256": "5e115c42b2556f53b6d87a1aa1c33139d5e7234b8b8ddafdbf71eb0a467ed549"
+    },
+    "reviews/ux/images/density-before/density-measurements.json": {
+      "bytes": 662,
+      "sha256": "070a82f6215aadfb227df7ddefd8a8113a0854cd678b5d87c27592368613c8e7"
+    },
+    "reviews/ux/images/density-final/density-dark-1x-1200.png": {
+      "bytes": 73991,
+      "sha256": "300fa1d8a555be986c6784cf899ef8655cc239a28a86e548a3682b959d9efe45"
+    },
+    "reviews/ux/images/density-final/density-dark-1x-390.png": {
+      "bytes": 66601,
+      "sha256": "9be1772365e2c811691747905179c1af83d7139e2b35c2b3c196dc1f5eb750b2"
+    },
+    "reviews/ux/images/density-final/density-dark-2x-1200.png": {
+      "bytes": 91559,
+      "sha256": "0e0cd2d4713bf7466b617661e288fd3c1da7268994541a7dd9bed67246d769ce"
+    },
+    "reviews/ux/images/density-final/density-dark-2x-390.png": {
+      "bytes": 60441,
+      "sha256": "3ba3701bf6c8e6128b1b53c2e78c43b688c227b39c532ec52f73ccb9fa667174"
+    },
+    "reviews/ux/images/density-final/density-light-1x-1200.png": {
+      "bytes": 76174,
+      "sha256": "22c4d454bb65360d0535e1af586f3e7e1cc9944f3ff89b60bc447c6e899530a4"
+    },
+    "reviews/ux/images/density-final/density-light-1x-390.png": {
+      "bytes": 68249,
+      "sha256": "e18a5865e91bb57d4611ce5cdb57c5fcc08ec095ed9d8f53ceca19e8e5407e42"
+    },
+    "reviews/ux/images/density-final/density-light-2x-1200.png": {
+      "bytes": 93290,
+      "sha256": "1b107dabe5ea290ac225b944876a559a027d2a0c8c46ed7dc29edc57daab59b8"
+    },
+    "reviews/ux/images/density-final/density-light-2x-390.png": {
+      "bytes": 61454,
+      "sha256": "c8e8e033d60cb41e0b498d13bc3d26d9957fd057069497a5a7c75d590ee83373"
+    },
+    "reviews/ux/images/density-final/density-measurements.json": {
+      "bytes": 2767,
+      "sha256": "a8077ab6b701f6afd1c3f551d889fd4b280e3d6900da46953fe436c4b74a9235"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-deleted.png": {
+      "bytes": 26401,
+      "sha256": "e38fa4550dc5ab691b2eb34c617bccabb14275e771a32b2868d283c3d56b61a1"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-editor.png": {
+      "bytes": 40810,
+      "sha256": "b83d945f2928fc3f557222af79bb561248d0c1f407bdf088ac5a21619d58bb34"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-inbox.png": {
+      "bytes": 25575,
+      "sha256": "7721a6ff836de2595070a56afb58c52182728dfc0dffb352b3624c1c0039ffb3"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-inspect.png": {
+      "bytes": 58049,
+      "sha256": "bdec7299596251bf8993d3966aeba1604f6f27c081368a16538eb12c0b477d37"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-retained-collapsed.png": {
+      "bytes": 21543,
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-retained-expanded.png": {
+      "bytes": 26127,
+      "sha256": "097178479d3bdd39a0f596380b3d17543f2a5a857a39fbdcb8b25b923756024c"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-selected-partial.png": {
+      "bytes": 57944,
+      "sha256": "5f401cd269a65f96409f3164d7a79ac523bfcad0742da01ab0ed6964df5e7177"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/narrow-stock.png": {
+      "bytes": 30978,
+      "sha256": "bf7056cbb0df02a892d4ad9de3e0e812eea16107a8858ea3dc9d334538690362"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/wide-stock-after-restore.png": {
+      "bytes": 62717,
+      "sha256": "a4030b37275ceb4cc7515e05efc61e87eee16d78c3900ce1fe038bc9d7e3459f"
+    },
+    "reviews/ux/images/preview-before-spacing-fix/wide-stock.png": {
+      "bytes": 33945,
+      "sha256": "c5cdf21c8866aa571d08b55acdcbd56f1a52c80aeb1ca3c7acea6a66e62a964f"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-deleted.png": {
+      "bytes": 26615,
+      "sha256": "156ba01c72747293d049e6bd0863427620cc5a592d4cae255e2eaaa211871153"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-editor.png": {
+      "bytes": 40082,
+      "sha256": "cf2ee359f55a4bc133a5c325eb9c28ebcdba4926b2cddfd0c0995072e43a8b3c"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-inbox.png": {
+      "bytes": 25575,
+      "sha256": "7721a6ff836de2595070a56afb58c52182728dfc0dffb352b3624c1c0039ffb3"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-inspect.png": {
+      "bytes": 58020,
+      "sha256": "d52e2e16dd5d36f9d044bae68b31e0731849d7cbce3f416cc30074f5eb802033"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-retained-collapsed.png": {
+      "bytes": 21543,
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-retained-expanded.png": {
+      "bytes": 26127,
+      "sha256": "097178479d3bdd39a0f596380b3d17543f2a5a857a39fbdcb8b25b923756024c"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-selected-partial.png": {
+      "bytes": 57883,
+      "sha256": "b9932f66089d6a98003cd818ab98ba1189fdc2bad41664c55f02dc97783bb2f0"
+    },
+    "reviews/ux/images/preview-spacing-closure/narrow-stock.png": {
+      "bytes": 30978,
+      "sha256": "bf7056cbb0df02a892d4ad9de3e0e812eea16107a8858ea3dc9d334538690362"
+    },
+    "reviews/ux/images/preview-spacing-closure/wide-stock-after-restore.png": {
+      "bytes": 62690,
+      "sha256": "d7bbd8705977f085523b2c47f01def798d8640c3ca479fa85cb8120eb3ff33fd"
+    },
+    "reviews/ux/images/preview-spacing-closure/wide-stock.png": {
+      "bytes": 33945,
+      "sha256": "c5cdf21c8866aa571d08b55acdcbd56f1a52c80aeb1ca3c7acea6a66e62a964f"
+    },
+    "reviews/ux/images/production-verified/production-narrow-stock.png": {
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    "reviews/ux/images/production-verified/production-wide-stock.png": {
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    "reviews/ux/ime-recovery-final/README.md": {
+      "bytes": 2394,
+      "sha256": "cf625e4eec60d7bdc397241e1a4dbb39c1aca5c5538be92b2fcdd2695b982f3f"
+    },
+    "reviews/ux/ime-recovery-final/images/production-narrow-shared-recovery-2x.png": {
+      "bytes": 64854,
+      "sha256": "293a168438560d79a92e622afa9cdb7532921dfec9a20e5adc0361c5da51d0ac"
+    },
+    "reviews/ux/ime-recovery-final/images/production-narrow-stock.png": {
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    "reviews/ux/ime-recovery-final/images/production-wide-stock.png": {
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    "reviews/ux/ime-recovery-final/logs/tandemlog-food-production-recovery-final-native.log": {
+      "bytes": 5772,
+      "sha256": "f48cd02f4875c3fc6b26e2feddb98d0257c82e87ed1ac7d6ad13b212444dc1f4"
+    },
+    "reviews/ux/ime-recovery-final/logs/tandemlog-food-setup-preserved-focus-native.log": {
+      "bytes": 4151,
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78"
+    },
+    "reviews/ux/ime-recovery-final/logs/tandemlog-food-task-checkpoint-native.log": {
+      "bytes": 8383,
+      "sha256": "73a0334a98dd9c2579ee1005df335a391fba9d583d26a7376ce5175934d3a6ce"
+    },
+    "reviews/ux/ime-recovery-final/logs/tandemlog-food-task-regressions-fixed-native.log": {
+      "bytes": 9667,
+      "sha256": "add77ef6adfc26ef9ba520c2bef51f1bf7954323f932403dbf055b7d8f79554d"
+    },
+    "reviews/ux/ime-recovery-final/review-receipt.json": {
+      "bytes": 7194,
+      "sha256": "b2b20629dc5ee0f0dd0e62bc2ea686446fe5d56d95775db4821b67314b718fdf"
+    },
+    "reviews/ux/ime-recovery-final/source/integration_test/food_production_workflow_test.dart.txt": {
+      "bytes": 20126,
+      "sha256": "c9dc531f5fee6e771774c103a9f7fad4f3976e0d738b8be03855fe9b8866b8da"
+    },
+    "reviews/ux/ime-recovery-final/source/integration_test/task_flow_test.dart.txt": {
+      "bytes": 170224,
+      "sha256": "95b3dc4bdbd6d8f55dff76c35fb92b2c57d25087fc87bdd0603ccb7eb048e498"
+    },
+    "reviews/ux/ime-recovery-final/source/lib/food/food_page.dart.txt": {
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "reviews/ux/ime-recovery-final/source/lib/main.dart.txt": {
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "reviews/ux/inspect-access-final/README.md": {
+      "bytes": 3204,
+      "sha256": "c214ffc87113d744a2cdf32e1c93a5d101f17671605672ee959f738232b774c0"
+    },
+    "reviews/ux/inspect-access-final/images/diagnostic/inspect-traversal-diagnostic.png": {
+      "bytes": 67020,
+      "sha256": "e58bb7b16807b10f16815e2c203980e82b04c25ca2b871328cc823431d188151"
+    },
+    "reviews/ux/inspect-access-final/images/failed-retry/inspect-dark-1x-390-actions.png": {
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    "reviews/ux/inspect-access-final/images/failed-retry/inspect-dark-1x-390-editor.png": {
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    "reviews/ux/inspect-access-final/images/failed-retry/inspect-dark-1x-390.png": {
+      "bytes": 63997,
+      "sha256": "635af1f5c8fad7754a8a8bbc172a168a8425d47f9b0c660c9336ebfeac633af4"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-1200-actions.png": {
+      "bytes": 76706,
+      "sha256": "5b03b31736ff2d24a04660c8915fd2abe8782678d9d22e40692d9cc543647d56"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-1200-editor.png": {
+      "bytes": 96032,
+      "sha256": "de0e2ac2d12a85a145ff80bf26e91af0db640a1657a17626464cf6d13c7a90a6"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-1200.png": {
+      "bytes": 73969,
+      "sha256": "45d2378fb09a78bc39958ffdbbee2f1696eeef2cd3a3fcf1d28ff9e35e98ea1c"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-390-actions.png": {
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-390-editor.png": {
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-1x-390.png": {
+      "bytes": 64455,
+      "sha256": "2123dcd1c3b61da2c0645b2f047db0a7be342fb8bb77a1e0a7a951526e8c3336"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-1200-actions.png": {
+      "bytes": 102541,
+      "sha256": "7ba615614102716d7be4c036f24b0985ed0caaa98b31269b589527ec236e4c65"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-1200-editor.png": {
+      "bytes": 118687,
+      "sha256": "29a8c88b2c403743ef257772c6132885f7dbdc5f34373c127a4d55f4dc121a85"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-1200.png": {
+      "bytes": 91667,
+      "sha256": "b726aabd7536510faf47b8e7245ad460ee0770e04b31a54023186a63ee3d0c4c"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-390-actions.png": {
+      "bytes": 66848,
+      "sha256": "33f565014ddf8f448fa1d49c0c07748868bec34eaaf57080a25956690eead521"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-390-editor.png": {
+      "bytes": 61941,
+      "sha256": "31113cad4b5a634215f61fd6882df80ea428cc671949a4b4e20dd09b4c7a1e4b"
+    },
+    "reviews/ux/inspect-access-final/images/final/inspect-dark-2x-390.png": {
+      "bytes": 60451,
+      "sha256": "82ce30caf328f8d37aa8ff49d5636960182b3c42d603b302ba908ac90a19ef0d"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-inspect-final-native.log": {
+      "bytes": 4026,
+      "sha256": "5842527fc48f12332c386d007d3c5dca101d8c49a7cf64c803a0d324535da6d2"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-inspect-final-retry-native.log": {
+      "bytes": 5601,
+      "sha256": "c79d66b4daacbe4e3bc3101f3630a8c84f3ca2f0fea459345e8a42ef97cf2ecb"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-inspect-focus-diagnostic-native.log": {
+      "bytes": 6319,
+      "sha256": "5515872269cb6ea6299a33a61ca0e64b0b2afd49199ccd35253e2b01a1c7568a"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-inspect-keyboard-final-native.log": {
+      "bytes": 3566,
+      "sha256": "ca252fab7b260f1c9ea79f0e3d04c759cc53b7a7783b7016a9ea9f3f02e2b601"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-inspect-red-native.log": {
+      "bytes": 5598,
+      "sha256": "a6a2a0ef6ebd463719d0177364e66013ea8ef5afff43e6299919a026d44350ec"
+    },
+    "reviews/ux/inspect-access-final/logs/tandemlog-food-task-checkpoint-native.log": {
+      "bytes": 47441,
+      "sha256": "4a9f1d56baf3eab6783cf2df49cc6083530e017e44f8a900fceeb291a222e432"
+    },
+    "reviews/ux/inspect-access-final/review-receipt.json": {
+      "bytes": 16510,
+      "sha256": "fd2d6e03074b7a82003a62582ee5fcc43465181ca8d2b2360869614d6f0f9d8e"
+    },
+    "reviews/ux/inspect-access-final/source/integration_test/food_density_workflow_test.dart.txt": {
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "reviews/ux/inspect-access-final/source/integration_test/food_inspect_accessibility_test.dart.txt": {
+      "bytes": 5916,
+      "sha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b"
+    },
+    "reviews/ux/inspect-access-final/source/integration_test/food_preview_workflow_test.dart.txt": {
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    "reviews/ux/inspect-access-final/source/lib/food/food_page.dart.txt": {
+      "bytes": 38673,
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50"
+    },
+    "reviews/ux/inspect-access-final/source/lib/food/food_store.dart.txt": {
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "reviews/ux/inspect-access-final/source/lib/food/inventory.dart.txt": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "reviews/ux/inspect-access-final/source/lib/main.dart.txt": {
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "reviews/ux/inspect-access-final/source/tool/food_preview.dart.txt": {
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    "reviews/ux/inspect-access-final/source-history/food_page-accepted8219.dart.txt": {
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "reviews/ux/inspect-access-final/source-history/renderer-singular-copy.diff": {
+      "bytes": 1448,
+      "sha256": "bf25cdac9647aaae2c5936ac726798cb6066ad4005b8c80a719ba4e138f4b4b4"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-density-before-native.log": {
+      "bytes": 2629,
+      "sha256": "70b46bd697d16735add846c3ca5e980b1a791042002fdf0097f62fcbc6c0b04d"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-density-final-native.log": {
+      "bytes": 5187,
+      "sha256": "822f5e860eb0720b36bec07032d36037041cf63b07e29e249b21cc39389fe73a"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-preview-accepted-native.log": {
+      "bytes": 5180,
+      "sha256": "837a5768161068db8cee5a1ba64429e9bbab7bd6c493372b320b90a55b14b83c"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-preview-final-native.log": {
+      "bytes": 5180,
+      "sha256": "0eae37b67912586ac12e8e87e5e9d20b14c4cdd94cb1a1f28000e17cff810d1e"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-production-accepted-native.log": {
+      "bytes": 9479,
+      "sha256": "2f89040bf344f3c6cf503f7e3e77f8f973918705e7a0958b0b7c7cc5bb5a6bbb"
+    },
+    "reviews/ux/logs-at-review/tandemlog-food-production-verified-native.log": {
+      "bytes": 6971,
+      "sha256": "3c6c674098d4a01592c2634770e8a5275ebb0353778fd155ac7f21dbae8b6149"
+    },
+    "reviews/ux/matched-before-source/density_before_test.dart.txt": {
+      "bytes": 4024,
+      "sha256": "cdbc9d110514ecede899c9da080a1e3a75ff6610b3499db191174b75ed0a7fc8"
+    },
+    "reviews/ux/matched-before-source/executed_before_workflow_test.dart.txt": {
+      "bytes": 4024,
+      "sha256": "cdbc9d110514ecede899c9da080a1e3a75ff6610b3499db191174b75ed0a7fc8"
+    },
+    "reviews/ux/matched-before-source/food_page.dart.txt": {
+      "bytes": 37194,
+      "sha256": "ee52612d565748a1967a0d488ed1341d7989da7d213becfc0003b4ba8f6fcbac"
+    },
+    "reviews/ux/matched-before-source/food_preview.dart.txt": {
+      "bytes": 5721,
+      "sha256": "f53c6adb0e38ded2158941621bcecdede6ef612fd69f6e4214d286d259c47e32"
+    },
+    "reviews/ux/native-linux-scripted-preview.mp4": {
+      "bytes": 181530,
+      "sha256": "020da824c67e99534504b6f1673e7f66df311b941000b263323c0d9d924b4187"
+    },
+    "reviews/ux/recurrence-disposition/README.md": {
+      "bytes": 1380,
+      "sha256": "5ab5a9534bc32185a7dae08cff8aca0b4c751b8699b942e32289b7afbb784bba"
+    },
+    "reviews/ux/recurrence-disposition/disposition-receipt.json": {
+      "bytes": 3562,
+      "sha256": "9c51077568660e4e98d88db511176334fe8f6e2fc3f28cf474001c3be0ce818b"
+    },
+    "reviews/ux/recurrence-disposition/independent-correctness/diagnostic-only-addendum.json": {
+      "bytes": 2228,
+      "sha256": "f0e8c7eac10a7ea6c67683b118034b942e085a863e9b035d9489e6714870bed4"
+    },
+    "reviews/ux/recurrence-disposition/independent-correctness/diagnostic-only.diff": {
+      "bytes": 454,
+      "sha256": "4e605239e501e2fb5b85e34ba65e0331a3c1b0468fe28eed919f478376653d97"
+    },
+    "reviews/ux/recurrence-disposition/logs/later-onboarding-pass.log": {
+      "bytes": 4151,
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78"
+    },
+    "reviews/ux/recurrence-disposition/logs/recurrence-pass-onboarding-fail.log": {
+      "bytes": 6313,
+      "sha256": "572d0b75b7bc7edc02ec00f153be7572159ecc9c30fb0e434d4726c840f9eb6a"
+    },
+    "reviews/ux/recurrence-disposition/source/integration_test/completion_actions_test.dart.txt": {
+      "bytes": 7675,
+      "sha256": "a0bb728966046c9fa2fab789acb361848e644a3970c16b102482fe7172738a9a"
+    },
+    "reviews/ux/recurrence-disposition/source/lib/food/food_store.dart.txt": {
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "reviews/ux/review-receipt.json": {
+      "bytes": 27024,
+      "sha256": "d92bcdfa4e93f91fe2af55e9f4b192ed6dfd7517fc1654dd8da8852adc430cb9"
+    },
+    "reviews/ux/snapshot-manifest-draft.json": {
+      "bytes": 17069,
+      "sha256": "39030f3c0e6440ce384f25daec463ddbb83e5d73b1ef4eb26507cec340653db4"
+    },
+    "reviews/ux/sources-at-review/design/decisions/0014-food-inventory.md": {
+      "bytes": 10114,
+      "sha256": "1a21c4286dd0d2586a2bc0d39d4a2911c26f27619f0b84c50549708eafcd86a0"
+    },
+    "reviews/ux/sources-at-review/integration_test/food_density_workflow_test.dart.txt": {
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "reviews/ux/sources-at-review/integration_test/food_preview_workflow_test.dart.txt": {
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    "reviews/ux/sources-at-review/integration_test/food_production_workflow_test.dart.txt": {
+      "bytes": 16451,
+      "sha256": "2a41074040b95728ea863972f6a49682e896b148bb6f0dd69c2a510e2063354d"
+    },
+    "reviews/ux/sources-at-review/lib/food/food_page.dart.txt": {
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "reviews/ux/sources-at-review/lib/food/inventory.dart.txt": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "reviews/ux/sources-at-review/lib/main.dart.txt": {
+      "bytes": 194342,
+      "sha256": "e3fa271f928e8f75a8a48f91baac1587c8ecba8ebb4d9cf729169a07b11916b9"
+    },
+    "reviews/ux/sources-at-review/lib/presentation/tag_input.dart.txt": {
+      "bytes": 23270,
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+    },
+    "reviews/ux/sources-at-review/tool/food_preview.dart.txt": {
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    "reviews/ux/stable-source/design/decisions/0014-food-inventory.md": {
+      "bytes": 10114,
+      "sha256": "1a21c4286dd0d2586a2bc0d39d4a2911c26f27619f0b84c50549708eafcd86a0"
+    },
+    "reviews/ux/stable-source/integration_test/food_density_workflow_test.dart.txt": {
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "reviews/ux/stable-source/integration_test/food_preview_workflow_test.dart.txt": {
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    "reviews/ux/stable-source/integration_test/food_production_workflow_test.dart.txt": {
+      "bytes": 16451,
+      "sha256": "2a41074040b95728ea863972f6a49682e896b148bb6f0dd69c2a510e2063354d"
+    },
+    "reviews/ux/stable-source/lib/food/food_page.dart.txt": {
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "reviews/ux/stable-source/lib/food/inventory.dart.txt": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "reviews/ux/stable-source/lib/main.dart.txt": {
+      "bytes": 194342,
+      "sha256": "e3fa271f928e8f75a8a48f91baac1587c8ecba8ebb4d9cf729169a07b11916b9"
+    },
+    "reviews/ux/stable-source/lib/presentation/tag_input.dart.txt": {
+      "bytes": 23270,
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+    },
+    "reviews/ux/stable-source/tool/food_preview.dart.txt": {
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    "tandemlog-food-renderer-before-singular-copy.dart.txt": {
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "tandemlog-food-renderer-singular-copy.diff": {
+      "bytes": 1448,
+      "sha256": "bf25cdac9647aaae2c5936ac726798cb6066ad4005b8c80a719ba4e138f4b4b4"
+    }
+  },
+  "attachmentMapping": "Reviewer receipts retain original absolute paths. Copies preserve bytes; Dart source attachments use .dart.txt to remain outside analyzer/test discovery. SHA256 identifies each unchanged attachment.",
+  "limits": [
+    "Linux GTK debug native test windows, not Android/Windows/human touch acceptance",
+    "Frozen review receipts qualify owner-run evidence versus independent execution",
+    "Historical failed/partial runs retained, not counted as accepted",
+    "Library supported helper failed HTTP401 before upload; no Library ID or URL",
+    "Pubspec remains released2026.10.3+56; new Food candidate must use new exact identity",
+    "Private import, exact installers, device acceptance and release notes/media/publication gates remain pending"
+  ]
+}

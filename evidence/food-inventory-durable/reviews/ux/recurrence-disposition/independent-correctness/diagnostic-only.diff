@@ -1,0 +1,13 @@
+--- accepted-core
++++ diagnostic-only
+@@ -126,8 +126,8 @@
+     final type = await FileSystemEntity.type(path, followLinks: false);
+     if (type != FileSystemEntityType.file &&
+         !(allowMissing && type == FileSystemEntityType.notFound)) {
+-      throw const FormatException(
+-        'Food canonical paths must be regular files.',
++      throw FormatException(
++        'Food canonical path "$name" must be a regular file.',
+       );
+     }
+   }

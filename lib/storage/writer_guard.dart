@@ -175,17 +175,31 @@ class SqliteWriterGuard implements WriterGuard {
     List<PreparedWriterRecord> records,
   ) async {
     profile.transaction(
-      () => _save(
+      () => prepareInTransaction(space, writer, sequence, hash, records),
+    );
+  }
+
+  /// Reserve a canonical append with its immutable recovery bytes atomically.
+  void prepareInTransaction(
+    String space,
+    String writer,
+    int sequence,
+    String hash,
+    List<PreparedWriterRecord> records,
+  ) {
+    if (profile.database.autocommit) {
+      throw StateError('Writer preparation requires an active transaction.');
+    }
+    _save(
+      space,
+      writer,
+      _prepareGuard(
         space,
         writer,
-        _prepareGuard(
-          space,
-          writer,
-          _load(space, writer),
-          sequence,
-          hash,
-          records,
-        ),
+        _load(space, writer),
+        sequence,
+        hash,
+        records,
       ),
     );
   }

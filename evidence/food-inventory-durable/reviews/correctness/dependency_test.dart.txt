@@ -1,0 +1,62 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const install='00000000-0000-4000-8000-000000000010';
+const a='00000000-0000-4000-8000-000000000020';
+const b='00000000-0000-4000-8000-000000000030';
+const c='00000000-0000-4000-8000-000000000040';
+const id='00000000-0000-4000-8000-000000000100';
+FoodRecord record(String w,int seq,int clock,FoodAction action,{FoodRecord? previous,List<String> deletes=const[],List<String> edits=const[],Contents? contents,FoodDetails? details,String? createdWith})=>FoodRecord(space:space,writer:w,sequence:seq,clock:EventClock(BigInt.from(clock)),previousHash:previous?.hash??eventGenesisHash(space,w),operation:FoodOperation(id:'$w:$seq',order:clock,action:action,targets:[id],details:details,contents:contents,createdAt:action==FoodAction.add?'2026-10-10T00:00:00Z':null,observedDeletes:deletes,observedEdits:edits),createdWith:action==FoodAction.add?{}:{id:createdWith??'$a:1'});
+void main(){
+ late Directory root; late LocalProfileDatabase profile;late LocalLogFolder folder;late FoodStore food;
+ setUp(()async{root=await Directory.systemTemp.createTemp('food-dependency-');profile=await LocalProfileDatabase.open('${root.path}/profile');folder=LocalLogFolder((await Directory('${root.path}/data').create()).path);await folder.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));food=await FoodStore.open(folder,profile:profile,installationWriter:install,space:space);});
+ tearDown(()async{await food.close();await profile.close();await root.delete(recursive:true);});
+ Future<void> deliver(List<FoodRecord> records)async{for(final r in records){final file=File('${folder.location}/${foodLogName(r.writer)}');await file.writeAsString('${r.encode()}\n',mode:FileMode.append,flush:true);}}
+ test('missing creation defers edit; delayed birth resolves; duplicate refresh is exact',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final edit=record(b,1,2,FoodAction.edit,contents:const Contents.fraction(1,3));
+ await deliver([edit]);await food.refresh();expect(food.pendingReferences,1);expect(food.state.containers,isEmpty);
+ await expectLater(food.add(const FoodDetails(name:'Tea'),1),throwsFormatException);expect(ProfileFoodIntents(profile).pending(space,foodWriter(install)),isEmpty);
+ await deliver([birth]);await food.refresh();expect(food.pendingReferences,0);expect(food.state.active.single.contents.label,'⅓ remaining');
+ final heads=profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer').map((r)=>Map.from(r)).toList();await food.refresh();expect(profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer'),heads);expect(food.state.active,hasLength(1));
+ });
+ test('known-invalid delayed observed source cannot publish or advance heads',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final wrong=record(c,1,2,FoodAction.edit,details:const FoodDetails(name:'Tea'));
+ final restoration=record(b,1,3,FoodAction.restore,deletes:[wrong.id]);
+ await deliver([birth,restoration]);await food.refresh();expect(food.pendingReferences,1);expect(food.state.active.single.details.name,'Rice');
+ final heads=profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer').map((r)=>Map.from(r)).toList();
+ await deliver([wrong]);await expectLater(food.refresh(),throwsFormatException);expect(food.state.active.single.details.name,'Rice');expect(food.pendingReferences,1);expect(profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer'),heads);
+ });
+ test('offline remove/restore only cancels observed tokens regardless of arrival',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final removed=record(a,2,2,FoodAction.remove,previous:birth);
+ final other=record(c,1,2,FoodAction.remove);
+ final restored=record(b,1,3,FoodAction.restore,deletes:[removed.id]);
+ await deliver([birth,restored]);await food.refresh();expect(food.pendingReferences,1);
+ await deliver([removed]);await food.refresh();expect(food.state.active,hasLength(1));
+ await deliver([other]);await food.refresh();expect(food.state.deleted.single.deletions,{other.id});
+ await food.refresh();expect(food.state.deleted.single.deletions,{other.id});
+ });
+ test('offline concurrent contents remain alternatives until observed resolution arrives',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final left=record(a,2,2,FoodAction.edit,previous:birth,contents:const Contents.fraction(1,3));
+ final right=record(b,1,2,FoodAction.edit,contents:const Contents.fraction(1,2));
+ final resolution=record(c,1,3,FoodAction.edit,contents:const Contents.fraction(1,4),edits:[left.id,right.id]);
+ await deliver([birth,left,resolution]);await food.refresh();expect(food.pendingReferences,1);expect(food.state.active.single.contentsEdits.keys,{left.id});
+ await deliver([right]);await food.refresh();expect(food.pendingReferences,0);expect(food.state.active.single.contentsEdits.keys,{resolution.id});expect(food.state.active.single.contents.label,'¼ remaining');
+ });
+ test('queued close rejects later commands and releases namespace for reopen',()async{
+ final operation=food.add(const FoodDetails(name:'Rice'),1);final close=food.close();final later=food.add(const FoodDetails(name:'Tea'),1);await operation;await close;await expectLater(later,throwsStateError);
+ food=await FoodStore.open(folder,profile:profile,installationWriter:install,space:space);expect(food.state.active.single.details.name,'Rice');
+ });
+}

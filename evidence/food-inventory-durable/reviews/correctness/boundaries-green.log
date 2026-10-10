@@ -1,0 +1,13 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/observed_snapshot_green_test.dart
+00:00 +0: /tmp/food-correctness-review/durable/observed_snapshot_green_test.dart: Restore cancels displayed deletion only and preserves unseen removal
+00:00 +1: /tmp/food-correctness-review/durable/reference_capacity_green_test.dart: admitted deletion tokens above one record bound can still be restored
+00:00 +2: /tmp/food-correctness-review/durable/reference_capacity_green_test.dart: admitted deletion tokens above one record bound can still be restored
+00:00 +3: /tmp/food-correctness-review/durable/reference_capacity_green_test.dart: admitted deletion tokens above one record bound can still be restored
+00:01 +4: /tmp/food-correctness-review/durable/reference_capacity_green_test.dart: admitted concurrent contents above one record bound can still be resolved
+00:01 +5: /tmp/food-correctness-review/durable/recovery_capacity_test.dart: prepared first-stream recovery refuses new remote stream-count cap before append
+00:02 +6: /tmp/food-correctness-review/durable/dependency_test.dart: missing creation defers edit; delayed birth resolves; duplicate refresh is exact
+00:02 +7: /tmp/food-correctness-review/durable/dependency_test.dart: known-invalid delayed observed source cannot publish or advance heads
+00:02 +8: /tmp/food-correctness-review/durable/dependency_test.dart: offline remove/restore only cancels observed tokens regardless of arrival
+00:02 +9: /tmp/food-correctness-review/durable/dependency_test.dart: offline concurrent contents remain alternatives until observed resolution arrives
+00:02 +10: /tmp/food-correctness-review/durable/dependency_test.dart: queued close rejects later commands and releases namespace for reopen
+00:02 +11: All tests passed!

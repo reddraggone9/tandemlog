@@ -1,0 +1,42 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const install='00000000-0000-4000-8000-000000000010';
+const a='00000000-0000-4000-8000-000000000020';
+const b='00000000-0000-4000-8000-000000000030';
+const c='00000000-0000-4000-8000-000000000040';
+const id='00000000-0000-4000-8000-000000000100';
+FoodRecord record(String w,int seq,int clock,FoodAction action,{FoodRecord? previous,List<String> deletes=const[],List<String> edits=const[],Contents? contents,FoodDetails? details,String? createdWith})=>FoodRecord(space:space,writer:w,sequence:seq,clock:EventClock(BigInt.from(clock)),previousHash:previous?.hash??eventGenesisHash(space,w),operation:FoodOperation(id:'$w:$seq',order:clock,action:action,targets:[id],details:details,contents:contents,createdAt:action==FoodAction.add?'2026-10-10T00:00:00Z':null,observedDeletes:deletes,observedEdits:edits),createdWith:action==FoodAction.add?{}:{id:createdWith??'$a:1'});
+void main(){
+ late Directory root; late LocalProfileDatabase profile;late LocalLogFolder folder;late FoodStore food;
+ setUp(()async{root=await Directory.systemTemp.createTemp('food-dependency-');profile=await LocalProfileDatabase.open('${root.path}/profile');folder=LocalLogFolder((await Directory('${root.path}/data').create()).path);await folder.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));food=await FoodStore.open(folder,profile:profile,installationWriter:install,space:space);});
+ tearDown(()async{await food.close();await profile.close();await root.delete(recursive:true);});
+ Future<void> deliver(List<FoodRecord> records)async{for(final r in records){final file=File('${folder.location}/${foodLogName(r.writer)}');await file.writeAsString('${r.encode()}\n',mode:FileMode.append,flush:true);}}
+ test('delayed cross-container observed removal rolls back both heads and view',()async{
+ const otherId='00000000-0000-4000-8000-000000000101';
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final otherBirth=FoodRecord(space:space,writer:c,sequence:1,clock:EventClock(BigInt.one),previousHash:eventGenesisHash(space,c),operation:FoodOperation(id:'$c:1',order:1,action:FoodAction.add,targets:[otherId],details:const FoodDetails(name:'Tea'),createdAt:'2026-10-10T00:00:00Z'));
+ final source=FoodRecord(space:space,writer:c,sequence:2,clock:EventClock(BigInt.two),previousHash:otherBirth.hash,createdWith:{otherId:otherBirth.id},operation:FoodOperation(id:'$c:2',order:2,action:FoodAction.remove,targets:[otherId]));
+ final restoration=record(b,1,3,FoodAction.restore,deletes:[source.id]);
+ await deliver([birth,otherBirth,restoration]);await food.refresh();expect(food.pendingReferences,1);expect(food.state.active,hasLength(2));
+ final heads=profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer').map((r)=>Map.from(r)).toList();
+ await deliver([source]);await expectLater(food.refresh(),throwsA(isA<FoodHistoryFailure>()));expect(profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer'),heads);expect(food.state.active,hasLength(2));expect(food.pendingReferences,1);
+ });
+ test('delayed noncausal observed source rolls back heads and retains pending view',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ final source=record(c,1,3,FoodAction.remove);
+ final restoration=record(b,1,2,FoodAction.restore,deletes:[source.id]);
+ await deliver([birth,restoration]);await food.refresh();expect(food.pendingReferences,1);
+ final heads=profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer').map((r)=>Map.from(r)).toList();
+ await deliver([source]);await expectLater(food.refresh(),throwsA(isA<FoodHistoryFailure>()));expect(profile.database.select('SELECT * FROM protected_food_heads ORDER BY writer'),heads);expect(food.state.active.single.details.name,'Rice');expect(food.pendingReferences,1);
+ });
+}

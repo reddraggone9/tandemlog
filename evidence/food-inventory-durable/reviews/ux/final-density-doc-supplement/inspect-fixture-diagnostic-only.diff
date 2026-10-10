@@ -1,0 +1,9 @@
+--- native-passed-bfc
++++ final-1567
+@@ -19,5 +19,5 @@
+     tester.element(icons.evaluate().isEmpty ? control : icons.first),
+   );
+-  final label = control.description;
++  final label = control.toString();
+   for (var step = 0; step < 60 && !focus.hasPrimaryFocus; step++) {
+     if (backwards) {

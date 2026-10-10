@@ -25,6 +25,20 @@ FoodOperation operation(
 );
 
 void main() {
+  test(
+    'legacy date certainty stays unknown unless evidence establishes it',
+    () {
+      final raw = const FoodDetails(
+        name: 'Synthetic source',
+        expiry: '2026-10-15',
+      ).toJson();
+      raw['estimated'] = null;
+      final details = FoodDetails.fromJson(raw);
+      expect(details.estimated, isNull);
+      expect(FoodDetails.fromJson(details.toJson()).estimated, isNull);
+    },
+  );
+
   test('Deleted sorts tied writers and uses latest still-active deletion', () {
     const other = '00000000-0000-4000-8000-000000000020';
     final events = [
@@ -243,7 +257,7 @@ void main() {
         ], contents: const Contents.fraction(1, 3)),
       ]);
       expect(state.groups.single.containers.length, 8);
-      expect(state.groups.single.summary, '7 full + ⅓ remaining');
+      expect(state.groups.single.summary, '7 full + 1 container ⅓ full');
       expect(state.groups.single.quickRemoveTarget, isNull);
     },
   );

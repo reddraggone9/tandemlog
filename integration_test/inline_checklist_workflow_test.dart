@@ -18,7 +18,7 @@ import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 
-class _FailingMenuFolder implements LogFolder {
+class _FailingMenuFolder implements LogFolder, BoundedLogFolder {
   _FailingMenuFolder(this.inner);
   final LocalLogFolder inner;
   bool failLists = false;
@@ -30,6 +30,9 @@ class _FailingMenuFolder implements LogFolder {
     return inner.list();
   }
 
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      inner.readBounded(name, maximumBytes);
   @override
   Future<Uint8List> read(String name) => inner.read(name);
   @override

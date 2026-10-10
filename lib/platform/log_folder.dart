@@ -15,7 +15,7 @@ class AndroidLogFileInfo extends LogFileInfo {
   final int? modifiedMillis;
 }
 
-class AndroidLogFolder implements LogFolder, RangeLogFolder {
+class AndroidLogFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   static const channel = MethodChannel('tandemlog/folders');
   static const eventsChannel = EventChannel('tandemlog/folder-events');
   static const _watchMethods = MethodChannel('tandemlog/folder-events');
@@ -166,6 +166,18 @@ class AndroidLogFolder implements LogFolder, RangeLogFolder {
   @override
   Future<Uint8List> read(String name) async =>
       (await _invoke<Uint8List>('read', {'tree': location, 'name': name}))!;
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) async {
+    if (maximumBytes < 0 || maximumBytes > 32 * 1024 * 1024) {
+      throw ArgumentError.value(maximumBytes, 'maximumBytes');
+    }
+    return (await _invoke<Uint8List>('read', {
+      'tree': location,
+      'name': name,
+      'maximumBytes': maximumBytes,
+    }))!;
+  }
+
   @override
   Future<Uint8List?> readFrom(String name, int offset) async {
     if (offset < 0) throw ArgumentError.value(offset, 'offset');

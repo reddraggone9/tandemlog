@@ -1,0 +1,70 @@
+{
+  "result": "BUILD SUCCESSFUL :app:compileDebugKotlin, 64 actionable tasks; no device or release acceptance",
+  "source": {
+    "path": "/tmp/tandemlog-food-implementation/android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt",
+    "bytes": 19721,
+    "sha256": "4a40628a02f781a4221e095e2acef541de7c29534068efa8d9d043002f383bce"
+  },
+  "gradle": {
+    "path": "/tmp/tandemlog-food-gradle-9.4.1-all.zip",
+    "bytes": 238160795,
+    "sha256": "708d2c6ecc97ca9a11838ef64a6c2301151b8dd10387e22dc1a12c30557cab5b"
+  },
+  "javaVersion": "21.0.12.1, matching inherited Debian JRE patch",
+  "jdkPackageProvenance": "android-toolchain-provenance.json",
+  "ndkVersion": "28.2.13676358",
+  "sdk": "isolated/tmp platforms35 revision2 plus inherited36; no repository upgrade",
+  "compiledClasses": [
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/DuplicateCanonicalFile.class",
+      "bytes": 1442,
+      "sha256": "3c889ba0c899967199784abba8dccd9d155bbd35134283f910cb6a20b4e646fd"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity$FolderChild.class",
+      "bytes": 5070,
+      "sha256": "a5f1e881965c2ff8e3a9ffc4566d90336468479f0405a5c8a623e2f8ffb3a8cf"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity$FolderWatch.class",
+      "bytes": 2878,
+      "sha256": "e97e697a4126d5af5f8afe76af10919fcb4138b8f0af9b1dfaa5afef75930f40"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity$configureFlutterEngine$2$1$sink$1.class",
+      "bytes": 2228,
+      "sha256": "238df9b000ad3a6587520cf0dac2aa58aa7c8b96576b6914838dd8ad222a6182"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity$refreshFolderWatch$1.class",
+      "bytes": 2660,
+      "sha256": "03e49295c0d8eb501cefee1150b33c5e3a72ab25fd54ab2d682afa1e63a8add3"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity$timeReceiver$1.class",
+      "bytes": 1526,
+      "sha256": "995f9e6249ba2e1eedcd2d95082b3bf8c3219d6bf45f406e0155f507ea745e36"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MainActivity.class",
+      "bytes": 33909,
+      "sha256": "5b155e0bbe89d406eb6f1adc03dd5f5c8f5d0ef2982f8b9007b268b911a2e111"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/build/app/tmp/kotlin-classes/debug/com/reddraggone9/tandemlog/MissingFolderFile.class",
+      "bytes": 1411,
+      "sha256": "fa38cf25f704c395c40ad6288e7a084344920cd2dfc48e5ea2ec06a3809a536a"
+    }
+  ],
+  "log": {
+    "path": "/tmp/tandemlog-food-android-kotlin-isolated-sdk.log",
+    "bytes": 81269,
+    "sha256": "2f9e8dd22e9ff3700d12b71e95a882c7ed3a0e5717954b12487df1c3ee820d0f"
+  },
+  "limitations": [
+    "Only changed Kotlin compiled; Flutter debug build tasks are not a released APK",
+    "No Android device, SAF provider or human touch workflow accepted",
+    "No repository dependency/version/signing change",
+    "Initial environment build failures preserved with accurate scope"
+  ]
+}

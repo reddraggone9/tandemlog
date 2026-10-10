@@ -1,5 +1,10 @@
 # Task protocol v3
 
+This document specifies the released task protocol. The unreleased Food
+envelope and additive private-profile schema3 are specified in
+[ADR0014](decisions/0014-food-inventory.md); Food records are outside task JSONL
+discovery and do not change task v3 encoding or meanings.
+
 Implementation: `lib/domain/event.dart`, `lib/domain/event_chain.dart`, `lib/storage/task_store.dart`. The first stable 2026.10.0 format explicitly rejects prerelease-only v1/v2 canonical manifests and events, preserving them without rewriting or deleting data. Existing v3 folders remain supported unchanged; backward readability and meaning are durable from this stable boundary. The [chain decision](decisions/0007-canonical-history-integrity.md) specifies exact encoding and integrity limits.
 
 ## Data space and files

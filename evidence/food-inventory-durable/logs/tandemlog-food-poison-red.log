@@ -1,0 +1,28 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_store_test.dart
+00:00 +0: food handle releases its lease when the profile owner is poisoned
+00:00 +0 -1: food handle releases its lease when the profile owner is poisoned [E]
+  Bad state: Local profile database is closed or requires recovery.
+  package:tandemlog/storage/local_profile_database.dart 91:7   LocalProfileDatabase.database
+  package:tandemlog/storage/local_profile_database.dart 70:7   LocalProfileDatabase.serialize.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                   Future.then
+  package:tandemlog/storage/local_profile_database.dart 69:27  LocalProfileDatabase.serialize
+  package:tandemlog/food/food_store.dart 92:19                 FoodStore.close
+  test/food_store_test.dart 202:17                             main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                   _CustomZone.registerUnaryCallback
+  test/food_store_test.dart 200:5                              main.<fn>
+  
+  Bad state: Local profile database is closed or requires recovery.
+  package:tandemlog/storage/local_profile_database.dart 91:7   LocalProfileDatabase.database
+  package:tandemlog/storage/local_profile_database.dart 70:7   LocalProfileDatabase.serialize.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                   Future.then
+  package:tandemlog/storage/local_profile_database.dart 69:27  LocalProfileDatabase.serialize
+  package:tandemlog/food/food_store.dart 92:19                 FoodStore.close
+  test/food_store_test.dart 71:17                              main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_store_test.dart: food handle releases its lease when the profile owner is poisoned

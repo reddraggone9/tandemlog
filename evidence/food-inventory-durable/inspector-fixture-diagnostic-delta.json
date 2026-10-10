@@ -1,0 +1,7 @@
+{
+  "nativeExecutedTestSha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b",
+  "currentTestSha256": "1567aec41a2d191a564f89e32d7fc26cc7897574b5a524efbf8d27863c0d7919",
+  "change": "Only debug-label getter control.description -> control.toString() to remove deprecated API warning; no traversal/activation/assertion/capture change",
+  "verification": "Reversing this exact replacement restores the independently preserved executed native fixture bytes",
+  "nativeLog": "logs/tandemlog-food-inspect-keyboard-final-native.log"
+}

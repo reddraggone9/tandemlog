@@ -1,0 +1,12 @@
+[
+  {
+    "url": "https://snapshot.debian.org/archive/debian-security/20260828T000000Z/pool/updates/main/o/openjdk-21/openjdk-21-jre-headless_21.0.12.1+1-1~deb13u1_amd64.deb",
+    "sha256": "e95f36193e45464ac758e5436f940bf3eaecc77de67188275a42104f58aa7674",
+    "bytes": 41900512
+  },
+  {
+    "url": "https://snapshot.debian.org/archive/debian-security/20260828T000000Z/pool/updates/main/o/openjdk-21/openjdk-21-jdk-headless_21.0.12.1+1-1~deb13u1_amd64.deb",
+    "sha256": "f3abafb6c644b03df042824e707cd211ea33254761d7f7b75be3f8dc0df97c7a",
+    "bytes": 83035048
+  }
+]

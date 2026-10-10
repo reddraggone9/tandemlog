@@ -1,0 +1,14 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/recovery_capacity_test.dart
+00:00 +0: prepared first-stream recovery refuses new remote stream-count cap before append
+00:00 +0 -1: prepared first-stream recovery refuses new remote stream-count cap before append [E]
+  Expected: false
+    Actual: <true>
+  
+  package:matcher                                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18                   expect
+  ../food-correctness-review/durable/recovery_capacity_test.dart 53:2  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/recovery_capacity_test.dart: prepared first-stream recovery refuses new remote stream-count cap before append

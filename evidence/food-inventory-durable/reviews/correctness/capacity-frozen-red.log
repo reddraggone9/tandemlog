@@ -1,0 +1,5 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/capacity_frozen_test.dart
+00:00 +0: a valid near-cap stream refuses crossing the cap before canonical append
+real valid stream bytes=16776789 records=1354 cap=16777216 gap=427 endedDeleted=false
+after rejected command bytes=16776789; protected receipts=0
+00:13 +1: All tests passed!

@@ -1,0 +1,127 @@
+{
+  "status": "accepted for bounded Linux Task IME/recovery UX followup; full Tasks/native release acceptance not established",
+  "reviewer": "/root/tag_autocomplete_trials",
+  "frozenUtc": "2026-10-10T03:32:32.397054+00:00",
+  "sourceBinding": "final current source independently copied/hashed; parent confirmed final production run binding; mixed focused Tasks run is historical and not represented as a final all-green run",
+  "mainSha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+  "foodPageSha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d",
+  "imeRegression": {
+    "bodyIdenticalToGitHead": true,
+    "bodySha256": "0f65256372cb1493d967723a4ba90de4a9313252e6c1ce99fb5dd0779f461312",
+    "observedAuthorResult": "passed in mixed focused native run; original caret/viewport and single/bulk scale assertions unchanged",
+    "policy": "hide Tasks/Food selector only while single/bulk Task editor has bottom viewInsets>0; selector returns declaratively after IME close; editor draft/controller state retained; no font or touch target shrinking",
+    "limitation": "separate selector-node absence/return assertion was not independently run; this reviewer read source and native results"
+  },
+  "recoveryPixelReview": {
+    "image": "images/production-narrow-shared-recovery-2x.png",
+    "actualPlatform": "Linux GTK",
+    "logicalViewport": "390x800",
+    "textScale": 2,
+    "finding": "heading, complete diagnostic and preservation/retry guidance readable; Retry visibly separated at bottom; no clipped or overlapping text/actions observed",
+    "layout": "Expanded scrollable message plus fixed bottom Retry; underlying non-setup command surface excludes pointer, semantics and focus"
+  },
+  "setupReview": {
+    "scope": "first-name setup exception only, with max120px scrollable diagnostic and retained existing name/focus/Continue retry",
+    "source": "keepSetupInputs only when store exists, Tasks selected, no current user and empty user list or pending first user; Continue revalidates shared authority and captured origin/name/pending identity before admission",
+    "evidence": "later desktop onboarding native run1/1 green; no independent setup pixel or human journey claim"
+  },
+  "logsRead": {
+    "productionRecoveryFinal": "5/5 green",
+    "taskRegressionsFixed": "3 passed (phone single/bulk IME, fixed header, native tag filters/block drag);2 failed (historical v3 recurrence async UI readiness and desktop onboarding focus assertion). This whole run is not green.",
+    "setupPreservedFocus": "later onboarding1/1 green after final setup focus fix",
+    "taskCheckpoint": "full87 Tasks suite still running when copied; no final pass claim"
+  },
+  "noOpenMustFixInReviewedScope": true,
+  "remainingGates": [
+    "full87 Tasks result and unresolved recurrence failure closure",
+    "exact-artifact/native acceptance beyond supplied bounded Linux runs",
+    "actual Android/Windows affected workflows and visible-input demos",
+    "full keyboard/assistive technology and human workflow checks",
+    "release/import gates remain separate; no private/live synced data operation"
+  ],
+  "priorFoodDensityReceipt": {
+    "path": "/tmp/food-ux-review/density-final/review-receipt.json",
+    "sha256": "d92bcdfa4e93f91fe2af55e9f4b192ed6dfd7517fc1654dd8da8852adc430cb9",
+    "unchanged": true
+  },
+  "reviewActions": "read-only source/log/pixel review; no implementation edits, builds, tests or native launch",
+  "entries": [
+    {
+      "kind": "stable final review input",
+      "original": "/tmp/tandemlog-food-implementation/lib/main.dart",
+      "snapshot": "source/lib/main.dart",
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    {
+      "kind": "stable final review input",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "snapshot": "source/lib/food/food_page.dart",
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    {
+      "kind": "stable final review input",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart",
+      "snapshot": "source/integration_test/task_flow_test.dart",
+      "bytes": 170224,
+      "sha256": "95b3dc4bdbd6d8f55dff76c35fb92b2c57d25087fc87bdd0603ccb7eb048e498"
+    },
+    {
+      "kind": "stable final review input",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart",
+      "snapshot": "source/integration_test/food_production_workflow_test.dart",
+      "bytes": 20126,
+      "sha256": "c9dc531f5fee6e771774c103a9f7fad4f3976e0d738b8be03855fe9b8866b8da"
+    },
+    {
+      "kind": "actual Linux GTK capture independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/production-recovery-final/production-narrow-shared-recovery-2x.png",
+      "snapshot": "images/production-narrow-shared-recovery-2x.png",
+      "bytes": 64854,
+      "sha256": "293a168438560d79a92e622afa9cdb7532921dfec9a20e5adc0361c5da51d0ac"
+    },
+    {
+      "kind": "actual Linux GTK capture independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/production-recovery-final/production-narrow-stock.png",
+      "snapshot": "images/production-narrow-stock.png",
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    {
+      "kind": "actual Linux GTK capture independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/production-recovery-final/production-wide-stock.png",
+      "snapshot": "images/production-wide-stock.png",
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    {
+      "kind": "author-run evidence; full Tasks checkpoint is in-progress snapshot",
+      "original": "/tmp/tandemlog-food-production-recovery-final-native.log",
+      "snapshot": "logs/tandemlog-food-production-recovery-final-native.log",
+      "bytes": 5772,
+      "sha256": "f48cd02f4875c3fc6b26e2feddb98d0257c82e87ed1ac7d6ad13b212444dc1f4"
+    },
+    {
+      "kind": "author-run evidence; full Tasks checkpoint is in-progress snapshot",
+      "original": "/tmp/tandemlog-food-task-regressions-fixed-native.log",
+      "snapshot": "logs/tandemlog-food-task-regressions-fixed-native.log",
+      "bytes": 9667,
+      "sha256": "add77ef6adfc26ef9ba520c2bef51f1bf7954323f932403dbf055b7d8f79554d"
+    },
+    {
+      "kind": "author-run evidence; full Tasks checkpoint is in-progress snapshot",
+      "original": "/tmp/tandemlog-food-setup-preserved-focus-native.log",
+      "snapshot": "logs/tandemlog-food-setup-preserved-focus-native.log",
+      "bytes": 4151,
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78"
+    },
+    {
+      "kind": "author-run evidence; full Tasks checkpoint is in-progress snapshot",
+      "original": "/tmp/tandemlog-food-task-checkpoint-native.log",
+      "snapshot": "logs/tandemlog-food-task-checkpoint-native.log",
+      "bytes": 8383,
+      "sha256": "73a0334a98dd9c2579ee1005df335a391fba9d583d26a7376ce5175934d3a6ce"
+    }
+  ]
+}

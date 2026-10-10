@@ -1,0 +1,25 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_inventory_test.dart
+00:00 +0: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: legacy date certainty stays unknown unless evidence establishes it
+00:00 +1: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: Deleted sorts tied writers and uses latest still-active deletion
+00:00 +2: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: Deleted sequence tie uses numeric sequence rather than lexical ID
+00:00 +3: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: equivalent fractions do not conflict; real alternatives require review
+00:00 +4: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: multiwriter tied clocks and delayed Restore replay deterministically
+00:00 +5: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: independent field edits merge without overwriting the other field
+00:00 +6: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: concurrent contents alternatives remain visible until observed resolution
+00:00 +7: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: Add N creates physical containers; count is derived
+00:00 +8: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: eight containers stay eight with seven full and one third remaining
+00:00 +9: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: identical full containers have a deterministic quick target
+00:00 +10: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: observed group deletion excludes concurrent new containers
+00:00 +11: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: concurrent same-target remove counts once; unseen delete survives Restore
+00:00 +12: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: duplicate and arbitrarily reordered delivery replay identically
+00:00 +13: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: retention hides even preexpiry; undated stays Inbox; search ignores filters
+00:00 +14: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: expiry order is global; different expiry or descriptive data stay separate
+00:00 +15: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: Deleted is explicit, searchable, and durable with no age cutoff
+00:00 +16: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: invalid counts, fractions, dates, paths and unknown fields fail closed
+00:00 +17: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:01 +18: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+00:01 +19: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:01 +20: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:01 +21: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: quick remove, Deleted and Undo preserve physical identity
+00:02 +22: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: partial containers require inspection; search includes retained stock
+00:02 +23: All tests passed!

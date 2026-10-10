@@ -1,0 +1,292 @@
+{
+  "status": "accepted for final-renderer inspected-group keyboard/Back and large-text Linux UX scope; no open material must-fix in reviewed scope",
+  "reviewer": "/root/tag_autocomplete_trials",
+  "frozenUtc": "2026-10-10T03:57:48.801337+00:00",
+  "repository": "/tmp/tandemlog-food-implementation",
+  "baseHead": "f1db9f5b1f06c4e8b328d18010cad3e92c184b1b",
+  "sourceState": "uncommitted final renderer independently snapshotted/hashed; parent confirmed native source/run binding; no separate exact binary attestation invented",
+  "sourceHashes": {
+    "lib/main.dart": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+    "lib/food/food_page.dart": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50",
+    "lib/food/food_store.dart": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f",
+    "lib/food/inventory.dart": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+    "tool/food_preview.dart": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0",
+    "integration_test/food_inspect_accessibility_test.dart": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b",
+    "integration_test/food_density_workflow_test.dart": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c",
+    "integration_test/food_preview_workflow_test.dart": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+  },
+  "sourceDeltaProof": "Reversing exactly three singular/plural strings (Remove menu, Remove confirmation, Edit title) makes current3b renderer byte-identical to accepted8219 renderer. No layout, action, guard, or persistence change in this delta.",
+  "nativeResult": {
+    "log": "logs/tandemlog-food-inspect-keyboard-final-native.log",
+    "result": "1/1 passed51sec; one meaningful fixture loops four cases",
+    "cases": [
+      "390x850 dark1x",
+      "390x850 dark2x",
+      "1200x850 dark1x",
+      "1200x850 dark2x"
+    ],
+    "actions": "Tab reaches Inspect/menu/Edit, Enter activates; Escape dismisses menu; dispatched Flutter Back closes unchanged editor; Shift+Tab reaches preceding Collapse and Enter closes it",
+    "dataGate": "before/after every physical container full toJson snapshot compared for all twelve items; all snapshots unchanged",
+    "limits": "programmatic ensureVisible supplies initial scroll framing; genuine Tab/ShiftTab focus assertions remain. Not a full-list wraparound traversal or assistive technology audit. Back uses Flutter handlePopRoute, not physical Android Back/human input."
+  },
+  "visualReview": {
+    "actualFinalFramesViewed": 12,
+    "observations": [
+      "expanded metadata500g/Freezer and physical ID/Full readable in all four cases",
+      "menus wrap at2x within viewport; both secondary actions visible and keyboard Edit activation passes",
+      "existing editor size/location values and Save/Cancel visible/reachable in all four cases",
+      "whole-card Inspect captures retain row title and action context",
+      "singular menu and editor title are corrected"
+    ],
+    "qualifiedLimitations": [
+      "narrow2x date-format/optional floating-label suffix and Inbox helper tail ellipsize; core label/value meaning and primary actions remain understandable",
+      "narrow2x retention hint ellipsizes; full keyboard/screen-reader name semantics were not newly audited",
+      "editor screenshot is deliberately scrolled to Location; top name field can be partially outside scroll viewport at2x. This is scrolling, not lost content."
+    ],
+    "judgment": "ancillary label ellipsis is a bounded large-label limitation, not material Inspect-access blocker; no UI policy/layout redesign requested"
+  },
+  "historicalFailuresPreserved": {
+    "red": "meaningful singular menu expectation failed after successful Inspect/menu access on8219 renderer",
+    "firstFinalAttempt": "app startup/debug connection failure before fixture execution; no frame acceptance",
+    "retry": "forward Tab after Back traversed later groups, first card left lazy render range and Collapse finder failed",
+    "diagnostic": "actual step22 original focus not primary, Oat card unmounted and later rows visible; confirmed direction/framing issue. Fixture retained genuine Shift+Tab to preceding Collapse, no requestFocus fallback."
+  },
+  "tasksDisposition": {
+    "fullSuite": "87/87 passed17:13 on Main6f5/renderer8219 before three-string Food-only copy correction",
+    "qualification": "not an exact3b full-suite run; parent final native/density/artifact acceptance remains separate"
+  },
+  "priorEvidence": "prior density8219, Task recovery and recurrence-disposition receipts remain unchanged; early historical media not promoted to current-renderer evidence",
+  "remainingGates": [
+    "owner final3b density capture/binding",
+    "actual Windows/Android affected flows and visible-input demos",
+    "broader whole-list keyboard and assistive technology/human workflow acceptance",
+    "exact artifact/storage/native/release/editorial gates; no private import/live synced user-data operation"
+  ],
+  "reviewActions": "read-only source/log/image review and local receipt snapshots; no implementation edits, builds or tests run by reviewer",
+  "entries": [
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-1200-actions.png",
+      "snapshot": "images/final/inspect-dark-1x-1200-actions.png",
+      "bytes": 76706,
+      "sha256": "5b03b31736ff2d24a04660c8915fd2abe8782678d9d22e40692d9cc543647d56"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-1200-editor.png",
+      "snapshot": "images/final/inspect-dark-1x-1200-editor.png",
+      "bytes": 96032,
+      "sha256": "de0e2ac2d12a85a145ff80bf26e91af0db640a1657a17626464cf6d13c7a90a6"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-1200.png",
+      "snapshot": "images/final/inspect-dark-1x-1200.png",
+      "bytes": 73969,
+      "sha256": "45d2378fb09a78bc39958ffdbbee2f1696eeef2cd3a3fcf1d28ff9e35e98ea1c"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-390-actions.png",
+      "snapshot": "images/final/inspect-dark-1x-390-actions.png",
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-390-editor.png",
+      "snapshot": "images/final/inspect-dark-1x-390-editor.png",
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-1x-390.png",
+      "snapshot": "images/final/inspect-dark-1x-390.png",
+      "bytes": 64455,
+      "sha256": "2123dcd1c3b61da2c0645b2f047db0a7be342fb8bb77a1e0a7a951526e8c3336"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-1200-actions.png",
+      "snapshot": "images/final/inspect-dark-2x-1200-actions.png",
+      "bytes": 102541,
+      "sha256": "7ba615614102716d7be4c036f24b0985ed0caaa98b31269b589527ec236e4c65"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-1200-editor.png",
+      "snapshot": "images/final/inspect-dark-2x-1200-editor.png",
+      "bytes": 118687,
+      "sha256": "29a8c88b2c403743ef257772c6132885f7dbdc5f34373c127a4d55f4dc121a85"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-1200.png",
+      "snapshot": "images/final/inspect-dark-2x-1200.png",
+      "bytes": 91667,
+      "sha256": "b726aabd7536510faf47b8e7245ad460ee0770e04b31a54023186a63ee3d0c4c"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390-actions.png",
+      "snapshot": "images/final/inspect-dark-2x-390-actions.png",
+      "bytes": 66848,
+      "sha256": "33f565014ddf8f448fa1d49c0c07748868bec34eaaf57080a25956690eead521"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390-editor.png",
+      "snapshot": "images/final/inspect-dark-2x-390-editor.png",
+      "bytes": 61941,
+      "sha256": "31113cad4b5a634215f61fd6882df80ea428cc671949a4b4e20dd09b4c7a1e4b"
+    },
+    {
+      "kind": "actual final Linux GTK frame; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390.png",
+      "snapshot": "images/final/inspect-dark-2x-390.png",
+      "bytes": 60451,
+      "sha256": "82ce30caf328f8d37aa8ff49d5636960182b3c42d603b302ba908ac90a19ef0d"
+    },
+    {
+      "kind": "historical mixed traversal failure frame; not final acceptance",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-final-retry/inspect-dark-1x-390-actions.png",
+      "snapshot": "images/failed-retry/inspect-dark-1x-390-actions.png",
+      "bytes": 67404,
+      "sha256": "d2c4a4e833edb4891bc6b669bfc5475e68b73d7eacc8381fa6f1cf4918c974da"
+    },
+    {
+      "kind": "historical mixed traversal failure frame; not final acceptance",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-final-retry/inspect-dark-1x-390-editor.png",
+      "snapshot": "images/failed-retry/inspect-dark-1x-390-editor.png",
+      "bytes": 56848,
+      "sha256": "6a921dad6b1d81c6f64eaf56230c2aceeb8d11a1f0027d00b1aad8751aeff9f5"
+    },
+    {
+      "kind": "historical mixed traversal failure frame; not final acceptance",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-final-retry/inspect-dark-1x-390.png",
+      "snapshot": "images/failed-retry/inspect-dark-1x-390.png",
+      "bytes": 63997,
+      "sha256": "635af1f5c8fad7754a8a8bbc172a168a8425d47f9b0c660c9336ebfeac633af4"
+    },
+    {
+      "kind": "actual forward traversal unmount diagnostic; independently viewed",
+      "original": "/tmp/tandemlog-food-durable-evidence/inspect-focus-diagnostic/inspect-traversal-diagnostic.png",
+      "snapshot": "images/diagnostic/inspect-traversal-diagnostic.png",
+      "bytes": 67020,
+      "sha256": "e58bb7b16807b10f16815e2c203980e82b04c25ca2b871328cc823431d188151"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/lib/main.dart",
+      "snapshot": "source/lib/main.dart",
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "snapshot": "source/lib/food/food_page.dart",
+      "bytes": 38673,
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_store.dart",
+      "snapshot": "source/lib/food/food_store.dart",
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "snapshot": "source/lib/food/inventory.dart",
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "snapshot": "source/tool/food_preview.dart",
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart",
+      "snapshot": "source/integration_test/food_inspect_accessibility_test.dart",
+      "bytes": 5916,
+      "sha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_density_workflow_test.dart",
+      "snapshot": "source/integration_test/food_density_workflow_test.dart",
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    {
+      "kind": "final review input; stable parent-confirmed source/run binding",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_preview_workflow_test.dart",
+      "snapshot": "source/integration_test/food_preview_workflow_test.dart",
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-inspect-red-native.log",
+      "snapshot": "logs/tandemlog-food-inspect-red-native.log",
+      "bytes": 5598,
+      "sha256": "a6a2a0ef6ebd463719d0177364e66013ea8ef5afff43e6299919a026d44350ec"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-inspect-final-native.log",
+      "snapshot": "logs/tandemlog-food-inspect-final-native.log",
+      "bytes": 4026,
+      "sha256": "5842527fc48f12332c386d007d3c5dca101d8c49a7cf64c803a0d324535da6d2"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-inspect-final-retry-native.log",
+      "snapshot": "logs/tandemlog-food-inspect-final-retry-native.log",
+      "bytes": 5601,
+      "sha256": "c79d66b4daacbe4e3bc3101f3630a8c84f3ca2f0fea459345e8a42ef97cf2ecb"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-inspect-focus-diagnostic-native.log",
+      "snapshot": "logs/tandemlog-food-inspect-focus-diagnostic-native.log",
+      "bytes": 6319,
+      "sha256": "5515872269cb6ea6299a33a61ca0e64b0b2afd49199ccd35253e2b01a1c7568a"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-inspect-keyboard-final-native.log",
+      "snapshot": "logs/tandemlog-food-inspect-keyboard-final-native.log",
+      "bytes": 3566,
+      "sha256": "ca252fab7b260f1c9ea79f0e3d04c759cc53b7a7783b7016a9ea9f3f02e2b601"
+    },
+    {
+      "kind": "owner-run raw evidence; individual outcome qualified below",
+      "original": "/tmp/tandemlog-food-task-checkpoint-native.log",
+      "snapshot": "logs/tandemlog-food-task-checkpoint-native.log",
+      "bytes": 47441,
+      "sha256": "4a9f1d56baf3eab6783cf2df49cc6083530e017e44f8a900fceeb291a222e432"
+    },
+    {
+      "kind": "previous accepted renderer; historical density binding",
+      "original": "/tmp/tandemlog-food-renderer-before-singular-copy.dart.txt",
+      "snapshot": "source-history/food_page-accepted8219.dart.txt",
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    {
+      "kind": "three-string copy delta provided by owner and independently verified",
+      "original": "/tmp/tandemlog-food-renderer-singular-copy.diff",
+      "snapshot": "source-history/renderer-singular-copy.diff",
+      "bytes": 1448,
+      "sha256": "bf25cdac9647aaae2c5936ac726798cb6066ad4005b8c80a719ba4e138f4b4b4"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/observed_snapshot_test.dart
+00:00 +0: Restore cancels displayed deletion only and preserves unseen removal
+00:00 +0 -1: Restore cancels displayed deletion only and preserves unseen removal [E]
+  Bad state: No element
+  dart:core                                                             List.single
+  ../food-correctness-review/durable/observed_snapshot_test.dart 29:28  main.<fn>
+  
+00:00 +0 -1: contents save consumes displayed edits only and preserves unseen alternative
+00:00 +0 -2: contents save consumes displayed edits only and preserves unseen alternative [E]
+  Expected: contains '00000000-0000-4000-8000-000000000030:1'
+    Actual: _CompactKeysIterable<String>:['ef7de7ae-f895-59f0-9090-8480d065bcd4:1']
+     Which: does not contain '00000000-0000-4000-8000-000000000030:1'
+  
+  package:matcher                                                      expect
+  package:flutter_test/src/widget_tester.dart 473:18                   expect
+  ../food-correctness-review/durable/observed_snapshot_test.dart 36:2  main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/observed_snapshot_test.dart: Restore cancels displayed deletion only and preserves unseen removal
+  /tmp/food-correctness-review/durable/observed_snapshot_test.dart: contents save consumes displayed edits only and preserves unseen alternative

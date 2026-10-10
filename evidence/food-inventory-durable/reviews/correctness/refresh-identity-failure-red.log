@@ -1,0 +1,28 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/refresh_identity_failure_test.dart
+00:00 +0: malformed remote Food cannot mask simultaneous manifest change during refresh
+00:00 +0 -1: malformed remote Food cannot mask simultaneous manifest change during refresh [E]
+  Expected: throws <Instance of 'FormatException'> with `isolated history`: <false>
+    Actual: <Instance of 'Future<void>'>
+     Which: threw FoodHistoryFailure:<FormatException: Unexpected character>
+            stack package:tandemlog/food/food_store.dart 320:7                                FoodStore._refresh
+                  ===== asynchronous gap ===========================
+                  package:matcher                                                             expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8                           expectLater
+                  ../food-correctness-review/durable/refresh_identity_failure_test.dart 47:8  main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                                                  _CustomZone.registerUnaryCallback
+                  ../food-correctness-review/durable/refresh_identity_failure_test.dart 44:8  main.<fn>
+                  
+            which has `isolated history` with value <true>
+  
+  package:matcher                                                             expectLater
+  package:flutter_test/src/widget_tester.dart 507:8                           expectLater
+  ../food-correctness-review/durable/refresh_identity_failure_test.dart 47:8  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                                  _CustomZone.registerUnaryCallback
+  ../food-correctness-review/durable/refresh_identity_failure_test.dart 44:8  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/refresh_identity_failure_test.dart: malformed remote Food cannot mask simultaneous manifest change during refresh

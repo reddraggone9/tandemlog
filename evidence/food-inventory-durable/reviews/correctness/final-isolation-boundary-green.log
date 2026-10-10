@@ -1,0 +1,13 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/refresh_identity_failure_test.dart
+00:00 +0: /tmp/food-correctness-review/durable/refresh_identity_failure_test.dart: malformed remote Food cannot mask simultaneous manifest change during refresh
+00:00 +1: /tmp/food-correctness-review/durable/initialization_failure_test.dart: initialized first pending append cannot lose both guard and receipt
+00:00 +2: /tmp/food-correctness-review/durable/initialization_failure_test.dart: isolated malformed remote history cannot mask lost protected first-pending authority
+00:00 +3: /tmp/food-correctness-review/durable/guard_regression_test.dart: regressed valid guard cannot erase a later protected reservation
+00:01 +4: /tmp/food-correctness-review/durable/negative_reference_test.dart: delayed cross-container observed removal rolls back both heads and view
+00:01 +5: /tmp/food-correctness-review/durable/negative_reference_test.dart: delayed noncausal observed source rolls back heads and retains pending view
+00:01 +6: /tmp/food-correctness-review/durable/dependency_final_test.dart: missing creation defers edit; delayed birth resolves; duplicate refresh is exact
+00:01 +7: /tmp/food-correctness-review/durable/dependency_final_test.dart: known-invalid delayed observed source cannot publish or advance heads
+00:01 +8: /tmp/food-correctness-review/durable/dependency_final_test.dart: offline remove/restore only cancels observed tokens regardless of arrival
+00:01 +9: /tmp/food-correctness-review/durable/dependency_final_test.dart: offline concurrent contents remain alternatives until observed resolution arrives
+00:01 +10: /tmp/food-correctness-review/durable/dependency_final_test.dart: queued close rejects later commands and releases namespace for reopen
+00:01 +11: All tests passed!

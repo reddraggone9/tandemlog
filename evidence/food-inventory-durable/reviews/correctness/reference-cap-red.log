@@ -1,0 +1,22 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/reference_capacity_test.dart
+00:00 +0: admitted deletion tokens above one record bound can still be restored
+00:00 +0 -1: admitted deletion tokens above one record bound can still be restored [E]
+  FormatException: Invalid food references.
+  package:tandemlog/food/inventory.dart 594:33   _invalid
+  package:tandemlog/food/inventory.dart 253:9    FoodOperation.validate
+  package:tandemlog/food/food_record.dart 52:15  new FoodRecord
+  package:tandemlog/food/food_store.dart 493:22  FoodStore._commandLocked
+  
+00:00 +0 -1: admitted concurrent contents above one record bound can still be resolved
+00:01 +0 -2: admitted concurrent contents above one record bound can still be resolved [E]
+  FormatException: Invalid food references.
+  package:tandemlog/food/inventory.dart 594:33   _invalid
+  package:tandemlog/food/inventory.dart 253:9    FoodOperation.validate
+  package:tandemlog/food/food_record.dart 52:15  new FoodRecord
+  package:tandemlog/food/food_store.dart 493:22  FoodStore._commandLocked
+  
+00:01 +0 -2: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/reference_capacity_test.dart: admitted concurrent contents above one record bound can still be resolved
+  /tmp/food-correctness-review/durable/reference_capacity_test.dart: admitted deletion tokens above one record bound can still be restored

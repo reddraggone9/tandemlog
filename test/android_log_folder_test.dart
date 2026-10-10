@@ -572,4 +572,26 @@ void main() {
       expect(failureMessage(invalid), 'Unsupported canonical event version.');
     },
   );
+  test('food duplicates remain visible for module-scoped admission', () async {
+    messenger.setMockMethodCallHandler(
+      AndroidLogFolder.channel,
+      (call) async => [
+        {'name': 'food-00000000-0000-4000-8000-000000000010.foodlog'},
+        {'name': 'food-00000000-0000-4000-8000-000000000010.foodlog'},
+      ],
+    );
+    expect(await folder.list(), hasLength(2));
+  });
+  test('bounded food reads send the limit to the provider', () async {
+    messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (call) async {
+      expect(call.method, 'read');
+      expect(call.arguments, {
+        'tree': folder.location,
+        'name': 'food-test.foodlog',
+        'maximumBytes': 4096,
+      });
+      return Uint8List.fromList([1, 2]);
+    });
+    expect(await folder.readBounded('food-test.foodlog', 4096), [1, 2]);
+  });
 }

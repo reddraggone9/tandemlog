@@ -1,0 +1,16 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_intents_test.dart
+00:00 +0: reservation and exact bytes commit or roll back together
+00:00 +1: receipt cannot be retired by different bytes or without transaction
+00:00 +1 -1: receipt cannot be retired by different bytes or without transaction [E]
+  Expected: throws <Instance of 'FormatException'>
+    Actual: <Closure: () => void>
+     Which: returned <null>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/food_intents_test.dart 100:5                   main.<fn>
+  
+00:00 +1 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_intents_test.dart: receipt cannot be retired by different bytes or without transaction

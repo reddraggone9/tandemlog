@@ -1,0 +1,59 @@
+{
+  "status": "accepted accurate disposition supplement; earlier failure logs preserved; full Tasks still pending",
+  "reviewer": "/root/tag_autocomplete_trials",
+  "frozenUtc": "2026-10-10T03:33:50.970167+00:00",
+  "supersedesOnly": "earlier final-addendum statement that historical recurrence still needed disposition; no change to original frozen bytes",
+  "priorReceipt": {
+    "path": "/tmp/food-ux-review/task-ime-recovery-followup/final-addendum/review-receipt.json",
+    "sha256": "b2b20629dc5ee0f0dd0e62bc2ea686446fe5d56d95775db4821b67314b718fdf",
+    "unchanged": true
+  },
+  "disposition": {
+    "historicalV3Recurrence": "PASS in mixed diagnostic-retry native run",
+    "mixedRun": "1pass/1fail; recurrence passed, desktop onboarding focus failed. Whole run is not green.",
+    "laterOnboarding": "PASS1/1 in setup-preserved-focus native run",
+    "actualCause": "Historical recurrence gate waited for diagnostic containing tandemlog-space.json. FoodStore missing/non-regular-file message omitted requested filename, so the async UI predicate timed out. Message-only correction names requested file. This disposition does not infer a recurrence data/Undo semantics change.",
+    "causeEvidence": "completion_actions_test.dart107\u2013110 predicate and exact bounded diagnostic-only diff; independent correctness acceptance; native recurrence pass",
+    "exactDeltaIndependentlyVerified": "reversing the single known diagnostic block in current FoodStore exactly restores prior accepted source SHA2562a7ba64a705e4314536d581adfc0142bfdea7ab69a54defaeff13d596384efe7",
+    "currentFoodStoreSha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+  },
+  "qualification": "Author-run Linux GTK scripted native tests. Reviewer read and hash-bound logs/source/review, no build/test rerun. Mixed runs are not represented as green. Full87 current Tasks still running; no final pass claim or Android/Windows/human touch claim.",
+  "entries": [
+    {
+      "original": "/tmp/tandemlog-food-recovery-name-diagnostic-retry-native.log",
+      "snapshot": "logs/recurrence-pass-onboarding-fail.log",
+      "bytes": 6313,
+      "sha256": "572d0b75b7bc7edc02ec00f153be7572159ecc9c30fb0e434d4726c840f9eb6a"
+    },
+    {
+      "original": "/tmp/tandemlog-food-setup-preserved-focus-native.log",
+      "snapshot": "logs/later-onboarding-pass.log",
+      "bytes": 4151,
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78"
+    },
+    {
+      "original": "/tmp/food-correctness-review/durable/diagnostic-only-addendum.json",
+      "snapshot": "independent-correctness/diagnostic-only-addendum.json",
+      "bytes": 2228,
+      "sha256": "f0e8c7eac10a7ea6c67683b118034b942e085a863e9b035d9489e6714870bed4"
+    },
+    {
+      "original": "/tmp/food-correctness-review/durable/diagnostic-only.diff",
+      "snapshot": "independent-correctness/diagnostic-only.diff",
+      "bytes": 454,
+      "sha256": "4e605239e501e2fb5b85e34ba65e0331a3c1b0468fe28eed919f478376653d97"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_store.dart",
+      "snapshot": "source/lib/food/food_store.dart",
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart",
+      "snapshot": "source/integration_test/completion_actions_test.dart",
+      "bytes": 7675,
+      "sha256": "a0bb728966046c9fa2fab789acb361848e644a3970c16b102482fe7172738a9a"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[238464]: [session uid=1000 pid=238464 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=238751 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+
+(process:238757): dconf-CRITICAL **: 02:49:59.785: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:238757): dconf-CRITICAL **: 02:49:59.786: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:238757): dconf-CRITICAL **: 02:49:59.786: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:238757): dconf-CRITICAL **: 02:49:59.786: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[238464]: [session uid=1000 pid=238464 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:238757): dconf-CRITICAL **: 02:49:59.787: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:238757): dconf-CRITICAL **: 02:49:59.787: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[238763]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=238751 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+dbus-daemon[238763]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=435
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=16
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=26
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1680 FILES_READ=2
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _WidgetPredicateWidgetFinder:<Found 1 widget with widget matching predicate: [
+            RawTooltip-[LabeledGlobalKey<RawTooltipState>#847cd]("Add tasks", hover delay:
+0:00:00.000000, touch delay: 0:00:01.500000, dismiss delay: 0:00:00.100000, triggerMode:
+TooltipTriggerMode.longPress, enableFeedback: true, positionDelegate: Closure:
+(TooltipPositionContext) => Offset from Function '_getDefaultPositionDelegate@900220820':., state:
+RawTooltipState#c4ea9),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart:120:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart line 120
+The test description was:
+  queued task capture cannot append after reconciliation discovers shared authority loss
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +0 -1: queued task capture cannot append after reconciliation discovers shared authority loss [E]
+  Test failed. See exception logs above.
+  The test description was: queued task capture cannot append after reconciliation discovers shared authority loss
+  
+00:04 +0 -1: shared recovery retains private task editor draft and rejects a retained Save
+00:04 +0 -1: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=23
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=39
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=22
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=492 FILES_READ=2
+00:07 +1 -1: isolated Food startup failure keeps Tasks writable and retries only Food
+00:07 +1 -1: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=20
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=24
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=575 FILES_READ=1
+00:10 +2 -1: production Food navigation persists Deleted and restores after restart
+00:10 +2 -1: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=31
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=19
+TANDEMLOG_PHASE ingest=25
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=455 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=15
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=12
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=193 FILES_READ=0
+00:20 +3 -1: (tearDownAll)
+00:20 +3 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart: queued task capture cannot append after reconciliation discovers shared authority loss
+X connection to :99 broken (explicit kill or server shutdown).

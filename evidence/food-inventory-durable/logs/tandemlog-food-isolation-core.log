@@ -1,0 +1,66 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_store_test.dart
+00:00 +0: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +1: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +2: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +3: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +4: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +5: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +6: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +7: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +8: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +9: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +10: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +11: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +12: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:00 +13: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: duplicate and arbitrarily reordered delivery replay identically
+00:00 +14: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +15: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +16: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +17: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +18: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +19: /tmp/tandemlog-food-implementation/test/food_store_test.dart: moved manifest stays a shared fatal fault
+00:00 +20: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed protected Food head is shared integrity, not history
+00:00 +21: /tmp/tandemlog-food-implementation/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.sync-conflict-synthetic.foodlog
+00:00 +22: /tmp/tandemlog-food-implementation/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.foodlog.sync-conflict-synthetic
+00:00 +23: /tmp/tandemlog-food-implementation/test/food_store_test.dart: unclassified conflict preserves released Task fail-closed policy
+00:00 +24: /tmp/tandemlog-food-implementation/test/food_store_test.dart: disabled Food retains exact prepared bytes for explicit recovery
+00:00 +25: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food physical count and durable Deleted survive restart without changing task v3 bytes
+00:00 +26: /tmp/tandemlog-food-implementation/test/food_store_test.dart: partial first record is resumed exactly from protected bytes across restart
+00:00 +27: /tmp/tandemlog-food-implementation/test/food_store_test.dart: uncertain successful append admits once and retires exact receipt
+00:00 +28: /tmp/tandemlog-food-implementation/test/food_store_test.dart: acknowledged missing stream fails closed and retains last view
+00:00 +29: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food refresh SQL fault preserves state and receipts together
+00:00 +30: /tmp/tandemlog-food-implementation/test/food_store_test.dart: missing own reservation after initialization cannot reuse a sequence
+00:00 +31: /tmp/tandemlog-food-implementation/test/food_store_test.dart: missing own reservation after initialization cannot reuse a sequence
+00:00 +32: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: range truncation/provider errors remain failures rather than fallback
+00:00 +33: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food handle releases its lease when the profile owner is poisoned
+00:00 +34: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: unsupported watch retains 15-second foreground fallback and retries
+00:00 +35: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: metadata remains optional observations and never creates trusted stamps
+00:00 +36: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: false)
+00:00 +37: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: true)
+00:00 +38: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: false)
+00:00 +39: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: true)
+00:00 +40: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: unrelated duplicate names do not reject the folder
+00:00 +41: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list preserves native duplicate-name diagnostics and fails closed
+00:00 +42: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: read preserves native duplicate-name diagnostics and fails closed
+00:00 +43: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: readFrom preserves native duplicate-name diagnostics and fails closed
+00:00 +44: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: append preserves native duplicate-name diagnostics and fails closed
+00:00 +45: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: create preserves native duplicate-name diagnostics and fails closed
+00:00 +46: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: watch cancellation and old callbacks cannot trigger the new folder
+00:00 +47: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: unsupported watch activation becomes a stream error for polling fallback
+00:00 +48: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: observer error is delivered and a resumed watch uses fresh token
+00:00 +49: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: successful folder calls preserve bytes, names and forced revalidation
+00:00 +50: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: missing manifest gives restoration guidance without blaming permission
+00:00 +51: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: list generic IO failure stays honest and omits provider internals
+00:00 +52: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: read generic IO failure stays honest and omits provider internals
+00:00 +53: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: append generic IO failure stays honest and omits provider internals
+00:00 +54: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: create generic IO failure stays honest and omits provider internals
+00:00 +55: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: actual denied access and picker failures have specific recovery
+00:00 +56: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: presentation retains partial progress and canonical validation messages
+00:00 +57: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: food duplicates remain visible for module-scoped admission
+00:00 +58: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: bounded food reads send the limit to the provider
+00:01 +59: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+00:02 +60: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: pending receipt prevents opening a different Add editor
+00:02 +61: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:03 +62: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:03 +63: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: a retained rendered removal callback keeps its workspace origin
+00:03 +64: All tests passed!

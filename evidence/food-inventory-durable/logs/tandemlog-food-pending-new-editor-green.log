@@ -1,0 +1,7 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart
+00:00 +0: a failed durable Add retains editor and exact visible draft
+00:01 +1: pending receipt prevents opening a different Add editor
+00:01 +2: failed prepared Save retries the frozen original draft
+00:01 +3: repeated captured discard decision cannot pop another route
+00:02 +4: a retained rendered removal callback keeps its workspace origin
+00:02 +5: All tests passed!

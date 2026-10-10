@@ -1,0 +1,22 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/food_durable_review_test.dart
+00:00 +0: invalid installation writer cannot leak the food namespace lease
+00:00 +0 -1: invalid installation writer cannot leak the food namespace lease [E]
+  This workspace is already open in this profile.
+  package:tandemlog/storage/local_profile_database.dart 79:7              LocalProfileDatabase.acquireWorkspace
+  package:tandemlog/food/food_store.dart 57:13                            FoodStore.open
+  ../food-correctness-review/durable/food_durable_review_test.dart 45:24  main.<fn>
+  
+00:00 +0 -1: partial append reports protected pending immediately without refresh
+00:00 +0 -2: partial append reports protected pending immediately without refresh [E]
+  Expected: true
+    Actual: <false>
+  
+  package:matcher                                                        expect
+  package:flutter_test/src/widget_tester.dart 473:18                     expect
+  ../food-correctness-review/durable/food_durable_review_test.dart 54:2  main.<fn>
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/food_durable_review_test.dart: invalid installation writer cannot leak the food namespace lease
+  /tmp/food-correctness-review/durable/food_durable_review_test.dart: partial append reports protected pending immediately without refresh

@@ -1,0 +1,212 @@
+import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'file:///tmp/tandemlog-food-density-before-source/food_page.dart';
+
+void main() => runApp(const FoodPreviewApp());
+
+/// Synthetic, process-local working UX preview; no profile or sync folder opens.
+class FoodPreviewApp extends StatefulWidget {
+  const FoodPreviewApp({
+    super.key,
+    this.initialOperations,
+    this.brightness = Brightness.dark,
+    this.textScale = 1,
+  });
+  final Brightness brightness;
+  final double textScale;
+  final List<FoodOperation>? initialOperations;
+  @override
+  State<FoodPreviewApp> createState() => _FoodPreviewAppState();
+}
+
+class _FoodPreviewAppState extends State<FoodPreviewApp> {
+  static const writer = '00000000-0000-4000-8000-000000000010';
+  final operations = <FoodOperation>[];
+  final undo = <FoodOperation>[];
+  int sequence = 0;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialOperations != null) {
+      operations.addAll(widget.initialOperations!);
+      sequence = operations
+          .map((op) => op.order)
+          .fold(0, (a, b) => a > b ? a : b);
+      return;
+    }
+    _add(
+      const FoodDetails(
+        name: 'Rice',
+        brand: 'Example Pantry',
+        expiry: '2026-10-15',
+        size: '1 lb',
+      ),
+      8,
+      notify: false,
+    );
+    operations.add(
+      _operation(FoodAction.edit, [
+        operations.first.targets.last,
+      ], contents: const Contents.fraction(1, 3)),
+    );
+    _add(
+      const FoodDetails(
+        name: 'Oat milk',
+        brand: 'Example Foods',
+        expiry: '2026-10-12',
+        size: '1 L',
+        location: 'Refrigerator',
+      ),
+      2,
+      notify: false,
+    );
+    _add(
+      const FoodDetails(
+        name: 'Peas',
+        expiry: '2026-10-17',
+        size: '500 g',
+        location: 'Freezer',
+      ),
+      1,
+      notify: false,
+    );
+    _add(
+      const FoodDetails(
+        name: 'Chocolate',
+        expiry: '2026-10-13',
+        retention: 'Birthday baking',
+      ),
+      1,
+      notify: false,
+    );
+    _add(const FoodDetails(name: 'Lentils', size: '1 lb'), 1, notify: false);
+  }
+
+  FoodOperation _operation(
+    FoodAction action,
+    List<String> targets, {
+    FoodDetails? details,
+    Contents? contents,
+    List<String> observedDeletes = const [],
+    List<String> observedEdits = const [],
+    List<String>? fields,
+  }) {
+    sequence++;
+    return FoodOperation(
+      id: '$writer:$sequence',
+      order: sequence,
+      action: action,
+      targets: targets,
+      details: details,
+      contents: contents,
+      createdAt: action == FoodAction.add ? '2026-10-10T00:00:00Z' : null,
+      observedDeletes: observedDeletes,
+      observedEdits: observedEdits,
+      fields: fields,
+    );
+  }
+
+  void _add(FoodDetails details, int count, {bool notify = true}) {
+    final operation = _operation(
+      FoodAction.add,
+      List.generate(count, (_) => const Uuid().v4()),
+      details: details,
+      contents: const Contents.fraction(1, 1),
+    );
+    operation.validate();
+    operations.add(operation);
+    undo.clear();
+    if (notify) setState(() {});
+  }
+
+  @override
+  Widget build(BuildContext context) => MaterialApp(
+    debugShowCheckedModeBanner: false,
+    title: 'Tandemlog · food preview',
+    theme: ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: const Color(0xff267461),
+        brightness: widget.brightness,
+      ),
+      inputDecorationTheme: const InputDecorationTheme(
+        border: OutlineInputBorder(),
+      ),
+    ),
+    builder: (context, child) => MediaQuery(
+      data: MediaQuery.of(
+        context,
+      ).copyWith(textScaler: TextScaler.linear(widget.textScale)),
+      child: child!,
+    ),
+    home: FoodInventoryPage(
+      state: projectFood(operations),
+      onAdd: _add,
+      onRemove: (ids) => setState(() {
+        undo.clear();
+        for (final batch in _batches(ids)) {
+          final remove = _operation(FoodAction.remove, batch);
+          remove.validate();
+          undo.add(remove);
+          operations.add(remove);
+        }
+      }),
+      onRestore: (item) => setState(() {
+        undo.clear();
+        operations.add(
+          _operation(FoodAction.restore, [
+            item.id,
+          ], observedDeletes: item.deletions.toList()),
+        );
+      }),
+      onContents: (item, contents) => setState(() {
+        undo.clear();
+        operations.add(
+          _operation(
+            FoodAction.edit,
+            [item.id],
+            contents: contents,
+            observedEdits: item.contentsEdits.keys.toList(),
+          ),
+        );
+      }),
+      onDetails: (items, details, fields) => setState(() {
+        undo.clear();
+        for (final batch in _batches(items.map((e) => e.id).toList())) {
+          operations.add(
+            _operation(
+              FoodAction.edit,
+              batch,
+              details: details,
+              fields: fields,
+            ),
+          );
+        }
+      }),
+      onUndo: undo.isEmpty
+          ? null
+          : () => setState(() {
+              for (final last in List.of(undo)) {
+                operations.add(
+                  _operation(
+                    FoodAction.restore,
+                    last.targets,
+                    observedDeletes: [last.id],
+                  ),
+                );
+              }
+              undo.clear();
+            }),
+    ),
+  );
+}
+
+Iterable<List<String>> _batches(List<String> ids) sync* {
+  for (var start = 0; start < ids.length; start += 100) {
+    yield ids.sublist(
+      start,
+      start + 100 > ids.length ? ids.length : start + 100,
+    );
+  }
+}

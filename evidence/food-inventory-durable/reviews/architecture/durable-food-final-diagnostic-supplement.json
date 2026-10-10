@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "review": "Independent final diagnostic/doc byte supplement",
+  "reviewedAtUtc": "2026-10-10T04:01:10.521883+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "verdict": "ACCEPT; no must-fix, no native rerun needed for diagnostic-only fixture delta",
+  "mustFix": [],
+  "extends": {
+    "path": "/tmp/food-architecture-review/durable-food-final-milestone-closure.json",
+    "sha256": "f59fbd400adf7554b26f5d91b88f08b25e9c9b0739e77600d22c7277d14c32e2",
+    "bindingCount": 44,
+    "unchangedBindings": 42,
+    "changedBindings": [
+      "design/status.md",
+      "integration_test/food_inspect_accessibility_test.dart"
+    ]
+  },
+  "changeAssessment": [
+    "Fixture differs exactly by control.description\u2192control.toString() in a failure-only debug label; key activation, focus traversal, mounted-target checks, screenshots and all assertions remain byte-identical.",
+    "Status paragraph wrapping retains the reviewed milestone facts and open platform/import/publication gates; no production or format change."
+  ],
+  "unchangedProductionBindings": {
+    "lib/main.dart": {
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+      "bytes": 201499
+    },
+    "lib/food/food_page.dart": {
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50",
+      "bytes": 38673
+    },
+    "lib/food/food_store.dart": {
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f",
+      "bytes": 27565
+    }
+  },
+  "changedFileBindings": {
+    "design/status.md": {
+      "sha256": "16387f7a2280ec77ee25c3a4f4688b28a57c8b324fd682edf860467f6d268021",
+      "bytes": 97921,
+      "previousSha256": "3cce26918ca914d33692a928a4227aa1ad0334bb617d9189f0ea3cc45cadf775"
+    },
+    "integration_test/food_inspect_accessibility_test.dart": {
+      "sha256": "1567aec41a2d191a564f89e32d7fc26cc7897574b5a524efbf8d27863c0d7919",
+      "bytes": 5915,
+      "previousSha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b"
+    }
+  },
+  "evidenceQualification": "The accepted1/1 Inspect native run used the prior fixture hash bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b. Current fixture differs only in diagnostic string retrieval; this is explicitly not a new native execution claim. Parent reports analyzer rerunning; no analyzer result claimed in this supplement.",
+  "remainingGates": [
+    "Actual Windows/Android affected native/provider/upgrade acceptance and exact new candidate/package identity.",
+    "Final human UX/keyboard/touch/accessibility and visible-input demo review; inspected-group traversal is not whole-list wraparound or spoken AT acceptance.",
+    "Private import mapping/cutover remains separately controlled outside Git; no private input read/live import.",
+    "Full candidate/source/CI, new version/build floor and independent notes/media/publication gates; current2026.10.3+56 must not publish Food over the released stable version."
+  ],
+  "reviewerExecutedBuildsOrTests": false,
+  "trackedSourceEditsByReviewer": false
+}

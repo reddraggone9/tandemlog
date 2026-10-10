@@ -300,7 +300,7 @@ void main() {
   );
 }
 
-class CountingFolder implements LogFolder, RangeLogFolder {
+class CountingFolder implements LogFolder, RangeLogFolder, BoundedLogFolder {
   CountingFolder(this.delegate);
   final LocalLogFolder delegate;
   int appends = 0, lists = 0, reads = 0;
@@ -330,6 +330,9 @@ class CountingFolder implements LogFolder, RangeLogFolder {
     return delegate.list();
   }
 
+  @override
+  Future<Uint8List> readBounded(String name, int maximumBytes) =>
+      delegate.readBounded(name, maximumBytes);
   @override
   Future<Uint8List> read(String name) {
     reads++;

@@ -1,0 +1,5 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/food_durable_review_test.dart
+00:00 +0: /tmp/food-correctness-review/durable/food_durable_review_test.dart: invalid installation writer cannot leak the food namespace lease
+00:00 +1: /tmp/food-correctness-review/durable/empty_stream_capacity_test.dart: empty stream files count toward admission cap before first append
+00:00 +2: /tmp/food-correctness-review/durable/empty_stream_capacity_test.dart: empty stream files count toward admission cap before first append
+00:00 +3: All tests passed!

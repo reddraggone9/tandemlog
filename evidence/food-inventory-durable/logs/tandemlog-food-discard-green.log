@@ -1,0 +1,4 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart
+00:00 +0: a failed durable Add retains editor and exact visible draft
+00:01 +1: repeated captured discard decision cannot pop another route
+00:01 +2: All tests passed!

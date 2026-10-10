@@ -1,0 +1,2061 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+> Task :gradle:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :gradle:compileKotlin UP-TO-DATE
+> Task :gradle:compileJava NO-SOURCE
+> Task :gradle:compileGroovy NO-SOURCE
+> Task :gradle:pluginDescriptors UP-TO-DATE
+> Task :gradle:processResources UP-TO-DATE
+> Task :gradle:classes UP-TO-DATE
+> Task :gradle:jar UP-TO-DATE
+
+> Configure project :app
+Unable to initialize metrics, ensure /home/agent/.android is writable, details: /home/agent/.android/analytics.settings (No such file or directory)
+WARNING: The option setting 'android.builtInKotlin=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: The option setting 'android.newDsl=false' is deprecated.
+The current default is 'true'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+WARNING: API 'applicationVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling applicationVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+WARNING: API 'testVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling testVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+WARNING: API 'unitTestVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling unitTestVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':app' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :file_selector_android
+WARNING: API 'libraryVariants' is obsolete and has been replaced with 'AndroidComponentsExtension'.
+It will be removed in version 10.0 of the Android Gradle plugin.
+The legacy variant API is disabled by default in AGP 9.0, but can be re-enabled by adding 
+    android.newDsl=false
+to this project's gradle.properties file.
+For more information, see http://developer.android.com/build/r/new-dsl.
+
+To determine what is calling libraryVariants, use -Pandroid.debug.obsoleteApi=true on the command line to display more information.
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':file_selector_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :integration_test
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':integration_test' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :jni_flutter
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':jni_flutter' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+
+> Configure project :url_launcher_android
+w: [33m[1m⚠️ Deprecated 'org.jetbrains.kotlin.android' plugin usage[0m[0m
+The 'org.jetbrains.kotlin.android' plugin in project ':url_launcher_android' is no longer required for Kotlin support since AGP 9.0.
+[32m[1mSolution:[0m[0m
+[32m[3mRemove both `android.builtInKotlin=true` and `android.newDsl=false` from `gradle.properties`, then migrate to built-in Kotlin.[0m[0m
+[36mSee [0m[34mhttps://kotl.in/gradle/agp-built-in-kotlin[0m[36m for more details.[0m
+
+Checking the license for package Android SDK Platform 35 in /tmp/tandemlog-food-android-sdk/licenses
+License for package Android SDK Platform 35 accepted.
+Preparing "Install Android SDK Platform 35 (revision 2)".
+"Install Android SDK Platform 35 (revision 2)" ready.
+Installing Android SDK Platform 35 in /tmp/tandemlog-food-android-sdk/platforms/android-35
+"Install Android SDK Platform 35 (revision 2)" complete.
+"Install Android SDK Platform 35 (revision 2)" finished.
+
+> Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :app:cleanMergeDebugAssets UP-TO-DATE
+> Task :app:compileFlutterBuildDebug
+> Task :app:generateDebugAssets UP-TO-DATE
+
+> Task :app:buildTextEngine
+   Compiling proc-macro2 v1.0.107
+   Compiling unicode-ident v1.0.26
+   Compiling quote v1.0.47
+   Compiling libc v0.2.190
+   Compiling serde_core v1.0.229
+   Compiling zmij v1.0.23
+   Compiling smallvec v1.16.2
+   Compiling parking_lot_core v0.9.12
+   Compiling pin-project-lite v0.2.17
+   Compiling parking v2.2.1
+   Compiling rustversion v1.0.23
+   Compiling crossbeam-utils v0.8.23
+   Compiling event-listener v5.4.2
+   Compiling syn v3.0.6
+   Compiling serde v1.0.229
+   Compiling scopeguard v1.2.0
+   Compiling cfg-if v1.0.5
+   Compiling thiserror v2.0.21
+   Compiling serde_json v1.0.151
+   Compiling lock_api v0.4.14
+   Compiling event-listener-strategy v0.5.4
+   Compiling hashbrown v0.14.5
+   Compiling once_cell v1.21.4
+   Compiling itoa v1.0.18
+   Compiling memchr v2.8.3
+   Compiling dashmap v6.2.1
+   Compiling arc-swap v1.9.2
+   Compiling async-lock v3.4.2
+   Compiling smallstr v0.3.1
+   Compiling fastrand v2.5.0
+   Compiling base64 v0.22.1
+   Compiling serde_derive v1.0.229
+   Compiling thiserror-impl v2.0.21
+   Compiling async-trait v0.1.92
+   Compiling yrs v0.28.0 (/tmp/tandemlog-food-implementation/native/text_engine/vendor/yrs-0.28.0)
+warning: unused imports: `BlockRange` and `Block`
+ --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+  |
+1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+  |                    ^^^^^  ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Block`
+ --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+  |
+1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+  |                    ^^^^^
+
+warning: unused import: `ItemContent`
+ --> vendor/yrs-0.28.0/src/iter.rs:1:20
+  |
+1 | use crate::block::{ItemContent, ItemPtr};
+  |                    ^^^^^^^^^^^
+
+warning: unused imports: `SmallVec` and `smallvec`
+ --> vendor/yrs-0.28.0/src/iter.rs:4:16
+  |
+4 | use smallvec::{smallvec, SmallVec};
+  |                ^^^^^^^^  ^^^^^^^^
+
+warning: unused import: `crate::utils::OptionExt`
+  --> vendor/yrs-0.28.0/src/doc.rs:10:5
+   |
+10 | use crate::utils::OptionExt;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: value assigned to `left` is never read
+   --> vendor/yrs-0.28.0/src/block.rs:494:24
+    |
+494 |         let mut left = None;
+    |                        ^^^^ this value is reassigned later and never used
+...
+540 |                 left = parent_branch.map.get(sub).cloned();
+    |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/block.rs:886:21
+    |
+886 |                 let ptr = BranchPtr::from(branch);
+    |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+    |
+778 |         let ptr = item.clone();
+    |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+    |
+958 |         let mut block = Item::new(
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/undo.rs:133:13
+    |
+133 |         let mut state = Arc::new(Inner {
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: unused variable: `clear_undo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:34
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+
+warning: unused variable: `clear_redo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:52
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+
+warning: method `as_item` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:198:12
+    |
+183 | impl<'a> BlockRef<'a> {
+    | --------------------- method in this implementation
+...
+198 |     pub fn as_item(&self) -> Option<&'a Item> {
+    |            ^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+   --> vendor/yrs-0.28.0/src/block.rs:264:12
+    |
+221 | impl Block {
+    | ---------- methods in this implementation
+...
+264 |     pub fn last_id(&self) -> ID {
+    |            ^^^^^^^
+...
+281 |     pub fn is_item(&self) -> bool {
+    |            ^^^^^^^
+...
+291 |     pub fn is_gc(&self) -> bool {
+    |            ^^^^^
+
+warning: method `delete_as_cleanup` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:632:19
+    |
+444 | impl ItemPtr {
+    | ------------ method in this implementation
+...
+632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: method `integrate` is never used
+    --> vendor/yrs-0.28.0/src/block.rs:1415:19
+     |
+1354 | impl BlockRange {
+     | --------------- method in this implementation
+...
+1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+     |                   ^^^^^^^^^
+
+warning: method `contains` is never used
+   --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+    |
+289 | impl BlockStore {
+    | --------------- method in this implementation
+...
+300 |     pub fn contains(&self, id: &ID) -> bool {
+    |            ^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+    |
+230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+    |       ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+    |
+232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+    |
+234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+    |
+236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+    |
+238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+    |
+240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+    |
+536 | pub(crate) struct Entries<'a, B, T> {
+    |                   ------- field in this struct
+537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+538 |     txn: B,
+    |     ^^^
+    |
+    = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `as_id_set` is never used
+  --> vendor/yrs-0.28.0/src/update.rs:48:12
+   |
+28 | impl BlockSet {
+   | ------------- method in this implementation
+...
+48 |     pub fn as_id_set(&self) -> IdSet {
+   |            ^^^^^^^^^
+
+warning: associated functions `next_target` and `return_stack` are never used
+   --> vendor/yrs-0.28.0/src/update.rs:503:8
+    |
+169 | impl Update {
+    | ----------- associated functions in this implementation
+...
+503 |     fn next_target<'a, 'b>(
+    |        ^^^^^^^^^^^
+...
+526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+    |        ^^^^^^^^^^^^
+
+warning: methods `forward`, `backward`, and `values` are never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+    |
+ 18 | impl BlockIter {
+    | -------------- methods in this implementation
+...
+ 76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+    |            ^^^^^^^
+...
+130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+    |            ^^^^^^^^
+...
+369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+    |            ^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+    |
+377 | pub struct Values<'a, 'txn> {
+    |            ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+    |
+382 | impl<'a, 'txn> Values<'a, 'txn> {
+    | ------------------------------- associated function in this implementation
+383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+    |        ^^^
+
+warning: method `remove_at` is never used
+   --> vendor/yrs-0.28.0/src/branch.rs:398:19
+    |
+222 | impl Branch {
+    | ----------- method in this implementation
+...
+398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+    |                   ^^^^^^^^^
+
+warning: method `inner_mut` is never used
+   --> vendor/yrs-0.28.0/src/ids.rs:548:19
+    |
+ 58 | impl<T: Merge> IdRanges<T> {
+    | -------------------------- method in this implementation
+...
+548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+    |                   ^^^^^^^^^
+
+warning: trait `BlockIterator` is never used
+ --> vendor/yrs-0.28.0/src/iter.rs:7:18
+  |
+7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+  |                  ^^^^^^^^^^^^^
+
+warning: trait `BlockSliceIterator` is never used
+  --> vendor/yrs-0.28.0/src/iter.rs:16:18
+   |
+16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `RangeIter` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:106:19
+    |
+106 | pub(crate) struct RangeIter<I> {
+    |                   ^^^^^^^^^
+
+warning: associated items `new` and `begin` are never used
+   --> vendor/yrs-0.28.0/src/iter.rs:117:8
+    |
+113 | / impl<I> RangeIter<I>
+114 | | where
+115 | |     I: Iterator<Item = ItemPtr>,
+    | |________________________________- associated items in this implementation
+116 |   {
+117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+    |          ^^^
+...
+126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+    |          ^^^^^
+
+warning: enum `RangeIterState` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:234:6
+    |
+234 | enum RangeIterState {
+    |      ^^^^^^^^^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:245:19
+    |
+245 | pub(crate) struct Values<I> {
+    |                   ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:251:8
+    |
+250 | impl<I> Values<I> {
+    | ----------------- associated function in this implementation
+251 |     fn new(iter: I) -> Self {
+    |        ^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/iter.rs:287:5
+    |
+286 | pub struct AsIter<'a, T, I> {
+    |            ------ field in this struct
+287 |     txn: &'a T,
+    |     ^^^
+    |
+    = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+   --> vendor/yrs-0.28.0/src/slice.rs:164:12
+    |
+105 | impl ItemSlice {
+    | -------------- methods in this implementation
+...
+164 |     pub fn adjacent(&self) -> bool {
+    |            ^^^^^^^^
+...
+179 |     pub fn contains_id(&self, id: &ID) -> bool {
+    |            ^^^^^^^^^^^
+...
+249 |     pub fn right(&self) -> Option<ItemSlice> {
+    |            ^^^^^
+...
+269 |     pub fn left(&self) -> Option<ItemSlice> {
+    |            ^^^^
+
+warning: methods `within_range` and `get_item` are never used
+   --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+    |
+ 51 | impl StickyIndex {
+    | ---------------- methods in this implementation
+...
+272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+    |                   ^^^^^^^^^^^^
+...
+287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+    |                   ^^^^^^^^
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:63:18
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter {
+   |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                  |
+   |                  the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+   = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+   |                                            ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:69:20
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter {
+   |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                    |
+   |                    the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+   |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:75:19
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter {
+   |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                   |
+   |                   the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+   |                                             ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:358:20
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter {
+    |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                    |
+    |                    the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                         ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:364:25
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+    |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                         |
+    |                         the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:444:28
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+    |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                            |
+    |                            the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:449:33
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+    |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                 |
+    |                                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+    |                                                           +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:458:30
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+    |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                              |
+    |                              the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+    |                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:462:29
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+    |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                             |
+    |                             the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+    |                                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:467:34
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+    |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                  |
+    |                                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:476:31
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+    |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                               |
+    |                               the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+    |                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+    |
+168 |     fn root_refs(&self) -> RootRefs {
+    |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+    |                  |
+    |                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+168 |     fn root_refs(&self) -> RootRefs<'_> {
+    |                                    ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids {
+    |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                     |
+    |                     the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+    |
+181 |     fn subdocs(&self) -> SubdocsIter {
+    |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                |
+    |                the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+    |
+911 |     pub fn iter(&self) -> EventsIter {
+    |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+911 |     pub fn iter(&self) -> EventsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+   |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                 |
+   |                 the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+   |                                                            +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+    |
+141 |     pub fn iter(&self) -> AwarenessIter {
+    |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+    |                                        ++++
+
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+   Compiling tandemlog-text v0.0.0 (/tmp/tandemlog-food-implementation/native/text_engine)
+    Finished `release` profile [optimized] target(s) in 24.81s
+   Compiling serde_core v1.0.229
+   Compiling libc v0.2.190
+   Compiling pin-project-lite v0.2.17
+   Compiling parking v2.2.1
+   Compiling smallvec v1.16.2
+   Compiling parking_lot_core v0.9.12
+   Compiling zmij v1.0.23
+   Compiling crossbeam-utils v0.8.23
+   Compiling event-listener v5.4.2
+   Compiling cfg-if v1.0.5
+   Compiling scopeguard v1.2.0
+   Compiling thiserror v2.0.21
+   Compiling lock_api v0.4.14
+   Compiling event-listener-strategy v0.5.4
+   Compiling serde v1.0.229
+   Compiling serde_json v1.0.151
+   Compiling hashbrown v0.14.5
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling once_cell v1.21.4
+   Compiling dashmap v6.2.1
+   Compiling arc-swap v1.9.2
+   Compiling async-lock v3.4.2
+   Compiling smallstr v0.3.1
+   Compiling fastrand v2.5.0
+   Compiling base64 v0.22.1
+   Compiling yrs v0.28.0 (/tmp/tandemlog-food-implementation/native/text_engine/vendor/yrs-0.28.0)
+warning: unused imports: `BlockRange` and `Block`
+ --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+  |
+1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+  |                    ^^^^^  ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Block`
+ --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+  |
+1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+  |                    ^^^^^
+
+warning: unused import: `ItemContent`
+ --> vendor/yrs-0.28.0/src/iter.rs:1:20
+  |
+1 | use crate::block::{ItemContent, ItemPtr};
+  |                    ^^^^^^^^^^^
+
+warning: unused imports: `SmallVec` and `smallvec`
+ --> vendor/yrs-0.28.0/src/iter.rs:4:16
+  |
+4 | use smallvec::{smallvec, SmallVec};
+  |                ^^^^^^^^  ^^^^^^^^
+
+warning: unused import: `crate::utils::OptionExt`
+  --> vendor/yrs-0.28.0/src/doc.rs:10:5
+   |
+10 | use crate::utils::OptionExt;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: value assigned to `left` is never read
+   --> vendor/yrs-0.28.0/src/block.rs:494:24
+    |
+494 |         let mut left = None;
+    |                        ^^^^ this value is reassigned later and never used
+...
+540 |                 left = parent_branch.map.get(sub).cloned();
+    |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/block.rs:886:21
+    |
+886 |                 let ptr = BranchPtr::from(branch);
+    |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+    |
+778 |         let ptr = item.clone();
+    |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+    |
+958 |         let mut block = Item::new(
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/undo.rs:133:13
+    |
+133 |         let mut state = Arc::new(Inner {
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: unused variable: `clear_undo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:34
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+
+warning: unused variable: `clear_redo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:52
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+
+warning: method `as_item` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:198:12
+    |
+183 | impl<'a> BlockRef<'a> {
+    | --------------------- method in this implementation
+...
+198 |     pub fn as_item(&self) -> Option<&'a Item> {
+    |            ^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+   --> vendor/yrs-0.28.0/src/block.rs:264:12
+    |
+221 | impl Block {
+    | ---------- methods in this implementation
+...
+264 |     pub fn last_id(&self) -> ID {
+    |            ^^^^^^^
+...
+281 |     pub fn is_item(&self) -> bool {
+    |            ^^^^^^^
+...
+291 |     pub fn is_gc(&self) -> bool {
+    |            ^^^^^
+
+warning: method `delete_as_cleanup` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:632:19
+    |
+444 | impl ItemPtr {
+    | ------------ method in this implementation
+...
+632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: method `integrate` is never used
+    --> vendor/yrs-0.28.0/src/block.rs:1415:19
+     |
+1354 | impl BlockRange {
+     | --------------- method in this implementation
+...
+1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+     |                   ^^^^^^^^^
+
+warning: method `contains` is never used
+   --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+    |
+289 | impl BlockStore {
+    | --------------- method in this implementation
+...
+300 |     pub fn contains(&self, id: &ID) -> bool {
+    |            ^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+    |
+230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+    |       ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+    |
+232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+    |
+234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+    |
+236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+    |
+238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+    |
+240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+    |
+536 | pub(crate) struct Entries<'a, B, T> {
+    |                   ------- field in this struct
+537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+538 |     txn: B,
+    |     ^^^
+    |
+    = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `as_id_set` is never used
+  --> vendor/yrs-0.28.0/src/update.rs:48:12
+   |
+28 | impl BlockSet {
+   | ------------- method in this implementation
+...
+48 |     pub fn as_id_set(&self) -> IdSet {
+   |            ^^^^^^^^^
+
+warning: associated functions `next_target` and `return_stack` are never used
+   --> vendor/yrs-0.28.0/src/update.rs:503:8
+    |
+169 | impl Update {
+    | ----------- associated functions in this implementation
+...
+503 |     fn next_target<'a, 'b>(
+    |        ^^^^^^^^^^^
+...
+526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+    |        ^^^^^^^^^^^^
+
+warning: methods `forward`, `backward`, and `values` are never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+    |
+ 18 | impl BlockIter {
+    | -------------- methods in this implementation
+...
+ 76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+    |            ^^^^^^^
+...
+130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+    |            ^^^^^^^^
+...
+369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+    |            ^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+    |
+377 | pub struct Values<'a, 'txn> {
+    |            ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+    |
+382 | impl<'a, 'txn> Values<'a, 'txn> {
+    | ------------------------------- associated function in this implementation
+383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+    |        ^^^
+
+warning: method `remove_at` is never used
+   --> vendor/yrs-0.28.0/src/branch.rs:398:19
+    |
+222 | impl Branch {
+    | ----------- method in this implementation
+...
+398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+    |                   ^^^^^^^^^
+
+warning: method `inner_mut` is never used
+   --> vendor/yrs-0.28.0/src/ids.rs:548:19
+    |
+ 58 | impl<T: Merge> IdRanges<T> {
+    | -------------------------- method in this implementation
+...
+548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+    |                   ^^^^^^^^^
+
+warning: trait `BlockIterator` is never used
+ --> vendor/yrs-0.28.0/src/iter.rs:7:18
+  |
+7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+  |                  ^^^^^^^^^^^^^
+
+warning: trait `BlockSliceIterator` is never used
+  --> vendor/yrs-0.28.0/src/iter.rs:16:18
+   |
+16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `RangeIter` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:106:19
+    |
+106 | pub(crate) struct RangeIter<I> {
+    |                   ^^^^^^^^^
+
+warning: associated items `new` and `begin` are never used
+   --> vendor/yrs-0.28.0/src/iter.rs:117:8
+    |
+113 | / impl<I> RangeIter<I>
+114 | | where
+115 | |     I: Iterator<Item = ItemPtr>,
+    | |________________________________- associated items in this implementation
+116 |   {
+117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+    |          ^^^
+...
+126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+    |          ^^^^^
+
+warning: enum `RangeIterState` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:234:6
+    |
+234 | enum RangeIterState {
+    |      ^^^^^^^^^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:245:19
+    |
+245 | pub(crate) struct Values<I> {
+    |                   ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:251:8
+    |
+250 | impl<I> Values<I> {
+    | ----------------- associated function in this implementation
+251 |     fn new(iter: I) -> Self {
+    |        ^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/iter.rs:287:5
+    |
+286 | pub struct AsIter<'a, T, I> {
+    |            ------ field in this struct
+287 |     txn: &'a T,
+    |     ^^^
+    |
+    = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+   --> vendor/yrs-0.28.0/src/slice.rs:164:12
+    |
+105 | impl ItemSlice {
+    | -------------- methods in this implementation
+...
+164 |     pub fn adjacent(&self) -> bool {
+    |            ^^^^^^^^
+...
+179 |     pub fn contains_id(&self, id: &ID) -> bool {
+    |            ^^^^^^^^^^^
+...
+249 |     pub fn right(&self) -> Option<ItemSlice> {
+    |            ^^^^^
+...
+269 |     pub fn left(&self) -> Option<ItemSlice> {
+    |            ^^^^
+
+warning: methods `within_range` and `get_item` are never used
+   --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+    |
+ 51 | impl StickyIndex {
+    | ---------------- methods in this implementation
+...
+272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+    |                   ^^^^^^^^^^^^
+...
+287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+    |                   ^^^^^^^^
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:63:18
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter {
+   |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                  |
+   |                  the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+   = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+   |                                            ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:69:20
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter {
+   |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                    |
+   |                    the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+   |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:75:19
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter {
+   |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                   |
+   |                   the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+   |                                             ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:358:20
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter {
+    |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                    |
+    |                    the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                         ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:364:25
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+    |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                         |
+    |                         the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:444:28
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+    |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                            |
+    |                            the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:449:33
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+    |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                 |
+    |                                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+    |                                                           +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:458:30
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+    |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                              |
+    |                              the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+    |                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:462:29
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+    |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                             |
+    |                             the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+    |                                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:467:34
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+    |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                  |
+    |                                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:476:31
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+    |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                               |
+    |                               the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+    |                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+    |
+168 |     fn root_refs(&self) -> RootRefs {
+    |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+    |                  |
+    |                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+168 |     fn root_refs(&self) -> RootRefs<'_> {
+    |                                    ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids {
+    |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                     |
+    |                     the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+    |
+181 |     fn subdocs(&self) -> SubdocsIter {
+    |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                |
+    |                the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+    |
+911 |     pub fn iter(&self) -> EventsIter {
+    |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+911 |     pub fn iter(&self) -> EventsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+   |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                 |
+   |                 the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+   |                                                            +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+    |
+141 |     pub fn iter(&self) -> AwarenessIter {
+    |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+    |                                        ++++
+
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+   Compiling tandemlog-text v0.0.0 (/tmp/tandemlog-food-implementation/native/text_engine)
+    Finished `release` profile [optimized] target(s) in 22.54s
+   Compiling libc v0.2.190
+   Compiling serde_core v1.0.229
+   Compiling smallvec v1.16.2
+   Compiling pin-project-lite v0.2.17
+   Compiling parking v2.2.1
+   Compiling zmij v1.0.23
+   Compiling event-listener v5.4.2
+   Compiling crossbeam-utils v0.8.23
+   Compiling parking_lot_core v0.9.12
+   Compiling scopeguard v1.2.0
+   Compiling cfg-if v1.0.5
+   Compiling thiserror v2.0.21
+   Compiling lock_api v0.4.14
+   Compiling event-listener-strategy v0.5.4
+   Compiling serde_json v1.0.151
+   Compiling serde v1.0.229
+   Compiling hashbrown v0.14.5
+   Compiling once_cell v1.21.4
+   Compiling memchr v2.8.3
+   Compiling itoa v1.0.18
+   Compiling async-lock v3.4.2
+   Compiling dashmap v6.2.1
+   Compiling arc-swap v1.9.2
+   Compiling smallstr v0.3.1
+   Compiling fastrand v2.5.0
+   Compiling base64 v0.22.1
+   Compiling yrs v0.28.0 (/tmp/tandemlog-food-implementation/native/text_engine/vendor/yrs-0.28.0)
+warning: unused imports: `BlockRange` and `Block`
+ --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+  |
+1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+  |                    ^^^^^  ^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `Block`
+ --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+  |
+1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+  |                    ^^^^^
+
+warning: unused import: `ItemContent`
+ --> vendor/yrs-0.28.0/src/iter.rs:1:20
+  |
+1 | use crate::block::{ItemContent, ItemPtr};
+  |                    ^^^^^^^^^^^
+
+warning: unused imports: `SmallVec` and `smallvec`
+ --> vendor/yrs-0.28.0/src/iter.rs:4:16
+  |
+4 | use smallvec::{smallvec, SmallVec};
+  |                ^^^^^^^^  ^^^^^^^^
+
+warning: unused import: `crate::utils::OptionExt`
+  --> vendor/yrs-0.28.0/src/doc.rs:10:5
+   |
+10 | use crate::utils::OptionExt;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: value assigned to `left` is never read
+   --> vendor/yrs-0.28.0/src/block.rs:494:24
+    |
+494 |         let mut left = None;
+    |                        ^^^^ this value is reassigned later and never used
+...
+540 |                 left = parent_branch.map.get(sub).cloned();
+    |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+    |
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/block.rs:886:21
+    |
+886 |                 let ptr = BranchPtr::from(branch);
+    |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `ptr`
+   --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+    |
+778 |         let ptr = item.clone();
+    |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+    |
+958 |         let mut block = Item::new(
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+   --> vendor/yrs-0.28.0/src/undo.rs:133:13
+    |
+133 |         let mut state = Arc::new(Inner {
+    |             ----^^^^^
+    |             |
+    |             help: remove this `mut`
+
+warning: unused variable: `clear_undo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:34
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+
+warning: unused variable: `clear_redo`
+   --> vendor/yrs-0.28.0/src/undo.rs:379:52
+    |
+379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+    |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+
+warning: method `as_item` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:198:12
+    |
+183 | impl<'a> BlockRef<'a> {
+    | --------------------- method in this implementation
+...
+198 |     pub fn as_item(&self) -> Option<&'a Item> {
+    |            ^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+   --> vendor/yrs-0.28.0/src/block.rs:264:12
+    |
+221 | impl Block {
+    | ---------- methods in this implementation
+...
+264 |     pub fn last_id(&self) -> ID {
+    |            ^^^^^^^
+...
+281 |     pub fn is_item(&self) -> bool {
+    |            ^^^^^^^
+...
+291 |     pub fn is_gc(&self) -> bool {
+    |            ^^^^^
+
+warning: method `delete_as_cleanup` is never used
+   --> vendor/yrs-0.28.0/src/block.rs:632:19
+    |
+444 | impl ItemPtr {
+    | ------------ method in this implementation
+...
+632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+    |                   ^^^^^^^^^^^^^^^^^
+
+warning: method `integrate` is never used
+    --> vendor/yrs-0.28.0/src/block.rs:1415:19
+     |
+1354 | impl BlockRange {
+     | --------------- method in this implementation
+...
+1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+     |                   ^^^^^^^^^
+
+warning: method `contains` is never used
+   --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+    |
+289 | impl BlockStore {
+    | --------------- method in this implementation
+...
+300 |     pub fn contains(&self, id: &ID) -> bool {
+    |            ^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+    |
+230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+    |       ^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+    |
+232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+    |
+234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+    |
+236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+    |
+238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+   --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+    |
+240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+    |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+    |
+536 | pub(crate) struct Entries<'a, B, T> {
+    |                   ------- field in this struct
+537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+538 |     txn: B,
+    |     ^^^
+    |
+    = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: method `as_id_set` is never used
+  --> vendor/yrs-0.28.0/src/update.rs:48:12
+   |
+28 | impl BlockSet {
+   | ------------- method in this implementation
+...
+48 |     pub fn as_id_set(&self) -> IdSet {
+   |            ^^^^^^^^^
+
+warning: associated functions `next_target` and `return_stack` are never used
+   --> vendor/yrs-0.28.0/src/update.rs:503:8
+    |
+169 | impl Update {
+    | ----------- associated functions in this implementation
+...
+503 |     fn next_target<'a, 'b>(
+    |        ^^^^^^^^^^^
+...
+526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+    |        ^^^^^^^^^^^^
+
+warning: methods `forward`, `backward`, and `values` are never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+    |
+ 18 | impl BlockIter {
+    | -------------- methods in this implementation
+...
+ 76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+    |            ^^^^^^^
+...
+130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+    |            ^^^^^^^^
+...
+369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+    |            ^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+    |
+377 | pub struct Values<'a, 'txn> {
+    |            ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+    |
+382 | impl<'a, 'txn> Values<'a, 'txn> {
+    | ------------------------------- associated function in this implementation
+383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+    |        ^^^
+
+warning: method `remove_at` is never used
+   --> vendor/yrs-0.28.0/src/branch.rs:398:19
+    |
+222 | impl Branch {
+    | ----------- method in this implementation
+...
+398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+    |                   ^^^^^^^^^
+
+warning: method `inner_mut` is never used
+   --> vendor/yrs-0.28.0/src/ids.rs:548:19
+    |
+ 58 | impl<T: Merge> IdRanges<T> {
+    | -------------------------- method in this implementation
+...
+548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+    |                   ^^^^^^^^^
+
+warning: trait `BlockIterator` is never used
+ --> vendor/yrs-0.28.0/src/iter.rs:7:18
+  |
+7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+  |                  ^^^^^^^^^^^^^
+
+warning: trait `BlockSliceIterator` is never used
+  --> vendor/yrs-0.28.0/src/iter.rs:16:18
+   |
+16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+   |                  ^^^^^^^^^^^^^^^^^^
+
+warning: struct `RangeIter` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:106:19
+    |
+106 | pub(crate) struct RangeIter<I> {
+    |                   ^^^^^^^^^
+
+warning: associated items `new` and `begin` are never used
+   --> vendor/yrs-0.28.0/src/iter.rs:117:8
+    |
+113 | / impl<I> RangeIter<I>
+114 | | where
+115 | |     I: Iterator<Item = ItemPtr>,
+    | |________________________________- associated items in this implementation
+116 |   {
+117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+    |          ^^^
+...
+126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+    |          ^^^^^
+
+warning: enum `RangeIterState` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:234:6
+    |
+234 | enum RangeIterState {
+    |      ^^^^^^^^^^^^^^
+
+warning: struct `Values` is never constructed
+   --> vendor/yrs-0.28.0/src/iter.rs:245:19
+    |
+245 | pub(crate) struct Values<I> {
+    |                   ^^^^^^
+
+warning: associated function `new` is never used
+   --> vendor/yrs-0.28.0/src/iter.rs:251:8
+    |
+250 | impl<I> Values<I> {
+    | ----------------- associated function in this implementation
+251 |     fn new(iter: I) -> Self {
+    |        ^^^
+
+warning: field `txn` is never read
+   --> vendor/yrs-0.28.0/src/iter.rs:287:5
+    |
+286 | pub struct AsIter<'a, T, I> {
+    |            ------ field in this struct
+287 |     txn: &'a T,
+    |     ^^^
+    |
+    = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+   --> vendor/yrs-0.28.0/src/slice.rs:164:12
+    |
+105 | impl ItemSlice {
+    | -------------- methods in this implementation
+...
+164 |     pub fn adjacent(&self) -> bool {
+    |            ^^^^^^^^
+...
+179 |     pub fn contains_id(&self, id: &ID) -> bool {
+    |            ^^^^^^^^^^^
+...
+249 |     pub fn right(&self) -> Option<ItemSlice> {
+    |            ^^^^^
+...
+269 |     pub fn left(&self) -> Option<ItemSlice> {
+    |            ^^^^
+
+warning: methods `within_range` and `get_item` are never used
+   --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+    |
+ 51 | impl StickyIndex {
+    | ---------------- methods in this implementation
+...
+272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+    |                   ^^^^^^^^^^^^
+...
+287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+    |                   ^^^^^^^^
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:63:18
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter {
+   |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                  |
+   |                  the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+   = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+help: use `'_` for type paths
+   |
+63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+   |                                            ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:69:20
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter {
+   |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                    |
+   |                    the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+   |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/event.rs:75:19
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter {
+   |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                   |
+   |                   the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+   |                                             ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:358:20
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter {
+    |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                    |
+    |                    the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                         ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:364:25
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+    |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                         |
+    |                         the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                              ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:444:28
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+    |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                            |
+    |                            the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:449:33
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+    |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                 |
+    |                                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+    |                                                           +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:458:30
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+    |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                              |
+    |                              the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+    |                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:462:29
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+    |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                             |
+    |                             the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+    |                                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:467:34
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+    |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                                  |
+    |                                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+    |                                                             +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/store.rs:476:31
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+    |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+    |                               |
+    |                               the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+    |                                               +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+    |
+168 |     fn root_refs(&self) -> RootRefs {
+    |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+    |                  |
+    |                  the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+168 |     fn root_refs(&self) -> RootRefs<'_> {
+    |                                    ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids {
+    |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                     |
+    |                     the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+    |                                          ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+    |
+181 |     fn subdocs(&self) -> SubdocsIter {
+    |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+    |                |
+    |                the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+    |
+911 |     pub fn iter(&self) -> EventsIter {
+    |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+911 |     pub fn iter(&self) -> EventsIter<'_> {
+    |                                     ++++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+  --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+   |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+   |                 |
+   |                 the lifetime is elided here
+   |
+   = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+   |
+93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+   |                                                            +++
+
+warning: hiding a lifetime that's elided elsewhere is confusing
+   --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+    |
+141 |     pub fn iter(&self) -> AwarenessIter {
+    |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+    |                 |
+    |                 the lifetime is elided here
+    |
+    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+help: use `'_` for type paths
+    |
+141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+    |                                        ++++
+
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+   Compiling tandemlog-text v0.0.0 (/tmp/tandemlog-food-implementation/native/text_engine)
+    Finished `release` profile [optimized] target(s) in 22.61s
+
+> Task :app:validateCompileSdkVersion
+> Task :app:preBuild
+> Task :app:preDebugBuild
+> Task :file_selector_android:generateDebugAssets UP-TO-DATE
+> Task :file_selector_android:preBuild UP-TO-DATE
+> Task :file_selector_android:preDebugBuild UP-TO-DATE
+> Task :file_selector_android:mergeDebugAssets
+> Task :integration_test:generateDebugAssets UP-TO-DATE
+> Task :integration_test:preBuild UP-TO-DATE
+> Task :integration_test:preDebugBuild UP-TO-DATE
+> Task :integration_test:mergeDebugAssets
+> Task :jni:generateDebugAssets UP-TO-DATE
+> Task :jni:preBuild UP-TO-DATE
+> Task :jni:preDebugBuild UP-TO-DATE
+> Task :jni:mergeDebugAssets
+> Task :jni_flutter:generateDebugAssets UP-TO-DATE
+> Task :jni_flutter:preBuild UP-TO-DATE
+> Task :jni_flutter:preDebugBuild UP-TO-DATE
+> Task :jni_flutter:mergeDebugAssets
+> Task :url_launcher_android:generateDebugAssets UP-TO-DATE
+> Task :url_launcher_android:preBuild UP-TO-DATE
+> Task :url_launcher_android:preDebugBuild UP-TO-DATE
+> Task :url_launcher_android:mergeDebugAssets
+> Task :app:mergeDebugAssets
+> Task :app:copyFlutterAssetsDebug
+> Task :app:generateDebugResources
+> Task :app:packageDebugResources
+> Task :file_selector_android:processDebugNavigationResources
+> Task :integration_test:processDebugNavigationResources
+> Task :jni:processDebugNavigationResources
+> Task :jni_flutter:processDebugNavigationResources
+> Task :url_launcher_android:processDebugNavigationResources
+> Task :app:processDebugNavigationResources
+> Task :file_selector_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :file_selector_android:generateDebugResources
+> Task :file_selector_android:packageDebugResources
+> Task :file_selector_android:parseDebugLocalResources
+> Task :app:parseDebugLocalResources
+> Task :file_selector_android:generateDebugRFile
+> Task :app:generateDebugRFile
+> Task :file_selector_android:javaPreCompileDebug
+> Task :integration_test:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :integration_test:generateDebugResources
+> Task :integration_test:packageDebugResources
+> Task :integration_test:parseDebugLocalResources
+> Task :integration_test:generateDebugRFile
+> Task :integration_test:compileDebugKotlin NO-SOURCE
+> Task :integration_test:javaPreCompileDebug
+> Task :file_selector_android:compileDebugKotlin
+> Task :integration_test:compileDebugJavaWithJavac
+> Task :file_selector_android:compileDebugJavaWithJavac
+> Task :integration_test:bundleLibCompileToJarDebug
+> Task :jni:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :file_selector_android:bundleLibCompileToJarDebug
+> Task :jni:generateDebugResources
+> Task :jni:packageDebugResources
+> Task :jni:javaPreCompileDebug
+> Task :jni_flutter:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni_flutter:generateDebugResources
+> Task :jni:parseDebugLocalResources
+> Task :jni_flutter:packageDebugResources
+> Task :jni:generateDebugRFile
+> Task :jni:compileDebugKotlin NO-SOURCE
+> Task :jni:compileDebugJavaWithJavac
+> Task :jni:bundleLibCompileToJarDebug
+> Task :jni_flutter:javaPreCompileDebug
+> Task :url_launcher_android:checkKotlinGradlePluginConfigurationErrors SKIPPED
+> Task :jni_flutter:parseDebugLocalResources
+> Task :jni_flutter:generateDebugRFile
+> Task :url_launcher_android:generateDebugBuildConfig
+> Task :jni_flutter:compileDebugKotlin NO-SOURCE
+> Task :jni_flutter:compileDebugJavaWithJavac
+> Task :jni_flutter:bundleLibCompileToJarDebug
+> Task :url_launcher_android:generateDebugResources
+> Task :url_launcher_android:packageDebugResources
+> Task :url_launcher_android:javaPreCompileDebug
+> Task :url_launcher_android:parseDebugLocalResources
+> Task :url_launcher_android:generateDebugRFile
+> Task :url_launcher_android:compileDebugKotlin
+> Task :url_launcher_android:compileDebugJavaWithJavac
+> Task :url_launcher_android:bundleLibCompileToJarDebug
+> Task :app:compileDebugKotlin
+
+[Incubating] Problems report is available at: file:///tmp/tandemlog-food-implementation/build/reports/problems/problems-report.html
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 10.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/9.4.1/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD SUCCESSFUL in 2m 22s
+64 actionable tasks: 59 executed, 5 up-to-date

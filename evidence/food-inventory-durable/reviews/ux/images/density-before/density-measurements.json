@@ -1,0 +1,37 @@
+[
+  {
+    "name": "density-dark-1x-390",
+    "viewport": "390x850",
+    "theme": "dark",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 5,
+    "rowHeights": [
+      112.0,
+      112.0,
+      112.0,
+      112.0,
+      112.0
+    ],
+    "listViewportHeight": 650.0,
+    "minimumActionTarget": 40
+  },
+  {
+    "name": "density-dark-1x-1200",
+    "viewport": "1200x850",
+    "theme": "dark",
+    "textScale": 1.0,
+    "fixtureGroups": 12,
+    "fullyVisibleGroups": 6,
+    "rowHeights": [
+      112.0,
+      112.0,
+      112.0,
+      112.0,
+      112.0,
+      112.0
+    ],
+    "listViewportHeight": 688.0,
+    "minimumActionTarget": 40
+  }
+]

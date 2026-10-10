@@ -1,0 +1,40 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/food/food_store.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const install='00000000-0000-4000-8000-000000000010';
+const a='00000000-0000-4000-8000-000000000020';
+const b='00000000-0000-4000-8000-000000000030';
+const c='00000000-0000-4000-8000-000000000040';
+const id='00000000-0000-4000-8000-000000000100';
+FoodRecord record(String w,int seq,int clock,FoodAction action,{FoodRecord? previous,List<String> deletes=const[],List<String> edits=const[],Contents? contents,FoodDetails? details,String? createdWith})=>FoodRecord(space:space,writer:w,sequence:seq,clock:EventClock(BigInt.from(clock)),previousHash:previous?.hash??eventGenesisHash(space,w),operation:FoodOperation(id:'$w:$seq',order:clock,action:action,targets:[id],details:details,contents:contents,createdAt:action==FoodAction.add?'2026-10-10T00:00:00Z':null,observedDeletes:deletes,observedEdits:edits),createdWith:action==FoodAction.add?{}:{id:createdWith??'$a:1'});
+void main(){
+ late Directory root; late LocalProfileDatabase profile;late LocalLogFolder folder;late FoodStore food;
+ setUp(()async{root=await Directory.systemTemp.createTemp('food-dependency-');profile=await LocalProfileDatabase.open('${root.path}/profile');folder=LocalLogFolder((await Directory('${root.path}/data').create()).path);await folder.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));food=await FoodStore.open(folder,profile:profile,installationWriter:install,space:space);});
+ tearDown(()async{await food.close();await profile.close();await root.delete(recursive:true);});
+ Future<void> deliver(List<FoodRecord> records)async{for(final r in records){final file=File('${folder.location}/${foodLogName(r.writer)}');await file.writeAsString('${r.encode()}\n',mode:FileMode.append,flush:true);}}
+ test('admitted deletion tokens above one record bound can still be restored',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ var prior=birth;final encoded=StringBuffer('${birth.encode()}\n');
+ for(var i=2;i<=1002;i++){prior=record(a,i,i,FoodAction.remove,previous:prior);encoded.writeln(prior.encode());}
+ await File('${folder.location}/${foodLogName(a)}').writeAsString(encoded.toString(),flush:true);
+ await food.refresh();expect(food.pendingReferences,0);expect(food.state.deleted.single.deletions,hasLength(1001));
+ await food.restore([food.state.deleted.single]);expect(food.state.active,hasLength(1));expect(food.hasPreparedAppend,isFalse);
+ });
+ test('admitted concurrent contents above one record bound can still be resolved',()async{
+ final birth=record(a,1,1,FoodAction.add,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1));
+ var prior=birth;final encoded=StringBuffer('${birth.encode()}\n');
+ for(var i=2;i<=1002;i++){prior=record(a,i,i,FoodAction.edit,previous:prior,contents:Contents.fraction(i%2+1,3));encoded.writeln(prior.encode());}
+ await File('${folder.location}/${foodLogName(a)}').writeAsString(encoded.toString(),flush:true);
+ await food.refresh();expect(food.pendingReferences,0);expect(food.state.active.single.contentsEdits,hasLength(1001));
+ await food.changeContents(food.state.active.single,const Contents.fraction(1,4));expect(food.state.active.single.contentsEdits,hasLength(1));expect(food.state.active.single.contents.label,'¼ remaining');
+ });
+}

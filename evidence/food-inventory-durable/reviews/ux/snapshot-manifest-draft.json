@@ -1,0 +1,349 @@
+{
+  "status": "draft; awaiting stable source notice; not final acceptance",
+  "baseHead": "a47015d799f575616f5b80222d8435dd351836b1",
+  "entries": [
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-before/density-dark-1x-1200.png",
+      "snapshot": "images/density-before/density-dark-1x-1200.png",
+      "bytes": 59601,
+      "sha256": "0a94307bff1de34b159ebb36ff53e53595bbfddf142b5ce471ff81dc5d79ea5a"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-before/density-dark-1x-390.png",
+      "snapshot": "images/density-before/density-dark-1x-390.png",
+      "bytes": 54386,
+      "sha256": "5e115c42b2556f53b6d87a1aa1c33139d5e7234b8b8ddafdbf71eb0a467ed549"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-before/density-measurements.json",
+      "snapshot": "images/density-before/density-measurements.json",
+      "bytes": 662,
+      "sha256": "070a82f6215aadfb227df7ddefd8a8113a0854cd678b5d87c27592368613c8e7"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-dark-1x-1200.png",
+      "snapshot": "images/density-final/density-dark-1x-1200.png",
+      "bytes": 73991,
+      "sha256": "300fa1d8a555be986c6784cf899ef8655cc239a28a86e548a3682b959d9efe45"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-dark-1x-390.png",
+      "snapshot": "images/density-final/density-dark-1x-390.png",
+      "bytes": 66601,
+      "sha256": "9be1772365e2c811691747905179c1af83d7139e2b35c2b3c196dc1f5eb750b2"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-dark-2x-1200.png",
+      "snapshot": "images/density-final/density-dark-2x-1200.png",
+      "bytes": 91559,
+      "sha256": "0e0cd2d4713bf7466b617661e288fd3c1da7268994541a7dd9bed67246d769ce"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-dark-2x-390.png",
+      "snapshot": "images/density-final/density-dark-2x-390.png",
+      "bytes": 60441,
+      "sha256": "3ba3701bf6c8e6128b1b53c2e78c43b688c227b39c532ec52f73ccb9fa667174"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-light-1x-1200.png",
+      "snapshot": "images/density-final/density-light-1x-1200.png",
+      "bytes": 76174,
+      "sha256": "22c4d454bb65360d0535e1af586f3e7e1cc9944f3ff89b60bc447c6e899530a4"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-light-1x-390.png",
+      "snapshot": "images/density-final/density-light-1x-390.png",
+      "bytes": 68249,
+      "sha256": "e18a5865e91bb57d4611ce5cdb57c5fcc08ec095ed9d8f53ceca19e8e5407e42"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-light-2x-1200.png",
+      "snapshot": "images/density-final/density-light-2x-1200.png",
+      "bytes": 93290,
+      "sha256": "1b107dabe5ea290ac225b944876a559a027d2a0c8c46ed7dc29edc57daab59b8"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-light-2x-390.png",
+      "snapshot": "images/density-final/density-light-2x-390.png",
+      "bytes": 61454,
+      "sha256": "c8e8e033d60cb41e0b498d13bc3d26d9957fd057069497a5a7c75d590ee83373"
+    },
+    {
+      "kind": "matched density capture or measurements",
+      "original": "/tmp/tandemlog-food-durable-evidence/density-final/density-measurements.json",
+      "snapshot": "images/density-final/density-measurements.json",
+      "bytes": 2767,
+      "sha256": "a8077ab6b701f6afd1c3f551d889fd4b280e3d6900da46953fe436c4b74a9235"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-deleted.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-deleted.png",
+      "bytes": 26401,
+      "sha256": "e38fa4550dc5ab691b2eb34c617bccabb14275e771a32b2868d283c3d56b61a1"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-editor.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-editor.png",
+      "bytes": 40810,
+      "sha256": "b83d945f2928fc3f557222af79bb561248d0c1f407bdf088ac5a21619d58bb34"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-inbox.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-inbox.png",
+      "bytes": 25575,
+      "sha256": "7721a6ff836de2595070a56afb58c52182728dfc0dffb352b3624c1c0039ffb3"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-inspect.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-inspect.png",
+      "bytes": 58049,
+      "sha256": "bdec7299596251bf8993d3966aeba1604f6f27c081368a16538eb12c0b477d37"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-retained-collapsed.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-retained-collapsed.png",
+      "bytes": 21543,
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-retained-expanded.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-retained-expanded.png",
+      "bytes": 26127,
+      "sha256": "097178479d3bdd39a0f596380b3d17543f2a5a857a39fbdcb8b25b923756024c"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-selected-partial.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-selected-partial.png",
+      "bytes": 57944,
+      "sha256": "5f401cd269a65f96409f3164d7a79ac523bfcad0742da01ab0ed6964df5e7177"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/narrow-stock.png",
+      "snapshot": "images/preview-before-spacing-fix/narrow-stock.png",
+      "bytes": 30978,
+      "sha256": "bf7056cbb0df02a892d4ad9de3e0e812eea16107a8858ea3dc9d334538690362"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/wide-stock-after-restore.png",
+      "snapshot": "images/preview-before-spacing-fix/wide-stock-after-restore.png",
+      "bytes": 62717,
+      "sha256": "a4030b37275ceb4cc7515e05efc61e87eee16d78c3900ce1fe038bc9d7e3459f"
+    },
+    {
+      "kind": "workflow before editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-final/wide-stock.png",
+      "snapshot": "images/preview-before-spacing-fix/wide-stock.png",
+      "bytes": 33945,
+      "sha256": "c5cdf21c8866aa571d08b55acdcbd56f1a52c80aeb1ca3c7acea6a66e62a964f"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-deleted.png",
+      "snapshot": "images/preview-spacing-closure/narrow-deleted.png",
+      "bytes": 26615,
+      "sha256": "156ba01c72747293d049e6bd0863427620cc5a592d4cae255e2eaaa211871153"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-editor.png",
+      "snapshot": "images/preview-spacing-closure/narrow-editor.png",
+      "bytes": 40082,
+      "sha256": "cf2ee359f55a4bc133a5c325eb9c28ebcdba4926b2cddfd0c0995072e43a8b3c"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-inbox.png",
+      "snapshot": "images/preview-spacing-closure/narrow-inbox.png",
+      "bytes": 25575,
+      "sha256": "7721a6ff836de2595070a56afb58c52182728dfc0dffb352b3624c1c0039ffb3"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-inspect.png",
+      "snapshot": "images/preview-spacing-closure/narrow-inspect.png",
+      "bytes": 58020,
+      "sha256": "d52e2e16dd5d36f9d044bae68b31e0731849d7cbce3f416cc30074f5eb802033"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-retained-collapsed.png",
+      "snapshot": "images/preview-spacing-closure/narrow-retained-collapsed.png",
+      "bytes": 21543,
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-retained-expanded.png",
+      "snapshot": "images/preview-spacing-closure/narrow-retained-expanded.png",
+      "bytes": 26127,
+      "sha256": "097178479d3bdd39a0f596380b3d17543f2a5a857a39fbdcb8b25b923756024c"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-selected-partial.png",
+      "snapshot": "images/preview-spacing-closure/narrow-selected-partial.png",
+      "bytes": 57883,
+      "sha256": "b9932f66089d6a98003cd818ab98ba1189fdc2bad41664c55f02dc97783bb2f0"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/narrow-stock.png",
+      "snapshot": "images/preview-spacing-closure/narrow-stock.png",
+      "bytes": 30978,
+      "sha256": "bf7056cbb0df02a892d4ad9de3e0e812eea16107a8858ea3dc9d334538690362"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/wide-stock-after-restore.png",
+      "snapshot": "images/preview-spacing-closure/wide-stock-after-restore.png",
+      "bytes": 62690,
+      "sha256": "d7bbd8705977f085523b2c47f01def798d8640c3ca479fa85cb8120eb3ff33fd"
+    },
+    {
+      "kind": "workflow after editor-spacing closure",
+      "original": "/tmp/tandemlog-food-durable-evidence/preview-accepted/wide-stock.png",
+      "snapshot": "images/preview-spacing-closure/wide-stock.png",
+      "bytes": 33945,
+      "sha256": "c5cdf21c8866aa571d08b55acdcbd56f1a52c80aeb1ca3c7acea6a66e62a964f"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "snapshot": "sources-at-review/lib/food/food_page.dart",
+      "bytes": 38532,
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "snapshot": "sources-at-review/lib/food/inventory.dart",
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "snapshot": "sources-at-review/tool/food_preview.dart",
+      "bytes": 5695,
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_density_workflow_test.dart",
+      "snapshot": "sources-at-review/integration_test/food_density_workflow_test.dart",
+      "bytes": 3952,
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_preview_workflow_test.dart",
+      "snapshot": "sources-at-review/integration_test/food_preview_workflow_test.dart",
+      "bytes": 6156,
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_production_workflow_test.dart",
+      "snapshot": "sources-at-review/integration_test/food_production_workflow_test.dart",
+      "bytes": 16451,
+      "sha256": "2a41074040b95728ea863972f6a49682e896b148bb6f0dd69c2a510e2063354d"
+    },
+    {
+      "kind": "review-time source; final stable binding pending",
+      "original": "/tmp/tandemlog-food-implementation/design/decisions/0014-food-inventory.md",
+      "snapshot": "sources-at-review/design/decisions/0014-food-inventory.md",
+      "bytes": 10114,
+      "sha256": "1a21c4286dd0d2586a2bc0d39d4a2911c26f27619f0b84c50549708eafcd86a0"
+    },
+    {
+      "kind": "author-run log; production accepted named run contains failure",
+      "original": "/tmp/tandemlog-food-density-before-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-density-before-native.log",
+      "bytes": 2629,
+      "sha256": "70b46bd697d16735add846c3ca5e980b1a791042002fdf0097f62fcbc6c0b04d"
+    },
+    {
+      "kind": "author-run log; production accepted named run contains failure",
+      "original": "/tmp/tandemlog-food-density-final-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-density-final-native.log",
+      "bytes": 5187,
+      "sha256": "822f5e860eb0720b36bec07032d36037041cf63b07e29e249b21cc39389fe73a"
+    },
+    {
+      "kind": "author-run log; production accepted named run contains failure",
+      "original": "/tmp/tandemlog-food-preview-final-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-preview-final-native.log",
+      "bytes": 5180,
+      "sha256": "0eae37b67912586ac12e8e87e5e9d20b14c4cdd94cb1a1f28000e17cff810d1e"
+    },
+    {
+      "kind": "author-run log; production accepted named run contains failure",
+      "original": "/tmp/tandemlog-food-preview-accepted-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-preview-accepted-native.log",
+      "bytes": 5180,
+      "sha256": "837a5768161068db8cee5a1ba64429e9bbab7bd6c493372b320b90a55b14b83c"
+    },
+    {
+      "kind": "author-run log; production accepted named run contains failure",
+      "original": "/tmp/tandemlog-food-production-accepted-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-production-accepted-native.log",
+      "bytes": 9479,
+      "sha256": "2f89040bf344f3c6cf503f7e3e77f8f973918705e7a0958b0b7c7cc5bb5a6bbb"
+    },
+    {
+      "kind": "final candidate review evidence; source stability pending",
+      "original": "/tmp/tandemlog-food-production-verified-native.log",
+      "snapshot": "logs-at-review/tandemlog-food-production-verified-native.log",
+      "bytes": 6971,
+      "sha256": "3c6c674098d4a01592c2634770e8a5275ebb0353778fd155ac7f21dbae8b6149"
+    },
+    {
+      "kind": "final candidate review evidence; source stability pending",
+      "original": "/tmp/tandemlog-food-implementation/lib/main.dart",
+      "snapshot": "sources-at-review/lib/main.dart",
+      "bytes": 194342,
+      "sha256": "e3fa271f928e8f75a8a48f91baac1587c8ecba8ebb4d9cf729169a07b11916b9"
+    },
+    {
+      "kind": "final candidate review evidence; source stability pending",
+      "original": "/tmp/tandemlog-food-implementation/lib/presentation/tag_input.dart",
+      "snapshot": "sources-at-review/lib/presentation/tag_input.dart",
+      "bytes": 23270,
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+    },
+    {
+      "kind": "final candidate review evidence; source stability pending",
+      "original": "/tmp/tandemlog-food-durable-evidence/production-verified/production-narrow-stock.png",
+      "snapshot": "images/production-verified/production-narrow-stock.png",
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    },
+    {
+      "kind": "final candidate review evidence; source stability pending",
+      "original": "/tmp/tandemlog-food-durable-evidence/production-verified/production-wide-stock.png",
+      "snapshot": "images/production-verified/production-wide-stock.png",
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    }
+  ]
+}

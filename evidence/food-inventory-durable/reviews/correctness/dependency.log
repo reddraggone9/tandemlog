@@ -1,0 +1,7 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/dependency_test.dart
+00:00 +0: missing creation defers edit; delayed birth resolves; duplicate refresh is exact
+00:00 +1: known-invalid delayed observed source cannot publish or advance heads
+00:00 +2: offline remove/restore only cancels observed tokens regardless of arrival
+00:00 +3: offline concurrent contents remain alternatives until observed resolution arrives
+00:00 +4: queued close rejects later commands and releases namespace for reopen
+00:00 +5: All tests passed!

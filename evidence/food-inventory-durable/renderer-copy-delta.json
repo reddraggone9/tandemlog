@@ -1,0 +1,25 @@
+{
+  "previousSha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d",
+  "currentSha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50",
+  "reversingExactlyThreeLabelReplacementsRestoresPreviousBytes": true,
+  "changes": [
+    [
+      "'Remove ${group.containers.length} containers'",
+      "'Remove ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}'"
+    ],
+    [
+      "'Remove ${targets.length} ${group.details.name} containers?'",
+      "'Remove ${targets.length} ${group.details.name} ${targets.length == 1 ? 'container' : 'containers'}?'"
+    ],
+    [
+      "'Edit ${group.containers.length} containers'",
+      "'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}'"
+    ]
+  ],
+  "origins": {
+    "production5AndTasks87": "main6f5/storage5cc/pre-copyFoodPage821",
+    "finalInspector1FourCases": "main6f5/storage5cc/FoodPage3b",
+    "finalDensity1EightCases": "FoodPage3b; unchanged measurement harness"
+  },
+  "scope": "Labels only; no callbacks, layout, domain, transport or recovery authority change"
+}

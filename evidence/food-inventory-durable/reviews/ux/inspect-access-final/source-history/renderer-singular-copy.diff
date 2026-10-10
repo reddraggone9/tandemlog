@@ -1,0 +1,29 @@
+--- /tmp/tandemlog-food-renderer-before-singular-copy.dart.txt	2026-10-10 03:48:36.826392296 +0000
++++ lib/food/food_page.dart	2026-10-10 03:48:37.291351456 +0000
+@@ -387,7 +387,7 @@
+                         PopupMenuItem(
+                           value: 'remove',
+                           child: Text(
+-                            'Remove ${group.containers.length} containers',
++                            'Remove ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
+                           ),
+                         ),
+                     ],
+@@ -500,7 +500,7 @@
+         final answer = _answerOnce<bool>(context);
+         return AlertDialog(
+           title: Text(
+-            'Remove ${targets.length} ${group.details.name} containers?',
++            'Remove ${targets.length} ${group.details.name} ${targets.length == 1 ? 'container' : 'containers'}?',
+           ),
+           content: Text(
+             '${group.summary}. Only these observed containers will be removed. You can restore them from Deleted.',
+@@ -661,7 +661,7 @@
+               title: Text(
+                 group == null
+                     ? 'Add food'
+-                    : 'Edit ${group.containers.length} containers',
++                    : 'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
+               ),
+               content: SizedBox(
+                 width: 480,

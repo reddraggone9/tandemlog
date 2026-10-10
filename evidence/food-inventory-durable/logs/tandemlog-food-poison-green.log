@@ -1,0 +1,8 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_store_test.dart
+00:00 +0: food physical count and durable Deleted survive restart without changing task v3 bytes
+00:00 +1: partial first record is resumed exactly from protected bytes across restart
+00:00 +2: uncertain successful append admits once and retires exact receipt
+00:00 +3: acknowledged missing stream fails closed and retains last view
+00:00 +4: food refresh SQL fault preserves state and receipts together
+00:00 +5: food handle releases its lease when the profile owner is poisoned
+00:00 +6: All tests passed!

@@ -1,0 +1,351 @@
+{
+  "schema": 1,
+  "review": "Independent durable Food source/architecture and bounded Linux native milestone closure",
+  "reviewedAtUtc": "2026-10-10T03:58:52.609263+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "gitHead": "f1db9f5b1f06c4e8b328d18010cad3e92c184b1b",
+  "workingTreeUncommitted": true,
+  "verdict": "ACCEPT_SCOPED_ARCHITECTURE_AND_LINUX_MILESTONE; no architecture must-fix; platform/package/import/publication gates remain open",
+  "mustFix": [],
+  "extends": {
+    "path": "/tmp/food-architecture-review/shared-read-recovery-closure.json",
+    "sha256": "c3d03bcf62c64930f27b2a024307d1d26907ebba667015e0f04a94954b3c6109",
+    "previousBindingCount": 42,
+    "unchangedPreviousBindings": 40,
+    "changedPreviousBindings": [
+      "design/status.md",
+      "lib/food/food_page.dart"
+    ],
+    "additionalBindings": [
+      "integration_test/food_inspect_accessibility_test.dart",
+      "evidence/food-inventory-durable/README.md"
+    ]
+  },
+  "sourceReviewScope": [
+    "Dedicated shared Retry drains current ingestion and validates unchanged Task/Food/profile/installation identities plus protected settings and task guard; sequential Task/Food/Task reads precede clearing the stop.",
+    "Retry does not append canonical bytes, retry prepared operations, reload settings, discard receipts, replace existing module handles or close editors. Hard authority/poison failures retain the stop; isolated Food history may remain module-only warning.",
+    "Every Food typed-history failure is followed by shared manifest/owner revalidation before module-only propagation; missing canonical path diagnostic identifies filename without changing wire semantics.",
+    "Existing private editor controllers and FocusScope subtree stay mounted under the blocking scrollable recovery overlay; Retry remains a separate fixed action.",
+    "Only the first-name form keeps local typing/focus while stopped, with a bounded120px scrollable diagnostic and fixed Retry. Existing-user picker and editor command callbacks remain blocked.",
+    "Explicit setup Continue captures Task/profile/name/pending identity, requires user-null and unchanged intent after shared admission, then performs captured-origin command-safety checks before/after Task refresh. Pending user IDs/names persist on failure.",
+    "Module selector yields space for single/bulk Task editor IME; old header fixture prohibition is scoped to TaskToolbar while explicitly requiring the new module controls. Existing geometry/draft/canonical assertions remain.",
+    "Final renderer differs from prior821 snapshot by exactly3 menu/confirmation/editor count-wording replacements; no callback, layout, canonical/storage/native dependency changes in this final delta.",
+    "Inspect fixture uses real Tab/ShiftTab and Enter with focused/mounted assertions, Escape for popup and binding platform-pop dispatch for unchanged dialog. Metadata/actions become reachable at four viewport/text-scale cases; complete container JSON equality retained. No direct-focus fallback.",
+    "Durable README/status distinguish full Tasks87/durable Food5 origin821 from final Inspect/density source3b; historical first-slice and failed diagnostics remain preserved."
+  ],
+  "evidenceReadOnly": {
+    "/tmp/tandemlog-food-task-checkpoint-native.log": {
+      "sha256": "4a9f1d56baf3eab6783cf2df49cc6083530e017e44f8a900fceeb291a222e432",
+      "bytes": 47441,
+      "ownerRunPassed": 87,
+      "scope": "Existing full Tasks Linux GTK debug native suite; owner source main6f5/renderer821",
+      "reviewerExecuted": false
+    },
+    "/tmp/tandemlog-food-production-recovery-final-native.log": {
+      "sha256": "f48cd02f4875c3fc6b26e2feddb98d0257c82e87ed1ac7d6ad13b212444dc1f4",
+      "bytes": 5772,
+      "ownerRunPassed": 5,
+      "scope": "Durable production Linux GTK debug suite; owner source main6f5/renderer821",
+      "reviewerExecuted": false
+    },
+    "/tmp/tandemlog-food-setup-preserved-focus-native.log": {
+      "sha256": "44261a1d4ec495c2b2b2a26a8fb8faa797410139f9b06fdbcf1da899e2c6ed78",
+      "bytes": 4151,
+      "ownerRunPassed": 1,
+      "scope": "Existing onboarding Linux GTK debug native fixture",
+      "reviewerExecuted": false
+    },
+    "/tmp/tandemlog-food-inspect-keyboard-final-native.log": {
+      "sha256": "ca252fab7b260f1c9ea79f0e3d04c759cc53b7a7783b7016a9ea9f3f02e2b601",
+      "bytes": 3566,
+      "ownerRunPassed": 1,
+      "scope": "Synthetic shared Food presentation on Linux GTK debug, renderer3b;390/1200 and1x/2x",
+      "reviewerExecuted": false
+    },
+    "/tmp/tandemlog-food-density-checkpoint-final-native.log": {
+      "sha256": "228bf4328f0b0330c21fa6a4f3cb818d3c5d10abb0d6b0d3ebc961b2e4b00f5c",
+      "bytes": 3562,
+      "ownerRunPassed": 1,
+      "scope": "Synthetic shared Food presentation Linux GTK debug, final renderer3b; both themes/normal/enlarged; not physical device",
+      "reviewerExecuted": false
+    },
+    "/tmp/tandemlog-food-renderer-before-singular-copy.dart.txt": {
+      "sha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d",
+      "bytes": 38532,
+      "scope": "Exact prior821 renderer snapshot retained; verified only3 string replacements produce final3b source"
+    },
+    "/tmp/tandemlog-food-renderer-singular-copy.diff": {
+      "sha256": "bf25cdac9647aaae2c5936ac726798cb6066ad4005b8c80a719ba4e138f4b4b4",
+      "bytes": 1448,
+      "scope": "Preserved narrow renderer copy diff"
+    },
+    "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390.png": {
+      "sha256": "82ce30caf328f8d37aa8ff49d5636960182b3c42d603b302ba908ac90a19ef0d",
+      "bytes": 60451,
+      "reviewerViewedActualPixels": true,
+      "scope": "Synthetic Linux GTK narrow390x850, injected200% text,dark"
+    },
+    "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390-actions.png": {
+      "sha256": "33f565014ddf8f448fa1d49c0c07748868bec34eaaf57080a25956690eead521",
+      "bytes": 66848,
+      "reviewerViewedActualPixels": true,
+      "scope": "Synthetic Linux GTK narrow390x850, injected200% text,dark"
+    },
+    "/tmp/tandemlog-food-durable-evidence/inspect-keyboard-final/inspect-dark-2x-390-editor.png": {
+      "sha256": "31113cad4b5a634215f61fd6882df80ea428cc671949a4b4e20dd09b4c7a1e4b",
+      "bytes": 61941,
+      "reviewerViewedActualPixels": true,
+      "scope": "Synthetic Linux GTK narrow390x850, injected200% text,dark"
+    }
+  },
+  "evidenceQualification": "Read owner-run terminal logs and relevant fixture assertions; no builds/tests by reviewer. Owner reports source origins, bound independently here as exact working-tree bytes; this is not distributed binary attestation. Viewed three actual final narrow enlarged Inspect/menu/editor pixels. Forward-only traversal diagnostic remains a retained failure, not final keyboard evidence; ShiftTab reaches the preceding Collapse target without forcing focus.",
+  "visualObservations": [
+    "Inspect metadata and physical identity remain visible; menu wraps \"Remove 1 container\" label without clipping and final editor title uses singular container.",
+    "At390px/injected200% editor text ancillary optional/date-format suffixes and helper text are ellipsized; core values/actions remain visible in inspected frames. Separate UX review owns materiality; no spoken/assistive-technology acceptance claimed."
+  ],
+  "remainingGates": [
+    "Actual Windows/Android affected native/provider/upgrade acceptance and exact new candidate/package identity.",
+    "Final human UX/keyboard/touch/accessibility and visible-input demo review; inspected-group traversal is not whole-list wraparound or spoken AT acceptance.",
+    "Private import mapping/cutover remains separately controlled outside Git; no private input read/live import.",
+    "Full candidate/source/CI, new version/build floor and independent notes/media/publication gates; current2026.10.3+56 must not publish Food over the released stable version."
+  ],
+  "limits": [
+    "Read-only source/docs/test assertions and existing logs/pixels; no source edits, builds or tests by reviewer.",
+    "Protected receipts and heads are authority; bounded RAM full replay remains accepted initial debt, not asymptotic or total heap claim.",
+    "Hash continuity assumes trusted household peers; no cryptographic peer authentication claim.",
+    "Milestone/source acceptance does not authorize signing, publication, live import or existing profile cleanup."
+  ],
+  "unchangedSourceGroups": [
+    "lib/domain",
+    "lib/text",
+    "native",
+    "pubspec.yaml",
+    "pubspec.lock",
+    "android/settings.gradle.kts",
+    "android/app/build.gradle.kts",
+    "android/gradle",
+    "packaging",
+    ".github/workflows"
+  ],
+  "unexpectedChangesInUnchangedGroups": [],
+  "bindings": {
+    "AGENTS.md": {
+      "sha256": "203d719027c4e1c83573e1298e52265ecd1ecee38aaae8a8902390c640429f77",
+      "bytes": 5332,
+      "previousSha256": "203d719027c4e1c83573e1298e52265ecd1ecee38aaae8a8902390c640429f77"
+    },
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": {
+      "sha256": "4a40628a02f781a4221e095e2acef541de7c29534068efa8d9d043002f383bce",
+      "bytes": 19721,
+      "previousSha256": "4a40628a02f781a4221e095e2acef541de7c29534068efa8d9d043002f383bce"
+    },
+    "design/README.md": {
+      "sha256": "81648b6be5f94c7a08dabf09299b146640a8ccea9b6d71eb1ee095f863d73ba1",
+      "bytes": 5770,
+      "previousSha256": "81648b6be5f94c7a08dabf09299b146640a8ccea9b6d71eb1ee095f863d73ba1"
+    },
+    "design/architecture.md": {
+      "sha256": "5180a680768cbef92c0c8053c31b7fb10ef740545fd52d2bf53ec9f16ca92b8d",
+      "bytes": 8376,
+      "previousSha256": "5180a680768cbef92c0c8053c31b7fb10ef740545fd52d2bf53ec9f16ca92b8d"
+    },
+    "design/decisions/0014-food-inventory.md": {
+      "sha256": "a6ac5b7d0bf9b3e43af60d35f18445a590d9280bde320f94249b184a7305869a",
+      "bytes": 11042,
+      "previousSha256": "a6ac5b7d0bf9b3e43af60d35f18445a590d9280bde320f94249b184a7305869a"
+    },
+    "design/product-behavior.md": {
+      "sha256": "dcfddb59d4c30a874dbbe34a5013ea91adfe85a33a9a8e84b0727eb215fef47b",
+      "bytes": 31516,
+      "previousSha256": "dcfddb59d4c30a874dbbe34a5013ea91adfe85a33a9a8e84b0727eb215fef47b"
+    },
+    "design/status.md": {
+      "sha256": "3cce26918ca914d33692a928a4227aa1ad0334bb617d9189f0ea3cc45cadf775",
+      "bytes": 97921,
+      "previousSha256": "778d2aebbb70722ac73b8fb442318a075654778554430e1864c28248cdcc6f1d"
+    },
+    "evidence/food-inventory-first-slice/README.md": {
+      "sha256": "99c8f18987d7a265d348bd66ea97217a80f2e06dca1abbca67c6eb1514670f53",
+      "bytes": 4614,
+      "previousSha256": "99c8f18987d7a265d348bd66ea97217a80f2e06dca1abbca67c6eb1514670f53"
+    },
+    "integration_test/checklist_lifecycle_test.dart": {
+      "sha256": "3ff295bdca91b9e3b9ec6823c5fcccd77c24d5d89951e6bdbde95424fba26760",
+      "bytes": 17758,
+      "previousSha256": "3ff295bdca91b9e3b9ec6823c5fcccd77c24d5d89951e6bdbde95424fba26760"
+    },
+    "integration_test/completion_confirmation_progress_test.dart": {
+      "sha256": "360c7d8092059e3d87dea6a5255ccb835b8aa5ec5d79c0b54346428e6090dc8b",
+      "bytes": 9619,
+      "previousSha256": "360c7d8092059e3d87dea6a5255ccb835b8aa5ec5d79c0b54346428e6090dc8b"
+    },
+    "integration_test/food_density_workflow_test.dart": {
+      "sha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c",
+      "bytes": 3952,
+      "previousSha256": "b550d91708b418eb8c9b13cc9123833dcb06235a115cf22611781163f850357c"
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "sha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323",
+      "bytes": 6156,
+      "previousSha256": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "sha256": "c9dc531f5fee6e771774c103a9f7fad4f3976e0d738b8be03855fe9b8866b8da",
+      "bytes": 20126,
+      "previousSha256": "c9dc531f5fee6e771774c103a9f7fad4f3976e0d738b8be03855fe9b8866b8da"
+    },
+    "integration_test/inline_checklist_workflow_test.dart": {
+      "sha256": "ad359cdc2fe4fef7cd9e4e7b7fbecb317690f283a3f3ea8018a97d0f67dab936",
+      "bytes": 34732,
+      "previousSha256": "ad359cdc2fe4fef7cd9e4e7b7fbecb317690f283a3f3ea8018a97d0f67dab936"
+    },
+    "integration_test/native_text_fixtures.dart": {
+      "sha256": "9c06ff30f9ae20d98ac92f3a75a384ed38823b53a3d8398741d7834161983821",
+      "bytes": 4884,
+      "previousSha256": "9c06ff30f9ae20d98ac92f3a75a384ed38823b53a3d8398741d7834161983821"
+    },
+    "lib/food/food_page.dart": {
+      "sha256": "3b1555c7dd12891768fef70276b2973571b2c560e71c9b4eeed3216cb3e10d50",
+      "bytes": 38673,
+      "previousSha256": "8219fa213c9b85d1c2788351f450c5d7d9c5e13e6af720371c69e6af3175959d"
+    },
+    "lib/food/food_record.dart": {
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7",
+      "bytes": 5623,
+      "previousSha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    "lib/food/food_store.dart": {
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f",
+      "bytes": 27565,
+      "previousSha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "lib/food/inventory.dart": {
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+      "bytes": 20285,
+      "previousSha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "lib/main.dart": {
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+      "bytes": 201499,
+      "previousSha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "lib/platform/log_folder.dart": {
+      "sha256": "49b59f9b82d21c1c333c993f3b2f0f80cd6318ea490a286cd8bdba32f5c06899",
+      "bytes": 7534,
+      "previousSha256": "49b59f9b82d21c1c333c993f3b2f0f80cd6318ea490a286cd8bdba32f5c06899"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "sha256": "84af00560ba8e2cefa2649712de1b9811c1e7017688f76e5cd8489c7a4a8ca9d",
+      "bytes": 12220,
+      "previousSha256": "84af00560ba8e2cefa2649712de1b9811c1e7017688f76e5cd8489c7a4a8ca9d"
+    },
+    "lib/storage/log_folder.dart": {
+      "sha256": "3652a6dee2867a39453f20683d8661619697b65d1c5d9146c273f7d84913807a",
+      "bytes": 4520,
+      "previousSha256": "3652a6dee2867a39453f20683d8661619697b65d1c5d9146c273f7d84913807a"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1",
+      "bytes": 4773,
+      "previousSha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "lib/storage/task_store.dart": {
+      "sha256": "a8435c136297402927add4085e5aa871459c9d30cba5ce7698e6ac6ca0284558",
+      "bytes": 156281,
+      "previousSha256": "a8435c136297402927add4085e5aa871459c9d30cba5ce7698e6ac6ca0284558"
+    },
+    "lib/storage/writer_guard.dart": {
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6",
+      "bytes": 11161,
+      "previousSha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "test/android_log_folder_test.dart": {
+      "sha256": "614448f5c0a7223d9024249f960853ace382b10ff815176139caa257dcab5a1a",
+      "bytes": 19681,
+      "previousSha256": "614448f5c0a7223d9024249f960853ace382b10ff815176139caa257dcab5a1a"
+    },
+    "test/batch_storage_test.dart": {
+      "sha256": "89ffdcf03368fbb852242cb33e45455b2841702a00deb2510c39cb8c717e68c1",
+      "bytes": 12937,
+      "previousSha256": "89ffdcf03368fbb852242cb33e45455b2841702a00deb2510c39cb8c717e68c1"
+    },
+    "test/food_durable_editor_test.dart": {
+      "sha256": "b03a6c26485bfdcca1119aaa2676369057b51706729752fbc115e4c857aa0859",
+      "bytes": 5762,
+      "previousSha256": "b03a6c26485bfdcca1119aaa2676369057b51706729752fbc115e4c857aa0859"
+    },
+    "test/food_intents_test.dart": {
+      "sha256": "cc540db665288d84b5f2d8a3c1559c2ec66f78b9152faf99d93e3936f62bb3ac",
+      "bytes": 4105,
+      "previousSha256": "cc540db665288d84b5f2d8a3c1559c2ec66f78b9152faf99d93e3936f62bb3ac"
+    },
+    "test/food_inventory_test.dart": {
+      "sha256": "8ae29133d175462396897eea76036e84f36222406cc418e21dbc44e940a22df0",
+      "bytes": 13701,
+      "previousSha256": "8ae29133d175462396897eea76036e84f36222406cc418e21dbc44e940a22df0"
+    },
+    "test/food_preview_test.dart": {
+      "sha256": "f62e5eabe1b6797e97f10105a4226e0da3440a12ee122edc6d91ba219a76058c",
+      "bytes": 2920,
+      "previousSha256": "f62e5eabe1b6797e97f10105a4226e0da3440a12ee122edc6d91ba219a76058c"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "sha256": "541a4a5deb80015057cc121ececf36b3d82a2c4b8e5b09c9da597b4245cfad8b",
+      "bytes": 6185,
+      "previousSha256": "541a4a5deb80015057cc121ececf36b3d82a2c4b8e5b09c9da597b4245cfad8b"
+    },
+    "test/food_record_test.dart": {
+      "sha256": "4dd5268d24f5c8c76bc72db066a981a18bade99e5d1599a5be37ef0f38856f8d",
+      "bytes": 5661,
+      "previousSha256": "4dd5268d24f5c8c76bc72db066a981a18bade99e5d1599a5be37ef0f38856f8d"
+    },
+    "test/food_replay_budget_test.dart": {
+      "sha256": "93014c6510d5a34c6a697aedcb8571db31f1c4af6236b9d154f5ebf33b6686e0",
+      "bytes": 3818,
+      "previousSha256": "93014c6510d5a34c6a697aedcb8571db31f1c4af6236b9d154f5ebf33b6686e0"
+    },
+    "test/food_retention_draft_test.dart": {
+      "sha256": "ec40024abf60546cab2b4f6aea14ca6016075cb24976cea20eee5f20bb4c2283",
+      "bytes": 1772,
+      "previousSha256": "ec40024abf60546cab2b4f6aea14ca6016075cb24976cea20eee5f20bb4c2283"
+    },
+    "test/food_review_regression_test.dart": {
+      "sha256": "f4b2b72ab19f86dafe5d9a4ed56ee629791dde41380844c861a5100808df6125",
+      "bytes": 5571,
+      "previousSha256": "f4b2b72ab19f86dafe5d9a4ed56ee629791dde41380844c861a5100808df6125"
+    },
+    "test/food_store_test.dart": {
+      "sha256": "90b7a9713492c9a4bc38d3448f85daa80b4ac2501d403e070d0cf4141e863c37",
+      "bytes": 11779,
+      "previousSha256": "90b7a9713492c9a4bc38d3448f85daa80b4ac2501d403e070d0cf4141e863c37"
+    },
+    "test/local_profile_database_test.dart": {
+      "sha256": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e",
+      "bytes": 8390,
+      "previousSha256": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e"
+    },
+    "test/profile_task_store_test.dart": {
+      "sha256": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890",
+      "bytes": 14230,
+      "previousSha256": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890"
+    },
+    "tool/food_preview.dart": {
+      "sha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0",
+      "bytes": 5695,
+      "previousSha256": "ea86f0299ca10c26bb93b69c9f2fcdc7189b0f96f566883dbdbaaab1308731a0"
+    },
+    "integration_test/task_flow_test.dart": {
+      "sha256": "95b3dc4bdbd6d8f55dff76c35fb92b2c57d25087fc87bdd0603ccb7eb048e498",
+      "bytes": 170224,
+      "previousSha256": "95b3dc4bdbd6d8f55dff76c35fb92b2c57d25087fc87bdd0603ccb7eb048e498"
+    },
+    "integration_test/food_inspect_accessibility_test.dart": {
+      "sha256": "bfcddbc860ad078e755ac029092979e85433fe3f66f3d97aff3462379ef0de4b",
+      "bytes": 5916
+    },
+    "evidence/food-inventory-durable/README.md": {
+      "sha256": "e40e8b2ecce762d0f97f27542f54ab976cc752683022abc54b82e45097eac9c4",
+      "bytes": 9725
+    }
+  }
+}

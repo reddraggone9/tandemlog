@@ -19,6 +19,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.EventChannel
 import io.flutter.plugin.common.StandardMethodCodec
 import java.io.FileOutputStream
+import java.io.ByteArrayOutputStream
 import java.io.IOException
 import android.os.ParcelFileDescriptor
 import java.util.concurrent.Executors
@@ -163,8 +164,19 @@ class MainActivity : FlutterActivity() {
                     val value: Any? = when (call.method) {
                         "list" -> children(tree).map { it.observation() }
                         "read" -> contentResolver.openInputStream(child(tree, name!!) ?: throw MissingFolderFile(name))!!.use { stream ->
-                            val bytes = stream.readBytes()
-                            bytes
+                            val limit = call.argument<Number>("maximumBytes")?.toLong()
+                            if (limit == null) stream.readBytes() else {
+                                require(limit in 0..(32L * 1024 * 1024)) { "Invalid read limit" }
+                                val output = ByteArrayOutputStream()
+                                val chunk = ByteArray(64 * 1024)
+                                while (true) {
+                                    val count = stream.read(chunk)
+                                    if (count < 0) break
+                                    require(output.size().toLong() + count <= limit) { "Input exceeds safe read limits" }
+                                    output.write(chunk, 0, count)
+                                }
+                                output.toByteArray()
+                            }
                         }
                         "readFrom" -> {
                             val offset = (call.argument<Number>("offset") ?: error("Missing offset")).toLong()
@@ -266,7 +278,11 @@ class MainActivity : FlutterActivity() {
         return result
     }
     private fun children(tree: Uri): List<FolderChild> = queryChildren(tree).use { cursor -> cursorChildren(tree, cursor) }
-    private fun child(tree: Uri, name: String): Uri? = children(tree).firstOrNull { it.name == name }?.uri
+    private fun child(tree: Uri, name: String): Uri? {
+        val matches = children(tree).filter { it.name == name }
+        if (matches.size > 1) throw DuplicateCanonicalFile(name)
+        return matches.firstOrNull()?.uri
+    }
 
     private fun stopFolderWatch() {
         val watch = folderWatch ?: return

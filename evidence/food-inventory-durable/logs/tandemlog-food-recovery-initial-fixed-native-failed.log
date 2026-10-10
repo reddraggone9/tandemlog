@@ -1,0 +1,173 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=392
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=31
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1339 FILES_READ=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+The expected async UI state did not become ready.
+
+When the exception was thrown, this was the stack:
+#4      waitForUi (file:///tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart:174:3)
+<asynchronous suspension>
+#5      registerCompletionActionTests.<anonymous closure> (file:///tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart:107:9)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart line 174
+The test description was:
+  historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +0 -1: historical v3 recurrence compatibility: checked completion, failed reopen and Undo [E]
+  Test failed. See exception logs above.
+  The test description was: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+  
+00:17 +0 -1: phone single and bulk editors keep fields usable with the IME
+00:18 +0 -1: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=27
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=35
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=728 FILES_READ=1
+00:55 +1 -1: desktop onboarding, live theme, inline retry and folder actions
+00:55 +1 -1: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=37
+TANDEMLOG_ONBOARDING_READY_MS=155 FILES_READ=0
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_ONBOARDING_READY_MS=138 FILES_READ=0
+01:03 +1 -1: desktop onboarding, live theme, inline retry and folder actions
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=11
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart:1425:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart line 1425
+The test description was:
+  desktop onboarding, live theme, inline retry and folder actions
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:04 +1 -2: desktop onboarding, live theme, inline retry and folder actions [E]
+  Test failed. See exception logs above.
+  The test description was: desktop onboarding, live theme, inline retry and folder actions
+  
+01:04 +1 -2: header controls stay fixed between open and completed tabs
+02:31 +1 -2: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=1239
+TANDEMLOG_ROWS {"query_ms":3,"decode_ms":10,"sort_ms":0}
+TANDEMLOG_READY_MS=1724 FILES_READ=1
+02:56 +2 -2: native tag filters preserve drafts and selected block drag scrolls offscreen
+03:03 +2 -2: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=69
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=604 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=16
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=12
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=247 FILES_READ=0
+03:31 +3 -2: (tearDownAll)
+03:31 +3 -2: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart: desktop onboarding, live theme, inline retry and folder actions
+  /tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart: historical v3 recurrence compatibility: checked completion, failed reopen and Undo

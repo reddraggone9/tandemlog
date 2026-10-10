@@ -1,0 +1,12 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_inventory_test.dart
+00:00 +0: legacy date certainty stays unknown unless evidence establishes it
+00:00 +0 -1: legacy date certainty stays unknown unless evidence establishes it [E]
+  FormatException: Invalid food details.
+  package:tandemlog/food/inventory.dart 594:33  _invalid
+  package:tandemlog/food/inventory.dart 63:7    new FoodDetails.fromJson
+  test/food_inventory_test.dart 31:31           main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: legacy date certainty stays unknown unless evidence establishes it

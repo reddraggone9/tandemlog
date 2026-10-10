@@ -1,0 +1,18 @@
+00:00 +0: loading /tmp/food-correctness-review/durable/guard_regression_test.dart
+00:00 +0: regressed valid guard cannot erase a later protected reservation
+00:00 +0 -1: regressed valid guard cannot erase a later protected reservation [E]
+  Expected: throws <Instance of 'FormatException'>
+    Actual: <Instance of 'Future<FoodStore>'>
+     Which: emitted <Instance of 'FoodStore'>
+  
+  package:matcher                                                     expectLater
+  package:flutter_test/src/widget_tester.dart 507:8                   expectLater
+  ../food-correctness-review/durable/guard_regression_test.dart 53:8  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                                          _CustomZone.registerUnaryCallback
+  ../food-correctness-review/durable/guard_regression_test.dart 44:8  main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/food-correctness-review/durable/guard_regression_test.dart: regressed valid guard cannot erase a later protected reservation

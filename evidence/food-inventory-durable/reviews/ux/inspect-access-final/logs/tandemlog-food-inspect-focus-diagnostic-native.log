@@ -1,0 +1,96 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: Inspect exposes metadata and secondary actions with keyboard and Back
+FOOD_INSPECT_FOCUS target=widget matching predicate step=22 primary=null originalPrimary=false visibleTooltips=[Undo removal, Add food, Remove one Rice container, Inspect Rice containers, Remove one Peas container, Inspect Peas containers, Remove one Yogurt container, Inspect Yogurt containers, Remove one Beans container, Inspect Beans containers, Remove one Carrots container, Inspect Carrots containers, Remove one Flour container, Inspect Flour containers, Remove one Eggs container, Inspect Eggs containers, Remove one Lentils container, Inspect Lentils containers, Remove one Pasta container, Inspect Pasta containers, Remove one Soup container, Inspect Soup containers, Remove one Tomatoes container, Inspect Tomatoes containers]
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+Control reachable through Tab
+
+When the exception was thrown, this was the stack:
+#4      activateWithKeyboard (file:///tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart:32:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart:120:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart line 32
+The test description was:
+  Inspect exposes metadata and secondary actions with keyboard and Back
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:22 +0 -1: Inspect exposes metadata and secondary actions with keyboard and Back [E]
+  Test failed. See exception logs above.
+  The test description was: Inspect exposes metadata and secondary actions with keyboard and Back
+  
+00:22 +0 -1: (tearDownAll)
+00:22 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/integration_test/food_inspect_accessibility_test.dart: Inspect exposes metadata and secondary actions with keyboard and Back

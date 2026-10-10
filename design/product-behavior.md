@@ -1,8 +1,8 @@
 # Product behavior and milestones
 
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
-Its scope is separate from tasks. Current implementation is an early synthetic
-preview with production durability and native gates still pending.
+Its scope is separate from tasks. The unreleased durable implementation uses production navigation and the shared
+profile DB. Final native and release gates remain pending.
 
 ## Accepted direction
 
@@ -17,7 +17,7 @@ does not invent a value. The existing X clears time and retains its date.
 Controls stack when width or larger text requires it. Tags and Assignee follow
 all scheduling content, before actions, in single and bulk editors. [Layout rationale](decisions/0009-date-and-optional-time-rows.md).
 
-Offline household task management first. Windows and Android are the first intended user platforms. Future modules include games, food logging, inventory, and assisted input. Time tracking is undecided and excluded.
+Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking is undecided and excluded.
 
 The first slice is folder/user selection, capture, edit, complete, undo, persistence, and convergence tests. Recurrence, reminders, deletion, advanced dates, floating priorities, manual shared sorting, and other modules are outside this slice.
 

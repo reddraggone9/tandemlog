@@ -1,0 +1,53 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/domain/event.dart';
+import 'package:tandemlog/food/food_record.dart';
+import 'file:///tmp/food-correctness-review/durable/old_food_store.dart';
+import 'package:tandemlog/food/inventory.dart';
+import 'package:tandemlog/storage/log_folder.dart';
+import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/profile_food_intents.dart';
+const space='00000000-0000-4000-8000-000000000001';
+const installation='00000000-0000-4000-8000-000000000010';
+void main(){
+ test('a valid near-cap stream refuses crossing the cap before canonical append',()async{
+ final root=await Directory.systemTemp.createTemp('food-review-capacity-');
+ final profile=await LocalProfileDatabase.open('${root.path}/profile');
+ final folder=LocalLogFolder((await Directory('${root.path}/data').create()).path);
+ FoodStore? store;
+ try{
+ await folder.create('tandemlog-space.json',Uint8List.fromList(utf8.encode(jsonEncode({'v':3,'id':space}))));
+ final writer=foodWriter(installation);
+ final ids=List.generate(100,(i)=>'00000000-0000-4000-8000-${(i+100).toString().padLeft(12,'0')}');
+ int sequence=1;
+ var record=FoodRecord(space:space,writer:writer,sequence:1,clock:EventClock(BigInt.one),previousHash:eventGenesisHash(space,writer),operation:FoodOperation(id:'$writer:1',order:1,action:FoodAction.add,targets:ids,details:const FoodDetails(name:'Rice'),contents:const Contents.fraction(1,1),createdAt:'2026-10-10T00:00:00Z'));
+ final bytes=BytesBuilder(copy:false)..add(utf8.encode('${record.encode()}\n'));
+ final birth={for(final id in ids)id:'$writer:1'};
+ bool endedDeleted=false;
+ while(true){
+ final next=sequence+1;
+ final remove=FoodRecord(space:space,writer:writer,sequence:next,clock:EventClock(BigInt.from(next)),previousHash:record.hash,createdWith:birth,operation:FoodOperation(id:'$writer:$next',order:next,action:FoodAction.remove,targets:ids));
+ final removeBytes=utf8.encode('${remove.encode()}\n');
+ if(bytes.length+removeBytes.length>FoodStore.maximumStreamBytes)break;
+ final edit=FoodRecord(space:space,writer:writer,sequence:next,clock:EventClock(BigInt.from(next)),previousHash:record.hash,createdWith:birth,operation:FoodOperation(id:'$writer:$next',order:next,action:FoodAction.edit,targets:ids,contents:const Contents.fraction(1,1)));
+ final editBytes=utf8.encode('${edit.encode()}\n');
+ if(bytes.length+editBytes.length>FoodStore.maximumStreamBytes){record=remove;sequence=next;bytes.add(removeBytes);endedDeleted=true;break;}
+ record=edit;sequence=next;bytes.add(editBytes);
+ }
+ final initial=bytes.takeBytes();expect(initial.length,lessThanOrEqualTo(FoodStore.maximumStreamBytes));
+ await folder.create(foodLogName(writer),initial);
+ store=await FoodStore.open(folder,profile:profile,installationWriter:installation,space:space,now:()=>DateTime.fromMicrosecondsSinceEpoch(0,isUtc:true));
+ expect(store.state.containers,hasLength(100));expect(store.pendingReferences,0);
+ print('real valid stream bytes=${initial.length} records=$sequence cap=${FoodStore.maximumStreamBytes} gap=${FoodStore.maximumStreamBytes-initial.length} endedDeleted=$endedDeleted');
+ await expectLater(endedDeleted?store.restore(ids):store.remove(ids),throwsFormatException);
+ final after=await folder.read(foodLogName(writer));
+ print('after rejected command bytes=${after.length}; protected receipts=${ProfileFoodIntents(profile).pending(space,writer).length}');
+ expect(after,initial,reason:'Capacity refusal must occur before adding durable canonical bytes');
+ expect(ProfileFoodIntents(profile).pending(space,writer),isEmpty);
+ await store.close();store=await FoodStore.open(folder,profile:profile,installationWriter:installation,space:space);
+ expect(store.state.containers,hasLength(100));
+ }finally{await store?.close();await profile.close();await root.delete(recursive:true);}
+ },timeout:const Timeout(Duration(seconds:60)));
+}

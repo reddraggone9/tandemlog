@@ -2,8 +2,9 @@
 
 Status: Lee approved phased implementation on the stable2026.10.3 base and an
 early working preview before layout freeze. Product scope below is accepted;
-row density and partial-stock wording remain provisional. The first slice is
-synthetic and process-local. Production durability and release gates remain open.
+visual refinements remain provisional. The original slice is synthetic and
+process-local; the durable implementation now uses production navigation and the
+shared profile DB. This is unreleased work, with native and release gates open.
 
 ## Context and accepted scope
 
@@ -36,7 +37,7 @@ and target count before confirmation.
 
 Brand is separate; location and nominal size are optional. Remaining contents
 are per container. The provisional example is seven full containers plus one
-third-full container: `7 full + ⅓ remaining`, with eight physical IDs visible in
+third-full container: `7 full + 1 container ⅓ full`, with eight physical IDs visible in
 inspection. Exact fractions and measured amounts retain their units. No automatic
 unit conversion or quantity redistribution is approved. Concurrent contents
 alternatives remain visible until an observed resolution.
@@ -60,33 +61,86 @@ reordered delivery. Its DTO is a prototype, not an accepted canonical wire forma
 host. `tool/food_preview.dart` supplies synthetic process-local stock, bounded
 command batches and session Undo. It opens no profile or sync folder. The preview
 offers full, half, third, quarter and unknown contents. Arbitrary measured-amount
-editing and production navigation remain later implementation.
+editing remains later implementation. Production navigation now offers Tasks and
+Food in the same selected workspace. Container inspection labels use stable ID
+suffixes rather than list positions. The wide Food surface caps at900px and expiry
+has a stronger scan emphasis.
 
-Cards currently show name, metadata, contents and expiry with inspection for
-physical selection. Wide density, expiry scan emphasis and partial-stock wording
-remain review questions. The [early preview evidence](../../evidence/food-inventory-first-slice/README.md)
+Lee's early-preview feedback requested materially shorter rows. Collapsed rows
+now pair name and stock summary, then expiration and brand. Size, location,
+physical count and group-detail/whole-group actions appear after Inspect; quick
+Remove one remains directly available for identical full containers. No text size
+was reduced. Food action targets now explicitly measure48px (the previous
+inherited icon style measured40px). In the same12-group Linux fixture, normal
+rows including their margins are64px versus112px before; fully visible groups
+increase from5 to10 at390×850 and6 to10 at1200×850. The wide surface stays900px.
+Both themes and200% text grow naturally without overlap. This is an automated
+native layout result, not Android/Windows or human-user acceptance. The [early preview evidence](../../evidence/food-inventory-first-slice/README.md)
 records actual narrow/wide Linux pixels and tested workflows before layout freeze.
 
-## Planned storage boundary; not yet implemented
+## Implemented storage boundary; unreleased
 
-Keep food streams outside the task reader's `*.jsonl` namespace. Reviewed
-direction: `food-<writer>.foodlog` containing closed, versioned, hashed records
-with a distinct module hash domain. Derive a separate stable module writer from
-the installation writer with one fixed UUID-v5 name. Bind operation identity
-and order to verified record writer, sequence and clock, rather than trusting
-DTO fields.
+Food streams use `food-<writer>.foodlog`, outside the task reader's `*.jsonl`
+namespace. Closed version1 envelopes bind workspace, writer, sequence, exact
+signed64 clock, operation, target creation basis, predecessor and SHA256 digest.
+Canonical record JSON is bounded to256KiB. The module hash domain is
+`tandemlog:food-record:v1\n`; sequence0 uses the existing workspace/writer genesis
+hash. The food writer is UUID-v5 of the installation writer and the fixed name
+`tandemlog:food:v1`. Neither this identity nor Food clocks enter task v3 streams.
 
-Use `LocalProfileDatabase`'s owning connection, queue and a separate food location
-lease. Add protected exact pending food receipts and stream authority with a
-checked schema migration preserving existing protected task state. Reserve and
-freeze exact bytes before append. Retire them only with exact admitted canonical
-read-back in the owning transaction; rebuild only derived food state.
+Schema3 adds exact protected Food intents, stream heads and location bindings to
+`LocalProfileDatabase`'s owning connection. Frozen schema2 fixtures verify existing
+protected task/settings/cache bytes and rollback of a partial upgrade. The module
+uses the owner's queue and a separate food-location lease; it opens no second DB.
+Reserve writer authority and exact recovery bytes in one transaction before
+provider append. Retire only the exact admitted read-back in the acknowledgement
+transaction. A durable own-writer initialization witness prevents a missing guard
+from being silently treated as new. SQL contains recovery authority; derived food
+state is rebuilt in memory from verified canonical history.
 
-Production admission must bound records/delivery, validate causal and target
-references, retain unresolved references explicitly, reject aliases/duplicate
-streams and inconsistent actor chains, and recover ambiguous append outcomes.
-The task reader's conservative synced-conflict handling may still block the
-workspace. This plan does not promise complete module fault isolation.
+Reads require a bounded transport, with limits of256 streams,16MiB per stream,
+32MiB total,50000 records and100000 physical containers. Local and Android reads
+bound allocation before delivery. Canonical names, actor chains, hashes, clocks,
+creation identity and observed references are checked before head advancement.
+Missing dependencies remain explicitly pending and block commands. Invalid known
+references reject the candidate view. Restore and contents edits capture observed
+references; large sets use bounded reference chunks without expanding observation.
+An interrupted append retains its immutable bytes and only its exact missing
+suffix may be retried, with the same limits as a new append. Neither startup nor
+refresh automatically creates new inventory or retries a write.
+
+All protected authority is validated before a remote history failure can be
+classified as isolated; the own guard and trusted head must align exactly. Every
+refresh rechecks shared identity before returning a module-only failure.
+
+Editor Save awaits durable command admission and retains a failed draft. A
+prepared Save freezes its fields for exact retry; it cannot open another Add/Edit
+instead. Closing a changed draft requires a decision. Host callbacks retain their
+rendered workspace origin, and handle close drains admitted work even when the
+profile owner is poisoned. Session Undo applies only admitted local removal tokens.
+Legacy expiration certainty may remain unknown (`null`); no source import occurs.
+
+Startup distinguishes isolated Food history/transport admission failures from
+shared safety faults. The former leave Tasks usable with a Food error surface and
+explicit retry; the latter prevent opening the workspace. Food writes require a
+fully admitted handle. Runtime refresh keeps module projections independent and
+preserves each last good view. Canonical manifest changes, invalid installation
+identity and shared DB failures are never downgraded to a Food-only warning. A
+hard foreground failure stops new host commands and preserves the mounted editor
+behind a recovery overlay; existing private drafts stay in memory. Commands
+waiting for refresh and retained Save callbacks recheck safety before admission.
+The recovery panel scrolls at enlarged text and keeps Retry reachable. Explicit
+Retry keeps writes blocked while revalidating the same profile, installation
+writer and workspace, then Tasks, Food and Tasks again. It neither appends nor
+retries prepared operations. Exact restored identity can resume the existing
+draft; lost guards/receipts or a poisoned owner remain blocked. Existing Food
+handles and observed pending intents survive an isolated history failure.
+The first-name setup form alone preserves local typing and focus during a stop;
+its diagnostic is bounded and scrollable. Continue preserves the pending user
+identity and performs the same bound read-only admission before user creation.
+The existing-user picker and all other command callbacks remain blocked. On
+phones the module selector yields space while a Task editor's software keyboard
+is visible, preserving the existing caret viewport and touch targets.
 
 ## Validation and remaining gates
 
@@ -96,8 +150,7 @@ merging, contents conflicts, retention search and draft safety. Independent
 architecture/correctness/security/UX reviews distinguish first-slice acceptance
 from production durability.
 
-Before publication: durable storage/recovery and compatibility fixtures,
-production host/workspace/draft boundaries, both themes and large text, keyboard
+Before publication: final storage/recovery and production host acceptance, both themes and large text, keyboard
 and touch flows, exact artifacts, actual Windows/Android affected workflows and
 visible-input demos, and independent notes/media review. Linux narrow captures
 do not establish Android acceptance. Lee's quota overrides apply only to this
@@ -111,6 +164,8 @@ operations explicit; grouping keeps everyday scanning compact. A separate food
 database would violate the app-wide local DB direction. Routing food through task
 JSONL would break existing task stream discovery.
 
-Revisit density/wording after early feedback and larger-inventory trials. Revisit
+Revisit density/wording after the denser preview and larger real inventories.
+The menu behind Inspect trades direct secondary-action discovery for compact
+everyday scanning; retain this as provisional until Lee sees the revised preview. Revisit
 record/receipt boundaries if crash, replay or native-provider evidence requires
 change before the unreleased format is frozen.

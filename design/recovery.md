@@ -1,5 +1,13 @@
 # Recovery and known boundaries
 
+The unreleased [Food module](decisions/0014-food-inventory.md) retains exact
+prepared bytes and offers explicit suffix retry after safe admission. An
+isolated Food history error leaves compatible Tasks usable; shared manifest,
+installation authority or DB faults stop writes. Shared Retry revalidates the
+same owner and both modules without appending, resetting authority or discarding
+mounted drafts. Restoring intact shared identity can resume those drafts; lost
+protected guards/receipts and poisoned owners remain blocked.
+
 1. Stop writes and preserve a copy of the entire selected data folder before repair. Sync is not a backup.
 2. Read the visible error. Restore a missing or altered committed log from a known intact copy; do not merge log text by hand or remove a conflict copy merely to hide the warning.
 3. Unknown format/type: install a compatible app. Keep the original records intact. No partial-success view is claimed at initial open.

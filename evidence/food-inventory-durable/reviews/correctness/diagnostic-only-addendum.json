@@ -1,0 +1,37 @@
+{
+  "reviewer": "independent correctness_review agent",
+  "timestampUtc": "2026-10-10T03:18:18.398769+00:00",
+  "verdict": "ACCEPT diagnostic-only source delta; prior scoped core acceptance retained",
+  "source": {
+    "path": "/tmp/tandemlog-food-implementation/lib/food/food_store.dart",
+    "bytes": 27565,
+    "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+  },
+  "priorReceipt": {
+    "path": "/tmp/food-correctness-review/durable/final-durable-isolation-core-review.json",
+    "bytes": 14999,
+    "sha256": "7af16b934eda6d10446febe9be8c4dca21a63dee480c639be20f911fa99f5d76"
+  },
+  "exactDeltaProof": {
+    "reversingSingleKnownDiagnosticBlockRestoresAcceptedFullSourceSha256": "2a7ba64a705e4314536d581adfc0142bfdea7ab69a54defaeff13d596384efe7",
+    "priorReconstructedSnapshot": {
+      "path": "/tmp/food-correctness-review/durable/food_store-accepted-isolation-source.dart.txt",
+      "bytes": 27563,
+      "sha256": "2a7ba64a705e4314536d581adfc0142bfdea7ab69a54defaeff13d596384efe7"
+    },
+    "currentSnapshot": {
+      "path": "/tmp/food-correctness-review/durable/food_store-diagnostic-source.dart.txt",
+      "bytes": 27565,
+      "sha256": "5cc6a25cfe56ae512e6bef445d5ca2a97f5b63667f58f616a3a3fc419021428f"
+    },
+    "diff": {
+      "path": "/tmp/food-correctness-review/durable/diagnostic-only.diff",
+      "bytes": 454,
+      "sha256": "4e605239e501e2fb5b85e34ba65e0331a3c1b0468fe28eed919f478376653d97"
+    }
+  },
+  "change": "Non-regular/missing Local canonical-file diagnostic now names requested filename; const removed only to permit interpolation. Manifest and canonical Food names are bounded known filenames, not full local paths or editable content.",
+  "correctness": "No condition, I/O, classifier, admission, guard, receipt, transaction, queue, lease, or wire-format change; exception remains FormatException.",
+  "tests": "No duplicate runtime tests run for message-only change. Previous reviewed test logs remain bound to their prior source; owner current focused/native rerun pending independently.",
+  "scope": "Narrow additive receipt; earlier frozen core receipts preserved byte-for-byte. Host retry/safety source and native/release/import acceptance excluded."
+}

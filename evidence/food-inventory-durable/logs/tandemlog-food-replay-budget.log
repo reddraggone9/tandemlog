@@ -1,0 +1,4 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart
+00:00 +0: wide-target thousand-reference history has a bounded replay budget
+FOOD_REPLAY_BUDGET bytes=12418562 records=1002 targets=100 refs=1000 elapsed_ms=2112
+00:03 +1: All tests passed!
