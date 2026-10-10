@@ -153,3 +153,20 @@ records91 Linux native passes/one disclosure failure; recurrence happened to pas
 that run. Its preceding candidate overflow remains a timing-dependent production
 failure, made deterministic by the bounded synthetic provider pause. No running
 or failed job is accepted as a release gate.
+
+
+Corrected executable source is immutable
+[`97880eebf75875b1e83f2ce0039fb13f5c533968`](https://github.com/reddraggone9/tandemlog/commit/97880eebf75875b1e83f2ce0039fb13f5c533968).
+Its [signed candidate38027666368](https://github.com/reddraggone9/tandemlog/actions/runs/38027666368)
+and [push CI38027658576](https://github.com/reddraggone9/tandemlog/actions/runs/38027658576)
+are running. The [independent frozen-source/preflight review](candidate/corrected-frozen-source-preflight-independent-review.json)
+accepts actual source and hosted preflight/history success, without accepting
+unfinished matrix or artifact gates.
+
+The [separate final actual-range editorial review](candidate/corrected-final-range-editorial-accepted-review.json)
+accepts stable2026.10.3 through corrected97880ee and revised notes SHA256
+`3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae`.
+It adds one concise visible error-message fix bullet; immutable repeat media
+and its public bytes/crops remain unchanged and independently accepted. This
+later documentation-only commit updates dispatch-pinned notes and receipts;
+it does not change or rebuild executable candidate97880ee.

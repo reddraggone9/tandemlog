@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T05:31:45.942777+00:00",
+  "verdict": "ACCEPT_FINAL_RANGE_REVISED_NOTES_AND_MEDIA",
+  "covered_range": {
+    "baseline_tag": "v2026.10.3",
+    "baseline_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "final_candidate_source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+    "full_diff_sha256": "d10ee5868dfb30e7d245360856f0fa4eac3b097dcb3d93521ac0c8a93dcaa0ac"
+  },
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "findings": [],
+  "not_separate_release_bullets": [
+    "Poisoned owner liveness guard is internal failure handling associated with new Food module, not a standalone security-fix release claim.",
+    "Lazy disclosure fixture targeting and held provider fixture are QA changes, not new user-facing disclosure layout."
+  ],
+  "existing_media": "ACCEPT: actual dark Before/After pixels viewed; stable-source before/current renderer after equality verified; both integer crop RGBA comparisons true; readable centered labels and accurate alt; no private data; immutable public URL HTTP200 byte equality.",
+  "media_bindings": {
+    "before-source.dart.txt": {
+      "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+      "bytes": 2780
+    },
+    "after-source.dart.txt": {
+      "sha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+      "bytes": 3011
+    },
+    "repeat-dark-1x-after.png": {
+      "sha256": "8ba14d1c837463c5bf0a3198cbc715c8b8e54e04b8bb9c3082b8d8577b2759cb",
+      "bytes": 5300
+    },
+    "repeat-dark-1x-before.png": {
+      "sha256": "1e4b9a8b9bf074086b9cf2548aef3b1e87b6ee7a86cf764bd32703362e20d7d1",
+      "bytes": 5165
+    },
+    "disabled-repeat-media-recipe.json": {
+      "sha256": "4572fc49d9d7607f7f2f0125f7eaa617811534cb5cd3f6303cdfbc2a8fa5fab0",
+      "bytes": 807
+    },
+    "disabled-repeat-before-after.png": {
+      "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+      "bytes": 3913
+    }
+  },
+  "public_media": {
+    "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png",
+    "status": 200,
+    "bytes": 3913,
+    "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "equals_local": true
+  },
+  "actual_new_error_frames_viewed": [
+    "evidence/food-2026.10.4-rc.1/candidate/native-fixes/completion-scroll-accepted/completion-failed-reopen.png",
+    "evidence/food-2026.10.4-rc.1/candidate/native-fixes/completion-scroll-accepted/completion-error-end.png"
+  ],
+  "artifact_coverage_limits": "Synthetic native Linux debug captures bind renderer source; not signed artifact or Android/Windows native acceptance. No additional capture required for prose-only error fix.",
+  "publisher_notes_routing": "prerelease.yml reads frozen dispatch GITHUB_SHA:design/prerelease-notes.md; approved docs-only notes update may follow immutable candidate without rebuilding unchanged binary source. Final revised draft/dispatch range still needs review.",
+  "prior_editorial_reviews": "Preserved; this receipt reviews final range extension independently from author of new banner changes.",
+  "supporting_bindings": {
+    "path": "/workspace/recovery/food-rc57-review/corrected-source-editorial-bindings.json",
+    "sha256": "09d57c6c48e5eaab95a16c5bf22c8875a1d07fdf1beecbd9168f73da35123006"
+  },
+  "publication_acceptance": false,
+  "finding_closed": "Actual revised draft adds exactly one concise bullet: Long error messages now scroll so task controls stay accessible. Accurate for the reviewed bounded ordinary error banner; no QA assurances or unnecessary implementation prose.",
+  "draft_contents": "Experimental 2026.10.4-rc.1 preview.\n\n- Added Food inventory with expiration dates, Inbox, retained stock, partial contents, and per-container removal and restoration.\n\n- Disabled repeating-task checkboxes now have even opacity around their arrow tips.\n\n- Long error messages now scroll so task controls stay accessible.\n\n![Before: disabled repeat arrow tips have darker seams. After: the arrow tips and perimeter have even opacity.](https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png)\n",
+  "predecessor_finding_receipt": {
+    "path": "/workspace/recovery/food-rc57-review/corrected-final-range-editorial-independent-review.json",
+    "sha256": "0cd131c01698964d6d2e7ad431f8362cd28c07340328596f0e70df58b86d9ade",
+    "preserved": true
+  },
+  "notes_only_delta_verified": {
+    "head": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+    "modified_tracked_files": [
+      "design/prerelease-notes.md"
+    ],
+    "no_executable_modifications": true
+  },
+  "remaining_gate": "Freeze reviewed notes bytes into trusted dispatch commit; final dispatch source/routing must preserve approved notes/media and exact candidate binding. Full candidate/artifact/native/quota/publication gates remain separate.",
+  "guidance_sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122"
+}

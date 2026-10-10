@@ -1,0 +1,183 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T05:31:29.053280+00:00",
+  "verdict": "ACCEPT_FROZEN_SOURCE_PREFLIGHT_ONLY_FULL_CANDIDATE_PENDING",
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "candidate_run": 38027666368,
+  "push_run": 38027658576,
+  "source_bindings": {
+    "lib/main.dart": {
+      "sha256": "7307bde352f4733acb04655b3baa809ccf8cf9c964a2d2e01ea8b61fd480bf1f",
+      "matches_frozen_author": true
+    },
+    "lib/storage/local_profile_database.dart": {
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04",
+      "matches_frozen_author": true
+    },
+    "test/food_store_test.dart": {
+      "sha256": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2",
+      "matches_frozen_author": true
+    },
+    "integration_test/completion_actions_test.dart": {
+      "sha256": "4b68b48d9e44fb73afeff62dec253c7b049ec61cf206a808c91f5348d57c9751",
+      "matches_frozen_author": true
+    },
+    "integration_test/checklist_disclosure_layout_test.dart": {
+      "sha256": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292",
+      "matches_frozen_author": true
+    },
+    "lib/food/food_page.dart": {
+      "sha256": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+      "matches_frozen_author": true
+    },
+    "lib/food/food_store.dart": {
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+      "matches_frozen_author": true
+    },
+    "lib/food/food_import.dart": {
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+      "matches_frozen_author": true
+    },
+    "design/food-import-contract.md": {
+      "sha256": "b29632085d157f63b48ccb65c9a2e70247805b10e433a6d2fef9f2ef047d21fe",
+      "matches_frozen_author": true
+    },
+    "design/prerelease-notes.md": {
+      "sha256": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+      "matches_frozen_author": true
+    },
+    "pubspec.yaml": {
+      "sha256": "909f45bea2908e9da84d49ef05f4f56b9f9a6e4dfbaacedf65f73adb465252ac",
+      "matches_frozen_author": true
+    },
+    "pubspec.lock": {
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+      "matches_frozen_author": true
+    }
+  },
+  "preflight": {
+    "job_id": 114141862261,
+    "status": "completed",
+    "conclusion": "success",
+    "actual_log_checked": [
+      "checkout 97880eebf75875b1e83f2ce0039fb13f5c533968",
+      "test GITHUB_REF = refs/heads/main",
+      "android_release.py preflight",
+      "android_release.py candidate-history"
+    ],
+    "successful_build_floor": 56,
+    "same_failed_code_reuse": 57
+  },
+  "fresh_api_read_at_utc": "2026-10-10T05:29:42.029801+00:00",
+  "remote_main_matches_frozen": true,
+  "worktree_was_clean_at_inspection": true,
+  "required_jobs_at_checkpoint": [
+    {
+      "id": 114141862261,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114141896032,
+      "name": "checks / linux",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 114141896073,
+      "name": "checks / windows",
+      "status": "in_progress",
+      "conclusion": null
+    },
+    {
+      "id": 114141896110,
+      "name": "checks / android",
+      "status": "in_progress",
+      "conclusion": null
+    }
+  ],
+  "reported_artifacts_at_checkpoint": [],
+  "gate_policy_invariance": {
+    ".github/workflows/android-candidate.yml": {
+      "sha256": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+      "unchanged": true
+    },
+    ".github/workflows/prerelease.yml": {
+      "sha256": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+      "unchanged": true
+    },
+    "tool/candidate_source.py": {
+      "sha256": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+      "unchanged": true
+    },
+    "tool/publish_gate.py": {
+      "sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+      "unchanged": true
+    },
+    "tool/release_assets.py": {
+      "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+      "unchanged": true
+    },
+    "tool/attach_preview_assets.py": {
+      "sha256": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+      "unchanged": true
+    },
+    "tool/android_release.py": {
+      "sha256": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+      "unchanged": true
+    },
+    "tool/build_android_release.sh": {
+      "sha256": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6",
+      "unchanged": true
+    },
+    "android/signing-certificate.sha256": {
+      "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+      "unchanged": true
+    }
+  },
+  "scoped_corrections": [
+    "Windows expanded+JSON diagnostics previously independently accepted; test exit remains authoritative and diagnostic upload cannot bypass required gates.",
+    "Four-line owner rollback liveness correction binds separately accepted architecture/security source hashes.",
+    "Bounded ordinary action-error scroll/focus and lazy disclosure targeting bind separately accepted architecture/pixel source and import-only addendum.",
+    "Retained author final full-unit log ends 822 passed, final analysis clean, format208 unchanged; hashes independently verified. These source-level receipts do not substitute for hosted matrix."
+  ],
+  "published_baseline": {
+    "tag": "v2026.10.3",
+    "release_id": 408448633,
+    "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9"
+  },
+  "publisher_review": "Unchanged main-only successful signed-candidate resolver; exact candidate checkout and original three platform archives; trusted dispatch inventory/member/lifecycle/accepted APK verification and strict checksums before exact three installer copies and prerelease=true/latest=false creation without rebuild. Notes frozen from dispatch SHA.",
+  "source_diff_sha256": "d10ee5868dfb30e7d245360856f0fa4eac3b097dcb3d93521ac0c8a93dcaa0ac",
+  "limits": [
+    "No new test/build execution, artifact archive/member/inner APK hash acceptance, native platform acceptance or publication.",
+    "Full hosted matrix and signed owner APK remain pending; initial failed receipts retained unchanged.",
+    "Editorial review has separate outstanding ordinary-error bullet finding until revised draft is read."
+  ],
+  "remaining_gates": [
+    "Full successful corrected candidate/push matrix and exact artifacts.",
+    "Actual original archive/member/installer/APK/signer/native checks.",
+    "Final revised notes acceptance against dispatch source.",
+    "Parent exact Android/Windows affected-flow acceptance and fresh publication quota.",
+    "Normal trusted no-rebuild publisher and post-publication byte/source/tag/Latest review."
+  ],
+  "evidence": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-frozen-identity-api.json",
+      "sha256": "846c6044a472869bca6ac5eeacd1c87e1879ad615de7f3c80f7f2938bc681f9b"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-jobs-artifacts-api.json",
+      "sha256": "8ffc6d30e096b2d689daa1440a32bbe14016354d1d92c50ea29085a3a0c4a26d"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-preflight-hosted.log",
+      "sha256": "765025838de2f62508014f72924fb627ede380ad6c3a118a038e3906d5ee4425"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-source-editorial-bindings.json",
+      "sha256": "09d57c6c48e5eaab95a16c5bf22c8875a1d07fdf1beecbd9168f73da35123006"
+    }
+  ]
+}

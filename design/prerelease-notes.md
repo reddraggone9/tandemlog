@@ -4,4 +4,6 @@ Experimental 2026.10.4-rc.1 preview.
 
 - Disabled repeating-task checkboxes now have even opacity around their arrow tips.
 
+- Long error messages now scroll so task controls stay accessible.
+
 ![Before: disabled repeat arrow tips have darker seams. After: the arrow tips and perimeter have even opacity.](https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png)
