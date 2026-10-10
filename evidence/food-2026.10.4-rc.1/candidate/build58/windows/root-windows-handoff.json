@@ -1,0 +1,38 @@
+{
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "candidate_run": 38064595888,
+  "artifact": 11675306002,
+  "archive_bytes": 26202717,
+  "archive_sha256": "85025ca84cdfde318a95e42a8b2ca1b808048ca89a44dff6b57ea26ef937a8d5",
+  "files": {
+    "windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "0af63bf74f813145cac051b1939a3702cd8bd9e872358293245e9c6d6a25274e"
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "7b73d31dec51a4d4a068d3315e6d30f431e020a2303bd626297ed7691efabace"
+    },
+    "windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "9694de66f364ea442ef3aeb7e90aadb163874bc98af4b17411eac0a0d5f3926a"
+    },
+    "windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "f50bf4a9c8faf4f7164b6eb41f7e146146cd50633055be3365a7d02744b0a90a"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12376080,
+      "sha256": "acb4982d4dcd35c670ac274fe70aff226076a24a08b373a3e50a1edbd64c166a"
+    },
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14392905,
+      "sha256": "86f108d003597c09df5a25fbb4bd2584667d49185c640a91f954fa55f9cf14fd"
+    }
+  },
+  "root_readable_inner_installer_and_portable_hashes_match": true,
+  "root_internal_setup_checksum_verifies": true,
+  "lifecycle_four_phases_pass": true,
+  "manual_windows_gui": "Parent RC waiver; not executed here",
+  "remaining": "Full signed candidate and push CI now SUCCESS; Windows exact artifact accepted. Parent focused Android58 acceptance and normal publication gates remain pending."
+}

@@ -1,0 +1,197 @@
+{
+  "checked_at_utc": "2026-10-10T16:19:40.730608+00:00",
+  "verdict": "ACCEPT_PENDING_DOCS_EVIDENCE_HANDOFF",
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "candidate_run": 38064595888,
+  "version": "2026.10.4-rc.1+58",
+  "must_fix": [],
+  "reviewed_scope": "Four tracked documentation/handoff updates and additive build58 copied evidence, including final README receipt link and root Windows remaining-boundary clarification",
+  "checks": [
+    "No executable/workflow/test/platform delta against frozen432",
+    "Exact original artifact IDs/hashes/counts/source/run/version match independent accepted artifact review",
+    "Copied independent receipts/original desktop lifecycle/startup/Android metadata bytes identical",
+    "Relative Markdown links resolve; JSON receipts parse",
+    "New documentation lines and additive build58 records omit private Library identifiers/signed URLs/numeric quota values; historical source sections retained",
+    "Android58 focused runtime/upgrade acceptance and publication remain pending; no artifact acceptance misrepresented as native acceptance",
+    "Windows GUI RC-waiver and actual57/stable56 CLI/storage attribution retained",
+    "Publication route retains exactly three original installers no rebuild, prerelease true/latest false, stableLatestv2026.10.3"
+  ],
+  "original_startup_qualification": "Original linux-startup.json preserves DBus stdout prefix followed by valid final JSON; it is not whole-file JSON-only and is byte-identical to the accepted archive.",
+  "byteidentical_copies": [
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-combined-inventory-independent-verification.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-windows-actual-artifact-bindings.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-linux-actual-artifact-bindings.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-android-release-actual-artifact-bindings.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-full-candidate-artifacts-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-frozen-promotion-policy-bindings.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/build58-pushed-preflight-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/final-range-build58-editorial-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/frozen-build58-source-readiness-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/linux/build58-linux-artifact-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/windows/build58-windows-artifact-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/linux/linux-install-smoke.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/linux/linux-startup.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/windows/windows-install-smoke.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/windows/windows-portable-provenance.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-release-metadata.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-signature.txt",
+    "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-SHA256SUMS.txt"
+  ],
+  "files": [
+    {
+      "path": "design/food-native-acceptance.md",
+      "sha256": "c487d84ca923976586433ca9507654e71540a63b899801ca85c8859784914a9f",
+      "bytes": 5993
+    },
+    {
+      "path": "design/status.md",
+      "sha256": "73e63e2473b57fb4038dc059cb0369978e8ff476349e575861525ea111b5dcfd",
+      "bytes": 100744
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/README.md",
+      "sha256": "9715b09062cf39c79e58ff3e24772ec87d74670d6314ba8ee970db1a9151e456",
+      "bytes": 14064
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-SHA256SUMS.txt",
+      "sha256": "b10afcfd6dca66bac4275f1febd68753e22df6b8bf3277e2e70eec92f9cfffa5",
+      "bytes": 88
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-badging-root.txt",
+      "sha256": "21fe0cb0ac0baf607e1a8807eaf0522b79c7d03776e4a2995253e2e84abd0440",
+      "bytes": 1170
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-payload-root.txt",
+      "sha256": "513dd6fb9e3793f6d07c9d197dbb5786884ee60957a3b123d2f2729a23d17050",
+      "bytes": 127
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-release-metadata.json",
+      "sha256": "5e50f6ba0177d89fb4c48bd0a974bae57d8168a2a57dc97a76b4e1ebe767206b",
+      "bytes": 295
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-signature-root.txt",
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "bytes": 942
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/android-signature.txt",
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "bytes": 942
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/android/root-android-identity.json",
+      "sha256": "359cb59ceb693678ca0f47b34da5ab304b7ba5c6b5af94150ec5e351ed85690a",
+      "bytes": 981
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-android-release-actual-artifact-bindings.json",
+      "sha256": "d0020aede71bf906affc73bf72208bdc9a8b566b28f0996b7deb11bc88a854c6",
+      "bytes": 3330
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-combined-inventory-independent-verification.json",
+      "sha256": "05af792704c7c52228ac8055e6e0762e52a9449f9ddb2bca98a008f81539b38c",
+      "bytes": 3318
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-frozen-promotion-policy-bindings.json",
+      "sha256": "7096b0c9d6d1fdd987fde0f73700e35a4fec89c86de1128346e9531481a9ec65",
+      "bytes": 2354
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-full-candidate-artifacts-independent-review.json",
+      "sha256": "e577bbb1b62331cf326511883dae601b6d48053f6e630d9c4dc553da75c9842a",
+      "bytes": 14083
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-linux-actual-artifact-bindings.json",
+      "sha256": "fda51b481c2f3e430fcd0a50cb5a199b28db45e9fc080ab88b2683671cd34f6c",
+      "bytes": 5929
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-pushed-preflight-independent-review.json",
+      "sha256": "94852e0ce3d9f3092f95cf2b91f4b3d1e55c5e3353942a35b04c2c802f5707a2",
+      "bytes": 1590
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/build58-windows-actual-artifact-bindings.json",
+      "sha256": "0c75bf1a9d1aad17526082a02b4b71ea9c6c6f0233f50d59a48fadc5384a228e",
+      "bytes": 9695
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/commit-432784d-binding-addendum.json",
+      "sha256": "652e19be87dffd5d4bea6a92e4f5141c6fc3edc88759e1b2e5f566299ed150aa",
+      "bytes": 975
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/final-range-build58-editorial-independent-review.json",
+      "sha256": "f3102b943123f928d91576395e49108e218031f255fa3de1f33106eaa10d94ad",
+      "bytes": 4920
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/final-source-native-ux-review.json",
+      "sha256": "e0545792a615ed79880f00fb916afa7168f9c8d8729661608e070b5c59a244d6",
+      "bytes": 8566
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/frozen-build58-source-readiness-independent-review.json",
+      "sha256": "e81039e459970bee372ddc806831e00302e67007b85b635b6188012eced4a30a",
+      "bytes": 11562
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/handoff-pending.json",
+      "sha256": "028e10eb50ce7d1b47b0fcf56c1ab88f5b63e3cf38e374a96eed8e2a290c05e4",
+      "bytes": 3346
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/linux/build58-linux-artifact-independent-review.json",
+      "sha256": "18612a8fa0846cd0c43f49f22485d4451f729ee17d4121e25ba086e5de1dc8f7",
+      "bytes": 6298
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/linux/linux-install-smoke.json",
+      "sha256": "389de26c908ec8361331dee069b38a0b4af0459ff9e0c1ac79274e4b5793c63c",
+      "bytes": 2025
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/linux/linux-startup.json",
+      "sha256": "98e24243011c8c839c6479e92f670db818f0d99b15168104f6381b77fbaa40a7",
+      "bytes": 6191
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/windows/build58-windows-artifact-independent-review.json",
+      "sha256": "bb860b2bc1ccba137d5bada913b9fc5348223701537b0e8ffdd75dc1ce32c70d",
+      "bytes": 3636
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/windows/root-windows-handoff.json",
+      "sha256": "1127aeb46bc1f86dcf9bba5ced341f3a449e0faa08041dff31cb7d6b7111d578",
+      "bytes": 1574
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/windows/windows-install-smoke.json",
+      "sha256": "f50bf4a9c8faf4f7164b6eb41f7e146146cd50633055be3365a7d02744b0a90a",
+      "bytes": 1758
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build58/windows/windows-portable-provenance.json",
+      "sha256": "9694de66f364ea442ef3aeb7e90aadb163874bc98af4b17411eac0a0d5f3926a",
+      "bytes": 2181
+    }
+  ],
+  "publication_ready": false,
+  "remaining": [
+    "Parent exact Android58 focused native/upgrade attestation and fresh private publication snapshot",
+    "Normal publication and postpublication gates"
+  ],
+  "scope_limits": [
+    "No tests/downloads/runtime reruns or source edits for this review",
+    "No publication or reviewer device acceptance",
+    "Existing Food authorization/quota override preserved; private account values omitted"
+  ]
+}

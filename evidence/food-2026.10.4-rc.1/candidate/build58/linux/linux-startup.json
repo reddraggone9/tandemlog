@@ -1,0 +1,90 @@
+dbus-daemon[8466]: [session uid=1001 pid=8466] Activating service name='org.freedesktop.portal.Desktop' requested by ':1.0' (uid=1001 pid=8468 comm="build/linux/x64/release/bundle/tandemlog" label="unconfined")
+dbus-daemon[8466]: [session uid=1001 pid=8466] Activating service name='org.freedesktop.portal.Documents' requested by ':1.2' (uid=1001 pid=8473 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+dbus-daemon[8466]: [session uid=1001 pid=8466] Activating service name='org.freedesktop.impl.portal.PermissionStore' requested by ':1.3' (uid=1001 pid=8479 comm="/usr/libexec/xdg-document-portal" label="unconfined")
+dbus-daemon[8466]: [session uid=1001 pid=8466] Successfully activated service 'org.freedesktop.impl.portal.PermissionStore'
+dbus-daemon[8466]: [session uid=1001 pid=8466] Successfully activated service 'org.freedesktop.portal.Documents'
+Ignoring invalid max threads value 4294967295 > max (100000).
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.839: Choosing gtk.portal for org.freedesktop.impl.portal.Lockdown as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.839: The preferred method to match portal implementations to desktop environments is to use the portals.conf(5) configuration file
+dbus-daemon[8466]: [session uid=1001 pid=8466] Activating service name='org.freedesktop.impl.portal.desktop.gtk' requested by ':1.2' (uid=1001 pid=8473 comm="/usr/libexec/xdg-desktop-portal" label="unconfined")
+
+(xdg-desktop-portal-gtk:8496): dbind-WARNING **: 16:06:01.852: AT-SPI: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+dbus-daemon[8466]: [session uid=1001 pid=8466] Successfully activated service 'org.freedesktop.impl.portal.desktop.gtk'
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.866: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.866: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.866: Failed to load RealtimeKit property: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.freedesktop.RealtimeKit1 was not provided by any .service files
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.866: No skeleton to export
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.866: Choosing gtk.portal for org.freedesktop.impl.portal.FileChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.867: Choosing gtk.portal for org.freedesktop.impl.portal.AppChooser as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.868: Choosing gtk.portal for org.freedesktop.impl.portal.Print as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.869: Choosing gtk.portal for org.freedesktop.impl.portal.Notification as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.870: Choosing gtk.portal for org.freedesktop.impl.portal.Inhibit as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.871: Choosing gtk.portal for org.freedesktop.impl.portal.Access as a last-resort fallback
+[W][01517.168310] pw.conf      | [          conf.c: 1031 try_load_conf()] can't load config client.conf: No such file or directory
+[E][01517.168360] pw.conf      | [          conf.c: 1060 pw_conf_load_conf_for_context()] can't load config client.conf: No such file or directory
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.873: Failed connect to PipeWire: Couldn't create PipeWire context
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.873: Choosing gtk.portal for org.freedesktop.impl.portal.Account as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.874: Choosing gtk.portal for org.freedesktop.impl.portal.Email as a last-resort fallback
+
+(/usr/libexec/xdg-desktop-portal:8473): xdg-desktop-portal-WARNING **: 16:06:01.875: Choosing gtk.portal for org.freedesktop.impl.portal.DynamicLauncher as a last-resort fallback
+dbus-daemon[8466]: [session uid=1001 pid=8466] Successfully activated service 'org.freedesktop.portal.Desktop'
+{
+  "target": "Linux x86_64 native / Xvfb",
+  "binary": "build/linux/x64/release/bundle/tandemlog",
+  "tasks": 10,
+  "label": "tasks",
+  "os_page_cache": "not flushed",
+  "results": [
+    {
+      "run": 1,
+      "cache": "rebuild",
+      "external_ms": 1191,
+      "marker": "TANDEMLOG_READY_MS=929 FILES_READ=1",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=65",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=35",
+        "TANDEMLOG_PHASE manifest=20",
+        "TANDEMLOG_PHASE ingest=57",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=929 FILES_READ=1"
+      ],
+      "external_main_ms": 258,
+      "external_first_frame_ms": 328
+    },
+    {
+      "run": 2,
+      "cache": "warm",
+      "external_ms": 512,
+      "marker": "TANDEMLOG_READY_MS=313 FILES_READ=0",
+      "phases": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=66",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=46",
+        "TANDEMLOG_PHASE manifest=32",
+        "TANDEMLOG_PHASE ingest=32",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=313 FILES_READ=0"
+      ],
+      "external_main_ms": 195,
+      "external_first_frame_ms": 265
+    }
+  ]
+}

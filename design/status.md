@@ -2,16 +2,34 @@
 
 ## Food inventory — durable source checkpoint
 
-RC preparation now proceeds under the existing Food authorization and quota
-override. Published stable2026.10.3/build56 and the complete41-successful-candidate
-history establish build56 as the floor; the next candidate is
-2026.10.4-rc.1/build57. The bounded [Food import contract v1](food-import-contract.md)
-is public for parallel private staging; its generic app-side implementation has
-55 passing focused tests and accepted independent architecture/security review.
-The final configured unit suite passes822; analysis/formatting are clean. All5
-production Food native workflows and their composed CI registration pass. An empty-inventory candidate does
-not depend on live cutover. Private source rows/whitelist and any live import or
-deletion remain outside this work.
+RC preparation proceeds under the existing Food authorization and quota
+override. Replacement2026.10.4-rc.1/build58 is frozen at
+`432784d0181af5b97fd89bfb3ef8d5c83212f92e`.
+[Signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
+and push CI38064596284 passed. Original Android artifact11674984580 contains APK
+SHA256 `e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`;
+root and independent checks verify source, version58, owner signer, package,
+checksums and native payload. Hosted Linux passes826 unit/93 native tests,
+Windows823 unit tests, and both exact installed desktop lifecycles pass.
+Independent source/UX/editorial reviews accept the scoped replacement.
+
+Build57's Android finding omitted the date format and blank-date Inbox guidance
+at320dp/200% text. Build58 uses the short "Expiration" label and a growing helper
+inside the existing scrollable form; no domain, validation or storage behavior
+changes. The new native Linux regression passes both themes at100/200% text.
+Fresh exact Android date focus/validation/save/persistence and stable56→58
+upgrade acceptance remain pending. Windows manual GUI is RC-waived by the parent;
+fresh hosted58 lifecycle evidence is separate from carried source-bound CLI proof.
+Publication awaits that focused Android acceptance and the parent's fresh private
+quota snapshot. Stable2026.10.3/build56 remains Latest; Food stable promotion
+requires Lee's approval. The [current handoff](food-native-acceptance.md) records
+the bounded scope.
+
+The bounded [Food import contract v1](food-import-contract.md) is public for
+parallel private staging; its generic implementation has55 focused passes and
+accepted architecture/security review. Empty-inventory acceptance does not
+depend on live cutover. Private source rows, live import and deletion remain
+outside this work.
 
 Collapsed stock omits the redundant quantity only for one known-full,
 conflict-free container; unknown, partial, multiple and mixed summaries remain.
@@ -22,8 +40,8 @@ bound. Native Linux pixels pass both themes and normal/200% text. Fresh syntheti
 density keeps64px normal rows/10 complete groups,136px narrow enlarged rows/3
 groups and104px wide enlarged rows/5 groups, with48px actions. "Sample Foods"
 is the fixture brand and "Freezer" is the location; real metadata is unchanged.
-Native Android/Windows exact candidate acceptance and full hosted matrix remain
-pending. Relevant semantics, keyboard, enlarged text, focus and readable labels
+Earlier presentation evidence remains attributed to its original build57 source.
+Relevant semantics, keyboard, enlarged text, focus and readable labels
 are the bounded scope; optional broad assistive-technology/audio work is not a
 release gate.
 

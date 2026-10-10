@@ -1,0 +1,19 @@
+{
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "candidate_run": 38064595888,
+  "artifact_id": 11674984580,
+  "apk_sha256": "e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588",
+  "apk_bytes": 67066589,
+  "version": "2026.10.4-rc.1",
+  "version_code": 58,
+  "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "official_signature_badging_checksum_metadata_verified": true,
+  "android_native_acceptance": "Pending focused parent build58 acceptance",
+  "artifact_archive_bytes": 31055426,
+  "artifact_archive_sha256": "5e845620059ce238b73ff25ed223c5bee926835ea045055093013ddf45bda3c6",
+  "native_payload_verifier": "PASS; exact packaged notices, all three ABI ELF/exports/alignment verified",
+  "hosted_candidate": "SUCCESS",
+  "push_ci_run": 38064596284,
+  "push_ci": "SUCCESS",
+  "remaining": "Focused parent Android58 runtime and stable56-to58 upgrade acceptance; fresh parent quota snapshot before publication"
+}

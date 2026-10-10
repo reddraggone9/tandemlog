@@ -1,0 +1,55 @@
+{
+  "checked_at_utc": "2026-10-10T15:56:34.914154+00:00",
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "docs_head": "46e117798de9de723c864d1cba0179b144f10871",
+  "candidate_run": 38064595888,
+  "bindings": [
+    {
+      "path": ".github/workflows/android-candidate.yml",
+      "sha256": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": ".github/workflows/validate.yml",
+      "sha256": "8d38b56f3abefb2c93eb7b7cad54bc708cf030a5e33d1a917efa32ea7a1ebc76",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": ".github/workflows/prerelease.yml",
+      "sha256": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "tool/candidate_source.py",
+      "sha256": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "tool/publish_gate.py",
+      "sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "tool/android_release.py",
+      "sha256": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "tool/release_assets.py",
+      "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "tool/attach_preview_assets.py",
+      "sha256": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+      "unchanged_from_candidate_source": true
+    },
+    {
+      "path": "design/prerelease-notes.md",
+      "sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+      "unchanged_from_candidate_source": true
+    }
+  ],
+  "gate_order": "Trusted main resolves full successful main candidate; exact source checkout downloads original linux/windows/android-release; closed inventory/portable members/lifecycles/accepted exact APK metadata precede strict three checksums and three versioned installer copy; prerelease/latest=false; no rebuild",
+  "publication_status": "NOT_READY: full signed candidate and parent exact Android58 native acceptance pending"
+}

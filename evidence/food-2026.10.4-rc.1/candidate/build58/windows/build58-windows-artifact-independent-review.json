@@ -1,0 +1,100 @@
+{
+  "checked_at_utc": "2026-10-10T15:53:59.712563+00:00",
+  "verdict": "ACCEPT_EXACT_WINDOWS_ARTIFACT_ONLY",
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "candidate_run": 38064595888,
+  "version": "2026.10.4-rc.1+58",
+  "artifact_id": 11675306002,
+  "actual_archive": {
+    "path": "/tmp/food-rc58-artifacts/food58-windows-38064595888.zip",
+    "bytes": 26202717,
+    "sha256": "85025ca84cdfde318a95e42a8b2ca1b808048ca89a44dff6b57ea26ef937a8d5"
+  },
+  "actual_members": [
+    {
+      "name": "tandemlog-windows-x64-unsigned-portable.zip",
+      "bytes": 14392905,
+      "sha256": "86f108d003597c09df5a25fbb4bd2584667d49185c640a91f954fa55f9cf14fd",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12376080,
+      "sha256": "acb4982d4dcd35c670ac274fe70aff226076a24a08b373a3e50a1edbd64c166a",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-install-smoke.json",
+      "bytes": 1758,
+      "sha256": "f50bf4a9c8faf4f7164b6eb41f7e146146cd50633055be3365a7d02744b0a90a",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-provenance.json",
+      "bytes": 2181,
+      "sha256": "9694de66f364ea442ef3aeb7e90aadb163874bc98af4b17411eac0a0d5f3926a",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-SHA256SUMS.txt",
+      "bytes": 111,
+      "sha256": "7b73d31dec51a4d4a068d3315e6d30f431e020a2303bd626297ed7691efabace",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "bytes": 108,
+      "sha256": "0af63bf74f813145cac051b1939a3702cd8bd9e872358293245e9c6d6a25274e",
+      "crc_valid": true
+    }
+  ],
+  "portable_actual_member_count": 17,
+  "actual_byte_checks": [
+    "API archive SHA256/size/source/run/unexpired",
+    "closed six-member safe inventory/full CRC/checksums",
+    "portable full member hashes/path/case/CRC and source/run provenance",
+    "native notices content matches frozen source with CRLF representation accounted for",
+    "four installed lifecycle phases pass frozen policy"
+  ],
+  "hosted_checks": {
+    "job_id": 114249604143,
+    "conclusion": "success",
+    "unit_tests": {
+      "passed": 823,
+      "platform_skips": 2
+    },
+    "contracts": {
+      "passed": 107
+    },
+    "python_policies": {
+      "run": 57,
+      "platform_skips": 5
+    },
+    "native_payload": "Hosted Windows native library and exact notices passed before archive upload",
+    "installer_lifecycle": "Four phases independently verified from actual original report"
+  },
+  "supporting_files": [
+    {
+      "path": "/tmp/food-rc58-independent-review/build58-windows-actual-artifact-bindings.json",
+      "sha256": "0c75bf1a9d1aad17526082a02b4b71ea9c6c6f0233f50d59a48fadc5384a228e"
+    },
+    {
+      "path": "/tmp/food-rc58-independent-review/build58-windows-hosted.log",
+      "sha256": "7cec0dd216f606eda6e9e1ae08a3bbb11f1cb78bc4a069819a8d586b078d3f41"
+    },
+    {
+      "path": "/tmp/food-rc58-independent-review/build58-jobs-after-windows-api.json",
+      "sha256": "e27f5ef32b98ab461457902878fc757ee7e9f971cff4ff4c286de0a761165f1c"
+    },
+    {
+      "path": "/tmp/food-rc58-independent-review/build58-artifacts-after-windows-api.json",
+      "sha256": "13a7be72cf60e783b9223eb64c003ad84c4c28c71276ef3cb2d4a822f57d1bcb"
+    }
+  ],
+  "limits": [
+    "No reviewer Windows runtime or GUI execution; parent RC GUI waiver retained",
+    "Only Windows artifact accepted; full candidate and exact Android focused native acceptance remain pending",
+    "Build57 native evidence stays source-bound; no blanket build58 native acceptance",
+    "No publication approval or mutation"
+  ]
+}

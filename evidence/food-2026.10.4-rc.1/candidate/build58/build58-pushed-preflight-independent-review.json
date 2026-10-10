@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T15:44:27.793327+00:00",
+  "verdict": "ACCEPT_PUSHED_SOURCE_AND_HOSTED_PREFLIGHT_ONLY_MATRIX_PENDING",
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "version": "2026.10.4-rc.1+58",
+  "candidate_run": 38064595888,
+  "push_run": 38064596284,
+  "candidate_workflow": ".github/workflows/android-candidate.yml",
+  "branch": "main",
+  "event": "workflow_dispatch",
+  "candidate_checkpoint": "in_progress",
+  "preflight_job": 114249570427,
+  "preflight_success": true,
+  "preflight_observations": [
+    "Exact432 checkout; main ref assertion; android_release preflight; full candidate-history pass."
+  ],
+  "earlier_successful_build_floor": 57,
+  "strictly_increasing_build": 58,
+  "docs_only_main": "46e117798de9de723c864d1cba0179b144f10871",
+  "docs_only_executable_diff_empty": true,
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "existing_independent_source_receipt_sha256": "e81039e459970bee372ddc806831e00302e67007b85b635b6188012eced4a30a",
+  "existing_editorial_receipt_sha256": "f3102b943123f928d91576395e49108e218031f255fa3de1f33106eaa10d94ad",
+  "signed_artifact_or_native_acceptance": false,
+  "required_remaining": "Full hosted replacement matrix, actual original platform artifacts and focused exact Android58 date/upgrade acceptance, final native readiness and normal publisher/post-publication gates.",
+  "evidence": {
+    "path": "/tmp/food-rc58-independent-review/build58-candidate-preflight-hosted.log",
+    "sha256": "6d10b7c045ddaec2f17476f9d6e44e6d743974dbaa74179155548d70473fd6d6"
+  }
+}

@@ -12,6 +12,20 @@ unfocused with the actual keyboard: full guidance, invalid calendar rejection,
 valid date save, blank-date Inbox placement, Cancel/Back, and stable56→58 upgrade
 preserving Tasks/settings/physical containers. These checks remain pending
 until the exact replacement APK is accepted.
+
+The replacement [signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
+and push CI38064596284 passed at exact source
+`432784d0181af5b97fd89bfb3ef8d5c83212f92e`. Download original `android-release`
+artifact11674984580: actual APK SHA256
+`e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`,
+version2026.10.4-rc.1/code58. Root and independent artifact checks pass owner
+signature, package, nondebuggable flag, source metadata, checksums and native
+payload. Original Windows artifact11675306002 and Linux artifact11674779087
+pass their exact hosted lifecycle gates. Windows manual GUI is RC-waived by
+the parent; old local CLI/storage evidence remains attributed to its actual
+build57 or stable56 source. These artifact gates do not close the focused
+Android58 runtime checks above.
+
 Stable promotion requires Lee's acceptance. The
 [source/evidence checkpoint](../evidence/food-2026.10.4-rc.1/README.md) and
 [import contract](food-import-contract.md) separate app behavior from private

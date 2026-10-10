@@ -1,0 +1,1 @@
+Packaged native library and exact notices verified: /tmp/food-rc58-artifacts/android-release-38064595888/tandemlog-android.apk

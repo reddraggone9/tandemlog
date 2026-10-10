@@ -3,7 +3,7 @@
   "version": "2026.10.4-rc.1+58",
   "signed_candidate_run": 38064595888,
   "push_ci_run": 38064596284,
-  "status": "Candidate running; exact replacement artifacts/Android acceptance pending",
+  "status": "Full signed candidate and push CI success; original replacement artifacts independently accepted for focused parent Android58 runtime handoff",
   "delta_from_accepted57": "Only expiration label/helper and build number; test/QA docs/evidence also updated",
   "prior57_source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
   "prior57_apk_sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
@@ -18,5 +18,27 @@
   ],
   "windows": "Manual GUI RC-waived by parent; fresh hosted exact installed lifecycle required. Prior localCLI schema/store proof remains source-bound.",
   "publication": "Authorized Food RC only after full exact-artifact gates and focused native acceptance; reuse accepted original artifacts without rebuilding; prerelease true/latest false; stable v2026.10.3 remains Latest",
-  "quota": "No quota reader exposed here. Parent must supply fresh remaining/reset for final private publication receipt; existing Food feature/publication override applies without renewed Lee permission."
+  "quota": "No quota reader exposed here. Parent must supply fresh remaining/reset for final private publication receipt; existing Food feature/publication override applies without renewed Lee permission.",
+  "candidate_conclusion": "success",
+  "push_ci_conclusion": "success",
+  "android_artifact_id": 11674984580,
+  "android_archive_sha256": "5e845620059ce238b73ff25ed223c5bee926835ea045055093013ddf45bda3c6",
+  "android_apk_sha256": "e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588",
+  "android_apk_bytes": 67066589,
+  "windows_artifact_id": 11675306002,
+  "windows_setup_sha256": "acb4982d4dcd35c670ac274fe70aff226076a24a08b373a3e50a1edbd64c166a",
+  "linux_artifact_id": 11674779087,
+  "linux_flatpak_sha256": "78ae595ee571e4e4df521f7cdbd5a219205154a53a8d19c86c8327e8ca52d75e",
+  "full_independent_artifact_review": "ACCEPT_FOR_EXACT_PARENT_NATIVE_HANDOFF; publication_ready=false",
+  "root_combined_inventory": "PASS original14 members, portable source/member hashes, lifecycle gates; actual APK official verification PASS",
+  "linux_tests": {
+    "unit": 826,
+    "native": 93
+  },
+  "windows_tests": {
+    "unit": 823,
+    "platform_skips": 2
+  },
+  "publication_ready": false,
+  "remaining": "Parent focused Android58 date/IME/persistence and stable56-to58 upgrade acceptance; fresh private parent quota snapshot; normal exact-artifact publication and post-publication checks"
 }

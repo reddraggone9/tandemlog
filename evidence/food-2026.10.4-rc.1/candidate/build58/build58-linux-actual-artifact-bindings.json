@@ -1,0 +1,172 @@
+{
+  "checked_at_utc": "2026-10-10T16:08:04.058791+00:00",
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "candidate_run": 38064595888,
+  "version": "2026.10.4-rc.1+58",
+  "artifact_api_metadata": {
+    "id": 11674779087,
+    "name": "linux",
+    "size_in_bytes": 9216787,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11674779087",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11674779087/zip",
+    "expired": false,
+    "created_at": "2026-10-10T16:07:36Z",
+    "expires_at": "2026-10-15T16:07:35Z",
+    "updated_at": "2026-10-10T16:07:36Z",
+    "digest": "sha256:6d30b80ed9528cc3609d97d467f755099231ea2363c831f196cee615447ca3fb",
+    "workflow_run": {
+      "id": 38064595888,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "432784d0181af5b97fd89bfb3ef8d5c83212f92e"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/food-rc58-artifacts/food58-linux-38064595888.zip",
+    "bytes": 9216787,
+    "sha256": "6d30b80ed9528cc3609d97d467f755099231ea2363c831f196cee615447ca3fb"
+  },
+  "original_member_inventory_and_crc": "PASS",
+  "strict_member_checksums": "PASS",
+  "actual_members": [
+    {
+      "name": "linux-SHA256SUMS.txt",
+      "bytes": 94,
+      "sha256": "a4cd4edd12f5c6ff015bac1cce99f9e454a854bfcb417a2d28a61a2caed285e7",
+      "crc_valid": true
+    },
+    {
+      "name": "linux-install-smoke.json",
+      "bytes": 2025,
+      "sha256": "389de26c908ec8361331dee069b38a0b4af0459ff9e0c1ac79274e4b5793c63c",
+      "crc_valid": true
+    },
+    {
+      "name": "linux-startup.json",
+      "bytes": 6191,
+      "sha256": "98e24243011c8c839c6479e92f670db818f0d99b15168104f6381b77fbaa40a7",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-linux-x64.flatpak",
+      "bytes": 9211960,
+      "sha256": "78ae595ee571e4e4df521f7cdbd5a219205154a53a8d19c86c8327e8ca52d75e",
+      "crc_valid": true
+    }
+  ],
+  "frozen_policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "lifecycle": {
+    "phases": [
+      {
+        "phase": "after-install",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=72",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=15",
+          "TANDEMLOG_PHASE manifest=10",
+          "TANDEMLOG_PHASE ingest=20",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=1346 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-upgrade",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=73",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=41",
+          "TANDEMLOG_PHASE manifest=37",
+          "TANDEMLOG_PHASE ingest=66",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=343 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-uninstall",
+        "passed": true,
+        "loaded_projection": false,
+        "sandbox_stopped": false,
+        "markers": []
+      },
+      {
+        "phase": "after-reinstall",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=74",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=33",
+          "TANDEMLOG_PHASE manifest=46",
+          "TANDEMLOG_PHASE ingest=66",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=358 FILES_READ=1"
+        ]
+      }
+    ],
+    "upgrade": {
+      "candidate_commit": "bb98343018ddcc13429c1311b4353183ec66aa85e77a2c24d15c0defe85f459f",
+      "baseline_commit": "31ca01eecc2e384cb6ec1b2e8ba55bc2fbfd77d7ebfb98df1a1960273c4d7142",
+      "baseline_payload_equal": true,
+      "baseline_permissions_equal": true,
+      "final_candidate_restored": true
+    }
+  },
+  "lifecycle_frozen_policy": "PASS",
+  "startup": {
+    "target": "Linux x86_64 native / Xvfb",
+    "binary": "build/linux/x64/release/bundle/tandemlog",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 1191,
+        "marker": "TANDEMLOG_READY_MS=929 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=65",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=35",
+          "TANDEMLOG_PHASE manifest=20",
+          "TANDEMLOG_PHASE ingest=57",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=929 FILES_READ=1"
+        ],
+        "external_main_ms": 258,
+        "external_first_frame_ms": 328
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 512,
+        "marker": "TANDEMLOG_READY_MS=313 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=66",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=46",
+          "TANDEMLOG_PHASE manifest=32",
+          "TANDEMLOG_PHASE ingest=32",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=313 FILES_READ=0"
+        ],
+        "external_main_ms": 195,
+        "external_first_frame_ms": 265
+      }
+    ]
+  },
+  "startup_qualification": "Original report may include captured DBus stdout prefix; anchored final JSON parsed without modifying original member. OS page cache not flushed."
+}

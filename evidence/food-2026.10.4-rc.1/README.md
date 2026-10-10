@@ -13,6 +13,37 @@ from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
+## Build58 verified artifact handoff
+
+Frozen executable source `432784d0181af5b97fd89bfb3ef8d5c83212f92e` passed
+[signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
+and push CI38064596284. Original signed Android artifact11674984580 contains
+APK SHA256 `e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`.
+[Root identity](candidate/build58/android/root-android-identity.json) records
+official signature/package/version58/checksum/source and native-payload checks;
+it does not attest Android runtime acceptance. Windows artifact11675306002 and
+Linux artifact11674779087 retain their exact hosted installed lifecycle proofs.
+Hosted Linux passes826 unit and93 native tests; Windows passes823 unit tests.
+The new native expiration regression is included in the aggregate suite.
+[Full independent artifact review](candidate/build58/build58-full-candidate-artifacts-independent-review.json)
+accepts the exact original14-member inventory for parent native handoff and
+explicitly leaves publication readiness false.
+
+[Source/UX review](candidate/build58/final-source-native-ux-review.json),
+[frozen source review](candidate/build58/frozen-build58-source-readiness-independent-review.json)
+and [actual-range editorial review](candidate/build58/final-range-build58-editorial-independent-review.json)
+accept the bounded source and notes. [Expiration evidence](native/expiry-build58/README.md)
+retains20 actual Linux GTK captures and the pointer-visible synthetic demo,
+with viewport/font/focus qualifications. Focused parent Android58 acceptance
+and stable56→58 upgrade smoke remain pending. Windows manual GUI is RC-waived;
+carried local CLI/storage evidence retains its original source attribution.
+Publication is authorized after the remaining exact acceptance, reusing these
+original binaries without rebuilding and keeping stable2026.10.3 Latest.
+
+The presentation hashes and preparation sections below retain earlier build57
+checkpoint evidence and failures. Build58's changed expiration source and tests
+are bound in its separate evidence; old pending entries are historical checkpoints.
+
 The independently reviewed [durable checkpoint](../food-inventory-durable/README.md)
 contains the original788-unit/87-native-Tasks/5-production-Food evidence and
 recovery receipts. This additive record covers the final collapsed summary and
