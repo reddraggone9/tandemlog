@@ -1,0 +1,27 @@
+{
+  "v": 1,
+  "space": "00000000-0000-4000-8000-000000000001",
+  "importId": "00000000-0000-4000-8000-000000000003",
+  "sourceSha256": "396fc5d3a5f35f0d42c40310343b1d70b1d876d9bac3a4f07d5aba076de4c390",
+  "containers": [
+    {
+      "sourceId": "synthetic-row",
+      "ordinal": 1,
+      "details": {
+        "name": "Synthetic beans",
+        "brand": "Sample Foods",
+        "expiry": "2027-03-01",
+        "estimated": null,
+        "retention": "Birthday cooking",
+        "location": "Freezer",
+        "size": "500 g"
+      },
+      "contents": {
+        "numerator": null,
+        "denominator": null,
+        "unit": null
+      },
+      "createdAt": "2020-01-02T03:04:05+02:00"
+    }
+  ]
+}
