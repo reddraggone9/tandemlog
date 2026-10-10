@@ -1,0 +1,125 @@
+{
+  "candidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidateRunId": 37995721678,
+  "artifactId": 11648101550,
+  "zipSha256": "2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+  "memberSha256": {
+    "linux-SHA256SUMS.txt": "2ffc301ae7e934bae80e4ae561e9278be8228621c1f35d3ae0e64ce3e8111a98",
+    "linux-install-smoke.json": "aae087ef10527d1cd2c6f4d748fb85bac9f9f75096a92395643346fe981b68f8",
+    "linux-startup.json": "5cad232a172cf118c1eddfc50326f2aa2d000342da615628445d1fd45f2eb902",
+    "tandemlog-linux-x64.flatpak": "592f435134fe1059efa547262cffb03508299583e85c8f6624936f2f74de5fce"
+  },
+  "installedLifecycleGate": "PASS: frozen trusted publish_gate.verify_install_smoke(require_changed_commit=True)",
+  "installSmoke": {
+    "phases": [
+      {
+        "phase": "after-install",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=73",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=15",
+          "TANDEMLOG_PHASE manifest=10",
+          "TANDEMLOG_PHASE ingest=19",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=1298 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-upgrade",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=75",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=32",
+          "TANDEMLOG_PHASE manifest=45",
+          "TANDEMLOG_PHASE ingest=66",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=271 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-uninstall",
+        "passed": true,
+        "loaded_projection": false,
+        "sandbox_stopped": false,
+        "markers": []
+      },
+      {
+        "phase": "after-reinstall",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=74",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=11",
+          "TANDEMLOG_PHASE manifest=64",
+          "TANDEMLOG_PHASE ingest=66",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=260 FILES_READ=1"
+        ]
+      }
+    ],
+    "upgrade": {
+      "candidate_commit": "bdf6c293de630d421245a00af269f4d1d84bb8e9c81d9b568360df201a54da86",
+      "baseline_commit": "1350dba3ec04d37cb7e9a292d23ac4522494d79e59a7d62a801f09bb254dfa54",
+      "baseline_payload_equal": true,
+      "baseline_permissions_equal": true,
+      "final_candidate_restored": true
+    }
+  },
+  "startup": {
+    "target": "Linux x86_64 native / Xvfb",
+    "binary": "build/linux/x64/release/bundle/tandemlog",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 1028,
+        "marker": "TANDEMLOG_READY_MS=768 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=66",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=32",
+          "TANDEMLOG_PHASE manifest=21",
+          "TANDEMLOG_PHASE ingest=54",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=768 FILES_READ=1"
+        ],
+        "external_main_ms": 256,
+        "external_first_frame_ms": 326
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 421,
+        "marker": "TANDEMLOG_READY_MS=223 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=65",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=45",
+          "TANDEMLOG_PHASE manifest=18",
+          "TANDEMLOG_PHASE ingest=20",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=223 FILES_READ=0"
+        ],
+        "external_main_ms": 193,
+        "external_first_frame_ms": 262
+      }
+    ]
+  },
+  "startupFormatQualification": "Includes dbus diagnostic stdout prefix before actual JSON; inspected JSON suffix. Publisher requires file inventory but parses only lifecycle report, not startup file. No artifact bytes changed."
+}

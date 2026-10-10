@@ -1,0 +1,21 @@
+{
+  "recordedAtUtc": "2026-10-10T00:20:25.751835+00:00",
+  "authorizationSourceThread": "01a118df-0916-77c7-8253-b440044e00c7",
+  "authorization": "Parent explicitly conveys Lee authorization to publish combined stablev2026.10.3/build56 after final independent native/artifact acceptance; no rebuild or icon/food work. Applies to reviewed combined app-wide local storage migration and Android build dependencies.",
+  "dispatchRevision": "0ae5e66115e10f6a9c355086248ff01becddc423",
+  "candidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidateRunId": 37995721678,
+  "tag": "v2026.10.3",
+  "acceptedInnerApkSha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+  "notesSha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+  "independentFinalReview": "final-native-artifact-independent-review.json",
+  "independentFinalReviewSha256": "26f2a1d30327ef7832dad5dc8cfac0897aff1e7c8b7e88cfaac0923cd784c457",
+  "nativeAcceptance": "PASS within reviewed actual Windows/Android/upgrade/SAF/Undo/process-death/injected capacity scopes; reviewer limits retained",
+  "saveFinding": "Resolved actual unchanged productionAPK by owner-only fixture reversal; no appfix or waiver",
+  "parentQuotaReadAtUtc": "2026-10-10T00:08:00Z",
+  "parentQuotaAboveApplicablePublicationApprovalThreshold": true,
+  "hostedPublicationGatesStillRequired": true,
+  "publicVerificationStillRequired": true,
+  "rebuilt": false,
+  "published": false
+}

@@ -1,0 +1,28 @@
+{
+  "candidateSource": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "candidateRunId": 37995721678,
+  "artifactId": 11648102388,
+  "zipSha256": "18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+  "memberSha256": {
+    "android-SHA256SUMS.txt": "f34f7486317e242f303b9c4fe59029cf5c58faa0adf1d78db5e6356b1a772e75",
+    "android-release-metadata.json": "5494fbfbfa6c8ba34bd7a3d148b93638514765099c65f6e5a900b96361486782",
+    "android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "tandemlog-android.apk": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438"
+  },
+  "apkSha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+  "metadata": {
+    "source_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "version": "2026.10.3",
+    "version_code": 56,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438"
+  },
+  "officialSignatureVerification": "PASS",
+  "signatureReportSha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+  "badgingReportSha256": "d5437045978dae30b54b69e426f698d0d4e067dd4c0ab59e12afeaa5a22fc8d1",
+  "package": "com.reddraggone9.tandemlog",
+  "version": "2026.10.3",
+  "versionCode": 56,
+  "nonDebuggable": true,
+  "notes": "Actual APK verified using Android SDK apksigner/aapt through anonymous memory file to avoid disk pressure; no artifact byte changes."
+}

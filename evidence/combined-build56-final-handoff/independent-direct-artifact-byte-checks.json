@@ -1,0 +1,110 @@
+{
+  "linux": {
+    "zip_sha256": "2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+    "size": 9093385,
+    "members": {
+      "linux-SHA256SUMS.txt": {
+        "size": 94,
+        "sha256": "2ffc301ae7e934bae80e4ae561e9278be8228621c1f35d3ae0e64ce3e8111a98"
+      },
+      "linux-install-smoke.json": {
+        "size": 2025,
+        "sha256": "aae087ef10527d1cd2c6f4d748fb85bac9f9f75096a92395643346fe981b68f8"
+      },
+      "linux-startup.json": {
+        "size": 6191,
+        "sha256": "5cad232a172cf118c1eddfc50326f2aa2d000342da615628445d1fd45f2eb902"
+      },
+      "tandemlog-linux-x64.flatpak": {
+        "size": 9088568,
+        "sha256": "592f435134fe1059efa547262cffb03508299583e85c8f6624936f2f74de5fce"
+      }
+    },
+    "crc_ok": true
+  },
+  "android-release": {
+    "zip_sha256": "18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+    "size": 30685785,
+    "members": {
+      "android-SHA256SUMS.txt": {
+        "size": 88,
+        "sha256": "f34f7486317e242f303b9c4fe59029cf5c58faa0adf1d78db5e6356b1a772e75"
+      },
+      "android-release-metadata.json": {
+        "size": 290,
+        "sha256": "5494fbfbfa6c8ba34bd7a3d148b93638514765099c65f6e5a900b96361486782"
+      },
+      "android-signature.txt": {
+        "size": 942,
+        "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+      },
+      "tandemlog-android.apk": {
+        "size": 66116061,
+        "sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438"
+      }
+    },
+    "crc_ok": true,
+    "metadata": {
+      "source_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "version": "2026.10.3",
+      "version_code": 56,
+      "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+      "apk_sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438"
+    },
+    "apk_crc_ok": true,
+    "apk_members": 79,
+    "apk_native_payload_sha256": {
+      "lib/arm64-v8a/libapp.so": "cfc3acdd5f29b247de69bbb78177efdd616b0ab9a3f3926a05da8918b75a8cf1",
+      "lib/arm64-v8a/libdartjni.so": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "lib/arm64-v8a/libflutter.so": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "lib/arm64-v8a/libsqlite3.so": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "lib/arm64-v8a/libtandemlog_text.so": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "lib/armeabi-v7a/libapp.so": "2869d106aff57319e7b240d855df6187ad3ac18c5dc2a3da778ee5f864798c16",
+      "lib/armeabi-v7a/libdartjni.so": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "lib/armeabi-v7a/libflutter.so": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "lib/armeabi-v7a/libsqlite3.so": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "lib/armeabi-v7a/libtandemlog_text.so": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "lib/x86_64/libapp.so": "41d51504ba6ebe54ae1afe7a1d69365cb912c945fa71912cfea61bc023a8ea1c",
+      "lib/x86_64/libdartjni.so": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "lib/x86_64/libflutter.so": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "lib/x86_64/libsqlite3.so": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "lib/x86_64/libtandemlog_text.so": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    },
+    "native_notices_sha256": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c"
+  },
+  "windows": {
+    "zip_sha256": "7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+    "size": 25989868,
+    "members": {
+      "tandemlog-windows-x64-unsigned-portable.zip": {
+        "size": 14270693,
+        "sha256": "7cad2cd9b4e7f2969651d4c92df11d669ccb4e59ff9f9295e4346e3629df73cf"
+      },
+      "tandemlog-windows-x64-unsigned-setup.exe": {
+        "size": 12285359,
+        "sha256": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23"
+      },
+      "windows-install-smoke.json": {
+        "size": 1757,
+        "sha256": "4c625942d6213f68215f2e6fff4af8ef1213a583e0405ef6d040a1522d4715c8"
+      },
+      "windows-portable-provenance.json": {
+        "size": 2181,
+        "sha256": "071b7852552e32cbce45a5c2d9276c6004f71c52746df70c93841f045c90a899"
+      },
+      "windows-portable-SHA256SUMS.txt": {
+        "size": 111,
+        "sha256": "2044b815f554fdeb76b31078c6cda0c957da1b42401b4274aa5aa73c5093cd76"
+      },
+      "windows-SHA256SUMS.txt": {
+        "size": 108,
+        "sha256": "be9ca7586a21af5a3ea1ab2864ccec2c737db644613e23a9094ada6e65c17ce1"
+      }
+    },
+    "crc_ok": true,
+    "portable_exact_inventory": true,
+    "portable_members_verified": true,
+    "portable_crc_ok": true,
+    "portable_member_count": 17
+  }
+}

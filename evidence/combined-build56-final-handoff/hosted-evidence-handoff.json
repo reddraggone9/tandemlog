@@ -2074,12 +2074,9 @@
     }
   },
   "remainingGates": [
-    "Parent/local exact artifact ZIP/payload/signature/native provenance review; thisexecutor localmaterialization403",
-    "Android actualAPI/ABI andsource-bound force-stop/same-root recovery usingdeliveredQA APK/runner",
-    "Windows compiledmigrationcutscaffolds actualOSrun, withhostedexactinstaller+strictOSwindowproof available",
-    "Exact production owner-signed Android update/startup/SAF/provider acceptance",
-    "Independent final artifact/native review andfreshparent publication quota; no releasepublished",
-    "Foodanddisabledrepeat-icon seam remain deferred; no live-user-data operations"
+    "Normal trusted hosted exact-source/artifact/checksum/inventory/lifecycle publication gates",
+    "Actual public three-installer byte/signature/tag/source/notes/Latest/prior-release verification after authorized promotion",
+    "Food and minor icon seam remain deferred; no live synced user-data operations"
   ],
   "independentHostedHandoffReview": {
     "file": "independent-hosted-handoff-review.json",
@@ -2104,5 +2101,16 @@
     "independentRemoteReviewSha256": "4c4addd7d71e4b49942debed272cbf464df08295ccdef002fefc32bdeeea0c5f",
     "historicalPreparation": "notes-routing-preparation.json",
     "historicalPreparationQualification": "Original unapplied preparation retained; superseded only for applied/remote routing status by current receipts"
+  },
+  "finalNativeArtifactAcceptance": {
+    "verdict": "ACCEPT",
+    "review": "final-native-artifact-independent-review.json",
+    "reviewSha256": "26f2a1d30327ef7832dad5dc8cfac0897aff1e7c8b7e88cfaac0923cd784c457",
+    "authoritativeEvidenceLibraryFileId": "libfile_dba5421f97788191b5c2077ac1cf98d7",
+    "authoritativeEvidenceZipSha256": "95adafa6f781179d6fd2a98619f8e150c3676954f920c8440ed45073fe49b829",
+    "acceptedApkSha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+    "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "saveFindingResolved": true,
+    "qualification": "Earlier partial/unresolved receipts retained historically; final actual diagnosis/restoration/native/artifact review supersedes their pending status. No appfix or waiver."
   }
 }

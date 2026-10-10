@@ -1,0 +1,1086 @@
+[
+  {
+    "id": 408169620,
+    "tag_name": "v2026.10.2",
+    "target_commitish": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2026-10-09T16:40:15Z",
+    "published_at": "2026-10-09T17:31:53Z",
+    "body": "- Task titles and notes combine offline edits from different devices. For existing tasks, choose **Set up shared text editing** in Settings.\n- Add inline, reorderable checklists with item notes. Repeating tasks get fresh unchecked items.\n- Editors, bulk actions and filters share tag suggestions and selected-tag chips.\n\n![Before: Home Office is plain text in Tags. After: it is a selected chip above Find or add tags.](https://raw.githubusercontent.com/reddraggone9/tandemlog/89cec5a13900291df9f1cb841c5351277f38f4ff/evidence/rc4-editorial/tag-control-before-after.png)\n\n- Start and Due use compact Date and Time rows; scheduling fields come before Tags and Assignee.\n- New tasks stay at the top of manual order after leaving Inbox.\n- Bulk Apply controls have field-specific screen-reader labels, and save failures stay beside the action buttons.\n- Task rows use the available narrow-screen width, with aligned checklist controls and compact press feedback.\n- Settings shows the current release version with a copy action.\n",
+    "assets": [
+      {
+        "id": 625674445,
+        "name": "tandemlog-2026.10.2-android.apk",
+        "size": 65313245,
+        "digest": "sha256:b825c02c7214109a87d70643fa83985c1d9101d112fb9f593e19991119ae8ecd",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T17:31:53Z"
+      },
+      {
+        "id": 625674449,
+        "name": "tandemlog-2026.10.2-linux-x64.flatpak",
+        "size": 9007280,
+        "digest": "sha256:fd827855a5cd639dedbd69d52256c6d9c472d35b231709f9fa34cea63cc6de7f",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T17:31:51Z"
+      },
+      {
+        "id": 625674451,
+        "name": "tandemlog-2026.10.2-windows-x64-setup.exe",
+        "size": 12206276,
+        "digest": "sha256:00004336d6bcaaebbd7bbb22bf033ef98cea610c312f2d21d463ee1a378f33eb",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T17:31:51Z"
+      }
+    ]
+  },
+  {
+    "id": 408086549,
+    "tag_name": "v2026.10.2-rc.7",
+    "target_commitish": "74afbe294065f462b742b4570d4095e690e54b04",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-09T14:37:42Z",
+    "published_at": "2026-10-09T16:05:07Z",
+    "body": "Experimental 2026.10.2-rc.7 preview.\n\n- Reduced space below checklist counts and tightened the arrow/count gap.\n\n![Before: checklist counts have extra space below and a wide arrow gap. After: the footer is compact and the arrow/count gap is tighter.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-spacing-before-after.png)\n\n- Checklist presses now show a compact, centered rounded highlight.\n\n![Before: a circular highlight sits below the checklist label. After: a short rounded rectangular highlight is centered around the arrow and count.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-ink-before-after.png)\n",
+    "assets": [
+      {
+        "id": 625458452,
+        "name": "tandemlog-2026.10.2-rc.7-android.apk",
+        "size": 65313253,
+        "digest": "sha256:bb8f0c8abedeee8846bc5a800fb1dfdcc69b7f12e13b5c5137217e3ffdf3478d",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T16:05:06Z"
+      },
+      {
+        "id": 625458467,
+        "name": "tandemlog-2026.10.2-rc.7-linux-x64.flatpak",
+        "size": 9016416,
+        "digest": "sha256:6e482505ffedd604d8f9b98bfdf2bc2e2a4a0971b67fba9beae83b7eb75a7734",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T16:05:05Z"
+      },
+      {
+        "id": 625458456,
+        "name": "tandemlog-2026.10.2-rc.7-windows-x64-setup.exe",
+        "size": 12205429,
+        "digest": "sha256:72ce363cfc2c1181622f27e7a3473ade7c1e9a7f07c3af3d7fdc2f40fece8b33",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T16:05:05Z"
+      }
+    ]
+  },
+  {
+    "id": 407616987,
+    "tag_name": "v2026.10.2-rc.6",
+    "target_commitish": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-09T05:42:22Z",
+    "published_at": "2026-10-09T06:56:07Z",
+    "body": "Experimental 2026.10.2-rc.6 preview.\n\n- Fixed checklist reordering after holding the drag handle.\n- Aligned checklist controls and tightened disclosure spacing; narrow task rows now use the available content width.\n\n![Before: checklist controls use different icons and trailing columns. After: controls align and disclosure spacing is tighter.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-controls-before-after.png)\n\n- The checklist toolbar button now directly expands or collapses shown checklists.\n\n![Before: expand and collapse require choosing a menu action. After: one button performs the next action directly.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-toggle-before-after.png)\n\n- Add checklist disappears from a task menu once that task has items, including incoming items while the menu is open.\n\n![Before: a task with checklist items still offers Add checklist. After: that redundant action is hidden.](https://raw.githubusercontent.com/reddraggone9/tandemlog/8bd3ef1daedb821406f453c3af9ab7a3fdbc05ff/evidence/rc6-editorial/checklist-menu-before-after.png)\n",
+    "assets": [
+      {
+        "id": 624169713,
+        "name": "tandemlog-2026.10.2-rc.6-android.apk",
+        "size": 65313253,
+        "digest": "sha256:4134fcc571d4f90c2d980b0f95d8087d586638c257216ae6ddad252f0448a30a",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T06:56:06Z"
+      },
+      {
+        "id": 624169717,
+        "name": "tandemlog-2026.10.2-rc.6-linux-x64.flatpak",
+        "size": 9003640,
+        "digest": "sha256:bdb63d15e397c4a412b3de0bfed5eb7438d332f490d1f1463c52ac4165035797",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T06:56:05Z"
+      },
+      {
+        "id": 624169716,
+        "name": "tandemlog-2026.10.2-rc.6-windows-x64-setup.exe",
+        "size": 12200608,
+        "digest": "sha256:831c0e17292af2cd89a97e17c7ad70736f2a2e32287cce10094b023b8a1a673a",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T06:56:05Z"
+      }
+    ]
+  },
+  {
+    "id": 407443598,
+    "tag_name": "v2026.10.2-rc.5",
+    "target_commitish": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-09T00:22:26Z",
+    "published_at": "2026-10-09T02:47:15Z",
+    "body": "Experimental 2026.10.2-rc.5 preview.\n\n- Checklists now expand beneath tasks for editing, checking off and reordering items, with menus to add checklists or delete tasks.\n\n![Before: a six-item checklist is inside the parent editor. After: the same checklist appears beneath the task.](https://raw.githubusercontent.com/reddraggone9/tandemlog/c11441353a919f21cc54234685ed3a52a509ab2c/evidence/rc5-editorial/inline-checklist-before-after.png)\n\n- Fixed the header showing progress while awaiting unfinished-checklist confirmation.\n",
+    "assets": [
+      {
+        "id": 623695460,
+        "name": "tandemlog-2026.10.2-rc.5-android.apk",
+        "size": 65296877,
+        "digest": "sha256:a6d7912986fe8102089b4a83788d668249c9b977bde1067b68e6ed147503f9e3",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T02:47:14Z"
+      },
+      {
+        "id": 623695463,
+        "name": "tandemlog-2026.10.2-rc.5-linux-x64.flatpak",
+        "size": 9011304,
+        "digest": "sha256:cd8ee0309d218d5fd9e9dfb3a4b5b171299950ae842c2fdf7e46cb1d629921c4",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T02:47:12Z"
+      },
+      {
+        "id": 623695457,
+        "name": "tandemlog-2026.10.2-rc.5-windows-x64-setup.exe",
+        "size": 12201392,
+        "digest": "sha256:7d2992c863f89719f737ac4f6fbd55611a56439ea6945c7d5c264a57a755bdad",
+        "state": "uploaded",
+        "updated_at": "2026-10-09T02:47:12Z"
+      }
+    ]
+  },
+  {
+    "id": 407291600,
+    "tag_name": "v2026.10.2-rc.4",
+    "target_commitish": "44344407200b61d38d7b33f22c0ace715376fd6f",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-08T19:52:22Z",
+    "published_at": "2026-10-08T21:50:27Z",
+    "body": "Experimental 2026.10.2-rc.4 preview.\n\n- Task titles and notes combine offline edits from different devices. For existing tasks, choose **Set up shared text editing** in Settings.\n- Add reorderable checklists with item notes. Repeating tasks start with a fresh unchecked checklist.\n- Editors, bulk actions and filters share tag suggestions and selected-tag chips.\n\n![Before: Home Office is plain text in Tags. After: it is a selected chip above Find or add tags.](https://raw.githubusercontent.com/reddraggone9/tandemlog/89cec5a13900291df9f1cb841c5351277f38f4ff/evidence/rc4-editorial/tag-control-before-after.png)\n\n- New tasks keep their place at the top of manual order after leaving Inbox.\n- Sort-date bounds and tag filters have clearer spacing.\n- Bulk Apply controls announce the field they affect to screen readers.\n- Compact bulk editors show save failures beside the action buttons.\n",
+    "assets": [
+      {
+        "id": 623102405,
+        "name": "tandemlog-2026.10.2-rc.4-android.apk",
+        "size": 65263981,
+        "digest": "sha256:cd264a174418be34844da8fbd4bf6dd9b26394984c86b14e4dd77bad4ab6f722",
+        "state": "uploaded",
+        "updated_at": "2026-10-08T21:50:26Z"
+      },
+      {
+        "id": 623102406,
+        "name": "tandemlog-2026.10.2-rc.4-linux-x64.flatpak",
+        "size": 8994688,
+        "digest": "sha256:3233f69caacf9495a9af4875733ffbabc7c714b7561aa7c92fa09dfa6599b609",
+        "state": "uploaded",
+        "updated_at": "2026-10-08T21:50:25Z"
+      },
+      {
+        "id": 623102407,
+        "name": "tandemlog-2026.10.2-rc.4-windows-x64-setup.exe",
+        "size": 12187692,
+        "digest": "sha256:9901bc644e17755535683318fad32fb9fa3b68d511f332b8b698d51ebea13dbe",
+        "state": "uploaded",
+        "updated_at": "2026-10-08T21:50:25Z"
+      }
+    ]
+  },
+  {
+    "id": 403281742,
+    "tag_name": "v2026.10.2-rc.3",
+    "target_commitish": "5ac35da50acca69ab196a54312efc8ccef1452da",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-04T23:01:23Z",
+    "published_at": "2026-10-05T00:51:51Z",
+    "body": "Experimental 2026.10.2-rc.3 preview.\n\n- Date and Time fields fit side by side in narrower editors, including bulk edits and larger text.\n\n![Before: Start and Due dates and times stack vertically. After: each date and time shares a row at the same width and text size.](https://raw.githubusercontent.com/reddraggone9/tandemlog/648d159014c0adb5b4927d44caad70b47c5ef25f/evidence/date-time-width-reconciliation/proposed/normal-width.png)\n",
+    "assets": [
+      {
+        "id": 611061597,
+        "name": "tandemlog-2026.10.2-rc.3-android.apk",
+        "size": 60002124,
+        "digest": "sha256:625bee0e2fd1b51cd131f10004f696ebeff711e7b61fb0168851e2cda0d1e8aa",
+        "state": "uploaded",
+        "updated_at": "2026-10-05T00:46:38Z"
+      },
+      {
+        "id": 611061602,
+        "name": "tandemlog-2026.10.2-rc.3-linux-x64.flatpak",
+        "size": 8337904,
+        "digest": "sha256:7e948c40bf74bf37e88f2e5395f9cf0fd582ba8d749ae889306780ad326335c6",
+        "state": "uploaded",
+        "updated_at": "2026-10-05T00:46:37Z"
+      },
+      {
+        "id": 611061596,
+        "name": "tandemlog-2026.10.2-rc.3-windows-x64-setup.exe",
+        "size": 11598744,
+        "digest": "sha256:da80c6adb0495bbcf2648a8be84522a0ed366cf6f258a462e4a69d7368b63a36",
+        "state": "uploaded",
+        "updated_at": "2026-10-05T00:46:37Z"
+      }
+    ]
+  },
+  {
+    "id": 403213422,
+    "tag_name": "v2026.10.2-rc.2",
+    "target_commitish": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-04T18:40:42Z",
+    "published_at": "2026-10-04T21:18:42Z",
+    "body": "Experimental 2026.10.2-rc.2 preview.\n\n- Start and Due show Time inputs directly, retaining the existing clear controls.\n- Tags and Assignee follow scheduling fields in single and bulk editors.\n",
+    "assets": [
+      {
+        "id": 610696537,
+        "name": "tandemlog-2026.10.2-rc.2-android.apk",
+        "size": 60002120,
+        "digest": "sha256:3e730b5416b0c245a585c40f41fc44e3b83bcfe403241302fc5cf288801e3ea3",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T21:18:42Z"
+      },
+      {
+        "id": 610696540,
+        "name": "tandemlog-2026.10.2-rc.2-linux-x64.flatpak",
+        "size": 8337856,
+        "digest": "sha256:8e1e1f47bcdcdbd3994c8268de71a87ea975ff625081697420121c86557f5ef2",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T21:18:41Z"
+      },
+      {
+        "id": 610696544,
+        "name": "tandemlog-2026.10.2-rc.2-windows-x64-setup.exe",
+        "size": 11598034,
+        "digest": "sha256:d29c0e817115e335725f481595c047f59ad54cf621af0cbe526bd38bf98c7334",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T21:18:41Z"
+      }
+    ]
+  },
+  {
+    "id": 403122064,
+    "tag_name": "v2026.10.2-rc.1",
+    "target_commitish": "147a876d799e5832527177fa76c5fdf77c1827a6",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-04T14:06:40Z",
+    "published_at": "2026-10-04T17:15:17Z",
+    "body": "Experimental 2026.10.2-rc.1 preview.\n\n- Settings shows the current release version with a copy action.\n- Start and Due use compact date/time rows with optional \u201cAdd time\u201d controls.\n",
+    "assets": [
+      {
+        "id": 610252358,
+        "name": "tandemlog-2026.10.2-rc.1-android.apk",
+        "size": 60002120,
+        "digest": "sha256:c4310d05da3d803782f94c0c99ca08b5e28d16af6a270fb103b70aa13996c14c",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T17:14:28Z"
+      },
+      {
+        "id": 610252355,
+        "name": "tandemlog-2026.10.2-rc.1-linux-x64.flatpak",
+        "size": 8337656,
+        "digest": "sha256:bd403e56b730f1a6b9df22b37b25a43053ce4959ebd60019cd2d50fbd1f031e8",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T17:14:26Z"
+      },
+      {
+        "id": 610252354,
+        "name": "tandemlog-2026.10.2-rc.1-windows-x64-setup.exe",
+        "size": 11599053,
+        "digest": "sha256:c081d0ecf7462c234301e1f31ebeb53a0c3ee3270cc1761064d95b1e9b069853",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T17:14:26Z"
+      }
+    ]
+  },
+  {
+    "id": 403030558,
+    "tag_name": "v2026.10.1",
+    "target_commitish": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2026-10-04T12:35:24Z",
+    "published_at": "2026-10-04T13:19:15Z",
+    "body": "- Tasks with specific times sort before date-only tasks on the same day.\n- Editor titles grow from one visual line to two; line breaks become spaces.\n- Notes grow with their content before scrolling.\n",
+    "assets": [
+      {
+        "id": 609886738,
+        "name": "tandemlog-2026.10.1-android.apk",
+        "size": 59936576,
+        "digest": "sha256:bd2f7097fde440f8b3850f75a1c99acdc734602ac9434e8f8b086d2d9823f908",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T13:19:14Z"
+      },
+      {
+        "id": 609886737,
+        "name": "tandemlog-2026.10.1-linux-x64.flatpak",
+        "size": 8336768,
+        "digest": "sha256:0a6d6fcfcad1e6ca6a5cbd37981e8e3b2625aae1596db8127d37fd9067b69377",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T13:19:12Z"
+      },
+      {
+        "id": 609886736,
+        "name": "tandemlog-2026.10.1-windows-x64-setup.exe",
+        "size": 11596320,
+        "digest": "sha256:3e66fe9f5a5b2970e54fdc6979bbf1827a60d39d90c91745bbeae118100a37ad",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T13:19:13Z"
+      }
+    ]
+  },
+  {
+    "id": 402895497,
+    "tag_name": "v2026.10.1-rc.1",
+    "target_commitish": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-04T05:28:05Z",
+    "published_at": "2026-10-04T07:18:53Z",
+    "body": "Experimental 2026.10.1-rc.1 preview.\n\n- Tasks with specific times sort before date-only tasks on the same day. Reordering respects that distinction.\n- Editor titles start at one visual line and grow to two; pasted line breaks become spaces. Existing multiline titles remain readable and unchanged by notes-only edits.\n- Notes expand with their content, then scroll within the available space. The caret stays visible when the editor resizes or text size changes; Save and Cancel remain reachable.\n",
+    "assets": [
+      {
+        "id": 609348551,
+        "name": "tandemlog-2026.10.1-rc.1-android.apk",
+        "size": 59936584,
+        "digest": "sha256:b7d35aec8641e77367629935d7d730b73574e54f384d9eef8bb96318c42ef658",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T07:18:52Z"
+      },
+      {
+        "id": 609348552,
+        "name": "tandemlog-2026.10.1-rc.1-linux-x64.flatpak",
+        "size": 8335848,
+        "digest": "sha256:849af067b5af32fb57cc7d8c1ff7960d866966bfa00f7486a7dbc868062b78d7",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T07:18:50Z"
+      },
+      {
+        "id": 609348550,
+        "name": "tandemlog-2026.10.1-rc.1-windows-x64-setup.exe",
+        "size": 11596349,
+        "digest": "sha256:e34f52a83bf15b7051e99ef2ded94cbe35afae54fb482d19cd80a609aeded15a",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T07:18:50Z"
+      }
+    ]
+  },
+  {
+    "id": 402839527,
+    "tag_name": "v2026.10.0",
+    "target_commitish": "aacabf942122283731b5ea448a3800fe73ab63a2",
+    "draft": false,
+    "prerelease": false,
+    "created_at": "2026-10-04T03:35:03Z",
+    "published_at": "2026-10-04T04:27:07Z",
+    "body": "First stable Tandemlog release.\n\nCapture and organize shared tasks with dates and times, tags, recurring tasks, completion history and Undo. Work offline and synchronize through a shared folder. Android, Windows and Linux installers are available.\n\nFrom this release onward, existing v3 task histories remain supported by future versions.\n",
+    "assets": [
+      {
+        "id": 609115510,
+        "name": "tandemlog-2026.10.0-android.apk",
+        "size": 59920192,
+        "digest": "sha256:86b9edadc37915b5e1deafb262b608e5a4bb8b21345d1a5ff428e2aa127fe3b4",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T04:27:06Z"
+      },
+      {
+        "id": 609115508,
+        "name": "tandemlog-2026.10.0-linux-x64.flatpak",
+        "size": 8331480,
+        "digest": "sha256:e1275cf8ec026470b958c744880792f27a5453b4d69cab9747badfbac920bf9f",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T04:26:03Z"
+      },
+      {
+        "id": 609115509,
+        "name": "tandemlog-2026.10.0-windows-x64-setup.exe",
+        "size": 11592934,
+        "digest": "sha256:86af5e6d470df06b0a77bc880586b196bb653d558493be1937a69c2338b334ce",
+        "state": "uploaded",
+        "updated_at": "2026-10-04T04:27:05Z"
+      }
+    ]
+  },
+  {
+    "id": 402738893,
+    "tag_name": "v2026.10.0-rc.1",
+    "target_commitish": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-03T20:18:14Z",
+    "published_at": "2026-10-03T23:52:19Z",
+    "body": "Experimental 2026.10.0-rc.1 task preview.\n\n- Raw captures stay in Inbox until a saved edit; Undo restores the classification.\n- Desktop setup uses a clearly named shared-data folder. Search/Add and task titles/metadata fit the compact interface; existing folder selections stay unchanged.\n- A profile lock and installation writer guard protect local writing. Android imports use notifications and retained byte checkpoints, with a conservative fallback; Linux file creation gains directory durability barriers.\n- Settings adds **Check data integrity**, with a full v3 record-chain check and copyable diagnostics. Ambiguous Android canonical filenames are refused.\n\n**Test-data format break:** existing v1/v2 canonical folders are preserved but cannot open in this build. Back them up and use a separate v3 test folder, or coordinate fresh test contents across all participating apps/devices. There is no automatic conversion, reset or deletion. Markdown remains authoritative until a separately agreed cutover.\n",
+    "assets": [
+      {
+        "id": 608748885,
+        "name": "tandemlog-2026.10.0-rc.1-android.apk",
+        "size": 59920200,
+        "digest": "sha256:ab841c340193dbd42a84c3266e440ffa16ce2ae54cb04c271b034e9a7adf9036",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T23:52:19Z"
+      },
+      {
+        "id": 608748887,
+        "name": "tandemlog-2026.10.0-rc.1-linux-x64.flatpak",
+        "size": 8330216,
+        "digest": "sha256:fd9d331149bf1f3801230ed0d2c987fd6da01c9707908d10bd45028b0487db4b",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T23:52:17Z"
+      },
+      {
+        "id": 608748886,
+        "name": "tandemlog-2026.10.0-rc.1-windows-x64-setup.exe",
+        "size": 11593609,
+        "digest": "sha256:7a33f85c5e341dd23027dc772eacd09e6313007611342886486d96e676b7e3d7",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T23:52:18Z"
+      }
+    ]
+  },
+  {
+    "id": 402295941,
+    "tag_name": "v0.1.0-rc.9",
+    "target_commitish": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-03T01:52:33Z",
+    "published_at": "2026-10-03T03:04:45Z",
+    "body": "Experimental RC9 task preview.\n\n- The task header combines the title/count and everyday controls where they fit. Narrow screens use compact Filter and account controls.\n- Selection actions replace task entry rather than moving the list. Capture drafts are kept, and reducing a narrow selection to one task keeps selection active.\n- Keyboard task navigation respects sticky headings, and long assignee names fit the editor.\n\nUpgrade every device sharing a data folder before using recurring-completion Undo introduced in RC8. Canonical history, app identity and Android signing are unchanged.\n",
+    "assets": [
+      {
+        "id": 607023873,
+        "name": "tandemlog-0.1.0-rc.9-android.apk",
+        "size": 59674320,
+        "digest": "sha256:b83c744c252ca98485d3eded2d5503bfc4d7a9ec075e297772ee3cb3b84038f2",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T03:04:44Z"
+      },
+      {
+        "id": 607023874,
+        "name": "tandemlog-0.1.0-rc.9-linux-x64.flatpak",
+        "size": 8297048,
+        "digest": "sha256:0783b8f796f68d0fa85acea755c912467d0d52dd53a314ebc7ae06ff0c2d28e8",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T03:04:43Z"
+      },
+      {
+        "id": 607023872,
+        "name": "tandemlog-0.1.0-rc.9-windows-x64-setup.exe",
+        "size": 11562430,
+        "digest": "sha256:6efde2dd511c0664a4e5cad40c49de79470e172e0c8904320a2f70d4b3867e21",
+        "state": "uploaded",
+        "updated_at": "2026-10-03T03:04:43Z"
+      }
+    ]
+  },
+  {
+    "id": 402059579,
+    "tag_name": "v0.1.0-rc.8",
+    "target_commitish": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-02T17:30:48Z",
+    "published_at": "2026-10-02T18:29:42Z",
+    "body": "Experimental RC8 task preview.\n\n- Completed tasks use ordinary checked boxes. Reopening a repeating task restores its arrow outline.\n- True Undo of recurring completion retracts an untouched next occurrence. Independent successor changes or dependencies are preserved and explained; checkbox Reopen still retains the next occurrence.\n- Failed reopening no longer shows a success notice, and another concurrent completion is explained when it keeps the task completed.\n- Keyboard completion/reopening keeps checkbox focus when the task remains visible in Search; pending writes reject overlapping commands.\n\n**Upgrade every device sharing a data folder before using the new recurring-completion Undo.** Older versions reject its new event; canonical history is retained. App identity and Android signing are unchanged. Supported older local caches rebuild automatically, and historical Undo records keep their previous meaning.\n",
+    "assets": [
+      {
+        "id": 606222378,
+        "name": "tandemlog-0.1.0-rc.8-android.apk",
+        "size": 59592404,
+        "digest": "sha256:47d748968401533371219a0b0fa5dfb964c87a584296ed2f720497ad55de7f15",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T18:29:42Z"
+      },
+      {
+        "id": 606222380,
+        "name": "tandemlog-0.1.0-rc.8-linux-x64.flatpak",
+        "size": 8296544,
+        "digest": "sha256:93158432629567221f7245e496000fddfa23f9e947f509eff8938bf10f582bc8",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T18:29:40Z"
+      },
+      {
+        "id": 606222385,
+        "name": "tandemlog-0.1.0-rc.8-windows-x64-setup.exe",
+        "size": 11558877,
+        "digest": "sha256:dbb376002c121274808670b6617f0c800f97a935299cb3b22292b86f10707e11",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T18:29:40Z"
+      }
+    ]
+  },
+  {
+    "id": 401876291,
+    "tag_name": "v0.1.0-rc.7",
+    "target_commitish": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-02T12:50:36Z",
+    "published_at": "2026-10-02T14:13:00Z",
+    "body": "Experimental RC7 task preview.\n\n- Date and Someday headings stay visible while scrolling, with the next group pushing the heading aside.\n- Repeating tasks have clearer checkbox arrows while retaining the normal checkbox size and touch target.\n- Future tasks show when they become available; the hint updates as time passes and disappears once they can start.\n- Saves and partial batches now verify their exact records after folder reconciliation, preventing a false success if an incoming replacement drops newly appended records. An affected edit retains its draft for retry.\n\nCompatibility: updates RC6 with the same app identity, Android signer, protocol2 and cache8. No shared-history conversion is required.\n",
+    "assets": [
+      {
+        "id": 605752708,
+        "name": "tandemlog-0.1.0-rc.7-android.apk",
+        "size": 59576020,
+        "digest": "sha256:1a7ad7cb8fd8cd39a0af8b8d98aab5b4493176061aa4ad850313c3e4e4abaf80",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T14:12:59Z"
+      },
+      {
+        "id": 605752707,
+        "name": "tandemlog-0.1.0-rc.7-linux-x64.flatpak",
+        "size": 8293192,
+        "digest": "sha256:01ef0f4a1458c4337bc592ad764266c23be59cc60897e05c45dd3f528a33cdb1",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T14:12:52Z"
+      },
+      {
+        "id": 605752716,
+        "name": "tandemlog-0.1.0-rc.7-windows-x64-setup.exe",
+        "size": 11557002,
+        "digest": "sha256:ddab8a8a8ba58cdae39ed31b10472bc0e0ced833623f7bf2b010a3945ca9b231",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T14:12:52Z"
+      }
+    ]
+  },
+  {
+    "id": 401577213,
+    "tag_name": "v0.1.0-rc.6",
+    "target_commitish": "5f615f536ad89eef835c828b77cdd200c08d4541",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-02T04:54:39Z",
+    "published_at": "2026-10-02T06:07:28Z",
+    "body": "Experimental RC6 task preview. Public prerelease, not Latest; stable 0.1.0 remains deferred.\n\nNew:\n- Repeating tasks use the approved repeat-checkbox outline, at the same 18px square size as an ordinary checkbox. Curled tails and filled tips retain their intentional vertical bleed. The redundant repeat marker is removed; full recurrence wording remains in the editor and accessible labels.\n- The padded touch target, keyboard focus, hover feedback, checked history/reopening and unavailable-completion explanation remain native. Completion, selection and drag remain independent. No recurrence, canonical data or cache behavior changes in this release.\n\nCompatibility: same application ID, owner Android signer and protocol v2. Cache format8 automatically rebuilds known older disposable caches with backups and preserved identity/integrity guards. Upgrade EVERY participating app before using Undo: older readers explicitly reject the additive `task.operationUndone` type. Do not delete shared logs to accommodate an old reader. RC2 protocol-v1 folders remain unsupported and preserved.\n\nLinux: install the unsigned `tandemlog-linux-x64.flatpak` with `flatpak install --user ./tandemlog-linux-x64.flatpak`; run `flatpak run com.reddraggone9.tandemlog`. GNOME50 runtime resolves from Flathub, so this is not an offline-only bundle. Native default profile/data location is retained. Custom sync folders may require portal selection or a scoped folder grant; do not relocate a permanent share or grant whole-home access. See repository packaging/README.md.\n\nWindows: run `tandemlog-windows-x64-unsigned-setup.exe`. Installs per-user without elevation; unsigned warnings are possible. Setup checks Microsoft C++ x64 runtime against the compiler version. If absent/old, setup stops with Microsoft's official download link; runtime installation/terms are not automated. Uninstall preserves profiles/shared data. Hosted native lifecycle smoke complements Linux visual QA, not full manual Windows acceptance.\n\nAndroid: universal non-debuggable APK signed by the retained owner identity, with increasing build30 and same package. Picker controls retain query/keyboard focus while opening or collapsing tag results. Phone editor fields remain scrollable above the keyboard, including enlarged text; focusing mixed bulk fields alone does not clear them. The exact code30 APK passed native Android11/API30 acceptance in both themes at100/200% text: padded targets, guarded completion explanation, completion/reopen/Undo, selection/drag independence and restart. The193 baseline entities remained identical, with one documented successor added by the test. Published from that exact accepted candidate without rebuilding. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.\n\nBulk writes are independently durable per task. A failed operation can partially apply: the app refreshes/reconciles before retry and reports remaining tasks; it is not one all-or-nothing transaction. Dirty drafts are protected during this session, not persisted through process termination. Deletion recovery is bounded session Undo, not a persistent history browser. No notifications, private spaces or future modules are included. Events identify the writer device, not the acting person; device attribution is advisory, not authentication.\n\nMarkdown remains authoritative throughout prereleases. App tests use copies; stable cutover requires a coordinated fresh import and separate acceptance. No migration tooling or source formatting metadata ships in the app. Preserve full canonical manifests and every writer log; never delete history to fix cache/signature/access errors. Unknown/invalid history fails explicitly.\n\nSource commit: `5f615f536ad89eef835c828b77cdd200c08d4541`\n",
+    "assets": [
+      {
+        "id": 604945180,
+        "name": "android-release-metadata.json",
+        "size": 291,
+        "digest": "sha256:4a5a64f2a8c77e6f8518cfe28e1a117a458219c24f153d34b114baafce260385",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945177,
+        "name": "android-SHA256SUMS.txt",
+        "size": 88,
+        "digest": "sha256:255a360d0d6ecf7c58d89d02d80b927fcbd074e77f13865b7d72f1d2d8645f38",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945178,
+        "name": "android-signature.txt",
+        "size": 942,
+        "digest": "sha256:ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945179,
+        "name": "linux-install-smoke.json",
+        "size": 2022,
+        "digest": "sha256:83a8342e7c8c648481a3382327bb6308a3db091021e9416c1bdaae39549bf041",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945182,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 94,
+        "digest": "sha256:c409c6749abc1bdcee16e4bf2a85d4a3c827271e6d068387ada4c4ddaf48b1c2",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945192,
+        "name": "linux-startup.json",
+        "size": 6141,
+        "digest": "sha256:4c7dbe82412e94c4fcaae446ea900b8b8243edd3cae230288ac9acc0287bde32",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      },
+      {
+        "id": 604945199,
+        "name": "tandemlog-android.apk",
+        "size": 59395796,
+        "digest": "sha256:1cb506157aaf295edc5a60b4e291dee39111b446f282d1a8d52617215bc383b5",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:28Z"
+      },
+      {
+        "id": 604945197,
+        "name": "tandemlog-linux-x64.flatpak",
+        "size": 8282624,
+        "digest": "sha256:e548db2e23a7cb7a6e1d5eed94d2def0fc33cf182ada009e452268097a9bb053",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:25Z"
+      },
+      {
+        "id": 604945203,
+        "name": "tandemlog-windows-x64-unsigned-setup.exe",
+        "size": 11544839,
+        "digest": "sha256:c2be01d8566f48a6fcdde1d2656e8d984e1e2bff1e09bfb07f95a6990121d6c0",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:25Z"
+      },
+      {
+        "id": 604945210,
+        "name": "windows-install-smoke.json",
+        "size": 1599,
+        "digest": "sha256:fe0d7c938bbf3f6aee52be1be2004769b470916baf24abc90b1bfea86412b248",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:25Z"
+      },
+      {
+        "id": 604945202,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 108,
+        "digest": "sha256:81a64d7de6604bfb4bf1e8ee57bc0b1a666d1066513257317e3e8a967407db98",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T06:07:24Z"
+      }
+    ]
+  },
+  {
+    "id": 401533006,
+    "tag_name": "v0.1.0-rc.5",
+    "target_commitish": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-02T03:10:23Z",
+    "published_at": "2026-10-02T04:06:45Z",
+    "body": "Experimental RC5 task preview. Public prerelease, not Latest; stable 0.1.0 remains deferred.\n\nNew:\n- Selection actions stay above the scrolling task list whenever the side pane cannot fit, on desktop and phone. Count, Clear Selection and Edit remain reachable without covering rows or drag targets; larger text wraps the strip.\n- Repeating rows use a compact marker rather than verbose rule wording; full rules remain in the editor and accessible labels. The proposed custom checkbox is not adopted pending separate approval.\n- Recurring completion is unavailable when the computed successor keeps the same start/due/occurrence dates; tap, hover or focus explains why. Eligibility updates at local/pinned-zone midnight. Reopen/Undo and advancing recurrences stay available.\n- Dragging keeps single/bulk editors and dirty drafts mounted; Shift-range selection follows the reordered anchor. Bulk capture/edit/tag/reorder/delete/Undo now use one validated flushed append/cache reconciliation, with honest partial-failure recovery. Capture clears once after acknowledgement.\n- Tag suggestions prefer below when usable room exists, flipping for viewport/keyboard limits rather than the dialog footer. Their accessible labels/actions sit outside the clipped query viewport; initial opening stays open as the keyboard/dialog resizes. Enlarged-text users can scroll later options fully into view.\n- Folder errors explain missing files, denied access or unavailable reads/writes in ordinary language, preserving confirmed progress, drafts and retry/integrity checks. Missing files are not assumed to be revoked grants.\n- Deliberate Add accepts the visible composing draft through normal IME finalization; hardware Enter still leaves active composition to candidate selection. Failed captures retain unconfirmed text for retry, and duplicate submissions do not create extra tasks.\n- Persistent toolbar Undo for edits, relative moves, completion/reopening and deletion. Repeated Undo steps through up to 50 confirmed session actions. Restart/workspace changes clear this local history; there is no redo. Save/move actions are quiet. Completion/deletion briefly offer the same action; snackbar expiry does not remove toolbar Undo. Ctrl/Cmd+Z acts on tasks outside editable text, leaving native input Undo intact.\n- Undo retracts only the named operation. Independent later synced writes, same-label tag additions and recurring successor work remain. Another device's completion/deletion can keep a task completed/deleted. Partial durable recovery reports confirmed progress and keeps the remaining action retryable; no history rewrite.\n- Compact bulk editor heading and explicit Clear Selection with existing dirty-draft guards. No redundant bulk selected count/explanation.\n- Less toolbar chrome: checkmark retained, no permanent app label. The full active-user name appears when actual width/text scale allow it; otherwise an accessible initial avatar opens the same identity/Settings menu.\n\nCompatibility: same application ID, owner Android signer and protocol v2. Cache format8 automatically rebuilds known older disposable caches with backups and preserved identity/integrity guards. Upgrade EVERY participating app before using Undo: older readers explicitly reject the additive `task.operationUndone` type. Do not delete shared logs to accommodate an old reader. RC2 protocol-v1 folders remain unsupported and preserved.\n\nLinux: install the unsigned `tandemlog-linux-x64.flatpak` with `flatpak install --user ./tandemlog-linux-x64.flatpak`; run `flatpak run com.reddraggone9.tandemlog`. GNOME50 runtime resolves from Flathub, so this is not an offline-only bundle. Native default profile/data location is retained. Custom sync folders may require portal selection or a scoped folder grant; do not relocate a permanent share or grant whole-home access. See repository packaging/README.md.\n\nWindows: run `tandemlog-windows-x64-unsigned-setup.exe`. Installs per-user without elevation; unsigned warnings are possible. Setup checks Microsoft C++ x64 runtime against the compiler version. If absent/old, setup stops with Microsoft's official download link; runtime installation/terms are not automated. Uninstall preserves profiles/shared data. Hosted native lifecycle smoke complements Linux visual QA, not full manual Windows acceptance.\n\nAndroid: universal non-debuggable APK signed by the retained owner identity, with increasing build29 and same package. Picker controls retain query/keyboard focus while opening or collapsing tag results. Phone editor fields remain scrollable above the keyboard, including enlarged text; focusing mixed bulk fields alone does not clear them. Exact APK must pass native acceptance before publication; no rebuild after acceptance. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.\n\nBulk writes are independently durable per task. A failed operation can partially apply: the app refreshes/reconciles before retry and reports remaining tasks; it is not one all-or-nothing transaction. Dirty drafts are protected during this session, not persisted through process termination. Deletion recovery is bounded session Undo, not a persistent history browser. No notifications, private spaces or future modules are included. Events identify the writer device, not the acting person; device attribution is advisory, not authentication.\n\nMarkdown remains authoritative throughout prereleases. App tests use copies; stable cutover requires a coordinated fresh import and separate acceptance. No migration tooling or source formatting metadata ships in the app. Preserve full canonical manifests and every writer log; never delete history to fix cache/signature/access errors. Unknown/invalid history fails explicitly.\n\nSource commit: `b6bc029c4d5e30ccb791f0502173b16810811d68`\n",
+    "assets": [
+      {
+        "id": 604768288,
+        "name": "android-release-metadata.json",
+        "size": 291,
+        "digest": "sha256:59a2aa710d42e761d7807832f140c47cbffdb4c2d98781c6e0f191941fed8a7e",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768287,
+        "name": "android-SHA256SUMS.txt",
+        "size": 88,
+        "digest": "sha256:76dc95e91aad3b5f291d29d6f1e60da1fc4a540d14b64bb8c8ec21893bf107eb",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768292,
+        "name": "android-signature.txt",
+        "size": 942,
+        "digest": "sha256:ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768284,
+        "name": "linux-install-smoke.json",
+        "size": 2023,
+        "digest": "sha256:89b6a4fae9c6dd4bc21dde3011a6ed447513ce1a9e37ef5ed7a2259aa8d254f1",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:41Z"
+      },
+      {
+        "id": 604768286,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 94,
+        "digest": "sha256:3e22b63a4a34c7825bccef7d87afcc7a31d2fcd4a3f08a001a56b04223b7b49b",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768303,
+        "name": "linux-startup.json",
+        "size": 6141,
+        "digest": "sha256:36719fd53a02ec6aac9169bd7b3b05feeefee5aa75ea8342e6c1e9dc57079e0a",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768304,
+        "name": "tandemlog-android.apk",
+        "size": 59330260,
+        "digest": "sha256:16e8bd00d916054eca3afac02779fbfb16206b0dc004504771535d7dabf1414b",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:45Z"
+      },
+      {
+        "id": 604768309,
+        "name": "tandemlog-linux-x64.flatpak",
+        "size": 8277568,
+        "digest": "sha256:1418368c05242d138b83375c6515e53ff784e20a418479008219f5aa8266ad9b",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:43Z"
+      },
+      {
+        "id": 604768311,
+        "name": "tandemlog-windows-x64-unsigned-setup.exe",
+        "size": 11541369,
+        "digest": "sha256:b7459bdb00fcd7fd1b2e212a0b996b7c99c77b6bd34da184fd694ec60c80c7f4",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:43Z"
+      },
+      {
+        "id": 604768315,
+        "name": "windows-install-smoke.json",
+        "size": 1403,
+        "digest": "sha256:768e9de037f974f2b359c58d93e6fde60f7807297c9bfd75536f861717c2f866",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      },
+      {
+        "id": 604768312,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 108,
+        "digest": "sha256:2d10d7094b5cd7c53347af9dc80d42d11b6029016cc7b38dc695006fb285eb80",
+        "state": "uploaded",
+        "updated_at": "2026-10-02T04:06:42Z"
+      }
+    ]
+  },
+  {
+    "id": 401290180,
+    "tag_name": "v0.1.0-rc.4",
+    "target_commitish": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-01T18:25:59Z",
+    "published_at": "2026-10-01T19:36:19Z",
+    "body": "Experimental RC4 task preview. Public prerelease, not Latest; stable 0.1.0 remains deferred.\n\nNew:\n- Searchable multi-tag selection with removable chips and an anchored results dropdown that leaves the Filter dialog stable while searching. Tasks match any selected tag, intersecting other filters; workspace search still pauses/restores filters.\n- Direct task editing without task overflow menus, a wide side editor and protected in-session drafts. Live validation, relevance-based occurrence controls and reordered schedule fields.\n- Row-based selection, automatic wide editors and contextual count/Clear, with modifier, long-press, range and keyboard selection. Selection/target changes protect drafts through Save/Discard/Cancel. Bulk edit/delete and constrained block dragging retain edge scrolling; untouched mixed fields remain unchanged and bulk edits exclude title/notes. Confirmed deletion retains canonical tombstones and independent recurrence successors.\n- Actual Linux Flatpak and unsigned per-user Windows installer, with exact installed launch/replacement/uninstall/data-preservation/reinstall gates.\n\nCompatibility: same application ID, owner Android signer, protocol v2 and cache format7 as RC3. RC4 opens valid RC3 folders. Upgrade every participating app BEFORE using deletion or assignee edits: RC3 readers reject new event/field types explicitly. Do not remove shared logs to accommodate an older app. RC2 protocol-v1 folders remain unsupported and preserved.\n\nLinux: install the unsigned `tandemlog-linux-x64.flatpak` with `flatpak install --user ./tandemlog-linux-x64.flatpak`; run `flatpak run com.reddraggone9.tandemlog`. GNOME50 runtime resolves from Flathub, so this is not an offline-only bundle. Native default profile/data location is retained. Custom sync folders may require portal selection or a scoped folder grant; do not relocate a permanent share or grant whole-home access. See repository packaging/README.md.\n\nWindows: run `tandemlog-windows-x64-unsigned-setup.exe`. Installs per-user without elevation; unsigned warnings are possible. Setup checks Microsoft C++ x64 runtime against the compiler version. If absent/old, setup stops with Microsoft's official download link; runtime installation/terms are not automated. Uninstall preserves profiles/shared data. Hosted native lifecycle smoke complements Linux visual QA, not full manual Windows acceptance.\n\nAndroid: universal non-debuggable APK signed by the retained owner identity, with increasing build24 and same package. Picker controls retain query/keyboard focus while opening or collapsing tag results. Phone editor fields remain scrollable above the keyboard, including enlarged text; focusing mixed bulk fields alone does not clear them. Exact APK must pass native acceptance before publication; no rebuild after acceptance. API30 emulator evidence does not cover every real phone/API36/provider. Back up the complete external canonical folder before uninstall; private settings/cache/writer/grants are not synced.\n\nBulk writes are independently durable per task. A failed operation can partially apply: the app refreshes/reconciles before retry and reports remaining tasks; it is not one all-or-nothing transaction. Dirty drafts are protected during this session, not persisted through process termination. No deletion recovery UI, notifications, private spaces or future modules are included. Users are attribution, not access control.\n\nMarkdown remains authoritative throughout prereleases. App tests use copies; stable cutover requires a coordinated fresh import and separate acceptance. No migration tooling or source formatting metadata ships in the app. Preserve full canonical manifests and every writer log; never delete history to fix cache/signature/access errors. Unknown/invalid history fails explicitly.\n\nNative acceptance: the exact owner-signed Android build24 passed Android11/API30 at 540\u00d7960/density240: single/bulk keyboard access through 200% text, focus-only mixed Due preservation and explicit clearing, draft guards, retained data/restart, filters/upcoming, drag, bulk tags, delete cancellation and completion/Undo. Build23 separately passed tablet layouts, stale-update guards, block drag, confirmed deletion and themes; those unchanged-flow results remain tied to that build. Physical-phone/provider and Android hardware Ctrl/Shift coverage remain pending. Full Linux/Windows/Android CI and exact installed desktop lifecycle gates passed; no candidate rebuild was performed for publication.\n\nSource commit: `ded2eebc10eb1670658995cbc0c06b4676a5c583`\n",
+    "assets": [
+      {
+        "id": 603992035,
+        "name": "android-release-metadata.json",
+        "size": 291,
+        "digest": "sha256:0c7ef95d0f744a02c0250409664494d6dfd3fd2b8aa16df9344057b4d7589c14",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:15Z"
+      },
+      {
+        "id": 603992038,
+        "name": "android-SHA256SUMS.txt",
+        "size": 88,
+        "digest": "sha256:52c8b14098de49f8e50f30f6d10b1085f72f3ab4329c4c5bfbc2d4840aeb9f5a",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:15Z"
+      },
+      {
+        "id": 603992043,
+        "name": "android-signature.txt",
+        "size": 942,
+        "digest": "sha256:ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:15Z"
+      },
+      {
+        "id": 603992040,
+        "name": "linux-install-smoke.json",
+        "size": 2024,
+        "digest": "sha256:432c5652cf026f7611467912ac804858501e082bdfb2835a9606d602e3511c8b",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:15Z"
+      },
+      {
+        "id": 603992036,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 94,
+        "digest": "sha256:c2e9ea75e0850b70f36b5cee52697083a9d2e16510fbdff85c39e89b85f3746e",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:15Z"
+      },
+      {
+        "id": 603992068,
+        "name": "linux-startup.json",
+        "size": 6141,
+        "digest": "sha256:8491f8e861092d69d233fcafeeefcbf561f7c36bc4248ccd59b598b5f31f21f5",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:16Z"
+      },
+      {
+        "id": 603992071,
+        "name": "tandemlog-android.apk",
+        "size": 59281040,
+        "digest": "sha256:eaf16ed555acc6bef637542133d907a7ee349434657cf6c7f64a7e5cdff57bda",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:18Z"
+      },
+      {
+        "id": 603992078,
+        "name": "tandemlog-linux-x64.flatpak",
+        "size": 8259592,
+        "digest": "sha256:f9c4f883b596498a650d35be892e14e29a97038d19622b6d37ff856dae487ec9",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:17Z"
+      },
+      {
+        "id": 603992081,
+        "name": "tandemlog-windows-x64-unsigned-setup.exe",
+        "size": 11524972,
+        "digest": "sha256:b7fab39b4eb98565f31d42f13706c6c2b1eb9ddd3687f9bbe9dd19122f37f875",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:17Z"
+      },
+      {
+        "id": 603992092,
+        "name": "windows-install-smoke.json",
+        "size": 1403,
+        "digest": "sha256:e6ad2c9b51870abbdb59094a3b41ba40b5d16c5be376d8546739555b76c11902",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:16Z"
+      },
+      {
+        "id": 603992083,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 108,
+        "digest": "sha256:61c3b85c60aaec6e8fb685565f5a9eed4a233691af4fbcdfe86afc7e7c496416",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T19:36:16Z"
+      }
+    ]
+  },
+  {
+    "id": 400637752,
+    "tag_name": "v0.1.0-rc.3",
+    "target_commitish": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-10-01T03:17:20Z",
+    "published_at": "2026-10-01T03:57:12Z",
+    "body": "Experimental task-parity preview. This is a public prerelease, not Latest or a stable release.\n\n**Breaking prerelease boundary:** the application identifier is now `com.reddraggone9.tandemlog`, and protocol v2 requires a new data folder. Android installs separately from rc2; Windows uses a new local profile. Keep existing Markdown and complete canonical folders. Use a fresh test-only protocol-v2 workspace; do not mix old protocol logs or delete an old folder to resolve an error. Stable compatibility promises begin at 0.1.0; no in-place prerelease conversion is provided.\n\nNew in rc3:\n\n- Workspace-wide title/description search includes other assignees, future-start tasks and completed history. Search temporarily pauses filters; clearing it restores their choices. Completed matches appear separately below open matches.\n\n- Separate start, scheduled and due dates, each with optional time. Choose Local or a shared pinned IANA zone (including UTC) for the task schedule. Omitted times retain date-only precision. Invalid start-after-due values fail without discarding the editor draft.\n- Scheduled-first date groups and start-time availability update while the app stays open. Optional sort-date bounds move the displayed day without changing deadlines and preserve precise time within that day. Native time/zone signals plus a foreground fallback recompute the view.\n- Tags with a searchable bounded picker and a consolidated filter menu with visible nondefault/reset state, constrained drag with edge scrolling and accessible move-up/down ordering within equal effective date/time keys, and the 37 observed Obsidian Tasks recurrence expressions. Completion creates one successor atomically. The editor labels the scheduled override \u201cThis occurrence\u201d; list rows show that override or Due, never both. The override clears on repeat without shifting the base due cadence; the successor precedes completed history. Reopening or Undo preserves the next occurrence and its work; recompleting history does not create another successor.\n- Show upcoming is off by default and makes future-start tasks editable. A scheduled date without recurrence warns without clearing the value. Known obsolete local caches rebuild from validated logs while preserving writer identity and a private backup.\n- Spaced responsive onboarding/settings actions, compact task headers with top-bar identity/settings, and immediate caret visibility after Shift+Enter. Large-text editor controls wrap; the everyday task list stays compact. Wide rows place metadata beside titles; narrow layouts retain secondary metadata, with a separate description preview only when present. Day-group rows show local times and roles without zone labels; original calendar dates and pinned zones remain in the editor.\n- The original wall-clock/causal event ordering is restored: max(current nanoseconds, highest seen clock + 1), encoded as an exact decimal string. Imported clocks are immutable. A materially future clock warns but does not block writes; bad future clocks can propagate. Automatic history repair is not implemented.\n\nLinux: extract the entire x64 bundle and run `tandemlog`. Built on Ubuntu 24.04; requires a compatible glibc, GTK 3, C++ runtime and graphical session. On Ubuntu 24.04 the runtime packages are `libgtk-3-0t64` and `libstdc++6`. Keep `lib/` and `data/` beside the app. Linux is the primary desktop visual QA target.\n\nWindows: unsigned portable x64 ZIP; extract everything and run `tandemlog.exe`. Hosted Windows builds/tests are required, but do not establish interactive Windows UI acceptance. The Microsoft Visual C++ runtime may be required; unsigned-app warnings are possible.\n\nAndroid: universal non-debuggable APK signed by the retained owner identity. The release gate requires native validation of the exact APK hash before publication; the public artifact is not rebuilt afterward. Android uses SAF folder selection. API 30 emulator evidence is narrower than real-phone/API 36/provider coverage; BasicSync and other transports need device-specific testing. Back up external canonical folders before uninstalling any earlier app; local settings, grants and caches can be lost.\n\nTask users are attribution, not access control: a folder is all-shared. No notifications, deletion, durable drafts, private spaces or future modules are implemented. Unknown/invalid history fails explicitly without silent deletion. Checksums accompany all platform bundles; the owner Android certificate fingerprint and source metadata accompany the APK. Stable-only clients have no stable build available yet.\n\nMarkdown remains authoritative during prereleases. Testing uses copies in the permanent sync folder; only test contents are disposable. The private one-time migration tooling is separate and is not shipped or supported as an app feature. Stable cutover requires a coordinated fresh snapshot/import and explicit approval.\n\nFilter state lasts for the current app session; it does not change shared task facts. Reset restores active-user Open tasks with upcoming hidden and no tag filter, preserving the active identity.\n\n## Accepted artifacts and runtime evidence\n\nSource commit: `8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e`. Candidate run: https://github.com/reddraggone9/tandemlog/actions/runs/36809817199. All platform checks/builds and owner signing passed. These assets are reused from that run without rebuilding.\n\nThe exact owner-signed Android APK, version code 17, passed native Android 11/API 30 acceptance: search/filter restoration and live updates, bounded tag picker, responsive layouts, occurrence editor, clock-driven updates/draft preservation, restart, constrained drag including stationary edge scrolling, hidden ranks and rejected drops without events. Native Linux light/dark, narrow/large-text and affected workflows passed. Windows hosted builds/tests and archive validation passed; full interactive Windows QA has not been performed. Real-phone/API 36/provider-specific coverage remains limited.\n\nAPK SHA256: `fa3f5758c3b54567587f788827d5a694952b23c0721fa5de28c905ed0577315f`. Owner certificate SHA256: `0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d`.\n\n## Back up and reselect safely\n\nBefore uninstalling or replacing any preview, copy and verify the complete external canonical folder: its manifest plus every per-device JSONL log. Keep the authoritative Markdown source unchanged and backed up. Local SQLite/settings/writer files are private rebuildable state and must not be synced as canonical data.\n\nRC2 protocol-v1 folders cannot be opened as RC3 protocol v2; keep them intact and use a separate fresh test-only workspace for RC3. RC3's new app identifier installs separately on Android. For an existing protocol-v2 test folder, select that same folder through Android's picker, grant tree access again if needed, and choose the existing user. Never delete shared history to resolve a cache, permission or signature error. App uninstall can remove local settings, grants and unsaved drafts.\n\nThis release does not authorize final migration or stable cutover. Markdown remains authoritative throughout previews.\n",
+    "assets": [
+      {
+        "id": 602384463,
+        "name": "android-release-metadata.json",
+        "size": 291,
+        "digest": "sha256:70ad245072bfc68b0ac7d932ffc1c7afe2385636963af24aa7ad8c81dde50a71",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:09Z"
+      },
+      {
+        "id": 602384461,
+        "name": "android-SHA256SUMS.txt",
+        "size": 88,
+        "digest": "sha256:1d4febbf8599378d43d075c5e356d8898550fc45ff1385074c1e06d36df6827f",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:09Z"
+      },
+      {
+        "id": 602384465,
+        "name": "android-signature.txt",
+        "size": 942,
+        "digest": "sha256:ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:09Z"
+      },
+      {
+        "id": 602384464,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 93,
+        "digest": "sha256:b5b5e8a0c32db82824f30b1706e7ed3c2dfca5ac0787c4a55a068e9bafbaf0ad",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:09Z"
+      },
+      {
+        "id": 602384462,
+        "name": "linux-startup.json",
+        "size": 1303,
+        "digest": "sha256:a660facdcdf7900a7d45d447c1789754dd637eed8e25bbef3bd04e80f962dc7d",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:09Z"
+      },
+      {
+        "id": 602384471,
+        "name": "tandemlog-android.apk",
+        "size": 58740296,
+        "digest": "sha256:fa3f5758c3b54567587f788827d5a694952b23c0721fa5de28c905ed0577315f",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:12Z"
+      },
+      {
+        "id": 602384475,
+        "name": "tandemlog-linux-x64.tar.gz",
+        "size": 11016325,
+        "digest": "sha256:c6e187da756e4bfe497bb2b391714021a66d11cac1e89519f1444eb04e83a7a1",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:10Z"
+      },
+      {
+        "id": 602384476,
+        "name": "tandemlog-windows-x64-unsigned.zip",
+        "size": 13437770,
+        "digest": "sha256:9f8ec5a062b935b9097bfefe0440703551f9a8739d3fd66ce46cf4c451f57a1b",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:11Z"
+      },
+      {
+        "id": 602384477,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 102,
+        "digest": "sha256:5079cd46ce10b21903ff79b6448f296cc535d1dc4d5c7bd47ad4cb26998124df",
+        "state": "uploaded",
+        "updated_at": "2026-10-01T03:57:10Z"
+      }
+    ]
+  },
+  {
+    "id": 400364781,
+    "tag_name": "v0.1.0-rc.2",
+    "target_commitish": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-09-30T18:36:39Z",
+    "published_at": "2026-09-30T19:20:27Z",
+    "body": "Experimental task-management preview. Use a new dedicated test folder and synthetic/noncritical tasks. No stable release or daily-use guarantee.\n\nNew in rc2 (build 5; UI unchanged from build 4): desktop Start creates a default data folder, first-user setup is inline, and System/Light/Dark appearance persists locally through a conventional Theme row and radio choices. The task list is more compact. Folder management lives in Settings; automatic foreground importing is hardened with desktop file notifications, bounded fallback and resume reconciliation, with no routine refresh button. Existing chosen folders are preserved. Android keeps its SAF folder picker.\n\nDesktop Enter/keypad Enter now submits; Shift+Enter inserts a new task line. Android Enter remains newline, with the arrow or supported IME submit action to add tasks. Each nonempty line creates a task. These shortcuts changed from rc1.\n\nA compact Open/Completed switch now exposes completed tasks; uncheck a completed row to reopen it. Reopening preserves unseen concurrent completions. Repeated Inbox badges are hidden, Undo uses theme-appropriate colors, and compact divided rows replace the padded task cards while retaining 48-pixel checkbox targets and wrapping titles. Description previews use one ellipsized line; the editor keeps full multiline notes.\n\nIncludes household user selection/creation, task capture, edit, completion and targeted undo, with canonical JSON logs and a rebuildable private SQLite cache.\n\n- Linux: native release bundle, extract then run `tandemlog`. Built on Ubuntu 24.04 x64; use Ubuntu 24.04 or a compatible/newer glibc desktop. Requires GTK 3 and the standard C++ runtime (`sudo apt install libgtk-3-0t64 libstdc++6` on Ubuntu 24.04), plus a graphical session. Keep the bundle\u2019s `lib/` and `data/` beside the executable. Other distributions/older glibc are unverified. Native Linux workflows, restart, error handling and integration tests were exercised.\n- Windows: unsigned portable x64 ZIP; extract the entire bundle and run `tandemlog.exe`. Built on a native Windows runner with domain/storage tests. Interactive Windows launch/UI acceptance remains pending. Windows may require the Microsoft Visual C++ runtime and show an unsigned-app warning.\n- Android: universal release APK signed with the dedicated owner identity; its public certificate fingerprint is included in the release metadata. rc1 native capture/edit/complete/undo, SAF force-stop/reopen and remote atomic replacement passed on an accelerated API 30 emulator. Build-4 debug native QA also passed settings/radio themes, one-line notes, 130% text, completed-task reopening, persisted SAF and external updates. The exact signed build-5 APK passed native launch, SAF access to a copied canonical folder, retained users/tasks/notes, capture, completion, checked-row reopening and process restart on an accelerated Android 11/API 30 emulator. Four UI states and fourteen unique events were checked; the publication workflow preserved that exact tested APK. Real phones/API 36/actual provider combinations still need broader coverage. This cloud's software emulator could not run the app; compilation is not runtime acceptance. **One-time reinstall required from public rc1 or cloud debug candidates because their certificates differ.** Before uninstalling, back up and verify the entire external shared folder (manifest and every JSONL log). After reinstalling, choose that same folder and existing user. Local settings, grants and cache can be lost on uninstall. Never delete the shared folder to fix a signature mismatch.\n\nSigning does not make this a stable release. Target release startup still needs measurement; earlier debug performance is not representative. Provider-specific sync and real phone-to-phone behavior still need device tests. Separate users are attribution, not access control; this version is all-shared.\n\nNo recurrence, deletion, durable drafts, nutrition, inventory, games or private spaces. Malformed/unknown history visibly blocks writes; recovery guidance is in `design/recovery.md`.\n\nThis GitHub release is marked prerelease and is not Latest. Preview-aware clients may opt in; stable-only clients have no stable build available yet. Checksums accompany all bundles.\n\nSource commit: `d89a7d99fabecd27993e81707e98e7f0a3a8227c`\n\n",
+    "assets": [
+      {
+        "id": 601634923,
+        "name": "android-release-metadata.json",
+        "size": 290,
+        "digest": "sha256:bd4752a842dac5dfcb08651e189f0e02b29643570a2d0814eaa119cf602fa070",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:24Z"
+      },
+      {
+        "id": 601634927,
+        "name": "android-SHA256SUMS.txt",
+        "size": 88,
+        "digest": "sha256:eaff3694a4ae040486a86be0a9324aec6559f137a64f7cf5ece810c8faa0db54",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:24Z"
+      },
+      {
+        "id": 601634921,
+        "name": "android-signature.txt",
+        "size": 942,
+        "digest": "sha256:ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:24Z"
+      },
+      {
+        "id": 601634919,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 93,
+        "digest": "sha256:01f420f12fededc938a9a97c822127bd7fecca2d2ecd7e2c4412c944fc4fdc43",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:24Z"
+      },
+      {
+        "id": 601634920,
+        "name": "linux-startup.json",
+        "size": 1303,
+        "digest": "sha256:dba0ad25f5af262394f411fed76e312ec73e624278d030f697b840dd09e86d66",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:24Z"
+      },
+      {
+        "id": 601634939,
+        "name": "tandemlog-android.apk",
+        "size": 56068924,
+        "digest": "sha256:cd392117b91c8db8193fa164a45600032d6f6de055066f757aeb8cb8777be046",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:26Z"
+      },
+      {
+        "id": 601634951,
+        "name": "tandemlog-linux-x64.tar.gz",
+        "size": 10675730,
+        "digest": "sha256:b36b36cce5380defa466b227c4fda55ecaef92808088e6f5af6f6a5633e56a90",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:26Z"
+      },
+      {
+        "id": 601634946,
+        "name": "tandemlog-windows-x64-unsigned.zip",
+        "size": 13077047,
+        "digest": "sha256:8f7b0a8acbe940d0e51b60ace67fc2ea3837cc694037bf54fb1eb584fe8be711",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:25Z"
+      },
+      {
+        "id": 601634952,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 102,
+        "digest": "sha256:5f461e9c4b534ab54683d5c2cd1abd845e90b9a95ca1b54665dc4e78b3a9b8ee",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T19:20:25Z"
+      }
+    ]
+  },
+  {
+    "id": 400154224,
+    "tag_name": "v0.1.0-rc.1",
+    "target_commitish": "adacd395a19b94dbf4a2f00788e0ffd00a1497f0",
+    "draft": false,
+    "prerelease": true,
+    "created_at": "2026-09-30T14:49:38Z",
+    "published_at": "2026-09-30T14:55:20Z",
+    "body": "Experimental task-management preview. Use a new dedicated test folder and synthetic/noncritical tasks. No stable release or daily-use guarantee.\n\nIncludes folder selection, household user selection/creation, task capture, edit, completion and targeted undo, with canonical JSON logs and a rebuildable private SQLite cache.\n\n- Linux: native release bundle, extract then run `tandemlog`. Built on Ubuntu 24.04 x64; use Ubuntu 24.04 or a compatible/newer glibc desktop. Requires GTK 3 and the standard C++ runtime (`sudo apt install libgtk-3-0t64 libstdc++6` on Ubuntu 24.04), plus a graphical session. Keep the bundle\u2019s `lib/` and `data/` beside the executable. Other distributions/older glibc are unverified. Native Linux workflows, restart, error handling and integration tests were exercised.\n- Windows: unsigned portable x64 ZIP; extract the entire bundle and run `tandemlog.exe`. Built on a native Windows runner with domain/storage tests. Interactive Windows launch/UI acceptance remains pending. Windows may require the Microsoft Visual C++ runtime and show an unsigned-app warning.\n- Android: test-only debug APK, signed with an ephemeral CI debug certificate. Native app launch and SAF grants/restart/remote replacement remain **unverified**: this cloud's software emulator failed before app installation. Do not treat compilation as Android acceptance. Subsequent candidates may use a different certificate and require uninstall/reinstall; preserve the shared canonical folder first. Private settings, grants and cache can be lost on uninstall.\n\nNo production signing credentials are used. Android debug performance is not representative of release startup. Provider-specific sync and real phone-to-phone behavior still need device tests. Separate users are attribution, not access control; this version is all-shared.\n\nNo recurrence, deletion, durable drafts, nutrition, inventory, games or private spaces. Malformed/unknown history visibly blocks writes; recovery guidance is in `design/recovery.md`.\n\nThis GitHub release is marked prerelease and is not Latest. Preview-aware clients may opt in; stable-only clients have no stable build available yet. Checksums accompany all bundles.\n\nSource commit: `adacd395a19b94dbf4a2f00788e0ffd00a1497f0`\n",
+    "assets": [
+      {
+        "id": 601167605,
+        "name": "android-SHA256SUMS.txt",
+        "size": 98,
+        "digest": "sha256:4eb2c3582a60a4f169caf10559017fde0a76b0b6c5d3cdf1d7f29fc350d218ab",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:14Z"
+      },
+      {
+        "id": 601167601,
+        "name": "android-signature.txt",
+        "size": 307,
+        "digest": "sha256:706924fa0d6745d35b724dbd76a779d1b56273d76d2831afdf0abec1c3a1b815",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:14Z"
+      },
+      {
+        "id": 601167602,
+        "name": "linux-SHA256SUMS.txt",
+        "size": 93,
+        "digest": "sha256:f464739df4d358d785a51b6a35a947cd13d881ab14d90f8f419b683f8118e83d",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:14Z"
+      },
+      {
+        "id": 601167599,
+        "name": "linux-startup.json",
+        "size": 1303,
+        "digest": "sha256:9bfa7f6d3ffec471a19fd57bbf7e94d40c0a474d70e6b125d411ad7d3e65e8f6",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:14Z"
+      },
+      {
+        "id": 601167600,
+        "name": "tandemlog-android-test-only.apk",
+        "size": 160088417,
+        "digest": "sha256:c0aecfb70f54dadf36439e0168a83f64e87ccde8ee4ca888d61104750eec2ee7",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:19Z"
+      },
+      {
+        "id": 601167614,
+        "name": "tandemlog-linux-x64.tar.gz",
+        "size": 10558790,
+        "digest": "sha256:0df6dd24af23def7e4b844d398fe21b95e43a4103752c4fd114072725f0a0df4",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:15Z"
+      },
+      {
+        "id": 601167621,
+        "name": "tandemlog-windows-x64-unsigned.zip",
+        "size": 12927122,
+        "digest": "sha256:9161191fb99cbb842f164383112b55e75de73a7c6a83ec2b07bed8d08c167c28",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:15Z"
+      },
+      {
+        "id": 601167623,
+        "name": "windows-SHA256SUMS.txt",
+        "size": 102,
+        "digest": "sha256:d35e9fb532c37e3a3d5f48fbb8f5ffe2714bfecd5b35bf350e5c8d7a1f685e2b",
+        "state": "uploaded",
+        "updated_at": "2026-09-30T14:55:15Z"
+      }
+    ]
+  }
+]
