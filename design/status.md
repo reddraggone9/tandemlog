@@ -26,7 +26,10 @@ The unchanged four bulk native cases reproduce two RED failures and now pass
 four GREEN cases; complete draft, focus, selection and canonical assertions remain.
 Linux's budget increases from30 to40 minutes based on the measured28-minute
 preparation/native duration and required packaging tail, with every gate retained.
-A fresh full candidate is required. Independent code, UX/pixels, demo and
+Corrected executable source is `75557b100bdb17aeb76deb41fad646d95a9cc898`.
+[Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
+and push CI38076106828 are running; source/version-history preflight passed.
+Independent code, UX/pixels, demo and
 actual-range editorial reviews accept the scoped correction. The recorded native
 GTK matrix passes twelve combinations with120 actual captures; final12 widget
 cases pass the later assertion-only glyph guard. Both themes,100/200% text,

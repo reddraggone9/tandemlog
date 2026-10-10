@@ -13,6 +13,21 @@ from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
+## Corrected build59 source — fresh candidate pending
+
+Executable source `75557b100bdb17aeb76deb41fad646d95a9cc898` declares
+2026.10.4-rc.1/build59. [Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
+and push CI38076106828 are running; hosted source/version-history preflight passed.
+[Frozen source review](candidate/build59/task-inset-correction/replacement-frozen-pushed-source-and-preflight-independent-review.json)
+and [actual stable-to-source editorial review](candidate/build59/task-inset-correction/replacement-final-range-editorial-independent-review.json)
+accept the scoped Task inset restoration and unchanged notes/media.
+[Current handoff](candidate/build59/task-inset-correction/replacement-handoff-pending.json)
+leaves full hosted/artifact gates and exact Android acceptance open. The corrected
+local native evidence has148 verified members and ten source bindings; original
+145-member Food and failed source87 evidence remain unchanged. No replacement
+APK or publication readiness is claimed until the new artifacts and native gates
+actually pass.
+
 ## Initial build59 source — native gate failed
 
 Executable source `87e8b321ea76623e5ef5b8c532d69a3895300e65` declares build59

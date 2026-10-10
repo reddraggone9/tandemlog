@@ -41,7 +41,10 @@ keyboard-safe bounds after Save changes focus while leaving Food handling intact
 The unchanged four bulk native flows now pass after reproducing both failures.
 The [failure disposition](../evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json)
 preserves the original failed run and source-bound Windows artifact evidence.
-The corrected source needs a fresh full candidate and all new original artifacts.
+Corrected source `75557b100bdb17aeb76deb41fad646d95a9cc898` is running
+[fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
+and push CI38076106828, with source/version-history preflight passed. It needs
+all new original artifacts; none from the failed source87 run can be promoted.
 Local independent code/UX/demo and actual-range notes
 reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
 records120 captures and the earlier fixture qualification. The separate

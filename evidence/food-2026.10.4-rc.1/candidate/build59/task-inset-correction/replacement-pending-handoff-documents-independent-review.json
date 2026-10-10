@@ -1,0 +1,27 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:34:55.167183+00:00",
+  "verdict": "ACCEPT_DOCS_ONLY_PENDING_HANDOFF",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "push_ci_run": 38076106828,
+  "file_sha256": {
+    "design/status.md": "c26cea1ccf4fd8aa5f5602d224671e6c37c6752af052312d547bcfa4f90d7a92",
+    "design/food-native-acceptance.md": "0b27d99194bb3fe20b456f58b0ae8618ea5baffd67d0e8af8331d4c3c79a4178",
+    "evidence/food-2026.10.4-rc.1/README.md": "d033d79f2180317f5b4a48450caccd1b21e1470fa13dcb0c1f23585ac43972d7",
+    "evidence/food-2026.10.4-rc.1/candidate/build59/task-inset-correction/replacement-handoff-pending.json": "e0efc298c1ce9d31277a5bbafe2db8b41a80e133a92039a1937ce97756eac627"
+  },
+  "checks": [
+    "Executable closure unchanged against755; no new candidate or rebuild required for docs-only checkpoint",
+    "Exact source/run/version and passed preflight bound; whole matrix/artifacts/native pending accurately stated",
+    "148 current native members and original145 attribution preserved",
+    "Source87 failed artifacts historical only; null replacementAPK fields",
+    "Fresh desktop installed lifecycle still mandatory; parent WindowsGUI RC waiver and oldCLI source attribution retained",
+    "Relative links resolve, no private markers in new delta, copied two ACCEPT receipts byte-identical; historical documents unchanged"
+  ],
+  "copied_receipts_byte_identical": {
+    "replacement-frozen-pushed-source-and-preflight-independent-review.json": true,
+    "replacement-final-range-editorial-independent-review.json": true
+  },
+  "must_fix": [],
+  "publication_ready": false
+}

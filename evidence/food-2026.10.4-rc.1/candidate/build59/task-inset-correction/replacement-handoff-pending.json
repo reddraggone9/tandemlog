@@ -1,0 +1,22 @@
+{
+  "recorded_utc": "2026-10-10T18:33:45.131921+00:00",
+  "executable_source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "version": "2026.10.4-rc.1",
+  "version_code": 59,
+  "signed_candidate_run": 38076112442,
+  "push_ci_run": 38076106828,
+  "preflight": "PASS hosted source/version history",
+  "candidate_status": "in_progress",
+  "local_native": "4 unchanged bulk cases PASS28s; Food production navigation and final12-combination matrix PASS2 in05:38; actual GTK/simulated280pxIME",
+  "source_qualification": "Bulk GREEN precedes only explanatory comment; later Food native rebuilds final commented source. Full frozen-source hosted matrix remains pending.",
+  "original_evidence": "148 current native members + ten source bindings; original145 retained",
+  "prior_source87": "FAILED92PASS2FAIL; signing skipped; no APK; its Windows artifact remains historical only",
+  "android_artifact_id": null,
+  "actual_apk_sha256": null,
+  "exact_android_acceptance": "pending parent actual Gboard/combined title/form/error/field/draft/Save/upgrade/cold replay matrix",
+  "windows_gui": "parent RCwaiver; fresh exact hosted installed lifecycle still mandatory",
+  "stable_latest": "v2026.10.3/build56",
+  "publication_ready": false,
+  "publication": "authorized Food preview after full artifact/native gates and parent fresh private clearance; no stable promotion implied",
+  "scope": "Task inset restoration preserves prior behavior; Food UI preserved; Bazaar/Flatpak XDG feedback next release only; no live synced data touched"
+}

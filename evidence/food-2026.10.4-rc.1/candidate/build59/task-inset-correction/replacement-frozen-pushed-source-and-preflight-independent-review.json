@@ -1,0 +1,31 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:32:35.113895+00:00",
+  "verdict": "ACCEPT_EXACT_PUSHED_REPLACEMENT_SOURCE_AND_PREFLIGHT_ONLY",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "preflight_job": 114283280636,
+  "version": "2026.10.4-rc.1+59",
+  "source_delta_since_failed87": [
+    ".github/workflows/validate.yml",
+    "lib/main.dart"
+  ],
+  "executable_delta_sha256": "cacb6d0cf332277ae68041fc4077b05b1e406d8f68b958cbd52f23fb70abb88b",
+  "source_checks": [
+    "Remote main, local clean HEAD and workflow-dispatch candidate exact source match",
+    "Only Task resize disjunction/comment and Linux timeout30-to40 change executable closure since failed87; Food code and every native assertion unchanged",
+    "All148 current evidence members and10 source-binding Git blobs verified; previous145 evidence unchanged",
+    "Local unchanged Task4GREEN and final Food2GREEN including12-combination/glyph matrix accepted; GTK/simulatedIME explicitly not Android"
+  ],
+  "hosted_preflight": "Main guard and current preflight/history pass; successful candidate floor58 permits unissued59 because failed87 owner signing skipped",
+  "preflight_log_sha256": "ac86f9deb8166a2688bedcc71ba44b9dcb2c083f834438a6a8e3f1d1d5cbd768",
+  "log_normalization": "Decoded returned logs saved with leading U+FEFF removed and one final newline; source87 records preserved separately",
+  "candidate_status": "full new matrix in progress, not artifact or native acceptance",
+  "must_fix": [],
+  "remaining": [
+    "Full new candidate and push CI success",
+    "All three original new-source archives/member/checksum/lifecycle/signature review",
+    "Parent exact new owner APK Android Gboard/upgrade/cold replay acceptance",
+    "Normal prerelease publication gates and private clearance; Windows GUI RC waiver retained"
+  ],
+  "publication_ready": false
+}

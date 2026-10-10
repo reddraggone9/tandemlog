@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:32:35.114097+00:00",
+  "verdict": "ACCEPT_ACTUAL_FINAL_RANGE_NOTES_AND_UNCHANGED_IMMUTABLE_MEDIA",
+  "baseline_tag": "v2026.10.3",
+  "baseline_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "final_source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "version": "2026.10.4-rc.1+59",
+  "actual_stable_to_source_diff_sha256": "0e2d7d25651d21111032842fe688f82765f3b80a4ca509b64626266894799d63",
+  "review_strategy": "Prior independently reviewed full stable76-to87 Food/icon/error covered range retained; actual final stable76-to755 diff inspected with incremental executable closure restricted to Task baseline restoration and measured CI capacity. No unrelated/vendor reaudit implied.",
+  "notes_path": "design/prerelease-notes.md",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "notes_bullets": [
+    "Food inventory/expiration/Inbox/retained stock/partial contents/per-container removal-restoration",
+    "Disabled recurring-checkbox opacity seam",
+    "Scrollable long error messages"
+  ],
+  "editorial_findings": "Three meaningful concise bullets accurately cover actual stable range. Unreleased Food keyboard refinements and baseline Task restoration fit existing feature/fix statements; no additional QA-assurance bullet or screenshot needed. Bazaar/XDG excluded.",
+  "media": {
+    "path": "evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png",
+    "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "immutable_source_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "qualification": "Previously independently inspected real dark synthetic native Before stable56/After renderer57 image; integer1:1 crops and current renderer unchanged. Not a new Android59 capture."
+  },
+  "editorial_policy_path": "design/releases.md",
+  "policy_sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+  "must_fix": [],
+  "scope_limits": "Editorial/source acceptance only. New candidate all artifacts and parent exact Android acceptance remain pending. No publication approval implied.",
+  "publication_ready": false
+}
