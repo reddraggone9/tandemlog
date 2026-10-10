@@ -1,30 +1,42 @@
 # Food RC native acceptance
 
-RC2026.10.4-rc.1/build58 is the replacement candidate for authorized
-exact-artifact preview delivery. Build57's bounded Android acceptance exposed
-truncated expiration guidance at320dp/200% text. The replacement keeps the
-short "Expiration" label and allows the complete date-format/Inbox helper to
-wrap within the existing scrollable editor, preserving typography and targets.
-Prior build57 domain/recovery evidence retains its original source/artifact
-attribution. Before delivery, verify the replacement's provenance and repeat
-focused native Android Add/Edit date checks at320dp/100% and200%, focused and
-unfocused with the actual keyboard: full guidance, invalid calendar rejection,
-valid date save, blank-date Inbox placement, Cancel/Back, and stable56→58 upgrade
-preserving Tasks/settings/physical containers. These checks remain pending
-until the exact replacement APK is accepted.
+Replacement RC2026.10.4-rc.1/build59 is being prepared for authorized
+exact-artifact preview delivery. Build58 is blocked and must not be published:
+actual Android320dp/200% Gboard-open pixels showed its two-line Edit1 title and
+actions consuming the entire field viewport. Build59 shares the title and form
+in one constrained scrollable area above Cancel/Save, keeps the obscured page
+stable during modal and closing keyboard transitions, and reveals focused input
+after inset animation. Dirty-close confirmation also scrolls. Full target-count
+titles, font scaling, editable name, all field values and durable Save semantics
+remain required.
 
-The replacement [signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
-and push CI38064596284 passed at exact source
-`432784d0181af5b97fd89bfb3ef8d5c83212f92e`. Download original `android-release`
-artifact11674984580: actual APK SHA256
-`e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`,
-version2026.10.4-rc.1/code58. Root and independent artifact checks pass owner
-signature, package, nondebuggable flag, source metadata, checksums and native
-payload. Original Windows artifact11675306002 and Linux artifact11674779087
-pass their exact hosted lifecycle gates. Windows manual GUI is RC-waived by
-the parent; old local CLI/storage evidence remains attributed to its actual
-build57 or stable56 source. These artifact gates do not close the focused
-Android58 runtime checks above.
+Fresh exact build59 Android acceptance must cover the combined matrix, not only
+individual easy states: both themes;320dp/100% and200%; Add, Edit1 and a wrapped
+plural title; actual Gboard open/closed and dismissal/reopening; automatically
+visible focused name/date; every field reachable; complete date/Inbox helper and
+invalid-calendar error readable by scrolling; Cancel/Back/Keep editing retaining
+the same draft; valid date and blank Inbox Save plus cold replay. Confirm that
+Save/Cancel remain usable while typing and that closing the keyboard/modal does
+not overflow the underlying page. Record actual titles, insets and focused field.
+Repeat synthetic stable56 upgrade and compare exact Tasks/settings/physical
+container identities. Do not attribute Linux simulated IME checks to Android.
+
+Build58's signed candidate38064595888, source
+`432784d0181af5b97fd89bfb3ef8d5c83212f92e`, original Android artifact11674984580
+and actual APK SHA256
+`e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`
+remain historical evidence. Parent build58 checks passed stable56 upgrade,
+invalid-calendar rejection without writes, blank-date Inbox Save and valid-date
+cold replay with eight prior physical containers and18 Task tables/settings and
+canonical history preserved. Other field states were unfinished. These passes
+and older build57/storage proofs remain bound to their original source and APK;
+none substitutes for replacement59 keyboard acceptance.
+
+The build59 candidate run, source commit and exact APK identity will be recorded
+after the fresh full matrix and independent artifact review. Windows manual GUI
+remains RC-waived by the parent; fresh hosted Linux/Windows installed lifecycle
+proofs are still required for this candidate. Prior local CLI/storage evidence
+retains its original build57 or stable56 attribution.
 
 Stable promotion requires Lee's acceptance. The
 [source/evidence checkpoint](../evidence/food-2026.10.4-rc.1/README.md) and

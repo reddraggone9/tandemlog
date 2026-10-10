@@ -1,0 +1,531 @@
+{
+  "queried_utc": "2026-10-10T17:32:39Z",
+  "successful_main_candidates": [
+    {
+      "created_at": "2026-10-10T15:41:00Z",
+      "head_sha": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+      "id": 38064595888,
+      "version": "2026.10.4-rc.1",
+      "version_code": 58
+    },
+    {
+      "created_at": "2026-10-10T05:29:19Z",
+      "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+      "id": 38027666368,
+      "version": "2026.10.4-rc.1",
+      "version_code": 57
+    },
+    {
+      "created_at": "2026-10-09T21:49:19Z",
+      "head_sha": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "id": 37995721678,
+      "version": "2026.10.3",
+      "version_code": 56
+    },
+    {
+      "created_at": "2026-10-09T20:28:08Z",
+      "head_sha": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "id": 37987187103,
+      "version": "2026.10.3",
+      "version_code": 54
+    },
+    {
+      "created_at": "2026-10-09T16:40:52Z",
+      "head_sha": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+      "id": 37960853538,
+      "version": "2026.10.2",
+      "version_code": 53
+    },
+    {
+      "created_at": "2026-10-09T14:37:46Z",
+      "head_sha": "74afbe294065f462b742b4570d4095e690e54b04",
+      "id": 37945597400,
+      "version": "2026.10.2-rc.7",
+      "version_code": 52
+    },
+    {
+      "created_at": "2026-10-09T05:42:36Z",
+      "head_sha": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+      "id": 37889870105,
+      "version": "2026.10.2-rc.6",
+      "version_code": 50
+    },
+    {
+      "created_at": "2026-10-09T00:37:31Z",
+      "head_sha": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+      "id": 37865723987,
+      "version": "2026.10.2-rc.5",
+      "version_code": 48
+    },
+    {
+      "created_at": "2026-10-08T20:21:13Z",
+      "head_sha": "44344407200b61d38d7b33f22c0ace715376fd6f",
+      "id": 37838800145,
+      "version": "2026.10.2-rc.4",
+      "version_code": 47
+    },
+    {
+      "created_at": "2026-10-08T17:46:57Z",
+      "head_sha": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+      "id": 37819214432,
+      "version": "2026.10.2-rc.4",
+      "version_code": 46
+    },
+    {
+      "created_at": "2026-10-04T23:16:40Z",
+      "head_sha": "5ac35da50acca69ab196a54312efc8ccef1452da",
+      "id": 37243170201,
+      "version": "2026.10.2-rc.3",
+      "version_code": 45
+    },
+    {
+      "created_at": "2026-10-04T19:15:22Z",
+      "head_sha": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+      "id": 37227569897,
+      "version": "2026.10.2-rc.2",
+      "version_code": 44
+    },
+    {
+      "created_at": "2026-10-04T14:07:00Z",
+      "head_sha": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "id": 37208066354,
+      "version": "2026.10.2-rc.1",
+      "version_code": 43
+    },
+    {
+      "created_at": "2026-10-04T12:35:42Z",
+      "head_sha": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "id": 37202648731,
+      "version": "2026.10.1",
+      "version_code": 42
+    },
+    {
+      "created_at": "2026-10-04T05:28:35Z",
+      "head_sha": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "id": 37179994243,
+      "version": "2026.10.1-rc.1",
+      "version_code": 41
+    },
+    {
+      "created_at": "2026-10-04T04:55:50Z",
+      "head_sha": "249cfbdf853ceb4ee264510171e3bb051b0f3612",
+      "id": 37178408565,
+      "version": "2026.10.1-rc.1",
+      "version_code": 40
+    },
+    {
+      "created_at": "2026-10-04T03:35:21Z",
+      "head_sha": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "id": 37174502075,
+      "version": "2026.10.0",
+      "version_code": 39
+    },
+    {
+      "created_at": "2026-10-03T20:18:59Z",
+      "head_sha": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+      "id": 37151096841,
+      "version": "2026.10.0-rc.1",
+      "version_code": 38
+    },
+    {
+      "created_at": "2026-10-03T15:21:49Z",
+      "head_sha": "11c0bd73429ccf721a19cca1becedab48ef8a4fb",
+      "id": 37132974584,
+      "version": "0.1.0-rc.10",
+      "version_code": 37
+    },
+    {
+      "created_at": "2026-10-03T01:52:53Z",
+      "head_sha": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "id": 37087766510,
+      "version": "0.1.0-rc.9",
+      "version_code": 36
+    },
+    {
+      "created_at": "2026-10-02T17:31:42Z",
+      "head_sha": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+      "id": 37041309886,
+      "version": "0.1.0-rc.8",
+      "version_code": 35
+    },
+    {
+      "created_at": "2026-10-02T15:31:09Z",
+      "head_sha": "0547f4cf3182fb0381c9b31425b205dee320250f",
+      "id": 37027539131,
+      "version": "0.1.0-rc.8",
+      "version_code": 34
+    },
+    {
+      "created_at": "2026-10-02T15:11:37Z",
+      "head_sha": "9cb10d027fe05ccbc21059b2a8656459965191c5",
+      "id": 37025225656,
+      "version": "0.1.0-rc.8",
+      "version_code": 33
+    },
+    {
+      "created_at": "2026-10-02T12:50:40Z",
+      "head_sha": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+      "id": 37009157582,
+      "version": "0.1.0-rc.7",
+      "version_code": 32
+    },
+    {
+      "created_at": "2026-10-02T12:26:37Z",
+      "head_sha": "6d9726b6a68fd8e91a639216ac33d923ad619273",
+      "id": 37006704032,
+      "version": "0.1.0-rc.7",
+      "version_code": 31
+    },
+    {
+      "created_at": "2026-10-02T04:54:44Z",
+      "head_sha": "5f615f536ad89eef835c828b77cdd200c08d4541",
+      "id": 36966612040,
+      "version": "0.1.0-rc.6",
+      "version_code": 30
+    },
+    {
+      "created_at": "2026-10-02T03:10:27Z",
+      "head_sha": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+      "id": 36958983160,
+      "version": "0.1.0-rc.5",
+      "version_code": 29
+    },
+    {
+      "created_at": "2026-10-02T01:04:43Z",
+      "head_sha": "b501dc64766be078d327ae778c09952995acd84e",
+      "id": 36949182910,
+      "version": "0.1.0-rc.5",
+      "version_code": 28
+    },
+    {
+      "created_at": "2026-10-01T23:46:23Z",
+      "head_sha": "d7dd98124f2bab09b05c39ca7df4c8506fa37f08",
+      "id": 36942561444,
+      "version": "0.1.0-rc.5",
+      "version_code": 27
+    },
+    {
+      "created_at": "2026-10-01T22:05:53Z",
+      "head_sha": "134c8b9e8006abaa07e596f4e91d32b0f2b8edd6",
+      "id": 36932940961,
+      "version": "0.1.0-rc.5",
+      "version_code": 25
+    },
+    {
+      "created_at": "2026-10-01T18:26:43Z",
+      "head_sha": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+      "id": 36906871648,
+      "version": "0.1.0-rc.4",
+      "version_code": 24
+    },
+    {
+      "created_at": "2026-10-01T17:11:09Z",
+      "head_sha": "b9e445da917e58fef18f4e8fe45607eda4eab090",
+      "id": 36897516356,
+      "version": "0.1.0-rc.4",
+      "version_code": 23
+    },
+    {
+      "created_at": "2026-10-01T15:37:04Z",
+      "head_sha": "a742f3325dce0b8d2340ba893ab4ea58e3cef0b6",
+      "id": 36885656212,
+      "version": "0.1.0-rc.4",
+      "version_code": 22
+    },
+    {
+      "created_at": "2026-10-01T03:17:23Z",
+      "head_sha": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+      "id": 36809817199,
+      "version": "0.1.0-rc.3",
+      "version_code": 17
+    },
+    {
+      "created_at": "2026-10-01T02:45:03Z",
+      "head_sha": "02f32695bc776e7ac68c6796ac3a4c4c201a3a9c",
+      "id": 36807290597,
+      "version": "0.1.0-rc.3",
+      "version_code": 16
+    },
+    {
+      "created_at": "2026-10-01T01:11:29Z",
+      "head_sha": "f5f3d025841ae64da13af3ba3f615309e00221df",
+      "id": 36799901390,
+      "version": "0.1.0-rc.3",
+      "version_code": 13
+    },
+    {
+      "created_at": "2026-10-01T00:33:48Z",
+      "head_sha": "bd02aa6fc58b6f82488cc0a005c989effa6d8c0c",
+      "id": 36796794061,
+      "version": "0.1.0-rc.3",
+      "version_code": 12
+    },
+    {
+      "created_at": "2026-09-30T23:56:08Z",
+      "head_sha": "4d255e2b06187d6d6ad383d9142bfb2b3454c6b4",
+      "id": 36793617099,
+      "version": "0.1.0-rc.3",
+      "version_code": 11
+    },
+    {
+      "created_at": "2026-09-30T23:23:09Z",
+      "head_sha": "09bb3cf1cd7d9804a2fc7199b2349d80e29bae62",
+      "id": 36790803679,
+      "version": "0.1.0-rc.3",
+      "version_code": 10
+    },
+    {
+      "created_at": "2026-09-30T22:39:12Z",
+      "head_sha": "f503ad923a2d7d14dea9ab986af2b7950ad7ac89",
+      "id": 36786794937,
+      "version": "0.1.0-rc.3",
+      "version_code": 9
+    },
+    {
+      "created_at": "2026-09-30T22:21:23Z",
+      "head_sha": "9c58e744d1e5ca093f3a7fe7895afa8b2d9ba2ca",
+      "id": 36785084105,
+      "version": "0.1.0-rc.3",
+      "version_code": 8
+    },
+    {
+      "created_at": "2026-09-30T21:47:31Z",
+      "head_sha": "46bcb5a981cd7c8d751a187dd463b898c316835f",
+      "id": 36781661950,
+      "version": "0.1.0-rc.3",
+      "version_code": 7
+    },
+    {
+      "created_at": "2026-09-30T18:55:37Z",
+      "head_sha": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+      "id": 36762053783,
+      "version": "0.1.0-rc.2",
+      "version_code": 5
+    }
+  ],
+  "published_releases": [
+    {
+      "draft": false,
+      "id": 408448633,
+      "prerelease": false,
+      "published_at": "2026-10-10T00:21:08Z",
+      "tag_name": "v2026.10.3",
+      "target_commitish": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "version": "2026.10.3",
+      "version_code": 56
+    },
+    {
+      "draft": false,
+      "id": 408169620,
+      "prerelease": false,
+      "published_at": "2026-10-09T17:31:53Z",
+      "tag_name": "v2026.10.2",
+      "target_commitish": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+      "version": "2026.10.2",
+      "version_code": 53
+    },
+    {
+      "draft": false,
+      "id": 408086549,
+      "prerelease": true,
+      "published_at": "2026-10-09T16:05:07Z",
+      "tag_name": "v2026.10.2-rc.7",
+      "target_commitish": "74afbe294065f462b742b4570d4095e690e54b04",
+      "version": "2026.10.2-rc.7",
+      "version_code": 52
+    },
+    {
+      "draft": false,
+      "id": 407616987,
+      "prerelease": true,
+      "published_at": "2026-10-09T06:56:07Z",
+      "tag_name": "v2026.10.2-rc.6",
+      "target_commitish": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+      "version": "2026.10.2-rc.6",
+      "version_code": 50
+    },
+    {
+      "draft": false,
+      "id": 407443598,
+      "prerelease": true,
+      "published_at": "2026-10-09T02:47:15Z",
+      "tag_name": "v2026.10.2-rc.5",
+      "target_commitish": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+      "version": "2026.10.2-rc.5",
+      "version_code": 48
+    },
+    {
+      "draft": false,
+      "id": 407291600,
+      "prerelease": true,
+      "published_at": "2026-10-08T21:50:27Z",
+      "tag_name": "v2026.10.2-rc.4",
+      "target_commitish": "44344407200b61d38d7b33f22c0ace715376fd6f",
+      "version": "2026.10.2-rc.4",
+      "version_code": 47
+    },
+    {
+      "draft": false,
+      "id": 403281742,
+      "prerelease": true,
+      "published_at": "2026-10-05T00:51:51Z",
+      "tag_name": "v2026.10.2-rc.3",
+      "target_commitish": "5ac35da50acca69ab196a54312efc8ccef1452da",
+      "version": "2026.10.2-rc.3",
+      "version_code": 45
+    },
+    {
+      "draft": false,
+      "id": 403213422,
+      "prerelease": true,
+      "published_at": "2026-10-04T21:18:42Z",
+      "tag_name": "v2026.10.2-rc.2",
+      "target_commitish": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+      "version": "2026.10.2-rc.2",
+      "version_code": 44
+    },
+    {
+      "draft": false,
+      "id": 403122064,
+      "prerelease": true,
+      "published_at": "2026-10-04T17:15:17Z",
+      "tag_name": "v2026.10.2-rc.1",
+      "target_commitish": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "version": "2026.10.2-rc.1",
+      "version_code": 43
+    },
+    {
+      "draft": false,
+      "id": 403030558,
+      "prerelease": false,
+      "published_at": "2026-10-04T13:19:15Z",
+      "tag_name": "v2026.10.1",
+      "target_commitish": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "version": "2026.10.1",
+      "version_code": 42
+    },
+    {
+      "draft": false,
+      "id": 402895497,
+      "prerelease": true,
+      "published_at": "2026-10-04T07:18:53Z",
+      "tag_name": "v2026.10.1-rc.1",
+      "target_commitish": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "version": "2026.10.1-rc.1",
+      "version_code": 41
+    },
+    {
+      "draft": false,
+      "id": 402839527,
+      "prerelease": false,
+      "published_at": "2026-10-04T04:27:07Z",
+      "tag_name": "v2026.10.0",
+      "target_commitish": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "version": "2026.10.0",
+      "version_code": 39
+    },
+    {
+      "draft": false,
+      "id": 402738893,
+      "prerelease": true,
+      "published_at": "2026-10-03T23:52:19Z",
+      "tag_name": "v2026.10.0-rc.1",
+      "target_commitish": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+      "version": "2026.10.0-rc.1",
+      "version_code": 38
+    },
+    {
+      "draft": false,
+      "id": 402295941,
+      "prerelease": true,
+      "published_at": "2026-10-03T03:04:45Z",
+      "tag_name": "v0.1.0-rc.9",
+      "target_commitish": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "version": "0.1.0-rc.9",
+      "version_code": 36
+    },
+    {
+      "draft": false,
+      "id": 402059579,
+      "prerelease": true,
+      "published_at": "2026-10-02T18:29:42Z",
+      "tag_name": "v0.1.0-rc.8",
+      "target_commitish": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+      "version": "0.1.0-rc.8",
+      "version_code": 35
+    },
+    {
+      "draft": false,
+      "id": 401876291,
+      "prerelease": true,
+      "published_at": "2026-10-02T14:13:00Z",
+      "tag_name": "v0.1.0-rc.7",
+      "target_commitish": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+      "version": "0.1.0-rc.7",
+      "version_code": 32
+    },
+    {
+      "draft": false,
+      "id": 401577213,
+      "prerelease": true,
+      "published_at": "2026-10-02T06:07:28Z",
+      "tag_name": "v0.1.0-rc.6",
+      "target_commitish": "5f615f536ad89eef835c828b77cdd200c08d4541",
+      "version": "0.1.0-rc.6",
+      "version_code": 30
+    },
+    {
+      "draft": false,
+      "id": 401533006,
+      "prerelease": true,
+      "published_at": "2026-10-02T04:06:45Z",
+      "tag_name": "v0.1.0-rc.5",
+      "target_commitish": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+      "version": "0.1.0-rc.5",
+      "version_code": 29
+    },
+    {
+      "draft": false,
+      "id": 401290180,
+      "prerelease": true,
+      "published_at": "2026-10-01T19:36:19Z",
+      "tag_name": "v0.1.0-rc.4",
+      "target_commitish": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+      "version": "0.1.0-rc.4",
+      "version_code": 24
+    },
+    {
+      "draft": false,
+      "id": 400637752,
+      "prerelease": true,
+      "published_at": "2026-10-01T03:57:12Z",
+      "tag_name": "v0.1.0-rc.3",
+      "target_commitish": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+      "version": "0.1.0-rc.3",
+      "version_code": 17
+    },
+    {
+      "draft": false,
+      "id": 400364781,
+      "prerelease": true,
+      "published_at": "2026-09-30T19:20:27Z",
+      "tag_name": "v0.1.0-rc.2",
+      "target_commitish": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+      "version": "0.1.0-rc.2",
+      "version_code": 5
+    },
+    {
+      "draft": false,
+      "id": 400154224,
+      "prerelease": true,
+      "published_at": "2026-09-30T14:55:20Z",
+      "tag_name": "v0.1.0-rc.1",
+      "target_commitish": "adacd395a19b94dbf4a2f00788e0ffd00a1497f0",
+      "version": "0.1.0-rc.1",
+      "version_code": 1
+    }
+  ],
+  "maximum_candidate_code": 58,
+  "maximum_published_code": 56,
+  "next_changed_candidate_code": 59
+}

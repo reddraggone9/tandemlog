@@ -1,0 +1,119 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: (setUpAll)
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:02 +1: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 1.0x date guidance and saving
+00:03 +2: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:03 +3: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 2.0x date guidance and saving
+00:04 +4: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:05 +5: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:07 +6: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:07 +7: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: collapsed summary preserves single known full
+00:08 +8: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:08 +9: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:08 +10: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:08 +11: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:09 +12: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:09 +13: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:09 +14: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:09 +15: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<Looking up a deactivated widget's ancestor is unsafe.
+          At this point the state of the widget's element tree is no longer stable.
+          To safely refer to a widget's ancestor in its dispose() method, save a reference to the
+ancestor by calling dependOnInheritedWidgetOfExactType() in the widget's didChangeDependencies()
+method.>
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_preview_test.dart:90:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_preview_test.dart line 90
+The test description was:
+  narrow and wide inventory render partial stock without overflow
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:10 +15 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:10 +15 -1: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow [E]
+  Test failed. See exception logs above.
+  The test description was: narrow and wide inventory render partial stock without overflow
+  
+00:10 +16 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:11 +17 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:12 +18 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:12 +19 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:13 +20 -1: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:13 +21 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:13 +22 -1: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:13 +23 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors
+00:14 +24 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors
+00:14 +25 -1: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:16 +26 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:17 +27 -1: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+00:17 +28 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+00:17 +29 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+00:18 +30 -1: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:18 +31 -1: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:18 +32 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:19 +33 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:19 +34 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:19 +35 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:21 +36 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:21 +37 -1: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+00:21 +38 -1: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:22 +39 -1: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+00:22 +40 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:23 +41 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:23 +42 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:23 +43 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:24 +44 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:24 +45 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:25 +46 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:25 +47 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: single and bulk editors put tags and assignee after scheduling
+00:25 +48 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: touch creation adds all new tokens and invalid query never enables it
+00:25 +49 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:26 +50 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: opaque original tags survive pending Save with exact case and spaces
+00:26 +51 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:26 +52 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:26 +53 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: active tag composition blocks Save and canClose Save
+00:26 +54 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:26 +55 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:27 +56 -1: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: pending query participates in canClose; Cancel retains it, Save commits it
+00:27 +57 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:27 +58 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:27 +59 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:28 +60 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:28 +61 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:28 +62 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:29 +63 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:29 +64 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:29 +65 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:29 +66 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:29 +67 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:30 +68 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:30 +69 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk coupled validation checks every task
+00:31 +70 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:31 +71 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:31 +72 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:32 +73 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:32 +74 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title and notes wire limits validate before save
+00:32 +75 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:33 +76 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:33 +77 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:33 +78 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:33 +79 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:33 +80 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:34 +81 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:34 +82 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: selection header wraps at narrow large text
+00:34 +83 -1: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:34 +84 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow

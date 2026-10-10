@@ -1,0 +1,84 @@
+{
+  "checked_at_utc": "2026-10-10T17:33:40.855173+00:00",
+  "verdict": "ACCEPT_UNCHANGED_NOTES_FOR_CURRENT_RANGE_FINAL_SOURCE_FREEZE_PENDING",
+  "stable_baseline": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "preparation_head": "d99d791daffb29cde6451c1221018e3edb564ec0",
+  "working_tree_mutable": true,
+  "tracked_stable_to_working_tree_diff_sha256": "4c36e3e13218aeb22ef047e5f05f2ffb3f283c4c55a91836bb4051075f9c8fd0",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "immutable_media_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+  "composite_sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+  "editorial_findings": [
+    "Three meaningful bullets accurately cover new Food inventory, disabled repeat icon seams and scrollable long errors",
+    "Keyboard/title viewport fix refines unreleased Food Add/Edit workflow; no additional repetitive QA-assurance bullet needed",
+    "Existing dark repeat Before/After bytes and immutable URL unchanged; previously reviewed real-app provenance still applicable; no new image required for this concise dialog-layout correction",
+    "Bazaar/XDG feedback deferred to next release and absent from current notes"
+  ],
+  "successful_main_candidate_history": {
+    "count": 43,
+    "highest_build": 58,
+    "next_required_build": 59,
+    "evidence": "successful-candidate-floor-pre-freeze.json"
+  },
+  "current_declared_version": "2026.10.4-rc.1+58",
+  "version_boundary": "Parent already plans59; current58 is not eligible for a new successful candidate and must become59 before freeze/preflight. No final preflight acceptance implied.",
+  "must_fix_editorial": [],
+  "remaining": [
+    "Version59, final source/tests/evidence freeze and immutable source-range amendment",
+    "Complete strict native simulated-IME matrix and independent UX/source acceptance",
+    "New full successful candidate/original artifact identities and fresh hosted desktop lifecycles",
+    "Parent exact Android59 combined Gboard matrix/upgrade acceptance before publication"
+  ],
+  "scope_limits": [
+    "No app build/test/install or downloads by reviewer",
+    "Native GTK/simulated280IME cannot attest actual Android keyboard behavior",
+    "Build57/58 artifact/runtime evidence retains original bindings and does not constitute build59 acceptance",
+    "Parent Windows GUI RC waiver retained; no account quota values or private Library IDs recorded"
+  ],
+  "files": [
+    {
+      "path": "lib/food/food_page.dart",
+      "sha256": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a"
+    },
+    {
+      "path": "lib/main.dart",
+      "sha256": "4a3b4e45026c40d4b4613b8527ccb13476f6bbcd199413a62dc62e8665a41dd7"
+    },
+    {
+      "path": "integration_test/task_flow_test.dart",
+      "sha256": "f9bce860bc6996dd8fdca480947010aad519ac5bdd9aab61bd7907c0fc319657"
+    },
+    {
+      "path": "integration_test/food_editor_keyboard_workflow_test.dart",
+      "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8"
+    },
+    {
+      "path": "test/food_editor_keyboard_layout_test.dart",
+      "sha256": "3ea6ccebe067e8899f9b83310a5937470381af5b124d22b10d8ecaefbb999f77"
+    },
+    {
+      "path": "design/prerelease-notes.md",
+      "sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae"
+    },
+    {
+      "path": "design/releases.md",
+      "sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122"
+    },
+    {
+      "path": "design/decisions/0014-food-inventory.md",
+      "sha256": "433400fa981aa7741164850d4404b0315fd163236d5a150d26afceff950a5f85"
+    },
+    {
+      "path": "design/food-native-acceptance.md",
+      "sha256": "319b8d58610a1abcedc7b35d783c306b66497de7adab6f356150eee114d029c2"
+    },
+    {
+      "path": "design/status.md",
+      "sha256": "be4d91974642f86c5aeccecadda449b1b31a261b84a70defcf144f7f92594e85"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/README.md",
+      "sha256": "2f8677978245639f0530dc25f9b30e1d7be4d30ea32b81f293a09a7d71b2aefb"
+    }
+  ]
+}

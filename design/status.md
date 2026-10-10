@@ -3,27 +3,29 @@
 ## Food inventory — durable source checkpoint
 
 RC preparation proceeds under the existing Food authorization and quota
-override. Replacement2026.10.4-rc.1/build58 is frozen at
-`432784d0181af5b97fd89bfb3ef8d5c83212f92e`.
-[Signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
-and push CI38064596284 passed. Original Android artifact11674984580 contains APK
-SHA256 `e47db07178961b0a7bd0e029ee5a43b81f79f77a3a0f7c10b6d90f97fc2f0588`;
-root and independent checks verify source, version58, owner signer, package,
-checksums and native payload. Hosted Linux passes826 unit/93 native tests,
-Windows823 unit tests, and both exact installed desktop lifecycles pass.
-Independent source/UX/editorial reviews accept the scoped replacement.
+override. Build58 source `432784d0181af5b97fd89bfb3ef8d5c83212f92e` passed
+its hosted candidate and exact artifact gates, but focused Android acceptance
+found a further blocking layout defect: at320dp/200% with Gboard open, even the
+two-line Edit1 title left no field viewport. Build58 will not be published.
+Its successful stable56 upgrade, invalid-date rejection, blank-date Inbox Save,
+valid-date cold replay and preserved Tasks/settings/container checks remain
+attributed to build58; its incomplete field workflows remain open.
 
-Build57's Android finding omitted the date format and blank-date Inbox guidance
-at320dp/200% text. Build58 uses the short "Expiration" label and a growing helper
-inside the existing scrollable form; no domain, validation or storage behavior
-changes. The new native Linux regression passes both themes at100/200% text.
-Fresh exact Android date focus/validation/save/persistence and stable56→58
-upgrade acceptance remain pending. Windows manual GUI is RC-waived by the parent;
-fresh hosted58 lifecycle evidence is separate from carried source-bound CLI proof.
-Publication awaits that focused Android acceptance and the parent's fresh private
-quota snapshot. Stable2026.10.3/build56 remains Latest; Food stable promotion
-requires Lee's approval. The [current handoff](food-native-acceptance.md) records
-the bounded scope.
+Replacement2026.10.4-rc.1/build59 puts title and fields in one constrained
+scrollable viewport above the actions. Dirty-close confirmation also scrolls;
+the obscured page no longer shrinks for a modal keyboard, and focused input is
+revealed after the dialog inset animation resizes its viewport. Font sizes,
+full edited-target counts, controllers and durable command behavior are retained.
+The combined regression covers both themes,100/200% text, Add/Edit1/Edit100,
+keyboard open/closed, focused fields, invalid errors, Cancel/Keep editing and
+valid Save. Source/UX review, fresh signed artifacts and exact Android acceptance
+are required before publication; Linux simulated keyboard metrics are not Gboard
+acceptance. Windows manual GUI remains RC-waived; the new candidate still needs
+its own hosted installed lifecycle proofs. The [current handoff](food-native-acceptance.md)
+records that scope. Stable2026.10.3/build56 remains Latest. Food stable promotion
+requires Lee's approval; publication also awaits the parent's fresh private quota
+snapshot. Bazaar title and Flatpak data-path feedback are queued for the next
+release, outside this keyboard-layout correction.
 
 The bounded [Food import contract v1](food-import-contract.md) is public for
 parallel private staging; its generic implementation has55 focused passes and

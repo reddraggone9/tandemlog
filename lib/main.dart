@@ -1151,8 +1151,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   bool get _textHasFocus {
     final focus = FocusManager.instance.primaryFocus?.context;
-    return focus?.widget is EditableText ||
-        focus?.findAncestorWidgetOfExactType<EditableText>() != null;
+    if (focus is! Element || focus.renderObject?.attached != true) return false;
+    return focus.widget is EditableText ||
+        focus.findAncestorWidgetOfExactType<EditableText>() != null;
   }
 
   void _focusChanged() {
@@ -3791,6 +3792,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         },
         child: FocusScope(
           child: Scaffold(
+            resizeToAvoidBottomInset:
+                (ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus,
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(

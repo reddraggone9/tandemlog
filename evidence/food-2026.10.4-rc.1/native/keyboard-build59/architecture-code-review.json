@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "reviewer": "architecture_review",
+  "createdUtc": "2026-10-10T17:30:15.768558+00:00",
+  "worktree": "/tmp/tandemlog-food-date-readability",
+  "baseHead": "d99d791daffb29cde6451c1221018e3edb564ec0",
+  "verdict": "ACCEPTED_SCOPED_SOURCE_NO_MUST_FIX",
+  "scope": "Independent read-only architecture/code gate for Food editor keyboard layout correction; current uncommitted source, version bump pending. No builds, tests, commits or pushes performed by this reviewer.",
+  "findings": [],
+  "sourceSha256": {
+    "lib/main.dart": "4a3b4e45026c40d4b4613b8527ccb13476f6bbcd199413a62dc62e8665a41dd7",
+    "lib/food/food_page.dart": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a",
+    "test/food_editor_keyboard_layout_test.dart": "3ea6ccebe067e8899f9b83310a5937470381af5b124d22b10d8ecaefbb999f77",
+    "integration_test/food_editor_keyboard_workflow_test.dart": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8",
+    "integration_test/task_flow_test.dart": "f9bce860bc6996dd8fdca480947010aad519ac5bdd9aab61bd7907c0fc319657",
+    "pubspec.yaml": "e38784993eaa2b5c48c45d4bff2cf2282d5971d6bfc5c3e482328fa3fb0366fa",
+    "pubspec.lock": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+    "AGENTS.md": "203d719027c4e1c83573e1298e52265ecd1ecee38aaae8a8902390c640429f77",
+    "design/README.md": "e4864e320526d636d29928d55f718a7fe2f8f0e596b1d4cf04b848cdfb97fe82"
+  },
+  "trackedPatchSha256": "cf1121f2d0ef53c77a8630c0784ece6b1d4f155c5a31a73692b67a8177a7f5fb",
+  "unchangedProtectedAuthority": {
+    "lib/food/food_store.dart": {
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+      "equalToBaseHead": true
+    },
+    "lib/food/food_record.dart": {
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7",
+      "equalToBaseHead": true
+    },
+    "lib/food/food_import.dart": {
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+      "equalToBaseHead": true
+    },
+    "lib/storage/local_profile_database.dart": {
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04",
+      "equalToBaseHead": true
+    },
+    "lib/storage/task_store.dart": {
+      "sha256": "a8435c136297402927add4085e5aa871459c9d30cba5ce7698e6ac6ca0284558",
+      "equalToBaseHead": true
+    },
+    "pubspec.lock": {
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+      "equalToBaseHead": true
+    }
+  },
+  "acceptedBoundaries": [
+    "Food editor title and fields use one AlertDialog-owned scroll viewport; actions remain outside viewport.",
+    "Dirty-discard confirmation independently scrollable; controller, command, receipt and route.completed disposal ownership unchanged.",
+    "Both Scaffold bodies resize only for current route plus attached focused EditableText. Food FocusManager listener registration/removal balanced; existing Main reactive listener retained.",
+    "Caret reveal only for depth-zero vertical changed viewport, after frame, while owning dialog current/unanswered/mounted and focused EditableText belongs to same dialog route. No keyboard dismissal or background-page scroll request.",
+    "Platform target assertion remains48px Android/iOS and32px compact desktop; hit-testing/keyboard bounds and draft/state/error assertions preserved. Normal CI registration additive."
+  ],
+  "testEvidence": {
+    "reviewedLogsSha256": {
+      "/tmp/food-build59-keyboard-evidence/unit-final-r2.log": "88134e259b7d05abc44224e9bfb3b1544aea4d6f7c51c939562f911b4a37d68a",
+      "/tmp/food-build59-keyboard-evidence/analyze-final-r2.log": "f9a30114ebc84582e7c1354613190617eaa60622d2e2996ee137a9ecb6d6f4f2",
+      "/tmp/food-build59-keyboard-evidence/format-final-r2.log": "3756548afc9cfbcc2dcedb67745fac2fd08cc8583b12bcbbb7a1a7cd676ed4d2",
+      "/tmp/food-build59-keyboard-evidence/native-final.log": "d459f126ba9a6ab8b840e911d9d8218b9b3b54723e809d58ad6c7110b5cad92e",
+      "/tmp/food-build59-keyboard-evidence/red-focused.log": "16aec7b198ad26b27ddfa81ed23d0ae80d0e33bd55e5d82576e240a6e09970ff",
+      "/tmp/food-build59-keyboard-evidence/shared-scroller-only.log": "880a14587ba01f439d59d487295d45baff33a5f31f86501918f046d4a27ba287",
+      "/tmp/food-build59-keyboard-evidence/matrix-first.log": "ed9b0d310bbf14c365a90706ab0f413c6568add2878ab05e9fd6290c5c2aa980",
+      "/tmp/food-build59-keyboard-evidence/unit-final.log": "b55703bf7476649b7df9b47c26c94f37b060b9313602691c687f1670fad27997"
+    },
+    "ownerTargetedResult": "unit-final-r2.log terminal85 passed; analyze no issues; format5 files zero changed. Logs inspected independently, not rerun.",
+    "sourceQualification": "85-pass logs preceded final platform-aware action-minimum assertion-only adaptation; final native/analysis rerun remains owner-controlled. First GTK run failed only fixture48px assumption against actual32px desktop action, retained and not accepted as native pass.",
+    "meaningfulChecks": "12 combinations light/dark x1/2 text scale x Add/Edit1/Edit100 with simulated320x640/280IME; already-focused line visible before test ensureVisible assistance; Retention input; invalid date no mutation; exact draft retained through IME/Keep editing; successful save. FoodPreviewApp excludes nested productionMain evidence."
+  },
+  "privateVisualObservation": "Previously viewed both parent-provided actual Android build58 screenshots light/dark200% Gboard: title/actions visible and editor fields entirely absent. Private pixels not copied into this receipt/deliverable.",
+  "remainingGates": [
+    "Final exact source/version binding and affected native/CI results.",
+    "Actual Android/Gboard changed-flow acceptance; simulated GTK/widget insets are not Android runtime proof.",
+    "Paired productionMain Task/search/setup/checklist/pending-close paths retain final native acceptance; FoodPreview matrix alone does not establish them.",
+    "No release/publication/Windows acceptance implied."
+  ]
+}

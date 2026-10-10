@@ -1,19 +1,19 @@
 # Food RC1 preparation
 
-Replacement preview:2026.10.4-rc.1/build58. The successful build57 candidate
-establishes the updated floor57. Build58 fixes the bounded Android finding
-that320dp/200% text hid the date format and blank-date Inbox destination. Its
-short label and growing helper preserve the existing scrollable editor and
-typography; validation, domain and storage behavior are unchanged. New source
-requires fresh full candidate/provenance checks and focused exact Android
-acceptance; earlier build57 acceptance remains accurately source-bound.
+Replacement preview:2026.10.4-rc.1/build59 is in preparation. Build58 passed
+its hosted and artifact gates below, but exact320dp/200% Android acceptance found
+that its two-line Edit1 title plus actions left no editor fields while Gboard was
+open. Build58 is blocked from publication. The replacement shares title and
+fields in one scrollable viewport above actions, retains typography/count scope,
+and covers the combined Add/Edit1/Edit100, theme, large-text, IME and error matrix.
+Fresh full candidate/provenance and exact Android acceptance remain required.
 
 The original build57 [version floor](version-floor.json) comes
 from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
-## Build58 verified artifact handoff
+## Historical build58 artifacts — Android layout blocked
 
 Frozen executable source `432784d0181af5b97fd89bfb3ef8d5c83212f92e` passed
 [signed candidate38064595888](https://github.com/reddraggone9/tandemlog/actions/runs/38064595888)
@@ -34,11 +34,13 @@ explicitly leaves publication readiness false.
 and [actual-range editorial review](candidate/build58/final-range-build58-editorial-independent-review.json)
 accept the bounded source and notes. [Expiration evidence](native/expiry-build58/README.md)
 retains20 actual Linux GTK captures and the pointer-visible synthetic demo,
-with viewport/font/focus qualifications. Focused parent Android58 acceptance
-and stable56→58 upgrade smoke remain pending. Windows manual GUI is RC-waived;
+with viewport/font/focus qualifications. Parent Android58 checks passed stable56 upgrade, invalid-calendar rejection,
+blank-date Inbox Save and valid-date cold replay, preserving eight prior physical
+containers and18 Task tables/settings/canonical history. Other field states were
+unfinished when the keyboard-layout defect blocked acceptance. Windows manual GUI is RC-waived;
 carried local CLI/storage evidence retains its original source attribution.
-Publication is authorized after the remaining exact acceptance, reusing these
-original binaries without rebuilding and keeping stable2026.10.3 Latest.
+These build58 binaries must not be published. Build59 requires its own fresh
+artifacts and acceptance while keeping stable2026.10.3 Latest.
 
 The presentation hashes and preparation sections below retain earlier build57
 checkpoint evidence and failures. Build58's changed expiration source and tests

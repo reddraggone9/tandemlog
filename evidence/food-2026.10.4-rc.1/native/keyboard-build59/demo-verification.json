@@ -1,0 +1,26 @@
+{
+  "source_recording": "/tmp/food-build59-keyboard-evidence/native/native-linux-scripted-preview.mp4",
+  "selected_case": "dark200% Edit100",
+  "trim_start_seconds": 157.3354504108429,
+  "trim_duration_seconds": 30.2,
+  "crop": "native window320x640 at0,0; rest of X screen excluded",
+  "physical_keyboard": "none; GTK fake280pxinset",
+  "metadata": "debug UI productionhashes unchanged; currentpubspec59",
+  "verification_pending": false,
+  "verified_duration_seconds": 30.133333,
+  "width": 320,
+  "height": 640,
+  "video_sha256": "83cc1f78eb0d9c303bba3d51d379009ab1874187cce76be5a9d180947d846e47",
+  "original_recording_sha256": "f5772c3be474aa4f02f2a85adf680369e82ee6ce401d1b4edd9131c9fc10a0a2",
+  "pointer": "Actual X crosshair visible in final cropped-video decoded frames at3,14,26 and29.9seconds; Flutter scripted taps mark pointer location using xdotool.",
+  "observations": "Dark200% Edit100 field/caret, helper scrolling, invalid error, keyboard close/reopen, discard/Keep editing and valid-date typing/Save input. Crop excludes remaining X desktop. Clip ends at Save rather than showing next independent light-theme fixture.",
+  "qualification": "actual Linux GTKdebug and scripted inputs, simulated280pxIME; not Android/Gboard/Windows/human-user acceptance",
+  "checked_frames_seconds": [
+    0,
+    3,
+    14,
+    26,
+    29.5,
+    29.9
+  ]
+}

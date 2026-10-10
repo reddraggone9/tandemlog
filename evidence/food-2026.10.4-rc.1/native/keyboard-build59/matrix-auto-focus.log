@@ -1,0 +1,383 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: 320dp dark 1.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp dark 1.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +0 -1: 320dp dark 1.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 1.0x editor 0 with IME/errors
+  
+00:02 +0 -1: 320dp dark 1.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp dark 1.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +0 -2: 320dp dark 1.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 1.0x editor 1 with IME/errors
+  
+00:03 +0 -2: 320dp dark 1.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp dark 1.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +0 -3: 320dp dark 1.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 1.0x editor 100 with IME/errors
+  
+00:07 +0 -3: 320dp dark 2.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <-588.0>
+   Which: is not a value greater than or equal to <47.5>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:117:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:161:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 117
+The test description was:
+  320dp dark 2.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +0 -4: 320dp dark 2.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 0 with IME/errors
+  
+00:08 +0 -4: 320dp dark 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <0.0>
+   Which: is not a value greater than or equal to <47.5>
+An already-focused input must stay visible when IME changes
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectFocusedLineVisible (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:85:5)
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:144:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 85
+The test description was:
+  320dp dark 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +0 -5: 320dp dark 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 1 with IME/errors
+  
+00:08 +0 -5: 320dp dark 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <-64.0>
+   Which: is not a value greater than or equal to <47.5>
+An already-focused input must stay visible when IME changes
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectFocusedLineVisible (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:85:5)
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:144:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 85
+The test description was:
+  320dp dark 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +0 -6: 320dp dark 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 100 with IME/errors
+  
+00:11 +0 -6: 320dp light 1.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp light 1.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:11 +0 -7: 320dp light 1.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 1.0x editor 0 with IME/errors
+  
+00:11 +0 -7: 320dp light 1.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp light 1.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +0 -8: 320dp light 1.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 1.0x editor 1 with IME/errors
+  
+00:12 +0 -8: 320dp light 1.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _HitTestableWidgetFinder:<Found 0 widgets with type "TextButton" that are ancestors of
+widgets with text "Cancel" (considering only hit-testable widgets with a RenderBox): []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectActions (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:96:7)
+#5      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:120:5)
+<asynchronous suspension>
+#6      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:159:5)
+<asynchronous suspension>
+#7      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#8      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#9      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 96
+The test description was:
+  320dp light 1.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +0 -9: 320dp light 1.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 1.0x editor 100 with IME/errors
+  
+00:15 +0 -9: 320dp light 2.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <-588.0>
+   Which: is not a value greater than or equal to <47.5>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:117:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:161:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 117
+The test description was:
+  320dp light 2.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +0 -10: 320dp light 2.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 0 with IME/errors
+  
+00:16 +0 -10: 320dp light 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <0.0>
+   Which: is not a value greater than or equal to <47.5>
+An already-focused input must stay visible when IME changes
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectFocusedLineVisible (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:85:5)
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:144:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 85
+The test description was:
+  320dp light 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +0 -11: 320dp light 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 1 with IME/errors
+  
+00:16 +0 -11: 320dp light 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: a value greater than or equal to <47.5>
+  Actual: <-64.0>
+   Which: is not a value greater than or equal to <47.5>
+An already-focused input must stay visible when IME changes
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout.expectFocusedLineVisible (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:85:5)
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:144:3)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:238:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 85
+The test description was:
+  320dp light 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:19 +0 -12: 320dp light 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 100 with IME/errors
+  
+00:19 +0 -12: (tearDownAll)
+00:19 +0 -12: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+  ... and 8 more

@@ -48,6 +48,23 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Future<bool> requestCloseEditor() async =>
       await _requestEditorClose?.call() ?? true;
   String? _actionError;
+  @override
+  void initState() {
+    super.initState();
+    FocusManager.instance.addListener(_focusChanged);
+  }
+
+  void _focusChanged() {
+    if (mounted) setState(() {});
+  }
+
+  bool get _textHasFocus {
+    final focus = FocusManager.instance.primaryFocus?.context;
+    if (focus is! Element || focus.renderObject?.attached != true) return false;
+    return focus.widget is EditableText ||
+        focus.findAncestorWidgetOfExactType<EditableText>() != null;
+  }
+
   Future<void> _invoke(FutureOr<void> Function() action) async {
     try {
       await action();
@@ -59,6 +76,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   @override
   void dispose() {
+    FocusManager.instance.removeListener(_focusChanged);
     search.dispose();
     reasonQuery.dispose();
     super.dispose();
@@ -80,6 +98,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         ),
       ),
       child: Scaffold(
+        // Modals own their insets. A closing keyboard without an active input
+        // must not compress the page while its route becomes current again.
+        resizeToAvoidBottomInset:
+            (ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus,
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -584,6 +606,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     var retention = original?.retention ?? '';
     bool? estimated = original == null ? false : original.estimated;
     String? error;
+    double? editorViewportHeight;
     var answered = false, saving = false, deciding = false;
     bool pending() => widget.hasPendingSave?.call() ?? widget.savePending;
     String snapshot() => jsonEncode([
@@ -624,6 +647,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   builder: (ctx) {
                     final decide = _answerOnce<bool>(ctx);
                     return AlertDialog(
+                      scrollable: true,
                       title: Text(
                         pending()
                             ? 'Close food editor?'
@@ -662,15 +686,47 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             onPopInvokedWithResult: (didPop, result) {
               if (!didPop) unawaited(cancel());
             },
-            child: AlertDialog(
-              title: Text(
-                group == null
-                    ? 'Add food'
-                    : 'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
-              ),
-              content: SizedBox(
-                width: 480,
-                child: SingleChildScrollView(
+            child: NotificationListener<ScrollMetricsNotification>(
+              onNotification: (notification) {
+                if (notification.depth == 0 &&
+                    notification.metrics.axis == Axis.vertical &&
+                    editorViewportHeight !=
+                        notification.metrics.viewportDimension) {
+                  editorViewportHeight = notification.metrics.viewportDimension;
+                  // Dialog inset animation can resize the viewport after the
+                  // input's initial keyboard-metrics caret reveal.
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    final focused = FocusManager.instance.primaryFocus?.context;
+                    if (!answered &&
+                        dialogContext.mounted &&
+                        ModalRoute.of(dialogContext)?.isCurrent == true &&
+                        _textHasFocus &&
+                        focused != null &&
+                        focused.mounted &&
+                        identical(
+                          ModalRoute.of(focused),
+                          ModalRoute.of(dialogContext),
+                        )) {
+                      Scrollable.ensureVisible(
+                        focused,
+                        alignmentPolicy:
+                            ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+                      );
+                    }
+                  });
+                }
+                return false;
+              },
+              child: AlertDialog(
+                // Title and fields share the constrained space above the actions.
+                scrollable: true,
+                title: Text(
+                  group == null
+                      ? 'Add food'
+                      : 'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
+                ),
+                content: SizedBox(
+                  width: 480,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -815,92 +871,94 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     ],
                   ),
                 ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: saving ? null : cancel,
-                  child: const Text('Cancel'),
-                ),
-                FilledButton(
-                  onPressed: saving
-                      ? null
-                      : () async {
-                          try {
-                            if ([
-                              name,
-                              brand,
-                              expiry,
-                              size,
-                              location,
-                              count,
-                              retentionQuery,
-                            ].any(_composing)) {
-                              setDialog(
-                                () => error =
-                                    'Finish composing text before saving.',
-                              );
-                              return;
-                            }
-                            final amount = int.tryParse(count.text);
-                            if (amount == null || amount < 1 || amount > 100) {
-                              throw const FormatException(
-                                'Add 1 to 100 containers at a time.',
-                              );
-                            }
-                            final details = FoodDetails(
-                              name: name.text.trim(),
-                              brand: brand.text.trim(),
-                              expiry: expiry.text.trim().isEmpty
-                                  ? null
-                                  : expiry.text.trim(),
-                              estimated: estimated,
-                              retention: retentionQuery.text.trim().isEmpty
-                                  ? retention
-                                  : retentionQuery.text.trim(),
-                              size: size.text.trim(),
-                              location: location.text.trim(),
-                            );
-                            details.validate();
-                            setDialog(() => saving = true);
-                            if (group == null) {
-                              await add(details, amount);
-                            } else {
-                              final before = original!.toJson(),
-                                  after = details.toJson();
-                              final fields = after.keys
-                                  .where((key) => before[key] != after[key])
-                                  .toList();
-                              if (fields.isNotEmpty) {
-                                await changeDetails(
-                                  group.containers,
-                                  details,
-                                  fields,
+                actions: [
+                  TextButton(
+                    onPressed: saving ? null : cancel,
+                    child: const Text('Cancel'),
+                  ),
+                  FilledButton(
+                    onPressed: saving
+                        ? null
+                        : () async {
+                            try {
+                              if ([
+                                name,
+                                brand,
+                                expiry,
+                                size,
+                                location,
+                                count,
+                                retentionQuery,
+                              ].any(_composing)) {
+                                setDialog(
+                                  () => error =
+                                      'Finish composing text before saving.',
+                                );
+                                return;
+                              }
+                              final amount = int.tryParse(count.text);
+                              if (amount == null ||
+                                  amount < 1 ||
+                                  amount > 100) {
+                                throw const FormatException(
+                                  'Add 1 to 100 containers at a time.',
                                 );
                               }
+                              final details = FoodDetails(
+                                name: name.text.trim(),
+                                brand: brand.text.trim(),
+                                expiry: expiry.text.trim().isEmpty
+                                    ? null
+                                    : expiry.text.trim(),
+                                estimated: estimated,
+                                retention: retentionQuery.text.trim().isEmpty
+                                    ? retention
+                                    : retentionQuery.text.trim(),
+                                size: size.text.trim(),
+                                location: location.text.trim(),
+                              );
+                              details.validate();
+                              setDialog(() => saving = true);
+                              if (group == null) {
+                                await add(details, amount);
+                              } else {
+                                final before = original!.toJson(),
+                                    after = details.toJson();
+                                final fields = after.keys
+                                    .where((key) => before[key] != after[key])
+                                    .toList();
+                                if (fields.isNotEmpty) {
+                                  await changeDetails(
+                                    group.containers,
+                                    details,
+                                    fields,
+                                  );
+                                }
+                              }
+                              if (dialogContext.mounted) {
+                                answer(dialogContext, (details, amount));
+                              }
+                            } catch (e) {
+                              if (dialogContext.mounted) {
+                                setDialog(() {
+                                  saving = false;
+                                  error = e is FormatException
+                                      ? e.message
+                                      : e.toString();
+                                });
+                              }
                             }
-                            if (dialogContext.mounted) {
-                              answer(dialogContext, (details, amount));
-                            }
-                          } catch (e) {
-                            if (dialogContext.mounted) {
-                              setDialog(() {
-                                saving = false;
-                                error = e is FormatException
-                                    ? e.message
-                                    : e.toString();
-                              });
-                            }
-                          }
-                        },
-                  child: Text(
-                    pending()
-                        ? 'Retry save'
-                        : group == null
-                        ? 'Add'
-                        : 'Save',
+                          },
+                    child: Text(
+                      pending()
+                          ? 'Retry save'
+                          : group == null
+                          ? 'Add'
+                          : 'Save',
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },

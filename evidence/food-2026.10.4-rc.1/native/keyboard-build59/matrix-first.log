@@ -1,0 +1,179 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: 320dp dark 1.0x editor 0 with IME/errors
+00:02 +1: 320dp dark 1.0x editor 1 with IME/errors
+00:03 +2: 320dp dark 1.0x editor 100 with IME/errors
+00:05 +3: 320dp dark 2.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp dark 2.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +3 -1: 320dp dark 2.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 0 with IME/errors
+  
+00:06 +3 -1: 320dp dark 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp dark 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +3 -2: 320dp dark 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 1 with IME/errors
+  
+00:07 +3 -2: 320dp dark 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp dark 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +3 -3: 320dp dark 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 100 with IME/errors
+  
+00:09 +3 -3: 320dp light 1.0x editor 0 with IME/errors
+00:10 +4 -3: 320dp light 1.0x editor 1 with IME/errors
+00:10 +5 -3: 320dp light 1.0x editor 100 with IME/errors
+00:12 +6 -3: 320dp light 2.0x editor 0 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp light 2.0x editor 0 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +6 -4: 320dp light 2.0x editor 0 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 0 with IME/errors
+  
+00:12 +6 -4: 320dp light 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp light 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:13 +6 -5: 320dp light 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 1 with IME/errors
+  
+00:13 +6 -5: 320dp light 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: null
+  Actual: FlutterError:<A RenderFlex overflowed by 30 pixels on the bottom.>
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:204:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:223:13)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart line 204
+The test description was:
+  320dp light 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +6 -6: 320dp light 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 100 with IME/errors
+  
+00:15 +6 -6: (tearDownAll)
+00:15 +6 -6: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+  ... and 2 more

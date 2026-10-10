@@ -1,0 +1,16 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: 320dp dark 1.0x editor 0 with IME/errors
+00:02 +1: 320dp dark 1.0x editor 1 with IME/errors
+00:03 +2: 320dp dark 1.0x editor 100 with IME/errors
+00:08 +3: 320dp dark 2.0x editor 0 with IME/errors
+00:08 +4: 320dp dark 2.0x editor 1 with IME/errors
+00:09 +5: 320dp dark 2.0x editor 100 with IME/errors
+00:13 +6: 320dp light 1.0x editor 0 with IME/errors
+00:14 +7: 320dp light 1.0x editor 1 with IME/errors
+00:14 +8: 320dp light 1.0x editor 100 with IME/errors
+00:18 +9: 320dp light 2.0x editor 0 with IME/errors
+00:18 +10: 320dp light 2.0x editor 1 with IME/errors
+00:19 +11: 320dp light 2.0x editor 100 with IME/errors
+00:22 +12: (tearDownAll)
+00:22 +12: All tests passed!

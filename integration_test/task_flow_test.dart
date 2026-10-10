@@ -52,6 +52,8 @@ import 'tag_input_workflow_test.dart' show registerTagInputWorkflowTests;
 import 'food_production_workflow_test.dart' show registerFoodProductionTests;
 import 'food_expiry_guidance_workflow_test.dart'
     show registerFoodExpiryGuidanceTests;
+import 'food_editor_keyboard_workflow_test.dart'
+    show registerFoodEditorKeyboardTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -211,6 +213,7 @@ void main() {
   registerTagInputWorkflowTests();
   registerFoodProductionTests();
   registerFoodExpiryGuidanceTests();
+  registerFoodEditorKeyboardTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {

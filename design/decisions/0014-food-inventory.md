@@ -150,6 +150,20 @@ both instructions. Allowing helper growth inside the existing scrollable form
 preserves font size and touch targets; shrinking text or redesigning unrelated
 fields is unnecessary. Add/Edit share the same decoration and validation.
 
+A second actual320dp/200% Gboard-open check showed that even the two-line
+Edit1 title could consume all available space when held outside the field
+scroller. The title and fields now share AlertDialog's constrained scroller,
+with actions outside it; shortening the title alone would leave the same combined
+IME/large-text failure. Dirty-close confirmation uses the same bounded pattern.
+The obscured page and closing-keyboard transition keep their geometry stable;
+the current page resizes while an attached text input has focus. A dialog-scoped
+viewport-change notification reveals its own focused input after animated insets
+finish resizing. It neither changes user text nor forces focus. Tests require
+an already-focused editable line to remain visible before manual scrolling,
+and preserve draft, error and observed-target Save behavior. A disconnected focus
+element is rejected before ancestor traversal. Revisit this bounded mechanism if
+real keyboard timing or pending-save/recovery overlay evidence reveals a gap.
+
 ## Validation and remaining gates
 
 Focused domain/widget regressions cover physical identity, partial grouping,
