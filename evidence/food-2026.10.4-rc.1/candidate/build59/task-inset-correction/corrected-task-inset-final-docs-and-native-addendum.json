@@ -1,0 +1,48 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:30:35.457800+00:00",
+  "verdict": "ACCEPT_FINAL_PRE_FREEZE_DOCUMENTS_AND_NATIVE_EVIDENCE_BINDINGS",
+  "reviewed_docs_sha256": {
+    "design/status.md": "698a385170e47365956a265ac2d8cec9220a5e70fc994edaf85ced574e1f47cf",
+    "design/food-native-acceptance.md": "d1fa4a6275c0df367615c91b6aeb979e354e6cb00e4a680eef5b93febc25b1c2",
+    "evidence/food-2026.10.4-rc.1/README.md": "0e99466ac644198f085aae2f089edb3743ffad42cc945104221ee0bcb6e3875d",
+    "evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md": "9b7f38321f9dfff5b0e6c799a8ff090fa1c3f6f0a0ec03577c6e112147630de5"
+  },
+  "manifest_sha256": {
+    "evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json": "80e262548d61525d4a9f677bf4208c4bf0ef129c0cba10fbbc3e5170e705dae0",
+    "evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/manifest.json": "b62776adb92633a8612078914149c3411bc39dc5b59c61083b67ae863062a1e6"
+  },
+  "checks": {
+    "failure_members_original_hash_and_size_match": 9,
+    "new_native_members_original_hash_and_size_match": 148,
+    "current_source_binding_hashes_match": 10,
+    "old_source87_native_evidence_files_and_manifest_unchanged": true,
+    "copied_independent_receipts_byte_identical": {
+      "corrected-task-inset-pre-freeze-independent-review.json": true,
+      "corrected-task-inset-documents-independent-review.json": true
+    },
+    "relative_markdown_links_resolve": true,
+    "private_marker_findings": [],
+    "whitespace_diff_check": "PASS"
+  },
+  "native_scope": {
+    "task_bulk_red": "four unchanged flows:2 pass/2 failures before fix",
+    "task_bulk_green": "four unchanged flows:4 pass28s, compiled predicate before explanatory comment only",
+    "food_green": "final commented source rebuilt:2 pass5:38, production Save/restart/restore plus all12 editor combinations with final nonempty selected-glyph assertion",
+    "captures": "120 Food matrix images plus two production stock images; two warmups explicitly excluded;112 matrix captures byte-identical to original source87 evidence, eight changed matrix captures separately reviewed by UX reviewer",
+    "platform": "actual Linux GTK debug synthetic data with simulated280px inset; no own Android/Gboard or Windows GUI execution claimed"
+  },
+  "historical_failure_attribution": "source87 candidate38073185907 native92 pass/2 Task notice assertion failures before timeout, Food matrix pass, signing skipped. Original source87 Windows bytes cannot promote corrected source; BOM normalization attribution corrected.",
+  "source_change": "Task root Scaffold restores resizing when Food hidden; Food expression/test assertions unchanged. Linux40 measured budget retains all gates and is not represented as timeout remediation.",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "editorial_status": "same three bullets and immutable dark repeat-checkbox image accepted for corrected working range; final stable76-to-frozen-SHA amendment pending",
+  "must_fix": [],
+  "remaining": [
+    "Exact corrected source freeze and final covered-range amendment",
+    "New full candidate/push terminal success and all original archives/source-member-checksum/lifecycle gates",
+    "Exact replacement owner APK parent Android Gboard matrix/upgrade/cold replay acceptance",
+    "Normal publication preflight and private parent clearance; Windows manual GUI RC waiver preserved"
+  ],
+  "publication_ready": false,
+  "privacy": "No private quota values, Library IDs or source rows.",
+  "architecture_addendum": "One additive independent architecture receipt copied without changing prior147 members, source, frames, logs or README; complete148-member manifest verified."
+}

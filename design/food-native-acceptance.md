@@ -32,13 +32,24 @@ canonical history preserved. Other field states were unfinished. These passes
 and older build57/storage proofs remain bound to their original source and APK;
 none substitutes for replacement59 keyboard acceptance.
 
-Frozen build59 source `87e8b321ea76623e5ef5b8c532d69a3895300e65` is running
+Initial build59 source `87e8b321ea76623e5ef5b8c532d69a3895300e65` failed
 [signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
-and push CI38073186249. Local independent code/UX/demo and actual-range notes
+and push CI38073186249:92 native passes/two Task bulk-warning visibility failures,
+not a timeout. Owner signing was skipped and no replacement APK exists from that
+run. The new Food matrix passed; a scoped root Scaffold correction restores Task
+keyboard-safe bounds after Save changes focus while leaving Food handling intact.
+The unchanged four bulk native flows now pass after reproducing both failures.
+The [failure disposition](../evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json)
+preserves the original failed run and source-bound Windows artifact evidence.
+The corrected source needs a fresh full candidate and all new original artifacts.
+Local independent code/UX/demo and actual-range notes
 reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
-records120 captures and the final fixture qualification. The exact Android
+records120 captures and the earlier fixture qualification. The separate
+[corrected-source rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
+passes production Food persistence and the twelve-case matrix in5:38, executing
+the final glyph assertion without rewriting the original evidence. The exact Android
 artifact ID/APK hash will be recorded after the fresh full matrix and independent
-artifact review; no build59 runtime acceptance is implied by this checkpoint. Windows manual GUI
+artifact review; no Android runtime acceptance is implied by this checkpoint. Windows manual GUI
 remains RC-waived by the parent; fresh hosted Linux/Windows installed lifecycle
 proofs are still required for this candidate. Prior local CLI/storage evidence
 retains its original build57 or stable56 attribution.

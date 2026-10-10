@@ -3792,8 +3792,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         },
         child: FocusScope(
           child: Scaffold(
+            // Task controls remain above a closing keyboard after Save takes
+            // focus. Food dialogs own their insets without shrinking the page.
             resizeToAvoidBottomInset:
-                (ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus,
+                !foodVisible ||
+                ((ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus),
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(

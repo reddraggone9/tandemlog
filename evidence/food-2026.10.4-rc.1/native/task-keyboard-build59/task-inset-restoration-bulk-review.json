@@ -1,0 +1,135 @@
+{
+  "decision": "ACCEPT scoped Tasks inset restoration and unchanged4-case bulk regression; Food rerun still pending terminal in this preliminary receipt",
+  "source": {
+    "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+    "bytes": 203608,
+    "sha256": "237b3b5b91d17f2314fe85afd7e8b2ef49a18235c1fd0b2ddef09aee0d181f4f"
+  },
+  "source_delta": "Only root Scaffold predicate and explanatory comment: !foodVisible || ((ModalRoute.isCurrentOf(context) ?? true) && _textHasFocus). Restores prior always-resizing Tasks behavior, retaining identical Food-visible branch. No Food renderer/editing/data change.",
+  "previous_failed_source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "fixture": {
+    "path": "/tmp/tandemlog-food-date-readability/integration_test/bulk_failure_visibility_test.dart",
+    "bytes": 8434,
+    "sha256": "478fc2cab79fab6492ef5e069cdf79f097ec2137a06c0da71b48feb6c7640636"
+  },
+  "fixture_byte_equal_failed_source": true,
+  "fixture_assertions": "Original viewport bounds and notice-before-actions bounds, warning hit test, editor draft/controller selection, repeated-save focus/scroll stability, unchanged canonical hashes/peer description/schedule, CancelDiscard and no exception retained. No viewport/font resizing or exception suppression.",
+  "native_result": "green-native.log4PASS0/28sec; red-native.log2PASS2FAIL24sec with actual warning bottom656>540 and476>360 in two200%-IME cases.",
+  "actual_pixels": "All8 native GTK green frames independently viewed. Desktop/narrow dark normal warnings and actions readable.390/light200 and360/dark200 full stale warning plus Cancel/Save readable above simulated keyboard; no visible overflow. Draft12 retained; not claiming entire form fits at once in small error viewport.",
+  "platform": "Actual Linux GTK with synthetic Tasks/profile/shared folders and simulated280px IME, framework inputs. Not Android keyboard/physical touch acceptance.",
+  "source_retention": {
+    "FoodPage": {
+      "path": "/tmp/tandemlog-food-date-readability/lib/food/food_page.dart",
+      "bytes": 41707,
+      "sha256": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a"
+    },
+    "keyboard_fixture": {
+      "path": "/tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart",
+      "bytes": 11704,
+      "sha256": "52258b99ae93b7d668a295783a737fc0122f829e9e8f8bc4fc98bd370c4864b3"
+    },
+    "Food_native_fixture": {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/food_editor_keyboard_workflow_test.dart",
+      "bytes": 1636,
+      "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8"
+    },
+    "qualification": "Prior final120 Food frames retain exact earlier main4a3 source attribution; Food rendererf2a and fixtures522/1d2 unchanged. Main is now237b source. New Food composed-navigation and matrix runtime must close current-host gate."
+  },
+  "bound_logs": [
+    {
+      "path": "/tmp/food-build59-task-inset-review/red-native.log",
+      "bytes": 10090,
+      "sha256": "1d621157993905fc15281c8049ddd1f47ba752e04b6ed5b29addc44aa861197d"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-native.log",
+      "bytes": 6158,
+      "sha256": "15322d669273cb89886acfc880a8c21ef7761af0fc96062f54fc447b647b2aa3"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/analyze.log",
+      "bytes": 686,
+      "sha256": "d90e6523aa6eb6906c4dc66c4792cf662b1eaa3e97b202e07060bae6dc4cb1ac"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/format.log",
+      "bytes": 46,
+      "sha256": "a019a650f63282baef242f373bb1cdfb5263aa771ff7a8e0b7774a6aa484c6a6"
+    }
+  ],
+  "viewed_images": [
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-desktop-dark-before-save.png",
+      "bytes": 63438,
+      "sha256": "de4f5da20b39a3fa82e181a9cfe49885645befb66dddde449a1decf2c061b1da",
+      "pixels": [
+        1200,
+        850
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-desktop-dark-rejected.png",
+      "bytes": 71076,
+      "sha256": "8f10cd337a832421bd1c308623eb473b7104cd9c05554a0d3f76e6c10b43d506",
+      "pixels": [
+        1200,
+        850
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-narrow-dark-before-save.png",
+      "bytes": 39386,
+      "sha256": "d6adeec800f67dbd8505f957346a86ed9971e3f7c795c6f4e7193b14fd4cb235",
+      "pixels": [
+        390,
+        820
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-narrow-dark-rejected.png",
+      "bytes": 42745,
+      "sha256": "36d9f748b782e24bd6b0a4e519cd37c486d98153fc42b2735f98fefd6d72b9dd",
+      "pixels": [
+        390,
+        820
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-narrow-light-200-ime-before-save.png",
+      "bytes": 37325,
+      "sha256": "744fe7517ba55d226aea0687b532b99aed2a2c06bb788489372fc68223550095",
+      "pixels": [
+        390,
+        820
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-narrow-light-200-ime-rejected.png",
+      "bytes": 41742,
+      "sha256": "b490b646ba33dcc5508001cb1e68268150bfe0654e08d693fbc07528fb2dd665",
+      "pixels": [
+        390,
+        820
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-small-dark-200-ime-before-save.png",
+      "bytes": 26252,
+      "sha256": "1db2a04c531623c5a5fac43d934ee96d306f14bda3be1146b5e65bf95885113f",
+      "pixels": [
+        360,
+        640
+      ]
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-screens/bulk-failure-small-dark-200-ime-rejected.png",
+      "bytes": 29969,
+      "sha256": "9fd535c3a170ee7cd02066c62ab879d250c0780551a618121af43eaa37386de4",
+      "pixels": [
+        360,
+        640
+      ]
+    }
+  ],
+  "remaining": "Await current Food production-navigation+12 matrix terminal, then source-bound additive closure. Full fresh signed candidate/installed lifecycle/exact Android and publication gates remain pending. CI budget/workflow edit is outside this UX-only review."
+}

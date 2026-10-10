@@ -1,0 +1,33 @@
+{
+  "checked_at_utc": "2026-10-10T18:19:18.234680+00:00",
+  "verdict": "ACCEPT_PROACTIVE_LINUX40_CAPACITY_BUDGET_ONLY_NOT_APPLIED",
+  "supersedes_for_justification": "conditional-linux-timeout-independent-review.json condition was not met; prior receipt/patch retained",
+  "source_observed": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "run_observed": 38073185907,
+  "observed_measurements": {
+    "Linux_native_step_start": "17:52:58Z",
+    "full94suite_terminal": "18:15:56Z",
+    "native_duration": "22:58",
+    "Linux_job_start": "17:47:55Z",
+    "time_to_native_terminal": "28:01",
+    "job_completed": "18:16:00Z",
+    "actual_outcome": "92pass2nativeassertfail exit1; not timeout",
+    "prior58_post_native_gates_duration": "2:15 (16:05:23 native pass\u219216:07:38 job completion)"
+  },
+  "capacity_inference": "Observed preparation+full94native already consume28:01; prior actual release/payload/startup/Flatpak/lifecycle/upload tail2:15 projects roughly30:16. Success/repaired full assertions may take additional time, so30minute job has insufficient credible margin. This is measured capacity planning, not an assertion that timeout happened.",
+  "proposal": "Raise only Linux timeout30\u219240 in same necessary corrected-source full candidate. Match existing Windows/debugAndroid/owner-signing40 budgets.",
+  "patch": {
+    "path": "/tmp/food-rc59-independent-review/conditional-linux-timeout-30-to-40.patch",
+    "sha256": "8e390d38908490537dd04ee962292aca0e609bc0320ecf69c0678ecf952e065a",
+    "apply_check": "PASS not applied"
+  },
+  "retained_gates": "All94 real-native/unit/contracts/policies/release/payload/startup/installed lifecycle/full source-artifact-signature/checksum/publisher gates remain; same runner; no retries/skip/outcome masking/permission changes",
+  "actual_failure_must_fix": "Bulk notice regression must independently go RED\u2192GREEN with unchanged assertions before candidate preparation. Capacity change cannot turn current failed candidate into accepted evidence.",
+  "replacement_requirement": "New immutable full candidate source including UI remedy+one workflow line, fresh original artifacts and exact native acceptance; old source87 Windows artifact remains source87-only",
+  "scope_limits": [
+    "No workflow source edit, cancel, dispatch or publication by reviewer",
+    "No extra runners, fees setting changes or optional matrix",
+    "No personal quota values published"
+  ],
+  "publication_ready": false
+}

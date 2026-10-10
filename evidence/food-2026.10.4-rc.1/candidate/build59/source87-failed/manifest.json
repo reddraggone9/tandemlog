@@ -1,0 +1,55 @@
+{
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "disposition": "FAILED_NATIVE_GATE_NOT_A_TIMEOUT; no owner-signed APK; no promotion",
+  "members": [
+    {
+      "file": "build59-source87-linux-failed-hosted.log",
+      "bytes": 462606,
+      "sha256": "078883286cba41585f237bcaf8af370afa2ad082da2b36190e6ebdd8f0b2679d"
+    },
+    {
+      "file": "build59-source87-native-failure-independent-review.json",
+      "bytes": 4680,
+      "sha256": "82148e29d620d0299064dab56649e0f518bd665005d5a74f913b48bd31f523f4"
+    },
+    {
+      "file": "build59-source87-final-failure-run-annotations-api.json",
+      "bytes": 36799,
+      "sha256": "fffbbb9333aebf4da126a8bf4fa0cd489e1094793231c5c70a57dd192adb7584"
+    },
+    {
+      "file": "build59-source87-final-jobs-api.json",
+      "bytes": 13184,
+      "sha256": "5bef318eca39333e6589620cf07642a591816e58a885f64dd61db0aa553bb514"
+    },
+    {
+      "file": "build59-source87-final-push-jobs-api.json",
+      "bytes": 11921,
+      "sha256": "7cdaa5a0efbfe2b88cac6db53f4a27ead02f06c2ff0a129df659222ce8f99634"
+    },
+    {
+      "file": "build59-source87-final-artifacts-api.json",
+      "bytes": 3215,
+      "sha256": "a6d38ce60579e0e7a526cf12c0ea11bad41f94b00e29f52b0ce065dbf9159e51"
+    },
+    {
+      "file": "build59-windows-artifact-independent-review.json",
+      "bytes": 3602,
+      "sha256": "cd310f1d7db13d3487538be9f5f29cdafa02d4769e420ad9506490c69a47b007"
+    },
+    {
+      "file": "proactive-linux40-observed-capacity-independent-review.json",
+      "bytes": 2463,
+      "sha256": "187c8a6e4072fe40eefd1f5adc9547d2f06716ca466836a66a584b8b77093839"
+    },
+    {
+      "file": "windows-original-identity.json",
+      "bytes": 1587,
+      "sha256": "95eb6146bfa025dfcb7c308adc0d1374fe57bba277ed54df5bd7453a11084180"
+    }
+  ],
+  "preservation": "Copied saved review/log/API bytes without rewriting prior evidence. The independent reviewer removed only the leading U+FEFF BOM from the returned decoded log before saving it; the saved log and its recorded hash remain unchanged.",
+  "windows": "Verified source87 archive/installed lifecycle remains historical artifact evidence, not replacement-source acceptance.",
+  "publication_ready": false
+}

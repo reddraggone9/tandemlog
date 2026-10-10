@@ -1,0 +1,45 @@
+{
+  "source_commit": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "original_artifact_id": 11678046493,
+  "verified_by": "root independent read of original reviewer-materialized bytes",
+  "windows_gui": "parent RCwaiver; no GUI runtime byroot",
+  "native_runtime": "original hosted installed lifecycle report, not root local installation",
+  "checks": {
+    "original_six_members": true,
+    "portable_source_member_inventory": "pass",
+    "installed_phases": "pass"
+  },
+  "original_members": {
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14396338,
+      "sha256": "55cd4e2488c8570fb05081aaaca7165137a24fca3dd7fd3e2cdde1671cf83e79"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12376084,
+      "sha256": "49ed85cdfac11f85489598667956d00db033a1e7517f65671745749b5d5db529"
+    },
+    "windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "2cf97e57e5b53c67cbcf236d32fe9829f619c549cc191b7a561f20a459621445"
+    },
+    "windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "28bc80b332be962593df31bbcb5942b36e907c779d0f0d2a950e1aafc92a9a23"
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "329a1fa096d3f08db64b1a0c027c4afe60371030d45cac16f9d7c03ca82f4f5f"
+    },
+    "windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "8860ff48cb4876482fab5b9600326201022b9542215ac323cb4f3b740a0ebbf3"
+    }
+  },
+  "hosted_lifecycle_phase_names": [
+    "after-install",
+    "after-upgrade",
+    "after-uninstall",
+    "after-reinstall"
+  ]
+}

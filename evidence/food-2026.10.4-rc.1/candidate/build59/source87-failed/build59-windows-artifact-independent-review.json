@@ -1,0 +1,99 @@
+{
+  "checked_at_utc": "2026-10-10T17:58:45.321086+00:00",
+  "verdict": "ACCEPT_EXACT_WINDOWS_ARTIFACT_ONLY",
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "version": "2026.10.4-rc.1+59",
+  "artifact_id": 11678046493,
+  "actual_archive": {
+    "path": "/tmp/food-rc59-artifacts/food59-windows-38073185907.zip",
+    "bytes": 26206247,
+    "sha256": "ffe8be0e03db5451684eac03ef7b40dbef1fc5141aa5156a66c64c7771283c24"
+  },
+  "actual_members": [
+    {
+      "name": "windows-install-smoke.json",
+      "bytes": 1758,
+      "sha256": "28bc80b332be962593df31bbcb5942b36e907c779d0f0d2a950e1aafc92a9a23",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12376084,
+      "sha256": "49ed85cdfac11f85489598667956d00db033a1e7517f65671745749b5d5db529",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-portable.zip",
+      "bytes": 14396338,
+      "sha256": "55cd4e2488c8570fb05081aaaca7165137a24fca3dd7fd3e2cdde1671cf83e79",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-provenance.json",
+      "bytes": 2181,
+      "sha256": "8860ff48cb4876482fab5b9600326201022b9542215ac323cb4f3b740a0ebbf3",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-SHA256SUMS.txt",
+      "bytes": 111,
+      "sha256": "329a1fa096d3f08db64b1a0c027c4afe60371030d45cac16f9d7c03ca82f4f5f",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "bytes": 108,
+      "sha256": "2cf97e57e5b53c67cbcf236d32fe9829f619c549cc191b7a561f20a459621445",
+      "crc_valid": true
+    }
+  ],
+  "portable_actual_member_count": 17,
+  "checks": [
+    "Original API archive SHA256/size/source/main/run/unexpired match actual bytes",
+    "Six safe original members/full CRC/checksums",
+    "All17 actual portable payload member hashes/path/case/CRC and source/run provenance",
+    "Exact native notices content source equivalence with CRLF representation; hosted Windows native export gate passed",
+    "Four installed lifecycle phases pass unmodified frozen publish policy"
+  ],
+  "hosted_checks": {
+    "job_id": 114274685906,
+    "conclusion": "success",
+    "unit_tests": {
+      "passed": 835,
+      "platform_skips": 2
+    },
+    "contracts": {
+      "passed": 107
+    },
+    "python_policies": {
+      "run": 57,
+      "platform_skips": 5
+    },
+    "native_payload": "Packaged native library and exact notices PASS before artifact upload"
+  },
+  "supporting_files": [
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-windows-actual-artifact-bindings.json",
+      "sha256": "bf42b1eb2042f4026824fe82f783456dcf2353d378d00a52a56c94083655899e"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-windows-hosted.log",
+      "sha256": "eab4a6763d19ee8510f45469404d9445f93bf7d0d694c41d9f6d926403dc26f2"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-jobs-after-windows-api.json",
+      "sha256": "d1626943376a207dc7cb861d8701a5ae842328c2966ac175aea5788c494e93b2"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-artifacts-after-windows-api.json",
+      "sha256": "a6d38ce60579e0e7a526cf12c0ea11bad41f94b00e29f52b0ce065dbf9159e51"
+    }
+  ],
+  "publication_ready": false,
+  "limits": [
+    "Artifact only; full candidate/signed Android and parent combined Android59 acceptance pending",
+    "Reviewer did not execute app/DLL/installer or GUI; parent RC Windows manualGUI waiver retained",
+    "Older57/58 native evidence remains source-bound; no publication approval"
+  ]
+}

@@ -13,13 +13,18 @@ from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
-## Build59 frozen source — candidate pending
+## Initial build59 source — native gate failed
 
 Executable source `87e8b321ea76623e5ef5b8c532d69a3895300e65` declares build59
 and passed fresh candidate/history preflight above floor58 from43 successful
 main signed candidates and22 releases. [Signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
-and push CI38073186249 are running at that exact source. No APK hash or Android
-acceptance is claimed until actual replacement bytes are available and verified.
+and push CI38073186249 failed at that exact source:92 native passes and two
+bulk-edit warning visibility failures. The Food title/form/IME matrix passed.
+This was an ordinary assertion failure before the timeout; owner signing was
+skipped and no build59 release APK exists from this run. The
+[original failure disposition](candidate/build59/source87-failed/manifest.json)
+retains decoded logs, API proof and independent review. Verified Windows artifacts
+remain source87-only evidence and cannot be promoted from the failed candidate.
 
 [Keyboard evidence](native/keyboard-build59/README.md) contains the tested REDs,
 85 affected widget passes, final strengthened12-case matrix and actual GTK
@@ -33,10 +38,25 @@ All145 manifest members match their original bytes and Git blobs.
 [frozen source review](candidate/build59/frozen-build59-source-readiness-independent-review.json)
 and [immutable-range editorial review](candidate/build59/final-range-build59-editorial-independent-review.json)
 accept the scoped source and unchanged three notes/media items.
-[Pending handoff](candidate/build59/handoff-pending.json) keeps exact artifact,
-hosted lifecycle and parent Gboard/upgrade acceptance open. These records do not
+[Original pending handoff](candidate/build59/handoff-pending.json) describes its
+earlier in-progress checkpoint; the terminal failure above supersedes that status.
+Exact artifact, hosted lifecycle and parent Gboard/upgrade acceptance remain open. These records do not
 upgrade older build57/58 evidence to build59 acceptance. Stable2026.10.3 remains
 Latest; publication requires the remaining gates and parent's private clearance.
+
+The corrected root Scaffold rule restores Task resizing whenever Food is not
+visible. Food's paired-page/modal inset handling is unchanged. Four unchanged
+bulk native flows first reproduced the two visibility failures, then passed all
+four after correction, including exact draft/selection/focus/scroll and canonical
+preservation assertions. The replacement receives fresh full candidate and
+artifact review. Linux's40-minute budget retains every gate and matches the other
+platform budgets; the [capacity review](candidate/build59/source87-failed/proactive-linux40-observed-capacity-independent-review.json)
+uses the actual28:01 preparation/native duration and previous2:15 packaging tail,
+without describing the assertion failures as a timeout or waiving them.
+The [corrected-source native closure](native/task-keyboard-build59/README.md)
+binds these bulk RED/GREEN checks, the final production Food persistence flow and
+all twelve final editor combinations in5:38, with120 matrix captures and no
+fixture weakening. New exact Android and full hosted/artifact gates remain open.
 
 ## Historical build58 artifacts — Android layout blocked
 

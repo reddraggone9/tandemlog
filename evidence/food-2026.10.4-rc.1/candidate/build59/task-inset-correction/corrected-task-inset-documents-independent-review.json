@@ -1,0 +1,23 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:28:05.262744+00:00",
+  "verdict": "ACCEPT_CURRENT_CORRECTED_SOURCE_CHECKPOINT_DOCUMENTS",
+  "amends_receipt": "corrected-task-inset-pre-freeze-independent-review.json",
+  "doc_sha256": {
+    "design/status.md": "f84b870ee35fcbdefcc60e2914ec47b7ac49c1749b439edec581609567e551d6",
+    "design/food-native-acceptance.md": "fddad1246dffbbef3fa1b1d740dc477a7f45ee2fc5fbfc6a526db7616c075d49",
+    "evidence/food-2026.10.4-rc.1/README.md": "59ca5aa9a0b13ee7690ae52a6c7e591bf758c116ada6ef9912d5b7c5c210c61d",
+    "evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json": "80e262548d61525d4a9f677bf4208c4bf0ef129c0cba10fbbc3e5170e705dae0"
+  },
+  "closed_finding": "Failure manifest now accurately attributes leading U+FEFF BOM normalization to independent reviewer; preserved saved log and hashes unchanged. Nine preserved original files still byte/size/hash identical.",
+  "claims_review": [
+    "Source87 failed ordinary Task notice assertions; native92 pass/two failures, Food matrix passed, signing skipped, no release APK.",
+    "Source87 original Windows artifact remains historical and cannot promote failed or corrected replacement source.",
+    "Scoped corrected Task rule and separate measured Linux40 budget described accurately; no assertion or gate weakening.",
+    "Old source87 native/media/demo records retain original attribution; replacement full candidate/artifacts/parent real Android acceptance pending.",
+    "Relative Markdown links resolve, diff whitespace check passes, no private Library/storage token/quota markers found in new failure records."
+  ],
+  "replacement_source_frozen": null,
+  "must_fix": [],
+  "publication_ready": false,
+  "privacy": "No personal quota numbers or private Library references."
+}

@@ -1,0 +1,100 @@
+{
+  "checked_at_utc": "2026-10-10T18:19:18.231977+00:00",
+  "verdict": "REJECT_SOURCE87_CANDIDATE_FOR_PROMOTION_ACTUAL_NATIVE_REGRESSIONS",
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "push_run": 38073186249,
+  "candidate_conclusion": "failure",
+  "linux_job": 114274685898,
+  "job_conclusion": "failure",
+  "linux_native": {
+    "passed": 92,
+    "failed": 2,
+    "actual_full_suite_total": 94,
+    "Food_keyboard_matrix": "PASS18:07:23",
+    "app_unit_passed": 838,
+    "last_test": "compact selection commands stay reachable through scrolling and resize PASS18:15:56"
+  },
+  "failed_assertions": [
+    {
+      "test": "native stale bulk failure stays visible narrow-light-200-ime",
+      "source_file": "integration_test/bulk_failure_visibility_test.dart",
+      "line": 174,
+      "expected_notice_bottom_max": 540,
+      "actual_notice_bottom": 656,
+      "excess": 116,
+      "time": "17:56:43Z"
+    },
+    {
+      "test": "native stale bulk failure stays visible small-dark-200-ime",
+      "source_file": "integration_test/bulk_failure_visibility_test.dart",
+      "line": 174,
+      "expected_notice_bottom_max": 360,
+      "actual_notice_bottom": 476,
+      "excess": 116,
+      "time": "17:56:46Z"
+    }
+  ],
+  "failure_classification": "Native assertion failures with normal completed exit1; not timeout. Job17:47:55\u219218:16:00 completed before30minutes; annotations confirm92pass2fail and exit1. Conditional timeout remedy condition unmet and does not address these failures.",
+  "source_inference": "Frozen main Tasks Scaffold changed from ordinary resize to route-current+editable-focus-conditioned resize. Embedded single/bulk Task dialog explicitly removes bottom viewInsets assuming outer Scaffold already resized. This creates an inset-responsibility mismatch if focus moves to another control while IME remains visible. Exact post-Save focus was not instrumented by this reviewer; parent owns RED/GREEN diagnosis. Restoring established Tasks behavior while keeping Food-specific route/focus policy is a bounded remedy for independent review, not a fixture waiver.",
+  "required_disposition": [
+    "Diagnose and fix actual bulk notice visibility regression; keep legacy assertions and full94suite",
+    "Current source87 successful Windows/debug artifacts remain immutable evidence and cannot form release from failed full candidate",
+    "Fresh corrected source, fullmatrix/original artifacts and parent exact Android59 acceptance required; version eligibility checked afresh"
+  ],
+  "signed_android": {
+    "job_id": 114280263007,
+    "conclusion": "skipped",
+    "actual_owner_apk": "none"
+  },
+  "artifact_inventory": [
+    {
+      "id": 11678226192,
+      "name": "windows-storage-harness",
+      "digest": "sha256:85613922ba25c0bc84feeff582a3e332d3122bbcedcbbf2c7750e1a1eef7d651"
+    },
+    {
+      "id": 11678046493,
+      "name": "windows",
+      "digest": "sha256:ffe8be0e03db5451684eac03ef7b40dbef1fc5141aa5156a66c64c7771283c24"
+    },
+    {
+      "id": 11677657029,
+      "name": "android",
+      "digest": "sha256:5da5dd05ec28bf4e61c4317adbd063374487c45d455209d37b1a8ca1fda8e4df"
+    },
+    {
+      "id": 11677412545,
+      "name": "windows-unit-tests",
+      "digest": "sha256:87482182c72cf2d2879108896f2c5176b673f5b89256cee69a105b17156d8ede"
+    }
+  ],
+  "publication_ready": false,
+  "supporting_files": [
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-source87-linux-failed-hosted.log",
+      "sha256": "078883286cba41585f237bcaf8af370afa2ad082da2b36190e6ebdd8f0b2679d"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-source87-final-failure-run-annotations-api.json",
+      "sha256": "fffbbb9333aebf4da126a8bf4fa0cd489e1094793231c5c70a57dd192adb7584"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-source87-final-jobs-api.json",
+      "sha256": "5bef318eca39333e6589620cf07642a591816e58a885f64dd61db0aa553bb514"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-source87-final-push-jobs-api.json",
+      "sha256": "7cdaa5a0efbfe2b88cac6db53f4a27ead02f06c2ff0a129df659222ce8f99634"
+    },
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-source87-final-artifacts-api.json",
+      "sha256": "a6d38ce60579e0e7a526cf12c0ea11bad41f94b00e29f52b0ce065dbf9159e51"
+    }
+  ],
+  "scope_limits": [
+    "Read-only original log/API/source review; no tests/app execution/source edits/dispatch/publication",
+    "Previous source preparation/editorial/artifact-only receipts preserved with original scope; this terminal failure closes full candidate gate",
+    "No private quota counts or Library IDs recorded"
+  ]
+}

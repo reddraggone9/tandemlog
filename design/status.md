@@ -16,15 +16,27 @@ scrollable viewport above the actions. Dirty-close confirmation also scrolls;
 the obscured page no longer shrinks for a modal keyboard, and focused input is
 revealed after the dialog inset animation resizes its viewport. Font sizes,
 full edited-target counts, controllers and durable command behavior are retained.
-Frozen build59 source is `87e8b321ea76623e5ef5b8c532d69a3895300e65`.
+Initial build59 source is `87e8b321ea76623e5ef5b8c532d69a3895300e65`.
 [Signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
-and push CI38073186249 are in progress. Independent code, UX/pixels, demo and
+and push CI38073186249 failed with92 native passes and two bulk-edit warning
+visibility failures. Owner signing was skipped; no build59 release APK was issued.
+The Food matrix passed, but the root Scaffold inset rule also affected Tasks.
+The corrected rule restores Task resizing while retaining Food's modal handling.
+The unchanged four bulk native cases reproduce two RED failures and now pass
+four GREEN cases; complete draft, focus, selection and canonical assertions remain.
+Linux's budget increases from30 to40 minutes based on the measured28-minute
+preparation/native duration and required packaging tail, with every gate retained.
+A fresh full candidate is required. Independent code, UX/pixels, demo and
 actual-range editorial reviews accept the scoped correction. The recorded native
 GTK matrix passes twelve combinations with120 actual captures; final12 widget
 cases pass the later assertion-only glyph guard. Both themes,100/200% text,
 Add/Edit1/Edit100, keyboard transitions, focused fields, full helper/error,
 Cancel/route Back/Keep editing and valid Save are covered. [Bound evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
-retains executed-fixture and platform qualifications. Fresh signed artifacts and
+retains executed-fixture and platform qualifications.
+The [corrected-source native rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
+passes production Food Save/restart/restore and all twelve editor combinations
+in5:38, including the final glyph-box assertion; its source and120 captures are
+bound separately from the original checkpoint. Fresh signed artifacts and
 exact Android acceptance are still required; simulated GTK metrics are not Gboard
 acceptance. Windows manual GUI remains RC-waived; the new candidate still needs
 its own hosted installed lifecycle proofs. The [current handoff](food-native-acceptance.md)

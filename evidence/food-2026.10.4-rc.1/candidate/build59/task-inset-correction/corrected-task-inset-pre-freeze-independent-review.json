@@ -1,0 +1,62 @@
+{
+  "reviewed_at_utc": "2026-10-10T18:27:34.717879+00:00",
+  "verdict": "ACCEPT_BOUNDED_CODE_AND_CAPACITY_PREPARATION; FINAL_FROZEN_SOURCE_BINDING_PENDING",
+  "baseline_stable_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "failed_candidate_source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "working_head_docs_checkpoint": "5f0fc4a2537f19534090af559cac90421b6d1a0c",
+  "replacement_candidate_source": null,
+  "version": "2026.10.4-rc.1+59",
+  "reviewed_working_patch_sha256": "cacb6d0cf332277ae68041fc4077b05b1e406d8f68b958cbd52f23fb70abb88b",
+  "reviewed_file_sha256": {
+    "lib/main.dart": "237b3b5b91d17f2314fe85afd7e8b2ef49a18235c1fd0b2ddef09aee0d181f4f",
+    ".github/workflows/validate.yml": "941ddc5a49bc3f7775b8a3b61cbb712933f4788d2af4d6311b9c0893c1ac4e83",
+    "pubspec.yaml": "3dcab95b4c3c8c425573f785661d7370b7d5bb2473266710e9b400bf9712f44b",
+    "integration_test/bulk_failure_visibility_test.dart": "478fc2cab79fab6492ef5e069cdf79f097ec2137a06c0da71b48feb6c7640636",
+    "lib/food/food_page.dart": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a",
+    "design/prerelease-notes.md": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+    "design/food-native-acceptance.md": "fddad1246dffbbef3fa1b1d740dc477a7f45ee2fc5fbfc6a526db7616c075d49",
+    "design/status.md": "f84b870ee35fcbdefcc60e2914ec47b7ac49c1749b439edec581609567e551d6",
+    "evidence/food-2026.10.4-rc.1/README.md": "59ca5aa9a0b13ee7690ae52a6c7e591bf758c116ada6ef9912d5b7c5c210c61d"
+  },
+  "reviewed_log_sha256": {
+    "red-native.log": "1d621157993905fc15281c8049ddd1f47ba752e04b6ed5b29addc44aa861197d",
+    "green-native.log": "15322d669273cb89886acfc880a8c21ef7761af0fc96062f54fc447b647b2aa3",
+    "food-native.log": "8eb394910da0517f64ae47e9b990da6ee439dadc1f1fded3ea7ecc47b1fc2aec",
+    "analyze.log": "d90e6523aa6eb6906c4dc66c4792cf662b1eaa3e97b202e07060bae6dc4cb1ac",
+    "format.log": "a019a650f63282baef242f373bb1cdfb5263aa771ff7a8e0b7774a6aa484c6a6"
+  },
+  "observed_checks": {
+    "unchanged_task_bulk_fixture_red": "2 pass / 2 failures in 24s before correction",
+    "unchanged_task_bulk_fixture_green": "4 pass in 28s after correction",
+    "food_production_navigation_and_12_combination_native_matrix": "2 pass in 5m38s; Linux GTK with simulated keyboard, no real Android claim",
+    "analysis": "clean in 1.6s",
+    "format": "1 file, 0 changed",
+    "failure_manifest": "nine actual files size/hash match originals",
+    "food_implementation_tests_version_unchanged_from_source87": true
+  },
+  "reasoning": [
+    "When Food is hidden, root Scaffold resizes regardless of Save-button focus; this restores the embedded Task bulk editor invariant that surrounding Scaffold already excluded IME space. When Food is visible the source87 route/focus expression is unchanged.",
+    "Linux timeout 30 to 40 minutes changes only the job budget; observed previous preparation/native 28m01s plus prior packaging 2m15s motivates capacity. Source87 failed actual bounds assertions before timeout and remains rejected; every gate/test/runner retained.",
+    "Reviewed corrected green Task notice and Food enlarged-text expiration pixels match the captured test scope. No assertions/fixtures weakened."
+  ],
+  "editorial": {
+    "covered_range": "stable76 to current corrected working source; exact frozen end pending",
+    "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+    "three_existing_bullets_appropriate": true,
+    "media": "existing immutable dark disabled-repeat comparison; bytes/rendering unchanged; no new image required for restoring unpublished Task regression",
+    "no_new_qa_assurance_bullet_needed": true
+  },
+  "documentation_finding": {
+    "must_correct_before_final_docs_acceptance": "failure manifest attributes leading-BOM removal to log provider and claims old failure receipt records qualification. Actual MCP decoded content began U+FEFF; reviewer normalized that leading BOM when saving. Saved log/hash preserved, original receipt untouched.",
+    "severity": "factual evidence attribution only; no application defect"
+  },
+  "remaining": [
+    "Freeze corrected exact source and bind final actual-range editorial receipt",
+    "Fresh full signed candidate and push CI on new source; all newly produced original artifacts",
+    "Exact replacement owner APK Android Gboard/native upgrade acceptance by parent",
+    "Normal independent publication preflight/notes/gates with private parent clearance; Windows GUI RC waiver retained with fresh hosted lifecycle mandatory"
+  ],
+  "publication_ready": false,
+  "reviewer_runtime_execution": false,
+  "privacy": "No personal quota numbers, private Library references or source data in this receipt."
+}

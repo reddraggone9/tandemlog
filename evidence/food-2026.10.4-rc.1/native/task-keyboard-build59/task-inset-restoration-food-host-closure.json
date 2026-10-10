@@ -1,0 +1,1452 @@
+{
+  "decision": "ACCEPT scoped Tasks inset restoration plus current Food host/matrix regression closure; no source/pixel must-fix remaining. Full fresh candidate/artifact/platform/publication acceptance pending.",
+  "review_scope": "Independent read-only UX/source/test/pixel review. No production edits/tests/builds/commits/push by reviewer; own JSON receipts only. CI budget/workflow changes outside this UX scope.",
+  "additive_to_tasks_receipt": {
+    "path": "/tmp/food-build59-keyboard-ux-review/task-inset-restoration-bulk-review.json",
+    "bytes": 6205,
+    "sha256": "deb26bee1d786948dc6fc9034d2e39f707adea2fee863fc7c5bc8578820c54fa"
+  },
+  "prior_food_receipts": [
+    {
+      "path": "/tmp/food-build59-keyboard-ux-review/final-r4-source-native-ux-review.json",
+      "bytes": 62807,
+      "sha256": "b2df1b59f829af16b1932e34c3e0fb6aaa82ab79cc4346500a31884775f14afe"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-ux-review/final-source-doc-demo-addendum.json",
+      "bytes": 9645,
+      "sha256": "77ae7d5ed728a4173effeb282d3fd53c7862e139c1012edc21ad630de40f8342"
+    }
+  ],
+  "current_sources": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "bytes": 203608,
+      "sha256": "237b3b5b91d17f2314fe85afd7e8b2ef49a18235c1fd0b2ddef09aee0d181f4f",
+      "repository_path": "lib/main.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/food/food_page.dart",
+      "bytes": 41707,
+      "sha256": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a",
+      "repository_path": "lib/food/food_page.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/bulk_failure_visibility_test.dart",
+      "bytes": 8434,
+      "sha256": "478fc2cab79fab6492ef5e069cdf79f097ec2137a06c0da71b48feb6c7640636",
+      "repository_path": "integration_test/bulk_failure_visibility_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart",
+      "bytes": 11704,
+      "sha256": "52258b99ae93b7d668a295783a737fc0122f829e9e8f8bc4fc98bd370c4864b3",
+      "repository_path": "test/food_editor_keyboard_layout_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/food_editor_keyboard_workflow_test.dart",
+      "bytes": 1636,
+      "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8",
+      "repository_path": "integration_test/food_editor_keyboard_workflow_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/food_production_workflow_test.dart",
+      "bytes": 20840,
+      "sha256": "ea0755fde0f9b210f9cd9251728c26e734d3cb19a808d280822ac749a7c71fcd",
+      "repository_path": "integration_test/food_production_workflow_test.dart"
+    }
+  ],
+  "source_reasoning": "Prior generic root predicate ignored closing keyboard insets when Save moved focus off Tasks input, leaving stale bulk warning below viewport. New root predicate !foodVisible || ((routecurrent)&&_textHasFocus) restores original Tasks always-resizing behavior; Food-visible conditional branch is unchanged. Food rendererf2a and final keyboard522/native1d2 fixtures unchanged. No controller/validation/targets/history/touch/font change.",
+  "no_test_weakening": {
+    "failed_source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+    "bulk_fixture_exact_byte_equal": true,
+    "retained_assertions": "Exact warning bounds aboveIME and beforeCancel, warning hit test, unchanged draft controller/text/selection, repeatedSave focus+scroll stability, canonical log hashes, observed peer description and unchanged schedule, CancelDiscard, no exception. No viewport enlargement/font shrinking/test skips/swallowed errors."
+  },
+  "bulk_runtime": {
+    "red": "4 unchanged cases2PASS2FAIL24sec, warning bottom656>540 and476>360 in200%-IME variants",
+    "green": "4PASS0/28sec on currentmain237b\u2026",
+    "pixels": "All8 current green GTK frames directly viewed; full stale warning and reachable Cancel/Save above simulatedIME in390/light200 and360/dark200; normal narrow/desktop states readable. Existing draft12 retained. No claim entire form fits simultaneously in small error viewport."
+  },
+  "food_runtime": {
+    "result": "food-native.log terminal05:38 +2 All tests passed: actual composed production navigation/persistence workflow + complete12-variant keyboard matrix",
+    "matrix_frames": 120,
+    "changed_direct_views": 8,
+    "exact_equality_prior_views": 112,
+    "extra_equal_samples_re_viewed": 4,
+    "current_production_stock_direct_views": 2,
+    "excluded_warmups": [
+      "keyboard-warmup-not-evidence.png",
+      "production-wide-warmup-not-evidence.png"
+    ],
+    "guard_qualification": "Current rerun uses final522 nonempty-glyph-box fixture, so final guard now has local native matrix execution. Historical r4 remained9cb-preassert and stays attributed to its original source. This does not substitute for full hosted aggregate/candidate."
+  },
+  "pixel_observations": [
+    "Current composed Main+Food production1200x850 and390x850 Stock/navigation/filter/search/expiry/action rows readable without overflow",
+    "Every new/changed Food matrix frame viewed; name/date and fixed actions still visible with simulatedIME, wrapping helper/discard explanation retained.112 exact-equal frames preserve prior complete Food pixel review",
+    "No generated/repainted pixels or private Android raw packet copied by reviewer; all fixtures synthetic"
+  ],
+  "platform_limits": "Actual Linux GTK renderer and synthetic profiles/process-local matrix; simulated280pxIME and framework pointer/route/key inputs. Not physical AndroidGboard/touch, Windows GUI or installed signed replacement artifact acceptance. Composed production workflow persistence evidence is separate from process-local editor matrix.",
+  "source_attribution": "Old Food120 pixels retain oldmain4a3+rendererf2a source and r4preassert fixture9cb; fresh current-host evidence binds newmain237b, samef2a renderer and final522 fixture. Earlier native successes/failures remain raw and separately scoped.",
+  "bound_logs": [
+    {
+      "path": "/tmp/food-build59-task-inset-review/red-native.log",
+      "bytes": 10090,
+      "sha256": "1d621157993905fc15281c8049ddd1f47ba752e04b6ed5b29addc44aa861197d"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/green-native.log",
+      "bytes": 6158,
+      "sha256": "15322d669273cb89886acfc880a8c21ef7761af0fc96062f54fc447b647b2aa3"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-native.log",
+      "bytes": 5347,
+      "sha256": "8eb394910da0517f64ae47e9b990da6ee439dadc1f1fded3ea7ecc47b1fc2aec"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/analyze.log",
+      "bytes": 686,
+      "sha256": "d90e6523aa6eb6906c4dc66c4792cf662b1eaa3e97b202e07060bae6dc4cb1ac"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/format.log",
+      "bytes": 46,
+      "sha256": "a019a650f63282baef242f373bb1cdfb5263aa771ff7a8e0b7774a6aa484c6a6"
+    }
+  ],
+  "bound_current_food_matrix_images": [
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-discard-explanation-ime.png",
+      "bytes": 19358,
+      "sha256": "671e2661a595abdb0109a2c3d63055334f4f0620039f198cc5e775b9e337998d",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-discard-ime.png",
+      "bytes": 19358,
+      "sha256": "671e2661a595abdb0109a2c3d63055334f4f0620039f198cc5e775b9e337998d",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-draft-no-ime.png",
+      "bytes": 29483,
+      "sha256": "fd93bc1dfd752b483a9aebac7e9f3b7eac4bb94087366f0a840e4eb425a5f21c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-error-ime.png",
+      "bytes": 20156,
+      "sha256": "e5048617d8064dab6cd31e8681a0adc448ea979eb25570ec163f03681ec13698",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-error-no-ime.png",
+      "bytes": 29191,
+      "sha256": "c2e82ebcd01b98804a41aa3cbbbfd631da04c947074f905773739a3855d9a600",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-expiration-ime.png",
+      "bytes": 19489,
+      "sha256": "fe1b9d8a202847b2bfdd981bd4d11ae60c5db548a93ae7fe25735c38aa1b92d6",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-helper-end-ime.png",
+      "bytes": 20694,
+      "sha256": "d60186992a0d4479a6541d70761cda2f44cdac280e5893f8b1163061a25b113a",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-helper-start-ime.png",
+      "bytes": 19508,
+      "sha256": "36714d0327adbc7ae09813c8d841cc484a7eeeb118a7df8106b074b5ac0cc71c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-add-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-open-no-ime.png",
+      "bytes": 26787,
+      "sha256": "9e3926361c509a39a2d360e57218a09b64bd74da2a74aa2b0f017b23f10ab1f0",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-add-title-and-name-ime.png",
+      "bytes": 15664,
+      "sha256": "bf112dee6a2088f822c07b53dca16edc6f505695bab5c9055423229e4c330a03",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-discard-explanation-ime.png",
+      "bytes": 22670,
+      "sha256": "f2032ec67924b7a9b3c63031ad9891b9eafca77c60886dea544e96be7b6fc62b",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-discard-ime.png",
+      "bytes": 22670,
+      "sha256": "f2032ec67924b7a9b3c63031ad9891b9eafca77c60886dea544e96be7b6fc62b",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-draft-no-ime.png",
+      "bytes": 31423,
+      "sha256": "3cbbf75c94ebf35b2bce45baa195fda1d95b2e3f1bdb1d9c617545959a0636dd",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-error-ime.png",
+      "bytes": 23087,
+      "sha256": "76dc8e88f8289d4d5b38cbc14fab3500c000bc34aa29ee29350c0fecc4108cd3",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-error-no-ime.png",
+      "bytes": 31985,
+      "sha256": "630f2305844e556671df62b535eeab9085e7d4f2558bbcd03409ca4e651d89e4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-expiration-ime.png",
+      "bytes": 25328,
+      "sha256": "c69a293964391ea7f5c88d7b18f275fc518260771a923af14ca1c3c02cd92581",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-helper-end-ime.png",
+      "bytes": 26531,
+      "sha256": "f2e74554518b4191dff8babeae1bb8b7264af8069f1b81d66acc284758a22624",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-helper-start-ime.png",
+      "bytes": 24401,
+      "sha256": "7292646eedb452b3e33a08b5b8cb46776ee1ac8cd3deb8cc5b8de47e097c7fd1",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-open-no-ime.png",
+      "bytes": 32746,
+      "sha256": "3429c8140a4e9f0f737a03e0ed61255280dca7e9e5b463fcbfce261048b0386c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-1-title-and-name-ime.png",
+      "bytes": 24746,
+      "sha256": "e483c4a078397bb7cee5d1cae1299e1ac9ca9805b380323694ce6e464bab9be9",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-1-title-and-name-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-discard-explanation-ime.png",
+      "bytes": 31073,
+      "sha256": "177f865e14f5b9025bf291e0ce9946218c9fe2b22bf7c60c361debb124ea8662",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-discard-ime.png",
+      "bytes": 31073,
+      "sha256": "177f865e14f5b9025bf291e0ce9946218c9fe2b22bf7c60c361debb124ea8662",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-draft-no-ime.png",
+      "bytes": 33914,
+      "sha256": "56c1a380902570a44944c13035760035431f955b338ba257ad6a909308d39ca3",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-error-ime.png",
+      "bytes": 32586,
+      "sha256": "43b5d02830146b69db7ee5411027262d9f14ef026c17f705dc23027f34d560d7",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-error-no-ime.png",
+      "bytes": 34501,
+      "sha256": "144ce4c945e842f3e4d31a3f0f6080c7cc1511eb8fbc4c7c77661c1630e259d4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-expiration-ime.png",
+      "bytes": 34831,
+      "sha256": "e5bf8a387f71fb1c583755567f7b172361b3d8e65c96a43fe05dce302be01126",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-helper-end-ime.png",
+      "bytes": 36102,
+      "sha256": "5d3f2e1339a6233eb8f93d8b4c7dcb12c80cf84cea7b45d1f7f3402929808e32",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-helper-start-ime.png",
+      "bytes": 33928,
+      "sha256": "78f15dbcea304559dd65ef950a8af9792280f81d3db41d115c649c9a255fb675",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-open-no-ime.png",
+      "bytes": 34528,
+      "sha256": "4e9e519cba65ec84086a70d641008aa5c801f738850df8d672648a8158a7077e",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-1x-edit-100-title-and-name-ime.png",
+      "bytes": 34369,
+      "sha256": "02aa5bea7512358d01e5980011fb032a6f73a339c8892a563fbbe30543273945",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-1x-edit-100-title-and-name-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-discard-explanation-ime.png",
+      "bytes": 30896,
+      "sha256": "70432357ca41fbd34b2a1fc84838debb6cdd6b658ae115c047c652a10dc16e22",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-discard-ime.png",
+      "bytes": 27538,
+      "sha256": "59d7426f571adb046fe8af00a68452550abc528b99372c812f0fdbf2ec798e66",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-draft-no-ime.png",
+      "bytes": 35356,
+      "sha256": "9516184f05bbdcde96649a7efc56308984e661384dc3dac0799b21d9399901b0",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-error-ime.png",
+      "bytes": 29958,
+      "sha256": "82aa66fce5ce667b0ce8a257481ff5daf7321471ed69668070de041eed1ac5c3",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-error-no-ime.png",
+      "bytes": 32356,
+      "sha256": "8b46bdbd078ca4a6549b63c5178ed9a0277dce111062643dd7febe73a0746821",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-expiration-ime.png",
+      "bytes": 31291,
+      "sha256": "98d04cbac8c95fd56c3e7cfdaa844849fc22a7c3654b3a351af8a3a1c3b11e0f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-helper-end-ime.png",
+      "bytes": 30717,
+      "sha256": "596dc694e088dbfcccce176d04adf980477eaee1faf05aa575a0fe64a32234aa",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-helper-start-ime.png",
+      "bytes": 30320,
+      "sha256": "56da577f1b2d480fffe320b2a9b0ef0f2ca4c09f035a3e69f22c51b0cba4e629",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-open-no-ime.png",
+      "bytes": 31651,
+      "sha256": "546a2a6fa540ab889287dc16db01f2c90ba305cf88957869f5b8405cbae59520",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-add-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-add-title-and-name-ime.png",
+      "bytes": 26032,
+      "sha256": "e0c5691fb9ffba55e035d78f3d44eccaf9ae0ca7ebac06f755a4d5922e1260b4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-discard-explanation-ime.png",
+      "bytes": 34475,
+      "sha256": "1dfe0e5a3a8449e310669506f4482aa6f617fd744e113647be0928c12f5dbc5e",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-discard-explanation-ime.png",
+      "additional_review": "Also independently re-viewed current-run large-text sample"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-discard-ime.png",
+      "bytes": 31083,
+      "sha256": "f45ed2c61c5a7301440475b90d5f02ead641c370408258cea8f47c75d725bfb4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-draft-no-ime.png",
+      "bytes": 36270,
+      "sha256": "2228aee74cf07a731cb13b76b38ff4c31cfce9d9a0e99c71d4825f21469ee893",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-error-ime.png",
+      "bytes": 30545,
+      "sha256": "9b6d76fe8dd335a5ed73e7016364cb547f3a20973d3661830a1eb09babd66f30",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-error-no-ime.png",
+      "bytes": 32590,
+      "sha256": "a6ca37e53dfc87c04b34de5e73964135325ccd88a48f6c43ccda2c653d05b345",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-expiration-ime.png",
+      "bytes": 33311,
+      "sha256": "fa1b048fd364225f85f9cf9ad59fd51b923422c4d6aaf0a16a0b9459359f0ac7",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-expiration-ime.png",
+      "additional_review": "Also independently re-viewed current-run large-text sample"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-helper-end-ime.png",
+      "bytes": 33370,
+      "sha256": "558542c34ff22df0f691c8603394ef2328ab1a3428f536888eb8565f1e1d4d19",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-helper-start-ime.png",
+      "bytes": 32915,
+      "sha256": "fe03fcd10d4289271c4a2a1bc9be9889e3f3c9ce8d3e5289ded1055093828830",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-open-no-ime.png",
+      "bytes": 38571,
+      "sha256": "0b7640c89a78c567f8c663a1f16ff4198ad1e66821ca556238120ff33ecfff4f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-1-title-and-name-ime.png",
+      "bytes": 36601,
+      "sha256": "154c33e3704f71dbba559bb695abaab91be16c0ef9b31b9cf413bd6611f3790e",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-1-title-and-name-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-discard-explanation-ime.png",
+      "bytes": 35251,
+      "sha256": "3dd7273e2c18e61d607da530d340ed682f1112bd4fa5621fadb22e8506cdfcfe",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-discard-ime.png",
+      "bytes": 31857,
+      "sha256": "293f7240ef6abba73e6074132f1ac9ecfaac363c58c775801ae6b602ee96d60f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-draft-no-ime.png",
+      "bytes": 36201,
+      "sha256": "1f985386745ddf1bab2d3ae9d2a2be8c247b51767b7a154a4630cc365668c7fe",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-error-ime.png",
+      "bytes": 31414,
+      "sha256": "61a6678c3f19e1373566caefdbb6fb769f3497d9a85df67463427ea21751d2ae",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-error-no-ime.png",
+      "bytes": 32508,
+      "sha256": "e8e72364069565ed1565d19ab825f034ff8e7768cb64246ebe4b5f94fb87fdf6",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-expiration-ime.png",
+      "bytes": 34189,
+      "sha256": "55f4c772685de9adb1dde9b825088ef05529876e9dfcf66c94c37ec0d37c271a",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-helper-end-ime.png",
+      "bytes": 34242,
+      "sha256": "80df61ce8b22a48030877e3be251b078e0a93c2367e9dac5654cca02c00fa4dd",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-helper-end-ime.png",
+      "additional_review": "Also independently re-viewed current-run large-text sample"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-helper-start-ime.png",
+      "bytes": 33790,
+      "sha256": "c96647be63fdbc16ec7c0cd2a7b0fbc183ed147b790d7262d7c9500f94be4197",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-open-no-ime.png",
+      "bytes": 39155,
+      "sha256": "3e2b0d6e4a072681e2d06e809bdf9460f4b3e3d4a50c26c243091e66fed4fe03",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-dark-2x-edit-100-title-and-name-ime.png",
+      "bytes": 34356,
+      "sha256": "5a0bab7a7a5bfb9e8f1019f46413de8a2dbf3f7661fb64758dca43103526413e",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-dark-2x-edit-100-title-and-name-ime.png",
+      "additional_review": "Also independently re-viewed current-run large-text sample"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-discard-explanation-ime.png",
+      "bytes": 19595,
+      "sha256": "02362a61e7cc69d187e3497a502bd6e28646ef5f6c26aaf4c5c425d77984a1ef",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-discard-ime.png",
+      "bytes": 19595,
+      "sha256": "02362a61e7cc69d187e3497a502bd6e28646ef5f6c26aaf4c5c425d77984a1ef",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-draft-no-ime.png",
+      "bytes": 29399,
+      "sha256": "5084242cc94a76072d5d863fc6a7b696bcc84671603f440c6b1bb709909ce385",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-error-ime.png",
+      "bytes": 19964,
+      "sha256": "66f4bbcf3dc921310d11a673f6ccd559f4464b21d247ca0105550641bd7738f5",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-error-no-ime.png",
+      "bytes": 29020,
+      "sha256": "316485a19f9b83a7e5e2b4090106ee3a759731eabb29d66f6fb9eb0995cae7f7",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-expiration-ime.png",
+      "bytes": 19435,
+      "sha256": "be84b4685944027e46939757c229a4877320acd71ba7fbe05b148bec9ccdd414",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-helper-end-ime.png",
+      "bytes": 20590,
+      "sha256": "a9008a46dc8c6904476ce57d397fd440e549974f35f457dbc5173954b5af4ca7",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-helper-start-ime.png",
+      "bytes": 19480,
+      "sha256": "a2d4658e1648c64634bbbf203fd58a910299f74c19c9f31b66c1ffc0a780e8eb",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-open-no-ime.png",
+      "bytes": 26805,
+      "sha256": "048348aa2c53720b5ce71cd219406888a472592b6df6d9015286081e5a0fdb59",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-add-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-add-title-and-name-ime.png",
+      "bytes": 15761,
+      "sha256": "a28b46fb72fb78b2d9b184b72839a5a0264a503388e230cacb6982283b98006c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-discard-explanation-ime.png",
+      "bytes": 23285,
+      "sha256": "90e5006ee2f1cb87bf7525342edae16bc4132d132e9006c47e4e2dd5a7af76be",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-discard-ime.png",
+      "bytes": 23285,
+      "sha256": "90e5006ee2f1cb87bf7525342edae16bc4132d132e9006c47e4e2dd5a7af76be",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-draft-no-ime.png",
+      "bytes": 31412,
+      "sha256": "ea18a11aae599470f2a53fe8d51d7a541f15c1080615aabc67c3035035c04e6a",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-error-ime.png",
+      "bytes": 23217,
+      "sha256": "23027f5961ee03f44dcfa8b51c3dfb4143c37c987740e78ac74abfaf3c6c5764",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-error-no-ime.png",
+      "bytes": 32114,
+      "sha256": "dd5073ea8e0797bdfdb8608988ec0984c0551e86fe94b64875aa9d0f58b44cd2",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-expiration-ime.png",
+      "bytes": 25577,
+      "sha256": "9985f8396b5b1846549ba7701a210d0c1a8bc60a72bb21d4a9ad2395bc365ab4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-helper-end-ime.png",
+      "bytes": 26721,
+      "sha256": "a39b1bbb23bf4a587ce0da8d70be40862cc340518d2048ea28af0053f9a4defb",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-helper-start-ime.png",
+      "bytes": 24648,
+      "sha256": "b336d11e9d8496c1277dc7e6d52724326d2806393d544722f2bbd393e1176adf",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-open-no-ime.png",
+      "bytes": 32960,
+      "sha256": "f8375b81daa2d4990f9b67e1b48f432c0b0685766cccee09d0ad77679dcbf403",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-1-title-and-name-ime.png",
+      "bytes": 25151,
+      "sha256": "5824f032a5655e05d1f7638ebfa926f9964690538f8be693dec0cd03788ac5c0",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-1-title-and-name-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-discard-explanation-ime.png",
+      "bytes": 31709,
+      "sha256": "762f33448f9a071e430444ce4fcf5f34b4e277be8955fe899f61f5816e65e6a5",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-discard-ime.png",
+      "bytes": 31709,
+      "sha256": "762f33448f9a071e430444ce4fcf5f34b4e277be8955fe899f61f5816e65e6a5",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-draft-no-ime.png",
+      "bytes": 33603,
+      "sha256": "f65320ecde34a54cb301fbdfb0b3532e6b94aeba74883b770d9ffbf60229dd0c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-error-ime.png",
+      "bytes": 32431,
+      "sha256": "03aa38be9a49b79f91c72e4104f482e6197ec4671f9d72ecad00add30195c6eb",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-error-no-ime.png",
+      "bytes": 34303,
+      "sha256": "0af21a83b11ac7ce40c2acb29900f1e6ea983d041f20cdd340fbdca8de72ccc4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-expiration-ime.png",
+      "bytes": 34826,
+      "sha256": "568822193298dff5f36ae4738a8de327dee77fb0ae13d0c31876c1f7f57ce326",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-helper-end-ime.png",
+      "bytes": 35960,
+      "sha256": "8bcb9135bfbf8b314717c1782aa77d9d92cbbea081c4167365ecb4e035a7d733",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-helper-start-ime.png",
+      "bytes": 33898,
+      "sha256": "a9f3583428b3676a551f759bfa3943f6d1335b51b29353d30bea8c6e15baad33",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-open-no-ime.png",
+      "bytes": 34537,
+      "sha256": "27e945345fdac27ad95b2450ec1aa44b978bc00b05f74d54aaec9e0bc86e6b2a",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-1x-edit-100-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-1x-edit-100-title-and-name-ime.png",
+      "bytes": 34490,
+      "sha256": "7d9c23859b58b2020d33349e499a5fa236dab6fee853fadd3440a57cd8f0b23f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-discard-explanation-ime.png",
+      "bytes": 31405,
+      "sha256": "e0da56ab2dcef2c099a9061c17621b69e5fa91e6f48e5786a6eba45b6704a4e7",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-discard-ime.png",
+      "bytes": 28089,
+      "sha256": "addeeed9a8f94f4d9cf46ec46d514a6bd018408a8652e6cdcaade65515a3ac0b",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-draft-no-ime.png",
+      "bytes": 35567,
+      "sha256": "3127b2d33a1dbebcd5df1463fa61f0049e5979671e0e2994d9fe8312bde98514",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-error-ime.png",
+      "bytes": 29994,
+      "sha256": "3e455c508b55eac92f4d8f1ce9e3133f07f2a4049917ea0c15aaeffda66a5428",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-error-no-ime.png",
+      "bytes": 32345,
+      "sha256": "e47f4e2bc03cedb3a92280ebda70e2585b7d05dfd6cb827dd3753948baf9ed64",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-expiration-ime.png",
+      "bytes": 31478,
+      "sha256": "09c53e73ec4931a63fb50a0982542d471a2af013653adf5fdbf90afeaaae5e78",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-helper-end-ime.png",
+      "bytes": 30874,
+      "sha256": "b87941443e6fc68d5fea1c8886b4ee263de20a24cb857fb9e2da1170a64ffdd4",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-helper-start-ime.png",
+      "bytes": 30457,
+      "sha256": "c59ac4adaad972a9d6bd8e0c9e658748bfdf6c62f7a2e17a9d50ec2dd4851c2a",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-open-no-ime.png",
+      "bytes": 31908,
+      "sha256": "a3941b7cc9dc0effa7249e4dfbd32c402dddf600a680173f65fa4a0547b7e31e",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-add-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-add-title-and-name-ime.png",
+      "bytes": 26233,
+      "sha256": "10a327ca493ca2a0dd83ce8e2ce38f354ecd18fc179addf16a1ad51afff6c1c1",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "New/changed current-run pixels independently viewed"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-discard-explanation-ime.png",
+      "bytes": 35165,
+      "sha256": "09b22e2f55901fdea06a7cffb84ee7ccf9dd1329813c2baaebcd1c7ca9b3483b",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-discard-ime.png",
+      "bytes": 31806,
+      "sha256": "893b1490bdf90a06e7f8d2eafcd9803ac560af6267e2e9585d471b83d4d8a3fb",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-draft-no-ime.png",
+      "bytes": 36488,
+      "sha256": "cb94b84c1eb667f1857c07de77046ed920a1e3fd2c196b29251e2c38fb96894c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-error-ime.png",
+      "bytes": 30806,
+      "sha256": "1bd0b17991802da4f258d371f9b6ac0368efb478cd4380f6993228d87a4f148d",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-error-no-ime.png",
+      "bytes": 32695,
+      "sha256": "62e64156c8cc3b709b0e7f50a891d131854912d06f6b61648592168781738b9d",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-expiration-ime.png",
+      "bytes": 33740,
+      "sha256": "9586667fe496188c93c0783f8f1d8b446ac0de9969ae631d140b9245ad4f5d0f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-helper-end-ime.png",
+      "bytes": 33805,
+      "sha256": "d936116303feb6972f25e3b6f1c04cb7e8d92df3f143b3b6bc13798b9c869af9",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-helper-start-ime.png",
+      "bytes": 33361,
+      "sha256": "dfa523ec24669530ff5bc47111667eae2de7853303339d4582f6359ee9afc553",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-open-no-ime.png",
+      "bytes": 38916,
+      "sha256": "a495f9fd78321a65716bab73c20726cc8a96fdc450a7ce87fb5d22fc423be349",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-1-title-and-name-ime.png",
+      "bytes": 37160,
+      "sha256": "ec8bd1c1ba4f6fa7f028cf3805f9656db619e02045596c4eece9c246ea063be6",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-1-title-and-name-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-discard-explanation-ime.png",
+      "bytes": 35926,
+      "sha256": "4e73a535f667a534ce0c05343a273a26766e3b14e46d92f7ec955d91b53f62b2",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-discard-explanation-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-discard-ime.png",
+      "bytes": 32562,
+      "sha256": "0cba95e8694363ab350fa421887a165ca1173f41255944cd4260d641c0773fb3",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-discard-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-draft-no-ime.png",
+      "bytes": 36356,
+      "sha256": "776b5074811cdb40839ba9407740cbc02226227b7551f1afaad57555928ad893",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-draft-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-error-ime.png",
+      "bytes": 31652,
+      "sha256": "4a2d8730f20760f8dc7d52bc1ccbe1373acfe6e3525baee41e796ba3374dc322",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-error-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-error-no-ime.png",
+      "bytes": 32574,
+      "sha256": "57058e102a1444f7ef3ea4831bfb3e23a5ea0a2c298fb36cca5203295a47db37",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-error-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-expiration-ime.png",
+      "bytes": 34592,
+      "sha256": "fe85317f3b3885e3408118d787c1a8a07a0242592149d4045b6a2f7e4e47863c",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-expiration-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-helper-end-ime.png",
+      "bytes": 34649,
+      "sha256": "b64ba7610d948cdfcd0ab271454d51c250b7cc7009c696bae0898d3a7250404f",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-helper-end-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-helper-start-ime.png",
+      "bytes": 34210,
+      "sha256": "d92e1956a60cb895765664875eabdb065602f284d40db8e7f9b4ae7b92a8ea53",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-helper-start-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-open-no-ime.png",
+      "bytes": 39503,
+      "sha256": "84fd97eb2cd26d8b27fd0435943911039d04003d682001ef52d379d82eae4213",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-open-no-ime.png"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/keyboard-light-2x-edit-100-title-and-name-ime.png",
+      "bytes": 34851,
+      "sha256": "93722162ad306646de918ea2a7a8ff23f9e69883cb481e9b677576a3fd50dee5",
+      "pixels": [
+        320,
+        640
+      ],
+      "review_mode": "Exact byte/SHA256 equality to prior independently reviewed Food PNG",
+      "previous_path": "/tmp/food-build59-keyboard-evidence/native/keyboard-light-2x-edit-100-title-and-name-ime.png"
+    }
+  ],
+  "viewed_current_production_stock": [
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/production-wide-stock.png",
+      "bytes": 27489,
+      "sha256": "497a3c8e9043915b19329735ee03a04b337822247a0f9bd603c071923c12c7ee"
+    },
+    {
+      "path": "/tmp/food-build59-task-inset-review/food-screens/production-narrow-stock.png",
+      "bytes": 24471,
+      "sha256": "519c59893ed5d57ea03e91749ad1e0582d750a6e48706478ae57cdf7943ec7fc"
+    }
+  ],
+  "remaining_gates": [
+    "Full fresh signed exact-source candidate/native aggregate and installer/signature/payload identities plus exact hosted Linux/Windows installed lifecycle gates",
+    "Exact replacement Android320dp normal/200% actualGboard combined Add/Edit/name/date/helper/error/action/keyboard/CancelBack/draft/valid-invalid-blankInbox/persistence and stable56-upgrade acceptance",
+    "Final frozen-range editorial/publication quota gate under existing Food override. Windows manual GUI RC waiver remains, stable feature promotion requires Lee approval."
+  ]
+}
