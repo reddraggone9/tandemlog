@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T21:25:32.981417+00:00",
+  "verdict": "ACCEPT_ORIGINAL_BUILD60_LINUX_ARTIFACT_ONLY",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "version": "2026.10.4-rc.1+60",
+  "job_id": 114310713469,
+  "hosted_gates": {
+    "unit_passed": 878,
+    "real_native_passed": 95,
+    "contracts": 107,
+    "python_policy_total": 57,
+    "format_analyze": "PASS",
+    "production_native_payload_and_notices": "PASS",
+    "release_startup_and_installed_changed_commit_lifecycle": "PASS"
+  },
+  "artifact_id": 11682714300,
+  "actual_byte_binding_receipt": "build60-linux-actual-artifact-bindings.json",
+  "actual_byte_binding_sha256": "da1136b5438f9fb1bc42683f8c538081fd82f3b19d3287026443521c22fa48e9",
+  "full_hosted_log": "build60-linux-hosted.log",
+  "full_hosted_log_sha256": "221c2a8fbddfd68ee90d8f23c97d24b0ec98c64babd09b5fef2c936ca9ea6f6c",
+  "log_qualification": "Actual full provider-decoded log retained; reviewer removed leading U+FEFF when present and normalized final newline. Original reports/archive bytes unchanged.",
+  "startup_qualification": "Original startup member includes DBus diagnostic stdout prefix; only anchored final JSON parsed, no claim entire file is raw JSON-only; OS page cache not flushed.",
+  "limits": [
+    "Owner APK/full candidate terminal, parent exact Android60 runtime and publication gates pending.",
+    "No native app or installer execution by reviewer."
+  ],
+  "must_fix": [],
+  "publication_ready": false
+}

@@ -1,0 +1,25 @@
+{
+  "reviewed_at_utc": "2026-10-10T20:53:19.453912+00:00",
+  "verdict": "ACCEPT_ACTUAL_STABLE_TO_BUILD60_RANGE_NOTES_AND_UNCHANGED_MEDIA",
+  "baseline_tag": "v2026.10.3",
+  "baseline_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "version": "2026.10.4-rc.1+60",
+  "actual_stable_range_patch_sha256": "28bf519050b492cc904ed9a3b36c63dc3cebf864df5a2266b5e7fe8f11c3750d",
+  "review_strategy": "Previously independently reviewed stable76-to755 cumulative Food/icon/error changes retained; actual76-to3d diff and full incremental755-to3d reviewed. Incremental Food-only scroll reachability/test/version60 changes preserve command/persistence/editor behavior and fit newFood feature bullet. Source/reviewer receipts remain separate.",
+  "notes_path": "design/prerelease-notes.md",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "three_bullets": "Foodinventory/expiration/Inbox/retained/partial/per-container lifecycle; disabledrepeat opacity seam; longerror scrolling",
+  "editorial_finding": "Meaningful concise changes cover actual stable range. No new QA assurance, unpublished defect history or obvious scroll-interaction prose needed. No extra image/demo requirement introduced. Bazaar/XDG queuednextrelease excluded.",
+  "media": {
+    "path": "evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png",
+    "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "immutable_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "provenance": "Prior independently inspected actual dark synthetic stable56-before/renderer57-after, exactintegercrops; renderer unchanged60. No newAndroid60 frame claim."
+  },
+  "editorial_policy_sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+  "must_fix": [],
+  "scope_limits": "Editorial and exactsource preparation only; wholecandidate/artifacts/newparentAndroid checks stillpending. Prior59native reused only with originalsource attribution.",
+  "publication_ready": false
+}

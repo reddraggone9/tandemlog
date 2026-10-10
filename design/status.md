@@ -20,7 +20,17 @@ long errors, eight empty views, actual vertical swipes, guidance/error glyph
 endpoints, Retained filter/expansion and Deleted Restore identity. Native GTK passes the40-case matrix and production save/restart/Restore in4:08;
 eight density variants pass. The synthetic matrix excerpt has a visible pointer.
 [Source-bound evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
-is frozen; independent final review and fresh build60 artifacts are in progress.
+is frozen; independent architecture/UX/media/source/editorial reviews accept it.
+Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
+[signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
+and push CI38085382087:878 Linux units/95 native cases and875 Windows units/two
+platform skips,107 contracts/57 policy tests. [Original artifact handoff](../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
+verifies all three archives/14 members, both desktop installed lifecycles and
+owner APK artifact11681994515/code60/SHA256
+`2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`.
+The replacement is ready for the parent's minimal affected Android retest;
+Android60 runtime acceptance and fresh private publication clearance remain pending.
+Stable2026.10.3/build56 remains Latest; nothing from58/59/60 has been published.
 No domain/storage/host inset/dependency or live-data changes are included.
 
 ### Historical build58/59 checkpoints

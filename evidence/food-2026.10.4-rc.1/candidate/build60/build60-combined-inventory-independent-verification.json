@@ -1,0 +1,99 @@
+{
+  "checked_at_utc": "2026-10-10T21:31:38.622484+00:00",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "version": "2026.10.4-rc.1+60",
+  "verdict": "PASS_FROZEN_COMBINED_ARTIFACT_INVENTORY_CHECKSUMS_AND_LIFECYCLES",
+  "inventory_directory": "/tmp/food60-independent-closed-inventory-wnwgj9ii",
+  "original_members": [
+    {
+      "name": "tandemlog-windows-x64-unsigned-portable.zip",
+      "bytes": 14395595,
+      "sha256": "2816459fa166bad371401662922ae7628cc89cfb1d94f3063572bb9035d67bc3",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12377461,
+      "sha256": "b29b45899b07f2ba8e69ed1692f8669692ba108c9c672a433e46c69afee3a124",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-install-smoke.json",
+      "bytes": 1757,
+      "sha256": "3b23227b630c87eaed3cb11cecc1badee5fa73e2981ad2e58bebf3096fa39e6f",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-provenance.json",
+      "bytes": 2181,
+      "sha256": "b1cd1a74eb186afe269740ae54359ba433df8b622b326162ad5edda0690c5c29",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-portable-SHA256SUMS.txt",
+      "bytes": 111,
+      "sha256": "9490b26dffb8f4995c802ac49f12d1f657791bd215eace22905dbc1b6ed3d4b0",
+      "crc_valid": true
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "bytes": 108,
+      "sha256": "137c9eec3d9bd567570b69508079eb283d8e6b99861e9eec15f7d697b6344d5e",
+      "crc_valid": true
+    },
+    {
+      "name": "linux-SHA256SUMS.txt",
+      "bytes": 94,
+      "sha256": "cd9ced2f6675ed04aaf669be77ff6533e19f0105c5b45002d6868e2fcab05436",
+      "crc_valid": true
+    },
+    {
+      "name": "linux-install-smoke.json",
+      "bytes": 2023,
+      "sha256": "c8d5b7fae36cb5e4d7792b0f21e230d88a44a62a9ccfe52a3e66d27aead97c8d",
+      "crc_valid": true
+    },
+    {
+      "name": "linux-startup.json",
+      "bytes": 6191,
+      "sha256": "e7864a84293911244ba2d140c965f25a62ee0e07ac68c86d699c511f034b0b66",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-linux-x64.flatpak",
+      "bytes": 9213592,
+      "sha256": "a0ea09289dc5839b8bd58635a931cd1f9e3935e3e0a1b9992245c781a8560d5b",
+      "crc_valid": true
+    },
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "9638e7bb78861e9f88576ba6ca20726fb9e1b0b34f7f350ff89d37d261b48217",
+      "crc_valid": true
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc_valid": true
+    },
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 295,
+      "sha256": "c246bb125006985f66b5e42fd3499f9f3a0e84003299247e4973518df628842b",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+      "crc_valid": true
+    }
+  ],
+  "link_method": "Hardlinks retain exact original bytes; unmodified frozen gate rejects symlinks; no extra receipt files placed in inventory.",
+  "limits": [
+    "This structural/byte gate does not attest parent Android runtime acceptance or authorize publication",
+    "No installer/app execution or rebuild by reviewer"
+  ]
+}

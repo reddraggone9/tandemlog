@@ -1,0 +1,41 @@
+{
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "artifact_id": 11681994515,
+  "root_check": "Independent read of original reviewer-materialized bytes; no rebuild",
+  "members": {
+    "android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "9638e7bb78861e9f88576ba6ca20726fb9e1b0b34f7f350ff89d37d261b48217"
+    },
+    "android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "c246bb125006985f66b5e42fd3499f9f3a0e84003299247e4973518df628842b"
+    },
+    "android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "tandemlog-android.apk": {
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+    }
+  },
+  "publication_ready": false,
+  "original_archive": {
+    "bytes": 31059641,
+    "sha256": "93e2e78de0ef9eb7a9ea236d7db4c59a7d8456cf3074fac5cf7bd56480bebc22",
+    "github_api_digest_size_source_run": "PASS",
+    "CRC_and_members_equal_directory": "PASS"
+  },
+  "apk_crc_members": 79,
+  "identity": {
+    "source_commit": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "version": "2026.10.4-rc.1",
+    "version_code": 60,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+  },
+  "official_static_verification": "PASS owner pin/package/code60/version/nondebuggable/threeABI/16K alignment/ELF/exports/notices/checksums",
+  "runtime": "Pending exact parent Android Inbox and sibling-view acceptance; static metadata equality supplies no native attestation"
+}

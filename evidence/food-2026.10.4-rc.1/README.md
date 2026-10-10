@@ -7,8 +7,20 @@ one scroller. The same layout covers Stock, Retained, Deleted and empty states;
 a search-IME probe requires view/search to yield space too. Forty focused widget
 cases pass. Final GTK passes the40-case matrix and production save/restart/Restore in4:08;
 eight density variants also pass. [Native evidence](native/inbox-build60/README.md) is frozen with223 original
-members/seven source bindings; final review and fresh exact candidate gates remain
-pending.
+members/seven source bindings. Architecture, source/native UX, bundle/demo and
+actual-range editorial reviews accept the bounded correction with no must-fix.
+Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
+[signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
+and push CI38085382087:878 Linux units,95 native cases,875 Windows units/two
+platform skips,107 contracts and57 policy tests (Windows five platform skips).
+[Exact artifact handoff](candidate/build60/artifacts/manifest.json) records three
+original archives and14 original members, independently/root-verified signatures,
+checksums, provenance, native payload and both hosted installed lifecycles.
+Android artifact11681994515 contains code60 APK SHA256
+`2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`,
+67082973 bytes. [Independent full candidate review](candidate/build60/build60-full-candidate-artifacts-independent-review.json)
+accepts it for parent native handoff. Exact affected Android acceptance and fresh
+private publication clearance remain pending.
 No build59 or58 binary will be published.
 
 The parent's build59 twelve-case actual Gboard editor matrix, stable56 upgrade,

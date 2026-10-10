@@ -1,6 +1,16 @@
 # Food RC native acceptance
 
-Replacement RC2026.10.4-rc.1/build60 is being prepared. Build59 at
+Replacement RC2026.10.4-rc.1/build60 is ready for the parent's affected Android
+retest. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
+[signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
+(all five jobs) and push CI38085382087 (all three jobs).
+[Exact original-artifact handoff](../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
+records three independently/root-verified archives and14 original members,
+including both hosted installed lifecycles. Android artifact11681994515 contains
+the67082973-byte APK, SHA256 `2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`.
+Official owner signer/package/code60/nondebuggable/threeABI and native16K/ELF/
+exports/notices checks pass. Parent exact Android60 runtime remains pending;
+static verification supplies no native acceptance. Build59 at
 `75557b100bdb17aeb76deb41fad646d95a9cc898`, APK SHA256
 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`,
 passed the parent's twelve actual Android Add/Edit Gboard cases at320dp,
@@ -31,15 +41,15 @@ editor, upgrade and storage passes with their original attribution; do not call
 them freshly executed on60. Search input/retention filters must remain reachable
 when their keyboard is open, without text loss. The host's separate pending-save
 recovery notice retains its existing coverage, outside this page viewport change.
-Exact candidate artifacts, full hosted gates and parent native acceptance remain
-required; simulated GTK insets are not actual Gboard evidence.
+Exact candidate artifacts and full hosted gates passed; parent native acceptance
+remains required. Simulated GTK insets are not actual Gboard evidence.
 
 [Source-bound build60 evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
 records40 final widget cases,149 earlier qualified Food regressions, final native
 40-case scrolling matrix plus production Save/restart/Restore in4:08, eight
 density variants and the actual pointer-visible synthetic GTK matrix excerpt.
-All seven final native source bindings stayed identical. Fresh candidate artifacts
-and exact affected Android acceptance remain pending.
+All seven final native source bindings stayed identical. All hosted gates and exact candidate artifact checks passed. Exact affected
+Android acceptance and fresh private publication clearance remain pending.
 
 Build58's signed candidate38064595888, source
 `432784d0181af5b97fd89bfb3ef8d5c83212f92e`, original Android artifact11674984580
@@ -50,7 +60,7 @@ invalid-calendar rejection without writes, blank-date Inbox Save and valid-date
 cold replay with eight prior physical containers and18 Task tables/settings and
 canonical history preserved. Other field states were unfinished. These passes
 and older build57/storage proofs remain bound to their original source and APK;
-none substitutes for replacement59 keyboard acceptance.
+none substitutes for replacement60 affected-viewport acceptance.
 
 Initial build59 source `87e8b321ea76623e5ef5b8c532d69a3895300e65` failed
 [signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)

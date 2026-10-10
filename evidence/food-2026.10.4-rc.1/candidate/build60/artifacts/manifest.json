@@ -1,0 +1,221 @@
+{
+  "recorded_utc": "2026-10-10T21:32:31.109199+00:00",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "push_ci_run": 38085382087,
+  "version": "2026.10.4-rc.1+60",
+  "disposition": "EXACT_ORIGINAL_ARTIFACTS_VERIFIED_FOR_PARENT_NATIVE_HANDOFF",
+  "actual_android": {
+    "source_commit": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "version": "2026.10.4-rc.1",
+    "version_code": 60,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+  },
+  "original_artifact_ids": {
+    "windows": 11681762588,
+    "linux": 11682714300,
+    "android-release": 11681994515
+  },
+  "original_archives": {
+    "windows": {
+      "bytes": 26206919,
+      "sha256": "d96c996976ca45bd8fc51012baabff35f12731c9ea6563dc763fbbc2378eb043",
+      "github_api_digest_size_source_run": "PASS",
+      "CRC_and_members_equal_directory": "PASS"
+    },
+    "linux": {
+      "bytes": 9218422,
+      "sha256": "d41608c8ffa21777bc8621977d3b4e18586c90e0dbf3d6fe7a6ce0ae052612f1",
+      "github_api_digest_size_source_run": "PASS",
+      "CRC_and_members_equal_directory": "PASS"
+    },
+    "android-release": {
+      "bytes": 31059641,
+      "sha256": "93e2e78de0ef9eb7a9ea236d7db4c59a7d8456cf3074fac5cf7bd56480bebc22",
+      "github_api_digest_size_source_run": "PASS",
+      "CRC_and_members_equal_directory": "PASS"
+    }
+  },
+  "original_14_member_inventory": {
+    "windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "137c9eec3d9bd567570b69508079eb283d8e6b99861e9eec15f7d697b6344d5e"
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "9490b26dffb8f4995c802ac49f12d1f657791bd215eace22905dbc1b6ed3d4b0"
+    },
+    "windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "b1cd1a74eb186afe269740ae54359ba433df8b622b326162ad5edda0690c5c29"
+    },
+    "windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "3b23227b630c87eaed3cb11cecc1badee5fa73e2981ad2e58bebf3096fa39e6f"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12377461,
+      "sha256": "b29b45899b07f2ba8e69ed1692f8669692ba108c9c672a433e46c69afee3a124"
+    },
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14395595,
+      "sha256": "2816459fa166bad371401662922ae7628cc89cfb1d94f3063572bb9035d67bc3"
+    },
+    "tandemlog-linux-x64.flatpak": {
+      "bytes": 9213592,
+      "sha256": "a0ea09289dc5839b8bd58635a931cd1f9e3935e3e0a1b9992245c781a8560d5b"
+    },
+    "linux-startup.json": {
+      "bytes": 6191,
+      "sha256": "e7864a84293911244ba2d140c965f25a62ee0e07ac68c86d699c511f034b0b66"
+    },
+    "linux-install-smoke.json": {
+      "bytes": 2023,
+      "sha256": "c8d5b7fae36cb5e4d7792b0f21e230d88a44a62a9ccfe52a3e66d27aead97c8d"
+    },
+    "linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "cd9ced2f6675ed04aaf669be77ff6533e19f0105c5b45002d6868e2fcab05436"
+    },
+    "tandemlog-android.apk": {
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+    },
+    "android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "c246bb125006985f66b5e42fd3499f9f3a0e84003299247e4973518df628842b"
+    },
+    "android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "9638e7bb78861e9f88576ba6ca20726fb9e1b0b34f7f350ff89d37d261b48217"
+    }
+  },
+  "hosted_gates": {
+    "candidate": "5/5 jobs SUCCESS",
+    "push_ci": "3/3 jobs SUCCESS",
+    "linux_units": 878,
+    "linux_native": 95,
+    "windows_units": 875,
+    "windows_unit_platform_skips": 2,
+    "contracts": 107,
+    "linux_python_policy": 57,
+    "windows_python_policy_total": 57,
+    "windows_python_platform_skips": 5,
+    "format": "214 files,0 changed",
+    "analysis": "clean",
+    "desktop_install_lifecycles": "both original four-phase reports PASS"
+  },
+  "members": {
+    "android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "9638e7bb78861e9f88576ba6ca20726fb9e1b0b34f7f350ff89d37d261b48217"
+    },
+    "android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "c246bb125006985f66b5e42fd3499f9f3a0e84003299247e4973518df628842b"
+    },
+    "android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "android-release/hosted.log": {
+      "bytes": 190584,
+      "sha256": "87ff44f5f83aa4e76dfa1c166abd2a82e61294ffb86ce4edea3851b0b3f74f2f"
+    },
+    "android-release/original-artifact-bindings.json": {
+      "bytes": 3330,
+      "sha256": "df604c5c7a02d02d34f2d3f9978337929270e90ed5d1fe1133075133097768a1"
+    },
+    "android-release/root-android-native-payload.log": {
+      "bytes": 127,
+      "sha256": "bed22742f54002ac8e76f899a833b19c5fffb5d465550a02088cfed9c2d3c7ab"
+    },
+    "android-release/root-apksigner.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "android-release/root-badging.txt": {
+      "bytes": 1170,
+      "sha256": "9fab41852310774a39863d939b5a05ee48cc992c4ce949db4888d437dc168210"
+    },
+    "android-release/root-identity.json": {
+      "bytes": 1689,
+      "sha256": "5050de64f192560ea5e2372503dafa5b6fd49f6f670910c9535c74dd28d5f113"
+    },
+    "linux/hosted.log": {
+      "bytes": 487371,
+      "sha256": "221c2a8fbddfd68ee90d8f23c97d24b0ec98c64babd09b5fef2c936ca9ea6f6c"
+    },
+    "linux/independent-review.json": {
+      "bytes": 1513,
+      "sha256": "f47ae653d2ef4efc1e93f51aa57e56b5d7c54f1873c01adb6959a6edfab0be20"
+    },
+    "linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "cd9ced2f6675ed04aaf669be77ff6533e19f0105c5b45002d6868e2fcab05436"
+    },
+    "linux/linux-install-smoke.json": {
+      "bytes": 2023,
+      "sha256": "c8d5b7fae36cb5e4d7792b0f21e230d88a44a62a9ccfe52a3e66d27aead97c8d"
+    },
+    "linux/linux-startup.json": {
+      "bytes": 6191,
+      "sha256": "e7864a84293911244ba2d140c965f25a62ee0e07ac68c86d699c511f034b0b66"
+    },
+    "linux/original-artifact-bindings.json": {
+      "bytes": 5927,
+      "sha256": "da1136b5438f9fb1bc42683f8c538081fd82f3b19d3287026443521c22fa48e9"
+    },
+    "linux/root-identity.json": {
+      "bytes": 2737,
+      "sha256": "62ea954d6ec7bfa6e53f4722b55ec8eeb30bc25ae4c433be41fec3cbc63a8e1a"
+    },
+    "root-combined-inventory.json": {
+      "bytes": 2413,
+      "sha256": "9e23b9eb5d8f53418b52fc03154f8aec31d375ad86555ae729a25c21405e3524"
+    },
+    "windows/hosted.log": {
+      "bytes": 328624,
+      "sha256": "1300031bc5ee6b00ae2c3977ebf51d39cb015d99490e21e53eb3fe2da5a1e52b"
+    },
+    "windows/independent-review.json": {
+      "bytes": 1415,
+      "sha256": "de0c37aa34c1eccef8eabd889b0b874ca2556fb763b20a64b720a7f3edd32b52"
+    },
+    "windows/original-artifact-bindings.json": {
+      "bytes": 9694,
+      "sha256": "09726e809b177ff4d0f21fe99ac455e602c525654efb6cd6ccb3f22fd22ac483"
+    },
+    "windows/root-identity.json": {
+      "bytes": 1672,
+      "sha256": "062b4db974e06aa77b40cb51757787e1cdd2ac7b3c9e9b6b4c7963c19b9fdb9b"
+    },
+    "windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "137c9eec3d9bd567570b69508079eb283d8e6b99861e9eec15f7d697b6344d5e"
+    },
+    "windows/windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "3b23227b630c87eaed3cb11cecc1badee5fa73e2981ad2e58bebf3096fa39e6f"
+    },
+    "windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "9490b26dffb8f4995c802ac49f12d1f657791bd215eace22905dbc1b6ed3d4b0"
+    },
+    "windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "b1cd1a74eb186afe269740ae54359ba433df8b622b326162ad5edda0690c5c29"
+    }
+  },
+  "remaining": [
+    "Parent exact build60 Android320dp/200% both themes Inbox swipes/guidance/saved name/Needs expiration/Inspect/Edit; sibling Retained/Deleted/search keyboard checks",
+    "Previously deferred valid-date native UI Save/restart replay with retained Tasks/settings/container/canonical state",
+    "Fresh private parent publication clearance under existing authorization"
+  ],
+  "publication_ready": false
+}

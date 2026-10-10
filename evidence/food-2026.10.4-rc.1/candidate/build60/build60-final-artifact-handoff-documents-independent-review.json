@@ -1,0 +1,60 @@
+{
+  "reviewed_at_utc": "2026-10-10T21:34:38.246825+00:00",
+  "verdict": "ACCEPT_FINAL_BUILD60_ORIGINAL_ARTIFACT_HANDOFF_DOCUMENTS",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "push_ci_run": 38085382087,
+  "version": "2026.10.4-rc.1+60",
+  "actual_android_artifact": 11681994515,
+  "actual_apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+  "checks": [
+    "All25 public evidence files are closed by manifest and match actual size/SHA; copied original bindings/logs and four owned receipts byte-identical to reviewed private originals",
+    "All14 original member size/SHA bindings equal actual independently verified three archives; source/run/version60/artifact IDs and observed878/875+2/95/107/57 counts consistent",
+    "Three changed Markdown documents resolve relative links and clearly mark exact affected Android60 runtime and private publication clearance pending; no static-to-device acceptance claim",
+    "Windows GUI RC waiver and historical CLI/native evidence retain original source attribution; blocked59 and deferred validdate native UI replay not relabeled as60 passes",
+    "Native223member manifest and original files remain unchanged and valid; all executable/test/version/tool/workflow/platform/native bytes equal frozen3d",
+    "New documents/QA receipts contain no private Library transfer references, signed storage URLs, import rows or personal quota values; raw artifact reports remain unchanged"
+  ],
+  "startup_qualification": "Original linux-startup.json retains DBus stdout prefix; anchored final JSON parsed separately, entire file is not claimed JSON-only.",
+  "reviewed_file_sha256": {
+    "design/status.md": "4d6dbb054226657dee37664df996bcae4c6a45f10d39f0f5410533ae6149430d",
+    "design/food-native-acceptance.md": "263577d75b1e8eaacdada51ae07b2745ca6d960f9b0c18f82d8879049817a2f6",
+    "evidence/food-2026.10.4-rc.1/README.md": "878e496af567813271ff578c52ae72ec15ec78932d7ac4491117496858dfdc26",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json": "9db5298fbb83dcacfcfbfe5e6c20376ad953c915a9357625343232278d9297c4"
+  },
+  "artifact_manifest_member_sha256": {
+    "android-release/android-SHA256SUMS.txt": "9638e7bb78861e9f88576ba6ca20726fb9e1b0b34f7f350ff89d37d261b48217",
+    "android-release/android-release-metadata.json": "c246bb125006985f66b5e42fd3499f9f3a0e84003299247e4973518df628842b",
+    "android-release/android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "android-release/hosted.log": "87ff44f5f83aa4e76dfa1c166abd2a82e61294ffb86ce4edea3851b0b3f74f2f",
+    "android-release/original-artifact-bindings.json": "df604c5c7a02d02d34f2d3f9978337929270e90ed5d1fe1133075133097768a1",
+    "android-release/root-android-native-payload.log": "bed22742f54002ac8e76f899a833b19c5fffb5d465550a02088cfed9c2d3c7ab",
+    "android-release/root-apksigner.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "android-release/root-badging.txt": "9fab41852310774a39863d939b5a05ee48cc992c4ce949db4888d437dc168210",
+    "android-release/root-identity.json": "5050de64f192560ea5e2372503dafa5b6fd49f6f670910c9535c74dd28d5f113",
+    "linux/hosted.log": "221c2a8fbddfd68ee90d8f23c97d24b0ec98c64babd09b5fef2c936ca9ea6f6c",
+    "linux/independent-review.json": "f47ae653d2ef4efc1e93f51aa57e56b5d7c54f1873c01adb6959a6edfab0be20",
+    "linux/linux-SHA256SUMS.txt": "cd9ced2f6675ed04aaf669be77ff6533e19f0105c5b45002d6868e2fcab05436",
+    "linux/linux-install-smoke.json": "c8d5b7fae36cb5e4d7792b0f21e230d88a44a62a9ccfe52a3e66d27aead97c8d",
+    "linux/linux-startup.json": "e7864a84293911244ba2d140c965f25a62ee0e07ac68c86d699c511f034b0b66",
+    "linux/original-artifact-bindings.json": "da1136b5438f9fb1bc42683f8c538081fd82f3b19d3287026443521c22fa48e9",
+    "linux/root-identity.json": "62ea954d6ec7bfa6e53f4722b55ec8eeb30bc25ae4c433be41fec3cbc63a8e1a",
+    "root-combined-inventory.json": "9e23b9eb5d8f53418b52fc03154f8aec31d375ad86555ae729a25c21405e3524",
+    "windows/hosted.log": "1300031bc5ee6b00ae2c3977ebf51d39cb015d99490e21e53eb3fe2da5a1e52b",
+    "windows/independent-review.json": "de0c37aa34c1eccef8eabd889b0b874ca2556fb763b20a64b720a7f3edd32b52",
+    "windows/original-artifact-bindings.json": "09726e809b177ff4d0f21fe99ac455e602c525654efb6cd6ccb3f22fd22ac483",
+    "windows/root-identity.json": "062b4db974e06aa77b40cb51757787e1cdd2ac7b3c9e9b6b4c7963c19b9fdb9b",
+    "windows/windows-SHA256SUMS.txt": "137c9eec3d9bd567570b69508079eb283d8e6b99861e9eec15f7d697b6344d5e",
+    "windows/windows-install-smoke.json": "3b23227b630c87eaed3cb11cecc1badee5fa73e2981ad2e58bebf3096fa39e6f",
+    "windows/windows-portable-SHA256SUMS.txt": "9490b26dffb8f4995c802ac49f12d1f657791bd215eace22905dbc1b6ed3d4b0",
+    "windows/windows-portable-provenance.json": "b1cd1a74eb186afe269740ae54359ba433df8b622b326162ad5edda0690c5c29"
+  },
+  "owned_full_artifact_review_sha256": "c779228204a977ff50a50cad04fd5b061df4bd7ef64e85b3279dd52eb1ff0423",
+  "must_fix": [],
+  "publication_ready": false,
+  "reviewer_device_acceptance": false,
+  "remaining": [
+    "Parent exact build60 affected Android native acceptance and source-qualified historical reuse",
+    "Private fresh parent publication clearance and normal prerelease/public-byte/source/notes verification gates"
+  ]
+}

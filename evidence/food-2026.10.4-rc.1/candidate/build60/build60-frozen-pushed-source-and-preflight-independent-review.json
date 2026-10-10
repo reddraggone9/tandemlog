@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T20:53:19.451481+00:00",
+  "verdict": "ACCEPT_EXACT_FROZEN_PUSHED_BUILD60_SOURCE_AND_PREFLIGHT_ONLY",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "push_ci_run": 38085382087,
+  "version": "2026.10.4-rc.1+60",
+  "preflight_job": 114310682307,
+  "preflight": "Hosted main/source/version-history guard success; successful floor59 requires60",
+  "source_scope": [
+    "Production change only Foodpage shared sliver viewport and version60 since755; Main/domains/storage/dependencies/workflows/tools/platform/native unchanged",
+    "New40-case widget fixture and native register included in finalGit; old density selector updates ListView to CustomScrollView, viewport metric qualification explicit",
+    "All223 immutable native evidence members and7 exact source/test/version bindings verified against actualGit blobs",
+    "Local final40widget PASS, finalGTK40variants plus productionSave/restart/Restore2PASS4:08 accepted by separate architecture/UX reviewers; source before/after unchanged",
+    "Earlier149 focused Food cases retain earlier fixture binding; executed baseline RED26px native/2px widget before later green assertions explicitly qualified; no finalbaseline execution claim",
+    "Assisted search-IME reveal and scripted independent-fixture pointer demo accurately qualified, no automatic Android caret/device proof"
+  ],
+  "actual59_to60_executable_patch_sha256": "4986529516ff6c750519ffa950e780690d26a49defd29db0d5bded351aa06001",
+  "native_manifest_sha256": "6b7fe698f0e1f47bf3e8bbbde14227e7f59fe61ed6676fa39237b10931872e3f",
+  "preflight_log_sha256": "f525758c1196f8ee1dab2251517a3debe48919808a2353637c65689760a8ac9d",
+  "source59_status": "Parent editor/upgrade/storage passes keep755/APK689...da51 attribution; actual Inbox blocker prevents59 publication; deferred validdate nativeUI replay remains",
+  "must_fix": [],
+  "remaining": [
+    "Fresh candidate5jobs/push3jobs fullsuccess with observed95native/new unit counts",
+    "New original3platform archives/member/checksum/lifecycle/owner signature gates",
+    "Parent exactnewAPK affected Inbox/siblings/search/validUI replay acceptance with source-qualified59reuse",
+    "Normal prerelease/no-rebuild/latestfalse and private fresh clearance/publicverification gates"
+  ],
+  "publication_ready": false
+}

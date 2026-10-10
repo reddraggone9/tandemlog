@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T21:02:19.955093+00:00",
+  "verdict": "ACCEPT_ORIGINAL_BUILD60_WINDOWS_ARTIFACT_ONLY",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "version": "2026.10.4-rc.1+60",
+  "job_id": 114310713459,
+  "hosted_gates": {
+    "unit_passed": 875,
+    "unit_platform_skipped": 2,
+    "contracts": 107,
+    "python_policy_total": 57,
+    "python_platform_skipped": 5,
+    "production_native_payload_and_notices": "PASS",
+    "installed_lifecycle_four_phases": "PASS",
+    "portable_source_run_and_all17_members": "PASS"
+  },
+  "artifact_id": 11681762588,
+  "actual_byte_binding_receipt": "build60-windows-actual-artifact-bindings.json",
+  "actual_byte_binding_sha256": "09726e809b177ff4d0f21fe99ac455e602c525654efb6cd6ccb3f22fd22ac483",
+  "full_hosted_log": "build60-windows-hosted.log",
+  "full_hosted_log_sha256": "1300031bc5ee6b00ae2c3977ebf51d39cb015d99490e21e53eb3fe2da5a1e52b",
+  "log_qualification": "Actual full provider-decoded log retained; reviewer removed leading U+FEFF when present and normalized final newline. Original installer/report bytes unchanged.",
+  "limits": [
+    "Windows manual GUI RC waiver persists; historical CLI/storage evidence retains its own source attribution.",
+    "Linux, owner Android, fullcandidate terminal and exact parent Android60 acceptance pending."
+  ],
+  "must_fix": [],
+  "publication_ready": false
+}
