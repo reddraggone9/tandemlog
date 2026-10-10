@@ -1,0 +1,87 @@
+{
+  "checked_at_utc": "2026-10-10T19:06:27.683380+00:00",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "version": "2026.10.4-rc.1+59",
+  "artifact_api_metadata": {
+    "id": 11679079347,
+    "name": "android-release",
+    "size_in_bytes": 31058814,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11679079347",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11679079347/zip",
+    "expired": false,
+    "created_at": "2026-10-10T19:06:09Z",
+    "expires_at": "2026-10-15T19:06:06Z",
+    "updated_at": "2026-10-10T19:06:09Z",
+    "digest": "sha256:e045977582b15f8801c5bba85e766e340fbe2e3b016ca2359137c2b7b4cd07e5",
+    "workflow_run": {
+      "id": 38076112442,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "75557b100bdb17aeb76deb41fad646d95a9cc898"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/food-rc59-replacement-artifacts/food59-android-release-38076112442.zip",
+    "bytes": 31058814,
+    "sha256": "e045977582b15f8801c5bba85e766e340fbe2e3b016ca2359137c2b7b4cd07e5"
+  },
+  "original_member_inventory_and_crc": "PASS",
+  "strict_member_checksums": "PASS",
+  "actual_members": [
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "669302b39dfcdf7e192b7a5158b5daf890310790cacedc0ee63aed4af40c06c2",
+      "crc_valid": true
+    },
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 295,
+      "sha256": "8ec24c5ea5bb7a151dcefdfc106d3857e20e4180cf9ca95ba7aac24950ec4ea0",
+      "crc_valid": true
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc_valid": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 67066589,
+      "sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51",
+      "crc_valid": true
+    }
+  ],
+  "frozen_policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "apk_crc_member_count": 79,
+  "actual_native_libraries": [
+    {
+      "name": "lib/arm64-v8a/libtandemlog_text.so",
+      "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0"
+    },
+    {
+      "name": "lib/armeabi-v7a/libtandemlog_text.so",
+      "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5"
+    },
+    {
+      "name": "lib/x86_64/libtandemlog_text.so",
+      "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    }
+  ],
+  "android_metadata": {
+    "source_commit": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+    "version": "2026.10.4-rc.1",
+    "version_code": 59,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51"
+  },
+  "actual_apk": {
+    "path": "/tmp/food-rc59-replacement-artifacts/android-release-38076112442/tandemlog-android.apk",
+    "bytes": 67066589,
+    "sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51"
+  },
+  "own_sdk_signature_badging_and_static_payload": "PASS pinned owner/package/code59/nondebuggable/threeABI/16K alignment/ELF/export/notices; no app execution"
+}

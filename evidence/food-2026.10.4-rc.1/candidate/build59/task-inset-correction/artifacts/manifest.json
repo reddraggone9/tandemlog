@@ -1,0 +1,125 @@
+{
+  "recorded_utc": "2026-10-10T19:07:58.190720+00:00",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "version": "2026.10.4-rc.1+59",
+  "disposition": "EXACT_ORIGINAL_ARTIFACTS_VERIFIED_FOR_PARENT_NATIVE_HANDOFF",
+  "actual_android": {
+    "source_commit": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+    "version": "2026.10.4-rc.1",
+    "version_code": 59,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51"
+  },
+  "original_artifact_ids": {
+    "windows": 11678622184,
+    "linux": 11678552798,
+    "android-release": 11679079347
+  },
+  "native_linux": "838unit and94nativePASS from actual hosted log;107contracts and57policy checksPASS",
+  "windows": "835unitPASS/2platformskips; original hosted4phaseinstalledlifecycle andportable17memberinventoryPASS; parentmanualGUIRCwaiver",
+  "remaining": [
+    "Parent exact APK Android Gboard combined title/form/IME/error/field/draft/Save/upgrade/cold replay acceptance",
+    "Parent fresh private publication clearance under existing Food authorization"
+  ],
+  "publication_ready": false,
+  "members": {
+    "windows/root-identity.json": {
+      "bytes": 1672,
+      "sha256": "437414423e3b50c59579cbecf1cd5c7d26139486c74783f303677a936b4c381a"
+    },
+    "windows/original-artifact-bindings.json": {
+      "bytes": 9706,
+      "sha256": "b3f074ad5648906c10255b3c455d197062de62f2049f7dd603afbc9f84f0aedd"
+    },
+    "windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "3bca6e32a096214b1797bf5699c386a49606634d5072bfb104a53c4f45da607c"
+    },
+    "windows/windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "7484f0e202aaf8806538a1a9119559fb9e99176a080b2f97dfceeffac7c0ae23"
+    },
+    "windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "dc611a69ccb3af90e58362b06fc21a036f652943ae76160d5e27ca1371132af3"
+    },
+    "windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "200d4d5370be46aaeffd57fab9d4169a094093057a66c495059692994c5a1d3b"
+    },
+    "linux/root-identity.json": {
+      "bytes": 2736,
+      "sha256": "60444751ef248adcba20f8cc75d56f43d26a292826245274397566142a1dc977"
+    },
+    "linux/original-artifact-bindings.json": {
+      "bytes": 5939,
+      "sha256": "fc531f9b11608bfacbb5d54d2cf229a8ee8dcdf1f8e8a8e9c168fc2e78a75e88"
+    },
+    "linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "35337995d4801392dc94dbb8698c4b87c4c53736bf0f488bd22ecaa2a098a361"
+    },
+    "linux/linux-install-smoke.json": {
+      "bytes": 2024,
+      "sha256": "41695a857ad136026d51a8cd65701ef70aa51837c8f4fca12031769ab0f00b8d"
+    },
+    "linux/linux-startup.json": {
+      "bytes": 6190,
+      "sha256": "1e0035153bee794321d4f045aa63773844529562e00cdb4cc86b5f0a666c9a4f"
+    },
+    "android-release/root-identity.json": {
+      "bytes": 1673,
+      "sha256": "8bcfc4ac4ed67df6e493f68bc759bf2d0e2d9376735f443471d2a54a8e5aef12"
+    },
+    "android-release/original-artifact-bindings.json": {
+      "bytes": 3354,
+      "sha256": "84a0efaeb32d6da75e4e50f64ebd97d807632aa00a040775c120f43073ddb316"
+    },
+    "android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "669302b39dfcdf7e192b7a5158b5daf890310790cacedc0ee63aed4af40c06c2"
+    },
+    "android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "8ec24c5ea5bb7a151dcefdfc106d3857e20e4180cf9ca95ba7aac24950ec4ea0"
+    },
+    "android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "android-release/root-apksigner.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "android-release/root-badging.txt": {
+      "bytes": 1170,
+      "sha256": "f70ae48eb95dd5e2e5a4628b1b43eda9d732d1745a5d673ca24150d05b0f2f23"
+    },
+    "android-release/root-android-native-payload.log": {
+      "bytes": 139,
+      "sha256": "ae861746a757cde24bf74fa1b5386177ac667cdbd888971561454c1095ebbbd7"
+    },
+    "root-combined-inventory.json": {
+      "bytes": 2543,
+      "sha256": "b3a3f8df78420db06a56093cb1156b2834301adc91098257523f32e414ce787b"
+    },
+    "replacement-full-candidate-artifacts-independent-review.json": {
+      "bytes": 9789,
+      "sha256": "5a694e27e3c14f5619e6b9333fd21c2a0e31d720903258af9c9e0e48a3a54f16"
+    },
+    "build59-combined-inventory-independent-verification.json": {
+      "bytes": 3318,
+      "sha256": "2962a2e242cf0821135ef3a33c4fc11b3b784c3eddb59242dc7543a8d1b49d1a"
+    },
+    "replacement-windows-artifact-independent-review.json": {
+      "bytes": 1909,
+      "sha256": "8b7dee65d23a29cde300828df23126ad76d3f3a9ff5e456d9b1420d3ce81f1d4"
+    },
+    "replacement-linux-artifact-independent-review.json": {
+      "bytes": 2216,
+      "sha256": "15af16032891d1f451ffc4acd5d068f4e328dfe171d4371d21c1c1ae8eb9938c"
+    }
+  },
+  "preservation": "Original hosted metadata/checksums/reports copied byte for byte, including Windows CRLF and Linux startup DBus stdout prefix. No installers rebuilt/copied into public source evidence. Prior source87 originals remain separate."
+}

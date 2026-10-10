@@ -28,7 +28,13 @@ Linux's budget increases from30 to40 minutes based on the measured28-minute
 preparation/native duration and required packaging tail, with every gate retained.
 Corrected executable source is `75557b100bdb17aeb76deb41fad646d95a9cc898`.
 [Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
-and push CI38076106828 are running; source/version-history preflight passed.
+and push CI38076106828 passed every hosted gate. Linux838 unit/94 native cases
+and Windows835 unit cases pass; both exact desktop installed lifecycles pass.
+[Original artifact verification](../evidence/food-2026.10.4-rc.1/candidate/build59/task-inset-correction/artifacts/manifest.json)
+accepts the three new archives and14 original members. Android artifact11679079347
+contains APK SHA256 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`.
+Owner signer/package/version59/native-payload checks pass; exact parent Android
+Gboard acceptance remains pending.
 Independent code, UX/pixels, demo and
 actual-range editorial reviews accept the scoped correction. The recorded native
 GTK matrix passes twelve combinations with120 actual captures; final12 widget
@@ -39,10 +45,10 @@ retains executed-fixture and platform qualifications.
 The [corrected-source native rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
 passes production Food Save/restart/restore and all twelve editor combinations
 in5:38, including the final glyph-box assertion; its source and120 captures are
-bound separately from the original checkpoint. Fresh signed artifacts and
-exact Android acceptance are still required; simulated GTK metrics are not Gboard
-acceptance. Windows manual GUI remains RC-waived; the new candidate still needs
-its own hosted installed lifecycle proofs. The [current handoff](food-native-acceptance.md)
+bound separately from the original checkpoint. Exact Android acceptance is still
+required; simulated GTK metrics are not Gboard
+acceptance. Windows manual GUI remains RC-waived; both exact hosted installed
+lifecycle proofs passed. The [current handoff](food-native-acceptance.md)
 records that scope. Stable2026.10.3/build56 remains Latest. Food stable promotion
 requires Lee's approval; publication also awaits the parent's fresh private quota
 snapshot. Bazaar title and Flatpak data-path feedback are queued for the next

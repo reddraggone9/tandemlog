@@ -1,0 +1,30 @@
+{
+  "reviewed_at_utc": "2026-10-10T19:10:50.399870+00:00",
+  "verdict": "ACCEPT_FINAL_DOCS_ONLY_EXACT_ARTIFACT_HANDOFF_NO_MUST_FIX",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "push_ci_run": 38076106828,
+  "version": "2026.10.4-rc.1+59",
+  "file_sha256": {
+    "design/status.md": "254b019d2a480b308a3ecf897d9d0f8b248242961be40c8c1f031de9cc686238",
+    "design/food-native-acceptance.md": "130a8f7917b708b8f42fd33dfa932878c084557d1face996f0dfcc1b23b1a542",
+    "evidence/food-2026.10.4-rc.1/README.md": "82fc3cfe02c6c39f4f902b600eab4d551f2746a8a147a77b08c9fed6e01c510a"
+  },
+  "artifact_evidence_manifest_sha256": "197dda756570e757746f4fbc678db538a72393f472dab2fe1241d9e71e2089a1",
+  "checks": [
+    "All24 artifact evidence members actual size/hash verified; all24 copied reviewer/SDK/root/original records byte-identical to retained local originals",
+    "Both full/combined ACCEPT receipts and Windows/Linux receipts copied byte-identically; no actual installer binaries or private transfer files in public evidence",
+    "Candidate and push terminalsuccess, Linux838unit/94native,Windows835unit/2platform skips and desktop installed lifecycles accurately stated",
+    "Android artifact11679079347 actualAPK689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51 signer/package/version59/staticpayload identity accurately stated, parent actualGboard/native remains pending",
+    "Current native148, prior145 and rejected source87 evidence files remain byte/Git-blob identical to755; executable/test/version/workflow/tool closure unchanged",
+    "New relative links resolve and diff whitespace passes; new artifact records contain no private Library/token/quota-value markers",
+    "One stale is-running wording corrected to completed hosted result; historical pending handoff and rejected87 qualify originalsource/status clearly"
+  ],
+  "must_fix": [],
+  "publication_ready": false,
+  "remaining": [
+    "Parent exact newAPK real Android Gboard/combined editor/upgrade/replay acceptance",
+    "Parent private fresh clearance and normal prerelease promotion/public verification gates"
+  ],
+  "scope_limits": "Documentation accuracy and completed static exact-artifact gates only. No reviewer device/GUI/app execution or new Android acceptance claimed. Parent WindowsGUI RC waiver retained; prior CLI coverage keeps originalsource."
+}

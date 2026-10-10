@@ -6,27 +6,34 @@ that its two-line Edit1 title plus actions left no editor fields while Gboard wa
 open. Build58 is blocked from publication. The replacement shares title and
 fields in one scrollable viewport above actions, retains typography/count scope,
 and covers the combined Add/Edit1/Edit100, theme, large-text, IME and error matrix.
-Fresh full candidate/provenance and exact Android acceptance remain required.
+Fresh full candidate/provenance gates passed; exact Android acceptance remains required.
 
 The original build57 [version floor](version-floor.json) comes
 from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
-## Corrected build59 source — fresh candidate pending
+## Corrected build59 source — exact Android acceptance pending
 
 Executable source `75557b100bdb17aeb76deb41fad646d95a9cc898` declares
 2026.10.4-rc.1/build59. [Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
-and push CI38076106828 are running; hosted source/version-history preflight passed.
+and push CI38076106828 passed every hosted gate:838 Linux units,94 native Linux
+cases,835 Windows units/two platform skips,107 contract and57 policy checks.
 [Frozen source review](candidate/build59/task-inset-correction/replacement-frozen-pushed-source-and-preflight-independent-review.json)
 and [actual stable-to-source editorial review](candidate/build59/task-inset-correction/replacement-final-range-editorial-independent-review.json)
 accept the scoped Task inset restoration and unchanged notes/media.
-[Current handoff](candidate/build59/task-inset-correction/replacement-handoff-pending.json)
-leaves full hosted/artifact gates and exact Android acceptance open. The corrected
+[Original in-progress handoff](candidate/build59/task-inset-correction/replacement-handoff-pending.json)
+retains its earlier checkpoint. [Exact artifact handoff](candidate/build59/task-inset-correction/artifacts/manifest.json)
+records three independently/root-verified original archives,14 original members,
+both hosted installed lifecycles and Android artifact11679079347/APK SHA256
+`689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`.
+Owner signature/package/code59/native-payload checks pass. Exact parent Gboard,
+combined fields/title/error/draft/Save/upgrade/cold-replay acceptance remains open.
+The corrected
 local native evidence has148 verified members and ten source bindings; original
-145-member Food and failed source87 evidence remain unchanged. No replacement
-APK or publication readiness is claimed until the new artifacts and native gates
-actually pass.
+145-member Food and failed source87 evidence remain unchanged. Android runtime
+acceptance and publication readiness await the remaining native
+and private clearance gates pass.
 
 ## Initial build59 source — native gate failed
 
@@ -71,7 +78,8 @@ without describing the assertion failures as a timeout or waiving them.
 The [corrected-source native closure](native/task-keyboard-build59/README.md)
 binds these bulk RED/GREEN checks, the final production Food persistence flow and
 all twelve final editor combinations in5:38, with120 matrix captures and no
-fixture weakening. New exact Android and full hosted/artifact gates remain open.
+fixture weakening. Current hosted/artifact gates passed above; exact Android
+acceptance remains open.
 
 ## Historical build58 artifacts — Android layout blocked
 

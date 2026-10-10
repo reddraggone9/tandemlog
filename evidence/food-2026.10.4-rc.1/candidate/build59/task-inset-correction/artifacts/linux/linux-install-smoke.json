@@ -1,0 +1,66 @@
+{
+  "phases": [
+    {
+      "phase": "after-install",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=65",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=14",
+        "TANDEMLOG_PHASE manifest=10",
+        "TANDEMLOG_PHASE ingest=17",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=823 FILES_READ=1"
+      ]
+    },
+    {
+      "phase": "after-upgrade",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=47",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=36",
+        "TANDEMLOG_PHASE manifest=17",
+        "TANDEMLOG_PHASE ingest=37",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=229 FILES_READ=1"
+      ]
+    },
+    {
+      "phase": "after-uninstall",
+      "passed": true,
+      "loaded_projection": false,
+      "sandbox_stopped": false,
+      "markers": []
+    },
+    {
+      "phase": "after-reinstall",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=47",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=37",
+        "TANDEMLOG_PHASE manifest=17",
+        "TANDEMLOG_PHASE ingest=38",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=231 FILES_READ=1"
+      ]
+    }
+  ],
+  "upgrade": {
+    "candidate_commit": "874ccf94595d03a205564b06defcea8bf781a813466259d45bdde231b0ea68e5",
+    "baseline_commit": "28ef3fc790674bfcd5c1199fe4e1e94f79bc6b1a8bc664809a98e788fcc839aa",
+    "baseline_payload_equal": true,
+    "baseline_permissions_equal": true,
+    "final_candidate_restored": true
+  }
+}

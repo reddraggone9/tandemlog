@@ -1,0 +1,44 @@
+{
+  "reviewed_at_utc": "2026-10-10T19:00:47.158219+00:00",
+  "verdict": "ACCEPT_EXACT_REPLACEMENT_LINUX_ARTIFACT_ONLY",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "artifact_id": 11678552798,
+  "version": "2026.10.4-rc.1+59",
+  "actual_archive": {
+    "path": "/tmp/food-rc59-replacement-artifacts/food59-linux-38076112442.zip",
+    "bytes": 9217530,
+    "sha256": "020b100f69699a749861bdbeed56f55bc1022f38cc5fe8441b90a8f0e0b53e6d"
+  },
+  "actual_flatpak": {
+    "name": "tandemlog-linux-x64.flatpak",
+    "bytes": 9212712,
+    "sha256": "5648133397d453d9287d39a67831f1d33c7a0fbb29506e51a2edf7925ec892bf",
+    "crc_valid": true
+  },
+  "checks": [
+    "Official API digest/size/source/main/run equals actual ZIP",
+    "Closed four original member inventory fullCRC/safepaths/allchecksums PASS",
+    "Frozen current installed Linux changed-commit lifecycle PASS; candidate final payload restored, synthetic data retained and sandbox stopped",
+    "Hosted838 application PASS,94 native PASS/0 FAIL,107 frozen contracts and57 policy tests pass before release build/startup/Flatpak lifecycle/upload"
+  ],
+  "precise_hosted_pass_lines": [
+    "2026-10-10T18:35:03.6504221Z \ud83c\udf89 838 tests passed.",
+    "2026-10-10T18:35:12.3288472Z Ran 107 tests in 2.689s",
+    "2026-10-10T18:35:13.0892004Z Ran 57 tests in 0.637s",
+    "2026-10-10T18:57:32.0662249Z \ud83c\udf89 94 tests passed."
+  ],
+  "raw_startup": {
+    "member_sha256": "1e0035153bee794321d4f045aa63773844529562e00cdb4cc86b5f0a666c9a4f",
+    "qualification": "Original6190B preserved includingDBus/portal stdout prefix; anchored finalJSON parsed. Rebuild/warm SQLite metrics, OS page cache not flushed. Whole original member not claimed JSON-only."
+  },
+  "supporting_receipt_sha256": "fc531f9b11608bfacbb5d54d2cf229a8ee8dcdf1f8e8a8e9c168fc2e78a75e88",
+  "actual_hosted_log_sha256": "b1b85ca7757f664791eae535fc15d285f98f3b7e8391a42dd9e7ea9de0552f93",
+  "must_fix": [],
+  "scope_limits": [
+    "No reviewer install/app execution",
+    "Signed owner APK still building, actual APK hash and parent Android acceptance pending",
+    "Source87 failed evidence retained separately"
+  ],
+  "publication_ready": false
+}

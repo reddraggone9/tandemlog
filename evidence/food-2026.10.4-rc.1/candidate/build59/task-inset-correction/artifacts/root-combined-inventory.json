@@ -1,0 +1,67 @@
+{
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "verdict": "PASS14_ORIGINAL_MEMBER_FROZEN_INVENTORY_AND_INSTALLED_LIFECYCLES",
+  "directory": "/tmp/food59-replacement-root-inventory-52qjhmw7",
+  "original_members": {
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14396349,
+      "sha256": "abfc875fa688218fa88732fdee27c00bbcae0d10a0d5f4e3af77e4e0afffb821"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12374723,
+      "sha256": "2bee58ef9cf5aef3a01fd5fff19617ac08cd93aad71789859b80f9ebe08a7285"
+    },
+    "windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "3bca6e32a096214b1797bf5699c386a49606634d5072bfb104a53c4f45da607c"
+    },
+    "windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "7484f0e202aaf8806538a1a9119559fb9e99176a080b2f97dfceeffac7c0ae23"
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "dc611a69ccb3af90e58362b06fc21a036f652943ae76160d5e27ca1371132af3"
+    },
+    "windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "200d4d5370be46aaeffd57fab9d4169a094093057a66c495059692994c5a1d3b"
+    },
+    "linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "35337995d4801392dc94dbb8698c4b87c4c53736bf0f488bd22ecaa2a098a361"
+    },
+    "linux-install-smoke.json": {
+      "bytes": 2024,
+      "sha256": "41695a857ad136026d51a8cd65701ef70aa51837c8f4fca12031769ab0f00b8d"
+    },
+    "linux-startup.json": {
+      "bytes": 6190,
+      "sha256": "1e0035153bee794321d4f045aa63773844529562e00cdb4cc86b5f0a666c9a4f"
+    },
+    "tandemlog-linux-x64.flatpak": {
+      "bytes": 9212712,
+      "sha256": "5648133397d453d9287d39a67831f1d33c7a0fbb29506e51a2edf7925ec892bf"
+    },
+    "android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "669302b39dfcdf7e192b7a5158b5daf890310790cacedc0ee63aed4af40c06c2"
+    },
+    "android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "8ec24c5ea5bb7a151dcefdfc106d3857e20e4180cf9ca95ba7aac24950ec4ea0"
+    },
+    "android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "tandemlog-android.apk": {
+      "bytes": 67066589,
+      "sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51"
+    }
+  },
+  "method": "Hardlinks retain exact bytes; no extra metadata or symlink in inventory",
+  "exact_android_runtime": "pending parent Gboard/upgrade/cold replay acceptance",
+  "publication_ready": false
+}

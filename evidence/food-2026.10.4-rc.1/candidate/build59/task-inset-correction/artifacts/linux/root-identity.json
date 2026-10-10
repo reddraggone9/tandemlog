@@ -1,0 +1,78 @@
+{
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "artifact_id": 11678552798,
+  "root_check": "Independent read of original reviewer-materialized bytes; no rebuild",
+  "members": {
+    "linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "35337995d4801392dc94dbb8698c4b87c4c53736bf0f488bd22ecaa2a098a361"
+    },
+    "linux-install-smoke.json": {
+      "bytes": 2024,
+      "sha256": "41695a857ad136026d51a8cd65701ef70aa51837c8f4fca12031769ab0f00b8d"
+    },
+    "linux-startup.json": {
+      "bytes": 6190,
+      "sha256": "1e0035153bee794321d4f045aa63773844529562e00cdb4cc86b5f0a666c9a4f"
+    },
+    "tandemlog-linux-x64.flatpak": {
+      "bytes": 9212712,
+      "sha256": "5648133397d453d9287d39a67831f1d33c7a0fbb29506e51a2edf7925ec892bf"
+    }
+  },
+  "publication_ready": false,
+  "original_archive": {
+    "bytes": 9217530,
+    "sha256": "020b100f69699a749861bdbeed56f55bc1022f38cc5fe8441b90a8f0e0b53e6d",
+    "github_api_digest_size_source_run": "PASS",
+    "CRC_and_members_equal_directory": "PASS"
+  },
+  "hosted_installed_lifecycle": "PASS all4 phases; original hosted report, not local installer execution",
+  "startup": {
+    "target": "Linux x86_64 native / Xvfb",
+    "binary": "build/linux/x64/release/bundle/tandemlog",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 828,
+        "marker": "TANDEMLOG_READY_MS=652 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=45",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=20",
+          "TANDEMLOG_PHASE manifest=17",
+          "TANDEMLOG_PHASE ingest=35",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=652 FILES_READ=1"
+        ],
+        "external_main_ms": 172,
+        "external_first_frame_ms": 221
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 373,
+        "marker": "TANDEMLOG_READY_MS=237 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=45",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=38",
+          "TANDEMLOG_PHASE manifest=26",
+          "TANDEMLOG_PHASE ingest=18",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=237 FILES_READ=0"
+        ],
+        "external_main_ms": 133,
+        "external_first_frame_ms": 182
+      }
+    ]
+  },
+  "startup_limit": "Actual hosted production native release; raw DBus prefix retained; OS page cache not flushed"
+}

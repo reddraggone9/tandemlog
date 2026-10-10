@@ -41,20 +41,24 @@ keyboard-safe bounds after Save changes focus while leaving Food handling intact
 The unchanged four bulk native flows now pass after reproducing both failures.
 The [failure disposition](../evidence/food-2026.10.4-rc.1/candidate/build59/source87-failed/manifest.json)
 preserves the original failed run and source-bound Windows artifact evidence.
-Corrected source `75557b100bdb17aeb76deb41fad646d95a9cc898` is running
-[fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
-and push CI38076106828, with source/version-history preflight passed. It needs
-all new original artifacts; none from the failed source87 run can be promoted.
+[Fresh candidate38076112442](https://github.com/reddraggone9/tandemlog/actions/runs/38076112442)
+and push CI38076106828 passed all hosted gates at corrected source
+`75557b100bdb17aeb76deb41fad646d95a9cc898`. Independent and root verification
+accept the [three new original archives and14-member inventory](../evidence/food-2026.10.4-rc.1/candidate/build59/task-inset-correction/artifacts/manifest.json),
+including both exact hosted installed lifecycles. None from the failed source87
+run is promoted. The actual owner-signed Android artifact is11679079347; APK
+SHA256 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`,
+67066589 bytes, package/version2026.10.4-rc.1/code59. Official signature, owner
+pin, threeABIs, nondebuggable and native16K/ELF/exports/notices checks pass.
 Local independent code/UX/demo and actual-range notes
 reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
 records120 captures and the earlier fixture qualification. The separate
 [corrected-source rerun](../evidence/food-2026.10.4-rc.1/native/task-keyboard-build59/README.md)
 passes production Food persistence and the twelve-case matrix in5:38, executing
-the final glyph assertion without rewriting the original evidence. The exact Android
-artifact ID/APK hash will be recorded after the fresh full matrix and independent
-artifact review; no Android runtime acceptance is implied by this checkpoint. Windows manual GUI
-remains RC-waived by the parent; fresh hosted Linux/Windows installed lifecycle
-proofs are still required for this candidate. Prior local CLI/storage evidence
+the final glyph assertion without rewriting the original evidence. Exact Android
+runtime acceptance remains pending for this APK; static identity checks do not
+replace actual Gboard testing. Windows manual GUI remains RC-waived by the parent;
+the fresh hosted Linux/Windows installed lifecycle proofs passed. Prior local CLI/storage evidence
 retains its original build57 or stable56 attribution.
 
 Stable promotion requires Lee's acceptance. The

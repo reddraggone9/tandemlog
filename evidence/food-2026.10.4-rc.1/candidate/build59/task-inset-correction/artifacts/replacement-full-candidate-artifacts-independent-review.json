@@ -1,0 +1,194 @@
+{
+  "reviewed_at_utc": "2026-10-10T19:07:47.003785+00:00",
+  "verdict": "ACCEPT_FOR_PARENT_EXACT_ANDROID_NATIVE_HANDOFF",
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "push_ci_run": 38076106828,
+  "version": "2026.10.4-rc.1+59",
+  "terminal_gates": "Fresh official run/job API: candidate5jobs success and push3jobs success at exact755 main; signing114288915951 success",
+  "observed_hosted_counts": {
+    "linux_application": {
+      "passed": 838
+    },
+    "windows_application": {
+      "passed": 835,
+      "platform_skipped": 2
+    },
+    "native_linux": {
+      "passed": 94,
+      "failed": 0
+    },
+    "frozen_contracts_each_platform": 107,
+    "policy_tests_each_platform": 57,
+    "windows_policy_skips": 5
+  },
+  "original_artifacts": [
+    {
+      "platform": "windows",
+      "id": 11678622184,
+      "archive": {
+        "path": "/tmp/food-rc59-replacement-artifacts/food59-windows-38076112442.zip",
+        "bytes": 26204916,
+        "sha256": "32984e2aacf8fe3786979cd44e547ff8c756a5a937b4d6cf81a2f4747e2e5e53"
+      },
+      "original_members": [
+        {
+          "name": "tandemlog-windows-x64-unsigned-portable.zip",
+          "bytes": 14396349,
+          "sha256": "abfc875fa688218fa88732fdee27c00bbcae0d10a0d5f4e3af77e4e0afffb821",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-install-smoke.json",
+          "bytes": 1757,
+          "sha256": "7484f0e202aaf8806538a1a9119559fb9e99176a080b2f97dfceeffac7c0ae23",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-windows-x64-unsigned-setup.exe",
+          "bytes": 12374723,
+          "sha256": "2bee58ef9cf5aef3a01fd5fff19617ac08cd93aad71789859b80f9ebe08a7285",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-portable-provenance.json",
+          "bytes": 2181,
+          "sha256": "200d4d5370be46aaeffd57fab9d4169a094093057a66c495059692994c5a1d3b",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-portable-SHA256SUMS.txt",
+          "bytes": 111,
+          "sha256": "dc611a69ccb3af90e58362b06fc21a036f652943ae76160d5e27ca1371132af3",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-SHA256SUMS.txt",
+          "bytes": 108,
+          "sha256": "3bca6e32a096214b1797bf5699c386a49606634d5072bfb104a53c4f45da607c",
+          "crc_valid": true
+        }
+      ],
+      "unexpired": true
+    },
+    {
+      "platform": "linux",
+      "id": 11678552798,
+      "archive": {
+        "path": "/tmp/food-rc59-replacement-artifacts/food59-linux-38076112442.zip",
+        "bytes": 9217530,
+        "sha256": "020b100f69699a749861bdbeed56f55bc1022f38cc5fe8441b90a8f0e0b53e6d"
+      },
+      "original_members": [
+        {
+          "name": "linux-install-smoke.json",
+          "bytes": 2024,
+          "sha256": "41695a857ad136026d51a8cd65701ef70aa51837c8f4fca12031769ab0f00b8d",
+          "crc_valid": true
+        },
+        {
+          "name": "linux-startup.json",
+          "bytes": 6190,
+          "sha256": "1e0035153bee794321d4f045aa63773844529562e00cdb4cc86b5f0a666c9a4f",
+          "crc_valid": true
+        },
+        {
+          "name": "linux-SHA256SUMS.txt",
+          "bytes": 94,
+          "sha256": "35337995d4801392dc94dbb8698c4b87c4c53736bf0f488bd22ecaa2a098a361",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-linux-x64.flatpak",
+          "bytes": 9212712,
+          "sha256": "5648133397d453d9287d39a67831f1d33c7a0fbb29506e51a2edf7925ec892bf",
+          "crc_valid": true
+        }
+      ],
+      "unexpired": true
+    },
+    {
+      "platform": "android-release",
+      "id": 11679079347,
+      "archive": {
+        "path": "/tmp/food-rc59-replacement-artifacts/food59-android-release-38076112442.zip",
+        "bytes": 31058814,
+        "sha256": "e045977582b15f8801c5bba85e766e340fbe2e3b016ca2359137c2b7b4cd07e5"
+      },
+      "original_members": [
+        {
+          "name": "android-SHA256SUMS.txt",
+          "bytes": 88,
+          "sha256": "669302b39dfcdf7e192b7a5158b5daf890310790cacedc0ee63aed4af40c06c2",
+          "crc_valid": true
+        },
+        {
+          "name": "android-release-metadata.json",
+          "bytes": 295,
+          "sha256": "8ec24c5ea5bb7a151dcefdfc106d3857e20e4180cf9ca95ba7aac24950ec4ea0",
+          "crc_valid": true
+        },
+        {
+          "name": "android-signature.txt",
+          "bytes": 942,
+          "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-android.apk",
+          "bytes": 67066589,
+          "sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51",
+          "crc_valid": true
+        }
+      ],
+      "unexpired": true
+    }
+  ],
+  "actual_owner_apk": {
+    "path": "/tmp/food-rc59-replacement-artifacts/android-release-38076112442/tandemlog-android.apk",
+    "bytes": 67066589,
+    "sha256": "689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51"
+  },
+  "checks": [
+    "All3 actual original archive byte sizes and SHA256 match fresh immutable official artifact API, exact source/run/main/unexpired metadata",
+    "Exact6Windows+4Linux+4Android original member inventory, safe paths and fullCRC; every original/checksum actual member byte verified",
+    "Windows portable exact17 member bytes/hash/path/case/CRC, source755 and run38076112442; source native notices content verified with CRLF/LF representation accounted for",
+    "Frozen desktop installed lifecycle reports pass; Linux changed-commit candidate restored and synthetic sandbox stopped",
+    "Own official apksigner cryptographic pinned owner and aapt package/version59/nondebuggable/3ABI pass on actualAPK; own frozen full static native16K alignment/ELF/export/notices and APK internalCRC pass",
+    "Combined exact14-member frozen publisher inventory/checksum/desktop-lifecycle gate PASS via separate hardlink directory with no extra receipts; no symlink bypass",
+    "Actual complete decoded hosted logs retained; source/signature/native payload gates occur before upload; no rebuild, emulator or app/installer execution by reviewer"
+  ],
+  "owner_pin_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "android_package": "com.reddraggone9.tandemlog",
+  "startup_qualification": "Original Linux startup stdout contains DBus prefix; anchored finalJSON parsed without changing6190B member, cache rebuild/warm labels and OS page cache not flushed. No claim whole original file JSON-only.",
+  "supporting_file_sha256": {
+    "replacement-frozen-pushed-source-and-preflight-independent-review.json": "f42ef387d0789f902dd286f0c40e37db1a4401c8df0c220dfc3da17cc81932ad",
+    "replacement-final-range-editorial-independent-review.json": "532d79bcf1e7de81d8657c2542618258dbdd04176a057d775fc92d6e35f1e904",
+    "replacement-windows-artifact-independent-review.json": "8b7dee65d23a29cde300828df23126ad76d3f3a9ff5e456d9b1420d3ce81f1d4",
+    "replacement-linux-artifact-independent-review.json": "15af16032891d1f451ffc4acd5d068f4e328dfe171d4371d21c1c1ae8eb9938c",
+    "build59-windows-actual-artifact-bindings.json": "b3f074ad5648906c10255b3c455d197062de62f2049f7dd603afbc9f84f0aedd",
+    "build59-linux-actual-artifact-bindings.json": "fc531f9b11608bfacbb5d54d2cf229a8ee8dcdf1f8e8a8e9c168fc2e78a75e88",
+    "build59-android-release-actual-artifact-bindings.json": "84a0efaeb32d6da75e4e50f64ebd97d807632aa00a040775c120f43073ddb316",
+    "build59-combined-inventory-independent-verification.json": "2962a2e242cf0821135ef3a33c4fc11b3b784c3eddb59242dc7543a8d1b49d1a",
+    "windows-hosted.log": "9e002bc83cdb1e321b17b6b7516062e31fe424f6b16337e0ccc07f83887d3bda",
+    "linux-hosted.log": "b1b85ca7757f664791eae535fc15d285f98f3b7e8391a42dd9e7ea9de0552f93",
+    "signed-android-hosted.log": "da926e019f8cc5e06f2c1c48e52deae9e7574b228c8843a17d00b4f5398bfff9",
+    "final-candidate-run-api.json": "b8bad8e9cdd7f03775e150c06577378f0aef8fc6a8a95249687b3909410514df",
+    "final-push-run-api.json": "5660069c28ec3f286dd0918fea18cf9ae0c745a7c2177db75a22534899460b4e",
+    "final-original-artifact-api.json": "b36e5b782e1c74a40a6ead8bc8459f5457be2a79527ff6cc22b83d255e374090",
+    "final-candidate-jobs-api.json": "024a8d4ae4529ec5621dc57849bb433b642024b17e1a7f38a2dd12fde5950ebc",
+    "final-push-jobs-api.json": "bd2753f376b6e87e8d7e927ba345753da509be5a9838585d2ee078a4aee36d41"
+  },
+  "prior_evidence": "Rejected87 artifacts/failure and58/57 qualified native records preserved separate; none relabeled as755 or exactAndroid59 acceptance",
+  "must_fix": [],
+  "remaining_gates": [
+    "Parent exact new755/build59 owner APK Android actual Gboard combined title/form/errors/field/draft/Save/Back/upgrade/cold replay acceptance",
+    "Applicable native demo/evidence and private fresh clearance from parent; Food override already authorized, no renewed general permission implied",
+    "Normal independently reviewed exact-source prerelease promotion checks, absent tag/closed3installers/no-rebuild/latestfalse, then actual public-byte/source/notes/priorrelease review"
+  ],
+  "windows_scope": "Parent WindowsGUI RC waiver retained; fresh exact hosted four-phase installed lifecycle reviewed. Prior native CLI/storage proofs carry only unaffected coverage at their originalsource.",
+  "notes_and_media": "Separate final actual stable76-to755 editorial receipt accepts three notes bullets SHA3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae and immutable real dark repeat comparison; no new editorial gap",
+  "publication_ready": false,
+  "reviewer_device_acceptance": false,
+  "privacy": "No private account quota values, Library transfer references or private import data in this receipt."
+}

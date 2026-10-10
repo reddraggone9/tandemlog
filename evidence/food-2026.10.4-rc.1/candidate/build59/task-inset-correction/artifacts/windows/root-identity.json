@@ -1,0 +1,42 @@
+{
+  "source": "75557b100bdb17aeb76deb41fad646d95a9cc898",
+  "candidate_run": 38076112442,
+  "artifact_id": 11678622184,
+  "root_check": "Independent read of original reviewer-materialized bytes; no rebuild",
+  "members": {
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14396349,
+      "sha256": "abfc875fa688218fa88732fdee27c00bbcae0d10a0d5f4e3af77e4e0afffb821"
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12374723,
+      "sha256": "2bee58ef9cf5aef3a01fd5fff19617ac08cd93aad71789859b80f9ebe08a7285"
+    },
+    "windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "3bca6e32a096214b1797bf5699c386a49606634d5072bfb104a53c4f45da607c"
+    },
+    "windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "7484f0e202aaf8806538a1a9119559fb9e99176a080b2f97dfceeffac7c0ae23"
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "dc611a69ccb3af90e58362b06fc21a036f652943ae76160d5e27ca1371132af3"
+    },
+    "windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "200d4d5370be46aaeffd57fab9d4169a094093057a66c495059692994c5a1d3b"
+    }
+  },
+  "publication_ready": false,
+  "original_archive": {
+    "bytes": 26204916,
+    "sha256": "32984e2aacf8fe3786979cd44e547ff8c756a5a937b4d6cf81a2f4747e2e5e53",
+    "github_api_digest_size_source_run": "PASS",
+    "CRC_and_members_equal_directory": "PASS"
+  },
+  "hosted_installed_lifecycle": "PASS all4 phases; original hosted report, not local installer execution",
+  "portable_frozen_gate": "PASS source/run/member inventory/checksums/CRC",
+  "windows_manual_gui": "Parent RCwaiver; no local WindowsGUI attestation"
+}
