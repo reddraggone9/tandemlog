@@ -70,7 +70,17 @@ jobs:
           if [[ "$RUNNER_OS" == Windows ]]; then native_library="$(cygpath -w "$native_library")"; fi
           python tool/native_build_gates.py verify_library "$native_library"
           echo "TANDEMLOG_TEXT_LIBRARY=$native_library" >> "$GITHUB_ENV"
-      - run: flutter test
+      - name: Run Windows unit tests with retained diagnostics
+        id: windows-unit
+        run: flutter test --reporter expanded --file-reporter json:windows-unit-tests.json
+      - name: Preserve Windows unit-test results
+        if: always() && steps.windows-unit.outcome != 'skipped'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: windows-unit-tests
+          path: windows-unit-tests.json
+          retention-days: 5
+          if-no-files-found: warn
       - name: Verify frozen native admission and worker contracts
         shell: bash
         run: |

@@ -1,0 +1,9 @@
+{"protocolVersion":"0.1.1","runnerVersion":null,"pid":263676,"type":"start","time":0}
+{"suite":{"id":0,"platform":"vm","path":"/tmp/tandemlog-food-implementation/test/food_import_contract_vector_test.dart"},"type":"suite","time":0}
+{"test":{"id":1,"name":"loading /tmp/tandemlog-food-implementation/test/food_import_contract_vector_test.dart","suiteID":0,"groupIDs":[],"metadata":{"skip":false,"skipReason":null},"line":null,"column":null,"url":null},"type":"testStart","time":0}
+{"count":1,"time":5,"type":"allSuites"}
+{"testID":1,"result":"success","skipped":false,"hidden":true,"type":"testDone","time":1546}
+{"group":{"id":2,"suiteID":0,"parentID":null,"name":"","metadata":{"skip":false,"skipReason":null},"testCount":1,"line":null,"column":null,"url":null},"type":"group","time":1550}
+{"test":{"id":3,"name":"v1 import identity and plan hash match independent frozen vector","suiteID":0,"groupIDs":[2],"metadata":{"skip":false,"skipReason":null},"line":8,"column":3,"url":"file:///tmp/tandemlog-food-implementation/test/food_import_contract_vector_test.dart"},"type":"testStart","time":1550}
+{"testID":3,"result":"success","skipped":false,"hidden":false,"type":"testDone","time":1596}
+{"success":true,"type":"done","time":1614}

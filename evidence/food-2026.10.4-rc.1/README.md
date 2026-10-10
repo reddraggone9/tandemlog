@@ -74,9 +74,29 @@ accept source with no must-fix. Private extraction/whitelist/source
 rows remain outside the repository. No live import, cutover or deletion occurs.
 Empty-inventory native RC acceptance does not require live import first.
 
-Full hosted candidate matrix, signed exact APK identity, native Android/Windows
-acceptance and independent notes/media review remain pending. Relevant
+Signed [candidate run38024653325](https://github.com/reddraggone9/tandemlog/actions/runs/38024653325)
+and [push CI38024653341](https://github.com/reddraggone9/tandemlog/actions/runs/38024653341)
+both select immutable source `2ecfbd620bc92ab23d08fb3f7df2b67b355f62da`.
+The [independent source/preflight receipt](candidate/source-preflight-independent-review.json)
+accepts gate placement and the passed candidate preflight; it does not accept
+running jobs or unavailable artifact bytes. The later
+[independent exact-range editorial receipt](candidate/exact-range-editorial-review.json)
+accepts the final notes/media against stable2026.10.3 through that source with
+no must-fix. These additive receipts were collected after source freeze and
+do not change the candidate source or imply a rebuild.
+
+Full hosted candidate matrix, signed exact APK identity and native Android/Windows
+acceptance remain pending. Relevant
 semantics, keyboard, enlarged text, focus and readable labels are the bounded
 acceptance scope; optional broad assistive-technology/audio work is not a gate.
 Publication will reuse accepted artifacts without rebuilding, with
 prerelease=true/latest=false.
+
+The initial candidate and push runs failed their Windows unit-test step after
+818 passes/two skips and process exit1. Neither decoded log nor the generic
+check annotation identifies a failing test. The
+[failure observation and decoded logs](candidate/initial-windows-failure-observation.json)
+preserve this unresolved result. Windows packaging did not execute; debug
+Android success does not substitute for signed or native acceptance. A bounded
+Windows CI reporter change retains expanded output and machine-readable results
+for diagnosis while preserving the test exit status and all existing gates.

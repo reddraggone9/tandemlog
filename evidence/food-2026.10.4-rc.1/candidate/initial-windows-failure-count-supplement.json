@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "sourceCommit": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "originalObservationSha256": "b6036a4b009f6372fa0594b246c12d47a3b3fd6aa9168703745a7ed112b61406",
+  "countDiagnosis": {
+    "expectedWindowsPasses": 819,
+    "explicitWindowsSkips": 2,
+    "notRegisteredOnWindows": 1,
+    "uniqueReportedPassingNames": 819,
+    "finalSummaryPasses": 818,
+    "interpretation": "Pinned GitHub reporter may print green summary with no failed tests while incomplete/cancelled live test yields exit1. This is a diagnosis clue, not established cause."
+  }
+}

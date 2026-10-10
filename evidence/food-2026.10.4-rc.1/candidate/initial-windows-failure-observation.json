@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "recordedUtc": "2026-10-10T04:48:59.226955+00:00",
+  "sourceCommit": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "version": "2026.10.4-rc.1+57",
+  "candidateRun": 38024653325,
+  "candidateWindowsJob": 114132834118,
+  "pushRun": 38024653341,
+  "pushWindowsJob": 114132797157,
+  "observation": "Both Windows flutter test steps exited 1 after 818 passing tests and 2 skips. Decoded logs contain no failing-test/error block; check annotation says only Process completed with exit code 1. Root cause unresolved. No Windows release packaging/upload or signed APK executed. Linux still running when recorded.",
+  "logs": [
+    {
+      "file": "initial-candidate-windows-decoded.log",
+      "sha256": "b49fca89f3af61f4b43645e4435f1ce5e68bd06e770da2cd0de3c836589604a2",
+      "bytes": 214269,
+      "retrieval": "Supported GitHub connector decoded job logs; UTF-8 serialization, not a raw ZIP"
+    },
+    {
+      "file": "initial-push-windows-decoded.log",
+      "sha256": "fdb9b99fba1b134f3cf53b10300efa95817f3c13be94d1930d451ef17fb5b162",
+      "bytes": 214269,
+      "retrieval": "Supported GitHub connector decoded job logs; UTF-8 serialization, not a raw ZIP"
+    }
+  ],
+  "diagnosticChange": "Proposed Windows expanded reporter and retained JSON test results; no acceptance-gate relaxation."
+}

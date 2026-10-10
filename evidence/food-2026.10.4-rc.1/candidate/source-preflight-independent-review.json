@@ -1,0 +1,70 @@
+{
+  "schema": 1,
+  "reviewer": "Independent delegated artifact/provenance reviewer",
+  "reviewed_at_utc": "2026-10-10T04:39:05.422810+00:00",
+  "verdict": "SOURCE_PREFLIGHT_PASS_CANDIDATE_PENDING",
+  "must_fix": [],
+  "source": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "candidate_run_id": 38024653325,
+  "push_ci_run_id": 38024653341,
+  "version": "2026.10.4-rc.1+57",
+  "baseline_latest": {
+    "tag": "v2026.10.3",
+    "release_id": 408448633,
+    "version_code": 56
+  },
+  "findings": {
+    "same_repo_main_workflow_dispatch_exact_candidate_source_fresh_api": true,
+    "main_preflight_and_candidate_history_job_success": true,
+    "source_version_above_recorded_maximum_successful_candidate_floor56": true,
+    "workflow_signing_owner_pin_and_publish_policy_byte_identical_to_previous_accepted_stable": true,
+    "food_production_tests_registered_in_required_real_native_aggregate": true,
+    "signed_job_depends_on_full_platform_checks": true,
+    "signer_package_version_nondebuggable_native_payload_and_notices_checked_before_android_release_upload": true,
+    "publisher_requires_successful_immutable_main_run_and_candidate_tag_version": true,
+    "normal_publisher_downloads_exact_three_archives_validates_inventory_portable_members_lifecycle_accepted_apk_and_strict_checksums_before_create": true,
+    "normal_publisher_copies_versioned_original_three_installers_no_rebuild_prerelease_true_latest_false": true,
+    "notes_are_pinned_to_trusted_dispatch_design_prerelease_notes": true
+  },
+  "boundaries": {
+    "initial_artifact_inventory": [],
+    "actual_zip_apk_installer_verification": false,
+    "signed_apk_hash": null,
+    "native_parent_android_windows_acceptance": "pending exact final signed/installers",
+    "notes_media": "independent UX/editorial agent owns final source-range gate; not accepted by this receipt",
+    "publication": "not performed or approved by reviewer"
+  },
+  "coordination": {
+    "root_owns_build_monitoring_and_downloads": true,
+    "shared_actual_artifact_directory": "/tmp/tandemlog-food-candidate-artifacts",
+    "no_duplicate_downloads": true,
+    "do_not_store_large_files_in_workspace": true
+  },
+  "reviewed_file_sha256": {
+    ".github/workflows/android-candidate.yml": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74",
+    ".github/workflows/validate.yml": "e3194eae1a0071795da06a3174d09e6a40fab7b977a63a5e482433d4e0385c25",
+    ".github/workflows/prerelease.yml": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1",
+    "tool/candidate_source.py": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "tool/release_assets.py": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95",
+    "tool/attach_preview_assets.py": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab",
+    "tool/android_release.py": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7",
+    "tool/build_android_release.sh": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6",
+    "android/signing-certificate.sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3",
+    "pubspec.yaml": "909f45bea2908e9da84d49ef05f4f56b9f9a6e4dfbaacedf65f73adb465252ac",
+    "design/food-native-acceptance.md": "224c66fa924e71ba66178858d8382a6177b9fe11991c064d8312609d972e2aa3",
+    "evidence/food-2026.10.4-rc.1/version-floor.json": "0bd15cc16e436000e0b6a649d8b42fcb03a9f5d21b7e1bd14f8dc4e0bdfd2f47",
+    "integration_test/task_flow_test.dart": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da"
+  },
+  "limits": "This receipt accepts source/preflight gate placement only. Running jobs are not passes; no actual artifact bytes were available at initial read, and debug Android cannot substitute for signed or native acceptance. Prior RC/stable receipts kept separate. No private import/live cutover/data cleanup or new runtime tests performed.",
+  "remaining_gates": [
+    "Full completed candidate and push CI",
+    "Original unexpired archive metadata and supported actual-byte verification",
+    "Exact owner APK hash/signature/native payload identity",
+    "Parent exact Android and Windows affected-flow acceptance",
+    "Independent final notes/media/source-range review",
+    "Fresh parent publication quota clearance and normal exact-artifact prerelease gates"
+  ],
+  "source_mutations": false,
+  "publication_by_reviewer": false
+}

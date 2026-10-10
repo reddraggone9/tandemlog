@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "reviewer": "Independent delegated artifact/provenance reviewer",
+  "reviewed_at_utc": "2026-10-10T04:48:46.943279+00:00",
+  "verdict": "HOLD_FAILED_WINDOWS_GATE",
+  "source": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "version": "2026.10.4-rc.1+57",
+  "candidate_run_id": 38024653325,
+  "push_ci_run_id": 38024653341,
+  "windows_job_id": 114132834118,
+  "push_windows_job_id": 114132797157,
+  "actual_failure": {
+    "step": "Run flutter test",
+    "conclusion": "failure",
+    "process_exit_code": 1,
+    "reporter_summary": "818 tests passed, 2 skipped.",
+    "decoded_log_sha256": "b49fca89f3af61f4b43645e4435f1ce5e68bd06e770da2cd0de3c836589604a2",
+    "decoded_log_bytes": 214269,
+    "failure_block_found": false,
+    "job_check_annotations": [
+      {
+        "path": ".github",
+        "blob_href": "https://github.com/reddraggone9/tandemlog/blob/2ecfbd620bc92ab23d08fb3f7df2b67b355f62da/.github",
+        "start_line": 891,
+        "start_column": null,
+        "end_line": 891,
+        "end_column": null,
+        "annotation_level": "failure",
+        "title": "",
+        "message": "Process completed with exit code 1.",
+        "raw_details": ""
+      }
+    ],
+    "check_summary": null,
+    "check_text": null,
+    "diagnosis": "Unresolved Windows flutter-test process/reporting failure. The success-count summary does not override nonzero process status; no cause or application defect inferred."
+  },
+  "gate_impact": {
+    "source_preflight_static_review_remains_accurate_and_separate": true,
+    "windows_contract_policy_build_payload_harness_lifecycle_and_upload_steps_skipped": true,
+    "linux_native_in_progress_at_read": true,
+    "android_debug_success_not_signed_or_native_acceptance": true,
+    "only_artifact_names_at_read": [
+      "android"
+    ],
+    "signed_android_cannot_run_until_full_checks_succeed": true,
+    "candidate_not_eligible_for_promotion": true,
+    "all_actual_release_byte_checks_on_hold": true
+  },
+  "replacement_guidance": "Resolve the failing Windows command with original author and preserve its exact failure evidence. A reporter that also preserves expanded or machine-readable errors can close this reporting gap; do not force exit0, waive tests or treat debug APK as owner-signed evidence. New source must be frozen and full main-only candidate repeated. Existing policy consumes successful main signed-candidate version codes only; failed candidate57 does not by itself raise the successful floor56. Reuse57 is conditional on a fresh history check finding no successful57 candidate.",
+  "remaining_blockers": [
+    "Corrected full green candidate and push CI",
+    "Original exact signed APK and Windows/Linux installers with required byte/provenance checks",
+    "Parent exact Android/Windows native acceptance",
+    "Independent final notes/media and normal publication gates"
+  ],
+  "supporting_files": {
+    "job_and_annotations": "/workspace/recovery/food-rc57-review/windows-failure-job-check-api.json",
+    "boundaries": "/workspace/recovery/food-rc57-review/windows-failure-boundaries-api.json",
+    "prior_static_review": "/workspace/recovery/food-rc57-review/source-preflight-independent-review.json"
+  },
+  "source_edits": false,
+  "downloads": false,
+  "artifact_acceptance": false,
+  "publication": false
+}

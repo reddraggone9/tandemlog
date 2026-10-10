@@ -1,0 +1,204 @@
+{
+  "reviewer": "/root/tag_autocomplete_trials",
+  "createdUtc": "2026-10-10T04:38:28.679093+00:00",
+  "decision": "ACCEPT exact-range independent release-note/media editorial gate and scoped final UX supplement; no must-fix",
+  "coveredRange": {
+    "baselineTag": "v2026.10.3",
+    "baselineCommit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "candidateCommit": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+    "sourceWorktreeClean": true,
+    "sourceDiffSha256": "8900fe2a48ef2c0c0a123960bbdd79f0efbe299aa715d53b5648c289d2c0a7eb"
+  },
+  "notes": {
+    "sha256": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+    "changesAccurate": true,
+    "twoBullets": [
+      "Food inventory with expiration, Inbox, retained stock, partial contents, per-container removal and restoration",
+      "uniform opacity of disabled repeating-task checkbox arrow tips"
+    ],
+    "judgment": "Both describe actual new or fixed end-user behavior since stable. Food is newly introduced in this range; unreleased prototype summary refinements are not separate release claims. No repeated earlier checklist/tag/storage release content, private import utility, QA/preservation assurances or routine update warning. No exceptional actionable compatibility requirement identified by the reviewed draft/range."
+  },
+  "media": {
+    "commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "unchangedFromPreliminaryReview": true,
+    "actualDarkBeforeAfterViewed": true,
+    "stableBeforeSourceEquality": true,
+    "rawCropRgbaEqualityBothTrue": true,
+    "readableLabelsAndAccurateAlt": true,
+    "noPrivateDataOrGeneratedPixels": true,
+    "publicLinkVerification": {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png",
+      "status": 200,
+      "bytes": 3913,
+      "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+      "equalsLocal": true
+    },
+    "judgment": "Single tightly cropped real-control comparison usefully explains the small opacity defect. Food feature prose does not require an additional Before comparison for a module absent from baseline."
+  },
+  "productionFixtureDelta": {
+    "sha256": "a5f12628d2ff9d370b1a1dffdcbb2015faef52a5666b0d0d37518099b274a216",
+    "judgment": "Accept. Replaces obsolete 1-full collapsed-label readiness wait with real projected active physical count=1. Adds explicit absent collapsed quantity, Inspect quantity+physicalFull, collapse absent quantity, then preserves existing Deleted/restart/Restore checks. New registerFoodProductionTests entry preserves main invocation and enables normal aggregate CI. No renderer or durable expectations weakened.",
+    "priorFailure": "production-final-native.log retained; stale fixture expected the intentionally omitted single-full summary. This is a fixture failure against approved UI, not a product regression waiver.",
+    "laterPass": "production-accepted native5/5; composed native3/3+2/2"
+  },
+  "preview": {
+    "platform": "native Linux GTK debug integration fixture",
+    "fixture": "FoodPreviewApp synthetic process-local operations; no profile/persistence/SAF/Android or Windows runtime claim",
+    "rawPngCount": 11,
+    "selectedActualPngsViewed": 10,
+    "excluded": [
+      "initial-warmup-not-evidence.png"
+    ],
+    "observations": [
+      "Global expiration rows/name+brand remain readable at390/1200 normal dark.",
+      "Rice7full+1container1/3full remains explicit, requires Inspect/physical selection, and has no quickRemove.",
+      "Inspect shows8 physical containers with one selected partial; Deleted/restoration preserve that ID/contents in this synthetic run.",
+      "Retained reason stays initially collapsed; expansion is discoverable; Inbox needs-expiration and editor fields/actions remain clear.",
+      "Fresh wide-stock frame is actual stock, not rejected first-frame splash."
+    ],
+    "video": {
+      "sha256": "cb0017009ef81f4b9ea5f7c1357f3ecfaffd41191d3a54507497243b50c57148",
+      "bytes": 189857,
+      "codec": "h264",
+      "durationSeconds": 14.133333,
+      "width": 1200,
+      "height": 850,
+      "frameRate": "15/1",
+      "frameCount": 212,
+      "nativePointerActuallyViewedAtSeconds": [
+        1,
+        4,
+        8,
+        12
+      ],
+      "inputQualification": "Visible X-shaped native pointer moves to input targets via xdotool; fixture dispatches Flutter taps. Not human physical touch. Wide capture includes black unused desktop area when app390px narrow; this is capture context, not missing app rendering.",
+      "sourceBinding": "Frozen production renderer e6b8c24d and current tool/fixture hashes bound below. Log verifies GTK debug bundle and1/1 script pass; no claim this is a final signed release artifact."
+    }
+  },
+  "boundedFinalChecks": {
+    "authorFullUnit": "822/822 frozen log",
+    "authorAnalysis": "clean",
+    "authorFormat": "208 files,0 changes",
+    "freshProduction": "5/5",
+    "composed": "3/3+2/2",
+    "independentWidgetGuard": "4/4 and temporary mutant4/4 failures preserved in predecessor receipt"
+  },
+  "limitations": [
+    "Existing200% narrow ancillary label/hint ellipsis remains previously qualified; core values/actions and scoped Inspect access pass.",
+    "Full signed exact-artifact/native Android/Windows acceptance and publication gates are separate and remain required.",
+    "No optional broad assistive-technology/audio or whole-list human keyboard traversal claim.",
+    "Import correctness/security/recovery reviewed by separate owners; this editorial review adds no private import/cutover authorization."
+  ],
+  "predecessorReceipt": {
+    "path": "/tmp/food-ux-review/rc-delta/review-receipt.json",
+    "sha256": "ea8e1deca3ff284e79f087ceb729a5f53da5953cf5026a32fb326305f652c461",
+    "preserved": true
+  },
+  "sourceDocumentHashes": {
+    "design/prerelease-notes.md": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+    "design/releases.md": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+    "design/food-native-acceptance.md": "224c66fa924e71ba66178858d8382a6177b9fe11991c064d8312609d972e2aa3",
+    "evidence/food-2026.10.4-rc.1/README.md": "09840afafb2e05efbffda3c26db4a1bb6e9e12ccb96ee68d2c513377a1fbfc5a",
+    "lib/food/food_page.dart": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+    "lib/presentation/task_completion_checkbox.dart": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+    "lib/food/inventory.dart": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+    "lib/food/food_import.dart": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+    "lib/food/food_store.dart": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+    "lib/main.dart": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+    "pubspec.yaml": "909f45bea2908e9da84d49ef05f4f56b9f9a6e4dfbaacedf65f73adb465252ac",
+    "tool/food_preview.dart": "8f32a5bba70245d806d5a051d73d62aea34ad43f815d3824546ef3ec9c9545ec",
+    "integration_test/food_preview_workflow_test.dart": "45453d8aa5cf5d981d7aaa0f512e9edb514779d9de42724b0674db85e9597323",
+    "integration_test/food_production_workflow_test.dart": "8f03a3086b5ef20ee69d76cd7e833f39d084b2b219c4742e280ddaef38ebb398",
+    "integration_test/task_flow_test.dart": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da",
+    "test/food_collapsed_inspect_guard_test.dart": "e97ef66fb52cb99317158f3bfff348cba55a69be7a71f4589e831b258b304cf4"
+  },
+  "previewPixelHashes": {
+    "narrow-deleted.png": {
+      "sha256": "7513a628a49502cc74c9f842bf920e6257829b2426e2f34f95d78af6e77541fc",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-editor.png": {
+      "sha256": "cf2ee359f55a4bc133a5c325eb9c28ebcdba4926b2cddfd0c0995072e43a8b3c",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-inbox.png": {
+      "sha256": "83c5fa56a5e430b0a2a0d4b00bc3eb13d9d24df3fd36f18d149200006cf3fe51",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-inspect.png": {
+      "sha256": "edc7a56ceee78ec20a9ecefd76d833a3c6d3a0ed118cc21fddd75cd739795a80",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-retained-collapsed.png": {
+      "sha256": "28484b3f79a77fe1c35fc4b811a7ddd7b847459fa5f138c3d3fbfb97acd4ff85",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-retained-expanded.png": {
+      "sha256": "fdc989562668052641673b7c5693eb85b9be2150de9e1ab4569e55bf7039383d",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-selected-partial.png": {
+      "sha256": "71dd8f64bb95f00da992fbbea5165f774548e6b4226d693ec60e303477f54658",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "narrow-stock.png": {
+      "sha256": "a127f23a295485378b31af0fa593b527d468941903539a16aa9603878b333244",
+      "dimensions": [
+        390,
+        850
+      ]
+    },
+    "wide-stock-after-restore.png": {
+      "sha256": "ee932b8410979cbd638f3f084fff8da21401a81c5600ca943ba40ff620d5890f",
+      "dimensions": [
+        1200,
+        850
+      ]
+    },
+    "wide-stock.png": {
+      "sha256": "a1c51438dccbf34c10c0a0b7f73ce50bec50902d706ea0ed92f5797ae2288c8f",
+      "dimensions": [
+        1200,
+        850
+      ]
+    }
+  },
+  "sampledVideoFrameHashes": {
+    "video-12s.png": "db37377e692610cc73c67299a3cfdeadcf73cd873c1ab5f971f0f1993a07ce09",
+    "video-1s.png": "2043a198010800bcc88b32f0292a67890b54ced7662a6b0df53fd9ea53695b4c",
+    "video-4s.png": "e5bb3368a1e06bab556952dcac494e8e8d9e8d5ffe676479ba4eb70737c78f69",
+    "video-8s.png": "745e6c82cf9b6766968253e401c5a124c3cd135a2f1010464dafb61ed92db5d6"
+  },
+  "supportingLogHashes": {
+    "evidence/food-2026.10.4-rc.1/native/preview-accepted-native.log": "c18efbb44396f305ff663039d1a54d81e41ab23fa031fad5aa2c65976c879bf4",
+    "evidence/food-2026.10.4-rc.1/native/preview-final-native.log": "e528e825ecbcdeb4660fbe583f46d6c8a2719ba14b7a370c9b557a0aee24a968",
+    "evidence/food-2026.10.4-rc.1/native/production-accepted-native.log": "e3683200c41e9e4e0de298bf86b6caa8970d961961819dcd4606d6be75f0cce6",
+    "evidence/food-2026.10.4-rc.1/native/production-final-native.log": "7cbf8e01cd723ba12b4744381911d19bfcfc8e79e41dfef63680edf5cca33834",
+    "evidence/food-2026.10.4-rc.1/native/food-composed-native.log": "0ba50c69e73b5bdeed267a46da7cb3aaf0407fc722561a52402e3d53aebce9ca",
+    "evidence/food-2026.10.4-rc.1/native/food-composed-recovery-native.log": "1b1a2654850988cfbd23eccdfce4004504e82f09e45b996b727e96e260bf7230",
+    "evidence/food-2026.10.4-rc.1/native/full-unit-frozen.log": "956fe5e51c1e00ac2e91058cb14f8f3574c347b58de8f4f27c8570c5c2511909",
+    "evidence/food-2026.10.4-rc.1/native/analyze-frozen.log": "47be775a3bfe22ce5fa7b380f8565bbf13566c9fce685b08304927fab66d9e70",
+    "evidence/food-2026.10.4-rc.1/native/format-frozen.log": "6c86bd50ab771d65e29d984b1f68294e9526e1ee2f53608a3afa01a2cdf892bc"
+  }
+}

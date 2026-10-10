@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "reviewer": "Independent delegated artifact/provenance reviewer",
+  "reviewed_at_utc": "2026-10-10T04:50:46.491415+00:00",
+  "verdict": "ACCEPT_BOUNDED_DIAGNOSTIC_WORKFLOW_CHANGE",
+  "must_fix": [],
+  "base_source": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "version": "2026.10.4-rc.1+57",
+  "failed_candidate_run": 38024653325,
+  "failed_push_ci_run": 38024653341,
+  "precise_change": "Only Windows unit invocation uses expanded console reporter and file JSON reporter; pinned upload action retains windows-unit-tests diagnostic file with always condition after attempted test step. Linux and all later required contracts/policy/build/payload/installed lifecycle/upload gates remain unchanged.",
+  "correctness": {
+    "exact_windows_only_replacement_verified": true,
+    "all_tests_still_invoked_no_filter_or_skip_added": true,
+    "nonzero_flutter_exit_still_fails_job": true,
+    "no_continue_on_error_or_forced_success": true,
+    "always_diagnostic_upload_does_not_unfail_previous_step_or_enable_default_success_only_later_gates": true,
+    "missing_diagnostic_file_warning_is_only_diagnostic_not_test_waiver": true,
+    "separate_windows_unit_tests_name_not_selected_by_three_release_artifact_pattern": true,
+    "pinned_action_no_new_credentials_permissions_dependencies": true,
+    "no_app_native_platform_dependency_version_test_or_tool_diff": true
+  },
+  "option_validation": {
+    "flutter_pin": "3.47.5/6a19cca56475dbfba1478ee68d7bd0c2ef891da1",
+    "author_actual_frozen_import_vector_probe": "One frozen vector case passed; parsed file-reporter JSON events conclude done/success:true. This validates reporter options on pinned local Flutter, not the failed Windows suite or a Windows fix.",
+    "log_sha256": "a78baba24f110c96410736da5e5a33ecaf660edebe21c9682b44f4e36c77101c",
+    "json_events_sha256": "7e5d9d049a6b6676ae3ca3bb74698009448366a899524f51be3fd47741f8a044"
+  },
+  "provenance": {
+    "workflow_sha256": "8d38b56f3abefb2c93eb7b7cad54bc708cf030a5e33d1a917efa32ea7a1ebc76",
+    "exact_workflow_diff_sha256": "42f0bb2633f8970431564872cfa34e649cbb848b8a32e20625c53c9fb7ab1351",
+    "parent_owns_new_source_commit_push_and_candidate_dispatch": true,
+    "replacement_source_and_run_must_be_freshly_bound": true,
+    "failed_candidate_and_reporter_observations_preserved_separately": true
+  },
+  "unresolved": "Windows flutter-test process failure still requires diagnosis and a full green replacement. Reporter success counts and incomplete-test hypothesis do not prove the source fixed. No actual acceptance artifact is approved; Android debug is excluded from native owner-APK proof. Build57 reuse requires fresh successful-candidate history check showing no successful57 consumption.",
+  "remaining_gates": [
+    "Corrected green full main candidate and push CI",
+    "Original exact archive/member/checksum/ownerAPK verification",
+    "Parent exact Android/Windows native affected-flow acceptance",
+    "Independent final notes/media and normal exact-artifact prerelease gates"
+  ],
+  "source_edits_by_reviewer": false,
+  "artifact_downloads": false,
+  "artifact_acceptance": false,
+  "publication_by_reviewer": false
+}
