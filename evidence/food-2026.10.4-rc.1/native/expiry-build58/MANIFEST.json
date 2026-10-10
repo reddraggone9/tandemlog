@@ -1,0 +1,130 @@
+{
+  "README.md": {
+    "size": 1358,
+    "sha256": "48aa37af84cb64560b7d50fe95183ec9bb8732436eec5bfd8bdab09e1e2a6391"
+  },
+  "analyze-final.log": {
+    "size": 96,
+    "sha256": "2026820a062f189ba770739defc1ddaed691ba17f1b15e2d54ac93e1770e99ef"
+  },
+  "candidate-floor-check.log": {
+    "size": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "expiry-dark-1x-add-blank.png": {
+    "size": 29314,
+    "sha256": "d5a08081cd21c6038c1974a9e329dccd37fe965263c08748a367a28de1c5e513"
+  },
+  "expiry-dark-1x-add-focused.png": {
+    "size": 30682,
+    "sha256": "832ce4655895cf3b67c76f65a97c24e941e0dbd60c64b0e1c9b010011b5aa247"
+  },
+  "expiry-dark-1x-blank-saved-inbox.png": {
+    "size": 24067,
+    "sha256": "ba17c9c588092fc249c7359fae1d962a93369c085d7f0ccf1601cd34a8408ce4"
+  },
+  "expiry-dark-1x-edit-date.png": {
+    "size": 30768,
+    "sha256": "b408dd9475c88028e1624e15dc682420736512bab72f43309262e2678e4c0138"
+  },
+  "expiry-dark-1x-invalid-date.png": {
+    "size": 31425,
+    "sha256": "348bbd637907e20e5529628121689e389709e87d321a2e4aaeeee16f0dc7caea"
+  },
+  "expiry-dark-2x-add-blank.png": {
+    "size": 36242,
+    "sha256": "bb5fee26055221c0bd259ac9b3e40df32d1dad2b391411ad3b0134d75d9528a6"
+  },
+  "expiry-dark-2x-add-focused.png": {
+    "size": 39757,
+    "sha256": "eb6fece3b6198a36d08cd1de1cd35f79b99e26fee761502e8fd43c696899830b"
+  },
+  "expiry-dark-2x-blank-saved-inbox.png": {
+    "size": 38657,
+    "sha256": "3f18e106289e5959695394aba6879235cf64fc6bc939021a823978734a92b08e"
+  },
+  "expiry-dark-2x-edit-date.png": {
+    "size": 36891,
+    "sha256": "f25a26ff22d4afb950d0d8d4546c5de7f5ad330a86f9678e97ef84638f12e30a"
+  },
+  "expiry-dark-2x-invalid-date.png": {
+    "size": 32720,
+    "sha256": "f7e67952a4b69a4c0c52144b65c5c271ff004f6a034c93ecde8167c0505516d6"
+  },
+  "expiry-light-1x-add-blank.png": {
+    "size": 29365,
+    "sha256": "b25a7534bb84bea2e063e8a2770035daf3f993a5a7ef39926dd9c21906d9d239"
+  },
+  "expiry-light-1x-add-focused.png": {
+    "size": 30616,
+    "sha256": "3a43c1c9636255917d007fe6253b508afc81af10a723f5ea76a555ffb64120f0"
+  },
+  "expiry-light-1x-blank-saved-inbox.png": {
+    "size": 24055,
+    "sha256": "22581b61a34551d247ab2a9807ba540682b4839e56db955c8413394e3f54612e"
+  },
+  "expiry-light-1x-edit-date.png": {
+    "size": 30892,
+    "sha256": "5bb7cf3117fdd51af224a498df8ad6dbbc35711cbbac928b2161160420e20972"
+  },
+  "expiry-light-1x-invalid-date.png": {
+    "size": 31322,
+    "sha256": "28a4b2ab0a9b920f2058eabb9dcf3cc0f8175b4e06d6e6b0f9b20bb298fcda99"
+  },
+  "expiry-light-2x-add-blank.png": {
+    "size": 36491,
+    "sha256": "834ea20f32054fcaf106b589d2778c637b74b1a49fcb320bf24a219201b539a7"
+  },
+  "expiry-light-2x-add-focused.png": {
+    "size": 39983,
+    "sha256": "9dc0a1b824ba20a031c0d47ca78fe956ad72af9a0cc4ac72361dd14c503de163"
+  },
+  "expiry-light-2x-blank-saved-inbox.png": {
+    "size": 38582,
+    "sha256": "8ee29037160cdadbc3afe95cdaddfb14b0a0ae2619b59591de05f6965918bbe7"
+  },
+  "expiry-light-2x-edit-date.png": {
+    "size": 37167,
+    "sha256": "0c2ac3edff8522de0ad79ad66429ad821617fa3d58c934fc5eca7f210ee7d910"
+  },
+  "expiry-light-2x-invalid-date.png": {
+    "size": 32753,
+    "sha256": "5395814b2b6650430b591f427e5d79cc801b92ee27500545a082b76417bcdc89"
+  },
+  "format.log": {
+    "size": 49,
+    "sha256": "47a1a5a59b7b290fa01c2a5b5a0a144d2e4c56fb6419ffe4087a297a6d9d2df1"
+  },
+  "green-final.log": {
+    "size": 1941,
+    "sha256": "0fdfc17296964737ddd1026e9d2662d6c6ddf50884a61f8f6928f338a922c0cd"
+  },
+  "native-final-input.log": {
+    "size": 4200,
+    "sha256": "8ee94395b70fcbd12f3b1c794d9723e50cae7a8d41731c965b102f6f09d9e2c5"
+  },
+  "native-linux-expiry-guidance.mp4": {
+    "size": 1170043,
+    "sha256": "c469538d6c87008be7412235feddc9a0fb893f8927d96a0570c1f995494eb7a5"
+  },
+  "red-roboto-exit.txt": {
+    "size": 2,
+    "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  },
+  "red-roboto-source.sha256": {
+    "size": 90,
+    "sha256": "fbf9fd1e41c5c76d718a051243afd1f49c00e53e1a164e0f748531faf13b459f"
+  },
+  "red-roboto.log": {
+    "size": 4237,
+    "sha256": "f8d6135635b440707049a2d2820d765a57c6a1b8b2506341a0f9704ae8742e69"
+  },
+  "source-guard.json": {
+    "size": 535,
+    "sha256": "989e929d42e817c22379965b99b0fe87b438e7333a7fe346fde8d12bd9ce0a5d"
+  },
+  "verification.json": {
+    "size": 1867,
+    "sha256": "a22a67c2585b209a74251517f2d62ff690eb25fad8983a84ddb914cb6889f2cb"
+  }
+}

@@ -1,6 +1,17 @@
 # Food RC native acceptance
 
-RC2026.10.4-rc.1/build57 is authorized for exact-artifact preview delivery.
+RC2026.10.4-rc.1/build58 is the replacement candidate for authorized
+exact-artifact preview delivery. Build57's bounded Android acceptance exposed
+truncated expiration guidance at320dp/200% text. The replacement keeps the
+short "Expiration" label and allows the complete date-format/Inbox helper to
+wrap within the existing scrollable editor, preserving typography and targets.
+Prior build57 domain/recovery evidence retains its original source/artifact
+attribution. Before delivery, verify the replacement's provenance and repeat
+focused native Android Add/Edit date checks at320dp/100% and200%, focused and
+unfocused with the actual keyboard: full guidance, invalid calendar rejection,
+valid date save, blank-date Inbox placement, Cancel/Back, and stable56→58 upgrade
+preserving Tasks/settings/physical containers. These checks remain pending
+until the exact replacement APK is accepted.
 Stable promotion requires Lee's acceptance. The
 [source/evidence checkpoint](../evidence/food-2026.10.4-rc.1/README.md) and
 [import contract](food-import-contract.md) separate app behavior from private

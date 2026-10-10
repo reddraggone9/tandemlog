@@ -143,6 +143,13 @@ The existing-user picker and all other command callbacks remain blocked. On
 phones the module selector yields space while a Task editor's software keyboard
 is visible, preserving the existing caret viewport and touch targets.
 
+The expiration editor uses a short permanent "Expiration" label and a wrapping
+helper containing the calendar format and blank-date Inbox destination. Native
+320dp/200% acceptance found that the former long label and two-line helper hid
+both instructions. Allowing helper growth inside the existing scrollable form
+preserves font size and touch targets; shrinking text or redesigning unrelated
+fields is unnecessary. Add/Edit share the same decoration and validation.
+
 ## Validation and remaining gates
 
 Focused domain/widget regressions cover physical identity, partial grouping,

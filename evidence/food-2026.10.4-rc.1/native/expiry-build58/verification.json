@@ -1,0 +1,31 @@
+{
+  "base": "d51eefe7a704eac547fe895f1fe34c267232c515",
+  "version": "2026.10.4-rc.1+58",
+  "productionScope": "Expiration label and unrestricted wrapping helper only; validation/domain/storage unchanged",
+  "red": "Original production with SDK Roboto: both200% cases fail actual YYYY paragraph truncation; original Ahem run separately retained as mixed fixture evidence",
+  "unit": "13 passes:4 new date workflows +9 existing Food preview tests",
+  "native": "Linux GTK debug synthetic process-local preview,320x640, both themes100/200%, one native test four variants98seconds, real Tab traversal and actual EditableText pointer targets with fatal misses",
+  "nativeScope": [
+    "full date-format/Inbox helper without paragraph truncation",
+    "calendar error no mutation/draft retained",
+    "valid date Add/Edit displayed",
+    "Back/Discard retains original date",
+    "blank date saved into Inbox"
+  ],
+  "limits": [
+    "No persistence claim from process-local preview",
+    "No Android/Windows runtime claim",
+    "Some focused floating-label notches align at the viewport edge; full helper and date value remain visible",
+    "Fresh signed candidate/full gates and focused exact Android acceptance pending"
+  ],
+  "sourceGuard": {
+    "lib/food/food_page.dart": "639638cbdfdb3953bb0fe3e65cbaea71d0e05676f04063be1ee36ea2073ade7a",
+    "test/food_expiry_guidance_test.dart": "fa6c1704d6ad25ca5bdca2f80453112573744cf17b39251a50931d1595f57f5c",
+    "integration_test/food_expiry_guidance_workflow_test.dart": "f69b2f3956c41f930d31c32b157d63a3603f5edf7bf2933b27fd5afadf3ca20d",
+    "integration_test/task_flow_test.dart": "05fcf037c690ebfd545b6132e043ebd6f28c7bb048ef17b00e24edd65f63c7e2",
+    "pubspec.yaml": "e38784993eaa2b5c48c45d4bff2cf2282d5971d6bfc5c3e482328fa3fb0366fa"
+  },
+  "candidateFloor": 57,
+  "proposedBuild": 58,
+  "stableLatest": "v2026.10.3"
+}

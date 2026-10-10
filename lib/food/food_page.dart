@@ -695,9 +695,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         enabled: !saving && !pending(),
                         controller: expiry,
                         decoration: const InputDecoration(
-                          labelText: 'Expiration · YYYY-MM-DD',
-                          helperText: 'Leave blank for needs-expiration Inbox',
-                          helperMaxLines: 2,
+                          labelText: 'Expiration',
+                          helper: Text(
+                            'Use YYYY-MM-DD, or leave blank for the needs-expiration Inbox.',
+                            softWrap: true,
+                            overflow: TextOverflow.visible,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 12),

@@ -1,6 +1,14 @@
 # Food RC1 preparation
 
-Next preview:2026.10.4-rc.1/build57. [Version floor](version-floor.json) comes
+Replacement preview:2026.10.4-rc.1/build58. The successful build57 candidate
+establishes the updated floor57. Build58 fixes the bounded Android finding
+that320dp/200% text hid the date format and blank-date Inbox destination. Its
+short label and growing helper preserve the existing scrollable editor and
+typography; validation, domain and storage behavior are unchanged. New source
+requires fresh full candidate/provenance checks and focused exact Android
+acceptance; earlier build57 acceptance remains accurately source-bound.
+
+The original build57 [version floor](version-floor.json) comes
 from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.

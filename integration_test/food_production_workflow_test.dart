@@ -440,7 +440,7 @@ void registerFoodProductionTests() {
           'Synthetic Rice',
         );
         await tester.enterText(
-          find.widgetWithText(TextField, 'Expiration · YYYY-MM-DD'),
+          find.widgetWithText(TextField, 'Expiration'),
           '2026-10-15',
         );
         await tester.enterText(
