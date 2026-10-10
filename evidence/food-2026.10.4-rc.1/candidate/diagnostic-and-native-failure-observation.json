@@ -1,0 +1,49 @@
+{
+  "schema": 1,
+  "recordedUtc": "2026-10-10T05:04:05.727341+00:00",
+  "initialSource": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "initialCandidateRun": 38024653325,
+  "initialCandidateConclusion": "failure",
+  "initialLinuxJob": 114132834137,
+  "initialLinuxNative": "90 passed,2 failed: historical completion flow RenderFlex overflow26px; disclosure geometry reveal missed offscreen target390x200%. No packaging or signed job ran.",
+  "initialPushConclusion": "cancelled by normal CI concurrency when diagnostic source was pushed; prior Windows step had already failed.",
+  "diagnosticSource": "f489f122208280f4264f92abf024a74247be6a44",
+  "diagnosticRun": 38025500431,
+  "diagnosticWindowsJob": 114135418991,
+  "diagnosticArtifact": {
+    "id": 11660004690,
+    "name": "windows-unit-tests",
+    "archiveSha256": "df0c28ab3ee00d0a10499fd549334af9f01d4d893ae1c9dcecef77c92c396223",
+    "archiveBytes": 47128,
+    "actualArchiveDigestMatchesApi": true,
+    "materialization": "Supported GitHub resolved reference \u2192 Library prepare_materialize \u2192 current bundled library_file_transfer.py helper; readable actual archive and JSON verified."
+  },
+  "diagnosticOutcome": {
+    "testId": 384,
+    "name": "food handle releases its lease when the profile owner is poisoned",
+    "path": "test/food_store_test.dart:364",
+    "testResult": "error",
+    "errorEventCount": 0,
+    "terminalDoneSuccess": false,
+    "expandedResult": "did not complete [E]",
+    "causeStatus": "Pinned binding autocommit reads native pointer without close guard; fixture closes connection in transaction then rollback probes it. Unsafe closed-pointer access established by source inspection; platform worker-exit mechanism inferred. Narrow safe rollback liveness probe under implementation/review."
+  },
+  "files": [
+    {
+      "file": "diagnostic-windows-decoded.log",
+      "bytes": 218697,
+      "sha256": "908184b50e64c037fbdd83c2febbe38e5402fbda7c438a7d73c11a1a31b0ef12"
+    },
+    {
+      "file": "initial-candidate-linux-decoded.log",
+      "bytes": 458765,
+      "sha256": "6c7c9ef222ed4a23975efb39cd5bcddb1092486aad58bee6f895c756d81f6db5"
+    },
+    {
+      "file": "windows-unit-tests-38025500431.json",
+      "bytes": 404899,
+      "sha256": "e533b9e184d5c8f816c5b366924bf7577982dbc8e5ec96bbb4a35da73e0f2068"
+    }
+  ],
+  "acceptance": "Failed runs preserved; no signed/Windows candidate artifact, native acceptance or publication accepted."
+}

@@ -1,0 +1,852 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.14 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_contract_vector_test.dart
+00:00 +0: /tmp/tandemlog-food-implementation/test/food_import_contract_vector_test.dart: v1 import identity and plan hash match independent frozen vector
+00:00 +1: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:00 +2: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:00 +3: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +4: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +5: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +6: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +7: /tmp/tandemlog-food-implementation/test/food_import_test.dart: changed count source payload and namespace refuse after attempt
+00:01 +8: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+00:01 +9: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+00:01 +10: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+00:01 +11: /tmp/tandemlog-food-implementation/test/food_import_test.dart: unrelated pending receipt is not recovered as import
+00:01 +12: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:01 +13: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:01 +14: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:01 +15: /tmp/tandemlog-food-implementation/test/food_import_test.dart: pre-byte crash changed plan and missing ledger cannot restamp prepared receipts
+00:01 +16: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+00:01 +17: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+00:02 +18: /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+00:02 +19: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:05 +20: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +21: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +22: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +23: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +24: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +25: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +26: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +27: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+00:05 +28: /tmp/tandemlog-food-implementation/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+FOOD_REPLAY_BUDGET bytes=12418562 records=1002 targets=100 refs=1000 elapsed_ms=2321
+00:06 +29: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+00:07 +30: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:07 +31: /tmp/tandemlog-food-implementation/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+00:07 +32: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +33: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +34: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +35: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +36: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +37: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +38: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +39: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: failed prepared Save retries the frozen original draft
+00:07 +40: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food physical count and durable Deleted survive restart without changing task v3 bytes
+00:07 +41: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:07 +42: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:07 +43: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:08 +44: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:08 +45: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:08 +46: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: repeated captured discard decision cannot pop another route
+00:08 +47: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food handle releases its lease when the profile owner is poisoned
+00:08 +48: /tmp/tandemlog-food-implementation/test/food_durable_editor_test.dart: a retained rendered removal callback keeps its workspace origin
+00:08 +49: /tmp/tandemlog-food-implementation/test/food_intents_test.dart: reservation and exact bytes commit or roll back together
+00:08 +50: /tmp/tandemlog-food-implementation/test/food_intents_test.dart: receipt cannot be retired by different bytes or without transaction
+00:08 +51: /tmp/tandemlog-food-implementation/test/food_profile_upgrade_test.dart: released schema2 upgrades additively and retains all protected bytes
+00:08 +52: /tmp/tandemlog-food-implementation/test/food_profile_upgrade_test.dart: weakened released authority prevents any schema3 creation
+00:08 +53: /tmp/tandemlog-food-implementation/test/food_profile_upgrade_test.dart: halfway additive upgrade failure rolls back all new authority
+00:09 +54: /tmp/tandemlog-food-implementation/test/food_record_test.dart: literal canonical food wire/hash and module writer fixture
+00:09 +55: /tmp/tandemlog-food-implementation/test/food_record_test.dart: separate food hash domain and immutable envelope bindings
+00:09 +56: /tmp/tandemlog-food-implementation/test/food_record_test.dart: food DTO identity and order cannot disagree with verified envelope
+00:09 +57: /tmp/tandemlog-food-implementation/test/food_record_test.dart: noncreation records carry observed per-container creation basis
+00:09 +58: /tmp/tandemlog-food-implementation/test/food_record_test.dart: unknown/noncanonical/oversized records are rejected
+00:09 +59: /tmp/tandemlog-food-implementation/test/food_record_test.dart: exact signed64 clock roundtrip and bounds
+00:09 +60: /tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:10 +61: /tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:10 +62: /tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+00:11 +63: /tmp/tandemlog-food-implementation/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:12 +64: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single known full
+00:12 +65: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single known full
+00:12 +66: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single known full
+00:12 +67: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single known full
+00:12 +68: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single known full
+00:13 +69: /tmp/tandemlog-food-implementation/test/food_inventory_test.dart: Deleted sorts tied writers and uses latest still-active deletion
+00:13 +70: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +71: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +72: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +73: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +74: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +75: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +76: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +77: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +78: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +79: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +80: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +81: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +82: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +83: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +84: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +85: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single unknown
+00:13 +86: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves single partial
+00:13 +87: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves multiple full
+00:13 +88: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: collapsed summary preserves mixed full and partial
+00:13 +89: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +90: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +91: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +92: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +93: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +94: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +95: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +96: /tmp/tandemlog-food-implementation/test/writer_identity_test.dart: cache 9 replays Inbox classification without changing canonical bytes
+00:13 +97: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +98: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +99: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +100: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +101: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:14 +102: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:14 +103: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: quick remove, Deleted and Undo preserve physical identity
+00:14 +104: /tmp/tandemlog-food-implementation/test/food_preview_test.dart: partial containers require inspection; search includes retained stock
+00:14 +105: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: acknowledged head blocks old snapshot through other directory without sequence reuse
+00:14 +106: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: acknowledged head blocks old snapshot through URI alias without sequence reuse
+00:14 +107: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: acknowledged head blocks old snapshot through rebuilt cache without sequence reuse
+00:14 +108: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: missing owned log is blocked even with a new cache and data directory
+00:14 +109: /tmp/tandemlog-food-implementation/test/wall_time_test.dart: Chicago spring gap moves forward by gap, fall fold uses earlier instant
+00:15 +110: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: same sequence with a fully recomputed valid chain rejects against private head
+00:15 +111: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: same sequence with a fully recomputed valid chain rejects against private head
+00:15 +112: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: same sequence with a fully recomputed valid chain rejects against private head
+00:15 +113: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: an explicitly different writer can use a restored snapshot without changing original guard
+00:15 +114: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: guard metadata is durable before append and normal reopen/refresh reads no old history
+00:15 +115: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: zero-record failed append reserves candidate across restart until exact late arrival
+00:15 +116: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: lost append acknowledgment reconciles exact pending head after restart without duplicate sequence
+00:15 +117: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: acknowledgment guard failure rolls cache back and blocks false confirmation until restart
+00:15 +118: /tmp/tandemlog-food-implementation/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:15 +119: /tmp/tandemlog-food-implementation/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:15 +120: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: batch durable prefix with partial tail blocks across cache replacement
+00:15 +121: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: batch durable prefix with partial tail blocks across cache replacement
+00:15 +122: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: batch durable prefix with partial tail blocks across cache replacement
+00:15 +123: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: batch durable prefix with partial tail blocks across cache replacement
+00:15 +124: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: batch durable prefix with partial tail blocks across cache replacement
+00:15 +125: /tmp/tandemlog-food-implementation/test/view_time_source_test.dart: Linux zone files honor localtime symlink and copied-file identity
+00:15 +126: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: valid cache12 upgrades once without changing canonical bytes or writer guard
+00:15 +127: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache10 retains old materialization and rejects separate tag event on upgrade
+00:15 +128: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache10 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +129: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache11 retains old materialization and rejects separate tag event on upgrade
+00:16 +130: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache11 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +131: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects separate tag event on upgrade
+00:16 +132: /tmp/tandemlog-food-implementation/test/view_clock_test.dart: exact boundary updates without edits; watchdog avoids projection
+00:16 +133: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +134: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +135: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +136: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +137: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +138: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +139: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: cache12 retains old materialization and rejects generic recurring Undo on upgrade
+00:16 +140: /tmp/tandemlog-food-implementation/test/view_clock_test.dart: injected calendar boundary crosses DST day 2027-11-07
+00:16 +141: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: noninteger pending sequence is rejected without normalizing private metadata
+00:16 +142: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: guard instances serialize candidate reservation for the same installation identity
+00:16 +143: /tmp/tandemlog-food-implementation/test/writer_guard_test.dart: malformed private guard is preserved and never rebuilt from disposable cache
+00:16 +144: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:16 +145: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:16 +146: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:17 +147: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:17 +148: /tmp/tandemlog-food-implementation/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:18 +149: /tmp/tandemlog-food-implementation/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:18 +150: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: Undo failure before append confirms only durable prefix and retry is idempotent
+00:18 +151: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: Undo failure after append confirms only durable prefix and retry is idempotent
+00:18 +152: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: unresolved write blocks new payload until exact delayed record appears
+00:18 +153: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:18 +154: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:18 +155: /tmp/tandemlog-food-implementation/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:18 +156: /tmp/tandemlog-food-implementation/test/text_undo_event_test.dart: Undo retracts only the original nontext effects in pure projection
+00:18 +157: loading /tmp/tandemlog-food-implementation/test/text_store_test.dart
+00:19 +157: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:19 +158: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:19 +159: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:20 +160: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:20 +161: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:20 +162: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:20 +163: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:20 +164: /tmp/tandemlog-food-implementation/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:20 +165: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:20 +166: /tmp/tandemlog-food-implementation/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:20 +167: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild
+00:20 +168: /tmp/tandemlog-food-implementation/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:20 +169: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:20 +170: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:20 +171: /tmp/tandemlog-food-implementation/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:20 +172: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:21 +173: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:21 +174: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +175: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +176: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +177: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +178: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +179: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:21 +180: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:21 +181: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +182: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +183: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +184: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +185: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +186: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:22 +187: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:22 +188: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:22 +189: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +190: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +191: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +192: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +193: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +194: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +195: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:22 +196: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:22 +197: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:22 +198: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore bulk capture with native engine creates independently editable native tasks
+00:22 +199: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:22 +200: /tmp/tandemlog-food-implementation/test/text_cache_inheritance_test.dart: resolved inherited cache preserves original claims and rebuilds corrupt disposable state
+00:23 +201: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:23 +202: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:23 +203: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:23 +204: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +205: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +206: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +207: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +208: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +209: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +210: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +211: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +212: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +213: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:23 +214: /tmp/tandemlog-food-implementation/test/text_actor_registry_test.dart: cached owner still rejects changed identity and unknown authors
+00:23 +215: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=false
+00:23 +216: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:23 +217: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=true
+00:23 +218: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:23 +219: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore misnamed private native intent rejects recovery before append and retains evidence
+00:23 +220: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:23 +221: /tmp/tandemlog-food-implementation/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:24 +222: /tmp/tandemlog-food-implementation/test/task_view_test.dart: exact times precede date-only on the same day without invented time
+00:24 +223: /tmp/tandemlog-food-implementation/test/task_view_test.dart: scheduled override supplies both date and precision for sorting
+00:24 +224: /tmp/tandemlog-food-implementation/test/task_view_test.dart: calendar bounds retain precision over viewer midnight and DST
+00:24 +225: /tmp/tandemlog-food-implementation/test/task_view_test.dart: visible future hints refresh at viewer midnight before the start
+00:24 +226: /tmp/tandemlog-food-implementation/test/task_view_test.dart: recurring completion eligibility changes at civil midnight and on zone changes
+00:24 +227: /tmp/tandemlog-food-implementation/test/task_view_test.dart: completion boundary follows 23-hour and 25-hour named-zone days
+00:24 +228: /tmp/tandemlog-food-implementation/test/task_view_test.dart: ordinary tag intersects assignee, upcoming and completed views
+00:24 +229: /tmp/tandemlog-food-implementation/test/task_view_test.dart: upcoming is opt-in and does not change stored rows
+00:24 +230: /tmp/tandemlog-food-implementation/test/task_view_test.dart: standalone timing evaluates hidden and completed rows without changing state
+00:24 +231: /tmp/tandemlog-food-implementation/test/task_view_test.dart: bounds accept only nullable integers and preserve recurrence anchor
+00:24 +232: /tmp/tandemlog-food-implementation/test/task_view_test.dart: availability includes exact boundary and completed history stays visible
+00:24 +233: /tmp/tandemlog-food-implementation/test/task_view_test.dart: effective scheduled precedence, bounds, Someday and manual ties
+00:24 +234: /tmp/tandemlog-food-implementation/test/task_view_test.dart: bounds clamp civil day while retaining exact time and manual tie order
+00:24 +235: /tmp/tandemlog-food-implementation/test/task_view_test.dart: pinned exact dates convert to viewer calendar but date-only remains civil
+00:24 +236: /tmp/tandemlog-food-implementation/test/task_view_test.dart: start midnight and DST gap/fold use calendar transitions
+00:24 +237: /tmp/tandemlog-food-implementation/test/task_view_test.dart: date-only start midnight uses the shared pinned task zone
+00:24 +238: /tmp/tandemlog-food-implementation/test/task_view_test.dart: supported bound horizon is admitted and renderable, larger values rejected
+00:24 +239: /tmp/tandemlog-food-implementation/test/task_view_test.dart: derived bound groups may cross the persisted date year limit
+00:24 +240: /tmp/tandemlog-food-implementation/test/task_view_test.dart: bounds midnight boundary follows 23 and 25 hour local days
+00:24 +241: /tmp/tandemlog-food-implementation/test/task_view_test.dart: filter and hidden bounds select earliest relevant clock boundary
+00:24 +242: /tmp/tandemlog-food-implementation/test/task_view_test.dart: search bypasses filters and availability without changing source
+00:24 +243: /tmp/tandemlog-food-implementation/test/task_view_test.dart: multiple tags match any then combine with visibility and assignee
+00:24 +244: /tmp/tandemlog-food-implementation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:24 +245: /tmp/tandemlog-food-implementation/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:26 +246: /tmp/tandemlog-food-implementation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:26 +247: /tmp/tandemlog-food-implementation/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:26 +248: /tmp/tandemlog-food-implementation/test/task_text_session_test.dart: later-field preparation failure retains earlier packet for retry
+00:26 +249: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: future hints use projection availability and the observed local day
+00:27 +250: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: passed start and history hints stay absent even with a retained instant
+00:27 +251: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: same heading removes date-only details and empty separators
+00:27 +252: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: same heading retains role and time
+00:27 +253: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: day groups hide due dates and available starts
+00:27 +254: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: day groups hide pinned dates even across local days
+00:27 +255: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: repeat perimeter needs no redundant metadata line or verbose rule
+00:27 +256: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: local zone changes alter only pinned presentation
+00:27 +257: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: pinned DST gaps and folds share projection resolution
+00:27 +258: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: local day headings and bounded task times share the observed zone
+00:27 +259: /tmp/tandemlog-food-implementation/test/task_metadata_test.dart: date-only occurrence override suppresses timed base due
+00:27 +260: /tmp/tandemlog-food-implementation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:28 +261: /tmp/tandemlog-food-implementation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:28 +262: /tmp/tandemlog-food-implementation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:29 +263: /tmp/tandemlog-food-implementation/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:29 +264: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:29 +265: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:30 +266: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:30 +267: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:31 +268: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:31 +269: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:31 +270: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:32 +271: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:32 +272: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: touch creation adds all new tokens and invalid query never enables it
+00:32 +273: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:32 +274: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: opaque original tags survive pending Save with exact case and spaces
+00:33 +275: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:33 +276: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:33 +277: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: active tag composition blocks Save and canClose Save
+00:33 +278: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:33 +279: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: single Save adds pending query without replacing selected tags
+00:33 +280: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:33 +281: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: pending query participates in canClose; Cancel retains it, Save commits it
+00:34 +282: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: pending query participates in canClose; Cancel retains it, Save commits it
+00:34 +283: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:34 +284: /tmp/tandemlog-food-implementation/test/task_editor_tags_test.dart: bulk Remove cannot create an unknown tag from an unfinished query
+00:34 +285: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:34 +286: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:34 +287: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:34 +288: /tmp/tandemlog-food-implementation/test/task_completion_checkbox_test.dart: disabled repeat perimeter has uniform opacity at overlapping tips
+00:35 +289: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:35 +290: /tmp/tandemlog-food-implementation/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+00:35 +291: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:35 +292: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:35 +293: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:35 +294: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: bulk coupled validation checks every task
+00:36 +295: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:36 +296: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:36 +297: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:36 +298: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:36 +299: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:37 +300: /tmp/tandemlog-food-implementation/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:37 +301: /tmp/tandemlog-food-implementation/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:37 +302: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: title and notes wire limits validate before save
+00:37 +303: /tmp/tandemlog-food-implementation/test/tag_input_test.dart: hardware Numpad Enter propagates active IME composition
+00:37 +304: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:37 +305: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:38 +306: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:38 +307: /tmp/tandemlog-food-implementation/test/tag_input_test.dart: opaque __create inventory tag and creation row keep separate identities
+00:38 +308: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:38 +309: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:38 +310: /tmp/tandemlog-food-implementation/test/tag_input_test.dart: shared B layout keeps chips above full-width query at 1000.0
+00:38 +311: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:38 +312: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:38 +313: /tmp/tandemlog-food-implementation/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:39 +314: /tmp/tandemlog-food-implementation/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:39 +315: /tmp/tandemlog-food-implementation/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:39 +316: /tmp/tandemlog-food-implementation/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:39 +317: /tmp/tandemlog-food-implementation/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:40 +318: /tmp/tandemlog-food-implementation/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:40 +319: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +320: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +321: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +322: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +323: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +324: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +325: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:41 +326: /tmp/tandemlog-food-implementation/test/storage_test.dart: bulk guard rechecks before the batch append; retry block uses global order
+00:41 +327: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:41 +328: /tmp/tandemlog-food-implementation/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:41 +329: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/1.0
+00:42 +330: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/1.0
+00:42 +331: /tmp/tandemlog-food-implementation/test/storage_test.dart: guarded move rejects changes arriving inside its refresh without append
+00:42 +332: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:42 +333: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/2.0
+00:42 +334: /tmp/tandemlog-food-implementation/test/storage_test.dart: failed obsolete-cache replay preserves identity and prior stream guards on retry
+00:42 +335: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:42 +336: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:42 +337: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:42 +338: /tmp/tandemlog-food-implementation/test/storage_test.dart: reopen targets observed completions, is idempotent and survives restart
+00:42 +339: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 2.0 text scale
+00:42 +340: /tmp/tandemlog-food-implementation/test/storage_test.dart: reopen refresh does not expand the observed target set
+00:42 +341: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:42 +342: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +343: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +344: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +345: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +346: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +347: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +348: /tmp/tandemlog-food-implementation/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:43 +349: /tmp/tandemlog-food-implementation/test/storage_test.dart: incomplete remote tail is retried after completion
+00:43 +350: /tmp/tandemlog-food-implementation/test/storage_test.dart: explicit integrity check rejects changed same-length committed prefix
+00:43 +351: /tmp/tandemlog-food-implementation/test/storage_test.dart: missing previously seen stream blocks writes
+00:43 +352: /tmp/tandemlog-food-implementation/test/storage_test.dart: owned incomplete tail is not silently truncated
+00:43 +353: /tmp/tandemlog-food-implementation/test/storage_test.dart: durable append before cache failure recovers once after restart
+00:43 +354: /tmp/tandemlog-food-implementation/test/storage_test.dart: out-of-order entity dependency is retained and projected later
+00:43 +355: /tmp/tandemlog-food-implementation/test/storage_test.dart: concurrent commands and refreshes serialize without duplicate sequence
+00:43 +356: /tmp/tandemlog-food-implementation/test/storage_test.dart: invalid local commands leave canonical bytes unchanged
+00:43 +357: /tmp/tandemlog-food-implementation/test/storage_test.dart: manifest deletion, replacement and future format block commands
+00:43 +358: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:43 +359: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +360: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +361: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +362: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +363: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +364: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +365: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:44 +366: /tmp/tandemlog-food-implementation/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:44 +367: /tmp/tandemlog-food-implementation/test/sticky_task_group_test.dart: native heading pins and pushes off at 2.0x text
+00:44 +368: /tmp/tandemlog-food-implementation/test/storage_test.dart: unchanged repeating completion rejects before append and refreshes remote schedule
+00:44 +369: /tmp/tandemlog-food-implementation/test/storage_test.dart: unchanged repeating completion rejects before append and refreshes remote schedule
+00:44 +370: /tmp/tandemlog-food-implementation/test/storage_test.dart: accepted historic unchanged recurrence is replayed without retroactive rejection
+00:44 +371: /tmp/tandemlog-food-implementation/test/storage_test.dart: concurrent recurrence completion has one durable successor and history reopen retains edits
+00:45 +372: /tmp/tandemlog-food-implementation/test/storage_test.dart: protocol v1 remains untouched and explicitly rejected
+00:45 +373: /tmp/tandemlog-food-implementation/test/storage_test.dart: late winning recurrence seed cannot resurrect removed successor tags
+00:45 +374: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: first stable v3 bytes, identities, clocks and event meanings stay frozen
+00:45 +375: /tmp/tandemlog-food-implementation/test/storage_test.dart: successor collision and invalid tag/move references fail before append
+00:45 +376: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:45 +377: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:45 +378: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:45 +379: /tmp/tandemlog-food-implementation/test/storage_test.dart: completion durable append failure recovers parent and sole successor together
+00:45 +380: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [33333333-3333-4333-8333-333333333333, 22222222-2222-4222-8222-222222222222] and cache rebuild
+00:45 +381: /tmp/tandemlog-food-implementation/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [33333333-3333-4333-8333-333333333333, 22222222-2222-4222-8222-222222222222] and cache rebuild
+00:45 +382: /tmp/tandemlog-food-implementation/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:45 +383: /tmp/tandemlog-food-implementation/test/storage_test.dart: offline older high sequence loses to a later wall-clock edit
+00:46 +384: /tmp/tandemlog-food-implementation/test/storage_test.dart: observed clocks precede local writes across rollback and restart
+00:46 +385: /tmp/tandemlog-food-implementation/test/storage_test.dart: future records remain immutable and readable while warning permits writes
+00:46 +386: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:46 +387: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:46 +388: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:46 +389: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:46 +390: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:46 +391: /tmp/tandemlog-food-implementation/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:47 +392: /tmp/tandemlog-food-implementation/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+00:48 +393: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +394: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +395: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +396: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +397: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +398: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +399: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +400: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +401: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +402: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:48 +403: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +404: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +405: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +406: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +407: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +408: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +409: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +410: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +411: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +412: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +413: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:49 +414: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+00:50 +415: /tmp/tandemlog-food-implementation/test/release_version_tile_test.dart: shows and copies only release version 2026.10.1
+00:50 +416: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+00:50 +417: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+00:51 +418: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+00:51 +419: /tmp/tandemlog-food-implementation/test/release_version_tile_test.dart: clipboard failure is contextual and can be retried
+00:51 +420: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:51 +421: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+00:51 +422: /tmp/tandemlog-food-implementation/test/recurring_text_test.dart: failed native admission discards rejected replay authority and recovers, cancellation fault=true
+00:51 +423: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+00:51 +424: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+00:52 +425: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+00:52 +426: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+00:52 +427: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+00:52 +428: /tmp/tandemlog-food-implementation/test/recurring_text_test.dart: actual native recurring inherited text shared originals remain bounded without evicting the latest edited proof
+00:52 +429: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +430: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +431: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +432: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +433: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +434: /tmp/tandemlog-food-implementation/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+00:53 +435: /tmp/tandemlog-food-implementation/test/recurring_text_test.dart: actual native recurring inherited text grandchild prefix excludes a late ancestor completion
+00:53 +436: /tmp/tandemlog-food-implementation/test/recurring_text_test.dart: actual native recurring inherited text missing current grant waits but a closed incomplete proof rejects
+00:53 +437: /tmp/tandemlog-food-implementation/test/recurring_text_test.dart: actual native recurring inherited text union visible overflow rejects without modifying canonical inputs
+00:53 +438: /tmp/tandemlog-food-implementation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:53 +439: /tmp/tandemlog-food-implementation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:54 +440: /tmp/tandemlog-food-implementation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:54 +441: /tmp/tandemlog-food-implementation/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+00:54 +442: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: tags protects successor from cleanup
+00:54 +443: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: move protects successor from cleanup
+00:54 +444: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: complete protects successor from cleanup
+00:54 +445: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+00:54 +446: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+00:54 +447: /tmp/tandemlog-food-implementation/test/profile_task_store_test.dart: immutable names reject injected identifiers
+00:54 +448: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: undoneEdit protects successor from cleanup
+00:55 +449: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: undoneEdit protects successor from cleanup
+00:55 +450: /tmp/tandemlog-food-implementation/test/profile_task_store_test.dart: two workspaces isolate identical entity and writer sequence IDs
+00:55 +451: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:55 +452: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:55 +453: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:55 +454: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+00:55 +455: /tmp/tandemlog-food-implementation/test/profile_task_store_test.dart: protected native receipt survives alias confirmation/rebuild appended=false
+00:55 +456: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:55 +457: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+00:55 +458: /tmp/tandemlog-food-implementation/test/profile_task_store_test.dart: failed shared acknowledgement retains exact intent and rolls back projections
+00:55 +459: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+00:55 +460: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+00:55 +461: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+00:55 +462: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+00:55 +463: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:56 +464: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:56 +465: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:56 +466: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:56 +467: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+00:56 +468: /tmp/tandemlog-food-implementation/test/profile_safety_store_test.dart: a SQL disk-capacity failure preserves original error and pending rows
+00:56 +469: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+00:56 +470: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+00:56 +471: /tmp/tandemlog-food-implementation/test/profile_safety_store_test.dart: distinct profile writers converge in one canonical workspace
+00:56 +472: /tmp/tandemlog-food-implementation/test/profile_safety_store_test.dart: distinct profile writers converge in one canonical workspace
+00:56 +473: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:56 +474: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:56 +475: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: delayed nonrecurring and forward cleanup targets fail transactionally
+00:56 +476: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: generic recurring Undo rejects transactionally when completion arrives late
+00:56 +477: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: new cleanup wire schema rejects extra fields and malformed references
+00:56 +478: /tmp/tandemlog-food-implementation/test/recurring_completion_undo_test.dart: pure seed selection is independent of arrival order and preserves historical Undo
+00:56 +479: /tmp/tandemlog-food-implementation/test/profile_lock_test.dart: same process and canonical aliases contend until release
+00:56 +480: /tmp/tandemlog-food-implementation/test/profile_lock_test.dart: failed acquisition releases the process guard for retry
+00:56 +481: /tmp/tandemlog-food-implementation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:57 +482: /tmp/tandemlog-food-implementation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:57 +483: /tmp/tandemlog-food-implementation/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+00:57 +484: /tmp/tandemlog-food-implementation/test/native_text_engine_test.dart: missing native library is an explicit failure
+00:57 +485: /tmp/tandemlog-food-implementation/test/native_text_engine_test.dart: operation bytes require exact canonical Base64 and bounded size
+00:57 +486: /tmp/tandemlog-food-implementation/test/native_text_engine_test.dart: actual production FFI inspection reuse is immutable budget-specific and bounded
+00:58 +487: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +488: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +489: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +490: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +491: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +492: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +493: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +494: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +495: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +496: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +497: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +498: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +499: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +500: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +501: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +502: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:58 +503: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+00:59 +504: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+HISTORICAL_RECOMPLETION recompletion: Native item Saved ChildItemA
+00:59 +505: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+00:59 +506: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+00:59 +507: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:00 +508: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:00 +509: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:00 +510: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+HISTORICAL_RECOMPLETION Undo: Native item Saved ChildItemA
+01:00 +511: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: restart resumes without identity change at cleanup.planned
+01:00 +512: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:00 +513: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:00 +514: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:00 +515: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:01 +516: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:01 +517: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:01 +518: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:01 +519: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:01 +520: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+HISTORICAL_RECOMPLETION recompletion cold replay: Native item Saved ChildItemA
+01:01 +521: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:02 +521: /tmp/tandemlog-food-implementation/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo cold replay
+HISTORICAL_RECOMPLETION Undo cold replay: Native item Saved ChildItemA
+01:02 +522: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:02 +523: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:02 +524: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:03 +525: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:03 +526: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:03 +527: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:03 +528: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:03 +529: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +530: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +531: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +532: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +533: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +534: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +535: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +536: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:04 +537: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at files.imported
+01:05 +538: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at files.imported
+01:06 +539: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+01:07 +540: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +541: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +542: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +543: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +544: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +545: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +546: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +547: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +548: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +549: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +550: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +551: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +552: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +553: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +554: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +555: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +556: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +557: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +558: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:07 +559: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +560: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +561: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +562: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +563: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +564: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +565: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +566: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +567: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +568: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +569: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +570: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +571: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +572: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:08 +573: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:09 +574: /tmp/tandemlog-food-implementation/test/legacy_cache_import_test.dart: captures primary and historical observations, keeps originals and replays unchanged logs
+01:09 +575: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:09 +576: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:09 +577: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:09 +578: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:10 +579: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:10 +580: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +581: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +582: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +583: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +584: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +585: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:11 +586: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:12 +587: /tmp/tandemlog-food-implementation/test/initial_task_rank_test.dart: global first rank covers completed and other-assignee hidden tasks
+01:12 +588: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:12 +589: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:12 +590: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:12 +591: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:13 +592: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:13 +593: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:13 +594: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:13 +595: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +596: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +597: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +598: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +599: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +600: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +601: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +602: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +603: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +604: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +605: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +606: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +607: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +608: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +609: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +610: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +611: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +612: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +613: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +614: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:14 +615: /tmp/tandemlog-food-implementation/test/incremental_history_test.dart: cache 10 upgrade replays once with retained baseline and then reads no historical bytes
+01:15 +616: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +617: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +618: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +619: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +620: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +621: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +622: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +623: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +624: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +625: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +626: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +627: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +628: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +629: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +630: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +631: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +632: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:15 +633: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:16 +634: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:16 +635: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:16 +636: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:17 +637: /tmp/tandemlog-food-implementation/test/historical_recompletion_test.dart: offline historical recompletions converge without reseeding or suppressing the existing child
+01:17 +638: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:17 +639: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:18 +640: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:18 +641: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:18 +642: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:19 +643: /tmp/tandemlog-food-implementation/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:19 +644: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:20 +645: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:20 +646: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:20 +647: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:20 +648: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:20 +649: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:20 +650: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:20 +651: /tmp/tandemlog-food-implementation/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:21 +652: /tmp/tandemlog-food-implementation/test/event_clock_test.dart: new wall time wins despite many older borrowed nanoseconds
+01:21 +653: /tmp/tandemlog-food-implementation/test/event_clock_test.dart: equal and backward wall time borrow exactly one nanosecond
+01:21 +654: /tmp/tandemlog-food-implementation/test/event_clock_test.dart: canonical decimal clock round trips values beyond JSON number precision
+01:21 +655: /tmp/tandemlog-food-implementation/test/event_clock_test.dart: numeric legacy and tuple draft event clocks are rejected explicitly
+01:21 +656: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: independent Python SHA256 golden JSONL is byte-exact on re-encode
+01:21 +657: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: new records require an explicit predecessor beyond genesis
+01:21 +658: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: canonical bytes reject alternate spellings and duplicate fields
+01:21 +659: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: data key order is recursive and array order remains significant
+01:21 +660: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: altering any envelope field or content breaks the retained hash
+01:21 +661: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: hash fields must be full lowercase hex and are mandatory
+01:21 +662: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: literal Unicode survives, malformed surrogates never become replacements
+01:21 +663: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: canonical numeric grammar is plain safe integers, never floats
+01:21 +664: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: obsolete separate tag events are rejected rather than reinterpreted
+01:21 +665: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: event size admission counts UTF-8 bytes with an inclusive 1 MiB limit
+01:21 +666: /tmp/tandemlog-food-implementation/test/event_chain_test.dart: v1 and v2 prerelease histories remain explicit preserved failures
+01:21 +667: /tmp/tandemlog-food-implementation/test/domain_test.dart: deletion is a validated permanent tombstone in every arrival order
+01:21 +668: /tmp/tandemlog-food-implementation/test/domain_test.dart: canonical UUID admission matches namespace validation and rejects aliases
+01:21 +669: /tmp/tandemlog-food-implementation/test/domain_test.dart: all arrival permutations yield identical field conflict and undo state
+01:21 +670: /tmp/tandemlog-food-implementation/test/domain_test.dart: unknown event/fields and counter overflow are rejected
+01:21 +671: /tmp/tandemlog-food-implementation/test/domain_test.dart: historical v1 events and invalid new active fields fail explicitly
+01:22 +672: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+01:23 +673: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:23 +674: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +675: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +676: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +677: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +678: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +679: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+01:24 +680: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +681: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +682: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +683: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:24 +684: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:25 +685: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:25 +686: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+01:25 +687: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+01:26 +688: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+01:27 +689: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+01:28 +690: /tmp/tandemlog-food-implementation/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:28 +691: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+01:28 +692: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+01:29 +693: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+01:29 +694: /tmp/tandemlog-food-implementation/test/checklist_security_review_test.dart: admissible large checklist copy has bounded decode work and preserves canonical bytes
+01:29 +695: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+01:30 +696: /tmp/tandemlog-food-implementation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:30 +697: /tmp/tandemlog-food-implementation/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:30 +698: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+01:30 +699: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+01:30 +700: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: holding child reorder handle never opens help popup
+01:31 +701: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: holding child reorder handle never opens help popup
+01:31 +702: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+01:31 +703: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: child reorder drag still works after holding 0:00:00.000000
+01:31 +704: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:31 +705: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:31 +706: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:31 +707: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:32 +708: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:32 +709: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+01:32 +710: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: busy checkbox keeps child focus and guards repeat Space
+01:32 +711: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+01:32 +712: /tmp/tandemlog-food-implementation/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+01:32 +713: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: child handle supports scoped typed drag and relative movement
+01:32 +714: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: drop rejects wrong scope stale snapshot and disabled late acceptance
+01:32 +715: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: move semantics keyboard edges and Add focus hook stay child scoped
+01:32 +716: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: new item saves normalized title and multiline notes independently
+01:33 +717: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:33 +718: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:33 +719: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:33 +720: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:34 +721: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:34 +722: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:34 +723: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+01:34 +724: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+01:34 +725: /tmp/tandemlog-food-implementation/test/checklist_item_native_editor_test.dart: native caret-only edits stay clean; composition propagates; committed merged text renews before close
+01:34 +726: /tmp/tandemlog-food-implementation/test/checklist_presentation_test.dart: render dark desktop and narrow enlarged components
+01:34 +727: /tmp/tandemlog-food-implementation/test/checklist_expansion_store_test.dart: sparse local expansion preserves other metadata and normal reopen
+01:34 +728: /tmp/tandemlog-food-implementation/test/checklist_expansion_store_test.dart: cache reset defaults collapsed and invalid local values are ignored
+01:34 +729: /tmp/tandemlog-food-implementation/test/checklist_expansion_store_test.dart: bad IDs and an active canonical transaction cannot cause partial UI writes
+01:34 +730: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: remote item waits for missing task parent then attaches once without appearing as a task
+01:35 +731: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: late user parent invalidates retained item transactionally
+01:35 +732: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: late item parent invalidates retained item transactionally
+01:35 +733: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+01:35 +734: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+01:35 +735: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+01:35 +736: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+01:35 +737: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+01:35 +738: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+01:36 +739: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: cancel unfinished warning prepares nothing and preserves exact canonical bytes
+01:36 +740: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: forged membership copy rejects before receipt and leaves canonical history untouched
+01:36 +741: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+01:36 +742: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: forged order copy rejects before receipt and leaves canonical history untouched
+01:36 +743: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming new unchecked item during warning requires fresh confirmation before receipt
+01:36 +744: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: forged visible text copy rejects before receipt and leaves canonical history untouched
+01:36 +745: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming completion state during warning requires fresh confirmation before receipt
+01:36 +746: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming completion state during warning requires fresh confirmation before receipt
+01:36 +747: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: forged source parent copy rejects before receipt and leaves canonical history untouched
+01:36 +748: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+01:36 +749: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+01:36 +750: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: copied ID collision with independent item rejects before receipt
+01:37 +751: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming notes during warning requires fresh confirmation before receipt
+01:37 +752: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+01:37 +753: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming order during warning requires fresh confirmation before receipt
+01:37 +754: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: parent recurrence preserves live item private draft and later source Save does not flow into copied notes
+01:37 +755: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: cancel renewed warning keeps peer changes but writes no local completion
+01:37 +756: /tmp/tandemlog-food-implementation/test/checklist_delivery_test.dart: item private drafts, pre-append Save cancellation and scoped Undo preserve another item
+01:37 +757: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: incoming checks clearing all unfinished work need no second warning
+01:37 +758: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: task deleted while warning is open stops without preparing duplicate completion
+01:38 +759: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: task completed while warning is open stops without preparing duplicate completion
+01:38 +760: /tmp/tandemlog-food-implementation/test/checklist_completion_command_test.dart: already completed task returns null without warning or duplicate receipt
+01:38 +761: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+01:38 +762: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+01:38 +763: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+01:39 +764: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+01:39 +765: /tmp/tandemlog-food-implementation/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+01:40 +766: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: later copied-item activity preserves the declared scalar baseline through native capture and cold replay
+01:40 +767: /tmp/tandemlog-food-implementation/test/checklist_baseline_selection_test.dart: later copied-item activity preserves the declared scalar baseline through native capture and cold replay
+01:40 +768: /tmp/tandemlog-food-implementation/test/checklist_architecture_gate_test.dart: local item check cannot resurrect a canceled successor
+01:40 +769: /tmp/tandemlog-food-implementation/test/checklist_architecture_gate_test.dart: local item move cannot resurrect a canceled successor
+01:40 +770: /tmp/tandemlog-food-implementation/test/checklist_architecture_gate_test.dart: local item delete cannot resurrect a canceled successor
+01:40 +771: /tmp/tandemlog-food-implementation/test/checklist_architecture_gate_test.dart: local item native Save cannot resurrect a canceled successor
+01:41 +772: /tmp/tandemlog-food-implementation/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+01:41 +773: /tmp/tandemlog-food-implementation/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+01:42 +774: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+01:43 +775: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+01:43 +776: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+01:44 +777: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+01:44 +778: /tmp/tandemlog-food-implementation/test/bulk_failure_visibility_test.dart: single modal and bulk panel keep existing failure location false
+01:44 +779: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+01:44 +780: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+01:45 +781: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+01:45 +782: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+01:46 +783: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+01:46 +784: /tmp/tandemlog-food-implementation/test/bulk_apply_semantics_test.dart: saving retains field names but disables all apply actions
+01:46 +785: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+01:47 +786: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+01:48 +787: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+01:48 +788: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture before write reconciles exact records and never discards incomplete tail
+01:48 +789: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: range bridge returns suffix and exposes nonseekable fallback explicitly
+01:48 +790: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +791: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +792: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +793: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +794: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +795: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +796: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +797: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +798: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +799: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +800: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +801: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +802: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +803: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture prefix write reconciles exact records and never discards incomplete tail
+01:48 +804: /tmp/tandemlog-food-implementation/test/android_log_folder_test.dart: watch cancellation and old callbacks cannot trigger the new folder
+01:48 +805: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +806: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +807: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +808: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +809: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +810: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +811: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +812: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +813: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +814: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +815: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +816: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +817: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+01:48 +818: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture after write reconciles exact records and never discards incomplete tail
+01:48 +819: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: capture cache write reconciles exact records and never discards incomplete tail
+01:48 +820: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: invalid deferred reference to second batch event rejects all before append
+01:49 +821: /tmp/tandemlog-food-implementation/test/batch_storage_test.dart: deferred tag reference to second prepared event rejects the complete batch
+01:49 +822: All tests passed!

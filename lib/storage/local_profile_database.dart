@@ -278,6 +278,10 @@ class LocalProfileDatabase {
   /// legacy file adapter. Shared ingestion itself does not await within SQL.
   void rollbackAfterFailure(Object error) {
     try {
+      // The SQLite wrapper's autocommit getter does not check whether its
+      // native handle was closed. Empty SQL checks wrapper liveness before
+      // reading transaction state, without executing a database command.
+      _database.execute('');
       if (!_database.autocommit) _database.execute('ROLLBACK');
     } catch (failure) {
       _poisoned = true;

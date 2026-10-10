@@ -1,0 +1,92 @@
+{
+  "schema": 1,
+  "review": "Independent bounded SQL owner closed-wrapper rollback correction",
+  "reviewedAtUtc": "2026-10-10T05:06:52.894034+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "gitHead": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "workingTreeUncommitted": true,
+  "verdict": "ACCEPT_SCOPED_SOURCE; no architecture must-fix; actual Windows replacement gate remains pending",
+  "mustFix": [],
+  "extends": {
+    "path": "/tmp/food-import-architecture-review/architecture-import-final-review.json",
+    "bytes": 10309,
+    "sha256": "98369ad0a014f907a8ab7bad3a1a63801d4de46b23a49ae8c4fc88ecdf559237",
+    "preserved": true
+  },
+  "sourceBindings": {
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12688,
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04"
+    },
+    "test/food_store_test.dart": {
+      "bytes": 14695,
+      "sha256": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 11161,
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    }
+  },
+  "primaryPinnedSource": {
+    "path": "/workspace/toolchains/pub-cache/hosted/pub.dev/sqlite3-3.7.0/lib/src/implementation/database.dart",
+    "bytes": 20312,
+    "sha256": "2563694d2443aa1f4e7c652368b41fcdc9a04cf0b1459faf8703b63c4ef26883",
+    "package": "sqlite3 3.7.0; pubspec.lock SHA cc62d72dbf16bb1f6ae8954b238016de1473e53df060ed0c332eed0a41dd1848",
+    "findings": [
+      "execute with zero parameters calls _ensureOpen before sqlite3_exec (lines287-301). _ensureOpen rejects isClosed (lines70-74).",
+      "autocommit directly calls sqlite3_get_autocommit without wrapper liveness check (lines323-325).",
+      "close marks isClosed before sqlite3_close_v2 and repeated close returns early (lines256-270)."
+    ]
+  },
+  "reviewedBoundary": [
+    "The added execute empty-string liveness probe precedes the unguarded autocommit read in the common owner rollback path. It has no statements and does not alter open transaction state. All steps remain synchronous, with no opportunity for queued work between probe and getter.",
+    "Closed native wrapper now throws before native autocommit access; existing catch poisons owner and reports initiating plus rollback/liveness errors. Normal rollback success still rethrows original error with original stack via transaction(). No schema, canonical format, history, identity, import contract, dependency or version change.",
+    "Poisoned owner rejects getters and queued work; Food refresh rejects; explicit module/owner cleanup remains possible and idempotent. Successful reopen checks original settings identity/theme, Food and task canonical bytes, heads, guards, physical ID and task projection. The test measures exact pre-fault authority rather than assuming genesis guard absence.",
+    "Current FoodStore bytes match prior accepted import implementation beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81. Concurrent integration_test/completion_actions_test.dart change is excluded from this narrow review."
+  ],
+  "evidence": {
+    "independentPinnedWrapperProbe": {
+      "source": "/tmp/food-import-architecture-review/poison-close/sqlite-empty-execute.dart",
+      "bytes": 914,
+      "sha256": "183c9128cb382a7ae41515589f8aa7ebce5fdddd0f369ce7f8035f5d18dab191",
+      "log": "/tmp/food-import-architecture-review/poison-close/sqlite-empty-execute.log",
+      "logBinding": {
+        "bytes": 100,
+        "sha256": "50c2862958c6bd1ac2044290fb2a540aacd75a6373465f2d27f6da761b9644ef"
+      },
+      "executedByReviewer": true,
+      "scope": "Existing pinned Dart/sqlite3; empty SQL preserves autocommit state before/in transaction, rollback discards row, closed execute rejects, repeated close safe. Does not call unsafe autocommit after close."
+    },
+    "ownerFocused29": {
+      "path": "/tmp/food-windows-poison-review/owner-food-upgrade-final-green.log",
+      "bytes": 4121,
+      "sha256": "b5ba1ba7d2cb6b1bcf9cd8e5169bb7d94f493906ac6df386c03ab8be0081928c",
+      "passed": 29,
+      "failed": 0,
+      "executedByReviewer": false,
+      "scope": "Author owner/Food/frozen-upgrade tests, source reviewed and terminal log inspected"
+    },
+    "windowsDiagnosticQualification": {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/diagnostic-and-native-failure-observation.json",
+      "bytes": 2443,
+      "sha256": "bd41719a87bba95b3fde03297aa3132dc525896ffdca4aa1f708063cbf75ee21",
+      "scope": "Original/diagnostic Windows incomplete-test evidence retained. Unsafe access established from pinned source; exact worker-exit mechanism remains inferred."
+    }
+  },
+  "remainingGates": [
+    "Actual replacement Windows test/candidate gate, full candidate/platform acceptance and publication remain pending.",
+    "No native app build or broad/full matrix executed by reviewer; no live data operation."
+  ]
+}

@@ -1,0 +1,118 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[271453]: [session uid=1000 pid=271453 pidfd=4] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=271672 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+
+(process:271677): dconf-CRITICAL **: 05:23:10.245: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:271677): dconf-CRITICAL **: 05:23:10.245: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:271677): dconf-CRITICAL **: 05:23:10.245: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:271677): dconf-CRITICAL **: 05:23:10.245: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[271453]: [session uid=1000 pid=271453 pidfd=4] Successfully activated service 'org.a11y.Bus'
+
+(process:271677): dconf-CRITICAL **: 05:23:10.246: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:271677): dconf-CRITICAL **: 05:23:10.246: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[271683]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=271672 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+dbus-daemon[271683]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: disclosure bottom spacing and ink retain compact row geometry
+TANDEMLOG_FIRST_FRAME_MS=254
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=72
+TANDEMLOG_PHASE manifest=19
+TANDEMLOG_PHASE ingest=103
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1368 FILES_READ=1
+DISCLOSURE_LAYOUT width=1200.0 scale=1.0 secondary=true ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 355.0, 348.3, 405.0) target=Rect.fromLTRB(68.0, 405.0, 116.0, 433.0) count=Rect.fromLTRB(81.0, 407.0, 103.8, 427.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=1200.0 scale=1.0 secondary=false ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 238.0, 283.9, 286.0) target=Rect.fromLTRB(68.0, 286.0, 116.0, 314.0) count=Rect.fromLTRB(81.0, 288.0, 103.8, 308.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=1200.0 scale=2.0 secondary=true ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 477.0, 604.1, 571.0) target=Rect.fromLTRB(68.0, 571.0, 126.4, 619.0) count=Rect.fromLTRB(81.0, 573.0, 126.4, 613.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=1200.0 scale=2.0 secondary=false ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(68.0, 314.0, 488.8, 368.0) target=Rect.fromLTRB(68.0, 368.0, 126.4, 416.0) count=Rect.fromLTRB(81.0, 370.0, 126.4, 410.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=390.0 scale=1.0 secondary=true ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(52.0, 355.0, 267.9, 427.0) target=Rect.fromLTRB(52.0, 427.0, 100.0, 455.0) count=Rect.fromLTRB(65.0, 429.0, 87.8, 449.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=390.0 scale=1.0 secondary=false ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(52.0, 238.0, 267.9, 286.0) target=Rect.fromLTRB(52.0, 286.0, 100.0, 314.0) count=Rect.fromLTRB(65.0, 288.0, 87.8, 308.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=390.0 scale=2.0 secondary=true ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(52.0, 363.0, 290.0, 595.0) target=Rect.fromLTRB(52.0, 595.0, 110.4, 643.0) count=Rect.fromLTRB(65.0, 597.0, 110.4, 637.0) shape=ChecklistDisclosureInkBorder()
+DISCLOSURE_LAYOUT width=390.0 scale=2.0 secondary=false ordinaryBottom=6.0 disclosureBottom=6.0 body=Rect.fromLTRB(52.0, 306.0, 290.0, 456.0) target=Rect.fromLTRB(52.0, 456.0, 110.4, 504.0) count=Rect.fromLTRB(65.0, 458.0, 110.4, 498.0) shape=ChecklistDisclosureInkBorder()
+00:29 +1: desktop onboarding, live theme, inline retry and folder actions
+00:30 +1: disclosure bottom spacing and ink retain compact row geometry
+TANDEMLOG_FIRST_FRAME_MS=19
+TANDEMLOG_ONBOARDING_READY_MS=135 FILES_READ=0
+TANDEMLOG_FIRST_FRAME_MS=25
+TANDEMLOG_ONBOARDING_READY_MS=157 FILES_READ=0
+00:37 +1: desktop onboarding, live theme, inline retry and folder actions
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=7
+TANDEMLOG_PHASE manifest=31
+TANDEMLOG_PHASE ingest=11
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_PHASE identity_lock=0
+00:46 +1: disclosure bottom spacing and ink retain compact row geometry
+TANDEMLOG_FIRST_FRAME_MS=19
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=10
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=11
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=171 FILES_READ=0
+00:47 +2: (tearDownAll)
+00:47 +2: All tests passed!

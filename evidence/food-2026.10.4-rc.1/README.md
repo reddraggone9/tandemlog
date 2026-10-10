@@ -85,8 +85,9 @@ accepts the final notes/media against stable2026.10.3 through that source with
 no must-fix. These additive receipts were collected after source freeze and
 do not change the candidate source or imply a rebuild.
 
-Full hosted candidate matrix, signed exact APK identity and native Android/Windows
-acceptance remain pending. Relevant
+The first hosted candidate is a recorded failure, not accepted release evidence.
+A corrected source candidate, its full hosted matrix, signed exact APK identity
+and native Android/Windows acceptance remain pending. Relevant
 semantics, keyboard, enlarged text, focus and readable labels are the bounded
 acceptance scope; optional broad assistive-technology/audio work is not a gate.
 Publication will reuse accepted artifacts without rebuilding, with
@@ -100,3 +101,55 @@ preserve this unresolved result. Windows packaging did not execute; debug
 Android success does not substitute for signed or native acceptance. A bounded
 Windows CI reporter change retains expanded output and machine-readable results
 for diagnosis while preserving the test exit status and all existing gates.
+
+
+The retained expanded/JSON diagnostic [push run38025500431](https://github.com/reddraggone9/tandemlog/actions/runs/38025500431)
+identifies the incomplete Windows case as the poisoned-profile Food lease test.
+The actual [machine-readable artifact](candidate/windows-unit-tests-38025500431.json)
+and [diagnosis](candidate/diagnostic-and-native-failure-observation.json) preserve
+the failed result. Pinned SQLite source shows that rollback read native transaction
+state after the fixture had closed its wrapper; a narrow empty-SQL wrapper-liveness
+check precedes that read. The strengthened poison/reopen regression passes with
+all29 focused owner/Food/upgrade tests and unchanged committed Tasks/Food/settings
+bytes. Independent [architecture](candidate/poison-close/architecture-review.json)
+and [security](candidate/poison-close/security-review.json) accept the scoped fix;
+actual corrected Windows CI is still required. The exact original worker-exit
+mechanism is inferred from the unsafe source path, without a Windows crash dump.
+
+The first Linux native matrix passed90 cases and failed two: the historical
+recurrence error flow overflowed by26px at200% text, and the checklist disclosure
+fixture asked for a lazily unmounted row before scrolling it into view. Native
+reproductions use process-local font configuration matching the CI fallback
+metrics. The [author closure and frozen source](candidate/native-fixes/final-closure/review-receipt.json)
+and [independent architecture/pixel review](candidate/native-fixes/independent-architecture-review.json)
+accept the scoped fixes with no must-fix. Ordinary diagnostic text retains its
+complete content inside an independent120px scroller; real Tab reaches it,
+ArrowDown advances from offset0, PageDown reaches the end, ArrowUp reverses and
+Shift+Tab exits. Normal body traversal and shared-stop focus/pointer/semantics
+predicates remain. The original recurrence/canonical/Undo assertions pass1/1;
+disclosure and desktop onboarding pass2/2, including all eight geometry pairs.
+These are scripted native Linux synthetic checks, not Android/Windows acceptance.
+The final fixture only removes an unused import from the executed version;
+[the byte-bound addendum](candidate/native-fixes/final-closure/unused-import-addendum.json)
+preserves that qualification. An earlier workflow-only keyboard pass, black
+first-frame capture and exit127 from an edited active temporary runner are
+explicitly excluded from keyboard/terminal evidence. All previous failed logs
+and original review receipts remain unchanged.
+
+The [fresh corrected-source validation](candidate/corrected-source-checks/receipt.json)
+passes822/822 units, final analysis has no issues and formatting208 files changes
+none. Its first analyzer result identified the unused integration-test import;
+that result remains a failure rather than being relabelled. The [fresh floor](candidate/corrected-version-floor.json)
+still records41 successful candidate runs,22 published releases and maximum
+build56, with stable2026.10.3 Latest. The failed Food runs issued no signed RC
+artifact, so the corrected candidate remains2026.10.4-rc.1/build57.
+Replacement full hosted CI and exact artifact/native platform gates remain required.
+The initial push run was subsequently cancelled by normal CI concurrency when
+the diagnostic source was pushed, after its Windows step had already failed.
+
+
+The [diagnostic terminal observation](candidate/diagnostic-terminal-observation.json)
+records91 Linux native passes/one disclosure failure; recurrence happened to pass
+that run. Its preceding candidate overflow remains a timing-dependent production
+failure, made deterministic by the bounded synthetic provider pause. No running
+or failed job is accepted as a release gate.

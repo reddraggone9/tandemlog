@@ -1,0 +1,305 @@
+diff --git a/integration_test/checklist_disclosure_layout_test.dart b/integration_test/checklist_disclosure_layout_test.dart
+index 5c2bb3a..238aa49 100644
+--- a/integration_test/checklist_disclosure_layout_test.dart
++++ b/integration_test/checklist_disclosure_layout_test.dart
+@@ -100,12 +100,39 @@ void registerChecklistDisclosureLayoutTests() {
+       }
+       await tester.pumpAndSettle();
+       Future<void> reveal(Finder finder) async {
++        // Expanded rows and larger native fallback fonts can move a target
++        // beyond the sliver's lazy render range. Locate it by scrolling before
++        // asking ensureVisible to use its mounted element.
++        if (finder.evaluate().isEmpty) {
++          final scrollable = find
++              .descendant(
++                of: find.byType(CustomScrollView).last,
++                matching: find.byType(Scrollable),
++              )
++              .first;
++          final position = tester.state<ScrollableState>(scrollable).position;
++          position.jumpTo(position.minScrollExtent);
++          await tester.pumpAndSettle();
++          await tester.scrollUntilVisible(
++            finder,
++            240,
++            scrollable: scrollable,
++            maxScrolls: 30,
++          );
++          await tester.pumpAndSettle();
++        }
++        expect(
++          finder,
++          findsOneWidget,
++          reason: 'Task target found by scrolling',
++        );
+         await Scrollable.ensureVisible(
+           finder.evaluate().single,
+           alignment: 0.5,
+           duration: Duration.zero,
+         );
+         await tester.pumpAndSettle();
++        expect(finder.hitTestable(), findsOneWidget);
+       }
+ 
+       double lastTextBottom(Finder body) => find
+diff --git a/integration_test/completion_actions_test.dart b/integration_test/completion_actions_test.dart
+index 4cad354..7690338 100644
+--- a/integration_test/completion_actions_test.dart
++++ b/integration_test/completion_actions_test.dart
+@@ -1,7 +1,10 @@
++import 'dart:async';
+ import 'dart:convert';
+ import 'dart:io';
++import 'dart:typed_data';
+ 
+ import 'package:flutter/material.dart';
++import 'package:flutter/services.dart';
+ import 'package:flutter_test/flutter_test.dart';
+ import 'package:integration_test/integration_test.dart';
+ import 'package:tandemlog/main.dart';
+@@ -12,6 +15,37 @@ import 'package:uuid/uuid.dart';
+ import 'native_text_fixtures.dart';
+ import 'task_flow_test.dart' as flows;
+ 
++/// Task reads fail immediately while a provider's separate bounded Food read
++/// is pending. This makes the initiating action error visible before shared
++/// recovery replaces it, rather than relying on a native watcher timing race.
++class _HeldFoodReadFolder implements LogFolder, BoundedLogFolder {
++  _HeldFoodReadFolder(this.inner);
++  final LocalLogFolder inner;
++  bool pause = false;
++  final entered = Completer<void>(), release = Completer<void>();
++  @override
++  String get location => inner.location;
++  @override
++  Future<List<LogFileInfo>> list() => inner.list();
++  @override
++  Future<Uint8List> read(String name) => inner.read(name);
++  @override
++  Future<Uint8List> readBounded(String name, int maximumBytes) async {
++    if (pause && name == 'tandemlog-space.json') {
++      if (!entered.isCompleted) entered.complete();
++      await release.future;
++    }
++    return inner.readBounded(name, maximumBytes);
++  }
++
++  @override
++  Future<void> append(String name, Uint8List bytes) =>
++      inner.append(name, bytes);
++  @override
++  Future<void> create(String name, Uint8List bytes) =>
++      inner.create(name, bytes);
++}
++
+ void main() {
+   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+   registerCompletionActionTests();
+@@ -24,6 +58,7 @@ void registerCompletionActionTests() {
+       final root = await Directory.systemTemp.createTemp('completion-native-');
+       final folder = await Directory('${root.path}/shared').create();
+       final profile = await Directory('${root.path}/profile').create();
++      final transport = _HeldFoodReadFolder(LocalLogFolder(folder.path));
+       final writer = await openNativeFixtureStore(
+         LocalLogFolder(folder.path),
+         '${root.path}/writer',
+@@ -60,6 +95,7 @@ void registerCompletionActionTests() {
+         await tester.pumpWidget(
+           TandemlogApp(
+             profilePath: profile.path,
++            folderFactory: (_) => transport,
+             timeSourceFactory: (onChanged) => ViewTimeSource(
+               onChanged: onChanged,
+               loadZone: () async => 'UTC',
+@@ -81,6 +117,7 @@ void registerCompletionActionTests() {
+           tester,
+           () => check(repeat).evaluate().isNotEmpty,
+         );
++        await captureNativeFixtureUi(tester, 'completion-warmup-not-evidence');
+         expect(vector(repeat), findsOneWidget);
+         await tester.tap(check(repeat));
+         await flows.waitForUi(tester, () => check(repeat).evaluate().isEmpty);
+@@ -103,6 +140,7 @@ void registerCompletionActionTests() {
+         final saved = await manifest.rename(
+           '${root.path}/manifest-backup.json',
+         );
++        transport.pause = true;
+         await tester.tap(check(repeat));
+         await flows.waitForUi(
+           tester,
+@@ -110,6 +148,77 @@ void registerCompletionActionTests() {
+               find.textContaining('tandemlog-space.json').evaluate().isNotEmpty,
+         );
+         expect(find.text('Task reopened; next occurrence kept.'), findsNothing);
++        await flows.waitForUi(tester, () => transport.entered.isCompleted);
++        final errorScroll = find.byKey(const ValueKey('action-error-scroll'));
++        expect(tester.getSize(errorScroll).height, lessThanOrEqualTo(120));
++        final errorText = find.descendant(
++          of: errorScroll,
++          matching: find.byType(Text),
++        );
++        expect(
++          tester.widget<Text>(errorText).data,
++          contains('tandemlog-space.json'),
++        );
++        final scrollState = tester.state<ScrollableState>(
++          find.descendant(of: errorScroll, matching: find.byType(Scrollable)),
++        );
++        expect(scrollState.position.maxScrollExtent, greaterThan(0));
++        // Traverse real controls; no requestFocus shortcut for error details.
++        bool detailsFocused() =>
++            Focus.of(tester.element(errorText)).hasPrimaryFocus;
++        for (var step = 0; step < 30 && !detailsFocused(); step++) {
++          await tester.sendKeyEvent(LogicalKeyboardKey.tab);
++          await tester.pumpAndSettle();
++        }
++        expect(
++          detailsFocused(),
++          isTrue,
++          reason: 'Error details reachable by Tab',
++        );
++        scrollState.position.jumpTo(0);
++        await tester.pumpAndSettle();
++        await captureNativeFixtureUi(tester, 'completion-failed-reopen');
++        await tester.sendKeyEvent(LogicalKeyboardKey.arrowDown);
++        await tester.pumpAndSettle();
++        expect(scrollState.position.pixels, greaterThan(0));
++        expect(detailsFocused(), isTrue);
++        await captureNativeFixtureUi(tester, 'completion-error-scrolled');
++        for (
++          var page = 0;
++          page < 20 &&
++              scrollState.position.pixels <
++                  scrollState.position.maxScrollExtent;
++          page++
++        ) {
++          await tester.sendKeyEvent(LogicalKeyboardKey.pageDown);
++          await tester.pumpAndSettle();
++        }
++        expect(
++          scrollState.position.pixels,
++          scrollState.position.maxScrollExtent,
++        );
++        expect(detailsFocused(), isTrue);
++        await captureNativeFixtureUi(tester, 'completion-error-end');
++        await tester.sendKeyEvent(LogicalKeyboardKey.arrowUp);
++        await tester.pumpAndSettle();
++        expect(
++          scrollState.position.pixels,
++          lessThan(scrollState.position.maxScrollExtent),
++        );
++        await tester.sendKeyDownEvent(LogicalKeyboardKey.shiftLeft);
++        await tester.sendKeyEvent(LogicalKeyboardKey.tab);
++        await tester.sendKeyUpEvent(LogicalKeyboardKey.shiftLeft);
++        await tester.pumpAndSettle();
++        expect(
++          detailsFocused(),
++          isFalse,
++          reason: 'Shift+Tab leaves error details',
++        );
++        transport.release.complete();
++        await flows.waitForUi(
++          tester,
++          () => find.text('Workspace requires recovery').evaluate().isNotEmpty,
++        );
+         await flows.waitForUi(
+           tester,
+           () => find.text('Retry').evaluate().isNotEmpty,
+@@ -183,8 +292,10 @@ void registerCompletionActionTests() {
+         expect(find.text('Water balcony plants'), findsOneWidget);
+         await writer.refresh();
+         expect(writer.rows.where((r) => r['kind'] == 'task').length, 3);
++        await captureNativeFixtureUi(tester, 'completion-final');
+         expect(tester.takeException(), isNull);
+       } finally {
++        if (!transport.release.isCompleted) transport.release.complete();
+         await tester.pumpWidget(const SizedBox());
+         await tester.pumpAndSettle();
+         tester.view.resetPhysicalSize();
+diff --git a/lib/main.dart b/lib/main.dart
+index 8efbc23..21a7aff 100644
+--- a/lib/main.dart
++++ b/lib/main.dart
+@@ -183,6 +183,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
+   Future<bool>? checklistCloseRequest;
+   final search = TextEditingController();
+   final searchFocus = FocusNode();
++  final bodyFocusScope = FocusScopeNode(debugLabel: 'Task and Food body');
+   bool searchOpen = false;
+   String get searchQuery => search.text.trim();
+   bool get searching => searchQuery.isNotEmpty;
+@@ -3713,6 +3714,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
+     }
+     search.dispose();
+     searchFocus.dispose();
++    bodyFocusScope.dispose();
+     capture.dispose();
+     captureFocus.dispose();
+     firstName.dispose();
+@@ -3760,6 +3762,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
+         !foodVisible &&
+         user == null &&
+         (users.isEmpty || pendingUserId != null);
++    // An ordinary diagnostic is a sibling of the protected body. Let its
++    // controls participate in keyboard traversal while that notice is visible.
++    bodyFocusScope.traversalEdgeBehavior =
++        error != null && (sharedSafetyError == null || keepSetupInputs)
++        ? TraversalEdgeBehavior.parentScope
++        : TraversalEdgeBehavior.closedLoop;
+     return PopScope(
+       canPop:
+           editingTask == null && editingBulk == null && selectedTasks.isEmpty,
+@@ -3924,16 +3932,37 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
+                                   const Icon(Icons.error_outline),
+                                   const SizedBox(width: 12),
+                                   Expanded(
+-                                    child: keepSetupInputs
+-                                        ? ConstrainedBox(
+-                                            constraints: const BoxConstraints(
+-                                              maxHeight: 120,
++                                    child: ConstrainedBox(
++                                      constraints: const BoxConstraints(
++                                        maxHeight: 120,
++                                      ),
++                                      child: SingleChildScrollView(
++                                        primary: false,
++                                        key: const ValueKey(
++                                          'action-error-scroll',
++                                        ),
++                                        child: Shortcuts(
++                                          shortcuts: const {
++                                            SingleActivator(
++                                              LogicalKeyboardKey.arrowDown,
++                                            ): ScrollIntent(
++                                              direction: AxisDirection.down,
+                                             ),
+-                                            child: SingleChildScrollView(
+-                                              child: Text(error!),
++                                            SingleActivator(
++                                              LogicalKeyboardKey.arrowUp,
++                                            ): ScrollIntent(
++                                              direction: AxisDirection.up,
+                                             ),
+-                                          )
+-                                        : Text(error!),
++                                          },
++                                          child: Focus(
++                                            key: const ValueKey(
++                                              'action-error-details',
++                                            ),
++                                            child: Text(error!),
++                                          ),
++                                        ),
++                                      ),
++                                    ),
+                                   ),
+                                   if (errorFromRefresh && store != null)
+                                     TextButton(
+@@ -4001,6 +4030,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
+                                       sharedSafetyError != null &&
+                                       !keepSetupInputs,
+                                   child: FocusScope(
++                                    node: bodyFocusScope,
+                                     canRequestFocus:
+                                         sharedSafetyError == null ||
+                                         keepSetupInputs,

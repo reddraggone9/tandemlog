@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "checkedUtc": "2026-10-10T05:27:52.365453+00:00",
+  "baseCommit": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "status": "822 unit passes; clean final analysis;208 files format zero changes; scoped native3passes/independent review recorded separately; full hosted corrected candidate still required",
+  "sourceHashes": {
+    "lib/main.dart": "7307bde352f4733acb04655b3baa809ccf8cf9c964a2d2e01ea8b61fd480bf1f",
+    "lib/storage/local_profile_database.dart": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04",
+    "test/food_store_test.dart": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2",
+    "integration_test/completion_actions_test.dart": "4b68b48d9e44fb73afeff62dec253c7b049ec61cf206a808c91f5348d57c9751",
+    "integration_test/checklist_disclosure_layout_test.dart": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292",
+    "lib/food/food_page.dart": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+    "lib/food/food_store.dart": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+    "lib/food/food_import.dart": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+    "design/food-import-contract.md": "b29632085d157f63b48ccb65c9a2e70247805b10e433a6d2fef9f2ef047d21fe",
+    "design/prerelease-notes.md": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+    "pubspec.yaml": "909f45bea2908e9da84d49ef05f4f56b9f9a6e4dfbaacedf65f73adb465252ac",
+    "pubspec.lock": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+  },
+  "nativeLibrary": {
+    "path": "/tmp/tandemlog-food-corrected-source/libtandemlog_text.so",
+    "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+    "qualification": "Copy of production native library in current unchanged-native source build; verify_library required ABI loaded before full unit execution; no concurrent app-library mutation."
+  },
+  "checks": {
+    "fullUnit": {
+      "passed": 822,
+      "failed": 0,
+      "exit": 0
+    },
+    "format": {
+      "files": 208,
+      "changed": 0
+    },
+    "firstAnalysis": "One unnecessary dart:typed_data integration-test import; not a pass. Author removed only that unused directive; native run import-only qualification preserved.",
+    "finalAnalysis": {
+      "issues": 0
+    }
+  },
+  "logs": {
+    "analyze-final.log": {
+      "bytes": 96,
+      "sha256": "919dbee6bf14f23c855d8f8f8e8edfc6a045f6151f96c003ec378d23099c5e0b"
+    },
+    "analyze.log": {
+      "bytes": 957,
+      "sha256": "bd4f3a0ff15a3a69bfceb424bedd6af12227850556316f2498589a8e973a416d"
+    },
+    "format.log": {
+      "bytes": 49,
+      "sha256": "f06c0b46ecc2504a6f79f345c9d590827267cb766960e28bd2c9bfa8149c2664"
+    },
+    "full-unit-exit.txt": {
+      "bytes": 2,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "full-unit.log": {
+      "bytes": 127751,
+      "sha256": "b07ecb46d49f466218998b9716d3dc890986dd2ee7899eaf33ffeec3676909e2"
+    }
+  },
+  "scope": "Linux scripted synthetic source evidence; no Windows/Android native or artifact/publication acceptance."
+}

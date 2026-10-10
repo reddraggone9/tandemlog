@@ -1,0 +1,3 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_store_test.dart
+00:00 +0: food handle releases its lease when the profile owner is poisoned
+00:00 +1: All tests passed!

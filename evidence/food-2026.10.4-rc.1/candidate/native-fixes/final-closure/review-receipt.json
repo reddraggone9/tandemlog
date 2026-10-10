@@ -1,0 +1,197 @@
+{
+  "scope": "Two Linux native RC regression gates; bounded action-error presentation and lazy disclosure fixture targeting.",
+  "repository": "/tmp/tandemlog-food-implementation",
+  "base_head": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "sources": {
+    "lib/main.dart": "7307bde352f4733acb04655b3baa809ccf8cf9c964a2d2e01ea8b61fd480bf1f",
+    "lib/storage/local_profile_database.dart": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04",
+    "lib/food/food_page.dart": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+    "lib/presentation/task_completion_checkbox.dart": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+    "integration_test/completion_actions_test.dart": "a9748996c1d572fc9b010920ed80e78e9791a1b75895d8408ac898bc5420edf3",
+    "integration_test/checklist_disclosure_layout_test.dart": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292",
+    "integration_test/task_flow_test.dart": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da",
+    "integration_test/native_text_fixtures.dart": "9c06ff30f9ae20d98ac92f3a75a384ed38823b53a3d8398741d7834161983821",
+    "pubspec.lock": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+  },
+  "scoped_patch_sha256": "987b7ccdf3c12cc080e30cd27056d0d0c8f2061b63d23278eb8fd0dac3d00d07",
+  "product_change": "Ordinary error text now always max120px and independently scrollable with primary:false. Focused text uses standard ScrollIntent for ArrowUp/Down; State-owned body focus scope exits to parent only while ordinary error banner visible. Complete diagnostic text, Retry callbacks, protected shared-stop focus/pointer/semantics guards unchanged.",
+  "fixture_changes": "Held bounded Food manifest read makes transient initiating Task error deterministic; actualTab+ArrowDown/PageDown/ArrowUp/ShiftTab gate retained with all prior canonical/Undo/legacyv3 checks. Disclosure scrolls to lazy-unmounted target before ensureVisible and asserts hitTestable; original8 geometry/ink/semantics/key/no-exception checks unchanged.",
+  "font_reproduction": {
+    "config_path": "/tmp/food-ux-review/native-regressions/ci-fontconfig.conf",
+    "config_sha256": "bf7b597c7889c8a906df42e408434c89412907a6d2a1ccabc7ac06be7a0b16d6",
+    "runtime_only": true,
+    "installed_font_mapping": "fc-match Roboto =>DejaVu Sans Book /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "font_sha256": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+    "qualification": "Process-only selection of existing host fonts, no installation/global font changes; reproduced precedingCI disclosure metrics exactly. Default host OpenAI Sans controls passed and did not reproduce both failures."
+  },
+  "runner": {
+    "path": "/tmp/food-ux-review/native-regressions/run-native-font-repro.sh",
+    "sha256": "a6c780aa3c824d4f39cf43f17d0abc79f9fc6bff68c3c0aeaafc436663160b47",
+    "serialized_native_lock": "/tmp/tandemlog-food-native-run.lock",
+    "native_library_sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56"
+  },
+  "runs": {
+    "disclosure-font-red": {
+      "path": "/tmp/food-ux-review/native-regressions/disclosure-font-red",
+      "files": {
+        "disclosure-1200-1-false.png": "a731bee7d7ba0e7f7abcba49d71a10f70efd86c110224180d875b353b3fde38d",
+        "disclosure-1200-1-true.png": "a731bee7d7ba0e7f7abcba49d71a10f70efd86c110224180d875b353b3fde38d",
+        "disclosure-1200-2-false.png": "55e4e13116c8139ff8b8013e9c954cfe17e15111fe3d1674159c6dd169a447f8",
+        "disclosure-1200-2-true.png": "55e4e13116c8139ff8b8013e9c954cfe17e15111fe3d1674159c6dd169a447f8",
+        "disclosure-390-1-false.png": "0f9e383634c9170f99046fc47d34222637e98183da38cb1ac3035b64a776762d",
+        "disclosure-390-1-true.png": "0f9e383634c9170f99046fc47d34222637e98183da38cb1ac3035b64a776762d",
+        "disclosure-390-2-true.png": "5fae6e043bb1a2fb4f809615c0e40b80c47a9361c72a5943a638c2e00ee9cda3",
+        "disclosure-expanded-1200-1-false.png": "29011c0c0837d06e601c416dd113e279095b7df04cc88fa338ae28b15db30c37",
+        "disclosure-expanded-1200-1-true.png": "da182650e74ea615cdf3d5322ac7d4e9ca3e2175f93163b806c478b7a1b10a65",
+        "disclosure-expanded-1200-2-false.png": "9d4414986d658a819595e8b5e0c65c849e5cac54d89dade36ac2d911d8edad7a",
+        "disclosure-expanded-1200-2-true.png": "655c7790b5193d42e086c6b9c2a22b45c32db70274da375e0c02c0b171cbf3d5",
+        "disclosure-expanded-390-1-false.png": "09ac1a784942277b3dd3ce32b518f6095fa6ebf308eae9598522e68130082949",
+        "disclosure-expanded-390-1-true.png": "11e9bb21033f8977664fd85230f4ecc1784fe7de7b86afdb0e29a10ccc3815fe",
+        "disclosure-expanded-390-2-true.png": "e1a2ead4299d67b471592494c0d94932c47364752672d7652b0fed058380f574",
+        "disclosure-held-ink.png": "1de7a37115e912657e18e0b3189ec6970360ac855af722f71fcf7519cd7c311f",
+        "disclosure-unpressed.png": "7417d5a8e5aff1b6ba51cc2cb9ed34172a36294f6155c48ec2b80390fb5435dc",
+        "fixture.dart.txt": "b52148d6b43df1448c2b9075fbcdd5d1514bbbe7decca7767abdaee5c3ae6a29",
+        "native.log": "2ed43b3d3efac4ac1a0b21127f9d2fb6759f3914f9b1ac578f1250ff0411a928",
+        "process-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-after.sha256": "b3a145cf80373470e59d4fe32e2330e6ba6a256c5a6c448b71963ff25288d62c",
+        "source-before.sha256": "b3a145cf80373470e59d4fe32e2330e6ba6a256c5a6c448b71963ff25288d62c"
+      },
+      "disposition": "Meaningful RED: CI-matching measured font geometry; lazy target unmounted, original reveal .single fails."
+    },
+    "completion-provider-red": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-provider-red",
+      "files": {
+        "completion-failed-reopen.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "completion-final.png": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3",
+        "fixture.dart.txt": "8cfe3499f0592ca3d5547ba56105204dcbf6988487c8c831ff02bf2d060c3d29",
+        "main.dart.txt": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+        "native.log": "677fe8a816a1ff16c92d9bbcc6d1ae367ab1e691c459d47e1c10cc66c2d9677c",
+        "process-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-after.sha256": "1514f3d37294f2ce57fe000058c24ae5e92ce2e8764a31f2a0dd1fef20fc9fcc",
+        "source-before.sha256": "1514f3d37294f2ce57fe000058c24ae5e92ce2e8764a31f2a0dd1fef20fc9fcc"
+      },
+      "disposition": "Meaningful RED: held Food provider read exposes initiating Task action error, exact26px task-body overflow; all original domain workflow assertions execute before final no-exception failure."
+    },
+    "completion-provider-green": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-provider-green",
+      "files": {
+        "completion-warmup-not-evidence.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "native.log": "7bdb93b72e0d4cada26da253e037371174c7385eab1bcb9766d8735ef4cf02c2",
+        "process-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-after.sha256": "2d1a1c9a30d63d3d2160ce7093e22e23d0023beca584a0fe4e12346ec21df04d",
+        "source-before.sha256": "2d1a1c9a30d63d3d2160ce7093e22e23d0023beca584a0fe4e12346ec21df04d"
+      },
+      "disposition": "Intermediate failure: capped banner removes overflow, new genuine Tab reachability assertion fails."
+    },
+    "completion-keyboard-diagnostic": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-keyboard-diagnostic",
+      "files": {
+        "completion-warmup-not-evidence.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "native.log": "e5357be44611de6e6c5da10ec17c5b6dd1f160271877f09b3ab9d1e239ac1218",
+        "process-exit.txt": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+        "source-after.sha256": "84ba9862cd6a754a767368ed41864badc28e8fa282b64cc5a016da64f709e68b",
+        "source-before.sha256": "84ba9862cd6a754a767368ed41864badc28e8fa282b64cc5a016da64f709e68b"
+      },
+      "disposition": "Intermediate failure: real Tab logs prove body closedLoop cycles row controls and never reaches diagnostic."
+    },
+    "completion-provider-final": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-provider-final",
+      "files": {
+        "completion-error-scrolled.png": "5f452310239ff7fec54b32bee7cb9cf8ae39040c9f302ac93b5fe6a036a754b1",
+        "completion-failed-reopen.png": "ad8b20703354808bdd96bccb4450978ee8fcebd05c7c3ed4cd667d13728ebe99",
+        "completion-final.png": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3",
+        "completion-warmup-not-evidence.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "native.log": "36ba4789cd5999e460a53ad7ebd1424776caf75166a2fd68a2c290338fd6b240",
+        "process-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "source-after.sha256": "b07a2311213ccc5cbb8d5a22157071205bf5a58cb42590a02694e6289fe9d2cf",
+        "source-before.sha256": "b07a2311213ccc5cbb8d5a22157071205bf5a58cb42590a02694e6289fe9d2cf"
+      },
+      "disposition": "Intermediate workflow1PASS; initial scroll assertion too weak because Tab itself scrolled long text; not final keyboard acceptance."
+    },
+    "completion-scroll-final": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-scroll-final",
+      "files": {
+        "completion-error-end.png": "f34dbfd4d5f74fb28cbcc4d5198c05f04b41327e76e651c068d0906bccfe16f5",
+        "completion-error-scrolled.png": "6f1b0e8777d114c481fe0e659358edcb88c0c4a6607e1287bd4a21ac0254ddcc",
+        "completion-failed-reopen.png": "2dc21dc377a65c2ba0fbd9d30f420e211b7f524f6cd9eb4b360e08d7489c9f57",
+        "completion-final.png": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3",
+        "completion-warmup-not-evidence.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "native.log": "07b4dbf806d6e3980ad7c8a4e75cc00fdecc394ca2ae17fedb482180d0e2ccdb",
+        "process-exit.txt": "743c7850cccfba5e53a9002663ec1ddd1079315a98bdbfdde10e6044f56abefe",
+        "source-after.sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462",
+        "source-before.sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462"
+      },
+      "disposition": "INVALID terminal evidence: runner modified while old Bash invocation active, overwritten log and exit127. Actual pixels diagnostic only, no test PASS claimed."
+    },
+    "completion-scroll-accepted": {
+      "path": "/tmp/food-ux-review/native-regressions/completion-scroll-accepted",
+      "files": {
+        "completion-error-end.png": "f34dbfd4d5f74fb28cbcc4d5198c05f04b41327e76e651c068d0906bccfe16f5",
+        "completion-error-scrolled.png": "6f1b0e8777d114c481fe0e659358edcb88c0c4a6607e1287bd4a21ac0254ddcc",
+        "completion-failed-reopen.png": "2dc21dc377a65c2ba0fbd9d30f420e211b7f524f6cd9eb4b360e08d7489c9f57",
+        "completion-final.png": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3",
+        "completion-warmup-not-evidence.png": "cf84541bb82eb928a7ff95efcbce34229e72a633ebd473c80a85e2780ce08e9b",
+        "native.log": "1c6e24b9358bb2d70c82062dea24d0f17f004c85416c33d06265de3dd020c8d8",
+        "process-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "source-after.sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462",
+        "source-before.sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462"
+      },
+      "disposition": "Accepted native1PASS32sec, stronger real Tab/ArrowDown/PageDown/ArrowUp/ShiftTab scroll assertions and full original canonical/Reopen/Undo gates."
+    },
+    "disclosure-onboarding-final": {
+      "path": "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final",
+      "files": {
+        "disclosure-1200-1-false.png": "a731bee7d7ba0e7f7abcba49d71a10f70efd86c110224180d875b353b3fde38d",
+        "disclosure-1200-1-true.png": "a731bee7d7ba0e7f7abcba49d71a10f70efd86c110224180d875b353b3fde38d",
+        "disclosure-1200-2-false.png": "55e4e13116c8139ff8b8013e9c954cfe17e15111fe3d1674159c6dd169a447f8",
+        "disclosure-1200-2-true.png": "55e4e13116c8139ff8b8013e9c954cfe17e15111fe3d1674159c6dd169a447f8",
+        "disclosure-390-1-false.png": "0f9e383634c9170f99046fc47d34222637e98183da38cb1ac3035b64a776762d",
+        "disclosure-390-1-true.png": "0f9e383634c9170f99046fc47d34222637e98183da38cb1ac3035b64a776762d",
+        "disclosure-390-2-false.png": "f2570695fd1e63bb3d1f8f9b906c55a293d9abb873092caba4bf94b97c3482c1",
+        "disclosure-390-2-true.png": "5fae6e043bb1a2fb4f809615c0e40b80c47a9361c72a5943a638c2e00ee9cda3",
+        "disclosure-expanded-1200-1-false.png": "29011c0c0837d06e601c416dd113e279095b7df04cc88fa338ae28b15db30c37",
+        "disclosure-expanded-1200-1-true.png": "da182650e74ea615cdf3d5322ac7d4e9ca3e2175f93163b806c478b7a1b10a65",
+        "disclosure-expanded-1200-2-false.png": "9d4414986d658a819595e8b5e0c65c849e5cac54d89dade36ac2d911d8edad7a",
+        "disclosure-expanded-1200-2-true.png": "655c7790b5193d42e086c6b9c2a22b45c32db70274da375e0c02c0b171cbf3d5",
+        "disclosure-expanded-390-1-false.png": "09ac1a784942277b3dd3ce32b518f6095fa6ebf308eae9598522e68130082949",
+        "disclosure-expanded-390-1-true.png": "11e9bb21033f8977664fd85230f4ecc1784fe7de7b86afdb0e29a10ccc3815fe",
+        "disclosure-expanded-390-2-false.png": "6748d196d64eec9f96a8f352d6f4c6c60e88f6f83401e678ef0535dfb8cfe3af",
+        "disclosure-expanded-390-2-true.png": "e1a2ead4299d67b471592494c0d94932c47364752672d7652b0fed058380f574",
+        "disclosure-held-ink.png": "1de7a37115e912657e18e0b3189ec6970360ac855af722f71fcf7519cd7c311f",
+        "disclosure-unpressed.png": "7417d5a8e5aff1b6ba51cc2cb9ed34172a36294f6155c48ec2b80390fb5435dc",
+        "native.log": "736fc65282d8c5a9fdcaf4c3969f5572597e48ec456d56fb601a6da6f45b6324",
+        "process-exit.txt": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+        "source-after.sha256": "ba42ff0f5f027158bbf2271a3677a63bdcd58f487df73fe46ce67eb1dff4120c",
+        "source-before.sha256": "ba42ff0f5f027158bbf2271a3677a63bdcd58f487df73fe46ce67eb1dff4120c"
+      },
+      "disposition": "Accepted native2PASS47sec:8 geometry cases plus existing desktop onboarding/live-theme/inline-retry/folder workflow."
+    }
+  },
+  "initial_ci_log": {
+    "path": "/tmp/tandemlog-food-initial-linux-decoded.log",
+    "sha256": "6c7c9ef222ed4a23975efb39cd5bcddb1092486aad58bee6f895c756d81f6db5",
+    "actual_result": "90PASS2FAIL"
+  },
+  "pixel_review": {
+    "completion-scroll-accepted/completion-failed-reopen.png": "2dc21dc377a65c2ba0fbd9d30f420e211b7f524f6cd9eb4b360e08d7489c9f57",
+    "completion-scroll-accepted/completion-error-scrolled.png": "6f1b0e8777d114c481fe0e659358edcb88c0c4a6607e1287bd4a21ac0254ddcc",
+    "completion-scroll-accepted/completion-error-end.png": "f34dbfd4d5f74fb28cbcc4d5198c05f04b41327e76e651c068d0906bccfe16f5",
+    "completion-scroll-accepted/completion-final.png": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3",
+    "disclosure-onboarding-final/disclosure-390-2-false.png": "f2570695fd1e63bb3d1f8f9b906c55a293d9abb873092caba4bf94b97c3482c1",
+    "disclosure-onboarding-final/disclosure-expanded-390-2-false.png": "6748d196d64eec9f96a8f352d6f4c6c60e88f6f83401e678ef0535dfb8cfe3af",
+    "disclosure-onboarding-final/disclosure-390-2-true.png": "5fae6e043bb1a2fb4f809615c0e40b80c47a9361c72a5943a638c2e00ee9cda3"
+  },
+  "pixel_findings": "Actual390px200% action-error top/middle/end readable within fixed banner, Retry remains visible, task rows remain available; final Undo retains edited successor and no overflow. Actual390px200% disclosure counts/targets and expanded six-item checklist readable and separated.",
+  "excluded_frames": [
+    "completion-provider-red/completion-failed-reopen.png is black first-frame, not visualBefore evidence.",
+    "All *warmup-not-evidence.png excluded.",
+    "completion-scroll-final pixels not bound to a usable terminal outcome."
+  ],
+  "qualification": "Scripted nativeLinux GTK synthetic folders/profile, no live data, Android/Windows/nativeinstaller/human-touch or whole-list accessibility claim. Error scroller primary:false checked in production source, not mobile native acceptance.",
+  "remaining_gates": [
+    "Parent independent architecture review.",
+    "Parent final fullunit/analyze and corrected exactsource CI/native aggregate/candidate artifact gates."
+  ],
+  "source_edits_frozen": true,
+  "committed_or_pushed_by_child": false
+}

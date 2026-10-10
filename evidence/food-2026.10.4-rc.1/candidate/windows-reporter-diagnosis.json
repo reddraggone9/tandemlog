@@ -1,0 +1,47 @@
+{
+  "role": "independent read-only diagnosis",
+  "source": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+  "productionChanges": false,
+  "extraTestsOrBuilds": false,
+  "observations": [
+    {
+      "path": "/tmp/tandemlog-food-candidate-windows-decoded.log",
+      "bytes": 214269,
+      "sha256": "b49fca89f3af61f4b43645e4435f1ce5e68bd06e770da2cd0de3c836589604a2",
+      "namedTestOutcomes": 821,
+      "namedTestFiles": 94,
+      "uniquePassedLabels": 819,
+      "summary": "818 tests passed, 2 skipped",
+      "exitCode": 1
+    },
+    {
+      "path": "/tmp/tandemlog-food-push-windows-decoded.log",
+      "bytes": 214269,
+      "sha256": "fdb9b99fba1b134f3cf53b10300efa95817f3c13be94d1930d451ef17fb5b162",
+      "namedTestOutcomes": 821,
+      "namedTestFiles": 94,
+      "uniquePassedLabels": 819,
+      "summary": "818 tests passed, 2 skipped",
+      "exitCode": 1
+    }
+  ],
+  "sourceConditionalUnregisteredTest": {
+    "path": "test/legacy_protected_files_import_test.dart",
+    "line": 293,
+    "name": "recognized symlink source is rejected without following it",
+    "reason": "registered only inside if (!Platform.isWindows)"
+  },
+  "explicitSkippedTests": [
+    "local_durability_test.dart: real Linux FFI smoke",
+    "view_time_source_test.dart: Linux zone files honor localtime symlink and copied-file identity"
+  ],
+  "expectedCountInference": "Local822 minus1 unregistered Windows symlink case minus2 explicit skipped =819 Windows pass outcomes if no other runtime registration difference. Logs label819 unique tests as passed, but final engine count is818.",
+  "probableMechanism": "Pinned test_core GithubReporter prints success icons from empty error lists and ignores engine success/active when constructing final summary. JsonReporter explicitly maps active/cancelled tests to error. An incomplete/cancelled test can therefore appear as passed with nonzero exit, but its name/cause cannot be identified from these logs.",
+  "limits": [
+    "No observed production defect identified",
+    "No test-specific assertion/failure/timeout block retained",
+    "GH push check-run annotations only Process completed with exit code1",
+    "Linux in-progress MCP logs returned BlobNotFound404; no Linux log completeness claim"
+  ],
+  "recommendation": "Preserve strict exit-code gating; diagnostic-only Windows --reporter expanded plus --file-reporter json:windows-unit-tests.json, upload always with separate QA artifact. Map any result=error or testStart without passing testDone to its testID/name; preserve raw logs and original source bindings before deciding production/test changes."
+}

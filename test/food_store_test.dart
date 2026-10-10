@@ -7,6 +7,7 @@ import 'package:tandemlog/domain/event.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/storage/local_profile_database.dart';
+import 'package:tandemlog/storage/local_settings.dart';
 import 'package:tandemlog/storage/log_folder.dart';
 import 'package:tandemlog/storage/profile_food_intents.dart';
 import 'package:tandemlog/storage/task_store.dart';
@@ -364,14 +365,91 @@ void main() {
   test(
     'food handle releases its lease when the profile owner is poisoned',
     () async {
+      final settingsRaw = utf8.encode(
+        jsonEncode({'writer': installation, 'appearance': 'dark'}),
+      );
+      profile.transaction(
+        () => profile.database.execute(
+          'INSERT INTO protected_settings VALUES (1,?,?)',
+          [installation, settingsRaw],
+        ),
+      );
+      await tasks.command(
+        '00000000-0000-4000-8000-000000000002',
+        'user.created',
+        {'name': 'Preserved after poison'},
+      );
+      final taskBytes = await folder.read('$installation.jsonl');
       await open();
+      await food!.add(const FoodDetails(name: 'Rice'), 1);
+      final id = food!.state.active.single.id;
+      final space = tasks.space;
+      final writer = food!.writer;
+      final before = await folder.read(foodLogName(writer));
+      final heads = profile.database
+          .select('SELECT * FROM protected_food_heads')
+          .map((row) => Map<String, Object?>.from(row))
+          .toList();
+      final guards = profile.database
+          .select('SELECT * FROM protected_writer_guards ORDER BY space,writer')
+          .map((row) => Map<String, Object?>.from(row))
+          .toList();
       expect(
         () => profile.transaction(() => profile.database.close()),
         throwsA(isA<LocalDatabaseFailure>()),
       );
+      expect(() => profile.database, throwsStateError);
+      var admitted = false;
+      await expectLater(
+        profile.serialize(() async => admitted = true),
+        throwsStateError,
+      );
+      expect(admitted, isFalse);
+      await expectLater(food!.refresh(), throwsStateError);
       await food!.close();
       await tasks.close();
       await profile.close();
+      await food!.close();
+      await tasks.close();
+      await profile.close();
+
+      // Successful reopening proves both module leases and the owner's lease
+      // were released, while the committed identity/history survive poison.
+      profile = await LocalProfileDatabase.open('${root.path}/profile');
+      final settings = LocalSettings(profile.root, profileDatabase: profile);
+      await settings.load();
+      expect(settings.writer, installation);
+      expect(settings.appearance, Appearance.dark);
+      expect(
+        profile.database
+            .select('SELECT raw FROM protected_settings')
+            .single['raw'],
+        settingsRaw,
+      );
+      expect(
+        profile.database.select('SELECT * FROM protected_food_heads'),
+        heads,
+      );
+      tasks = await TaskStore.open(
+        folder,
+        profile.root,
+        profileDatabase: profile,
+        writerIdentity: settings.writer,
+      );
+      food = null;
+      await open();
+      expect(tasks.space, space);
+      expect(food!.writer, writer);
+      expect(food!.state.active.single.id, id);
+      expect(await folder.read(foodLogName(writer)), before);
+      expect(await folder.read('$installation.jsonl'), taskBytes);
+      expect(tasks.rows.single['name'], 'Preserved after poison');
+      expect(
+        profile.database.select(
+          'SELECT * FROM protected_writer_guards ORDER BY space,writer',
+        ),
+        guards,
+      );
     },
   );
 }

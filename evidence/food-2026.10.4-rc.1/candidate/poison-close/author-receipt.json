@@ -1,0 +1,106 @@
+{
+  "scope": "Windows incomplete poisoned-profile unit test; parent-authorized bounded shared-owner hardening",
+  "sourceBase": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "status": "implemented; scoped Linux checks pass; actual Windows rerun pending",
+  "productionDelta": "LocalProfileDatabase.rollbackAfterFailure checks wrapper liveness using empty SQL before native autocommit access; no FoodStore, schema, canonical-format or dependency change.",
+  "diagnosis": {
+    "observed": "Actual hosted Windows JSON test384 starts then completes result:error without error event; expanded logs state did not complete.",
+    "sourceProven": "Pinned sqlite3 3.7.0 close frees native handle via sqlite3_close_v2; execute checks _ensureOpen, while autocommit directly calls sqlite3_get_autocommit without liveness guard. Old fault fixture closed that wrapper inside transaction before rollback inspected autocommit.",
+    "qualification": "Native use-after-close is an unsafe code path and likely cause of hosted worker termination. No independent Windows crash dump or local red is claimed; Linux baseline pass was not evidence that the native access was safe."
+  },
+  "regressionAssertions": [
+    "Poison still raises LocalDatabaseFailure; owner getter, queued work and Food refresh reject without invoking queued callback.",
+    "Food and Tasks handles and owner close idempotently; both workspace leases and profile lease release.",
+    "Same profile reopens preserving settings writer/theme and raw bytes, exact Food heads and writer guards, Food identity and canonical bytes, scalar Tasks record and canonical bytes."
+  ],
+  "validation": {
+    "focusedPoison": {
+      "passed": 1,
+      "failed": 0,
+      "log": {
+        "path": "/tmp/food-windows-poison-review/poison-focused-green-first.log",
+        "bytes": 183,
+        "sha256": "aebbff0174e4bda0684eeb9086b0289fff9e849d7fcb5b2740f8c5a3f58043eb"
+      }
+    },
+    "finalFocusedOwnerFoodUpgrade": {
+      "passed": 29,
+      "failed": 0,
+      "skipped": 0,
+      "files": [
+        "test/food_store_test.dart",
+        "test/local_profile_database_test.dart",
+        "test/food_profile_upgrade_test.dart"
+      ],
+      "log": {
+        "path": "/tmp/food-windows-poison-review/owner-food-upgrade-final-green.log",
+        "bytes": 4121,
+        "sha256": "b5ba1ba7d2cb6b1bcf9cd8e5169bb7d94f493906ac6df386c03ab8be0081928c"
+      }
+    },
+    "analysis": {
+      "issues": 0,
+      "log": {
+        "path": "/tmp/food-windows-poison-review/scoped-analyze-final.log",
+        "bytes": 96,
+        "sha256": "1cedd1f3ac4804477beb407906d420c7f9007603b44f21ac06b78d0f1353c61d"
+      }
+    },
+    "format": "Two scoped files formatted; final run reported zero changes.",
+    "diffCheck": "Passed."
+  },
+  "sourceFiles": [
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/storage/local_profile_database.dart",
+      "bytes": 12688,
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_store_test.dart",
+      "bytes": 14695,
+      "sha256": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/food/food_store.dart",
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    }
+  ],
+  "preservedEvidence": [
+    {
+      "path": "/tmp/food-windows-poison-review/local_profile_database-before.dart",
+      "bytes": 12434,
+      "sha256": "6169c602b5da1ec40e52efad96495f906f59c0c33044ef4ec463a79936b28a99"
+    },
+    {
+      "path": "/tmp/food-windows-poison-review/food_store_test-before.dart",
+      "bytes": 11779,
+      "sha256": "90b7a9713492c9a4bc38d3448f85daa80b4ac2501d403e070d0cf4141e863c37"
+    },
+    {
+      "path": "/tmp/food-windows-poison-review/windows-test-384-events.json",
+      "bytes": 568,
+      "sha256": "a4b44e6c56fb7a95b8012c6818a40e584b67161ee301d3f85e0421baa213a2fb"
+    },
+    {
+      "path": "/tmp/food-windows-poison-review/owner-food-upgrade-green.log",
+      "bytes": 4110,
+      "sha256": "ac97a5997554c7a1c2dbf3a619f8f15c037125ff1b88ffabf96f83b38a80cff3"
+    },
+    {
+      "path": "/tmp/tandemlog-food-candidate-artifacts/windows-unit-tests-38025500431.json",
+      "bytes": 404899,
+      "sha256": "e533b9e184d5c8f816c5b366924bf7577982dbc8e5ec96bbb4a35da73e0f2068"
+    }
+  ],
+  "remaining": [
+    "Independent architecture/security delta review",
+    "Actual Windows candidate tests and full candidate gates owned by parent"
+  ],
+  "actionsNotTaken": [
+    "No skip or timeout bypass",
+    "No raw-pointer probe",
+    "No broad test matrix",
+    "No commit, push, signing or publication"
+  ]
+}

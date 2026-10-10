@@ -1,0 +1,78 @@
+{
+  "reviewer": "/root/tag_autocomplete_trials independent UX/editorial reviewer",
+  "createdUtc": "2026-10-10T04:53:36.030251+00:00",
+  "decision": "ACCEPT additive exact-range editorial extension only; notes/media and previously accepted product-source bytes remain unchanged; no must-fix",
+  "coveredRange": {
+    "baselineTag": "v2026.10.3",
+    "baselineCommit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "candidateCommit": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+    "extendsPreviousAcceptedCandidate": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da"
+  },
+  "priorAcceptedReceipt": {
+    "path": "/tmp/food-ux-review/rc-delta/final-range/review-receipt.json",
+    "sha256": "0e08b7dc67fb6251fefed2cc5b0b582648f04b8ecfbfc4fb743054402da77d68",
+    "preserved": true
+  },
+  "changesSincePreviousAcceptance": {
+    "commitSubjects": [
+      "a1cee64a5f9ddbc499369217a14bb8db032a28d8 Preserve original decoded Windows failure logs",
+      "f489f122208280f4264f92abf024a74247be6a44 Retain Windows unit diagnostics and exact Food candidate reviews"
+    ],
+    "changedPaths": [
+      ".github/workflows/validate.yml",
+      "evidence/food-2026.10.4-rc.1/README.md",
+      "evidence/food-2026.10.4-rc.1/candidate/exact-range-editorial-review.json",
+      "evidence/food-2026.10.4-rc.1/candidate/initial-candidate-windows-decoded.log",
+      "evidence/food-2026.10.4-rc.1/candidate/initial-push-windows-decoded.log",
+      "evidence/food-2026.10.4-rc.1/candidate/initial-windows-failure-count-supplement.json",
+      "evidence/food-2026.10.4-rc.1/candidate/initial-windows-failure-observation.json",
+      "evidence/food-2026.10.4-rc.1/candidate/source-preflight-independent-review.json",
+      "evidence/food-2026.10.4-rc.1/candidate/tandemlog-food-reporter-option-check.json",
+      "evidence/food-2026.10.4-rc.1/candidate/tandemlog-food-reporter-option-check.log",
+      "evidence/food-2026.10.4-rc.1/candidate/windows-diagnostics-workflow-independent-review.json",
+      "evidence/food-2026.10.4-rc.1/candidate/windows-failure-independent-review.json"
+    ],
+    "boundedWorkflowDiffSha256": "42f0bb2633f8970431564872cfa34e649cbb848b8a32e20625c53c9fb7ab1351",
+    "description": "Windows unit invocation now retains expanded console and JSON file reporter results; pinned diagnostic upload uses always after attempted unit step. Added independently reviewed diagnostics and postfreeze receipts plus original decoded failed logs. No new end-user behavior or note/media content."
+  },
+  "byteEquality": {
+    "allSelectedGitBlobMapsEqual": true,
+    "selectedPathsCount": 388,
+    "canonicalSelectedBlobMapSha256": "50ab1af3c6fe1a16591403d9f540f60e0d23488683547a599d88f40564082a4c",
+    "preservedScopes": [
+      "all lib/native/platform/asset/packaging source",
+      "all test/integration-test/tool inputs",
+      "pubspec/version/dependency lock",
+      "actual prerelease notes and editorial guidance",
+      "whole immutable release-media subtree including raw captures/recipe/source snapshots"
+    ],
+    "notesSha256": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+    "mediaCompositeSha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "FoodRendererSha256": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+    "TaskCheckboxSha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8"
+  },
+  "editorialJudgment": "The same two accepted concise bullets and unchanged Dark real-control Before/After image remain accurate for the extended stable-to-candidate range. Diagnostic workflow/evidence additions have no user-visible change warranting release-note copy. Media provenance, pixel readability, alt, immutablelink and prior actual publicbyte verification carry forward unchanged.",
+  "reviewedDiagnosticProvenance": "Existing delegated diagnostic-workflow reviewer accepts bounded diagnostics with nonzero exit preservation/no new filter or forced success. This editorial extension does not substitute for CI/correctness/artifact acceptance.",
+  "ciQualification": {
+    "initialFailedResults": "Original Windows logs record818 passes/two skips then exit1, with missing or incomplete test outcome; exact root cause remains unresolved by these records. Counts are not a full green suite.",
+    "replacementStatus": "No new CI result queried or accepted by this review. Parent reports diagnostic push38025500431 underway at delegation. This receipt makes no success claim.",
+    "artifactAcceptance": false,
+    "nativeAcceptance": false,
+    "publicationApproval": false
+  },
+  "executionPerformed": "Git/source/document/receipt comparison only. No UI/video rerun, tests, builds, source edits or publication.",
+  "metadataHashesAtExtendedCommit": {
+    "evidence/food-2026.10.4-rc.1/README.md": "aca92f623f1210d89a16c6bb9b5833346f2043ff11ca4ba2948a351b79645158",
+    "evidence/food-2026.10.4-rc.1/candidate/windows-diagnostics-workflow-independent-review.json": "6997481c227bd372650ccc76f0292558f15dc9d90e7d1e8321b17ccc3605a58d",
+    "evidence/food-2026.10.4-rc.1/candidate/initial-windows-failure-count-supplement.json": "2502b8f75583290ebb922a1ea700126dd391862db940f2df8e5678ce574eb12d",
+    "evidence/food-2026.10.4-rc.1/candidate/initial-windows-failure-observation.json": "b6036a4b009f6372fa0594b246c12d47a3b3fd6aa9168703745a7ed112b61406",
+    "evidence/food-2026.10.4-rc.1/candidate/initial-candidate-windows-decoded.log": "b49fca89f3af61f4b43645e4435f1ce5e68bd06e770da2cd0de3c836589604a2",
+    "evidence/food-2026.10.4-rc.1/candidate/initial-push-windows-decoded.log": "fdb9b99fba1b134f3cf53b10300efa95817f3c13be94d1930d451ef17fb5b162"
+  },
+  "remainingGates": [
+    "A successful full replacement main candidate and pushCI",
+    "Exact accepted archive/member/APK/checksum/signer binding",
+    "Actual Windows/Android affected-flow acceptance",
+    "Normal prerelease publication gates; further source changes need source/range review"
+  ]
+}

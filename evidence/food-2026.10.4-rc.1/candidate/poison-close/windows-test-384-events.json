@@ -1,0 +1,29 @@
+[
+  {
+    "test": {
+      "id": 384,
+      "name": "food handle releases its lease when the profile owner is poisoned",
+      "suiteID": 348,
+      "groupIDs": [
+        352
+      ],
+      "metadata": {
+        "skip": false,
+        "skipReason": null
+      },
+      "line": 364,
+      "column": 3,
+      "url": "file:///D:/a/tandemlog/tandemlog/test/food_store_test.dart"
+    },
+    "type": "testStart",
+    "time": 118363
+  },
+  {
+    "testID": 384,
+    "result": "error",
+    "skipped": false,
+    "hidden": false,
+    "type": "testDone",
+    "time": 118681
+  }
+]

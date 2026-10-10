@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "recordedUtc": "2026-10-10T05:17:40.484397+00:00",
+  "runId": 38025500431,
+  "source": "f489f122208280f4264f92abf024a74247be6a44",
+  "status": "completed",
+  "conclusion": "failure",
+  "jobs": [
+    {
+      "id": 114135418887,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114135418964,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "failure"
+    },
+    {
+      "id": 114135418991,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "failure"
+    }
+  ],
+  "linuxNative": {
+    "passed": 91,
+    "failed": 1,
+    "failure": "disclosure bottom spacing and ink retain compact row geometry: No element before scrolling lazily unmounted target",
+    "historicalRecurrence": "Passed this run; the first candidate26px overflow remains a real timing-dependent defect reproduced by controlled provider fixture."
+  },
+  "actualDecodedLog": {
+    "file": "diagnostic-linux-decoded.log",
+    "bytes": 457179,
+    "sha256": "7b5445f44df89e4d1e17b35d5da53bb03b375b56e1b4ae42aeee0da07611e6f6"
+  },
+  "acceptance": "failed; no release artifact or native acceptance"
+}

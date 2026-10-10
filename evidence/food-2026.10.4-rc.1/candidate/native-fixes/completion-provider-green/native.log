@@ -1,0 +1,117 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[269511]: [session uid=1000 pid=269511 pidfd=4] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=269780 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+
+(process:269785): dconf-CRITICAL **: 05:15:56.879: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:269785): dconf-CRITICAL **: 05:15:56.879: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:269785): dconf-CRITICAL **: 05:15:56.880: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:269785): dconf-CRITICAL **: 05:15:56.880: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[269511]: [session uid=1000 pid=269511 pidfd=4] Successfully activated service 'org.a11y.Bus'
+
+(process:269785): dconf-CRITICAL **: 05:15:56.881: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:269785): dconf-CRITICAL **: 05:15:56.881: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[269791]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=269780 comm="/tmp/tandemlog-food-implementation/build/linux/x64" label="kernel")
+dbus-daemon[269791]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+TANDEMLOG_FIRST_FRAME_MS=256
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=19
+TANDEMLOG_PHASE ingest=97
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1269 FILES_READ=2
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+Error details reachable by Tab
+
+When the exception was thrown, this was the stack:
+#4      registerCompletionActionTests.<anonymous closure> (file:///tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart:181:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart line 181
+The test description was:
+  historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:16 +0 -1: historical v3 recurrence compatibility: checked completion, failed reopen and Undo [E]
+  Test failed. See exception logs above.
+  The test description was: historical v3 recurrence compatibility: checked completion, failed reopen and Undo
+  
+00:16 +0 -1: (tearDownAll)
+00:16 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/integration_test/completion_actions_test.dart: historical v3 recurrence compatibility: checked completion, failed reopen and Undo

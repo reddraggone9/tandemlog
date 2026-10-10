@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T05:16:03.206410+00:00",
+  "verdict": "HOLD_FAILED_RUNS_NOT_RELEASE_ELIGIBLE",
+  "scope": "Read-only fresh failed-run identities, job gates and reported artifact inventory; additive historical checkpoint, not corrected-source acceptance.",
+  "repository": "reddraggone9/tandemlog",
+  "fresh_run_api_read_at_utc": "2026-10-10T05:13:55.695814+00:00",
+  "initial_candidate": {
+    "id": 38024653325,
+    "head_sha": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da",
+    "head_branch": "main",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/android-candidate.yml",
+    "status": "completed",
+    "conclusion": "failure",
+    "jobs": [
+      {
+        "id": 114132799884,
+        "name": "candidate",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114132834118,
+        "name": "checks / windows",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 114132834137,
+        "name": "checks / linux",
+        "status": "completed",
+        "conclusion": "failure"
+      },
+      {
+        "id": 114132834156,
+        "name": "checks / android",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114136813794,
+        "name": "signed-android",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 11659973109,
+        "name": "android",
+        "size_in_bytes": 80706750,
+        "digest": "sha256:728ddd08fe1e80bc6d18d7663d83454568c49dfb0008d43d9c074fb26839e48b",
+        "expired": false,
+        "expires_at": "2026-10-15T04:43:07Z",
+        "workflow_run": {
+          "id": 38024653325,
+          "repository_id": 1204525648,
+          "head_repository_id": 1204525648,
+          "head_branch": "main",
+          "head_sha": "2ecfbd620bc92ab23d08fb3f7df2b67b355f62da"
+        }
+      }
+    ],
+    "gate_findings": [
+      "Windows unit-test gate failed; subsequent Windows release, installer lifecycle and release upload skipped.",
+      "Linux required native aggregate failed after app/contract/policy gates passed; Linux release and lifecycle upload skipped.",
+      "Signed Android job skipped; no android-release artifact exists."
+    ]
+  },
+  "diagnostic_push": {
+    "id": 38025500431,
+    "head_sha": "f489f122208280f4264f92abf024a74247be6a44",
+    "head_branch": "main",
+    "event": "push",
+    "path": ".github/workflows/ci.yml",
+    "status": "in_progress",
+    "conclusion": null,
+    "jobs": [
+      {
+        "id": 114135418887,
+        "name": "checks / android",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114135418964,
+        "name": "checks / linux",
+        "status": "in_progress",
+        "conclusion": null
+      },
+      {
+        "id": 114135418991,
+        "name": "checks / windows",
+        "status": "completed",
+        "conclusion": "failure"
+      }
+    ],
+    "artifacts": [
+      {
+        "id": 11660004690,
+        "name": "windows-unit-tests",
+        "size_in_bytes": 47128,
+        "digest": "sha256:df0c28ab3ee00d0a10499fd549334af9f01d4d893ae1c9dcecef77c92c396223",
+        "expired": false,
+        "expires_at": "2026-10-15T04:59:15Z",
+        "workflow_run": {
+          "id": 38025500431,
+          "repository_id": 1204525648,
+          "head_repository_id": 1204525648,
+          "head_branch": "main",
+          "head_sha": "f489f122208280f4264f92abf024a74247be6a44"
+        }
+      },
+      {
+        "id": 11659989401,
+        "name": "android",
+        "size_in_bytes": 80706753,
+        "digest": "sha256:49da602209664140528b217fa6f1d2af65ff7955e822ec4acbb208bb7f3e478b",
+        "expired": false,
+        "expires_at": "2026-10-15T04:56:59Z",
+        "workflow_run": {
+          "id": 38025500431,
+          "repository_id": 1204525648,
+          "head_repository_id": 1204525648,
+          "head_branch": "main",
+          "head_sha": "f489f122208280f4264f92abf024a74247be6a44"
+        }
+      }
+    ],
+    "gate_findings": [
+      "Windows unit-test gate failed and separate diagnostic results were uploaded; later Windows release gates skipped.",
+      "Linux native job still in progress at checkpoint; no terminal green conclusion claimed.",
+      "Push CI does not supply signed-candidate acceptance."
+    ]
+  },
+  "reported_metadata_limits": [
+    "Artifact digests describe GitHub-reported ZIP archives, not inner APK or installer hashes.",
+    "No artifact archive was downloaded or byte/member/signature verified by this review.",
+    "android artifacts are debug build outputs; they are not owner-signed installable RC acceptance or native device proof.",
+    "windows-unit-tests is diagnostic evidence, not a Windows installer."
+  ],
+  "inner_apk_sha256": null,
+  "remote_main_observed": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "current_main_acceptance": "Not reviewed: ongoing UI corrections must freeze before final source review.",
+  "latest_release_observed": {
+    "id": 408448633,
+    "tag": "v2026.10.3"
+  },
+  "correction_attribution": "Parent reports diagnostic JSON identified poisoned handle close test 384, a separately architecture/security-reviewed owner liveness fix, and pending UX native regression corrections. This receipt does not independently attest those mutable changes.",
+  "prior_reviews_preserved": [
+    "source-preflight-independent-review.json",
+    "windows-failure-independent-review.json",
+    "windows-diagnostics-workflow-independent-review.json"
+  ],
+  "remaining_gates": [
+    "Final corrected pushed main source/version/history preflight.",
+    "Successful full signed candidate matrix and new exact release artifact provenance/byte gates.",
+    "Independent final actual-range notes/media review.",
+    "Parent exact Android/Windows native acceptance and applicable fresh quota clearance.",
+    "Normal trusted exact-candidate no-rebuild prerelease publisher gates before creation."
+  ],
+  "evidence": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/failed-runs-fresh-identity-api.json",
+      "sha256": "449e753d4489774f6683461cb94a5a32f7c44e211c4ff1fdda3c24361f918414"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/failed-runs-jobs-artifacts-api.json",
+      "sha256": "1af42a5b272cc272a799f48ce187736ba65fe426979ca11d7bdfbea7d1098788"
+    }
+  ],
+  "mutations": "Only additive private review evidence; no repository/source edits, builds, downloads, dispatch or publication."
+}

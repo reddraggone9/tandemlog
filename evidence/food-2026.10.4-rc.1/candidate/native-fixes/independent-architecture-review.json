@@ -1,0 +1,171 @@
+{
+  "schema": 1,
+  "review": "Independent bounded ordinary action-error notice, focus/scroll access and lazy disclosure fixture closure",
+  "reviewedAtUtc": "2026-10-10T05:27:50.412504+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "gitHead": "a1cee64a5f9ddbc499369217a14bb8db032a28d8",
+  "workingTreeUncommitted": true,
+  "verdict": "ACCEPT_SCOPED_ARCHITECTURE_AND_LINUX_NATIVE_EVIDENCE; no architecture must-fix",
+  "mustFix": [],
+  "extends": {
+    "path": "/tmp/food-import-architecture-review/poison-close/architecture-rollback-liveness-review.json",
+    "bytes": 5383,
+    "sha256": "afb87feb389ab92ac23b2465fc50bd54f1b8edfb7cfca0de3218e0916ad9373e",
+    "preserved": true
+  },
+  "sourceBindings": {
+    "lib/main.dart": {
+      "bytes": 203223,
+      "sha256": "7307bde352f4733acb04655b3baa809ccf8cf9c964a2d2e01ea8b61fd480bf1f"
+    },
+    "integration_test/completion_actions_test.dart": {
+      "bytes": 12124,
+      "sha256": "4b68b48d9e44fb73afeff62dec253c7b049ec61cf206a808c91f5348d57c9751"
+    },
+    "integration_test/checklist_disclosure_layout_test.dart": {
+      "bytes": 12531,
+      "sha256": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12688,
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 170335,
+      "sha256": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da"
+    },
+    "test/food_store_test.dart": {
+      "bytes": 14695,
+      "sha256": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2"
+    }
+  },
+  "productionReview": [
+    "Ordinary action error text uses one independent primary:false SingleChildScrollView bounded to120px. The original entire Text(error) is retained without truncation. Original banner condition, diagnostic ownership and Retry/startup callbacks stay unchanged; buttons remain outside the text viewport.",
+    "Primary:false isolates the notice from the mobile page primary scroll controller. Scoped standard ScrollIntent Up/Down bindings apply only to focused error text, leaving page keyboard bindings and editable fields outside the subtree.",
+    "One State-owned body FocusScopeNode is passed to the existing protected body scope and disposed with State. Edge policy yields to parent only while ordinary sibling notice exists, otherwise closedLoop. Existing canRequestFocus/descendantsAreFocusable shared-stop/setup guards remain exact.",
+    "No command/recovery admission, private draft/receipt lifecycle, canonical record format/meaning, identity, schema or dependency changes in main.dart delta. Previously accepted SQL-owner liveness patch remains36c3b6; FoodStore/import remains beb13b.",
+    "Disclosure fixture scrolls an unmounted lazy target into render range before ensureVisible, then requires exactly one mounted/hit-testable target. All original8 geometry pairs, bottom spacing/ink/touch/semantics, Space/Enter, edge taps and expand/collapse assertions remain.",
+    "Recurrence fixture holds only separate bounded Food manifest read to expose task action error before shared recovery. Default Flutter error handler remains unchanged. It traverses real Tab without requestFocus shortcut, resets offset only for explicit ArrowDown control, verifies movement and primary focus, reaches exact end via bounded PageDown, then verifies ArrowUp movement/ShiftTab exit.",
+    "Manifest restoration, exact canonical byte equality after Retry, historical completion/Reopen, successor-preserving Undo and final task/text checks remain. Held read released in finally avoids cleanup deadlock."
+  ],
+  "runtimeEvidence": {
+    "completion-scroll-accepted": {
+      "passed": 1,
+      "failed": 0,
+      "exitCode": 0,
+      "executedByReviewer": false,
+      "observedByReviewer": "Source/terminal log and actual capture inspection",
+      "files": {
+        "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/native.log": {
+          "bytes": 5442,
+          "sha256": "1c6e24b9358bb2d70c82062dea24d0f17f004c85416c33d06265de3dd020c8d8"
+        },
+        "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/process-exit.txt": {
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/source-before.sha256": {
+          "bytes": 298,
+          "sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462"
+        },
+        "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/source-after.sha256": {
+          "bytes": 298,
+          "sha256": "bf9d41be177f7d4bb32f9091bd23c1ab4004848172131aefa17457dc7def1462"
+        }
+      }
+    },
+    "disclosure-onboarding-final": {
+      "passed": 2,
+      "failed": 0,
+      "exitCode": 0,
+      "executedByReviewer": false,
+      "observedByReviewer": "Source/terminal log and actual capture inspection",
+      "files": {
+        "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final/native.log": {
+          "bytes": 8500,
+          "sha256": "736fc65282d8c5a9fdcaf4c3969f5572597e48ec456d56fb601a6da6f45b6324"
+        },
+        "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final/process-exit.txt": {
+          "bytes": 2,
+          "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+        },
+        "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final/source-before.sha256": {
+          "bytes": 289,
+          "sha256": "ba42ff0f5f027158bbf2271a3677a63bdcd58f487df73fe46ce67eb1dff4120c"
+        },
+        "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final/source-after.sha256": {
+          "bytes": 289,
+          "sha256": "ba42ff0f5f027158bbf2271a3677a63bdcd58f487df73fe46ce67eb1dff4120c"
+        }
+      }
+    }
+  },
+  "currentFixtureQualification": {
+    "nativeExecutedSha256": "a9748996c1d572fc9b010920ed80e78e9791a1b75895d8408ac898bc5420edf3",
+    "currentSha256": "4b68b48d9e44fb73afeff62dec253c7b049ec61cf206a808c91f5348d57c9751",
+    "exactDelta": "One unused import 'dart:typed_data'; line removed; services already exports Uint8List. Whole byte equality after this deletion verified. No activation/focus/offset/capture/assertion changes.",
+    "snapshot": "/tmp/food-ux-review/native-regressions/final-closure/completion_actions_test.dart.txt",
+    "rerunRequired": false
+  },
+  "actualPixelsViewed": {
+    "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/completion-failed-reopen.png": {
+      "bytes": 37019,
+      "sha256": "2dc21dc377a65c2ba0fbd9d30f420e211b7f524f6cd9eb4b360e08d7489c9f57"
+    },
+    "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/completion-error-scrolled.png": {
+      "bytes": 36519,
+      "sha256": "6f1b0e8777d114c481fe0e659358edcb88c0c4a6607e1287bd4a21ac0254ddcc"
+    },
+    "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/completion-error-end.png": {
+      "bytes": 36227,
+      "sha256": "f34dbfd4d5f74fb28cbcc4d5198c05f04b41327e76e651c068d0906bccfe16f5"
+    },
+    "/tmp/food-ux-review/native-regressions/completion-scroll-accepted/completion-final.png": {
+      "bytes": 58484,
+      "sha256": "4ee61f084b0cdf0133cff1725f324313519bec31caf1cf8b0d0ecf616486d6c3"
+    },
+    "/tmp/food-ux-review/native-regressions/disclosure-onboarding-final/disclosure-390-2-false.png": {
+      "bytes": 56843,
+      "sha256": "f2570695fd1e63bb3d1f8f9b906c55a293d9abb873092caba4bf94b97c3482c1"
+    }
+  },
+  "visualFindings": [
+    "Actual accepted Linux GTK dark390x800/200% captures show start, middle and end of complete diagnostic; Retry stays visible and task rows remain below. No visible viewport overflow.",
+    "Final recurrence capture shows original task and independently edited successor after Undo, matching preserved assertions. Synthetic native debug evidence, not signed package or real-user data evidence.",
+    "Actual final disclosure390px/200% capture retains wrapped titles, separate count/arrow, row controls and next group. Final log records all8 comparison pairs with6px ordinary/disclosure bottom clearance."
+  ],
+  "testEnvironment": {
+    "platform": "Actual Linux GTK native debug/Xvfb; synthetic fixtures",
+    "fonts": "Process-only FONTCONFIG_FILE uses existing DejaVu Sans to reproduce hosted fallback geometry; no system install/production dependency change",
+    "helpers": {
+      "/tmp/food-ux-review/native-regressions/run-native-font-repro.sh": {
+        "bytes": 1047,
+        "sha256": "a6c780aa3c824d4f39cf43f17d0abc79f9fc6bff68c3c0aeaafc436663160b47"
+      },
+      "/tmp/food-ux-review/native-regressions/ci-fontconfig.conf": {
+        "bytes": 494,
+        "sha256": "bf7b597c7889c8a906df42e408434c89412907a6d2a1ccabc7ac06be7a0b16d6"
+      }
+    },
+    "noReviewerNativeBuild": true
+  },
+  "qualifiedEarlierEvidence": [
+    "completion-provider-red log reproduces26px overflow. Black failed-reopen capture is excluded from visual Before claims.",
+    "First completion-provider-final green is workflow-only: Tab auto-reveal made offset positive before ArrowDown, which changed focus. Not keyboard-scroll acceptance.",
+    "completion-scroll-final exit127 from changing temporary runner while old Bash process read it is invalid terminal evidence; captures diagnostic only. Unchanged final source has separate valid completion-scroll-accepted exit0."
+  ],
+  "authorReceipt": {
+    "path": "/tmp/food-ux-review/native-regressions/final-closure/review-receipt.json",
+    "bytes": 16782,
+    "sha256": "1f72228957f91e926d80c17684942cf03bf64e6790669087e52deafb7a97cac6"
+  },
+  "remainingGates": [
+    "Final full hosted candidate matrix and replacement Windows gate parent-owned; no signed artifacts/publication acceptance inferred. Parent reports local unit822pass separately.",
+    "Exact Android/Windows package/device native acceptance remains separate; no broad spoken-AT claim.",
+    "120px bounds ordinary diagnostic text, not universal tiny-height/keyboard redesign or substitute for shared safety recovery."
+  ]
+}

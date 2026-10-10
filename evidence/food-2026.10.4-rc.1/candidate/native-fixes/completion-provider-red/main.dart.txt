@@ -183,7 +183,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<bool>? checklistCloseRequest;
   final search = TextEditingController();
   final searchFocus = FocusNode();
-  final bodyFocusScope = FocusScopeNode(debugLabel: 'Task and Food body');
   bool searchOpen = false;
   String get searchQuery => search.text.trim();
   bool get searching => searchQuery.isNotEmpty;
@@ -3714,7 +3713,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     search.dispose();
     searchFocus.dispose();
-    bodyFocusScope.dispose();
     capture.dispose();
     captureFocus.dispose();
     firstName.dispose();
@@ -3762,12 +3760,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         !foodVisible &&
         user == null &&
         (users.isEmpty || pendingUserId != null);
-    // An ordinary diagnostic is a sibling of the protected body. Let its
-    // controls participate in keyboard traversal while that notice is visible.
-    bodyFocusScope.traversalEdgeBehavior =
-        error != null && (sharedSafetyError == null || keepSetupInputs)
-        ? TraversalEdgeBehavior.parentScope
-        : TraversalEdgeBehavior.closedLoop;
     return PopScope(
       canPop:
           editingTask == null && editingBulk == null && selectedTasks.isEmpty,
@@ -3932,37 +3924,16 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   const Icon(Icons.error_outline),
                                   const SizedBox(width: 12),
                                   Expanded(
-                                    child: ConstrainedBox(
-                                      constraints: const BoxConstraints(
-                                        maxHeight: 120,
-                                      ),
-                                      child: SingleChildScrollView(
-                                        primary: false,
-                                        key: const ValueKey(
-                                          'action-error-scroll',
-                                        ),
-                                        child: Shortcuts(
-                                          shortcuts: const {
-                                            SingleActivator(
-                                              LogicalKeyboardKey.arrowDown,
-                                            ): ScrollIntent(
-                                              direction: AxisDirection.down,
+                                    child: keepSetupInputs
+                                        ? ConstrainedBox(
+                                            constraints: const BoxConstraints(
+                                              maxHeight: 120,
                                             ),
-                                            SingleActivator(
-                                              LogicalKeyboardKey.arrowUp,
-                                            ): ScrollIntent(
-                                              direction: AxisDirection.up,
+                                            child: SingleChildScrollView(
+                                              child: Text(error!),
                                             ),
-                                          },
-                                          child: Focus(
-                                            key: const ValueKey(
-                                              'action-error-details',
-                                            ),
-                                            child: Text(error!),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                          )
+                                        : Text(error!),
                                   ),
                                   if (errorFromRefresh && store != null)
                                     TextButton(
@@ -4030,7 +4001,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                       sharedSafetyError != null &&
                                       !keepSetupInputs,
                                   child: FocusScope(
-                                    node: bodyFocusScope,
                                     canRequestFocus:
                                         sharedSafetyError == null ||
                                         keepSetupInputs,

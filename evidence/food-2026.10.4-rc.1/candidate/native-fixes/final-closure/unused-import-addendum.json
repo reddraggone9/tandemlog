@@ -1,0 +1,15 @@
+{
+  "original_receipt": {
+    "path": "/tmp/food-ux-review/native-regressions/final-closure/review-receipt.json",
+    "sha256": "1f72228957f91e926d80c17684942cf03bf64e6790669087e52deafb7a97cac6"
+  },
+  "delta": "Remove exactly one unnecessary dart:typed_data import from completion_actions_test.dart because flutter/services.dart exports Uint8List. No production, focus, key, assertions, fixture state, capture or runner changes.",
+  "native_executed_fixture_sha256": "a9748996c1d572fc9b010920ed80e78e9791a1b75895d8408ac898bc5420edf3",
+  "final_fixture_sha256": "4b68b48d9e44fb73afeff62dec253c7b049ec61cf206a808c91f5348d57c9751",
+  "production_main_sha256": "7307bde352f4733acb04655b3baa809ccf8cf9c964a2d2e01ea8b61fd480bf1f",
+  "disclosure_fixture_sha256": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292",
+  "final_patch_sha256": "e3f136e806f6c5ba823aa6131882dbf12d15d5c1dc891144bcc4202fefcd10c9",
+  "byte_delta_verified_exactly": true,
+  "qualification": "Accepted native1/1 execution and four reviewed completion frames bound a974 fixture before unused-import removal. Final4b68 fixture has only this import delta; parent explicitly requests no repeated native build. Original frozen receipt and all raw logs remain unchanged. Parent owns final analyzer/fullunit and independent review gates.",
+  "no_commit_or_push_by_child": true
+}

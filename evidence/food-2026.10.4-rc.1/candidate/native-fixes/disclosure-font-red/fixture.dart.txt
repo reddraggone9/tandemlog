@@ -100,39 +100,12 @@ void registerChecklistDisclosureLayoutTests() {
       }
       await tester.pumpAndSettle();
       Future<void> reveal(Finder finder) async {
-        // Expanded rows and larger native fallback fonts can move a target
-        // beyond the sliver's lazy render range. Locate it by scrolling before
-        // asking ensureVisible to use its mounted element.
-        if (finder.evaluate().isEmpty) {
-          final scrollable = find
-              .descendant(
-                of: find.byType(CustomScrollView).last,
-                matching: find.byType(Scrollable),
-              )
-              .first;
-          final position = tester.state<ScrollableState>(scrollable).position;
-          position.jumpTo(position.minScrollExtent);
-          await tester.pumpAndSettle();
-          await tester.scrollUntilVisible(
-            finder,
-            240,
-            scrollable: scrollable,
-            maxScrolls: 30,
-          );
-          await tester.pumpAndSettle();
-        }
-        expect(
-          finder,
-          findsOneWidget,
-          reason: 'Task target found by scrolling',
-        );
         await Scrollable.ensureVisible(
           finder.evaluate().single,
           alignment: 0.5,
           duration: Duration.zero,
         );
         await tester.pumpAndSettle();
-        expect(finder.hitTestable(), findsOneWidget);
       }
 
       double lastTextBottom(Finder body) => find
