@@ -1,0 +1,108 @@
+{
+  "reviewer": "correctness_review",
+  "reviewedAtUtc": "2026-10-10T01:38:10.558866+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "scope": "Bounded final first-slice UI/test/fixture/docs delta; synthetic process-local preview only",
+  "verdict": "ACCEPT; no must-fix found in final delta",
+  "mustFix": [],
+  "previousAcceptedReceiptPreserved": {
+    "path": "/tmp/food-correctness-review/final-first-slice-review.json",
+    "bytes": 5353,
+    "sha256": "dd691f8bbec0ad12b42e0bba0ec5eb4da997bf1957552f50387a05c87ee79b8b"
+  },
+  "changedPreviouslyReviewedFiles": {
+    "lib/food/inventory.dart": false,
+    "lib/food/food_page.dart": true,
+    "tool/food_preview.dart": false,
+    "test/food_inventory_test.dart": false,
+    "test/food_preview_test.dart": false,
+    "test/food_review_regression_test.dart": true,
+    "test/food_retention_draft_test.dart": true
+  },
+  "reviewedFiles": [
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "bytes": 20701,
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "bytes": 28620,
+      "sha256": "e3a9b6369278ea7368a5ed51a4c1e95ae26e067a660827d450c87e437df80b7f"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "bytes": 5376,
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_inventory_test.dart",
+      "bytes": 13278,
+      "sha256": "76f701fcec099c099d247e0ca9c925f1fff352e097ec7eeb77d3db78b6ca5190"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_preview_test.dart",
+      "bytes": 2798,
+      "sha256": "743c4ff0670ea265e37bad1d8d5bca1cc8af460b8ef18ece0c92b4dbe13bca22"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_review_regression_test.dart",
+      "bytes": 5571,
+      "sha256": "f4b2b72ab19f86dafe5d9a4ed56ee629791dde41380844c861a5100808df6125"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart",
+      "bytes": 1772,
+      "sha256": "ec40024abf60546cab2b4f6aea14ca6016075cb24976cea20eee5f20bb4c2283"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/integration_test/food_preview_workflow_test.dart",
+      "bytes": 6149,
+      "sha256": "26bb0307e017b6560c5534b1c53ddbe733ea2a6fa9900892e0c44275d6250056"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/design/decisions/0014-food-inventory.md",
+      "bytes": 6801,
+      "sha256": "7640b5115ab116de46ae6cab19d205be59eb591460160502fddf16cf6e702717"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/README.md",
+      "bytes": 4614,
+      "sha256": "99c8f18987d7a265d348bd66ea97217a80f2e06dca1abbca67c6eb1514670f53"
+    }
+  ],
+  "verifiedDelta": [
+    "Root Navigator pushes explicitly owned typed DialogRoute and awaits route.completed after result before disposing every editor controller; arbitrary250ms lifetime delay removed.",
+    "One-shot/current-route decisions, captured host callbacks, composition checks and validated retention-query consumption retained.",
+    "Two hint-based test selectors updated consistently to shortened Retention reason hint; behavior assertions unchanged.",
+    "Helper text wraps to two lines; count copy singular/plural and collapsed retained-section grouping inspected without changing physical ID selection or search bypass.",
+    "Domain inventory, synthetic host, domain tests and preview tests byte-identical to previously accepted source.",
+    "New native integration fixture addresses exactly synthetic partial selection/removal/Restore, retained collapse/expand and Inbox/editor return; only Linux optional capture subprocesses, configured synthetic preview with no profile or canonical folder.",
+    "Pointer helper moves actual X pointer but invokes WidgetTester.tap; fixture comment and README explicitly qualify scripted inputs, phone-width Linux is not Android and no production artifact acceptance.",
+    "ADR and evidence README links exist and explicitly keep codec/authority/pending/crash/import/navigation/WindowsAndroid gates open."
+  ],
+  "independentTargetedTests": [
+    {
+      "log": {
+        "path": "/tmp/food-correctness-review/final-delta-green.log",
+        "bytes": 1087,
+        "sha256": "f2fa6fc12f50cb5ac73bbcc71bddf032c98caab22696029a84d90eb04a99c1ac"
+      },
+      "result": "7passed0failed: review regressions and consumed-retention draft regression"
+    },
+    {
+      "log": {
+        "path": "/tmp/food-correctness-review/final-delta-preview-green.log",
+        "bytes": 403,
+        "sha256": "5327a1f4c2267fe48e483e92c61f3a591aa4d5f4f0bf3256c2932538d56799b9"
+      },
+      "result": "4passed0failed: retained collapsed/search, narrow/wide partial stock, physical Remove/Undo and partial inspect/search"
+    }
+  ],
+  "limits": [
+    "Owner27-focused and final source-bound nativev5 run are separate author evidence; not repeated or independently claimed here.",
+    "Source review of capture fixture does not independently verify final PNG/video/log manifest or actual native execution.",
+    "No persistent food format, authority/schema integration, durable receipt, private import, production candidate, native AndroidWindows or publication acceptance."
+  ],
+  "reviewerActions": "Read-only implementation/docs/fixture review;11bounded Flutter widget cases with logs under/tmp; separate scratch closure receipt only, prior receipt unchanged; no implementation edits/native builds/full matrices/push."
+}

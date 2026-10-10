@@ -1,0 +1,173 @@
+{
+  "reviewer": "independent /root/tag_autocomplete_trials",
+  "reviewed_at_utc": "2026-10-10T01:38:54.506061+00:00",
+  "decision": "Both initial minor visual findings closed on finalv5 actual pixels; early first-slice UX accepted, layout remains provisional",
+  "original_review": {
+    "path": "/tmp/food-ux-review/receipt.json",
+    "sha256": "b19853262673f94446535f8af66087a200395ee1d4ce75d600386b4e74738d54",
+    "preserved_unmodified": true
+  },
+  "closed_findings": [
+    {
+      "id": "UX1",
+      "closure": "narrow-editor helper text fully wraps, Retention reason fully visible; Add/Cancel remain visible at390x850 normal text"
+    },
+    {
+      "id": "UX2",
+      "closure": "Deleted and Retained correctly display1 container"
+    }
+  ],
+  "reviewed_source_snapshots": [
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "snapshot": "sources/lib/food/food_page.dart",
+      "sha256": "e3a9b6369278ea7368a5ed51a4c1e95ae26e067a660827d450c87e437df80b7f"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "snapshot": "sources/lib/food/inventory.dart",
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "snapshot": "sources/tool/food_preview.dart",
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_preview_workflow_test.dart",
+      "snapshot": "sources/integration_test/food_preview_workflow_test.dart",
+      "sha256": "26bb0307e017b6560c5534b1c53ddbe733ea2a6fa9900892e0c44275d6250056"
+    }
+  ],
+  "accepted_images": [
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-stock.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-stock.png",
+      "snapshot": "images/narrow-stock.png",
+      "sha256": "b7f9d1028159e7a27365dc890565c92c5fce302d5d1593682ba9b523dfc5e6a9",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-inspect.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-inspect.png",
+      "snapshot": "images/narrow-inspect.png",
+      "sha256": "411aafd17e3a6216723b8d23c9d71a95910e0bbc762c80c49a40c812fc6dd28b",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-selected-partial.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-selected-partial.png",
+      "snapshot": "images/narrow-selected-partial.png",
+      "sha256": "50209dc43a6457c4760754a154ac2785fb28ca5619cfc38f0f6bfcad7b2560f7",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-deleted.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-deleted.png",
+      "snapshot": "images/narrow-deleted.png",
+      "sha256": "d858d17a1b6e8bd8bee8c7b26bf50d0dcdcbee50c26ee7ba3d36274fde1e3b30",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-retained-collapsed.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-retained-collapsed.png",
+      "snapshot": "images/narrow-retained-collapsed.png",
+      "sha256": "6932c2d79630bcb50ff20c7aa72c45050fd4fa990247d188844412595d9709a1",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-retained-expanded.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-retained-expanded.png",
+      "snapshot": "images/narrow-retained-expanded.png",
+      "sha256": "2b2341d1edb30c20e2b886e84832fa0f5082f0b3ee18e74390b489bffcd19e0e",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-inbox.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-inbox.png",
+      "snapshot": "images/narrow-inbox.png",
+      "sha256": "6eda7b69f25ea5cf7bbd213a3f930e3af11fa5bba859fbd6505040e26d7af469",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/narrow-editor.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/narrow-editor.png",
+      "snapshot": "images/narrow-editor.png",
+      "sha256": "947aaff3b05a3c53492e56fd9a50bde211d507dba66aef045ab74e543a41dd9e",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/wide-stock-after-restore.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/wide-stock-after-restore.png",
+      "snapshot": "images/wide-stock-after-restore.png",
+      "sha256": "dc3940a349fcfd469227b6bf03cb7cba59657d4ad6daa705444cce5231c57666",
+      "inspected_actual_pixels": true
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v5/wide-stock.png",
+      "repository_evidence": "/tmp/tandemlog-food-implementation/evidence/food-inventory-first-slice/wide-stock.png",
+      "snapshot": "images/wide-stock.png",
+      "sha256": "9c97807f063190072a883f363701e9f37b7d8e26cc480b9083bdec47f2daec8f",
+      "inspected_actual_pixels": true
+    }
+  ],
+  "native_guard": {
+    "source_file": "native-source-inputs.json",
+    "sha256": "bca582adee4a5b7ee48959476e7b92ffc8374901ee4a7895712df64b0835a21d",
+    "all4source_hashes_match_current_reviewed_files": true,
+    "author_run_exit_code": 0,
+    "reviewer_reran": false
+  },
+  "manifest_check": {
+    "file": "author-manifest-at-closure.json",
+    "sha256": "978cbe0b67a2d689198e94ef91e4909843601bea3cc75593fc118c9d2add8602",
+    "matched_source_and_evidence_entries": 35,
+    "all_matched": true
+  },
+  "demo": {
+    "snapshot": "native-linux-scripted-preview.mp4",
+    "sha256": "e1116616646f0cae0de232c3b724cd890cad6d8044370af43b4383534e195605",
+    "repository_copy_matches_finalv5": true,
+    "duration_seconds": 14.133333,
+    "codec": "h264",
+    "dimensions": [
+      1200,
+      850
+    ],
+    "frame_rate": "15/1",
+    "input_claim": "Scripted Flutter taps; actual visible X cursor positioned by xdotool. Not physical touch or Android evidence.",
+    "review": "Four representative extracted frames inspected; cursor visible across partial selection, Retained, editor and wide finalStock. Not a full real-user interaction audit.",
+    "sample_recipe": "ffmpeg fps=1/4, first4frames, unaltered video extraction",
+    "sample_frames": [
+      {
+        "snapshot": "demo-frames/frame-01.png",
+        "sha256": "94912f1a73c7e3d2cafa6bbf4c9b72073a1b27ec62cb46da8b4e13f564f8b38e"
+      },
+      {
+        "snapshot": "demo-frames/frame-02.png",
+        "sha256": "b018e146b3811cd0924609802ca851acef5b31d338d6ce8a12f3a0f2b1a6c3d7"
+      },
+      {
+        "snapshot": "demo-frames/frame-03.png",
+        "sha256": "c6a7b5cd9aee6937c77973c1dec063dc1c0ed376adeae85b6fad311a4cad8139"
+      },
+      {
+        "snapshot": "demo-frames/frame-04.png",
+        "sha256": "fecf1ab3b30bf748909b01478ee83633bbc7c7871b9a84abb33b3ce7d43178e3"
+      }
+    ],
+    "limitations": "1200wide recording contains390wide app plusblackdesktop duringnarrow stages; this is an honest fixeddesktop capture, not phonevideo."
+  },
+  "new_visual_defects": [],
+  "provisional_preferences": [
+    "Wide density and expiry scan emphasis remain for Lee feedback/larger-inventory trials.",
+    "Partial-summary wording remains provisional."
+  ],
+  "remaining_gates": [
+    "Both themes,200% text/IME and live keyboard/assistive audit",
+    "Production durability, canonical compatibility and workspace/draft boundaries",
+    "Actual Windows/Android workflows, visible-input demos and signed exact-artifact acceptance"
+  ],
+  "no_implementation_edits": true,
+  "no_builds_or_tests_run_by_reviewer": true
+}

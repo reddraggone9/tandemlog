@@ -1,0 +1,204 @@
+{
+  "reviewer": "independent /root/tag_autocomplete_trials",
+  "reviewed_at_utc": "2026-10-10T01:34:02.431445+00:00",
+  "decision": "Accept early working synthetic first-slice preview with minor reversible copy/layout defects open; layout not frozen",
+  "repository": "/tmp/tandemlog-food-implementation",
+  "repository_base_head": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "source_status": "Food files uncommitted at review. Snapshots and hashes bind reviewed source; no claim that repository base HEAD contains this food slice. No independent compiled-binary/source identity audit performed.",
+  "platform": "Actual Linux GTK debug synthetic process-local preview, dark, normal text",
+  "accepted_visuals": [
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-stock.png",
+      "snapshot": "images/native-v2/narrow-stock.png",
+      "sha256": "b7f9d1028159e7a27365dc890565c92c5fce302d5d1593682ba9b523dfc5e6a9",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-inspect.png",
+      "snapshot": "images/native-v2/narrow-inspect.png",
+      "sha256": "a859e423acca4289f07fbb6ae76277b22559deeade8e3c21a22a7cbedc2992cd",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-selected-partial.png",
+      "snapshot": "images/native-v2/narrow-selected-partial.png",
+      "sha256": "c878e91de3061f5e0a7e4fa1dfd2c9efc9d9aed5bf3befb8e160398af35d5f9d",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-deleted.png",
+      "snapshot": "images/native-v2/narrow-deleted.png",
+      "sha256": "7519a8cfcd319ce983516ab1b2336b01e2e01d5cf9b8624b02092a417b998348",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-retained-collapsed.png",
+      "snapshot": "images/native-v2/narrow-retained-collapsed.png",
+      "sha256": "a74c12dd37c9e95ce59646c92967db2475df200ec08f791fccab3d910f03baf1",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-retained-expanded.png",
+      "snapshot": "images/native-v2/narrow-retained-expanded.png",
+      "sha256": "6801eac8b98073f93278b6c70570888436df310735832833e9d613e4657a844f",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-inbox.png",
+      "snapshot": "images/native-v2/narrow-inbox.png",
+      "sha256": "6eda7b69f25ea5cf7bbd213a3f930e3af11fa5bba859fbd6505040e26d7af469",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/narrow-editor.png",
+      "snapshot": "images/native-v2/narrow-editor.png",
+      "sha256": "aa1f88a090a6ef66eb81f069a179a4f39b7f64cdc81d02399abcdc021dee6ca1",
+      "viewport": [
+        390,
+        850
+      ]
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v3/wide-stock-after-restore.png",
+      "snapshot": "images/native-v3/wide-stock-after-restore.png",
+      "sha256": "98b53048bf32a33702fba3c72a24c49a412907f51afa035623bcf8047c59145b",
+      "viewport": [
+        1200,
+        850
+      ]
+    }
+  ],
+  "rejected_visuals": [
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/wide-stock.png",
+      "snapshot": "rejected/wide-stock.png",
+      "sha256": "b8046cfb22ecbdcad16baa889064ce266b0a269f3bb43ae8d20cd6999efa5d81",
+      "reason": "Actual pixels show integration Test starting splash, not food application UI. Never count as app acceptance."
+    }
+  ],
+  "reviewed_sources": [
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "snapshot": "sources/lib/food/food_page.dart",
+      "sha256": "e3a9b6369278ea7368a5ed51a4c1e95ae26e067a660827d450c87e437df80b7f"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "snapshot": "sources/lib/food/inventory.dart",
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/lib/presentation/tag_input.dart",
+      "snapshot": "sources/lib/presentation/tag_input.dart",
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "snapshot": "sources/tool/food_preview.dart",
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/integration_test/food_preview_workflow_test.dart",
+      "snapshot": "sources/integration_test/food_preview_workflow_test.dart",
+      "sha256": "b9dbf607007442ec158160019b4a365933a2d2f15d5c35dec88f3be56782154a"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/test/food_preview_test.dart",
+      "snapshot": "sources/test/food_preview_test.dart",
+      "sha256": "743c4ff0670ea265e37bad1d8d5bca1cc8af460b8ef18ece0c92b4dbe13bca22"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/test/food_review_regression_test.dart",
+      "snapshot": "sources/test/food_review_regression_test.dart",
+      "sha256": "f4b2b72ab19f86dafe5d9a4ed56ee629791dde41380844c861a5100808df6125"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart",
+      "snapshot": "sources/test/food_retention_draft_test.dart",
+      "sha256": "ec40024abf60546cab2b4f6aea14ca6016075cb24976cea20eee5f20bb4c2283"
+    },
+    {
+      "original": "/tmp/tandemlog-food-implementation/design/decisions/0014-food-inventory.md",
+      "snapshot": "sources/design/decisions/0014-food-inventory.md",
+      "sha256": "7640b5115ab116de46ae6cab19d205be59eb591460160502fddf16cf6e702717"
+    }
+  ],
+  "supporting_logs": [
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v2/integration.log",
+      "snapshot": "logs/native-v2-integration.log",
+      "sha256": "4a46e9a5840d7d17965ff2ead863f297952129132087187691b3e299da27b4b6",
+      "reviewer_reran": false
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/native-v3/integration.log",
+      "snapshot": "logs/native-v3-integration.log",
+      "sha256": "b229cbea34ecf4842f592902aaf2dab67af231882f54a6479a606a18c2c3df60",
+      "reviewer_reran": false
+    },
+    {
+      "original": "/tmp/tandemlog-food-preview-evidence/focused-tests-final.log",
+      "snapshot": "logs/author-focused-tests.log",
+      "sha256": "983eeac10ab98df27c314fa170387e1813f5fb07a15d9de01cbafd0ca54e1547",
+      "reviewer_reran": false
+    }
+  ],
+  "observations": {
+    "major_defects": [],
+    "minor_reversible_defects": [
+      {
+        "id": "UX1",
+        "image": "images/native-v2/narrow-editor.png",
+        "finding": "Expiration/count helper copy and retention hint truncate at390px normal text. The Inbox destination and count explanation are cut short.",
+        "suggestion": "Allow helper copy two lines and use a short visible retention label/hint; recapture narrow editor."
+      },
+      {
+        "id": "UX2",
+        "images": [
+          "images/native-v2/narrow-deleted.png",
+          "images/native-v2/narrow-retained-collapsed.png"
+        ],
+        "finding": "Singular count appears as 1 containers.",
+        "suggestion": "Use 1 container and plural containers otherwise."
+      }
+    ],
+    "earlier_findings_resolved_in_source": [
+      "Pending retention query included in direct Add/Save and composition blocked, validation failure retains draft.",
+      "Container checkbox semantic label includes food name, ordinal and contents."
+    ],
+    "provisional_preferences": [
+      "Trial more compact wide cards with20+groups before density decision.",
+      "Consider expiry scan emphasis or a short Expires label; no overdue/current-day sample inspected.",
+      "Consider short partial-stock inspection affordance after Lee feedback."
+    ],
+    "remaining_gates": [
+      "Light theme and200% text including IME/dialogs and longer names/reasons.",
+      "Actual keyboard/focus/assistive traversal; source labels reviewed but no live screen-reader run.",
+      "Retained autocomplete suggestions and search across filtered views actual native pixels.",
+      "Production persistence/workspace boundaries, released-v3 compatibility, exact artifact and Windows/Android workflows; process-local prototype establishes none of these."
+    ]
+  },
+  "no_implementation_edits": true,
+  "no_builds_or_tests_run_by_reviewer": true
+}

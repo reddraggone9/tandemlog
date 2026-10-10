@@ -1,0 +1,104 @@
+{
+  "reviewer": "correctness_review",
+  "reviewedAtUtc": "2026-10-10T01:28:19.115700+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "baseline": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "state": "initial food slice uncommitted; freeze must preserve reviewed hashes",
+  "scope": "Initial food domain and synthetic process-local UX only",
+  "verdict": "ACCEPT; no remaining must-fix within reviewed initial-slice scope",
+  "mustFix": [],
+  "reviewedFiles": [
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/food/inventory.dart",
+      "bytes": 20701,
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/lib/food/food_page.dart",
+      "bytes": 28348,
+      "sha256": "f624c512c05cac794b1683907f2b845b83d209ab093c277808b68f444d80b391"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/tool/food_preview.dart",
+      "bytes": 5376,
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_inventory_test.dart",
+      "bytes": 13278,
+      "sha256": "76f701fcec099c099d247e0ca9c925f1fff352e097ec7eeb77d3db78b6ca5190"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_preview_test.dart",
+      "bytes": 2798,
+      "sha256": "743c4ff0670ea265e37bad1d8d5bca1cc8af460b8ef18ece0c92b4dbe13bca22"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_review_regression_test.dart",
+      "bytes": 5681,
+      "sha256": "9960134fb5de222e83bcb71a48780325f543a0cc9f2ced7c52144a11186eeac3"
+    },
+    {
+      "path": "/tmp/tandemlog-food-implementation/test/food_retention_draft_test.dart",
+      "bytes": 1806,
+      "sha256": "8fc27722799a1d3b31c0c0cef4d95ba5d5dd8ca2f9c3b7ba77b8c4856c5ed158"
+    }
+  ],
+  "unchangedProductionInputs": true,
+  "independentTestEvidence": [
+    {
+      "log": {
+        "path": "/tmp/food-correctness-review/final-first-slice-green.log",
+        "bytes": 3017,
+        "sha256": "a5260c891a6ec3a3259df106da090759b1ea504142e4a13f60e1981d0754e82c"
+      },
+      "result": "21passed0failed: domain inventory plus six review regressions and consumed-retention draft regression"
+    },
+    {
+      "test": {
+        "path": "/tmp/food-correctness-review/deleted_order_test.dart",
+        "bytes": 1751,
+        "sha256": "c2aa013c499171ad50a54c135b72bcbd174100ebf827d7875343934dbf7ba099"
+      },
+      "log": {
+        "path": "/tmp/food-correctness-review/deleted-order-green.log",
+        "bytes": 261,
+        "sha256": "320363647d188692ad1d061eeb1d830a2a82bc2c77f194b2f017edb5adcb82df"
+      },
+      "result": "2passed0failed: numeric operation sequence at tied deletion clocks across duplicate/reordered delivery, surviving token ordering after partial/full Restore"
+    }
+  ],
+  "acceptedCorrections": [
+    "101+ captured group targets split into100-target host command batches; Undo retains and restores exactly all removal batches.",
+    "Known reference kind/target/causal order admission runs independently of missing target creation; known mutations must follow seed.",
+    "Direct Save flushes and validates pending retention query, composing Save/Submit rejected, successful custom submission clears consumed query so chip removal remains effective.",
+    "One-shot/current-route guards protect all dialog decisions; callback origin captured before asynchronous dialog waits.",
+    "Indexed histories are populated from globally sorted events and retain per-target replay order without repeated full-history scanning.",
+    "Deleted tie order derives from order plus numeric writer/operation ID comparison of the last surviving deletion token; Restore recomputes it and clears metadata once active.",
+    "Physical count, descriptive field patches, exact fraction alternatives, observed deletion/Restore semantics and captured contents/group targets remain consistent."
+  ],
+  "priorEvidenceRetained": [
+    {
+      "path": "/tmp/food-correctness-review/final-first-slice-review-before-query-clear.json",
+      "bytes": 4271,
+      "sha256": "18bd726c597df9d19d64f1256cea8bdf5f7bdcaaad40630d1184f5520eb21dd4"
+    },
+    {
+      "path": "/tmp/food-correctness-review/retention-chip-red.log",
+      "bytes": 1849,
+      "sha256": "c9e9cd5c533f70db3172503e4882e03bf6145766d4e7c2c9476d28c999bdd77e"
+    },
+    {
+      "path": "/tmp/food-correctness-review/final-six-red.log",
+      "bytes": 7100,
+      "sha256": "d11bb28bad67ffd143b4942e3df19ce143b19d14ffb5f23f6a75049827385ca2"
+    }
+  ],
+  "limits": [
+    "No persistence, new wire-format freeze, authoritative transactional admission, crash recovery, private import or production startup integration acceptance.",
+    "No Android/Windows/native screenshot/AT verification in this reviewer pass. Parent captures and owner24-test run are separate, not repeated or claimed as independent.",
+    "Future production host must bind callbacks to store/session/profile identity and provide atomic bounded logical-command/error handling.",
+    "No live user data or released scalarv3/native/dependency sources altered."
+  ],
+  "reviewerActions": "Source review, targeted Flutter widget/domain tests and scratch receipts under/tmp only; no implementation edits, native builds, full matrices or pushes."
+}

@@ -2,7 +2,7 @@
 
 ## Current source of truth
 
-Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are the current implementation; future modules remain separate.
+Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; the approved food capability is in phased implementation and remains a separate module.
 
 1. [Status, commands and limitations](status.md)
 2. [Product and milestone](product-behavior.md)
@@ -21,6 +21,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Dependency inventory and review](dependencies.md): resolved versions, native/build provenance and bounded update PRs.
 
 ## Current milestone and supporting research
+
+- [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
 
 - [Task parity decisions](decisions/0003-task-parity-and-prerelease-boundary.md): authorized scope, time semantics and prerelease compatibility boundary.
 

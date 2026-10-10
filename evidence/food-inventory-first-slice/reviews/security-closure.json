@@ -1,0 +1,114 @@
+{
+  "schema": 1,
+  "reviewed_at_utc": "2026-10-10T01:38:04.159080+00:00",
+  "reviewer": "security_review",
+  "base_commit": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "original_receipt_sha256": "03f204a466c7ee8a2de28024a2b61b4c2cb98d0dd68574bcf2d014918bfde995",
+  "original_receipt_preserved": true,
+  "verdict": "delta_source_accepted_for_synthetic_preview_only",
+  "files": {
+    "lib/food/inventory.dart": {
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff",
+      "bytes": 20701
+    },
+    "lib/food/food_page.dart": {
+      "sha256": "e3a9b6369278ea7368a5ed51a4c1e95ae26e067a660827d450c87e437df80b7f",
+      "bytes": 28620
+    },
+    "tool/food_preview.dart": {
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814",
+      "bytes": 5376
+    },
+    "test/food_inventory_test.dart": {
+      "sha256": "76f701fcec099c099d247e0ca9c925f1fff352e097ec7eeb77d3db78b6ca5190",
+      "bytes": 13278
+    },
+    "test/food_preview_test.dart": {
+      "sha256": "743c4ff0670ea265e37bad1d8d5bca1cc8af460b8ef18ece0c92b4dbe13bca22",
+      "bytes": 2798
+    },
+    "test/food_review_regression_test.dart": {
+      "sha256": "f4b2b72ab19f86dafe5d9a4ed56ee629791dde41380844c861a5100808df6125",
+      "bytes": 5571
+    },
+    "test/food_retention_draft_test.dart": {
+      "sha256": "ec40024abf60546cab2b4f6aea14ca6016075cb24976cea20eee5f20bb4c2283",
+      "bytes": 1772
+    },
+    "lib/presentation/tag_input.dart": {
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49",
+      "bytes": 23270
+    },
+    "lib/domain/event.dart": {
+      "sha256": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401",
+      "bytes": 27584
+    },
+    "lib/domain/event_chain.dart": {
+      "sha256": "64d8981cece52802434a97a7dda841f34a51386b82eca4e942a4f4f3d810c054",
+      "bytes": 4593
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "sha256": "26bb0307e017b6560c5534b1c53ddbe733ea2a6fa9900892e0c44275d6250056",
+      "bytes": 6149
+    },
+    "evidence/food-inventory-first-slice/README.md": {
+      "sha256": "99c8f18987d7a265d348bd66ea97217a80f2e06dca1abbca67c6eb1514670f53",
+      "bytes": 4614
+    },
+    "evidence/food-inventory-first-slice/focused-tests.log": {
+      "sha256": "a785c0a5b17dc8662752128c27f1f519747ee61ff66a2aac693ea7b1006cbfc5",
+      "bytes": 3962
+    },
+    "evidence/food-inventory-first-slice/native-linux-workflow.log": {
+      "sha256": "e219074f53b61b94ca207d83d5c3047382eda2c43edb24adeb548b56d738f553",
+      "bytes": 3555
+    },
+    "evidence/food-inventory-first-slice/demo-metadata.json": {
+      "sha256": "5407408b18a6fdb61e8835d2ed829a7ce698e01c274fab826b1e52adf4b8f7de",
+      "bytes": 284
+    },
+    "design/decisions/0014-food-inventory.md": {
+      "sha256": "7640b5115ab116de46ae6cab19d205be59eb591460160502fddf16cf6e702717",
+      "bytes": 6801
+    },
+    "evidence/food-inventory-first-slice/manifest.json": {
+      "sha256": "978cbe0b67a2d689198e94ef91e4909843601bea3cc75593fc118c9d2add8602",
+      "bytes": 6202
+    },
+    "evidence/food-inventory-first-slice/native-source-inputs.json": {
+      "sha256": "bca582adee4a5b7ee48959476e7b92ffc8374901ee4a7895712df64b0835a21d",
+      "bytes": 714
+    }
+  },
+  "changed_from_original_bound_files": [
+    "lib/food/food_page.dart",
+    "test/food_review_regression_test.dart",
+    "test/food_retention_draft_test.dart"
+  ],
+  "closed_item": {
+    "location": "lib/food/food_page.dart:510,680,685",
+    "description": "Explicit DialogRoute is pushed through root Navigator, then route.completed is awaited before editor-owned controller disposal. Removes guessed250ms delay. Existing one-shot/current-route result and mounted-before-callback checks remain."
+  },
+  "delta_observations": [
+    "Food inventory and process-local host hashes unchanged from original security receipt. Page changes are route completion, wrapped helpers and short/singular copy; updated focused test finders do not change command policy.",
+    "Integration capture is confined to integration_test source and defaults off. Linux env-opt-in only, external programs receive argument arrays; screenshot names are fixed literals and no shell interpolation is used. Output directory and DISPLAY are trusted operator input; existing dependency/source bytes are not installed or modified.",
+    "FFmpeg records the full selected X display rectangle; xdotool finds a visible window by common app title. These are not isolation guards. Run only on dedicated synthetic Xvfb/display and chosen output directory, as README qualifies; never on a live desktop/profile. Pipeline teardown sends q and awaits recording, but no timeout/reaping fallback exists for a stuck external tool; engineering debt, not application persistence behavior.",
+    "README correctly qualifies Linux GTK debug pixels, narrow Linux versus Android, scripted Flutter taps with actual pointer marker, excluded warmup capture, no compiled production acceptance, private import contract outside Git, and open durability/native/publication gates."
+  ],
+  "evidence_closure_issue": {
+    "severity": "P3 checkpoint documentation/evidence binding",
+    "location": "evidence/food-inventory-first-slice/README.md:46",
+    "description": "README asserts manifest.json binds source/images/demo/logs, but manifest.json is absent at review time. Add and verify final manifest or qualify sentence before evidence-complete checkpoint. Source security acceptance does not depend on existence of that manifest.",
+    "status": "closed during review: manifest added; all35 source/evidence entries independently match actual byte counts and SHA256"
+  },
+  "tests": "No tests/builds executed by this reviewer. Inspected source-bound producer logs ending27 focused passes and1 GTK integration pass. Four native source hashes match reviewed source; all35 final manifest source/evidence entries verify. This is log/provenance review, not independently performed native execution or pixel/video acceptance.",
+  "remaining_production_gates": "Original safe-clock, pending-reference authority, whole-input bounds, actor/module/space/hash binding, exact append reservation/retry and session callback freshness gates remain open. Route-based controller disposal portion is closed; no production durability approval.",
+  "privacy": "No private food data, profile/live database, keys or import accessed. Test evidence uses synthetic preview. Read-only repository inspection; only separate review files written under /tmp/food-security-review.",
+  "manifest_verification": {
+    "entries": 35,
+    "mismatches": 0,
+    "baseline_matches": true,
+    "native_source_input_four_hashes_match": true,
+    "scope": "Byte binding and static source/log review; no independent execution or visual acceptance."
+  }
+}

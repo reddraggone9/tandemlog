@@ -1,0 +1,14 @@
+{
+  "kind": "synthetic-Linux-native-preview-run",
+  "base": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "sourcesSha256": {
+    "lib/food/food_page.dart": "e3a9b6369278ea7368a5ed51a4c1e95ae26e067a660827d450c87e437df80b7f",
+    "lib/food/inventory.dart": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff",
+    "tool/food_preview.dart": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814",
+    "integration_test/food_preview_workflow_test.dart": "26bb0307e017b6560c5534b1c53ddbe733ea2a6fa9900892e0c44275d6250056"
+  },
+  "exitCode": 0,
+  "screens": "actual Linux GTK debug on isolated Xvfb; dark; 390x850 and1200x850",
+  "productionProfileOpened": false,
+  "liveDataTouched": false
+}

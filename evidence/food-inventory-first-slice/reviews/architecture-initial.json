@@ -1,0 +1,147 @@
+{
+  "schema": 1,
+  "reviewer": "architecture_review",
+  "reviewedAtUtc": "2026-10-10T01:33:42.588353+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "baseline": "530b458845288856ffa3bc91a671e7bc9a43ff12",
+  "sourceState": "Uncommitted first-slice snapshot; acceptance requires preserving these hashes or reviewing a changed delta.",
+  "verdict": "ACCEPT for synthetic process-local first slice and scoped ADR; no architecture source must-fix within this boundary. Evidence-link completion remains before milestone preservation.",
+  "mustFixWithinFirstSliceSource": [],
+  "reviewedFiles": {
+    "lib/food/inventory.dart": {
+      "bytes": 20701,
+      "sha256": "77bd879998d14774ae24d75b463bcad995eb56a1f7941ac7b9c1c4e5c8a5f0ff"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 28348,
+      "sha256": "f624c512c05cac794b1683907f2b845b83d209ab093c277808b68f444d80b391"
+    },
+    "tool/food_preview.dart": {
+      "bytes": 5376,
+      "sha256": "53dcfb42d997535a8d198055435d3791afb01f9ee6e1d267f00ed5ae64a46814"
+    },
+    "test/food_inventory_test.dart": {
+      "bytes": 13278,
+      "sha256": "76f701fcec099c099d247e0ca9c925f1fff352e097ec7eeb77d3db78b6ca5190"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 2798,
+      "sha256": "743c4ff0670ea265e37bad1d8d5bca1cc8af460b8ef18ece0c92b4dbe13bca22"
+    },
+    "test/food_review_regression_test.dart": {
+      "bytes": 5681,
+      "sha256": "9960134fb5de222e83bcb71a48780325f543a0cc9f2ced7c52144a11186eeac3"
+    },
+    "test/food_retention_draft_test.dart": {
+      "bytes": 1806,
+      "sha256": "8fc27722799a1d3b31c0c0cef4d95ba5d5dd8ca2f9c3b7ba77b8c4856c5ed158"
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "bytes": 4329,
+      "sha256": "b9dbf607007442ec158160019b4a365933a2d2f15d5c35dec88f3be56782154a"
+    },
+    "design/decisions/0014-food-inventory.md": {
+      "bytes": 6801,
+      "sha256": "7640b5115ab116de46ae6cab19d205be59eb591460160502fddf16cf6e702717"
+    },
+    "design/README.md": {
+      "bytes": 5770,
+      "sha256": "81648b6be5f94c7a08dabf09299b146640a8ccea9b6d71eb1ee095f863d73ba1"
+    },
+    "design/decisions/README.md": {
+      "bytes": 823,
+      "sha256": "bac2384ef2742aba3d999f05d26cbd4014a44b66c7dc7eeb761d36eeac910288"
+    },
+    "design/future-modules.md": {
+      "bytes": 3954,
+      "sha256": "d9f71939b78b5b168cd1706e4c0bde7f51514b811e0f5408fa476101ab08ccf5"
+    },
+    "design/product-behavior.md": {
+      "bytes": 31445,
+      "sha256": "bc3dd1685110deead110a8a4e7b60d69831d31030dd40ffd359a5f333b9ace33"
+    },
+    "design/status.md": {
+      "bytes": 96823,
+      "sha256": "28d0b837d11bec4d21de7150182d6d6e5c0b0ff7c4650fec67998e4f714fe3ea"
+    },
+    "AGENTS.md": {
+      "bytes": 5332,
+      "sha256": "203d719027c4e1c83573e1298e52265ecd1ecee38aaae8a8902390c640429f77"
+    },
+    "design/architecture.md": {
+      "bytes": 8122,
+      "sha256": "3b587b2bff05826d56d28486b2a0d0d5d801d090c0bc66ee850ce0192e588c27"
+    },
+    "lib/presentation/tag_input.dart": {
+      "bytes": 23270,
+      "sha256": "73d19507218b62572a7c04c3ade4ceab04b9d488d17fdb19e3dd7df6af3dea49"
+    },
+    "lib/domain/event.dart": {
+      "bytes": 27584,
+      "sha256": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401"
+    },
+    "lib/domain/event_chain.dart": {
+      "bytes": 4593,
+      "sha256": "64d8981cece52802434a97a7dda841f34a51386b82eca4e942a4f4f3d810c054"
+    }
+  },
+  "trackedDelta": [
+    "design/README.md",
+    "design/decisions/README.md",
+    "design/future-modules.md",
+    "design/product-behavior.md",
+    "design/status.md"
+  ],
+  "existingAppAndStorageTrackedSourcesUnchanged": true,
+  "independentReviewSourceBindings": {
+    "correctness_source_hashes_match": true,
+    "security_source_hashes_match": true
+  },
+  "supportingEvidenceInspected": {
+    "/tmp/food-correctness-review/final-first-slice-review.json": {
+      "bytes": 5353,
+      "sha256": "dd691f8bbec0ad12b42e0bba0ec5eb4da997bf1957552f50387a05c87ee79b8b"
+    },
+    "/tmp/food-security-review/receipt.json": {
+      "bytes": 6305,
+      "sha256": "03f204a466c7ee8a2de28024a2b61b4c2cb98d0dd68574bcf2d014918bfde995"
+    },
+    "/tmp/food-correctness-review/final-first-slice-green.log": {
+      "bytes": 3017,
+      "sha256": "a5260c891a6ec3a3259df106da090759b1ea504142e4a13f60e1981d0754e82c"
+    }
+  },
+  "acceptedBoundaries": [
+    "Pure container operation/projection model has no Flutter, DB, transport, wall-time or profile ownership; existing pure ID/canonical JSON helpers are reused without changes.",
+    "FoodPage owns temporary presentation/observed selections; host callbacks own commands. Tool preview opens no profile/provider and mutates only synthetic process-local operation lists.",
+    "Stable physical IDs, per-field descriptive patches, captured observed removal targets, observed deletion-token Restore, reduced rational comparisons and retained unresolved contents alternatives preserve the approved inventory semantics.",
+    "Per-container Restore avoids flat-reference Cartesian validation; captured removal batches remain at most 100 and preview Undo restores each exact batch.",
+    "ADR0014 distinguishes accepted scope from provisional density/wording and prototype DTO; food codec, derived writer, protected receipts and DB schema migration are planned rather than claimed implemented.",
+    "No private source import/whitelist or live profile data was read by this reviewer; test/preview values are synthetic."
+  ],
+  "documentationFollowups": [
+    {
+      "path": "design/decisions/0014-food-inventory.md; design/status.md",
+      "issue": "Both link evidence/food-inventory-first-slice/README.md, absent at review time. Add the promised checkpoint/index and accurate source/platform evidence before preserving the milestone."
+    }
+  ],
+  "deferredProductionRequirements": [
+    {
+      "path": "lib/food/food_page.dart:676",
+      "issue": "Fixed 250 ms controller disposal delay is a preview assumption. Before production host integration await actual route completion, bind callbacks to current store/workspace, serialize/revalidate busy state and preserve drafts/exact receipts on failed or ambiguous Save. The comment is not an established overlay lifecycle proof."
+    },
+    {
+      "path": "lib/food/inventory.dart",
+      "issue": "DTO order:int, missing-reference effects and in-memory histories are not accepted wire/admission behavior. Versioned codec must bind writer/sequence/clock to verified chains, apply causal/reference admission and explicit pending state, and bound input bytes/targets/history."
+    },
+    {
+      "path": "planned food storage",
+      "issue": "Use .foodlog namespace, fixed derived module writer, owner connection/queue and separate module lease; checked schema migration and protected exact pending bytes must join guard reservation/acknowledgement atomically. Task v3 golden fixtures and existing protected authority remain immutable."
+    },
+    {
+      "path": "production host / native QA",
+      "issue": "No production startup/navigation, durability/crash recovery, private import/cutover, workspace switching, Android/Windows, large-text/light-theme, spoken accessibility or exact release artifact acceptance is established by this source review."
+    }
+  ],
+  "reviewerActions": "Read-only source/docs/test and existing independent receipt/log inspection; wrote this scratch receipt only. No tests/builds/downloads/source edits/private-data reads. Native pixels/owner workflow outcomes were not independently reviewed in this pass."
+}

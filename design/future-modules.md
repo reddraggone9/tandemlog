@@ -8,6 +8,10 @@ Backlog, progress, notes and eventual recurring game activities. Start with sepa
 
 ## Food logging and inventory
 
+Manual inventory is now approved and in phased implementation; see
+[decision 0014](decisions/0014-food-inventory.md). The lot/delta and automatic
+logging ideas below remain deferred research, not the current specification.
+
 Lee confirmed nutrition includes adaptive expenditure estimation from weight and calorie intake to inform goals, alongside food logging. Before implementation, research MacroFactor’s public explanations and failure lessons; do not claim to reproduce its proprietary algorithm exactly. Catalog licensing, barcode/search quality, household privacy and offline availability may be larger product costs than UI implementation. No coaching algorithm or service is selected. Default household sharing is accepted; future private data belongs in a separate synced data space, not a filtered shared view.
 
 Keep food definitions, consumed servings and inventory lots distinct. Each lot has units, quantity and optional expiration; unknown dates stay unknown, not model-invented. Use fixed-point/decimal quantities with explicit dimensions and conversion/rounding policy. Grams, milliliters, packages and servings are not freely interchangeable without recorded conversion data.

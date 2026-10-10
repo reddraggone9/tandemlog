@@ -1,5 +1,9 @@
 # Product behavior and milestones
 
+The approved second capability is [food inventory](decisions/0014-food-inventory.md).
+Its scope is separate from tasks. Current implementation is an early synthetic
+preview with production durability and native gates still pending.
+
 ## Accepted direction
 
 Settings shows the release version compiled into the running app, with a copy

@@ -1,10 +1,22 @@
 # Current status — 2026-10-10
 
+## Food inventory — first implementation slice
+
+Lee authorized starting food now and explicitly overrode feature-start and
+publication quota thresholds for this food release only. The accepted
+[scope and storage boundary](decisions/0014-food-inventory.md) preserve task v3
+and the app-wide local DB. A pure physical-container model and synthetic working
+preview cover expiry grouping, Inbox, retention, partial contents and observed
+removal/Restore. Independent reviews and actual narrow/wide Linux evidence are
+tracked in the [first-slice checkpoint](../evidence/food-inventory-first-slice/README.md).
+Production persistence/navigation, private import cutover, exact Windows/Android
+candidate acceptance and publication remain open. No live data is imported.
+
 ## Stable2026.10.3 — combined storage and dependency release published
 
 Lee authorized the combined storage migration and reviewed Android dependency maintenance. [Stable2026.10.3/build56](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3) published2026-10-10T00:21:08Z and is Latest. One private local DB now owns preferences, guards, pending receipts and scoped workspace projections, with verified legacy capture, durable activation and resumable allowlist cleanup. Released v3 canonical bytes and meanings remain unchanged. Android dependencies use the accepted AGP9.2.1/Gradle9.4.1/Kotlin2.4.20 source review.
 
-Successful candidate37995721678 at exact source `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9` supplied all three original installers. Promotion38008637367 used trusted notes dispatch `0ae5e66115e10f6a9c355086248ff01becddc423` without rebuilding. Independent final native/artifact and post-publication reviews ACCEPT with no must-fix. Actual anonymous public bytes, owner APK signing/package/version, source/tag/notes/Latest and preservation of all21 prior releases verify. [Final receipts](../evidence/stable-2026.10.3/README.md) retain exact identity, native evidence origins and runtime limits; [native handoff](local-db-native-acceptance.md) records the completed gates. The fixture Save finding was resolved by controlled file-owner reversal on the unchanged production APK; no appfix or waiver was used. Fresh parent publication quota clearance passed at2026-10-10T00:08:00Z. No live-data operation occurred. Food implementation and the minor icon seam remain deferred.
+Successful candidate37995721678 at exact source `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9` supplied all three original installers. Promotion38008637367 used trusted notes dispatch `0ae5e66115e10f6a9c355086248ff01becddc423` without rebuilding. Independent final native/artifact and post-publication reviews ACCEPT with no must-fix. Actual anonymous public bytes, owner APK signing/package/version, source/tag/notes/Latest and preservation of all21 prior releases verify. [Final receipts](../evidence/stable-2026.10.3/README.md) retain exact identity, native evidence origins and runtime limits; [native handoff](local-db-native-acceptance.md) records the completed gates. The fixture Save finding was resolved by controlled file-owner reversal on the unchanged production APK; no appfix or waiver was used. Fresh parent publication quota clearance passed at2026-10-10T00:08:00Z. No live-data operation occurred. Food is now in the separate first-slice milestone above; the minor icon seam remains queued.
 
 ## Stable2026.10.2 — official release published
 
