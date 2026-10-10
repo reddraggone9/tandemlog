@@ -1,0 +1,26 @@
+{
+  "rawViewport": "390x300",
+  "platform": "Linux GTK debug native",
+  "theme": "dark",
+  "textScale": 1,
+  "cropBox": [
+    106,
+    128,
+    290,
+    174
+  ],
+  "padding": 14,
+  "gap": 18,
+  "labelHeight": 30,
+  "labelsOnly": [
+    "Before",
+    "After"
+  ],
+  "resampling": "none",
+  "rawFiles": {
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-1x-before.png": "1e4b9a8b9bf074086b9cf2548aef3b1e87b6ee7a86cf764bd32703362e20d7d1",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-1x-after.png": "8ba14d1c837463c5bf0a3198cbc715c8b8e54e04b8bb9c3082b8d8577b2759cb"
+  },
+  "beforeSource": "f4f7440:lib/presentation/task_completion_checkbox.dart byte-exact integration_test/fixtures copy",
+  "afterSourceSha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8"
+}
