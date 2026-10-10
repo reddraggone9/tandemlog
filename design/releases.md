@@ -141,3 +141,10 @@ drafts or unexpected/nonmatching assets, and never clobbers. The authorized
 connection verifies source/digests before finalizing prerelease=true/latest=false.
 No new credentials or repository permission/protection changes are implied.
 See GitHub's [release API permission rule](https://docs.github.com/en/rest/releases/releases#create-a-release).
+
+
+## Published stable2026.10.3/build56
+
+[Stable2026.10.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3) published2026-10-10T00:21:08Z as Latest with the Lee-authorized local storage migration and reviewed Android dependency maintenance. Candidate37995721678/source `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9` supplied the original three installers. [Promotion38008637367](https://github.com/reddraggone9/tandemlog/actions/runs/38008637367) used trusted dispatch `0ae5e66115e10f6a9c355086248ff01becddc423`, reviewed notes SHA256 `9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26`, and normal exact-artifact gates without rebuilding. No media was required for unchanged layout.
+
+[Final evidence](../evidence/stable-2026.10.3/README.md) records independent native/artifact and post-publication ACCEPT reviews, actual anonymous byte checks for the Android APK/Linux Flatpak/Windows installer, owner APK signing/package/version, source/tag/notes/Latest and all21 prior release identities unchanged. QA/debug/portable bundles were not published. Native coverage and its limits remain in the receipts; no live synced data was touched. Food and the minor icon seam remain deferred.

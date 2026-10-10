@@ -1,0 +1,149 @@
+{
+  "schema": 1,
+  "reviewer": "Independent delegated reviewer /root/rc5_artifact_promotion_review",
+  "reviewed_at_utc": "2026-10-10T00:19:44.632282+00:00",
+  "verdict": "ACCEPT",
+  "must_fix": [],
+  "scope": "Final independent native/artifact readiness for unchanged stable v2026.10.3+56. Parent may execute the already authorized normal exact-artifact no-rebuild publisher. Publication itself and final public verification are not yet accepted as completed.",
+  "candidate": {
+    "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "run_id": 37995721678,
+    "version": "2026.10.3+56",
+    "dispatch_main": "0ae5e66115e10f6a9c355086248ff01becddc423",
+    "five_hosted_jobs_terminal_success": true,
+    "original_release_artifacts": [
+      {
+        "id": 11648102388,
+        "name": "android-release",
+        "digest": "sha256:18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de",
+        "size_in_bytes": 30685785,
+        "expires_at": "2026-10-14T22:20:21Z"
+      },
+      {
+        "id": 11648101550,
+        "name": "linux",
+        "digest": "sha256:2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e",
+        "size_in_bytes": 9093385,
+        "expires_at": "2026-10-14T22:13:45Z"
+      },
+      {
+        "id": 11646614634,
+        "name": "windows",
+        "digest": "sha256:7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c",
+        "size_in_bytes": 25989868,
+        "expires_at": "2026-10-14T21:58:57Z"
+      }
+    ],
+    "test_debug_harness_artifacts_excluded": true
+  },
+  "actual_evidence_archive": {
+    "path": "/workspace/recovery/build56-final-native-review/tandemlog-build56-native-acceptance-partial.zip",
+    "sha256": "95adafa6f781179d6fd2a98619f8e150c3676954f920c8440ed45073fe49b829",
+    "bytes": 11408704,
+    "members": 1057,
+    "all_member_crc_passed": true,
+    "selected_entry_hashes": {
+      "ACCEPTANCE-LIMITS.txt": "def900f34145cc2831c858df9238859dc37a19b4cda5a9f89963653f63ebb41e",
+      "android/evidence/save-exception-r4/native-save-investigation-r4.json": "8ac6951d6c4905490cfe553a71357d6ad112002d294178016e7771af8ad58336",
+      "android/evidence/save-exception-r4/native-save-minimal.txt": "839fe8078667d2ec6cbbcbb5adb60b7e0da363576dd22a40c0bc7f8469cfe69c",
+      "android/evidence/save-exception-r4/fixture-owner-comparison.json": "eb3b62c1933b27bdaae66ca7626fb02bea8da0390034239d7a5410ea31e3a3ea",
+      "android/evidence/save-exception-r4/fixture-owner-restored.json": "7009aeabeaf14e2dff1778e11dc854ec1aef9d7ecd422ee80ee9ecfdce157737",
+      "android/evidence/save-exception-r4/final-canonical-sync.json": "b715b495860dd17b17c1cea9111759bd65facb338d2dc65cfbcecc77a49c8499",
+      "android/evidence/save-exception-r4/final-verified-restored/receipt.json": "9bfaa946878a263b07e59a423ffbed26ba373c833c719d6c1c1cf36fe6b0e0b8",
+      "android/evidence/save-exception-r4/final-verified-restored/protected-settings.json": "0db3721681e0e36eec8f8ed47649a7ced770c16c29d596925be7e62ea88248ce",
+      "android/evidence/save-exception-r4/final-verified-restored/grants-parcel.txt": "2208740e107a21cc8bf28e673781ffeec8dad91cd44d279f8b47e7025ea556e6",
+      "android/evidence/save-exception-r4/final-verified-restored/activity-permissions.txt": "d102a69d9f9a53f507c44fe6b992db0efd5376d9dfffbd278b410e5644f204d6",
+      "android/evidence/production-upgrade-acceptance.json": "037fe7a0c545fba8f2ecaf20f63276e03e83001d51986394a59ca15e275fd94a",
+      "android/evidence/fault-11cuts-setup-r2/android-storage-fault-receipt.json": "948bab00d2571ea4746bb74a5ab6df0e7519fa1f7ccc5e5a787d878a6924940e",
+      "android/evidence/remaining-gates-r2/remaining-gates-acceptance.json": "22484cebaee79be99e6a805c5ad89cf92ddb856c3d387d4bf3383c9fbcf3582f",
+      "windows/windows-storage-acceptance.json": "737231a6365f6e9a270cda67d3d1195a134fb624da224b306f0de8001f270c3d",
+      "verified-artifacts/all-zip-verification.json": "07783b2690c6917d18b788998910e35601409da4bb954dd2e27fb9e9d6a93d54",
+      "verified-artifacts/android-payload-verification.json": "3382985fb9f1a27daf3a69dc6b634368fd2d384431a912de0163981263ebd1c2",
+      "verified-artifacts/android-storage-fault/provenance.json": "390a33ac96efaa2e1d669d05f14d00008c8878aee5593ebeb07072e5424d3241",
+      "android/evidence/save-exception-r4/production-fixture-strace-minimal.txt": "83bc955b695892860d96285a68e6ab5fa7c224decb5cdfbe3ca995a38d673a33",
+      "android/evidence/save-exception-r4/production-provider-strace-minimal.txt": "251abd865abc62a4d18f296addfc664f7c5b23cf7478823bfb90bca785bf3d28",
+      "android/evidence/save-exception-r4/production-ownerfixed-strace-minimal.txt": "c97e9b95b62dc879503f8009383653c7e9fc694593d59f0cbd90512d8a4cd038"
+    }
+  },
+  "independent_actual_artifact_verification": {
+    "all_three_actual_outer_zip_sha_and_sizes_match_fresh_api": true,
+    "all_outer_members_hashed_and_crc_passed": true,
+    "strict_installer_checksums_passed": true,
+    "installers": {
+      "android-release": {
+        "sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+        "bytes": 66116061,
+        "member": "tandemlog-android.apk"
+      },
+      "linux": {
+        "sha256": "592f435134fe1059efa547262cffb03508299583e85c8f6624936f2f74de5fce",
+        "bytes": 9088568,
+        "member": "tandemlog-linux-x64.flatpak"
+      },
+      "windows": {
+        "sha256": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23",
+        "bytes": 12285359,
+        "member": "tandemlog-windows-x64-unsigned-setup.exe"
+      }
+    },
+    "windows_portable": "Actual portable ZIP hash/source/run matches provenance; exact17 member hashes and CRC; safe paths, types, sizes, unique casefold inventory all match trusted publish policy. Windows CRLF checksum text is parsed with universal newline semantics as the actual policy does.",
+    "android": "Actual owner APK hash equals parent accepted320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438; all79 inner members CRC pass; all15 native library hashes equal inspected native acceptance payload manifest. Native notices present/hash bound in byte-check receipt.",
+    "signature_attribution": "Reviewed parent actual SDK apksigner/aapt reports for this identical independently hashed APK: v2 cryptographic signature verified, pinned owner0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d, packagecom.reddraggone9.tandemlog, version2026.10.3/code56, nondebuggable, threeABIs. Reviewer did not rerun SDK executables.",
+    "desktop_lifecycle": "Independently invoked frozen publish_gate.verify_install_smoke on both actual archive reports: PASS. Linux additionally requires changed commit, equal baseline payload/permissions and final candidate restoration. Its startup file has a dbus diagnostic prefix before JSON; this does not bypass or invalidate parsed lifecycle gates."
+  },
+  "save_resolution": {
+    "finding": "Resolved; no production fix or waiver. Same exact unchanged owner APK controlled owner-only A-B-A identifies a synthetic root-owned writer file fsync failure.",
+    "trace": "666:0:0 writer:write776=776,fsync=-1EPERM,close=0. Only owner10159:10159 with mode666 and same fixture gives fsync0/native Save success. Owner0:0 reversal restoresEPERM. Original provider600:10159 writer saves successfully.",
+    "retry_and_admission": "Canonical append may have completed despite sync failure; protected prepared receipt and reconciliation/Retry retain single admission. Final canonical seq22 matches settled guard; no pending intents. Prior speculative double-close causation is superseded by exact phase/errno and successful-close traces.",
+    "baseline": "Independently compared actual Git bytes and hashes of MainActivity.kt, log_folder.dart, text_save_command.dart, task_text_session.dart and checklist_item_editor.dart at stable687 versus candidate76: identical. No stable53 runtime downgrade was performed because Android package version is shared across users. This is an explicit unmeasured comparison, not a blocker after same-APK causal reversal and ordinary-provider success.",
+    "diagnostic_limits": "No production PlatformException message/Java stack or suppressed exception stack captured. Syscalls identify the failing sync phase and successful close. Standalone helper provider SecurityExceptions are unrelated diagnostic-process failures."
+  },
+  "restoration": {
+    "authoritative_snapshot": "save-exception-r4/final-verified-restored",
+    "raw_sqlite_and_wal_independently_read": true,
+    "integrity": "ok",
+    "all25_actual_tables_match_receipt": true,
+    "writer_guard_seq": 22,
+    "pending_guard": [],
+    "protected_text_intents": 0,
+    "settings_actual_sha256": "0db3721681e0e36eec8f8ed47649a7ced770c16c29d596925be7e62ea88248ce",
+    "actual_settings_hash_matches_receipt": true,
+    "both_folders10_actual_canonical_hashes_match": true,
+    "all_five_earlier_canonical_prefixes_retained": true,
+    "pixels": "Actually viewed ownerfixed native saved/Undo state and final original folder title/collapsed checklist screenshot.",
+    "parent_actions": "Inspected final restored folder/settings/user/appearance/grants, synced canonical-only history without copying private identity, lab stopped/restored and unchanged OOM counters. Earlier final-original-restored/final-r5-restored are incomplete attempts and excluded.",
+    "historical25": "All25 true assertions retained; historical releaseAcceptanceComplete=false/open Save finding is closed by subsequent actual r4 traces/final restoration, not waived."
+  },
+  "native_evidence_scope": {
+    "windows": "Actual parent11 process-death cuts, confirmed owners exited, pre-writer competing admission blocked, settings/guard/canonical preserved; same exact release SQLite DLL with source-bound compiled QA child. Hidden CLI is not manual GUI proof; separate prior exact installed visibility and hosted installer lifecycle retained.",
+    "android": "Actual parent11 source-bound QA process-death cuts plus injected SQLite FULL13 preserving pending/writer/guard/trusted observations. QA overlay/native hashes bound to production76; separate package is not production SAF evidence. Four synthetic profiles upgraded exact ownerAPK fromstable53 with retained writer/settings/preferences/canonical and projections; legitimate complete checkpoint advancement explicitly distinguished from retained observations. Exact ownerAPK25 checks separately cover SAF switch/grant recovery/native Undo.",
+    "reviewer_attribution": "Independent examination of actual archive/receipt/trace bytes, actual preserved SQL/canonical files, actual candidate ZIP/APK/installer bytes and fresh API. No reviewer device, emulator, new runtime test, build or live-data operation."
+  },
+  "publication_contract": {
+    "authorization": "Lee explicitly authorized unchanged accepted stable release. Parent provided fresh publication quota clearance at2026-10-10T00:08UTC; private account values omitted.",
+    "notes_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "routing": "Trusted dispatch0ae reads approved two-bullet design/stable-notes.md; only notes differ from immutable production76. Previous independent remote-main/decoded notes/tree review retained.",
+    "mandatory_before_create": [
+      "Trusted main candidate resolver/source/version/absenttag validation",
+      "Download original linux/windows/android-release only; actual closed inventory, safe full portable members/lifecycle, exact acceptedAPK/source/version/signer metadata checks",
+      "Strict all three installer checksum checks before staging exactly three versioned installers",
+      "Stablev2026.10.3 create at source76 with Latesttrue; no rebuild and no debug/QA/harness assets"
+    ],
+    "normal_remaining_completion": "After dispatch independently verify terminal hosted gate order and actual public tag/source/notes/flags/three assets/download byte hashes/Latest and protected prior releases. These are ordinary publication completion gates, not unresolved native/artifact defects."
+  },
+  "limits": [
+    "No stable53 runtime downgrade comparison",
+    "No production Java exception or PlatformException stack/message capture",
+    "No physical power-loss/directory-barrier guarantee; process-death and injected SQLite capacity evidence retain stated scope",
+    "No publication performed by reviewer; final public release verification remains"
+  ],
+  "supporting_files": {
+    "fresh_api": "/workspace/recovery/build56-final-native-review/independent-final-github-api.json",
+    "direct_actual_bytes": "/workspace/recovery/build56-final-native-review/independent-direct-artifact-byte-checks.json",
+    "editorial": "/workspace/recovery/storage-release/final-editorial-review.json",
+    "remote_notes": "/workspace/recovery/storage-release/build56-notes-routing-remote-independent-review.json"
+  },
+  "source_edits": false,
+  "rebuild": false,
+  "published_by_reviewer": false
+}

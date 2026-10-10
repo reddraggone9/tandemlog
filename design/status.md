@@ -1,10 +1,10 @@
-# Current status — 2026-10-09
+# Current status — 2026-10-10
 
-## Combined storage and dependency release preparation
+## Stable2026.10.3 — combined storage and dependency release published
 
-Lee explicitly authorized finishing and publishing storage migration together with the reviewed Android dependency maintenance before revisiting food inventory. The combined branch starts from accepted dependency source `71b841fe9dba1b46e86de6c055ce56df4a978784` (AGP9.2.1/Gradle9.4.1, Kotlin2.4.20) and preserves the isolated migration checkpoint `18ee0191c199b5351440a0182078993d16992e5e`. One private local DB now owns preferences, guards, pending receipts and scoped workspace projections, with verified legacy capture, durable activation and resumable allowlist cleanup. Released v3 canonical bytes and meanings remain unchanged.
+Lee authorized the combined storage migration and reviewed Android dependency maintenance. [Stable2026.10.3/build56](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3) published2026-10-10T00:21:08Z and is Latest. One private local DB now owns preferences, guards, pending receipts and scoped workspace projections, with verified legacy capture, durable activation and resumable allowlist cleanup. Released v3 canonical bytes and meanings remain unchanged. Android dependencies use the accepted AGP9.2.1/Gradle9.4.1/Kotlin2.4.20 source review.
 
-Fresh GitHub reads confirmed version2026.10.3 is unpublished and successful candidate37987187103 consumed build54. Build55 reached actual Windows Flutter/native-contract success but failed later Python helper tests before packaging. The reviewed replacement uses build56, fixes Linux-only discovery and synthetic SQLite handle cleanup, and includes a separately packaged compiled migration child for native Windows storage checks. Isolated Linux evidence remains attributed to its original source; combined checks, independent review and exact Windows/Android artifact acceptance must pass before publication. Parent verifies final gates and a fresh publication quota read. No live-data operation is authorized. Food implementation is deferred until Lee is asked again after this release. [Dependency review](android-toolchain-maintenance.md), [ADR0013](decisions/0013-app-wide-local-database.md) and [combined native handoff](local-db-native-acceptance.md).
+Successful candidate37995721678 at exact source `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9` supplied all three original installers. Promotion38008637367 used trusted notes dispatch `0ae5e66115e10f6a9c355086248ff01becddc423` without rebuilding. Independent final native/artifact and post-publication reviews ACCEPT with no must-fix. Actual anonymous public bytes, owner APK signing/package/version, source/tag/notes/Latest and preservation of all21 prior releases verify. [Final receipts](../evidence/stable-2026.10.3/README.md) retain exact identity, native evidence origins and runtime limits; [native handoff](local-db-native-acceptance.md) records the completed gates. The fixture Save finding was resolved by controlled file-owner reversal on the unchanged production APK; no appfix or waiver was used. Fresh parent publication quota clearance passed at2026-10-10T00:08:00Z. No live-data operation occurred. Food implementation and the minor icon seam remain deferred.
 
 ## Stable2026.10.2 — official release published
 
@@ -17,7 +17,7 @@ attribution; fresh stable APK identity/upgrade/native gates remain required.
 The parent supplied fresh publication-threshold clearance at16:34:51UTC.
 Full stable candidate and bounded new stable-native acceptance passed.
 [Official stable2026.10.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.2)
-published2026-10-09T17:31:53Z and is Latest; RC7 and all20 prior releases' notes,
+published2026-10-09T17:31:53Z and was Latest at publication; RC7 and all20 prior releases' notes,
 metadata and asset identities are preserved.
 Candidate37960853538 and pushCI37960786048 completed successfully at exact stable source687163b;
 independent source/notes/README/media preparation review passes with no must-fix.

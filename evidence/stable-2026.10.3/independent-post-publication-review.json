@@ -1,0 +1,134 @@
+{
+  "schema": 1,
+  "reviewer": "Independent delegated reviewer /root/rc5_artifact_promotion_review",
+  "reviewed_at_utc": "2026-10-10T00:23:46.303629+00:00",
+  "verdict": "ACCEPT",
+  "must_fix": [],
+  "scope": "Actual final stable publication and anonymous public installer-byte verification; no additional runtime/device acceptance claimed.",
+  "release": {
+    "id": 408448633,
+    "url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3",
+    "tag": "v2026.10.3",
+    "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "version": "2026.10.3+56",
+    "published_at_utc": "2026-10-10T00:21:08Z",
+    "stable": true,
+    "draft": false,
+    "latest": true,
+    "tag_commit_verified_fresh": true,
+    "exactly_three_installers": true,
+    "notes_sha256": "9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26",
+    "notes_actual_body_byte_equal_approved_two_bullets": true,
+    "new_media": "None; unchanged layout and accepted editorial policy."
+  },
+  "promotion": {
+    "run_id": 38008637367,
+    "dispatch": "0ae5e66115e10f6a9c355086248ff01becddc423",
+    "path": ".github/workflows/stable.yml",
+    "event": "workflow_dispatch",
+    "candidate_run_id": 37995721678,
+    "candidate_job_id": 114083218603,
+    "publish_job_id": 114083244489,
+    "terminal_success": true,
+    "trusted_main_resolver_lee_accepted_and_candidate_identity_verified": true,
+    "original_artifacts": [
+      {
+        "id": 11648102388,
+        "name": "android-release",
+        "sha256": "18a4dbe9479d52f6a8f75237924850f0721b74e77c88b9569821f7b7d23900de"
+      },
+      {
+        "id": 11648101550,
+        "name": "linux",
+        "sha256": "2387438d45d48ed407412fe06e747ddf7b00201d34f07618b3424c6a273e0c2e"
+      },
+      {
+        "id": 11646614634,
+        "name": "windows",
+        "sha256": "7721d5edf66b19a5ee344a7a1bc7cb777aae623d688208d2783ccb5315846a4c"
+      }
+    ],
+    "actual_download_digest_mismatch_error_policy": true,
+    "gate_order": [
+      {
+        "time_utc": "2026-10-10T00:20:59Z",
+        "proof": "All three original candidate ZIP actual downloaded digests equal expected immutable API bindings."
+      },
+      {
+        "time_utc": "2026-10-10T00:21:02.7201659Z",
+        "proof": "Trusted actual closed inventory, full portable members/CRC, desktop installed lifecycle, APK accepted hash/signer/source/version gate passed."
+      },
+      {
+        "time_utc": "2026-10-10T00:21:02.7354566Z..00:21:02.7955309Z",
+        "proof": "All three installer checksum OK outputs before release creation."
+      },
+      {
+        "time_utc": "2026-10-10T00:21:08.5434657Z",
+        "proof": "Stable release creation URL emitted after all gates; source76, Latesttrue."
+      }
+    ],
+    "no_rebuild": true,
+    "no_debug_qa_harness_or_portable_release_asset": true
+  },
+  "independently_streamed_actual_public_bytes": [
+    {
+      "asset_id": 626558999,
+      "name": "tandemlog-2026.10.3-android.apk",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.3/tandemlog-2026.10.3-android.apk",
+      "http_status": 200,
+      "bytes": 66116061,
+      "sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+      "api_digest_size_match": true,
+      "anonymous": true,
+      "stored_binary": false
+    },
+    {
+      "asset_id": 626559000,
+      "name": "tandemlog-2026.10.3-linux-x64.flatpak",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.3/tandemlog-2026.10.3-linux-x64.flatpak",
+      "http_status": 200,
+      "bytes": 9088568,
+      "sha256": "592f435134fe1059efa547262cffb03508299583e85c8f6624936f2f74de5fce",
+      "api_digest_size_match": true,
+      "anonymous": true,
+      "stored_binary": false
+    },
+    {
+      "asset_id": 626558998,
+      "name": "tandemlog-2026.10.3-windows-x64-setup.exe",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.3/tandemlog-2026.10.3-windows-x64-setup.exe",
+      "http_status": 200,
+      "bytes": 12285359,
+      "sha256": "d391a50969de880b3a87b7b9d35ccfa35a2ecacca7950bbda6e4a32ef23bfb23",
+      "api_digest_size_match": true,
+      "anonymous": true,
+      "stored_binary": false
+    }
+  ],
+  "identity": {
+    "actual_public_bytes_equal_independently_verified_original_candidate_installers": true,
+    "public_android_equals_parent_native_accepted_apk": true,
+    "owner_sdk_signature_badging": "Read actual parent SDK apksigner/aapt public APK reports: cryptographic v2 verified, pinned owner0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d; com.reddraggone9.tandemlog, stable2026.10.3/code56, nondebuggable, all3ABIs. Reviewer independently hashed all public bytes; did not repeat SDK executables. Exact equality reuses completed actual candidate CRC/native-payload/notices review."
+  },
+  "prior_releases": {
+    "count": 21,
+    "all_preserved": true,
+    "independent_comparison": "Fresh post-publication API compared every recorded old release field and every asset field against pre-publication21-release snapshot: id/tag/source/draft/prerelease/dates/body, exact asset inventory and id/name/size/digest/state/updated_at unchanged. Latest intentionally points to new stable."
+  },
+  "evidence_sha256": {
+    "build56-public-release-independent-api.json": "b6cfee16b1fb16d78377bf7805231532df260224169283075050182efdea6927",
+    "build56-independent-public-stream-byte-verification.json": "dd4792d319df7524e122123b5ac30350a74a39775567a7b4f56be63ccf41f2be",
+    "build56-independent-publish-hosted.log": "7fb6c73b10680c9e4db51efc1f47c91dfc951b5821fa85cb836990b0ff04a8b1",
+    "build56-independent-candidate-hosted.log": "c111d7a9e9e14336b4f6a19aa3add2ae2e44460d67ee3aeb5f459b87bd020b3b",
+    "build56-prior-public-releases-before.json": "9898418351cf8bbe50f7079ddecf5bbb7111128369fd0c815f0dca5dbf71e027",
+    "build56-public-release-verification.json": "eb233ad1d997d8e23992510fd0cc1eef5bb97a662e1a04d529610887dcd0f071",
+    "build56-public-android-signature.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "build56-public-android-badging.txt": "d5437045978dae30b54b69e426f698d0d4e067dd4c0ab59e12afeaa5a22fc8d1",
+    "build56-final-native-artifact-independent-review.json": "26f2a1d30327ef7832dad5dc8cfac0897aff1e7c8b7e88cfaac0923cd784c457"
+  },
+  "runtime_limits": "Prior accepted parent-native evidence and explicit no-runtime-downgrade/no-Java-stack/no-power-loss limits remain; this review claims no own device execution.",
+  "remaining_blockers": [],
+  "source_mutations": false,
+  "publication_performed_by_reviewer": false,
+  "live_user_data_touched": false
+}
