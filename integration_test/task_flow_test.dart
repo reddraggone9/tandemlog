@@ -49,6 +49,7 @@ import 'bulk_failure_visibility_test.dart'
     show registerBulkFailureVisibilityTests;
 import 'field_layout_test.dart' show registerFieldLayoutTests;
 import 'tag_input_workflow_test.dart' show registerTagInputWorkflowTests;
+import 'food_production_workflow_test.dart' show registerFoodProductionTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -206,6 +207,7 @@ void main() {
   registerBulkApplySemanticsTests();
   registerFieldLayoutTests();
   registerTagInputWorkflowTests();
+  registerFoodProductionTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {

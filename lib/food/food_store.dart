@@ -5,10 +5,12 @@ import 'package:crypto/crypto.dart';
 import 'package:uuid/uuid.dart';
 import '../domain/event.dart';
 import '../storage/local_profile_database.dart';
+import '../storage/local_settings.dart';
 import '../storage/log_folder.dart';
 import '../storage/profile_food_intents.dart';
 import '../storage/writer_guard.dart';
 import 'food_record.dart';
+import 'food_import.dart';
 import 'inventory.dart';
 
 /// Isolated canonical Food history/provider admission failure. Shared profile,
@@ -181,6 +183,7 @@ class FoodStore {
     await _manifest();
     // Validate private recovery authority before a remote Food failure can be
     // classified as isolated. No canonical comparison or write occurs here.
+    _importAttempts();
     final trusted = profile.database.select(
       'SELECT writer,sequence,hash FROM protected_food_heads WHERE space=?',
       [space],
@@ -559,13 +562,45 @@ class FoodStore {
 
   Future<List<FoodRecord>> _command(List<_FoodChange> changes) =>
       _queue(() => _commandLocked(changes));
-  Future<List<FoodRecord>> _commandLocked(List<_FoodChange> changes) async {
+  Future<List<FoodRecord>> _commandLocked(
+    List<_FoodChange> changes, {
+    void Function(List<FoodRecord>)? stageImport,
+  }) async {
     await _refresh();
     if (hasPreparedAppend || pendingReferences > 0) {
       throw const FormatException(
         'Food history needs recovery or folder sync before another change.',
       );
     }
+    final (batch, appendBytes) = _prepareChanges(changes);
+    if (batch.isEmpty) return [];
+    final own = _records.where((r) => r.writer == writer).toList();
+    final intents = ProfileFoodIntents(profile),
+        guard = SqliteWriterGuard(profile);
+    profile.transaction(() {
+      guard.prepareInTransaction(
+        space,
+        writer,
+        own.length,
+        own.isEmpty ? eventGenesisHash(space, writer) : own.last.hash,
+        batch.map((r) => PreparedWriterRecord(r.sequence, r.hash)).toList(),
+      );
+      for (final r in batch) {
+        intents.stageInTransaction(
+          r,
+          Uint8List.fromList(utf8.encode(r.encode())),
+        );
+      }
+      stageImport?.call(List.unmodifiable(batch));
+    });
+    lastPreparedRecords = List.unmodifiable(batch);
+    _remaining = appendBytes;
+    await _append(appendBytes);
+    await _refresh();
+    return batch;
+  }
+
+  (List<FoodRecord>, Uint8List) _prepareChanges(List<_FoodChange> changes) {
     final own = _records.where((r) => r.writer == writer).toList();
     var seq = own.length,
         previous = own.isEmpty
@@ -588,7 +623,7 @@ class FoodStore {
         details: change.details,
         contents: change.contents,
         createdAt: change.action == FoodAction.add
-            ? now().toUtc().toIso8601String()
+            ? change.createdAt ?? now().toUtc().toIso8601String()
             : null,
         observedDeletes: change.deletes,
         observedEdits: [
@@ -621,7 +656,7 @@ class FoodStore {
       previous = record.hash;
       batch.add(record);
     }
-    if (batch.isEmpty) return [];
+    if (batch.isEmpty) return (batch, Uint8List(0));
     _project([
       ..._records,
       ...batch,
@@ -640,29 +675,318 @@ class FoodStore {
         'Food history is at its safe storage limit; no change was appended.',
       );
     }
-    final intents = ProfileFoodIntents(profile),
-        guard = SqliteWriterGuard(profile);
-    profile.transaction(() {
-      guard.prepareInTransaction(
-        space,
-        writer,
-        own.length,
-        own.isEmpty ? eventGenesisHash(space, writer) : own.last.hash,
-        batch.map((r) => PreparedWriterRecord(r.sequence, r.hash)).toList(),
+    return (batch, appendBytes);
+  }
+
+  // Import metadata is private local recovery evidence, never a second
+  // canonical inventory. The index witnesses every retained attempt row.
+  String get _importPrefix => 'food.import.v1.$space.';
+  List<Map<String, dynamic>> _importAttempts() {
+    // Bound corrupt/local inputs before SQLite materializes ledger strings.
+    final totals = profile.database.select(
+      "SELECT COUNT(*) AS n,COALESCE(SUM(length(CAST(value AS BLOB))),0) AS bytes,COALESCE(MAX(length(CAST(value AS BLOB))),0) AS largest,COALESCE(MAX(length(CAST(key AS BLOB))),0) AS keyBytes,COALESCE(SUM(CASE WHEN typeof(value)='text' THEN 0 ELSE 1 END),0) AS invalid FROM profile_metadata WHERE key LIKE ?",
+      ['$_importPrefix%'],
+    ).single;
+    if ((totals['n'] as int) > 101 ||
+        (totals['bytes'] as int) > 26 * 1024 * 1024 ||
+        (totals['largest'] as int) > 256 * 1024 ||
+        (totals['keyBytes'] as int) > 256 ||
+        totals['invalid'] != 0) {
+      throw const FormatException('Import evidence exceeds safe read limits.');
+    }
+    final rows = profile.database.select(
+      'SELECT key,value FROM profile_metadata WHERE key LIKE ?',
+      ['$_importPrefix%'],
+    );
+    final witness = profile.database.select(
+      'SELECT version FROM protected_food_import_witnesses WHERE space=?',
+      [space],
+    );
+    if ((witness.isEmpty != rows.isEmpty) ||
+        (witness.isNotEmpty && witness.single['version'] != 1)) {
+      throw const FormatException(
+        'Import initialization evidence is missing or differs.',
       );
-      for (final r in batch) {
-        intents.stageInTransaction(
-          r,
-          Uint8List.fromList(utf8.encode(r.encode())),
+    }
+    if (rows.isEmpty) return [];
+    if (rows.length > 101) {
+      throw const FormatException('Too many import attempts.');
+    }
+    final byKey = {
+      for (final row in rows) row['key'] as String: row['value'] as String,
+    };
+    final rawIndex = byKey.remove('${_importPrefix}index');
+    if (rawIndex == null || utf8.encode(rawIndex).length > 64 * 1024) {
+      throw const FormatException(
+        'Import source witness is missing or invalid.',
+      );
+    }
+    final index = jsonDecode(rawIndex);
+    if (index is! List || index.isEmpty || index.length > 100) {
+      throw const FormatException('Invalid import source witness.');
+    }
+    final result = <Map<String, dynamic>>[];
+    final namespaces = <String>{}, sources = <String>{};
+    for (final entry in index) {
+      if (entry is! Map<String, dynamic> ||
+          entry.length != 4 ||
+          !{
+            'importId',
+            'sourceSha256',
+            'planHash',
+            'writer',
+          }.every(entry.containsKey) ||
+          !isCanonicalId(entry['importId']) ||
+          !isCanonicalId(entry['writer']) ||
+          !_importHash(entry['sourceSha256']) ||
+          !_importHash(entry['planHash']) ||
+          !namespaces.add(entry['importId']) ||
+          !sources.add(entry['sourceSha256'])) {
+        throw const FormatException('Invalid import source witness.');
+      }
+      final raw = byKey.remove('${_importPrefix}attempt.${entry['importId']}');
+      if (raw == null || utf8.encode(raw).length > 256 * 1024) {
+        throw const FormatException(
+          'Import attempt evidence is missing or invalid.',
         );
       }
-    });
-    lastPreparedRecords = List.unmodifiable(batch);
-    _remaining = appendBytes;
-    await _append(appendBytes);
-    await _refresh();
-    return batch;
+      final attempt = jsonDecode(raw);
+      if (attempt is! Map<String, dynamic> ||
+          attempt.length != 7 ||
+          !{
+            'v',
+            'space',
+            'importId',
+            'sourceSha256',
+            'planHash',
+            'writer',
+            'records',
+          }.every(attempt.containsKey) ||
+          attempt['v'] is! int ||
+          attempt['v'] != 1 ||
+          attempt['space'] != space ||
+          entry.keys.any((key) => attempt[key] != entry[key]) ||
+          attempt['records'] is! List ||
+          (attempt['records'] as List).isEmpty ||
+          (attempt['records'] as List).length > 1000) {
+        throw const FormatException('Invalid import attempt evidence.');
+      }
+      final recordIds = <String>{};
+      int? priorSequence;
+      for (final record in attempt['records'] as List) {
+        if (record is! Map<String, dynamic> ||
+            record.length != 2 ||
+            !record.containsKey('id') ||
+            !record.containsKey('hash') ||
+            record['id'] is! String ||
+            !_importHash(record['hash'])) {
+          throw const FormatException('Invalid import record evidence.');
+        }
+        validateFoodReference(record['id']);
+        final parts = (record['id'] as String).split(':');
+        final sequence = int.parse(parts.last);
+        if (parts.first != attempt['writer'] ||
+            !recordIds.add(record['id']) ||
+            (priorSequence != null && sequence != priorSequence + 1)) {
+          throw const FormatException('Invalid import record evidence.');
+        }
+        priorSequence = sequence;
+      }
+      result.add(attempt);
+    }
+    if (byKey.isNotEmpty) {
+      throw const FormatException('Import witness omits retained attempts.');
+    }
+    return result;
   }
+
+  static bool _importHash(Object? value) =>
+      value is String && RegExp(r'^[0-9a-f]{64}$').hasMatch(value);
+  List<_FoodChange> _importChanges(FoodImportPlan plan) => [
+    for (final container in plan.containers)
+      _FoodChange(
+        FoodAction.add,
+        [container.targetId(plan.importId)],
+        details: container.details,
+        contents: container.contents,
+        createdAt: container.createdAt,
+      ),
+  ];
+  FoodImportReport _importReport(
+    FoodImportPlan plan,
+    FoodImportStatus status, [
+    List<String> ids = const [],
+  ]) => FoodImportReport(status, plan.planHash, writer, plan.targetIds, ids);
+
+  FoodImportReport _inspectImport(
+    FoodImportPlan plan,
+    List<Map<String, dynamic>> attempts,
+  ) {
+    plan.validate();
+    _checkImportWriter();
+    if (plan.space != space) {
+      throw const FormatException('Import workspace differs.');
+    }
+    final matches = attempts
+        .where((a) => a['importId'] == plan.importId)
+        .toList();
+    if (matches.isEmpty) {
+      if (attempts.any((a) => a['sourceSha256'] == plan.sourceSha256)) {
+        throw const FormatException(
+          'This source already has an import namespace.',
+        );
+      }
+      if (attempts.length >= 100) {
+        throw const FormatException('Import attempt limit reached.');
+      }
+      // Never recover another command or multiply target UUID derivations just
+      // to reject its pending suffix. All receipts were validated by refresh.
+      if (hasPreparedAppend || pendingReferences > 0) {
+        throw const FormatException('Recover or sync Food before importing.');
+      }
+      final targetIds = plan.targetIds;
+      if (targetIds.any(_births.containsKey)) {
+        throw const FormatException(
+          'Import physical identity already exists without this attempt.',
+        );
+      }
+      _prepareChanges(_importChanges(plan));
+      return _importReport(plan, FoodImportStatus.ready);
+    }
+    final attempt = matches.single;
+    if (attempt['planHash'] != plan.planHash ||
+        attempt['sourceSha256'] != plan.sourceSha256 ||
+        attempt['writer'] != writer) {
+      throw const FormatException(
+        'Import attempt source, plan or writer differs.',
+      );
+    }
+    final evidence = (attempt['records'] as List).cast<Map<String, dynamic>>();
+    if (evidence.length != plan.containers.length) {
+      throw const FormatException('Import count differs.');
+    }
+    final known = {for (final r in _records) r.id: r};
+    final pending = ProfileFoodIntents(profile)
+        .pending(space, writer)
+        .map((b) => FoodRecord.decode(utf8.decode(b)))
+        .toList();
+    final pendingById = {for (final r in pending) r.id: r};
+    var complete = true;
+    final missing = <String>{};
+    for (var i = 0; i < evidence.length; i++) {
+      final proof = evidence[i];
+      final record = known[proof['id']] ?? pendingById[proof['id']];
+      final container = plan.containers[i];
+      if (record == null ||
+          record.hash != proof['hash'] ||
+          record.space != space ||
+          record.writer != writer ||
+          record.operation.action != FoodAction.add ||
+          record.operation.targets.length != 1 ||
+          record.operation.targets.single !=
+              container.targetId(plan.importId) ||
+          record.operation.createdAt != container.createdAt ||
+          canonicalDataJson(record.operation.details?.toJson()) !=
+              canonicalDataJson(container.details.toJson()) ||
+          canonicalDataJson(record.operation.contents?.toJson()) !=
+              canonicalDataJson(container.contents.toJson())) {
+        throw const FormatException(
+          'Original import record differs or is missing.',
+        );
+      }
+      if (!isAdmitted(record)) {
+        complete = false;
+        missing.add(record.id);
+      }
+    }
+    if (!complete &&
+        (pending.length != missing.length ||
+            pending.any((r) => !missing.contains(r.id)) ||
+            !hasPreparedAppend)) {
+      throw const FormatException(
+        'Import recovery differs from its exact protected receipts.',
+      );
+    }
+    return _importReport(
+      plan,
+      complete ? FoodImportStatus.committed : FoodImportStatus.pendingRecovery,
+      evidence.map((r) => r['id'] as String).toList(),
+    );
+  }
+
+  void _checkImportWriter() {
+    final installation =
+        LocalSettings.protectedValues(profile)['writer'] as String;
+    if (foodWriter(installation) != writer) {
+      throw const FormatException(
+        'Import writer differs from current protected settings.',
+      );
+    }
+  }
+
+  Future<FoodImportReport> dryRunImport(FoodImportPlan plan) =>
+      _queue(() async {
+        _checkImportWriter();
+        await _refresh();
+        return _inspectImport(plan, _importAttempts());
+      });
+  Future<FoodImportReport> commitImport(
+    FoodImportPlan plan,
+  ) => _queue(() async {
+    _checkImportWriter();
+    await _refresh();
+    final attempts = _importAttempts();
+    final inspected = _inspectImport(plan, attempts);
+    if (inspected.status == FoodImportStatus.committed) return inspected;
+    if (inspected.status == FoodImportStatus.pendingRecovery) {
+      await _append(_remaining);
+      await _refresh();
+    } else {
+      await _commandLocked(
+        _importChanges(plan),
+        stageImport: (records) {
+          _checkImportWriter();
+          profile.database.execute(
+            'INSERT OR IGNORE INTO protected_food_import_witnesses VALUES (?,1)',
+            [space],
+          );
+          final attempt = <String, dynamic>{
+            'v': 1,
+            'space': space,
+            'importId': plan.importId,
+            'sourceSha256': plan.sourceSha256,
+            'planHash': plan.planHash,
+            'writer': writer,
+            'records': [
+              for (final r in records) {'id': r.id, 'hash': r.hash},
+            ],
+          };
+          profile.database
+              .execute('INSERT INTO profile_metadata VALUES (?,?)', [
+                '${_importPrefix}attempt.${plan.importId}',
+                canonicalDataJson(attempt),
+              ]);
+          final index = [
+            for (final a in [...attempts, attempt])
+              {
+                for (final key in [
+                  'importId',
+                  'sourceSha256',
+                  'planHash',
+                  'writer',
+                ])
+                  key: a[key],
+              },
+          ];
+          profile.database.execute(
+            'INSERT INTO profile_metadata VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value',
+            ['${_importPrefix}index', canonicalDataJson(index)],
+          );
+        },
+      );
+    }
+    return _inspectImport(plan, _importAttempts());
+  });
 
   Future<void> add(FoodDetails details, int count) {
     if (count < 1 || count > 100) {
@@ -781,6 +1105,7 @@ class _FoodChange {
     this.targets, {
     this.details,
     this.contents,
+    this.createdAt,
     this.fields,
     this.deletes = const [],
     this.edits = const [],
@@ -790,6 +1115,7 @@ class _FoodChange {
   final List<String> targets;
   final FoodDetails? details;
   final Contents? contents;
+  final String? createdAt;
   final List<String>? fields;
   final List<String> deletes, edits;
   final bool observePreviousEdit;

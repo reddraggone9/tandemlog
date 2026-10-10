@@ -1,0 +1,11 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_preview_test.dart
+00:00 +0: collapsed summary preserves single known full
+00:00 +1: collapsed summary preserves single unknown
+00:01 +2: collapsed summary preserves single partial
+00:01 +3: collapsed summary preserves multiple full
+00:01 +4: collapsed summary preserves mixed full and partial
+00:01 +5: retained reasons start collapsed; active search bypasses them
+00:01 +6: narrow and wide inventory render partial stock without overflow
+00:01 +7: quick remove, Deleted and Undo preserve physical identity
+00:02 +8: partial containers require inspection; search includes retained stock
+00:02 +9: All tests passed!

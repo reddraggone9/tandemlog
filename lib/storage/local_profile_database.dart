@@ -43,6 +43,8 @@ class LocalProfileDatabase {
         'CREATE TABLE protected_food_heads (space TEXT NOT NULL, writer TEXT NOT NULL, sequence INTEGER NOT NULL, hash TEXT NOT NULL, PRIMARY KEY(space,writer))',
     'protected_food_locations':
         'CREATE TABLE protected_food_locations (location TEXT PRIMARY KEY, space TEXT NOT NULL)',
+    'protected_food_import_witnesses':
+        'CREATE TABLE protected_food_import_witnesses (space TEXT PRIMARY KEY NOT NULL, version INTEGER NOT NULL CHECK(version=1))',
   };
   static const _introduced = {
     'protected_cache_imports': 2,
@@ -50,6 +52,7 @@ class LocalProfileDatabase {
     'protected_food_intents': 3,
     'protected_food_heads': 3,
     'protected_food_locations': 3,
+    'protected_food_import_witnesses': 3,
   };
   static final _held = <String>{};
   final String root;

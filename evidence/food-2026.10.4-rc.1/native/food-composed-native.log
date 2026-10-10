@@ -1,0 +1,97 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/integration_test/task_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+00:00 +0: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=383
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=28
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1487 FILES_READ=2
+00:04 +1: isolated Food startup failure keeps Tasks writable and retries only Food
+00:05 +1: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=47
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=38
+TANDEMLOG_PHASE manifest=34
+TANDEMLOG_PHASE ingest=32
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=759 FILES_READ=1
+00:08 +2: production Food navigation persists Deleted and restores after restart
+00:08 +2: queued task capture cannot append after reconciliation discovers shared authority loss
+TANDEMLOG_FIRST_FRAME_MS=137
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=29
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=751 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=24
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=34
+TANDEMLOG_PHASE manifest=13
+TANDEMLOG_PHASE ingest=13
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=232 FILES_READ=0
+00:17 +3: (tearDownAll)
+00:17 +3: All tests passed!

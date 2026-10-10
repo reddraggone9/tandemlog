@@ -266,6 +266,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         detailsCommand = widget.onDetails;
     final details = group.details, key = details.groupKey;
     final opened = expanded.contains(key), deleted = view == FoodView.deleted;
+    final singleKnownFull =
+        group.containers.length == 1 &&
+        group.containers.single.contents.full &&
+        !group.contentsConflict;
     final metadata = [
       if (details.size.isNotEmpty) details.size,
       if (details.location.isNotEmpty) details.location,
@@ -291,10 +295,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             details.name,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
-                          Text(
-                            group.summary,
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
+                          if (opened || !singleKnownFull)
+                            Text(
+                              group.summary,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
                         ],
                       ),
                       Wrap(

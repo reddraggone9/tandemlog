@@ -1,0 +1,192 @@
+{
+  "schema": 1,
+  "review": "Independent bounded Food import, unpublished schema3 revision, small presentation delta and normal native CI registration architecture closure",
+  "reviewedAtUtc": "2026-10-10T04:31:07.657794+00:00",
+  "worktree": "/tmp/tandemlog-food-implementation",
+  "gitHead": "355da1fe6166cc1d8f6b0a6f1ffad58d9a018573",
+  "workingTreeUncommitted": true,
+  "verdict": "ACCEPT_SCOPED_SOURCE; no architecture must-fix. Live import and release/platform acceptance remain separate.",
+  "mustFix": [],
+  "extends": {
+    "path": "/tmp/food-architecture-review/durable-food-final-diagnostic-supplement.json",
+    "bytes": 3085,
+    "sha256": "2c47ac2eb2c4495de250d3d0279b1235cb3c7a7201551b241cb6f5e28d70eee7",
+    "preserved": true
+  },
+  "sourceSha256": {
+    "lib/main.dart": {
+      "bytes": 201499,
+      "sha256": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3"
+    },
+    "lib/food/food_import.dart": {
+      "bytes": 6286,
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    "lib/food/food_record.dart": {
+      "bytes": 5623,
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    "lib/food/inventory.dart": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 38889,
+      "sha256": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2"
+    },
+    "lib/presentation/task_completion_checkbox.dart": {
+      "bytes": 3011,
+      "sha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12434,
+      "sha256": "6169c602b5da1ec40e52efad96495f906f59c0c33044ef4ec463a79936b28a99"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 11161,
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "lib/storage/local_settings.dart": {
+      "bytes": 7325,
+      "sha256": "166e0722aacdd37236b03a306e42f38d06dda683b3edb8cdc2322a20547b8561"
+    },
+    "test/food_import_test.dart": {
+      "bytes": 21483,
+      "sha256": "38fa2094e6bb4d05bc7ac02678283fc84fb8c83bc91e4b539853596c55099056"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "bytes": 6228,
+      "sha256": "037a5bd153f8a69d7c9a62ee2c1a8e2540355057b54809419e940d53f06fa523"
+    },
+    "test/food_import_contract_vector_test.dart": {
+      "bytes": 931,
+      "sha256": "6221fef8d56da9ea2d67bb4ab7503cb4fd43a8ffb5bfa99608480a590ad88b45"
+    },
+    "test/fixtures/food-import/plan-v1.json": {
+      "bytes": 698,
+      "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047"
+    },
+    "test/fixtures/food-import/expected-v1.json": {
+      "bytes": 901,
+      "sha256": "22cbb31b33bf3fc97944b09c9c556a7bd1d2f12a4905965e19ac9d5112c4470e"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 4991,
+      "sha256": "416fa37a14510f4004d6399a975281790ef258db58c66f251c2d740f322288a3"
+    },
+    "test/task_completion_checkbox_test.dart": {
+      "bytes": 7067,
+      "sha256": "f2215da6f012c3d452303a04e5781491b7318d3229be163936dceb069dfa3667"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 170335,
+      "sha256": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 20854,
+      "sha256": "8f03a3086b5ef20ee69d76cd7e833f39d084b2b219c4742e280ddaef38ebb398"
+    },
+    "design/food-import-contract.md": {
+      "bytes": 6324,
+      "sha256": "b29632085d157f63b48ccb65c9a2e70247805b10e433a6d2fef9f2ef047d21fe"
+    },
+    "design/README.md": {
+      "bytes": 5939,
+      "sha256": "e4864e320526d636d29928d55f718a7fe2f8f0e596b1d4cf04b848cdfb97fe82"
+    },
+    "design/decisions/0014-food-inventory.md": {
+      "bytes": 11139,
+      "sha256": "4829be5a1476663be409b883c3a95cdce81da72ffa64b79b139a4cf0b1563c3b"
+    },
+    "evidence/food-import-v1/README.md": {
+      "bytes": 2470,
+      "sha256": "9e4ff8e5b2742b377f18d719ddd255ccc948717a0a9badcb27b52d3fe4c8f7ed"
+    },
+    "evidence/food-import-v1/implementation-receipt.json": {
+      "bytes": 4612,
+      "sha256": "38fbafa1afa535e197c6de85832cf358bfd10b1c5e340ed3ee83895087cba0a5"
+    },
+    "pubspec.yaml": {
+      "bytes": 590,
+      "sha256": "909f45bea2908e9da84d49ef05f4f56b9f9a6e4dfbaacedf65f73adb465252ac"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    }
+  },
+  "reviewedBoundaries": [
+    "Import is a bounded adapter into the existing Food Add command path, not an external canonical writer. Deterministic physical UUIDs derive from once-generated import namespace plus original source ID and ordinal; current clocks/sequence/writer remain app-owned. Unknown historical contents/certainty stay unknown and createdAt retains reviewed original spelling.",
+    "Immutable domain-prefixed plan hash binds source SHA, count, order, normalized payload and namespace. Committed repeat proves original record IDs/hashes, not edited/deleted projection fields. Changed source/count/plan or collisions refuse; concurrent callbacks serialize into one original batch.",
+    "Owner transaction atomically stages guard reservation, exact Food receipts, dedicated per-space initialized witness and complete index/attempt ledger before any provider append. SQL staging failure rolls back witness/ledger/receipt/guard changes; retained pre-existing genesis guard stays byte-identical.",
+    "Import witness and complete bounded metadata inventory validate before typed remote Food-history admission; protected current settings/writer validate at each import entry before refresh and again before staging. Lost initialization/index/attempt evidence remains hard even with malformed remote Food history.",
+    "Partial, zero-byte and ambiguous appends retain exact original receipts. Recovery uses only the original missing suffix; admitted repeat does not recover unrelated pending commands. Missing receipts/evidence and changed source cannot restamp new originals.",
+    "Released stable v2026.10.3 source is schema2. New witness table is introduced3 only, additive from frozen released1/2 definitions. Earlier unpublished prototype3 without the table rejects via exact schema verification; no silent repair, reset or live migration is authorized.",
+    "Collapsed summary suppression is limited to exactly one known-full conflict-free physical container; Inspect reveals full details. Unknown/partial/multiple/conflicting summaries retain their meaning. Repeat opacity composites the complete vector once, retaining native Checkbox hit/focus/semantics behavior.",
+    "Normal native runner adds one registerFoodProductionTests call/import and exports the existing five-test registration. The changed singleton flow asserts actual physical count, absence of redundant collapsed text, and full Inspect contents rather than waiting for obsolete text. Existing removal/Deleted/restart/Restore and safety checks remain."
+  ],
+  "independentExecution": {
+    "firstRun": {
+      "passed": 37,
+      "failed": 0,
+      "exitCode": 0,
+      "scope": "Import20 + frozen upgrade3 + vector1 + component/preview gates; before final ordering/test additions",
+      "log": "/tmp/food-import-architecture-review/focused-tests.log",
+      "bytes": 5453,
+      "sha256": "e10f865e947fdee5649b1723e22cda131228e113079cb441f27ab33c52c2bdc7"
+    },
+    "finalRun": {
+      "passed": 27,
+      "failed": 0,
+      "exitCode": 0,
+      "scope": "Final import23 + frozen schema2 upgrade3 + frozen vector1",
+      "log": "/tmp/food-import-architecture-review/final-import-upgrade-tests.log",
+      "bytes": 3965,
+      "sha256": "9827a8d128bdbd522c098fa61549c85e3ff3fea533d454ac924a198517e0a87a",
+      "sourceChangedDuringRun": false
+    },
+    "nativeLibrary": {
+      "path": "/tmp/tandemlog-food-implementation/build/linux/x64/debug/text_engine/libtandemlog_text.so",
+      "bytes": 1167040,
+      "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56",
+      "reusedExistingBuild": true
+    },
+    "vectorIndependentPython": {
+      "canonicalJsonMatches": true,
+      "planHash": "4324b2a04df6895717edadd7aaf0ded5ca85049b29aa33e3152729a5b24bf79b",
+      "targetIds": [
+        "269e1a79-9257-51ce-9117-1537d8e6ac0a"
+      ]
+    },
+    "noFullBuildOrFullMatrixRun": true
+  },
+  "protectedPathsUnchangedFromCheckpointF4": [
+    "lib/main.dart",
+    "lib/domain",
+    "native",
+    "android",
+    "windows",
+    "linux",
+    "pubspec.lock",
+    ".github/workflows",
+    "lib/storage/writer_guard.dart",
+    "lib/storage/profile_food_intents.dart",
+    "lib/storage/local_settings.dart"
+  ],
+  "limits": [
+    "No private source bytes read or imported; supplied sourceSha256 is not independently verified against absent private data. Live source staging/cutover/deletion requires its separate authorized contract.",
+    "One designated installation/profile is required for this operation. No offline cross-profile multiwriter import convergence or global exactly-once claim; loss of both ledger and dedicated witness is outside retained-witness detection.",
+    "Earlier unpublished schema3 profiles lacking the new table fail closed. Released schema1/2 upgrade compatibility is retained, not a downgrade guarantee.",
+    "The independent reviewer executed focused Flutter tests with existing native library, not Android/Windows native import or exact signed candidate acceptance. Root owns final hosted matrix and package/device gates.",
+    "Root is verifying composed five-test native registration separately. Source review accepts registration; does not invent a completed composed runtime result.",
+    "Earlier Tasks87/Food5 runtime receipts preserve their original source attribution; this receipt does not retroactively relabel them as executing the new import implementation."
+  ]
+}

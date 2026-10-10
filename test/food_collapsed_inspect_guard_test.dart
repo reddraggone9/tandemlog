@@ -1,0 +1,139 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
+
+const writer = '00000000-0000-4000-8000-000000000010';
+const container = '00000000-0000-4000-8000-000000000001';
+
+List<FoodOperation> fixture() => [
+  FoodOperation(
+    id: '$writer:1',
+    order: 1,
+    action: FoodAction.add,
+    targets: const [container],
+    details: const FoodDetails(
+      name: 'Rice',
+      brand: 'Sample Foods',
+      expiry: '2026-10-15',
+      size: '500 g',
+      location: 'Freezer',
+    ),
+    contents: const Contents.fraction(1, 1),
+    createdAt: '2026-10-10T00:00:00Z',
+  ),
+  FoodOperation(
+    id: '$writer:2',
+    order: 2,
+    action: FoodAction.edit,
+    targets: const [container],
+    contents: const Contents.fraction(1, 2),
+  ),
+  FoodOperation(
+    id: '$writer:3',
+    order: 3,
+    action: FoodAction.edit,
+    targets: const [container],
+    contents: const Contents.fraction(1, 1),
+  ),
+];
+
+Future<void> keyboardActivate(WidgetTester tester, Finder control) async {
+  await tester.ensureVisible(control);
+  await tester.pumpAndSettle();
+  final icon = find.descendant(of: control, matching: find.byType(Icon));
+  final focus = Focus.of(tester.element(icon.first));
+  for (var i = 0; i < 20 && !focus.hasPrimaryFocus; i++) {
+    await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+    await tester.pumpAndSettle();
+  }
+  expect(focus.hasPrimaryFocus, isTrue, reason: 'Real Tab reaches Inspect');
+  await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+  await tester.pumpAndSettle();
+}
+
+void main() {
+  for (final brightness in Brightness.values) {
+    for (final scale in [1.0, 2.0]) {
+      testWidgets('latest Full conflict retains warning and Inspect '
+          '${brightness.name} ${scale}x', (tester) async {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(390, 850);
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        final operations = fixture();
+        for (final operation in operations) {
+          operation.validate();
+        }
+        final state = projectFood(operations);
+        final before = state.containers.map((e) => e.toJson()).toList();
+        expect(state.active.single.contents.full, isTrue);
+        expect(state.active.single.contentsConflict, isTrue);
+        expect(state.groups.single.quickRemoveTarget, isNull);
+        final commands = <String>[];
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(brightness: brightness, useMaterial3: true),
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(
+                context,
+              ).copyWith(textScaler: TextScaler.linear(scale)),
+              child: child!,
+            ),
+            home: FoodInventoryPage(
+              state: state,
+              onAdd: (_, _) => commands.add('add'),
+              onRemove: (_) => commands.add('remove'),
+              onRestore: (_) => commands.add('restore'),
+              onContents: (_, _) => commands.add('contents'),
+              onDetails: (_, _, _) => commands.add('details'),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final warning = find.textContaining('contents need review');
+        expect(
+          warning.hitTestable(),
+          findsOneWidget,
+          reason: 'Full latest value cannot hide an unresolved conflict',
+        );
+        expect(find.byTooltip('Remove one Rice container'), findsNothing);
+        expect(find.text('1 full'), findsNothing);
+        await keyboardActivate(
+          tester,
+          find.byTooltip('Inspect Rice containers'),
+        );
+        expect(warning, findsOneWidget);
+        expect(find.text('1 container · 500 g · Freezer'), findsOneWidget);
+        expect(find.text('Container 00000001 · Full'), findsOneWidget);
+        expect(
+          find.text('Observed alternatives: ½ remaining / Full'),
+          findsOneWidget,
+        );
+        expect(
+          find.text(
+            'Contents changed on another device. '
+            'Choose contents to resolve.',
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.byTooltip('Edit Rice container 00000001 contents'),
+          findsOneWidget,
+        );
+        final remove = tester.widget<TextButton>(
+          find.widgetWithText(TextButton, 'Remove selected (0)'),
+        );
+        expect(
+          remove.onPressed,
+          isNull,
+          reason: 'Inspect alone never selects a physical container',
+        );
+        expect(commands, isEmpty);
+        expect(state.containers.map((e) => e.toJson()).toList(), before);
+        expect(tester.takeException(), isNull);
+      });
+    }
+  }
+}

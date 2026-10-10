@@ -1,0 +1,128 @@
+{
+  "role": "author implementation handoff; independent reviews separately required",
+  "status": "implemented focused gates pass; no live/native-platform/import/release acceptance",
+  "sourceBase": "355da1fe6166cc1d8f6b0a6f1ffad58d9a018573",
+  "changes": "bounded v1 import API only; other concurrent root changes excluded",
+  "focusedTests": {
+    "count": 55,
+    "failed": 0,
+    "exitCode": 0,
+    "log": "evidence/food-import-v1/author-focused55-green.txt"
+  },
+  "analysis": "no issues",
+  "files": [
+    {
+      "path": "lib/food/food_import.dart",
+      "bytes": 6286,
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305"
+    },
+    {
+      "path": "lib/food/food_store.dart",
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    {
+      "path": "lib/storage/local_profile_database.dart",
+      "bytes": 12434,
+      "sha256": "6169c602b5da1ec40e52efad96495f906f59c0c33044ef4ec463a79936b28a99"
+    },
+    {
+      "path": "test/food_import_test.dart",
+      "bytes": 21483,
+      "sha256": "38fa2094e6bb4d05bc7ac02678283fc84fb8c83bc91e4b539853596c55099056"
+    },
+    {
+      "path": "test/food_profile_upgrade_test.dart",
+      "bytes": 6228,
+      "sha256": "037a5bd153f8a69d7c9a62ee2c1a8e2540355057b54809419e940d53f06fa523"
+    },
+    {
+      "path": "test/food_import_contract_vector_test.dart",
+      "bytes": 931,
+      "sha256": "6221fef8d56da9ea2d67bb4ab7503cb4fd43a8ffb5bfa99608480a590ad88b45"
+    },
+    {
+      "path": "test/fixtures/food-import/plan-v1.json",
+      "bytes": 698,
+      "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047"
+    },
+    {
+      "path": "test/fixtures/food-import/expected-v1.json",
+      "bytes": 901,
+      "sha256": "22cbb31b33bf3fc97944b09c9c556a7bd1d2f12a4905965e19ac9d5112c4470e"
+    },
+    {
+      "path": "design/food-import-contract.md",
+      "bytes": 6324,
+      "sha256": "b29632085d157f63b48ccb65c9a2e70247805b10e433a6d2fef9f2ef047d21fe"
+    },
+    {
+      "path": "design/README.md",
+      "bytes": 5939,
+      "sha256": "e4864e320526d636d29928d55f718a7fe2f8f0e596b1d4cf04b848cdfb97fe82"
+    },
+    {
+      "path": "design/decisions/0014-food-inventory.md",
+      "bytes": 11139,
+      "sha256": "4829be5a1476663be409b883c3a95cdce81da72ffa64b79b139a4cf0b1563c3b"
+    },
+    {
+      "path": "evidence/food-import-v1/README.md",
+      "bytes": 2470,
+      "sha256": "9e4ff8e5b2742b377f18d719ddd255ccc948717a0a9badcb27b52d3fe4c8f7ed"
+    },
+    {
+      "path": "evidence/food-import-v1/all-ledger-loss-red.txt",
+      "bytes": 1010,
+      "sha256": "c0ac7d48236d154ad10c216ad985ae1b7f989b8b68aebbb0565e068c06e279a6"
+    },
+    {
+      "path": "evidence/food-import-v1/author-analysis.txt",
+      "bytes": 148,
+      "sha256": "3d7b3685589cf8736e26b1b2088aaa3c2e8ae5cc4613a2a6171cb46b7c40f1a0"
+    },
+    {
+      "path": "evidence/food-import-v1/author-focused55-green.txt",
+      "bytes": 8045,
+      "sha256": "8c14dc145e5fbf722816ab1f0cc8a6bee1484b7303c2b7f4b7840a33f865e9ac"
+    },
+    {
+      "path": "evidence/food-import-v1/current-writer-red.txt",
+      "bytes": 971,
+      "sha256": "8b8db4e22cc98d121c3ff76e7b32a9a8d6b752826475a9efb77fd7c5be45d988"
+    },
+    {
+      "path": "evidence/food-import-v1/fixture-failure-observation.json",
+      "bytes": 724,
+      "sha256": "381927522a458f12ed6a661aa1f80193a2fb51e3cb6b1644c2ce7abea9fdd19a"
+    },
+    {
+      "path": "evidence/food-import-v1/integer-version-red.txt",
+      "bytes": 1994,
+      "sha256": "140fc322cf8cd3352137b88dfa211cf422b9dfd927911eb68fb3a71c1b5c3ec4"
+    },
+    {
+      "path": "evidence/food-import-v1/ledger-authority-order-red.txt",
+      "bytes": 1753,
+      "sha256": "8a1e56cdb0927fe73cd02de2224561654b7780fd058b72e6c99b72e15fe83a47"
+    },
+    {
+      "path": "evidence/food-import-v1/settings-authority-order-red.txt",
+      "bytes": 1736,
+      "sha256": "7984be4658ac0a58e2207a33e00a67c1d51c2498332623d71ca325f39a3368ea"
+    },
+    {
+      "path": "evidence/food-import-v1/stub-red.txt",
+      "bytes": 6233,
+      "sha256": "8b71657369e590a13a8489f9295be31c2d2c1c050dd63b1151780ea67741ddff"
+    }
+  ],
+  "limitations": [
+    "No sourceSha256 verification against absent private source bytes",
+    "No real private/live import",
+    "No cross-profile/offline multiwriter import convergence",
+    "No global duplicate guarantee after loss of both private ledger and protected witness",
+    "No Windows/Android import-specific native acceptance",
+    "Missing intermediate fixture-only full log qualified in fixture-failure-observation.json"
+  ]
+}

@@ -47,8 +47,9 @@ this implementation. Import is private and separately controlled: only approved
 whole-container suffixes and the exact approved literal brand list may be
 extracted. Preserve all other source text/fields and source identity. A
 deterministic source-ID/container-ordinal mapping makes retries idempotent.
-The contract, whitelist, staging originals and private source data stay outside
-Git. No live import or synced user-data operation is authorized here.
+The [generic app-side v1 contract](../food-import-contract.md) is authorized in
+Git; private extraction rules, whitelist, staging originals and private source
+data stay outside Git. No live import or synced user-data operation is authorized here.
 
 ## First slice and provisional UX
 

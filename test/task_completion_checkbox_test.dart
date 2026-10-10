@@ -1,9 +1,65 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/task_completion_checkbox.dart';
 
 void main() {
+  testWidgets(
+    'disabled repeat perimeter has uniform opacity at overlapping tips',
+    (tester) async {
+      for (final brightness in Brightness.values) {
+        final boundary = GlobalKey();
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(brightness: brightness),
+            home: Material(
+              color: Colors.transparent,
+              child: Center(
+                child: RepaintBoundary(
+                  key: boundary,
+                  child: const TaskCompletionCheckbox(
+                    value: false,
+                    repeating: true,
+                    onChanged: null,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final pixels = await tester.runAsync(() async {
+          final image =
+              await (boundary.currentContext!.findRenderObject()
+                      as RenderRepaintBoundary)
+                  .toImage(pixelRatio: 4);
+          final data = await image.toByteData(
+            format: ui.ImageByteFormat.rawRgba,
+          );
+          image.dispose();
+          return data!.buffer.asUint8List();
+        });
+        var maximumAlpha = 0;
+        for (var i = 3; i < pixels!.length; i += 4) {
+          if (pixels[i] > maximumAlpha) maximumAlpha = pixels[i];
+        }
+        expect(
+          maximumAlpha,
+          greaterThan(90),
+          reason: 'Perimeter remains visible',
+        );
+        expect(
+          maximumAlpha,
+          lessThanOrEqualTo(99),
+          reason:
+              '${brightness.name}: whole disabled vector uses 38% opacity; '
+              'overlapping stroke/tip must not double-blend',
+        );
+      }
+    },
+  );
   testWidgets('repeat geometry retains padded touch and checked semantics', (
     tester,
   ) async {

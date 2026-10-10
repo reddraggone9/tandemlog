@@ -1,0 +1,213 @@
+{
+  "successfulRuns": 41,
+  "uniqueSources": 41,
+  "floor": 56,
+  "candidates": [
+    {
+      "source": "02f32695bc776e7ac68c6796ac3a4c4c201a3a9c",
+      "version": "0.1.0-rc.3",
+      "code": 16
+    },
+    {
+      "source": "0547f4cf3182fb0381c9b31425b205dee320250f",
+      "version": "0.1.0-rc.8",
+      "code": 34
+    },
+    {
+      "source": "09bb3cf1cd7d9804a2fc7199b2349d80e29bae62",
+      "version": "0.1.0-rc.3",
+      "code": 10
+    },
+    {
+      "source": "11c0bd73429ccf721a19cca1becedab48ef8a4fb",
+      "version": "0.1.0-rc.10",
+      "code": 37
+    },
+    {
+      "source": "134c8b9e8006abaa07e596f4e91d32b0f2b8edd6",
+      "version": "0.1.0-rc.5",
+      "code": 25
+    },
+    {
+      "source": "147a876d799e5832527177fa76c5fdf77c1827a6",
+      "version": "2026.10.2-rc.1",
+      "code": 43
+    },
+    {
+      "source": "249cfbdf853ceb4ee264510171e3bb051b0f3612",
+      "version": "2026.10.1-rc.1",
+      "code": 40
+    },
+    {
+      "source": "2aa46be9043251c8ed4e21b2ad00d41aa054dffc",
+      "version": "2026.10.2-rc.6",
+      "code": 50
+    },
+    {
+      "source": "44344407200b61d38d7b33f22c0ace715376fd6f",
+      "version": "2026.10.2-rc.4",
+      "code": 47
+    },
+    {
+      "source": "46bcb5a981cd7c8d751a187dd463b898c316835f",
+      "version": "0.1.0-rc.3",
+      "code": 7
+    },
+    {
+      "source": "4d255e2b06187d6d6ad383d9142bfb2b3454c6b4",
+      "version": "0.1.0-rc.3",
+      "code": 11
+    },
+    {
+      "source": "5ac35da50acca69ab196a54312efc8ccef1452da",
+      "version": "2026.10.2-rc.3",
+      "code": 45
+    },
+    {
+      "source": "5d62b93f8154d71b9998683d9053e104dce16ae7",
+      "version": "0.1.0-rc.7",
+      "code": 32
+    },
+    {
+      "source": "5f615f536ad89eef835c828b77cdd200c08d4541",
+      "version": "0.1.0-rc.6",
+      "code": 30
+    },
+    {
+      "source": "687163b1f9c95fe8dee1dffa0775ee7fe4cd3884",
+      "version": "2026.10.2",
+      "code": 53
+    },
+    {
+      "source": "6d9726b6a68fd8e91a639216ac33d923ad619273",
+      "version": "0.1.0-rc.7",
+      "code": 31
+    },
+    {
+      "source": "7027851cc66b8681eb1c66f251f84f0bc740cbeb",
+      "version": "0.1.0-rc.8",
+      "code": 35
+    },
+    {
+      "source": "71b841fe9dba1b46e86de6c055ce56df4a978784",
+      "version": "2026.10.3",
+      "code": 54
+    },
+    {
+      "source": "74afbe294065f462b742b4570d4095e690e54b04",
+      "version": "2026.10.2-rc.7",
+      "code": 52
+    },
+    {
+      "source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+      "version": "2026.10.3",
+      "code": 56
+    },
+    {
+      "source": "77a5f2dfde4ea914e7f2cf09dcbf77ee738056cc",
+      "version": "2026.10.2-rc.4",
+      "code": 46
+    },
+    {
+      "source": "8ca015fa10cdfc17a1a84e55685c1fb00d2f5c3e",
+      "version": "0.1.0-rc.3",
+      "code": 17
+    },
+    {
+      "source": "9c58e744d1e5ca093f3a7fe7895afa8b2d9ba2ca",
+      "version": "0.1.0-rc.3",
+      "code": 8
+    },
+    {
+      "source": "9cb10d027fe05ccbc21059b2a8656459965191c5",
+      "version": "0.1.0-rc.8",
+      "code": 33
+    },
+    {
+      "source": "a742f3325dce0b8d2340ba893ab4ea58e3cef0b6",
+      "version": "0.1.0-rc.4",
+      "code": 22
+    },
+    {
+      "source": "aacabf942122283731b5ea448a3800fe73ab63a2",
+      "version": "2026.10.0",
+      "code": 39
+    },
+    {
+      "source": "b501dc64766be078d327ae778c09952995acd84e",
+      "version": "0.1.0-rc.5",
+      "code": 28
+    },
+    {
+      "source": "b6bc029c4d5e30ccb791f0502173b16810811d68",
+      "version": "0.1.0-rc.5",
+      "code": 29
+    },
+    {
+      "source": "b9e445da917e58fef18f4e8fe45607eda4eab090",
+      "version": "0.1.0-rc.4",
+      "code": 23
+    },
+    {
+      "source": "bc1fc99db53ef0ff9b9ad281ddefed4ea3bf234b",
+      "version": "2026.10.2-rc.5",
+      "code": 48
+    },
+    {
+      "source": "bd02aa6fc58b6f82488cc0a005c989effa6d8c0c",
+      "version": "0.1.0-rc.3",
+      "code": 12
+    },
+    {
+      "source": "c3c1bd87dc3495de6158e1913e1f3e1f8bdb6f2e",
+      "version": "2026.10.0-rc.1",
+      "code": 38
+    },
+    {
+      "source": "cf44c463ab632b6594f8114bdc0caee81feb2db2",
+      "version": "0.1.0-rc.9",
+      "code": 36
+    },
+    {
+      "source": "d7dd98124f2bab09b05c39ca7df4c8506fa37f08",
+      "version": "0.1.0-rc.5",
+      "code": 27
+    },
+    {
+      "source": "d89a7d99fabecd27993e81707e98e7f0a3a8227c",
+      "version": "0.1.0-rc.2",
+      "code": 5
+    },
+    {
+      "source": "da4859ea82f8b066ed701740c57cb9bcff1083ff",
+      "version": "2026.10.1",
+      "code": 42
+    },
+    {
+      "source": "ded2eebc10eb1670658995cbc0c06b4676a5c583",
+      "version": "0.1.0-rc.4",
+      "code": 24
+    },
+    {
+      "source": "e2df9f1de036077d4db7b91fb359f42d204e3d83",
+      "version": "2026.10.2-rc.2",
+      "code": 44
+    },
+    {
+      "source": "eb17c6aa7f34bef7429f6d9fb0db25c652c5f3e9",
+      "version": "2026.10.1-rc.1",
+      "code": 41
+    },
+    {
+      "source": "f503ad923a2d7d14dea9ab986af2b7950ad7ac89",
+      "version": "0.1.0-rc.3",
+      "code": 9
+    },
+    {
+      "source": "f5f3d025841ae64da13af3ba3f615309e00221df",
+      "version": "0.1.0-rc.3",
+      "code": 13
+    }
+  ],
+  "published": "v2026.10.3\tfalse\t2026-10-10T00:21:08Z\nv2026.10.2\tfalse\t2026-10-09T17:31:53Z\nv2026.10.2-rc.7\ttrue\t2026-10-09T16:05:07Z\nv2026.10.2-rc.6\ttrue\t2026-10-09T06:56:07Z\nv2026.10.2-rc.5\ttrue\t2026-10-09T02:47:15Z\nv2026.10.2-rc.4\ttrue\t2026-10-08T21:50:27Z\nv2026.10.2-rc.3\ttrue\t2026-10-05T00:51:51Z\nv2026.10.2-rc.2\ttrue\t2026-10-04T21:18:42Z\nv2026.10.2-rc.1\ttrue\t2026-10-04T17:15:17Z\nv2026.10.1\tfalse\t2026-10-04T13:19:15Z\nv2026.10.1-rc.1\ttrue\t2026-10-04T07:18:53Z\nv2026.10.0\tfalse\t2026-10-04T04:27:07Z\nv2026.10.0-rc.1\ttrue\t2026-10-03T23:52:19Z\nv0.1.0-rc.9\ttrue\t2026-10-03T03:04:45Z\nv0.1.0-rc.8\ttrue\t2026-10-02T18:29:42Z\nv0.1.0-rc.7\ttrue\t2026-10-02T14:13:00Z\nv0.1.0-rc.6\ttrue\t2026-10-02T06:07:28Z\nv0.1.0-rc.5\ttrue\t2026-10-02T04:06:45Z\nv0.1.0-rc.4\ttrue\t2026-10-01T19:36:19Z\nv0.1.0-rc.3\ttrue\t2026-10-01T03:57:12Z\nv0.1.0-rc.2\ttrue\t2026-09-30T19:20:27Z\nv0.1.0-rc.1\ttrue\t2026-09-30T14:55:20Z\n"
+}

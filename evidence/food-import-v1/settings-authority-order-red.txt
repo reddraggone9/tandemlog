@@ -1,0 +1,28 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_test.dart
+00:00 +0: malformed Food cannot mask protected settings binding on import
+00:00 +0 -1: malformed Food cannot mask protected settings binding on import [E]
+  Expected: throws <Instance of 'LocalDatabaseFailure'>
+    Actual: <Instance of 'Future<FoodImportReport>'>
+     Which: threw FoodHistoryFailure:<FormatException: Unexpected character>
+            stack package:tandemlog/food/food_store.dart 334:7       FoodStore._admitRefresh
+                  ===== asynchronous gap ===========================
+                  package:matcher                                    expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+                  test/food_import_test.dart 607:11                  main.<fn>
+                  ===== asynchronous gap ===========================
+                  dart:async                                         _CustomZone.registerUnaryCallback
+                  test/food_import_test.dart 606:5                   main.<fn>
+                  
+            which is not an instance of 'LocalDatabaseFailure'
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/food_import_test.dart 607:11                  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/food_import_test.dart 606:5                   main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: malformed Food cannot mask protected settings binding on import

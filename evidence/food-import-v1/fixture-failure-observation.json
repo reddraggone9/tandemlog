@@ -1,0 +1,12 @@
+{
+  "status": "fixture correction only; no production change",
+  "completeFailedLogRetained": false,
+  "reason": "Author reused output path during follow-up run before copying intermediate complete log",
+  "observedTerminal": "00:14 +54 -1: Some tests failed.",
+  "failingTest": "atomic ledger staging failure preserves canonical guard and intents",
+  "observedFailureExcerpt": [
+    "Expected: empty",
+    "Actual: [{space: 00000000-0000-4000-8000-000000000001, writer: 27665d95-e109-5f9a-ae7c-4778520a9042, raw: [123,34,118,34,58,49,...]}]"
+  ],
+  "correction": "Capture initialized genesis guard raw bytes before command; compare exact equality after injected ledger failure instead of expecting no initialized guard."
+}

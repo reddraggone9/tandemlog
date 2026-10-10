@@ -2,6 +2,31 @@
 
 ## Food inventory — durable source checkpoint
 
+RC preparation now proceeds under the existing Food authorization and quota
+override. Published stable2026.10.3/build56 and the complete41-successful-candidate
+history establish build56 as the floor; the next candidate is
+2026.10.4-rc.1/build57. The bounded [Food import contract v1](food-import-contract.md)
+is public for parallel private staging; its generic app-side implementation has
+55 passing focused tests and accepted independent architecture/security review.
+The final configured unit suite passes822; analysis/formatting are clean. All5
+production Food native workflows and their composed CI registration pass. An empty-inventory candidate does
+not depend on live cutover. Private source rows/whitelist and any live import or
+deletion remain outside this work.
+
+Collapsed stock omits the redundant quantity only for one known-full,
+conflict-free container; unknown, partial, multiple and mixed summaries remain.
+Inspect retains explicit physical details. Five focused UI cases and the complete
+preview widget suite pass. Disabled repeat vectors now composite opacity once;
+the regression first reproduced157/255 overlap alpha and now passes the38%
+bound. Native Linux pixels pass both themes and normal/200% text. Fresh synthetic
+density keeps64px normal rows/10 complete groups,136px narrow enlarged rows/3
+groups and104px wide enlarged rows/5 groups, with48px actions. "Sample Foods"
+is the fixture brand and "Freezer" is the location; real metadata is unchanged.
+Native Android/Windows exact candidate acceptance and full hosted matrix remain
+pending. Relevant semantics, keyboard, enlarged text, focus and readable labels
+are the bounded scope; optional broad assistive-technology/audio work is not a
+release gate.
+
 Lee authorized starting food now and explicitly overrode feature-start and
 publication quota thresholds for this food release only. The accepted
 [scope and storage boundary](decisions/0014-food-inventory.md) preserve task v3

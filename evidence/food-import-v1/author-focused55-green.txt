@@ -1,0 +1,57 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_test.dart
+00:00 +0: /tmp/tandemlog-food-implementation/test/food_import_test.dart: strict v1 contract canonical fractions stable identities and invalid inputs
+00:00 +1: /tmp/tandemlog-food-implementation/test/food_import_test.dart: strict v1 contract canonical fractions stable identities and invalid inputs
+00:00 +2: /tmp/tandemlog-food-implementation/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+00:00 +3: /tmp/tandemlog-food-implementation/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +4: /tmp/tandemlog-food-implementation/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +5: /tmp/tandemlog-food-implementation/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +6: /tmp/tandemlog-food-implementation/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +7: /tmp/tandemlog-food-implementation/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.foodlog.sync-conflict-synthetic
+00:00 +8: /tmp/tandemlog-food-implementation/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+00:00 +9: /tmp/tandemlog-food-implementation/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+00:00 +10: /tmp/tandemlog-food-implementation/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+00:00 +11: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food physical count and durable Deleted survive restart without changing task v3 bytes
+00:00 +12: /tmp/tandemlog-food-implementation/test/food_import_test.dart: partial append cold retry recovers exact reserved bytes without fresh IDs
+00:00 +13: /tmp/tandemlog-food-implementation/test/food_store_test.dart: partial first record is resumed exactly from protected bytes across restart
+00:00 +14: /tmp/tandemlog-food-implementation/test/food_import_test.dart: uncertain full append cold retry admits originals without second append
+00:00 +15: /tmp/tandemlog-food-implementation/test/food_import_test.dart: uncertain full append cold retry admits originals without second append
+00:00 +16: /tmp/tandemlog-food-implementation/test/food_store_test.dart: acknowledged missing stream fails closed and retains last view
+00:00 +17: /tmp/tandemlog-food-implementation/test/food_import_test.dart: changed count source payload and namespace refuse after attempt
+00:00 +18: /tmp/tandemlog-food-implementation/test/food_import_test.dart: changed count source payload and namespace refuse after attempt
+00:00 +19: /tmp/tandemlog-food-implementation/test/food_import_test.dart: changed count source payload and namespace refuse after attempt
+00:00 +20: /tmp/tandemlog-food-implementation/test/food_store_test.dart: food handle releases its lease when the profile owner is poisoned
+00:01 +21: /tmp/tandemlog-food-implementation/test/food_import_test.dart: atomic ledger staging failure preserves canonical guard and intents
+00:01 +22: /tmp/tandemlog-food-implementation/test/food_import_test.dart: missing attempt or source witness fails closed
+00:01 +23: /tmp/tandemlog-food-implementation/test/food_import_test.dart: unrelated pending receipt is not recovered as import
+00:01 +24: /tmp/tandemlog-food-implementation/test/food_import_test.dart: wrong workspace refuses without reserving or appending
+00:01 +25: /tmp/tandemlog-food-implementation/test/food_import_test.dart: missing index with retained attempt refuses a new source namespace
+00:01 +26: /tmp/tandemlog-food-implementation/test/food_intents_test.dart: reservation and exact bytes commit or roll back together
+00:01 +27: /tmp/tandemlog-food-implementation/test/food_import_test.dart: pre-byte crash changed plan and missing ledger cannot restamp prepared receipts
+00:01 +28: /tmp/tandemlog-food-implementation/test/food_import_test.dart: pre-byte crash changed plan and missing ledger cannot restamp prepared receipts
+00:01 +29: /tmp/tandemlog-food-implementation/test/food_import_test.dart: physical collision with remote birth without local ledger refuses
+00:01 +30: /tmp/tandemlog-food-implementation/test/food_import_test.dart: concurrent identical commit callbacks serialize into one original batch
+00:01 +31: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +32: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +33: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +34: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +35: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +36: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:02 +37: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:04 +38: /tmp/tandemlog-food-implementation/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:06 +39: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives rollback and process death
+00:06 +40: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives rollback and process death
+00:06 +41: /tmp/tandemlog-food-implementation/test/food_import_test.dart: import cannot select a writer different from protected settings
+00:06 +42: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +43: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +44: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +45: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +46: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +47: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:06 +48: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:07 +49: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+00:07 +50: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: independent profiles can own DBs concurrently; this is not a workspace lease
+00:07 +51: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: missing protected_writer_guards fails closed instead of recreating safety authority
+00:07 +52: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: missing protected_text_intents fails closed instead of recreating safety authority
+00:07 +53: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: weakened protected schema fails closed despite matching columns
+00:07 +54: /tmp/tandemlog-food-implementation/test/local_profile_database_test.dart: exact frozen unpublished v1 upgrades without resetting identity
+00:07 +55: All tests passed!

@@ -116,6 +116,7 @@ void main() {
         'protected_food_intents',
         'protected_food_heads',
         'protected_food_locations',
+        'protected_food_import_witnesses',
       ]) {
         expect(db.select('SELECT * FROM $table'), isEmpty);
       }

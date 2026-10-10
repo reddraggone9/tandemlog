@@ -1,0 +1,90 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_test.dart
+00:00 +0: strict v1 contract canonical fractions stable identities and invalid inputs
+00:00 +1: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +1 -1: dry run stages nothing and explicit commit preserves physical and unknown data [E]
+  UnimplementedError: Import validation stub
+  package:tandemlog/food/food_store.dart 669:25                FoodStore.dryRunImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -1: cold retry after later edit and deletion uses original admission not projection
+00:00 +1 -2: cold retry after later edit and deletion uses original admission not projection [E]
+  UnimplementedError: Import commit stub
+  package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -2: partial append cold retry recovers exact reserved bytes without fresh IDs
+00:00 +1 -3: partial append cold retry recovers exact reserved bytes without fresh IDs [E]
+  Expected: throws <Instance of 'StateError'>
+    Actual: <Instance of 'Future<FoodImportReport>'>
+     Which: threw UnimplementedError:<UnimplementedError: Import commit stub>
+            stack package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+                  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+                  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+                  ===== asynchronous gap ===========================
+                  package:matcher                                              expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8            expectLater
+                  test/food_import_test.dart 82:37                             main.<fn>
+                  
+            which is not an instance of 'StateError'
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/food_import_test.dart 82:37                   main.<fn>
+  
+00:00 +1 -3: uncertain full append cold retry admits originals without second append
+00:00 +1 -4: uncertain full append cold retry admits originals without second append [E]
+  Expected: throws <Instance of 'StateError'>
+    Actual: <Instance of 'Future<FoodImportReport>'>
+     Which: threw UnimplementedError:<UnimplementedError: Import commit stub>
+            stack package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+                  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+                  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+                  ===== asynchronous gap ===========================
+                  package:matcher                                              expectLater
+                  package:flutter_test/src/widget_tester.dart 507:8            expectLater
+                  test/food_import_test.dart 91:45                             main.<fn>
+                  
+            which is not an instance of 'StateError'
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/food_import_test.dart 91:45                   main.<fn>
+  
+00:00 +1 -4: changed count source payload and namespace refuse after attempt
+00:00 +1 -5: changed count source payload and namespace refuse after attempt [E]
+  UnimplementedError: Import commit stub
+  package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -5: atomic ledger staging failure preserves canonical guard and intents
+00:00 +1 -6: atomic ledger staging failure preserves canonical guard and intents [E]
+  UnimplementedError: Import commit stub
+  package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -6: missing attempt or source witness fails closed
+00:00 +1 -7: missing attempt or source witness fails closed [E]
+  UnimplementedError: Import commit stub
+  package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -7: unrelated pending receipt is not recovered as import
+00:00 +1 -8: unrelated pending receipt is not recovered as import [E]
+  UnimplementedError: Import commit stub
+  package:tandemlog/food/food_store.dart 671:25                FoodStore.commitImport.<fn>
+  package:tandemlog/food/food_store.dart 102:18                FoodStore._queue.<fn>
+  package:tandemlog/storage/local_profile_database.dart 71:18  LocalProfileDatabase.serialize.<fn>
+  
+00:00 +1 -8: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: atomic ledger staging failure preserves canonical guard and intents
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: changed count source payload and namespace refuse after attempt
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+  ... and 4 more

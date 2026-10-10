@@ -1,0 +1,18 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_test.dart
+00:00 +0: import cannot select a writer different from protected settings
+00:00 +0 -1: import cannot select a writer different from protected settings [E]
+  Expected: throws <Instance of 'FormatException'>
+    Actual: <Instance of 'Future<FoodImportReport>'>
+     Which: emitted <Instance of 'FoodImportReport'>
+  
+  package:matcher                                    expectLater
+  package:flutter_test/src/widget_tester.dart 507:8  expectLater
+  test/food_import_test.dart 534:11                  main.<fn>
+  ===== asynchronous gap ===========================
+  dart:async                                         _CustomZone.registerUnaryCallback
+  test/food_import_test.dart 530:5                   main.<fn>
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: import cannot select a writer different from protected settings

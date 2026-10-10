@@ -1,0 +1,139 @@
+{
+  "schema": 1,
+  "reviewer": "security_review",
+  "reviewed_at_utc": "2026-10-10T04:31:25.663331+00:00",
+  "source_base": "355da1fe6166cc1d8f6b0a6f1ffad58d9a018573",
+  "verdict": "accepted_scoped_static_security_source_closure",
+  "must_fix": [],
+  "source_status": "Uncommitted authorized RC delta; hashes bind exact files, not a candidate artifact or live-import/publication permission. Earlier durable receipts remain unchanged.",
+  "files": {
+    "lib/food/food_import.dart": {
+      "bytes": 6286,
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12434,
+      "sha256": "6169c602b5da1ec40e52efad96495f906f59c0c33044ef4ec463a79936b28a99"
+    },
+    "test/food_import_test.dart": {
+      "bytes": 21483,
+      "sha256": "38fa2094e6bb4d05bc7ac02678283fc84fb8c83bc91e4b539853596c55099056"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "bytes": 6228,
+      "sha256": "037a5bd153f8a69d7c9a62ee2c1a8e2540355057b54809419e940d53f06fa523"
+    },
+    "test/food_import_contract_vector_test.dart": {
+      "bytes": 931,
+      "sha256": "6221fef8d56da9ea2d67bb4ab7503cb4fd43a8ffb5bfa99608480a590ad88b45"
+    },
+    "test/fixtures/food-import/plan-v1.json": {
+      "bytes": 698,
+      "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047"
+    },
+    "test/fixtures/food-import/expected-v1.json": {
+      "bytes": 901,
+      "sha256": "22cbb31b33bf3fc97944b09c9c556a7bd1d2f12a4905965e19ac9d5112c4470e"
+    },
+    "design/food-import-contract.md": {
+      "bytes": 6324,
+      "sha256": "b29632085d157f63b48ccb65c9a2e70247805b10e433a6d2fef9f2ef047d21fe"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 38889,
+      "sha256": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2"
+    },
+    "lib/presentation/task_completion_checkbox.dart": {
+      "bytes": 3011,
+      "sha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 4991,
+      "sha256": "416fa37a14510f4004d6399a975281790ef258db58c66f251c2d740f322288a3"
+    },
+    "test/task_completion_checkbox_test.dart": {
+      "bytes": 7067,
+      "sha256": "f2215da6f012c3d452303a04e5781491b7318d3229be163936dceb069dfa3667"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 20854,
+      "sha256": "8f03a3086b5ef20ee69d76cd7e833f39d084b2b219c4742e280ddaef38ebb398"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 170335,
+      "sha256": "085339feb27ca8c85e30af5b65ea5ab62c2a4d8756fc11b52482db4bbdf892da"
+    }
+  },
+  "author_frozen_core_verified": {
+    "lib/food/food_import.dart": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+    "lib/food/food_store.dart": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+    "lib/storage/local_profile_database.dart": "6169c602b5da1ec40e52efad96495f906f59c0c33044ef4ec463a79936b28a99"
+  },
+  "evidence_logs": {
+    "/tmp/food-import-focused-final55-green.log": {
+      "bytes": 8045,
+      "sha256": "8c14dc145e5fbf722816ab1f0cc8a6bee1484b7303c2b7f4b7840a33f865e9ac"
+    },
+    "/tmp/food-import-analysis-final.log": {
+      "bytes": 148,
+      "sha256": "3d7b3685589cf8736e26b1b2088aaa3c2e8ae5cc4613a2a6171cb46b7c40f1a0"
+    },
+    "/tmp/food-import-authority-order-red.log": {
+      "bytes": 1753,
+      "sha256": "8a1e56cdb0927fe73cd02de2224561654b7780fd058b72e6c99b72e15fe83a47"
+    },
+    "/tmp/food-import-all-ledger-loss-red.log": {
+      "bytes": 1010,
+      "sha256": "c0ac7d48236d154ad10c216ad985ae1b7f989b8b68aebbb0565e068c06e279a6"
+    },
+    "/tmp/food-import-settings-order-red.log": {
+      "bytes": 1736,
+      "sha256": "7984be4658ac0a58e2207a33e00a67c1d51c2498332623d71ca325f39a3368ea"
+    },
+    "/tmp/food-import-current-writer-valid-red.log": {
+      "bytes": 971,
+      "sha256": "8b8db4e22cc98d121c3ff76e7b32a9a8d6b752826475a9efb77fd7c5be45d988"
+    }
+  },
+  "closed_findings": [
+    "Ledger values now have SQL COUNT/SUM/MAX/type/key-byte preflight before materialization: at most101rows,26MiBtotal,256KiBpervalue,256bytekeys; index64KiB and100attempts,1000recordsperattempt are additionally validated.",
+    "Unrelated pending bytes/references reject before target collision scan; target identities are derived once for that scan, avoiding repeated1000-element UUID work.",
+    "Separate protected_food_import_witnesses per-space version1 row is staged atomically with complete index, attempt, guard and exact raw intents; witness/metadata presence must align. Missing index/attempt/witness, omitted rows and all-ledger loss with surviving witness fail closed.",
+    "Import ledger authority validates in _admitRefresh before streams can return FoodHistoryFailure. Import protected-settings writer checks run before initial refresh, after refresh during inspection, and in atomic staging. Shared identity/profile/ledger/guard errors cannot be downgraded to Food-only history faults.",
+    "Contract specifies exact domain-separated plan hash and explicitly qualifies loss of all ledger plus independent witness, including when other profile tables survive."
+  ],
+  "authority_review": [
+    "Final Plan and Container classes prevent implementation/subclass forgery. Container constructor reconstructs plain strict FoodDetails/Contents; immutable copied plan rows are validated. Exact keys/integer version, canonical UUIDs/source hash, count/UTF8 size, opaque source ID/ordinal uniqueness and calendar/offset timestamp checks apply.",
+    "UUID-v5 targets bind import namespace to sourceId/ordinal; plan SHA256 binds normalized data, row order, space, namespace and source attestation under explicit domain. Source bytes/provenance are external; sourceSha256 alone does not authenticate private extraction.",
+    "dryRun stages/appends nothing; refresh may admit an existing durable prefix. commit revalidates and uses normal bounded current Food Add records with original source createdAt, current clock/sequence and owned module writer. Existing births without matching ledger and same-source different namespaces refuse.",
+    "Ledger originals bind record IDs/hashes and exact add target/details/contents/createdAt, not mutable projection. Matching committed import returns originals after later edits/deletion and does not recover unrelated receipts. Ambiguous/partial retry uses only original saved suffix, same clocks/IDs/hashes, with no fresh reservation.",
+    "Owner queue serializes commits; short SQL transaction stages guard+raw receipts+ledger+witness before provider I/O. Existing released schema1/2 definitions/upgrades are unchanged; witness table joins unreleased schema3. Old prototype3 lacking it rejects rather than silently inventing authority.",
+    "Task v3 codec/hash/clock/ID/Undo sources, TaskStore, existing writer guard/raw Food intents, dependency lock and Android transport have no diff in this delta. Standard Food production test registration extends the existing native target; it introduces no live/private operation.",
+    "UI delta only composites disabled repeat vector opacity once under unchanged excluded/IgnorePointer semantics, and hides collapsed summary only for exactly one known-full nonconflicting container. Expanded Inspect and unknown/partial/multiple/conflicting summaries remain. No write authority or data behavior change."
+  ],
+  "validation_inspected": {
+    "focused": "Producer final55/0 exit0 log inspected; reviewer did not execute Dart/SQLite tests. Includes exact cold partial/full-uncertain recovery, changed source/count/plan refusal,1000physicalcontainers, concurrent duplicate commit, rollback, task/settings preservation and frozen released schema upgrade cases.",
+    "loss_cases": "Committed all-ledger-loss with new namespace, zero-byte all-ledger-loss with original and new namespaces, missing indexed attempt original retry, missing index, and missing independent witness refuse without new bytes; exact raw pending receipts preserved.",
+    "classification": "Meaningful prior red ledger-loss and ledger/settings ordering logs inspected; fixed combined malformed Food + lost authority returns hard errors. Earlier wrong-writer red was fixture head failure and is not accepted as evidence; current-writer-valid-red is the meaningful control.",
+    "independent_vector": {
+      "method": "Python standard-library canonical sorted JSON, hashlib.sha256 and uuid.uuid5 independently recomputed from public synthetic fixture",
+      "planHash": "4324b2a04df6895717edadd7aaf0ded5ca85049b29aa33e3152729a5b24bf79b",
+      "targetIds": [
+        "269e1a79-9257-51ce-9117-1537d8e6ac0a"
+      ],
+      "source_hash_matches_synthetic_bytes": true
+    },
+    "analysis": "Author analyzer log no issues; final composed tests/native/platform CI remain root-owned gates."
+  },
+  "remaining_limits": [
+    "No live/private import or source/whitelist review; those stay outside repo.",
+    "Loss of both all ledger metadata and independent witness can defeat source detection for a fresh namespace even when other profile tables survive; no reset/reimport permission follows. No cross-profile/global one-time guarantee; designated installation and private backup required.",
+    "Maximum-cap/mobile performance and Windows/Android import-specific native acceptance not established by focused Linux SQL tests.",
+    "Final committed source, full applicable CI, affected native UI/artifact, notes/media and publication gates remain separate."
+  ],
+  "reviewer_limits": "Read-only source/diff/log/hash review plus independent small Python vector calculation; no builds, test execution, dependency code, live data, private source, secrets or publication. Only this new receipt written outside repo."
+}

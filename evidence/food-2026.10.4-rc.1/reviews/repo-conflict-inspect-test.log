@@ -1,0 +1,6 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_collapsed_inspect_guard_test.dart
+00:00 +0: latest Full conflict retains warning and Inspect dark 1.0x
+00:01 +1: latest Full conflict retains warning and Inspect dark 2.0x
+00:01 +2: latest Full conflict retains warning and Inspect light 1.0x
+00:01 +3: latest Full conflict retains warning and Inspect light 2.0x
+00:01 +4: All tests passed!

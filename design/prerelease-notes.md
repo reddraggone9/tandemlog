@@ -1,9 +1,7 @@
-Experimental 2026.10.2-rc.7 preview.
+Experimental 2026.10.4-rc.1 preview.
 
-- Reduced space below checklist counts and tightened the arrow/count gap.
+- Added Food inventory with expiration dates, Inbox, retained stock, partial contents, and per-container removal and restoration.
 
-![Before: checklist counts have extra space below and a wide arrow gap. After: the footer is compact and the arrow/count gap is tighter.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-spacing-before-after.png)
+- Disabled repeating-task checkboxes now have even opacity around their arrow tips.
 
-- Checklist presses now show a compact, centered rounded highlight.
-
-![Before: a circular highlight sits below the checklist label. After: a short rounded rectangular highlight is centered around the arrow and count.](https://raw.githubusercontent.com/reddraggone9/tandemlog/9b6f18b52f1b22b4f8196e4273e5f660056bc726/evidence/rc7-editorial/disclosure-ink-before-after.png)
+![Before: disabled repeat arrow tips have darker seams. After: the arrow tips and perimeter have even opacity.](https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png)

@@ -1,0 +1,30 @@
+00:00 +0: loading /tmp/tandemlog-food-implementation/test/food_import_test.dart
+00:00 +0: strict v1 contract canonical fractions stable identities and invalid inputs
+00:00 +0 -1: strict v1 contract canonical fractions stable identities and invalid inputs [E]
+  Expected: throws <Instance of 'FormatException'>
+    Actual: <Closure: () => FoodImportPlan>
+     Which: returned <Instance of 'FoodImportPlan'>
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/food_import_test.dart 168:7                    main.<fn>
+  
+00:00 +0 -1: dry run stages nothing and explicit commit preserves physical and unknown data
+00:00 +1 -1: cold retry after later edit and deletion uses original admission not projection
+00:00 +2 -1: partial append cold retry recovers exact reserved bytes without fresh IDs
+00:00 +3 -1: uncertain full append cold retry admits originals without second append
+00:00 +4 -1: changed count source payload and namespace refuse after attempt
+00:00 +5 -1: atomic ledger staging failure preserves canonical guard and intents
+00:00 +6 -1: missing attempt or source witness fails closed
+00:01 +7 -1: unrelated pending receipt is not recovered as import
+00:01 +8 -1: wrong workspace refuses without reserving or appending
+00:01 +9 -1: missing index with retained attempt refuses a new source namespace
+00:01 +10 -1: pre-byte crash changed plan and missing ledger cannot restamp prepared receipts
+00:01 +11 -1: physical collision with remote birth without local ledger refuses
+00:01 +12 -1: concurrent identical commit callbacks serialize into one original batch
+00:01 +13 -1: fully staged maximum batch preserves all 1000 physical identities
+00:04 +14 -1: shared manifest change remains hard and leaves import unstaged
+00:04 +15 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-implementation/test/food_import_test.dart: strict v1 contract canonical fractions stable identities and invalid inputs

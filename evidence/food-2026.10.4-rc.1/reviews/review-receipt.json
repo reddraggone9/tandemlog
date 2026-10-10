@@ -1,0 +1,149 @@
+{
+  "reviewer": "/root/tag_autocomplete_trials independent UX/editorial reviewer",
+  "createdUtc": "2026-10-10T04:23:28.110669+00:00",
+  "decision": "ACCEPT scoped source/pixel UX delta and preliminary draft media; exact covered-range editorial closure pending final author commit",
+  "mustFix": [],
+  "scope": [
+    "uniform disabled repeat-vector opacity",
+    "single known-full conflict-free Food collapsed summary omission",
+    "fresh selected native Linux GTK frames and Inspect keyboard/Back workflow evidence",
+    "bounded final draft release notes and actual Before/After media"
+  ],
+  "notClaimed": [
+    "Android or Windows native acceptance",
+    "physical touch or human testing",
+    "broad assistive technology/audio coverage",
+    "publication/signing/artifact acceptance",
+    "generic Food import/recovery correctness review"
+  ],
+  "productionChanges": {
+    "repeat": "Complete opaque vector is composited once at0.38 for disabled controls. Native Checkbox hit/focus/semantics remain underneath; enabled/completed behavior remains unchanged.",
+    "summary": "Renderer predicate omits redundant collapsed summary only when exactly one container is known Full and conflict-free. Inspect restores summary; unknown/partial/multi/mixed/conflict summaries remain."
+  },
+  "actualViewedSelectedFrames": {
+    "repeat": 8,
+    "density": 8,
+    "inspect": 12,
+    "total": 28,
+    "warmupExcluded": true,
+    "repositoryCopiesByteIdentical": true
+  },
+  "observations": [
+    "Final repeat Before and After are credible native images; rejected initial black first capture is not selected. Dark comparison visibly removes darker seams without changing control geometry.",
+    "Normal density retains64px rows and10 complete groups at390/1200. At200%,136px narrow/3 complete and104px wide/5 complete. Expiration/name/brand remain readable and48px actions separated.",
+    "All12 Inspector frames independently viewed. Inspect reveals500g/Freezer and physical ID;200% menu wraps Remove1container without overflow. Edit field values and Save/Cancel remain readable.",
+    "Existing200% narrow ancillary date-format suffix/optional-label/retention hint and Inbox-helper ellipsis persists. It does not hide core field values or block the scoped Inspect workflow. Scrolled editor frames are not claims that every field is visible simultaneously.",
+    "Native Inspector log1/1 loops390/1200\u00d71x2x dark, using Tab/ShiftTab/Enter, Escape and dispatchedFlutterBack; all12 full container JSONs remain unchanged. This is scripted synthetic nativeLinux, not whole-list traversal/human testing."
+  ],
+  "independentGuard": {
+    "repoTest": "test/food_collapsed_inspect_guard_test.dart",
+    "green": "4/4 themes\u00d71x2x390 widget passes; real Tab+Enter Inspect; latestFull concurrenthalf/Full warning visible; no quickRemove; physicalmetadata/alternatives visible; commands empty and whole container JSON unchanged",
+    "mutationNegativeControl": "Temporary copy drops only !group.contentsConflict predicate.4/4 tests fail at missing collapsed warning; production file never edited by reviewer.",
+    "fixtureCorrection": "Initial temporary assertion used nonexistent half-full label; corrected to actual half-remaining. Failed fixture-label log preserved and is not a production regression."
+  },
+  "nativePasses": {
+    "repeat": "1/1 enclosing8 Before/After theme/scale stages; raw transparent alpha before>99 after90..99 and48px nativeCheckbox target",
+    "density": "1/1 enclosing8 theme/scale/viewport cases",
+    "inspect": "1/1 enclosing4 viewport/scale keyboard/Back cases",
+    "completionFocus": "3/3 existing productionTasks cases including historicalv3 recurrence/remote regrouping"
+  },
+  "harnessBindingQualifier": "Final repeat fixture formatted after native execution; author states whitespace-only change. Production checkbox and Food renderer bytes are exact executed source, and unchanged at review.",
+  "preliminaryEditorial": {
+    "draft": "Two concise bullets: newFoodinventory with expiration/Inbox/retention/partial/removal/Restore; fixed uneven disabled repeating-checkbox opacity. No repeated shared-tag/checklist changes, prototype1full refinement, QA/preservation assurances or private import utility claim.",
+    "mediaCommit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "mediaRawBeforeEqualsStableSource": true,
+    "stableCheckboxSha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+    "cropRgbaEquality": {
+      "before": true,
+      "after": true
+    },
+    "actualCropOrigins": {
+      "before": [
+        14,
+        44
+      ],
+      "after": [
+        216,
+        44
+      ]
+    },
+    "cropSize": [
+      184,
+      46
+    ],
+    "compositeSize": [
+      414,
+      104
+    ],
+    "judgment": "Dark real-control crop has readable centered Before/After labels, adequate control context and descriptive accurate alt; no generated pixels/private data. Immutable repository link pinned to media commit.",
+    "rangeStatus": "Provisional v2026.10.3..HEAD plus current working delta; exact final candidate range still required."
+  },
+  "sourceHashes": {
+    "lib/food/food_page.dart": "e6b8c24dfbb2b90357e5da218ae140c79121fd490e90c9675c2beeb7651aeac2",
+    "lib/presentation/task_completion_checkbox.dart": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+    "lib/food/inventory.dart": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+    "lib/main.dart": "6f5b37fc1d0ba6382f20919de2ac262049eb6dbfce426a2f590a55c94d4b63f3",
+    "integration_test/food_density_workflow_test.dart": "67d357f88c497bb02541b5d96272d687c2a67e45ba2a6ea0a67821965ec8e2b1",
+    "integration_test/food_inspect_accessibility_test.dart": "1567aec41a2d191a564f89e32d7fc26cc7897574b5a524efbf8d27863c0d7919",
+    "integration_test/completion_disabled_opacity_workflow_test.dart": "6c41429d30ed7369ffd6b1c014d01e5ab61557c1c0f9767d03f20162a9e9f093",
+    "integration_test/fixtures/task_completion_checkbox_before.dart": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+    "test/food_collapsed_inspect_guard_test.dart": "e97ef66fb52cb99317158f3bfff348cba55a69be7a71f4589e831b258b304cf4",
+    "test/food_preview_test.dart": "416fa37a14510f4004d6399a975281790ef258db58c66f251c2d740f322288a3",
+    "test/task_completion_checkbox_test.dart": "f2215da6f012c3d452303a04e5781491b7318d3229be163936dceb069dfa3667",
+    "tool/food_preview.dart": "8f32a5bba70245d806d5a051d73d62aea34ad43f815d3824546ef3ec9c9545ec",
+    "design/prerelease-notes.md": "cf46786252f1964e154810ea6de888c30d6110db7eacd52ffc8cb0d8b565f3f0",
+    "design/releases.md": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+    "evidence/food-2026.10.4-rc.1/README.md": "cdc8c0aee433764805fb79d450cc497829f8c707ca19907e69ebb972c302332a"
+  },
+  "selectedPixelHashes": {
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-1x-after.png": "8ba14d1c837463c5bf0a3198cbc715c8b8e54e04b8bb9c3082b8d8577b2759cb",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-1x-before.png": "1e4b9a8b9bf074086b9cf2548aef3b1e87b6ee7a86cf764bd32703362e20d7d1",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-2x-after.png": "e00af1fa822972af34333d10738a5a90feca6627cecdaabdf4276e43333880ad",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-dark-2x-before.png": "32496a143460f8a5abb2b4883288e7245ca2f08b5c54ac20f1a9c256f2268bde",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-light-1x-after.png": "bbb819ce7880c20b900d7d629f328f192fef2a0a63b0271709bd010384d0de29",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-light-1x-before.png": "9726488a6c845cecf139227baf7e706c33ffd1a64949dc714da1654536340c53",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-light-2x-after.png": "3adfac8255ebcc2ac5f80b9bcee72942029ca436f30708606e9cef36ff9d8751",
+    "/tmp/tandemlog-food-rc-evidence/repeat-final/repeat-light-2x-before.png": "eeb034d07bb69cb0c74b0e632e697a42b9274637a3609eb9ad4a6e15e113dfff",
+    "/tmp/tandemlog-food-rc-evidence/density/density-dark-1x-1200.png": "17b6eff2b4bc57fdc4a0f5452cf5ad439cddf955270117d861b08ce891ee2ed3",
+    "/tmp/tandemlog-food-rc-evidence/density/density-dark-1x-390.png": "3cf7e270e408d8c64114884d468cc3345f37b5b21dedf5dec95c3a5df1d78e4b",
+    "/tmp/tandemlog-food-rc-evidence/density/density-dark-2x-1200.png": "78b02a81bda6f19c1d677fb294a1e654b38ae4964dbe9d75726cd9fa2a492f3d",
+    "/tmp/tandemlog-food-rc-evidence/density/density-dark-2x-390.png": "a9cdbcb66ff5031a8348419e3ad6faa28d9dd749b2d41165ff566e3ac5932f10",
+    "/tmp/tandemlog-food-rc-evidence/density/density-light-1x-1200.png": "81282e73f77688ba93faad17ccea672cc6f61c4c7e27d54208ff8df91fc5e3eb",
+    "/tmp/tandemlog-food-rc-evidence/density/density-light-1x-390.png": "7e7b4868d46439d5b8601a2b784dfbaf6d2f0cb3562094bfbf87f1dfe6a118cf",
+    "/tmp/tandemlog-food-rc-evidence/density/density-light-2x-1200.png": "5c6921e9e108a31928cdd141d0a684aebd3a63058f20ccfc89f8db6018b22959",
+    "/tmp/tandemlog-food-rc-evidence/density/density-light-2x-390.png": "9c45f53f160fe36825ab198dc604feee26c1fc7d0c3bb5fbffd4e17c42549258",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-1200-actions.png": "5938f2c28919ecb80b42ff70446a8d0efc844d8b4dc646ae2c8e11c56bafa0a7",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-1200-editor.png": "a37d9c3649858e48b00b401c593e24dd6c139dc2d94fbacad1038164043574ba",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-1200.png": "8e22d8b25315984114900fe1e64c3ec378033494586d503ff11401551fd88092",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-390-actions.png": "8bd519fbddc5bd450979d496d04adc5beea69e80e56a3c5a4d4a5c3dcc7334c5",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-390-editor.png": "ff377e87d7d706854425ca4f142c09cbb0767d63be01e63c1041f91a28013505",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-1x-390.png": "4fbf0963ea0a16f8395526917cbb2b9dacc7654d5871705309bf96ec660ffe25",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-1200-actions.png": "34a9cfbc3484613f07a0476fb55b63f0029eafefc62c0ecd80d6733cd911dda9",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-1200-editor.png": "d142730ca2d63ed2985407a152ffa99f1aa3b1be2a67a7836aef65f43d97ce4f",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-1200.png": "58489857ee12ba70d200bfb013e09318ba8bb9a5c409b03274238908096f6268",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-390-actions.png": "60340ebaf6625141f7cb6972462dbdf405d24eaeccbf682a13a1d866a74533c7",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-390-editor.png": "a2a5e8d6ec09cb1523335f7977ada18895b52786dd3fb798b415663cc6b9748e",
+    "/tmp/tandemlog-food-rc-evidence/inspect/inspect-dark-2x-390.png": "6a50e680cb32f1b4b31340a43896abf738572ecebfb354fc02bb007ee8b36a0a"
+  },
+  "logsAndMediaHashes": {
+    "/tmp/tandemlog-food-rc-evidence/repeat-final-native.log": "d0dff573ab1079335e81956b03ec9b8d2e9ba7c5456688ee70dea571aa692333",
+    "/tmp/tandemlog-food-rc-evidence/density-final-native.log": "228bf4328f0b0330c21fa6a4f3cb818d3c5d10abb0d6b0d3ebc961b2e4b00f5c",
+    "/tmp/tandemlog-food-rc-evidence/inspect-final-native.log": "f702c4cea5a275781ae8993cc8c71f12b1a2d8aa98da9bc5cfe4d060e9c06e13",
+    "/tmp/tandemlog-food-rc-evidence/completion-focus-final-native.log": "4451ff7d9b15d12b43c0a834d7037d055ebcf858ab5768e37ee17487b0eb146b",
+    "/tmp/food-ux-review/rc-delta/repo-conflict-inspect-test.log": "4b3d3cfe9b50c436c0aec9ac540a2db989671c1387b0428eaf4c241598d6a0e4",
+    "/tmp/food-ux-review/rc-delta/conflict-inspect-test.log": "0598232eab6b0760654dc53b647377afaac5f7196c0f0efc5967dd5ad0c15205",
+    "/tmp/food-ux-review/rc-delta/conflict-inspect-negative-control.log": "1f78eb88946a6edcfb8a27b43bff0c4828a92e42aa2045da973b87a1320fc9dc",
+    "/tmp/food-ux-review/rc-delta/fixture-label-mismatch.log": "58ed2bf5d87f9882607dfbfcee6212365a084f4341447459b8131e3d27f25e0f",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/before-source.dart.txt": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/after-source.dart.txt": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/repeat-dark-1x-after.png": "8ba14d1c837463c5bf0a3198cbc715c8b8e54e04b8bb9c3082b8d8577b2759cb",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/repeat-dark-1x-before.png": "1e4b9a8b9bf074086b9cf2548aef3b1e87b6ee7a86cf764bd32703362e20d7d1",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/disabled-repeat-media-recipe.json": "4572fc49d9d7607f7f2f0125f7eaa617811534cb5cd3f6303cdfbc2a8fa5fab0",
+    "/tmp/tandemlog-food-implementation/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881"
+  },
+  "preservedPriorReceipts": [
+    "/tmp/food-ux-review/density-final/review-receipt.json",
+    "/tmp/food-ux-review/inspect-access/final-addendum/review-receipt.json",
+    "/tmp/food-ux-review/final-density-doc-supplement/review-receipt.json"
+  ]
+}

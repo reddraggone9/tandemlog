@@ -22,6 +22,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Food import contract v1](food-import-contract.md): bounded reviewed staging, explicit official commit and exact-byte retry; private extraction/data remain external.
+
 - [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
 
 - [Task parity decisions](decisions/0003-task-parity-and-prerelease-boundary.md): authorized scope, time semantics and prerelease compatibility boundary.

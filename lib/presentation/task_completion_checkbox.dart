@@ -26,7 +26,7 @@ class TaskCompletionCheckbox extends StatelessWidget {
     );
     final colors = Theme.of(context).colorScheme;
     final color = onChanged == null
-        ? colors.onSurface.withValues(alpha: 0.38)
+        ? colors.onSurface
         : colors.onSurfaceVariant;
     return Stack(
       alignment: Alignment.center,
@@ -35,9 +35,14 @@ class TaskCompletionCheckbox extends StatelessWidget {
         if (showRepeat)
           IgnorePointer(
             child: ExcludeSemantics(
-              child: CustomPaint(
-                size: const Size(18, 26),
-                painter: _RepeatPerimeter(color),
+              // Composite the complete vector once so stroke/tip overlap does
+              // not make disabled sections darker than the rest.
+              child: Opacity(
+                opacity: onChanged == null ? 0.38 : 1,
+                child: CustomPaint(
+                  size: const Size(18, 26),
+                  painter: _RepeatPerimeter(color),
+                ),
               ),
             ),
           ),

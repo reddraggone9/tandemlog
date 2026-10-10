@@ -38,7 +38,7 @@ class _FoodPreviewAppState extends State<FoodPreviewApp> {
     _add(
       const FoodDetails(
         name: 'Rice',
-        brand: 'Example Pantry',
+        brand: 'Sample Foods',
         expiry: '2026-10-15',
         size: '1 lb',
       ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
+import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
@@ -44,6 +45,10 @@ class _HeldFoodManifestFolder implements LogFolder, BoundedLogFolder {
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  registerFoodProductionTests();
+}
+
+void registerFoodProductionTests() {
   testWidgets(
     'queued task capture cannot append after reconciliation discovers shared authority loss',
     (tester) async {
@@ -456,8 +461,22 @@ void main() {
         await tester.tap(find.byTooltip('Remove one Synthetic Rice container'));
         await flows.waitForUi(
           tester,
-          () => find.text('1 full').evaluate().isNotEmpty,
+          () =>
+              tester
+                  .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
+                  .state
+                  .active
+                  .length ==
+              1,
         );
+        expect(find.text('1 full'), findsNothing);
+        await tester.tap(find.byTooltip('Inspect Synthetic Rice containers'));
+        await tester.pumpAndSettle();
+        expect(find.text('1 full'), findsOneWidget);
+        expect(find.textContaining(' · Full'), findsOneWidget);
+        await tester.tap(find.byTooltip('Collapse Synthetic Rice containers'));
+        await tester.pumpAndSettle();
+        expect(find.text('1 full'), findsNothing);
         await tester.tap(find.text('Deleted'));
         await tester.pumpAndSettle();
         expect(find.text('Synthetic Rice'), findsOneWidget);

@@ -34,7 +34,7 @@ List<FoodOperation> densityFixture() {
       ],
       details: FoodDetails(
         name: names[i],
-        brand: 'Example Pantry',
+        brand: 'Sample Foods',
         expiry: '2026-10-${11 + i}',
         size: '500 g',
         location: 'Freezer',
