@@ -1,0 +1,22 @@
+{
+  "checked_at_utc": "2026-10-10T17:50:18.995835+00:00",
+  "verdict": "ACCEPT_EXACT_PUSHED_SOURCE_AND_HOSTED_PREFLIGHT_ONLY",
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "push_ci_run": 38073186249,
+  "preflight_job": 114274649668,
+  "preflight": "Hosted candidate main guard/preflight/candidate-history passed; actual source87e8 checkout retained",
+  "version": "2026.10.4-rc.1+59",
+  "matrix_status": "in progress",
+  "publication_ready": false,
+  "supporting_files": [
+    {
+      "path": "/tmp/food-rc59-independent-review/build59-candidate-preflight-hosted.log",
+      "sha256": "6f71bbf899927d54cec1fa6bc1d82ef5e31bc64e825d5ac5462326a55fdf3539"
+    },
+    {
+      "path": "build59-initial-run-api.json",
+      "sha256": "eb491c77ed0d0a048c16f00e9dfb0a1dfb0ea13178216f9ef99cfef9bc009310"
+    }
+  ]
+}

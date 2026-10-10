@@ -1,0 +1,29 @@
+{
+  "checked_at_utc": "2026-10-10T17:49:10.842247+00:00",
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "stable_baseline": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+  "version": "2026.10.4-rc.1+59",
+  "actual_stable_to_candidate_diff_sha256": "7aac5eebc5b627d383d3887f7e7176b436c153a36b26f1d6a2408f60efc6c598",
+  "must_fix": [],
+  "publication_ready": false,
+  "verdict": "ACCEPT_ACTUAL_FINAL_RANGE_NOTES_AND_MEDIA",
+  "notes_path": "design/prerelease-notes.md",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "immutable_media_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+  "composite_sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+  "guidance_sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+  "findings": [
+    "Actual stable76c5-to87e8 covered changes retain meaningful three bullets: new Food inventory, disabled repeat icon seam and scrollable long errors",
+    "Keyboard fix is part of previously unreleased Food workflow; no extra QA/detail bullet or new image necessary; readable fields/Save assurances remain evidence-side",
+    "Existing dark real-app repeat Before/After and immutable link unchanged from separately accepted media provenance/crops; accurate alt text and synthetic data",
+    "Bazaar/XDG queued next-release items are absent; no privacy, compatibility boilerplate or testing claims added"
+  ],
+  "source_media_qualification": "Linux keyboard evidence/demo matches frozen production hashes with accurately documented earlier executed fixture plus final extra guard; not published notes media and not Android/native acceptance. Previous repeat image remains byte-identical, no repaint/recreation.",
+  "remaining": [
+    "New candidate artifacts and parent Android59 acceptance; this editorial receipt is not release readiness"
+  ],
+  "scope_limits": [
+    "Read-only review; no builds/tests/downloads/publication performed",
+    "No numeric account quota or private Library identifiers recorded"
+  ]
+}

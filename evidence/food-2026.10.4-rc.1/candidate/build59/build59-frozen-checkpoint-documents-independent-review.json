@@ -1,0 +1,62 @@
+{
+  "checked_at_utc": "2026-10-10T17:51:30.631709+00:00",
+  "verdict": "ACCEPT_DOCS_ONLY_FROZEN_BUILD59_CHECKPOINT",
+  "source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "candidate_run": 38073185907,
+  "push_ci_run": 38073186249,
+  "version": "2026.10.4-rc.1+59",
+  "must_fix": [],
+  "checks": [
+    "Only three tracked Markdown updates plus five additive candidate JSON receipts/handoff",
+    "Executable source/tests/version/lock/platform/workflow unchanged from87e8;145native manifest members/hashbytes unchanged",
+    "Copied reviewer source/editorial/preflight receipts byte-identical",
+    "Frozen source/runIDs,120native captures,12combo recorded run and later finalguard widget qualification accurate",
+    "Candidate matrix/exact Android artifacts/runtime/lifecycles/publication accurately pending, stableLatestv2026.10.3 preserved",
+    "Old57/58 bound evidence not promoted; Windows manualGUI RCwaiver retained",
+    "New record privacy markers absent; relativeMarkdown links resolve"
+  ],
+  "publication_ready": false,
+  "remaining": [
+    "Full candidate/exact original artifacts and new hosted lifecycles",
+    "Parent exact Android59 acceptance and normal publication/public verification gates"
+  ],
+  "copied_receipts_byteidentical": [
+    "evidence/food-2026.10.4-rc.1/candidate/build59/build59-pushed-preflight-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build59/final-range-build59-editorial-independent-review.json",
+    "evidence/food-2026.10.4-rc.1/candidate/build59/frozen-build59-source-readiness-independent-review.json"
+  ],
+  "files": [
+    {
+      "path": "design/food-native-acceptance.md",
+      "sha256": "4242428afe34dda8d9b234a2953033f4fd2905051afd35da5f3495f76d72331c"
+    },
+    {
+      "path": "design/status.md",
+      "sha256": "8f43d9f1074f3e8ab12b9d8997c50f5c5a9a2f8ff4c83834c55d544fc3f41e4f"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/README.md",
+      "sha256": "3ed31c2dd98ba4d162a0862d9bf2972e4d2032160810b66bac10e83ef10131cb"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build59/build59-pushed-preflight-independent-review.json",
+      "sha256": "a6eab201cb55f256d90714664337528a391c4e20db321520574b36c21b849aeb"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build59/handoff-pending.json",
+      "sha256": "9e17e7dcaa3359ccbbdb66dd95a75987cf38ce2cb46ea58cf5c5a87736fcdd4f"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build59/final-range-build59-editorial-independent-review.json",
+      "sha256": "a0123ca01bce5d08767e58597b99c7fa8c6a1bc14070db0f4e958599399fd4f7"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build59/frozen-build59-source-readiness-independent-review.json",
+      "sha256": "daf1c25469a3de542f1c031fa9a822bb8d34bb3d360e994222d7118f0636bf8a"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.1/candidate/build59/final-source-doc-demo-addendum.json",
+      "sha256": "77ae7d5ed728a4173effeb282d3fd53c7862e139c1012edc21ad630de40f8342"
+    }
+  ]
+}

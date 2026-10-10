@@ -1,0 +1,174 @@
+{
+  "decision": "ACCEPT scoped final source/doc/pixel/demo local gate; no must-fix remaining. Candidate dispatch may proceed; publication/artifact/platform acceptance remain separate pending gates.",
+  "additive_to": {
+    "path": "/tmp/food-build59-keyboard-ux-review/final-r4-source-native-ux-review.json",
+    "bytes": 62807,
+    "sha256": "b2df1b59f829af16b1932e34c3e0fb6aaa82ab79cc4346500a31884775f14afe"
+  },
+  "review_scope": "Read-only independent UX/source/media review. No production files changed, builds/tests/commits/push performed. Only own receipt and two real-video decoded frames written under private /tmp.",
+  "final_sources": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "bytes": 203416,
+      "sha256": "4a3b4e45026c40d4b4613b8527ccb13476f6bbcd199413a62dc62e8665a41dd7",
+      "repository_path": "lib/main.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/food/food_page.dart",
+      "bytes": 41707,
+      "sha256": "f2a92b946f72ec3efad6afe49cf420efa6c78be99570bd2c91e2699b4b2f805a",
+      "repository_path": "lib/food/food_page.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart",
+      "bytes": 11704,
+      "sha256": "52258b99ae93b7d668a295783a737fc0122f829e9e8f8bc4fc98bd370c4864b3",
+      "repository_path": "test/food_editor_keyboard_layout_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/food_editor_keyboard_workflow_test.dart",
+      "bytes": 1636,
+      "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8",
+      "repository_path": "integration_test/food_editor_keyboard_workflow_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart",
+      "bytes": 170591,
+      "sha256": "f9bce860bc6996dd8fdca480947010aad519ac5bdd9aab61bd7907c0fc319657",
+      "repository_path": "integration_test/task_flow_test.dart"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/pubspec.yaml",
+      "bytes": 590,
+      "sha256": "3dcab95b4c3c8c425573f785661d7370b7d5bb2473266710e9b400bf9712f44b",
+      "repository_path": "pubspec.yaml"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/pubspec.lock",
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+      "repository_path": "pubspec.lock"
+    }
+  ],
+  "reviewed_documents": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/decisions/0014-food-inventory.md",
+      "bytes": 12631,
+      "sha256": "433400fa981aa7741164850d4404b0315fd163236d5a150d26afceff950a5f85",
+      "repository_path": "design/decisions/0014-food-inventory.md"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/food-native-acceptance.md",
+      "bytes": 6746,
+      "sha256": "319b8d58610a1abcedc7b35d783c306b66497de7adab6f356150eee114d029c2",
+      "repository_path": "design/food-native-acceptance.md"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/design/status.md",
+      "bytes": 100976,
+      "sha256": "be4d91974642f86c5aeccecadda449b1b31a261b84a70defcf144f7f92594e85",
+      "repository_path": "design/status.md"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/README.md",
+      "bytes": 14325,
+      "sha256": "2f8677978245639f0530dc25f9b30e1d7be4d30ea32b81f293a09a7d71b2aefb",
+      "repository_path": "evidence/food-2026.10.4-rc.1/README.md"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md",
+      "bytes": 5348,
+      "sha256": "b2023f43dfdaa0af1cdbaf3d58b352bf31957046317e0f102b4349ae40b9c6fa",
+      "repository_path": "evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md"
+    }
+  ],
+  "document_verdict": "README and source/handoff/status/ADR accurately distinguish blockedbuild58 and current preparation59;120 actual synthetic GTK frames,85 earlier targeted tests vs strengthened12 final widgets; executed9cb native fixture vs final522 nonempty-glyph assertion; actual route-event Back vs Android keyboard ordering; no fresh signed/native Android/persistence acceptance claimed. Source count/font/controller/observed-target/format semantics retained. No private Android packet or quota value copied into reviewed145-member bundle.",
+  "native_fixture_qualification": "Final code guard52258\u2026 differs from executed9cb\u2026 only by explicit nonempty selected-glyph-box assertion. Independent diff reviewed. Final12 widget cases PASS22sec, analyzer no issues, format5zero; unchanged production f2a/4a3. No claim r4 native executed final guard. Hosted final candidate aggregate required.",
+  "demo": {
+    "path": "/tmp/food-build59-keyboard-evidence/native-linux-build59-keyboard-demo.mp4",
+    "bytes": 281731,
+    "sha256": "83cc1f78eb0d9c303bba3d51d379009ab1874187cce76be5a9d180947d846e47",
+    "codec": "H264",
+    "width": 320,
+    "height": 640,
+    "fps": "15/1",
+    "frames": 452,
+    "duration_seconds": 30.133333,
+    "recipe": {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-verification.json",
+      "bytes": 1358,
+      "sha256": "106b954c5f84e9fc148e31a0ec9cfd919fcb4498b506cb73e47d39a3915d06e4"
+    },
+    "raw_full_recording": {
+      "path": "/tmp/food-build59-keyboard-evidence/native/native-linux-scripted-preview.mp4",
+      "bytes": 3320613,
+      "sha256": "f5772c3be474aa4f02f2a85adf680369e82ee6ce401d1b4edd9131c9fc10a0a2"
+    },
+    "observations": "Actual dark200% Edit100 synthetic GTK viewport, focused field/caret, helper scroll, invalid date/error, keyboard metric transitions, discard/Keep editing and valid-date typing/Save pointer input. WhiteX crosshair visible at actual controls. Continuous window crop/trim; no generated/repainted UI. Ends Save input before next independent light fixture; does not show durable projection/result.",
+    "platform": "Linux GTK debug, Flutter-scripted pointer taps positioned with xdotool, simulated280px keyboard insets. Not actual Gboard/Android/Windows/human touch or profile persistence."
+  },
+  "viewed_demo_frames": [
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-0.0.png",
+      "bytes": 64654,
+      "sha256": "f315a4f73cc0befa5e796022290ecb6205f820fbaac36b0e742fb4e8c789c816"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-3.0.png",
+      "bytes": 69623,
+      "sha256": "cacbe381ae2f686ec7f6fccacd745f3f150d3f83f0eeb351a44cde362d2d64af"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-14.0.png",
+      "bytes": 64079,
+      "sha256": "d832cb741c63f472ff4625ff60c5a8d10797297b9f16b7471ff357935ce12dda"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-26.0.png",
+      "bytes": 57277,
+      "sha256": "90188a6cf0b098b2ac53e06f03f84a87bce8485ec37a5e63a84f27db0f2f7614"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-29.5.png",
+      "bytes": 67391,
+      "sha256": "46ddc23c770d62ff69b6bdf9ab3bb36d4f92b6cd33d773821c7d4d558cabdd0c"
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-evidence/demo-final-frame-29.9.png",
+      "bytes": 67830,
+      "sha256": "1d1332b94724609ee29ff2a0fdfba09ce0f93fb765ab33506ddebee021c46cfb"
+    }
+  ],
+  "independent_decode": [
+    {
+      "path": "/tmp/food-build59-keyboard-ux-review/independent-demo-14.png",
+      "bytes": 64079,
+      "sha256": "d832cb741c63f472ff4625ff60c5a8d10797297b9f16b7471ff357935ce12dda",
+      "seconds": 14,
+      "rgba_equals_owner_frame": true
+    },
+    {
+      "path": "/tmp/food-build59-keyboard-ux-review/independent-demo-29_9.png",
+      "bytes": 67830,
+      "sha256": "1d1332b94724609ee29ff2a0fdfba09ce0f93fb765ab33506ddebee021c46cfb",
+      "seconds": 29.9,
+      "rgba_equals_owner_frame": true
+    }
+  ],
+  "bundle_verification": {
+    "manifest": {
+      "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/keyboard-build59/manifest.json",
+      "bytes": 26408,
+      "sha256": "3cb47b5edf5e4e3175a6968de485bd3e50ee884cd61aad78e2b7658286b10c20"
+    },
+    "member_count": 145,
+    "verification": "Every member actual byte size/SHA256 matched manifest; all7 source hashes matched current files. All120 copied PNGs and concise demo byte-equal reviewed originals. Warmup excluded. No raw failed logs normalized.",
+    "snapshot_qualification": "Manifest is bound at this review; adding this additive receipt requires regenerating its member list/hash without changing reviewed executable/media bytes."
+  },
+  "remaining_gates": [
+    "Fresh signed exact-source replacement candidate and normal hosted tests/native aggregate including final nonempty guard; original installer/package/signature/native payload bindings and exact desktop installed lifecycles",
+    "Exact Android320dp normal/200% real Gboard focused/unfocused Add/Edit1/wrapped plural, automatically visible name/date, lower fields, helper/error scroll, keyboard close/reopen/Cancel/Back/draft, invalid/valid/blankInbox and cold replay; synthetic stable56 upgrade with exact Tasks/settings/physical IDs comparison",
+    "Final immutable covered-range editorial/artifact/native acceptance and parent publication quota gate under Food override; stable promotion requires Lee approval. Windows manual GUI RC waiver unchanged."
+  ],
+  "prior_evidence": "Keep all earlier RED/intermediate/native failures and historical57/58/r3 proofs with original source/artifact/fixture attributions. This addendum does not convert their platform scope."
+}

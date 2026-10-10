@@ -16,10 +16,16 @@ scrollable viewport above the actions. Dirty-close confirmation also scrolls;
 the obscured page no longer shrinks for a modal keyboard, and focused input is
 revealed after the dialog inset animation resizes its viewport. Font sizes,
 full edited-target counts, controllers and durable command behavior are retained.
-The combined regression covers both themes,100/200% text, Add/Edit1/Edit100,
-keyboard open/closed, focused fields, invalid errors, Cancel/Keep editing and
-valid Save. Source/UX review, fresh signed artifacts and exact Android acceptance
-are required before publication; Linux simulated keyboard metrics are not Gboard
+Frozen build59 source is `87e8b321ea76623e5ef5b8c532d69a3895300e65`.
+[Signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
+and push CI38073186249 are in progress. Independent code, UX/pixels, demo and
+actual-range editorial reviews accept the scoped correction. The recorded native
+GTK matrix passes twelve combinations with120 actual captures; final12 widget
+cases pass the later assertion-only glyph guard. Both themes,100/200% text,
+Add/Edit1/Edit100, keyboard transitions, focused fields, full helper/error,
+Cancel/route Back/Keep editing and valid Save are covered. [Bound evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
+retains executed-fixture and platform qualifications. Fresh signed artifacts and
+exact Android acceptance are still required; simulated GTK metrics are not Gboard
 acceptance. Windows manual GUI remains RC-waived; the new candidate still needs
 its own hosted installed lifecycle proofs. The [current handoff](food-native-acceptance.md)
 records that scope. Stable2026.10.3/build56 remains Latest. Food stable promotion

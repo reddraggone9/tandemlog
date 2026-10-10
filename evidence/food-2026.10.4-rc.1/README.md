@@ -13,6 +13,31 @@ from all41 successful main signed-candidate runs and22 published releases;
 stable2026.10.3/build56 remains Latest. Food RC delivery is authorized. Stable
 promotion and private source cutover remain separate decisions.
 
+## Build59 frozen source — candidate pending
+
+Executable source `87e8b321ea76623e5ef5b8c532d69a3895300e65` declares build59
+and passed fresh candidate/history preflight above floor58 from43 successful
+main signed candidates and22 releases. [Signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
+and push CI38073186249 are running at that exact source. No APK hash or Android
+acceptance is claimed until actual replacement bytes are available and verified.
+
+[Keyboard evidence](native/keyboard-build59/README.md) contains the tested REDs,
+85 affected widget passes, final strengthened12-case matrix and actual GTK
+integration pass across twelve combinations,120 original captures and a
+30-second pointer-visible demo. It qualifies the native executed fixture's
+later assertion-only nonempty glyph guard and simulated IME/platform limits.
+All145 manifest members match their original bytes and Git blobs.
+[Final code supplement](native/keyboard-build59/architecture-build59-supplement.json),
+[UX/pixel review](native/keyboard-build59/final-r4-source-native-ux-review.json),
+[demo/document addendum](candidate/build59/final-source-doc-demo-addendum.json),
+[frozen source review](candidate/build59/frozen-build59-source-readiness-independent-review.json)
+and [immutable-range editorial review](candidate/build59/final-range-build59-editorial-independent-review.json)
+accept the scoped source and unchanged three notes/media items.
+[Pending handoff](candidate/build59/handoff-pending.json) keeps exact artifact,
+hosted lifecycle and parent Gboard/upgrade acceptance open. These records do not
+upgrade older build57/58 evidence to build59 acceptance. Stable2026.10.3 remains
+Latest; publication requires the remaining gates and parent's private clearance.
+
 ## Historical build58 artifacts — Android layout blocked
 
 Frozen executable source `432784d0181af5b97fd89bfb3ef8d5c83212f92e` passed

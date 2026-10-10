@@ -32,8 +32,13 @@ canonical history preserved. Other field states were unfinished. These passes
 and older build57/storage proofs remain bound to their original source and APK;
 none substitutes for replacement59 keyboard acceptance.
 
-The build59 candidate run, source commit and exact APK identity will be recorded
-after the fresh full matrix and independent artifact review. Windows manual GUI
+Frozen build59 source `87e8b321ea76623e5ef5b8c532d69a3895300e65` is running
+[signed candidate38073185907](https://github.com/reddraggone9/tandemlog/actions/runs/38073185907)
+and push CI38073186249. Local independent code/UX/demo and actual-range notes
+reviews accept the scoped correction. [Actual GTK evidence](../evidence/food-2026.10.4-rc.1/native/keyboard-build59/README.md)
+records120 captures and the final fixture qualification. The exact Android
+artifact ID/APK hash will be recorded after the fresh full matrix and independent
+artifact review; no build59 runtime acceptance is implied by this checkpoint. Windows manual GUI
 remains RC-waived by the parent; fresh hosted Linux/Windows installed lifecycle
 proofs are still required for this candidate. Prior local CLI/storage evidence
 retains its original build57 or stable56 attribution.

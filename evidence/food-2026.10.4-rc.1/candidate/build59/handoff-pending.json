@@ -1,0 +1,23 @@
+{
+  "recorded_utc": "2026-10-10T17:50:03.251803+00:00",
+  "executable_source": "87e8b321ea76623e5ef5b8c532d69a3895300e65",
+  "version": "2026.10.4-rc.1",
+  "version_code": 59,
+  "signed_candidate_run": 38073185907,
+  "push_ci_run": 38073186249,
+  "local_source_ux_demo_editorial_gates": "accepted; final immutable review receipts adjacent",
+  "native_gtk": "one12combination matrix passed06:16 with120originalcaptures; final12widgetmatrix added only nonemptyglyphassert and passed22s",
+  "native_executed_fixture_qualification": "recorded9cb809 preassertfixture retained; finalhostednative must exercise finalguard",
+  "candidate_status": "in_progress",
+  "exact_android_status": "pending; actual artifact ID/APK digest unavailable at this checkpoint",
+  "build58_status": "blocked by actual Gboard title/form collapse; never publish",
+  "publication_ready": false,
+  "stable_latest": "v2026.10.3",
+  "remaining": [
+    "fresh full hosted candidate and desktop installed lifecycle proofs",
+    "exact original installer identity and independent full artifact review",
+    "parent Android59 combined actual Gboard/title/text/error/field matrix and upgrade/cold replay",
+    "parent fresh private quota snapshot before authorized Food publication"
+  ],
+  "scope": "Food keyboard correction only; Bazaar metadata/XDG feedback next release; no live synced data touched"
+}
