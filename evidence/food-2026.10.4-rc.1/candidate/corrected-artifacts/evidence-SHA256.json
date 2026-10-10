@@ -1,0 +1,146 @@
+{
+  "README.md": {
+    "bytes": 4879,
+    "sha256": "ff3b41facc4d67ba833731bd0e60db476f54a4a28abf5af374d7f5ec5c0aa686"
+  },
+  "android-38027666368-independent-badging.txt": {
+    "bytes": 1170,
+    "sha256": "1cb9574acbb39bc45e4765b8f7329478f4763bfa3d77737b798d194a16a373ee"
+  },
+  "android-38027666368-independent-signature.txt": {
+    "bytes": 942,
+    "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+  },
+  "android-SHA256SUMS.txt": {
+    "bytes": 88,
+    "sha256": "220b8f478dea658bcaef2e66f3dc83e93a9f2cd1810c524324b5b60b531c2155"
+  },
+  "android-cloud-archive-verification.json": {
+    "bytes": 826,
+    "sha256": "29b94e094a24228cfcae9f3789ee64feea6965268ca62b57bd772c7a308bdcfc"
+  },
+  "android-release-metadata.json": {
+    "bytes": 295,
+    "sha256": "4572965bf31abb1ade48d44fb41933781050602a68c31b5026865242a4956595"
+  },
+  "android-signature.txt": {
+    "bytes": 942,
+    "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+  },
+  "cloud-actual-badging.txt": {
+    "bytes": 1170,
+    "sha256": "1cb9574acbb39bc45e4765b8f7329478f4763bfa3d77737b798d194a16a373ee"
+  },
+  "cloud-actual-signature.txt": {
+    "bytes": 942,
+    "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+  },
+  "cloud-android-verification.json": {
+    "bytes": 745,
+    "sha256": "532ae03c2f67417a08cb18143756538856ac24db54588fbbf543d0c0b97c16f1"
+  },
+  "cloud-linux-verification.json": {
+    "bytes": 2028,
+    "sha256": "6a809b7fc591fa1a7b0484f756f0522ee85dfed293cab68df1530df027830e5e"
+  },
+  "cloud-windows-verification.json": {
+    "bytes": 1957,
+    "sha256": "edb6179bc983481653a3da8aeae28a17d398d0cb6f44787ac17a1db7e00a0c66"
+  },
+  "corrected-android-combined-actual-artifact-bindings.json": {
+    "bytes": 4484,
+    "sha256": "a299b9d1a2e1527a1f0ce46fe27809d8aeb37e41b669685deba885e9b7aad77c"
+  },
+  "corrected-android-hosted.log": {
+    "bytes": 191223,
+    "sha256": "8d0d541b2d2d19334b344536f222fff213e2826edde519443ad7179a4f1144ec"
+  },
+  "corrected-full-candidate-artifacts-independent-review.json": {
+    "bytes": 12009,
+    "sha256": "2ff560b0cfbe2f2973f310f07e26a99f8a62620ec76c2a7352104681e545f893"
+  },
+  "corrected-linux-actual-artifact-bindings.json": {
+    "bytes": 5969,
+    "sha256": "bac4d7d4389026622c4c96c9b9a08df99eaf7024112d715d3def78170d30ed50"
+  },
+  "corrected-linux-artifact-independent-review.json": {
+    "bytes": 8849,
+    "sha256": "5dc2674f90e2ba32dcbf68d7334e291303859d7fd3d123ba938321f0c7e5d5b8"
+  },
+  "corrected-linux-gates-artifacts-api.json": {
+    "bytes": 19305,
+    "sha256": "c81e8c907193df601b27e156d5de53bc0d1aef631d48e131ec1e94fb07993196"
+  },
+  "corrected-linux-hosted.log": {
+    "bytes": 477957,
+    "sha256": "c7e05596bf5c0e6e8deb8113b352da69d2b3ed92940eb885581d1c400f30a2f4"
+  },
+  "corrected-linux-run-api.json": {
+    "bytes": 28979,
+    "sha256": "ef35b61e70857c94269d53796f750707c5c9e715dce1a27de222b240d582eaf4"
+  },
+  "corrected-terminal-jobs-artifacts-api.json": {
+    "bytes": 20292,
+    "sha256": "13fb6af06aaf42d67740c6bb22b75efb3c6865f8b01b5b31acf1c4d14eb50261"
+  },
+  "corrected-terminal-push-jobs-api.json": {
+    "bytes": 11921,
+    "sha256": "96bfb44d8a6173549047e9875d32247134d1465a05952d6a8b2fac3fb48ddf43"
+  },
+  "corrected-terminal-run-api.json": {
+    "bytes": 28982,
+    "sha256": "be6cc38d71fc2621c2d4ad2042f4525ca64e18a9fc5f1a6484aa85a11dafe735"
+  },
+  "corrected-windows-actual-artifact-bindings.json": {
+    "bytes": 9795,
+    "sha256": "1f3682f3d879021712873a3e25711adec1d44138dea782dc013d0ea6609c4b4f"
+  },
+  "corrected-windows-artifact-independent-review.json": {
+    "bytes": 5066,
+    "sha256": "7b99d3b16e2967693bb5bd4ae1f3cf5d88ab736c7d9af6f8ccb9a02ef5c12c49"
+  },
+  "corrected-windows-gates-artifacts-api.json": {
+    "bytes": 15984,
+    "sha256": "e1f72b65a7aa230d46aac5633063fc7f563c9da141e5b26d7eb02fe722c5a9fd"
+  },
+  "corrected-windows-hosted.log": {
+    "bytes": 318259,
+    "sha256": "8e6a582ac2ed0f45f5117aace15dff347bb70cd843f6ef360f7c3621fafb1404"
+  },
+  "linux-SHA256SUMS.txt": {
+    "bytes": 94,
+    "sha256": "7ee66b961aa1bfec6c2aaa2763e1a7596737d92f20fb799cfc9698714b553838"
+  },
+  "linux-cloud-archive-verification.json": {
+    "bytes": 812,
+    "sha256": "9a3f9deffbabab066654d8b2c17bf14822d5c3e12a5329eb1a49995943813d6f"
+  },
+  "linux-install-smoke.json": {
+    "bytes": 2025,
+    "sha256": "67b74cc589f6bd9823a14b7de36a6f6d084046c89a919e8d5f6a14eca61bd5f8"
+  },
+  "linux-startup.json": {
+    "bytes": 6191,
+    "sha256": "97670b26373deab378a2067e0ae775633befb593e96e8358c718762ae32c2f43"
+  },
+  "terminal-runs.json": {
+    "bytes": 667,
+    "sha256": "bf68e4107b4198d95ccf0d8e7c5742ec54c9945a4594ea505b686f59360ac377"
+  },
+  "windows-SHA256SUMS.txt": {
+    "bytes": 108,
+    "sha256": "b7d351cc14b72c62cd349dcb1aa5bbd0c48ae7371a0c8977a4b9a94266ef5ee0"
+  },
+  "windows-install-smoke.json": {
+    "bytes": 1759,
+    "sha256": "403242a4729ff56de86db3a7a920192cc85e89b880b2ad5ba2cececb5430cda3"
+  },
+  "windows-portable-SHA256SUMS.txt": {
+    "bytes": 111,
+    "sha256": "f273dceccabce04ebdd8ebdb5f6dcf2ced718ef63063d9b42b803be6c544b7f7"
+  },
+  "windows-portable-provenance.json": {
+    "bytes": 2181,
+    "sha256": "ae7b8e3edd72ff238d735c114dd82c61edabd025585ee510e6b7e356ea1eca85"
+  }
+}

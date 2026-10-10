@@ -1,0 +1,118 @@
+{
+  "reviewed_at_utc": "2026-10-10T06:04:12.540538+00:00",
+  "artifact_api_metadata": {
+    "id": 11661298116,
+    "name": "android-release",
+    "size_in_bytes": 31055650,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661298116",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661298116/zip",
+    "expired": false,
+    "created_at": "2026-10-10T06:01:44Z",
+    "expires_at": "2026-10-15T06:01:41Z",
+    "updated_at": "2026-10-10T06:01:44Z",
+    "digest": "sha256:d90416dee883c76325ea7628b0f74e7ad14d6b9ea3ab6d040a696b1f0a62e4a6",
+    "workflow_run": {
+      "id": 38027666368,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/food-android-release-38027666368.zip",
+    "bytes": 31055650,
+    "sha256": "d90416dee883c76325ea7628b0f74e7ad14d6b9ea3ab6d040a696b1f0a62e4a6"
+  },
+  "actual_outer_members": [
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "220b8f478dea658bcaef2e66f3dc83e93a9f2cd1810c524324b5b60b531c2155",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 295,
+      "sha256": "4572965bf31abb1ade48d44fb41933781050602a68c31b5026865242a4956595",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 67066589,
+      "sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+      "crc_valid": true,
+      "equals_extracted": true
+    }
+  ],
+  "metadata": {
+    "source_commit": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+    "version": "2026.10.4-rc.1",
+    "version_code": 57,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078"
+  },
+  "actual_apk": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/android-release-38027666368/tandemlog-android.apk",
+    "sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+    "bytes": 67066589,
+    "all_zip_member_crc": "PASS",
+    "member_count": 79
+  },
+  "own_official_sdk_verification": {
+    "apksigner": "PASS actual APK cryptographic verification",
+    "aapt_and_frozen_verify_apk": "PASS package/version57/owner pin/nondebuggable/three ABI",
+    "signature_path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-signature.txt",
+    "badging_path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-badging.txt"
+  },
+  "native_payload_and_notice_content": "PASS frozen byte-level payload verifier",
+  "native_libraries": [
+    {
+      "name": "lib/arm64-v8a/libtandemlog_text.so",
+      "bytes": 1044120,
+      "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0"
+    },
+    {
+      "name": "lib/armeabi-v7a/libtandemlog_text.so",
+      "bytes": 793428,
+      "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5"
+    },
+    {
+      "name": "lib/x86_64/libtandemlog_text.so",
+      "bytes": 1192968,
+      "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    }
+  ],
+  "combined_inventory": {
+    "path": "/tmp/food57-independent-closed-inventory-63kwau32",
+    "members": [
+      "android-SHA256SUMS.txt",
+      "android-release-metadata.json",
+      "android-signature.txt",
+      "linux-SHA256SUMS.txt",
+      "linux-install-smoke.json",
+      "linux-startup.json",
+      "tandemlog-android.apk",
+      "tandemlog-linux-x64.flatpak",
+      "tandemlog-windows-x64-unsigned-portable.zip",
+      "tandemlog-windows-x64-unsigned-setup.exe",
+      "windows-SHA256SUMS.txt",
+      "windows-install-smoke.json",
+      "windows-portable-SHA256SUMS.txt",
+      "windows-portable-provenance.json"
+    ],
+    "link_kind": "hardlinks to exact original files; no symlink gate bypass",
+    "closed_inventory_and_portable_frozen_policy": "PASS",
+    "desktop_lifecycle_frozen_policy": "PASS",
+    "all_three_platform_strict_checksums": "PASS"
+  }
+}

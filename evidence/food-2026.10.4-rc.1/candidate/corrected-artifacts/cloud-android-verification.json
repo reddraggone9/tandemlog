@@ -1,0 +1,19 @@
+{
+  "checkedUtc": "2026-10-10T06:02:46.252851+00:00",
+  "run": 38027666368,
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "apk_sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+  "bytes": 67066589,
+  "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "package": "com.reddraggone9.tandemlog",
+  "non_debuggable": true,
+  "abis": [
+    "armeabi-v7a",
+    "arm64-v8a",
+    "x86_64"
+  ],
+  "signature_verification": "PASS actual apksigner",
+  "metadata_and_strict_checksum": "PASS frozen policy",
+  "qualification": "Actual bytes verified on cloud Linux; Android installation/launch/affected-flow acceptance remains parent pending."
+}

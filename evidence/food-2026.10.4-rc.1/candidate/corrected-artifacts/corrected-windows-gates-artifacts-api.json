@@ -1,0 +1,512 @@
+{
+  "jobs": [
+    {
+      "id": 114141862261,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38027666368,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run test \"$GITHUB_REF\" = refs/heads/main",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        }
+      ]
+    },
+    {
+      "id": 114141896032,
+      "name": "checks / linux",
+      "status": "in_progress",
+      "conclusion": null,
+      "run_id": 38027666368,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run dart format --output=none --set-exit-if-changed lib test integration_test tool",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Run flutter analyze",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Build and require production native library for all unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run flutter test",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Verify frozen native admission and worker contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Run python3 -m unittest discover -s tool -p 'test_*.py'",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Run xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux",
+          "status": "in_progress",
+          "conclusion": null,
+          "number": 13
+        },
+        {
+          "name": "Run flutter build linux --release",
+          "status": "pending",
+          "conclusion": null,
+          "number": 14
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle",
+          "status": "pending",
+          "conclusion": null,
+          "number": 15
+        },
+        {
+          "name": "Smoke-test native release startup with fresh and warm cache",
+          "status": "pending",
+          "conclusion": null,
+          "number": 16
+        },
+        {
+          "name": "Run mkdir dist",
+          "status": "pending",
+          "conclusion": null,
+          "number": 17
+        },
+        {
+          "name": "Build user-installable Flatpak bundle",
+          "status": "pending",
+          "conclusion": null,
+          "number": 18
+        },
+        {
+          "name": "Install, launch, replace and uninstall Flatpak with synthetic data",
+          "status": "pending",
+          "conclusion": null,
+          "number": 19
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "pending",
+          "conclusion": null,
+          "number": 20
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "pending",
+          "conclusion": null,
+          "number": 40
+        }
+      ]
+    },
+    {
+      "id": 114141896073,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38027666368,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Build and require production native library for all unit tests",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run Windows unit tests with retained diagnostics",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Preserve Windows unit-test results",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8
+        },
+        {
+          "name": "Verify frozen native admission and worker contracts",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Run python -m unittest discover -s tool -p 'test_*.py'",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 10
+        },
+        {
+          "name": "Run python tool/app_version.py",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Run flutter build windows --release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 13
+        },
+        {
+          "name": "Compile exact-source synthetic migration process harness",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 14
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 15
+        },
+        {
+          "name": "Preserve exact portable Windows payload for isolated native acceptance",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Build per-user installer and verify native installation lifecycle",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 17
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 18
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 36
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 37
+        }
+      ]
+    },
+    {
+      "id": 114141896110,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success",
+      "run_id": 38027666368,
+      "logs_url": null,
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2
+        },
+        {
+          "name": "Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3
+        },
+        {
+          "name": "Run ./.github/actions/setup-flutter",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4
+        },
+        {
+          "name": "Run ./.github/actions/setup-text-engine",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 5
+        },
+        {
+          "name": "Run flutter pub get --enforce-lockfile",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6
+        },
+        {
+          "name": "Run test -x \"$ANDROID_HOME/build-tools/36.0.0/apksigner\"",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7
+        },
+        {
+          "name": "Observe reviewed Kotlin scopes on the remediation branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 8
+        },
+        {
+          "name": "Build Android debug APK",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9
+        },
+        {
+          "name": "Repeat warm Android debug build on the remediation branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 10
+        },
+        {
+          "name": "Run python tool/native_build_gates.py verify_payload --platform android --payload build/app/outputs/flutter-apk/app-debug.apk",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 11
+        },
+        {
+          "name": "Run mkdir dist",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 12
+        },
+        {
+          "name": "Preserve cold and warm Kotlin evaluation receipts",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 13
+        },
+        {
+          "name": "Remove the remediation observation script",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 14
+        },
+        {
+          "name": "Package separate recovery harness on the isolated adoption branch",
+          "status": "completed",
+          "conclusion": "skipped",
+          "number": 15
+        },
+        {
+          "name": "Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 16
+        },
+        {
+          "name": "Post Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 31
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 32
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 33
+        }
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": 11660818359,
+      "name": "android",
+      "size_in_bytes": 80708001,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660818359",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660818359/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:35:29Z",
+      "expires_at": "2026-10-15T05:35:23Z",
+      "updated_at": "2026-10-10T05:35:29Z",
+      "digest": "sha256:90a9c6e100912ce6031af48713609215238efae8b1f4bc2903f1c3782225ec73",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    },
+    {
+      "id": 11660733418,
+      "name": "windows-unit-tests",
+      "size_in_bytes": 47167,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660733418",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660733418/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:36:59Z",
+      "expires_at": "2026-10-15T05:36:58Z",
+      "updated_at": "2026-10-10T05:36:59Z",
+      "digest": "sha256:32cfac1964e508d68a646a5155d1878b00bb90fdddb65c0affcf9051fbd40c15",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    },
+    {
+      "id": 11660613849,
+      "name": "windows",
+      "size_in_bytes": 26204338,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:39:43Z",
+      "expires_at": "2026-10-15T05:39:41Z",
+      "updated_at": "2026-10-10T05:39:43Z",
+      "digest": "sha256:754bc467b6015a924df8358d90871cff31e2709e87ef30693310d67f20d4230b",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    },
+    {
+      "id": 11660478960,
+      "name": "windows-storage-harness",
+      "size_in_bytes": 4176624,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660478960",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660478960/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:39:13Z",
+      "expires_at": "2026-10-15T05:39:12Z",
+      "updated_at": "2026-10-10T05:39:13Z",
+      "digest": "sha256:6bf62ea43377a0fbe597c99ac4c95e645856a470b2319aa9d1350ce6fb30179a",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    }
+  ]
+}

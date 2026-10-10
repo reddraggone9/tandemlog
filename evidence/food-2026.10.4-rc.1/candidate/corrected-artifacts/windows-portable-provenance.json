@@ -1,0 +1,26 @@
+{
+  "source_revision": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "github_run_id": "38027666368",
+  "artifact": "tandemlog-windows-x64-unsigned-portable.zip",
+  "artifact_sha256": "6a39b8cc257ae29db63c8d15c118bd9887a933b430fab3a42a0d55b84b1341ef",
+  "payload_sha256": {
+    "dartjni.dll": "66a2775130c9c25278cab38f310d1795aae3ec7f8c539438c4e544e0a513dfe6",
+    "data/app.so": "b565ee7cb80a0937b22ee0f2066d75fca2639a1925fc0deaa986d4356127ea4b",
+    "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+    "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+    "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "602902e58fe9702350f7095845dc186748bb028610c24a6c0d1d485e89ac7500",
+    "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49",
+    "data/flutter_assets/NativeAssetsManifest.json": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379",
+    "data/flutter_assets/NOTICES.Z": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc",
+    "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+    "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+    "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+    "file_selector_windows_plugin.dll": "eac686d3709e2b306134349e877b6e026ab9f8b92821c1d5aaee378f4615b0bd",
+    "flutter_windows.dll": "8bd7b61eee31aa436edb182db41624d1cd3b2688a7e03622320dbeae067b5251",
+    "sqlite3.dll": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce",
+    "tandemlog.exe": "d186a963e282b98804c9edc0c618a5b460142390c2ed9b1009c73ab0bfb06395",
+    "tandemlog_text.dll": "58bf87a783ad35ab4f3080c8e85decb2314516de06c70cdec4562f97de147812",
+    "url_launcher_windows_plugin.dll": "5de5eb2fbc19055928f1e8c5339c78484a83ffe0cba18015bd4d29317603654c"
+  },
+  "scope": "Exact unsigned Release bundle; isolated synthetic QA only"
+}

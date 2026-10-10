@@ -1,0 +1,66 @@
+{
+  "schema": 1,
+  "checkedUtc": "2026-10-10T05:42:13.378063+00:00",
+  "run": 38027666368,
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1",
+  "code": 57,
+  "artifact": {
+    "id": 11660613849,
+    "zipBytes": 26204338,
+    "zipSha256": "754bc467b6015a924df8358d90871cff31e2709e87ef30693310d67f20d4230b"
+  },
+  "members": {
+    "windows-SHA256SUMS.txt": {
+      "sha256": "b7d351cc14b72c62cd349dcb1aa5bbd0c48ae7371a0c8977a4b9a94266ef5ee0",
+      "bytes": 108
+    },
+    "windows-portable-SHA256SUMS.txt": {
+      "sha256": "f273dceccabce04ebdd8ebdb5f6dcf2ced718ef63063d9b42b803be6c544b7f7",
+      "bytes": 111
+    },
+    "windows-portable-provenance.json": {
+      "sha256": "ae7b8e3edd72ff238d735c114dd82c61edabd025585ee510e6b7e356ea1eca85",
+      "bytes": 2181
+    },
+    "tandemlog-windows-x64-unsigned-portable.zip": {
+      "sha256": "6a39b8cc257ae29db63c8d15c118bd9887a933b430fab3a42a0d55b84b1341ef",
+      "bytes": 14392765
+    },
+    "tandemlog-windows-x64-unsigned-setup.exe": {
+      "sha256": "2196693341d297e1f463dabb72dadad8b24a7adffddf482158327f1374d02e90",
+      "bytes": 12377683
+    },
+    "windows-install-smoke.json": {
+      "sha256": "403242a4729ff56de86db3a7a920192cc85e89b880b2ad5ba2cececb5430cda3",
+      "bytes": 1759
+    }
+  },
+  "portablePayload": {
+    "allMembersMatchManifest": true,
+    "files": 17,
+    "windowsPEVersionInfo": [
+      {
+        "offset": 132328,
+        "fileVersion": [
+          2026,
+          10,
+          4,
+          57
+        ],
+        "productVersion": [
+          2026,
+          10,
+          4,
+          57
+        ]
+      }
+    ]
+  },
+  "installedLifecycle": "allfourphasespass; exactcandidatejobpassed;manualnativeFoodworkflowpending",
+  "remaining": [
+    "fullLinux andsignedAndroid",
+    "parentWindows/Androidnativeacceptance"
+  ],
+  "qualification": "Read actual bytes onLinux; no Linux execution of Windows binary or claim of manual Windows UI."
+}

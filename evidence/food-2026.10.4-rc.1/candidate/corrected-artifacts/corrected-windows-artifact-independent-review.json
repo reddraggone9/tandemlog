@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T05:43:43.754816+00:00",
+  "verdict": "ACCEPT_EXACT_WINDOWS_ARTIFACT_ONLY",
+  "repository": "reddraggone9/tandemlog",
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "candidate_run": 38027666368,
+  "windows_job": {
+    "id": 114141896073,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "artifact": {
+    "id": 11660613849,
+    "name": "windows",
+    "size_in_bytes": 26204338,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849/zip",
+    "expired": false,
+    "created_at": "2026-10-10T05:39:43Z",
+    "expires_at": "2026-10-15T05:39:41Z",
+    "updated_at": "2026-10-10T05:39:43Z",
+    "digest": "sha256:754bc467b6015a924df8358d90871cff31e2709e87ef30693310d67f20d4230b",
+    "workflow_run": {
+      "id": 38027666368,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/food-windows-38027666368.zip",
+    "sha256": "754bc467b6015a924df8358d90871cff31e2709e87ef30693310d67f20d4230b",
+    "bytes": 26204338,
+    "full_crc_and_six_member_inventory": "PASS"
+  },
+  "actual_installer": {
+    "name": "tandemlog-windows-x64-unsigned-setup.exe",
+    "bytes": 12377683,
+    "sha256": "2196693341d297e1f463dabb72dadad8b24a7adffddf482158327f1374d02e90",
+    "crc_valid": true,
+    "equals_extracted": true
+  },
+  "actual_portable": {
+    "name": "tandemlog-windows-x64-unsigned-portable.zip",
+    "bytes": 14392765,
+    "sha256": "6a39b8cc257ae29db63c8d15c118bd9887a933b430fab3a42a0d55b84b1341ef",
+    "crc_valid": true,
+    "equals_extracted": true
+  },
+  "actual_verifications": [
+    "All six original outer members independently streamed, CRC/hash checked and equal parent extraction.",
+    "Installer and portable checksum files match actual bytes exactly.",
+    "Portable source/run provenance matches immutable candidate978/run38027666368.",
+    "All17 portable member byte hashes, complete inventory, case uniqueness, paths, file kinds, sizes and CRC pass frozen publish policy.",
+    "Native DLL is nonempty PE payload.",
+    "All four original installed lifecycle phases pass frozen publisher verification."
+  ],
+  "notices": {
+    "packaged_sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49",
+    "source_sha256": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c",
+    "newline_normalized_content_equal": true,
+    "qualification": "Windows packaged notices have checkout CRLF, Unix source LF; actual hosted Windows gate verifies its own checkout bytes exactly. No cross-platform raw-byte equality claimed."
+  },
+  "hosted_gate_evidence": {
+    "actual_log": "/tmp/tandemlog-food-candidate-artifacts/windows-38027666368-independent-hosted.log",
+    "sha256": "8e6a582ac2ed0f45f5117aace15dff347bb70cd843f6ef360f7c3621fafb1404",
+    "observations": [
+      "Reusable validate workflow and checkout978 exact.",
+      "819 Windows Flutter passes/2 platform skips with successful poisoned-owner handle lease test.",
+      "107 frozen native/worker contracts and57 policies with5 policy platform skips complete successfully.",
+      "Version2026.10.4-rc.1/build57 validated.",
+      "Windows production native ABI loaded and exact checkout packaged notices verified before installer lifecycle and upload.",
+      "Portable digest and final setup digest logged before artifact11660613849 upload; ZIP upload digest equals actual materialized bytes."
+    ]
+  },
+  "native_execution_attribution": "Windows hosted ABI/installer lifecycle executed by actual CI. Reviewer performed archive/member checks and frozen policy functions only; no reviewer Windows runtime or parent manual native acceptance.",
+  "remaining_gates": [
+    "Linux full native/build/release lifecycle completion and actual artifact review.",
+    "Signed owner Android job/artifact/signature/version/payload and exact native acceptance.",
+    "Parent affected Windows Food/native workflows.",
+    "Full candidate terminal success plus fresh publication quota and normal exact-artifact publisher gates."
+  ],
+  "limits": [
+    "Android debug output and Windows diagnostic/harness evidence remain separate from signed release acceptance.",
+    "No candidate-wide/native/publication acceptance; no new builds, downloads or source edits by reviewer."
+  ],
+  "supporting_evidence": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-windows-gates-artifacts-api.json",
+      "sha256": "e1f72b65a7aa230d46aac5633063fc7f563c9da141e5b26d7eb02fe722c5a9fd"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-windows-actual-artifact-bindings.json",
+      "sha256": "1f3682f3d879021712873a3e25711adec1d44138dea782dc013d0ea6609c4b4f"
+    }
+  ],
+  "must_fix": []
+}

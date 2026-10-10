@@ -1,0 +1,287 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T06:04:58.850155+00:00",
+  "verdict": "ACCEPT_FOR_PARENT_NATIVE_HANDOFF",
+  "scope": "Completed hosted candidate provenance and exact original three platform archive/installer byte gates; no device/native affected-flow acceptance or publication approval.",
+  "repository": "reddraggone9/tandemlog",
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "candidate_run": 38027666368,
+  "candidate_terminal": {
+    "status": "completed",
+    "conclusion": "success",
+    "event": "workflow_dispatch",
+    "path": ".github/workflows/android-candidate.yml",
+    "branch": "main",
+    "all_five_jobs_success": true
+  },
+  "push_run": 38027658576,
+  "push_terminal": {
+    "status": "completed",
+    "conclusion": "success",
+    "all_three_jobs_success": true
+  },
+  "fresh_api_read_at_utc": "2026-10-10T06:03:14.834172+00:00",
+  "candidate_jobs": [
+    {
+      "id": 114141862261,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114141896032,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114141896073,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114141896110,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 114146197645,
+      "name": "signed-android",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "original_release_artifacts": [
+    {
+      "id": 11661550518,
+      "name": "linux",
+      "size_in_bytes": 9217900,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661550518",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661550518/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:55:09Z",
+      "expires_at": "2026-10-15T05:55:08Z",
+      "updated_at": "2026-10-10T05:55:09Z",
+      "digest": "sha256:fc5d9196b6795eff32a42ff2f9947b3438da7ee1ccf646f48fdd97471718565b",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    },
+    {
+      "id": 11661298116,
+      "name": "android-release",
+      "size_in_bytes": 31055650,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661298116",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661298116/zip",
+      "expired": false,
+      "created_at": "2026-10-10T06:01:44Z",
+      "expires_at": "2026-10-15T06:01:41Z",
+      "updated_at": "2026-10-10T06:01:44Z",
+      "digest": "sha256:d90416dee883c76325ea7628b0f74e7ad14d6b9ea3ab6d040a696b1f0a62e4a6",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    },
+    {
+      "id": 11660613849,
+      "name": "windows",
+      "size_in_bytes": 26204338,
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849",
+      "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11660613849/zip",
+      "expired": false,
+      "created_at": "2026-10-10T05:39:43Z",
+      "expires_at": "2026-10-15T05:39:41Z",
+      "updated_at": "2026-10-10T05:39:43Z",
+      "digest": "sha256:754bc467b6015a924df8358d90871cff31e2709e87ef30693310d67f20d4230b",
+      "workflow_run": {
+        "id": 38027666368,
+        "repository_id": 1204525648,
+        "head_repository_id": 1204525648,
+        "head_branch": "main",
+        "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+      }
+    }
+  ],
+  "android_actual_archive": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/food-android-release-38027666368.zip",
+    "bytes": 31055650,
+    "sha256": "d90416dee883c76325ea7628b0f74e7ad14d6b9ea3ab6d040a696b1f0a62e4a6"
+  },
+  "android_actual_outer_members": [
+    {
+      "name": "android-SHA256SUMS.txt",
+      "bytes": 88,
+      "sha256": "220b8f478dea658bcaef2e66f3dc83e93a9f2cd1810c524324b5b60b531c2155",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "android-release-metadata.json",
+      "bytes": 295,
+      "sha256": "4572965bf31abb1ade48d44fb41933781050602a68c31b5026865242a4956595",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "android-signature.txt",
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc_valid": true,
+      "equals_extracted": true
+    },
+    {
+      "name": "tandemlog-android.apk",
+      "bytes": 67066589,
+      "sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+      "crc_valid": true,
+      "equals_extracted": true
+    }
+  ],
+  "android_actual_apk": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/android-release-38027666368/tandemlog-android.apk",
+    "sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+    "bytes": 67066589,
+    "all_zip_member_crc": "PASS",
+    "member_count": 79
+  },
+  "android_metadata": {
+    "source_commit": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+    "version": "2026.10.4-rc.1",
+    "version_code": 57,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078"
+  },
+  "own_sdk_byte_verification": {
+    "apksigner": "PASS actual APK cryptographic verification",
+    "aapt_and_frozen_verify_apk": "PASS package/version57/owner pin/nondebuggable/three ABI",
+    "signature_path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-signature.txt",
+    "badging_path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-badging.txt"
+  },
+  "android_native_payload": {
+    "actual_full_apk_crc_members": 79,
+    "native_libraries": [
+      {
+        "name": "lib/arm64-v8a/libtandemlog_text.so",
+        "bytes": 1044120,
+        "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0"
+      },
+      {
+        "name": "lib/armeabi-v7a/libtandemlog_text.so",
+        "bytes": 793428,
+        "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5"
+      },
+      {
+        "name": "lib/x86_64/libtandemlog_text.so",
+        "bytes": 1192968,
+        "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+      }
+    ],
+    "notices": "Actual packaged bytes equal frozen source; frozen byte-level payload verifier passed.",
+    "hosted_gate": "Actual signed hosted log proves pinned release signer/package/version/nondebuggable/threeABI verification then full frozen Android native payload gate including alignment/ELF/exports before upload. No reviewer app/device execution."
+  },
+  "combined_original_inventory": {
+    "path": "/tmp/food57-independent-closed-inventory-63kwau32",
+    "members": [
+      "android-SHA256SUMS.txt",
+      "android-release-metadata.json",
+      "android-signature.txt",
+      "linux-SHA256SUMS.txt",
+      "linux-install-smoke.json",
+      "linux-startup.json",
+      "tandemlog-android.apk",
+      "tandemlog-linux-x64.flatpak",
+      "tandemlog-windows-x64-unsigned-portable.zip",
+      "tandemlog-windows-x64-unsigned-setup.exe",
+      "windows-SHA256SUMS.txt",
+      "windows-install-smoke.json",
+      "windows-portable-SHA256SUMS.txt",
+      "windows-portable-provenance.json"
+    ],
+    "link_kind": "hardlinks to exact original files; no symlink gate bypass",
+    "closed_inventory_and_portable_frozen_policy": "PASS",
+    "desktop_lifecycle_frozen_policy": "PASS",
+    "all_three_platform_strict_checksums": "PASS"
+  },
+  "desktop_acceptance": {
+    "windows": "Reuse unchanged prior ACCEPT_EXACT_WINDOWS_ARTIFACT_ONLY receipt: actual6 outer/17 portable member gates plus hosted ABI and lifecycle.",
+    "linux": "Reuse unchanged prior ACCEPT_EXACT_LINUX_ARTIFACT_ONLY receipt: actual4 members, strict checksum, actual startup JSON suffix and changed-commit lifecycle.",
+    "execution_limits": "Reviewer did not build/install/run desktop or Android app. Parent affected native tests remain required."
+  },
+  "current_dispatch_notes_context": {
+    "worktree_head": "360ec8aa6ddfd2ef9757fa5540aeb16737b94ae1",
+    "executable_source_diff_from_candidate_empty": true,
+    "approved_notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+    "editorial_acceptance_separate": true
+  },
+  "remaining_gates": [
+    "Parent exact accepted owner APK Android install/upgrade/Food/affected recovery/UI acceptance and affected Windows Food/native acceptance.",
+    "Applicable parent quota/publication clearance; user standing experimental RC scope retained.",
+    "Independent final native readiness review of parent exact receipts, and normal trusted exact-candidate inventory/member/lifecycle/accepted APK/strict checksum publisher gates before creation.",
+    "Final public release/source/tag/notes/media/three installer byte review; stableLatest and old releases preserved."
+  ],
+  "must_fix": [],
+  "mutation_limits": "Only private additive evidence, isolated original-byte hardlinks and SDK byte-verification reports; no downloads, builds, installs, app execution, source edits, dispatch or publication.",
+  "preserved_prior_receipts": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-windows-artifact-independent-review.json",
+      "sha256": "7b99d3b16e2967693bb5bd4ae1f3cf5d88ab736c7d9af6f8ccb9a02ef5c12c49",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-linux-artifact-independent-review.json",
+      "sha256": "5dc2674f90e2ba32dcbf68d7334e291303859d7fd3d123ba938321f0c7e5d5b8",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-frozen-source-preflight-independent-review.json",
+      "sha256": "61cb6b966776218c428a4e64a88afda95c976044f69ce62370582880d8b370bc",
+      "unchanged": true
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-final-range-editorial-accepted-review.json",
+      "sha256": "93a682facda39e437219f282c6d8428b5888c7a2359e5d0076d55bdaa9f8a857",
+      "unchanged": true
+    }
+  ],
+  "evidence": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-terminal-run-api.json",
+      "sha256": "be6cc38d71fc2621c2d4ad2042f4525ca64e18a9fc5f1a6484aa85a11dafe735"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-terminal-jobs-artifacts-api.json",
+      "sha256": "13fb6af06aaf42d67740c6bb22b75efb3c6865f8b01b5b31acf1c4d14eb50261"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-terminal-push-jobs-api.json",
+      "sha256": "96bfb44d8a6173549047e9875d32247134d1465a05952d6a8b2fac3fb48ddf43"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-android-combined-actual-artifact-bindings.json",
+      "sha256": "a299b9d1a2e1527a1f0ce46fe27809d8aeb37e41b669685deba885e9b7aad77c"
+    },
+    {
+      "path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-hosted.log",
+      "sha256": "8d0d541b2d2d19334b344536f222fff213e2826edde519443ad7179a4f1144ec"
+    },
+    {
+      "path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-signature.txt",
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    {
+      "path": "/tmp/tandemlog-food-candidate-artifacts/android-38027666368-independent-badging.txt",
+      "sha256": "1cb9574acbb39bc45e4765b8f7329478f4763bfa3d77737b798d194a16a373ee"
+    }
+  ]
+}

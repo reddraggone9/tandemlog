@@ -1,0 +1,54 @@
+{
+  "run": 38027666368,
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "archive_sha256": "fc5d9196b6795eff32a42ff2f9947b3438da7ee1ccf646f48fdd97471718565b",
+  "flatpak_sha256": "1c00c415d2ab0a1d19f74b12187754567cca48ccb0165c5fef206be051d46b40",
+  "frozen_install_lifecycle": "PASS",
+  "startup": {
+    "target": "Linux x86_64 native / Xvfb",
+    "binary": "build/linux/x64/release/bundle/tandemlog",
+    "tasks": 10,
+    "label": "tasks",
+    "os_page_cache": "not flushed",
+    "results": [
+      {
+        "run": 1,
+        "cache": "rebuild",
+        "external_ms": 1096,
+        "marker": "TANDEMLOG_READY_MS=862 FILES_READ=1",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=70",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=25",
+          "TANDEMLOG_PHASE manifest=39",
+          "TANDEMLOG_PHASE ingest=42",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=862 FILES_READ=1"
+        ],
+        "external_main_ms": 229,
+        "external_first_frame_ms": 304
+      },
+      {
+        "run": 2,
+        "cache": "warm",
+        "external_ms": 458,
+        "marker": "TANDEMLOG_READY_MS=280 FILES_READ=0",
+        "phases": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=71",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=33",
+          "TANDEMLOG_PHASE manifest=45",
+          "TANDEMLOG_PHASE ingest=19",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=280 FILES_READ=0"
+        ],
+        "external_main_ms": 174,
+        "external_first_frame_ms": 248
+      }
+    ]
+  },
+  "startup_qualification": "Original file has dbus stdout prefix; parsed anchored final JSON object without modifying original bytes. Ten synthetic Tasks, OS page cache not flushed. Hosted native runtime, no local installed acceptance claim."
+}

@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T05:58:25.917829+00:00",
+  "verdict": "ACCEPT_EXACT_LINUX_ARTIFACT_ONLY",
+  "source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "version": "2026.10.4-rc.1+57",
+  "candidate_run": 38027666368,
+  "linux_job": {
+    "id": 114141896032,
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "artifact": {
+    "id": 11661550518,
+    "name": "linux",
+    "size_in_bytes": 9217900,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661550518",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11661550518/zip",
+    "expired": false,
+    "created_at": "2026-10-10T05:55:09Z",
+    "expires_at": "2026-10-15T05:55:08Z",
+    "updated_at": "2026-10-10T05:55:09Z",
+    "digest": "sha256:fc5d9196b6795eff32a42ff2f9947b3438da7ee1ccf646f48fdd97471718565b",
+    "workflow_run": {
+      "id": 38027666368,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/tandemlog-food-candidate-artifacts/food-linux-38027666368.zip",
+    "bytes": 9217900,
+    "sha256": "fc5d9196b6795eff32a42ff2f9947b3438da7ee1ccf646f48fdd97471718565b"
+  },
+  "actual_flatpak": {
+    "name": "tandemlog-linux-x64.flatpak",
+    "bytes": 9213080,
+    "sha256": "1c00c415d2ab0a1d19f74b12187754567cca48ccb0165c5fef206be051d46b40",
+    "crc_valid": true,
+    "equals_extracted": true
+  },
+  "actual_member_verification": {
+    "closed_original_four_member_inventory": "PASS",
+    "archive_crc": "PASS",
+    "all_member_hashes_and_extracted_equality": "PASS",
+    "installer_checksum": "PASS",
+    "lifecycle_require_changed_commit_frozen_gate": "PASS"
+  },
+  "lifecycle": {
+    "phases": [
+      {
+        "phase": "after-install",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=76",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=15",
+          "TANDEMLOG_PHASE manifest=10",
+          "TANDEMLOG_PHASE ingest=18",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=1076 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-upgrade",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=76",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=10",
+          "TANDEMLOG_PHASE manifest=56",
+          "TANDEMLOG_PHASE ingest=64",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=318 FILES_READ=1"
+        ]
+      },
+      {
+        "phase": "after-uninstall",
+        "passed": true,
+        "loaded_projection": false,
+        "sandbox_stopped": false,
+        "markers": []
+      },
+      {
+        "phase": "after-reinstall",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": true,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=75",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=10",
+          "TANDEMLOG_PHASE manifest=56",
+          "TANDEMLOG_PHASE ingest=67",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=336 FILES_READ=1"
+        ]
+      }
+    ],
+    "upgrade": {
+      "candidate_commit": "967a32c081807ad81e2ba5cd8ac1efcc46bff8975a70b4b9659377126e8657ea",
+      "baseline_commit": "e0bd6085db9a1874da2243a068b2a01d6106461b5014e08aaf39bda8a346f2a4",
+      "baseline_payload_equal": true,
+      "baseline_permissions_equal": true,
+      "final_candidate_restored": true
+    }
+  },
+  "startup_evidence": {
+    "member_bytes": 6191,
+    "member_sha256": "97670b26373deab378a2067e0ae775633befb593e96e8358c718762ae32c2f43",
+    "original_unchanged": true,
+    "interpretation": "Actual JSON suffix after captured DBus stdout prefix; original member retained byte-identically. Publisher requires member inventory and actual lifecycle, not whole startup JSON parse.",
+    "decoded_suffix": {
+      "target": "Linux x86_64 native / Xvfb",
+      "binary": "build/linux/x64/release/bundle/tandemlog",
+      "tasks": 10,
+      "label": "tasks",
+      "os_page_cache": "not flushed",
+      "results": [
+        {
+          "run": 1,
+          "cache": "rebuild",
+          "external_ms": 1096,
+          "marker": "TANDEMLOG_READY_MS=862 FILES_READ=1",
+          "phases": [
+            "TANDEMLOG_MAIN",
+            "TANDEMLOG_FIRST_FRAME_MS=70",
+            "TANDEMLOG_PHASE identity_lock=0",
+            "TANDEMLOG_PHASE sqlite_open_schema=25",
+            "TANDEMLOG_PHASE manifest=39",
+            "TANDEMLOG_PHASE ingest=42",
+            "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+            "TANDEMLOG_READY_MS=862 FILES_READ=1"
+          ],
+          "external_main_ms": 229,
+          "external_first_frame_ms": 304
+        },
+        {
+          "run": 2,
+          "cache": "warm",
+          "external_ms": 458,
+          "marker": "TANDEMLOG_READY_MS=280 FILES_READ=0",
+          "phases": [
+            "TANDEMLOG_MAIN",
+            "TANDEMLOG_FIRST_FRAME_MS=71",
+            "TANDEMLOG_PHASE identity_lock=0",
+            "TANDEMLOG_PHASE sqlite_open_schema=33",
+            "TANDEMLOG_PHASE manifest=45",
+            "TANDEMLOG_PHASE ingest=19",
+            "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+            "TANDEMLOG_READY_MS=280 FILES_READ=0"
+          ],
+          "external_main_ms": 174,
+          "external_first_frame_ms": 248
+        }
+      ]
+    },
+    "scope": "Ten synthetic Tasks, cache rebuild/warm, OS page cache not flushed; no general Food performance or cold OS-cache claim."
+  },
+  "actual_hosted_gate_observations": [
+    "Frozen source978 checkout and reusable validate workflow.",
+    "822 app tests passed.",
+    "107 frozen native/worker contracts and57 policy tests passed.",
+    "92 required real Linux native integration tests passed including corrected failure workflows.",
+    "Release build and production native ABI/exact notice payload verification succeeded before packaging.",
+    "Actual fresh/warm native release startup successful.",
+    "Installed Flatpak install/real changed-commit replacement/uninstall/reinstall with unchanged payload/permissions and final candidate restoration passes.",
+    "Original Flatpak checksum logged OK before artifact upload, upload ZIP digest matches independently read bytes."
+  ],
+  "push_ci": {
+    "run": 38027658576,
+    "head_sha": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "candidate_boundary": {
+    "status": "in_progress",
+    "conclusion": null,
+    "signed_android_job": 114146197645,
+    "signed_android_checkpoint": "in_progress"
+  },
+  "execution_attribution": "Native tests/build/startup/install lifecycle were executed by actual hosted job. Reviewer checked its actual full log, streamed materialized archive and ran frozen lifecycle report validation only; no new build/install/native execution/download.",
+  "prior_windows_review": {
+    "path": "/workspace/recovery/food-rc57-review/corrected-windows-artifact-independent-review.json",
+    "sha256": "7b99d3b16e2967693bb5bd4ae1f3cf5d88ab736c7d9af6f8ccb9a02ef5c12c49",
+    "unchanged": true
+  },
+  "remaining_gates": [
+    "Signed owner Android artifact/signature/package/version/payload, actual archive/inner APK checks.",
+    "Parent exact affected Windows/Android native acceptance.",
+    "Candidate terminal full success and fresh publication quota.",
+    "Normal trusted exact-artifact no-rebuild preview publisher and final public download/source/tag/Latest checks."
+  ],
+  "must_fix": [],
+  "evidence": [
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-linux-run-api.json",
+      "sha256": "ef35b61e70857c94269d53796f750707c5c9e715dce1a27de222b240d582eaf4"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-linux-gates-artifacts-api.json",
+      "sha256": "c81e8c907193df601b27e156d5de53bc0d1aef631d48e131ec1e94fb07993196"
+    },
+    {
+      "path": "/workspace/recovery/food-rc57-review/corrected-linux-actual-artifact-bindings.json",
+      "sha256": "bac4d7d4389026622c4c96c9b9a08df99eaf7024112d715d3def78170d30ed50"
+    },
+    {
+      "path": "/tmp/tandemlog-food-candidate-artifacts/linux-38027666368-independent-hosted.log",
+      "sha256": "c7e05596bf5c0e6e8deb8113b352da69d2b3ed92940eb885581d1c400f30a2f4"
+    }
+  ]
+}
