@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "reviewed_at_utc": "2026-10-10T15:40:41.001582+00:00",
+  "verdict": "ACCEPT_ACTUAL_FINAL_RANGE_NOTES_AND_MEDIA",
+  "covered_range": {
+    "baseline_tag": "v2026.10.3",
+    "baseline_source": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "final_source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+    "actual_diff_sha256": "135af891262a69bcc3da0c2b05c742bdbd727c9edf273713509a4ee2eb9b25a0"
+  },
+  "version": "2026.10.4-rc.1+58",
+  "notes_path": "design/prerelease-notes.md",
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "notes_contents": "Experimental 2026.10.4-rc.1 preview.\n\n- Added Food inventory with expiration dates, Inbox, retained stock, partial contents, and per-container removal and restoration.\n\n- Disabled repeating-task checkboxes now have even opacity around their arrow tips.\n\n- Long error messages now scroll so task controls stay accessible.\n\n![Before: disabled repeat arrow tips have darker seams. After: the arrow tips and perimeter have even opacity.](https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png)\n",
+  "judgment": "Three concise accurate end-user changes match actual stable-to-final diff: new Food inventory; even disabled repeating-checkbox arrow opacity; long action errors scroll keeping task controls accessible. Narrow expiry helper correction refines this newly introduced unreleased Food editor and does not require another release bullet or media. No security-fix assertion, testing/preservation transcript, framework details or repeated compatibility warnings.",
+  "media": {
+    "covered_baseline": "v2026.10.3/76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "pending_final_candidate_commit": false,
+    "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+    "three_existing_bullets": "Food inventory; disabled repeat-arrow opacity; bounded scrollable action errors.",
+    "verdict": "ACCEPT unchanged notes/media for actual final stable76..432 commit range",
+    "new_bullet_or_media_required": false,
+    "reason": "Minimal correction refines newly introduced unreleased Food editor. Existing Food bullet accurately covers new capability; no QA assurances or extra narrow fix bullet needed.",
+    "immutable_media_commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "media_sha256": {
+      "before-source.dart.txt": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161",
+      "after-source.dart.txt": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8",
+      "repeat-dark-1x-after.png": "8ba14d1c837463c5bf0a3198cbc715c8b8e54e04b8bb9c3082b8d8577b2759cb",
+      "repeat-dark-1x-before.png": "1e4b9a8b9bf074086b9cf2548aef3b1e87b6ee7a86cf764bd32703362e20d7d1",
+      "disabled-repeat-media-recipe.json": "4572fc49d9d7607f7f2f0125f7eaa617811534cb5cd3f6303cdfbc2a8fa5fab0",
+      "disabled-repeat-before-after.png": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881"
+    },
+    "repeat_renderer_unchanged": true,
+    "actual_final_source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e"
+  },
+  "guidance_sha256": "f4bd62a065503930ca6de2430c97f5250767949d20dc4889269830a90f4db122",
+  "source_invariance_to_prior_accepted_media": "Repeat renderer before equals stable56 and after unchanged57\u219258; all six raw/provenance/composite files byte-identical to prior independently accepted actual media. Previous HTTP200/crop pixels/source equality proof retained; no redundant regeneration.",
+  "previous_editorial_receipt": {
+    "path": "/workspace/recovery/food-rc57-review/corrected-final-range-editorial-accepted-review.json",
+    "sha256": "93a682facda39e437219f282c6d8428b5888c7a2359e5d0076d55bdaa9f8a857",
+    "preserved": true
+  },
+  "notes_routing": "Trusted prerelease publisher freezes dispatch GITHUB_SHA:design/prerelease-notes.md; preserve exact approved notes hash when preparing final publication dispatch.",
+  "artifact_coverage_constraints": "Native expiry media is current432-source Linux GTK debug synthetic process-local preview, not Android/Windows or signed artifact acceptance. New full signed58 artifacts and exact parent Android date/56\u219258 checks pending. User RC Windows GUI waiver retained, current hosted lifecycle mandatory.",
+  "must_fix": [],
+  "publication_ready": false,
+  "source_receipt": {
+    "path": "/tmp/food-rc58-independent-review/frozen-build58-source-readiness-independent-review.json",
+    "sha256": "e81039e459970bee372ddc806831e00302e67007b85b635b6188012eced4a30a"
+  },
+  "reviewer_scope": "Read-only actual final commit diff/hash/notes/media and source-linked raw logs/pixels; no source modifications, tests/builds/app execution or publication.",
+  "actual57_to58_executable_diff_sha256": "057e05c5b98a1c2196c41e63d1219caa2e88b18792558c6b6f1c4db4c427ea4b"
+}

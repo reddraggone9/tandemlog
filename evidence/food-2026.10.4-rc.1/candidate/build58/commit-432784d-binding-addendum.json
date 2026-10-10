@@ -1,0 +1,13 @@
+{
+  "original_review": {
+    "path": "/tmp/food-date-readability-review/final-source-native-ux-review.json",
+    "sha256": "e0545792a615ed79880f00fb916afa7168f9c8d8729661608e070b5c59a244d6"
+  },
+  "accepted_frozen_source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "working_tree_clean": true,
+  "source_guard_matches_git_commit_and_local_bytes": true,
+  "all_32_manifest_member_git_blobs_verified": true,
+  "manifest_note": "32listedmembers plus MANIFEST.json itself =33evidence files.",
+  "verdict": "ACCEPT432784d scopedsource and source-bound finalLinuxUX evidence; no remaining source/harness mustfix. Product639/sharedfixturefa6 unchanged from reviewednativefinal-input.",
+  "qualification": "Onlyfinalstrictinput98sec/fa6c run accepted; prior weaker/failing nativefixtures remain historical. Signedreplacementbuild58, hostednormalcandidategates and exactAndroiddate/IME/persistence/stable-upgrade acceptance still pending. No push/build/source edit by reviewer."
+}

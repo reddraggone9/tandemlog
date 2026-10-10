@@ -1,0 +1,96 @@
+{
+  "scope": "Independent minimal expiry readability source, shared harness and actual nativeLinux pixels review; no production edits/builds/test execution by reviewer.",
+  "candidate_baseline": "97880eebf75875b1e83f2ce0039fb13f5c533968 build57; newbuild58 proposed; finalcandidatecommit/signedAPK not yet accepted.",
+  "source_guard": {
+    "lib/food/food_page.dart": "639638cbdfdb3953bb0fe3e65cbaea71d0e05676f04063be1ee36ea2073ade7a",
+    "test/food_expiry_guidance_test.dart": "fa6c1704d6ad25ca5bdca2f80453112573744cf17b39251a50931d1595f57f5c",
+    "integration_test/food_expiry_guidance_workflow_test.dart": "f69b2f3956c41f930d31c32b157d63a3603f5edf7bf2933b27fd5afadf3ca20d",
+    "integration_test/task_flow_test.dart": "05fcf037c690ebfd545b6132e043ebd6f28c7bb048ef17b00e24edd65f63c7e2",
+    "pubspec.yaml": "e38784993eaa2b5c48c45d4bff2cf2282d5971d6bfc5c3e482328fa3fb0366fa"
+  },
+  "source_guard_sha256": "989e929d42e817c22379965b99b0fe87b438e7333a7fe346fde8d12bd9ce0a5d",
+  "production_diff_from_exact57": [
+    "lib/food/food_page.dart"
+  ],
+  "production_verdict": "ACCEPT scoped fix: shortExpiration label plus fullywrapping unrestricted customText helper in existing InputDecoration. No validation/controllers/type/domain/durable/native/platform/dependency changes relative57; fonts/targets unchanged. Existing InputDecoration semantic association preserved at source level; exactAndroid hierarchy/IME remains pending.",
+  "harness_verdict": "ACCEPT finalfa6c helper: validates actualRenderParagraph truncation rather than source strings alone; SDKRoboto makes oldsource fail two200%cases without Ahem artifact. RealtwoTab events verify datefocus. ActualEditableText center is tapped; focus asserted BEFORE programmaticenterText; controller checked after settle; missedhits fatal within scoped try/finally and normaltest setting restored. Invalidcalendar createsnoactivecontainer/retainsdraft; validsave andEdit date checked; simulatedBack/Discard retainsoldvalue; blankSave appearsInbox; noexception gate retained. Newnativecase is registered in task_flow aggregate.",
+  "observed_author_executed_results": {
+    "red_roboto": "2of2selected200%oldsource cases fail YYYYparagraph maxlines, no unrelated Ahem dropdown overflow.",
+    "unit": "13PASS (4newtheme/scale workflows plus9existingFood preview tests), no tapwarnings/exceptions in bound log.",
+    "native": "1PASS98sec with4theme/scale320x640variants, no missedhits/exceptions, frameworkscriptedGTK debug/proces-localfixture.",
+    "analyze": "Noissues in boundlog.",
+    "format": "203files0changes in boundlog.",
+    "qualification": "Reviewed owner logs and source; reviewer did not rerun these suites. Earlier3native input failures and weak/missed-hit runs retained at /tmp/food-date-readability-evidence; no acceptance attributed to them."
+  },
+  "evidence_manifest": {
+    "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/expiry-build58/MANIFEST.json",
+    "sha256": "632261c9585d58ee80a0d77fc8dbaab86558e90d71c301d134baa33f23ad706b",
+    "entry_count": 32,
+    "all_sizes_hashes_verified": true
+  },
+  "actual_twenty_frames_viewed": {
+    "expiry-dark-1x-add-blank.png": "d5a08081cd21c6038c1974a9e329dccd37fe965263c08748a367a28de1c5e513",
+    "expiry-dark-1x-add-focused.png": "832ce4655895cf3b67c76f65a97c24e941e0dbd60c64b0e1c9b010011b5aa247",
+    "expiry-dark-1x-blank-saved-inbox.png": "ba17c9c588092fc249c7359fae1d962a93369c085d7f0ccf1601cd34a8408ce4",
+    "expiry-dark-1x-edit-date.png": "b408dd9475c88028e1624e15dc682420736512bab72f43309262e2678e4c0138",
+    "expiry-dark-1x-invalid-date.png": "348bbd637907e20e5529628121689e389709e87d321a2e4aaeeee16f0dc7caea",
+    "expiry-dark-2x-add-blank.png": "bb5fee26055221c0bd259ac9b3e40df32d1dad2b391411ad3b0134d75d9528a6",
+    "expiry-dark-2x-add-focused.png": "eb6fece3b6198a36d08cd1de1cd35f79b99e26fee761502e8fd43c696899830b",
+    "expiry-dark-2x-blank-saved-inbox.png": "3f18e106289e5959695394aba6879235cf64fc6bc939021a823978734a92b08e",
+    "expiry-dark-2x-edit-date.png": "f25a26ff22d4afb950d0d8d4546c5de7f5ad330a86f9678e97ef84638f12e30a",
+    "expiry-dark-2x-invalid-date.png": "f7e67952a4b69a4c0c52144b65c5c271ff004f6a034c93ecde8167c0505516d6",
+    "expiry-light-1x-add-blank.png": "b25a7534bb84bea2e063e8a2770035daf3f993a5a7ef39926dd9c21906d9d239",
+    "expiry-light-1x-add-focused.png": "3a43c1c9636255917d007fe6253b508afc81af10a723f5ea76a555ffb64120f0",
+    "expiry-light-1x-blank-saved-inbox.png": "22581b61a34551d247ab2a9807ba540682b4839e56db955c8413394e3f54612e",
+    "expiry-light-1x-edit-date.png": "5bb7cf3117fdd51af224a498df8ad6dbbc35711cbbac928b2161160420e20972",
+    "expiry-light-1x-invalid-date.png": "28a4b2ab0a9b920f2058eabb9dcf3cc0f8175b4e06d6e6b0f9b20bb298fcda99",
+    "expiry-light-2x-add-blank.png": "834ea20f32054fcaf106b589d2778c637b74b1a49fcb320bf24a219201b539a7",
+    "expiry-light-2x-add-focused.png": "9dc0a1b824ba20a031c0d47ca78fe956ad72af9a0cc4ac72361dd14c503de163",
+    "expiry-light-2x-blank-saved-inbox.png": "8ee29037160cdadbc3afe95cdaddfb14b0a0ae2619b59591de05f6965918bbe7",
+    "expiry-light-2x-edit-date.png": "0c2ac3edff8522de0ad79ad66429ad821617fa3d58c934fc5eca7f210ee7d910",
+    "expiry-light-2x-invalid-date.png": "5395814b2b6650430b591f427e5d79cc801b92ee27500545a082b76417bcdc89"
+  },
+  "pixel_verdict": "CompleteYYYY-MM-DD and needs-expirationInbox helper readable/reachable in blank/focusedAdd andEdit, both themes100/200%; full entereddate and calendarerror readable; Add/Save/Cancel visible. Pattern wraps afterhyphen at200% but everypartremainsvisible. No helperellipsis or fontshrink.",
+  "qualified_capture_limits": [
+    "200%Edit floatingExpiration notch remains partlyaligned/cropped at scrollviewporttop in stagedensureVisible capture; full datevalue and completeessentialhelper visible. This is scroll/capture positioning rather than hiddeninputsyntax; no claimalllabelsfullyvisible.",
+    "200%Inbox savedcard lies below firstviewport; workflowstate and finder prove savedInbox, normal-size actualcardvisible. Nativecapturedoesnotattestwholelistreadability.",
+    "Unchanged optionalBrand/size/location/certainty labels mayellipsis; no redesign claimed."
+  ],
+  "video": {
+    "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.1/native/expiry-build58/native-linux-expiry-guidance.mp4",
+    "sha256": "c469538d6c87008be7412235feddc9a0fb893f8927d96a0570c1f995494eb7a5",
+    "bytes": 1170043,
+    "metadata": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 1200,
+          "height": 850,
+          "r_frame_rate": "15/1",
+          "duration": "96.666667",
+          "nb_frames": "1450"
+        }
+      ]
+    },
+    "actual_annotated_frame_viewed": {
+      "path": "/tmp/food-date-readability-review/annotated-pointer-frame-14s.png",
+      "sha256": "95b68c4c415b13537ea99ea8c135acf152f3aac78827405f0e71f046a2d85fbb"
+    },
+    "actual_raw_pointer_frames_viewed": {
+      "pointer-frame-10s.png": "7c889fc7cc382a686c4c0bd4852f4eb595bcdb247e00476344154ff4572be441",
+      "pointer-frame-35s.png": "15b09d57b0e60456ac33dc1570e0178bd79b8a5b2dfa7512e4befbfbcf641e98",
+      "pointer-frame-70s.png": "1c6441aa742f36d2a630dcd7776b5e7f10bfaeeaf6f46fdf9de99bf8751cf2ea"
+    },
+    "verdict": "ActualX cursor visible at button/date/menu targets in decodedvideo frames. RealGTK window320x640 on1200x850X capture; frameworkscriptedFlutter taps+xdotoolpointer positions, not physicalhuman/device touch. Annotatedfooter accuratelylabels LinuxGTKdebug/synthetic320dp/100and200percent."
+  },
+  "docs_verdict": "README and verification accurately qualify process-local/no persistence/noAndroidWindows and focusednotch limit, retain prior57 source attribution, and keep new signed/fullcandidate/exactAndroid gates pending.",
+  "remaining_required_gates": [
+    "Finalnewsource commit/build58 fullnormalcandidateCI/signature/exactAPKidentity.",
+    "ExactAndroid320dp normal/200%Add/Edit empty/focused/realGboard: fullguidance and datevalue, invalidcalendar/format rejection withretaineddraft, validSave/blankInbox, Cancel/Back/focus, changeddate coldreplay/persistence and stableupgrade smoke.",
+    "Prior unaffected build57functional/storage evidence maycarryforward onlyexplicitlysource/artifactattributed; WindowsGUIRCwaiver preserved."
+  ],
+  "no_remaining_source_or_harness_mustfix_found": true,
+  "promotion_authorization": "This accepts scopedsource/LinuxUX correction, not finalAndroidartifact or promotion. Parent release gates remain authoritative."
+}

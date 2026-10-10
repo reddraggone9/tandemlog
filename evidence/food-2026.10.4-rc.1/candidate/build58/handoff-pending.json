@@ -1,0 +1,22 @@
+{
+  "source": "432784d0181af5b97fd89bfb3ef8d5c83212f92e",
+  "version": "2026.10.4-rc.1+58",
+  "signed_candidate_run": 38064595888,
+  "push_ci_run": 38064596284,
+  "status": "Candidate running; exact replacement artifacts/Android acceptance pending",
+  "delta_from_accepted57": "Only expiration label/helper and build number; test/QA docs/evidence also updated",
+  "prior57_source": "97880eebf75875b1e83f2ce0039fb13f5c533968",
+  "prior57_apk_sha256": "e5cf44582e999dec3c6f5f57de5a3c89a458cb932e3e0bb12f35e026607f1078",
+  "carry_forward": "Unchanged domain/storage/recovery/SAF and Windows CLI evidence remains attributed to its actual57 or76c5 source. It does not establish58 exact native acceptance.",
+  "fresh_android_scope": [
+    "Verify original artifact archive/APK metadata/checksums/signature/version58/actual installed hash",
+    "At320dp100/200% both themes, Add/Edit blank and populated date field with actual keyboard; full date format and blank Inbox guidance, value, reachable Save/Cancel",
+    "Invalid format/calendar date retains draft and does not write; valid Save persists/cold replay; blank Save appears Inbox",
+    "Cancel and Back/Discard retain original state; existing eight physical containers and prior Tasks/settings/writer/folder grants preserve meaning",
+    "In-place stable56\u219258 upgrade smoke on existing verified synthetic QA paths; no live data/import/reset",
+    "Parent-coordinated native resource cap and cleanup; actual Android demo with Show taps"
+  ],
+  "windows": "Manual GUI RC-waived by parent; fresh hosted exact installed lifecycle required. Prior localCLI schema/store proof remains source-bound.",
+  "publication": "Authorized Food RC only after full exact-artifact gates and focused native acceptance; reuse accepted original artifacts without rebuilding; prerelease true/latest false; stable v2026.10.3 remains Latest",
+  "quota": "No quota reader exposed here. Parent must supply fresh remaining/reset for final private publication receipt; existing Food feature/publication override applies without renewed Lee permission."
+}
