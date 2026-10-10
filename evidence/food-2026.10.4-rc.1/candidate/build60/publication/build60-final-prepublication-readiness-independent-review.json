@@ -1,0 +1,58 @@
+{
+  "reviewed_at_utc": "2026-10-10T22:05:55.420487+00:00",
+  "verdict": "ACCEPT_READY_FOR_AUTHORIZED_EXACT_RC_PUBLICATION",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "push_ci_run": 38085382087,
+  "version": "2026.10.4-rc.1+60",
+  "accepted_android_artifact": 11681994515,
+  "accepted_apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+  "original_artifact_ids": {
+    "windows": 11681762588,
+    "linux": 11682714300,
+    "android-release": 11681994515
+  },
+  "reviewed_dispatch_main_sha": "d6d2e548199763806a680ba4f2d173b79d56c3ea",
+  "approved_publication_recipe": {
+    "workflow": ".github/workflows/prerelease.yml",
+    "ref": "main",
+    "inputs": {
+      "tag": "v2026.10.4-rc.1",
+      "candidate_run_id": "38085381679",
+      "android_verified_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+      "draft_release_id": ""
+    },
+    "source_and_dispatch": "Exact historical candidate3d is selected by successful main signed-run resolver; checked current dispatch workflow/policies/notes unchanged. A docs-only successor is eligible only with these reviewed executable/tool/workflow/notes/media blobs unchanged and fresh main binding.",
+    "mandatory_gate_order": [
+      "Resolve immutable candidate run/source/version on main",
+      "Checkout exactcandidate; download originalLinux/Windows/ownerAndroid archives only",
+      "Trusted dispatch policy verifies closedinventory/portablemembers/desktoplifecycles/source/version/pinnedowner/acceptedAPKhash; strict3installer checksums",
+      "Copy exactly3versionedinstaller bytes without rebuild; use dispatch-pinned reviewed notes",
+      "Create absent exactcandidate tag/release with prerelease=true/latest=false; stablev2026.10.3 remainsLatest"
+    ],
+    "draft_bridge": "Not required by current workflow-equivalent dispatch. If normal release creation is rejected solely by GitHub historical workflow permissions, preserve mandatory gates and use exact owner-authorized private prerelease draft targeted to3d, validate id/tag/source/draft/3asset digests through unchanged attach_preview_assets.py; finalize only after exact checks with latest=false. No token/permission changes or rebuild."
+  },
+  "approved_notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "approved_immutable_media": {
+    "commit": "48d55416c6e593921e67ed77c2fe46a469a1b10a",
+    "sha256": "b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881"
+  },
+  "editorial_range": "Actualstable76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9 through3d; unchanged3conciseFood/repeatopacity/error-scroll bullets and actual dark repeat comparison accepted; no QA-prose or new media gap.",
+  "hosted_and_artifact_gates": "All5candidate/all3push jobsSUCCESS; actual3originalZIPs/full14members/strictchecksums/Windowsportable17members/freshbothdesktoplifecycles/officialSDKAPKowneridentity/native16K ELF/export/notices previously independently verified and currentAPI metadata unchanged/unexpired.",
+  "aggregate_parent_native_acceptance": "Exact60 affected actual Android Inbox320dp/200% both themes/swipes/fullguidance/savedname/NeedsExpiration/Inspect/Edit, siblingRetained/DeletedRestore/Gboardsearch and deferredvaliddate UI coldreplay PASS; prior18Tasktables/settings/writer/folder/10containers/canonicalhistory retained with4syntheticFoodappends. Native execution by parent/operator, reviewer existing evidence only.",
+  "prior_native_attribution": "Unaffected59 editor/stable56 upgrade proof retains source755/APK689...da51; unaffected57/storage proof originalsource only. WindowsGUI RC waiver retained with fresh60hosted installedlifecycle.",
+  "authorization_and_clearance": "Parent relayed explicit exactFoodRC publication authorization and reconfirmed Food-specific publication override; fresh private clearance observed2026-10-10T22:00:09Z. No account values recorded.",
+  "fresh_remote_baseline": {
+    "prior_releases": 22,
+    "stable_latest": "v2026.10.3",
+    "rc_tag_absent": true
+  },
+  "must_fix": [],
+  "publication_ready": true,
+  "reviewer_device_execution": false,
+  "remaining_required_execution": [
+    "Normal mandatory hosted promotion gate success before release creation",
+    "Independent postpublication actual source/tag/flags/notes/media/3publicbyte digests and unchangedprior22release verification"
+  ],
+  "privacy": "Public projection excludes privatepacket Library identifiers/digest/path, private fixture/canonical IDs/maps, import rows and personal quota values."
+}

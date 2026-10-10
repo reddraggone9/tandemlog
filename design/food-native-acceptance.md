@@ -1,7 +1,7 @@
 # Food RC native acceptance
 
-Replacement RC2026.10.4-rc.1/build60 is ready for the parent's affected Android
-retest. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
+Replacement RC2026.10.4-rc.1/build60 passed the parent's affected Android
+native acceptance and is ready for authorized RC publication. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
 [signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
 (all five jobs) and push CI38085382087 (all three jobs).
 [Exact original-artifact handoff](../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
@@ -9,7 +9,7 @@ records three independently/root-verified archives and14 original members,
 including both hosted installed lifecycles. Android artifact11681994515 contains
 the67082973-byte APK, SHA256 `2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`.
 Official owner signer/package/code60/nondebuggable/threeABI and native16K/ELF/
-exports/notices checks pass. Parent exact Android60 runtime remains pending;
+exports/notices checks pass. Parent exact Android60 runtime now passed separately;
 static verification supplies no native acceptance. Build59 at
 `75557b100bdb17aeb76deb41fad646d95a9cc898`, APK SHA256
 `689bd84c27d20eb52ed7a50d1dabc30f304d2ae402c83ab885eae677740fda51`,
@@ -41,15 +41,15 @@ editor, upgrade and storage passes with their original attribution; do not call
 them freshly executed on60. Search input/retention filters must remain reachable
 when their keyboard is open, without text loss. The host's separate pending-save
 recovery notice retains its existing coverage, outside this page viewport change.
-Exact candidate artifacts and full hosted gates passed; parent native acceptance
-remains required. Simulated GTK insets are not actual Gboard evidence.
+Exact candidate artifacts, full hosted gates and parent native acceptance
+passed. Simulated GTK insets are not actual Gboard evidence.
 
 [Source-bound build60 evidence](../evidence/food-2026.10.4-rc.1/native/inbox-build60/README.md)
 records40 final widget cases,149 earlier qualified Food regressions, final native
 40-case scrolling matrix plus production Save/restart/Restore in4:08, eight
 density variants and the actual pointer-visible synthetic GTK matrix excerpt.
 All seven final native source bindings stayed identical. All hosted gates and exact candidate artifact checks passed. Exact affected
-Android acceptance and fresh private publication clearance remain pending.
+Android acceptance and parent publication clearance now passed.
 
 Build58's signed candidate38064595888, source
 `432784d0181af5b97fd89bfb3ef8d5c83212f92e`, original Android artifact11674984580
@@ -152,3 +152,17 @@ with the app stopped and its protected settings writer loaded. It never chooses
 a source writer, resets identity or writes canonical streams directly. A
 controlled immutable plan, dry-run and explicit commit are required. Private
 extraction, whitelist/provenance and live cutover are separate work.
+
+## Final build60 native readiness
+
+Parent actual affected Android acceptance now passed on the exact build60 APK:
+320dp/200% in both themes, native Inbox swipes/full guidance/saved name/Needs
+expiration/Inspect/Edit, Retained selection/clearing/expansion, Deleted Restore,
+search/Gboard and valid-date native Save/cold UI replay. Eighteen prior Task
+tables/settings/writer/folder and ten prior physical containers remain preserved;
+only four new synthetic fixture events were appended. Build59 editor/stable56
+upgrade passes retain their original attribution. Independent final readiness
+review accepts exact Food RC publication without rebuilding; stable2026.10.3
+remains Latest. Private native fixtures remain outside the repository.
+
+[Accepted-native readiness](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records the source-bound publication attestation.

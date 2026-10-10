@@ -19,8 +19,8 @@ checksums, provenance, native payload and both hosted installed lifecycles.
 Android artifact11681994515 contains code60 APK SHA256
 `2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`,
 67082973 bytes. [Independent full candidate review](candidate/build60/build60-full-candidate-artifacts-independent-review.json)
-accepts it for parent native handoff. Exact affected Android acceptance and fresh
-private publication clearance remain pending.
+accepts it for parent native handoff. Exact affected Android acceptance and parent
+publication clearance now passed; [final native readiness](candidate/build60/publication/accepted-native-readiness.json) preserves original59 attribution and private-fixture boundaries.
 No build59 or58 binary will be published.
 
 The parent's build59 twelve-case actual Gboard editor matrix, stable56 upgrade,

@@ -28,8 +28,9 @@ platform skips,107 contracts/57 policy tests. [Original artifact handoff](../evi
 verifies all three archives/14 members, both desktop installed lifecycles and
 owner APK artifact11681994515/code60/SHA256
 `2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db`.
-The replacement is ready for the parent's minimal affected Android retest;
-Android60 runtime acceptance and fresh private publication clearance remain pending.
+The parent's exact Android60 affected native checks and publication clearance
+now passed. Independent final readiness accepts exact Food RC publication
+without rebuilding; [readiness](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records native acceptance and original59 attribution.
 Stable2026.10.3/build56 remains Latest; nothing from58/59/60 has been published.
 No domain/storage/host inset/dependency or live-data changes are included.
 
