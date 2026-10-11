@@ -1,0 +1,88 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "825a26added1d6c3f6d6220cc5531063caff89456eeb1ca789ad175f430469b5",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T16:44:23.245121+00:00",
+    "verdict": "ACCEPTED_BOUNDED_FIXTURE_AND_LINUX_ALLOWANCE",
+    "mustFix": [],
+    "baseCommit": "46c4ff5c1492c65990c331e3bed117ad2220cc1b",
+    "sourceBindings": {
+      ".github/workflows/validate.yml": {
+        "path": ".github/workflows/validate.yml",
+        "sha256": "71af9469116081b5f5cf096609884c48ad2ee4dd6776866d982dfd983b580901",
+        "bytes": 11490
+      },
+      "integration_test/task_flow_test.dart": {
+        "path": "integration_test/task_flow_test.dart",
+        "sha256": "a8098599b47989c09130d0a45a94ff82012d6df830368b538a929aa28d5a107f",
+        "bytes": 174768
+      }
+    },
+    "baselineSha256": {
+      ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+      "integration_test/task_flow_test.dart": "a6724c3f8c7adca53e2937ec5e0d2abbe908a2e2db01d481b8f796f618ea99c8"
+    },
+    "sourceVerification": {
+      "exactWorkflowChange": "Linux job timeout40->55 only; all remaining workflow bytes identical to base.",
+      "exactFixtureChanges": "Unique SnackBarAction Undo assertion and pointer tap; later transient Undo absence scoped to same finder. All other fixture bytes identical to base.",
+      "settledInventory": {
+        "path": "runtime-evidence/source-inputs-settled.json",
+        "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3",
+        "bytes": 9727
+      },
+      "unchangedSettledEntries": 59,
+      "soleChangedSettledEntry": "integration_test/task_flow_test.dart",
+      "otherWorkingChanges": "Evidence/.gitattributes changes outside this bounded two-file review are not accepted by this receipt."
+    },
+    "preservedFailedCandidate": {
+      "path": "candidate-review-evidence/cancelled-38153414378-independent-hold-disposition.json",
+      "sha256": "4d7f17f6c5d0515d81d27c5ccd5d7eae1bd82dfcafeeaa7965a745e04a33e18c",
+      "bytes": 4966
+    },
+    "failedCandidateQualification": "Run38153414378 has explicit40m0s deadline cancellation and separate earlier ambiguous Undo target failure; incomplete Linux native suite and skipped signing remain ineligible. Later progress is not a passing full gate.",
+    "evidenceBindings": [
+      {
+        "path": "runtime-evidence/hosted-native-undo-fix-green.log",
+        "sha256": "1842b8846f2e9eebf1d95006c8285a3f049fe3380569df672a79a978f7a9f9a2",
+        "bytes": 6291
+      },
+      {
+        "path": "runtime-evidence/hosted-native-undo-fix-analyze.log",
+        "sha256": "ad38104fd8bddf6d3d0990d6206e1be32dc3f2e51f98b45bc9390c9044c7c77f",
+        "bytes": 686
+      },
+      {
+        "path": "runtime-evidence/hosted-native-undo-fix-format.log",
+        "sha256": "8877e3717f097525dd5acc91c0f0b4ddb3b9f3eda08861d868f09182a5f7368d",
+        "bytes": 46
+      },
+      {
+        "path": "runtime-evidence/hosted-native-undo-fix-tools.log",
+        "sha256": "2665f8e0cfdaebbfabe75de826d9067578a992e2a8d3758f1b0a9c9de6090716",
+        "bytes": 597
+      },
+      {
+        "path": "candidate-review-evidence/linux-provider-decoded-hosted.log",
+        "sha256": "9241c6128b63292671d766cdbc45057da04ca85f4205a48687973b01f62d747f",
+        "bytes": 546378
+      }
+    ],
+    "observedChecks": {
+      "targetedActualLinuxNative": "00:25 +1 Alltests passed: capture/edit/completion/Undo/restart/error recovery actual task_flow case.",
+      "analysis": "No issues found1.6s",
+      "format": "1file0changed",
+      "tools": "74tests OK"
+    },
+    "findings": [
+      "SnackBar-specific selector targets intended transient completion Undo without confusing approved wide toolbar Undo. Explicit findsOneWidget preserves meaningful target assertion.",
+      "Later absence assertion correctly checks transient notification, allowing persistent toolbar action. Capture, notes, completion/reopen, persistent completed browsing, restart, input/focus and error-recovery assertions remain byte-identical.",
+      "55-minute bound is proportionate to observed deadline and expanded full native suite; retains same existing ubuntu24.04 runner, read-only permissions, complete checks, release/Flatpak/native packaging and successful-checks signing dependency. No paid runner or compatibility change."
+    ],
+    "remainingGates": [
+      "Replacement exact-source full candidate must complete every gate and signing; this targeted1/1 pass is not full native or candidate acceptance.",
+      "Exact signed-artifact native acceptance and publication remain separately gated."
+    ],
+    "reviewMethod": "Read-only source/log review; independently verified exact byte substitutions and bindings. No tests/builds rerun; no application files edited."
+  }
+}

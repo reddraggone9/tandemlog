@@ -1350,7 +1350,9 @@ void main() {
       await tester.tap(find.byTooltip('Complete Buy oats'));
       await tester.pumpAndSettle();
       expect(find.text('No open tasks'), findsOneWidget);
-      await tester.tap(find.text('Undo'));
+      final transientUndo = find.widgetWithText(SnackBarAction, 'Undo');
+      expect(transientUndo, findsOneWidget);
+      await tester.tap(transientUndo);
       await tester.pumpAndSettle();
       expect(find.text('Buy oats'), findsOneWidget);
       await tester.tap(find.byTooltip('Complete Buy oats'));
@@ -1385,7 +1387,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byTooltip('Reopen Buy oats'));
       await tester.pumpAndSettle();
-      expect(find.text('Undo'), findsNothing);
+      expect(transientUndo, findsNothing);
       await filterChoice(tester, 'Open');
       await tester.pumpAndSettle();
       // Periodic ingestion must not steal an unfinished capture's input/focus.

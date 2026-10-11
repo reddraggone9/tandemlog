@@ -1,15 +1,17 @@
 # Food RC3/build65 — exact Android acceptance handoff
 
-The first candidate at `16cb07d62b3b6ef8432120debf45192c3b522ecd`, run
-[38152037169](https://github.com/reddraggone9/tandemlog/actions/runs/38152037169),
-failed unit gates before signing and is ineligible. Two old fixture files
-were corrected; application code is unchanged. Replacement candidate
-[38153414378](https://github.com/reddraggone9/tandemlog/actions/runs/38153414378)
-uses exact source `1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c`.
-Original archive identity, owner-signed APK hash and full hosted gates are pending;
-use the eventual verified original APK, without rebuilding. This document does
-not claim installed Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
-records scoped actual Linux checks and independent reviews.
+The first candidate38152037169 at `16cb07d` fails unit fixtures before signing.
+Replacement38153414378 at `1bd746e` exposes a native Undo-finder ambiguity and
+reaches the Linux40-minute deadline; signing is skipped. Both are ineligible.
+The reviewed fixture correction targets the Snackbar action; its actual Linux
+native case passes in25 seconds. A Linux-only55-minute allowance keeps every
+existing gate. Application/native/dependency source is unchanged.
+
+A fresh exact-source full candidate, original archive identities and owner-signed
+APK remain pending. Use the eventual verified original APK without rebuilding.
+This document does not claim installed Android acceptance.
+[Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) retains both failures,
+targeted actual checks and independent review.
 
 Use disposable synthetic data and the locally coordinated fresh trial only.
 Keep live synced data and the old trial/receipts intact. Existing initialized

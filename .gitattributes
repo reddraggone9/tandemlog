@@ -24,3 +24,6 @@ evidence/bulk-stale-warning/** -text
 
 # RC3 raw synthetic QA logs retain literal bytes, including reporter spacing.
 evidence/toolbar-2026.10.4-rc.3/logs/*.txt -text -whitespace
+
+# Original RC3 candidate reports and archive receipts retain exact bytes.
+evidence/toolbar-2026.10.4-rc.3/candidate/** -text -whitespace

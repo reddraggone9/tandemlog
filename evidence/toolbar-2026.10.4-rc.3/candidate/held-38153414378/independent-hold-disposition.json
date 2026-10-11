@@ -1,0 +1,149 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "4d7f17f6c5d0515d81d27c5ccd5d7eae1bd82dfcafeeaa7965a745e04a33e18c",
+  "review": {
+    "checked_at_utc": "2026-10-11T16:39:49.030763+00:00",
+    "source": "1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c",
+    "candidate_run": 38153414378,
+    "version": "2026.10.4-rc.3+65",
+    "verdict": "HOLD_INELIGIBLE_DEADLINE_CANCELLATION_WITH_EARLIER_NATIVE_TEST_FAILURE",
+    "linux_job": {
+      "id": 114511411503,
+      "started_at": "2026-10-11T15:57:20Z",
+      "completed_at": "2026-10-11T16:37:37Z",
+      "conclusion": "cancelled",
+      "duration_seconds": 2417,
+      "annotations": [
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/reddraggone9/tandemlog/blob/1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c/.github",
+          "start_line": 1,
+          "start_column": null,
+          "end_line": 1,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The job has exceeded the maximum execution time of 40m0s",
+          "raw_details": ""
+        },
+        {
+          "path": ".github",
+          "blob_href": "https://github.com/reddraggone9/tandemlog/blob/1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c/.github",
+          "start_line": 1465,
+          "start_column": null,
+          "end_line": 1465,
+          "end_column": null,
+          "annotation_level": "failure",
+          "title": "",
+          "message": "The operation was canceled.",
+          "raw_details": ""
+        }
+      ]
+    },
+    "earlier_native_failure": {
+      "timestamp": "2026-10-11T16:33:03.5615816Z",
+      "test": "native capture, edit, completion, undo, restart and error recovery",
+      "assertion": "find.text(Undo) ambiguously matched2 Text widgets; tap requires one target",
+      "stack": "integration_test/task_flow_test.dart:1353:20",
+      "interpretation": "Independent actual native test failure precedes deadline cancellation; not a timeout-only successful gate"
+    },
+    "observed_progress": {
+      "linux_units": 1017,
+      "rust_tests": 4,
+      "native_contracts": 107,
+      "tool_checks": 74,
+      "last_completed_native_test_at": "2026-10-11T16:37:16.7167333Z",
+      "last_native_ready_at": "2026-10-11T16:37:29.7100640Z",
+      "full_native_suite_completed": false,
+      "native_total_pass_count_not_attested": true
+    },
+    "job_states": [
+      {
+        "id": 114511370844,
+        "name": "candidate",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114511411503,
+        "name": "checks / linux",
+        "status": "completed",
+        "conclusion": "cancelled"
+      },
+      {
+        "id": 114511411542,
+        "name": "checks / android",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114511411578,
+        "name": "checks / windows",
+        "status": "completed",
+        "conclusion": "success"
+      },
+      {
+        "id": 114519710810,
+        "name": "signed-android",
+        "status": "completed",
+        "conclusion": "skipped"
+      }
+    ],
+    "downloaded_originals": {
+      "windows": {
+        "path": "candidate-review-evidence/windows-38153414378-original.zip",
+        "bytes": 26247895,
+        "sha256": "db5f5544e030abbcf3721b974113e558818e83663aff61d3e06d88dbf9cf6a40"
+      }
+    },
+    "windows_individual_member_and_static_gates": "PASS but candidate run is ineligible; originals preserved for audit, not promotion",
+    "linux_original_available": false,
+    "signed_android_original_available": false,
+    "handed_off_apk": false,
+    "publication_or_runtime_acceptance": false,
+    "log_representation": "Official GitHub App decoded UTF8 content preserved byte-for-byte as returned representation, no BOM/newline normalization; no raw download hash claim",
+    "parent_owns_test_fixture_and_workflow_correction": true,
+    "files": [
+      {
+        "name": "frozen-source-inventory-independent-verification.json",
+        "bytes": 61826,
+        "sha256": "75cc958237bbed43845e27164f5e9c1fcb00b083850cdc5c099bc4fd8a59f42e"
+      },
+      {
+        "name": "build65-windows-actual-artifact-bindings.json",
+        "bytes": 9809,
+        "sha256": "64dcdef7249f0ca55b00054295c75219112627fad53091ec5701e3952adfd219"
+      },
+      {
+        "name": "terminal-run-api.json",
+        "bytes": 3824,
+        "sha256": "f79262933e268a15a9085bbc9351d975f6134d50cce29428070b85129f3e1a8f"
+      },
+      {
+        "name": "terminal-jobs-api.json",
+        "bytes": 24520,
+        "sha256": "2ca77c3c3bfcc70ec8c8a4279f6ea3882a50c67e444b0c991c5899a022956889"
+      },
+      {
+        "name": "terminal-artifacts-api.json",
+        "bytes": 3447,
+        "sha256": "ecbe8d5c916d1efdcd74191b28c19edfe64e738d20311524d6fcc0176a08ace1"
+      },
+      {
+        "name": "terminal-linux-check-run-api.json",
+        "bytes": 3074,
+        "sha256": "59decf4e703572ba34d96cc1bb7d3285b7d7202d071d083849bce2c5159c907f"
+      },
+      {
+        "name": "terminal-linux-check-annotations-api.json",
+        "bytes": 620,
+        "sha256": "0a7a915e52fc63e26e6e08600791e61f4b110edd9acd6f02ce7f3444326def55"
+      },
+      {
+        "name": "linux-provider-decoded-hosted.log",
+        "bytes": 546378,
+        "sha256": "9241c6128b63292671d766cdbc45057da04ca85f4205a48687973b01f62d747f"
+      }
+    ]
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+  "previous_candidate_source": "1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c",
+  "previous_candidate_run": 38153414378,
+  "qualification": "Current compiler/test inputs for the next full candidate. Previous 62 bindings remain historical; only task_flow SnackBar Undo selectors change, plus one new Linux-only 40\u219255-minute workflow binding. No application/native/dependency/signing/assertion policy change. The resulting signed-candidate receipt binds the exact Git source.",
+  "files": {
+    "integration_test/checklist_lifecycle_test.dart": {
+      "bytes": 17809,
+      "sha256": "7d523a5d9fd5b8bac83a4f7ec890e75a28abdffd407536b7f8ddf6748e0dd123"
+    },
+    "integration_test/completion_actions_test.dart": {
+      "bytes": 12200,
+      "sha256": "e47207c7b5f258ed99221f794318d1fc72de2519e54f79d9fc6252638ab6bc86"
+    },
+    "integration_test/completion_focus_test.dart": {
+      "bytes": 8749,
+      "sha256": "9768f00536389de6b491772eea48797dd36886144ba64b019b544346d9c030a4"
+    },
+    "integration_test/food_account_workflow_test.dart": {
+      "bytes": 21668,
+      "sha256": "6002245ffe8678d647382da7e17cac9dc5995e82da28a0130f14bf78cfb253b3"
+    },
+    "integration_test/food_all_status_search_workflow_test.dart": {
+      "bytes": 1774,
+      "sha256": "18145feadefd0feeb40778d9ad28034d8d62ccf5831bb0e119b142344654a140"
+    },
+    "integration_test/food_bulk_details_host_undo_review_test.dart": {
+      "bytes": 412,
+      "sha256": "cffcb1ed84b93642d953bdcf012435a365d2cbf294ccc0111aab0ff28e4ae274"
+    },
+    "integration_test/food_inspect_accessibility_test.dart": {
+      "bytes": 5954,
+      "sha256": "d7dffa74142429a852719b0cae2ceacec2194461fc7f7edd25d626395213ea53"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 24227,
+      "sha256": "ecdac29d95e68073c840bf066a2eed7b72b8e89949e65855cd935f1133ceb4e5"
+    },
+    "integration_test/food_refinements_workflow_test.dart": {
+      "bytes": 3265,
+      "sha256": "54a2d8f46bff0f0e1996e5d6c085eeaedb4470dbcb8615745b67bf0221010c56"
+    },
+    "integration_test/food_undo_stack_workflow_test.dart": {
+      "bytes": 28277,
+      "sha256": "ad5efff9c11e306cf67509af1e2fdd27d6a9ecc58b59ca30f6ad2f49cc6f6b68"
+    },
+    "integration_test/native_text_fixtures.dart": {
+      "bytes": 5007,
+      "sha256": "61d478071446541e0e17c0eb4c364185a5e9e89e9d60f8525e52a97af99d375d"
+    },
+    "integration_test/rc3_affected_acceptance_test.dart": {
+      "bytes": 966,
+      "sha256": "8e47ec679a3906e69c06206200747877a85b14c3d83471f1d5cc6f62f7076fc3"
+    },
+    "integration_test/save_acknowledgement_test.dart": {
+      "bytes": 12560,
+      "sha256": "1a1953a233617a477e3d760152f0918534348954fa31974fc855c6881c1091d5"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 174768,
+      "sha256": "a8098599b47989c09130d0a45a94ff82012d6df830368b538a929aa28d5a107f"
+    },
+    "integration_test/task_precision_test.dart": {
+      "bytes": 6672,
+      "sha256": "156da66d1ca879800a60a39bc3d2a933ff425619ca72c0530608ba296d76955f"
+    },
+    "integration_test/text_workflow_test.dart": {
+      "bytes": 18610,
+      "sha256": "13c5e8c6ed4fa386067c3237fbb5bda13783cf890e09258b18f4e8051a2710d7"
+    },
+    "integration_test/toolbar_parity_workflow_test.dart": {
+      "bytes": 12350,
+      "sha256": "4c75c14162db06588d3daba5836f5e84de264e0d9f1ab4b29e3c4423e9e96dca"
+    },
+    "lib/food/food_import.dart": {
+      "bytes": 6309,
+      "sha256": "404f56da757b682420d166fac0df28d1c63bde81c4cf0d465ac5d8b09f62b7a4"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 67022,
+      "sha256": "d8bc4f06e53bdf9abe3f04019208662976f25236fb4d46c8cc30485ff68a77c7"
+    },
+    "lib/food/inventory.dart": {
+      "bytes": 24057,
+      "sha256": "b2726737d7581f51b8516ae0ce4b08412365eb9861564a382c1d6cb7e1abb6f1"
+    },
+    "lib/main.dart": {
+      "bytes": 203720,
+      "sha256": "26013a6cc4f36c597b198c550edee690daeb9c516590d63e3c68a1c45db0b267"
+    },
+    "lib/presentation/civil_date_input.dart": {
+      "bytes": 6604,
+      "sha256": "bca5bf871fe79f0f176172d7e2b19cf028be13e21e73a2f6de51da967ebc597a"
+    },
+    "lib/presentation/free_text_autocomplete.dart": {
+      "bytes": 1631,
+      "sha256": "f2b82719e5c9026b1fb9d6c4e0856b3b757ee528cbeb7d4c5511ddcbcbc22ff9"
+    },
+    "lib/presentation/tag_input.dart": {
+      "bytes": 23703,
+      "sha256": "a7caf9da03f018d4e41c436a04d836eb356bcfa1eec5b51d42f9f9d1d4c7da37"
+    },
+    "lib/presentation/task_editor.dart": {
+      "bytes": 41745,
+      "sha256": "46f01e3123f69299ce6a65dc37f47536d24270119e78813434de6a333c0f8120"
+    },
+    "lib/presentation/task_toolbar.dart": {
+      "bytes": 8880,
+      "sha256": "4a1052035369038feb75f86cb7a9e4158eb29572be3190b4dc28d3c88411306a"
+    },
+    "lib/presentation/toolbar_action.dart": {
+      "bytes": 2871,
+      "sha256": "9f6c6773bfa042aa10575f8660ef83827976dfe5ba2787677c69eebb57e5e837"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 158992,
+      "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+    },
+    "pubspec.yaml": {
+      "bytes": 590,
+      "sha256": "9f7bca14b738b7a060b74537968a5e56b97fd1965ecc3dc8c21e844b7ec0e13d"
+    },
+    "test/checklist_baseline_selection_test.dart": {
+      "bytes": 7235,
+      "sha256": "f7574f98ce5f82f95950406647f6f9d9cfdd6fccce8c8c5d1a2fe3cfe394bcf1"
+    },
+    "test/checklist_storage_test.dart": {
+      "bytes": 20463,
+      "sha256": "3314b157ef75dcd258f0287d03ecece54c7435222d5e25eb07365aa989277957"
+    },
+    "test/date_input_alignment_workflow_test.dart": {
+      "bytes": 3608,
+      "sha256": "6a84bf04222a6cad0b00bbf298dfd8901eaaacdc445874ec1c4940cb052ca579"
+    },
+    "test/date_time_layout_test.dart": {
+      "bytes": 9566,
+      "sha256": "04447a6717c90c865164abb2637eb3a136cc9a51ad12a540196ac92228893fa7"
+    },
+    "test/fixtures/food-import/expected-v1-full-default.json": {
+      "bytes": 982,
+      "sha256": "4056ddb7ccbb0648c2bc5c51aa7429b20d1c9c460105dbd42e010edf43f0f143"
+    },
+    "test/fixtures/food-import/plan-v1-full-default.json": {
+      "bytes": 713,
+      "sha256": "102096a7f994fa846931a411e7c7477bcec89be9f6b4cca40462e667b681b501"
+    },
+    "test/food_all_status_search_workflow_test.dart": {
+      "bytes": 12707,
+      "sha256": "0ebd3e9bbc598802a2c26e9a8328174e14a6ace6f22f493518c621639644534f"
+    },
+    "test/food_bulk_details_undo_review_test.dart": {
+      "bytes": 21532,
+      "sha256": "e0f7218cd662ffdddea8500961d32e8e2609879addf6246ac8ecad7525b67f87"
+    },
+    "test/food_bulk_details_workflow_test.dart": {
+      "bytes": 8440,
+      "sha256": "0c79acf380e05e0c21200f1932969d3c3bbb16f04e7f618f68d0896d21fca37e"
+    },
+    "test/food_collapsed_inspect_guard_test.dart": {
+      "bytes": 4999,
+      "sha256": "a97e307365de421addb4ac9e00ec500486da0a706f456d2710202ba04f43ca1e"
+    },
+    "test/food_combined_stock_review_test.dart": {
+      "bytes": 5607,
+      "sha256": "d8c4605d0ad53d2bd3bcac808962538110eb8e50c3927f544908d994313c295e"
+    },
+    "test/food_editor_keyboard_layout_test.dart": {
+      "bytes": 11984,
+      "sha256": "5ae57348ab770a0c3e04d55cf60b8407e0886fcd20cd503c89b68bc1d71782f1"
+    },
+    "test/food_expiration_observed_group_review_test.dart": {
+      "bytes": 5574,
+      "sha256": "9b4a9abd00535ef65e79cb37caec8bc4fa69ceb01e37c643e6e4d3056613aa08"
+    },
+    "test/food_field_filter_workflow_test.dart": {
+      "bytes": 7210,
+      "sha256": "f1898a94d6933b5c6f5416f03dbb806379fab87d448080cac799732df39fcde3"
+    },
+    "test/food_filter_route_ownership_test.dart": {
+      "bytes": 3389,
+      "sha256": "e5a8ae048d7ef33bb919a9a4a587c0cfc53ad8aec3eed283158cc556798ec4f9"
+    },
+    "test/food_full_default_import_vector_test.dart": {
+      "bytes": 5310,
+      "sha256": "e51c4803c27ceca143d39a5cdc567ce017f2bc0167da0fc1ccd606d29b3f5c6e"
+    },
+    "test/food_full_default_test.dart": {
+      "bytes": 2114,
+      "sha256": "7034278a0015c123a6dcd091b932908d0e1c06f90be24b1cf1d02fdc1807c0ab"
+    },
+    "test/food_group_action_geometry_test.dart": {
+      "bytes": 5690,
+      "sha256": "9bf1c8f839101d480f82893dac783f156247e0388209fd435eb65c970045c202"
+    },
+    "test/food_import_contract_vector_test.dart": {
+      "bytes": 741,
+      "sha256": "51a833324bbee63a47202a8f967b34b1db4608c762e54508a6819c4a9f4458d4"
+    },
+    "test/food_import_test.dart": {
+      "bytes": 21497,
+      "sha256": "2de7ea8267709e2b23ff4c489d8d19359244645f04216442d9f5bef253f502f1"
+    },
+    "test/food_inventory_test.dart": {
+      "bytes": 17745,
+      "sha256": "7aae02586aa01a113479e8f5053118b1ad18aafceff5bd1acd778548e32eb556"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 5114,
+      "sha256": "782268f08e608cf8a116e99a1bd9d5f99c643b93587cb831e64a47f0fbe59ab0"
+    },
+    "test/food_restore_batch_callback_test.dart": {
+      "bytes": 4408,
+      "sha256": "9f3eea2419e475166fa8dc71715277e48263739bc50726e3661cefe51127a78d"
+    },
+    "test/food_stock_toolbar_workflow_test.dart": {
+      "bytes": 9350,
+      "sha256": "4d9b2c85b16b44cba8037c4f3aea5ea2c8559bf7f4da21c74df1a0d79ff5b77f"
+    },
+    "test/food_value_autocomplete_workflow_test.dart": {
+      "bytes": 4998,
+      "sha256": "ce6e41ad5cacba2dd915c49215dfee437ec4a421488358b25c6718b4d1ee70a5"
+    },
+    "test/food_view_reachability_test.dart": {
+      "bytes": 14908,
+      "sha256": "7d4b9409e66a9d654ab4fcf760e0a209cf9554fcdbc184ac0f56f5ba40ef42a9"
+    },
+    "test/historical_delivery_test.dart": {
+      "bytes": 9726,
+      "sha256": "5f274f3eed1901a9dab81e6770ea10d7b22ae921927a66c57a36475da4e5ad33"
+    },
+    "test/historical_recompletion_test.dart": {
+      "bytes": 10934,
+      "sha256": "7379ca457d347fa38db3e70e62e08cfdf87d2079db874a4806a31e5b940f7cb2"
+    },
+    "test/new_workspace_text_initialization_test.dart": {
+      "bytes": 11511,
+      "sha256": "1d181edfc4a90d9bf3c887022bc54eba4d0beeb5be999020d6c2b44bf2e7d9ba"
+    },
+    "test/support/toolbar_button.dart": {
+      "bytes": 837,
+      "sha256": "28cfacd3e218673abca39451691c2fb5fc9ca2efa0dd914a75eb4637753f1198"
+    },
+    "test/task_editor_test.dart": {
+      "bytes": 47677,
+      "sha256": "ba68f359ab8802c76264454ba6526acd630d7a365576c83cab36bb16f0c2d019"
+    },
+    "test/text_store_test.dart": {
+      "bytes": 79372,
+      "sha256": "3f733f5958807cc2845900c9b6ec1cfec6b6241aeadadd58298bd56e9b387a15"
+    },
+    "test/toolbar_undo_label_test.dart": {
+      "bytes": 2125,
+      "sha256": "e87533a4453e01460c55a1d5a6ccfc52f92527d06b10d690c597c72c0fc5591a"
+    },
+    ".github/workflows/validate.yml": {
+      "bytes": 11490,
+      "sha256": "71af9469116081b5f5cf096609884c48ad2ee4dd6776866d982dfd983b580901"
+    }
+  }
+}
