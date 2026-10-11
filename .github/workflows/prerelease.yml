@@ -52,6 +52,9 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11
       - uses: ./.github/actions/setup-flutter
+      - uses: ./.github/actions/setup-text-engine
+        with:
+          platform: linux
       - run: flutter pub get --enforce-lockfile
       - run: dart format --output=none --set-exit-if-changed integration_test/folder_actions_smoke_test.dart
       - run: python3 tool/dependency_smoke.py desktop "$RUNNER_TEMP/folder-smoke"
