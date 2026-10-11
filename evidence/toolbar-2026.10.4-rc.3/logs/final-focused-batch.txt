@@ -1,0 +1,144 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:01 +1: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:01 +2: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:02 +3: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:02 +4: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:02 +5: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:02 +6: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +7: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +8: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +9: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +10: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +11: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:03 +12: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x dark
+00:04 +13: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:04 +14: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +15: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +16: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +17: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +18: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +19: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +20: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +21: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +22: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +23: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:05 +24: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:06 +25: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:06 +26: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:06 +27: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 900.0 1.0x light
+00:06 +28: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:08 +29: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+00:09 +30: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +31: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +32: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +33: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +34: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +35: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +36: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +37: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:09 +38: /tmp/tandemlog-food-date-readability/test/food_bulk_details_workflow_test.dart: Food bulk details 320.0 2.0x light
+00:10 +39: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: legacy date certainty stays unknown unless evidence establishes it
+00:10 +40: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Deleted sorts tied writers and uses latest still-active deletion
+00:10 +41: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Deleted sequence tie uses numeric sequence rather than lexical ID
+00:10 +42: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: equivalent fractions do not conflict; real alternatives require review
+00:10 +43: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: multiwriter tied clocks and delayed Restore replay deterministically
+00:10 +44: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: independent field edits merge without overwriting the other field
+00:10 +45: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: concurrent contents alternatives remain visible until observed resolution
+00:10 +46: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Add N creates physical containers; count is derived
+00:10 +47: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: eight containers stay eight with seven full and one third remaining
+00:10 +48: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: identical full containers have a deterministic quick target
+00:10 +49: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: observed group deletion excludes concurrent new containers
+00:10 +50: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: concurrent same-target remove counts once; unseen delete survives Restore
+00:10 +51: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: duplicate and arbitrarily reordered delivery replay identically
+00:10 +52: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: retention hides even preexpiry; undated stays Inbox; search ignores filters
+00:10 +53: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: expiry order is global; different expiry or descriptive data stay separate
+00:10 +54: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: search ignores every saved filter, separates statuses and preserves ordering
+00:10 +55: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: brand/location filters OR within field, AND between fields, and pause during search
+00:10 +56: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Search includes Deleted without changing durable meaning
+00:10 +57: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: invalid counts, fractions, dates, paths and unknown fields fail closed
+00:10 +58: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: literal canonical food wire/hash and module writer fixture
+00:10 +59: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: separate food hash domain and immutable envelope bindings
+00:10 +60: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: food DTO identity and order cannot disagree with verified envelope
+00:10 +61: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: noncreation records carry observed per-container creation basis
+00:10 +62: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: unknown/noncanonical/oversized records are rejected
+00:10 +63: /tmp/tandemlog-food-date-readability/test/food_record_test.dart: exact signed64 clock roundtrip and bounds
+00:10 +64: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: collapsed summary preserves single known full
+00:12 +65: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:12 +66: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:12 +67: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:12 +68: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+00:12 +69: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +70: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:13 +71: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+00:13 +72: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +73: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:13 +74: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: quick remove, Deleted and Undo preserve physical identity
+00:14 +75: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: mixed legacy group remains inspected after first representative is removed
+00:14 +76: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: mixed legacy group remains inspected after first representative is removed
+00:15 +77: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 1200.0 1.0x
+00:16 +78: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: date-only mixed group edit targets observed containers and leaves a late arrival alone
+00:16 +79: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 320.0 1.0x
+00:16 +80: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 320.0 2.0x
+00:16 +81: /tmp/tandemlog-food-date-readability/test/food_restore_batch_callback_test.dart: Deleted group Restore calls one batch with exact observed containers; individual Restore stays single
+00:17 +82: /tmp/tandemlog-food-date-readability/test/food_restore_batch_callback_test.dart: Deleted group Restore calls one batch with exact observed containers; individual Restore stays single
+00:17 +83: /tmp/tandemlog-food-date-readability/test/food_restore_batch_callback_test.dart: Deleted group Restore calls one batch with exact observed containers; individual Restore stays single
+00:17 +84: /tmp/tandemlog-food-date-readability/test/food_restore_batch_callback_test.dart: Deleted group Restore calls one batch with exact observed containers; individual Restore stays single
+00:18 +85: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+00:18 +86: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+00:21 +87: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+00:22 +88: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+00:23 +89: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x dark
+00:23 +90: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x light
+00:24 +91: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x light
+00:26 +92: /tmp/tandemlog-food-date-readability/test/food_value_autocomplete_workflow_test.dart: Food value autocomplete 900.0 1.0x dark
+00:27 +93: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x dark
+00:28 +94: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x dark
+00:28 +95: /tmp/tandemlog-food-date-readability/test/food_value_autocomplete_workflow_test.dart: Food value autocomplete 320.0 2.0x dark
+00:29 +96: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x light
+00:30 +97: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x light
+00:30 +98: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:32 +99: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:32 +100: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:32 +101: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:33 +102: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:35 +103: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:35 +104: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x dark
+00:35 +105: /tmp/tandemlog-food-date-readability/test/civil_date_input_test.dart: picker preserves civil date and accepts manual date typing
+00:36 +106: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x light
+00:36 +107: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x light
+00:36 +108: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x light
+00:36 +109: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x light
+00:37 +110: /tmp/tandemlog-food-date-readability/test/food_field_filter_workflow_test.dart: Food field filters 900.0 1.0x light
+00:38 +110: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:38 +111: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=465.0
+00:40 +112: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=644.0
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+00:42 +113: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=561.0
+00:43 +114: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:43 +115: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:43 +116: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:43 +117: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=740.0
+00:44 +118: /tmp/tandemlog-food-date-readability/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:45 +119: /tmp/tandemlog-food-date-readability/test/task_toolbar_test.dart: status changes reserve count and control geometry
+00:45 +120: All tests passed!

@@ -1,0 +1,115 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/new_workspace_text_initialization_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/new_workspace_text_initialization_test.dart: genuine new workspace initializes once and cold replay preserves bytes
+00:00 +1: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +2: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +3: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +4: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +5: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +6: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +7: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:00 +8: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:01 +9: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:01 +10: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:01 +11: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:02 +12: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:02 +13: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+00:02 +14: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:02 +15: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+00:02 +16: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+00:02 +17: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:03 +18: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: later copied-item activity preserves the declared scalar baseline through native capture and cold replay
+00:03 +19: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: later copied-item activity preserves the declared scalar baseline through native capture and cold replay
+00:03 +20: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:03 +21: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:03 +22: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:03 +23: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:03 +24: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:04 +25: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:04 +26: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:04 +27: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+00:04 +28: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:04 +29: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:04 +30: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:04 +31: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:04 +32: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+00:04 +33: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:04 +34: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+00:05 +35: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+00:05 +36: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+00:05 +37: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: nested, non-task parents and cross-parent move anchors append nothing
+00:05 +38: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:05 +39: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+00:05 +40: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+00:05 +41: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+00:06 +42: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+00:06 +43: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+00:07 +44: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+00:07 +45: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+00:07 +46: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+00:07 +47: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+00:08 +48: /tmp/tandemlog-food-date-readability/test/historical_recompletion_test.dart: offline historical recompletions converge without reseeding or suppressing the existing child
+00:08 +49: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:08 +50: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+00:08 +51: /tmp/tandemlog-food-date-readability/test/historical_recompletion_test.dart: historical recompletion preserves independent child draft, context and scoped Undo
+00:09 +52: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+00:09 +53: /tmp/tandemlog-food-date-readability/test/historical_recompletion_test.dart: historical recompletion leaves open child unchanged through warm and cold replay
+00:09 +54: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+00:09 +55: /tmp/tandemlog-food-date-readability/test/historical_recompletion_test.dart: historical recompletion leaves completed child unchanged through warm and cold replay
+00:09 +56: /tmp/tandemlog-food-date-readability/test/historical_recompletion_test.dart: historical recompletion leaves deleted child unchanged through warm and cold replay
+00:10 +57: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: sort bounds explanation clears floating Minimum days label at 1.0
+00:11 +58: /tmp/tandemlog-food-date-readability/test/food_filter_route_ownership_test.dart: repeated Food filter Cancel owns only its modal
+00:11 +59: /tmp/tandemlog-food-date-readability/test/food_filter_route_ownership_test.dart: repeated Food filter Cancel owns only its modal
+00:11 +60: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: blocked text instruction wraps with full semantics at narrow 200 percent
+00:11 +61: /tmp/tandemlog-food-date-readability/test/food_filter_route_ownership_test.dart: repeated Food filter Apply owns only its modal
+00:11 +62: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:12 +63: /tmp/tandemlog-food-date-readability/test/food_filter_route_ownership_test.dart: Food filter queries dispose when the app unmounts
+00:12 +64: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:13 +65: /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart: Food bulk details Undo independent review 205-container Brand edit is one confirmed action; untouched mixed fields and later arrivals survive Undo
+00:13 +66: /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart: Food bulk details Undo independent review 205-container Brand edit is one confirmed action; untouched mixed fields and later arrivals survive Undo
+00:14 +67: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: date and optional time share rows and clear time independently
+00:14 +68: /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart: Food bulk details Undo independent review explicit Location clear over 205 containers retains one exact action through partial Undo recovery
+00:14 +69: /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart: Food bulk details Undo independent review explicit Location clear over 205 containers retains one exact action through partial Undo recovery
+00:14 +70: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:15 +71: /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart: Food bulk details Undo independent review 205-container Brand/Location Undo restores only local contributions and preserves newer peer fields across chunks
+00:15 +72: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:15 +73: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:16 +74: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title input normalizes paste selection after IME commits
+00:16 +75: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:16 +76: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:17 +77: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:17 +78: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: close guards dirty draft and preserves text after keep editing
+00:17 +79: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:17 +80: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:18 +81: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:18 +82: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:19 +83: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk coupled validation checks every task
+00:19 +84: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: async save disables controls, rejects duplicate submit and keeps failed draft
+00:19 +85: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: deletion requires confirmation and delete failure preserves draft
+00:20 +86: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:20 +87: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:20 +88: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title and notes wire limits validate before save
+00:21 +89: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:21 +90: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:21 +91: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:22 +92: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: guard Save commits frozen single draft without closing
+00:22 +93: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: folder failure is readable and retains the draft for retry
+00:22 +94: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: guard Save validation and write failure retain draft and selection
+00:22 +95: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:23 +96: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: selection header wraps at narrow large text
+00:23 +97: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:23 +98: All tests passed!

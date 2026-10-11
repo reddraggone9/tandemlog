@@ -1,0 +1,19 @@
+.....................F....................................................
+======================================================================
+FAIL: test_metainfo_release_matches_actual_candidate_version (test_linux_flatpak_metadata.FlatpakSourceContracts.test_metainfo_release_matches_actual_candidate_version)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_flatpak_metadata.py", line 34, in test_metainfo_release_matches_actual_candidate_version
+    self.assertEqual(data.find('releases/release').get('version'), version[0])
+AssertionError: '2026.10.4-rc.2' != '2026.10.4-rc.3'
+- 2026.10.4-rc.2
+?              ^
++ 2026.10.4-rc.3
+?              ^
+
+
+----------------------------------------------------------------------
+Ran 74 tests in 0.847s
+
+FAILED (failures=1)
+{"executable_sha256": "0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310", "github_run_id": "123", "native_library_sha256": "7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8", "portable_archive": "tandemlog-windows-x64-unsigned-portable.zip", "portable_sha256": "74b9e32ef48d4ee6baa479d8d95ca7e9f16afe8597cffbfd71e5cfdc40613aaa", "source_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}

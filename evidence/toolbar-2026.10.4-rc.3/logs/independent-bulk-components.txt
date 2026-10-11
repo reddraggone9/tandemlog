@@ -1,0 +1,5 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_bulk_details_undo_review_test.dart
+00:00 +0: Food bulk details Undo independent review 205-container Brand edit is one confirmed action; untouched mixed fields and later arrivals survive Undo
+00:01 +1: Food bulk details Undo independent review explicit Location clear over 205 containers retains one exact action through partial Undo recovery
+00:01 +2: Food bulk details Undo independent review 205-container Brand/Location Undo restores only local contributions and preserves newer peer fields across chunks
+00:02 +3: All tests passed!

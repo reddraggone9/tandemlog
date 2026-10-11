@@ -21,3 +21,6 @@ evidence/final-preview/windows-native/** -text
 
 # Exact focused regression and native capture receipts retain their bytes.
 evidence/bulk-stale-warning/** -text
+
+# RC3 raw synthetic QA logs retain literal bytes, including reporter spacing.
+evidence/toolbar-2026.10.4-rc.3/logs/*.txt -text -whitespace

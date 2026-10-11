@@ -4,6 +4,8 @@ Food search finds active and deleted food across all filters, with deleted match
 
 Expanded food rows show remaining contents without container IDs or a duplicate count, with less space around actions. New and imported containers default to Full; Unspecified contents has been removed.
 
+![Expanded Food contents before and after cleanup](https://raw.githubusercontent.com/reddraggone9/tandemlog/7515375455d627b8ab224bb39ca8649e97ace053/evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png)
+
 New workspaces set up shared text editing automatically. The old Settings setup action has been removed.
 
 Preview trials with Unspecified contents or uninitialized shared text cannot be upgraded in place. Preserve the old trial and use a fresh workspace and import plan.

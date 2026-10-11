@@ -1,0 +1,10 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/new_workspace_text_initialization_test.dart
+00:00 +0: genuine new workspace initializes once and cold replay preserves bytes
+00:00 +1: selecting an existing uninitialized workspace never activates it
+00:00 +2: an existing empty manifest is not proof of a fresh bootstrap
+00:00 +3: food history without its manifest cannot become a fresh workspace
+00:00 +4: fresh initialized workspace preserves offline peer edits through cold replay
+00:00 +5: explicit fresh initialization requires native support before writing
+00:00 +6: uncertain bootstrap at 0 bytes resumes its exact protected receipt
+00:00 +7: uncertain bootstrap at 71 bytes resumes its exact protected receipt
+00:00 +8: All tests passed!

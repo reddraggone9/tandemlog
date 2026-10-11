@@ -1,0 +1,365 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/integration_test/rc3_affected_acceptance_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[124825]: [session uid=1000 pid=124825 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=124997 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+
+(process:125002): dconf-CRITICAL **: 15:15:18.278: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:125002): dconf-CRITICAL **: 15:15:18.278: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:125002): dconf-CRITICAL **: 15:15:18.278: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:125002): dconf-CRITICAL **: 15:15:18.278: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:125002): dconf-CRITICAL **: 15:15:18.279: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[124825]: [session uid=1000 pid=124825 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:125002): dconf-CRITICAL **: 15:15:18.279: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[125008]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=124997 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+dbus-daemon[125008]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=402
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=17
+TANDEMLOG_PHASE ingest=30
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_ONBOARDING_READY_MS=1395 FILES_READ=1
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: true
+  Actual: <false>
+The expected async UI state did not become ready.
+
+When the exception was thrown, this was the stack:
+#4      waitForUi (file:///tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart:244:3)
+<asynchronous suspension>
+#5      registerTextWorkflowTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/integration_test/text_workflow_test.dart:67:9)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart line 244
+The test description was:
+  fresh application workspace initializes automatically and cold reopens without setup
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:14 +0 -1: fresh application workspace initializes automatically and cold reopens without setup [E]
+  Test failed. See exception logs above.
+  The test description was: fresh application workspace initializes automatically and cold reopens without setup
+  
+00:14 +0 -1: existing uninitialized application workspace preserves bytes and offers no setup migration
+00:14 +0 -1: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=28
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=29
+00:16 +1 -1: initialized text, remote draft Save, Undo and restart without migration workflow
+00:16 +1 -1: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=29
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=38
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=681 FILES_READ=2
+TANDEMLOG_FIRST_FRAME_MS=33
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=42
+TANDEMLOG_PHASE manifest=15
+TANDEMLOG_PHASE ingest=15
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=242 FILES_READ=0
+00:26 +2 -1: historical successor recompletion completes parent and keeps independent child
+00:26 +2 -1: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=27
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=6
+TANDEMLOG_PHASE ingest=34
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=884 FILES_READ=1
+00:29 +3 -1: Food bulk details Undo independent review actual Food host groups a 205-container details callback into one Undo action
+00:30 +3 -1: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=28
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=12
+TANDEMLOG_PHASE ingest=66
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=333 FILES_READ=0
+00:32 +4 -1: actual section toolbar parity dark
+00:32 +4 -1: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=41
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=16
+TANDEMLOG_PHASE manifest=52
+TANDEMLOG_PHASE ingest=22
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=612 FILES_READ=1
+00:41 +4 -1: actual section toolbar parity dark
+TOOLBAR_PARITY Brightness.dark (390.0, 1.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(48.0, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(48.0, 48.0)}
+TOOLBAR_PARITY Brightness.dark (320.0, 2.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(64.0, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.7490, green: 0.7882, blue: 0.7686, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(64.0, 48.0)}
+TOOLBAR_PARITY Brightness.dark (900.0, 1.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), add-target: Size(108.9, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(100.4, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), filter-target: Size(93.8, 48.0), account-center-y: 36.0, account-size: Size(200.6, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), add-target: Size(108.9, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(100.4, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), filter-target: Size(93.8, 48.0), account-center-y: 36.0, account-size: Size(200.6, 48.0)}
+TOOLBAR_PARITY Brightness.dark (1200.0, 2.0) tasks={height: 56.0, add-size: Size(20.0, 20.0), add-center-y: 40.0, add-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), add-target: Size(153.2, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 40.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(132.3, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 40.0, filter-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), filter-target: Size(123.0, 48.0), account-center-y: 40.0, account-size: Size(334.4, 48.0)} food={height: 56.0, add-size: Size(20.0, 20.0), add-center-y: 40.0, add-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), add-target: Size(153.2, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 40.0, undo-color: Color(alpha: 0.3804, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), undo-target: Size(132.3, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 40.0, filter-color: Color(alpha: 1.0000, red: 0.5255, green: 0.8392, blue: 0.7451, colorSpace: ColorSpace.sRGB), filter-target: Size(123.0, 48.0), account-center-y: 40.0, account-size: Size(64.0, 48.0)}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: Size:<Size(334.4, 48.0)>
+  Actual: Size:<Size(64.0, 48.0)>
+
+When the exception was thrown, this was the stack:
+#4      registerToolbarParityTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/integration_test/toolbar_parity_workflow_test.dart:151:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/integration_test/toolbar_parity_workflow_test.dart line 151
+The test description was:
+  actual section toolbar parity dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:13 +4 -2: actual section toolbar parity dark [E]
+  Test failed. See exception logs above.
+  The test description was: actual section toolbar parity dark
+  
+01:13 +4 -2: actual section toolbar parity light
+01:14 +4 -2: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=17
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=25
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=562 FILES_READ=1
+01:21 +4 -2: actual section toolbar parity light
+TOOLBAR_PARITY Brightness.light (390.0, 1.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(48.0, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(48.0, 48.0)}
+TOOLBAR_PARITY Brightness.light (320.0, 2.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(64.0, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), add-target: Size(48.0, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(48.0, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.2471, green: 0.2863, blue: 0.2706, colorSpace: ColorSpace.sRGB), filter-target: Size(48.0, 48.0), account-center-y: 36.0, account-size: Size(64.0, 48.0)}
+TOOLBAR_PARITY Brightness.light (900.0, 1.0) tasks={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), add-target: Size(108.9, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(100.4, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), filter-target: Size(93.8, 48.0), account-center-y: 36.0, account-size: Size(200.6, 48.0)} food={height: 48.0, add-size: Size(20.0, 20.0), add-center-y: 36.0, add-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), add-target: Size(108.9, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 36.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(100.4, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 36.0, filter-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), filter-target: Size(93.8, 48.0), account-center-y: 36.0, account-size: Size(200.6, 48.0)}
+TOOLBAR_PARITY Brightness.light (1200.0, 2.0) tasks={height: 56.0, add-size: Size(20.0, 20.0), add-center-y: 40.0, add-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), add-target: Size(153.2, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 40.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(132.3, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 40.0, filter-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), filter-target: Size(123.0, 48.0), account-center-y: 40.0, account-size: Size(334.4, 48.0)} food={height: 56.0, add-size: Size(20.0, 20.0), add-center-y: 40.0, add-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), add-target: Size(153.2, 48.0), undo-size: Size(24.0, 24.0), undo-center-y: 40.0, undo-color: Color(alpha: 0.3804, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), undo-target: Size(132.3, 48.0), filter-size: Size(20.0, 20.0), filter-center-y: 40.0, filter-color: Color(alpha: 1.0000, red: 0.0588, green: 0.4196, blue: 0.3412, colorSpace: ColorSpace.sRGB), filter-target: Size(123.0, 48.0), account-center-y: 40.0, account-size: Size(64.0, 48.0)}
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: Size:<Size(334.4, 48.0)>
+  Actual: Size:<Size(64.0, 48.0)>
+
+When the exception was thrown, this was the stack:
+#4      registerToolbarParityTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/integration_test/toolbar_parity_workflow_test.dart:151:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/integration_test/toolbar_parity_workflow_test.dart line 151
+The test description was:
+  actual section toolbar parity light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:52 +4 -3: actual section toolbar parity light [E]
+  Test failed. See exception logs above.
+  The test description was: actual section toolbar parity light
+  
+01:52 +4 -3: native all-status Food search pins Deleted and moves restored/removed rows
+03:20 +5 -3: queued task capture cannot append after reconciliation discovers shared authority loss
+03:20 +5 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=26
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=20
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=416 FILES_READ=2
+03:23 +6 -3: shared recovery retains private task editor draft and rejects a retained Save
+03:23 +6 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=26
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=23
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=401 FILES_READ=2
+03:26 +7 -3: restored exact manifest resumes the same draft after guarded repeated Retry
+03:26 +7 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=11
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=20
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=420 FILES_READ=2
+03:32 +8 -3: isolated Food startup failure keeps Tasks writable and retries only Food
+03:32 +8 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=13
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=26
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=514 FILES_READ=1
+03:36 +9 -3: production Food navigation persists Deleted and restores after restart
+03:37 +9 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=12
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=24
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=23
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=404 FILES_READ=1
+TANDEMLOG_FIRST_FRAME_MS=20
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=28
+TANDEMLOG_PHASE manifest=15
+TANDEMLOG_PHASE ingest=13
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=194 FILES_READ=0
+03:54 +10 -3: Tasks Due calendar days are readable at320dp dark 1.0x
+CALENDAR day=10 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+03:58 +11 -3: Tasks Due calendar days are readable at320dp dark 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:01 +12 -3: Tasks Due calendar days are readable at390dp dark 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:05 +13 -3: Tasks Due calendar days are readable at320dp light 1.0x
+CALENDAR day=10 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+04:08 +14 -3: Tasks Due calendar days are readable at320dp light 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:12 +15 -3: Tasks Due calendar days are readable at390dp light 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:16 +16 -3: Food Expiration calendar days are readable at320dp dark 1.0x
+CALENDAR day=10 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+04:19 +17 -3: Food Expiration calendar days are readable at320dp dark 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:22 +18 -3: Food Expiration calendar days are readable at390dp dark 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:24 +19 -3: Food Expiration calendar days are readable at320dp light 1.0x
+CALENDAR day=10 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.3, 24.0) boxes=[TextBox.fromLTRBD(0.3, 1.1, 19.6, 22.9, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+04:27 +20 -3: Food Expiration calendar days are readable at320dp light 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:30 +21 -3: Food Expiration calendar days are readable at390dp light 2.0x
+CALENDAR day=10 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(24.9, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 25.2, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=20.921875 scaler=2.0
+04:33 +22 -3: Tasks Due pending calendar date survives resizing and rotation; closed owner is untouched
+04:40 +23 -3: Food Expiration pending calendar date survives resizing and rotation; closed owner is untouched
+04:46 +24 -3: optional time rows preserve precision, zone and drafts
+04:46 +24 -3: fresh application workspace initializes automatically and cold reopens without setup
+TANDEMLOG_FIRST_FRAME_MS=14
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=15
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=23
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=400 FILES_READ=1
+05:02 +25 -3: (tearDownAll)
+05:02 +25 -3: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/integration_test/rc3_affected_acceptance_test.dart: actual section toolbar parity dark
+  /tmp/tandemlog-food-date-readability/integration_test/rc3_affected_acceptance_test.dart: actual section toolbar parity light
+  /tmp/tandemlog-food-date-readability/integration_test/rc3_affected_acceptance_test.dart: fresh application workspace initializes automatically and cold reopens without setup
