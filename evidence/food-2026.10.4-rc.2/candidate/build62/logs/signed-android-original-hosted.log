@@ -1,0 +1,2672 @@
+2026-10-11T08:02:21.1604189Z Current runner version: '2.337.0'
+2026-10-11T08:02:21.1629870Z ##[group]Runner Image Provisioner
+2026-10-11T08:02:21.1630855Z Hosted Compute Agent
+2026-10-11T08:02:21.1631566Z Version: 20261002.596
+2026-10-11T08:02:21.1632312Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+2026-10-11T08:02:21.1633099Z Build Date: 2026-10-02T22:28:27Z
+2026-10-11T08:02:21.1633880Z Worker ID: {d1ff9fb6-bf24-4d8d-8295-0432cc025bc6}
+2026-10-11T08:02:21.1634721Z Region: centralus
+2026-10-11T08:02:21.1635308Z Cloud: Azure
+2026-10-11T08:02:21.1636295Z ##[endgroup]
+2026-10-11T08:02:21.1637891Z ##[group]Operating System
+2026-10-11T08:02:21.1638789Z Ubuntu
+2026-10-11T08:02:21.1639506Z 24.04.5
+2026-10-11T08:02:21.1640137Z LTS
+2026-10-11T08:02:21.1640742Z ##[endgroup]
+2026-10-11T08:02:21.1641341Z ##[group]Runner Image
+2026-10-11T08:02:21.1642045Z Image: ubuntu-24.04
+2026-10-11T08:02:21.1642678Z Version: 20261004.327.1
+2026-10-11T08:02:21.1644055Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+2026-10-11T08:02:21.1645661Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+2026-10-11T08:02:21.1646732Z ##[endgroup]
+2026-10-11T08:02:21.1647936Z ##[group]GITHUB_TOKEN Permissions
+2026-10-11T08:02:21.1650457Z Contents: read
+2026-10-11T08:02:21.1651102Z Metadata: read
+2026-10-11T08:02:21.1651779Z ##[endgroup]
+2026-10-11T08:02:21.1654293Z Secret source: Actions
+2026-10-11T08:02:21.1655435Z Cache mode: write
+2026-10-11T08:02:21.1656425Z Prepare workflow directory
+2026-10-11T08:02:21.2001454Z Prepare all required actions
+2026-10-11T08:02:21.2051935Z Getting action download info
+2026-10-11T08:02:21.4883595Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+2026-10-11T08:02:22.4759344Z Download action repository 'actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6' (SHA:de7274f081f381c8f8158605e0321c36c376e2e6)
+2026-10-11T08:02:23.1571434Z Download action repository 'actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a' (SHA:043fb46d1a93c77aae656e7c1c64a875d1fc6a0a)
+2026-10-11T08:02:23.4572570Z Complete job name: signed-android
+2026-10-11T08:02:23.5560427Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+2026-10-11T08:02:23.5562345Z with:
+2026-10-11T08:02:23.5563232Z   fetch-depth: 0
+2026-10-11T08:02:23.5564232Z   repository: reddraggone9/tandemlog
+2026-10-11T08:02:23.5573350Z   token: ***
+2026-10-11T08:02:23.5574294Z   ssh-strict: true
+2026-10-11T08:02:23.5575240Z   ssh-user: git
+2026-10-11T08:02:23.5576203Z   persist-credentials: true
+2026-10-11T08:02:23.5577253Z   clean: true
+2026-10-11T08:02:23.5578216Z   sparse-checkout-cone-mode: true
+2026-10-11T08:02:23.5579507Z   fetch-tags: false
+2026-10-11T08:02:23.5580476Z   show-progress: true
+2026-10-11T08:02:23.5581454Z   lfs: false
+2026-10-11T08:02:23.5582355Z   submodules: false
+2026-10-11T08:02:23.5583331Z   set-safe-directory: true
+2026-10-11T08:02:23.5584436Z   allow-unsafe-pr-checkout: false
+2026-10-11T08:02:23.5585887Z ##[endgroup]
+2026-10-11T08:02:23.6605653Z Syncing repository: reddraggone9/tandemlog
+2026-10-11T08:02:23.6609290Z ##[group]Getting Git version info
+2026-10-11T08:02:23.6611026Z Working directory is '/home/runner/work/tandemlog/tandemlog'
+2026-10-11T08:02:23.6613416Z [command]/usr/bin/git version
+2026-10-11T08:02:23.7810896Z git version 2.55.0
+2026-10-11T08:02:23.7835993Z ##[endgroup]
+2026-10-11T08:02:23.7848114Z Temporarily overriding HOME='/home/runner/work/_temp/9901ae42-75c6-4a7b-8417-13d6b5164735' before making global git config changes
+2026-10-11T08:02:23.7853585Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-11T08:02:23.7857948Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+2026-10-11T08:02:23.8113407Z Deleting the contents of '/home/runner/work/tandemlog/tandemlog'
+2026-10-11T08:02:23.8118043Z ##[group]Determining repository object format
+2026-10-11T08:02:23.8122259Z ##[endgroup]
+2026-10-11T08:02:23.8125461Z ##[group]Initializing the repository
+2026-10-11T08:02:23.8128116Z [command]/usr/bin/git init /home/runner/work/tandemlog/tandemlog
+2026-10-11T08:02:23.8654302Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-10-11T08:02:23.8657088Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-10-11T08:02:23.8660815Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-10-11T08:02:23.8664024Z hint: call:
+2026-10-11T08:02:23.8665728Z hint:
+2026-10-11T08:02:23.8668172Z hint: 	git config --global init.defaultBranch <name>
+2026-10-11T08:02:23.8670908Z hint:
+2026-10-11T08:02:23.8673202Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-10-11T08:02:23.8676648Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-10-11T08:02:23.8679796Z hint:
+2026-10-11T08:02:23.8681578Z hint: 	git branch -m <name>
+2026-10-11T08:02:23.8683444Z hint:
+2026-10-11T08:02:23.8685866Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-10-11T08:02:23.8688244Z Initialized empty Git repository in /home/runner/work/tandemlog/tandemlog/.git/
+2026-10-11T08:02:23.8694279Z [command]/usr/bin/git remote add origin https://github.com/reddraggone9/tandemlog
+2026-10-11T08:02:23.8937288Z ##[endgroup]
+2026-10-11T08:02:23.8940111Z ##[group]Disabling automatic garbage collection
+2026-10-11T08:02:23.8941757Z [command]/usr/bin/git config --local gc.auto 0
+2026-10-11T08:02:23.8973584Z ##[endgroup]
+2026-10-11T08:02:23.8976004Z ##[group]Setting up auth
+2026-10-11T08:02:23.8977736Z Removing SSH command configuration
+2026-10-11T08:02:23.8979986Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-11T08:02:23.9010086Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-11T08:02:24.3859235Z Removing HTTP extra header
+2026-10-11T08:02:24.3864996Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-11T08:02:24.3896709Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-11T08:02:24.4111169Z Removing includeIf entries pointing to credentials config files
+2026-10-11T08:02:24.4116899Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-11T08:02:24.4147963Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-11T08:02:24.4377745Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-10-11T08:02:24.4412864Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path /home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:02:24.4443388Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:02:24.4479690Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:02:24.4511080Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:02:24.4540193Z ##[endgroup]
+2026-10-11T08:02:24.4542653Z ##[group]Fetching the repository
+2026-10-11T08:02:24.4546957Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules origin +refs/heads/*:refs/remotes/origin/* +refs/tags/*:refs/tags/*
+2026-10-11T08:02:26.7496143Z From https://github.com/reddraggone9/tandemlog
+2026-10-11T08:02:26.7497400Z  * [new branch]      analysis/kotlin-gradle-audit -> origin/analysis/kotlin-gradle-audit
+2026-10-11T08:02:26.7499194Z  * [new branch]      analysis/shared-history-performance -> origin/analysis/shared-history-performance
+2026-10-11T08:02:26.7500766Z  * [new branch]      copilot/research-undo-behavior-design -> origin/copilot/research-undo-behavior-design
+2026-10-11T08:02:26.7502531Z  * [new branch]      dependabot/gradle/android/com.android.application-9.4.1 -> origin/dependabot/gradle/android/com.android.application-9.4.1
+2026-10-11T08:02:26.7504077Z  * [new branch]      dependabot/gradle/android/gradle-wrapper-9.8.0 -> origin/dependabot/gradle/android/gradle-wrapper-9.8.0
+2026-10-11T08:02:26.7505237Z  * [new branch]      docs/final-preview-ci-qa -> origin/docs/final-preview-ci-qa
+2026-10-11T08:02:26.7506304Z  * [new branch]      docs/rc4-build47-signed-handoff -> origin/docs/rc4-build47-signed-handoff
+2026-10-11T08:02:26.7507301Z  * [new branch]      docs/rc4-release-notes  -> origin/docs/rc4-release-notes
+2026-10-11T08:02:26.7508317Z  * [new branch]      docs/rc4-signed-candidate-handoff -> origin/docs/rc4-signed-candidate-handoff
+2026-10-11T08:02:26.7509537Z  * [new branch]      evidence/2026.10.2-rc5-candidate -> origin/evidence/2026.10.2-rc5-candidate
+2026-10-11T08:02:26.7510580Z  * [new branch]      evidence/android-storage-fault56 -> origin/evidence/android-storage-fault56
+2026-10-11T08:02:26.7511873Z  * [new branch]      evidence/android-toolchain-candidate54-review -> origin/evidence/android-toolchain-candidate54-review
+2026-10-11T08:02:26.7513263Z  * [new branch]      evidence/combined-build56-final-handoff -> origin/evidence/combined-build56-final-handoff
+2026-10-11T08:02:26.7514553Z  * [new branch]      evidence/windows-visible-build56 -> origin/evidence/windows-visible-build56
+2026-10-11T08:02:26.7515664Z  * [new branch]      experiment/date-time-layout -> origin/experiment/date-time-layout
+2026-10-11T08:02:26.7517018Z  * [new branch]      experiment/food-rc2-input-and-expiry -> origin/experiment/food-rc2-input-and-expiry
+2026-10-11T08:02:26.7518242Z  * [new branch]      experiment/tag-autocomplete-trials -> origin/experiment/tag-autocomplete-trials
+2026-10-11T08:02:26.7521043Z  * [new branch]      experiment/text-activation-policy -> origin/experiment/text-activation-policy
+2026-10-11T08:02:26.7522311Z  * [new branch]      feature/food-inventory-implementation -> origin/feature/food-inventory-implementation
+2026-10-11T08:02:26.7523428Z  * [new branch]      feature/one-level-checklists -> origin/feature/one-level-checklists
+2026-10-11T08:02:26.7524539Z  * [new branch]      feature/shared-tag-input -> origin/feature/shared-tag-input
+2026-10-11T08:02:26.7525440Z  * [new branch]      fix/android-field-layout -> origin/fix/android-field-layout
+2026-10-11T08:02:26.7526306Z  * [new branch]      fix/bulk-apply-semantics -> origin/fix/bulk-apply-semantics
+2026-10-11T08:02:26.7527266Z  * [new branch]      fix/bulk-stale-warning-visibility -> origin/fix/bulk-stale-warning-visibility
+2026-10-11T08:02:26.7528603Z  * [new branch]      fix/checklist-disclosure-spacing -> origin/fix/checklist-disclosure-spacing
+2026-10-11T08:02:26.7529646Z  * [new branch]      fix/checklist-handle-menu -> origin/fix/checklist-handle-menu
+2026-10-11T08:02:26.7530721Z  * [new branch]      fix/completion-confirmation-progress -> origin/fix/completion-confirmation-progress
+2026-10-11T08:02:26.7531980Z  * [new branch]      fix/historical-checklist-recompletion -> origin/fix/historical-checklist-recompletion
+2026-10-11T08:02:26.7533113Z  * [new branch]      fix/initial-task-rank   -> origin/fix/initial-task-rank
+2026-10-11T08:02:26.7534053Z  * [new branch]      fix/kotlin-2.4.20-remediation -> origin/fix/kotlin-2.4.20-remediation
+2026-10-11T08:02:26.7535094Z  * [new branch]      fix/publish-portable-qa-inventory -> origin/fix/publish-portable-qa-inventory
+2026-10-11T08:02:26.7536416Z  * [new branch]      investigate/windows-idle-refresh -> origin/investigate/windows-idle-refresh
+2026-10-11T08:02:26.7537245Z  * [new branch]      main                    -> origin/main
+2026-10-11T08:02:26.7538075Z  * [new branch]      preview/checklists-queued-fixes -> origin/preview/checklists-queued-fixes
+2026-10-11T08:02:26.7539217Z  * [new branch]      preview/rc4-main-ready  -> origin/preview/rc4-main-ready
+2026-10-11T08:02:26.7540288Z  * [new branch]      preview/shared-history-checklists-final -> origin/preview/shared-history-checklists-final
+2026-10-11T08:02:26.7541360Z  * [new branch]      recovery/shared-history -> origin/recovery/shared-history
+2026-10-11T08:02:26.7542143Z  * [new branch]      release/2026.10.2       -> origin/release/2026.10.2
+2026-10-11T08:02:26.7543019Z  * [new branch]      release/2026.10.2-rc5-preparation -> origin/release/2026.10.2-rc5-preparation
+2026-10-11T08:02:26.7543904Z  * [new branch]      release/rc4-build47     -> origin/release/rc4-build47
+2026-10-11T08:02:26.7544831Z  * [new branch]      test/final-preview-windows-native -> origin/test/final-preview-windows-native
+2026-10-11T08:02:26.7546037Z  * [new branch]      test/historical-checklist-windows-native -> origin/test/historical-checklist-windows-native
+2026-10-11T08:02:26.7547286Z  * [new branch]      test/shared-tags-windows-native -> origin/test/shared-tags-windows-native
+2026-10-11T08:02:26.7548313Z  * [new branch]      test/windows-native-app-flows -> origin/test/windows-native-app-flows
+2026-10-11T08:02:26.7549668Z  * [new branch]      text-lab-artifact-inspection -> origin/text-lab-artifact-inspection
+2026-10-11T08:02:26.7550505Z  * [new tag]         v0.1.0-rc.1             -> v0.1.0-rc.1
+2026-10-11T08:02:26.7551090Z  * [new tag]         v0.1.0-rc.2             -> v0.1.0-rc.2
+2026-10-11T08:02:26.7551661Z  * [new tag]         v0.1.0-rc.3             -> v0.1.0-rc.3
+2026-10-11T08:02:26.7552221Z  * [new tag]         v0.1.0-rc.4             -> v0.1.0-rc.4
+2026-10-11T08:02:26.7552798Z  * [new tag]         v0.1.0-rc.5             -> v0.1.0-rc.5
+2026-10-11T08:02:26.7553353Z  * [new tag]         v0.1.0-rc.6             -> v0.1.0-rc.6
+2026-10-11T08:02:26.7554080Z  * [new tag]         v0.1.0-rc.7             -> v0.1.0-rc.7
+2026-10-11T08:02:26.7554642Z  * [new tag]         v0.1.0-rc.8             -> v0.1.0-rc.8
+2026-10-11T08:02:26.7555188Z  * [new tag]         v0.1.0-rc.9             -> v0.1.0-rc.9
+2026-10-11T08:02:26.7555733Z  * [new tag]         v2026.10.0              -> v2026.10.0
+2026-10-11T08:02:26.7556309Z  * [new tag]         v2026.10.0-rc.1         -> v2026.10.0-rc.1
+2026-10-11T08:02:26.7556879Z  * [new tag]         v2026.10.1              -> v2026.10.1
+2026-10-11T08:02:26.7557507Z  * [new tag]         v2026.10.1-rc.1         -> v2026.10.1-rc.1
+2026-10-11T08:02:26.7558093Z  * [new tag]         v2026.10.2              -> v2026.10.2
+2026-10-11T08:02:26.7558870Z  * [new tag]         v2026.10.2-rc.1         -> v2026.10.2-rc.1
+2026-10-11T08:02:26.7559467Z  * [new tag]         v2026.10.2-rc.2         -> v2026.10.2-rc.2
+2026-10-11T08:02:26.7560068Z  * [new tag]         v2026.10.2-rc.3         -> v2026.10.2-rc.3
+2026-10-11T08:02:26.7560699Z  * [new tag]         v2026.10.2-rc.4         -> v2026.10.2-rc.4
+2026-10-11T08:02:26.7561321Z  * [new tag]         v2026.10.2-rc.5         -> v2026.10.2-rc.5
+2026-10-11T08:02:26.7561955Z  * [new tag]         v2026.10.2-rc.6         -> v2026.10.2-rc.6
+2026-10-11T08:02:26.7562619Z  * [new tag]         v2026.10.2-rc.7         -> v2026.10.2-rc.7
+2026-10-11T08:02:26.7563200Z  * [new tag]         v2026.10.3              -> v2026.10.3
+2026-10-11T08:02:26.7563802Z  * [new tag]         v2026.10.4-rc.1         -> v2026.10.4-rc.1
+2026-10-11T08:02:26.7565597Z [command]/usr/bin/git branch --list --remote origin/main
+2026-10-11T08:02:26.7569561Z   origin/main
+2026-10-11T08:02:26.7582588Z [command]/usr/bin/git rev-parse refs/remotes/origin/main
+2026-10-11T08:02:26.7625302Z 7ae14371fa0b734599fcdbb184d93376b8898a2a
+2026-10-11T08:02:26.7633255Z ##[endgroup]
+2026-10-11T08:02:26.7634530Z ##[group]Determining the checkout info
+2026-10-11T08:02:26.7635402Z ##[endgroup]
+2026-10-11T08:02:26.7639027Z [command]/usr/bin/git sparse-checkout disable
+2026-10-11T08:02:26.8096333Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-10-11T08:02:26.8133514Z ##[group]Checking out the ref
+2026-10-11T08:02:26.8137728Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-10-11T08:02:27.6019353Z Switched to a new branch 'main'
+2026-10-11T08:02:27.6023498Z branch 'main' set up to track 'origin/main'.
+2026-10-11T08:02:27.6049318Z ##[endgroup]
+2026-10-11T08:02:27.6107943Z [command]/usr/bin/git log -1 --format=%H
+2026-10-11T08:02:27.6125477Z 7ae14371fa0b734599fcdbb184d93376b8898a2a
+2026-10-11T08:02:27.6437445Z ##[group]Run actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6
+2026-10-11T08:02:27.6437855Z with:
+2026-10-11T08:02:27.6438058Z   distribution: temurin
+2026-10-11T08:02:27.6438285Z   java-version: 21
+2026-10-11T08:02:27.6438990Z   java-package: jdk
+2026-10-11T08:02:27.6439229Z   check-latest: false
+2026-10-11T08:02:27.6439448Z   force-download: false
+2026-10-11T08:02:27.6439661Z   set-default: true
+2026-10-11T08:02:27.6439867Z   server-id: github
+2026-10-11T08:02:27.6440099Z   mvn-repositories-include-central: true
+2026-10-11T08:02:27.6440413Z   mvn-repositories-prioritize-central: true
+2026-10-11T08:02:27.6440722Z   overwrite-settings: true
+2026-10-11T08:02:27.6440960Z   cache-read-only: false
+2026-10-11T08:02:27.6441182Z   job-status: success
+2026-10-11T08:02:27.6443608Z   token: ***
+2026-10-11T08:02:27.6443840Z   show-download-progress: false
+2026-10-11T08:02:27.6444106Z   problem-matcher: true
+2026-10-11T08:02:27.6444345Z ##[endgroup]
+2026-10-11T08:02:27.7142788Z ##[group]Installed distributions
+2026-10-11T08:02:27.7339562Z Resolved Java 21.0.12+1 from tool-cache
+2026-10-11T08:02:27.7340108Z Setting Java 21.0.12+1 as the default
+2026-10-11T08:02:27.7348079Z 
+2026-10-11T08:02:27.7348281Z Java configuration:
+2026-10-11T08:02:27.7348856Z   Distribution: temurin
+2026-10-11T08:02:27.7349715Z   Version: 21.0.12+1
+2026-10-11T08:02:27.7350432Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:27.7350960Z 
+2026-10-11T08:02:27.7351409Z ##[endgroup]
+2026-10-11T08:02:27.7380169Z Creating settings.xml with server-id: github
+2026-10-11T08:02:27.7380798Z Creating toolchains.xml for JDK version 21 from temurin
+2026-10-11T08:02:27.7381396Z Writing to /home/runner/.m2/settings.xml
+2026-10-11T08:02:27.7390411Z Writing to /home/runner/.m2/toolchains.xml
+2026-10-11T08:02:27.7397701Z Configured MAVEN_ARGS to include -ntp to suppress Maven transfer progress logs. Set 'show-download-progress: true' to keep the download progress output.
+2026-10-11T08:02:27.7562681Z Prepare all required actions
+2026-10-11T08:02:27.7602973Z ##[group]Run ./.github/actions/setup-flutter
+2026-10-11T08:02:27.7603369Z env:
+2026-10-11T08:02:27.7603691Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:27.7604226Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:27.7604620Z   MAVEN_ARGS: -ntp
+2026-10-11T08:02:27.7604836Z ##[endgroup]
+2026-10-11T08:02:27.7661008Z ##[start-action display=Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter";id=__self.__run]
+2026-10-11T08:02:27.7698282Z ##[group]Run git clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"
+2026-10-11T08:02:27.7699323Z [36;1mgit clone --depth 1 --branch 3.47.5 https://github.com/flutter/flutter.git "$RUNNER_TEMP/flutter"[0m
+2026-10-11T08:02:27.7700074Z [36;1mtest "$(git -C "$RUNNER_TEMP/flutter" rev-parse HEAD)" = 6a19cca56475dbfba1478ee68d7bd0c2ef891da1[0m
+2026-10-11T08:02:27.7700603Z [36;1mecho "$RUNNER_TEMP/flutter/bin" >> "$GITHUB_PATH"[0m
+2026-10-11T08:02:27.8918286Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-11T08:02:27.8918898Z env:
+2026-10-11T08:02:27.8919248Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:27.8920055Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:27.8920494Z   MAVEN_ARGS: -ntp
+2026-10-11T08:02:27.8920726Z ##[endgroup]
+2026-10-11T08:02:27.9041337Z Cloning into '/home/runner/work/_temp/flutter'...
+2026-10-11T08:02:33.8698301Z Note: switching to '6a19cca56475dbfba1478ee68d7bd0c2ef891da1'.
+2026-10-11T08:02:33.8698992Z 
+2026-10-11T08:02:33.8699372Z You are in 'detached HEAD' state. You can look around, make experimental
+2026-10-11T08:02:33.8700184Z changes and commit them, and you can discard any commits you make in this
+2026-10-11T08:02:33.8701052Z state without impacting any branches by switching back to a branch.
+2026-10-11T08:02:33.8701579Z 
+2026-10-11T08:02:33.8701914Z If you want to create a new branch to retain commits you create, you may
+2026-10-11T08:02:33.8702683Z do so (now or later) by using -c with the switch command. Example:
+2026-10-11T08:02:33.8703128Z 
+2026-10-11T08:02:33.8703333Z   git switch -c <new-branch-name>
+2026-10-11T08:02:33.8703626Z 
+2026-10-11T08:02:33.8703801Z Or undo this operation with:
+2026-10-11T08:02:33.8704071Z 
+2026-10-11T08:02:33.8704235Z   git switch -
+2026-10-11T08:02:33.8704453Z 
+2026-10-11T08:02:33.8704823Z Turn off this advice by setting config variable advice.detachedHead to false
+2026-10-11T08:02:33.8705363Z 
+2026-10-11T08:02:34.8989109Z Updating files:  92% (14806/16074)
+2026-10-11T08:02:34.9078948Z Updating files:  93% (14949/16074)
+2026-10-11T08:02:34.9172375Z Updating files:  94% (15110/16074)
+2026-10-11T08:02:34.9308302Z Updating files:  95% (15271/16074)
+2026-10-11T08:02:34.9450291Z Updating files:  96% (15432/16074)
+2026-10-11T08:02:34.9579958Z Updating files:  97% (15592/16074)
+2026-10-11T08:02:34.9676588Z Updating files:  98% (15753/16074)
+2026-10-11T08:02:34.9771389Z Updating files:  99% (15914/16074)
+2026-10-11T08:02:34.9771895Z Updating files: 100% (16074/16074)
+2026-10-11T08:02:34.9772203Z Updating files: 100% (16074/16074), done.
+2026-10-11T08:02:35.0015069Z ##[end-action id=__self.__run;outcome=success;conclusion=success;duration_ms=7235]
+2026-10-11T08:02:35.0018099Z ##[start-action display=Run flutter config --no-analytics;id=__self.__run_2]
+2026-10-11T08:02:35.0037371Z ##[group]Run flutter config --no-analytics
+2026-10-11T08:02:35.0037726Z [36;1mflutter config --no-analytics[0m
+2026-10-11T08:02:35.0038007Z [36;1mflutter --version[0m
+2026-10-11T08:02:35.0099161Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-11T08:02:35.0099512Z env:
+2026-10-11T08:02:35.0099825Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:35.0100533Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:02:35.0100923Z   MAVEN_ARGS: -ntp
+2026-10-11T08:02:35.0101131Z ##[endgroup]
+2026-10-11T08:02:35.0553738Z Downloading Linux x64 Dart SDK from Flutter engine af7e796e161ae0bb1ff0758c71a7105418bd9ded...
+2026-10-11T08:02:35.1954124Z   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+2026-10-11T08:02:35.1955189Z                                  Dload  Upload   Total   Spent    Left  Speed
+2026-10-11T08:02:35.1955697Z 
+2026-10-11T08:02:35.4859668Z   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+2026-10-11T08:02:36.4915974Z   0  227M    0 1746k    0     0  6010k      0  0:00:38 --:--:--  0:00:38 6003k
+2026-10-11T08:02:36.5367128Z  95  227M   95  216M    0     0   167M      0  0:00:01  0:00:01 --:--:--  167M
+2026-10-11T08:02:36.5367845Z 100  227M  100  227M    0     0   169M      0  0:00:01  0:00:01 --:--:--  169M
+2026-10-11T08:02:41.3790232Z Building flutter tool...
+2026-10-11T08:02:41.3959486Z Resolving dependencies...
+2026-10-11T08:02:41.9666895Z Downloading packages...
+2026-10-11T08:02:45.7829505Z + _fe_analyzer_shared 95.0.0 (109.0.0 available)
+2026-10-11T08:02:45.7830158Z + analyzer 10.1.0 (14.5.0 available)
+2026-10-11T08:02:45.7830613Z + archive 3.6.1 (4.5.0 available)
+2026-10-11T08:02:45.7831025Z + args 2.7.0
+2026-10-11T08:02:45.7831682Z + async 2.13.1
+2026-10-11T08:02:45.7832038Z + boolean_selector 2.1.2
+2026-10-11T08:02:45.7832463Z + browser_launcher 1.1.3 (1.2.0 available)
+2026-10-11T08:02:45.7832958Z + built_collection 5.1.1 (5.1.2 available)
+2026-10-11T08:02:45.7833433Z + built_value 8.12.6 (8.13.0 available)
+2026-10-11T08:02:45.7833885Z + checked_yaml 2.0.4
+2026-10-11T08:02:45.7834185Z + cli_config 0.2.0
+2026-10-11T08:02:45.7834790Z + clock 1.1.2 (1.1.3 available)
+2026-10-11T08:02:45.7856498Z + code_assets 1.2.1 (2.1.0 available)
+2026-10-11T08:02:45.7856977Z + code_builder 4.11.1 (4.12.0 available)
+2026-10-11T08:02:45.7857446Z + collection 1.19.1
+2026-10-11T08:02:45.7857806Z + completion 1.0.2
+2026-10-11T08:02:45.7858175Z + convert 3.1.2
+2026-10-11T08:02:45.7858638Z + coverage 1.15.1
+2026-10-11T08:02:45.7858858Z + crypto 3.0.7
+2026-10-11T08:02:45.7859069Z + csslib 1.0.2
+2026-10-11T08:02:45.7859262Z + dap 1.4.0
+2026-10-11T08:02:45.7859489Z + dart_service_protocol_shared 0.0.3
+2026-10-11T08:02:45.7859784Z + dart_style 3.1.7 (3.1.13 available)
+2026-10-11T08:02:45.7860061Z + data_assets 0.20.0
+2026-10-11T08:02:45.7860274Z + dds 5.4.0
+2026-10-11T08:02:45.7860485Z + dds_service_extensions 2.1.0
+2026-10-11T08:02:45.7860754Z + devtools_shared 13.1.0 (14.0.0 available)
+2026-10-11T08:02:45.7861026Z + dtd 4.0.0
+2026-10-11T08:02:45.7861220Z + dwds 27.1.2 (27.1.4 available)
+2026-10-11T08:02:45.7861478Z + extension_discovery 2.1.0
+2026-10-11T08:02:45.7861711Z + fake_async 1.3.3
+2026-10-11T08:02:45.7861910Z + ffi 2.2.0
+2026-10-11T08:02:45.7862096Z + file 7.0.1
+2026-10-11T08:02:45.7862304Z + file_testing 3.0.2 (3.1.0 available)
+2026-10-11T08:02:45.7862554Z + fixnum 1.1.1
+2026-10-11T08:02:45.7862792Z + flutter_template_images 5.0.0 (5.0.1 available)
+2026-10-11T08:02:45.7863123Z + frontend_server_client 4.0.0 (4.1.0 available)
+2026-10-11T08:02:45.7863413Z + glob 2.1.3 (2.2.0 available)
+2026-10-11T08:02:45.7863652Z + graphs 2.3.2
+2026-10-11T08:02:45.7863868Z + hooks 2.0.2 (2.2.0 available)
+2026-10-11T08:02:45.7864118Z + hooks_runner 1.5.0 (1.6.4 available)
+2026-10-11T08:02:45.7864385Z + html 0.15.6 (0.15.7 available)
+2026-10-11T08:02:45.7864623Z + http 1.6.0
+2026-10-11T08:02:45.7864830Z + http_multi_server 3.2.2
+2026-10-11T08:02:45.7865065Z + http_parser 4.1.2
+2026-10-11T08:02:45.7865269Z + intl 0.20.3
+2026-10-11T08:02:45.7865482Z + io 1.0.5 (1.1.0 available)
+2026-10-11T08:02:45.7865719Z + js 0.7.2 (discontinued)
+2026-10-11T08:02:45.7865944Z + json_annotation 4.12.0
+2026-10-11T08:02:45.7866177Z + json_rpc_2 4.1.0
+2026-10-11T08:02:45.7866392Z + logging 1.3.0
+2026-10-11T08:02:45.7866598Z + matcher 0.12.20
+2026-10-11T08:02:45.7866837Z + meta 1.18.3 (1.19.0 available)
+2026-10-11T08:02:45.7867088Z + mime 2.0.0 (2.1.0 available)
+2026-10-11T08:02:45.7867551Z + multicast_dns 0.3.3+1
+2026-10-11T08:02:45.7867827Z + mustache_template 2.0.5 (2.0.6 available)
+2026-10-11T08:02:45.7868138Z + native_stack_traces 0.6.1 (0.7.0 available)
+2026-10-11T08:02:45.7868693Z + node_preamble 2.0.2
+2026-10-11T08:02:45.7868959Z + package_config 2.2.0 (3.0.0 available)
+2026-10-11T08:02:45.7869233Z + path 1.9.1
+2026-10-11T08:02:45.7869461Z + petitparser 7.0.2 (7.1.0 available)
+2026-10-11T08:02:45.7869734Z + platform 3.1.6 (3.2.0 available)
+2026-10-11T08:02:45.7870000Z + pool 1.5.2 (1.5.3 available)
+2026-10-11T08:02:45.7870249Z + process 5.0.5 (5.0.6 available)
+2026-10-11T08:02:45.7870504Z + pub_semver 2.2.0 (2.2.1 available)
+2026-10-11T08:02:45.7870787Z + pubspec_parse 1.5.0 (1.6.0 available)
+2026-10-11T08:02:45.7871056Z + record_use 0.6.0 (1.1.1 available)
+2026-10-11T08:02:45.7871305Z + shelf 1.4.2
+2026-10-11T08:02:45.7871528Z + shelf_packages_handler 3.0.2
+2026-10-11T08:02:45.7871768Z + shelf_proxy 1.0.5
+2026-10-11T08:02:45.7871976Z + shelf_static 1.1.3
+2026-10-11T08:02:45.7872209Z + shelf_web_socket 3.0.0
+2026-10-11T08:02:45.7872447Z + source_map_stack_trace 2.1.2
+2026-10-11T08:02:45.7872700Z + source_maps 0.10.13 (0.10.14 available)
+2026-10-11T08:02:45.7872967Z + source_span 1.10.2
+2026-10-11T08:02:45.7873186Z + sprintf 7.0.0
+2026-10-11T08:02:45.7873531Z + sse 4.2.0
+2026-10-11T08:02:45.7873733Z + stack_trace 1.12.1 (1.12.2 available)
+2026-10-11T08:02:45.7874017Z + standard_message_codec 0.0.1+5
+2026-10-11T08:02:45.7874268Z + stream_channel 2.1.4
+2026-10-11T08:02:45.7874493Z + string_scanner 1.4.1
+2026-10-11T08:02:45.7874712Z + sync_http 0.3.1
+2026-10-11T08:02:45.7874919Z + term_glyph 1.2.2
+2026-10-11T08:02:45.7875135Z + test 1.31.1 (1.33.0 available)
+2026-10-11T08:02:45.7875384Z + test_api 0.7.12 (0.7.15 available)
+2026-10-11T08:02:45.7875653Z + test_core 0.6.18 (0.6.21 available)
+2026-10-11T08:02:45.7875904Z + typed_data 1.4.0
+2026-10-11T08:02:45.7876135Z + unified_analytics 8.0.15 (8.0.18 available)
+2026-10-11T08:02:45.7876426Z + uuid 4.5.3 (4.6.0 available)
+2026-10-11T08:02:45.7876676Z + vm_service 15.2.0 (15.3.0 available)
+2026-10-11T08:02:45.7876944Z + vm_service_interface 2.0.1
+2026-10-11T08:02:45.7877196Z + vm_snapshot_analysis 0.7.6
+2026-10-11T08:02:45.7877429Z + watcher 1.2.1
+2026-10-11T08:02:45.7877624Z + web 1.1.1
+2026-10-11T08:02:45.7877816Z + web_socket 1.0.1
+2026-10-11T08:02:45.7878042Z + web_socket_channel 3.0.3
+2026-10-11T08:02:45.7878287Z + webdriver 3.1.0 (3.2.0 available)
+2026-10-11T08:02:45.7878899Z + webkit_inspection_protocol 1.2.1
+2026-10-11T08:02:45.7879180Z + xml 6.6.1 (7.1.0 available)
+2026-10-11T08:02:45.7879416Z + yaml 3.1.3 (3.1.4 available)
+2026-10-11T08:02:45.7879648Z + yaml_edit 2.2.4
+2026-10-11T08:02:45.7879899Z Changed 101 dependencies!
+2026-10-11T08:02:45.7880146Z 1 package is discontinued.
+2026-10-11T08:02:45.7880494Z 43 packages have newer versions incompatible with dependency constraints.
+2026-10-11T08:02:45.7880915Z Try `dart pub outdated` for more information.
+2026-10-11T08:03:03.0192168Z Analytics reporting disabled.
+2026-10-11T08:03:03.0194143Z 
+2026-10-11T08:03:03.0194625Z You may need to restart any open editors for them to read new settings.
+2026-10-11T08:03:03.0986894Z Flutter 3.47.5 • channel [user-branch] • https://github.com/flutter/flutter.git
+2026-10-11T08:03:03.0988150Z Framework • revision 6a19cca564 (3 weeks ago) • 2026-09-17 14:13:22 -0400
+2026-10-11T08:03:03.0989905Z Engine • hash ab598368592da0064197e2bc15c7f5b0a2c6bb1f (revision af7e796e16) (24 days ago) • 2026-09-16 18:35:09.000Z
+2026-10-11T08:03:03.0991385Z Tools • Dart 3.13.4 • DevTools 2.60.0
+2026-10-11T08:03:03.1033264Z ##[end-action id=__self.__run_2;outcome=success;conclusion=success;duration_ms=28101]
+2026-10-11T08:03:03.1099166Z Prepare all required actions
+2026-10-11T08:03:03.1143698Z ##[group]Run ./.github/actions/setup-text-engine
+2026-10-11T08:03:03.1144007Z with:
+2026-10-11T08:03:03.1144207Z   platform: android
+2026-10-11T08:03:03.1144420Z env:
+2026-10-11T08:03:03.1144733Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:03.1145220Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:03.1145609Z   MAVEN_ARGS: -ntp
+2026-10-11T08:03:03.1145817Z ##[endgroup]
+2026-10-11T08:03:03.1150293Z ##[start-action display=Select preinstalled Windows Python 3.11;id=__self_2.__run]
+2026-10-11T08:03:03.1156227Z ##[end-action id=__self_2.__run;outcome=skipped;conclusion=skipped;duration_ms=0]
+2026-10-11T08:03:03.1160883Z ##[start-action display=Bootstrap reviewed official Rust inputs outside app builds;id=__self_2.__run_2]
+2026-10-11T08:03:03.1177112Z ##[group]Run python tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"
+2026-10-11T08:03:03.1177685Z [36;1mpython tool/bootstrap_text_engine.py --platform "$TEXT_PLATFORM"[0m
+2026-10-11T08:03:03.1239111Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-11T08:03:03.1239452Z env:
+2026-10-11T08:03:03.1239765Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:03.1240268Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:03.1240655Z   MAVEN_ARGS: -ntp
+2026-10-11T08:03:03.1240874Z   TEXT_PLATFORM: android
+2026-10-11T08:03:03.1241094Z ##[endgroup]
+2026-10-11T08:03:03.5533456Z info: profile set to minimal
+2026-10-11T08:03:03.5534106Z info: default host tuple is x86_64-unknown-linux-gnu
+2026-10-11T08:03:03.5534681Z info: skipping toolchain installation
+2026-10-11T08:03:03.5534996Z 
+2026-10-11T08:03:03.5535226Z 
+2026-10-11T08:03:03.5535702Z Rust is installed now. Great!
+2026-10-11T08:03:03.5535975Z 
+2026-10-11T08:03:03.5536202Z To get started you need Cargo's bin directory (/home/runner/work/_
+2026-10-11T08:03:03.5536876Z temp/tandemlog-rust-bootstrap/cargo/bin) in your PATH
+2026-10-11T08:03:03.5537667Z environment variable. This has not been done automatically.
+2026-10-11T08:03:03.5538175Z 
+2026-10-11T08:03:03.5538334Z To configure your current shell, you need to source
+2026-10-11T08:03:03.5539388Z the corresponding env file under /home/runner/work/_
+2026-10-11T08:03:03.5539999Z temp/tandemlog-rust-bootstrap/cargo.
+2026-10-11T08:03:03.5540329Z 
+2026-10-11T08:03:03.5540701Z Consider running the right command for your shell (note the leading DOT):
+2026-10-11T08:03:03.5541313Z . "/home/runner/work/_temp/tandemlog-rust-bootstrap/cargo/env"     # For 
+2026-10-11T08:03:03.5541721Z sh/ash/dash/pdksh/bash
+2026-10-11T08:03:03.5542081Z . "/home/runner/work/_temp/tandemlog-rust-bootstrap/cargo/env.ps1" # For pwsh
+2026-10-11T08:03:03.5542539Z cargo:rerun-if-env-changed=CC_x86_64-unknown-linux-gnu
+2026-10-11T08:03:03.5542872Z CC_x86_64-unknown-linux-gnu = None
+2026-10-11T08:03:03.5543184Z cargo:rerun-if-env-changed=CC_x86_64_unknown_linux_gnu
+2026-10-11T08:03:03.5543508Z CC_x86_64_unknown_linux_gnu = None
+2026-10-11T08:03:03.5543770Z cargo:rerun-if-env-changed=HOST_CC
+2026-10-11T08:03:03.5544025Z HOST_CC = None
+2026-10-11T08:03:03.5544251Z cargo:rerun-if-env-changed=CC
+2026-10-11T08:03:03.5544489Z CC = None
+2026-10-11T08:03:03.5544732Z cargo:rerun-if-env-changed=CC_ENABLE_DEBUG_OUTPUT
+2026-10-11T08:03:04.3462102Z cargo:rerun-if-env-changed=CRATE_CC_NO_DEFAULTS
+2026-10-11T08:03:04.3462494Z CRATE_CC_NO_DEFAULTS = None
+2026-10-11T08:03:04.3462837Z cargo:rerun-if-env-changed=CFLAGS
+2026-10-11T08:03:04.3463243Z CFLAGS = None
+2026-10-11T08:03:04.3463485Z cargo:rerun-if-env-changed=HOST_CFLAGS
+2026-10-11T08:03:04.3463784Z HOST_CFLAGS = None
+2026-10-11T08:03:04.3464065Z cargo:rerun-if-env-changed=CFLAGS_x86_64_unknown_linux_gnu
+2026-10-11T08:03:04.3464414Z CFLAGS_x86_64_unknown_linux_gnu = None
+2026-10-11T08:03:04.3464740Z cargo:rerun-if-env-changed=CFLAGS_x86_64-unknown-linux-gnu
+2026-10-11T08:03:04.3465509Z CFLAGS_x86_64-unknown-linux-gnu = None
+2026-10-11T08:03:04.3520691Z info: auto-self-update mode set to disable
+2026-10-11T08:03:04.3521332Z warn: no toolchain installed and no default toolchain set
+2026-10-11T08:03:04.3522113Z help: run 'rustup default stable' to download the latest stable release of Rust and set it as your default toolchain.
+2026-10-11T08:03:04.3572378Z info: syncing channel updates for 1.99.0-x86_64-unknown-linux-gnu
+2026-10-11T08:03:04.5846445Z info: latest update on 2026-10-01 for version 1.99.0 (b940084d7 2026-09-28)
+2026-10-11T08:03:04.5847196Z info: downloading 3 components
+2026-10-11T08:03:12.2263600Z 
+2026-10-11T08:03:12.2331242Z   1.99.0-x86_64-unknown-linux-gnu installed - rustc 1.99.0 (b940084d7 2026-09-28)
+2026-10-11T08:03:12.2331799Z 
+2026-10-11T08:03:12.2335971Z info: default toolchain set to 1.99.0-x86_64-unknown-linux-gnu
+2026-10-11T08:03:12.2861150Z info: downloading 3 components
+2026-10-11T08:03:18.7436881Z     Updating crates.io index
+2026-10-11T08:03:19.0434041Z  Downloading crates ...
+2026-10-11T08:03:19.1755710Z   Downloaded thiserror v2.0.21
+2026-10-11T08:03:19.1834748Z   Downloaded smallstr v0.3.1
+2026-10-11T08:03:19.1877639Z   Downloaded thiserror-impl v2.0.21
+2026-10-11T08:03:19.1951336Z   Downloaded quote v1.0.47
+2026-10-11T08:03:19.1983627Z   Downloaded itoa v1.0.18
+2026-10-11T08:03:19.2101222Z   Downloaded wasm-bindgen-shared v0.2.129
+2026-10-11T08:03:19.2120086Z   Downloaded wasm-bindgen-macro v0.2.129
+2026-10-11T08:03:19.2144304Z   Downloaded windows-link v0.2.1
+2026-10-11T08:03:19.2169506Z   Downloaded event-listener-strategy v0.5.4
+2026-10-11T08:03:19.2234872Z   Downloaded cfg-if v1.0.5
+2026-10-11T08:03:19.2252298Z   Downloaded scopeguard v1.2.0
+2026-10-11T08:03:19.2267892Z   Downloaded parking v2.2.1
+2026-10-11T08:03:19.2280263Z   Downloaded proc-macro2 v1.0.107
+2026-10-11T08:03:19.2315225Z   Downloaded zmij v1.0.23
+2026-10-11T08:03:19.2334302Z   Downloaded rustversion v1.0.23
+2026-10-11T08:03:19.2368394Z   Downloaded fastrand v2.5.0
+2026-10-11T08:03:19.2385334Z   Downloaded dashmap v6.2.1
+2026-10-11T08:03:19.2415793Z   Downloaded lock_api v0.4.14
+2026-10-11T08:03:19.2428993Z   Downloaded smallvec v1.16.2
+2026-10-11T08:03:19.2445522Z   Downloaded redox_syscall v0.5.18
+2026-10-11T08:03:19.2473690Z   Downloaded async-trait v0.1.92
+2026-10-11T08:03:19.2516191Z   Downloaded pin-project-lite v0.2.17
+2026-10-11T08:03:19.2587433Z   Downloaded async-lock v3.4.2
+2026-10-11T08:03:19.2611308Z   Downloaded once_cell v1.21.4
+2026-10-11T08:03:19.2640231Z   Downloaded parking_lot_core v0.9.12
+2026-10-11T08:03:19.2664293Z   Downloaded event-listener v5.4.2
+2026-10-11T08:03:19.2685303Z   Downloaded unicode-ident v1.0.26
+2026-10-11T08:03:19.2715876Z   Downloaded getrandom v0.4.3
+2026-10-11T08:03:19.2761574Z   Downloaded bitflags v2.13.2
+2026-10-11T08:03:19.2812186Z   Downloaded r-efi v6.0.0
+2026-10-11T08:03:19.2868354Z   Downloaded serde_core v1.0.229
+2026-10-11T08:03:19.2897537Z   Downloaded wasm-bindgen v0.2.129
+2026-10-11T08:03:19.2927053Z   Downloaded serde_derive v1.0.229
+2026-10-11T08:03:19.2961008Z   Downloaded crossbeam-utils v0.8.23
+2026-10-11T08:03:19.2991364Z   Downloaded base64 v0.22.1
+2026-10-11T08:03:19.3032874Z   Downloaded serde v1.0.229
+2026-10-11T08:03:19.3070453Z   Downloaded memchr v2.8.3
+2026-10-11T08:03:19.3131913Z   Downloaded bumpalo v3.20.3
+2026-10-11T08:03:19.3159462Z   Downloaded arc-swap v1.9.2
+2026-10-11T08:03:19.3203841Z   Downloaded serde_json v1.0.151
+2026-10-11T08:03:19.3286358Z   Downloaded wasm-bindgen-macro-support v0.2.129
+2026-10-11T08:03:19.3312125Z   Downloaded js-sys v0.3.106
+2026-10-11T08:03:19.3343787Z   Downloaded hashbrown v0.14.5
+2026-10-11T08:03:19.3394355Z   Downloaded syn v3.0.6
+2026-10-11T08:03:19.3512445Z   Downloaded libc v0.2.190
+2026-10-11T08:03:19.4304294Z ##[end-action id=__self_2.__run_2;outcome=success;conclusion=success;duration_ms=16314]
+2026-10-11T08:03:19.4308880Z ##[start-action display=Install exact approved NDK outside app builds;id=__self_2.__run_3]
+2026-10-11T08:03:19.4341631Z ##[group]Run "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358"
+2026-10-11T08:03:19.4342677Z [36;1m"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "ndk;28.2.13676358"[0m
+2026-10-11T08:03:19.4431204Z shell: /usr/bin/bash --noprofile --norc -e -o pipefail {0}
+2026-10-11T08:03:19.4431651Z env:
+2026-10-11T08:03:19.4432042Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:19.4432728Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:19.4433241Z   MAVEN_ARGS: -ntp
+2026-10-11T08:03:19.4433645Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:03:19.4434253Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:03:19.4434843Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:03:19.4435341Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:03:19.4435750Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:03:19.4436253Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:03:19.4436803Z ##[endgroup]
+2026-10-11T08:03:25.5417548Z Loading package information...                                                  
+2026-10-11T08:03:25.6152065Z Loading local repository...                                                     
+2026-10-11T08:03:25.6154320Z [                                       ] 3% Loading local repository...        
+2026-10-11T08:03:27.1320755Z [                                       ] 3% Fetch remote repository...         
+2026-10-11T08:03:27.6281560Z [=                                      ] 3% Fetch remote repository...         
+2026-10-11T08:03:27.7372675Z [=                                      ] 4% Fetch remote repository...         
+2026-10-11T08:03:27.9036043Z [=                                      ] 5% Fetch remote repository...         
+2026-10-11T08:03:27.9593358Z [==                                     ] 5% Fetch remote repository...         
+2026-10-11T08:03:28.0938912Z [==                                     ] 6% Fetch remote repository...         
+2026-10-11T08:03:28.1959878Z [==                                     ] 7% Fetch remote repository...         
+2026-10-11T08:03:28.1979283Z [==                                     ] 7% Computing updates...               
+2026-10-11T08:03:28.2071826Z [===                                    ] 8% Computing updates...               
+2026-10-11T08:03:28.3179814Z [===                                    ] 10% Computing updates...              
+2026-10-11T08:03:28.3731430Z [===                                    ] 10% Installing NDK (Side by side) 28.2
+2026-10-11T08:03:28.5859047Z [===                                    ] 10% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:28.6829196Z [====                                   ] 10% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:28.8524243Z [====                                   ] 11% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.0152357Z [====                                   ] 12% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.1453807Z [=====                                  ] 13% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.2755348Z [=====                                  ] 14% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.3731110Z [=====                                  ] 15% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.4382206Z [======                                 ] 15% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.5681255Z [======                                 ] 16% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.7303057Z [======                                 ] 17% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:29.8597752Z [=======                                ] 18% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.0210555Z [=======                                ] 19% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.0855081Z [=======                                ] 20% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.1338893Z [========                               ] 20% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.2314857Z [========                               ] 21% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.2956599Z [========                               ] 22% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.3657181Z [=========                              ] 23% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.4468977Z [=========                              ] 24% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.4763503Z [=========                              ] 25% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.5069556Z [==========                             ] 25% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.5960584Z [==========                             ] 26% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.6576642Z [==========                             ] 27% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.7529973Z [===========                            ] 28% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.8282803Z [===========                            ] 29% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.8639612Z [===========                            ] 30% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.9097174Z [============                           ] 30% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:30.9690539Z [============                           ] 31% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:31.0258921Z [============                           ] 32% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:31.0263336Z [============                           ] 33% Downloading android-ndk-r28c-linux
+2026-10-11T08:03:31.5823735Z [============                           ] 33% Unzipping...                      
+2026-10-11T08:03:31.5839703Z [============                           ] 33% Unzipping... android-ndk-r28c/    
+2026-10-11T08:03:31.5849679Z [============                           ] 33% Unzipping... android-ndk-r28c/READ
+2026-10-11T08:03:31.5879425Z [=============                          ] 33% Unzipping... android-ndk-r28c/READ
+2026-10-11T08:03:31.5886926Z [=============                          ] 33% Unzipping... android-ndk-r28c/meta
+2026-10-11T08:03:31.7438378Z [=============                          ] 33% Unzipping... android-ndk-r28c/shad
+2026-10-11T08:03:31.7450000Z [=============                          ] 33% Unzipping... android-ndk-r28c/ndk-
+2026-10-11T08:03:31.7479147Z [=============                          ] 33% Unzipping... android-ndk-r28c/wrap
+2026-10-11T08:03:31.7479889Z [=============                          ] 33% Unzipping... android-ndk-r28c/ndk-
+2026-10-11T08:03:32.2721542Z [=============                          ] 33% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:32.7429936Z [=============                          ] 34% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:32.9618975Z [=============                          ] 35% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:33.2065082Z [==============                         ] 35% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:33.6063545Z [==============                         ] 36% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:34.5076195Z [==============                         ] 37% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:34.8593611Z [===============                        ] 38% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:35.2928828Z [===============                        ] 39% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:35.5029489Z [===============                        ] 40% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:35.7451864Z [================                       ] 40% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:36.2239782Z [================                       ] 41% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:36.6538148Z [================                       ] 42% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:37.4699992Z [=================                      ] 43% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:37.9955555Z [=================                      ] 44% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:38.2845135Z [=================                      ] 45% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:38.8769496Z [==================                     ] 45% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:39.6724695Z [==================                     ] 46% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:40.1606363Z [==================                     ] 47% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:40.5659562Z [===================                    ] 48% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:40.9989133Z [===================                    ] 49% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:41.1835937Z [===================                    ] 50% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:41.3801593Z [====================                   ] 50% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:41.8349164Z [====================                   ] 51% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:42.2138115Z [====================                   ] 52% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:42.6367339Z [=====================                  ] 53% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:42.8889210Z [=====================                  ] 54% Unzipping... android-ndk-r28c/tool
+2026-10-11T08:03:42.9004454Z [=====================                  ] 54% Unzipping... android-ndk-r28c/buil
+2026-10-11T08:03:43.1125738Z [=====================                  ] 54% Unzipping... android-ndk-r28c/sour
+2026-10-11T08:03:43.1146410Z [=====================                  ] 54% Unzipping... android-ndk-r28c/NOTI
+2026-10-11T08:03:43.1147999Z [=====================                  ] 54% Unzipping... android-ndk-r28c/ndk-
+2026-10-11T08:03:43.1161493Z [=====================                  ] 54% Unzipping... android-ndk-r28c/NOTI
+2026-10-11T08:03:43.1200794Z [=====================                  ] 54% Unzipping... android-ndk-r28c/pyth
+2026-10-11T08:03:43.1613926Z [=====================                  ] 54% Unzipping... android-ndk-r28c/preb
+2026-10-11T08:03:43.1616683Z [=====================                  ] 54% Unzipping... android-ndk-r28c/ndk-
+2026-10-11T08:03:43.1619343Z [=====================                  ] 54% Unzipping... android-ndk-r28c/sour
+2026-10-11T08:03:43.2191276Z [=====================                  ] 54% Unzipping... android-ndk-r28c/simp
+2026-10-11T08:03:43.3735103Z [=====================                  ] 55% Unzipping... android-ndk-r28c/simp
+2026-10-11T08:03:43.5049033Z [=====================                  ] 55% Unzipping... android-ndk-r28c/CHAN
+2026-10-11T08:03:43.5049832Z [=======================================] 100% Unzipping... android-ndk-r28c/CHA
+2026-10-11T08:03:43.9799581Z 
+2026-10-11T08:03:44.0141359Z ##[end-action id=__self_2.__run_3;outcome=success;conclusion=success;duration_ms=24583]
+2026-10-11T08:03:44.0185532Z ##[group]Run flutter pub get --enforce-lockfile
+2026-10-11T08:03:44.0185949Z [36;1mflutter pub get --enforce-lockfile[0m
+2026-10-11T08:03:44.0249666Z shell: /usr/bin/bash -e {0}
+2026-10-11T08:03:44.0249932Z env:
+2026-10-11T08:03:44.0250249Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:44.0250780Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:44.0251194Z   MAVEN_ARGS: -ntp
+2026-10-11T08:03:44.0251509Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:03:44.0251962Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:03:44.0252429Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:03:44.0252805Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:03:44.0253118Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:03:44.0253515Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:03:44.0253926Z ##[endgroup]
+2026-10-11T08:03:44.4711609Z [1/10] Material Fonts                                              327ms
+2026-10-11T08:03:44.5700939Z [2/10] Gradle Wrapper                                               51ms
+2026-10-11T08:03:44.5811727Z [3/10] Flutter SDK
+2026-10-11T08:03:44.6804336Z   ├─ [1/5] sky_engine                                               93ms
+2026-10-11T08:03:44.7754153Z   ├─ [2/5] flutter_gpu                                              27ms
+2026-10-11T08:03:44.9681992Z   ├─ [3/5] flutter_patched_sdk                                     179ms
+2026-10-11T08:03:45.2266871Z   ├─ [4/5] flutter_patched_sdk_product                             164ms
+2026-10-11T08:03:46.2209529Z   └─ [5/5] linux-x64                                               900ms
+2026-10-11T08:03:46.9310303Z [10/10] linux-x64/font-subset                                       97ms
+2026-10-11T08:03:47.0473148Z Resolving dependencies...
+2026-10-11T08:03:47.6619503Z Downloading packages...
+2026-10-11T08:03:49.3960320Z   code_assets 1.2.1 (2.1.0 available)
+2026-10-11T08:03:49.3960989Z   cross_file 0.3.5+5 (0.4.0 available)
+2026-10-11T08:03:49.3961541Z   jni 1.0.3 (1.1.0 available)
+2026-10-11T08:03:49.3962052Z   jni_flutter 1.0.3 (1.0.4+1 available)
+2026-10-11T08:03:49.3962679Z   material_color_utilities 0.13.0 (0.13.1 available)
+2026-10-11T08:03:49.3963345Z   native_toolchain_c 0.19.3 (0.19.5 available)
+2026-10-11T08:03:49.3963951Z   objective_c 9.5.0 (9.6.2 available)
+2026-10-11T08:03:49.3964505Z   test_api 0.7.12 (0.7.15 available)
+2026-10-11T08:03:49.3965056Z   url_launcher 6.3.2 (6.3.3 available)
+2026-10-11T08:03:49.3965615Z   vector_math 2.4.0 (2.4.3 available)
+2026-10-11T08:03:49.3966554Z Got dependencies!
+2026-10-11T08:03:49.3967102Z 10 packages have newer versions incompatible with dependency constraints.
+2026-10-11T08:03:49.3967689Z Try `flutter pub outdated` for more information.
+2026-10-11T08:03:49.5883287Z ##[group]Run bash tool/build_android_release.sh
+2026-10-11T08:03:49.5883680Z [36;1mbash tool/build_android_release.sh[0m
+2026-10-11T08:03:49.5945741Z shell: /usr/bin/bash -e {0}
+2026-10-11T08:03:49.5946001Z env:
+2026-10-11T08:03:49.5946334Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:49.5946871Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:03:49.5947306Z   MAVEN_ARGS: -ntp
+2026-10-11T08:03:49.5947645Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:03:49.5948133Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:03:49.5948852Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:03:49.5949273Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:03:49.5949600Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:03:49.5950020Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:03:49.5973429Z   ANDROID_KEYSTORE_BASE64: ***
+2026-10-11T08:03:49.5973913Z   ANDROID_KEYSTORE_PASSWORD: ***
+2026-10-11T08:03:49.5974193Z   ANDROID_KEY_ALIAS: ***
+2026-10-11T08:03:49.5974606Z   ANDROID_KEY_PASSWORD: ***
+2026-10-11T08:03:49.5974843Z ##[endgroup]
+2026-10-11T08:03:49.8051560Z [1/1] Android SDK
+2026-10-11T08:03:50.2174244Z   ├─ [1/6] android-arm-profile/linux-x64                           410ms
+2026-10-11T08:03:50.4593488Z   ├─ [2/6] android-arm-release/linux-x64                           174ms
+2026-10-11T08:03:50.6847558Z   ├─ [3/6] android-arm64-profile/linux-x64                         170ms
+2026-10-11T08:03:50.9045189Z   ├─ [4/6] android-arm64-release/linux-x64                         154ms
+2026-10-11T08:03:51.1285934Z   ├─ [5/6] android-x64-profile/linux-x64                           167ms
+2026-10-11T08:03:51.3327264Z   └─ [6/6] android-x64-release/linux-x64                           138ms
+2026-10-11T08:03:51.4816626Z Resolving dependencies...
+2026-10-11T08:03:51.5657708Z Downloading packages...
+2026-10-11T08:03:51.6282009Z   code_assets 1.2.1 (2.1.0 available)
+2026-10-11T08:03:51.6282497Z   cross_file 0.3.5+5 (0.4.0 available)
+2026-10-11T08:03:51.6282848Z   jni 1.0.3 (1.1.0 available)
+2026-10-11T08:03:51.6283154Z   jni_flutter 1.0.3 (1.0.4+1 available)
+2026-10-11T08:03:51.6283524Z   material_color_utilities 0.13.0 (0.13.1 available)
+2026-10-11T08:03:51.6283925Z   native_toolchain_c 0.19.3 (0.19.5 available)
+2026-10-11T08:03:51.6284285Z   objective_c 9.5.0 (9.6.2 available)
+2026-10-11T08:03:51.6284676Z   test_api 0.7.12 (0.7.15 available)
+2026-10-11T08:03:51.6285179Z   url_launcher 6.3.2 (6.3.3 available)
+2026-10-11T08:03:51.6285537Z   vector_math 2.4.0 (2.4.3 available)
+2026-10-11T08:03:51.6285883Z Got dependencies!
+2026-10-11T08:03:51.6286350Z 10 packages have newer versions incompatible with dependency constraints.
+2026-10-11T08:03:51.6286925Z Try `flutter pub outdated` for more information.
+2026-10-11T08:06:08.5569518Z Running Gradle task 'assembleRelease'...                        
+2026-10-11T08:06:08.5600439Z Font asset "MaterialIcons-Regular.otf" was tree-shaken, reducing it from 1645184 to 4732 bytes (99.7% reduction). Tree-shaking can be disabled by providing the --no-tree-shake-icons flag when building your app.
+2026-10-11T08:06:26.6499812Z    Compiling proc-macro2 v1.0.107
+2026-10-11T08:06:26.6529312Z    Compiling unicode-ident v1.0.26
+2026-10-11T08:06:26.6559241Z    Compiling quote v1.0.47
+2026-10-11T08:06:26.6560219Z    Compiling serde_core v1.0.229
+2026-10-11T08:06:26.6562733Z    Compiling libc v0.2.190
+2026-10-11T08:06:27.2464803Z    Compiling smallvec v1.16.2
+2026-10-11T08:06:27.2476532Z    Compiling parking_lot_core v0.9.12
+2026-10-11T08:06:27.2477319Z    Compiling zmij v1.0.23
+2026-10-11T08:06:27.3469596Z    Compiling rustversion v1.0.23
+2026-10-11T08:06:27.3471123Z    Compiling crossbeam-utils v0.8.23
+2026-10-11T08:06:27.3500004Z    Compiling pin-project-lite v0.2.17
+2026-10-11T08:06:27.4441629Z    Compiling parking v2.2.1
+2026-10-11T08:06:27.4510005Z    Compiling event-listener v5.4.2
+2026-10-11T08:06:27.8459428Z    Compiling serde_json v1.0.151
+2026-10-11T08:06:27.8478249Z    Compiling syn v3.0.6
+2026-10-11T08:06:27.8519225Z    Compiling serde v1.0.229
+2026-10-11T08:06:28.0489799Z    Compiling scopeguard v1.2.0
+2026-10-11T08:06:28.0509193Z    Compiling cfg-if v1.0.5
+2026-10-11T08:06:28.0541667Z    Compiling thiserror v2.0.21
+2026-10-11T08:06:28.2456228Z    Compiling lock_api v0.4.14
+2026-10-11T08:06:28.3439692Z    Compiling event-listener-strategy v0.5.4
+2026-10-11T08:06:28.7489639Z    Compiling memchr v2.8.3
+2026-10-11T08:06:29.2438771Z    Compiling itoa v1.0.18
+2026-10-11T08:06:29.3459750Z    Compiling hashbrown v0.14.5
+2026-10-11T08:06:29.4449643Z    Compiling once_cell v1.21.4
+2026-10-11T08:06:29.5479704Z    Compiling arc-swap v1.9.2
+2026-10-11T08:06:29.8438312Z    Compiling async-lock v3.4.2
+2026-10-11T08:06:30.0439591Z    Compiling dashmap v6.2.1
+2026-10-11T08:06:30.4459671Z    Compiling smallstr v0.3.1
+2026-10-11T08:06:30.4489222Z    Compiling fastrand v2.5.0
+2026-10-11T08:06:30.5449515Z    Compiling base64 v0.22.1
+2026-10-11T08:06:31.1447261Z    Compiling serde_derive v1.0.229
+2026-10-11T08:06:31.1469192Z    Compiling thiserror-impl v2.0.21
+2026-10-11T08:06:31.1488948Z    Compiling async-trait v0.1.92
+2026-10-11T08:06:33.0436937Z    Compiling yrs v0.28.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine/vendor/yrs-0.28.0)
+2026-10-11T08:06:33.1448879Z warning: unused imports: `BlockRange` and `Block`
+2026-10-11T08:06:33.1449811Z  --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+2026-10-11T08:06:33.1450449Z   |
+2026-10-11T08:06:33.1451146Z 1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+2026-10-11T08:06:33.1451775Z   |                    ^^^^^  ^^^^^^^^^^
+2026-10-11T08:06:33.1452057Z   |
+2026-10-11T08:06:33.1452349Z   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:33.1452639Z 
+2026-10-11T08:06:33.1452748Z warning: unused import: `Block`
+2026-10-11T08:06:33.1453039Z  --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+2026-10-11T08:06:33.1453306Z   |
+2026-10-11T08:06:33.1453580Z 1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+2026-10-11T08:06:33.1453925Z   |                    ^^^^^
+2026-10-11T08:06:33.1454075Z 
+2026-10-11T08:06:33.2444050Z warning: unused import: `ItemContent`
+2026-10-11T08:06:33.2445145Z  --> vendor/yrs-0.28.0/src/iter.rs:1:20
+2026-10-11T08:06:33.2445861Z   |
+2026-10-11T08:06:33.2448917Z 1 | use crate::block::{ItemContent, ItemPtr};
+2026-10-11T08:06:33.2449964Z   |                    ^^^^^^^^^^^
+2026-10-11T08:06:33.2450243Z 
+2026-10-11T08:06:33.2450467Z warning: unused imports: `SmallVec` and `smallvec`
+2026-10-11T08:06:33.2450993Z  --> vendor/yrs-0.28.0/src/iter.rs:4:16
+2026-10-11T08:06:33.2460966Z   |
+2026-10-11T08:06:33.2464779Z 4 | use smallvec::{smallvec, SmallVec};
+2026-10-11T08:06:33.2465486Z   |                ^^^^^^^^  ^^^^^^^^
+2026-10-11T08:06:33.2465904Z 
+2026-10-11T08:06:33.7439254Z warning: unused import: `crate::utils::OptionExt`
+2026-10-11T08:06:33.7440104Z   --> vendor/yrs-0.28.0/src/doc.rs:10:5
+2026-10-11T08:06:33.7440788Z    |
+2026-10-11T08:06:33.7441152Z 10 | use crate::utils::OptionExt;
+2026-10-11T08:06:33.7441579Z    |     ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:33.7441821Z 
+2026-10-11T08:06:33.7442444Z warning: value assigned to `left` is never read
+2026-10-11T08:06:33.7442961Z    --> vendor/yrs-0.28.0/src/block.rs:494:24
+2026-10-11T08:06:33.7443419Z     |
+2026-10-11T08:06:33.7456957Z 494 |         let mut left = None;
+2026-10-11T08:06:33.7457551Z     |                        ^^^^ this value is reassigned later and never used
+2026-10-11T08:06:33.7458104Z ...
+2026-10-11T08:06:33.7458715Z 540 |                 left = parent_branch.map.get(sub).cloned();
+2026-10-11T08:06:33.7460000Z     |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+2026-10-11T08:06:33.7460771Z     |
+2026-10-11T08:06:33.7461343Z     = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:33.7461674Z 
+2026-10-11T08:06:33.7461795Z warning: unused variable: `ptr`
+2026-10-11T08:06:33.7462088Z    --> vendor/yrs-0.28.0/src/block.rs:886:21
+2026-10-11T08:06:33.7462358Z     |
+2026-10-11T08:06:33.7462613Z 886 |                 let ptr = BranchPtr::from(branch);
+2026-10-11T08:06:33.7463043Z     |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:06:33.7463418Z     |
+2026-10-11T08:06:33.7463718Z     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:33.7464011Z 
+2026-10-11T08:06:33.9442333Z warning: unused variable: `ptr`
+2026-10-11T08:06:33.9451328Z    --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+2026-10-11T08:06:33.9451983Z     |
+2026-10-11T08:06:33.9452361Z 778 |         let ptr = item.clone();
+2026-10-11T08:06:33.9453071Z     |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:06:33.9453616Z 
+2026-10-11T08:06:33.9453869Z warning: variable does not need to be mutable
+2026-10-11T08:06:33.9454485Z    --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+2026-10-11T08:06:33.9455016Z     |
+2026-10-11T08:06:33.9455640Z 958 |         let mut block = Item::new(
+2026-10-11T08:06:33.9456196Z     |             ----^^^^^
+2026-10-11T08:06:33.9456608Z     |             |
+2026-10-11T08:06:33.9457026Z     |             help: remove this `mut`
+2026-10-11T08:06:33.9457523Z     |
+2026-10-11T08:06:33.9458110Z     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:33.9458868Z 
+2026-10-11T08:06:34.3442798Z warning: variable does not need to be mutable
+2026-10-11T08:06:34.3454845Z    --> vendor/yrs-0.28.0/src/undo.rs:133:13
+2026-10-11T08:06:34.3455413Z     |
+2026-10-11T08:06:34.3455972Z 133 |         let mut state = Arc::new(Inner {
+2026-10-11T08:06:34.3456480Z     |             ----^^^^^
+2026-10-11T08:06:34.3456873Z     |             |
+2026-10-11T08:06:34.3457269Z     |             help: remove this `mut`
+2026-10-11T08:06:34.3457590Z 
+2026-10-11T08:06:34.3457769Z warning: unused variable: `clear_undo`
+2026-10-11T08:06:34.3458265Z    --> vendor/yrs-0.28.0/src/undo.rs:379:34
+2026-10-11T08:06:34.3458920Z     |
+2026-10-11T08:06:34.3459410Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:06:34.3460310Z     |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+2026-10-11T08:06:34.3460669Z 
+2026-10-11T08:06:34.3460782Z warning: unused variable: `clear_redo`
+2026-10-11T08:06:34.3461066Z    --> vendor/yrs-0.28.0/src/undo.rs:379:52
+2026-10-11T08:06:34.3461324Z     |
+2026-10-11T08:06:34.3461595Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:06:34.3462173Z     |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+2026-10-11T08:06:34.3462547Z 
+2026-10-11T08:06:34.4440408Z warning: method `as_item` is never used
+2026-10-11T08:06:34.4459430Z    --> vendor/yrs-0.28.0/src/block.rs:198:12
+2026-10-11T08:06:34.4479026Z     |
+2026-10-11T08:06:34.4490009Z 183 | impl<'a> BlockRef<'a> {
+2026-10-11T08:06:34.4515153Z     | --------------------- method in this implementation
+2026-10-11T08:06:34.4549113Z ...
+2026-10-11T08:06:34.4561351Z 198 |     pub fn as_item(&self) -> Option<&'a Item> {
+2026-10-11T08:06:34.4562294Z     |            ^^^^^^^
+2026-10-11T08:06:34.4565639Z     |
+2026-10-11T08:06:34.4566733Z     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:34.4567466Z 
+2026-10-11T08:06:34.4567983Z warning: methods `last_id`, `is_item`, and `is_gc` are never used
+2026-10-11T08:06:34.4569205Z    --> vendor/yrs-0.28.0/src/block.rs:264:12
+2026-10-11T08:06:34.4570456Z     |
+2026-10-11T08:06:34.4571038Z 221 | impl Block {
+2026-10-11T08:06:34.4571723Z     | ---------- methods in this implementation
+2026-10-11T08:06:34.4572474Z ...
+2026-10-11T08:06:34.4573439Z 264 |     pub fn last_id(&self) -> ID {
+2026-10-11T08:06:34.4574196Z     |            ^^^^^^^
+2026-10-11T08:06:34.4574735Z ...
+2026-10-11T08:06:34.4575246Z 281 |     pub fn is_item(&self) -> bool {
+2026-10-11T08:06:34.4575892Z     |            ^^^^^^^
+2026-10-11T08:06:34.4576460Z ...
+2026-10-11T08:06:34.4576989Z 291 |     pub fn is_gc(&self) -> bool {
+2026-10-11T08:06:34.4577639Z     |            ^^^^^
+2026-10-11T08:06:34.4578062Z 
+2026-10-11T08:06:34.4578722Z warning: method `delete_as_cleanup` is never used
+2026-10-11T08:06:34.4579541Z    --> vendor/yrs-0.28.0/src/block.rs:632:19
+2026-10-11T08:06:34.4580219Z     |
+2026-10-11T08:06:34.4580748Z 444 | impl ItemPtr {
+2026-10-11T08:06:34.4581343Z     | ------------ method in this implementation
+2026-10-11T08:06:34.4582030Z ...
+2026-10-11T08:06:34.4582847Z 632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+2026-10-11T08:06:34.4583767Z     |                   ^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4584248Z 
+2026-10-11T08:06:34.4584591Z warning: method `integrate` is never used
+2026-10-11T08:06:34.4585307Z     --> vendor/yrs-0.28.0/src/block.rs:1415:19
+2026-10-11T08:06:34.4585947Z      |
+2026-10-11T08:06:34.4586458Z 1354 | impl BlockRange {
+2026-10-11T08:06:34.4587128Z      | --------------- method in this implementation
+2026-10-11T08:06:34.4587810Z ...
+2026-10-11T08:06:34.4588680Z 1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+2026-10-11T08:06:34.4589502Z      |                   ^^^^^^^^^
+2026-10-11T08:06:34.4589960Z 
+2026-10-11T08:06:34.4590306Z warning: method `contains` is never used
+2026-10-11T08:06:34.4591026Z    --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+2026-10-11T08:06:34.4591692Z     |
+2026-10-11T08:06:34.4592175Z 289 | impl BlockStore {
+2026-10-11T08:06:34.4592815Z     | --------------- method in this implementation
+2026-10-11T08:06:34.4593486Z ...
+2026-10-11T08:06:34.4594032Z 300 |     pub fn contains(&self, id: &ID) -> bool {
+2026-10-11T08:06:34.4595144Z     |            ^^^^^^^^
+2026-10-11T08:06:34.4595462Z 
+2026-10-11T08:06:34.4595747Z warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+2026-10-11T08:06:34.4596411Z    --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+2026-10-11T08:06:34.4596920Z     |
+2026-10-11T08:06:34.4597332Z 230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+2026-10-11T08:06:34.4597871Z     |       ^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4598167Z 
+2026-10-11T08:06:34.4598855Z warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+2026-10-11T08:06:34.4609552Z    --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+2026-10-11T08:06:34.4610076Z     |
+2026-10-11T08:06:34.4610538Z 232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+2026-10-11T08:06:34.4611091Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4611402Z 
+2026-10-11T08:06:34.4611696Z warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+2026-10-11T08:06:34.4612342Z    --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+2026-10-11T08:06:34.4612879Z     |
+2026-10-11T08:06:34.4613302Z 234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+2026-10-11T08:06:34.4613874Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4614176Z 
+2026-10-11T08:06:34.4614486Z warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+2026-10-11T08:06:34.4615166Z    --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+2026-10-11T08:06:34.4615661Z     |
+2026-10-11T08:06:34.4616102Z 236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+2026-10-11T08:06:34.4616678Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4616993Z 
+2026-10-11T08:06:34.4617289Z warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+2026-10-11T08:06:34.4617940Z    --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+2026-10-11T08:06:34.4618661Z     |
+2026-10-11T08:06:34.4619110Z 238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+2026-10-11T08:06:34.4619977Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4620284Z 
+2026-10-11T08:06:34.4620561Z warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+2026-10-11T08:06:34.4621465Z    --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+2026-10-11T08:06:34.4621956Z     |
+2026-10-11T08:06:34.4622381Z 240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+2026-10-11T08:06:34.4622948Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4623236Z 
+2026-10-11T08:06:34.4623423Z warning: field `txn` is never read
+2026-10-11T08:06:34.4629355Z    --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+2026-10-11T08:06:34.4643891Z     |
+2026-10-11T08:06:34.4649576Z 536 | pub(crate) struct Entries<'a, B, T> {
+2026-10-11T08:06:34.4650426Z     |                   ------- field in this struct
+2026-10-11T08:06:34.4651300Z 537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+2026-10-11T08:06:34.4652102Z 538 |     txn: B,
+2026-10-11T08:06:34.4652637Z     |     ^^^
+2026-10-11T08:06:34.4653125Z     |
+2026-10-11T08:06:34.4654068Z     = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:06:34.4655027Z 
+2026-10-11T08:06:34.4655396Z warning: method `as_id_set` is never used
+2026-10-11T08:06:34.4656094Z   --> vendor/yrs-0.28.0/src/update.rs:48:12
+2026-10-11T08:06:34.4656726Z    |
+2026-10-11T08:06:34.4657209Z 28 | impl BlockSet {
+2026-10-11T08:06:34.4657810Z    | ------------- method in this implementation
+2026-10-11T08:06:34.4658717Z ...
+2026-10-11T08:06:34.4659286Z 48 |     pub fn as_id_set(&self) -> IdSet {
+2026-10-11T08:06:34.4659963Z    |            ^^^^^^^^^
+2026-10-11T08:06:34.4660386Z 
+2026-10-11T08:06:34.4660957Z warning: associated functions `next_target` and `return_stack` are never used
+2026-10-11T08:06:34.4661909Z    --> vendor/yrs-0.28.0/src/update.rs:503:8
+2026-10-11T08:06:34.4662562Z     |
+2026-10-11T08:06:34.4663042Z 169 | impl Update {
+2026-10-11T08:06:34.4663698Z     | ----------- associated functions in this implementation
+2026-10-11T08:06:34.4664426Z ...
+2026-10-11T08:06:34.4664937Z 503 |     fn next_target<'a, 'b>(
+2026-10-11T08:06:34.4665537Z     |        ^^^^^^^^^^^
+2026-10-11T08:06:34.4666081Z ...
+2026-10-11T08:06:34.4666862Z 526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+2026-10-11T08:06:34.4667805Z     |        ^^^^^^^^^^^^
+2026-10-11T08:06:34.4668223Z 
+2026-10-11T08:06:34.4668967Z warning: methods `forward`, `backward`, and `values` are never used
+2026-10-11T08:06:34.4669851Z    --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+2026-10-11T08:06:34.4670506Z     |
+2026-10-11T08:06:34.4671003Z  18 | impl BlockIter {
+2026-10-11T08:06:34.4671632Z     | -------------- methods in this implementation
+2026-10-11T08:06:34.4672286Z ...
+2026-10-11T08:06:34.4672902Z  76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+2026-10-11T08:06:34.4673676Z     |            ^^^^^^^
+2026-10-11T08:06:34.4674265Z ...
+2026-10-11T08:06:34.4674952Z 130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+2026-10-11T08:06:34.4675768Z     |            ^^^^^^^^
+2026-10-11T08:06:34.4676298Z ...
+2026-10-11T08:06:34.4676839Z 369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+2026-10-11T08:06:34.4677499Z     |            ^^^^^^
+2026-10-11T08:06:34.4677893Z 
+2026-10-11T08:06:34.4678263Z warning: struct `Values` is never constructed
+2026-10-11T08:06:34.4679218Z    --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+2026-10-11T08:06:34.4679884Z     |
+2026-10-11T08:06:34.4680410Z 377 | pub struct Values<'a, 'txn> {
+2026-10-11T08:06:34.4681065Z     |            ^^^^^^
+2026-10-11T08:06:34.4681498Z 
+2026-10-11T08:06:34.4681889Z warning: associated function `new` is never used
+2026-10-11T08:06:34.4682704Z    --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+2026-10-11T08:06:34.4683442Z     |
+2026-10-11T08:06:34.4684261Z 382 | impl<'a, 'txn> Values<'a, 'txn> {
+2026-10-11T08:06:34.4685162Z     | ------------------------------- associated function in this implementation
+2026-10-11T08:06:34.4686679Z 383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+2026-10-11T08:06:34.4687669Z     |        ^^^
+2026-10-11T08:06:34.4688116Z 
+2026-10-11T08:06:34.4689037Z warning: method `remove_at` is never used
+2026-10-11T08:06:34.4689898Z    --> vendor/yrs-0.28.0/src/branch.rs:398:19
+2026-10-11T08:06:34.4690639Z     |
+2026-10-11T08:06:34.4691215Z 222 | impl Branch {
+2026-10-11T08:06:34.4691873Z     | ----------- method in this implementation
+2026-10-11T08:06:34.4692601Z ...
+2026-10-11T08:06:34.4693474Z 398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+2026-10-11T08:06:34.4694526Z     |                   ^^^^^^^^^
+2026-10-11T08:06:34.4695059Z 
+2026-10-11T08:06:34.4695461Z warning: method `inner_mut` is never used
+2026-10-11T08:06:34.4696295Z    --> vendor/yrs-0.28.0/src/ids.rs:548:19
+2026-10-11T08:06:34.4697043Z     |
+2026-10-11T08:06:34.4697635Z  58 | impl<T: Merge> IdRanges<T> {
+2026-10-11T08:06:34.4698792Z     | -------------------------- method in this implementation
+2026-10-11T08:06:34.4699612Z ...
+2026-10-11T08:06:34.4700409Z 548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+2026-10-11T08:06:34.4701385Z     |                   ^^^^^^^^^
+2026-10-11T08:06:34.4701909Z 
+2026-10-11T08:06:34.4702363Z warning: trait `BlockIterator` is never used
+2026-10-11T08:06:34.4703161Z  --> vendor/yrs-0.28.0/src/iter.rs:7:18
+2026-10-11T08:06:34.4703860Z   |
+2026-10-11T08:06:34.4704611Z 7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+2026-10-11T08:06:34.4705542Z   |                  ^^^^^^^^^^^^^
+2026-10-11T08:06:34.4706067Z 
+2026-10-11T08:06:34.4706539Z warning: trait `BlockSliceIterator` is never used
+2026-10-11T08:06:34.4707290Z   --> vendor/yrs-0.28.0/src/iter.rs:16:18
+2026-10-11T08:06:34.4720144Z    |
+2026-10-11T08:06:34.4723796Z 16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+2026-10-11T08:06:34.4725043Z    |                  ^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4729104Z 
+2026-10-11T08:06:34.4759215Z warning: struct `RangeIter` is never constructed
+2026-10-11T08:06:34.4759967Z    --> vendor/yrs-0.28.0/src/iter.rs:106:19
+2026-10-11T08:06:34.4760561Z     |
+2026-10-11T08:06:34.4761083Z 106 | pub(crate) struct RangeIter<I> {
+2026-10-11T08:06:34.4761752Z     |                   ^^^^^^^^^
+2026-10-11T08:06:34.4762212Z 
+2026-10-11T08:06:34.4762640Z warning: associated items `new` and `begin` are never used
+2026-10-11T08:06:34.4763474Z    --> vendor/yrs-0.28.0/src/iter.rs:117:8
+2026-10-11T08:06:34.4764139Z     |
+2026-10-11T08:06:34.4764680Z 113 | / impl<I> RangeIter<I>
+2026-10-11T08:06:34.4765309Z 114 | | where
+2026-10-11T08:06:34.4765925Z 115 | |     I: Iterator<Item = ItemPtr>,
+2026-10-11T08:06:34.4766757Z     | |________________________________- associated items in this implementation
+2026-10-11T08:06:34.4767585Z 116 |   {
+2026-10-11T08:06:34.4768611Z 117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+2026-10-11T08:06:34.4769526Z     |          ^^^
+2026-10-11T08:06:34.4770054Z ...
+2026-10-11T08:06:34.4770776Z 126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+2026-10-11T08:06:34.4771552Z     |          ^^^^^
+2026-10-11T08:06:34.4771904Z 
+2026-10-11T08:06:34.4772239Z warning: enum `RangeIterState` is never used
+2026-10-11T08:06:34.4772937Z    --> vendor/yrs-0.28.0/src/iter.rs:234:6
+2026-10-11T08:06:34.4773546Z     |
+2026-10-11T08:06:34.4774012Z 234 | enum RangeIterState {
+2026-10-11T08:06:34.4774556Z     |      ^^^^^^^^^^^^^^
+2026-10-11T08:06:34.4774901Z 
+2026-10-11T08:06:34.4775217Z warning: struct `Values` is never constructed
+2026-10-11T08:06:34.4775875Z    --> vendor/yrs-0.28.0/src/iter.rs:245:19
+2026-10-11T08:06:34.4776455Z     |
+2026-10-11T08:06:34.4776921Z 245 | pub(crate) struct Values<I> {
+2026-10-11T08:06:34.4777487Z     |                   ^^^^^^
+2026-10-11T08:06:34.4777853Z 
+2026-10-11T08:06:34.4778176Z warning: associated function `new` is never used
+2026-10-11T08:06:34.4779483Z    --> vendor/yrs-0.28.0/src/iter.rs:251:8
+2026-10-11T08:06:34.4780042Z     |
+2026-10-11T08:06:34.4780526Z 250 | impl<I> Values<I> {
+2026-10-11T08:06:34.4781394Z     | ----------------- associated function in this implementation
+2026-10-11T08:06:34.4782165Z 251 |     fn new(iter: I) -> Self {
+2026-10-11T08:06:34.4782771Z     |        ^^^
+2026-10-11T08:06:34.4783083Z 
+2026-10-11T08:06:34.4783368Z warning: field `txn` is never read
+2026-10-11T08:06:34.4783978Z    --> vendor/yrs-0.28.0/src/iter.rs:287:5
+2026-10-11T08:06:34.4784573Z     |
+2026-10-11T08:06:34.4785052Z 286 | pub struct AsIter<'a, T, I> {
+2026-10-11T08:06:34.4785661Z     |            ------ field in this struct
+2026-10-11T08:06:34.4786243Z 287 |     txn: &'a T,
+2026-10-11T08:06:34.4786706Z     |     ^^^
+2026-10-11T08:06:34.4787129Z     |
+2026-10-11T08:06:34.4788083Z     = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:06:34.4789314Z 
+2026-10-11T08:06:34.4789922Z warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+2026-10-11T08:06:34.4791088Z    --> vendor/yrs-0.28.0/src/slice.rs:164:12
+2026-10-11T08:06:34.4791964Z     |
+2026-10-11T08:06:34.4792543Z 105 | impl ItemSlice {
+2026-10-11T08:06:34.4793365Z     | -------------- methods in this implementation
+2026-10-11T08:06:34.4807079Z ...
+2026-10-11T08:06:34.4807445Z 164 |     pub fn adjacent(&self) -> bool {
+2026-10-11T08:06:34.4807907Z     |            ^^^^^^^^
+2026-10-11T08:06:34.4808300Z ...
+2026-10-11T08:06:34.4808927Z 179 |     pub fn contains_id(&self, id: &ID) -> bool {
+2026-10-11T08:06:34.4809472Z     |            ^^^^^^^^^^^
+2026-10-11T08:06:34.4809848Z ...
+2026-10-11T08:06:34.4810186Z 249 |     pub fn right(&self) -> Option<ItemSlice> {
+2026-10-11T08:06:34.4810518Z     |            ^^^^^
+2026-10-11T08:06:34.4810732Z ...
+2026-10-11T08:06:34.4810968Z 269 |     pub fn left(&self) -> Option<ItemSlice> {
+2026-10-11T08:06:34.4811274Z     |            ^^^^
+2026-10-11T08:06:34.4811426Z 
+2026-10-11T08:06:34.4811593Z warning: methods `within_range` and `get_item` are never used
+2026-10-11T08:06:34.4811987Z    --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+2026-10-11T08:06:34.4812291Z     |
+2026-10-11T08:06:34.4812507Z  51 | impl StickyIndex {
+2026-10-11T08:06:34.4812861Z     | ---------------- methods in this implementation
+2026-10-11T08:06:34.4813158Z ...
+2026-10-11T08:06:34.4813591Z 272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+2026-10-11T08:06:34.4813987Z     |                   ^^^^^^^^^^^^
+2026-10-11T08:06:34.4814310Z ...
+2026-10-11T08:06:34.4814683Z 287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+2026-10-11T08:06:34.4815178Z     |                   ^^^^^^^^
+2026-10-11T08:06:34.4815349Z 
+2026-10-11T08:06:34.4815548Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4816090Z   --> vendor/yrs-0.28.0/src/event.rs:63:18
+2026-10-11T08:06:34.4816569Z    |
+2026-10-11T08:06:34.4816960Z 63 |     pub fn added(&self) -> SubdocsEventIter {
+2026-10-11T08:06:34.4817557Z    |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4818114Z    |                  |
+2026-10-11T08:06:34.4818729Z    |                  the lifetime is elided here
+2026-10-11T08:06:34.4819195Z    |
+2026-10-11T08:06:34.4819814Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4820680Z    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+2026-10-11T08:06:34.4821257Z help: use `'_` for type paths
+2026-10-11T08:06:34.4821654Z    |
+2026-10-11T08:06:34.4822048Z 63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:34.4822590Z    |                                            ++++
+2026-10-11T08:06:34.4822915Z 
+2026-10-11T08:06:34.4823216Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4823840Z   --> vendor/yrs-0.28.0/src/event.rs:69:20
+2026-10-11T08:06:34.4824558Z    |
+2026-10-11T08:06:34.4824944Z 69 |     pub fn removed(&self) -> SubdocsEventIter {
+2026-10-11T08:06:34.4825544Z    |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4826249Z    |                    |
+2026-10-11T08:06:34.4826683Z    |                    the lifetime is elided here
+2026-10-11T08:06:34.4827136Z    |
+2026-10-11T08:06:34.4827735Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4828694Z help: use `'_` for type paths
+2026-10-11T08:06:34.4829090Z    |
+2026-10-11T08:06:34.4829436Z 69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:34.4829773Z    |                                              ++++
+2026-10-11T08:06:34.4830070Z 
+2026-10-11T08:06:34.4830258Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4830729Z   --> vendor/yrs-0.28.0/src/event.rs:75:19
+2026-10-11T08:06:34.4831004Z    |
+2026-10-11T08:06:34.4831244Z 75 |     pub fn loaded(&self) -> SubdocsEventIter {
+2026-10-11T08:06:34.4831831Z    |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4832373Z    |                   |
+2026-10-11T08:06:34.4832663Z    |                   the lifetime is elided here
+2026-10-11T08:06:34.4832932Z    |
+2026-10-11T08:06:34.4833281Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4833728Z help: use `'_` for type paths
+2026-10-11T08:06:34.4833965Z    |
+2026-10-11T08:06:34.4834199Z 75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:34.4839141Z    |                                             ++++
+2026-10-11T08:06:34.4839494Z 
+2026-10-11T08:06:34.4839803Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4840315Z    --> vendor/yrs-0.28.0/src/store.rs:358:20
+2026-10-11T08:06:34.4840595Z     |
+2026-10-11T08:06:34.4840827Z 358 |     pub fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:06:34.4841185Z     |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4841784Z     |                    |
+2026-10-11T08:06:34.4842110Z     |                    the lifetime is elided here
+2026-10-11T08:06:34.4842389Z     |
+2026-10-11T08:06:34.4842755Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4849241Z help: use `'_` for type paths
+2026-10-11T08:06:34.4869157Z     |
+2026-10-11T08:06:34.4879252Z 358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:06:34.4879833Z     |                                         ++++
+2026-10-11T08:06:34.4880157Z 
+2026-10-11T08:06:34.4880442Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4880834Z    --> vendor/yrs-0.28.0/src/store.rs:364:25
+2026-10-11T08:06:34.4881108Z     |
+2026-10-11T08:06:34.4881346Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:06:34.4881710Z     |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4882034Z     |                         |
+2026-10-11T08:06:34.4882297Z     |                         the lifetime is elided here
+2026-10-11T08:06:34.4882578Z     |
+2026-10-11T08:06:34.4882931Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4883390Z help: use `'_` for type paths
+2026-10-11T08:06:34.4883625Z     |
+2026-10-11T08:06:34.4883863Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:06:34.4884187Z     |                                              ++++
+2026-10-11T08:06:34.4884376Z 
+2026-10-11T08:06:34.4884545Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4884912Z    --> vendor/yrs-0.28.0/src/store.rs:444:28
+2026-10-11T08:06:34.4885173Z     |
+2026-10-11T08:06:34.4885454Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+2026-10-11T08:06:34.4886085Z     |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4886434Z     |                            |
+2026-10-11T08:06:34.4886823Z     |                            the lifetime is elided here
+2026-10-11T08:06:34.4887111Z     |
+2026-10-11T08:06:34.4887763Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4888657Z help: use `'_` for type paths
+2026-10-11T08:06:34.4888915Z     |
+2026-10-11T08:06:34.4889209Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+2026-10-11T08:06:34.4889605Z     |                                                             +++
+2026-10-11T08:06:34.4889816Z 
+2026-10-11T08:06:34.4889990Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4890353Z    --> vendor/yrs-0.28.0/src/store.rs:449:33
+2026-10-11T08:06:34.4890610Z     |
+2026-10-11T08:06:34.4890886Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+2026-10-11T08:06:34.4891312Z     |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4891661Z     |                                 |
+2026-10-11T08:06:34.4891952Z     |                                 the lifetime is elided here
+2026-10-11T08:06:34.4892230Z     |
+2026-10-11T08:06:34.4892575Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4893018Z help: use `'_` for type paths
+2026-10-11T08:06:34.4893241Z     |
+2026-10-11T08:06:34.4893516Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+2026-10-11T08:06:34.4893903Z     |                                                           +++
+2026-10-11T08:06:34.4894102Z 
+2026-10-11T08:06:34.4894268Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4894633Z    --> vendor/yrs-0.28.0/src/store.rs:458:30
+2026-10-11T08:06:34.4894900Z     |
+2026-10-11T08:06:34.4895130Z 458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+2026-10-11T08:06:34.4895494Z     |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4895833Z     |                              |
+2026-10-11T08:06:34.4896109Z     |                              the lifetime is elided here
+2026-10-11T08:06:34.4896386Z     |
+2026-10-11T08:06:34.4896731Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4897169Z help: use `'_` for type paths
+2026-10-11T08:06:34.4897389Z     |
+2026-10-11T08:06:34.4897630Z 458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+2026-10-11T08:06:34.4897952Z     |                                             +++
+2026-10-11T08:06:34.4898136Z 
+2026-10-11T08:06:34.4898297Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4898797Z    --> vendor/yrs-0.28.0/src/store.rs:462:29
+2026-10-11T08:06:34.4909296Z     |
+2026-10-11T08:06:34.4919381Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+2026-10-11T08:06:34.4920201Z     |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4920831Z     |                             |
+2026-10-11T08:06:34.4921297Z     |                             the lifetime is elided here
+2026-10-11T08:06:34.4921778Z     |
+2026-10-11T08:06:34.4922389Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4923178Z help: use `'_` for type paths
+2026-10-11T08:06:34.4923581Z     |
+2026-10-11T08:06:34.4924085Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+2026-10-11T08:06:34.4924711Z     |                                                               +++
+2026-10-11T08:06:34.4924933Z 
+2026-10-11T08:06:34.4925108Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4925686Z    --> vendor/yrs-0.28.0/src/store.rs:467:34
+2026-10-11T08:06:34.4925979Z     |
+2026-10-11T08:06:34.4926264Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+2026-10-11T08:06:34.4926874Z     |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4927227Z     |                                  |
+2026-10-11T08:06:34.4927521Z     |                                  the lifetime is elided here
+2026-10-11T08:06:34.4927802Z     |
+2026-10-11T08:06:34.4928151Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4928893Z help: use `'_` for type paths
+2026-10-11T08:06:34.4929128Z     |
+2026-10-11T08:06:34.4929418Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+2026-10-11T08:06:34.4929818Z     |                                                             +++
+2026-10-11T08:06:34.4930019Z 
+2026-10-11T08:06:34.4930193Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4930566Z    --> vendor/yrs-0.28.0/src/store.rs:476:31
+2026-10-11T08:06:34.4930832Z     |
+2026-10-11T08:06:34.4931079Z 476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+2026-10-11T08:06:34.4931456Z     |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4931799Z     |                               |
+2026-10-11T08:06:34.4932112Z     |                               the lifetime is elided here
+2026-10-11T08:06:34.4932393Z     |
+2026-10-11T08:06:34.4932950Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4933410Z help: use `'_` for type paths
+2026-10-11T08:06:34.4933645Z     |
+2026-10-11T08:06:34.4933895Z 476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+2026-10-11T08:06:34.4934239Z     |                                               +++
+2026-10-11T08:06:34.4934427Z 
+2026-10-11T08:06:34.4934617Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4935000Z    --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+2026-10-11T08:06:34.4935287Z     |
+2026-10-11T08:06:34.4935495Z 168 |     fn root_refs(&self) -> RootRefs {
+2026-10-11T08:06:34.4935811Z     |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4936138Z     |                  |
+2026-10-11T08:06:34.4936379Z     |                  the lifetime is elided here
+2026-10-11T08:06:34.4936644Z     |
+2026-10-11T08:06:34.4936993Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4937430Z help: use `'_` for type paths
+2026-10-11T08:06:34.4937690Z     |
+2026-10-11T08:06:34.4937904Z 168 |     fn root_refs(&self) -> RootRefs<'_> {
+2026-10-11T08:06:34.4938190Z     |                                    ++++
+2026-10-11T08:06:34.4938500Z 
+2026-10-11T08:06:34.4938667Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4939049Z    --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+2026-10-11T08:06:34.4939332Z     |
+2026-10-11T08:06:34.4939543Z 175 |     fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:06:34.4939884Z     |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4940199Z     |                     |
+2026-10-11T08:06:34.4943168Z     |                     the lifetime is elided here
+2026-10-11T08:06:34.4943672Z     |
+2026-10-11T08:06:34.4944285Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4945078Z help: use `'_` for type paths
+2026-10-11T08:06:34.4945467Z     |
+2026-10-11T08:06:34.4945845Z 175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:06:34.4946374Z     |                                          ++++
+2026-10-11T08:06:34.4946699Z 
+2026-10-11T08:06:34.4946991Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4947626Z    --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+2026-10-11T08:06:34.4948307Z     |
+2026-10-11T08:06:34.4948847Z 181 |     fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:06:34.4949580Z     |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4950177Z     |                |
+2026-10-11T08:06:34.4950571Z     |                the lifetime is elided here
+2026-10-11T08:06:34.4951012Z     |
+2026-10-11T08:06:34.4951613Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4952392Z help: use `'_` for type paths
+2026-10-11T08:06:34.4952771Z     |
+2026-10-11T08:06:34.4953131Z 181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:06:34.4953632Z     |                                     ++++
+2026-10-11T08:06:34.4953938Z 
+2026-10-11T08:06:34.4954217Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4954841Z    --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+2026-10-11T08:06:34.4955352Z     |
+2026-10-11T08:06:34.4955709Z 911 |     pub fn iter(&self) -> EventsIter {
+2026-10-11T08:06:34.4956250Z     |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4956810Z     |                 |
+2026-10-11T08:06:34.4957210Z     |                 the lifetime is elided here
+2026-10-11T08:06:34.4957669Z     |
+2026-10-11T08:06:34.4958271Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4959191Z help: use `'_` for type paths
+2026-10-11T08:06:34.4959623Z     |
+2026-10-11T08:06:34.4960011Z 911 |     pub fn iter(&self) -> EventsIter<'_> {
+2026-10-11T08:06:34.4960499Z     |                                     ++++
+2026-10-11T08:06:34.4960831Z 
+2026-10-11T08:06:34.4961117Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4961726Z   --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+2026-10-11T08:06:34.4962004Z    |
+2026-10-11T08:06:34.4962326Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+2026-10-11T08:06:34.4962792Z    |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4963143Z    |                 |
+2026-10-11T08:06:34.4963378Z    |                 the lifetime is elided here
+2026-10-11T08:06:34.4963638Z    |
+2026-10-11T08:06:34.4963984Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4964422Z help: use `'_` for type paths
+2026-10-11T08:06:34.4964652Z    |
+2026-10-11T08:06:34.4964946Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+2026-10-11T08:06:34.4965349Z    |                                                            +++
+2026-10-11T08:06:34.4965597Z 
+2026-10-11T08:06:34.4965765Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:34.4966157Z    --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+2026-10-11T08:06:34.4969192Z     |
+2026-10-11T08:06:34.4974455Z 141 |     pub fn iter(&self) -> AwarenessIter {
+2026-10-11T08:06:34.4975053Z     |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:34.4975531Z     |                 |
+2026-10-11T08:06:34.4975804Z     |                 the lifetime is elided here
+2026-10-11T08:06:34.4976082Z     |
+2026-10-11T08:06:34.4976469Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:34.4976929Z help: use `'_` for type paths
+2026-10-11T08:06:34.4977173Z     |
+2026-10-11T08:06:34.4977404Z 141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+2026-10-11T08:06:34.4977720Z     |                                        ++++
+2026-10-11T08:06:34.4977901Z 
+2026-10-11T08:06:40.5439514Z warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+2026-10-11T08:06:40.5440556Z    Compiling tandemlog-text v0.0.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine)
+2026-10-11T08:06:53.1435992Z     Finished `release` profile [optimized] target(s) in 26.57s
+2026-10-11T08:06:53.2469630Z    Compiling pin-project-lite v0.2.17
+2026-10-11T08:06:53.2471219Z    Compiling libc v0.2.190
+2026-10-11T08:06:53.2472451Z    Compiling serde_core v1.0.229
+2026-10-11T08:06:53.2473234Z    Compiling parking v2.2.1
+2026-10-11T08:06:53.2473904Z    Compiling smallvec v1.16.2
+2026-10-11T08:06:53.2474621Z    Compiling crossbeam-utils v0.8.23
+2026-10-11T08:06:53.2475350Z    Compiling parking_lot_core v0.9.12
+2026-10-11T08:06:53.2476086Z    Compiling zmij v1.0.23
+2026-10-11T08:06:53.2476774Z    Compiling event-listener v5.4.2
+2026-10-11T08:06:53.4472966Z    Compiling cfg-if v1.0.5
+2026-10-11T08:06:53.4478980Z    Compiling scopeguard v1.2.0
+2026-10-11T08:06:53.4509051Z    Compiling serde_json v1.0.151
+2026-10-11T08:06:53.4539028Z    Compiling thiserror v2.0.21
+2026-10-11T08:06:53.4569121Z    Compiling lock_api v0.4.14
+2026-10-11T08:06:53.5465092Z    Compiling event-listener-strategy v0.5.4
+2026-10-11T08:06:53.5489002Z    Compiling serde v1.0.229
+2026-10-11T08:06:53.8444928Z    Compiling memchr v2.8.3
+2026-10-11T08:06:54.0449653Z    Compiling itoa v1.0.18
+2026-10-11T08:06:54.2466815Z    Compiling hashbrown v0.14.5
+2026-10-11T08:06:54.2489172Z    Compiling once_cell v1.21.4
+2026-10-11T08:06:54.4453864Z    Compiling arc-swap v1.9.2
+2026-10-11T08:06:54.6439608Z    Compiling async-lock v3.4.2
+2026-10-11T08:06:54.7459615Z    Compiling smallstr v0.3.1
+2026-10-11T08:06:54.8465349Z    Compiling dashmap v6.2.1
+2026-10-11T08:06:54.8489037Z    Compiling fastrand v2.5.0
+2026-10-11T08:06:55.0439703Z    Compiling base64 v0.22.1
+2026-10-11T08:06:56.1437062Z    Compiling yrs v0.28.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine/vendor/yrs-0.28.0)
+2026-10-11T08:06:56.2438735Z warning: unused imports: `BlockRange` and `Block`
+2026-10-11T08:06:56.2439643Z  --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+2026-10-11T08:06:56.2440279Z   |
+2026-10-11T08:06:56.2441075Z 1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+2026-10-11T08:06:56.2442066Z   |                    ^^^^^  ^^^^^^^^^^
+2026-10-11T08:06:56.2442668Z   |
+2026-10-11T08:06:56.2445319Z   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:56.2446074Z 
+2026-10-11T08:06:56.2446439Z warning: unused import: `Block`
+2026-10-11T08:06:56.2447160Z  --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+2026-10-11T08:06:56.2447929Z   |
+2026-10-11T08:06:56.2448842Z 1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+2026-10-11T08:06:56.2449686Z   |                    ^^^^^
+2026-10-11T08:06:56.2450128Z 
+2026-10-11T08:06:56.2450512Z warning: unused import: `ItemContent`
+2026-10-11T08:06:56.2451231Z  --> vendor/yrs-0.28.0/src/iter.rs:1:20
+2026-10-11T08:06:56.2451855Z   |
+2026-10-11T08:06:56.2452429Z 1 | use crate::block::{ItemContent, ItemPtr};
+2026-10-11T08:06:56.2453203Z   |                    ^^^^^^^^^^^
+2026-10-11T08:06:56.2453681Z 
+2026-10-11T08:06:56.2454101Z warning: unused imports: `SmallVec` and `smallvec`
+2026-10-11T08:06:56.2454910Z  --> vendor/yrs-0.28.0/src/iter.rs:4:16
+2026-10-11T08:06:56.2455565Z   |
+2026-10-11T08:06:56.2456121Z 4 | use smallvec::{smallvec, SmallVec};
+2026-10-11T08:06:56.2456796Z   |                ^^^^^^^^  ^^^^^^^^
+2026-10-11T08:06:56.2457278Z 
+2026-10-11T08:06:56.8439857Z warning: unused import: `crate::utils::OptionExt`
+2026-10-11T08:06:56.8441251Z   --> vendor/yrs-0.28.0/src/doc.rs:10:5
+2026-10-11T08:06:56.8442037Z    |
+2026-10-11T08:06:56.8442712Z 10 | use crate::utils::OptionExt;
+2026-10-11T08:06:56.8443479Z    |     ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:56.8444046Z 
+2026-10-11T08:06:56.8444483Z warning: value assigned to `left` is never read
+2026-10-11T08:06:56.8445392Z    --> vendor/yrs-0.28.0/src/block.rs:494:24
+2026-10-11T08:06:56.8446522Z     |
+2026-10-11T08:06:56.8447158Z 494 |         let mut left = None;
+2026-10-11T08:06:56.8448004Z     |                        ^^^^ this value is reassigned later and never used
+2026-10-11T08:06:56.8449109Z ...
+2026-10-11T08:06:56.8450365Z 540 |                 left = parent_branch.map.get(sub).cloned();
+2026-10-11T08:06:56.8451884Z     |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+2026-10-11T08:06:56.8452367Z     |
+2026-10-11T08:06:56.8452695Z     = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:56.8453005Z 
+2026-10-11T08:06:56.8453120Z warning: unused variable: `ptr`
+2026-10-11T08:06:56.8453404Z    --> vendor/yrs-0.28.0/src/block.rs:886:21
+2026-10-11T08:06:56.8453795Z     |
+2026-10-11T08:06:56.8454149Z 886 |                 let ptr = BranchPtr::from(branch);
+2026-10-11T08:06:56.8454593Z     |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:06:56.8454983Z     |
+2026-10-11T08:06:56.8455623Z     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:56.8456145Z 
+2026-10-11T08:06:57.0440017Z warning: unused variable: `ptr`
+2026-10-11T08:06:57.0440593Z    --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+2026-10-11T08:06:57.0441275Z     |
+2026-10-11T08:06:57.0441699Z 778 |         let ptr = item.clone();
+2026-10-11T08:06:57.0442508Z     |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:06:57.0443088Z 
+2026-10-11T08:06:57.0443351Z warning: variable does not need to be mutable
+2026-10-11T08:06:57.0444051Z    --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+2026-10-11T08:06:57.0444636Z     |
+2026-10-11T08:06:57.0445095Z 958 |         let mut block = Item::new(
+2026-10-11T08:06:57.0445856Z     |             ----^^^^^
+2026-10-11T08:06:57.0449503Z     |             |
+2026-10-11T08:06:57.0449921Z     |             help: remove this `mut`
+2026-10-11T08:06:57.0450391Z     |
+2026-10-11T08:06:57.0450913Z     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:57.0451425Z 
+2026-10-11T08:06:57.4436572Z warning: variable does not need to be mutable
+2026-10-11T08:06:57.4437535Z    --> vendor/yrs-0.28.0/src/undo.rs:133:13
+2026-10-11T08:06:57.4438283Z     |
+2026-10-11T08:06:57.4467742Z 133 |         let mut state = Arc::new(Inner {
+2026-10-11T08:06:57.4469223Z     |             ----^^^^^
+2026-10-11T08:06:57.4469933Z     |             |
+2026-10-11T08:06:57.4470563Z     |             help: remove this `mut`
+2026-10-11T08:06:57.4471129Z 
+2026-10-11T08:06:57.4471518Z warning: unused variable: `clear_undo`
+2026-10-11T08:06:57.4472279Z    --> vendor/yrs-0.28.0/src/undo.rs:379:34
+2026-10-11T08:06:57.4472985Z     |
+2026-10-11T08:06:57.4473739Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:06:57.4475163Z     |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+2026-10-11T08:06:57.4476048Z 
+2026-10-11T08:06:57.4476441Z warning: unused variable: `clear_redo`
+2026-10-11T08:06:57.4477185Z    --> vendor/yrs-0.28.0/src/undo.rs:379:52
+2026-10-11T08:06:57.4477884Z     |
+2026-10-11T08:06:57.4478856Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:06:57.4505382Z     |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+2026-10-11T08:06:57.4506330Z 
+2026-10-11T08:06:57.4506696Z warning: method `as_item` is never used
+2026-10-11T08:06:57.4507395Z    --> vendor/yrs-0.28.0/src/block.rs:198:12
+2026-10-11T08:06:57.4508024Z     |
+2026-10-11T08:06:57.4508746Z 183 | impl<'a> BlockRef<'a> {
+2026-10-11T08:06:57.4509489Z     | --------------------- method in this implementation
+2026-10-11T08:06:57.4510239Z ...
+2026-10-11T08:06:57.4510886Z 198 |     pub fn as_item(&self) -> Option<&'a Item> {
+2026-10-11T08:06:57.4511661Z     |            ^^^^^^^
+2026-10-11T08:06:57.4512263Z     |
+2026-10-11T08:06:57.4513015Z     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:06:57.4514347Z 
+2026-10-11T08:06:57.4514888Z warning: methods `last_id`, `is_item`, and `is_gc` are never used
+2026-10-11T08:06:57.4516141Z    --> vendor/yrs-0.28.0/src/block.rs:264:12
+2026-10-11T08:06:57.4516847Z     |
+2026-10-11T08:06:57.4517486Z 221 | impl Block {
+2026-10-11T08:06:57.4518616Z     | ---------- methods in this implementation
+2026-10-11T08:06:57.4519388Z ...
+2026-10-11T08:06:57.4519967Z 264 |     pub fn last_id(&self) -> ID {
+2026-10-11T08:06:57.4520688Z     |            ^^^^^^^
+2026-10-11T08:06:57.4521269Z ...
+2026-10-11T08:06:57.4521848Z 281 |     pub fn is_item(&self) -> bool {
+2026-10-11T08:06:57.4522578Z     |            ^^^^^^^
+2026-10-11T08:06:57.4523160Z ...
+2026-10-11T08:06:57.4523726Z 291 |     pub fn is_gc(&self) -> bool {
+2026-10-11T08:06:57.4524422Z     |            ^^^^^
+2026-10-11T08:06:57.4524860Z 
+2026-10-11T08:06:57.4525281Z warning: method `delete_as_cleanup` is never used
+2026-10-11T08:06:57.4526103Z    --> vendor/yrs-0.28.0/src/block.rs:632:19
+2026-10-11T08:06:57.4526801Z     |
+2026-10-11T08:06:57.4527356Z 444 | impl ItemPtr {
+2026-10-11T08:06:57.4528037Z     | ------------ method in this implementation
+2026-10-11T08:06:57.4529000Z ...
+2026-10-11T08:06:57.4529837Z 632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+2026-10-11T08:06:57.4530834Z     |                   ^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4531368Z 
+2026-10-11T08:06:57.4531787Z warning: method `integrate` is never used
+2026-10-11T08:06:57.4532560Z     --> vendor/yrs-0.28.0/src/block.rs:1415:19
+2026-10-11T08:06:57.4533286Z      |
+2026-10-11T08:06:57.4533853Z 1354 | impl BlockRange {
+2026-10-11T08:06:57.4534555Z      | --------------- method in this implementation
+2026-10-11T08:06:57.4535296Z ...
+2026-10-11T08:06:57.4535984Z 1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+2026-10-11T08:06:57.4536828Z      |                   ^^^^^^^^^
+2026-10-11T08:06:57.4537332Z 
+2026-10-11T08:06:57.4537723Z warning: method `contains` is never used
+2026-10-11T08:06:57.4538741Z    --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+2026-10-11T08:06:57.4539448Z     |
+2026-10-11T08:06:57.4539951Z 289 | impl BlockStore {
+2026-10-11T08:06:57.4540559Z     | --------------- method in this implementation
+2026-10-11T08:06:57.4541217Z ...
+2026-10-11T08:06:57.4541754Z 300 |     pub fn contains(&self, id: &ID) -> bool {
+2026-10-11T08:06:57.4542409Z     |            ^^^^^^^^
+2026-10-11T08:06:57.4542796Z 
+2026-10-11T08:06:57.4543187Z warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+2026-10-11T08:06:57.4543961Z    --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+2026-10-11T08:06:57.4544613Z     |
+2026-10-11T08:06:57.4545190Z 230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+2026-10-11T08:06:57.4545828Z     |       ^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4546287Z 
+2026-10-11T08:06:57.4546759Z warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+2026-10-11T08:06:57.4547632Z    --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+2026-10-11T08:06:57.4548288Z     |
+2026-10-11T08:06:57.4549189Z 232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+2026-10-11T08:06:57.4549961Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4550470Z 
+2026-10-11T08:06:57.4550904Z warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+2026-10-11T08:06:57.4551738Z    --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+2026-10-11T08:06:57.4552400Z     |
+2026-10-11T08:06:57.4552989Z 234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+2026-10-11T08:06:57.4553792Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4554288Z 
+2026-10-11T08:06:57.4554876Z warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+2026-10-11T08:06:57.4555807Z    --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+2026-10-11T08:06:57.4556445Z     |
+2026-10-11T08:06:57.4557075Z 236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+2026-10-11T08:06:57.4557852Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4558366Z 
+2026-10-11T08:06:57.4559150Z warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+2026-10-11T08:06:57.4560031Z    --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+2026-10-11T08:06:57.4561176Z     |
+2026-10-11T08:06:57.4561817Z 238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+2026-10-11T08:06:57.4562585Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4563371Z 
+2026-10-11T08:06:57.4563892Z warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+2026-10-11T08:06:57.4564723Z    --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+2026-10-11T08:06:57.4565370Z     |
+2026-10-11T08:06:57.4565935Z 240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+2026-10-11T08:06:57.4566648Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4567109Z 
+2026-10-11T08:06:57.4567443Z warning: field `txn` is never read
+2026-10-11T08:06:57.4568115Z    --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+2026-10-11T08:06:57.4569114Z     |
+2026-10-11T08:06:57.4569709Z 536 | pub(crate) struct Entries<'a, B, T> {
+2026-10-11T08:06:57.4570427Z     |                   ------- field in this struct
+2026-10-11T08:06:57.4571276Z 537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+2026-10-11T08:06:57.4572057Z 538 |     txn: B,
+2026-10-11T08:06:57.4572459Z     |     ^^^
+2026-10-11T08:06:57.4572762Z     |
+2026-10-11T08:06:57.4573345Z     = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:06:57.4573904Z 
+2026-10-11T08:06:57.4574130Z warning: method `as_id_set` is never used
+2026-10-11T08:06:57.4574554Z   --> vendor/yrs-0.28.0/src/update.rs:48:12
+2026-10-11T08:06:57.4574933Z    |
+2026-10-11T08:06:57.4575229Z 28 | impl BlockSet {
+2026-10-11T08:06:57.4575604Z    | ------------- method in this implementation
+2026-10-11T08:06:57.4576300Z ...
+2026-10-11T08:06:57.4576686Z 48 |     pub fn as_id_set(&self) -> IdSet {
+2026-10-11T08:06:57.4577148Z    |            ^^^^^^^^^
+2026-10-11T08:06:57.4577385Z 
+2026-10-11T08:06:57.4577751Z warning: associated functions `next_target` and `return_stack` are never used
+2026-10-11T08:06:57.4578677Z    --> vendor/yrs-0.28.0/src/update.rs:503:8
+2026-10-11T08:06:57.4579152Z     |
+2026-10-11T08:06:57.4579465Z 169 | impl Update {
+2026-10-11T08:06:57.4579946Z     | ----------- associated functions in this implementation
+2026-10-11T08:06:57.4580467Z ...
+2026-10-11T08:06:57.4580790Z 503 |     fn next_target<'a, 'b>(
+2026-10-11T08:06:57.4581210Z     |        ^^^^^^^^^^^
+2026-10-11T08:06:57.4581559Z ...
+2026-10-11T08:06:57.4582118Z 526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+2026-10-11T08:06:57.4584903Z     |        ^^^^^^^^^^^^
+2026-10-11T08:06:57.4585161Z 
+2026-10-11T08:06:57.4585356Z warning: methods `forward`, `backward`, and `values` are never used
+2026-10-11T08:06:57.4585886Z    --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+2026-10-11T08:06:57.4586375Z     |
+2026-10-11T08:06:57.4586692Z  18 | impl BlockIter {
+2026-10-11T08:06:57.4587113Z     | -------------- methods in this implementation
+2026-10-11T08:06:57.4587588Z ...
+2026-10-11T08:06:57.4588010Z  76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+2026-10-11T08:06:57.4588774Z     |            ^^^^^^^
+2026-10-11T08:06:57.4589126Z ...
+2026-10-11T08:06:57.4589611Z 130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+2026-10-11T08:06:57.4590224Z     |            ^^^^^^^^
+2026-10-11T08:06:57.4590567Z ...
+2026-10-11T08:06:57.4590918Z 369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+2026-10-11T08:06:57.4591396Z     |            ^^^^^^
+2026-10-11T08:06:57.4591618Z 
+2026-10-11T08:06:57.4591814Z warning: struct `Values` is never constructed
+2026-10-11T08:06:57.4592347Z    --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+2026-10-11T08:06:57.4592807Z     |
+2026-10-11T08:06:57.4593128Z 377 | pub struct Values<'a, 'txn> {
+2026-10-11T08:06:57.4593613Z     |            ^^^^^^
+2026-10-11T08:06:57.4593970Z 
+2026-10-11T08:06:57.4594190Z warning: associated function `new` is never used
+2026-10-11T08:06:57.4594731Z    --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+2026-10-11T08:06:57.4595190Z     |
+2026-10-11T08:06:57.4595779Z 382 | impl<'a, 'txn> Values<'a, 'txn> {
+2026-10-11T08:06:57.4596365Z     | ------------------------------- associated function in this implementation
+2026-10-11T08:06:57.4597343Z 383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+2026-10-11T08:06:57.4597997Z     |        ^^^
+2026-10-11T08:06:57.4598194Z 
+2026-10-11T08:06:57.4599746Z warning: method `remove_at` is never used
+2026-10-11T08:06:57.4600718Z    --> vendor/yrs-0.28.0/src/branch.rs:398:19
+2026-10-11T08:06:57.4601016Z     |
+2026-10-11T08:06:57.4601320Z 222 | impl Branch {
+2026-10-11T08:06:57.4601731Z     | ----------- method in this implementation
+2026-10-11T08:06:57.4602193Z ...
+2026-10-11T08:06:57.4609578Z 398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+2026-10-11T08:06:57.4610410Z     |                   ^^^^^^^^^
+2026-10-11T08:06:57.4610707Z 
+2026-10-11T08:06:57.4610920Z warning: method `inner_mut` is never used
+2026-10-11T08:06:57.4611469Z    --> vendor/yrs-0.28.0/src/ids.rs:548:19
+2026-10-11T08:06:57.4611958Z     |
+2026-10-11T08:06:57.4612317Z  58 | impl<T: Merge> IdRanges<T> {
+2026-10-11T08:06:57.4612866Z     | -------------------------- method in this implementation
+2026-10-11T08:06:57.4613437Z ...
+2026-10-11T08:06:57.4613994Z 548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+2026-10-11T08:06:57.4614701Z     |                   ^^^^^^^^^
+2026-10-11T08:06:57.4614995Z 
+2026-10-11T08:06:57.4615225Z warning: trait `BlockIterator` is never used
+2026-10-11T08:06:57.4615780Z  --> vendor/yrs-0.28.0/src/iter.rs:7:18
+2026-10-11T08:06:57.4616240Z   |
+2026-10-11T08:06:57.4616755Z 7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+2026-10-11T08:06:57.4629481Z   |                  ^^^^^^^^^^^^^
+2026-10-11T08:06:57.4630140Z 
+2026-10-11T08:06:57.4630383Z warning: trait `BlockSliceIterator` is never used
+2026-10-11T08:06:57.4630933Z   --> vendor/yrs-0.28.0/src/iter.rs:16:18
+2026-10-11T08:06:57.4631352Z    |
+2026-10-11T08:06:57.4631868Z 16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+2026-10-11T08:06:57.4632521Z    |                  ^^^^^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4632790Z 
+2026-10-11T08:06:57.4633006Z warning: struct `RangeIter` is never constructed
+2026-10-11T08:06:57.4633511Z    --> vendor/yrs-0.28.0/src/iter.rs:106:19
+2026-10-11T08:06:57.4633943Z     |
+2026-10-11T08:06:57.4634278Z 106 | pub(crate) struct RangeIter<I> {
+2026-10-11T08:06:57.4634701Z     |                   ^^^^^^^^^
+2026-10-11T08:06:57.4634963Z 
+2026-10-11T08:06:57.4635211Z warning: associated items `new` and `begin` are never used
+2026-10-11T08:06:57.4635749Z    --> vendor/yrs-0.28.0/src/iter.rs:117:8
+2026-10-11T08:06:57.4636177Z     |
+2026-10-11T08:06:57.4636504Z 113 | / impl<I> RangeIter<I>
+2026-10-11T08:06:57.4636874Z 114 | | where
+2026-10-11T08:06:57.4637205Z 115 | |     I: Iterator<Item = ItemPtr>,
+2026-10-11T08:06:57.4637777Z     | |________________________________- associated items in this implementation
+2026-10-11T08:06:57.4638620Z 116 |   {
+2026-10-11T08:06:57.4639114Z 117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+2026-10-11T08:06:57.4639725Z     |          ^^^
+2026-10-11T08:06:57.4640035Z ...
+2026-10-11T08:06:57.4640517Z 126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+2026-10-11T08:06:57.4641127Z     |          ^^^^^
+2026-10-11T08:06:57.4641340Z 
+2026-10-11T08:06:57.4641542Z warning: enum `RangeIterState` is never used
+2026-10-11T08:06:57.4642025Z    --> vendor/yrs-0.28.0/src/iter.rs:234:6
+2026-10-11T08:06:57.4642429Z     |
+2026-10-11T08:06:57.4642743Z 234 | enum RangeIterState {
+2026-10-11T08:06:57.4643112Z     |      ^^^^^^^^^^^^^^
+2026-10-11T08:06:57.4643342Z 
+2026-10-11T08:06:57.4643582Z warning: struct `Values` is never constructed
+2026-10-11T08:06:57.4644133Z    --> vendor/yrs-0.28.0/src/iter.rs:245:19
+2026-10-11T08:06:57.4644561Z     |
+2026-10-11T08:06:57.4644866Z 245 | pub(crate) struct Values<I> {
+2026-10-11T08:06:57.4645266Z     |                   ^^^^^^
+2026-10-11T08:06:57.4645775Z 
+2026-10-11T08:06:57.5459998Z warning: associated function `new` is never used
+2026-10-11T08:06:57.5469540Z    --> vendor/yrs-0.28.0/src/iter.rs:251:8
+2026-10-11T08:06:57.5470234Z     |
+2026-10-11T08:06:57.5471253Z 250 | impl<I> Values<I> {
+2026-10-11T08:06:57.5472097Z     | ----------------- associated function in this implementation
+2026-10-11T08:06:57.5472960Z 251 |     fn new(iter: I) -> Self {
+2026-10-11T08:06:57.5473634Z     |        ^^^
+2026-10-11T08:06:57.5474050Z 
+2026-10-11T08:06:57.5474442Z warning: field `txn` is never read
+2026-10-11T08:06:57.5475176Z    --> vendor/yrs-0.28.0/src/iter.rs:287:5
+2026-10-11T08:06:57.5475881Z     |
+2026-10-11T08:06:57.5476458Z 286 | pub struct AsIter<'a, T, I> {
+2026-10-11T08:06:57.5477189Z     |            ------ field in this struct
+2026-10-11T08:06:57.5477912Z 287 |     txn: &'a T,
+2026-10-11T08:06:57.5478762Z     |     ^^^
+2026-10-11T08:06:57.5479345Z     |
+2026-10-11T08:06:57.5480345Z     = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:06:57.5481351Z 
+2026-10-11T08:06:57.5481921Z warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+2026-10-11T08:06:57.5482929Z    --> vendor/yrs-0.28.0/src/slice.rs:164:12
+2026-10-11T08:06:57.5483624Z     |
+2026-10-11T08:06:57.5484183Z 105 | impl ItemSlice {
+2026-10-11T08:06:57.5484879Z     | -------------- methods in this implementation
+2026-10-11T08:06:57.5485626Z ...
+2026-10-11T08:06:57.5486253Z 164 |     pub fn adjacent(&self) -> bool {
+2026-10-11T08:06:57.5486914Z     |            ^^^^^^^^
+2026-10-11T08:06:57.5487465Z ...
+2026-10-11T08:06:57.5488088Z 179 |     pub fn contains_id(&self, id: &ID) -> bool {
+2026-10-11T08:06:57.5489128Z     |            ^^^^^^^^^^^
+2026-10-11T08:06:57.5489751Z ...
+2026-10-11T08:06:57.5490382Z 249 |     pub fn right(&self) -> Option<ItemSlice> {
+2026-10-11T08:06:57.5491167Z     |            ^^^^^
+2026-10-11T08:06:57.5491749Z ...
+2026-10-11T08:06:57.5492395Z 269 |     pub fn left(&self) -> Option<ItemSlice> {
+2026-10-11T08:06:57.5493140Z     |            ^^^^
+2026-10-11T08:06:57.5493589Z 
+2026-10-11T08:06:57.5494058Z warning: methods `within_range` and `get_item` are never used
+2026-10-11T08:06:57.5494974Z    --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+2026-10-11T08:06:57.5495715Z     |
+2026-10-11T08:06:57.5496281Z  51 | impl StickyIndex {
+2026-10-11T08:06:57.5496991Z     | ---------------- methods in this implementation
+2026-10-11T08:06:57.5497717Z ...
+2026-10-11T08:06:57.5498755Z 272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+2026-10-11T08:06:57.5499687Z     |                   ^^^^^^^^^^^^
+2026-10-11T08:06:57.5500322Z ...
+2026-10-11T08:06:57.5501066Z 287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+2026-10-11T08:06:57.5501993Z     |                   ^^^^^^^^
+2026-10-11T08:06:57.5502585Z 
+2026-10-11T08:06:57.5503085Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5504098Z   --> vendor/yrs-0.28.0/src/event.rs:63:18
+2026-10-11T08:06:57.5504857Z    |
+2026-10-11T08:06:57.5505787Z 63 |     pub fn added(&self) -> SubdocsEventIter {
+2026-10-11T08:06:57.5507102Z    |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5524133Z    |                  |
+2026-10-11T08:06:57.5524828Z    |                  the lifetime is elided here
+2026-10-11T08:06:57.5525557Z    |
+2026-10-11T08:06:57.5526428Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5527581Z    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+2026-10-11T08:06:57.5528670Z help: use `'_` for type paths
+2026-10-11T08:06:57.5529317Z    |
+2026-10-11T08:06:57.5529965Z 63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:57.5535671Z    |                                            ++++
+2026-10-11T08:06:57.5536256Z 
+2026-10-11T08:06:57.5536751Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5538046Z   --> vendor/yrs-0.28.0/src/event.rs:69:20
+2026-10-11T08:06:57.5539043Z    |
+2026-10-11T08:06:57.5539700Z 69 |     pub fn removed(&self) -> SubdocsEventIter {
+2026-10-11T08:06:57.5540816Z    |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5541667Z    |                    |
+2026-10-11T08:06:57.5562208Z    |                    the lifetime is elided here
+2026-10-11T08:06:57.5562972Z    |
+2026-10-11T08:06:57.5563842Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5564974Z help: use `'_` for type paths
+2026-10-11T08:06:57.5565628Z    |
+2026-10-11T08:06:57.5566308Z 69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:57.5567155Z    |                                              ++++
+2026-10-11T08:06:57.5567730Z 
+2026-10-11T08:06:57.5568260Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5569483Z   --> vendor/yrs-0.28.0/src/event.rs:75:19
+2026-10-11T08:06:57.5570230Z    |
+2026-10-11T08:06:57.5570939Z 75 |     pub fn loaded(&self) -> SubdocsEventIter {
+2026-10-11T08:06:57.5571838Z    |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5572655Z    |                   |
+2026-10-11T08:06:57.5573333Z    |                   the lifetime is elided here
+2026-10-11T08:06:57.5574033Z    |
+2026-10-11T08:06:57.5574905Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5575950Z help: use `'_` for type paths
+2026-10-11T08:06:57.5576587Z    |
+2026-10-11T08:06:57.5577227Z 75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:06:57.5578029Z    |                                             ++++
+2026-10-11T08:06:57.5578809Z 
+2026-10-11T08:06:57.5579322Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5580223Z    --> vendor/yrs-0.28.0/src/store.rs:358:20
+2026-10-11T08:06:57.5580941Z     |
+2026-10-11T08:06:57.5581565Z 358 |     pub fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:06:57.5582415Z     |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5583232Z     |                    |
+2026-10-11T08:06:57.5583895Z     |                    the lifetime is elided here
+2026-10-11T08:06:57.5584601Z     |
+2026-10-11T08:06:57.5585473Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5586539Z help: use `'_` for type paths
+2026-10-11T08:06:57.5587180Z     |
+2026-10-11T08:06:57.5587819Z 358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:06:57.5588821Z     |                                         ++++
+2026-10-11T08:06:57.5589340Z 
+2026-10-11T08:06:57.5589802Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5590627Z    --> vendor/yrs-0.28.0/src/store.rs:364:25
+2026-10-11T08:06:57.5591262Z     |
+2026-10-11T08:06:57.5591836Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:06:57.5592438Z     |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5592894Z     |                         |
+2026-10-11T08:06:57.5593278Z     |                         the lifetime is elided here
+2026-10-11T08:06:57.5593673Z     |
+2026-10-11T08:06:57.5594144Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5594711Z help: use `'_` for type paths
+2026-10-11T08:06:57.5595058Z     |
+2026-10-11T08:06:57.5595410Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:06:57.5595847Z     |                                              ++++
+2026-10-11T08:06:57.5596149Z 
+2026-10-11T08:06:57.5596430Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5596958Z    --> vendor/yrs-0.28.0/src/store.rs:444:28
+2026-10-11T08:06:57.5597338Z     |
+2026-10-11T08:06:57.5597978Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+2026-10-11T08:06:57.5598904Z     |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5599903Z     |                            |
+2026-10-11T08:06:57.5600594Z     |                            the lifetime is elided here
+2026-10-11T08:06:57.5601069Z     |
+2026-10-11T08:06:57.5601556Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5602017Z help: use `'_` for type paths
+2026-10-11T08:06:57.5602282Z     |
+2026-10-11T08:06:57.5602575Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+2026-10-11T08:06:57.5602980Z     |                                                             +++
+2026-10-11T08:06:57.5603185Z 
+2026-10-11T08:06:57.5603357Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5603720Z    --> vendor/yrs-0.28.0/src/store.rs:449:33
+2026-10-11T08:06:57.5603990Z     |
+2026-10-11T08:06:57.5604256Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+2026-10-11T08:06:57.5604676Z     |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5605024Z     |                                 |
+2026-10-11T08:06:57.5605308Z     |                                 the lifetime is elided here
+2026-10-11T08:06:57.5605581Z     |
+2026-10-11T08:06:57.5605924Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5606367Z help: use `'_` for type paths
+2026-10-11T08:06:57.5606591Z     |
+2026-10-11T08:06:57.5606865Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+2026-10-11T08:06:57.5607253Z     |                                                           +++
+2026-10-11T08:06:57.5607450Z 
+2026-10-11T08:06:57.5607620Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5607976Z    --> vendor/yrs-0.28.0/src/store.rs:458:30
+2026-10-11T08:06:57.5608234Z     |
+2026-10-11T08:06:57.5608720Z 458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+2026-10-11T08:06:57.5609099Z     |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5609431Z     |                              |
+2026-10-11T08:06:57.5609705Z     |                              the lifetime is elided here
+2026-10-11T08:06:57.5609981Z     |
+2026-10-11T08:06:57.5610323Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5610755Z help: use `'_` for type paths
+2026-10-11T08:06:57.5610975Z     |
+2026-10-11T08:06:57.5611245Z 458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+2026-10-11T08:06:57.5611575Z     |                                             +++
+2026-10-11T08:06:57.5611760Z 
+2026-10-11T08:06:57.5611929Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5612283Z    --> vendor/yrs-0.28.0/src/store.rs:462:29
+2026-10-11T08:06:57.5612541Z     |
+2026-10-11T08:06:57.5612817Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+2026-10-11T08:06:57.5613261Z     |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5613616Z     |                             |
+2026-10-11T08:06:57.5613883Z     |                             the lifetime is elided here
+2026-10-11T08:06:57.5614153Z     |
+2026-10-11T08:06:57.5614489Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5614925Z help: use `'_` for type paths
+2026-10-11T08:06:57.5615145Z     |
+2026-10-11T08:06:57.5615430Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+2026-10-11T08:06:57.5615828Z     |                                                               +++
+2026-10-11T08:06:57.5616190Z 
+2026-10-11T08:06:57.5616358Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5616707Z    --> vendor/yrs-0.28.0/src/store.rs:467:34
+2026-10-11T08:06:57.5616965Z     |
+2026-10-11T08:06:57.5617342Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+2026-10-11T08:06:57.5617778Z     |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5618132Z     |                                  |
+2026-10-11T08:06:57.5618679Z     |                                  the lifetime is elided here
+2026-10-11T08:06:57.5619168Z     |
+2026-10-11T08:06:57.5619536Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5619972Z help: use `'_` for type paths
+2026-10-11T08:06:57.5620198Z     |
+2026-10-11T08:06:57.5620485Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+2026-10-11T08:06:57.5620878Z     |                                                             +++
+2026-10-11T08:06:57.5621089Z 
+2026-10-11T08:06:57.5621252Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5621615Z    --> vendor/yrs-0.28.0/src/store.rs:476:31
+2026-10-11T08:06:57.5621873Z     |
+2026-10-11T08:06:57.5622106Z 476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+2026-10-11T08:06:57.5622478Z     |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5622805Z     |                               |
+2026-10-11T08:06:57.5623078Z     |                               the lifetime is elided here
+2026-10-11T08:06:57.5623354Z     |
+2026-10-11T08:06:57.5623691Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5624121Z help: use `'_` for type paths
+2026-10-11T08:06:57.5624345Z     |
+2026-10-11T08:06:57.5624582Z 476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+2026-10-11T08:06:57.5624914Z     |                                               +++
+2026-10-11T08:06:57.5625103Z 
+2026-10-11T08:06:57.5625265Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5625631Z    --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+2026-10-11T08:06:57.5625907Z     |
+2026-10-11T08:06:57.5626107Z 168 |     fn root_refs(&self) -> RootRefs {
+2026-10-11T08:06:57.5626425Z     |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5626728Z     |                  |
+2026-10-11T08:06:57.5626963Z     |                  the lifetime is elided here
+2026-10-11T08:06:57.5627235Z     |
+2026-10-11T08:06:57.5627570Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5627999Z help: use `'_` for type paths
+2026-10-11T08:06:57.5628223Z     |
+2026-10-11T08:06:57.5628554Z 168 |     fn root_refs(&self) -> RootRefs<'_> {
+2026-10-11T08:06:57.5628842Z     |                                    ++++
+2026-10-11T08:06:57.5629022Z 
+2026-10-11T08:06:57.5629187Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5629547Z    --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+2026-10-11T08:06:57.5629816Z     |
+2026-10-11T08:06:57.5630033Z 175 |     fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:06:57.5630361Z     |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5630673Z     |                     |
+2026-10-11T08:06:57.5630925Z     |                     the lifetime is elided here
+2026-10-11T08:06:57.5631186Z     |
+2026-10-11T08:06:57.5631522Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5631951Z help: use `'_` for type paths
+2026-10-11T08:06:57.5632170Z     |
+2026-10-11T08:06:57.5632387Z 175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:06:57.5632684Z     |                                          ++++
+2026-10-11T08:06:57.5632869Z 
+2026-10-11T08:06:57.5633189Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5633548Z    --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+2026-10-11T08:06:57.5633819Z     |
+2026-10-11T08:06:57.5634124Z 181 |     fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:06:57.5634445Z     |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5634748Z     |                |
+2026-10-11T08:06:57.5634979Z     |                the lifetime is elided here
+2026-10-11T08:06:57.5635233Z     |
+2026-10-11T08:06:57.5635569Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5636001Z help: use `'_` for type paths
+2026-10-11T08:06:57.5636219Z     |
+2026-10-11T08:06:57.5636422Z 181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:06:57.5636708Z     |                                     ++++
+2026-10-11T08:06:57.5636880Z 
+2026-10-11T08:06:57.5637043Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5637402Z    --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+2026-10-11T08:06:57.5637668Z     |
+2026-10-11T08:06:57.5637871Z 911 |     pub fn iter(&self) -> EventsIter {
+2026-10-11T08:06:57.5638184Z     |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5638610Z     |                 |
+2026-10-11T08:06:57.5638842Z     |                 the lifetime is elided here
+2026-10-11T08:06:57.5639100Z     |
+2026-10-11T08:06:57.5639443Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5640034Z help: use `'_` for type paths
+2026-10-11T08:06:57.5640314Z     |
+2026-10-11T08:06:57.5640525Z 911 |     pub fn iter(&self) -> EventsIter<'_> {
+2026-10-11T08:06:57.5640807Z     |                                     ++++
+2026-10-11T08:06:57.5640983Z 
+2026-10-11T08:06:57.5641148Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5641507Z   --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+2026-10-11T08:06:57.5641778Z    |
+2026-10-11T08:06:57.5642101Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+2026-10-11T08:06:57.5642554Z    |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5642899Z    |                 |
+2026-10-11T08:06:57.5643129Z    |                 the lifetime is elided here
+2026-10-11T08:06:57.5643382Z    |
+2026-10-11T08:06:57.5643724Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5644161Z help: use `'_` for type paths
+2026-10-11T08:06:57.5644381Z    |
+2026-10-11T08:06:57.5644673Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+2026-10-11T08:06:57.5645079Z    |                                                            +++
+2026-10-11T08:06:57.5645278Z 
+2026-10-11T08:06:57.5645445Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:06:57.5645817Z    --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+2026-10-11T08:06:57.5646099Z     |
+2026-10-11T08:06:57.5646312Z 141 |     pub fn iter(&self) -> AwarenessIter {
+2026-10-11T08:06:57.5646640Z     |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:06:57.5646953Z     |                 |
+2026-10-11T08:06:57.5647180Z     |                 the lifetime is elided here
+2026-10-11T08:06:57.5647437Z     |
+2026-10-11T08:06:57.5647779Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:06:57.5648214Z help: use `'_` for type paths
+2026-10-11T08:06:57.5648561Z     |
+2026-10-11T08:06:57.5648781Z 141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+2026-10-11T08:06:57.5649078Z     |                                        ++++
+2026-10-11T08:06:57.5649263Z 
+2026-10-11T08:07:03.5436628Z warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+2026-10-11T08:07:03.5438006Z    Compiling tandemlog-text v0.0.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine)
+2026-10-11T08:07:15.8460273Z     Finished `release` profile [optimized] target(s) in 22.63s
+2026-10-11T08:07:15.8461469Z    Compiling serde_core v1.0.229
+2026-10-11T08:07:15.8462270Z    Compiling libc v0.2.190
+2026-10-11T08:07:15.8462885Z    Compiling smallvec v1.16.2
+2026-10-11T08:07:15.8463530Z    Compiling pin-project-lite v0.2.17
+2026-10-11T08:07:15.8464268Z    Compiling parking v2.2.1
+2026-10-11T08:07:15.9450185Z    Compiling event-listener v5.4.2
+2026-10-11T08:07:16.0453857Z    Compiling crossbeam-utils v0.8.23
+2026-10-11T08:07:16.0479271Z    Compiling parking_lot_core v0.9.12
+2026-10-11T08:07:16.0503285Z    Compiling zmij v1.0.23
+2026-10-11T08:07:16.0529095Z    Compiling scopeguard v1.2.0
+2026-10-11T08:07:16.1459416Z    Compiling cfg-if v1.0.5
+2026-10-11T08:07:16.1489019Z    Compiling serde v1.0.229
+2026-10-11T08:07:16.1519020Z    Compiling thiserror v2.0.21
+2026-10-11T08:07:16.1549044Z    Compiling event-listener-strategy v0.5.4
+2026-10-11T08:07:16.1569241Z    Compiling lock_api v0.4.14
+2026-10-11T08:07:16.2437096Z    Compiling serde_json v1.0.151
+2026-10-11T08:07:16.4469682Z    Compiling hashbrown v0.14.5
+2026-10-11T08:07:16.6436071Z    Compiling once_cell v1.21.4
+2026-10-11T08:07:16.7439622Z    Compiling memchr v2.8.3
+2026-10-11T08:07:16.9449434Z    Compiling itoa v1.0.18
+2026-10-11T08:07:17.0469647Z    Compiling arc-swap v1.9.2
+2026-10-11T08:07:17.1439603Z    Compiling dashmap v6.2.1
+2026-10-11T08:07:17.2449629Z    Compiling async-lock v3.4.2
+2026-10-11T08:07:17.3436363Z    Compiling smallstr v0.3.1
+2026-10-11T08:07:17.4439635Z    Compiling fastrand v2.5.0
+2026-10-11T08:07:17.5437525Z    Compiling base64 v0.22.1
+2026-10-11T08:07:18.7436442Z    Compiling yrs v0.28.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine/vendor/yrs-0.28.0)
+2026-10-11T08:07:18.8436690Z warning: unused imports: `BlockRange` and `Block`
+2026-10-11T08:07:18.8440594Z  --> vendor/yrs-0.28.0/src/transaction.rs:1:20
+2026-10-11T08:07:18.8441623Z   |
+2026-10-11T08:07:18.8442604Z 1 | use crate::block::{Block, BlockRange, Item, ItemContent, ItemPosition, ItemPtr, Prelim, ID};
+2026-10-11T08:07:18.8443772Z   |                    ^^^^^  ^^^^^^^^^^
+2026-10-11T08:07:18.8444494Z   |
+2026-10-11T08:07:18.8445267Z   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:07:18.8446049Z 
+2026-10-11T08:07:18.8446471Z warning: unused import: `Block`
+2026-10-11T08:07:18.8447281Z  --> vendor/yrs-0.28.0/src/block_iter.rs:1:20
+2026-10-11T08:07:18.8448052Z   |
+2026-10-11T08:07:18.8449244Z 1 | use crate::block::{Block, Item, ItemContent, ItemPtr, Prelim};
+2026-10-11T08:07:18.8450153Z   |                    ^^^^^
+2026-10-11T08:07:18.8450675Z 
+2026-10-11T08:07:18.8451108Z warning: unused import: `ItemContent`
+2026-10-11T08:07:18.8451945Z  --> vendor/yrs-0.28.0/src/iter.rs:1:20
+2026-10-11T08:07:18.8452660Z   |
+2026-10-11T08:07:18.8453271Z 1 | use crate::block::{ItemContent, ItemPtr};
+2026-10-11T08:07:18.8454161Z   |                    ^^^^^^^^^^^
+2026-10-11T08:07:18.8454696Z 
+2026-10-11T08:07:18.8455148Z warning: unused imports: `SmallVec` and `smallvec`
+2026-10-11T08:07:18.8455979Z  --> vendor/yrs-0.28.0/src/iter.rs:4:16
+2026-10-11T08:07:18.8456687Z   |
+2026-10-11T08:07:18.8457308Z 4 | use smallvec::{smallvec, SmallVec};
+2026-10-11T08:07:18.8458026Z   |                ^^^^^^^^  ^^^^^^^^
+2026-10-11T08:07:18.8458820Z 
+2026-10-11T08:07:19.4436145Z warning: unused import: `crate::utils::OptionExt`
+2026-10-11T08:07:19.4437264Z   --> vendor/yrs-0.28.0/src/doc.rs:10:5
+2026-10-11T08:07:19.4438637Z    |
+2026-10-11T08:07:19.4439669Z 10 | use crate::utils::OptionExt;
+2026-10-11T08:07:19.4444445Z    |     ^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:19.4451491Z 
+2026-10-11T08:07:19.4452086Z warning: value assigned to `left` is never read
+2026-10-11T08:07:19.4452958Z    --> vendor/yrs-0.28.0/src/block.rs:494:24
+2026-10-11T08:07:19.4453637Z     |
+2026-10-11T08:07:19.4454181Z 494 |         let mut left = None;
+2026-10-11T08:07:19.4455425Z     |                        ^^^^ this value is reassigned later and never used
+2026-10-11T08:07:19.4456232Z ...
+2026-10-11T08:07:19.4456846Z 540 |                 left = parent_branch.map.get(sub).cloned();
+2026-10-11T08:07:19.4458182Z     |                 ------------------------------------------ `left` is overwritten here before the previous value is read
+2026-10-11T08:07:19.4459668Z     |
+2026-10-11T08:07:19.4460344Z     = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:07:19.4460934Z 
+2026-10-11T08:07:19.4461145Z warning: unused variable: `ptr`
+2026-10-11T08:07:19.4461674Z    --> vendor/yrs-0.28.0/src/block.rs:886:21
+2026-10-11T08:07:19.4462185Z     |
+2026-10-11T08:07:19.4462684Z 886 |                 let ptr = BranchPtr::from(branch);
+2026-10-11T08:07:19.4463492Z     |                     ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:07:19.4464205Z     |
+2026-10-11T08:07:19.4464765Z     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:07:19.4465339Z 
+2026-10-11T08:07:19.6437483Z warning: unused variable: `ptr`
+2026-10-11T08:07:19.6438266Z    --> vendor/yrs-0.28.0/src/transaction.rs:778:13
+2026-10-11T08:07:19.6439233Z     |
+2026-10-11T08:07:19.6439627Z 778 |         let ptr = item.clone();
+2026-10-11T08:07:19.6440269Z     |             ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+2026-10-11T08:07:19.6440784Z 
+2026-10-11T08:07:19.6440988Z warning: variable does not need to be mutable
+2026-10-11T08:07:19.6441551Z    --> vendor/yrs-0.28.0/src/transaction.rs:958:13
+2026-10-11T08:07:19.6442060Z     |
+2026-10-11T08:07:19.6442823Z 958 |         let mut block = Item::new(
+2026-10-11T08:07:19.6443441Z     |             ----^^^^^
+2026-10-11T08:07:19.6447906Z     |             |
+2026-10-11T08:07:19.6448695Z     |             help: remove this `mut`
+2026-10-11T08:07:19.6449198Z     |
+2026-10-11T08:07:19.6449719Z     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:07:19.6450221Z 
+2026-10-11T08:07:20.0462315Z warning: variable does not need to be mutable
+2026-10-11T08:07:20.0463360Z    --> vendor/yrs-0.28.0/src/undo.rs:133:13
+2026-10-11T08:07:20.0464373Z     |
+2026-10-11T08:07:20.0465156Z 133 |         let mut state = Arc::new(Inner {
+2026-10-11T08:07:20.0465931Z     |             ----^^^^^
+2026-10-11T08:07:20.0466603Z     |             |
+2026-10-11T08:07:20.0467261Z     |             help: remove this `mut`
+2026-10-11T08:07:20.0467833Z 
+2026-10-11T08:07:20.0468266Z warning: unused variable: `clear_undo`
+2026-10-11T08:07:20.0469346Z    --> vendor/yrs-0.28.0/src/undo.rs:379:34
+2026-10-11T08:07:20.0470058Z     |
+2026-10-11T08:07:20.0470845Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:07:20.0472118Z     |                                  ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_undo`
+2026-10-11T08:07:20.0473014Z 
+2026-10-11T08:07:20.0473429Z warning: unused variable: `clear_redo`
+2026-10-11T08:07:20.0474252Z    --> vendor/yrs-0.28.0/src/undo.rs:379:52
+2026-10-11T08:07:20.0474974Z     |
+2026-10-11T08:07:20.0475744Z 379 |     fn clear_internal(&mut self, clear_undo: bool, clear_redo: bool) {
+2026-10-11T08:07:20.0477019Z     |                                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_clear_redo`
+2026-10-11T08:07:20.0477938Z 
+2026-10-11T08:07:20.0478350Z warning: method `as_item` is never used
+2026-10-11T08:07:20.0479404Z    --> vendor/yrs-0.28.0/src/block.rs:198:12
+2026-10-11T08:07:20.0480164Z     |
+2026-10-11T08:07:20.0480789Z 183 | impl<'a> BlockRef<'a> {
+2026-10-11T08:07:20.0481560Z     | --------------------- method in this implementation
+2026-10-11T08:07:20.0482336Z ...
+2026-10-11T08:07:20.0483014Z 198 |     pub fn as_item(&self) -> Option<&'a Item> {
+2026-10-11T08:07:20.0483847Z     |            ^^^^^^^
+2026-10-11T08:07:20.0484463Z     |
+2026-10-11T08:07:20.0485208Z     = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+2026-10-11T08:07:20.0486264Z 
+2026-10-11T08:07:20.0486788Z warning: methods `last_id`, `is_item`, and `is_gc` are never used
+2026-10-11T08:07:20.0488092Z    --> vendor/yrs-0.28.0/src/block.rs:264:12
+2026-10-11T08:07:20.0489099Z     |
+2026-10-11T08:07:20.0489686Z 221 | impl Block {
+2026-10-11T08:07:20.0490378Z     | ---------- methods in this implementation
+2026-10-11T08:07:20.0491125Z ...
+2026-10-11T08:07:20.0491739Z 264 |     pub fn last_id(&self) -> ID {
+2026-10-11T08:07:20.0492467Z     |            ^^^^^^^
+2026-10-11T08:07:20.0493098Z ...
+2026-10-11T08:07:20.0493734Z 281 |     pub fn is_item(&self) -> bool {
+2026-10-11T08:07:20.0494471Z     |            ^^^^^^^
+2026-10-11T08:07:20.0495084Z ...
+2026-10-11T08:07:20.0495683Z 291 |     pub fn is_gc(&self) -> bool {
+2026-10-11T08:07:20.0496387Z     |            ^^^^^
+2026-10-11T08:07:20.0496867Z 
+2026-10-11T08:07:20.0497316Z warning: method `delete_as_cleanup` is never used
+2026-10-11T08:07:20.0498154Z    --> vendor/yrs-0.28.0/src/block.rs:632:19
+2026-10-11T08:07:20.0499125Z     |
+2026-10-11T08:07:20.0499715Z 444 | impl ItemPtr {
+2026-10-11T08:07:20.0500404Z     | ------------ method in this implementation
+2026-10-11T08:07:20.0501136Z ...
+2026-10-11T08:07:20.0501997Z 632 |     pub(crate) fn delete_as_cleanup(&self, txn: &mut TransactionMut, is_local: bool) {
+2026-10-11T08:07:20.0503032Z     |                   ^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0503598Z 
+2026-10-11T08:07:20.0504005Z warning: method `integrate` is never used
+2026-10-11T08:07:20.0504800Z     --> vendor/yrs-0.28.0/src/block.rs:1415:19
+2026-10-11T08:07:20.0505536Z      |
+2026-10-11T08:07:20.0506221Z 1354 | impl BlockRange {
+2026-10-11T08:07:20.0506949Z      | --------------- method in this implementation
+2026-10-11T08:07:20.0507700Z ...
+2026-10-11T08:07:20.0508659Z 1415 |     pub(crate) fn integrate(&mut self, pivot: u32) -> bool {
+2026-10-11T08:07:20.0509547Z      |                   ^^^^^^^^^
+2026-10-11T08:07:20.0510072Z 
+2026-10-11T08:07:20.0510497Z warning: method `contains` is never used
+2026-10-11T08:07:20.0511325Z    --> vendor/yrs-0.28.0/src/block_store.rs:300:12
+2026-10-11T08:07:20.0512098Z     |
+2026-10-11T08:07:20.0512921Z 289 | impl BlockStore {
+2026-10-11T08:07:20.0513717Z     | --------------- method in this implementation
+2026-10-11T08:07:20.0514209Z ...
+2026-10-11T08:07:20.0514577Z 300 |     pub fn contains(&self, id: &ID) -> bool {
+2026-10-11T08:07:20.0515047Z     |            ^^^^^^^^
+2026-10-11T08:07:20.0515277Z 
+2026-10-11T08:07:20.0515503Z warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+2026-10-11T08:07:20.0516065Z    --> vendor/yrs-0.28.0/src/types/mod.rs:230:7
+2026-10-11T08:07:20.0516513Z     |
+2026-10-11T08:07:20.0516885Z 230 | const WEAK_REF_FLAGS_QUOTE: u8 = 0b0000_0001;
+2026-10-11T08:07:20.0517353Z     |       ^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0517597Z 
+2026-10-11T08:07:20.0517845Z warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+2026-10-11T08:07:20.0518656Z    --> vendor/yrs-0.28.0/src/types/mod.rs:232:7
+2026-10-11T08:07:20.0519131Z     |
+2026-10-11T08:07:20.0519529Z 232 | const WEAK_REF_FLAGS_START_ASSOC: u8 = 0b0000_0010;
+2026-10-11T08:07:20.0520031Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0520309Z 
+2026-10-11T08:07:20.0520567Z warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+2026-10-11T08:07:20.0521149Z    --> vendor/yrs-0.28.0/src/types/mod.rs:234:7
+2026-10-11T08:07:20.0521591Z     |
+2026-10-11T08:07:20.0521978Z 234 | const WEAK_REF_FLAGS_END_ASSOC: u8 = 0b0000_0100;
+2026-10-11T08:07:20.0522448Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0522714Z 
+2026-10-11T08:07:20.0522993Z warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+2026-10-11T08:07:20.0523601Z    --> vendor/yrs-0.28.0/src/types/mod.rs:236:7
+2026-10-11T08:07:20.0524026Z     |
+2026-10-11T08:07:20.0524423Z 236 | const WEAK_REF_FLAGS_START_UNBOUNDED: u8 = 0b0000_1000;
+2026-10-11T08:07:20.0524960Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0525236Z 
+2026-10-11T08:07:20.0525749Z warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+2026-10-11T08:07:20.0526331Z    --> vendor/yrs-0.28.0/src/types/mod.rs:238:7
+2026-10-11T08:07:20.0526817Z     |
+2026-10-11T08:07:20.0527397Z 238 | const WEAK_REF_FLAGS_END_UNBOUNDED: u8 = 0b0001_0000;
+2026-10-11T08:07:20.0527932Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0528214Z 
+2026-10-11T08:07:20.0528704Z warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+2026-10-11T08:07:20.0529310Z    --> vendor/yrs-0.28.0/src/types/mod.rs:240:7
+2026-10-11T08:07:20.0529746Z     |
+2026-10-11T08:07:20.0530130Z 240 | const WEAK_REF_FLAGS_PARENT_ROOT: u8 = 0b0010_0000;
+2026-10-11T08:07:20.0530643Z     |       ^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0530992Z 
+2026-10-11T08:07:20.0531157Z warning: field `txn` is never read
+2026-10-11T08:07:20.0531616Z    --> vendor/yrs-0.28.0/src/types/mod.rs:538:5
+2026-10-11T08:07:20.0532044Z     |
+2026-10-11T08:07:20.0532386Z 536 | pub(crate) struct Entries<'a, B, T> {
+2026-10-11T08:07:20.0532883Z     |                   ------- field in this struct
+2026-10-11T08:07:20.0533475Z 537 |     iter: std::collections::hash_map::Iter<'a, Arc<str>, ItemPtr>,
+2026-10-11T08:07:20.0534024Z 538 |     txn: B,
+2026-10-11T08:07:20.0534338Z     |     ^^^
+2026-10-11T08:07:20.0534634Z     |
+2026-10-11T08:07:20.0535311Z     = note: `Entries` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:07:20.0535980Z 
+2026-10-11T08:07:20.0536154Z warning: method `as_id_set` is never used
+2026-10-11T08:07:20.0536640Z   --> vendor/yrs-0.28.0/src/update.rs:48:12
+2026-10-11T08:07:20.0537057Z    |
+2026-10-11T08:07:20.0537347Z 28 | impl BlockSet {
+2026-10-11T08:07:20.0537759Z    | ------------- method in this implementation
+2026-10-11T08:07:20.0538198Z ...
+2026-10-11T08:07:20.0538734Z 48 |     pub fn as_id_set(&self) -> IdSet {
+2026-10-11T08:07:20.0539166Z    |            ^^^^^^^^^
+2026-10-11T08:07:20.0539379Z 
+2026-10-11T08:07:20.0539714Z warning: associated functions `next_target` and `return_stack` are never used
+2026-10-11T08:07:20.0540430Z    --> vendor/yrs-0.28.0/src/update.rs:503:8
+2026-10-11T08:07:20.0540932Z     |
+2026-10-11T08:07:20.0541228Z 169 | impl Update {
+2026-10-11T08:07:20.0541641Z     | ----------- associated functions in this implementation
+2026-10-11T08:07:20.0542109Z ...
+2026-10-11T08:07:20.0542419Z 503 |     fn next_target<'a, 'b>(
+2026-10-11T08:07:20.0542808Z     |        ^^^^^^^^^^^
+2026-10-11T08:07:20.0543141Z ...
+2026-10-11T08:07:20.0543699Z 526 |     fn return_stack(stack: Vec<Block>, refs: &mut BlockSet, remaining: &mut BlockSet) {
+2026-10-11T08:07:20.0544347Z     |        ^^^^^^^^^^^^
+2026-10-11T08:07:20.0544571Z 
+2026-10-11T08:07:20.0544846Z warning: methods `forward`, `backward`, and `values` are never used
+2026-10-11T08:07:20.0545444Z    --> vendor/yrs-0.28.0/src/block_iter.rs:76:12
+2026-10-11T08:07:20.0545863Z     |
+2026-10-11T08:07:20.0546174Z  18 | impl BlockIter {
+2026-10-11T08:07:20.0546589Z     | -------------- methods in this implementation
+2026-10-11T08:07:20.0547046Z ...
+2026-10-11T08:07:20.0547448Z  76 |     pub fn forward<T: ReadTxn>(&mut self, txn: &T, len: u32) {
+2026-10-11T08:07:20.0547983Z     |            ^^^^^^^
+2026-10-11T08:07:20.0548310Z ...
+2026-10-11T08:07:20.0549032Z 130 |     pub fn backward<T: ReadTxn>(&mut self, txn: &mut T, mut len: u32) {
+2026-10-11T08:07:20.0549695Z     |            ^^^^^^^^
+2026-10-11T08:07:20.0550027Z ...
+2026-10-11T08:07:20.0550354Z 369 |     pub fn values<'a, 'txn, T: ReadTxn>(
+2026-10-11T08:07:20.0550784Z     |            ^^^^^^
+2026-10-11T08:07:20.0550989Z 
+2026-10-11T08:07:20.0551183Z warning: struct `Values` is never constructed
+2026-10-11T08:07:20.0551697Z    --> vendor/yrs-0.28.0/src/block_iter.rs:377:12
+2026-10-11T08:07:20.0552132Z     |
+2026-10-11T08:07:20.0552436Z 377 | pub struct Values<'a, 'txn> {
+2026-10-11T08:07:20.0552836Z     |            ^^^^^^
+2026-10-11T08:07:20.0553056Z 
+2026-10-11T08:07:20.0553287Z warning: associated function `new` is never used
+2026-10-11T08:07:20.0554045Z    --> vendor/yrs-0.28.0/src/block_iter.rs:383:8
+2026-10-11T08:07:20.0554484Z     |
+2026-10-11T08:07:20.0554812Z 382 | impl<'a, 'txn> Values<'a, 'txn> {
+2026-10-11T08:07:20.0555629Z     | ------------------------------- associated function in this implementation
+2026-10-11T08:07:20.0556430Z 383 |     fn new(iter: &'a mut BlockIter, txn: &'txn mut TransactionMut<'txn>) -> Self {
+2026-10-11T08:07:20.0557064Z     |        ^^^
+2026-10-11T08:07:20.0557250Z 
+2026-10-11T08:07:20.0557439Z warning: method `remove_at` is never used
+2026-10-11T08:07:20.0557917Z    --> vendor/yrs-0.28.0/src/branch.rs:398:19
+2026-10-11T08:07:20.0558341Z     |
+2026-10-11T08:07:20.0558874Z 222 | impl Branch {
+2026-10-11T08:07:20.0559274Z     | ----------- method in this implementation
+2026-10-11T08:07:20.0559710Z ...
+2026-10-11T08:07:20.0560275Z 398 |     pub(crate) fn remove_at(&self, txn: &mut TransactionMut, index: u32, len: u32) -> u32 {
+2026-10-11T08:07:20.0560941Z     |                   ^^^^^^^^^
+2026-10-11T08:07:20.0561215Z 
+2026-10-11T08:07:20.0561436Z warning: method `inner_mut` is never used
+2026-10-11T08:07:20.0561943Z    --> vendor/yrs-0.28.0/src/ids.rs:548:19
+2026-10-11T08:07:20.0562371Z     |
+2026-10-11T08:07:20.0562720Z  58 | impl<T: Merge> IdRanges<T> {
+2026-10-11T08:07:20.0563268Z     | -------------------------- method in this implementation
+2026-10-11T08:07:20.0563757Z ...
+2026-10-11T08:07:20.0564245Z 548 |     pub(crate) fn inner_mut(&mut self) -> &mut SmallVec<[(Range<u32>, T); 1]> {
+2026-10-11T08:07:20.0564855Z     |                   ^^^^^^^^^
+2026-10-11T08:07:20.0565108Z 
+2026-10-11T08:07:20.0565308Z warning: trait `BlockIterator` is never used
+2026-10-11T08:07:20.0565901Z  --> vendor/yrs-0.28.0/src/iter.rs:7:18
+2026-10-11T08:07:20.0566314Z   |
+2026-10-11T08:07:20.0566766Z 7 | pub(crate) trait BlockIterator: Iterator<Item = ItemPtr> + Sized {
+2026-10-11T08:07:20.0567327Z   |                  ^^^^^^^^^^^^^
+2026-10-11T08:07:20.0567593Z 
+2026-10-11T08:07:20.0567815Z warning: trait `BlockSliceIterator` is never used
+2026-10-11T08:07:20.0568351Z   --> vendor/yrs-0.28.0/src/iter.rs:16:18
+2026-10-11T08:07:20.0569000Z    |
+2026-10-11T08:07:20.0569494Z 16 | pub(crate) trait BlockSliceIterator: Iterator<Item = ItemSlice> + Sized {
+2026-10-11T08:07:20.0570153Z    |                  ^^^^^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0570444Z 
+2026-10-11T08:07:20.0570645Z warning: struct `RangeIter` is never constructed
+2026-10-11T08:07:20.0571165Z    --> vendor/yrs-0.28.0/src/iter.rs:106:19
+2026-10-11T08:07:20.0571573Z     |
+2026-10-11T08:07:20.0571897Z 106 | pub(crate) struct RangeIter<I> {
+2026-10-11T08:07:20.0572314Z     |                   ^^^^^^^^^
+2026-10-11T08:07:20.0572570Z 
+2026-10-11T08:07:20.0572827Z warning: associated items `new` and `begin` are never used
+2026-10-11T08:07:20.0573371Z    --> vendor/yrs-0.28.0/src/iter.rs:117:8
+2026-10-11T08:07:20.0573789Z     |
+2026-10-11T08:07:20.0574082Z 113 | / impl<I> RangeIter<I>
+2026-10-11T08:07:20.0574450Z 114 | | where
+2026-10-11T08:07:20.0574797Z 115 | |     I: Iterator<Item = ItemPtr>,
+2026-10-11T08:07:20.0575410Z     | |________________________________- associated items in this implementation
+2026-10-11T08:07:20.0575962Z 116 |   {
+2026-10-11T08:07:20.0576435Z 117 |       fn new(iter: I, start: StickyIndex, end: StickyIndex) -> Self {
+2026-10-11T08:07:20.0577012Z     |          ^^^
+2026-10-11T08:07:20.0577311Z ...
+2026-10-11T08:07:20.0577754Z 126 |       fn begin(&mut self, start_offset: &mut u32) -> Option<ItemPtr> {
+2026-10-11T08:07:20.0578331Z     |          ^^^^^
+2026-10-11T08:07:20.0578752Z 
+2026-10-11T08:07:20.0578949Z warning: enum `RangeIterState` is never used
+2026-10-11T08:07:20.0579418Z    --> vendor/yrs-0.28.0/src/iter.rs:234:6
+2026-10-11T08:07:20.0579844Z     |
+2026-10-11T08:07:20.0580157Z 234 | enum RangeIterState {
+2026-10-11T08:07:20.0580534Z     |      ^^^^^^^^^^^^^^
+2026-10-11T08:07:20.0580763Z 
+2026-10-11T08:07:20.0580967Z warning: struct `Values` is never constructed
+2026-10-11T08:07:20.0581450Z    --> vendor/yrs-0.28.0/src/iter.rs:245:19
+2026-10-11T08:07:20.0582108Z     |
+2026-10-11T08:07:20.0582427Z 245 | pub(crate) struct Values<I> {
+2026-10-11T08:07:20.0582847Z     |                   ^^^^^^
+2026-10-11T08:07:20.0583091Z 
+2026-10-11T08:07:20.0586502Z warning: associated function `new` is never used
+2026-10-11T08:07:20.0587628Z    --> vendor/yrs-0.28.0/src/iter.rs:251:8
+2026-10-11T08:07:20.0588643Z     |
+2026-10-11T08:07:20.0589010Z 250 | impl<I> Values<I> {
+2026-10-11T08:07:20.0589525Z     | ----------------- associated function in this implementation
+2026-10-11T08:07:20.0590069Z 251 |     fn new(iter: I) -> Self {
+2026-10-11T08:07:20.0590479Z     |        ^^^
+2026-10-11T08:07:20.0594004Z 
+2026-10-11T08:07:20.0594949Z warning: field `txn` is never read
+2026-10-11T08:07:20.0595684Z    --> vendor/yrs-0.28.0/src/iter.rs:287:5
+2026-10-11T08:07:20.0596356Z     |
+2026-10-11T08:07:20.0597148Z 286 | pub struct AsIter<'a, T, I> {
+2026-10-11T08:07:20.0597920Z     |            ------ field in this struct
+2026-10-11T08:07:20.0599058Z 287 |     txn: &'a T,
+2026-10-11T08:07:20.0599900Z     |     ^^^
+2026-10-11T08:07:20.0600546Z     |
+2026-10-11T08:07:20.0601867Z     = note: `AsIter` has a derived impl for the trait `Debug`, but this is intentionally ignored during dead code analysis
+2026-10-11T08:07:20.0602690Z 
+2026-10-11T08:07:20.0609695Z warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+2026-10-11T08:07:20.0610424Z    --> vendor/yrs-0.28.0/src/slice.rs:164:12
+2026-10-11T08:07:20.0610844Z     |
+2026-10-11T08:07:20.0611151Z 105 | impl ItemSlice {
+2026-10-11T08:07:20.0611576Z     | -------------- methods in this implementation
+2026-10-11T08:07:20.0612026Z ...
+2026-10-11T08:07:20.0612351Z 164 |     pub fn adjacent(&self) -> bool {
+2026-10-11T08:07:20.0612824Z     |            ^^^^^^^^
+2026-10-11T08:07:20.0613169Z ...
+2026-10-11T08:07:20.0613543Z 179 |     pub fn contains_id(&self, id: &ID) -> bool {
+2026-10-11T08:07:20.0614042Z     |            ^^^^^^^^^^^
+2026-10-11T08:07:20.0614384Z ...
+2026-10-11T08:07:20.0614740Z 249 |     pub fn right(&self) -> Option<ItemSlice> {
+2026-10-11T08:07:20.0615306Z     |            ^^^^^
+2026-10-11T08:07:20.0615654Z ...
+2026-10-11T08:07:20.0616055Z 269 |     pub fn left(&self) -> Option<ItemSlice> {
+2026-10-11T08:07:20.0616542Z     |            ^^^^
+2026-10-11T08:07:20.0616774Z 
+2026-10-11T08:07:20.0617039Z warning: methods `within_range` and `get_item` are never used
+2026-10-11T08:07:20.0617637Z    --> vendor/yrs-0.28.0/src/sticky_index.rs:272:19
+2026-10-11T08:07:20.0618091Z     |
+2026-10-11T08:07:20.0618675Z  51 | impl StickyIndex {
+2026-10-11T08:07:20.0619170Z     | ---------------- methods in this implementation
+2026-10-11T08:07:20.0619639Z ...
+2026-10-11T08:07:20.0620099Z 272 |     pub(crate) fn within_range(&self, ptr: Option<ItemPtr>) -> bool {
+2026-10-11T08:07:20.0620677Z     |                   ^^^^^^^^^^^^
+2026-10-11T08:07:20.0621058Z ...
+2026-10-11T08:07:20.0621519Z 287 |     pub(crate) fn get_item<T: ReadTxn>(&self, txn: &T) -> Option<ItemPtr> {
+2026-10-11T08:07:20.0622130Z     |                   ^^^^^^^^
+2026-10-11T08:07:20.0622394Z 
+2026-10-11T08:07:20.0622662Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0623263Z   --> vendor/yrs-0.28.0/src/event.rs:63:18
+2026-10-11T08:07:20.0623673Z    |
+2026-10-11T08:07:20.0624040Z 63 |     pub fn added(&self) -> SubdocsEventIter {
+2026-10-11T08:07:20.0624632Z    |                  ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0625144Z    |                  |
+2026-10-11T08:07:20.0625529Z    |                  the lifetime is elided here
+2026-10-11T08:07:20.0625994Z    |
+2026-10-11T08:07:20.0626560Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0627397Z    = note: `#[warn(mismatched_lifetime_syntaxes)]` on by default
+2026-10-11T08:07:20.0627946Z help: use `'_` for type paths
+2026-10-11T08:07:20.0628316Z    |
+2026-10-11T08:07:20.0628996Z 63 |     pub fn added(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:07:20.0629498Z    |                                            ++++
+2026-10-11T08:07:20.0630127Z 
+2026-10-11T08:07:20.0630430Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0631027Z   --> vendor/yrs-0.28.0/src/event.rs:69:20
+2026-10-11T08:07:20.0631711Z    |
+2026-10-11T08:07:20.0632802Z 69 |     pub fn removed(&self) -> SubdocsEventIter {
+2026-10-11T08:07:20.0633618Z    |                    ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0634149Z    |                    |
+2026-10-11T08:07:20.0641064Z    |                    the lifetime is elided here
+2026-10-11T08:07:20.0642003Z    |
+2026-10-11T08:07:20.0642834Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0643552Z help: use `'_` for type paths
+2026-10-11T08:07:20.0643918Z    |
+2026-10-11T08:07:20.0644265Z 69 |     pub fn removed(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:07:20.0644745Z    |                                              ++++
+2026-10-11T08:07:20.0645056Z 
+2026-10-11T08:07:20.0645317Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0645874Z   --> vendor/yrs-0.28.0/src/event.rs:75:19
+2026-10-11T08:07:20.0646272Z    |
+2026-10-11T08:07:20.0646716Z 75 |     pub fn loaded(&self) -> SubdocsEventIter {
+2026-10-11T08:07:20.0647260Z    |                   ^^^^^     ^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0647739Z    |                   |
+2026-10-11T08:07:20.0662129Z    |                   the lifetime is elided here
+2026-10-11T08:07:20.0662640Z    |
+2026-10-11T08:07:20.0663230Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0663971Z help: use `'_` for type paths
+2026-10-11T08:07:20.0664349Z    |
+2026-10-11T08:07:20.0664734Z 75 |     pub fn loaded(&self) -> SubdocsEventIter<'_> {
+2026-10-11T08:07:20.0665244Z    |                                             ++++
+2026-10-11T08:07:20.0665543Z 
+2026-10-11T08:07:20.0665845Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0666423Z    --> vendor/yrs-0.28.0/src/store.rs:358:20
+2026-10-11T08:07:20.0666855Z     |
+2026-10-11T08:07:20.0667229Z 358 |     pub fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:07:20.0667781Z     |                    ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0668294Z     |                    |
+2026-10-11T08:07:20.0668907Z     |                    the lifetime is elided here
+2026-10-11T08:07:20.0669345Z     |
+2026-10-11T08:07:20.0669914Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0670588Z help: use `'_` for type paths
+2026-10-11T08:07:20.0670942Z     |
+2026-10-11T08:07:20.0671292Z 358 |     pub fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:07:20.0671785Z     |                                         ++++
+2026-10-11T08:07:20.0672087Z 
+2026-10-11T08:07:20.0672364Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0672956Z    --> vendor/yrs-0.28.0/src/store.rs:364:25
+2026-10-11T08:07:20.0673375Z     |
+2026-10-11T08:07:20.0673747Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:07:20.0674303Z     |                         ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0674823Z     |                         |
+2026-10-11T08:07:20.0675231Z     |                         the lifetime is elided here
+2026-10-11T08:07:20.0675673Z     |
+2026-10-11T08:07:20.0676219Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0676917Z help: use `'_` for type paths
+2026-10-11T08:07:20.0677259Z     |
+2026-10-11T08:07:20.0677618Z 364 |     pub fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:07:20.0678149Z     |                                              ++++
+2026-10-11T08:07:20.0678644Z 
+2026-10-11T08:07:20.0678929Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0679815Z    --> vendor/yrs-0.28.0/src/store.rs:444:28
+2026-10-11T08:07:20.0680245Z     |
+2026-10-11T08:07:20.0680708Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<Store>> {
+2026-10-11T08:07:20.0681667Z     |                            ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0685852Z     |                            |
+2026-10-11T08:07:20.0686613Z     |                            the lifetime is elided here
+2026-10-11T08:07:20.0687289Z     |
+2026-10-11T08:07:20.0688066Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0689256Z help: use `'_` for type paths
+2026-10-11T08:07:20.0689837Z     |
+2026-10-11T08:07:20.0690522Z 444 |     pub(crate) fn try_read(&self) -> Option<RwLockReadGuard<'_, Store>> {
+2026-10-11T08:07:20.0691392Z     |                                                             +++
+2026-10-11T08:07:20.0691928Z 
+2026-10-11T08:07:20.0692458Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0693346Z    --> vendor/yrs-0.28.0/src/store.rs:449:33
+2026-10-11T08:07:20.0693969Z     |
+2026-10-11T08:07:20.0694601Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<Store> {
+2026-10-11T08:07:20.0695475Z     |                                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0696246Z     |                                 |
+2026-10-11T08:07:20.0696922Z     |                                 the lifetime is elided here
+2026-10-11T08:07:20.0697604Z     |
+2026-10-11T08:07:20.0698590Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0699561Z help: use `'_` for type paths
+2026-10-11T08:07:20.0700153Z     |
+2026-10-11T08:07:20.0700822Z 449 |     pub(crate) fn read_blocking(&self) -> RwLockReadGuard<'_, Store> {
+2026-10-11T08:07:20.0701651Z     |                                                           +++
+2026-10-11T08:07:20.0702190Z 
+2026-10-11T08:07:20.0702864Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0703627Z    --> vendor/yrs-0.28.0/src/store.rs:458:30
+2026-10-11T08:07:20.0704248Z     |
+2026-10-11T08:07:20.0704791Z 458 |     pub(crate) fn read_async(&self) -> Read<Store> {
+2026-10-11T08:07:20.0705581Z     |                              ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0706274Z     |                              |
+2026-10-11T08:07:20.0706882Z     |                              the lifetime is elided here
+2026-10-11T08:07:20.0707509Z     |
+2026-10-11T08:07:20.0708273Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0709422Z help: use `'_` for type paths
+2026-10-11T08:07:20.0709966Z     |
+2026-10-11T08:07:20.0710540Z 458 |     pub(crate) fn read_async(&self) -> Read<'_, Store> {
+2026-10-11T08:07:20.0711275Z     |                                             +++
+2026-10-11T08:07:20.0711776Z 
+2026-10-11T08:07:20.0712233Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0713014Z    --> vendor/yrs-0.28.0/src/store.rs:462:29
+2026-10-11T08:07:20.0713605Z     |
+2026-10-11T08:07:20.0714250Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<Store>> {
+2026-10-11T08:07:20.0715175Z     |                             ^^^^^            ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0715948Z     |                             |
+2026-10-11T08:07:20.0716584Z     |                             the lifetime is elided here
+2026-10-11T08:07:20.0717188Z     |
+2026-10-11T08:07:20.0717921Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0719086Z help: use `'_` for type paths
+2026-10-11T08:07:20.0719648Z     |
+2026-10-11T08:07:20.0720321Z 462 |     pub(crate) fn try_write(&self) -> Option<RwLockWriteGuard<'_, Store>> {
+2026-10-11T08:07:20.0721433Z     |                                                               +++
+2026-10-11T08:07:20.0721946Z 
+2026-10-11T08:07:20.0722378Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0723322Z    --> vendor/yrs-0.28.0/src/store.rs:467:34
+2026-10-11T08:07:20.0724129Z     |
+2026-10-11T08:07:20.0724927Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<Store> {
+2026-10-11T08:07:20.0726079Z     |                                  ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0726842Z     |                                  |
+2026-10-11T08:07:20.0727504Z     |                                  the lifetime is elided here
+2026-10-11T08:07:20.0728176Z     |
+2026-10-11T08:07:20.0729169Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0730122Z help: use `'_` for type paths
+2026-10-11T08:07:20.0730673Z     |
+2026-10-11T08:07:20.0731322Z 467 |     pub(crate) fn write_blocking(&self) -> RwLockWriteGuard<'_, Store> {
+2026-10-11T08:07:20.0732168Z     |                                                             +++
+2026-10-11T08:07:20.0732652Z 
+2026-10-11T08:07:20.0733093Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0733844Z    --> vendor/yrs-0.28.0/src/store.rs:476:31
+2026-10-11T08:07:20.0734435Z     |
+2026-10-11T08:07:20.0734985Z 476 |     pub(crate) fn write_async(&self) -> Write<Store> {
+2026-10-11T08:07:20.0735796Z     |                               ^^^^^     ^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0736552Z     |                               |
+2026-10-11T08:07:20.0737204Z     |                               the lifetime is elided here
+2026-10-11T08:07:20.0737862Z     |
+2026-10-11T08:07:20.0738830Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0739783Z help: use `'_` for type paths
+2026-10-11T08:07:20.0740526Z     |
+2026-10-11T08:07:20.0741125Z 476 |     pub(crate) fn write_async(&self) -> Write<'_, Store> {
+2026-10-11T08:07:20.0741876Z     |                                               +++
+2026-10-11T08:07:20.0742379Z 
+2026-10-11T08:07:20.0742832Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0743620Z    --> vendor/yrs-0.28.0/src/transaction.rs:168:18
+2026-10-11T08:07:20.0744264Z     |
+2026-10-11T08:07:20.0744772Z 168 |     fn root_refs(&self) -> RootRefs {
+2026-10-11T08:07:20.0745482Z     |                  ^^^^^     ^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0746176Z     |                  |
+2026-10-11T08:07:20.0746756Z     |                  the lifetime is elided here
+2026-10-11T08:07:20.0747375Z     |
+2026-10-11T08:07:20.0748141Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0749581Z help: use `'_` for type paths
+2026-10-11T08:07:20.0750231Z     |
+2026-10-11T08:07:20.0750663Z 168 |     fn root_refs(&self) -> RootRefs<'_> {
+2026-10-11T08:07:20.0751220Z     |                                    ++++
+2026-10-11T08:07:20.0751552Z 
+2026-10-11T08:07:20.0751862Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0752570Z    --> vendor/yrs-0.28.0/src/transaction.rs:175:21
+2026-10-11T08:07:20.0753090Z     |
+2026-10-11T08:07:20.0753486Z 175 |     fn subdoc_guids(&self) -> SubdocGuids {
+2026-10-11T08:07:20.0754096Z     |                     ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0754678Z     |                     |
+2026-10-11T08:07:20.0755121Z     |                     the lifetime is elided here
+2026-10-11T08:07:20.0755603Z     |
+2026-10-11T08:07:20.0756242Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.0757043Z help: use `'_` for type paths
+2026-10-11T08:07:20.0757456Z     |
+2026-10-11T08:07:20.0757875Z 175 |     fn subdoc_guids(&self) -> SubdocGuids<'_> {
+2026-10-11T08:07:20.0759055Z     |                                          ++++
+2026-10-11T08:07:20.0759451Z 
+2026-10-11T08:07:20.0759823Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.0760872Z    --> vendor/yrs-0.28.0/src/transaction.rs:181:16
+2026-10-11T08:07:20.0761412Z     |
+2026-10-11T08:07:20.0761792Z 181 |     fn subdocs(&self) -> SubdocsIter {
+2026-10-11T08:07:20.0762384Z     |                ^^^^^     ^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.0762952Z     |                |
+2026-10-11T08:07:20.1436077Z     |                the lifetime is elided here
+2026-10-11T08:07:20.1437012Z     |
+2026-10-11T08:07:20.1437856Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.1439232Z help: use `'_` for type paths
+2026-10-11T08:07:20.1439895Z     |
+2026-10-11T08:07:20.1440475Z 181 |     fn subdocs(&self) -> SubdocsIter<'_> {
+2026-10-11T08:07:20.1441232Z     |                                     ++++
+2026-10-11T08:07:20.1441802Z 
+2026-10-11T08:07:20.1442295Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.1443202Z    --> vendor/yrs-0.28.0/src/types/mod.rs:911:17
+2026-10-11T08:07:20.1443842Z     |
+2026-10-11T08:07:20.1444370Z 911 |     pub fn iter(&self) -> EventsIter {
+2026-10-11T08:07:20.1445080Z     |                 ^^^^^     ^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.1446083Z     |                 |
+2026-10-11T08:07:20.1446623Z     |                 the lifetime is elided here
+2026-10-11T08:07:20.1447218Z     |
+2026-10-11T08:07:20.1448018Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.1449169Z help: use `'_` for type paths
+2026-10-11T08:07:20.1449686Z     |
+2026-10-11T08:07:20.1450183Z 911 |     pub fn iter(&self) -> EventsIter<'_> {
+2026-10-11T08:07:20.1450829Z     |                                     ++++
+2026-10-11T08:07:20.1451265Z 
+2026-10-11T08:07:20.1451695Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.1452524Z   --> vendor/yrs-0.28.0/src/state_vector.rs:93:17
+2026-10-11T08:07:20.1453132Z    |
+2026-10-11T08:07:20.1453837Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<ClientID, u32> {
+2026-10-11T08:07:20.1454796Z    |                 ^^^^^     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.1455576Z    |                 |
+2026-10-11T08:07:20.1456193Z    |                 the lifetime is elided here
+2026-10-11T08:07:20.1456752Z    |
+2026-10-11T08:07:20.1457466Z    = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.1458590Z help: use `'_` for type paths
+2026-10-11T08:07:20.1459160Z    |
+2026-10-11T08:07:20.1459783Z 93 |     pub fn iter(&self) -> std::collections::hash_map::Iter<'_, ClientID, u32> {
+2026-10-11T08:07:20.1460633Z    |                                                            +++
+2026-10-11T08:07:20.1461275Z 
+2026-10-11T08:07:20.1461919Z warning: hiding a lifetime that's elided elsewhere is confusing
+2026-10-11T08:07:20.1462681Z    --> vendor/yrs-0.28.0/src/sync/awareness.rs:141:17
+2026-10-11T08:07:20.1463192Z     |
+2026-10-11T08:07:20.1463591Z 141 |     pub fn iter(&self) -> AwarenessIter {
+2026-10-11T08:07:20.1464197Z     |                 ^^^^^     ^^^^^^^^^^^^^ the same lifetime is hidden here
+2026-10-11T08:07:20.1464766Z     |                 |
+2026-10-11T08:07:20.1465191Z     |                 the lifetime is elided here
+2026-10-11T08:07:20.1465657Z     |
+2026-10-11T08:07:20.1466322Z     = help: the same lifetime is referred to in inconsistent ways, making the signature confusing
+2026-10-11T08:07:20.1467110Z help: use `'_` for type paths
+2026-10-11T08:07:20.1467527Z     |
+2026-10-11T08:07:20.1467913Z 141 |     pub fn iter(&self) -> AwarenessIter<'_> {
+2026-10-11T08:07:20.1468727Z     |                                        ++++
+2026-10-11T08:07:20.1469079Z 
+2026-10-11T08:07:26.1436419Z warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+2026-10-11T08:07:26.1437488Z    Compiling tandemlog-text v0.0.0 (/home/runner/work/tandemlog/tandemlog/native/text_engine)
+2026-10-11T08:07:38.3435193Z     Finished `release` profile [optimized] target(s) in 22.55s
+2026-10-11T08:07:40.4435113Z Checking the license for package CMake 3.22.1 in /usr/local/lib/android/sdk/licenses
+2026-10-11T08:07:40.4435703Z License for package CMake 3.22.1 accepted.
+2026-10-11T08:07:40.4436052Z Preparing "Install CMake 3.22.1 v.3.22.1".
+2026-10-11T08:07:41.7438109Z "Install CMake 3.22.1 v.3.22.1" ready.
+2026-10-11T08:07:41.7450301Z Installing CMake 3.22.1 in /usr/local/lib/android/sdk/cmake/3.22.1
+2026-10-11T08:07:41.7451396Z "Install CMake 3.22.1 v.3.22.1" complete.
+2026-10-11T08:07:41.8454428Z "Install CMake 3.22.1 v.3.22.1" finished.
+2026-10-11T08:09:07.4779195Z Running Gradle task 'assembleRelease'...                          315.6s
+2026-10-11T08:09:08.0590478Z ✓ Built build/app/outputs/flutter-apk/app-release.apk (67.0MB)
+2026-10-11T08:09:09.4969895Z Verified release certificate, package, version, non-debuggable flag and universal ABIs.
+2026-10-11T08:09:09.5783258Z ##[group]Run python tool/native_build_gates.py verify_payload --platform android --payload dist/tandemlog-android.apk
+2026-10-11T08:09:09.5784134Z [36;1mpython tool/native_build_gates.py verify_payload --platform android --payload dist/tandemlog-android.apk[0m
+2026-10-11T08:09:09.5906285Z shell: /usr/bin/bash -e {0}
+2026-10-11T08:09:09.5906556Z env:
+2026-10-11T08:09:09.5906872Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.5907398Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.5907803Z   MAVEN_ARGS: -ntp
+2026-10-11T08:09:09.5908126Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:09:09.5908837Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:09:09.5909315Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:09:09.5909708Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:09:09.5910063Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:09:09.5910447Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:09:09.5910880Z ##[endgroup]
+2026-10-11T08:09:09.7832439Z Packaged native library and exact notices verified: dist/tandemlog-android.apk
+2026-10-11T08:09:09.7999188Z ##[group]Run rm -rf -- "$RUNNER_TEMP/tandemlog-signing"
+2026-10-11T08:09:09.7999659Z [36;1mrm -rf -- "$RUNNER_TEMP/tandemlog-signing"[0m
+2026-10-11T08:09:09.8077908Z shell: /usr/bin/bash -e {0}
+2026-10-11T08:09:09.8078169Z env:
+2026-10-11T08:09:09.8078770Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.8079564Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.8080228Z   MAVEN_ARGS: -ntp
+2026-10-11T08:09:09.8080756Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:09:09.8081570Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:09:09.8082353Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:09:09.8083036Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:09:09.8083566Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:09:09.8084245Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:09:09.8084962Z ##[endgroup]
+2026-10-11T08:09:09.8247935Z ##[group]Run actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+2026-10-11T08:09:09.8248346Z with:
+2026-10-11T08:09:09.8248948Z   name: android-release
+2026-10-11T08:09:09.8249183Z   path: dist/*
+2026-10-11T08:09:09.8249396Z   retention-days: 5
+2026-10-11T08:09:09.8249612Z   if-no-files-found: error
+2026-10-11T08:09:09.8249843Z   compression-level: 6
+2026-10-11T08:09:09.8250062Z   overwrite: false
+2026-10-11T08:09:09.8250277Z   include-hidden-files: false
+2026-10-11T08:09:09.8250715Z   archive: true
+2026-10-11T08:09:09.8250916Z env:
+2026-10-11T08:09:09.8251220Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.8251709Z   JAVA_HOME_21_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/21.0.12-1/x64
+2026-10-11T08:09:09.8252092Z   MAVEN_ARGS: -ntp
+2026-10-11T08:09:09.8252398Z   CARGO_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/cargo
+2026-10-11T08:09:09.8252867Z   RUSTUP_HOME: /home/runner/work/_temp/tandemlog-rust-bootstrap/rustup
+2026-10-11T08:09:09.8253293Z   RUSTUP_UPDATE_ROOT: https://static.rust-lang.org/rustup
+2026-10-11T08:09:09.8253661Z   RUSTUP_DIST_SERVER: https://static.rust-lang.org
+2026-10-11T08:09:09.8253972Z   RUSTUP_AUTO_INSTALL: 0
+2026-10-11T08:09:09.8254333Z   TANDEMLOG_TEXT_TARGET_DIR: /home/runner/work/_temp/tandemlog-rust-bootstrap/target
+2026-10-11T08:09:09.8254734Z ##[endgroup]
+2026-10-11T08:09:09.9777253Z With the provided path, there will be 4 files uploaded
+2026-10-11T08:09:09.9782572Z Artifact name is valid!
+2026-10-11T08:09:09.9783226Z Root directory input is valid!
+2026-10-11T08:09:10.2444028Z Uploading artifact: android-release.zip
+2026-10-11T08:09:10.2502683Z Beginning upload of artifact content to blob storage
+2026-10-11T08:09:11.4248637Z Uploaded bytes 8388608
+2026-10-11T08:09:11.6068775Z Uploaded bytes 16777216
+2026-10-11T08:09:12.2294751Z Uploaded bytes 25165824
+2026-10-11T08:09:12.6492883Z Uploaded bytes 31047929
+2026-10-11T08:09:12.6959694Z Finished uploading artifact content to blob storage!
+2026-10-11T08:09:12.6963749Z SHA256 digest of uploaded artifact is e4df83be0db7b7b7daa76941de5664af3909b1b915c3e369bbe79e804243e7cb
+2026-10-11T08:09:12.6965991Z Finalizing artifact upload
+2026-10-11T08:09:12.9775112Z Artifact android-release successfully finalized. Artifact ID 11696122674
+2026-10-11T08:09:12.9776352Z Artifact android-release has been successfully uploaded! Final size is 31047929 bytes. Artifact ID is 11696122674
+2026-10-11T08:09:12.9783349Z Artifact download URL: https://github.com/reddraggone9/tandemlog/actions/runs/38121211371/artifacts/11696122674
+2026-10-11T08:09:13.0073653Z Post job cleanup.
+2026-10-11T08:09:13.1009250Z Post job cleanup.
+2026-10-11T08:09:13.1942512Z [command]/usr/bin/git version
+2026-10-11T08:09:13.1986463Z git version 2.55.0
+2026-10-11T08:09:13.2034731Z Temporarily overriding HOME='/home/runner/work/_temp/6920469e-1179-4ce9-9ae9-10db8d8ec45f' before making global git config changes
+2026-10-11T08:09:13.2036208Z Adding repository directory to the temporary git global config as a safe directory
+2026-10-11T08:09:13.2048302Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+2026-10-11T08:09:13.2079109Z Removing SSH command configuration
+2026-10-11T08:09:13.2081042Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-10-11T08:09:13.2122017Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-10-11T08:09:13.2403028Z Removing HTTP extra header
+2026-10-11T08:09:13.2410770Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-10-11T08:09:13.2451962Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-10-11T08:09:13.2744785Z Removing includeIf entries pointing to credentials config files
+2026-10-11T08:09:13.2751906Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-10-11T08:09:13.2787734Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+2026-10-11T08:09:13.2791148Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-11T08:09:13.2792253Z includeif.gitdir:/github/workspace/.git.path
+2026-10-11T08:09:13.2793192Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-11T08:09:13.2799858Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+2026-10-11T08:09:13.2827866Z /home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:09:13.2841964Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-ef862d65\-6d6b\-4978\-8628\-8c8e8502931f\.config
+2026-10-11T08:09:13.2890270Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+2026-10-11T08:09:13.2912763Z /home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:09:13.2924152Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-ef862d65\-6d6b\-4978\-8628\-8c8e8502931f\.config
+2026-10-11T08:09:13.2967542Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+2026-10-11T08:09:13.2989982Z /github/runner_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:09:13.2999263Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-ef862d65\-6d6b\-4978\-8628\-8c8e8502931f\.config
+2026-10-11T08:09:13.3033850Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+2026-10-11T08:09:13.3055343Z /github/runner_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config
+2026-10-11T08:09:13.3076762Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-ef862d65\-6d6b\-4978\-8628\-8c8e8502931f\.config
+2026-10-11T08:09:13.3111339Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-10-11T08:09:13.3347937Z Removing credentials config '/home/runner/work/_temp/git-credentials-ef862d65-6d6b-4978-8628-8c8e8502931f.config'
+2026-10-11T08:09:13.3525884Z Cleaning up orphan processes

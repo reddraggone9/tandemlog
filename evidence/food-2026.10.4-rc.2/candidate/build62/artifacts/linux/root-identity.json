@@ -1,0 +1,16 @@
+{
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "run": 38121211371,
+  "artifact_id": 11695788766,
+  "zip_crc_api_size_digest": "PASS",
+  "original_members": 4,
+  "flatpak_sha256": "8d4c49c4f680f561ddd7aaa1c36465903d0e8ae15ebbc4ad2726ac8949d25843",
+  "flatpak_bytes": 9226560,
+  "original_installed_lifecycle": "four phases PASS; all launched exact sandbox instances stopped",
+  "actual_installed_catalog": "Tandemlog ID/name, exact gzip catalog and five icon paths including64/128; successful frozen hosted file validation",
+  "default_sandbox_profile": "Exact privateXDG/nooverride/one permanent local.sqlite; no host-filesystem/network grant",
+  "real_commit_replacement": "Distinct packaging baseline with equal app payload/permissions, exact candidate restored",
+  "original_startup": "Final anchored JSON parsed without altering dbus-prefixed original; synthetic10tasks rebuild/warm PASS; OS page cache not flushed",
+  "native_payload_and_notices": "Source-bound successful hosted gate for original bundle; local Flatpak/OSTree unavailable",
+  "local_flatpak_runtime_or_bazaar_gui": "Not executed"
+}

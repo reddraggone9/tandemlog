@@ -1,0 +1,192 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:25:16.532637+00:00",
+  "comparison_scope": "Independent exact bytes and officialNDK28.2 readelf programheaders for all15native members in stable56, releasedRC1/build60 and proposedRC2/build62",
+  "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "baselines": {
+    "stable56": {
+      "path": "/tmp/food-build62-baseline-comparison/tandemlog-2026.10.3-android.apk",
+      "bytes": 66116061,
+      "sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438"
+    },
+    "RC1_build60": {
+      "path": "/tmp/food-rc60-artifacts/android-release-38085381679/tandemlog-android.apk",
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+    }
+  },
+  "byte_identical_across_all_three": 12,
+  "only_changed_members": [
+    "lib/arm64-v8a/libapp.so",
+    "lib/armeabi-v7a/libapp.so",
+    "lib/x86_64/libapp.so"
+  ],
+  "all_three_apks_all15_LOAD_alignment_and_congruence": "PASS",
+  "affected64bit_framework_SQLite_bytes_and_programheaders_across_all_three": "IDENTICAL",
+  "regression_verdict": "PRE_EXISTING_NOT_A_BUILD62_REGRESSION",
+  "runtime_risk_verdict": "STATIC_QUALIFICATION_ONLY_NO_CRASH_OR_LINKER_FAILURE_OBSERVED",
+  "layout_qualification": "For allthree affected64bit members the containingRWLOAD memory range equalsRELRO and subsequentRWLOAD roundedpages do not overlap roundedRELRO end. Current officialguide formula still reports nonzeroends; AOSP currentmain rounding source does not itself demonstrate a failure in these layouts.",
+  "official_android_guidance": "https://developer.android.com/guide/practices/page-sizes#check_the_relro_security_flag",
+  "primary_source_snapshot_receipt": "/tmp/food-rc62-artifact-independent-review/build62-relro-layout-source-qualification-addendum.json",
+  "release_scope": "This supplementary investigation introduces no new gate, no source/dependency upgrade, no waiver, and no publication approval. Established exact artifact/customtext/ZIP/hosteddesktop gates remainPASS; bounded AndroidUI QA can proceed on the exact62 APK. Broad16KB runtime support is not established by this static comparison.",
+  "previous_receipt_interpretation": "The earlier HOLD_GENERAL_APK16KB_ACCEPTANCE disposition is superseded by this exact baseline finding: a known pre-existing static-guidance discrepancy requiring parent disposition, not a demonstrated build62 regression or an automatic new release gate. Broad16KB runtime support remains unproven; existing bounded API30 AndroidUI acceptance may proceed.",
+  "rows": [
+    {
+      "member": "lib/arm64-v8a/libapp.so",
+      "stable56_sha256": "cfc3acdd5f29b247de69bbb78177efdd616b0ab9a3f3926a05da8918b75a8cf1",
+      "RC1_build60_sha256": "aff0d19435bfcafacab2b01da6ee97754c1a83cee13c5d1e5d94b2f2efa03bc6",
+      "RC2_build62_sha256": "3ed9c0b403f209b4616e1f0e4202434aa5d02e2cd163f05cfca4eba149451cab",
+      "all_three_byte_identical": false,
+      "all_three_program_headers_identical": false,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/arm64-v8a/libdartjni.so",
+      "stable56_sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "RC1_build60_sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "RC2_build62_sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/arm64-v8a/libflutter.so",
+      "stable56_sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "RC1_build60_sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "RC2_build62_sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": true
+    },
+    {
+      "member": "lib/arm64-v8a/libsqlite3.so",
+      "stable56_sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "RC1_build60_sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "RC2_build62_sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": true
+    },
+    {
+      "member": "lib/arm64-v8a/libtandemlog_text.so",
+      "stable56_sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "RC1_build60_sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "RC2_build62_sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/armeabi-v7a/libapp.so",
+      "stable56_sha256": "2869d106aff57319e7b240d855df6187ad3ac18c5dc2a3da778ee5f864798c16",
+      "RC1_build60_sha256": "b9284d989348a7688925f61c7ceab5c32cb5b97642cdf6a627b110ee3a5e5915",
+      "RC2_build62_sha256": "a715236ddfb251e797c32271b22ee63cc606ad4a1d54b8877f413a833934a803",
+      "all_three_byte_identical": false,
+      "all_three_program_headers_identical": false,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/armeabi-v7a/libdartjni.so",
+      "stable56_sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "RC1_build60_sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "RC2_build62_sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/armeabi-v7a/libflutter.so",
+      "stable56_sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "RC1_build60_sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "RC2_build62_sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/armeabi-v7a/libsqlite3.so",
+      "stable56_sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "RC1_build60_sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "RC2_build62_sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/armeabi-v7a/libtandemlog_text.so",
+      "stable56_sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "RC1_build60_sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "RC2_build62_sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/x86_64/libapp.so",
+      "stable56_sha256": "41d51504ba6ebe54ae1afe7a1d69365cb912c945fa71912cfea61bc023a8ea1c",
+      "RC1_build60_sha256": "7a6c8d8867af2d327f5a948c3bc9a28bf92cc2a0cb4002a43a99089aca705b12",
+      "RC2_build62_sha256": "fa91415fcc76ecefc7e380062f5478a38197bb7ba3add0e762293b2c6e750697",
+      "all_three_byte_identical": false,
+      "all_three_program_headers_identical": false,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/x86_64/libdartjni.so",
+      "stable56_sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "RC1_build60_sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "RC2_build62_sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/x86_64/libflutter.so",
+      "stable56_sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "RC1_build60_sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "RC2_build62_sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    },
+    {
+      "member": "lib/x86_64/libsqlite3.so",
+      "stable56_sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "RC1_build60_sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "RC2_build62_sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": true
+    },
+    {
+      "member": "lib/x86_64/libtandemlog_text.so",
+      "stable56_sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "RC1_build60_sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "RC2_build62_sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "all_three_byte_identical": true,
+      "all_three_program_headers_identical": true,
+      "64bit_RELRO_formula_nonzero": false
+    }
+  ],
+  "supporting_evidence": [
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/comparison.json",
+      "sha256": "59d01d449a331cd78e1d43025254b985a2fb6dc19f55d99621fce4450c116e9e"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/stable-build56/comparison.json",
+      "sha256": "b14711960ffa0b280aa1fae7f44ae45926c05746a4c8ac865509e91ccf075704"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-relro-layout-source-qualification-addendum.json",
+      "sha256": "74b0dbd06de8dedc68b3c0892aed362030bc7e473ce170a383b566be862007d9"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-framework-sqlite-relro-qualification.json",
+      "sha256": "da16dd84e15596848853d02e32d588d261146931e12617cf1f57df7ed4bc738e"
+    }
+  ],
+  "preservation": "No repo source edits, OSpackage install, APKpatch/rebuild, publication, userdata access or artifact deletion.",
+  "runtime_scope": "16KB guidance concerns devices running16KB memory pages (Android15+); static header comparison does not add a16KB gate to the existingAPI30 UIQA or GitHub APKsideload publication process. GooglePlay distribution is not claimed. ActualAPI36/16KB nativephone coverage remains unperformed.",
+  "parent_disposition": "Pending parent decision on recording the pre-existing compatibility qualification. This review introduces no automatic new gate or dependency upgrade."
+}

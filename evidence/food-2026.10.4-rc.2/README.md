@@ -1,4 +1,4 @@
-# Food RC2 — candidate preparation
+# Food RC2 — complete build62 Android handoff
 
 Approved scope: use the existing toolbar section identity for a responsive
 Tasks/Food dropdown, remove Food expiration-certainty UI/display distinctions,
@@ -15,8 +15,10 @@ Tasks date control; a50-action selective Food Undo stack; stable expanded-group
 control geometry; and the Flatpak name/catalog and sandbox-private-profile fixes.
 ADR0016/0017/0018 and ADR0013 record the approved
 behavior. Implementation and independent source reviews are complete; final local checks
-pass956 unit tests and13 changed native flows. Hosted and Android gates remain
-pending. [Expanded source-qualified closure](expanded-build62/README.md) records
+pass956 unit tests and13 changed native flows. All final hosted gates and exact
+original-artifact verification now pass; parent affected Android acceptance remains
+pending. [Exact build62 handoff](candidate/build62/README.md) records source7ae,
+run38121211371, the three original archives and owner-signed APK identity. [Expanded source-qualified closure](expanded-build62/README.md) records
 the full approved scope and disclosed Undo compatibility boundary.
 
 ## Initial three-change checkpoint — source00594c1
@@ -64,10 +66,15 @@ absence assertion; all remaining IME/error/draft checks remain and the twelve
 focused cases pass. The final full unit/analysis and changed native runs are
 recorded separately.
 
-Exact candidate installer hashes and full hosted gates must be recorded after
-the frozen build. Parent's actual Android build62 acceptance must cover section
+Exact candidate installer hashes and all full hosted gates are recorded in the
+[final manifest](candidate/build62/artifacts/manifest.json). Parent's actual Android build62 acceptance must cover section
 navigation, large text/keyboard/editor protection, short Inbox body taps and
 date-only Food behavior, Task Search/Add, combined Stock/Inbox, expiration colors
 and Filter/account behavior. Published RC1 and stable2026.10.3 remain unchanged.
 No publication, stable promotion, import or user/trial data migration is part of
 this candidate preparation. Original recovery is closed; no files/tasks deleted.
+
+The [exact handoff](candidate/build62/README.md) qualifies supplemental Android RELRO
+static guidance: affected libraries are byte-identical in stable56, RC1/60 and62;
+no runtime failure is established. Parent disposition is pending before publication,
+while exact Android UI QA may proceed. No new gate or toolchain upgrade was added.

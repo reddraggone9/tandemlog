@@ -1,0 +1,453 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:17:56.879532+00:00",
+  "verdict": "ACCEPT_ORIGINAL_IDENTITY_AND_HOSTED_DESKTOP_GATES_HOLD_GENERAL_APK_16KB_ACCEPTANCE",
+  "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "push_run": 38121201969,
+  "version": "2026.10.4-rc.2+62",
+  "workflow_terminal_verification": {
+    "38121211371": {
+      "event": "workflow_dispatch",
+      "path": ".github/workflows/android-candidate.yml",
+      "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114416195547,
+          "name": "candidate",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:23:55Z",
+          "completed_at": "2026-10-11T07:24:04Z"
+        },
+        {
+          "id": 114416227560,
+          "name": "checks / windows",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:24:06Z",
+          "completed_at": "2026-10-11T07:35:09Z"
+        },
+        {
+          "id": 114416227646,
+          "name": "checks / linux",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:24:07Z",
+          "completed_at": "2026-10-11T08:02:17Z"
+        },
+        {
+          "id": 114416227684,
+          "name": "checks / android",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:24:06Z",
+          "completed_at": "2026-10-11T07:30:39Z"
+        },
+        {
+          "id": 114422633504,
+          "name": "signed-android",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T08:02:20Z",
+          "completed_at": "2026-10-11T08:09:16Z"
+        }
+      ]
+    },
+    "38121201969": {
+      "event": "push",
+      "path": ".github/workflows/ci.yml",
+      "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 114416172733,
+          "name": "checks / windows",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:23:47Z",
+          "completed_at": "2026-10-11T07:32:54Z"
+        },
+        {
+          "id": 114416172928,
+          "name": "checks / android",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:23:48Z",
+          "completed_at": "2026-10-11T07:30:09Z"
+        },
+        {
+          "id": 114416172970,
+          "name": "checks / linux",
+          "status": "completed",
+          "conclusion": "success",
+          "started_at": "2026-10-11T07:23:47Z",
+          "completed_at": "2026-10-11T07:58:27Z"
+        }
+      ]
+    }
+  },
+  "original_artifacts": {
+    "windows": {
+      "receipt": "/tmp/food-rc62-artifact-independent-review/build62-windows-actual-artifact-bindings.json",
+      "receipt_sha256": "523c3853e7aad0ae784c10a0dd1a7d3a174e32ca2f0d7c60d4599adf6b22b622",
+      "artifact_id": 11695726852,
+      "original_archive": {
+        "path": "/tmp/food-rc62-artifact-independent-review/windows-38121211371-original.zip",
+        "bytes": 26198319,
+        "sha256": "ce395425c9efaf3a6d66f5a8cf2212baf8474a8cdfe5b3be8ae9d3616036ba92"
+      },
+      "original_members": [
+        {
+          "name": "tandemlog-windows-x64-unsigned-portable.zip",
+          "bytes": 14389214,
+          "sha256": "137465504f73ef8765f3553d9ff2f21fcdabc6eb66636210796f549095d02396",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-windows-x64-unsigned-setup.exe",
+          "bytes": 12375273,
+          "sha256": "83b8f8b934feea13bf14fd42369eda7ff84538dbd8c8c35b406f63f8763433d5",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-install-smoke.json",
+          "bytes": 1758,
+          "sha256": "960b86b2c03dda372a2e74d6aac2e4209617b9d54f4fc2b56eb09866a2cf33ee",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-portable-provenance.json",
+          "bytes": 2181,
+          "sha256": "55507d20eca3b742c3f296b4efc3d39281d2c1e0c54eabd5a4bdeb19c66a5912",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-portable-SHA256SUMS.txt",
+          "bytes": 111,
+          "sha256": "dcb0b711128c2153c24ac5a2c07f020062a59898390d860eddf24bcef7ff22da",
+          "crc_valid": true
+        },
+        {
+          "name": "windows-SHA256SUMS.txt",
+          "bytes": 108,
+          "sha256": "6ea074da4b96edcfdbafb69fe9ba82e4b091b317ac8d88beb5c8a867121ac9d5",
+          "crc_valid": true
+        }
+      ]
+    },
+    "linux": {
+      "receipt": "/tmp/food-rc62-artifact-independent-review/build62-linux-actual-artifact-bindings.json",
+      "receipt_sha256": "76082535abe22d9a33859ffe57d8e9c1feb77cf0f10c07fdad81e6d9e5f6648e",
+      "artifact_id": 11695788766,
+      "original_archive": {
+        "path": "/tmp/food-rc62-artifact-independent-review/linux-38121211371-original.zip",
+        "bytes": 9231646,
+        "sha256": "c10adb4e115717c4f7b94f1c3e9a8f79386763dec1e1d889f5edd583f9a17d83"
+      },
+      "original_members": [
+        {
+          "name": "linux-SHA256SUMS.txt",
+          "bytes": 94,
+          "sha256": "b4fabe0fa3954abbbd152f18eab22d66b2a105e6207681a27aea5c295914bb50",
+          "crc_valid": true
+        },
+        {
+          "name": "linux-install-smoke.json",
+          "bytes": 2918,
+          "sha256": "7ef49febc90d95c49b520545710d1e41cf2c71c49d158017b479ced40aa0daf9",
+          "crc_valid": true
+        },
+        {
+          "name": "linux-startup.json",
+          "bytes": 6191,
+          "sha256": "a3f5ed2e689f0691f4f8c53616c9029328dcbfb15e1b11b3507a3e5d6ddbdc5a",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-linux-x64.flatpak",
+          "bytes": 9226560,
+          "sha256": "8d4c49c4f680f561ddd7aaa1c36465903d0e8ae15ebbc4ad2726ac8949d25843",
+          "crc_valid": true
+        }
+      ]
+    },
+    "android-release": {
+      "receipt": "/tmp/food-rc62-artifact-independent-review/build62-android-release-actual-artifact-bindings.json",
+      "receipt_sha256": "dcc8afb4ce4529555c191d4545639d310e2a3c7b7a14187edfe2d2df3f8e001e",
+      "artifact_id": 11696122674,
+      "original_archive": {
+        "path": "/tmp/food-rc62-artifact-independent-review/android-release-38121211371-original.zip",
+        "bytes": 31047929,
+        "sha256": "e4df83be0db7b7b7daa76941de5664af3909b1b915c3e369bbe79e804243e7cb"
+      },
+      "original_members": [
+        {
+          "name": "android-SHA256SUMS.txt",
+          "bytes": 88,
+          "sha256": "129f3381100303c7ab71702125839cc9fb9242d40ba9f1fd72cf48bc5aa21c96",
+          "crc_valid": true
+        },
+        {
+          "name": "android-release-metadata.json",
+          "bytes": 295,
+          "sha256": "1dc9df0d629d86912b710b129e41c7f441cbf9339a99c4468039f3660679e591",
+          "crc_valid": true
+        },
+        {
+          "name": "android-signature.txt",
+          "bytes": 942,
+          "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+          "crc_valid": true
+        },
+        {
+          "name": "tandemlog-android.apk",
+          "bytes": 66984609,
+          "sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+          "crc_valid": true
+        }
+      ]
+    }
+  },
+  "actual_installers": {
+    "windows": {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12375273,
+      "sha256": "83b8f8b934feea13bf14fd42369eda7ff84538dbd8c8c35b406f63f8763433d5",
+      "crc_valid": true,
+      "local_path": "/tmp/food-rc62-artifact-independent-review/windows-38121211371/tandemlog-windows-x64-unsigned-setup.exe"
+    },
+    "linux": {
+      "name": "tandemlog-linux-x64.flatpak",
+      "bytes": 9226560,
+      "sha256": "8d4c49c4f680f561ddd7aaa1c36465903d0e8ae15ebbc4ad2726ac8949d25843",
+      "crc_valid": true,
+      "local_path": "/tmp/food-rc62-artifact-independent-review/linux-38121211371/tandemlog-linux-x64.flatpak"
+    },
+    "android-release": {
+      "name": "tandemlog-android.apk",
+      "bytes": 66984609,
+      "sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+      "crc_valid": true,
+      "local_path": "/tmp/food-rc62-artifact-independent-review/android-release-38121211371/tandemlog-android.apk"
+    }
+  },
+  "independent_static_checks": [
+    "All three original archive API SHA256/size/IDs/main/source/run/unexpired bindings and closed ZIP members/full CRC/internal SHA256SUMS",
+    "Original Windows portable complete 17-member provenance/hashes/full CRC, x64 text DLL exports, executable fixed version 2026.10.4 build62 and display RC2",
+    "Windows notices exactly equal immutable Git LF bytes converted to Windows checkout CRLF; original untouched",
+    "Official SDK36 apksigner cryptographic owner certificate plus aapt package/version62/nondebuggable/exact threeABIs",
+    "Exact APK notices/text-library payload/ELF architecture/LOAD16K/64bitRELRO/text exports and zipalign16K using frozen policy",
+    "Frozen combined complete14-member candidate inventory/checksum/desktop lifecycle gate"
+  ],
+  "hosted_actual_gates": {
+    "linux": {
+      "unit_passed": 956,
+      "native_integration_passed": 129,
+      "rust_contracts_passed": 4,
+      "python_native_contracts_passed": 107,
+      "policy_tools_total": 74,
+      "policy_tools_skipped": 0,
+      "native_payload_notices": "PASS source-bound hosted ELF/export/notices gate before original bundle packaging",
+      "installed_catalog_profile_and_lifecycle": "PASS original four-phase report: exact installed APP.xml.gz/name/icons64+128; private XDG without override; onlylocal.sqlite; no static host filesystem/network grants; sandbox instances stopped; distinct baseline OSTree commit/equal payload+permissions/final exact candidate restored",
+      "startup": "Original report: Linux x86_64/Xvfb,10synthetic tasks, rebuild981ms ready/external1253ms; warm315ms ready/external517ms; OS page cache not flushed"
+    },
+    "windows": {
+      "unit_passed": 953,
+      "unit_skipped": 2,
+      "rust_contracts_passed": 4,
+      "python_native_contracts_passed": 107,
+      "policy_tools_total": 74,
+      "policy_tools_skipped": 4,
+      "installed_lifecycle": "PASS original install/upgrade/uninstall/reinstall synthetic projection/data preservation; native release startup and source-bound packaged payload gate"
+    },
+    "android_debug": "PASS actual candidate debug build/native payload/notices, distinct from release APK",
+    "owner_signed_android": "PASS actual terminal build, packaged payload and artifact upload"
+  },
+  "scope_limits": [
+    "Reviewer executed static byte checks in Linux cloud workspace; no local Windows installer/DLL, Flatpak sandbox/Bazaar GUI or Android app execution",
+    "Linux internal native payload/notices/version acceptance uses exact frozen source-bound successful hosted build/gates and original bundle/lifecycle hash ties; no local OSTree extraction or Flatpak install claim",
+    "Hosted lifecycle and native Linux tests execute actual installed native code with synthetic disposable data; human target-device/UI acceptance is separate",
+    "Android metadata hash comparison is identity verification only and is not a native installation/QA attestation; parent must install/retest this exact new APK",
+    "No publication or stable feature promotion authorized by this receipt; parent native Android acceptance, exact handoff/editorial and final quota gates remain separate"
+  ],
+  "source_scope": "lib/native/Dart tests/integration/pubspec identical implementation freeze431 through final7ae; reviewed tooling isolation and literal fixture/catalog path corrections preserve source fixture bytes/validation gates. Catalog-path and literal-fixture corrections add no skips or bypasses; isolated tool tests run the Linux shebang wrapper on Linux and retain seven portable acquisition cases on Windows; all actual platform skips are reported explicitly",
+  "isolated_tool_acquisition": "Actual hosted six-package SHA/size closure equals frozen reviewed manifest; AppStream1.0.2 exact child-only environment/data extraction without install or hooks; host_packages_modified false applies only to this bounded preparation, not original Ubuntu runner setup",
+  "supplemental_apk_16KB_qualification": {
+    "reviewer": "/root/food_rc2_artifact_review",
+    "checked_at_utc": "2026-10-11T08:17:54.720348+00:00",
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "candidate_run": 38121211371,
+    "artifact_id": 11696122674,
+    "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+    "native_member_count": 15,
+    "all_PT_LOAD_alignment_and_offset_address_congruence": "PASS",
+    "frozen_custom_text_RELRO_export_notice_gate": "PASS",
+    "whole_APK_SDK36_zipalign16K": "PASS",
+    "supplemental_64bit_framework_sqlite_RELRO_formula": "DOES_NOT_MEET_CURRENT_OFFICIAL_STATIC_GUIDANCE",
+    "nonzero_relro_ends": [
+      {
+        "member": "lib/arm64-v8a/libflutter.so",
+        "elf_class": 2,
+        "ranges": [
+          {
+            "address": 11435760,
+            "memsz": 373008,
+            "end": 11808768,
+            "end_mod_16K": 12288
+          }
+        ]
+      },
+      {
+        "member": "lib/arm64-v8a/libsqlite3.so",
+        "elf_class": 2,
+        "ranges": [
+          {
+            "address": 1721904,
+            "memsz": 10704,
+            "end": 1732608,
+            "end_mod_16K": 12288
+          }
+        ]
+      },
+      {
+        "member": "lib/armeabi-v7a/libflutter.so",
+        "elf_class": 1,
+        "ranges": [
+          {
+            "address": 8482400,
+            "memsz": 197024,
+            "end": 8679424,
+            "end_mod_16K": 12288
+          }
+        ]
+      },
+      {
+        "member": "lib/x86_64/libsqlite3.so",
+        "elf_class": 2,
+        "ranges": [
+          {
+            "address": 1698832,
+            "memsz": 13296,
+            "end": 1712128,
+            "end_mod_16K": 8192
+          }
+        ]
+      }
+    ],
+    "affected_64bit_count": 3,
+    "official_primary_source": {
+      "url": "https://developer.android.com/guide/practices/page-sizes#check_the_relro_security_flag",
+      "checked_at_utc": "2026-10-11T08:17:54.720359+00:00",
+      "section": "Check the RELRO security flag",
+      "summary": "Android guidance asks checking each shared object and requires (GNU_RELRO VirtAddr + MemSiz) modulo 0x4000 to be zero; nonzero may protect a range expected writable and cause a runtime segmentation fault. LOAD and ZIP alignment checks are separate. Actual 16KB testing verifies getconf PAGE_SIZE returns16384."
+    },
+    "interpretation_limits": [
+      "Static nonconformance to the published formula is observed. No crash or linker rejection was executed or observed by this reviewer.",
+      "Affected binaries have separate subsequent RW LOAD segments; this receipt does not prove live writable-data overlap or infer a crash solely from the formula.",
+      "ARMv7 Flutter also has a nonzero RELRO end; the Android64bit requirement finding comprises the other three entries.",
+      "Actual16KB target execution or a documented source-supported compatibility disposition remains pending; a4KB device test cannot establish16KB behavior."
+    ],
+    "recommendation": "Hold general APK16KB compliance acceptance; carry explicit unresolved framework/SQLite RELRO qualification in handoff and obtain bounded disposition before publication. No dependency change or binary patch is authorized by this receipt.",
+    "supporting_evidence": [
+      {
+        "path": "/tmp/food-rc62-artifact-independent-review/build62-all-apk-ELF-program-headers.json",
+        "sha256": "c61f607162df118c977e020b4a99f39a35c71d2cf902a5f1f4419d47fe409450"
+      },
+      {
+        "path": "/tmp/food-rc62-artifact-independent-review/build62-official-ndk-readelf-all-native.json",
+        "sha256": "064cc50c15d6075e826061e6aafd1e87bf7140698a7bb6a0a1b557fa74b77cb2"
+      },
+      {
+        "path": "/tmp/food-rc62-artifact-independent-review/build62-independent-android-native-payload.log",
+        "sha256": "ed61b2521214726104f1d4879aebc57c52fe5e519feba639f7d0dcbdf0b2621d"
+      }
+    ]
+  },
+  "remaining_blockers": [
+    "General APK16KB compliance disposition for three64bit framework/SQLite RELRO ends that fail current official static formula",
+    "Parent exact APK affected Android runtime/Show taps acceptance",
+    "Final parent quota/publication clearance"
+  ],
+  "publication_ready": false,
+  "preservation": "No application/source edits, OS package installation, publication, live user data access or original artifact deletion by reviewer; failed prior candidate evidence retained and never substituted",
+  "supporting_evidence": {
+    "build62-combined-inventory-independent-verification.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-combined-inventory-independent-verification.json",
+      "sha256": "44d2c6b98a608a77a91834df683bb8a5aaa4b4e47731f2ce80268ed09a2be98b"
+    },
+    "7ae-frozen-policy-source-bindings.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-frozen-policy-source-bindings.json",
+      "sha256": "e19d326679252b73c232bd7f4e782a8b853e49044381e5567472c68a1eeedeac"
+    },
+    "build62-windows-exact-notice-representation.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-windows-exact-notice-representation.json",
+      "sha256": "49a78ffdbeeee99ffc9b13de1466369ae6414ed6c5697c3d7a74c4db98970ae5"
+    },
+    "build62-hosted-isolated-tool-receipt.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-hosted-isolated-tool-receipt.json",
+      "sha256": "30d3b7b6b246bb46caa751a6150a5660c8ff811f19a0c92cf8877e715b497d09"
+    },
+    "7ae-linux-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-linux-provider-decoded.log",
+      "sha256": "1d9992934a25225b5549a0790ff505767ad357e62d9e1fba95f1619cdf8042d8"
+    },
+    "7ae-windows-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-windows-provider-decoded.log",
+      "sha256": "e4ecde0ea89c2ed95a0dce909e34c67fe3ec48582aeeaff58b1cbb269285d998"
+    },
+    "7ae-android-debug-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-android-debug-provider-decoded.log",
+      "sha256": "a5dc534728372ad6cae29e98b31e5d5498baacefc5c92acbb4651e2902d60c6f"
+    },
+    "7ae-signed-android-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-signed-android-provider-decoded.log",
+      "sha256": "0fee626407b890de6217858d02e109057efdd977efb17706a618a22a6bc98c9a"
+    },
+    "build62-independent-signature.txt": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-independent-signature.txt",
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "build62-independent-badging.txt": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-independent-badging.txt",
+      "sha256": "9490c4f69ec0aaf830d44e7b9810a91758e3c47b0abe846a281261a565470204"
+    },
+    "build62-independent-android-native-payload.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-independent-android-native-payload.log",
+      "sha256": "ed61b2521214726104f1d4879aebc57c52fe5e519feba639f7d0dcbdf0b2621d"
+    },
+    "7ae-final-38121211371-run-api.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-final-38121211371-run-api.json",
+      "sha256": "36247a552c7ef778ecddc36f0a135622821743ba278451f9f207634b80cee107"
+    },
+    "7ae-final-38121211371-jobs-api.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-final-38121211371-jobs-api.json",
+      "sha256": "925ba59245c8286de482b7e5a15e59a289bd608b6be3a138aaf4357db206a1da"
+    },
+    "7ae-final-38121201969-run-api.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-final-38121201969-run-api.json",
+      "sha256": "ccbd32299c99e1b8ceade2fdbe42b5c87faa2783a54994c7ccf8bfb1c1617883"
+    },
+    "7ae-final-38121201969-jobs-api.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-final-38121201969-jobs-api.json",
+      "sha256": "c82a2d9d9338b5b8391bde15be1df0f00f7b7793ff2f69aa3fe2439a5f1a0f9c"
+    },
+    "7ae-final-original-artifacts-api.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/7ae-final-original-artifacts-api.json",
+      "sha256": "758ee69b234dff469b1c56ac9defec298c9cdaa70902530000b46dda36bbbe0e"
+    },
+    "build62-framework-sqlite-relro-qualification.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-framework-sqlite-relro-qualification.json",
+      "sha256": "da16dd84e15596848853d02e32d588d261146931e12617cf1f57df7ed4bc738e"
+    },
+    "build62-all-apk-ELF-program-headers.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-all-apk-ELF-program-headers.json",
+      "sha256": "c61f607162df118c977e020b4a99f39a35c71d2cf902a5f1f4419d47fe409450"
+    },
+    "build62-official-ndk-readelf-all-native.json": {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-official-ndk-readelf-all-native.json",
+      "sha256": "064cc50c15d6075e826061e6aafd1e87bf7140698a7bb6a0a1b557fa74b77cb2"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "reviewer": "independent editorial reviewer /root/food_rc2_editorial_review",
+  "outcome": "APPROVED full RC1 through corrected build62 candidate editorial closure; no new public notes about CI correction",
+  "covered_full_source_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "final_complete_candidate": "7ae14371fa0b734599fcdbb184d93376b8898a2a"
+  },
+  "reviewed_addendum_range": {
+    "base": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+    "after": "7ae14371fa0b734599fcdbb184d93376b8898a2a"
+  },
+  "prior_review_chain": [
+    "/tmp/food-rc2-expanded-editorial-review.json: exact3d671\u21924310708 fullscope notes/media review",
+    "/tmp/food-rc2-editorial-candidate-correction-addendum.json: exactd38\u219243df build-tool/fixture correction and unchanged app/media verification"
+  ],
+  "reviewed_source_hashes": {
+    "packaging/linux/verify_flatpak.py": "428b03056e70a301077dec082e0130f7836bb97261c33364f1b5167f30f01362",
+    "tool/test_linux_flatpak_metadata.py": "09e05cd8fa23720eb9ca8347822c6a39ab4af673307c8beaf4cdd431bb2397ea"
+  },
+  "observations": [
+    "Only two packaging verifier report-path conversions changed from str(relativePath) to relativePath.as_posix(); mandatory component identity, icon existence/size, permission and profile checks remain unchanged.",
+    "Added real-file regression invokes verifier with PureWindowsPath relative semantics; independent source receipt preserves actual composed-catalog and RED/GREEN qualification.",
+    "Portable forward-slash report paths repair engineering gates. No new end-user feature, changed installation action or altered app-center catalog contents are introduced.",
+    "Eight approved meaningful change bullets plus narrow interrupted-Undo recovery exception remain accurate. Existing real-app media source/capture provenance remains valid."
+  ],
+  "notes_sha256": "d93af0f5276f5ba8b9f59cf60f57192d6614c2f7281b39aec2d9d49928f79b94",
+  "unchanged_media_sha256": {
+    "evidence/food-2026.10.4-rc.2/media/task-search-before-after.png": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0",
+    "evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1"
+  },
+  "closure_check": "Empty43df\u21927ae diff for app/native/platform/Darttest/integration/version/shippedlauncher/metadata roots; notes and images also verified byte-identical directly from immutable Git objects.",
+  "candidate_run": "38121211371; not accepted as runtime/artifact evidence by this editorial review",
+  "remaining_gates": "New hosted/exact-artifact/native/publication gates remain independent. No Windows/Android/Flatpak target UI execution or publication claim."
+}

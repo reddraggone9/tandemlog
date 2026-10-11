@@ -1,0 +1,12 @@
+{
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "run": 38121211371,
+  "artifact_id": 11696122674,
+  "apk_bytes": 66984609,
+  "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "original_archive_api_size_digest_crc_and_four_members": "PASS",
+  "official_SDK36_signature_package_version_nondebuggable_three_ABIs": "PASS",
+  "owner_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "native_zipalign16K_ELF_RELRO_exports_exact_notices": "PASS",
+  "parent_actual_Android_runtime": "PENDING eight affected items and Show taps demo; static verification is separate"
+}

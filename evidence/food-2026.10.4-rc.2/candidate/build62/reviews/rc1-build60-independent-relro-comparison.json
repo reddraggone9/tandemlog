@@ -1,0 +1,2115 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:24:17.424757+00:00",
+  "released_label": "rc1-build60",
+  "released_apk": {
+    "path": "/tmp/food-rc60-artifacts/android-release-38085381679/tandemlog-android.apk",
+    "bytes": 67082973,
+    "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+  },
+  "candidate": {
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "run": 38121211371,
+    "artifact": 11696122674,
+    "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452"
+  },
+  "member_count": 15,
+  "identical_member_count": 12,
+  "changed_members": [
+    "lib/arm64-v8a/libapp.so",
+    "lib/armeabi-v7a/libapp.so",
+    "lib/x86_64/libapp.so"
+  ],
+  "pre_existing_nonzero_64bit_RELRO_ends": [
+    "lib/arm64-v8a/libflutter.so",
+    "lib/arm64-v8a/libsqlite3.so",
+    "lib/x86_64/libsqlite3.so"
+  ],
+  "all_affected_members_and_program_headers_identical": true,
+  "all_LOAD_16KB_alignment_and_congruence": true,
+  "regression_disposition": "Three64bit framework/SQLite RELRO formula findings are pre-existing in this released APK and byte-identical in build62; no build62 regression established.",
+  "runtime_risk_qualification": "Current Android guide formula fails. Exact headers establish no laterRWLOAD roundedpage overlap and containingRWLOAD wholly covered byRELRO. No actual16KB execution, crash or linker rejection observed. This does not establish16KB runtime support or introduce a new release gate.",
+  "official_requirement": "https://developer.android.com/guide/practices/page-sizes#check_the_relro_security_flag",
+  "no_upgrade_or_binary_patch_performed": true,
+  "rows": [
+    {
+      "member": "lib/arm64-v8a/libapp.so",
+      "identical_bytes": false,
+      "identical_program_headers": false,
+      "released": {
+        "bytes": 7865224,
+        "sha256": "aff0d19435bfcafacab2b01da6ee97754c1a83cee13c5d1e5d94b2f2efa03bc6",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 2963917,
+            "memory_size": 2963917,
+            "flags": "R",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 3014656,
+            "virtual_address": 3014656,
+            "physical_address": 3014656,
+            "file_size": 4791856,
+            "memory_size": 4791856,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 7864320,
+            "virtual_address": 7864320,
+            "physical_address": 7864320,
+            "file_size": 104,
+            "memory_size": 104,
+            "flags": "RW",
+            "alignment": 65536
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/arm64-v8a/libapp.readelf.txt"
+      },
+      "build62": {
+        "bytes": 7799688,
+        "sha256": "3ed9c0b403f209b4616e1f0e4202434aa5d02e2cd163f05cfca4eba149451cab",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 2959613,
+            "memory_size": 2959613,
+            "flags": "R",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 3014656,
+            "virtual_address": 3014656,
+            "physical_address": 3014656,
+            "file_size": 4778752,
+            "memory_size": 4778752,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 7798784,
+            "virtual_address": 7798784,
+            "physical_address": 7798784,
+            "file_size": 104,
+            "memory_size": 104,
+            "flags": "RW",
+            "alignment": 65536
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/arm64-v8a/libapp.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/arm64-v8a/libdartjni.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 131248,
+        "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 125968,
+            "memory_size": 125968,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 125968,
+            "virtual_address": 142352,
+            "physical_address": 142352,
+            "file_size": 1376,
+            "memory_size": 5104,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 127344,
+            "virtual_address": 160112,
+            "physical_address": 160112,
+            "file_size": 1784,
+            "memory_size": 2424,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 125968,
+            "virtual_address": 142352,
+            "physical_address": 142352,
+            "file_size": 1376,
+            "memory_size": 5104,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 147456,
+            "end_mod_16KB": 0,
+            "rounded_end": 147456,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 125968,
+              "virtual_address": 142352,
+              "physical_address": 142352,
+              "file_size": 1376,
+              "memory_size": 5104,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              147456
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/arm64-v8a/libdartjni.readelf.txt"
+      },
+      "build62": {
+        "bytes": 131248,
+        "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 125968,
+            "memory_size": 125968,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 125968,
+            "virtual_address": 142352,
+            "physical_address": 142352,
+            "file_size": 1376,
+            "memory_size": 5104,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 127344,
+            "virtual_address": 160112,
+            "physical_address": 160112,
+            "file_size": 1784,
+            "memory_size": 2424,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 125968,
+            "virtual_address": 142352,
+            "physical_address": 142352,
+            "file_size": 1376,
+            "memory_size": 5104,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 147456,
+            "end_mod_16KB": 0,
+            "rounded_end": 147456,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 125968,
+              "virtual_address": 142352,
+              "physical_address": 142352,
+              "file_size": 1376,
+              "memory_size": 5104,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              147456
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/arm64-v8a/libdartjni.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/arm64-v8a/libflutter.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 11747864,
+        "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 11370224,
+            "memory_size": 11370224,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 11370224,
+            "virtual_address": 11435760,
+            "physical_address": 11435760,
+            "file_size": 369400,
+            "memory_size": 373008,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 11739624,
+            "virtual_address": 11870696,
+            "physical_address": 11870696,
+            "file_size": 5864,
+            "memory_size": 67576,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 11370224,
+            "virtual_address": 11435760,
+            "physical_address": 11435760,
+            "file_size": 369400,
+            "memory_size": 373008,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 11808768,
+            "end_mod_16KB": 12288,
+            "rounded_end": 11812864,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 11370224,
+              "virtual_address": 11435760,
+              "physical_address": 11435760,
+              "file_size": 369400,
+              "memory_size": 373008,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              11862016
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/arm64-v8a/libflutter.readelf.txt"
+      },
+      "build62": {
+        "bytes": 11747864,
+        "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 11370224,
+            "memory_size": 11370224,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 11370224,
+            "virtual_address": 11435760,
+            "physical_address": 11435760,
+            "file_size": 369400,
+            "memory_size": 373008,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 11739624,
+            "virtual_address": 11870696,
+            "physical_address": 11870696,
+            "file_size": 5864,
+            "memory_size": 67576,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 11370224,
+            "virtual_address": 11435760,
+            "physical_address": 11435760,
+            "file_size": 369400,
+            "memory_size": 373008,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 11808768,
+            "end_mod_16KB": 12288,
+            "rounded_end": 11812864,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 11370224,
+              "virtual_address": 11435760,
+              "physical_address": 11435760,
+              "file_size": 369400,
+              "memory_size": 373008,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              11862016
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/arm64-v8a/libflutter.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/arm64-v8a/libsqlite3.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 1732360,
+        "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1705520,
+            "memory_size": 1705520,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1705520,
+            "virtual_address": 1721904,
+            "physical_address": 1721904,
+            "file_size": 9840,
+            "memory_size": 10704,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1715360,
+            "virtual_address": 1748128,
+            "physical_address": 1748128,
+            "file_size": 14896,
+            "memory_size": 16192,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1705520,
+            "virtual_address": 1721904,
+            "physical_address": 1721904,
+            "file_size": 9840,
+            "memory_size": 10704,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1732608,
+            "end_mod_16KB": 12288,
+            "rounded_end": 1736704,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1705520,
+              "virtual_address": 1721904,
+              "physical_address": 1721904,
+              "file_size": 9840,
+              "memory_size": 10704,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1736704
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/arm64-v8a/libsqlite3.readelf.txt"
+      },
+      "build62": {
+        "bytes": 1732360,
+        "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1705520,
+            "memory_size": 1705520,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1705520,
+            "virtual_address": 1721904,
+            "physical_address": 1721904,
+            "file_size": 9840,
+            "memory_size": 10704,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1715360,
+            "virtual_address": 1748128,
+            "physical_address": 1748128,
+            "file_size": 14896,
+            "memory_size": 16192,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1705520,
+            "virtual_address": 1721904,
+            "physical_address": 1721904,
+            "file_size": 9840,
+            "memory_size": 10704,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1732608,
+            "end_mod_16KB": 12288,
+            "rounded_end": 1736704,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1705520,
+              "virtual_address": 1721904,
+              "physical_address": 1721904,
+              "file_size": 9840,
+              "memory_size": 10704,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1736704
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/arm64-v8a/libsqlite3.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/arm64-v8a/libtandemlog_text.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 1044120,
+        "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 198040,
+            "memory_size": 198040,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 198040,
+            "virtual_address": 214424,
+            "physical_address": 214424,
+            "file_size": 827480,
+            "memory_size": 827480,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1025520,
+            "virtual_address": 1058288,
+            "physical_address": 1058288,
+            "file_size": 13768,
+            "memory_size": 23056,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1039288,
+            "virtual_address": 1088440,
+            "physical_address": 1088440,
+            "file_size": 2736,
+            "memory_size": 4968,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1025520,
+            "virtual_address": 1058288,
+            "physical_address": 1058288,
+            "file_size": 13768,
+            "memory_size": 23056,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1081344,
+            "end_mod_16KB": 0,
+            "rounded_end": 1081344,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1025520,
+              "virtual_address": 1058288,
+              "physical_address": 1058288,
+              "file_size": 13768,
+              "memory_size": 23056,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1081344
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/arm64-v8a/libtandemlog_text.readelf.txt"
+      },
+      "build62": {
+        "bytes": 1044120,
+        "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 198040,
+            "memory_size": 198040,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 198040,
+            "virtual_address": 214424,
+            "physical_address": 214424,
+            "file_size": 827480,
+            "memory_size": 827480,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1025520,
+            "virtual_address": 1058288,
+            "physical_address": 1058288,
+            "file_size": 13768,
+            "memory_size": 23056,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1039288,
+            "virtual_address": 1088440,
+            "physical_address": 1088440,
+            "file_size": 2736,
+            "memory_size": 4968,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1025520,
+            "virtual_address": 1058288,
+            "physical_address": 1058288,
+            "file_size": 13768,
+            "memory_size": 23056,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1081344,
+            "end_mod_16KB": 0,
+            "rounded_end": 1081344,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1025520,
+              "virtual_address": 1058288,
+              "physical_address": 1058288,
+              "file_size": 13768,
+              "memory_size": 23056,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1081344
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/arm64-v8a/libtandemlog_text.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/armeabi-v7a/libapp.so",
+      "identical_bytes": false,
+      "identical_program_headers": false,
+      "released": {
+        "bytes": 8520264,
+        "sha256": "b9284d989348a7688925f61c7ceab5c32cb5b97642cdf6a627b110ee3a5e5915",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 3408437,
+            "memory_size": 3408437,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 3424256,
+            "virtual_address": 3424256,
+            "physical_address": 3424256,
+            "file_size": 5088984,
+            "memory_size": 5088984,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 8519680,
+            "virtual_address": 8519680,
+            "physical_address": 8519680,
+            "file_size": 52,
+            "memory_size": 52,
+            "flags": "RW",
+            "alignment": 16384
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/armeabi-v7a/libapp.readelf.txt"
+      },
+      "build62": {
+        "bytes": 8487496,
+        "sha256": "a715236ddfb251e797c32271b22ee63cc606ad4a1d54b8877f413a833934a803",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 3404205,
+            "memory_size": 3404205,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 3407872,
+            "virtual_address": 3407872,
+            "physical_address": 3407872,
+            "file_size": 5075616,
+            "memory_size": 5075616,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 8486912,
+            "virtual_address": 8486912,
+            "physical_address": 8486912,
+            "file_size": 52,
+            "memory_size": 52,
+            "flags": "RW",
+            "alignment": 16384
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/armeabi-v7a/libapp.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/armeabi-v7a/libdartjni.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 81444,
+        "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 78256,
+            "memory_size": 78256,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 78256,
+            "virtual_address": 94640,
+            "physical_address": 94640,
+            "file_size": 692,
+            "memory_size": 3664,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 78948,
+            "virtual_address": 111716,
+            "physical_address": 111716,
+            "file_size": 892,
+            "memory_size": 1168,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 78256,
+            "virtual_address": 94640,
+            "physical_address": 94640,
+            "file_size": 692,
+            "memory_size": 3664,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 98304,
+            "end_mod_16KB": 0,
+            "rounded_end": 98304,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 78256,
+              "virtual_address": 94640,
+              "physical_address": 94640,
+              "file_size": 692,
+              "memory_size": 3664,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              98304
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/armeabi-v7a/libdartjni.readelf.txt"
+      },
+      "build62": {
+        "bytes": 81444,
+        "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 78256,
+            "memory_size": 78256,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 78256,
+            "virtual_address": 94640,
+            "physical_address": 94640,
+            "file_size": 692,
+            "memory_size": 3664,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 78948,
+            "virtual_address": 111716,
+            "physical_address": 111716,
+            "file_size": 892,
+            "memory_size": 1168,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 78256,
+            "virtual_address": 94640,
+            "physical_address": 94640,
+            "file_size": 692,
+            "memory_size": 3664,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 98304,
+            "end_mod_16KB": 0,
+            "rounded_end": 98304,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 78256,
+              "virtual_address": 94640,
+              "physical_address": 94640,
+              "file_size": 692,
+              "memory_size": 3664,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              98304
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/armeabi-v7a/libdartjni.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/armeabi-v7a/libflutter.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 8615900,
+        "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 8416864,
+            "memory_size": 8416864,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8416864,
+            "virtual_address": 8482400,
+            "physical_address": 8482400,
+            "file_size": 194488,
+            "memory_size": 197024,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8611352,
+            "virtual_address": 8742424,
+            "physical_address": 8742424,
+            "file_size": 2720,
+            "memory_size": 38440,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 8416864,
+            "virtual_address": 8482400,
+            "physical_address": 8482400,
+            "file_size": 194488,
+            "memory_size": 197024,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 8679424,
+            "end_mod_16KB": 12288,
+            "rounded_end": 8683520,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 8416864,
+              "virtual_address": 8482400,
+              "physical_address": 8482400,
+              "file_size": 194488,
+              "memory_size": 197024,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              8732672
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/armeabi-v7a/libflutter.readelf.txt"
+      },
+      "build62": {
+        "bytes": 8615900,
+        "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 8416864,
+            "memory_size": 8416864,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8416864,
+            "virtual_address": 8482400,
+            "physical_address": 8482400,
+            "file_size": 194488,
+            "memory_size": 197024,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8611352,
+            "virtual_address": 8742424,
+            "physical_address": 8742424,
+            "file_size": 2720,
+            "memory_size": 38440,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 8416864,
+            "virtual_address": 8482400,
+            "physical_address": 8482400,
+            "file_size": 194488,
+            "memory_size": 197024,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 8679424,
+            "end_mod_16KB": 12288,
+            "rounded_end": 8683520,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 8416864,
+              "virtual_address": 8482400,
+              "physical_address": 8482400,
+              "file_size": 194488,
+              "memory_size": 197024,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              8732672
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/armeabi-v7a/libflutter.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/armeabi-v7a/libsqlite3.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 1713736,
+        "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1697728,
+            "memory_size": 1697728,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1697728,
+            "virtual_address": 1714112,
+            "physical_address": 1714112,
+            "file_size": 6196,
+            "memory_size": 6208,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1703928,
+            "virtual_address": 1736696,
+            "physical_address": 1736696,
+            "file_size": 8224,
+            "memory_size": 8816,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1697728,
+            "virtual_address": 1714112,
+            "physical_address": 1714112,
+            "file_size": 6196,
+            "memory_size": 6208,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1720320,
+            "end_mod_16KB": 0,
+            "rounded_end": 1720320,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1697728,
+              "virtual_address": 1714112,
+              "physical_address": 1714112,
+              "file_size": 6196,
+              "memory_size": 6208,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1720320
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/armeabi-v7a/libsqlite3.readelf.txt"
+      },
+      "build62": {
+        "bytes": 1713736,
+        "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1697728,
+            "memory_size": 1697728,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1697728,
+            "virtual_address": 1714112,
+            "physical_address": 1714112,
+            "file_size": 6196,
+            "memory_size": 6208,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1703928,
+            "virtual_address": 1736696,
+            "physical_address": 1736696,
+            "file_size": 8224,
+            "memory_size": 8816,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1697728,
+            "virtual_address": 1714112,
+            "physical_address": 1714112,
+            "file_size": 6196,
+            "memory_size": 6208,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1720320,
+            "end_mod_16KB": 0,
+            "rounded_end": 1720320,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1697728,
+              "virtual_address": 1714112,
+              "physical_address": 1714112,
+              "file_size": 6196,
+              "memory_size": 6208,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1720320
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/armeabi-v7a/libsqlite3.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/armeabi-v7a/libtandemlog_text.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 793428,
+        "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 105885,
+            "memory_size": 105885,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 105888,
+            "virtual_address": 122272,
+            "physical_address": 122272,
+            "file_size": 674512,
+            "memory_size": 674512,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 780400,
+            "virtual_address": 813168,
+            "physical_address": 813168,
+            "file_size": 9724,
+            "memory_size": 22416,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 790128,
+            "virtual_address": 839280,
+            "physical_address": 839280,
+            "file_size": 1568,
+            "memory_size": 1665,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 780400,
+            "virtual_address": 813168,
+            "physical_address": 813168,
+            "file_size": 9724,
+            "memory_size": 22416,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 835584,
+            "end_mod_16KB": 0,
+            "rounded_end": 835584,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 780400,
+              "virtual_address": 813168,
+              "physical_address": 813168,
+              "file_size": 9724,
+              "memory_size": 22416,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              835584
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/armeabi-v7a/libtandemlog_text.readelf.txt"
+      },
+      "build62": {
+        "bytes": 793428,
+        "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+        "elf_class": 1,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 105885,
+            "memory_size": 105885,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 105888,
+            "virtual_address": 122272,
+            "physical_address": 122272,
+            "file_size": 674512,
+            "memory_size": 674512,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 780400,
+            "virtual_address": 813168,
+            "physical_address": 813168,
+            "file_size": 9724,
+            "memory_size": 22416,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 790128,
+            "virtual_address": 839280,
+            "physical_address": 839280,
+            "file_size": 1568,
+            "memory_size": 1665,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 780400,
+            "virtual_address": 813168,
+            "physical_address": 813168,
+            "file_size": 9724,
+            "memory_size": 22416,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 835584,
+            "end_mod_16KB": 0,
+            "rounded_end": 835584,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 780400,
+              "virtual_address": 813168,
+              "physical_address": 813168,
+              "file_size": 9724,
+              "memory_size": 22416,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              835584
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/armeabi-v7a/libtandemlog_text.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/x86_64/libapp.so",
+      "identical_bytes": false,
+      "identical_program_headers": false,
+      "released": {
+        "bytes": 8127368,
+        "sha256": "7a6c8d8867af2d327f5a948c3bc9a28bf92cc2a0cb4002a43a99089aca705b12",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 2957853,
+            "memory_size": 2957853,
+            "flags": "R",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 3014656,
+            "virtual_address": 3014656,
+            "physical_address": 3014656,
+            "file_size": 5062912,
+            "memory_size": 5062912,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8126464,
+            "virtual_address": 8126464,
+            "physical_address": 8126464,
+            "file_size": 104,
+            "memory_size": 104,
+            "flags": "RW",
+            "alignment": 65536
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/x86_64/libapp.readelf.txt"
+      },
+      "build62": {
+        "bytes": 8127368,
+        "sha256": "fa91415fcc76ecefc7e380062f5478a38197bb7ba3add0e762293b2c6e750697",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 2953821,
+            "memory_size": 2953821,
+            "flags": "R",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 3014656,
+            "virtual_address": 3014656,
+            "physical_address": 3014656,
+            "file_size": 5048992,
+            "memory_size": 5048992,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 8126464,
+            "virtual_address": 8126464,
+            "physical_address": 8126464,
+            "file_size": 104,
+            "memory_size": 104,
+            "flags": "RW",
+            "alignment": 65536
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/x86_64/libapp.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/x86_64/libdartjni.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 116640,
+        "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 111360,
+            "memory_size": 111360,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 111360,
+            "virtual_address": 127744,
+            "physical_address": 127744,
+            "file_size": 1376,
+            "memory_size": 3328,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 112736,
+            "virtual_address": 145504,
+            "physical_address": 145504,
+            "file_size": 1784,
+            "memory_size": 2420,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 111360,
+            "virtual_address": 127744,
+            "physical_address": 127744,
+            "file_size": 1376,
+            "memory_size": 3328,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 131072,
+            "end_mod_16KB": 0,
+            "rounded_end": 131072,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 111360,
+              "virtual_address": 127744,
+              "physical_address": 127744,
+              "file_size": 1376,
+              "memory_size": 3328,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              131072
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/x86_64/libdartjni.readelf.txt"
+      },
+      "build62": {
+        "bytes": 116640,
+        "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 111360,
+            "memory_size": 111360,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 111360,
+            "virtual_address": 127744,
+            "physical_address": 127744,
+            "file_size": 1376,
+            "memory_size": 3328,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 112736,
+            "virtual_address": 145504,
+            "physical_address": 145504,
+            "file_size": 1784,
+            "memory_size": 2420,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 111360,
+            "virtual_address": 127744,
+            "physical_address": 127744,
+            "file_size": 1376,
+            "memory_size": 3328,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 131072,
+            "end_mod_16KB": 0,
+            "rounded_end": 131072,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 111360,
+              "virtual_address": 127744,
+              "physical_address": 127744,
+              "file_size": 1376,
+              "memory_size": 3328,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              131072
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/x86_64/libdartjni.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/x86_64/libflutter.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 13051424,
+        "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 12676720,
+            "memory_size": 12676720,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 12676720,
+            "virtual_address": 12742256,
+            "physical_address": 12742256,
+            "file_size": 362064,
+            "memory_size": 364944,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 13038784,
+            "virtual_address": 13169856,
+            "physical_address": 13169856,
+            "file_size": 10264,
+            "memory_size": 73456,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 12676720,
+            "virtual_address": 12742256,
+            "physical_address": 12742256,
+            "file_size": 362064,
+            "memory_size": 364944,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 13107200,
+            "end_mod_16KB": 0,
+            "rounded_end": 13107200,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 12676720,
+              "virtual_address": 12742256,
+              "physical_address": 12742256,
+              "file_size": 362064,
+              "memory_size": 364944,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              13156352
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/x86_64/libflutter.readelf.txt"
+      },
+      "build62": {
+        "bytes": 13051424,
+        "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 12676720,
+            "memory_size": 12676720,
+            "flags": "RE",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 12676720,
+            "virtual_address": 12742256,
+            "physical_address": 12742256,
+            "file_size": 362064,
+            "memory_size": 364944,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "LOAD",
+            "offset": 13038784,
+            "virtual_address": 13169856,
+            "physical_address": 13169856,
+            "file_size": 10264,
+            "memory_size": 73456,
+            "flags": "RW",
+            "alignment": 65536
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 12676720,
+            "virtual_address": 12742256,
+            "physical_address": 12742256,
+            "file_size": 362064,
+            "memory_size": 364944,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 13107200,
+            "end_mod_16KB": 0,
+            "rounded_end": 13107200,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 12676720,
+              "virtual_address": 12742256,
+              "physical_address": 12742256,
+              "file_size": 362064,
+              "memory_size": 364944,
+              "flags": "RW",
+              "alignment": 65536
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              13156352
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/x86_64/libflutter.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/x86_64/libsqlite3.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 1709544,
+        "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1682448,
+            "memory_size": 1682448,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1682448,
+            "virtual_address": 1698832,
+            "physical_address": 1698832,
+            "file_size": 10056,
+            "memory_size": 13296,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1692512,
+            "virtual_address": 1725280,
+            "physical_address": 1725280,
+            "file_size": 14928,
+            "memory_size": 16241,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1682448,
+            "virtual_address": 1698832,
+            "physical_address": 1698832,
+            "file_size": 10056,
+            "memory_size": 13296,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1712128,
+            "end_mod_16KB": 8192,
+            "rounded_end": 1720320,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1682448,
+              "virtual_address": 1698832,
+              "physical_address": 1698832,
+              "file_size": 10056,
+              "memory_size": 13296,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1720320
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/x86_64/libsqlite3.readelf.txt"
+      },
+      "build62": {
+        "bytes": 1709544,
+        "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 1682448,
+            "memory_size": 1682448,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1682448,
+            "virtual_address": 1698832,
+            "physical_address": 1698832,
+            "file_size": 10056,
+            "memory_size": 13296,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1692512,
+            "virtual_address": 1725280,
+            "physical_address": 1725280,
+            "file_size": 14928,
+            "memory_size": 16241,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1682448,
+            "virtual_address": 1698832,
+            "physical_address": 1698832,
+            "file_size": 10056,
+            "memory_size": 13296,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1712128,
+            "end_mod_16KB": 8192,
+            "rounded_end": 1720320,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1682448,
+              "virtual_address": 1698832,
+              "physical_address": 1698832,
+              "file_size": 10056,
+              "memory_size": 13296,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1720320
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/x86_64/libsqlite3.readelf.txt"
+      }
+    },
+    {
+      "member": "lib/x86_64/libtandemlog_text.so",
+      "identical_bytes": true,
+      "identical_program_headers": true,
+      "released": {
+        "bytes": 1192968,
+        "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 204028,
+            "memory_size": 204028,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 204032,
+            "virtual_address": 220416,
+            "physical_address": 220416,
+            "file_size": 970048,
+            "memory_size": 970048,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1174080,
+            "virtual_address": 1206848,
+            "physical_address": 1206848,
+            "file_size": 14032,
+            "memory_size": 21952,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1188112,
+            "virtual_address": 1237264,
+            "physical_address": 1237264,
+            "file_size": 2760,
+            "memory_size": 5024,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1174080,
+            "virtual_address": 1206848,
+            "physical_address": 1206848,
+            "file_size": 14032,
+            "memory_size": 21952,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1228800,
+            "end_mod_16KB": 0,
+            "rounded_end": 1228800,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1174080,
+              "virtual_address": 1206848,
+              "physical_address": 1206848,
+              "file_size": 14032,
+              "memory_size": 21952,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1228800
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/rc1-build60/lib/x86_64/libtandemlog_text.readelf.txt"
+      },
+      "build62": {
+        "bytes": 1192968,
+        "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+        "elf_class": 2,
+        "headers": [
+          {
+            "type": "LOAD",
+            "offset": 0,
+            "virtual_address": 0,
+            "physical_address": 0,
+            "file_size": 204028,
+            "memory_size": 204028,
+            "flags": "R",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 204032,
+            "virtual_address": 220416,
+            "physical_address": 220416,
+            "file_size": 970048,
+            "memory_size": 970048,
+            "flags": "RE",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1174080,
+            "virtual_address": 1206848,
+            "physical_address": 1206848,
+            "file_size": 14032,
+            "memory_size": 21952,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "LOAD",
+            "offset": 1188112,
+            "virtual_address": 1237264,
+            "physical_address": 1237264,
+            "file_size": 2760,
+            "memory_size": 5024,
+            "flags": "RW",
+            "alignment": 16384
+          },
+          {
+            "type": "GNU_RELRO",
+            "offset": 1174080,
+            "virtual_address": 1206848,
+            "physical_address": 1206848,
+            "file_size": 14032,
+            "memory_size": 21952,
+            "flags": "R",
+            "alignment": 1
+          }
+        ],
+        "all_LOAD_16KB_alignment_and_congruence": true,
+        "RELRO": [
+          {
+            "end": 1228800,
+            "end_mod_16KB": 0,
+            "rounded_end": 1228800,
+            "containing_LOAD_same_start": {
+              "type": "LOAD",
+              "offset": 1174080,
+              "virtual_address": 1206848,
+              "physical_address": 1206848,
+              "file_size": 14032,
+              "memory_size": 21952,
+              "flags": "RW",
+              "alignment": 16384
+            },
+            "containing_LOAD_wholly_RELRO": true,
+            "later_RW_LOAD_page_starts": [
+              1228800
+            ],
+            "later_RW_LOAD_rounded_page_overlap": false
+          }
+        ],
+        "readelf_log": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/rc1-build60/build62/lib/x86_64/libtandemlog_text.readelf.txt"
+      }
+    }
+  ]
+}

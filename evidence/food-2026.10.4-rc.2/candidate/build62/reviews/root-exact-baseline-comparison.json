@@ -1,0 +1,2048 @@
+{
+  "method": "Independent stdlib ELF32/ELF64 program-header parsing of hash-verified exact APK ZIP members",
+  "apks": {
+    "stable56": {
+      "apk_sha256": "320cd2ca7574373b73f04726d7548ba38e88142afae61c4fff8aa9766c8ab438",
+      "apk_bytes": 66116061,
+      "libraries": {
+        "lib/arm64-v8a/libapp.so": {
+          "sha256": "cfc3acdd5f29b247de69bbb78177efdd616b0ab9a3f3926a05da8918b75a8cf1",
+          "bytes": 7537544,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2866973,
+              "memsz": 2866973,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 2883584,
+              "address": 2883584,
+              "filesz": 4601536,
+              "memsz": 4601536,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 7536640,
+              "address": 7536640,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/arm64-v8a/libdartjni.so": {
+          "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+          "bytes": 131248,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 125968,
+              "memsz": 125968,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 127344,
+              "address": 160112,
+              "filesz": 1784,
+              "memsz": 2424,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/arm64-v8a/libflutter.so": {
+          "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+          "bytes": 11747864,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 11370224,
+              "memsz": 11370224,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 11739624,
+              "address": 11870696,
+              "filesz": 5864,
+              "memsz": 67576,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libsqlite3.so": {
+          "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+          "bytes": 1732360,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1705520,
+              "memsz": 1705520,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1715360,
+              "address": 1748128,
+              "filesz": 14896,
+              "memsz": 16192,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libtandemlog_text.so": {
+          "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+          "bytes": 1044120,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 198040,
+              "memsz": 198040,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 198040,
+              "address": 214424,
+              "filesz": 827480,
+              "memsz": 827480,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1039288,
+              "address": 1088440,
+              "filesz": 2736,
+              "memsz": 4968,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libapp.so": {
+          "sha256": "2869d106aff57319e7b240d855df6187ad3ac18c5dc2a3da778ee5f864798c16",
+          "bytes": 8208968,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 3299517,
+              "memsz": 3299517,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 3309568,
+              "address": 3309568,
+              "filesz": 4894624,
+              "memsz": 4894624,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 8208384,
+              "address": 8208384,
+              "filesz": 52,
+              "memsz": 52,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/armeabi-v7a/libdartjni.so": {
+          "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+          "bytes": 81444,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 78256,
+              "memsz": 78256,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 78948,
+              "address": 111716,
+              "filesz": 892,
+              "memsz": 1168,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libflutter.so": {
+          "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+          "bytes": 8615900,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 8416864,
+              "memsz": 8416864,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 8611352,
+              "address": 8742424,
+              "filesz": 2720,
+              "memsz": 38440,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libsqlite3.so": {
+          "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+          "bytes": 1713736,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1697728,
+              "memsz": 1697728,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1703928,
+              "address": 1736696,
+              "filesz": 8224,
+              "memsz": 8816,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libtandemlog_text.so": {
+          "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+          "bytes": 793428,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 105885,
+              "memsz": 105885,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 105888,
+              "address": 122272,
+              "filesz": 674512,
+              "memsz": 674512,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 790128,
+              "address": 839280,
+              "filesz": 1568,
+              "memsz": 1665,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libapp.so": {
+          "sha256": "41d51504ba6ebe54ae1afe7a1d69365cb912c945fa71912cfea61bc023a8ea1c",
+          "bytes": 7799688,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2860157,
+              "memsz": 2860157,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 2883584,
+              "address": 2883584,
+              "filesz": 4865136,
+              "memsz": 4865136,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 7798784,
+              "address": 7798784,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/x86_64/libdartjni.so": {
+          "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+          "bytes": 116640,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 111360,
+              "memsz": 111360,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 112736,
+              "address": 145504,
+              "filesz": 1784,
+              "memsz": 2420,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libflutter.so": {
+          "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+          "bytes": 13051424,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 12676720,
+              "memsz": 12676720,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 13038784,
+              "address": 13169856,
+              "filesz": 10264,
+              "memsz": 73456,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libsqlite3.so": {
+          "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+          "bytes": 1709544,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1682448,
+              "memsz": 1682448,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1692512,
+              "address": 1725280,
+              "filesz": 14928,
+              "memsz": 16241,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 8192
+            }
+          ]
+        },
+        "lib/x86_64/libtandemlog_text.so": {
+          "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+          "bytes": 1192968,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 204028,
+              "memsz": 204028,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 204032,
+              "address": 220416,
+              "filesz": 970048,
+              "memsz": 970048,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1188112,
+              "address": 1237264,
+              "filesz": 2760,
+              "memsz": 5024,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        }
+      }
+    },
+    "rc60": {
+      "apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+      "apk_bytes": 67082973,
+      "libraries": {
+        "lib/arm64-v8a/libapp.so": {
+          "sha256": "aff0d19435bfcafacab2b01da6ee97754c1a83cee13c5d1e5d94b2f2efa03bc6",
+          "bytes": 7865224,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2963917,
+              "memsz": 2963917,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 3014656,
+              "address": 3014656,
+              "filesz": 4791856,
+              "memsz": 4791856,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 7864320,
+              "address": 7864320,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/arm64-v8a/libdartjni.so": {
+          "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+          "bytes": 131248,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 125968,
+              "memsz": 125968,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 127344,
+              "address": 160112,
+              "filesz": 1784,
+              "memsz": 2424,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/arm64-v8a/libflutter.so": {
+          "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+          "bytes": 11747864,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 11370224,
+              "memsz": 11370224,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 11739624,
+              "address": 11870696,
+              "filesz": 5864,
+              "memsz": 67576,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libsqlite3.so": {
+          "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+          "bytes": 1732360,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1705520,
+              "memsz": 1705520,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1715360,
+              "address": 1748128,
+              "filesz": 14896,
+              "memsz": 16192,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libtandemlog_text.so": {
+          "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+          "bytes": 1044120,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 198040,
+              "memsz": 198040,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 198040,
+              "address": 214424,
+              "filesz": 827480,
+              "memsz": 827480,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1039288,
+              "address": 1088440,
+              "filesz": 2736,
+              "memsz": 4968,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libapp.so": {
+          "sha256": "b9284d989348a7688925f61c7ceab5c32cb5b97642cdf6a627b110ee3a5e5915",
+          "bytes": 8520264,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 3408437,
+              "memsz": 3408437,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 3424256,
+              "address": 3424256,
+              "filesz": 5088984,
+              "memsz": 5088984,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 8519680,
+              "address": 8519680,
+              "filesz": 52,
+              "memsz": 52,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/armeabi-v7a/libdartjni.so": {
+          "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+          "bytes": 81444,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 78256,
+              "memsz": 78256,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 78948,
+              "address": 111716,
+              "filesz": 892,
+              "memsz": 1168,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libflutter.so": {
+          "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+          "bytes": 8615900,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 8416864,
+              "memsz": 8416864,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 8611352,
+              "address": 8742424,
+              "filesz": 2720,
+              "memsz": 38440,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libsqlite3.so": {
+          "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+          "bytes": 1713736,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1697728,
+              "memsz": 1697728,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1703928,
+              "address": 1736696,
+              "filesz": 8224,
+              "memsz": 8816,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libtandemlog_text.so": {
+          "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+          "bytes": 793428,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 105885,
+              "memsz": 105885,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 105888,
+              "address": 122272,
+              "filesz": 674512,
+              "memsz": 674512,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 790128,
+              "address": 839280,
+              "filesz": 1568,
+              "memsz": 1665,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libapp.so": {
+          "sha256": "7a6c8d8867af2d327f5a948c3bc9a28bf92cc2a0cb4002a43a99089aca705b12",
+          "bytes": 8127368,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2957853,
+              "memsz": 2957853,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 3014656,
+              "address": 3014656,
+              "filesz": 5062912,
+              "memsz": 5062912,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 8126464,
+              "address": 8126464,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/x86_64/libdartjni.so": {
+          "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+          "bytes": 116640,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 111360,
+              "memsz": 111360,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 112736,
+              "address": 145504,
+              "filesz": 1784,
+              "memsz": 2420,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libflutter.so": {
+          "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+          "bytes": 13051424,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 12676720,
+              "memsz": 12676720,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 13038784,
+              "address": 13169856,
+              "filesz": 10264,
+              "memsz": 73456,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libsqlite3.so": {
+          "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+          "bytes": 1709544,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1682448,
+              "memsz": 1682448,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1692512,
+              "address": 1725280,
+              "filesz": 14928,
+              "memsz": 16241,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 8192
+            }
+          ]
+        },
+        "lib/x86_64/libtandemlog_text.so": {
+          "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+          "bytes": 1192968,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 204028,
+              "memsz": 204028,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 204032,
+              "address": 220416,
+              "filesz": 970048,
+              "memsz": 970048,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1188112,
+              "address": 1237264,
+              "filesz": 2760,
+              "memsz": 5024,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        }
+      }
+    },
+    "rc62": {
+      "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+      "apk_bytes": 66984609,
+      "libraries": {
+        "lib/arm64-v8a/libapp.so": {
+          "sha256": "3ed9c0b403f209b4616e1f0e4202434aa5d02e2cd163f05cfca4eba149451cab",
+          "bytes": 7799688,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2959613,
+              "memsz": 2959613,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 3014656,
+              "address": 3014656,
+              "filesz": 4778752,
+              "memsz": 4778752,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 7798784,
+              "address": 7798784,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/arm64-v8a/libdartjni.so": {
+          "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+          "bytes": 131248,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 125968,
+              "memsz": 125968,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 127344,
+              "address": 160112,
+              "filesz": 1784,
+              "memsz": 2424,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 125968,
+              "address": 142352,
+              "filesz": 1376,
+              "memsz": 5104,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/arm64-v8a/libflutter.so": {
+          "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+          "bytes": 11747864,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 11370224,
+              "memsz": 11370224,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 11739624,
+              "address": 11870696,
+              "filesz": 5864,
+              "memsz": 67576,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 11370224,
+              "address": 11435760,
+              "filesz": 369400,
+              "memsz": 373008,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libsqlite3.so": {
+          "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+          "bytes": 1732360,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1705520,
+              "memsz": 1705520,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1715360,
+              "address": 1748128,
+              "filesz": 14896,
+              "memsz": 16192,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1705520,
+              "address": 1721904,
+              "filesz": 9840,
+              "memsz": 10704,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/arm64-v8a/libtandemlog_text.so": {
+          "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+          "bytes": 1044120,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 198040,
+              "memsz": 198040,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 198040,
+              "address": 214424,
+              "filesz": 827480,
+              "memsz": 827480,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1039288,
+              "address": 1088440,
+              "filesz": 2736,
+              "memsz": 4968,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1025520,
+              "address": 1058288,
+              "filesz": 13768,
+              "memsz": 23056,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libapp.so": {
+          "sha256": "a715236ddfb251e797c32271b22ee63cc606ad4a1d54b8877f413a833934a803",
+          "bytes": 8487496,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 3404205,
+              "memsz": 3404205,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 3407872,
+              "address": 3407872,
+              "filesz": 5075616,
+              "memsz": 5075616,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 8486912,
+              "address": 8486912,
+              "filesz": 52,
+              "memsz": 52,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/armeabi-v7a/libdartjni.so": {
+          "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+          "bytes": 81444,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 78256,
+              "memsz": 78256,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 78948,
+              "address": 111716,
+              "filesz": 892,
+              "memsz": 1168,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 78256,
+              "address": 94640,
+              "filesz": 692,
+              "memsz": 3664,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libflutter.so": {
+          "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+          "bytes": 8615900,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 8416864,
+              "memsz": 8416864,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 8611352,
+              "address": 8742424,
+              "filesz": 2720,
+              "memsz": 38440,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 8416864,
+              "address": 8482400,
+              "filesz": 194488,
+              "memsz": 197024,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 12288
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libsqlite3.so": {
+          "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+          "bytes": 1713736,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1697728,
+              "memsz": 1697728,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1703928,
+              "address": 1736696,
+              "filesz": 8224,
+              "memsz": 8816,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1697728,
+              "address": 1714112,
+              "filesz": 6196,
+              "memsz": 6208,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/armeabi-v7a/libtandemlog_text.so": {
+          "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+          "bytes": 793428,
+          "bits": 32,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 105885,
+              "memsz": 105885,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 105888,
+              "address": 122272,
+              "filesz": 674512,
+              "memsz": 674512,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 790128,
+              "address": 839280,
+              "filesz": 1568,
+              "memsz": 1665,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 780400,
+              "address": 813168,
+              "filesz": 9724,
+              "memsz": 22416,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libapp.so": {
+          "sha256": "fa91415fcc76ecefc7e380062f5478a38197bb7ba3add0e762293b2c6e750697",
+          "bytes": 8127368,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 2953821,
+              "memsz": 2953821,
+              "flags": 4,
+              "alignment": 65536
+            },
+            {
+              "offset": 3014656,
+              "address": 3014656,
+              "filesz": 5048992,
+              "memsz": 5048992,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 8126464,
+              "address": 8126464,
+              "filesz": 104,
+              "memsz": 104,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": []
+        },
+        "lib/x86_64/libdartjni.so": {
+          "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+          "bytes": 116640,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 111360,
+              "memsz": 111360,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 112736,
+              "address": 145504,
+              "filesz": 1784,
+              "memsz": 2420,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 111360,
+              "address": 127744,
+              "filesz": 1376,
+              "memsz": 3328,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libflutter.so": {
+          "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+          "bytes": 13051424,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 12676720,
+              "memsz": 12676720,
+              "flags": 5,
+              "alignment": 65536
+            },
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 6,
+              "alignment": 65536
+            },
+            {
+              "offset": 13038784,
+              "address": 13169856,
+              "filesz": 10264,
+              "memsz": 73456,
+              "flags": 6,
+              "alignment": 65536
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 12676720,
+              "address": 12742256,
+              "filesz": 362064,
+              "memsz": 364944,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        },
+        "lib/x86_64/libsqlite3.so": {
+          "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+          "bytes": 1709544,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": false,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 1682448,
+              "memsz": 1682448,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1692512,
+              "address": 1725280,
+              "filesz": 14928,
+              "memsz": 16241,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1682448,
+              "address": 1698832,
+              "filesz": 10056,
+              "memsz": 13296,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 8192
+            }
+          ]
+        },
+        "lib/x86_64/libtandemlog_text.so": {
+          "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+          "bytes": 1192968,
+          "bits": 64,
+          "LOAD_alignment_congruence_pass": true,
+          "strict_64bit_RELRO_formula_pass": true,
+          "LOADs": [
+            {
+              "offset": 0,
+              "address": 0,
+              "filesz": 204028,
+              "memsz": 204028,
+              "flags": 4,
+              "alignment": 16384
+            },
+            {
+              "offset": 204032,
+              "address": 220416,
+              "filesz": 970048,
+              "memsz": 970048,
+              "flags": 5,
+              "alignment": 16384
+            },
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 6,
+              "alignment": 16384
+            },
+            {
+              "offset": 1188112,
+              "address": 1237264,
+              "filesz": 2760,
+              "memsz": 5024,
+              "flags": 6,
+              "alignment": 16384
+            }
+          ],
+          "RELROs": [
+            {
+              "offset": 1174080,
+              "address": 1206848,
+              "filesz": 14032,
+              "memsz": 21952,
+              "flags": 4,
+              "alignment": 1,
+              "end_mod_16K": 0
+            }
+          ]
+        }
+      }
+    }
+  },
+  "comparison": {
+    "lib/arm64-v8a/libapp.so": {
+      "stable56": false,
+      "rc60": false
+    },
+    "lib/arm64-v8a/libdartjni.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/arm64-v8a/libflutter.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/arm64-v8a/libsqlite3.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/arm64-v8a/libtandemlog_text.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/armeabi-v7a/libapp.so": {
+      "stable56": false,
+      "rc60": false
+    },
+    "lib/armeabi-v7a/libdartjni.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/armeabi-v7a/libflutter.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/armeabi-v7a/libsqlite3.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/armeabi-v7a/libtandemlog_text.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/x86_64/libapp.so": {
+      "stable56": false,
+      "rc60": false
+    },
+    "lib/x86_64/libdartjni.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/x86_64/libflutter.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/x86_64/libsqlite3.so": {
+      "stable56": true,
+      "rc60": true
+    },
+    "lib/x86_64/libtandemlog_text.so": {
+      "stable56": true,
+      "rc60": true
+    }
+  },
+  "finding": "The three supplemental strict64bitRELRO failures are identical native library bytes in stable56, RC1build60 and candidate62; no introduced regression. All15 LOAD16K alignment/congruence pass in each APK. Static formula nonconformance does not establish runtime failure; existing custom-text ELF and wholeAPK ZIP gates are unchanged. Parent disposition pending; no new release gate or dependency upgrade."
+}

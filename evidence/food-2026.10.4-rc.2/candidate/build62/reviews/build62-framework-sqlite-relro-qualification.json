@@ -1,0 +1,91 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:17:54.720348+00:00",
+  "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "artifact_id": 11696122674,
+  "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "native_member_count": 15,
+  "all_PT_LOAD_alignment_and_offset_address_congruence": "PASS",
+  "frozen_custom_text_RELRO_export_notice_gate": "PASS",
+  "whole_APK_SDK36_zipalign16K": "PASS",
+  "supplemental_64bit_framework_sqlite_RELRO_formula": "DOES_NOT_MEET_CURRENT_OFFICIAL_STATIC_GUIDANCE",
+  "nonzero_relro_ends": [
+    {
+      "member": "lib/arm64-v8a/libflutter.so",
+      "elf_class": 2,
+      "ranges": [
+        {
+          "address": 11435760,
+          "memsz": 373008,
+          "end": 11808768,
+          "end_mod_16K": 12288
+        }
+      ]
+    },
+    {
+      "member": "lib/arm64-v8a/libsqlite3.so",
+      "elf_class": 2,
+      "ranges": [
+        {
+          "address": 1721904,
+          "memsz": 10704,
+          "end": 1732608,
+          "end_mod_16K": 12288
+        }
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libflutter.so",
+      "elf_class": 1,
+      "ranges": [
+        {
+          "address": 8482400,
+          "memsz": 197024,
+          "end": 8679424,
+          "end_mod_16K": 12288
+        }
+      ]
+    },
+    {
+      "member": "lib/x86_64/libsqlite3.so",
+      "elf_class": 2,
+      "ranges": [
+        {
+          "address": 1698832,
+          "memsz": 13296,
+          "end": 1712128,
+          "end_mod_16K": 8192
+        }
+      ]
+    }
+  ],
+  "affected_64bit_count": 3,
+  "official_primary_source": {
+    "url": "https://developer.android.com/guide/practices/page-sizes#check_the_relro_security_flag",
+    "checked_at_utc": "2026-10-11T08:17:54.720359+00:00",
+    "section": "Check the RELRO security flag",
+    "summary": "Android guidance asks checking each shared object and requires (GNU_RELRO VirtAddr + MemSiz) modulo 0x4000 to be zero; nonzero may protect a range expected writable and cause a runtime segmentation fault. LOAD and ZIP alignment checks are separate. Actual 16KB testing verifies getconf PAGE_SIZE returns16384."
+  },
+  "interpretation_limits": [
+    "Static nonconformance to the published formula is observed. No crash or linker rejection was executed or observed by this reviewer.",
+    "Affected binaries have separate subsequent RW LOAD segments; this receipt does not prove live writable-data overlap or infer a crash solely from the formula.",
+    "ARMv7 Flutter also has a nonzero RELRO end; the Android64bit requirement finding comprises the other three entries.",
+    "Actual16KB target execution or a documented source-supported compatibility disposition remains pending; a4KB device test cannot establish16KB behavior."
+  ],
+  "recommendation": "Hold general APK16KB compliance acceptance; carry explicit unresolved framework/SQLite RELRO qualification in handoff and obtain bounded disposition before publication. No dependency change or binary patch is authorized by this receipt.",
+  "supporting_evidence": [
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-all-apk-ELF-program-headers.json",
+      "sha256": "c61f607162df118c977e020b4a99f39a35c71d2cf902a5f1f4419d47fe409450"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-official-ndk-readelf-all-native.json",
+      "sha256": "064cc50c15d6075e826061e6aafd1e87bf7140698a7bb6a0a1b557fa74b77cb2"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/build62-independent-android-native-payload.log",
+      "sha256": "ed61b2521214726104f1d4879aebc57c52fe5e519feba639f7d0dcbdf0b2621d"
+    }
+  ]
+}

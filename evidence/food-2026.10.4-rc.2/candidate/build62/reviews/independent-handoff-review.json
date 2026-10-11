@@ -1,0 +1,56 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:18:38.515082+00:00",
+  "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "version": "2026.10.4-rc.2+62",
+  "verdict": "IDENTITIES_AND_RUNTIME_ATTRIBUTION_PASS_16KB_QUALIFICATION_ADDENDUM_REQUIRED",
+  "checks": [
+    "All3artifactIDs/ZIPsizes/SHAs exact original API+independentbytes",
+    "All14closedmanifestmembers exact original ZIPCRC32/length/SHA",
+    "APKactual66,984,609bytes/pin/package/RC2+62 hashes match verifiedoriginal",
+    "Unit956/Linuxnative129/Windows953 plus platformskips match actualterminaljoblogs",
+    "Hosted desktop lifecycles/catalog/privateXDG scope matches actual original reports",
+    "No localFlatpak/BazaarGUI or humanWindows claim; parent exactAndroid/Showtaps plusquota remainpending",
+    "Historicalfailed/cancelledrun/source attributions preserved",
+    "All reviewedrelative Markdowntargets resolve",
+    "publication_ready/publication_performed/stable_promotion false"
+  ],
+  "required_document_correction": "Carry unresolved generalAPK16KB framework/SQLite RELRO guidance finding. Native16K pass wording must explicitly scope frozen checks to custom textELF and wholeAPKZIP alignment; remaining-gates lists must include a bounded RELROcompatibility disposition. This is a staticguidance failure, not an observed Androidcrash.",
+  "qualification_receipt": "/tmp/food-rc62-artifact-independent-review/build62-framework-sqlite-relro-qualification.json",
+  "reviewed_files": {
+    "evidence/food-2026.10.4-rc.2/candidate/build62/README.md": {
+      "bytes": 3692,
+      "sha256": "600c04a793cee0cad5f2a11af1b862d2b91fe10d49b65b6356a2eb5b79071946"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/handoff.json": {
+      "bytes": 3713,
+      "sha256": "15c9e9341ef6113c38934835edab3783e406e935ca9f754db1daae945509ddcc"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json": {
+      "bytes": 5171,
+      "sha256": "c4ab942a7d85dd400c38219b21016b675690a63b8bc55d40c35ea31f7f2df815"
+    },
+    "design/status.md": {
+      "bytes": 109018,
+      "sha256": "964ad513a02d75068a70dd64de23d7571c3e3f8a4acc04a55d6b9b2011a57dd6"
+    },
+    "design/food-native-acceptance.md": {
+      "bytes": 18801,
+      "sha256": "f7120d58abd0c7a819b6a0d47c8fb5885966fabec24f7d94680978de1b9c17a2"
+    },
+    "evidence/food-2026.10.4-rc.2/README.md": {
+      "bytes": 5061,
+      "sha256": "8b6460c755cbf976c44084df120d975f65d0ef052c7a44aa0dc1b87b19c53438"
+    },
+    "evidence/food-2026.10.4-rc.2/expanded-build62/README.md": {
+      "bytes": 7805,
+      "sha256": "3db95c5b0548b6ce2ce14db16a744d8e7f4b0c66a9bfeb73c5a1d8c6c69f979b"
+    }
+  },
+  "relative_links_checked": 121,
+  "scope_limits": [
+    "No source edits/publication/native Android execution by reviewer.",
+    "Librarydelivery attempt HTTP401 recorded byroot; noLibraryitem or Androidacceptance inferred."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "original_receipt": "artifacts/android-release/root-identity.json",
+  "qualification": "Original native_zipalign16K_ELF_RELRO_exports_exact_notices PASS refers to frozen custom-text ELF/RELRO/exports/notices and wholeAPK ZIP gate, not all15 ELF RELRO or target-runtime attestation. Preserve original receipt bytes.",
+  "all15_LOAD_16KiB_alignment_congruence": "PASS",
+  "baseline_comparison": "root-exact-baseline-comparison.json",
+  "introduced_regression": false,
+  "runtime_failure_observed_or_established": false,
+  "parent_disposition": "Pending before publication; no new gate/upgrade; bounded exactAPK UI acceptance may proceed"
+}

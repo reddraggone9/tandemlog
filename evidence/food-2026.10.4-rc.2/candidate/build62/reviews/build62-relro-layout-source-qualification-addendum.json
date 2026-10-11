@@ -1,0 +1,119 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:19:56.336233+00:00",
+  "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "current_official_guide_formula_nonconformance": true,
+  "current_AOSP_linker_source": "https://android.googlesource.com/platform/bionic/+/refs/heads/main/linker/linker_phdr.cpp",
+  "source_snapshot": {
+    "path": "/tmp/food-rc62-artifact-independent-review/official-bionic-linker-phdr-main.cpp",
+    "sha256": "6bfb0cd76e2fc41c4d5c6cbae792827e6b18ec3c6aa8f53b7eb9b05b5c18c76a"
+  },
+  "source_is_moving_main_not_target_OS_attestation": true,
+  "analysis": "The three64bit ranges fail the Android guide formula. Current official AOSP code rounds RELRO pages read-only. Exact headers show entire corresponding RW LOAD covered by RELRO and separate later RW LOAD starts after its rounded16KB protection end. This header analysis establishes no later writableLOAD overlap and cannot support a claim that these bytes will crash. It does not execute the linker, establish runtimeOS branch or replace actual16KB target acceptance.",
+  "program_header_rows": [
+    {
+      "member": "lib/arm64-v8a/libflutter.so",
+      "RELRO": {
+        "address": 11435760,
+        "file_size": 369400,
+        "memory_size": 373008,
+        "flags": "R",
+        "alignment": 1
+      },
+      "containing_RW_LOAD": {
+        "address": 11435760,
+        "file_size": 369400,
+        "memory_size": 373008,
+        "flags": "RW",
+        "alignment": 65536
+      },
+      "RELRO_end": 11808768,
+      "rounded_16KB_RELRO_end": 11812864,
+      "later_RW_LOADs": [
+        {
+          "address": 11870696,
+          "file_size": 5864,
+          "memory_size": 67576,
+          "flags": "RW",
+          "alignment": 65536
+        }
+      ],
+      "later_RW_page_starts": [
+        11862016
+      ],
+      "containing_LOAD_wholly_RELRO": true,
+      "later_RW_LOAD_rounded_page_overlap": false,
+      "section_table": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libflutter.so-sections.txt"
+    },
+    {
+      "member": "lib/arm64-v8a/libsqlite3.so",
+      "RELRO": {
+        "address": 1721904,
+        "file_size": 9840,
+        "memory_size": 10704,
+        "flags": "R",
+        "alignment": 1
+      },
+      "containing_RW_LOAD": {
+        "address": 1721904,
+        "file_size": 9840,
+        "memory_size": 10704,
+        "flags": "RW",
+        "alignment": 16384
+      },
+      "RELRO_end": 1732608,
+      "rounded_16KB_RELRO_end": 1736704,
+      "later_RW_LOADs": [
+        {
+          "address": 1748128,
+          "file_size": 14896,
+          "memory_size": 16192,
+          "flags": "RW",
+          "alignment": 16384
+        }
+      ],
+      "later_RW_page_starts": [
+        1736704
+      ],
+      "containing_LOAD_wholly_RELRO": true,
+      "later_RW_LOAD_rounded_page_overlap": false,
+      "section_table": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libsqlite3.so-sections.txt"
+    },
+    {
+      "member": "lib/x86_64/libsqlite3.so",
+      "RELRO": {
+        "address": 1698832,
+        "file_size": 10056,
+        "memory_size": 13296,
+        "flags": "R",
+        "alignment": 1
+      },
+      "containing_RW_LOAD": {
+        "address": 1698832,
+        "file_size": 10056,
+        "memory_size": 13296,
+        "flags": "RW",
+        "alignment": 16384
+      },
+      "RELRO_end": 1712128,
+      "rounded_16KB_RELRO_end": 1720320,
+      "later_RW_LOADs": [
+        {
+          "address": 1725280,
+          "file_size": 14928,
+          "memory_size": 16241,
+          "flags": "RW",
+          "alignment": 16384
+        }
+      ],
+      "later_RW_page_starts": [
+        1720320
+      ],
+      "containing_LOAD_wholly_RELRO": true,
+      "later_RW_LOAD_rounded_page_overlap": false,
+      "section_table": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libsqlite3.so-sections.txt"
+    }
+  ],
+  "disposition": "UNRESOLVED_GUIDANCE_DISCREPANCY_AND_RUNTIME_QUALIFICATION; no observedcrash; no source or dependencychange made",
+  "publication_ready": false
+}

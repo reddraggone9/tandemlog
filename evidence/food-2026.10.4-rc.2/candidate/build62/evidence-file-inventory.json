@@ -1,0 +1,197 @@
+{
+  "scope": "Original artifact metadata, hosted logs and review receipts; binaries excluded; inventory excludes itself",
+  "files": {
+    "README.md": {
+      "bytes": 5943,
+      "sha256": "8b8f08965c6ad8ba66cffa912e4e7dfbbc79c24eb22685709cd188909c418cdc"
+    },
+    "artifacts/android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "129f3381100303c7ab71702125839cc9fb9242d40ba9f1fd72cf48bc5aa21c96"
+    },
+    "artifacts/android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "1dc9df0d629d86912b710b129e41c7f441cbf9339a99c4468039f3660679e591"
+    },
+    "artifacts/android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "artifacts/android-release/root-apksigner.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "artifacts/android-release/root-badging.txt": {
+      "bytes": 1170,
+      "sha256": "9490c4f69ec0aaf830d44e7b9810a91758e3c47b0abe846a281261a565470204"
+    },
+    "artifacts/android-release/root-identity.json": {
+      "bytes": 654,
+      "sha256": "ba12ba952ea28ca88b6760e964ee2661be5c843c688532de0e19561c653e9e04"
+    },
+    "artifacts/android-release/root-native-payload.log": {
+      "bytes": 119,
+      "sha256": "941829f6a581aeac17c6d9a3c263f618d260cd1d9bef9770017042567b9c78a2"
+    },
+    "artifacts/candidate-jobs-api.json": {
+      "bytes": 19839,
+      "sha256": "3778fca13f1c7bcc70b4aee23b483a1908637eb166fb89d8747620c53ac2e92b"
+    },
+    "artifacts/candidate-run-api.json": {
+      "bytes": 12648,
+      "sha256": "c5f85dd76fa111b50b39d9e4413360a8c823bff79a46395d775dd6dce2e7eacf"
+    },
+    "artifacts/linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "b4fabe0fa3954abbbd152f18eab22d66b2a105e6207681a27aea5c295914bb50"
+    },
+    "artifacts/linux/linux-install-smoke.json": {
+      "bytes": 2918,
+      "sha256": "7ef49febc90d95c49b520545710d1e41cf2c71c49d158017b479ced40aa0daf9"
+    },
+    "artifacts/linux/linux-startup.json": {
+      "bytes": 6191,
+      "sha256": "a3f5ed2e689f0691f4f8c53616c9029328dcbfb15e1b11b3507a3e5d6ddbdc5a"
+    },
+    "artifacts/linux/root-identity.json": {
+      "bytes": 1124,
+      "sha256": "7102565d9ff3eb4c5e09c37eb6f13b37cd412b3f530c0c2b20c9b585e4e34f71"
+    },
+    "artifacts/manifest.json": {
+      "bytes": 5730,
+      "sha256": "119921ebfb2b43577ffac056b8f804109ee4edb718ccc5a56dc0a6bd85f6dbe0"
+    },
+    "artifacts/original-artifacts-api.json": {
+      "bytes": 4151,
+      "sha256": "4a47c0f4c197fb3efeaae0538028f09855a0e64fcc49036821b330847316ac6e"
+    },
+    "artifacts/push-ci-run-api.json": {
+      "bytes": 12651,
+      "sha256": "49b7e332771d02c7c77b7ab8eefacf55d82da213f0dbc605452a5c2735f42ffe"
+    },
+    "artifacts/root-combined-inventory.json": {
+      "bytes": 3375,
+      "sha256": "88bc4987b3fdca8742e1ed612a7fb20498056a9d7d8430c62cddd444db0af4a4"
+    },
+    "artifacts/root-final-source-verification.json": {
+      "bytes": 325,
+      "sha256": "993279ca4542bae32ad75f675e3c127c6474a01c86d55c46416f330eec24e6b3"
+    },
+    "artifacts/windows/root-identity.json": {
+      "bytes": 896,
+      "sha256": "685961b38a6125433fc42ab3ba38f68f1cb72a0df4e7d9af52724a8b4c9afcb9"
+    },
+    "artifacts/windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "6ea074da4b96edcfdbafb69fe9ba82e4b091b317ac8d88beb5c8a867121ac9d5"
+    },
+    "artifacts/windows/windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "960b86b2c03dda372a2e74d6aac2e4209617b9d54f4fc2b56eb09866a2cf33ee"
+    },
+    "artifacts/windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "dcb0b711128c2153c24ac5a2c07f020062a59898390d860eddf24bcef7ff22da"
+    },
+    "artifacts/windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "55507d20eca3b742c3f296b4efc3d39281d2c1e0c54eabd5a4bdeb19c66a5912"
+    },
+    "handoff.json": {
+      "bytes": 4272,
+      "sha256": "61a6239437278ed73461bb1a462a51ffc946133a81bb2f33ff3b65ab6b631218"
+    },
+    "logs/android-debug-original-hosted.log": {
+      "bytes": 186442,
+      "sha256": "a5dc534728372ad6cae29e98b31e5d5498baacefc5c92acbb4651e2902d60c6f"
+    },
+    "logs/linux-original-hosted.log": {
+      "bytes": 553272,
+      "sha256": "1d9992934a25225b5549a0790ff505767ad357e62d9e1fba95f1619cdf8042d8"
+    },
+    "logs/push-linux-original-hosted.log": {
+      "bytes": 552587,
+      "sha256": "79d1ec16d47a8bab4fd69d416e05f8ba2a506906553168a78ee64c0dfcd96eb5"
+    },
+    "logs/signed-android-original-hosted.log": {
+      "bytes": 190814,
+      "sha256": "0fee626407b890de6217858d02e109057efdd977efb17706a618a22a6bc98c9a"
+    },
+    "logs/windows-original-hosted.log": {
+      "bytes": 343028,
+      "sha256": "e4ecde0ea89c2ed95a0dce909e34c67fe3ec48582aeeaff58b1cbb269285d998"
+    },
+    "reviews/build62-all-apk-ELF-program-headers.json": {
+      "bytes": 8959,
+      "sha256": "c61f607162df118c977e020b4a99f39a35c71d2cf902a5f1f4419d47fe409450"
+    },
+    "reviews/build62-android-release-actual-artifact-bindings.json": {
+      "bytes": 3419,
+      "sha256": "dcc8afb4ce4529555c191d4545639d310e2a3c7b7a14187edfe2d2df3f8e001e"
+    },
+    "reviews/build62-combined-inventory-independent-verification.json": {
+      "bytes": 3318,
+      "sha256": "44d2c6b98a608a77a91834df683bb8a5aaa4b4e47731f2ce80268ed09a2be98b"
+    },
+    "reviews/build62-framework-sqlite-relro-qualification.json": {
+      "bytes": 3712,
+      "sha256": "da16dd84e15596848853d02e32d588d261146931e12617cf1f57df7ed4bc738e"
+    },
+    "reviews/build62-hosted-isolated-tool-receipt.json": {
+      "bytes": 13703,
+      "sha256": "30d3b7b6b246bb46caa751a6150a5660c8ff811f19a0c92cf8877e715b497d09"
+    },
+    "reviews/build62-linux-actual-artifact-bindings.json": {
+      "bytes": 7097,
+      "sha256": "76082535abe22d9a33859ffe57d8e9c1feb77cf0f10c07fdad81e6d9e5f6648e"
+    },
+    "reviews/build62-official-ndk-readelf-all-native.json": {
+      "bytes": 10690,
+      "sha256": "064cc50c15d6075e826061e6aafd1e87bf7140698a7bb6a0a1b557fa74b77cb2"
+    },
+    "reviews/build62-relro-layout-source-qualification-addendum.json": {
+      "bytes": 4191,
+      "sha256": "74b0dbd06de8dedc68b3c0892aed362030bc7e473ce170a383b566be862007d9"
+    },
+    "reviews/build62-windows-actual-artifact-bindings.json": {
+      "bytes": 10018,
+      "sha256": "523c3853e7aad0ae784c10a0dd1a7d3a174e32ca2f0d7c60d4599adf6b22b622"
+    },
+    "reviews/build62-windows-exact-notice-representation.json": {
+      "bytes": 581,
+      "sha256": "49a78ffdbeeee99ffc9b13de1466369ae6414ed6c5697c3d7a74c4db98970ae5"
+    },
+    "reviews/combined-baseline-regression-disposition.json": {
+      "bytes": 11336,
+      "sha256": "bead473956e19bdba06105cee8a074fdb3e37bf623b0850ebabad8ebafa11135"
+    },
+    "reviews/independent-artifact-review.json": {
+      "bytes": 21465,
+      "sha256": "27c1394ffebcdd7fe80fb52ebe866c9c70c1ade7ecc99c27036d11a1890a114e"
+    },
+    "reviews/independent-final-readiness-wording-review.json": {
+      "bytes": 5392,
+      "sha256": "85f12509f60b900bdd8bbdcf50a1960ddb38e06853377bfcade1608fcfba3cc7"
+    },
+    "reviews/independent-handoff-review.json": {
+      "bytes": 2950,
+      "sha256": "f83e4bec25eaf072461d65076346d499a293d9f0a558e52a1c520b2d2829c5ca"
+    },
+    "reviews/rc1-build60-independent-relro-comparison.json": {
+      "bytes": 66207,
+      "sha256": "59d01d449a331cd78e1d43025254b985a2fb6dc19f55d99621fce4450c116e9e"
+    },
+    "reviews/root-exact-baseline-comparison.json": {
+      "bytes": 57778,
+      "sha256": "5ba7f7e214af045735fd84118b0ce7313ccd454aa990c23cc9d32ffa30fd1600"
+    },
+    "reviews/root-identity-qualification-addendum.json": {
+      "bytes": 642,
+      "sha256": "a8e57370b914128d974f9caea4ae8f0ab9ccb7277e87b27be7749685404cb4f3"
+    },
+    "reviews/stable-build56-independent-relro-comparison.json": {
+      "bytes": 66340,
+      "sha256": "b14711960ffa0b280aa1fae7f44ae45926c05746a4c8ac865509e91ccf075704"
+    }
+  }
+}

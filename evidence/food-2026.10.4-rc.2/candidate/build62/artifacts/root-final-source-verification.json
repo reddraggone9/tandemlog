@@ -1,0 +1,7 @@
+{
+  "candidate_source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "files_checked": 323,
+  "exact_size_and_sha256": "PASS",
+  "application_diff_since_4310708": "Empty for lib/native/test/integration/platform/version roots; Git checked independently",
+  "remaining": "Exact hosted archive/runtime proof remains separate"
+}

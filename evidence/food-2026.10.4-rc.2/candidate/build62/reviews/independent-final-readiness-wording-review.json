@@ -1,0 +1,86 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:29:11.258802+00:00",
+  "verdict": "ACCEPT_QUALIFIED_EXACT_ARTIFACT_HANDOFF_NOT_PUBLICATION_READY",
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "push_ci_run": 38121201969,
+  "version": "2026.10.4-rc.2+62",
+  "actual_APK_SHA256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "reviewed_scope": "Final metadata/document-only handoff wording and exact originalarchive identities; appended baseline16KB qualification, unchanged Android8items and concise Foodv2 older-reader recovery boundary. This receipt preserves original earlier review evidence and supplies final disposition wording.",
+  "checks": {
+    "all3_original_artifact_ID_size_SHA_and14_member_bindings": "PASS",
+    "owner_pin_package_RC2_code62_APKbytes_hash": "PASS against independentlyverified original receipt",
+    "whole_APK_ZIP_and_custom_text_ELF_RELRO_exports_notices": "PASS preciselyscoped",
+    "known_pre_existing_64bit_RELRO_formula_finding": "Documented; exactaffectedbytes/headers unchangedstable56/RC60/RC62; nointroducedregression or actualcrash established; noautomaticnewgate/upgrade",
+    "layout_runtime_qualification": "No laterRWLOAD overlap shown; AOSPmain sourceanalysis is not actualtargetlinker/16KB runtimeattestation",
+    "all8_Android_acceptance_items": "BYTE_IDENTICAL to frozen7ae source and unchanged Showtaps/exactAPKattestation",
+    "Foodv2_older_reader_boundary": "Concise and consistent with ADR0018: newclosedv2 Undo, releasedv1/Taskv3/manifest unchanged; peerFoodisolation; sameprofile unresolvedprotectedv2 canblockadmission; recoverexactbytes byreopeningcompatiblereader",
+    "prior_receipts_and_original_root_identity_bytes": "PRESERVED byteforbyte; qualificationlinkedwithoutrewriting originalPASSreceipt",
+    "relative_Markdown_links": 127,
+    "candidate_files": 47,
+    "candidate_pure_JSON": 32,
+    "original_anchored_JSON_members": [
+      "artifacts/linux/linux-startup.json"
+    ],
+    "private_secret_transfer_scan": "No privatekey/signedstorageURL/access/refresh/clientsecret/password/Bearer patterns; noAPKs/nativebinaries/transferpreparationobjects/userprofileexports amongcandidatefiles",
+    "shipped_application_platform_tool_workflow_source_changes": "NONE comparedwithfrozen7ae",
+    "publication_and_stable_promotion": "NOT_PERFORMED; publication_readyfalse",
+    "recorded_API30_UI_coverage": "Historical accepted workflow coverage retains nativeAPI30 attribution; parentcurrenttestOS must come from its exactAPKreceipt. BoundedcurrentUIQA mayproceed separately; broadphysicalphone/API36/16KB runtimeunperformed."
+  },
+  "remaining": [
+    "Parent exactAPK eightaffected Androidworkflows +Showtapsdemo acceptance",
+    "Parent disposition ofknownpreexisting framework/SQLite staticguidance qualification",
+    "Fresh privateparent quota/publication clearance; stablebehavior promotion stillrequiresLeeacceptance"
+  ],
+  "publication_ready": false,
+  "reviewed_files": {
+    "evidence/food-2026.10.4-rc.2/candidate/build62/README.md": {
+      "bytes": 5943,
+      "sha256": "8b8f08965c6ad8ba66cffa912e4e7dfbbc79c24eb22685709cd188909c418cdc"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/handoff.json": {
+      "bytes": 4272,
+      "sha256": "61a6239437278ed73461bb1a462a51ffc946133a81bb2f33ff3b65ab6b631218"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json": {
+      "bytes": 5730,
+      "sha256": "119921ebfb2b43577ffac056b8f804109ee4edb718ccc5a56dc0a6bd85f6dbe0"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/reviews/root-identity-qualification-addendum.json": {
+      "bytes": 642,
+      "sha256": "a8e57370b914128d974f9caea4ae8f0ab9ccb7277e87b27be7749685404cb4f3"
+    },
+    "design/status.md": {
+      "bytes": 109309,
+      "sha256": "aaf1a1c5e042b9bbb9a5fb9f1e473433aea3722e90aa1928441eac90d5d35aaa"
+    },
+    "design/food-native-acceptance.md": {
+      "bytes": 19195,
+      "sha256": "82c5a594283f161d55c57d897e51febc3e5a3c8d4ed6fedb4fa1672bc6f7002b"
+    },
+    "evidence/food-2026.10.4-rc.2/README.md": {
+      "bytes": 5398,
+      "sha256": "1e2f8aeaa7559b8d54f4e4fccff72108ba30f88392675cde648d9a4193a65695"
+    },
+    "evidence/food-2026.10.4-rc.2/expanded-build62/README.md": {
+      "bytes": 8145,
+      "sha256": "0f6db54b6dc986fe43b06b5885429ae8a4f913d34df2110edecbe4296737404f"
+    }
+  },
+  "supporting_receipts": [
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/independent-artifact-review.json",
+      "sha256": "27c1394ffebcdd7fe80fb52ebe866c9c70c1ade7ecc99c27036d11a1890a114e"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/released-relro-comparison/combined-baseline-regression-disposition.json",
+      "sha256": "bead473956e19bdba06105cee8a074fdb3e37bf623b0850ebabad8ebafa11135"
+    },
+    {
+      "path": "/tmp/food-rc62-artifact-independent-review/final-handoff-file-audit.json",
+      "sha256": "e9844905e59ab22fd8602a5cb9c8db84598abfa54f7f9da11449b33134202497"
+    }
+  ],
+  "scope_limits": "Reviewerperformed byte/static/documentchecks inLinuxcloud. Actualhostednative desktop evidence remainsqualifiedtooriginal reports; no localFlatpak/BazaarGUI/WindowsGUI/Android app execution, dependencyupgrade, OSpackageinstall, sourceedit, publication, userdatatouch or deletion."
+}

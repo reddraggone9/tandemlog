@@ -1,0 +1,21 @@
+{
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "run": 38121211371,
+  "artifact_id": 11695726852,
+  "zip_crc_api_size_digest": "PASS",
+  "original_members": 6,
+  "portable_payload_members": 17,
+  "exact_all_portable_member_hashes": "PASS",
+  "native_pe_x64_and_exports": "PASS",
+  "notices": "Exact Windows CRLF checkout of frozen Git LF source, matching successful hosted payload gate",
+  "actual_original_installed_lifecycle": "four phases PASS; synthetic app projection loaded for three launches",
+  "human_windows_gui": "RC waiver retained; not executed locally",
+  "local_verifier_qualification": "Linux CLI default notice expects LF; rerun with source-derived Windows CRLF notice and PE export inspection; no original bytes changed",
+  "original_executable_file_version": [
+    2026,
+    10,
+    4,
+    62
+  ],
+  "original_executable_display_version": "2026.10.4-rc.2"
+}

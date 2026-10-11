@@ -1,6 +1,6 @@
 # Current status — 2026-10-11
 
-## Next Food preview — complete build62 batch ready for candidate gates
+## Next Food preview — complete build62 ready for Android acceptance
 
 The approved batch includes the existing-toolbar Tasks/Food dropdown, date-only
 Food interface and short-title Tasks Inbox hit-area fix, plus default full-width
@@ -15,16 +15,32 @@ Undated retained food stays exclusively Retained; search never duplicates active
 items or mixes them with Deleted. These choices are recorded in ADR0016/0017/0018
 and the Flatpak update to ADR0013. No private-profile reset or migration is run.
 
-The three-change build61 run was cancelled when the complete scope was approved;
-it is an intermediate checkpoint and cannot be handed off or published. Build62 implementation and independent source reviews are complete. The final
-local suite passes956 unit tests and13 affected native Linux flows; analysis
-and formatting are clean. Exact hosted and Android acceptance remain pending. [RC2 source-qualified evidence](../evidence/food-2026.10.4-rc.2/README.md)
-keeps earlier passes attributed to their original source. RC1/build60 remains
-published; stable2026.10.3 remains Latest. The first build62 hosted attempt failed on runner tool installation and Windows
-frozen-fixture line endings; independently accepted isolated-tool extraction and
-scoped byte-preserving checkout corrections leave app code unchanged. A fresh
-complete signed candidate and parent's actual Android acceptance remain pending. No publication, stable promotion,
-import or user/trial data migration is included in this preparation.
+The complete source `7ae14371fa0b734599fcdbb184d93376b8898a2a` passes all five signed-candidate jobs in
+[run38121211371](https://github.com/reddraggone9/tandemlog/actions/runs/38121211371) and
+all three push CI38121201969 jobs. Linux956 units/129 native flows/107 contracts/
+Rust4/74 tooling checks and Windows953 units/two platform skips/107 contracts/
+Rust4/74 tooling checks with four platform skips pass. Analysis/formatting are clean.
+Both original installed desktop lifecycles and Linux's actual installed catalog,
+private default XDG profile and one permanent database pass. Independent and root
+verification accept all three original archives and14 members, including the
+owner-signed APK artifact11696122674/code62,
+SHA256 `fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452`.
+[Exact native handoff](../evidence/food-2026.10.4-rc.2/candidate/build62/README.md)
+records evidence and the eight pending affected Android items plus Show taps demo.
+
+The cancelled intermediate build61 and failed d38/43df attempts remain ineligible.
+Isolated audited-tool extraction, byte-preserving frozen-fixture checkout and
+canonical catalog report paths repair hosted gates without changing final app code.
+Food Undo's new inverse format and older-reader/protected-receipt boundary remain
+explicit in ADR0018 and the handoff. Local956 units/13 affected native flows and
+independent source/architecture/UX/notes/media reviews retain source attribution.
+No RC2 publication, stable promotion, import, reset or live data migration occurred.
+RC1/build60 remains published; stable2026.10.3/build56 remains Latest. Parent exact
+Android acceptance, disposition of the pre-existing Flutter/SQLite RELRO guidance
+discrepancy and fresh private publication clearance are still required. Exact
+baseline APK comparisons show all affected libraries unchanged from stable56
+and RC1/60, with no established runtime failure. Bounded UI QA remains unaffected;
+no new gate or dependency upgrade was introduced.
 
 ## Food inventory — durable source checkpoint
 

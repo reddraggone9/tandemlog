@@ -1,0 +1,11 @@
+{
+  "checked_at_utc": "2026-10-11T07:37:55.382734+00:00",
+  "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "run": 38121211371,
+  "verdict": "PASS_EXACT_SOURCE_DERIVED_WINDOWS_CRLF_NOTICE_BYTES",
+  "actual_bytes": 2008832,
+  "actual_sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49",
+  "source_git_LF_sha256": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c",
+  "expected_checkout_conversion": "Each immutable Git LF newline becomes CRLF; exact complete bytes equal, not only normalized content.",
+  "original_unchanged": true
+}

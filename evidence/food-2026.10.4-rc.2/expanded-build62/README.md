@@ -37,7 +37,9 @@ The independent core and host reviews accept this disclosed boundary.
 - Final application unit run:956 pass,0 fail, including the closed native fixture
   changes and one-line Search padding correction. Final affected native aggregate:
   13 pass,0 fail. Both execute the final application inventory below.
-- Full application analysis and format checks pass;64 tooling policies pass.
+- Full application analysis and format checks pass; the initial source passed64
+  tooling policies. Final corrected hosted source passes all74 on Linux and the
+  Windows suite with four platform skips; the local run retains its one skip.
 - Food Undo core:65 focused and72 expanded checks pass, including literal
   old-reader execution, invalid known refs and12.4MB replay budget.
 - Independent session tests:5 native Undo flows pass, plus the later newer
@@ -60,11 +62,13 @@ The independent core and host reviews accept this disclosed boundary.
   captures and release media use the production app with synthetic data.
 
 Reviews and native test inventories distinguish application bytes, fixture bytes,
-earlier checkpoints and pending acceptance. The exact original signed candidate,
-installed Flatpak catalog/private-profile lifecycle, original artifacts, parent's
-actual Android QA and final full-range editorial approval remain required before
-publication. Bazaar's actual target UI is not inferred from local AppStream
-composition alone.
+earlier checkpoints and pending acceptance. The final source7ae now passes the
+full signed candidate, exact original-artifact and actual installed Flatpak
+catalog/private-profile gates; independent final-range notes/media review accepts
+3d671 through7ae. [Final handoff](../candidate/build62/README.md) records all three
+original archives and the signed APK. Parent exact Android QA/Show taps and fresh
+private publication clearance remain required. No actual Bazaar GUI is inferred
+from local composition or the successful hosted catalog-file validation.
 
 ## First hosted attempt and bounded corrections
 
@@ -102,3 +106,20 @@ GREEN and actual five-icon composed-catalog comparison; Linux catalog JSON is
 byte-equivalent. All74 local tooling checks execute:73 pass,1 existing platform
 case skips. No skips/bypass, fixture or app-code changes are added. Both incomplete
 prior attempts remain ineligible; a fresh complete candidate remains required.
+
+## Final candidate closure
+
+Source7ae/candidate38121211371 and pushCI38121201969 pass every hosted job.
+Linux956 unit/129 native workflows/107 contracts/Rust4/74 tool checks and
+Windows953 unit/two skips/107 contracts/Rust4/74 tool checks/four platform skips
+pass. Both exact original installed desktop lifecycles pass. The earlier correction
+paragraphs are historical checkpoints; their pending fresh-run requirement is now
+fulfilled. The application remains byte-identical to the final4310708 local-tested
+source. [Original14-member manifest](../candidate/build62/artifacts/manifest.json)
+and [native handoff](../candidate/build62/README.md) record identity and explicit
+remaining Android/publication gates. No RC2 publication or stable promotion.
+
+The [exact handoff](../candidate/build62/README.md) qualifies supplemental Android RELRO
+static guidance: affected libraries are byte-identical in stable56, RC1/60 and62;
+no runtime failure is established. Parent disposition is pending before publication,
+while exact Android UI QA may proceed. No new gate or toolchain upgrade was added.

@@ -1,0 +1,446 @@
+[
+  {
+    "name": "lib/arm64-v8a/libapp.so",
+    "elf_class": 2,
+    "machine": 183,
+    "load": [
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      }
+    ],
+    "relro": []
+  },
+  {
+    "name": "lib/arm64-v8a/libdartjni.so",
+    "elf_class": 2,
+    "machine": 183,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 11280,
+        "virtual_address_mod_16K": 11280
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 12656,
+        "virtual_address_mod_16K": 12656
+      }
+    ],
+    "relro": [
+      {
+        "address": 142352,
+        "memsz": 5104,
+        "end": 147456,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/arm64-v8a/libflutter.so",
+    "elf_class": 2,
+    "machine": 183,
+    "load": [
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 16112,
+        "virtual_address_mod_16K": 16112
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 8680,
+        "virtual_address_mod_16K": 8680
+      }
+    ],
+    "relro": [
+      {
+        "address": 11435760,
+        "memsz": 373008,
+        "end": 11808768,
+        "end_mod_16K": 12288
+      }
+    ]
+  },
+  {
+    "name": "lib/arm64-v8a/libsqlite3.so",
+    "elf_class": 2,
+    "machine": 183,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 1584,
+        "virtual_address_mod_16K": 1584
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 11424,
+        "virtual_address_mod_16K": 11424
+      }
+    ],
+    "relro": [
+      {
+        "address": 1721904,
+        "memsz": 10704,
+        "end": 1732608,
+        "end_mod_16K": 12288
+      }
+    ]
+  },
+  {
+    "name": "lib/arm64-v8a/libtandemlog_text.so",
+    "elf_class": 2,
+    "machine": 183,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 1432,
+        "virtual_address_mod_16K": 1432
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 9712,
+        "virtual_address_mod_16K": 9712
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 7096,
+        "virtual_address_mod_16K": 7096
+      }
+    ],
+    "relro": [
+      {
+        "address": 1058288,
+        "memsz": 23056,
+        "end": 1081344,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/armeabi-v7a/libapp.so",
+    "elf_class": 1,
+    "machine": 40,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      }
+    ],
+    "relro": []
+  },
+  {
+    "name": "lib/armeabi-v7a/libdartjni.so",
+    "elf_class": 1,
+    "machine": 40,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 12720,
+        "virtual_address_mod_16K": 12720
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 13412,
+        "virtual_address_mod_16K": 13412
+      }
+    ],
+    "relro": [
+      {
+        "address": 94640,
+        "memsz": 3664,
+        "end": 98304,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/armeabi-v7a/libflutter.so",
+    "elf_class": 1,
+    "machine": 40,
+    "load": [
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 11872,
+        "virtual_address_mod_16K": 11872
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 9752,
+        "virtual_address_mod_16K": 9752
+      }
+    ],
+    "relro": [
+      {
+        "address": 8482400,
+        "memsz": 197024,
+        "end": 8679424,
+        "end_mod_16K": 12288
+      }
+    ]
+  },
+  {
+    "name": "lib/armeabi-v7a/libsqlite3.so",
+    "elf_class": 1,
+    "machine": 40,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 10176,
+        "virtual_address_mod_16K": 10176
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 16376,
+        "virtual_address_mod_16K": 16376
+      }
+    ],
+    "relro": [
+      {
+        "address": 1714112,
+        "memsz": 6208,
+        "end": 1720320,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/armeabi-v7a/libtandemlog_text.so",
+    "elf_class": 1,
+    "machine": 40,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 7584,
+        "virtual_address_mod_16K": 7584
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 10352,
+        "virtual_address_mod_16K": 10352
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 3696,
+        "virtual_address_mod_16K": 3696
+      }
+    ],
+    "relro": [
+      {
+        "address": 813168,
+        "memsz": 22416,
+        "end": 835584,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/x86_64/libapp.so",
+    "elf_class": 2,
+    "machine": 62,
+    "load": [
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      }
+    ],
+    "relro": []
+  },
+  {
+    "name": "lib/x86_64/libdartjni.so",
+    "elf_class": 2,
+    "machine": 62,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 13056,
+        "virtual_address_mod_16K": 13056
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 14432,
+        "virtual_address_mod_16K": 14432
+      }
+    ],
+    "relro": [
+      {
+        "address": 127744,
+        "memsz": 3328,
+        "end": 131072,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/x86_64/libflutter.so",
+    "elf_class": 2,
+    "machine": 62,
+    "load": [
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 11888,
+        "virtual_address_mod_16K": 11888
+      },
+      {
+        "align": 65536,
+        "file_offset_mod_16K": 13504,
+        "virtual_address_mod_16K": 13504
+      }
+    ],
+    "relro": [
+      {
+        "address": 12742256,
+        "memsz": 364944,
+        "end": 13107200,
+        "end_mod_16K": 0
+      }
+    ]
+  },
+  {
+    "name": "lib/x86_64/libsqlite3.so",
+    "elf_class": 2,
+    "machine": 62,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 11280,
+        "virtual_address_mod_16K": 11280
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 4960,
+        "virtual_address_mod_16K": 4960
+      }
+    ],
+    "relro": [
+      {
+        "address": 1698832,
+        "memsz": 13296,
+        "end": 1712128,
+        "end_mod_16K": 8192
+      }
+    ]
+  },
+  {
+    "name": "lib/x86_64/libtandemlog_text.so",
+    "elf_class": 2,
+    "machine": 62,
+    "load": [
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 0,
+        "virtual_address_mod_16K": 0
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 7424,
+        "virtual_address_mod_16K": 7424
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 10816,
+        "virtual_address_mod_16K": 10816
+      },
+      {
+        "align": 16384,
+        "file_offset_mod_16K": 8464,
+        "virtual_address_mod_16K": 8464
+      }
+    ],
+    "relro": [
+      {
+        "address": 1206848,
+        "memsz": 21952,
+        "end": 1228800,
+        "end_mod_16K": 0
+      }
+    ]
+  }
+]

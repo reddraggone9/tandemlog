@@ -1,23 +1,35 @@
 # Food RC native acceptance
 
-## Complete RC2/build62 — preparation and exact acceptance pending
+## Complete RC2/build62 — exact original artifacts ready; Android pending
 
-Build61 source `00594c1f91f478a729e091ab41c418afbfcbb383` and
-[signed candidate38115053314](https://github.com/reddraggone9/tandemlog/actions/runs/38115053314)
-are cancelled intermediate records. Lee added the Search/Add toggle and combined
-Stock/Inbox with expiration colors and toolbar filter/account parity, then
-required manual expiration with the shared Tasks date control, the full Food
-Undo stack and fixed expanded-group anchors after that source froze. Flatpak
-catalog/private-profile fixes also belong to the complete batch. No build61 APK is
-accepted or eligible for handoff/publication. The complete build62 source/run
-will be recorded after implementation and fresh gates.
-[Tests-first checkpoint](../evidence/food-2026.10.4-rc.2/preparation/expanded-scope/README.md)
-separates pending work from the earlier reviewed three-change source.
+Complete executable source `7ae14371fa0b734599fcdbb184d93376b8898a2a` passes all five jobs in
+[signed candidate38121211371](https://github.com/reddraggone9/tandemlog/actions/runs/38121211371)
+and all three push CI38121201969 jobs. Independent/root verification accept the
+[three original archives and14 members](../evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json),
+including both installed desktop lifecycles and Linux's actual catalog/private-XDG/
+one-database gate. The original Android artifact is
+`11696122674`; APK SHA256
+`fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452`, 66984609 bytes, owner signer/package/version2026.10.4-rc.2/
+code62/nondebuggable/threeABIs, whole-APK ZIP alignment and custom-text
+ELF/RELRO/export/notices checks pass. No Android runtime acceptance
+is inferred from static verification or actual Linux GTK demos. The handoff records
+a supplemental pre-existing Flutter/SQLite RELRO guidance discrepancy: affected
+libraries are identical to stable56 and RC1/60; no actual load failure or crash is
+established. Parent disposition remains pending before publication; bounded UI
+acceptance proceeds independently, without a new gate or toolchain upgrade.
 
-Use only the complete successful run's original owner-signed APK with its actual
-APK SHA256 recorded in the final handoff. Reuse isolated synthetic profiles;
-do not import, migrate or touch production/trial records. Prior acceptance keeps
-its exact source/build attribution.
+Build61/source00594c1 and failed d38/43df build62 runs are retained intermediate
+records, ineligible for handoff/publication. Their partial archives are not reused.
+All approved expanded scope is in this source, including Search/Add, Stock/date/
+Filter/account behavior, required shared date input, selective Food Undo, fixed
+expanded controls and Flatpak fixes. [Handoff](../evidence/food-2026.10.4-rc.2/candidate/build62/README.md)
+records original evidence, source-qualified local coverage and Food Undo's older-
+reader/protected-receipt downgrade boundary.
+
+Use only this original owner-signed APK. Reuse isolated synthetic profiles;
+do not import, copy, reset, migrate or touch live synced records. Prior acceptance
+keeps its exact source/build attribution. Parent must execute the following eight
+items and provide the exact-APK attestation and Show taps demo before publication.
 
 Focused actual Android acceptance for the complete changed candidate:
 

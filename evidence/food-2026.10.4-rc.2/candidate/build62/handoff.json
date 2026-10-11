@@ -1,0 +1,68 @@
+{
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "version": "2026.10.4-rc.2",
+  "build": 62,
+  "candidate_run": 38121211371,
+  "push_ci_run": 38121201969,
+  "status": "Original signed artifacts verified; parent exact Android acceptance pending",
+  "expected_package": "com.reddraggone9.tandemlog",
+  "expected_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "actual_android_artifact": {
+    "artifact_id": 11696122674,
+    "bytes": 31047929,
+    "sha256": "e4df83be0db7b7b7daa76941de5664af3909b1b915c3e369bbe79e804243e7cb",
+    "source_run_api_digest_size_crc": "PASS"
+  },
+  "actual_apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "actual_apk_bytes": 66984609,
+  "native_contract": "design/food-native-acceptance.md complete RC2/build62 eight affected Android items",
+  "linux_demo_paths": [
+    "evidence/food-2026.10.4-rc.2/expanded-build62/demos/task-search-add/screens/native-linux-scripted-preview.mp4",
+    "evidence/food-2026.10.4-rc.2/expanded-build62/demos/food-undo/screens/native-linux-scripted-preview.mp4"
+  ],
+  "scope_completion": "Complete approved feature scope, independently reviewed; current app Dart/native/shipped payload code unchanged after final956unit/13affectedGTK checks",
+  "undo_compatibility": "New closed Foodv2 Undo only; all originalFoodv1/Taskv3/manifest records unchanged. Contribution-specific retraction preserves newer peer edits. RC1 canonicalv2 isolates Food; same-profile unresolvedprotectedv2 downgrade can block workspace admission while retainingexactbytes; reopen compatiblepreview to recover. No Redo;50action sessionstack.",
+  "remaining_gates": [
+    "Parent exact APK eight affected Android workflows and Show taps demo",
+    "Parent disposition of pre-existing framework/SQLite RELRO static-guidance qualification; exact libraries unchanged from stable56/RC1build60; no actual crash established; unaffected Android UI QA proceeds",
+    "Fresh private parent quota/publication clearance"
+  ],
+  "data_boundary": "Disposable synthetic profiles only; no live synced data reset/import/migration/copy/deletion",
+  "failed_prior_attempt": {
+    "run": 38119736399,
+    "source": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+    "owner_signing": "Skipped",
+    "tool_fix": "Same six audited tools isolated without runner downgrade/removal",
+    "fixture_fix": "Scoped Gitbyte-preserving attribute; no accepted fixture/hash/assertion changed"
+  },
+  "prior_portability_attempt": {
+    "source": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+    "run": 38120531043,
+    "disposition": "Terminal cancellation after Windows tooling failure; unfinished Linux cancelled to release candidate concurrency; no owner-signed APK",
+    "actual_windows_unit_pass": 953,
+    "actual_windows_unit_skipped": 2,
+    "actual_windows_native_contracts_passed": 107,
+    "remaining_tool_fix": "Two catalog report paths canonicalized via as_posix; independent test/source/catalog review accepted"
+  },
+  "actual_windows_artifact": {
+    "id": 11695726852,
+    "archive_bytes": 26198319,
+    "archive_sha256": "ce395425c9efaf3a6d66f5a8cf2212baf8474a8cdfe5b3be8ae9d3616036ba92",
+    "installer_bytes": 12375273,
+    "installer_sha256": "83b8f8b934feea13bf14fd42369eda7ff84538dbd8c8c35b406f63f8763433d5",
+    "portable_bytes": 14389214,
+    "portable_sha256": "137465504f73ef8765f3553d9ff2f21fcdabc6eb66636210796f549095d02396",
+    "independent_and_root_static_identity": "PASS",
+    "original_hosted_installed_four_phase_lifecycle": "PASS",
+    "actual_human_windows_gui": "RC waiver retained; not executed locally"
+  },
+  "actual_linux_artifact": {
+    "artifact_id": 11695788766,
+    "bytes": 9231646,
+    "sha256": "c10adb4e115717c4f7b94f1c3e9a8f79386763dec1e1d889f5edd583f9a17d83",
+    "source_run_api_digest_size_crc": "PASS"
+  },
+  "publication_performed": false,
+  "stable_promotion_performed": false,
+  "android_static_qualification": "WholeAPK ZIP and frozen custom-text ELF/RELRO/export/notices PASS; all15 LOADalignment/congruence PASS. Three supplemental64bitframeworkSQLiteRELRO ends differ from officialguidance; exactsame12nonAOTlibrarybytes in stable56/RC60/RC62; no introducedregression or establishedcrash. No newgate/dependencyupgrade."
+}

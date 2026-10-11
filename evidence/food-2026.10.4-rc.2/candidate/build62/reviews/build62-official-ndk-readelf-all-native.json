@@ -1,0 +1,171 @@
+{
+  "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "readelf": "/workspace/toolchains/android-sdk/ndk/28.2.13676358/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-readelf",
+  "all_native_members": [
+    {
+      "member": "lib/arm64-v8a/libapp.so",
+      "sha256": "3ed9c0b403f209b4616e1f0e4202434aa5d02e2cd163f05cfca4eba149451cab",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libapp.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x2d28fd 0x2d28fd R   0x10000",
+        "  LOAD           0x2e0000 0x00000000002e0000 0x00000000002e0000 0x48eb00 0x48eb00 R E 0x10000",
+        "  LOAD           0x770000 0x0000000000770000 0x0000000000770000 0x000068 0x000068 RW  0x10000"
+      ]
+    },
+    {
+      "member": "lib/arm64-v8a/libdartjni.so",
+      "sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libdartjni.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x01ec10 0x01ec10 R E 0x4000",
+        "  LOAD           0x01ec10 0x0000000000022c10 0x0000000000022c10 0x000560 0x0013f0 RW  0x4000",
+        "  LOAD           0x01f170 0x0000000000027170 0x0000000000027170 0x0006f8 0x000978 RW  0x4000",
+        "  GNU_RELRO      0x01ec10 0x0000000000022c10 0x0000000000022c10 0x000560 0x0013f0 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/arm64-v8a/libflutter.so",
+      "sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libflutter.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0xad7ef0 0xad7ef0 R E 0x10000",
+        "  LOAD           0xad7ef0 0x0000000000ae7ef0 0x0000000000ae7ef0 0x05a2f8 0x05b110 RW  0x10000",
+        "  LOAD           0xb321e8 0x0000000000b521e8 0x0000000000b521e8 0x0016e8 0x0107f8 RW  0x10000",
+        "  GNU_RELRO      0xad7ef0 0x0000000000ae7ef0 0x0000000000ae7ef0 0x05a2f8 0x05b110 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/arm64-v8a/libsqlite3.so",
+      "sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libsqlite3.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x1a0630 0x1a0630 R E 0x4000",
+        "  LOAD           0x1a0630 0x00000000001a4630 0x00000000001a4630 0x002670 0x0029d0 RW  0x4000",
+        "  LOAD           0x1a2ca0 0x00000000001aaca0 0x00000000001aaca0 0x003a30 0x003f40 RW  0x4000",
+        "  GNU_RELRO      0x1a0630 0x00000000001a4630 0x00000000001a4630 0x002670 0x0029d0 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/arm64-v8a/libtandemlog_text.so",
+      "sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-arm64-v8a-libtandemlog_text.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x030598 0x030598 R   0x4000",
+        "  LOAD           0x030598 0x0000000000034598 0x0000000000034598 0x0ca058 0x0ca058 R E 0x4000",
+        "  LOAD           0x0fa5f0 0x00000000001025f0 0x00000000001025f0 0x0035c8 0x005a10 RW  0x4000",
+        "  LOAD           0x0fdbb8 0x0000000000109bb8 0x0000000000109bb8 0x000ab0 0x001368 RW  0x4000",
+        "  GNU_RELRO      0x0fa5f0 0x00000000001025f0 0x00000000001025f0 0x0035c8 0x005a10 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libapp.so",
+      "sha256": "a715236ddfb251e797c32271b22ee63cc606ad4a1d54b8877f413a833934a803",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-armeabi-v7a-libapp.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x00000000 0x00000000 0x33f1ad 0x33f1ad R   0x4000",
+        "  LOAD           0x340000 0x00340000 0x00340000 0x4d72a0 0x4d72a0 R E 0x4000",
+        "  LOAD           0x818000 0x00818000 0x00818000 0x00034 0x00034 RW  0x4000"
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libdartjni.so",
+      "sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-armeabi-v7a-libdartjni.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x00000000 0x00000000 0x131b0 0x131b0 R E 0x4000",
+        "  LOAD           0x0131b0 0x000171b0 0x000171b0 0x002b4 0x00e50 RW  0x4000",
+        "  LOAD           0x013464 0x0001b464 0x0001b464 0x0037c 0x00490 RW  0x4000",
+        "  GNU_RELRO      0x0131b0 0x000171b0 0x000171b0 0x002b4 0x00e50 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libflutter.so",
+      "sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-armeabi-v7a-libflutter.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x00000000 0x00000000 0x806e60 0x806e60 R E 0x10000",
+        "  LOAD           0x806e60 0x00816e60 0x00816e60 0x2f7b8 0x301a0 RW  0x10000",
+        "  LOAD           0x836618 0x00856618 0x00856618 0x00aa0 0x09628 RW  0x10000",
+        "  GNU_RELRO      0x806e60 0x00816e60 0x00816e60 0x2f7b8 0x301a0 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libsqlite3.so",
+      "sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-armeabi-v7a-libsqlite3.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x00000000 0x00000000 0x19e7c0 0x19e7c0 R E 0x4000",
+        "  LOAD           0x19e7c0 0x001a27c0 0x001a27c0 0x01834 0x01840 RW  0x4000",
+        "  LOAD           0x19fff8 0x001a7ff8 0x001a7ff8 0x02020 0x02270 RW  0x4000",
+        "  GNU_RELRO      0x19e7c0 0x001a27c0 0x001a27c0 0x01834 0x01840 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/armeabi-v7a/libtandemlog_text.so",
+      "sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-armeabi-v7a-libtandemlog_text.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x00000000 0x00000000 0x19d9d 0x19d9d R   0x4000",
+        "  LOAD           0x019da0 0x0001dda0 0x0001dda0 0xa4ad0 0xa4ad0 R E 0x4000",
+        "  LOAD           0x0be870 0x000c6870 0x000c6870 0x025fc 0x05790 RW  0x4000",
+        "  LOAD           0x0c0e70 0x000cce70 0x000cce70 0x00620 0x00681 RW  0x4000",
+        "  GNU_RELRO      0x0be870 0x000c6870 0x000c6870 0x025fc 0x05790 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/x86_64/libapp.so",
+      "sha256": "fa91415fcc76ecefc7e380062f5478a38197bb7ba3add0e762293b2c6e750697",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libapp.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x2d125d 0x2d125d R   0x10000",
+        "  LOAD           0x2e0000 0x00000000002e0000 0x00000000002e0000 0x4d0aa0 0x4d0aa0 R E 0x10000",
+        "  LOAD           0x7c0000 0x00000000007c0000 0x00000000007c0000 0x000068 0x000068 RW  0x10000"
+      ]
+    },
+    {
+      "member": "lib/x86_64/libdartjni.so",
+      "sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libdartjni.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x01b300 0x01b300 R E 0x4000",
+        "  LOAD           0x01b300 0x000000000001f300 0x000000000001f300 0x000560 0x000d00 RW  0x4000",
+        "  LOAD           0x01b860 0x0000000000023860 0x0000000000023860 0x0006f8 0x000974 RW  0x4000",
+        "  GNU_RELRO      0x01b300 0x000000000001f300 0x000000000001f300 0x000560 0x000d00 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/x86_64/libflutter.so",
+      "sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libflutter.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0xc16e70 0xc16e70 R E 0x10000",
+        "  LOAD           0xc16e70 0x0000000000c26e70 0x0000000000c26e70 0x058650 0x059190 RW  0x10000",
+        "  LOAD           0xc6f4c0 0x0000000000c8f4c0 0x0000000000c8f4c0 0x002818 0x011ef0 RW  0x10000",
+        "  GNU_RELRO      0xc16e70 0x0000000000c26e70 0x0000000000c26e70 0x058650 0x059190 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/x86_64/libsqlite3.so",
+      "sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libsqlite3.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x19ac10 0x19ac10 R E 0x4000",
+        "  LOAD           0x19ac10 0x000000000019ec10 0x000000000019ec10 0x002748 0x0033f0 RW  0x4000",
+        "  LOAD           0x19d360 0x00000000001a5360 0x00000000001a5360 0x003a50 0x003f71 RW  0x4000",
+        "  GNU_RELRO      0x19ac10 0x000000000019ec10 0x000000000019ec10 0x002748 0x0033f0 R   0x1"
+      ]
+    },
+    {
+      "member": "lib/x86_64/libtandemlog_text.so",
+      "sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "readelf_log": "/tmp/food-rc62-artifact-independent-review/official-ndk-readelf-all-apk-native/lib-x86_64-libtandemlog_text.so.txt",
+      "headers": [
+        "  LOAD           0x000000 0x0000000000000000 0x0000000000000000 0x031cfc 0x031cfc R   0x4000",
+        "  LOAD           0x031d00 0x0000000000035d00 0x0000000000035d00 0x0ecd40 0x0ecd40 R E 0x4000",
+        "  LOAD           0x11ea40 0x0000000000126a40 0x0000000000126a40 0x0036d0 0x0055c0 RW  0x4000",
+        "  LOAD           0x122110 0x000000000012e110 0x000000000012e110 0x000ac8 0x0013a0 RW  0x4000",
+        "  GNU_RELRO      0x11ea40 0x0000000000126a40 0x0000000000126a40 0x0036d0 0x0055c0 R   0x1"
+      ]
+    }
+  ]
+}

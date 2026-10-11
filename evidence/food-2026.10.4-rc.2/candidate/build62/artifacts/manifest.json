@@ -1,0 +1,133 @@
+{
+  "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "archives": {
+    "windows": {
+      "artifact_id": 11695726852,
+      "bytes": 26198319,
+      "sha256": "ce395425c9efaf3a6d66f5a8cf2212baf8474a8cdfe5b3be8ae9d3616036ba92",
+      "source_run_api_digest_size_crc": "PASS"
+    },
+    "linux": {
+      "artifact_id": 11695788766,
+      "bytes": 9231646,
+      "sha256": "c10adb4e115717c4f7b94f1c3e9a8f79386763dec1e1d889f5edd583f9a17d83",
+      "source_run_api_digest_size_crc": "PASS"
+    },
+    "android-release": {
+      "artifact_id": 11696122674,
+      "bytes": 31047929,
+      "sha256": "e4df83be0db7b7b7daa76941de5664af3909b1b915c3e369bbe79e804243e7cb",
+      "source_run_api_digest_size_crc": "PASS"
+    }
+  },
+  "members": {
+    "windows/tandemlog-windows-x64-unsigned-portable.zip": {
+      "bytes": 14389214,
+      "sha256": "137465504f73ef8765f3553d9ff2f21fcdabc6eb66636210796f549095d02396",
+      "crc32": "94d61352"
+    },
+    "windows/tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12375273,
+      "sha256": "83b8f8b934feea13bf14fd42369eda7ff84538dbd8c8c35b406f63f8763433d5",
+      "crc32": "aacbf4a6"
+    },
+    "windows/windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "960b86b2c03dda372a2e74d6aac2e4209617b9d54f4fc2b56eb09866a2cf33ee",
+      "crc32": "88005f9f"
+    },
+    "windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "55507d20eca3b742c3f296b4efc3d39281d2c1e0c54eabd5a4bdeb19c66a5912",
+      "crc32": "46e27023"
+    },
+    "windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "dcb0b711128c2153c24ac5a2c07f020062a59898390d860eddf24bcef7ff22da",
+      "crc32": "5e5bee97"
+    },
+    "windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "6ea074da4b96edcfdbafb69fe9ba82e4b091b317ac8d88beb5c8a867121ac9d5",
+      "crc32": "781c0fff"
+    },
+    "linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "b4fabe0fa3954abbbd152f18eab22d66b2a105e6207681a27aea5c295914bb50",
+      "crc32": "5bbf4236"
+    },
+    "linux/linux-install-smoke.json": {
+      "bytes": 2918,
+      "sha256": "7ef49febc90d95c49b520545710d1e41cf2c71c49d158017b479ced40aa0daf9",
+      "crc32": "f5949bd3"
+    },
+    "linux/linux-startup.json": {
+      "bytes": 6191,
+      "sha256": "a3f5ed2e689f0691f4f8c53616c9029328dcbfb15e1b11b3507a3e5d6ddbdc5a",
+      "crc32": "df036250"
+    },
+    "linux/tandemlog-linux-x64.flatpak": {
+      "bytes": 9226560,
+      "sha256": "8d4c49c4f680f561ddd7aaa1c36465903d0e8ae15ebbc4ad2726ac8949d25843",
+      "crc32": "d868e931"
+    },
+    "android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "129f3381100303c7ab71702125839cc9fb9242d40ba9f1fd72cf48bc5aa21c96",
+      "crc32": "aa81d442"
+    },
+    "android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "1dc9df0d629d86912b710b129e41c7f441cbf9339a99c4468039f3660679e591",
+      "crc32": "dff7111a"
+    },
+    "android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+      "crc32": "02981044"
+    },
+    "android-release/tandemlog-android.apk": {
+      "bytes": 66984609,
+      "sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+      "crc32": "67e42132"
+    }
+  },
+  "disposition": "EXACT_ORIGINAL_ARTIFACTS_VERIFIED_FOR_PARENT_ANDROID_HANDOFF",
+  "version": "2026.10.4-rc.2+62",
+  "push_ci_run": 38121201969,
+  "actual_android": {
+    "source_commit": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "version": "2026.10.4-rc.2",
+    "version_code": 62,
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452"
+  },
+  "hosted_gates": {
+    "candidate": "5/5 jobs SUCCESS",
+    "push_ci": "3/3 jobs SUCCESS",
+    "linux_units": 956,
+    "linux_native": 129,
+    "windows_units": 953,
+    "windows_unit_platform_skips": 2,
+    "native_contracts": 107,
+    "native_rust_tests": 4,
+    "linux_tool_tests": 74,
+    "linux_tool_skips": 0,
+    "windows_tool_tests": 74,
+    "windows_tool_platform_skips": 4,
+    "desktop_installed_lifecycles": "Both exact original four-phase reports PASS",
+    "linux_installed_catalog_profile": "Tandemlog ID/name/catalog/icons, private XDG/no override/one permanent local.sqlite/no host filesystem or network grants PASS",
+    "format_analysis": "Clean"
+  },
+  "local_validation": "956 full units,13 affected native GTK flows, clean analysis/format; earlier source-qualified flows and recording qualifications retained",
+  "remaining": [
+    "Parent exact APK eight affected Android workflows and Show taps demo",
+    "Parent disposition of pre-existing framework/SQLite RELRO static-guidance qualification; exact libraries unchanged from stable56/RC1build60; no actual crash established; unaffected Android UI QA proceeds",
+    "Fresh private parent quota/publication clearance"
+  ],
+  "publication_ready": false,
+  "data_boundary": "Disposable synthetic profiles only; no live data import/reset/copy/migration/deletion",
+  "runtime_qualification": "Actual hosted desktop installed lifecycles; no local Flatpak/Bazaar GUI execution; human Windows GUI RC waiver retained; GTK movies do not establish Android acceptance",
+  "android_static_qualification": "WholeAPK ZIP and frozen custom-text ELF/RELRO/export/notices PASS; all15 LOADalignment/congruence PASS. Three supplemental64bitframeworkSQLiteRELRO ends differ from officialguidance; exactsame12nonAOTlibrarybytes in stable56/RC60/RC62; no introducedregression or establishedcrash. No newgate/dependencyupgrade."
+}
