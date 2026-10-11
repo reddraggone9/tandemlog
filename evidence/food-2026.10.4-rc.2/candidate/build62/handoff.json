@@ -24,7 +24,6 @@
   "undo_compatibility": "New closed Foodv2 Undo only; all originalFoodv1/Taskv3/manifest records unchanged. Contribution-specific retraction preserves newer peer edits. RC1 canonicalv2 isolates Food; same-profile unresolvedprotectedv2 downgrade can block workspace admission while retainingexactbytes; reopen compatiblepreview to recover. No Redo;50action sessionstack.",
   "remaining_gates": [
     "Parent exact APK eight affected Android workflows and Show taps demo",
-    "Parent disposition of pre-existing framework/SQLite RELRO static-guidance qualification; exact libraries unchanged from stable56/RC1build60; no actual crash established; unaffected Android UI QA proceeds",
     "Fresh private parent quota/publication clearance"
   ],
   "data_boundary": "Disposable synthetic profiles only; no live synced data reset/import/migration/copy/deletion",
@@ -64,5 +63,7 @@
   },
   "publication_performed": false,
   "stable_promotion_performed": false,
-  "android_static_qualification": "WholeAPK ZIP and frozen custom-text ELF/RELRO/export/notices PASS; all15 LOADalignment/congruence PASS. Three supplemental64bitframeworkSQLiteRELRO ends differ from officialguidance; exactsame12nonAOTlibrarybytes in stable56/RC60/RC62; no introducedregression or establishedcrash. No newgate/dependencyupgrade."
+  "android_static_qualification": "WholeAPK ZIP and frozen custom-text ELF/RELRO/export/notices PASS; all15 LOADalignment/congruence PASS. Three supplemental64bitframeworkSQLiteRELRO ends differ from officialguidance; exactsame12nonAOTlibrarybytes in stable56/RC60/RC62; no introducedregression or establishedcrash. No newgate/dependencyupgrade.",
+  "parent_RELRO_disposition": "Accepted pre-existing unchanged-library limitation; not a newRC2gate; no fullAPK16Kcompliance/runtimeclaim",
+  "undo_peer_concurrency_evidence": "reviews/undo-peer-concurrency-evidence-and-parent-disposition.json"
 }

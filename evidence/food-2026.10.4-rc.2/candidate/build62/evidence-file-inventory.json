@@ -2,8 +2,8 @@
   "scope": "Original artifact metadata, hosted logs and review receipts; binaries excluded; inventory excludes itself",
   "files": {
     "README.md": {
-      "bytes": 5943,
-      "sha256": "8b8f08965c6ad8ba66cffa912e4e7dfbbc79c24eb22685709cd188909c418cdc"
+      "bytes": 6291,
+      "sha256": "0d7d4eb952f1a8f914b7a111757a4e8d0689d2b8116075a8e8594aa728b795ba"
     },
     "artifacts/android-release/android-SHA256SUMS.txt": {
       "bytes": 88,
@@ -58,8 +58,8 @@
       "sha256": "7102565d9ff3eb4c5e09c37eb6f13b37cd412b3f530c0c2b20c9b585e4e34f71"
     },
     "artifacts/manifest.json": {
-      "bytes": 5730,
-      "sha256": "119921ebfb2b43577ffac056b8f804109ee4edb718ccc5a56dc0a6bd85f6dbe0"
+      "bytes": 5765,
+      "sha256": "ad4f19ee9c48dcaee163d4115d682fa846367a5ef72c02f775af89fb7f22dfaa"
     },
     "artifacts/original-artifacts-api.json": {
       "bytes": 4151,
@@ -98,8 +98,8 @@
       "sha256": "55507d20eca3b742c3f296b4efc3d39281d2c1e0c54eabd5a4bdeb19c66a5912"
     },
     "handoff.json": {
-      "bytes": 4272,
-      "sha256": "61a6239437278ed73461bb1a462a51ffc946133a81bb2f33ff3b65ab6b631218"
+      "bytes": 4307,
+      "sha256": "e9a61f0308dbe478880db7fcdda9c5637c00e2f26039725b906e70c01e30d25b"
     },
     "logs/android-debug-original-hosted.log": {
       "bytes": 186442,
@@ -177,6 +177,10 @@
       "bytes": 2950,
       "sha256": "f83e4bec25eaf072461d65076346d499a293d9f0a558e52a1c520b2d2829c5ca"
     },
+    "reviews/independent-undo-peer-and-accepted-parent-disposition-addendum.json": {
+      "bytes": 7190,
+      "sha256": "116ca5afcc05247c5ea15d0a25c63e3064028362c267c3f77dd0aca0f44950e7"
+    },
     "reviews/rc1-build60-independent-relro-comparison.json": {
       "bytes": 66207,
       "sha256": "59d01d449a331cd78e1d43025254b985a2fb6dc19f55d99621fce4450c116e9e"
@@ -192,6 +196,10 @@
     "reviews/stable-build56-independent-relro-comparison.json": {
       "bytes": 66340,
       "sha256": "b14711960ffa0b280aa1fae7f44ae45926c05746a4c8ac865509e91ccf075704"
+    },
+    "reviews/undo-peer-concurrency-evidence-and-parent-disposition.json": {
+      "bytes": 3813,
+      "sha256": "9dacbd306fe9e69cc72deb07dc70ad2fe8297443c5a12303b7fa5400c4e6bc58"
     }
   }
 }

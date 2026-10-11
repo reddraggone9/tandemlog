@@ -56,14 +56,20 @@ Recorded accepted Android workflow coverage uses native Android/API30; broader
 physical-phone/API36 coverage remains explicitly unperformed in the runtime QA
 record. Releases are GitHub APK downloads; Google Play distribution is not this
 publication path. Static LOAD/ZIP/custom-text success is not general 16 KB runtime
-acceptance. Parent disposition of the pre-existing finding remains pending before
-publication. Bounded exact-APK UI QA may proceed independently. No new acceptance
+acceptance. Parent accepted the pre-existing unchanged-library limitation, not
+a new RC2 gate. Bounded exact-APK UI QA may proceed independently. No new acceptance
 gate, dependency upgrade or shipped-source change was introduced.
 
 Earlier independent review HOLD wording predates the exact baseline comparison;
 read it with the [combined disposition addendum](reviews/combined-baseline-regression-disposition.json).
 The [root identity addendum](reviews/root-identity-qualification-addendum.json)
 qualifies the preserved original receipt's native-check scope.
+
+The [exact Undo peer-concurrency evidence](reviews/undo-peer-concurrency-evidence-and-parent-disposition.json)
+binds the same-field and other-field assertions to successful unit/store tests
+and the actual build62 native GTK peer workflow. A newer peer Brand survives
+Undo of the superseded local Brand; the entire page-state snapshot and peer log
+bytes remain unchanged while the inverse is appended.
 
 Food Undo adds only closed v2 inverse records; original Foodv1, Taskv3 and shared
 manifest records retain their serialization, IDs, hashes, clocks and meaning.
@@ -84,6 +90,5 @@ stacked. No old task or files were deleted.
 
 No RC2 publication or stable promotion occurred. Published RC1/build60 and
 stable2026.10.3/build56 remain unchanged. Publication still requires exact Android
-acceptance, parent disposition of the pre-existing qualification and fresh private
-parent quota/clearance; stable behavior promotion
+acceptance and fresh private parent quota/clearance; stable behavior promotion
 requires Lee's acceptance. [Machine handoff](handoff.json) retains the identities.

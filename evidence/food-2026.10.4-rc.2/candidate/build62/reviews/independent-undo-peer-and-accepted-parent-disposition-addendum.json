@@ -1,0 +1,121 @@
+{
+  "reviewer": "/root/food_rc2_artifact_review",
+  "checked_at_utc": "2026-10-11T08:36:27.169554+00:00",
+  "verdict": "ACCEPT_ADDITIVE_UNDO_PEER_EVIDENCE_AND_PARENT_DISPOSITION; ANDROID_AND_PRIVATE_PUBLICATION_CLEARANCE_PENDING",
+  "candidate_source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "exact_APK_SHA256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+  "method": "Read-only source/assertion/log and final metadata review. No test rerun, app execution, application/source edits or publication.",
+  "parent_evidence_receipt": {
+    "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.2/candidate/build62/reviews/undo-peer-concurrency-evidence-and-parent-disposition.json",
+    "sha256": "9dacbd306fe9e69cc72deb07dc70ad2fe8297443c5a12303b7fa5400c4e6bc58"
+  },
+  "original_independent_hosted_log_binding": {
+    "path": "/tmp/tandemlog-food-date-readability/evidence/food-2026.10.4-rc.2/candidate/build62/logs/linux-original-hosted.log",
+    "bytes": 553272,
+    "sha256": "1d9992934a25225b5549a0790ff505767ad357e62d9e1fba95f1619cdf8042d8",
+    "byte_equal_to_independently_fetched_provider_decoded_log": true
+  },
+  "verified_case_bindings": [
+    {
+      "path": "test/food_operation_undo_test.dart",
+      "sha256": "2adeb5526b3983502c2352d41a68e80650caab8352a90750a4e7523dea377564",
+      "declaration_line": 129,
+      "original_PASS_line": 2730,
+      "case": "Undo details restores only original contributions; newer fields stay",
+      "binding": "PASS"
+    },
+    {
+      "path": "test/food_store_undo_test.dart",
+      "sha256": "da4356a67df0841cb13d25e96ec8b2e9f9e146bde18517b982fc8f48ba725fbb",
+      "declaration_line": 180,
+      "original_PASS_line": 2810,
+      "case": "Undo details and Add preserve later remote edits at the same physical ID",
+      "binding": "PASS"
+    },
+    {
+      "path": "integration_test/food_undo_stack_workflow_test.dart",
+      "sha256": "74da4d9378676f8215d5580bca0e2fa6b39d1f8779295ac44798493659f1191c",
+      "declaration_line": 235,
+      "original_PASS_line": 4840,
+      "case": "Food Undo retracts local details while preserving independent peer edits",
+      "binding": "PASS"
+    }
+  ],
+  "semantics_source_bindings": [
+    {
+      "path": "lib/food/inventory.dart",
+      "sha256": "fd9fd9b0d3b34f9b2e11a14048ef9f647a083164315bae12bbae6b34fa3af754"
+    },
+    {
+      "path": "lib/food/food_store.dart",
+      "sha256": "56fff749e7f6416632c1c72b473541f7c8be972d360441513bab2f472116bfd4"
+    },
+    {
+      "path": "lib/food/food_record.dart",
+      "sha256": "64b8e7235292559e9583a7eb5bc6706c822eb9f39e56d7f58badc76f42658206"
+    },
+    {
+      "path": "design/decisions/0018-food-session-undo.md",
+      "sha256": "f66c21a1596d0fc26aa812af96302983a246786c106e6446bec5885a4c572c0e"
+    }
+  ],
+  "inverse_semantics_review": "Closed Undo names one exact strictly earlier admitted own-writer operation and its exact targets. Command checks exact admitted receipt; replay validates references/creation bases before filtering the named contribution. It appends to own history and does not overwrite snapshots, modify peer logs or invent replacement physical IDs. Remaining newer field contributions survive.",
+  "assertion_review": {
+    "pure_projection": "Undo delivered before peer/local/birth retains peer title and Brand; withdrawn local expiry/retention reveal earlier values; original physical ID retained.",
+    "production_store": "Real LocalProfileDatabase/TaskStore/FoodStore plus LocalLogFolder and fault wrapper verify admission/refresh; later peer title survives local details Undo; UndoAdd retains independently edited physical seed and no fabricated Deleted entry.",
+    "actual_native_GTK": "First localBrandUndo retains peerLocation, original ID/expiry and exactpeerlog bytes. Second localBrand/newer peerBrand then actualtoolbarUndo increases appendcounter and exhausts action while the complete FoodInventoryPage.state snapshot and newerpeer log bytes are unchanged. This directly proves the newerpeer same-field value is not rolledback.",
+    "snapshot_precision": "The comparison encodes UI-bound FoodInventoryPage.state containers: IDs/details/contents/creation/deletion/conflict. It is a page-state equality check, not a pixel-equality assertion or Android runtime attestation."
+  },
+  "parent_disposition_review": "Parent explicitly accepted the byte-identical pre-existing framework/SQLite RELRO limitation. Active handoff/status/manifest reflect that acceptance without a fullAPK16KB compliance/runtime claim or new gate/upgrade. Earlier historical pending/HOLD receipts remain preserved and are read with this latest accepted disposition. Old recovery is closed by prior direction and is not a release gate.",
+  "final_metadata_checks": {
+    "all3_original_artifact_and14_member_ID_size_SHA_bindings": "UNCHANGED_PASS",
+    "exact8_Android_items": "BYTE_IDENTICAL_TO_7ae",
+    "shipped_source_delta_from_7ae": "NONE",
+    "relative_links_resolve": 128,
+    "remaining_gates": "Exactly parent exactAndroid/Showtaps acceptance and freshprivate publicationclearance",
+    "publication_performed": false,
+    "stable_promotion_performed": false
+  },
+  "remaining": [
+    "Parent exact APK eight affected Android workflows and Show taps demo",
+    "Fresh private parent quota/publication clearance"
+  ],
+  "publication_ready": false,
+  "reviewed_files": {
+    "design/food-native-acceptance.md": {
+      "bytes": 19251,
+      "sha256": "76d56a21c70b3496ca3c33f890d6981057ba8d5664ce5a1764779b6867d0f29d"
+    },
+    "design/status.md": {
+      "bytes": 109365,
+      "sha256": "e18d044469f7b82d120bf93c1881d8ab67eb4f1f7860d53d63b002e31f049abe"
+    },
+    "evidence/food-2026.10.4-rc.2/README.md": {
+      "bytes": 5459,
+      "sha256": "a956783b7e19fb95e6322115c56573354fd3354659b1c50dc2d915110ffa9d73"
+    },
+    "evidence/food-2026.10.4-rc.2/expanded-build62/README.md": {
+      "bytes": 8206,
+      "sha256": "f8ea3cbb203f8ceb4fd15cd8a190cd6d0e33a3d2dcd44071ba70046cfb5a3014"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/README.md": {
+      "bytes": 6291,
+      "sha256": "0d7d4eb952f1a8f914b7a111757a4e8d0689d2b8116075a8e8594aa728b795ba"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/handoff.json": {
+      "bytes": 4307,
+      "sha256": "e9a61f0308dbe478880db7fcdda9c5637c00e2f26039725b906e70c01e30d25b"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/artifacts/manifest.json": {
+      "bytes": 5765,
+      "sha256": "ad4f19ee9c48dcaee163d4115d682fa846367a5ef72c02f775af89fb7f22dfaa"
+    },
+    "evidence/food-2026.10.4-rc.2/candidate/build62/reviews/undo-peer-concurrency-evidence-and-parent-disposition.json": {
+      "bytes": 3813,
+      "sha256": "9dacbd306fe9e69cc72deb07dc70ad2fe8297443c5a12303b7fa5400c4e6bc58"
+    }
+  },
+  "scope_limits": "Linux GTK hosted execution evidence and pure/store tests retain actual source/run attribution. Reviewer did not rerun them or execute Android. Current parent Android testOS/evidence must come from its own exactAPK receipt.",
+  "wording_precision": "Final README and case evidence explicitly say page-state snapshot, not pixel comparison."
+}

@@ -1,0 +1,56 @@
+{
+  "candidate_source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "candidate_run": 38121211371,
+  "method": "Read actual frozen test assertions and original terminal hosted log; no new execution or application change",
+  "inverse_semantics": "Closed inverse names exactly one strictly earlier own-writer admitted operation and its exact targets. Projection validates raw history and bases before withdrawing only named contribution. Details reveal remaining field contributions; newer independent peer values in same/different fields survive. No snapshot rewrite, no peer log mutation, no replacement physical IDs.",
+  "log": {
+    "path": "logs/linux-original-hosted.log",
+    "bytes": 553272,
+    "sha256": "1d9992934a25225b5549a0790ff505767ad357e62d9e1fba95f1619cdf8042d8"
+  },
+  "cases": [
+    {
+      "test_path": "test/food_operation_undo_test.dart",
+      "test_declaration_line": 129,
+      "source_sha256": "2adeb5526b3983502c2352d41a68e80650caab8352a90750a4e7523dea377564",
+      "case": "Undo details restores only original contributions; newer fields stay",
+      "assertions": [
+        "Reordered inverse/peer/local/birth delivery retains peer name and brand; withdrawn local expiry/retention reveal prior values; physical ID retained"
+      ],
+      "original_hosted_PASS_line": 2730,
+      "original_hosted_PASS": "2026-10-11T07:29:01.0489061Z \u2705 /home/runner/work/tandemlog/tandemlog/test/food_operation_undo_test.dart: Undo details restores only original contributions; newer fields stay"
+    },
+    {
+      "test_path": "test/food_store_undo_test.dart",
+      "test_declaration_line": 180,
+      "source_sha256": "da4356a67df0841cb13d25e96ec8b2e9f9e146bde18517b982fc8f48ba725fbb",
+      "case": "Undo details and Add preserve later remote edits at the same physical ID",
+      "assertions": [
+        "Real store admission/refresh retains newer peer title after Undo local details; Undo Add retains independently edited original physical seed without manufacturing Deleted state"
+      ],
+      "original_hosted_PASS_line": 2810,
+      "original_hosted_PASS": "2026-10-11T07:29:08.7948660Z \u2705 /home/runner/work/tandemlog/tandemlog/test/food_store_undo_test.dart: Undo details and Add preserve later remote edits at the same physical ID"
+    },
+    {
+      "test_path": "integration_test/food_undo_stack_workflow_test.dart",
+      "test_declaration_line": 235,
+      "source_sha256": "74da4d9378676f8215d5580bca0e2fa6b39d1f8779295ac44798493659f1191c",
+      "case": "Food Undo retracts local details while preserving independent peer edits",
+      "assertions": [
+        "Actual native GTK production UI first undoes local Brand while retaining peer Location and exact peer log bytes",
+        "After second local Brand edit and newer peer Brand edit, toolbar Undo appends inverse and exhausts action while whole page-state snapshot remains equal to newer peer snapshot",
+        "Peer log bytes, original physical ID, peer Location and original expiry remain unchanged"
+      ],
+      "original_hosted_PASS_line": 4840,
+      "original_hosted_PASS": "2026-10-11T07:51:06.2415175Z \u2705 Food Undo retracts local details while preserving independent peer edits"
+    }
+  ],
+  "scope": "Unit/reordered pure projection, actual SQLite/store admission and Linux GTK workflow. Does not replace parent exact Android acceptance.",
+  "parent_RELRO_disposition": "Accepted as pre-existing unchanged-library limitation, not a new RC2 gate; no wholeAPK16KB runtime/compliance claim; no dependency upgrade",
+  "old_recovery": "Closed by prior user direction; not an RC2 release gate; existing truthful provenance retained only",
+  "publication_ready": false,
+  "remaining": [
+    "Parent exact Android acceptance and Show taps demo",
+    "Fresh private parent quota/publication clearance"
+  ]
+}

@@ -36,8 +36,9 @@ explicit in ADR0018 and the handoff. Local956 units/13 affected native flows and
 independent source/architecture/UX/notes/media reviews retain source attribution.
 No RC2 publication, stable promotion, import, reset or live data migration occurred.
 RC1/build60 remains published; stable2026.10.3/build56 remains Latest. Parent exact
-Android acceptance, disposition of the pre-existing Flutter/SQLite RELRO guidance
-discrepancy and fresh private publication clearance are still required. Exact
+Android acceptance and fresh private publication clearance are still required.
+Parent accepted the pre-existing Flutter/SQLite RELRO guidance discrepancy as
+an unchanged-library limitation, not a new RC2 gate. Exact
 baseline APK comparisons show all affected libraries unchanged from stable56
 and RC1/60, with no established runtime failure. Bounded UI QA remains unaffected;
 no new gate or dependency upgrade was introduced.

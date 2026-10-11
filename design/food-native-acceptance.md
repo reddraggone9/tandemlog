@@ -15,8 +15,9 @@ ELF/RELRO/export/notices checks pass. No Android runtime acceptance
 is inferred from static verification or actual Linux GTK demos. The handoff records
 a supplemental pre-existing Flutter/SQLite RELRO guidance discrepancy: affected
 libraries are identical to stable56 and RC1/60; no actual load failure or crash is
-established. Parent disposition remains pending before publication; bounded UI
-acceptance proceeds independently, without a new gate or toolchain upgrade.
+established. Parent accepted this as a pre-existing limitation, not a new RC2 gate. Bounded UI
+acceptance proceeds independently; no full-APK 16 KB compliance is claimed and
+no toolchain upgrade was introduced.
 
 Build61/source00594c1 and failed d38/43df build62 runs are retained intermediate
 records, ineligible for handoff/publication. Their partial archives are not reused.

@@ -76,5 +76,6 @@ this candidate preparation. Original recovery is closed; no files/tasks deleted.
 
 The [exact handoff](candidate/build62/README.md) qualifies supplemental Android RELRO
 static guidance: affected libraries are byte-identical in stable56, RC1/60 and62;
-no runtime failure is established. Parent disposition is pending before publication,
-while exact Android UI QA may proceed. No new gate or toolchain upgrade was added.
+no runtime failure is established. Parent accepted the pre-existing limitation,
+not a new RC2 gate or full-APK 16 KB compliance claim. Exact Android UI QA and
+publication clearance remain pending; no toolchain upgrade was added.
