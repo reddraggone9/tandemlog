@@ -148,3 +148,21 @@ See GitHub's [release API permission rule](https://docs.github.com/en/rest/relea
 [Stable2026.10.3](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.3) published2026-10-10T00:21:08Z as Latest with the Lee-authorized local storage migration and reviewed Android dependency maintenance. Candidate37995721678/source `76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9` supplied the original three installers. [Promotion38008637367](https://github.com/reddraggone9/tandemlog/actions/runs/38008637367) used trusted dispatch `0ae5e66115e10f6a9c355086248ff01becddc423`, reviewed notes SHA256 `9e6bec8bd02baa9551bda43415b140e290f8da6d19ca3c7ef244533e2bec2e26`, and normal exact-artifact gates without rebuilding. No media was required for unchanged layout.
 
 [Final evidence](../evidence/stable-2026.10.3/README.md) records independent native/artifact and post-publication ACCEPT reviews, actual anonymous byte checks for the Android APK/Linux Flatpak/Windows installer, owner APK signing/package/version, source/tag/notes/Latest and all21 prior release identities unchanged. QA/debug/portable bundles were not published. Native coverage and its limits remain in the receipts; no live synced data was touched. Food and the minor icon seam remain deferred.
+
+
+## Published experimental2026.10.4-rc.1/build60
+
+[Food2026.10.4-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.1)
+published as prerelease/not-Latest after exact affected Android build60 acceptance.
+Candidate38085381679/source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050`
+supplied the three installers. [Promotion38090188028](https://github.com/reddraggone9/tandemlog/actions/runs/38090188028)
+used reviewed docs dispatch762df7737f047e578ac570a296a17d5ecd6728d4 and notes
+SHA256 `3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae`,
+retaining all exact-artifact/source/checksum/installed-lifecycle gates without
+rebuilding. Public anonymous installer bytes match their accepted originals;
+official public APK owner signer/package/version/code60 checks pass. All22 prior
+release identities/assets/notes and tag refs remain unchanged; stable2026.10.3
+stays Latest. [Public evidence](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
+records exact identity, and the [native handoff](food-native-acceptance.md) preserves
+current60 acceptance and older59 editor/upgrade attribution. Private fixtures and
+importer evidence remain separate; no live import or stable promotion occurred.

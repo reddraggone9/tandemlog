@@ -1,7 +1,7 @@
 # Food RC native acceptance
 
-Replacement RC2026.10.4-rc.1/build60 passed the parent's affected Android
-native acceptance and is ready for authorized RC publication. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
+RC2026.10.4-rc.1/build60 passed the parent's affected Android native acceptance
+and is now published as an experimental prerelease. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
 [signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)
 (all five jobs) and push CI38085382087 (all three jobs).
 [Exact original-artifact handoff](../evidence/food-2026.10.4-rc.1/candidate/build60/artifacts/manifest.json)
@@ -166,3 +166,15 @@ review accepts exact Food RC publication without rebuilding; stable2026.10.3
 remains Latest. Private native fixtures remain outside the repository.
 
 [Accepted-native readiness](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records the source-bound publication attestation.
+
+## Published exact build60 RC
+
+[2026.10.4-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.1)
+published through [promotion38090188028](https://github.com/reddraggone9/tandemlog/actions/runs/38090188028)
+from reviewed dispatch762df7737f047e578ac570a296a17d5ecd6728d4, reusing the exact
+accepted candidate38085381679/source3d binaries without rebuilding. Root and
+independent anonymous downloads match all three original installers; public APK
+owner signer/package/version/code60/nondebuggable/native checks pass. Notes/tag
+and all22 prior releases/tag refs are unchanged; stable2026.10.3 remains Latest.
+[Public verification](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
+records exact public identities. No live import or stable promotion occurred.

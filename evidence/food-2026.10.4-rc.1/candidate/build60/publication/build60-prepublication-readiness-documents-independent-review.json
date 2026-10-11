@@ -1,0 +1,22 @@
+{
+  "reviewed_at_utc": "2026-10-10T22:06:42.964674+00:00",
+  "verdict": "ACCEPT_PUBLIC_BUILD60_NATIVE_READINESS_RECORDS",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "accepted_apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+  "reviewed_file_sha256": {
+    "design/status.md": "3f96c34e8ed0a39310768686ade5bcf112cddf62605a60e5840762e085ecca6c",
+    "design/food-native-acceptance.md": "11e2d93d7eae2c727b6bdb0bddbacc7ca3736ff20844ab0a24708b02b4df554e",
+    "evidence/food-2026.10.4-rc.1/README.md": "7c741085d443ed598867ce6cdc0032313df25661e2082a27cdbc032fc1567cb0",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json": "817d3860d562ba194ddf3967353097ba62a8fa1bf8e595e82e169ab84231803a"
+  },
+  "public_peer_readiness_sha256": "f2ec1d873f12066e8c29e5f6bf9a76ec198f8364ec3cf5a69d80b47f8614795c",
+  "checks": [
+    "Three currentMarkdown documents and sanitized author nativeattestation accurately record accepted exact60 affectedAndroid checks, preservedstate and original59 attribution",
+    "Relative links resolve; privatepacket identifiers/digest/path/fixtures and personalquota values excluded",
+    "Candidate binary/test/version/workflow/tool/media/notes unaffected; exact3d historicalcandidate and mandatory no-rebuild prerelease recipe retained"
+  ],
+  "must_fix": [],
+  "publication_ready": true,
+  "limits": "Record review and existing nativeevidence inspection only; no reviewer device execution/publication. Required hostedpromotion/publicverification remain."
+}

@@ -31,7 +31,13 @@ owner APK artifact11681994515/code60/SHA256
 The parent's exact Android60 affected native checks and publication clearance
 now passed. Independent final readiness accepts exact Food RC publication
 without rebuilding; [readiness](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/accepted-native-readiness.json) records native acceptance and original59 attribution.
-Stable2026.10.3/build56 remains Latest; nothing from58/59/60 has been published.
+[Food2026.10.4-rc.1/build60](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.1)
+is now published as an experimental prerelease through promotion38090188028,
+using exact accepted binaries without rebuilding. Independent/root public
+byte/signature/version/notes/tag checks pass; all22 prior releases remain unchanged.
+[Public closure](../evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json)
+records identities. Stable2026.10.3/build56 remains Latest;58/59 were not published.
+No live inventory import or stable promotion occurred.
 No domain/storage/host inset/dependency or live-data changes are included.
 
 ### Historical build58/59 checkpoints

@@ -1,4 +1,16 @@
-# Food RC1 preparation
+# Food RC1 publication
+
+[Experimental2026.10.4-rc.1](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.1)
+is published as prerelease/not-Latest from accepted build60/source
+`3d671c20c6a1f6bdc2a2082f9a00e820c34b8050`.
+[Promotion38090188028](https://github.com/reddraggone9/tandemlog/actions/runs/38090188028)
+passed both jobs at reviewed dispatch762df7737f047e578ac570a296a17d5ecd6728d4.
+It reused the exact three original installers without rebuilding. Root and
+independent anonymous public byte/signature/version/notes/tag checks pass;
+all22 prior releases/tag refs remain unchanged and stable2026.10.3 stays Latest.
+[Root public verification](candidate/build60/publication/root-public-verification.json)
+records the exact assets. Private native fixtures/importer evidence remain outside
+this public closure; no live inventory import or stable promotion occurred.
 
 Current replacement:2026.10.4-rc.1/build60 addresses the proven build59 Inbox
 scroll-access blocker at320dp/200% in both themes. The title remains fixed while

@@ -1,0 +1,100 @@
+{
+  "reviewed_at_utc": "2026-10-10T22:10:48.801919+00:00",
+  "verdict": "ACCEPT_ACTUAL_PUBLISHED_EXACT_FOOD_RC_AND_FINAL_PUBLIC_RECORDS",
+  "release_id": 409234493,
+  "release_url": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.1",
+  "tag": "v2026.10.4-rc.1",
+  "candidate_source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "candidate_run": 38085381679,
+  "version": "2026.10.4-rc.1+60",
+  "promotion_run": 38090188028,
+  "trusted_dispatch_source": "762df7737f047e578ac570a296a17d5ecd6728d4",
+  "promotion_publish_job": 114324891347,
+  "published_at_utc": "2026-10-10T22:07:19Z",
+  "flags": {
+    "prerelease": true,
+    "draft": false,
+    "stable_latest": "v2026.10.3"
+  },
+  "actual_independent_anonymous_public_downloads": [
+    {
+      "name": "tandemlog-2026.10.4-rc.1-android.apk",
+      "asset_id": 629108758,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-android.apk",
+      "http_status": 200,
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db"
+    },
+    {
+      "name": "tandemlog-2026.10.4-rc.1-linux-x64.flatpak",
+      "asset_id": 629108755,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-linux-x64.flatpak",
+      "http_status": 200,
+      "bytes": 9213592,
+      "sha256": "a0ea09289dc5839b8bd58635a931cd1f9e3935e3e0a1b9992245c781a8560d5b"
+    },
+    {
+      "name": "tandemlog-2026.10.4-rc.1-windows-x64-setup.exe",
+      "asset_id": 629108753,
+      "public_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-windows-x64-setup.exe",
+      "http_status": 200,
+      "bytes": 12377461,
+      "sha256": "b29b45899b07f2ba8e69ed1692f8669692ba108c9c672a433e46c69afee3a124"
+    }
+  ],
+  "public_apk_identity": {
+    "actual_anonymous_public_apk_sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+    "own_official_apksigner_crypto_pin_package_version60_nondebuggable_threeABI": "PASS",
+    "apk_full_internal_crc": "PASS",
+    "apk_internal_member_count": 79,
+    "full16K_alignment_ELF_exports_notices": "PASS",
+    "actual_native_library_sha256": {
+      "arm64-v8a": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "armeabi-v7a": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "x86_64": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8"
+    },
+    "reviewer_runtime_execution": false
+  },
+  "verified_checks": [
+    "Fresh officialAPI exactrelease/tag3d/source/version60/flags/closed3assets; stable10.3Latest retained",
+    "Own independent anonymous HTTP200 downloads of all3installer bytes/sizes/SHA equalAPI and acceptedoriginalcandidate members; no rebuild",
+    "Own officialSDK apksigner cryptographic ownerpin, aapt package/version60/nondebuggable/3ABIs and full79memberCRC/16K ELF/exports/notices on actualpublicAPK PASS",
+    "Actual complete hosted publish log verifies immutableoriginal3artifact IDs and downloadedZIPdigests; trusted closedinventory/portable/lifecycle/acceptedAPK gatePASS and3strictSHA sums before22:07:19 release creation; --latest=false and no build steps",
+    "Actualpublicnotes byte-identical approvedSHA3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae; actualimmutablemedia HTTP200/bytes/SHA b2b4772223e3551da4b9059f91a62ad213c57a423944408cf9aa7695af85b881",
+    "All22priorrelease identities/tags/target/names/body/flags/dates and assetidentities/sizes/digests/state unchanged; mutable read-only downloadcounts excluded. Allpriorgit tagref/SHA lines unchanged and onlynewRCtag added",
+    "FourfinalMarkdownrecords and copied publicrootproofs accurate/linksresolve/byteidentical copiedreadyreceipt; executable/tool/workflow/version/notes/media closure stays3d",
+    "Parent executed exact60 affectednative checks; privately inspected accepted aggregateevidence, retained59original editor/upgrade attribution and WindowsGUI RC waiver. No reviewer deviceexecution/liveimport/stablepromotion"
+  ],
+  "reviewed_notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "final_repository_document_sha256": {
+    "design/releases.md": "96f18935fdb62eb8df0b107cd68ef3007707ff2c40602626a9ce6f6df68f1684",
+    "design/status.md": "b487c2097fe4260874c4df087f4fe63e0d267b41ff3cca7207f7e849b1e0bc13",
+    "design/food-native-acceptance.md": "9a5028951ecd0414a072a0f2e6e5659710e96ffbbb521890fbaee2ade291f233",
+    "evidence/food-2026.10.4-rc.1/README.md": "539e1e60bdb484b1109180bc0bb00e6d8aaa9ca76455025c8be9ea5fb5459e56",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/publication/root-public-verification.json": "b4377235613bfac0c5b9881eab44650e3cbb9c3601450f579f4494eb34c21e93",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/publication/public-apksigner.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/publication/public-badging.txt": "9fab41852310774a39863d939b5a05ee48cc992c4ce949db4888d437dc168210",
+    "evidence/food-2026.10.4-rc.1/candidate/build60/publication/build60-prepublication-readiness-documents-independent-review.json": "31568628b3eebc3a386790965e30736b0a21942c703d717bbdd975334180a24e"
+  },
+  "supporting_private_evidence_file_sha256": {
+    "promotion-terminal-api.json": "a731c0614ab0af32a25af1d41f702faf26e51ffdc846add4602e2bed966042b0",
+    "promotion-terminal-jobs-api.json": "6fdda600efb9afcb6b8f4a3fe13a5d9643b0235dec15ec491ad3fe61639f5fa5",
+    "promotion-publish-hosted.log": "6b57c121134ccb30f614b4ef3aed8a9494a39c3f39ba36e7ec5fa85efcf04627",
+    "published-release-api.json": "ea11ac0b2ca3b76b23ed1258eeea6225927166b9922b6ec0e5b6fb6b4c21ee7f",
+    "latest-after-api.json": "1d58588189da04b5fac216134b330b9af8d6612b7ca943b15894aa174fedb4b6",
+    "public-tag-api.json": "afc392201eaccc40c58351b26f29f6b22def814cc0bfff650ffffb840da4e77d",
+    "all-public-releases-after-api.json": "5ac468659197fb27470f6c4559b4e7c5da4bc5a4049b92306bb4f047641760ce",
+    "public-tags-after.tsv": "63c09e057813dc3cd7f82907fcb38cd7499c2e67ef4e654578ade873611d8fd8",
+    "independent-actual-public-downloads.json": "bc315ed293046fdbd240bdee0f0da6b1433b41ad03364994b9c3245b716bb491",
+    "public-independent-apk-identity.json": "8ef95d46eac0a6b55b3ea815f90bd68fe2662f5ef2777c8ba93ed312409bc455",
+    "public-independent-apksigner.txt": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f",
+    "public-independent-badging.txt": "9fab41852310774a39863d939b5a05ee48cc992c4ce949db4888d437dc168210",
+    "public-independent-native-payload.log": "92a7c5451bb58250b003c1327b1503cdf1b8ba6187edb5ca730bbf7e1bf0d88b",
+    "public-media-verification.json": "523c8b25dfcfc1c0bb2ca940bbb81bb171210b116e538ed3ae90ba147078ae48"
+  },
+  "historical_scope": "Prior blocked59 and older58/57 records remain preserved and source-qualified; currentexact60native accepted by parent. Bazaar/XDG queued next release, outside current.",
+  "must_fix": [],
+  "remaining_release_blockers": [],
+  "reviewer_runtime_execution": false,
+  "privacy": "Public projection excludes private nativepacket identifiers/digest/path/fixtures/canonicalmaps/importrows/accountquota values and signedstorage URLs; private originals retained separately."
+}

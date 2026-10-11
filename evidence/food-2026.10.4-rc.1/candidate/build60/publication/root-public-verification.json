@@ -1,0 +1,46 @@
+{
+  "at_utc": "2026-10-10T22:08:49.183627+00:00",
+  "verdict": "PASS_ROOT_PUBLIC_EXACT_BYTES_SIGNATURE_VERSION_NOTES_TAG_LATEST_AND_PRIOR_RELEASES",
+  "release_id": 409234493,
+  "tag": "v2026.10.4-rc.1",
+  "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "publication_run": 38090188028,
+  "dispatch_commit": "762df7737f047e578ac570a296a17d5ecd6728d4",
+  "candidate_run": 38085381679,
+  "prerelease": true,
+  "draft": false,
+  "latest": "v2026.10.3",
+  "assets": {
+    "tandemlog-2026.10.4-rc.1-android.apk": {
+      "asset_id": 629108758,
+      "bytes": 67082973,
+      "sha256": "2b378fec198a1a51c5aa8027de0073bcde523a794c373c2a4da16c4c7f6b53db",
+      "anonymous_download": "PASS exact original accepted bytes",
+      "browser_download_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-android.apk"
+    },
+    "tandemlog-2026.10.4-rc.1-linux-x64.flatpak": {
+      "asset_id": 629108755,
+      "bytes": 9213592,
+      "sha256": "a0ea09289dc5839b8bd58635a931cd1f9e3935e3e0a1b9992245c781a8560d5b",
+      "anonymous_download": "PASS exact original accepted bytes",
+      "browser_download_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-linux-x64.flatpak"
+    },
+    "tandemlog-2026.10.4-rc.1-windows-x64-setup.exe": {
+      "asset_id": 629108753,
+      "bytes": 12377461,
+      "sha256": "b29b45899b07f2ba8e69ed1692f8669692ba108c9c672a433e46c69afee3a124",
+      "anonymous_download": "PASS exact original accepted bytes",
+      "browser_download_url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.1/tandemlog-2026.10.4-rc.1-windows-x64-setup.exe"
+    }
+  },
+  "notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "reviewed_notes_sha256": "3e54e578fe650c863f282e16119cb17ebff71f8017953427d74999a0abe6c5ae",
+  "notes_comparison": "Exact Markdown content; final newline normalization only when present",
+  "apk_signer_pin": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "public_apk_signature_package_version_code60_nondebuggable_3ABI": "PASS official tools on anonymously downloaded APK",
+  "prior_release_count": 22,
+  "prior_releases": "All IDs/tags/body/flags/target/dates/asset identity,size,digest/state unchanged; mutable download counters excluded",
+  "prior_tag_refs": "All prior ref/SHA lines unchanged",
+  "live_import": "none",
+  "stable_promotion": "none"
+}
