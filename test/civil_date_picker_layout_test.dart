@@ -200,4 +200,125 @@ void registerCivilDatePickerLayoutTests({
       }
     }
   }
+  for (final tasks in [true, false]) {
+    testWidgets(
+      '${tasks ? 'Tasks Due' : 'Food Expiration'} pending calendar date survives resizing and rotation; closed owner is untouched',
+      (tester) async {
+        final controller = TextEditingController(text: '2026-10-15');
+        final visible = ValueNotifier(true);
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(320, 640);
+        await tester.binding.setSurfaceSize(const Size(320, 640));
+        addTearDown(tester.view.resetPhysicalSize);
+        addTearDown(tester.view.resetDevicePixelRatio);
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        try {
+          await tester.pumpWidget(
+            MaterialApp(
+              theme: ThemeData(
+                colorScheme: ColorScheme.fromSeed(
+                  seedColor: const Color(0xff267461),
+                  brightness: Brightness.dark,
+                ),
+              ),
+              builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaler: TextScaler.linear(2),
+                  padding: const EdgeInsets.only(top: 24, bottom: 48),
+                ),
+                child: child!,
+              ),
+              home: Scaffold(
+                body: ValueListenableBuilder<bool>(
+                  valueListenable: visible,
+                  builder: (context, show, _) => !show
+                      ? const SizedBox.shrink()
+                      : tasks
+                      ? TaskEditor(
+                          panel: true,
+                          task: const {
+                            'id': 'synthetic-calendar',
+                            'title': 'Synthetic calendar',
+                            'description': '',
+                            'schedule': {'dueDate': '2026-10-15'},
+                          },
+                          save: (_, _, _) async {},
+                        )
+                      : CivilDateInput(
+                          controller: controller,
+                          label: 'Expiration',
+                        ),
+                ),
+              ),
+            ),
+          );
+          final open = find.byTooltip(
+            tasks ? 'Choose Due date' : 'Choose Expiration',
+          );
+          await tester.ensureVisible(open);
+          await tester.pumpAndSettle();
+          await tester.tap(open);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('17'));
+          await tester.pumpAndSettle();
+          if (capture != null) {
+            await capture(
+              tester,
+              '${tasks ? 'tasks' : 'food'}-pending17-initial',
+            );
+          }
+          for (final size in [
+            const Size(390, 800),
+            const Size(800, 390),
+            const Size(320, 640),
+          ]) {
+            tester.view.physicalSize = size;
+            await tester.binding.setSurfaceSize(size);
+            await tester.pumpAndSettle();
+            expect(
+              tester
+                  .widget<CalendarDatePicker>(find.byType(CalendarDatePicker))
+                  .initialDate,
+              DateTime(2026, 10, 17),
+            );
+            if (capture != null) {
+              await capture(
+                tester,
+                '${tasks ? 'tasks' : 'food'}-pending17-${size.width.toInt()}x${size.height.toInt()}',
+              );
+            }
+          }
+          await tester.tap(find.text('OK'));
+          await tester.pumpAndSettle();
+          final chosen = tasks
+              ? tester
+                    .widget<TextField>(find.byKey(const ValueKey('dueDate')))
+                    .controller!
+                    .text
+              : controller.text;
+          expect(chosen, '2026-10-17');
+          final chosenController = tasks
+              ? tester
+                    .widget<TextField>(find.byKey(const ValueKey('dueDate')))
+                    .controller!
+              : controller;
+          await tester.ensureVisible(open);
+          await tester.tap(open);
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('19'));
+          await tester.pumpAndSettle();
+          visible.value = false;
+          await tester.pumpAndSettle();
+          await tester.tap(find.text('OK'));
+          await tester.pumpAndSettle();
+          expect(chosenController.text, '2026-10-17');
+          expect(tester.takeException(), isNull);
+        } finally {
+          await tester.pumpWidget(const SizedBox());
+          visible.dispose();
+          controller.dispose();
+        }
+      },
+    );
+  }
 }

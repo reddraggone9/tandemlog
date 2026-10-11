@@ -1,0 +1,155 @@
+{
+  "review": "Independent build64 shared calendar layout and lifecycle closure",
+  "reviewer": "/root/architecture_review",
+  "reviewedAtUtc": "2026-10-11T10:51:31.815210+00:00",
+  "worktree": "/tmp/tandemlog-food-date-readability",
+  "baseHead": "1781b54fdaef69b6de7ea29715683c454ede4187",
+  "version": "2026.10.4-rc.2+64 preparation",
+  "verdict": "ACCEPTED_SCOPED_SOURCE_AND_LINUX_NATIVE_LAYOUT_LIFECYCLE",
+  "mustFix": [],
+  "currentSourceBindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/civil_date_input.dart",
+      "sha256": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82",
+      "bytes": 6625
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_editor.dart",
+      "sha256": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5",
+      "bytes": 41744
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart",
+      "sha256": "91aff62741d02423b042a0ebf4644a3a16eaef4ddd870088f6d49bdc61321a6c",
+      "bytes": 12863
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/civil_date_input_test.dart",
+      "sha256": "eee77ed1931978dc00409eea0c692cd816eb307e9406aeaf7cfd3a090bd24894",
+      "bytes": 6213
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/civil_date_picker_workflow_test.dart",
+      "sha256": "2a8ee7d4ec515cafa4614619929a617976f1ab2b5814da8f7ae18e69db2505e5",
+      "bytes": 676
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart",
+      "sha256": "33d97de39892d2a2e5c88acff6c041eacbeaad2d4dd89f037fc6c029777297bf",
+      "bytes": 174129
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/pubspec.yaml",
+      "sha256": "77ee1f3a922115bfb77f58adee35dd8c37255994947206ca936f95a22188ea57",
+      "bytes": 590
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/pubspec.lock",
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8",
+      "bytes": 19088
+    }
+  ],
+  "exactRetainedTestedSources": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/civil-date-input-tested-source.dart",
+      "sha256": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82",
+      "bytes": 6625
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/task-editor-tested-source.dart",
+      "sha256": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5",
+      "bytes": 41744
+    }
+  ],
+  "currentProductionEqualsRetainedTestedSources": true,
+  "priorEvidencePreserved": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/independent-calendar-review.json",
+      "sha256": "3c7691f7f4eae785c8b8d0716452e2583c52b311acd98ae4784c96730f3617d8",
+      "bytes": 14013
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/independent-calendar-lifecycle-finding.json",
+      "sha256": "e772d8b560b42e564740d085bd0b015d5521a557642b7d9961889c268528453d",
+      "bytes": 2358
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-resize-probe.log",
+      "sha256": "52bb1c27b71ec61cadf33f0ccf715c010c214bf3f12489366daff7e848bb208d",
+      "bytes": 2143
+    }
+  ],
+  "closedFindings": [
+    {
+      "severity": "P2",
+      "prior": "Typography fitting alternated bare picker child/themed child, replacing modal state and saving initial15 after user selected17 then resized.",
+      "fix": "Every non-null branch now returns DatePickerTheme at the same element position with unchanged or fitted data; landscape/M2/nonpositive-budget and original-style-fit branches preserve dialog state."
+    },
+    {
+      "severity": "P2",
+      "prior": "Task responsive rows can replace CivilDateInput while the same editor-owned controller survives; field-context.mounted alone skips chosen date delivery after rotation.",
+      "fix": "Optional controller-owner lifetime predicate defaults to context.mounted; _EditorBodyState passes()=>mounted. Its controllers are initialized once and disposed only by that owner; guard evaluates synchronously immediately before chosen date write. No guard removal or disposal heuristics."
+    }
+  ],
+  "acceptedArchitecture": [
+    "Shared picker remains one Tasks/Food presentation adapter. Validation, draft/controllers and durable writes remain owned by their existing caller layers. Only numeric date-theme adaptation and result-owner lifetime change; no SQL/log/native/dependency changes.",
+    "Original theme/day style stays unchanged when localized labels fit; otherwise actual font width/natural line and glyph height guide bounded font fitting. Route TextScaler stays enlarged and existing SDK grid clamps are modeled rather than overridden.",
+    "Current default M3 portrait geometry is explicitly pinned:360x568 dialog,16/24 insets,12 horizontal picker padding,4 day padding, default header/month/action/row sizing. SafeArea-adjusted constraints are respected; no new generic calendar framework.",
+    "Other theme fields, day selected/enabled full-date semantics, manual entry, input mode state identity and full-cell tap geometry remain SDK-owned. No48px-width day-target assertion at320.",
+    "Normal aggregate registers the same workflow; lifecycle cases preserve CalendarDatePicker selected17 across390x800,800x390 and320x640, then final actual Task/Food controller17. A second selected19 followed by whole-owner removal leaves17 and no disposed-controller exception."
+  ],
+  "actualEvidence": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/focused-final.log",
+      "sha256": "88ec6c009cc6cc61b0f9cb121371e4e3d466c2039911fae1d9b4e9babb42a46c",
+      "bytes": 10402
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/focused-before-owner-guard.log",
+      "sha256": "2012188917c88c93d609eefac81ce7ed336800a48528c40717debdbed584feea",
+      "bytes": 12201
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/analysis.log",
+      "sha256": "aa4365c4526a3cd5cee1bdd69cac99c52e63dcd71bdad0400743268d2f6b594a",
+      "bytes": 96
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final.log",
+      "sha256": "d711e017f7e50c1f8f5994711c288157763dbd0e15153c4aff05c3f734785a96",
+      "bytes": 9885
+    }
+  ],
+  "results": {
+    "focused": "26/26 terminal14seconds:12 layout plus2 lifecycle, existing7 input tests,1 date-time layout and4 Food validation cases.",
+    "native": "14/14 terminal1:04 on actual Linux GTK, same current helper and TaskEditor bytes as retained tested snapshots.",
+    "analysis": "No issues, five items8.7seconds.",
+    "independentExecution": "Reviewer read source/tests/SDK/logs, compared retained source bytes and viewed actual captures; no tests/builds launched by reviewer."
+  },
+  "actualPixelsViewed": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final/tasks-pending17-800x390.png",
+      "sha256": "674a6db364c2b690a2ad289e9010af16a6a7f2ffc25978d243ae0d771817888d",
+      "bytes": 42496
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final/tasks-pending17-320x640.png",
+      "sha256": "7d6cf55ad4caa0a812456049a9e770261fb9f25e3122d5f2bf9d1872a212e7e6",
+      "bytes": 40426
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final/food-light-2.0x.png",
+      "sha256": "a62e046bc18423663e2e965c065de57ce23549cc6be39ec048173c833158ecf8",
+      "bytes": 36994
+    }
+  ],
+  "pixelQualification": "Actual synthetic Linux GTK captures confirm selected17 survives landscape and return to portrait; Food light320/2x numbers readable. Landscape capture supports retained selection, not an all31 landscape glyph-containment certification.",
+  "compatibilityCheck": "Scoped git diff of lib/domain,lib/food,lib/storage,native,Android/Windows/Linux andpubspec.lock is empty; pubspec build63->64 metadata is separate from behavior proof.",
+  "remainingLimitsAndGates": [
+    "Earlier63 HOLD/failure remains historical and is not adopted. This receipt closes its two proven source lifecycle defects in64; it is not publication authorization.",
+    "Current English/default action style, pinned Material3 portrait geometry and320/390 supported cases; arbitrary custom action heights/themes/locales, landscape typography extremes/future SDK layouts remain outside static fitting guarantee. Revisit constants on SDK/layout upgrades.",
+    "Exact replacement Android signed/debug artifact and manual calendar validation, hosted frozen-source full suite/native aggregate and release/version/signer/editorial/fresh-quota/publication gates remain parent-owned pending.",
+    "Baseline earlier picker behavior is actual same-picker GTK/source evidence, not released oldTasksAndroid runtime proof. No Android/Windows/spoken accessibility gate inferred from Linux.",
+    "No private Library content or live profile data was read/written in this review."
+  ]
+}

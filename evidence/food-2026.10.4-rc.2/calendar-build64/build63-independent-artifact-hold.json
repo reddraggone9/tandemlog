@@ -1,0 +1,11 @@
+{
+  "checked_at_utc": "2026-10-11T10:39:10.675411+00:00",
+  "candidate_run": 38132007787,
+  "source": "1781b54fdaef69b6de7ea29715683c454ede4187",
+  "version": "2026.10.4-rc.2+63",
+  "disposition": "HOLD_INELIGIBLE_FOR_PUBLICATION",
+  "reason": "Root concrete resize regression selected17 ->390x800 resize ->OK returned15; independent architecture review identifies conditional wrapper replacing DatePickerDialog element and resetting selected date/input mode. Replacement build64 required.",
+  "reviewer_actions": "Stopped source-bound artifact observer; retained all historical snapshots and source-inventory receipts; no final binary acceptance, publication, rebuild or source edit.",
+  "downloaded_platform_archives": [],
+  "next": "Root will freeze reviewed build64 and provide new candidate source/run for independent exact-artifact review."
+}

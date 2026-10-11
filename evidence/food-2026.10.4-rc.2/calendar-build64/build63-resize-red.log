@@ -1,0 +1,37 @@
+00:00 +0: loading /tmp/food-calendar-acceptance-20261011/calendar_resize_probe_test.dart
+00:00 +0: (setUpAll)
+00:00 +0: picker selection survives resize across typography fit boundary
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: '2026-10-17'
+  Actual: '2026-10-15'
+   Which: is different.
+          Expected: 2026-10-17
+            Actual: 2026-10-15
+                             ^
+           Differ at offset 9
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/food-calendar-acceptance-20261011/calendar_resize_probe_test.dart:31:7)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/food-calendar-acceptance-20261011/calendar_resize_probe_test.dart line 31
+The test description was:
+  picker selection survives resize across typography fit boundary
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +0 -1: picker selection survives resize across typography fit boundary [E]
+  Test failed. See exception logs above.
+  The test description was: picker selection survives resize across typography fit boundary
+  
+00:01 +0 -1: (tearDownAll)
+00:01 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/food-calendar-acceptance-20261011/calendar_resize_probe_test.dart: picker selection survives resize across typography fit boundary

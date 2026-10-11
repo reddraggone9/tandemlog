@@ -11,8 +11,8 @@ checkpoint predates the expanded scope and is ineligible for handoff/publication
 [RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md) records tests-first
 failures, implementation and source-qualified independent/native reviews.
 Build62 full hosted gates passed, but exact Android acceptance found clipped
-calendar days at320dp/200%. Shared Tasks/Food picker correction now passes24
-focused checks and12 native Linux layout/selection cases across320/390×640,
+calendar days at320dp/200%. Shared Tasks/Food picker correction now passes26
+focused checks and14 native Linux layout/selection/lifecycle cases across320/390×640,
 both themes and normal/enlarged text. All31 day labels retain full-date semantics;
 normal day typography stays unchanged and enlarged dates remain larger than
 normal. Actual native pixels and pointer-visible scripted Linux demo are retained
@@ -20,11 +20,17 @@ with source attribution. Default English action styles and pinned Flutter3.47.5
 portrait geometry define this bounded coverage; no universal custom-theme,
 locale, landscape or48dp-wide day target claim is made.
 
-Build62 Android passes remain attributed to its exact APK. Replacement build63
+Build62 Android passes remain attributed to its exact APK. Replacement build64
 requires complete hosted/artifact gates and exact shared-picker Android acceptance,
 plus remaining SAF child switching/return, workspace-cleared Undo and final cold
 new-v2 fixture UI replay. See [native contract](food-native-acceptance.md). Linux
 images do not supply Android acceptance; no RC2 publication has occurred.
+
+Build63 candidate38132007787 was cancelled before signing after a real resize
+reset. Build64 retains selected17 across resizing/rotation, delivers it through
+the mounted controller owner and protects disposed controllers. The separate
+[build64 evidence](../evidence/food-2026.10.4-rc.2/calendar-build64/README.md)
+retains26 focused/14 native passes and independent review; build63 remains HOLD.
 
 ## Stable2026.10.2 — exact accepted candidate published
 

@@ -1,0 +1,10 @@
+{
+  "current_version": "2026.10.4-rc.2+64",
+  "current_capture": "calendar-build64/native-final/tasks-dark-2.0x.png",
+  "current_capture_sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a",
+  "historical_capture": "media/calendar-after-raw.png",
+  "byte_identical": true,
+  "current_helper_sha256": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82",
+  "current_task_editor_sha256": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5",
+  "qualification": "Actual Linux GTK synthetic TaskEditor at320x640/200%, dark, selected15. Historical published media/provenance retained; current capture independently rerun. No Android or general landscape typography attestation."
+}

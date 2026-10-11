@@ -1,0 +1,29 @@
+{
+  "review": "Independent shared calendar modal state-identity finding",
+  "reviewer": "/root/architecture_review",
+  "reviewedAtUtc": "2026-10-11T10:39:31.825936+00:00",
+  "verdict": "HOLD_PUBLICATION_PENDING_P2_FIX",
+  "severity": "P2",
+  "affectedProductionSourceSha256": "926fbc5baf60b1c6c1d0e35b3039dbfebe514d43ddb28bc474e722f4cfa70690",
+  "finding": "LayoutBuilder alternates bare DatePickerDialog child and DatePickerTheme wrapping that child across fitting/nonfitting, orientation or invalid-budget branches. Different child widget types replace the element subtree and discard unconfirmed DatePickerDialog selection/input-mode state. Reusing the same child Widget object does not preserve its State through this parent-structure change.",
+  "actualRed": {
+    "probe": {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar_resize_probe_test.dart",
+      "sha256": "690acd5baae9b53e90647d409c46a3fca596fcc344315b37d8ac4ed0187aabda",
+      "bytes": 1729
+    },
+    "log": {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-resize-probe.log",
+      "sha256": "52bb1c27b71ec61cadf33f0ccf715c010c214bf3f12489366daff7e848bb208d",
+      "bytes": 2143
+    },
+    "sequence": "Open at320x640/2x with initial2026-10-15; select17; resize390x800/2x across fit boundary; OK.",
+    "expected": "2026-10-17",
+    "actual": "2026-10-15",
+    "terminal": "0 passed/1 failed"
+  },
+  "minimalCorrection": "Always return the same DatePickerTheme wrapper type for every non-null picker child. Use unchanged pickerTheme data when no fitting/M3portrait calculation is needed, fitted day style otherwise. Preserve child identity and keys. Avoid GlobalKey/reparent machinery.",
+  "requiredVerification": "Freeze actual red and pass the retained-selection resize boundary; retain existing glyph/scaler/semantics tests and exact replacement candidate/native acceptance. Rotation/scale transitions should use the same wrapper by source construction.",
+  "priorReviewQualification": "Earlier accepted receipt covers static numeric readability and source boundaries. This new actual lifecycle finding supersedes any publication readiness inference from that receipt. Reviewer missed this transition in earlier static review.",
+  "execution": "Read-only source analysis and actual parent-run terminal probe log; reviewer did not execute builds/tests."
+}

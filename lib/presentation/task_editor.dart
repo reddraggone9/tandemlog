@@ -673,6 +673,7 @@ class _EditorBodyState extends State<_EditorBody> {
     }.contains(key);
     final input = key.endsWith('Date')
         ? CivilDateInput(
+            isOwnerMounted: () => mounted,
             fieldKey: ValueKey(key),
             controller: controllers[key]!,
             focusNode: textFocus[key],

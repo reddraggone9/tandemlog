@@ -4,11 +4,14 @@
 
 Parent's exact owner-signed build62 Android run at480×960px/density240
 (320×640dp),200% text and dark theme found two-digit days wrapping/clipping.
-Build62 is held. Shared Tasks/Food picker correction requires a new build63;
+Build62 is held. Shared Tasks/Food picker correction requires a new build64;
 the exact signed replacement APK must pass readable/selectable dates10/15/17
 at320dp/200% in both themes for Tasks and Food, with keyboard dismissed, plus
 normal-scale selection and accessible full-date selected/enabled labels. Keep
 the existing full-cell targets; seven columns at320dp do not provide48dp widths.
+Also select17, rotate and return to portrait, then confirm OK/Save retains17 in
+both Tasks and Food. Build63 was cancelled after a pending-date resize regression;
+build64 preserves dialog state and the mounted controller owner.
 Do not infer Android acceptance from native Linux captures.
 
 Retain parent-reported build62 passes with their original APK attribution:

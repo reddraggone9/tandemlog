@@ -1,3 +1,12 @@
+# Historical build63 — HOLD; ineligible
+
+Candidate38132007787 at1781b54fdaef69b6de7ea29715683c454ede4187 was
+cancelled before owner signing after an actual pending-date resize reset. No signed
+APK or original platform release archives were downloaded/accepted. The prior
+static acceptance below does not close lifecycle behavior. Build64 supersedes this
+attempt; the failed probe and independent HOLD finding are preserved in
+[build64 evidence](../calendar-build64/README.md).
+
 # Shared calendar correction — build63 preparation
 
 Actual Android build62 is held for wrapped/clipped two-digit dates at320dp/200%.

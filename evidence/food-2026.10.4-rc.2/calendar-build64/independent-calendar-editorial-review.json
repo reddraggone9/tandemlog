@@ -1,0 +1,131 @@
+{
+  "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+  "reviewed_at_utc": "2026-10-11T10:55:27.708253+00:00",
+  "outcome": "APPROVED build64 bounded editorial/media addendum; no unresolved editorial findings",
+  "scope": "Exact1781b54 working-source lifecycle correction and continued accuracy of previously reviewed RC1-through-RC2 notes/media. Independent editorial review; no implementation/native Android/publication authorization.",
+  "guidance": [
+    "AGENTS.md",
+    "design/releases.md: end-user editorial and media policy"
+  ],
+  "covered_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "previous_calendar_source_and_image": "22a13e5a83ec108392378041422fe58ed9cdae61",
+    "working_base": "1781b54fdaef69b6de7ea29715683c454ede4187",
+    "build": "2026.10.4-rc.2+64",
+    "uncommitted_application_delta": [
+      "lib/presentation/civil_date_input.dart",
+      "lib/presentation/task_editor.dart",
+      "pubspec.yaml"
+    ],
+    "freeze_condition": "Final source commit must preserve bound production/test/version bytes; later docs/evidence-only notes closure may retain exact reviewed notes hash."
+  },
+  "prior_editorial_review": {
+    "path": "/tmp/food-calendar-acceptance-20261011/independent-calendar-editorial-review.json",
+    "bytes": 7776,
+    "sha256": "063d762a5017a9dbd7af214f21a833d26a563bec2be0831d82ebef310c15a3c2"
+  },
+  "bound_files": [
+    {
+      "path": "lib/presentation/civil_date_input.dart",
+      "bytes": 6625,
+      "sha256": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82"
+    },
+    {
+      "path": "lib/presentation/task_editor.dart",
+      "bytes": 41744,
+      "sha256": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5"
+    },
+    {
+      "path": "test/civil_date_picker_layout_test.dart",
+      "bytes": 12863,
+      "sha256": "91aff62741d02423b042a0ebf4644a3a16eaef4ddd870088f6d49bdc61321a6c"
+    },
+    {
+      "path": "pubspec.yaml",
+      "bytes": 590,
+      "sha256": "77ee1f3a922115bfb77f58adee35dd8c37255994947206ca936f95a22188ea57"
+    },
+    {
+      "path": "design/prerelease-notes.md",
+      "bytes": 2093,
+      "sha256": "fd5a58a15b1f511e369029c29dbbb848807b12547358a22d6fc10b8fedef75ca"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/calendar-build64/calendar-media-identity-addendum.json",
+      "bytes": 727,
+      "sha256": "3209884394e27106ffcc97f3af220d283a587c9a1c7be527648a27454f3bb111"
+    }
+  ],
+  "source_observations": [
+    "Stable DatePickerTheme wrapper remains present through fit/no-fit/orientation branches, preserving pending dialog selection/input state during resize.",
+    "TaskEditor supplies owner-mounted callback while retaining its controller; default field-context guard remains for other users. Result update stays guarded after owner disposal.",
+    "Only bounded lifecycle correction and monotonic63-to64 metadata belong to new application delta. No new schema/dependency/sync feature is described."
+  ],
+  "notes_assessment": {
+    "sha256": "fd5a58a15b1f511e369029c29dbbb848807b12547358a22d6fc10b8fedef75ca",
+    "unchanged": true,
+    "meaningful_bullets": 9,
+    "conclusion": "Existing clipped-calendar-day fix remains accurate. Internal unreleased63 lifecycle defect correction does not need an extra expected-interaction or QA/preservation-assurance bullet. Prior eight RC2 meaningful changes and narrow interrupted-Food-Undo recovery remain covered by prior review. No Android64 acceptance, broad landscape readability or new feature claim added."
+  },
+  "media_identity": {
+    "historical_commit": "22a13e5a83ec108392378041422fe58ed9cdae61",
+    "raw_before_after_composite_and_provenance_unchanged_against_git_objects": true,
+    "actual_build64_capture_matches_historical_after_byte_for_byte": true,
+    "capture": {
+      "path": "evidence/food-2026.10.4-rc.2/calendar-build64/native-final/tasks-dark-2.0x.png",
+      "bytes": 39026,
+      "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a"
+    },
+    "historical_after": {
+      "path": "evidence/food-2026.10.4-rc.2/media/calendar-after-raw.png",
+      "bytes": 39026,
+      "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a"
+    },
+    "public_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/22a13e5a83ec108392378041422fe58ed9cdae61/evidence/food-2026.10.4-rc.2/media/calendar-before-after.png",
+    "http_status": 200,
+    "public_bytes_match_reviewed_composite": true,
+    "historical_provenance_preserved": true,
+    "assessment": "Immutable media remains accurate and actualLinux-qualified; independent64addendum records current source/capture identity without relabeling original capture as64."
+  },
+  "actual_pixels_viewed": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final/tasks-dark-2.0x.png",
+      "bytes": 39026,
+      "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a"
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final/tasks-pending17-800x390.png",
+      "bytes": 42496,
+      "sha256": "674a6db364c2b690a2ad289e9010af16a6a7f2ffc25978d243ae0d771817888d"
+    }
+  ],
+  "pixel_observations": "Current dark320/200% numeric days readable and identical to public After. Landscape pending17 retained visibly; this does not certify all landscape numeric glyph containment. Prior blank normal captures remain excluded from visual proof.",
+  "supporting_evidence": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/focused-final.log",
+      "bytes": 10402,
+      "sha256": "88ec6c009cc6cc61b0f9cb121371e4e3d466c2039911fae1d9b4e9babb42a46c"
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/native-final.log",
+      "bytes": 9885,
+      "sha256": "d711e017f7e50c1f8f5994711c288157763dbd0e15153c4aff05c3f734785a96"
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/analysis.log",
+      "bytes": 96,
+      "sha256": "aa4365c4526a3cd5cee1bdd69cac99c52e63dcd71bdad0400743268d2f6b594a"
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/build64/independent-calendar-review.json",
+      "bytes": 9018,
+      "sha256": "187fac67b580141ad5b061c701cda6cde941ca96f8f4b659edf4c98bc3b0ce03"
+    }
+  ],
+  "evidence_attribution": "Read actual26PASS focused/14PASS native terminal logs and no-issues analysis; current helper/editor bytes independently equal retained tested snapshots. Reviewer did not execute heavy tests or builds.",
+  "remaining_gates": [
+    "Build63 cancelled/HOLD; no signedAPK/archive acceptance transferred.",
+    "Freeze build64 exact source, full hosted candidate/artifact gates and required new exact Android acceptance remain pending.",
+    "Parent publication clearance; stable behavior promotion still requires Lee acceptance."
+  ]
+}

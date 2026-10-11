@@ -1,6 +1,6 @@
 # Current status — 2026-10-11
 
-## Shared calendar correction — build62 held; replacement build63 in preparation
+## Shared calendar correction — build62 held; replacement build64 in preparation
 
 Actual build62 Android acceptance at320dp/200% found wrapped and clipped
 two-digit calendar days. The same uncustomized picker reproduces the defect in
@@ -22,8 +22,16 @@ Food Undo and newer peer preservation, legacy certainty, account continuity and
 Task/Food Undo isolation. These remain attributed to build62. SAF child switching/
 return with workspace-cleared Undo and final cold UI replay of new v2 fixtures
 remain pending, alongside exact replacement-APK shared picker acceptance. Build62
-cannot be published. Build63 requires normal complete hosted candidate gates and
+cannot be published. Build64 requires normal complete hosted candidate gates and
 fresh exact-artifact verification; unrelated Android workflows need not be rerun.
+
+Build63 candidate38132007787 was cancelled before owner signing after an actual
+resize regression reset the pending date. Its static checks remain historical and
+ineligible. Build64 keeps the picker wrapper stable and returns the chosen date
+to the mounted controller owner when responsive layout replaces the opening field.
+All26 focused and14 Linux native checks pass, including selected17 across resize/
+rotation and disposal protection. Independent scoped review accepts this source;
+complete hosted/artifact and exact Android gates remain pending.
 
 ## Prior complete build62 — successful hosted gates; Android calendar HOLD
 

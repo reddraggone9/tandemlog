@@ -17,6 +17,7 @@ class CivilDateInput extends StatelessWidget {
     this.hint = 'YYYY-MM-DD',
     this.errorText,
     this.compactDecoration = true,
+    this.isOwnerMounted,
   });
 
   final TextEditingController controller;
@@ -27,6 +28,10 @@ class CivilDateInput extends StatelessWidget {
   final String? hint;
   final String? errorText;
   final bool compactDecoration;
+
+  /// Controller-owner lifetime when responsive layout can replace this field.
+  /// The owner must retain the controller until it is no longer mounted.
+  final bool Function()? isOwnerMounted;
 
   @override
   Widget build(BuildContext context) => TextField(
@@ -69,7 +74,8 @@ class CivilDateInput extends StatelessWidget {
                   lastDate: DateTime(9999),
                   builder: _readableCalendarDays,
                 );
-                if (chosen != null && context.mounted) {
+                if (chosen != null &&
+                    (isOwnerMounted?.call() ?? context.mounted)) {
                   controller.text = formatCivilDate(chosen);
                 }
               },
@@ -90,9 +96,13 @@ Widget _readableCalendarDays(
 ) => LayoutBuilder(
   builder: (context, constraints) {
     if (child == null) return const SizedBox.shrink();
+    final pickerTheme = DatePickerTheme.of(context);
+    // Keep this wrapper when fitting switches off, so a resize cannot replace
+    // the dialog's state and discard the user's pending date or input mode.
+    Widget unchanged() => DatePickerTheme(data: pickerTheme, child: child);
     if (!Theme.of(context).useMaterial3 ||
         MediaQuery.orientationOf(context) != Orientation.portrait) {
-      return child;
+      return unchanged();
     }
     final media = MediaQuery.of(context);
     final dialogScale =
@@ -115,8 +125,7 @@ Widget _readableCalendarDays(
     );
     final dayWidth = (dialogWidth - 24) / 7 - 8 - 2;
     final dayHeight = rowHeight - 8 - 2;
-    if (dayWidth <= 0 || dayHeight <= 0) return child;
-    final pickerTheme = DatePickerTheme.of(context);
+    if (dayWidth <= 0 || dayHeight <= 0) return unchanged();
     final defaults = DatePickerTheme.defaults(context).dayStyle!;
     final style = defaults.merge(pickerTheme.dayStyle);
     final fontSize = style.fontSize ?? defaults.fontSize!;
@@ -150,7 +159,7 @@ Widget _readableCalendarDays(
 
     if (fits(style)) {
       painter.dispose();
-      return child;
+      return unchanged();
     }
     // Numeric days use their actual font metrics rather than prose leading.
     final fittedStyle = style.copyWith(height: ui.kTextHeightNone);

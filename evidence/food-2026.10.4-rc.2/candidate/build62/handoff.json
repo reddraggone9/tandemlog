@@ -23,7 +23,7 @@
   "scope_completion": "Complete approved feature scope, independently reviewed; current app Dart/native/shipped payload code unchanged after final956unit/13affectedGTK checks",
   "undo_compatibility": "New closed Foodv2 Undo only; all originalFoodv1/Taskv3/manifest records unchanged. Contribution-specific retraction preserves newer peer edits. RC1 canonicalv2 isolates Food; same-profile unresolvedprotectedv2 downgrade can block workspace admission while retainingexactbytes; reopen compatiblepreview to recover. No Redo;50action sessionstack.",
   "remaining_gates": [
-    "Replacement build63 full hosted candidate gates and exact artifacts",
+    "Replacement build64 full hosted candidate gates and exact artifacts",
     "Parent replacement exact APK shared Tasks/Food picker acceptance",
     "SAF child switching/return and workspace-cleared Undo; final cold UI replay of new v2 fixtures",
     "Fresh private parent publication clearance"

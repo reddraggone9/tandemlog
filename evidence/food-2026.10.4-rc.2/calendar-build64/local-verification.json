@@ -1,0 +1,38 @@
+{
+  "version": "2026.10.4-rc.2+64",
+  "base": "1781b54fdaef69b6de7ea29715683c454ede4187",
+  "status": "LOCAL_SCOPED_PASS_HOSTED_AND_ANDROID_PENDING",
+  "focused": {
+    "passed": 26,
+    "log": "focused-final.log"
+  },
+  "native_linux": {
+    "passed": 14,
+    "log": "native-final.log",
+    "scope": "12 portrait typography/semantics/selection cases plus2 responsive selection/owner-disposal cases"
+  },
+  "analysis": "No issues found in5 items",
+  "source_snapshots": "Exact executed helper and TaskEditor bytes retained; formatter verification0changes",
+  "native_demo": {
+    "path": "native-final/native-linux-scripted-preview.mp4",
+    "duration_seconds": 2.6,
+    "bytes": 42941,
+    "input": "Actual GTK window, X pointer marker and scripted Flutter fixture actions; no physical Android attestation"
+  },
+  "excluded_visuals": [
+    "native-final/tasks-dark-1.0x.png: initial black screenshot retained unchanged"
+  ],
+  "qualifications": [
+    "Current default actions/English labels/production fonts/pinned Flutter3.47.5 Material3 portrait geometry",
+    "Landscape selection survives; landscape all31 typography is not certified",
+    "Existing cell targets retained; no48dp-wide target claim",
+    "Build62 parent Android passes retain build62 attribution; build63 cancelled and ineligible",
+    "No source/domain/store/native/dependency changes beyond shared picker presentation and version/tests"
+  ],
+  "remaining_gates": [
+    "Complete frozen-source hosted candidate checks and original release artifact verification",
+    "Exact build64 Android Tasks/Food picker at320dp200% both themes, normal selection, date17rotation/return/OK/Save",
+    "SAF child switch/return, workspace-cleared Undo, final cold new-v2 UI replay",
+    "Independent final editorial/artifact gate and parent publication clearance"
+  ]
+}
