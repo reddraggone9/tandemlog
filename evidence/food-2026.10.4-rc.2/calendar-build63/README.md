@@ -19,6 +19,9 @@ The normal baseline passes;200% baseline fails day10's single-line assertion.
 Exact source inventory and logs retain attribution. The pointer-visible2.6s Linux
 scripted demo is `native-final/native-linux-scripted-preview.mp4`; it is not an
 Android touch attestation. Cropped matched dark Before/After lives in `../media/`.
+The first normal dark Tasks capture in each native run is black and retained
+unchanged; exclude those two images from visual evidence. Normal Tasks Light and
+Food Dark captures are readable. Tests and enlarged Before/After remain valid.
 
 Build62 reported Android passes stay attributed to62. Replacement63 complete
 hosted/artifact gates and exact Android calendar acceptance remain pending, as do

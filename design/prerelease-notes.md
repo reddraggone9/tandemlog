@@ -16,3 +16,5 @@ reopen this preview.
 ![Before: Food uses a separate section row and view buttons. After: Food fits in the toolbar with Filter and expiration colors.](https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png)
 
 ![Before: task capture fills the input row, with a compact Search button in the toolbar. After: full-width Search replaces capture, and Add moves into the toolbar.](https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/task-search-before-after.png)
+
+![Actual Linux picker at larger text. Before: two-digit calendar days are clipped. After: full day numbers fit in the shared date picker.](https://raw.githubusercontent.com/reddraggone9/tandemlog/22a13e5a83ec108392378041422fe58ed9cdae61/evidence/food-2026.10.4-rc.2/media/calendar-before-after.png)

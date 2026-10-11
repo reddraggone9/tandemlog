@@ -1,0 +1,139 @@
+{
+  "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+  "reviewed_at_utc": "2026-10-11T10:26:32.413895+00:00",
+  "outcome": "APPROVED final RC2 notes and media; no unresolved editorial findings",
+  "scope": "Release-note accuracy, actual Before/After pixels and provenance. No implementation correctness, exact replacement Android acceptance or publication authorization.",
+  "guidance": [
+    "AGENTS.md",
+    "design/releases.md: public release-note editorial policy",
+    "design/prerelease-notes.md"
+  ],
+  "covered_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "build62_application": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "final_complete_application": "22a13e5a83ec108392378041422fe58ed9cdae61",
+    "final_notes_qualification": "Only descriptive-alt/immutable-calendar-image link added in working draft after22a. Notes exact hash recorded separately; future docs/evidence commit must preserve these reviewed bytes and frozen application."
+  },
+  "notes": {
+    "path": "design/prerelease-notes.md",
+    "bytes": 2093,
+    "sha256": "fd5a58a15b1f511e369029c29dbbb848807b12547358a22d6fc10b8fedef75ca",
+    "meaningful_change_bullets": 9,
+    "calendar_alt_text": "Actual Linux picker at larger text. Before: two-digit calendar days are clipped. After: full day numbers fit in the shared date picker."
+  },
+  "note_assessment": "Nine concise meaningful changes are supported: toolbar section dropdown; default full-width Tasks Search/Add; undated Stock/Filter/date urgency; required shared Food expiration and removed certainty/optional suffixes;50-action Food session Undo; Inbox-center tap; narrow/enlarged calendar day readability; fixed expanded Food controls and stale Task Undo notice; Flatpak app-center identity/private storage with conditional folder re-selection. Narrow interrupted-Food-Undo older-reader recovery remains actionable. No QA/preservation transcript, dependency/framework claim or private metadata.",
+  "reviewed_source": {
+    "path": "lib/presentation/civil_date_input.dart",
+    "bytes": 6107,
+    "sha256": "926fbc5baf60b1c6c1d0e35b3039dbfebe514d43ddb28bc474e722f4cfa70690"
+  },
+  "media": [
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/calendar-before-raw.png",
+      "bytes": 34423,
+      "sha256": "7981c5d9f800c8b4fc6c8cfcf0127bd2390db007cd4ba70abb16a7d282b1548a"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/calendar-after-raw.png",
+      "bytes": 39026,
+      "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/calendar-before-after.png",
+      "bytes": 31027,
+      "sha256": "16ace4113aa469ce1da6afb84ad8c7f4490e13a0bda18cd5df7b06051c0fdc85"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/calendar-provenance.json",
+      "bytes": 2025,
+      "sha256": "a1cf5884a5f7f3f185d804f4aa89e29d1191448511b1ac054f0ed8005e7e3401"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/task-search-before-after.png",
+      "bytes": 41543,
+      "sha256": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png",
+      "bytes": 43783,
+      "sha256": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1"
+    }
+  ],
+  "calendar_pixels": {
+    "actual_viewed": [
+      "matched dark Tasks320/200% Before raw",
+      "final dark Tasks320/200% After raw",
+      "calendar composite",
+      "existing toolbar and Tasks Search composites"
+    ],
+    "platform": "Actual Linux GTK,320x640 logical/native app pixels, dark,200% text, top24/bottom48 safe padding. Not Android.",
+    "fixture": "Synthetic TaskEditor Due date2026-10-15 on both sides",
+    "before_source": "7ae14371fa0b734599fcdbb184d93376b8898a2a detached worktree with current capture regression helper only; no production diff",
+    "pixel_recipe": {
+      "raw_crop_bounds_xyxy": [
+        0,
+        250,
+        320,
+        520
+      ],
+      "composite_dimensions": [
+        656,
+        302
+      ],
+      "before_app_origin": [
+        8,
+        32
+      ],
+      "after_app_origin": [
+        336,
+        32
+      ],
+      "no_resampling_or_retouch": true,
+      "both_composite_regions_exactly_match_raw_crops": true
+    },
+    "assessment": "Before leading-digit wrap/clipping clearly visible; After full1..31 labels readable. Selected15 and today11 styling preserved. Header ellipsis is outside cropped day-grid scope and not claimed repaired. Centered readable labels, dark matching canvas, useful weekday/grid context, no private data.",
+    "after_committed_source": "22a13e5a83ec108392378041422fe58ed9cdae61",
+    "execution_qualification": "Committed helper received formatter-only reflow after local tests/captures; provenance records this qualification and final helper hash. New full frozen-source hosted candidate gates remain separate."
+  },
+  "pointer_demo": {
+    "video": {
+      "path": "/tmp/food-calendar-acceptance-20261011/native-final/native-linux-scripted-preview.mp4",
+      "bytes": 39262,
+      "sha256": "a60b2aa3d33305711d620601eeccc94990bf13fe4aca95788fd7fd4ff1771b60"
+    },
+    "viewed_frame": {
+      "path": "/tmp/food-calendar-acceptance-20261011/editorial-pointer-frame.png",
+      "bytes": 71391,
+      "sha256": "f8316559cc44040af27d5f5c2ededbc75f571491aafe2fd479ae3163ba3f004c"
+    },
+    "extraction": "ffmpeg -ss0.5; independently extracted from current recording",
+    "assessment": "Actual1200x850 Linux X recording;320x640 app window; visible X pointer on Day10. Flutter taps are scripted; no physical-device/Android assertion."
+  },
+  "evidence": [
+    "calendar-native-before-matched.log shows normal case passes and200% Day10 two lines",
+    "calendar-native-final.log terminal12PASS inspected; acceptance scope remains Linux native"
+  ],
+  "remaining_editorial_step": null,
+  "independent_remaining_gates": [
+    "New frozen-source full candidate gates and exact artifacts",
+    "Replacement exact Android shared-picker acceptance plus bounded remaining native acceptance",
+    "Parent publication clearance; stable feature promotion requires Lee acceptance"
+  ],
+  "public_image_verification": {
+    "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/22a13e5a83ec108392378041422fe58ed9cdae61/evidence/food-2026.10.4-rc.2/media/calendar-before-after.png",
+    "http_status": 200,
+    "bytes": 31027,
+    "sha256": "16ace4113aa469ce1da6afb84ad8c7f4490e13a0bda18cd5df7b06051c0fdc85",
+    "matches_git_object_and_reviewed_local": true
+  },
+  "resolved_final_steps": [
+    "Verified final descriptive calendar alt explicitly identifies actual Linux, without an Android acceptance claim.",
+    "Verified exact commit-pinned calendar public URL HTTP200, with downloaded bytes identical to reviewed local composite and22a Git object.",
+    "Verified updated provenance binds final helper SHA926fbc5baf60b1c6c1d0e35b3039dbfebe514d43ddb28bc474e722f4cfa70690 and qualifies formatter-only reflow.",
+    "Final uncommitted notes delta is only approved image Markdown; production/native/test/integration/version roots have empty diff against22a."
+  ],
+  "engineering_evidence_qualification": {
+    "finding": "native-final/tasks-dark-1.0x.png and native-before-matched/tasks-dark-1.0x.png are163-byte blank/black captures. Final normal image actual pixels independently viewed.",
+    "disposition": "These files do not demonstrate normal-scale visual appearance. Relevant normal-scale assertions/logs are separate evidence. Enlarged matched raw images and approved calendar media remain valid; this is not an editorial media blocker. Parent notified for evidence qualification."
+  }
+}

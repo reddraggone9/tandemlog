@@ -46,5 +46,12 @@
     "stable": "v2026.10.3/build56",
     "preview": "v2026.10.4-rc.1/build60",
     "method": "Fresh official GitHub latest/release list API2026-10-11; noRC2publication"
+  },
+  "visual_capture_qualification": {
+    "excluded_blank_initial_captures": [
+      "native-final/tasks-dark-1.0x.png",
+      "native-before-matched/tasks-dark-1.0x.png"
+    ],
+    "reason": "Initial actual-window capture is entirely black; retained unchanged but not usable normal-scale visual evidence. Native assertion passes remain separately attributed. Actual Tasks light normal/Food dark normal and enlarged captures were viewed and are readable."
   }
 }
