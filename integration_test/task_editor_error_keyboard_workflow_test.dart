@@ -263,6 +263,8 @@ void registerTaskEditorErrorKeyboardTests() {
           expect(await canonical(), before);
           expect(tester.takeException(), isNull);
         } finally {
+          // Flutter verifies this override before registered tearDown callbacks.
+          debugDefaultTargetPlatformOverride = null;
           await tester.pumpWidget(const SizedBox.shrink());
           await tester.pumpAndSettle();
         }

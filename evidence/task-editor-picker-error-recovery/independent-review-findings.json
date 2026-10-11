@@ -1,0 +1,9 @@
+{
+  "recording": "Root records final messages from independent architecture_review and correctness_review; no additional reviewer test/build execution.",
+  "reviewed_production_commit": "5e8c7017562674309eec7365c38c22ba86150fef",
+  "verdict": "PHONE_SCOPED_GATES_PASS_RESIZE_MUST_FIX_BEFORE_CANDIDATE",
+  "actual_checks": "Independently read4PASS/0FAIL40sec, native GTK with simulated captured320dp/200% and280dp IME, Android Material targets. Root and architecture reviewer viewed valid title/fullaction/error viewport pixels. Body/session keys, composition/callbacks/receipt/draft guards unchanged. No physical Android claim.",
+  "must_fix": "_taskModalOpen evaluates before _editorSurface promotes wide selected editor to narrow modal via mobileEditorOpen. First narrow frame can retain external banner and also add contextNotice. Share/derive effective-modal predicate including wide active-editor promotion; verify exactly one action-error-scroll, same editor/text session and draft/composition, reachable title/actions on bounded resize.",
+  "remaining_error_readability": "Scroll inner diagnostic viewport to prove full final Try again. line. Current screenshot/test proves viewport access, not simultaneous fullmessage display.",
+  "remaining": "Relevant editor/bulk/analysis gates and final independent closure/editorial, monotonic corrected candidate, full hosted/signing/originals, parent focused installedAndroid/freshquota. No candidate/publication."
+}
