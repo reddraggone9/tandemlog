@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Exact current documentation/evidence extension. Frozen build67 source3ae00be retains its historical157-entry manifest and482-source review; this extension adds those final reviews and confirmed pending dispatch without executable or notes/media changes.",
+  "qualification": "Exact current docs/evidence extension. Frozen build67 source3ae00be retains157-entry manifest; this extension adds frozen reviews/dispatch and actual automaticWindows fix corroboration, separately qualified from pending signed-candidate gates. Executable and notes/media bytes remain unchanged.",
   "files": {
     "README.md": {
-      "bytes": 22787,
-      "sha256": "0c7efc06f2aedbb63dab62240806dc5880eeb02ed7d280baea66dd66602905bf"
+      "bytes": 23163,
+      "sha256": "d0ed2ae951bd3844cbeb4a65af3a89750a38f8f4b0bcbb88158cec7c5b86bd1e"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -173,6 +173,10 @@
     "logs/build66-release-tool-tests.txt": {
       "bytes": 614,
       "sha256": "a22507a81ac0b4cb5007c9214866cce14b41774b2844ab00f11ec1297797128c"
+    },
+    "logs/build67-automatic-ci-windows-provider-decoded.log": {
+      "bytes": 364282,
+      "sha256": "3740fd9302f472ac935f46c496fc902840ed5ac77d8ac51b09ebae81949da147"
     },
     "logs/build67-release-tool-tests.txt": {
       "bytes": 614,
@@ -537,6 +541,10 @@
     "reviews/build67-sqlite-fixture-independent-review.json": {
       "bytes": 3582,
       "sha256": "1432464b717d8c830be5ff1224814493c228082bb92c238b997bd262e6afa857"
+    },
+    "reviews/build67-windows-fixture-hosted-green-receipt.json": {
+      "bytes": 809,
+      "sha256": "5bceb1eae4be1f4d73c8d757cb80ff7b02f825f25ad029450b6540c705a68fd1"
     },
     "reviews/continue-readiness-addendum.json": {
       "bytes": 2392,

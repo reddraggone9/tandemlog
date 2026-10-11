@@ -1,0 +1,14 @@
+{
+  "checked_at_utc": "2026-10-11T19:14:19.315340+00:00",
+  "source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+  "automatic_ci_run": 38166126720,
+  "job": 114549012027,
+  "decoded_log": {
+    "file": "automatic-ci-windows-provider-decoded.log",
+    "bytes": 364282,
+    "sha256": "3740fd9302f472ac935f46c496fc902840ed5ac77d8ac51b09ebae81949da147",
+    "qualification": "GitHub provider-decoded UTF8 representation retained byte-exact without newline/BOM normalization; not raw HTTP archive."
+  },
+  "windows_fixture_tool_result": "79checks ran, OK skipped4; actual original cleanup ERROR removed",
+  "qualification": "Automatic same-source Windows completedSUCCESS corroboration. Signed candidate38166126728 must separately complete full gates; originals/static/signing/native acceptance still pending."
+}
