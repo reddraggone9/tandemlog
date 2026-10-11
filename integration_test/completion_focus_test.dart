@@ -83,7 +83,7 @@ void registerCompletionFocusTests() {
             ),
           );
           await flows.waitForUi(tester, () => checkbox().evaluate().isNotEmpty);
-          await tester.tap(find.byTooltip('Search all tasks (Ctrl+F)'));
+          await flows.openSearchForTest(tester);
           await tester.pumpAndSettle();
           await tester.enterText(
             find.byKey(const ValueKey('task-search')),

@@ -1,9 +1,11 @@
 # Collaborative task text
 
 Status: implementation authorized on 2026-10-04; successor union and the narrow
-Yrs patch accepted on 2026-10-05. Implemented on the unreleased
-`experiment/text-activation-policy` branch. Full platform and release gates remain
-pending; no CRDT release or stable behavior change has been published.
+Yrs patch accepted on 2026-10-05. Shared-history text was subsequently accepted
+and published in stable2026.10.2/build53;[the stable receipt](../../evidence/stable-2026.10.2/README.md)
+records reviewed source, exact native acceptance and publication. Earlier
+branch-specific investigations and pending checkpoints below retain their
+historical attribution and do not describe current release status.
 
 ## Accepted behavior
 

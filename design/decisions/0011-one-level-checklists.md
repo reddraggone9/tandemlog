@@ -1,9 +1,9 @@
 # One-level task checklists
 
 Status: accepted product scope from Lee. The inline interaction revision was
-approved on 2026-10-08 and is under independent/native acceptance on a separate
-branch. Preview rc.4/build47 remains released unchanged; stable promotion remains
-Lee's decision.
+approved on 2026-10-08 and published with the accepted inline interaction in
+stable2026.10.2/build53. [The stable receipt](../../evidence/stable-2026.10.2/README.md)
+records completed review, exact native acceptance and Lee's stable approval.
 
 ## Scope and interaction
 
@@ -81,7 +81,7 @@ Required additive event types describe item creation, completion state, relative
 movement and deletion. Released scalar v3 records, hashes, clocks, IDs and Undo
 meanings remain unchanged. Unknown required types stop older peers explicitly.
 Item creation names a parent task in the same space. Native item text uses the
-unreleased field adapter's existing text-edit and selective-Undo records, with
+field adapter's existing text-edit and selective-Undo records, with
 item-kind admission restricting them to title/notes. All task-only operations
 remain invalid on items. Missing remote parents/anchors remain dependencies;
 known wrong kinds, nesting or cross-parent anchors are invalid transactionally.

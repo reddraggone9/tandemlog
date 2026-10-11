@@ -1,9 +1,23 @@
 # Task protocol v3
 
-This document specifies the released task protocol. The unreleased Food
+This document specifies the released task protocol. The released-preview Food
 envelope and additive private-profile schema3 are specified in
 [ADR0014](decisions/0014-food-inventory.md); Food records are outside task JSONL
 discovery and do not change task v3 encoding or meanings.
+
+## Food Undo envelope
+
+The next preview adds a closed Food envelope version2 solely for `undo`.
+Its operation contains `action: undo`, exact physical `targets` and a
+`retracts` reference to one earlier same-writer, non-Undo operation. The existing
+`createdWith` envelope retains each target's observed birth. Version1 remains
+required for all original Food operations and preserves its canonical bytes and
+hash domain. Undo version2 uses`tandemlog:food-record:v2\n`; writer derivation,
+genesis, clocks, per-writer chain and the shared v3 manifest remain unchanged.
+References and bases validate before retraction filtering. See
+[ADR0018](decisions/0018-food-session-undo.md) for selective replay, frozen actual
+build60-reader tests and the unresolved-v2 protected-receipt downgrade recovery
+boundary. No task v3 format or historical meaning changes.
 
 Implementation: `lib/domain/event.dart`, `lib/domain/event_chain.dart`, `lib/storage/task_store.dart`. The first stable 2026.10.0 format explicitly rejects prerelease-only v1/v2 canonical manifests and events, preserving them without rewriting or deleting data. Existing v3 folders remain supported unchanged; backward readability and meaning are durable from this stable boundary. The [chain decision](decisions/0007-canonical-history-integrity.md) specifies exact encoding and integrity limits.
 

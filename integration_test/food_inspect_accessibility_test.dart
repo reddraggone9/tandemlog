@@ -108,14 +108,8 @@ void main() {
           expect(metadata, findsOneWidget);
           await activateWithKeyboard(tester, actions);
           await activateWithKeyboard(tester, find.text('Edit group details'));
-          final size = find.widgetWithText(
-            TextField,
-            'Container size (optional)',
-          );
-          final location = find.widgetWithText(
-            TextField,
-            'Location (optional)',
-          );
+          final size = find.widgetWithText(TextField, 'Container size');
+          final location = find.widgetWithText(TextField, 'Location');
           expect(tester.widget<TextField>(size).controller!.text, '500 g');
           expect(
             tester.widget<TextField>(location).controller!.text,

@@ -10,15 +10,17 @@ class TaskToolbar extends StatelessWidget {
   final Widget Function(bool compact)? filter;
   final Widget undo;
   final Widget? checklistMenu;
-  final Widget? searchField;
-  final VoidCallback? search;
+  final Widget Function(bool compact)? inputModeAction;
+  final String sectionName;
+  final IconData sectionIcon;
   const TaskToolbar({
     super.key,
     required this.userName,
     required this.identityMenu,
     required this.undo,
-    this.searchField,
-    this.search,
+    this.inputModeAction,
+    this.sectionName = 'Tasks',
+    this.sectionIcon = Icons.check_circle_outline,
     this.count,
     this.countLabels = const [],
     this.filter,
@@ -67,10 +69,12 @@ class TaskToolbar extends StatelessWidget {
       );
       final titleWidth = compact || (count == null && sectionMenu == null)
           ? 0.0
-          : measure('Tasks', titleStyle).width + 8;
+          : measure(sectionName, titleStyle).width + 8;
       final minimumRowHeight = math.max(
         48.0,
-        compact || count == null ? 0.0 : measure('Tasks', titleStyle).height,
+        compact || count == null
+            ? 0.0
+            : measure(sectionName, titleStyle).height,
       );
       final filterWidth = filter == null
           ? 0.0
@@ -79,13 +83,18 @@ class TaskToolbar extends StatelessWidget {
           : measure('Filter', theme.textTheme.labelLarge).width + 64;
       final closedActionsWidth =
           48.0 +
-          (search != null ? 48.0 : 0) +
+          (inputModeAction == null
+              ? 0.0
+              : compact
+              ? 48.0
+              : math.max(
+                      measure('Add', theme.textTheme.labelLarge).width,
+                      measure('Search', theme.textTheme.labelLarge).width,
+                    ) +
+                    64) +
           filterWidth +
           (checklistMenu == null ? 0 : 48);
-      final actionsWidth =
-          closedActionsWidth -
-          (searchField != null && search != null ? 48.0 : 0);
-      final searchMinimum = measure('Search').width + 64;
+      final actionsWidth = closedActionsWidth;
       // Keep the whole switch target, counts and actions comfortable. The
       // current section name yields when enlarged text consumes that space.
       final sectionCompact =
@@ -103,27 +112,20 @@ class TaskToolbar extends StatelessWidget {
       final fullName =
           !compact &&
           name != null &&
-          // Reserve Search's opening/close slot in both header modes, keeping
-          // the identity shape stable so Undo stays anchored beside it.
-          math.max(headingWidth, sectionWidth + 8 + searchMinimum) +
-                  closedActionsWidth +
-                  namedWidth <=
+          headingWidth + closedActionsWidth + namedWidth <=
               constraints.maxWidth;
       final identityWidth = fullName ? namedWidth : avatarWidth;
       // Enlarged text can use two rows; normal narrow layouts omit a count that
       // cannot fit rather than shrinking text or comfortable targets.
       final enlarged = scaler.scale(14) > 20;
-      final secondRow = searchField != null
-          ? sectionWidth + 8 + actionsWidth + identityWidth + searchMinimum >
-                constraints.maxWidth
-          : (sectionWidth + actionsWidth + identityWidth >
-                    constraints.maxWidth) ||
-                (count != null &&
-                    !compact &&
-                    headingWidth <= constraints.maxWidth &&
-                    enlarged &&
-                    headingWidth + actionsWidth + identityWidth >
-                        constraints.maxWidth);
+      final secondRow =
+          sectionWidth + actionsWidth + identityWidth > constraints.maxWidth ||
+          (count != null &&
+              !compact &&
+              headingWidth <= constraints.maxWidth &&
+              enlarged &&
+              headingWidth + actionsWidth + identityWidth >
+                  constraints.maxWidth);
       final showCount =
           count != null &&
           headingWidth <= constraints.maxWidth &&
@@ -175,10 +177,10 @@ class TaskToolbar extends StatelessWidget {
             sectionMenu!(sectionCompact)
           else
             Semantics(
-              label: 'Tasks',
+              label: sectionName,
               excludeSemantics: true,
               child: Icon(
-                Icons.check_circle_outline,
+                sectionIcon,
                 size: 24,
                 color: theme.colorScheme.primary,
               ),
@@ -186,12 +188,11 @@ class TaskToolbar extends StatelessWidget {
           if (withCount &&
               sectionMenu == null &&
               !compact &&
-              count != null &&
-              (searchField == null || secondRow)) ...[
+              count != null) ...[
             const SizedBox(width: 8),
-            Text('Tasks', style: titleStyle),
+            Text(sectionName, style: titleStyle),
           ],
-          if (withCount && showCount && (searchField == null || secondRow)) ...[
+          if (withCount && showCount) ...[
             const SizedBox(width: 8),
             SizedBox(
               width: countWidth,
@@ -203,12 +204,16 @@ class TaskToolbar extends StatelessWidget {
       Widget actions() => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (searchField == null && search != null)
-            IconButton(
-              key: const ValueKey('open-search'),
-              tooltip: 'Search all tasks (Ctrl+F)',
-              onPressed: search,
-              icon: const Icon(Icons.search),
+          if (inputModeAction != null)
+            SizedBox(
+              width: compact
+                  ? 48
+                  : math.max(
+                          measure('Add', theme.textTheme.labelLarge).width,
+                          measure('Search', theme.textTheme.labelLarge).width,
+                        ) +
+                        64,
+              child: inputModeAction!(compact),
             ),
           undo,
           if (filter != null) filter!(compact),
@@ -221,38 +226,12 @@ class TaskToolbar extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (secondRow) ...[
-            if (searchField != null) ...[
-              ConstrainedBox(
-                constraints: BoxConstraints(minHeight: minimumRowHeight),
-                child: Row(
-                  children: [
-                    heading(withCount: false),
-                    const Spacer(),
-                    actions(),
-                  ],
-                ),
-              ),
-              searchField!,
-            ] else ...[
-              Row(children: [Expanded(child: heading())]),
-              Row(children: [const Spacer(), actions()]),
-            ],
+            Row(children: [Expanded(child: heading())]),
+            Row(children: [const Spacer(), actions()]),
           ] else
             ConstrainedBox(
               constraints: BoxConstraints(minHeight: minimumRowHeight),
-              child: Row(
-                children: [
-                  if (searchField != null) ...[
-                    heading(),
-                    const SizedBox(width: 8),
-                    Expanded(child: searchField!),
-                  ] else ...[
-                    heading(),
-                    const Spacer(),
-                  ],
-                  actions(),
-                ],
-              ),
+              child: Row(children: [heading(), const Spacer(), actions()]),
             ),
         ],
       );

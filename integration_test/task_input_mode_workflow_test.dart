@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
@@ -12,6 +13,7 @@ import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' show filterChoice, waitForUi;
 import 'food_production_workflow_test.dart' show switchSection;
+import 'food_preview_workflow_test.dart' as pixels;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -60,6 +62,9 @@ void registerTaskInputModeTests() {
             tester,
             () => find.text('Reference task').evaluate().isNotEmpty,
           );
+          if (variant.theme == 'dark' && variant.width == 1200) {
+            await pixels.startRecording(tester);
+          }
           final input = find.byKey(const ValueKey('task-search'));
           final capture = find.widgetWithText(TextField, 'What needs doing?');
           expect(input, findsOneWidget);
@@ -82,7 +87,10 @@ void registerTaskInputModeTests() {
           );
           final dynamic state = tester.state(find.byType(TasksPage));
           for (var flip = 0; flip < 3; flip++) {
-            await tester.tap(find.byKey(const ValueKey('open-capture')));
+            await pixels.tap(
+              tester,
+              find.byKey(const ValueKey('open-capture')),
+            );
             await tester.pumpAndSettle();
             await waitForUi(
               tester,
@@ -90,6 +98,22 @@ void registerTaskInputModeTests() {
             );
             expect(input, findsNothing);
             expect(capture, findsOneWidget);
+            if (variant.width >= 600) {
+              final label = tester.renderObject<RenderParagraph>(
+                find.descendant(
+                  of: find.byKey(const ValueKey('open-search')),
+                  matching: find.text('Search'),
+                ),
+              );
+              final boxes = label.getBoxesForSelection(
+                const TextSelection(baseOffset: 0, extentOffset: 6),
+              );
+              expect(
+                boxes.map((box) => box.top).toSet(),
+                hasLength(1),
+                reason: 'The wide Search action label must stay on one line.',
+              );
+            }
             expect(state.search.text, isEmpty);
             expect(state.searchQuery, isEmpty);
             expect(
@@ -97,7 +121,7 @@ void registerTaskInputModeTests() {
               isTrue,
             );
             await tester.enterText(capture, 'Discarded unfinished $flip');
-            await tester.tap(find.byKey(const ValueKey('open-search')));
+            await pixels.tap(tester, find.byKey(const ValueKey('open-search')));
             await tester.pumpAndSettle();
             expect(capture, findsNothing);
             expect(state.capture.text, isEmpty);
@@ -112,14 +136,14 @@ void registerTaskInputModeTests() {
             tester,
             () => find.text('Reference task').evaluate().isNotEmpty,
           );
-          await tester.tap(find.byKey(const ValueKey('open-capture')));
+          await pixels.tap(tester, find.byKey(const ValueKey('open-capture')));
           await tester.pumpAndSettle();
           expect(state.showCompleted, isTrue);
           expect(state.searchQuery, isEmpty);
           expect(capture.hitTestable(), findsOneWidget);
           expect(find.text('Reference task'), findsNothing);
           await tester.enterText(capture, 'Captured one\nCaptured two');
-          await tester.tap(find.byKey(const ValueKey('capture-add')));
+          await pixels.tap(tester, find.byKey(const ValueKey('capture-add')));
           await waitForUi(
             tester,
             () => state.pendingCapture.isEmpty && !state.busy,
@@ -155,7 +179,7 @@ void registerTaskInputModeTests() {
             tester,
             'input-${variant.theme}-${variant.width}-${variant.scale}-add',
           );
-          await tester.tap(find.byKey(const ValueKey('open-search')));
+          await pixels.tap(tester, find.byKey(const ValueKey('open-search')));
           await tester.pumpAndSettle();
           expect(state.showCompleted, isTrue);
           await switchSection(tester, food: true);

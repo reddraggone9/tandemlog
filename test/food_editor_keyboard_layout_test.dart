@@ -8,7 +8,8 @@ import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 
 import '../tool/food_preview.dart';
-import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
+import 'food_expiry_guidance_test.dart'
+    show loadSdkRoboto, expectUntruncatedGuidance;
 
 Future<void> verifyFoodEditorKeyboardLayout(
   WidgetTester tester, {
@@ -186,10 +187,10 @@ Future<void> verifyFoodEditorKeyboardLayout(
     await tester.pumpAndSettle();
   }
   for (final label in [
-    'Brand (optional)',
+    'Brand',
     'Expiration',
-    'Container size (optional)',
-    'Location (optional)',
+    'Container size',
+    'Location',
     if (editingCount == 0) 'Containers to add',
     'Retention reason',
   ]) {
@@ -198,23 +199,22 @@ Future<void> verifyFoodEditorKeyboardLayout(
   expect(find.byType(DropdownButtonFormField<String>), findsNothing);
   expectActions();
   await focus('Expiration');
+  await tester.enterText(field('Expiration'), '');
+  await tester.pumpAndSettle();
+  expectUntruncatedGuidance(tester);
+  final calendar = find.byTooltip('Choose Expiration');
+  await Scrollable.ensureVisible(tester.element(calendar), alignment: 0.5);
+  await tester.pumpAndSettle();
+  expect(calendar.hitTestable(), findsOneWidget);
+  expectFocusedLineVisible('Expiration');
+  expectActions();
+  await capture?.call('$prefix-blank-date-hint-calendar-ime');
   await tester.enterText(field('Expiration'), '2027-02-30');
   await tester.pumpAndSettle();
   final draft = tester.widget<TextField>(field('Expiration')).controller!;
   await capture?.call('$prefix-expiration-ime');
-  final helper = find.text(
-    'Use YYYY-MM-DD, or leave blank for the needs-expiration Inbox.',
-  );
-  await Scrollable.ensureVisible(tester.element(helper), alignment: 0);
-  await tester.pumpAndSettle();
-  expectTextFragmentVisible(helper, 'Use YYYY');
+  expectUntruncatedGuidance(tester);
   expectActions();
-  await capture?.call('$prefix-helper-start-ime');
-  await Scrollable.ensureVisible(tester.element(helper), alignment: 1);
-  await tester.pumpAndSettle();
-  expectTextFragmentVisible(helper, 'Inbox.');
-  expectActions();
-  await capture?.call('$prefix-helper-end-ime');
   await keyboard(false);
   expect(draft.text, '2027-02-30');
   await capture?.call('$prefix-draft-no-ime');

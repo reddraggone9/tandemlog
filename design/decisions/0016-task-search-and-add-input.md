@@ -1,6 +1,8 @@
 # Task Search and Add input
 
-Status: accepted by Lee on2026-10-11; implementation and new native acceptance pending.
+Status: accepted by Lee on2026-10-11 and implemented for RC2/build62 with
+independent source review and native Linux checks. The full frozen candidate and
+exact Android acceptance remain pending.
 
 ## Context
 

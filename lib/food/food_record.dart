@@ -6,6 +6,7 @@ import '../domain/event.dart';
 import 'inventory.dart';
 
 const foodRecordHashDomain = 'tandemlog:food-record:v1\n';
+const foodUndoRecordHashDomain = 'tandemlog:food-record:v2\n';
 const foodWriterName = 'tandemlog:food:v1';
 const maximumFoodRecordBytes = 256 * 1024;
 
@@ -71,7 +72,9 @@ class FoodRecord {
     }
     hash = sha256
         .convert(
-          utf8.encode('$foodRecordHashDomain${canonicalDataJson(_body())}'),
+          utf8.encode(
+            '${version == 1 ? foodRecordHashDomain : foodUndoRecordHashDomain}${canonicalDataJson(_body())}',
+          ),
         )
         .toString();
     if (utf8.encode(encode()).length > maximumFoodRecordBytes) {
@@ -85,13 +88,14 @@ class FoodRecord {
   final Map<String, String> createdWith;
   late final String hash;
   String get id => '$writer:$sequence';
+  int get version => operation.action == FoodAction.undo ? 2 : 1;
 
   Map<String, dynamic> _body() {
     final payload = operation.toJson()
       ..remove('id')
       ..remove('order');
     return {
-      'v': 1,
+      'v': version,
       'module': 'food',
       'space': space,
       'writer': writer,
@@ -126,7 +130,7 @@ class FoodRecord {
       };
       if (j.length != keys.length ||
           !j.keys.every(keys.contains) ||
-          j['v'] != 1 ||
+          (j['v'] != 1 && j['v'] != 2) ||
           j['module'] != 'food' ||
           j['clock'] is! String ||
           (j['clock'] as String).length > 19) {
@@ -134,6 +138,9 @@ class FoodRecord {
       }
       final clock = EventClock.fromJson(j['clock']);
       final payload = j['operation'] as Map<String, dynamic>;
+      if ((j['v'] == 2) != (payload['action'] == FoodAction.undo.name)) {
+        throw const FormatException('Unsupported Food operation version.');
+      }
       if (payload.containsKey('id') || payload.containsKey('order')) {
         throw const FormatException('Food payload cannot override identity.');
       }

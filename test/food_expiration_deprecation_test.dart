@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
+import 'food_expiry_guidance_test.dart' show foodFixtureIdentityMenu;
 
 const writer = '00000000-0000-4000-8000-000000000010';
 List<FoodOperation> legacyFoods() => [
@@ -197,11 +198,8 @@ Future<void> verifyExpirationDeprecationWorkflow(
             state: projectFood(operations),
             sectionMenu: (compact) =>
                 SectionMenu(food: true, compact: compact, onSelected: (_) {}),
-            settings: IconButton(
-              tooltip: 'Settings',
-              onPressed: () {},
-              icon: const Icon(Icons.settings_outlined),
-            ),
+            userName: 'Synthetic household',
+            identityMenu: foodFixtureIdentityMenu,
             onAdd: (details, count) => added = details,
             onRemove: (_) {},
             onRestore: (_) {},

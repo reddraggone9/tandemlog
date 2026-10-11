@@ -1,0 +1,43 @@
+{
+  "decision": "Approve bounded wide Search label padding fix and meaningful rendered-line regression; no additional retry5 rerun requested solely for this padding change.",
+  "scope": "Independent source review of one new OutlinedButton padding line plus root-authored rendered-line regression. No production or test edits by reviewer for this follow-up.",
+  "sources": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "sha256": "c457b18e879cb6d9d371767465232dfe313f17365dd242d3a2ac8a0b314f9b01"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_toolbar.dart",
+      "sha256": "12b56e6f69f4128f4401ee44e553dfe219d595902dd67531db4cd672dd96e381"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/task_input_mode_workflow_test.dart",
+      "sha256": "4f2ff6c2d451243a0d4b356aaa3b812942f2b0da0d85c1542486e89522734838"
+    }
+  ],
+  "cause": "Actual previous native PNG shows Search wrapped as Searc + h at1200px/100% dark. Local pinned Flutter OutlinedButton.icon Material3 default uses16px leading+24px trailing padding; plus app20px icon and8px gap needs68px overhead, exceeding toolbar label width+64px reservation. Explicit symmetric16px padding uses60px overhead and retains unchanged reservation, target min48, standard density and callbacks. Icon/label gap decreases at enlarged text; overhead remains within reservation.",
+  "regression": "RenderParagraph.getBoxesForSelection over full six-character Search requires exactly one distinct vertical line top. Covers both wide native variants (1200px dark100%, light200%) on three repeated mode flips. This is a visual invariant and detects the observed failure independently of the chosen padding value.",
+  "recorded_red": {
+    "path": "/tmp/food-build62-search-label-red.log",
+    "sha256": "729fa47566a6cfc6ee77a2e95f6212d36ded92c359fc4d02b718b405bce275a8"
+  },
+  "red_observation": "Actual native failed at3s with line tops0.45600223541259766 and20.45600128173828; expected one line, observed two.",
+  "visual_before": {
+    "path": "/tmp/food-build62-demos/task-search-add/fixture-screens/input-dark-1200.0-1.0-add.png",
+    "sha256": "3901ef73e55c5d3ca1c07844c0544e3627305dfc072ae782ac60538b5be6910a"
+  },
+  "visual_after": [
+    {
+      "path": "/tmp/food-build62-final-native/fixture-screens/input-dark-1200.0-1.0-add.png",
+      "sha256": "9291eb13d860124cbeaa47016d2e15af74a316f56ecb85a39457014734aee8f2"
+    },
+    {
+      "path": "/tmp/food-build62-final-native/fixture-screens/input-light-1200.0-2.0-add.png",
+      "sha256": "3702546e1aade06cc82975d99203a61ea0d1e8dcfa29490e00ca6b2164f034ba"
+    }
+  ],
+  "actual_pixels_inspected": true,
+  "visual_observation": "Search label is complete on one line at both wide variants; neighboring Undo/Filter/account and entry row remain readable without visible overlap.",
+  "evidence_qualification": "The earlier independently executed retry5 GREEN27s binds main18a255fd, not currentmain. Its artifact remains unchanged and historical. This padding line changes no mode admission, buffer clearing, retry packet ownership or editor guards, so another retry5 run is not necessary solely for it. Food Undo evolution in current main has its separate owner/reviewer evidence and is outside this bounded approval.",
+  "pending": "At review write, root final13 native suite and full unit suite were still running; two wide Task cases had passed. Do not interpret this review as final suite or exact candidate Android/Windows acceptance. Root must finish native13/full checks and regenerate final Task movie before freeze."
+}

@@ -1,0 +1,14 @@
+{
+  ".github/workflows/validate.yml": "40f1773e68d19c600741ef0887282a3f1c36adede2dde1d034571c1644d3f057",
+  "packaging/README.md": "cc7bb4b6356ce910342e6a7e2b2569b529284497be99aa9959f65dbfc4c81d58",
+  "packaging/linux/tandemlog": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26",
+  "packaging/linux/build-flatpak.sh": "2f2e6eaf631e7982327b0251af7e530e88a66d73498f96bcdbf7a47020b04821",
+  "packaging/linux/install-smoke.sh": "8e3a69db3316f32d8499f2c683da91f94643cfaabbdc0f021dd69e9481a83de2",
+  "packaging/linux/verify_flatpak.py": "5e20f1f346513fd30d321b7dbefa67c981d75471d432f004aca9f851da9f0d72",
+  "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml": "9e85065d20ec58244cc62de49731848293349643077ef8b3a9e6b5e01f2fa25e",
+  "tool/test_linux_profile_discovery.py": "b60e26fe1153d24040d02a83ef86d146bb3322111c13ebb92270f251ace7e618",
+  "tool/test_linux_flatpak_metadata.py": "22f628cd3977df576e418d04fc85078aa4fe973f7b85005b8b66f499c292f695",
+  "design/decisions/0013-app-wide-local-database.md": "ef289f76cc005d8dd3364450798cc2d926be01c8b9914dd98b8941b8f8db98cd",
+  "design/recovery.md": "14a0662b9b4e0d0741e2ba6943dd6aa977adb95f738f1a631f589b7c525434e1",
+  "design/dependencies.md": "68368b0e5809e3d938aa2c44130079fb0ec296434e3f4260635f638ba9e6d5d2"
+}

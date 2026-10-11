@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.reddraggone9.tandemlog</id>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>CC0-1.0</project_license>
+  <name>Tandemlog</name>
+  <summary>Manage shared household tasks and food inventory</summary>
+  <description>
+    <p>Tandemlog keeps household tasks and physical food containers in a shared workspace. Capture tasks, track recurring work, and organize food by expiration date and retention reason.</p>
+    <p>Share the canonical data folder with a folder sync provider of your choice. Local settings and the private database stay on each installation.</p>
+  </description>
+  <launchable type="desktop-id">com.reddraggone9.tandemlog.desktop</launchable>
+  <url type="homepage">https://github.com/reddraggone9/tandemlog</url>
+  <url type="bugtracker">https://github.com/reddraggone9/tandemlog/issues</url>
+  <developer id="com.reddraggone9">
+    <name>reddraggone9</name>
+  </developer>
+  <content_rating type="oars-1.1"/>
+  <releases>
+    <release version="2026.10.4-rc.2" date="2026-10-11" type="development"/>
+  </releases>
+</component>

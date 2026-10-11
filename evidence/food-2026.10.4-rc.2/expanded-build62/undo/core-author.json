@@ -1,0 +1,64 @@
+{
+  "scope": "Food core operation-scoped Undo, UI and session stack owned by root",
+  "files": [
+    {
+      "path": "lib/food/inventory.dart",
+      "sha256": "fd9fd9b0d3b34f9b2e11a14048ef9f647a083164315bae12bbae6b34fa3af754",
+      "bytes": 23621
+    },
+    {
+      "path": "lib/food/food_record.dart",
+      "sha256": "64b8e7235292559e9583a7eb5bc6706c822eb9f39e56d7f58badc76f42658206",
+      "bytes": 6002
+    },
+    {
+      "path": "lib/food/food_store.dart",
+      "sha256": "56fff749e7f6416632c1c72b473541f7c8be972d360441513bab2f472116bfd4",
+      "bytes": 42349
+    },
+    {
+      "path": "test/food_operation_undo_test.dart",
+      "sha256": "2adeb5526b3983502c2352d41a68e80650caab8352a90750a4e7523dea377564",
+      "bytes": 11496
+    },
+    {
+      "path": "test/food_store_undo_test.dart",
+      "sha256": "da4356a67df0841cb13d25e96ec8b2e9f9e146bde18517b982fc8f48ba725fbb",
+      "bytes": 17619
+    },
+    {
+      "path": "test/food_undo_reader_compatibility_test.dart",
+      "sha256": "b70754d3bedfe0e03ce338bb6a0a4ddb5650777458b7fcc99cb5dc2d775e11a6",
+      "bytes": 6133
+    },
+    {
+      "path": "test/fixtures/food-undo/mixed-v1-v2.foodlog",
+      "sha256": "e866b4f013010ebff810d7cce7d2ffa2c756b5c6d94444573574d3a0afcf32fe",
+      "bytes": 1174
+    },
+    {
+      "path": "test/fixtures/food-undo/released-build60/provenance.json",
+      "sha256": "c12d3b896371cda21ca1d0874a82926245904c86b8ba67e40e2dee6b039bc389",
+      "bytes": 1125
+    }
+  ],
+  "tests": [
+    {
+      "log": "/tmp/food-undo-red.log",
+      "passed": 2,
+      "failed": 19,
+      "phase": "initial RED"
+    },
+    {
+      "log": "/tmp/food-undo-expanded-green.log",
+      "passed": 72,
+      "failed": 0,
+      "phase": "expanded GREEN"
+    }
+  ],
+  "analyze": "/tmp/food-undo-analyze-final.log",
+  "wire": "Existing add/edit/remove/restore remain exact v1. Only Undo uses closed v2 with food-record:v2 hash domain, same food writer and chain; frozen mixed-chain new Undo hash efe975f92b864edd636fb8d52ca4164d68f50045453a8e6c67c830dca7e3830c.",
+  "compatibility": "Actual frozen released-build60 codec/store/projection/intent validator proves canonical v2 isolated Food failure; unresolved protected v2 downgrade receipt remains hard authority failure, preserving bytes and recoverable by current reader.",
+  "semantics": "All raw history validated before retracting contributions. Suppressed Add retains canonical birth but is absent active/Deleted unless independent non-retracted direct mutations preserve/resurface its exact ID. Restore Undo withdraws only the named restore token-effect. Contents Undo withdraws only named value and domination edges.",
+  "pending": "Independent review and root UI integration/native acceptance still pending; no release/commit performed by this worker."
+}

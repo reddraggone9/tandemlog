@@ -1,0 +1,46 @@
+{
+  "scope": "Approved Flatpak AppStream/catalog and sandbox-private XDG defaults",
+  "source_files": {
+    "packaging/linux/tandemlog": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26",
+    "packaging/linux/build-flatpak.sh": "2f2e6eaf631e7982327b0251af7e530e88a66d73498f96bcdbf7a47020b04821",
+    "packaging/linux/install-smoke.sh": "8e3a69db3316f32d8499f2c683da91f94643cfaabbdc0f021dd69e9481a83de2",
+    "packaging/linux/verify_flatpak.py": "5e20f1f346513fd30d321b7dbefa67c981d75471d432f004aca9f851da9f0d72",
+    "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml": "9e85065d20ec58244cc62de49731848293349643077ef8b3a9e6b5e01f2fa25e",
+    "tool/test_linux_profile_discovery.py": "b60e26fe1153d24040d02a83ef86d146bb3322111c13ebb92270f251ace7e618",
+    "tool/test_linux_flatpak_metadata.py": "22f628cd3977df576e418d04fc85078aa4fe973f7b85005b8b66f499c292f695",
+    ".github/workflows/validate.yml": "40f1773e68d19c600741ef0887282a3f1c36adede2dde1d034571c1644d3f057"
+  },
+  "tests": {
+    "focused_linux_packaging": {
+      "passed": 12,
+      "log": "green.log"
+    },
+    "shell_syntax": "bash -n build-flatpak.sh install-smoke.sh; sh -n tandemlog passed",
+    "existing_installer_regression": {
+      "passed": 5,
+      "log": "installer-regression.log"
+    },
+    "python_compile": "Three changed Python files passed py_compile"
+  },
+  "actual_tool_execution": {
+    "version": "Ubuntu AppStream 1.0.2-1build6",
+    "metadata_validation": "passed --no-net",
+    "composition": "passed --no-net; matching ID, Tandemlog name, five included icon sizes/scales",
+    "method": "Audited official distro debs extracted under /tmp; direct CLI validator and internal composer binary; no install or maintainer-script execution"
+  },
+  "remaining_gates": [
+    "Hosted actual complete bundle export/install with catalog and sandbox XDG/one-permanent-DB assertions",
+    "Hosted exact installed install/replace/uninstall/reinstall and captured instance shutdown; settings/canonical continuity"
+  ],
+  "limitations": [
+    "Local composition is not proof of a built Flatpak or Bazaar UI",
+    "Lifecycle smoke force-stops exact sandbox instance; recovery WAL permitted, not orderly shutdown evidence"
+  ],
+  "data_actions": "Synthetic temporary roots only; no old task/file deletion, user reset, migration, copying or synced-data operation",
+  "independent_source_review": {
+    "verdict": "ACCEPT_BOUNDED_FLATPAK_SOURCE_PENDING_EXACT_HOSTED_PACKAGE_GATES",
+    "receipt": "independent-review/independent-flatpak-source-review.json",
+    "sha256": "1bca087e271073f87522927596652065d0546815c469bc31744d9b0d79dab46c",
+    "must_fix": []
+  }
+}

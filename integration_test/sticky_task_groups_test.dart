@@ -10,6 +10,7 @@ import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/presentation/sticky_task_group.dart';
 import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
+import 'task_flow_test.dart' as flows;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -89,6 +90,7 @@ void registerStickyTaskGroupTests() {
         return find.byKey(widget.headingKey!);
       }
 
+      await flows.openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Preserved capture draft');
       final body = find.byKey(ValueKey('task-body-${ids[1]}'));
@@ -218,7 +220,7 @@ void registerStickyTaskGroupTests() {
         tester.widget<TextField>(capture).controller!.text,
         'Preserved capture draft',
       );
-      await tester.tap(find.byTooltip('Search all tasks (Ctrl+F)'));
+      await flows.openSearchForTest(tester);
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const ValueKey('task-search')),

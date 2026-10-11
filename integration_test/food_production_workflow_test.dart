@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/food_record.dart';
 import 'package:tandemlog/presentation/task_editor.dart';
 import 'package:tandemlog/storage/log_folder.dart';
@@ -14,6 +15,7 @@ import 'package:uuid/uuid.dart';
 import 'native_text_fixtures.dart';
 import 'task_flow_test.dart' as flows;
 import 'food_preview_workflow_test.dart' as pixels;
+import '../test/food_expiry_guidance_test.dart' show selectFoodView;
 
 class _HeldFoodManifestFolder implements LogFolder, BoundedLogFolder {
   _HeldFoodManifestFolder(this.inner);
@@ -109,6 +111,8 @@ void registerFoodProductionTests() {
           tester,
           () => state.syncing == null && state.busy == false,
         );
+        await tester.tap(find.byKey(const ValueKey('open-capture')));
+        await tester.pumpAndSettle();
         await tester.enterText(
           find.widgetWithText(TextField, 'What needs doing?'),
           'Must not append',
@@ -375,6 +379,8 @@ void registerFoodProductionTests() {
           tester,
           () => find.text('Preserved synthetic task').evaluate().isNotEmpty,
         );
+        await tester.tap(find.byKey(const ValueKey('open-capture')));
+        await tester.pumpAndSettle();
         await tester.enterText(
           find.widgetWithText(TextField, 'What needs doing?'),
           'Added while Food unavailable',
@@ -491,7 +497,7 @@ void registerFoodProductionTests() {
         await tester.tap(find.byTooltip('Collapse Synthetic Rice containers'));
         await tester.pumpAndSettle();
         expect(find.text('1 full'), findsNothing);
-        await tester.tap(find.text('Deleted'));
+        await selectFoodView(tester, FoodView.deleted);
         await tester.pumpAndSettle();
         expect(find.text('Synthetic Rice'), findsOneWidget);
         final state = tester.state(find.byType(TasksPage)) as dynamic;
@@ -509,7 +515,7 @@ void registerFoodProductionTests() {
         );
         await switchSection(tester, food: true);
         await tester.pumpAndSettle();
-        await tester.tap(find.text('Deleted'));
+        await selectFoodView(tester, FoodView.deleted);
         await tester.pumpAndSettle();
         expect(find.text('Synthetic Rice'), findsOneWidget);
         await tester.tap(find.byTooltip('Restore Synthetic Rice containers'));
@@ -517,7 +523,7 @@ void registerFoodProductionTests() {
           tester,
           () => find.text('No deleted containers').evaluate().isNotEmpty,
         );
-        await tester.tap(find.text('Stock'));
+        await selectFoodView(tester, FoodView.inventory);
         await tester.pumpAndSettle();
         expect(find.text('2 full'), findsOneWidget);
         await switchSection(tester, food: false);

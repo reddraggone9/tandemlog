@@ -1,13 +1,17 @@
 # Runtime and visual QA — updated 2026-10-11
 
-## Food RC2 in preparation
+## Complete Food RC2 batch in preparation
 
-The approved toolbar dropdown, date-only Food interface and reproduced Inbox
-body hit-area fix have bounded actual Linux GTK/Flutter evidence and independent
-reviews in [RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md). Final
-build61 native runs and full hosted candidate gates are recorded there. Android
-acceptance remains pending on the exact new signed installer; existing build60
-acceptance is retained with its original source and does not attest these changes.
+Build62 covers section navigation, date-only Food, short Inbox task hit areas,
+default Task Search/explicit Add, combined Food Stock/Inbox, local-calendar date
+colors, shared Filter/account toolbar presentation, shared required date input,
+selective Food Undo stack, fixed group action anchors and Flatpak catalog/private
+profile fixes. The cancelled build61
+checkpoint predates the expanded scope and is ineligible for handoff/publication.
+[RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md) records tests-first
+failures, implementation and source-qualified independent/native reviews.
+Final full hosted gates and exact build62 Android acceptance remain pending;
+existing build60 acceptance does not attest the expanded changes.
 
 ## Stable2026.10.2 — exact accepted candidate published
 

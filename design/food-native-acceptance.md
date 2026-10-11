@@ -5,8 +5,10 @@
 Build61 source `00594c1f91f478a729e091ab41c418afbfcbb383` and
 [signed candidate38115053314](https://github.com/reddraggone9/tandemlog/actions/runs/38115053314)
 are cancelled intermediate records. Lee added the Search/Add toggle and combined
-Stock/Inbox with expiration colors and toolbar filter/account parity after that
-source froze. No build61 APK is
+Stock/Inbox with expiration colors and toolbar filter/account parity, then
+required manual expiration with the shared Tasks date control, the full Food
+Undo stack and fixed expanded-group anchors after that source froze. Flatpak
+catalog/private-profile fixes also belong to the complete batch. No build61 APK is
 accepted or eligible for handoff/publication. The complete build62 source/run
 will be recorded after implementation and fresh gates.
 [Tests-first checkpoint](../evidence/food-2026.10.4-rc.2/preparation/expanded-scope/README.md)
@@ -42,12 +44,31 @@ Focused actual Android acceptance for the complete changed candidate:
    scope without duplicates. Stock/Retained/Deleted live in the toolbar Filter;
    Settings and user switching match Tasks account menu, with selected view/badge
    and retention reason autocomplete available. Add/Edit has only a date, legacy mixed-certainty
-   grouping/fieldwise preservation still works, and blank-date Add lands Stock.
+   grouping/fieldwise preservation still works. Manual Add and detail Save require
+   expiration without writes on blank/invalid input. Existing undated records
+   remain readable; Cancel preserves them, and manual Save requires a date.
+   Valid dates cannot be cleared; untouched/mixed/late-arriving dates are retained
+   by fieldwise edits. Shared Tasks calendar input/picker, focused blank format
+   hint, locale/keyboard and narrow layout remain usable. Food labels omit
+   optional suffixes while those other fields remain optional.
    Date text uses local-calendar overdue/today..+2/+3..+6/+7 thresholds in red/
    orange/yellow/default; both themes remain readable and rollover changes no
    records. At320dp/200% reach scrolling guidance and all rows/controls with
    Gboard open/dismissed; check date Save/restart UI replay.
-6. Provide a native Android Show taps demo and exact-APK acceptance attestation.
+6. Verify Food toolbar Undo for Add, details/date/brand/retention, contents,
+   Remove and Restore; a bulk command is one action and repeated Undo traverses
+   earlier actions. Search/Filter, section and user changes preserve its stack;
+   workspace change clears it. Newer/independent peer edits and deletion tokens
+   survive. Failed save/inverse retains its action and retries the exact IDs and
+   bytes, without duplicate actions. Undo Add hides untouched physical IDs from
+   active and Deleted while retaining canonical births; later independent work
+   protects them. A Task completion notice cannot Undo after switching to Food,
+   and normal Task Undo still works when returning. See[ADR0018](decisions/0018-food-session-undo.md)
+   for the older-reader/protected-receipt downgrade boundary.
+7. Expand/collapse a multi-container group. Remove/Inspect and title/date width
+   stay fixed; overflow appears in the existing count/location row and controls
+   remain reachable with48px targets at narrow/enlarged text.
+8. Provide a native Android Show taps demo and exact-APK acceptance attestation.
    Linux GTK screenshots/demo and static inspection do not establish Android QA.
 
 Stable promotion requires Lee's acceptance. Preview publication follows all

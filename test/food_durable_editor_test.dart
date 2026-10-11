@@ -25,6 +25,10 @@ void main() {
       find.widgetWithText(TextField, 'Food name'),
       'Synthetic Rice',
     );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Expiration'),
+      '2027-06-01',
+    );
     await tester.tap(find.widgetWithText(FilledButton, 'Add'));
     await tester.pumpAndSettle();
     expect(find.text('Add food'), findsOneWidget);
@@ -83,6 +87,10 @@ void main() {
       find.widgetWithText(TextField, 'Food name'),
       'Synthetic Rice',
     );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Expiration'),
+      '2027-06-01',
+    );
     await tester.tap(find.widgetWithText(FilledButton, 'Add'));
     await tester.pumpAndSettle();
     expect(
@@ -119,6 +127,10 @@ void main() {
       find.widgetWithText(TextField, 'Food name'),
       'Synthetic Rice',
     );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Expiration'),
+      '2027-06-01',
+    );
     await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
     await tester.pumpAndSettle();
     final decision = tester
@@ -127,7 +139,7 @@ void main() {
     decision();
     await tester.pumpAndSettle();
     expect(() => decision(), returnsNormally);
-    expect(find.text('Food inventory'), findsOneWidget);
+    expect(find.byType(FoodInventoryPage), findsOneWidget);
     expect(tester.takeException(), isNull);
   });
 

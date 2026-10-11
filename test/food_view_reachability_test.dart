@@ -9,9 +9,10 @@ import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/tag_input.dart';
 import 'package:tandemlog/presentation/section_menu.dart';
 
-import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
+import 'food_expiry_guidance_test.dart'
+    show loadSdkRoboto, selectFoodView, foodFixtureIdentityMenu;
 
-const inboxGuidance = 'Needs an expiration date. A date moves food into stock.';
+const inboxGuidance = 'Add an expiration date to move food out of Inbox.';
 const retentionReason = 'Keep for the next family birthday recipe';
 const reachabilityError =
     'The synthetic folder could not save this change. Check its connection and permissions, then try again. Your existing food containers are still available.';
@@ -64,12 +65,6 @@ Future<void> verifyFoodViewReachability(
   Future<void> Function(String)? capture,
   Future<void> Function(Finder)? input,
 }) async {
-  final label = switch (mode) {
-    FoodView.inventory => 'Stock',
-    FoodView.inbox => 'Inbox',
-    FoodView.retained => 'Retained',
-    FoodView.deleted => 'Deleted',
-  };
   final name = switch (mode) {
     FoodView.inventory => 'Synthetic dated rice',
     FoodView.inbox => 'Synthetic undated lentils',
@@ -121,11 +116,8 @@ Future<void> verifyFoodViewReachability(
                     compact: compact,
                     onSelected: (_) {},
                   ),
-                  settings: IconButton(
-                    tooltip: 'Settings',
-                    onPressed: () {},
-                    icon: const Icon(Icons.settings_outlined),
-                  ),
+                  userName: 'Synthetic household',
+                  identityMenu: foodFixtureIdentityMenu,
                   state: state,
                   error: withError ? reachabilityError : null,
                   onAdd: (_, _) => commandCount++,
@@ -161,7 +153,7 @@ Future<void> verifyFoodViewReachability(
     await tester.pumpAndSettle();
   }
 
-  await tap(find.widgetWithText(ChoiceChip, label));
+  await selectFoodView(tester, mode, input: input);
   await capture?.call('$prefix-initial');
   final scrollable = find
       .descendant(
@@ -230,7 +222,8 @@ Future<void> verifyFoodViewReachability(
 
   for (final text in [
     if (withError) reachabilityError,
-    if (mode == FoodView.inbox) inboxGuidance,
+    if (!empty && (mode == FoodView.inbox || mode == FoodView.inventory))
+      inboxGuidance,
   ]) {
     final notice = find.text(text);
     expect(
@@ -252,8 +245,8 @@ Future<void> verifyFoodViewReachability(
   }
   if (empty) {
     final message = find.text(switch (mode) {
-      FoodView.inventory => 'No dated stock',
-      FoodView.inbox => 'Everything has an expiration date',
+      FoodView.inventory => 'No food in stock',
+      FoodView.inbox => 'No food in stock',
       FoodView.retained => 'No retained food',
       FoodView.deleted => 'No deleted containers',
     });

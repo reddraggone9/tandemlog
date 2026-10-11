@@ -1,0 +1,32 @@
+{
+  "commit": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "build": 60,
+  "frozenFiles": [
+    {
+      "source": "lib/food/inventory.dart",
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+      "bytes": 20285
+    },
+    {
+      "source": "lib/food/food_record.dart",
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7",
+      "bytes": 5623
+    },
+    {
+      "source": "lib/food/food_store.dart",
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+      "bytes": 39856
+    },
+    {
+      "source": "lib/food/food_import.dart",
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+      "bytes": 6286
+    },
+    {
+      "source": "lib/storage/profile_food_intents.dart",
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1",
+      "bytes": 4773
+    }
+  ],
+  "sharedInfrastructure": "Export shims use current unchanged public event/owner/folder/guard interfaces. Food parser, projection, store, imports and protected receipt validation are exact released bytes."
+}

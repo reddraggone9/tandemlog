@@ -18,7 +18,7 @@ Inject time, IDs, storage and platform services at boundaries. Commands produce 
 
 RC4 extracts single/bulk editor draft ownership into `presentation/task_editor.dart`; host navigation owns editor-session identity and dirty-close routing. Shared `presentation/tag_input.dart` owns focus and anchored suggestion geometry; its host owns selected values and query drafts. `presentation/tag_filter_picker.dart` is the thin Filter policy wrapper. `domain/bulk_task_edit.dart` describes explicit functional patches and per-task results, while `TaskStore` serializes validation/durable writes. UI passes target/context guards, never writes SQL/logs. Per-task partial durability is explicit; do not hide it behind an apparent multi-task transaction. Main still combines workspace/filter/selection/drag orchestration; extract a focused controller when concrete duplication or another workflow warrants it, rather than a generic framework during this candidate.
 
-The authorized, unreleased text integration adds `application/task_text_session.dart`
+The text integration released in stable2026.10.2 adds `application/task_text_session.dart`
 for captured private drafts and `application/text_save_command.dart` for exact
 canonical receipt/commit orchestration. `storage/text_cache.dart` validates and
 materializes native field checkpoints in the same disposable SQLite cache.
@@ -34,15 +34,25 @@ New reference proofs and compact SQLite reference rows now avoid inherited BLOBs
 and operation-ID arrays per occurrence; exact editor/receipt state is reconstructed
 on demand. Adapter1 proof/checkpoint meanings remain supported. Full observed-prefix
 scans and warm command costs remain scaling work; this is not a constant-latency
-claim. Independent review and platform acceptance are pending. See the
+claim. Independent review and exact platform acceptance completed for that stable
+release;[the stable receipt](../evidence/stable-2026.10.2/README.md) records them. See the
 [implementation evidence](../evidence/production-text/shared-history/README.md).
 `text/native_text_engine.dart` owns typed FFI handles and bounded exact packets;
 the single Rust implementation owns character identity and selective Undo only.
 Domain context/actor claims and required event validation stay in Dart. See
 [ADR 0010](decisions/0010-collaborative-text-adoption.md) for the legacy baseline,
-offline new-task exception and remaining release gates.
+offline new-task exception and historically attributed implementation gates.
 
 The approved [Food inventory module](decisions/0014-food-inventory.md) uses its own canonical Food streams and pure physical-container projection, with recovery authority on the same app-owned SQLite connection and queue. Tasks retain their released v3 history. Future games and nutrition remain separate domain modules with explicit integration commands. A food entry that deducts stock is one logical operation, with linked idempotency and reversal rules, rather than two UI callbacks. Shared foundations should stay small: workspace/user identity, event envelope, quantities where needed, and adapter contracts. No plugin engine, universal entity/field store, generalized CRDT framework or microservices now.
+
+`application/food_undo_history.dart` owns bounded session-local original receipts;
+the host records/pops complete confirmed actions and retains pending save/inverse
+packets. `FoodStore` owns immutable preparation, admission, exact-byte recovery
+and selective durable inverses; the pure Food projection owns retraction meaning.
+The histories remain separate from Tasks. See[ADR0018](decisions/0018-food-session-undo.md).
+Shared `presentation/task_toolbar.dart` owns responsive geometry without module
+semantics. `presentation/civil_date_input.dart` owns date typing/picker presentation
+and focus; Task/Food editors retain their distinct validation and draft ownership.
 
 The isolated checklist component keeps membership/order, item kind and durable
 descendant protection in `domain/checklist.dart`. `storage/checklist_store.dart`
@@ -61,15 +71,16 @@ use the existing cache metadata and do not enter canonical history.
 The host owns item capture/receipt lifetime independently from the parent draft.
 `ChecklistCompletionCommand` reconciles a complete immutable item snapshot before
 consent and again before preparation, renewing consent after incoming changes.
-Exact Windows/Android acceptance remains pending; see
+Exact Windows/Android acceptance completed before stable2026.10.2; see
 [ADR0011](decisions/0011-one-level-checklists.md).
 
 Checklist validation currently revisits existing completion prefixes during
 reconciliation/commands. Impact: larger checklists add work to the separately
 documented historical prefix CPU debt. Owner: Tandemlog implementation with Lee;
 exit: measured checklist native workflows meet the agreed device budget or a
-bounded indexed verifier is independently reviewed. Revisit before stable
-checklist promotion; do not claim linear replay or open-ended optimization here.
+bounded indexed verifier is independently reviewed. Revisit before another
+checklist expansion or measured performance regression; do not claim linear
+replay or open-ended optimization here.
 
 ## Trust and privacy
 
@@ -79,6 +90,6 @@ Model-derived content is untrusted input. A later ingestion adapter produces a p
 
 ## Growth and review
 
-The combined release candidate's app-wide profile owner serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup performs source-backed migration before opening adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and remaining platform acceptance.
+The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup performs source-backed migration before opening adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The next preview's Flatpak packaging correction uses its private XDG profile by default, with no automatic host-profile migration.
 
 At each milestone, review dependencies, duplicated rules, error/recovery paths, UX consistency and actual performance. For every module addition, review cross-module transactions and compatibility before UI expansion. Record refactors and bounded debt; do not use “future flexibility” to justify unused infrastructure.

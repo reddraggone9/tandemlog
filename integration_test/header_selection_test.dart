@@ -78,6 +78,7 @@ void registerHeaderSelectionTests() {
               if (e is File) e.path: base64Encode(await e.readAsBytes()),
           };
           final before = await contents();
+          await flows.openCaptureForTest(tester);
           final capture = find.widgetWithText(TextField, 'What needs doing?');
           await tester.enterText(
             capture,
@@ -219,7 +220,7 @@ void registerHeaderSelectionTests() {
           final undoBeforeSearch = tester.getRect(
             find.byKey(const ValueKey('undo-task-action')),
           );
-          await tester.tap(find.byKey(const ValueKey('open-search')));
+          await flows.openSearchForTest(tester);
           await tester.pumpAndSettle();
           expect(
             tester.getRect(find.byKey(const ValueKey('undo-task-action'))),
@@ -227,8 +228,9 @@ void registerHeaderSelectionTests() {
           );
           expect(
             find.byKey(const ValueKey('compact-selection-actions')),
-            findsOneWidget,
+            findsNothing,
           );
+          expect(controller.text, isEmpty);
           await tester.enterText(
             find.byKey(const ValueKey('task-search')),
             'Reference task 36',
@@ -247,7 +249,7 @@ void registerHeaderSelectionTests() {
             tester.getRect(find.byKey(const ValueKey('undo-task-action'))),
             undoBeforeSearch,
           );
-          // Breakpoint changes retain the draft; wide selection uses its existing
+          // Breakpoint changes retain active Search; wide selection uses its existing
           // side editor and the top toolbar remains the same height.
           tester.view.physicalSize = const Size(1200, 820);
           await tester.pumpAndSettle();
@@ -263,7 +265,7 @@ void registerHeaderSelectionTests() {
             tester.getRect(find.byKey(const ValueKey('task-header'))),
             wideHeader,
           );
-          expect(controller.value, draft);
+          expect(controller.text, isEmpty);
           await tester.tap(find.text('Cancel'));
           await tester.pumpAndSettle();
           await flows.openSettings(tester);

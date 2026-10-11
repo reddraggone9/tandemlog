@@ -1,6 +1,14 @@
 # Food Stock and toolbar refinements
 
-Status: accepted by Lee on2026-10-11; implementation and native acceptance pending.
+Status: accepted by Lee on2026-10-11 and implemented for RC2/build62 with
+independent source review and native Linux checks. The full frozen candidate and
+exact Android acceptance remain pending.
+
+The expanded batch also includes[Food session Undo](0018-food-session-undo.md).
+Expanded group actions retain the same two header control slots and title/date
+width as the collapsed group. Overflow appears at the trailing edge of the
+existing container-count/location details row, preserving48px targets without
+adding an empty vertical row.
 
 ## Context
 
@@ -32,6 +40,23 @@ Use theme-readable tones, retain the actual readable date, and refresh at local
 midnight/resume without changing durable records. Calendar boundaries must be
 safe across daylight-saving transitions; do not derive calendar days from
 elapsed24-hour durations.
+
+## Manual expiration correction
+
+Lee additionally requires an expiration date for manual Add and manual detail
+editing. Undated historical/imported records remain readable for the Inbox and
+future receipt automation; this does not introduce that automation or make the
+published canonical date field required. Saving an existing undated record
+manually requires a date, while Cancel preserves it. A valid date cannot be
+cleared by manual editing. Bulk fieldwise edits preserve untouched dates and
+must not silently convert mixed or late-arriving date values.
+
+Reuse the underlying Tasks calendar input/picker, including its focused blank
+format hint, locale and keyboard behavior. Required validation belongs to the
+Food form, without changing optional Task dates. Remove optional suffixes from
+Food labels while keeping Brand, Container size, Location and Retention reason
+optional. The earlier manual-editor invitation to leave expiration blank is
+superseded; existing undated reading and projection remain supported.
 
 ## Alternatives and consequences
 

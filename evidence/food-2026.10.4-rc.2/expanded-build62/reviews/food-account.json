@@ -1,0 +1,145 @@
+{
+  "reviewer": "/root/food_account_regressions",
+  "scope": "Independent actual host Food account, pending-save guards, and Task Snackbar crossover tests",
+  "production_edits_by_reviewer": false,
+  "test": {
+    "path": "/tmp/tandemlog-food-date-readability/integration_test/food_account_workflow_test.dart",
+    "sha256": "adad9a1a24b00673af660897e8c3e4a32dd8d113cc00b4fe73f03513957068cd",
+    "bytes": 21626
+  },
+  "register_function": "registerFoodAccountWorkflowTests",
+  "native_platform": "Linux GTK under Xvfb, not Android or Windows",
+  "viewports": [
+    {
+      "width": 1200,
+      "height": 850,
+      "text_scale": 1,
+      "theme": "dark"
+    },
+    {
+      "width": 320,
+      "height": 850,
+      "text_scale": 2,
+      "theme": "light"
+    }
+  ],
+  "red": {
+    "exit_code": 1,
+    "passed": 0,
+    "failed": 1,
+    "log": {
+      "path": "/tmp/food-account-evidence/red/snackbar-crossover.log",
+      "sha256": "da5df492d5096a6a0290b5590330a2c9f6a61a84da77bc35d4864093bf3ea2cb",
+      "bytes": 7214
+    },
+    "observed": {
+      "noticeRemains": true,
+      "canonicalChanged": true,
+      "additionalAppends": 1,
+      "taskCompleted": false,
+      "appendedTypes": [
+        "task.operationUndone"
+      ]
+    }
+  },
+  "green": {
+    "exit_code": 0,
+    "passed": 5,
+    "failed": 0,
+    "duration": "00:42",
+    "log": {
+      "path": "/tmp/food-account-evidence/green/account-workflow.log",
+      "sha256": "17dd5eaa4fafe6e0177e579aad4922c09099bc7067f0a75682dcadef482cfbbf",
+      "bytes": 6284
+    },
+    "observed": {
+      "noticeRemains": false,
+      "canonicalChanged": false,
+      "additionalAppends": 0,
+      "taskCompleted": true,
+      "appendedTypes": []
+    },
+    "positive_control": "Return to Tasks then actual toolbar Undo reopens same Task with one append"
+  },
+  "cases": [
+    "Task completion notice and retained callback cannot affect Tasks from Food; session Undo retained on return",
+    "Dark wide account preserves Food instance/view/search/reasons, Settings is last, Manage users returns Tasks picker",
+    "Light 320dp/200% same account and Settings/Manage-user flow",
+    "Dirty Food Keep editing preserves controllers/user/canonical bytes; Discard accepts identity switch",
+    "Bounded first Food-stream create failure blocks identity changes; actual top Retry confirms original records, bytes, and two container IDs"
+  ],
+  "source_review": "Accepted section switch clears notices after editor guards; Undo rejects Food before/after each relevant await; session history is not erased",
+  "source_bindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "sha256": "18a255fd5809ad83f30edbc97985e1dc2eb31390af39377f67f9751a7b1b63e5",
+      "bytes": 204218
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/food/food_page.dart",
+      "sha256": "31716b56aa78e6854c1123777270dd8bc6d59df95bd58e8e610e265a204d382f",
+      "bytes": 49702
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_toolbar.dart",
+      "sha256": "12b56e6f69f4128f4401ee44e553dfe219d595902dd67531db4cd672dd96e381",
+      "bytes": 8535
+    }
+  ],
+  "analyze": {
+    "path": "/tmp/food-account-evidence/green/analyze.log",
+    "sha256": "31eab767dd300cc13bf7e365d55ec684a82ef2f4bce25fc059c3d366aa17e5b4",
+    "bytes": 96
+  },
+  "format": {
+    "path": "/tmp/food-account-evidence/green/format.log",
+    "sha256": "ebf8691cd9669b02dd9d748aaf543551b337b2beb44f2d128dc7ffbfa0318f03",
+    "bytes": 46
+  },
+  "screenshots_actual_pixels_viewed": [
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-dark-manage-users.png",
+      "sha256": "8110d849602ec3ee304f45bb21eb4936d0f2fb719e5682cc9af0a49d9ca8b5b5",
+      "bytes": 27334
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-dark-settings.png",
+      "sha256": "bc4e280807fb510c63b284d72d71e7f9224578b144b08f553429c67d2d297051",
+      "bytes": 70506
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-dirty-kept.png",
+      "sha256": "64a6e4cea517d6d208de3687fb8a89a10110ed3755e9b63dae62c801b36c4317",
+      "bytes": 47048
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-light-manage-users.png",
+      "sha256": "bf2fab5c9e8f92e5afce0e0798d74dafcbe2fbcaeab5f302d3574ae90fc40634",
+      "bytes": 44107
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-light-settings.png",
+      "sha256": "0ec8f841dfc1f9af67b1512688a53b1c3a53cc19b93e2c82e10cc3a28bbf3060",
+      "bytes": 53168
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-account-pending-blocked.png",
+      "sha256": "61092c0d49dded024a10c0a4da5184d74a60a4055672ed0bdab00e179aee7745",
+      "bytes": 27832
+    },
+    {
+      "path": "/tmp/food-account-evidence/green/screens/food-task-snackbar-crossover.png",
+      "sha256": "1e388af63377c85fb43b2fb163e81604ed7b5c9601c31ca0d0090e987bf9ef03",
+      "bytes": 22041
+    },
+    {
+      "path": "/tmp/food-account-evidence/red/screens/food-task-snackbar-crossover.png",
+      "sha256": "e3a3ec07b66df9f69845d83b17151f715ec97c6c4cff6b04dcf447015c8cb7c9",
+      "bytes": 24766
+    }
+  ],
+  "limitations": [
+    "Source is not frozen/signed candidate acceptance",
+    "Android exact-artifact native acceptance remains parent-owned"
+  ]
+}

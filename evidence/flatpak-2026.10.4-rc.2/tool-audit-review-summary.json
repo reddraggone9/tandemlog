@@ -1,0 +1,115 @@
+{
+  "packages": [
+    {
+      "file": "appstream_1.0.2-1build6_amd64.deb",
+      "sha256": "194ae7ce7955e7b33b6eb2cd79a97f7b43dfed20ad54d1a8fd0ea8ab6b057d97",
+      "size": 69354,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/appstream_1.0.2-1build6_amd64.deb"
+    },
+    {
+      "file": "appstream-compose_1.0.2-1build6_amd64.deb",
+      "sha256": "fa682ec80b7f87f5f5b01d01cb8763e83ab82d443fe990ab2e5652ce00f75559",
+      "size": 27656,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/universe/a/appstream/appstream-compose_1.0.2-1build6_amd64.deb"
+    },
+    {
+      "file": "libappstream5_1.0.2-1build6_amd64.deb",
+      "sha256": "2c5d097a0ec6e918f986028844fc840d773bcf84a5a685a901f438dd48dcfe17",
+      "size": 238266,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/libappstream5_1.0.2-1build6_amd64.deb"
+    },
+    {
+      "file": "libappstream-compose0_1.0.2-1build6_amd64.deb",
+      "sha256": "d2371055678295313fc6e9591b7ee90674cbdb62a252f2f53429738dd0327456",
+      "size": 84328,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/libappstream-compose0_1.0.2-1build6_amd64.deb"
+    },
+    {
+      "file": "appstream_1.0.2-1build6.dsc",
+      "sha256": "a3075059dfa51c9d9f2160bf4ae7c10570843103a2b228aa0f1a51eb107c7c54",
+      "size": 4406,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/appstream_1.0.2-1build6.dsc"
+    },
+    {
+      "file": "appstream_1.0.2.orig.tar.xz",
+      "sha256": "1a5148ca97dcbf5eb6e9c380278bb0d20938569292ea8652df1b3cac8bd2736b",
+      "size": 2629708,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/appstream_1.0.2.orig.tar.xz"
+    },
+    {
+      "file": "appstream_1.0.2-1build6.debian.tar.xz",
+      "sha256": "40fec513c801c5bcedb0072f9caf08f12e80c01ccc2bf949f6219a662782a327",
+      "size": 18956,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/a/appstream/appstream_1.0.2-1build6.debian.tar.xz"
+    },
+    {
+      "file": "libxmlb2_0.3.18-1_amd64.deb",
+      "sha256": "8f501eb2ace5d4432f34120448a16d121f8ac105d606988cf42eb4e4f9c548c7",
+      "size": 67690,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxmlb/libxmlb2_0.3.18-1_amd64.deb"
+    },
+    {
+      "file": "libstemmer0d_2.2.0-4build1_amd64.deb",
+      "sha256": "131d145e9b110df4b4b953b5ab7b95a6531fab86e6d4b461728a63860fe00d53",
+      "size": 160766,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/s/snowball/libstemmer0d_2.2.0-4build1_amd64.deb"
+    },
+    {
+      "file": "libxmlb_0.3.18-1.dsc",
+      "sha256": "2d1ec64370c0259e4b5a806a079d4f63027e6f8542e7db9a24f42b53fad2bc67",
+      "size": 2461,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxmlb/libxmlb_0.3.18-1.dsc"
+    },
+    {
+      "file": "libxmlb_0.3.18.orig.tar.gz",
+      "sha256": "3798be088653a939b8516900eb5bd9491eda8975c5b9886434c670fa79cc56aa",
+      "size": 131331,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxmlb/libxmlb_0.3.18.orig.tar.gz"
+    },
+    {
+      "file": "libxmlb_0.3.18-1.debian.tar.xz",
+      "sha256": "1d2d87e19bcfee23c9125a81e6b536dfe8baad5c1a41555e9b6854a652345ca1",
+      "size": 5428,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/libx/libxmlb/libxmlb_0.3.18-1.debian.tar.xz"
+    },
+    {
+      "file": "snowball_2.2.0-4build1.dsc",
+      "sha256": "8d400f42f24ef212cf2329a7f7400bcc786ccf83837e60072f68a4b6ecbc661f",
+      "size": 2354,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/s/snowball/snowball_2.2.0-4build1.dsc"
+    },
+    {
+      "file": "snowball_2.2.0.orig.tar.gz",
+      "sha256": "425cdb5fba13a01db59a1713780f0662e984204f402d3dae1525bda9e6d30f1a",
+      "size": 223846,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/s/snowball/snowball_2.2.0.orig.tar.gz"
+    },
+    {
+      "file": "snowball_2.2.0-4build1.debian.tar.xz",
+      "sha256": "95eedbf7c94c77f8804eadb76cded9fd8bebc330b8449119f2c110de9d45089a",
+      "size": 8820,
+      "url": "https://archive.ubuntu.com/ubuntu/pool/main/s/snowball/snowball_2.2.0-4build1.debian.tar.xz"
+    }
+  ],
+  "source_tar_hashes_match_official_dsc": true,
+  "binary_main_hashes_match_official_packages_index": true,
+  "compose_hash_matches_official_ubuntu_package_page": true,
+  "archive_signatures_verified_locally": false,
+  "installation": "not installed; payloads extracted in /tmp only",
+  "execution": "audited CLI validator and composer invoked from extracted binaries with extracted shared libraries; no maintainer scripts executed",
+  "runtime_app_changes": false,
+  "hooks": {
+    "appstream": "preinst/prerm conffile removal helper; postinst distro OS AppStream cache refresh and obsolete cache cleanup only on old-version upgrade; postrm purge removes distro AppStream cache; triggers refresh OS metadata",
+    "appstream-compose": "no maintainer scripts",
+    "libraries": "ldconfig triggers only"
+  },
+  "optional_recommendations": "ffmpeg/optipng not newly installed (--no-install-recommends); no screenshot/video media provided; local compose succeeds without these tools",
+  "native_payload_sha256": {
+    "usr/libexec/appstreamcli-compose": "f2edf1ab3711a297b2d2f54bea8f4c1bf0f2488e35d9ecfacac71d022704ef5b",
+    "usr/bin/appstreamcli": "91a4411bbe5cc01c939d64b912aa1764000e8f222b086657119b34edd328af52",
+    "usr/lib/x86_64-linux-gnu/libappstream-compose.so.1.0.2": "7beb86b0fb086abe5767e95afef1e484b1d07750e03684df554796fc7756c708",
+    "usr/lib/x86_64-linux-gnu/libappstream.so.1.0.2": "ab16794fa5a6a3e3ff1f22c44d8f9880d09f08e4e8d5f4ed010bfdb038742e06"
+  },
+  "additional_source_review": "Official libxmlb0.3.18 and Snowball2.2.0 upstream/Debian packaging sources fetched/verified against officialNobleSourcesindex; build rules and native library control/ldconfig hooks reviewed.",
+  "new_host_dependency_version_policy": "Four AppStream packages pinned1.0.2-1build6; libxmlb2 pinned0.3.18-1 and libstemmer0d pinned2.2.0-4build1; no allow-downgrades, optional new recommendations excluded; actual distro versions logged before CLI validation/composition"
+}

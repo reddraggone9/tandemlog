@@ -30,6 +30,8 @@ import 'header_selection_test.dart' show registerHeaderSelectionTests;
 import 'historical_checklist_recompletion_test.dart'
     show registerHistoricalChecklistRecompletionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
+import 'task_input_mode_workflow_test.dart' show registerTaskInputModeTests;
+import 'task_input_mode_retry_test.dart' show registerTaskInputModeRetryTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
 import 'data_integrity_test.dart' show registerDataIntegrityTests;
 import 'task_precision_test.dart' show registerTaskPrecisionTests;
@@ -61,6 +63,17 @@ import 'food_editor_keyboard_workflow_test.dart'
     show registerFoodEditorKeyboardTests;
 import 'food_view_reachability_workflow_test.dart'
     show registerFoodViewReachabilityTests;
+import 'food_stock_toolbar_workflow_test.dart'
+    show registerFoodStockToolbarTests;
+import 'food_expiration_color_workflow_test.dart'
+    show registerFoodExpirationColorTests;
+import 'food_required_expiration_workflow_test.dart'
+    show registerFoodRequiredExpirationTests;
+import 'food_group_action_geometry_workflow_test.dart'
+    show registerFoodGroupActionGeometryTests;
+import 'food_account_workflow_test.dart' show registerFoodAccountWorkflowTests;
+import 'food_undo_stack_workflow_test.dart'
+    show registerFoodUndoStackWorkflowTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -73,6 +86,42 @@ Map<String, dynamic> readProfileSettings(WidgetTester tester) =>
     LocalSettings.protectedValues(
       (tester.state(find.byType(TasksPage)) as dynamic).profileDatabase,
     );
+
+bool _inputModeActionEnabled(WidgetTester tester, Finder action) =>
+    action.evaluate().isNotEmpty &&
+    switch (tester.widget(action)) {
+      ButtonStyleButton(:final onPressed) => onPressed != null,
+      IconButton(:final onPressed) => onPressed != null,
+      _ => false,
+    };
+
+// Capture fixtures deliberately enter Add; ordinary readiness retains Search.
+Future<void> openCaptureForTest(WidgetTester tester) async {
+  final capture = find.widgetWithText(TextField, 'What needs doing?');
+  if (capture.evaluate().isNotEmpty) return;
+  final action = find.byKey(const ValueKey('open-capture'));
+  await waitForUi(tester, () => _inputModeActionEnabled(tester, action));
+  await tester.ensureVisible(action);
+  await tester.tap(action);
+  await waitForUi(tester, () => capture.evaluate().isNotEmpty);
+}
+
+Future<void> openSearchForTest(WidgetTester tester) async {
+  // Ctrl+F also exposes an already active Search hidden by compact selection.
+  final action = find.byWidgetPredicate(
+    (widget) =>
+        widget.key == const ValueKey('open-capture') ||
+        widget.key == const ValueKey('open-search'),
+  );
+  await waitForUi(tester, () => _inputModeActionEnabled(tester, action));
+  await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
+  await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
+  await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
+  await waitForUi(
+    tester,
+    () => find.byKey(const ValueKey('task-search')).evaluate().isNotEmpty,
+  );
+}
 
 Future<void> openFilters(WidgetTester tester) async {
   final button = find.byKey(const ValueKey('task-filter'));
@@ -203,6 +252,8 @@ void main() {
   registerHistoricalChecklistRecompletionTests();
   registerBulkFailureVisibilityTests();
   registerHeaderSearchTests();
+  registerTaskInputModeTests();
+  registerTaskInputModeRetryTests();
   registerInboxFlowTests();
   registerDataIntegrityTests();
   registerTaskPrecisionTests();
@@ -225,6 +276,12 @@ void main() {
   registerFoodExpirationDeprecationTests();
   registerFoodEditorKeyboardTests();
   registerFoodViewReachabilityTests();
+  registerFoodStockToolbarTests();
+  registerFoodExpirationColorTests();
+  registerFoodRequiredExpirationTests();
+  registerFoodGroupActionGeometryTests();
+  registerFoodAccountWorkflowTests();
+  registerFoodUndoStackWorkflowTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -630,7 +687,7 @@ void main() {
         expect(find.text(title), findsOneWidget);
       }
       expect(find.text('Other user review'), findsNothing);
-      await tester.tap(find.byKey(const ValueKey('open-search')));
+      await openSearchForTest(tester);
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const ValueKey('task-search')),
@@ -1016,7 +1073,7 @@ void main() {
   );
 
   testWidgets(
-    'workspace search preserves filters drafts and completion sections',
+    'workspace search preserves filters and completion sections while discarding Add drafts',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(1200, 850);
@@ -1070,7 +1127,7 @@ void main() {
       await tester.pumpAndSettle();
       await filterChoice(tester, 'Completed');
       final capture = find.widgetWithText(TextField, 'What needs doing?');
-      await tester.tap(find.byKey(const ValueKey('open-search')));
+      await openSearchForTest(tester);
       await tester.pumpAndSettle();
       final searchField = find.byKey(const ValueKey('task-search'));
       await tester.enterText(searchField, '  PLANNING  ');
@@ -1164,6 +1221,7 @@ void main() {
       expect(find.text('Planning finished'), findsOneWidget);
       expect(find.text('Planning available'), findsNothing);
       await filterChoice(tester, 'Open');
+      await openCaptureForTest(tester);
       await tester.enterText(capture, 'Unsubmitted household draft');
       await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
       await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
@@ -1171,9 +1229,10 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(searchField, 'planning');
       await tester.pumpAndSettle();
+      expect(capture, findsNothing);
       expect(
-        tester.widget<TextField>(capture).controller!.text,
-        'Unsubmitted household draft',
+        (tester.state(find.byType(TasksPage)) as dynamic).capture.text,
+        isEmpty,
       );
       await writer.createNativeFixtureTask(const Uuid().v4(), {
         'title': 'Planning incoming',
@@ -1255,6 +1314,7 @@ void main() {
       await tester.tap(find.widgetWithText(FilledButton, 'Continue'));
       await tester.pumpAndSettle();
       expect(find.text('No open tasks'), findsOneWidget);
+      await openCaptureForTest(tester);
       await tester.enterText(find.byType(TextField), 'Pick up groceries');
       await tester.tap(find.byTooltip('Add tasks'));
       await tester.pumpAndSettle();
@@ -1546,6 +1606,7 @@ void main() {
         tester,
         () => find.byTooltip('Add tasks').evaluate().isNotEmpty,
       );
+      await openCaptureForTest(tester);
       final input = find.widgetWithText(TextField, 'What needs doing?');
       final controller = tester.widget<TextField>(input).controller!;
       Future<void> composing(String text) async {
@@ -1686,6 +1747,7 @@ void main() {
       expect(await Directory('${profile.path}/shared-data').exists(), isFalse);
       expect(find.byTooltip('Refresh folder'), findsNothing);
       expect(find.textContaining('Saved on this device'), findsNothing);
+      await openCaptureForTest(tester);
       await tester.enterText(find.byType(TextField), 'Enter task');
       await tester.sendKeyEvent(LogicalKeyboardKey.enter);
       await tester.pumpAndSettle();
@@ -1972,6 +2034,7 @@ void main() {
     ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
+    await openCaptureForTest(tester);
     final field = find.byType(TextField);
     final controller = tester.widget<TextField>(field).controller!;
     final editable = tester.state<EditableTextState>(find.byType(EditableText));
@@ -2073,6 +2136,7 @@ void main() {
     ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
+    await openCaptureForTest(tester);
     final capture = find.widgetWithText(TextField, 'What needs doing?');
     const draft = TextEditingValue(
       text: 'Retain this draft',
@@ -2548,6 +2612,7 @@ void main() {
       final headerBefore = tester.getRect(
         find.byKey(const ValueKey('task-header')),
       );
+      await openCaptureForTest(tester);
       final captureBefore = tester.getRect(
         find.widgetWithText(TextField, 'What needs doing?'),
       );
@@ -2817,6 +2882,7 @@ void main() {
     await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
     await tester.pumpAndSettle();
     expect(find.textContaining('ahead of this device'), findsOneWidget);
+    await openCaptureForTest(tester);
     final field = find.widgetWithText(TextField, 'What needs doing?');
     expect(tester.widget<TextField>(field).enabled, isTrue);
     await tester.tap(field);
@@ -2869,6 +2935,7 @@ void main() {
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
       await tester.pumpAndSettle();
+      await openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Keep this draft');
       await filterChoice(tester, '#Home');
@@ -3200,6 +3267,7 @@ void main() {
     expect(schedule['scheduledDate'], '2026-10-02');
     expect(schedule['recurrence'], isNull);
     expect(find.text('Hidden future'), findsNothing);
+    await openCaptureForTest(tester);
     final capture = find.widgetWithText(TextField, 'What needs doing?');
     await tester.enterText(capture, 'Keep this draft');
     await filterChoice(tester, 'Show upcoming');
@@ -3428,6 +3496,7 @@ void main() {
         tester.getTopLeft(find.text('Due earlier')).dy,
         lessThan(tester.getTopLeft(find.text('Scheduled before due')).dy),
       );
+      await openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.tap(capture);
       await tester.enterText(capture, 'Unsubmitted draft');
@@ -3568,6 +3637,7 @@ void main() {
       expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
       await editTitle('Check household supplies', 'Plan household supplies');
       // Capture keeps its own text undo; Ctrl+Z must not consume task history.
+      await openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.tap(capture);
       await tester.enterText(capture, 'Unsent capture draft');
@@ -3873,6 +3943,7 @@ void main() {
       final before = await File(
         '${folder.path}/${writer.writer}.jsonl',
       ).readAsString();
+      await openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.tap(capture);
       await tester.enterText(capture, 'Keep this draft');
@@ -4147,15 +4218,10 @@ void main() {
       tester.view.physicalSize = const Size(1200, 800);
       tester.view.devicePixelRatio = 1;
       await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
-      await waitForUi(
-        tester,
-        () => find
-            .widgetWithText(TextField, 'What needs doing?')
-            .evaluate()
-            .isNotEmpty,
-      );
+      await openCaptureForTest(tester);
       var total = 0;
       for (final count in [1, 30, 100]) {
+        await openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.ensureVisible(capture);
         await tester.tap(capture);

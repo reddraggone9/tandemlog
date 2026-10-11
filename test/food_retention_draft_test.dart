@@ -16,6 +16,10 @@ void main() {
       find.widgetWithText(TextField, 'Food name'),
       'Review beans',
     );
+    await tester.enterText(
+      find.widgetWithText(TextField, 'Expiration'),
+      '2027-06-01',
+    );
     final query = find.byWidgetPredicate(
       (w) => w is TextField && w.decoration?.hintText == 'Retention reason',
     );

@@ -5,6 +5,7 @@ import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/presentation/tag_input.dart';
 import '../tool/food_preview.dart';
+import 'food_expiry_guidance_test.dart' show selectFoodView;
 
 const writer = '00000000-0000-4000-8000-000000000010';
 String id(int n) => '00000000-0000-4000-8000-${n.toString().padLeft(12, '0')}';
@@ -75,6 +76,10 @@ void main() {
       'Review beans',
     );
     await tester.enterText(
+      find.widgetWithText(TextField, 'Expiration'),
+      '2027-06-01',
+    );
+    await tester.enterText(
       find.byWidgetPredicate(
         (w) => w is TextField && w.decoration?.hintText == 'Retention reason',
       ),
@@ -111,7 +116,7 @@ void main() {
           .retention,
       'Review trip',
     );
-    await tester.tap(find.text('Retained'));
+    await selectFoodView(tester, FoodView.retained);
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(ExpansionTile, 'Review trip'));
     await tester.pumpAndSettle();
@@ -130,7 +135,7 @@ void main() {
     cancel();
     cancel();
     await tester.pumpAndSettle();
-    expect(find.text('Food inventory'), findsOneWidget);
+    expect(find.byType(FoodInventoryPage), findsOneWidget);
   });
   test('known removal before physical creation is rejected', () {
     final seed = add(2, [id(1)]);

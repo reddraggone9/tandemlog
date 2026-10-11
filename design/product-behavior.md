@@ -2,8 +2,17 @@
 
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
 Its scope is separate from tasks. Its first experimental prerelease uses production
-navigation and the shared profile DB. The next refinements require fresh native
-and release gates.
+navigation and the shared profile DB. The accepted next preview combines undated,
+unretained Inbox food at the top of Stock, keeps retained food exclusively
+Retained, and uses Filter for Stock/Retained/Deleted choices. Ordinary search
+matches all active food; Deleted remains an explicit separate scope. The account
+menu retains app-wide user switching and Settings. Expiration date text uses
+local-calendar red/orange/yellow urgency thresholds with theme-readable tones.
+[Accepted Food refinement](decisions/0017-food-stock-and-toolbar-refinements.md)
+requires fresh native and release gates. Manual Food Add/detail editing requires
+expiration using the shared Tasks date input/picker; undated records remain
+readable, Cancel retains them and unrelated fieldwise edits preserve untouched
+dates. Other descriptive fields remain optional without optional label suffixes.
 
 ## Accepted direction
 
@@ -73,7 +82,7 @@ The explicit capture control uses a plus icon: **+ Add** when the entry has room
 
 ## Completed tasks and capture grouping
 
-The Open/Completed choice in Filter defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and assignee filtering applies to both. Capture appears in Open; switching views preserves its draft. Toolbar Undo persists through snackbar expiry within the session; completed history remains independently accessible.
+The Open/Completed choice in Filter defaults to Open. Completed tasks use the same rows with checked checkboxes; unchecking reopens the task. Task title/notes remain editable in either view, and assignee filtering applies to both. The active Search/Add input remains available in Open and Completed; changing filter choices preserves the same active input buffer. Toolbar Undo persists through snackbar expiry within the session; completed history remains independently accessible.
 
 Reopening reverses the completion events this device has observed, using existing targeted undo records. A concurrent unseen completion survives; after sync the task can remain Completed and can be unchecked again. Retrying after partial failure reverses only remaining observed completions.
 
@@ -115,7 +124,7 @@ The single-task editor, bulk Add/Remove and Filter use the same tag control and 
 
 Dragging near the list viewport edge scrolls during the active gesture so off-screen peers are reachable. Eligibility remains restricted to equal effective date/time, including after scrolling, clock changes and incoming updates; invalid targets remain visible during the gesture. Stop scroll work when the drag ends/cancels, the app suspends or the workspace/view changes.
 
-The everyday header uses one Filter control rather than permanent filter rows. Its single scrollable surface contains assignee scope, Open/Completed, upcoming and ordinary tag options. A nondefault-state indicator and Reset make current scope discoverable without repeating infrastructure. Reset restores active-user/Open/upcoming-hidden/all-tags; it never changes the active identity. The task icon/title/count and Undo/Search/Filter/identity share a row when space permits. Narrow layouts omit the title, use icon Filter and an account avatar, and show the count only when it fits; enlarged text can use two rows. Counts reserve both Open/Completed measurements, so switching status does not move controls. Current identity belongs in the top bar, with Settings in that menu; onboarding and recovery retain Settings access when no identity is available. This consolidates existing behavior to preserve vertical task space, not to add a general filter framework.
+The everyday header uses one Filter control rather than permanent filter rows. Its single scrollable surface contains assignee scope, Open/Completed, upcoming and ordinary tag options. A nondefault-state indicator and Reset make current scope discoverable without repeating infrastructure. Reset restores active-user/Open/upcoming-hidden/all-tags; it never changes the active identity. The section icon/title/count and Add-or-Search/Undo/Filter/identity share a row when space permits; Search itself occupies the full-width input below it. Narrow layouts omit the title, use icon Filter and an account avatar, and show the count only when it fits; enlarged text can use two rows. Counts reserve both Open/Completed measurements, so switching status does not move controls. Current identity belongs in the top bar, with Settings in that menu; onboarding and recovery retain Settings access when no identity is available. This consolidates existing behavior to preserve vertical task space, not to add a general filter framework.
 
 Date and Someday group headings remain visible while scrolling through their tasks. Each heading pins below the fixed toolbar and any compact selection controls; the next group pushes it away. Search retains its Open/Completed section labels and existing date groups. A heading is one opaque, accessible header rather than a duplicated overlay. Drag edge scrolling remains available, but a pointer over a pinned heading cannot target a task obscured beneath it. This keeps date context visible without changing grouping, filters, ordering or stored task data.
 
@@ -133,7 +142,7 @@ List schedule metadata shows this occurrence's override when present, otherwise 
 
 Follow [decision 0004](decisions/0004-editing-bulk-actions-and-installers.md). Task rows open editing directly. Each row also has a separate menu immediately left of its far-right drag handle; right-click and Context Menu/Shift+F10 expose the same Add checklist and Delete task actions. These actions target that row even during multi-selection. Wide layouts show a side editor; smaller ones use a modal. Protect unsaved drafts across navigation and resizing; validate changes immediately. Delete is opposite Cancel/Save and requires confirmation. Occurrence controls appear for repeating tasks or retained override data.
 
-Rows use selection highlights, with a separate completion checkbox and drag handle. Ordinary clicks edit one task; Ctrl/Cmd-click or long-press enters explicit selection and subsequent plain clicks toggle membership. Initial explicit one-item selection retains bulk intent; a later two-to-one reduction returns single editing in the wide pane, while compact selection stays active until Edit or clear; zero closes/exits. Shift ranges use current visible order, including different date groups for editing. Wide selection automatically opens a pane with count/Clear; layouts without the side pane swap selected count, Clear Selection and Edit into the fixed task-entry area above the scroll viewport. Keep the capture buffer mounted, preserve its multiline draft and reserve the same area before/during selection at the current text scale. Completed reserves the compact action area without an invisible multiline draft. Selection entry/exit does not insert/remove a row, move the pressed task or cover rows/drag targets. Search and Filter remain available while selected. No permanent selection button or second checkbox column. Dirty selection/target changes require Save/Discard/Cancel, retaining the old frozen draft and selection if validation or saving fails. Completion and drag gestures never change selection.
+Rows use selection highlights, with a separate completion checkbox and drag handle. Ordinary clicks edit one task; Ctrl/Cmd-click or long-press enters explicit selection and subsequent plain clicks toggle membership. Initial explicit one-item selection retains bulk intent; a later two-to-one reduction returns single editing in the wide pane, while compact selection stays active until Edit or clear; zero closes/exits. Shift ranges use current visible order, including different date groups for editing. Wide selection automatically opens a pane with count/Clear; layouts without the side pane swap selected count, Clear Selection and Edit into the fixed task-entry area above the scroll viewport. Keep the active Search or Add buffer mounted and preserve it while the selection overlay temporarily hides that same mode. Reserve the same area before/during selection at the current text scale. A deliberate mode change first resolves the task editor, exits selection and clears the outgoing buffer; Ctrl+F in already active Search exposes it and retains its query. Selection entry/exit does not insert/remove a row, move the pressed task or cover rows/drag targets. Search and Filter remain available while selected. No permanent selection button or second checkbox column. Dirty selection/target changes require Save/Discard/Cancel, retaining the old frozen draft and selection if validation or saving fails. Completion and drag gestures never change selection.
 
 Bulk edits exclude title/notes, retain untouched mixed values and apply only explicit schedule/assignee/tag deltas. Validate the selection before writing and disclose any partial durable progress; preserve/reconcile remaining drafts for retry. Bulk drag retains selected tasks' global relative order and unaffected tasks' relative order within an exact date/time and completion bucket, even though edit selections may span groups. Absolute indexes can shift; filters never cause hidden-task move records. Confirmed deletion is a canonical tombstone, recoverable through session Undo while preserving history and independent recurrence successors; deletion belongs in the editor rather than a duplicate selection toolbar.
 
@@ -148,6 +157,15 @@ extreme keyboard viewport whose enlarged actions already consume the entire
 editor remains a constrained-layout limitation; see [runtime QA](runtime-qa.md).
 
 ## Session Undo and toolbar fit
+
+Food retains its own50-action session stack for Add, details/date/brand/retention,
+contents changes, Remove and Restore. Bulk commands occupy one action. Undo
+withdraws only original operation contributions and preserves newer or independent
+peer work, physical births and unrelated deletion tokens. Ordinary search, Filter,
+section and app-wide user changes preserve history; successful workspace change
+or restart clears it. Failed originals and inverses retain exact protected receipts
+until fully admitted. Task Undo callbacks remain unavailable in Food. See
+[Food Undo contract and downgrade recovery](decisions/0018-food-session-undo.md).
 
 Follow [decision 0005](decisions/0005-session-undo-and-toolbar.md): at most 50 confirmed session actions, repeated toolbar Undo, native text Undo in inputs, quiet editing/reorder and brief completion/deletion notices sharing the same action. Retract only the named operation, preserving independent later contributions. Checkbox Reopen retains recurring successors; true Undo of recurring completion retracts an untouched successor proposal while preserving independently changed or referenced successor work. Late-arriving work restores its protected successor deterministically. Restart/workspace change clears local action history. The checkmark remains in the task toolbar; the active name fits in full or uses an accessible initial avatar. No per-event actor attribution or audit UI is implemented.
 

@@ -483,7 +483,22 @@ class FoodStore {
         ...r.createdWith.values,
         ...r.operation.observedDeletes,
         ...r.operation.observedEdits,
+        if (r.operation.retracts != null) r.operation.retracts!,
       };
+      if (r.operation.action == FoodAction.undo) {
+        final basis = byId[r.operation.retracts];
+        if (basis != null &&
+            (basis.operation.action == FoodAction.undo ||
+                basis.writer != r.writer ||
+                basis.sequence >= r.sequence ||
+                basis.clock >= r.clock ||
+                basis.operation.targets.length != r.operation.targets.length ||
+                !r.operation.targets.every(targetSets[basis.id]!.contains))) {
+          throw const FormatException(
+            'Food Undo reference has wrong kind, writer, targets or clock.',
+          );
+        }
+      }
       for (final entry in r.createdWith.entries) {
         final basis = byId[entry.value];
         if (basis != null &&
@@ -631,6 +646,7 @@ class FoodStore {
           if (change.observePreviousEdit) batch.last.id,
         ],
         fields: change.fields,
+        retracts: change.retracts,
       );
       final basis = <String, String>{};
       if (change.action != FoodAction.add) {
@@ -1088,6 +1104,50 @@ class FoodStore {
     }
     await _commandLocked(changes);
   });
+
+  /// Retract exact admitted local contributions without writing old snapshots.
+  /// A failed append retains all prepared receipts in [lastPreparedRecords];
+  /// callers acknowledge only the exact receipts admitted after read-back.
+  Future<List<FoodRecord>> undoOperations(List<FoodRecord> originals) => _queue(
+    () async {
+      await _refresh();
+      if (originals.isEmpty ||
+          originals.map((r) => r.id).toSet().length != originals.length ||
+          originals.length > ProfileFoodIntents.maximumPendingRecords) {
+        throw const FormatException('Choose distinct saved Food operations.');
+      }
+      for (final original in originals) {
+        if (original.space != space ||
+            original.writer != writer ||
+            original.operation.action == FoodAction.undo ||
+            !isAdmitted(original)) {
+          throw const FormatException(
+            'Undo requires an exact admitted local Food operation.',
+          );
+        }
+      }
+      final retracted = {
+        for (final r in _records.where(
+          (r) =>
+              _readyIds.contains(r.id) && r.operation.action == FoodAction.undo,
+        ))
+          r.operation.retracts!,
+      };
+      final changes = [
+        for (final original in originals)
+          if (!retracted.contains(original.id))
+            _FoodChange(
+              FoodAction.undo,
+              original.operation.targets,
+              retracts: original.id,
+            ),
+      ];
+      // An exact retry after acknowledgement failure is already complete;
+      // do not append another inverse or replace the prepared receipt set.
+      if (changes.isEmpty) return <FoodRecord>[];
+      return _commandLocked(changes);
+    },
+  );
   static List<List<String>> _batches(List<String> ids) {
     if (ids.isEmpty || ids.toSet().length != ids.length || ids.length > 10000) {
       throw const FormatException('Invalid food selection.');
@@ -1110,6 +1170,7 @@ class _FoodChange {
     this.deletes = const [],
     this.edits = const [],
     this.observePreviousEdit = false,
+    this.retracts,
   });
   final FoodAction action;
   final List<String> targets;
@@ -1119,6 +1180,7 @@ class _FoodChange {
   final List<String>? fields;
   final List<String> deletes, edits;
   final bool observePreviousEdit;
+  final String? retracts;
 }
 
 class _FoodAdmission {

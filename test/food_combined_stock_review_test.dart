@@ -61,10 +61,7 @@ void main() {
       expect(dated, [_id(5), _id(2)]);
       expect(retained.toSet(), {_id(3), _id(4)});
       expect(stock.toSet().intersection(retained.toSet()), isEmpty);
-      expect(
-        [...stock, ...retained].toSet(),
-        state.active.map((e) => e.id).toSet(),
-      );
+      expect({...stock, ...retained}, state.active.map((e) => e.id).toSet());
       expect(stock.length + retained.length, state.active.length);
       expect(_ids(state.view(FoodView.deleted)).toSet(), {
         _id(6),

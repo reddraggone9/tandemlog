@@ -5,9 +5,24 @@ Tasks/Food dropdown, remove Food expiration-certainty UI/display distinctions,
 and fix short Inbox task bodies whose blank middle did not open the editor.
 RC1 executable source is3d671c20c6a1f6bdc2a2082f9a00e820c34b8050; this work starts
 from the final RC1 publication checkpoint12242ea7a36a4b6cab7db50fd2af5be444535f7d.
-Version2026.10.4-rc.2/build61 exceeds published/successful-candidate floor60.
+The initial three-change build61 candidate was cancelled after expanded scope
+approval. It is retained as an intermediate checkpoint and is ineligible for
+handoff or publication. The complete batch targets2026.10.4-rc.2/build62:
+default full-width Tasks Search/explicit Add with outgoing-value clearing and
+submitted-write protection; combined Food Stock/Inbox; local-calendar expiration
+text colors; Food Filter/account-menu parity and required manual expiration through the shared
+Tasks date control; a50-action selective Food Undo stack; stable expanded-group
+control geometry; and the Flatpak name/catalog and sandbox-private-profile fixes.
+ADR0016/0017/0018 and ADR0013 record the approved
+behavior. Implementation and independent source reviews are complete; final local checks
+pass956 unit tests and13 changed native flows. Hosted and Android gates remain
+pending. [Expanded source-qualified closure](expanded-build62/README.md) records
+the full approved scope and disclosed Undo compatibility boundary.
 
-## Implementation and independent review
+## Initial three-change checkpoint — source00594c1
+
+The following implementation/review paragraphs and existing early captures
+apply to the initial checkpoint. They do not attest the expanded build62 tree.
 
 The section menu occupies the existing identity slot, uses check-circle/fridge
 icons, retains48px targets and full accessible labels, and names/marks both menu
@@ -50,8 +65,9 @@ focused cases pass. The final full unit/analysis and changed native runs are
 recorded separately.
 
 Exact candidate installer hashes and full hosted gates must be recorded after
-the frozen build. Parent's actual Android build61 acceptance must cover section
+the frozen build. Parent's actual Android build62 acceptance must cover section
 navigation, large text/keyboard/editor protection, short Inbox body taps and
-date-only Food behavior. Published RC1 and stable2026.10.3 remain unchanged.
+date-only Food behavior, Task Search/Add, combined Stock/Inbox, expiration colors
+and Filter/account behavior. Published RC1 and stable2026.10.3 remain unchanged.
 No publication, stable promotion, import or user/trial data migration is part of
 this candidate preparation. Original recovery is closed; no files/tasks deleted.

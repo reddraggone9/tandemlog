@@ -108,6 +108,7 @@ void registerDataIntegrityTests() {
           tester,
           () => find.text('Reference task').evaluate().isNotEmpty,
         );
+        await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.enterText(capture, 'Captured reference');
         await tester.tap(find.byKey(const ValueKey('capture-add')));
@@ -116,7 +117,7 @@ void registerDataIntegrityTests() {
           () => find.text('Captured reference').evaluate().isNotEmpty,
         );
         await tester.enterText(capture, 'Unsubmitted capture draft');
-        await tester.tap(find.byKey(const ValueKey('open-search')));
+        await flows.openSearchForTest(tester);
         await tester.pumpAndSettle();
         await tester.enterText(
           find.byKey(const ValueKey('task-search')),
@@ -140,10 +141,8 @@ void registerDataIntegrityTests() {
         );
         await tester.tap(find.text('Done').last);
         await tester.pumpAndSettle();
-        expect(
-          tester.widget<TextField>(capture).controller!.text,
-          'Unsubmitted capture draft',
-        );
+        expect(capture, findsNothing);
+        expect(state.capture.text, isEmpty);
         expect(
           tester
               .widget<TextField>(find.byKey(const ValueKey('task-search')))

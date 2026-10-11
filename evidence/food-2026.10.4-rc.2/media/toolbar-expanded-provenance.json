@@ -1,0 +1,27 @@
+{
+  "change": "Food toolbar dropdown, combined Stock and Filter with local expiration color",
+  "platform": "Actual Linux GTK/Flutter; synthetic household; dark;1200x850;100% text",
+  "fixture": "Synthetic Rice;2 full;2026-10-15;same synthetic household",
+  "before": {
+    "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "path": "evidence/food-2026.10.4-rc.1/native/inbox-build60/screens/production-wide-stock.png",
+    "sha256": "0df9768a5b1afea37ea030c4260076d24c62030d3fbebc2b13a3d527bc970f2d"
+  },
+  "after": {
+    "path": "toolbar-expanded-after-raw.png",
+    "sha256": "66eeee5ab791722b2b52df594ecf1ea25102a2fe299810e3ae367d4966693008",
+    "application_main_sha256": "c457b18e879cb6d9d371767465232dfe313f17365dd242d3a2ac8a0b314f9b01",
+    "food_page_sha256": "f5e122270f12962f976acb63b7d7d64aba4cc8cfb2943f05eb4b5b211c183886",
+    "source": "Complete implementation inventory; final Git source bound by candidate receipt",
+    "test_log": "expanded-build62/demos/production-toolbar/native.log"
+  },
+  "transform": "Crop both raw app images at(0,0,1200,300); stack with separate centered Before/After label bands; no app pixels retouched/resized",
+  "output": {
+    "path": "toolbar-expanded-before-after.png",
+    "sha256": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1",
+    "dimensions": [
+      1200,
+      660
+    ]
+  }
+}

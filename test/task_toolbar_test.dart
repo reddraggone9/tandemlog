@@ -58,15 +58,23 @@ void main() {
                             tooltip: 'Undo',
                             icon: const Icon(Icons.undo),
                           ),
-                          search: () {},
-                          searchField: searching
-                              ? const TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Search all tasks',
-                                    border: InputBorder.none,
+                          inputModeAction: (compact) => compact
+                              ? IconButton(
+                                  tooltip: searching
+                                      ? 'Search tasks'
+                                      : 'Add tasks',
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    searching ? Icons.search : Icons.add,
                                   ),
                                 )
-                              : null,
+                              : OutlinedButton.icon(
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    searching ? Icons.search : Icons.add,
+                                  ),
+                                  label: Text(searching ? 'Search' : 'Add'),
+                                ),
                           identityMenu: (child) => PopupMenuButton<String>(
                             key: const ValueKey('identity-menu'),
                             tooltip: 'Active user: $name',
@@ -153,7 +161,8 @@ void main() {
                     onPressed: () {},
                     icon: const Icon(Icons.undo),
                   ),
-                  search: () {},
+                  inputModeAction: (compact) =>
+                      IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
                   filter: (compact) => IconButton(
                     key: const ValueKey('filter'),
                     onPressed: () {},

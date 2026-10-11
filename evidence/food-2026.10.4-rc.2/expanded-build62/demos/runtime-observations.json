@@ -1,0 +1,17 @@
+{
+  "platform": "Actual Linux GTK/Flutter",
+  "source": "application-source-inventory.json",
+  "display_version": "2026.10.4-rc.2+62",
+  "profile": "Disposable synthetic; no live synced data",
+  "observations": [
+    "Task Search/Add movie:13.6 seconds, visible native X pointer/click marker; final one-line Search label native assertions pass",
+    "Food Undo movie:24.2 seconds; visible native X pointer; Add,details,contents,Remove,Restore and repeated Undo exact fixture passes",
+    "Final affected aggregate:13 pass; wide,narrow,both themes,enlarged text; dates/Stock/group geometry/manual Save",
+    "Production Rice2 matching capture passes Save/restart/Restore; original RC1 Before retained"
+  ],
+  "qualifications": [
+    "Source native Linux test executable; not release APK or Windows GUI",
+    "Scoped widget fixtures may show DEBUG; release media uses production TandemlogApp",
+    "Android Show taps video/actual exact APK acceptance remains pending"
+  ]
+}

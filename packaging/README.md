@@ -19,20 +19,22 @@ command and application ID. A different bundle commit updates the installed app
 without removing its data. Reinstalling the identical deployed commit can report
 `already installed`; it is not an update and needs no forced reinstall. Uninstall with
 `flatpak uninstall --user com.reddraggone9.tandemlog`; do not delete your profile
-or canonical folder. The package asks for desktop rendering/IPC and the two
-specific native profile paths, with no network, whole-home or whole-host grant.
+or canonical folder. The package asks for desktop rendering/IPC with no network,
+whole-home, whole-host or static host-profile filesystem grant. AppStream
+metainfo and its composed catalog include the Tandemlog name and icon for app
+centers such as Bazaar; the bundle is not submitted to Flathub.
 
-The launcher preserves `~/.local/share/com.reddraggone9.tandemlog`; new desktop
-setup uses its `shared-data` canonical folder. Previously selected `data` folders
-remain selected, and no files are moved. After a settings reset, a populated old
-default is reopened if `shared-data` is absent or empty. Existing legacy `~/.local/share/tandemlog/settings.json`
-is honored if the ID directory lacks settings, including an empty ID directory
-created by Flatpak's permission grant. It never copies, migrates or rewrites
-canonical history. The app's private cache/settings remain at their existing
-native path; package uninstall does not own those files.
+The default private profile now follows Flatpak's `XDG_DATA_HOME`, normally
+`~/.var/app/com.reddraggone9.tandemlog/data/com.reddraggone9.tandemlog`.
+New setup creates a fresh installation writer there. The previous host profile
+is not discovered, copied or migrated. For this transition Lee chose to reset
+his Flatpak installation and reselect the existing synced folder himself.
+Updating this package does not reset or delete either old or new data. A saved
+selection in an existing sandbox-private profile remains selected. Native
+non-Flatpak profile behavior is unchanged.
 
-A custom sync folder outside the granted profile needs selection through the GTK
-portal, or an explicit folder-scoped grant if the chooser/provider does not support
+A sync folder outside the sandbox needs selection through the GTK portal, or
+an explicit folder-scoped grant if the chooser/provider does not support
 persistent directory access:
 
 ```sh
@@ -41,16 +43,13 @@ flatpak override --user --filesystem="/absolute/permanent/sync/folder" com.reddr
 
 Grant the existing permanent folder; do not relocate it or its Syncthing share.
 An inaccessible saved folder produces the app's visible error/recovery path.
-Custom native `XDG_DATA_HOME` can be preserved by granting its exact profile path
-and setting the host data root explicitly, since Flatpak replaces `XDG_DATA_HOME`:
-
-```sh
-flatpak override --user --filesystem="/custom/data/com.reddraggone9.tandemlog" --env=TANDEMLOG_HOST_DATA_HOME=/custom/data com.reddraggone9.tandemlog
-```
-
-Explicit `TANDEMLOG_PROFILE` is also supported; supply it via `flatpak override
---user --env=TANDEMLOG_PROFILE=/absolute/profile` and grant that exact directory.
-These overrides are optional only when using custom locations.
+Explicit `TANDEMLOG_PROFILE` remains supported for a deliberate custom private
+profile; supply it via `flatpak override --user
+--env=TANDEMLOG_PROFILE=/absolute/profile` and grant that exact directory.
+The obsolete `TANDEMLOG_HOST_DATA_HOME` discovery override is no longer used.
+Never copy the old profile into a new active installation: that would copy its
+writer identity. Keep any intentional old-profile override separate from the
+fresh default profile.
 
 ## Windows
 
@@ -101,10 +100,13 @@ updates back to the untouched public candidate. Its gate verifies distinct commi
 identities, equal baseline payload/permissions and restored candidate commit; every
 recorded launch uses the public candidate. The private baseline is excluded from
 release artifacts and involves no app recompile. This does not establish old-app-
-version compatibility or manual Windows interaction acceptance. Windows uses an isolated synthetic profile override. Linux seeds the actual
-native default profile/shared-data paths on the disposable hosted runner, then launches
-without an override or extra filesystem grant to verify the production wrapper
-and default-folder permissions. Seeding refuses an existing directory; no test
+version compatibility or manual Windows interaction acceptance. Windows uses an isolated synthetic profile override. Linux queries the installed sandbox
+`XDG_DATA_HOME`, seeds its private default profile/shared-data on the disposable
+hosted runner, then launches without a profile override or extra filesystem
+grant. It verifies the included composed catalog/name/icon and one permanent
+`local.sqlite` after the exact sandbox process has stopped. Recovery WAL files
+remain permitted after forced process termination; this is not a clean-close
+claim. The package metadata must contain no static host filesystem grant. Seeding refuses an existing directory; no test
 reinstalls or modifies real data.
 
 The cloud Linux workspace cannot run a Flatpak sandbox: `unshare -Ur true` fails

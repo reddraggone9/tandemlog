@@ -1,12 +1,12 @@
 # One app-wide local database
 
-Status: user-approved direction and temporary-file exception; database proof, shared TaskStore and integrated bootstrap/cleanup preparation independently reviewed. Application startup is wired in the combined storage/dependency candidate. Lee explicitly authorized this combined release. Exact Windows/Android acceptance, independent combined-source/artifact review and parent publication gates remain pending; no live-data operation is authorized.
+Status: published stable2026.10.3/build56, with completed bounded Windows/Android native acceptance and independent final source/artifact/publication review. [Release receipts](../../evidence/stable-2026.10.3/README.md) bind the accepted implementation. The Flatpak private-XDG correction below is newly user-approved for 2026.10.4-rc.2; its exact installed-package gates remain pending. No live-data operation is authorized.
 
 ## Context and approved direction
 
 Lee wants one permanent local-state DB across workspaces, with migrated legacy files removed after verified import. Downgrade support and permanent rollback copies are unnecessary. SQLite-managed recovery sidecars are explicitly accepted, including after a crash until recovery completes. Hourly workspace snapshots do not capture all installation identity, writer safety or pending intent state; Lee acknowledged that local-only recovery risk.
 
-Use the existing private installation/profile root. Explicit `TANDEMLOG_PROFILE` remains an isolated installation override, not a per-workspace DB. Native Linux and Flatpak must continue discovering the same selected root. The launcher must recognize the new DB before legacy settings disappear, and must not silently merge two populated roots with different installation identities.
+Use the existing private installation/profile root. Explicit `TANDEMLOG_PROFILE` remains an isolated installation override, not a per-workspace DB. Native Linux keeps its established path-provider discovery. For Flatpak, Lee subsequently approved the sandbox-private XDG default and explicitly declined automatic host-profile migration: he will reset that installation and reselect the synced folder. The launcher preserves a deliberately supplied `TANDEMLOG_PROFILE` but no longer chooses either populated host root. New sandbox setup creates a fresh writer rather than copying the old identity. Existing host files remain untouched. [Packaging guidance](../../packaging/README.md) records narrowly scoped custom-folder access.
 
 ## Isolated implementation boundary
 
@@ -26,7 +26,7 @@ Namespace projection versions are metadata, not the profile's global SQLite vers
 
 `LocalProfileMigration` runs before adapters exist. It imports, reads back, validates source-to-target completeness and plans cleanup while holding the legacy leases. Only then does its durable active marker commit. Imported pending intents have immutable digest obligations; confirmation writes a matching workspace/writer/sequence digest proof in the same ingestion transaction as guard acknowledgement and intent retirement. Original guard baselines remain monotonic fences. Missing authorities cannot be mistaken for confirmation or repaired as an empty installation.
 
-Cleanup releases legacy leases before unlinking their lock files. A validated exact-path/source-digest allowlist excludes unknown files, links, changed replacements, the app DB and canonical data. Each deletion commits `deleting`, rechecks source/target obligations, unlinks, confirms the parent directory barrier, then commits `deleted`. Restart resumes either side of unlink. Duplicate atomic replacements are accounted only when byte-exact; orphan/unconfirmed authorities stop activation. The old files are never reimported after activation. DB-backed preferences preserve the installation writer and unknown settings keys. Failed workspace switches restore store/importer, rows, checklist expansion and Undo; the app-wide owner closes after all handles drain. Linux launcher discovery recognizes both settings and the new DB, preserves an explicit override and stops when both supported roots contain state.
+Cleanup releases legacy leases before unlinking their lock files. A validated exact-path/source-digest allowlist excludes unknown files, links, changed replacements, the app DB and canonical data. Each deletion commits `deleting`, rechecks source/target obligations, unlinks, confirms the parent directory barrier, then commits `deleted`. Restart resumes either side of unlink. Duplicate atomic replacements are accounted only when byte-exact; orphan/unconfirmed authorities stop activation. The old files are never reimported after activation. DB-backed preferences preserve the installation writer and unknown settings keys. Failed workspace switches restore store/importer, rows, checklist expansion and Undo; the app-wide owner closes after all handles drain. The originally released Flatpak launcher recognized both host roots and stopped on competing state. The approved RC2 correction removes that automatic host discovery and both static grants, allowing production path-provider resolution under sandbox `XDG_DATA_HOME`; explicit overrides remain authoritative.
 
 ## Exclusion boundary and independent review
 
@@ -34,11 +34,11 @@ The old profile and session locks are keyed by private roots, not canonical work
 
 Old binaries do not honor the new DB lease after legacy lock/settings cleanup. Concurrent use of those old binaries and downgrade in place are unsupported, consistent with Lee's decision. Legacy leases must span migration before cleanup.
 
-## Remaining rollout gates
+## Completed rollout contract and new Flatpak gates
 
 - Retain frozen tests for all imported authorities, interrupted replay, exact outbox confirmation, target/source replacement, activation and cleanup cuts. Run the combined source checks before candidate acceptance; standalone fixture/maintenance clients still use their established cache path.
 - Prove Windows and Android native contention, process death and clean-close behavior on the exact pinned SQLite/VFS. Linux subprocess tests do not substitute for those gates. Exercise migration crashes, disk/flush failures, source replacement and cleanup interruption.
-- Independent architecture/correctness review and source-bound native handoff before broad rollout. The combined branch uses the parent's accepted dependency base; source push and candidate build are authorized. Publication requires exact combined Windows/Android acceptance, final independent review and the parent's fresh quota gate. No live user-data operation is authorized.
+- The original combined storage rollout passed the source-bound native, architecture/correctness and exact-artifact gates recorded in the linked stable release receipts. Retain that evidence and its limits. For the new Flatpak correction, require independent packaging review, actual installed sandbox-XDG resolution, one permanent DB after process shutdown, protected settings/canonical continuity across replacement/uninstall/reinstall, minimal permissions and the actual included AppStream catalog. No live user-data operation is authorized.
 
 ## Alternatives and revisit trigger
 

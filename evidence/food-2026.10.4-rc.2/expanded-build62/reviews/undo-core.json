@@ -1,0 +1,67 @@
+{
+  "review": "Independent Food Undo core architecture and compatibility gate",
+  "reviewer": "architecture_review",
+  "reviewedAtUtc": "2026-10-11T06:25:01.719731+00:00",
+  "worktree": "/tmp/tandemlog-food-date-readability",
+  "preCommitBase": "1d83f0fa75a10028726ff5678e647b2f279403f7",
+  "verdict": "ACCEPTED_CORE_ONLY",
+  "sourceMustFix": [],
+  "sourceAndTestSha256": {
+    "lib/food/inventory.dart": "fd9fd9b0d3b34f9b2e11a14048ef9f647a083164315bae12bbae6b34fa3af754",
+    "lib/food/food_record.dart": "64b8e7235292559e9583a7eb5bc6706c822eb9f39e56d7f58badc76f42658206",
+    "lib/food/food_store.dart": "56fff749e7f6416632c1c72b473541f7c8be972d360441513bab2f472116bfd4",
+    "test/food_operation_undo_test.dart": "2adeb5526b3983502c2352d41a68e80650caab8352a90750a4e7523dea377564",
+    "test/food_store_undo_test.dart": "da4356a67df0841cb13d25e96ec8b2e9f9e146bde18517b982fc8f48ba725fbb",
+    "test/food_undo_reader_compatibility_test.dart": "b70754d3bedfe0e03ce338bb6a0a4ddb5650777458b7fcc99cb5dc2d775e11a6"
+  },
+  "fixtureSha256": {
+    "test/fixtures/food-undo/mixed-v1-v2.foodlog": "e866b4f013010ebff810d7cce7d2ffa2c756b5c6d94444573574d3a0afcf32fe",
+    "test/fixtures/food-undo/released-build60/README.md": "de992c16065ec8ff7bf496faac5288082795f4857bc0042271198203b34df873",
+    "test/fixtures/food-undo/released-build60/domain/event.dart": "f889ddac0df435b3e37cea01d1d30549bb3595f9a305ca141bdf5c813fff9788",
+    "test/fixtures/food-undo/released-build60/domain/event_chain.dart": "640e7c151d51d47bb53479ca8e7607de4213445c895ac98cc4d3b0222d23795e",
+    "test/fixtures/food-undo/released-build60/food/food_import.dart": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305",
+    "test/fixtures/food-undo/released-build60/food/food_record.dart": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7",
+    "test/fixtures/food-undo/released-build60/food/food_store.dart": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81",
+    "test/fixtures/food-undo/released-build60/food/inventory.dart": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69",
+    "test/fixtures/food-undo/released-build60/provenance.json": "c12d3b896371cda21ca1d0874a82926245904c86b8ba67e40e2dee6b039bc389",
+    "test/fixtures/food-undo/released-build60/storage/local_profile_database.dart": "5e64fcacfbb431c045c2e6ced2235791c999001737a5a3fd7f5165feb02867b7",
+    "test/fixtures/food-undo/released-build60/storage/local_settings.dart": "3a5803a1897abd4eaf11eb23dcee866a98800a8865e6973f37aa2c6ccd0223fe",
+    "test/fixtures/food-undo/released-build60/storage/log_folder.dart": "2e91e7d0018b2cb43183eea4f54aaa1ec09b2db9aa117310cfa62da3b05a9d24",
+    "test/fixtures/food-undo/released-build60/storage/profile_food_intents.dart": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1",
+    "test/fixtures/food-undo/released-build60/storage/writer_guard.dart": "bd24f2ee99cd74843b121d4f193ae5bbcf5e7872665cebaee8109e76097f6175"
+  },
+  "findings": [
+    "Food v2 is closed Undo-only with exact retracts reference, a separate hash domain and no alternate encoding for existing actions. Current decoding/encoding preserves frozen v1 bytes/hash, writer derivation, clocks, IDs and envelopes.",
+    "Undo command accepts only distinct exact hash-admitted local original records, rejects Undo of Undo/foreign originals and writes ordinary bounded protected batches; SQL guard reservation and exact intent bytes are unchanged.",
+    "All original operation shape, references, creation bases and known cross-target/kind/causal errors validate before retracted contribution filtering. Unknown refs remain explicitly pending, including dependent Undo, and wrong late basis refuses refresh without projection/head admission.",
+    "Replay removes only selected contribution effects: original details fields, contents values and dominance edges, removal tokens or Restore effects. Concurrent or later independent work remains. Undo Add suppresses untouched seeds from active and Deleted without inventing removal tokens; surviving direct history protects only its own physical targets.",
+    "No new database/schema, task v3, transport, import, permanent recovery file or profile ownership change is introduced by these three core files.",
+    "Undo retry after canonical acknowledgement returns empty rather than appending duplicate inverse; failed before-bytes, complete-prefix and acknowledgement failures retain exact protected receipts for recovery and restart."
+  ],
+  "independentChecks": {
+    "executed": "Read-only exact source/test/log review plus Python SHA/provenance checks. No Dart/Flutter tests or builds run by reviewer.",
+    "releasedFixtureCommit": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "allFiveFrozenFoodFilesEqualReleasedGitObjects": true,
+    "frozenReaderLimit": "Actual released Food parser/projection/store/import/intents source; unrelated shared infrastructure is explicit current public export shims, not a complete old application binary.",
+    "independentlyRecomputedGoldenHashes": {
+      "v1": "6648ddb329d58e21703e9670df883866fae0865f2dfca6ffb07604d97cf97901",
+      "v2": "efe975f92b864edd636fb8d52ca4164d68f50045453a8e6c67c830dca7e3830c"
+    },
+    "goldenChainLinkMatches": true,
+    "authorFocused": "65/65 passed",
+    "authorExpanded": "72/72 passed including existing replay/resource gates",
+    "authorAnalysis": "No issues found, six items, 6.4 seconds",
+    "oldReaderBoundary": "Actual frozen old Food admission rejects remote canonical v2 as FoodHistoryFailure without advancing its heads. Same-profile unresolved protected v2 fails hard outside isolated history handling, leaves exact intent/canonical bytes intact, then current reader recovers exact suffix."
+  },
+  "supportingLogsSha256": {
+    "/tmp/food-undo-green-final.log": "cd49f1b3d4521ef17c5fac5c428778f8c925013c5d37279b2b9ffceff1361dbf",
+    "/tmp/food-undo-expanded-green.log": "4c764a5601040db84544d500230c8c66672c955c26b82aa008fefab3a702b232",
+    "/tmp/food-undo-analyze-final.log": "a0d6a1f6c3cdf2e6d1af5cae7244e162b25a1774ab8a8d79252742f620ab8ff7"
+  },
+  "remainingGates": [
+    "Root-owned Food v2 schema/compatibility documentation and correction of obsolete ADR0014 removal-only Undo wording before final milestone freeze.",
+    "Separate independent host session Undo stack, origin/receipt/prefix admission and UI lifecycle review; not covered here.",
+    "Affected actual native workflows and frozen complete RC2 candidate/artifact/Android acceptance; core unit logs do not establish native runtime acceptance.",
+    "No old-reader feature support claimed; peers lacking v2 remain Food-read-only for that history, while protected unresolved-v2 downgrade must remain a hard stop."
+  ]
+}

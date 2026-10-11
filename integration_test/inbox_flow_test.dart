@@ -119,6 +119,7 @@ void registerInboxFlowTests() {
         () => find.text('Dated reference').evaluate().isNotEmpty,
       );
       expect(find.text('Inbox'), findsNothing);
+      await flows.openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Raw reference');
       await tester.tap(find.byKey(const ValueKey('capture-add')));
@@ -221,6 +222,7 @@ void registerInboxFlowTests() {
           tester,
           () => find.text('Organized anchor').evaluate().isNotEmpty,
         );
+        await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.enterText(capture, 'New pending');
         folder.fault = 'prefix';

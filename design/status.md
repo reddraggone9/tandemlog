@@ -1,17 +1,28 @@
 # Current status — 2026-10-11
 
-## Next Food preview — build61 in preparation
+## Next Food preview — complete build62 batch ready for candidate gates
 
-Lee approved a responsive Tasks/Food dropdown in the existing toolbar identity,
-removing the duplicated full-width selector row. Food now displays just its
-expiration date; hidden legacy certainty values remain wire-compatible and no
-longer split display groups. A reproduced short-title Tasks Inbox hit-area bug
-is fixed by expanding the task body without covering its separate controls.
-Independent navigation, compatibility/security and task-row reviews approve the
-bounded changes. [RC2 evidence and pending native/candidate gates](../evidence/food-2026.10.4-rc.2/README.md).
-RC1/build60 remains published; stable2026.10.3 remains Latest. No replacement
-publication is authorized by a passing cloud-only check; parent actual Android
-acceptance is still required.
+The approved batch includes the existing-toolbar Tasks/Food dropdown, date-only
+Food interface and short-title Tasks Inbox hit-area fix, plus default full-width
+Task Search with an explicit Add toggle, combined Food Stock/Inbox, calendar-date
+expiration colors, Food Filter/account-menu parity, required manual expiration
+through the shared Tasks date input, a50-action selective Food Undo stack, stable
+expanded group-control geometry and the reviewed Flatpak catalog/private-profile
+fixes. Search/Add explicitly
+clears the outgoing value while preserving chosen Task filters; an already
+submitted uncertain capture blocks switching until its original write is resolved.
+Undated retained food stays exclusively Retained; search never duplicates active
+items or mixes them with Deleted. These choices are recorded in ADR0016/0017/0018
+and the Flatpak update to ADR0013. No private-profile reset or migration is run.
+
+The three-change build61 run was cancelled when the complete scope was approved;
+it is an intermediate checkpoint and cannot be handed off or published. Build62 implementation and independent source reviews are complete. The final
+local suite passes956 unit tests and13 affected native Linux flows; analysis
+and formatting are clean. Exact hosted and Android acceptance remain pending. [RC2 source-qualified evidence](../evidence/food-2026.10.4-rc.2/README.md)
+keeps earlier passes attributed to their original source. RC1/build60 remains
+published; stable2026.10.3 remains Latest. The complete signed candidate and
+parent's actual Android acceptance are pending. No publication, stable promotion,
+import or user/trial data migration is included in this preparation.
 
 ## Food inventory — durable source checkpoint
 

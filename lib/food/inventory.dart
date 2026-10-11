@@ -1,7 +1,7 @@
 import '../domain/event.dart' show isCanonicalId;
 import '../domain/event_chain.dart' show canonicalDataJson;
 
-enum FoodAction { add, edit, remove, restore }
+enum FoodAction { add, edit, remove, restore, undo }
 
 enum FoodView { inventory, inbox, retained, deleted }
 
@@ -178,6 +178,7 @@ class FoodOperation {
     this.details,
     this.contents,
     this.createdAt,
+    this.retracts,
     List<String> observedDeletes = const [],
     List<String> observedEdits = const [],
     List<String>? fields,
@@ -198,6 +199,7 @@ class FoodOperation {
   final FoodDetails? details;
   final Contents? contents;
   final String? createdAt;
+  final String? retracts;
   void validate() {
     _reference(id);
     if (order < 0 ||
@@ -209,6 +211,25 @@ class FoodOperation {
     }
     details?.validate();
     contents?.validate();
+    if (action == FoodAction.undo) {
+      if (retracts == null ||
+          details != null ||
+          contents != null ||
+          createdAt != null ||
+          fields.isNotEmpty ||
+          observedDeletes.isNotEmpty ||
+          observedEdits.isNotEmpty) {
+        _invalid('Undo payload');
+      }
+      _reference(retracts!);
+      final source = id.split(':'), target = retracts!.split(':');
+      if (source.first != target.first ||
+          int.parse(target.last) >= int.parse(source.last)) {
+        _invalid('Undo reference');
+      }
+    } else if (retracts != null) {
+      _invalid('unexpected Undo reference');
+    }
     if (fields.toSet().length != fields.length ||
         fields.any(
           (key) => !const {
@@ -267,19 +288,49 @@ class FoodOperation {
     }
   }
 
-  Map<String, dynamic> toJson() => {
-    'id': id,
-    'order': order.toString(),
-    'action': action.name,
-    'targets': targets,
-    'details': details?.toJson(),
-    'contents': contents?.toJson(),
-    'createdAt': createdAt,
-    'observedDeletes': observedDeletes,
-    'observedEdits': observedEdits,
-    'fields': fields,
-  };
+  Map<String, dynamic> toJson() => action == FoodAction.undo
+      ? {
+          'id': id,
+          'order': order.toString(),
+          'action': action.name,
+          'targets': targets,
+          'retracts': retracts,
+        }
+      : {
+          'id': id,
+          'order': order.toString(),
+          'action': action.name,
+          'targets': targets,
+          'details': details?.toJson(),
+          'contents': contents?.toJson(),
+          'createdAt': createdAt,
+          'observedDeletes': observedDeletes,
+          'observedEdits': observedEdits,
+          'fields': fields,
+        };
   factory FoodOperation.fromJson(Map<String, dynamic> j) {
+    if (j['action'] == FoodAction.undo.name) {
+      _keys(j, {'id', 'order', 'action', 'targets', 'retracts'});
+      try {
+        if (j['order'] is! String ||
+            !RegExp(r'^(0|[1-9][0-9]{0,18})$').hasMatch(j['order'])) {
+          _invalid('clock');
+        }
+        final value = FoodOperation(
+          id: _string(j['id']),
+          order: int.parse(j['order'] as String),
+          action: FoodAction.undo,
+          targets: _strings(j['targets']),
+          retracts: _string(j['retracts']),
+        );
+        value.validate();
+        return value;
+      } on FormatException {
+        rethrow;
+      } catch (_) {
+        _invalid('operation');
+      }
+    }
     _keys(j, {
       'id',
       'order',
@@ -429,7 +480,8 @@ class FoodState {
       return switch (view) {
         FoodView.inventory =>
           e.details.expiry != null && e.details.retention.isEmpty,
-        FoodView.inbox => e.details.expiry == null,
+        FoodView.inbox =>
+          e.details.expiry == null && e.details.retention.isEmpty,
         FoodView.retained =>
           e.details.retention.isNotEmpty &&
               (reasons.isEmpty || reasons.contains(e.details.retention)),
@@ -468,6 +520,16 @@ FoodState projectFood(Iterable<FoodOperation> delivery) {
   final targetSets = {for (final op in events) op.id: op.targets.toSet()};
   // Admission must not depend on whether a target's creation has arrived.
   for (final op in events) {
+    if (op.action == FoodAction.undo) {
+      final before = indexed[op.retracts];
+      if (before != null &&
+          (before.action == FoodAction.undo ||
+              before.order >= op.order ||
+              before.targets.length != op.targets.length ||
+              !op.targets.every(targetSets[before.id]!.contains))) {
+        _invalid('Undo target kind, containers or clock');
+      }
+    }
     for (final (refs, kind) in [
       (op.observedDeletes, FoodAction.remove),
       (op.observedEdits, FoodAction.edit),
@@ -487,11 +549,6 @@ FoodState projectFood(Iterable<FoodOperation> delivery) {
   final result = <FoodContainer>[];
   final creations = <String, FoodOperation>{};
   final histories = <String, List<FoodOperation>>{};
-  for (final op in events.where((e) => e.action != FoodAction.add)) {
-    for (final id in op.targets) {
-      histories.putIfAbsent(id, () => []).add(op);
-    }
-  }
   for (final op in events.where((e) => e.action == FoodAction.add)) {
     for (final id in op.targets) {
       final prior = creations[id];
@@ -505,8 +562,37 @@ FoodState projectFood(Iterable<FoodOperation> delivery) {
       creations.putIfAbsent(id, () => op);
     }
   }
+  // Validate the entire canonical history before excluding contributions.
+  // Retraction must never turn an invalid historical mutation into valid data.
+  for (final op in events.where((e) => e.action != FoodAction.add)) {
+    for (final id in op.targets) {
+      final seed = creations[id];
+      if (seed != null && op.order <= seed.order) {
+        _invalid('mutation before container creation');
+      }
+    }
+  }
+  final retracted = {
+    for (final op in events.where((e) => e.action == FoodAction.undo))
+      op.retracts!,
+  };
+  for (final op in events.where(
+    (e) =>
+        e.action != FoodAction.add &&
+        e.action != FoodAction.undo &&
+        !retracted.contains(e.id),
+  )) {
+    for (final id in op.targets) {
+      histories.putIfAbsent(id, () => []).add(op);
+    }
+  }
   for (final entry in creations.entries) {
     final id = entry.key, seed = entry.value;
+    // A withdrawn creation is absent from active and Deleted views, without a
+    // fabricated removal token. Keep its canonical seed in the dependency
+    // index: any independent, non-retracted mutation protects this identity,
+    // including work that arrives after the Undo.
+    if (retracted.contains(seed.id) && !histories.containsKey(id)) continue;
     var details = seed.details!,
         contents = seed.contents ?? const Contents.unknown(),
         deletedOrder = 0;

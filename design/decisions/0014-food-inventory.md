@@ -4,7 +4,10 @@ Status: Lee approved phased implementation on the stable2026.10.3 base and an
 early working preview before layout freeze. Product scope below is accepted;
 visual refinements remain provisional. The original slice is synthetic and
 process-local; the durable implementation now uses production navigation and the
-shared profile DB. This is unreleased work, with native and release gates open.
+shared profile DB. The durable preview shipped in2026.10.4-rc.1/build60;
+the refinements in[ADR0017](0017-food-stock-and-toolbar-refinements.md) and
+[Food session Undo](0018-food-session-undo.md) target the next preview, with
+their new native and exact release gates still open.
 
 ## Context and accepted scope
 
@@ -79,7 +82,7 @@ Both themes and200% text grow naturally without overlap. This is an automated
 native layout result, not Android/Windows or human-user acceptance. The [early preview evidence](../../evidence/food-inventory-first-slice/README.md)
 records actual narrow/wide Linux pixels and tested workflows before layout freeze.
 
-## Implemented storage boundary; unreleased
+## Implemented storage boundary; released in preview build60
 
 Food streams use `food-<writer>.foodlog`, outside the task reader's `*.jsonl`
 namespace. Closed version1 envelopes bind workspace, writer, sequence, exact
@@ -118,7 +121,9 @@ Editor Save awaits durable command admission and retains a failed draft. A
 prepared Save freezes its fields for exact retry; it cannot open another Add/Edit
 instead. Closing a changed draft requires a decision. Host callbacks retain their
 rendered workspace origin, and handle close drains admitted work even when the
-profile owner is poisoned. Session Undo applies only admitted local removal tokens.
+profile owner is poisoned. Build60 session Undo applied only admitted local
+removal tokens;[ADR0018](0018-food-session-undo.md) supersedes that limit with
+operation-scoped Undo and a50-action session stack for the next preview.
 Legacy expiration certainty may remain unknown (`null`); no source import occurs.
 
 Startup distinguishes isolated Food history/transport admission failures from

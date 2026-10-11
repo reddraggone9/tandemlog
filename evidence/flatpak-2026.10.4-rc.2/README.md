@@ -1,0 +1,11 @@
+# Approved Flatpak RC2 packaging corrections
+
+Tests first: the new launcher tests failed on host profile selection, and metadata/compose tests failed on the absent metainfo/catalog before implementation. The completed local gate passes twelve focused tests, five existing installer regression tests and shell syntax checks. Official Ubuntu AppStream 1.0.2-1build6 payloads were extracted without installation; actual validation and composition pass against the shipped metadata, desktop file and icon. The local composed catalog/icons are retained here as tooling evidence, not an application bundle or Bazaar screenshot.
+
+`implementation-verification.json` binds source hashes, actual observations and pending gates. `tool-audit-manifest.json` records official source/binary URLs, sizes and SHA256; `tool-control-hooks.json` records exact package dependencies/install hooks. No maintainer scripts were executed locally. CI installs the four pinned AppStream packages and two audited native library dependencies using normal authenticated apt, without new optional ffmpeg/optipng recommendations.
+
+The complete candidate must still prove its actual exported/installed catalog, matching human-readable name/icons, no static host-profile grants, actual sandbox XDG default and one permanent DB after the captured sandbox stops. Existing package replacement/uninstall/reinstall, settings/canonical continuity and exact-instance cleanup gates remain required. Recovery WAL after a force-stop is allowed; these packaging checks do not claim orderly close or physical crash guarantees.
+
+Lee chose to reset his one installation and reselect his existing synced folder himself. Packaging does not delete/reset/migrate/copy any old data or duplicate the old writer identity. The native loose-binary path-provider behavior and explicit custom profile override remain unchanged.
+
+Independent exact-source review ACCEPTED the bounded changes with no must-fix at the frozen file hashes. It independently reran twelve focused tests, shell checks, the actual audited validator/composer, catalog/icon verification and package/source/control hashes. Its unchanged receipt and supporting logs are retained under `independent-review/`. This acceptance leaves the actual combined candidate and installed/target gates above pending.

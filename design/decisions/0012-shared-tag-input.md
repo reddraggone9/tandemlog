@@ -1,8 +1,10 @@
 # Shared tag input
 
 Status: Lee approved shared B-style implementation on 2026-10-08 at13:01:08UTC.
-Implementation, independent review and native acceptance are in progress on
-`feature/shared-tag-input`, isolated from the frozen checklist acceptance source.
+Implementation, independent review and native acceptance completed before
+stable2026.10.2/build53. [The stable receipt](../../evidence/stable-2026.10.2/README.md)
+records the accepted shared control and publication; the earlier isolated
+implementation checkpoints below remain historical evidence.
 
 ## Context and choice
 

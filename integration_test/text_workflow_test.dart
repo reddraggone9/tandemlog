@@ -56,6 +56,7 @@ void registerTextWorkflowTests() {
           tester,
           () => find.text('Legacy reference').evaluate().isNotEmpty,
         );
+        await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'One task per line');
         await tester.enterText(capture, 'Shared draft');
         await tester.tap(find.byKey(const ValueKey('capture-add')));

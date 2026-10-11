@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/log_folder.dart';
@@ -18,7 +17,7 @@ void registerHeaderSearchTests() {
     (width: 320.0, scale: 2.0, theme: 'light'),
   ]) {
     testWidgets(
-      'Search keeps Undo and text alignment ${variant.width} x${variant.scale}',
+      'Search and Add keep toolbar geometry ${variant.width} x${variant.scale}',
       (tester) async {
         final root = await Directory.systemTemp.createTemp('header-search-');
         final folder = await Directory('${root.path}/shared').create();
@@ -60,59 +59,58 @@ void registerHeaderSearchTests() {
             tester,
             () => find.text('Reference 0').evaluate().isNotEmpty,
           );
+          final input = find.byKey(const ValueKey('task-search'));
+          expect(input, findsOneWidget);
+          expect(tester.widget<TextField>(input).focusNode!.hasFocus, isFalse);
+          final toolbar = find.byKey(const ValueKey('task-header'));
+          final headerBefore = tester.getRect(toolbar);
+          final undo = find.byKey(const ValueKey('undo-task-action'));
+          final undoBefore = tester.getRect(undo);
+          final entry = tester.getRect(
+            find.byKey(const ValueKey('task-entry-area')),
+          );
+          final inputRect = tester.getRect(input);
+          expect(inputRect.width, closeTo(entry.width - 32, 1));
+          expect(inputRect.top, greaterThanOrEqualTo(headerBefore.bottom));
+          final action = find.byKey(const ValueKey('open-capture'));
+          expect(action.hitTestable(), findsOneWidget);
+          expect(tester.getSize(action).width, greaterThanOrEqualTo(48));
+          expect(tester.getSize(action).height, greaterThanOrEqualTo(48));
+          final canonical = <String, List<int>>{
+            await for (final entry in folder.list())
+              entry.path: await File(entry.path).readAsBytes(),
+          };
+          await tester.enterText(input, 'Reference');
+          await tester.pumpAndSettle();
+          await flows.openCaptureForTest(tester);
           final capture = find.widgetWithText(TextField, 'What needs doing?');
+          expect(input, findsNothing);
+          expect(tester.getRect(toolbar), headerBefore);
+          expect(tester.getRect(undo), undoBefore);
           final add = find.byKey(const ValueKey('capture-add'));
           expect(
             tester.widget(add),
             variant.width == 1200 ? isA<TextButton>() : isA<IconButton>(),
           );
           expect(find.byIcon(Icons.arrow_upward), findsNothing);
-          expect(find.byTooltip('Add tasks'), findsOneWidget);
-          await tester.enterText(capture, 'Retained capture draft');
+          await tester.enterText(capture, 'Discarded capture draft');
           final controller = tester.widget<TextField>(capture).controller!;
-          controller.selection = const TextSelection.collapsed(offset: 8);
-          final draft = controller.value;
-          final undo = find.byKey(const ValueKey('undo-task-action'));
-          final undoBefore = tester.getRect(undo);
-          final count = find.text('4 open');
-          double baseline(Finder finder) {
-            final box = tester.renderObject<RenderBox>(finder);
-            return box.localToGlobal(Offset.zero).dy +
-                box.getDryBaseline(box.constraints, TextBaseline.alphabetic)!;
-          }
-
-          final countBaseline = count.evaluate().isEmpty
-              ? null
-              : baseline(count);
-          final canonical = <String, List<int>>{
-            await for (final entry in folder.list())
-              entry.path: await File(entry.path).readAsBytes(),
-          };
-          await tester.sendKeyDownEvent(LogicalKeyboardKey.controlLeft);
-          await tester.sendKeyEvent(LogicalKeyboardKey.keyF);
-          await tester.sendKeyUpEvent(LogicalKeyboardKey.controlLeft);
-          await tester.pumpAndSettle();
-          expect(tester.getRect(undo), undoBefore);
-          final input = find.byKey(const ValueKey('task-search'));
+          await flows.openSearchForTest(tester);
+          expect(controller.text, isEmpty);
+          expect(capture, findsNothing);
+          expect(tester.widget<TextField>(input).controller!.text, isEmpty);
           expect(tester.widget<TextField>(input).focusNode!.hasFocus, isTrue);
-          if (countBaseline != null && variant.width == 1200) {
-            expect(
-              baseline(
-                find.descendant(of: input, matching: find.byType(EditableText)),
-              ),
-              closeTo(countBaseline, .5),
-            );
-          }
+          expect(tester.getRect(toolbar), headerBefore);
+          expect(tester.getRect(undo), undoBefore);
           await tester.enterText(input, 'Reference');
           await tester.pumpAndSettle();
-          expect(tester.getRect(undo), undoBefore);
-          expect(controller.value, draft);
           await tester.tap(find.byTooltip('Clear search'));
           await tester.pumpAndSettle();
+          expect(tester.getRect(toolbar), headerBefore);
           expect(tester.getRect(undo), undoBefore);
-          expect(controller.value, draft);
+          expect(tester.widget<TextField>(input).controller!.text, isEmpty);
           expect(
-            find.byKey(const ValueKey('open-search')).hitTestable(),
+            find.byKey(const ValueKey('open-capture')).hitTestable(),
             findsOneWidget,
           );
           expect(tester.takeException(), isNull);

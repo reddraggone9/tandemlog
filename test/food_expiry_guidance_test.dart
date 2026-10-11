@@ -5,26 +5,75 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
 import '../tool/food_preview.dart';
 
+// Choose a view through the same visible Filter menu as the application.
+// Inbox is a Stock group, so tests targeting undated rows choose Stock.
+Future<void> selectFoodView(
+  WidgetTester tester,
+  FoodView view, {
+  Future<void> Function(Finder)? input,
+}) async {
+  Future<void> tap(Finder target) async {
+    expect(target.hitTestable(), findsOneWidget);
+    if (input == null) {
+      await tester.tap(target);
+    } else {
+      await input(target);
+    }
+    await tester.pumpAndSettle();
+  }
+
+  await tap(find.byKey(const ValueKey('food-filter')));
+  final label = switch (view) {
+    FoodView.inventory || FoodView.inbox => 'Stock',
+    FoodView.retained => 'Retained',
+    FoodView.deleted => 'Deleted',
+  };
+  await tap(find.widgetWithText(PopupMenuItem<FoodView>, label));
+}
+
+Widget foodFixtureIdentityMenu(Widget? child) => PopupMenuButton<String>(
+  key: const ValueKey('identity-menu'),
+  tooltip: 'Active user: Synthetic household',
+  onSelected: (_) {},
+  itemBuilder: (_) => const [
+    CheckedPopupMenuItem(
+      value: 'synthetic',
+      checked: true,
+      child: Text('Synthetic household'),
+    ),
+    PopupMenuItem(value: 'new', child: Text('Manage users')),
+    PopupMenuDivider(),
+    PopupMenuItem(value: 'settings', child: Text('Settings')),
+  ],
+  child: child,
+);
+
 void expectUntruncatedGuidance(WidgetTester tester) {
-  final dialog = find.byType(AlertDialog);
-  for (final fragment in ['YYYY-MM-DD', 'Inbox']) {
-    final text = find.descendant(
-      of: dialog,
-      matching: find.byWidgetPredicate(
-        (widget) =>
-            widget is Text && (widget.data?.contains(fragment) ?? false),
-      ),
-    );
-    expect(text, findsOneWidget);
-    final paragraph = tester.renderObject<RenderParagraph>(
-      find.descendant(of: text, matching: find.byType(RichText)),
-    );
+  final field = find.widgetWithText(TextField, 'Expiration');
+  final input = tester.widget<TextField>(field);
+  expect(input.decoration!.hintText, 'YYYY-MM-DD');
+  final calendar = find.byTooltip('Choose Expiration');
+  expect(calendar, findsOneWidget);
+  expect(tester.getSize(calendar).height, greaterThanOrEqualTo(48));
+  expect(tester.getSize(calendar).width, greaterThanOrEqualTo(48));
+  final editable = tester.widget<EditableText>(
+    find.descendant(of: field, matching: find.byType(EditableText)),
+  );
+  if (input.controller!.text.isEmpty && editable.focusNode.hasFocus) {
+    final hint = find.text('YYYY-MM-DD');
+    expect(hint, findsOneWidget);
+    final rich = find.descendant(of: hint, matching: find.byType(RichText));
+    final paragraph = tester.renderObject<RenderParagraph>(rich);
+    expect(paragraph.didExceedMaxLines, isFalse);
     expect(
-      paragraph.didExceedMaxLines,
-      isFalse,
-      reason: '$fragment must remain readable without reducing text size',
+      paragraph.getBoxesForSelection(
+        const TextSelection(baseOffset: 0, extentOffset: 10),
+      ),
+      isNotEmpty,
+      reason: 'The focused blank date must render its format hint',
     );
   }
 }
@@ -118,6 +167,19 @@ Future<void> verifyExpiryGuidanceWorkflow(
         .hasFocus,
     isTrue,
   );
+  expectUntruncatedGuidance(tester);
+  await tap(find.widgetWithText(FilledButton, 'Add'));
+  await tester.pumpAndSettle();
+  expect(find.text('Expiration is required.'), findsOneWidget);
+  expect(
+    tester
+        .widget<FoodInventoryPage>(find.byType(FoodInventoryPage))
+        .state
+        .active,
+    isEmpty,
+    reason: 'A blank manual Add cannot write an undated container',
+  );
+  await capture?.call('$name-required-date');
   await type(expiry, '2027-02-30');
   await Scrollable.ensureVisible(tester.element(expiry), alignment: 0.15);
   await tester.pumpAndSettle();
@@ -150,6 +212,7 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await tester.pumpAndSettle();
   FoodInventoryPage page() => tester.widget(find.byType(FoodInventoryPage));
   expect(page().state.active.single.details.expiry, '2027-06-01');
+  final savedId = page().state.active.single.id;
   await tap(find.byTooltip('Inspect Test beans containers'));
   await tester.pumpAndSettle();
   await tap(find.byTooltip('Actions for Test beans'));
@@ -173,11 +236,18 @@ Future<void> verifyExpiryGuidanceWorkflow(
   await type(expiry, '');
   await tap(find.widgetWithText(FilledButton, 'Save'));
   await tester.pumpAndSettle();
-  expect(page().state.active.single.details.expiry, isNull);
-  await tap(find.text('Inbox'));
+  expect(find.text('Expiration is required.'), findsOneWidget);
+  expect(page().state.active.single.details.expiry, '2027-06-01');
+  expect(page().state.active.single.id, savedId);
+  expect(tester.widget<TextField>(expiry).controller!.text, isEmpty);
+  await capture?.call('$name-blank-edit-rejected');
+  await type(expiry, '2027-07-09');
+  await tap(find.widgetWithText(FilledButton, 'Save'));
   await tester.pumpAndSettle();
+  expect(page().state.active.single.details.expiry, '2027-07-09');
+  expect(page().state.active.single.id, savedId);
   expect(find.text('Test beans'), findsOneWidget);
-  await capture?.call('$name-blank-saved-inbox');
+  await capture?.call('$name-valid-edit-saved');
   expect(tester.takeException(), isNull);
 }
 

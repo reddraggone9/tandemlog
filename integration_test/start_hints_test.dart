@@ -100,6 +100,7 @@ void registerStartHintTests() {
       await tester.pumpAndSettle();
       expect(find.text('Later today'), findsNothing);
       expect(details('Past start'), '');
+      await flows.openCaptureForTest(tester);
       final capture = find.widgetWithText(TextField, 'What needs doing?');
       await tester.enterText(capture, 'Preserved hint-check draft');
       await flows.filterChoice(tester, 'Show upcoming');
@@ -136,7 +137,7 @@ void registerStartHintTests() {
       await tester.pumpAndSettle();
       await flows.filterChoice(tester, 'Show upcoming');
       expect(find.text('Later date'), findsNothing);
-      await tester.tap(find.byKey(const ValueKey('open-search')));
+      await flows.openSearchForTest(tester);
       await tester.pumpAndSettle();
       await tester.enterText(
         find.byKey(const ValueKey('task-search')),

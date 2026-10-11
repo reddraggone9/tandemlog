@@ -1,0 +1,68 @@
+{
+  "reviewed_at_utc": "2026-10-11T06:25:39.444770+00:00",
+  "verdict": "ACCEPT_BOUNDED_FLATPAK_SOURCE_PENDING_EXACT_HOSTED_PACKAGE_GATES",
+  "source_state": "Uncommitted authored Flatpak diff; review bound to exact file SHA256 below, not a final candidate commit",
+  "base_commit": "1d83f0fa75a10028726ff5678e647b2f279403f7",
+  "source_files": {
+    ".github/workflows/validate.yml": "40f1773e68d19c600741ef0887282a3f1c36adede2dde1d034571c1644d3f057",
+    "packaging/README.md": "cc7bb4b6356ce910342e6a7e2b2569b529284497be99aa9959f65dbfc4c81d58",
+    "packaging/linux/tandemlog": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26",
+    "packaging/linux/build-flatpak.sh": "2f2e6eaf631e7982327b0251af7e530e88a66d73498f96bcdbf7a47020b04821",
+    "packaging/linux/install-smoke.sh": "8e3a69db3316f32d8499f2c683da91f94643cfaabbdc0f021dd69e9481a83de2",
+    "packaging/linux/verify_flatpak.py": "5e20f1f346513fd30d321b7dbefa67c981d75471d432f004aca9f851da9f0d72",
+    "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml": "9e85065d20ec58244cc62de49731848293349643077ef8b3a9e6b5e01f2fa25e",
+    "tool/test_linux_profile_discovery.py": "b60e26fe1153d24040d02a83ef86d146bb3322111c13ebb92270f251ace7e618",
+    "tool/test_linux_flatpak_metadata.py": "22f628cd3977df576e418d04fc85078aa4fe973f7b85005b8b66f499c292f695",
+    "design/decisions/0013-app-wide-local-database.md": "ef289f76cc005d8dd3364450798cc2d926be01c8b9914dd98b8941b8f8db98cd",
+    "design/recovery.md": "14a0662b9b4e0d0741e2ba6943dd6aa977adb95f738f1a631f589b7c525434e1",
+    "design/dependencies.md": "68368b0e5809e3d938aa2c44130079fb0ec296434e3f4260635f638ba9e6d5d2"
+  },
+  "review_scope": [
+    "Shipped launcher private sandbox XDG default and authoritative explicit TANDEMLOG_PROFILE; no automatic host profile discovery/copy/migration/deletion",
+    "Matching CC0 metainfo/desktop/app ID and native icon; validate/compose before export; exact APP.xml.gz and included 64px/128px bundle icons",
+    "No static filesystem/network/unfiltered-session-bus grants; installed actual sandbox XDG query without profile override",
+    "Four original installed lifecycle phases and canonical/protected-settings continuity retained; exact sandbox instance stopped before DB reads; one permanent local.sqlite asserted; forced-stop recovery WAL allowed",
+    "Exact six audited pinned Ubuntu packaging tool/library package versions, original controls/hooks, source descriptor hashes and no-new-recommends workflow step",
+    "Updated packaging/recovery/ADR/dependency guidance accurately separates published one-DB implementation, approved Flatpak correction, source proofs and pending runtime gates"
+  ],
+  "independent_checks": {
+    "source_hashes_before_after": "All12 unchanged",
+    "focused_tests_passed": 12,
+    "shell_syntax": "PASS",
+    "actual_extracted_AppStream_version": "1.0.2",
+    "actual_metainfo_validation": "PASS --no-net",
+    "actual_composition": "PASS --no-net direct audited composer delegate, no installation/hooks",
+    "actual_catalog": "PASS name Tandemlog, matching app ID, included 48/64/128 icons and scaled64/128 variants",
+    "icon_visual_inspection": "128px actual produced PNG inspected; existing green check icon preserved",
+    "binary_and_source_manifest_bytes": "All15 original files match recorded size/SHA256; source tar archives match official descriptor entries",
+    "control_and_install_hooks": "All six exact package control/script records equal extracted originals; refresh/purge host cache operations reviewed",
+    "archive_signature_qualification": "Local archive signatures not verified; no signature-verification claim. CI normal authenticated apt remains required."
+  },
+  "finding_resolved": "Initial unpinned newly audited libxmlb2/libstemmer closure corrected to exact version pins before CI execution; exact bundle catalog/icons requirement tightened",
+  "must_fix": [],
+  "remaining_gates": [
+    "Frozen combined-source full CI including actual pinned package installs, validation/composition and complete bundle export",
+    "Original actual Flatpak artifact byte/source/inventory review",
+    "Hosted installed actual catalog/name/icon, no host grants, sandbox XDG resolution, one permanent DB after exact instance stops and full replacement/uninstall/reinstall continuity",
+    "Actual Bazaar display/target user acceptance where required; local catalog/icon inspection does not claim Bazaar UI",
+    "Normal combined signed-candidate and exact Android native/publication gates"
+  ],
+  "limits": [
+    "No Flatpak install/export/runtime or Bazaar execution by reviewer; local cloud lacks Flatpak sandbox support",
+    "No native target-runtime acceptance or publication authorization",
+    "No app source changes, live synced/user data operations, profile reset/copy/migration/deletion, old task/file deletion, main push or dependency installation by reviewer",
+    "Existing packaging smoke is reviewed and unchanged; forced termination is not orderly close or physical crash guarantee",
+    "Other host GTK/render/crypto libraries are inherited OS/Flatpak environment, not app/native/runtime updates; exact hosted resolved tool versions must remain visible"
+  ],
+  "supporting_files_sha256": {
+    "source-hashes-after.json": "e5410fa56d3c54ee31c5f9d705a6a26545ffc3bd1921b2ab7a957aba17ef898e",
+    "independent-focused-tests.log": "8a43a808e702a90fc1938c500fe4e345986a51d7624d5c9ad1f668a73563450d",
+    "independent-catalog.json": "5b2b0b37859bf585941802021000a13475d4ee073b60f07f30385a89fdcaa772",
+    "independent-composition.log": "fad628bec48f19d008fba90e1ce271b8026856b356e0f40b891e9106b96c797b",
+    "independent-validation.log": "6c0565d7c39e8bb933da619c3865c9259c4c92c9d6642b313aadd664515fa24b",
+    "independent-tool-version.log": "89fda1d94ed736d470c23094f05ec9df963ac6a4f53f9905b2bdd4f7ad8279c3",
+    "source-hashes-before.json": "e5410fa56d3c54ee31c5f9d705a6a26545ffc3bd1921b2ab7a957aba17ef898e"
+  },
+  "primary_reference": "https://docs.flatpak.org/en/latest/conventions.html",
+  "publication_ready": false
+}

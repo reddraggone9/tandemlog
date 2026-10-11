@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/food/food_page.dart';
+import 'package:tandemlog/food/inventory.dart';
+import '../test/food_expiry_guidance_test.dart' show selectFoodView;
 import '../tool/food_preview.dart';
 
 void main() {
@@ -46,21 +48,33 @@ void main() {
             .where((e) => e.details.name == 'Rice'),
         hasLength(7),
       );
-      await tap(tester, find.text('Deleted'));
+      await selectFoodView(
+        tester,
+        FoodView.deleted,
+        input: (target) => tap(tester, target),
+      );
       await tester.pumpAndSettle();
       expect(find.text('1 container ⅓ full'), findsOneWidget);
       await capture(tester, 'narrow-deleted');
       await tap(tester, find.byTooltip('Restore Rice containers'));
       await tester.pumpAndSettle();
       expect(find.text('No deleted containers'), findsOneWidget);
-      await tap(tester, find.text('Retained'));
+      await selectFoodView(
+        tester,
+        FoodView.retained,
+        input: (target) => tap(tester, target),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Chocolate').hitTestable(), findsNothing);
       await capture(tester, 'narrow-retained-collapsed');
       await tap(tester, find.widgetWithText(ExpansionTile, 'Birthday baking'));
       await tester.pumpAndSettle();
       await capture(tester, 'narrow-retained-expanded');
-      await tap(tester, find.text('Inbox'));
+      await selectFoodView(
+        tester,
+        FoodView.inventory,
+        input: (target) => tap(tester, target),
+      );
       await tester.pumpAndSettle();
       expect(find.text('Lentils'), findsOneWidget);
       await capture(tester, 'narrow-inbox');
@@ -69,7 +83,11 @@ void main() {
       await capture(tester, 'narrow-editor');
       await tap(tester, find.widgetWithText(TextButton, 'Cancel'));
       await tester.pumpAndSettle();
-      await tap(tester, find.text('Stock'));
+      await selectFoodView(
+        tester,
+        FoodView.inventory,
+        input: (target) => tap(tester, target),
+      );
       await tester.pumpAndSettle();
       tester.view.physicalSize = const Size(1200, 850);
       await tester.pumpAndSettle();

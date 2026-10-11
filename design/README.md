@@ -26,9 +26,11 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
 
-- [Food Stock and toolbar refinements](decisions/0017-food-stock-and-toolbar-refinements.md): accepted combined Stock/Inbox, local date urgency and filter/account parity; implementation and native acceptance pending.
+- [Food Stock and toolbar refinements](decisions/0017-food-stock-and-toolbar-refinements.md): implemented combined Stock/Inbox, local date urgency and filter/account parity; exact candidate/Android acceptance pending.
 
-- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): accepted default Search and explicit clearing toggle; implementation/native acceptance pending.
+- [Food session Undo](decisions/0018-food-session-undo.md): accepted50-action stack and selective additive v2 retractions; reviewed core complete, native host and exact candidate acceptance in progress.
+
+- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): implemented default Search and explicit clearing toggle; exact candidate/Android acceptance pending.
 
 - [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
 
@@ -47,15 +49,15 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 - [Canonical record chains and integrity checks](decisions/0007-canonical-history-integrity.md): approved v3 wire contract, Settings audit, compatibility and trusted-head limits.
 - [Calendar versions and promotion](decisions/0008-calver-and-release-promotion.md): approved naming, monotonic builds, resource bounds and separate stable acceptance.
 - [Separate date and optional-time rows](decisions/0009-date-and-optional-time-rows.md): compact time entry, precision and responsive layout.
-- [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): authorized implementation, existing-field shared baseline and offline new-task exception; unreleased with remaining gates. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve the earlier research and evidence.
+- [Collaborative text adoption](decisions/0010-collaborative-text-adoption.md): released in stable2026.10.2/build53, with existing-field shared baseline and offline new-task exception. [Investigation](text-merge-investigation.md), [test-first prototype](text-merge-prototype.md) and [adoption alternatives](text-merge-adoption-options.md) preserve earlier research and evidence.
 
 - [Android text-preview QA](android-text-preview-qa.md): exact synthetic test package and native workflow instructions.
-- [Historical recurring-text policy](historical-recurring-text-policy.md): approved historical recompletion preserves the independently initialized child; implementation and remaining gates.
+- [Historical recurring-text policy](historical-recurring-text-policy.md): released historical recompletion preserves the independently initialized child; earlier implementation checkpoints remain attributed.
 - [Shared-history native acceptance](shared-history-native-acceptance.md): exact artifact identity, synthetic fixture and Windows/Android affected-flow contract after independent implementation review.
-- [One-level checklists](decisions/0011-one-level-checklists.md): accepted item/recurrence policy; isolated storage and UI implementation, with exact Windows/Android acceptance still pending.
+- [One-level checklists](decisions/0011-one-level-checklists.md): released item/recurrence and inline interaction policy in stable2026.10.2/build53;[stable acceptance](../evidence/stable-2026.10.2/README.md).
 - [Checklist native acceptance](checklist-native-acceptance.md): exact candidate/fixture contract, platform workflow gates and current Linux evidence.
 - [Composed final preview](final-preview-acceptance.md): reviewed component/source bindings, rc.4/build46 and remaining exact-artifact/native/publication gates.
-- [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter; isolated implementation and native acceptance in progress.
-- [Shared tag native acceptance](shared-tag-native-acceptance.md): synthetic fixture, exact source binding and Android affected-flow handoff; device acceptance remains pending.
+- [Shared tag input](decisions/0012-shared-tag-input.md): Lee-approved B-style control across task editing, bulk Add/Remove and Filter, released in stable2026.10.2/build53.
+- [Shared tag native acceptance](shared-tag-native-acceptance.md): historical synthetic fixture and exact source binding; completed device acceptance is recorded in the stable2026.10.2 receipt.
 
 - [One app-wide local DB](decisions/0013-app-wide-local-database.md): approved single permanent DB and temporary recovery-file exception; published stable2026.10.3/build56 with verified import, activation, cleanup and startup/switch wiring. [Native handoff](local-db-native-acceptance.md) records completed bounded Windows/Android acceptance; [release receipts](../evidence/stable-2026.10.3/README.md) bind final native/artifact and public verification.

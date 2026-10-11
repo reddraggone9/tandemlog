@@ -1,0 +1,26 @@
+{
+  "change": "Tasks full-width default Search and toolbar Add",
+  "platform": "Actual Linux GTK/Flutter; synthetic household; dark;1200x850;100%text",
+  "before": {
+    "source": "00594c1f91f478a729e091ab41c418afbfcbb383",
+    "path": "evidence/food-2026.10.4-rc.2/preparation/native/section-dark-1200-1.0x-tasks.png",
+    "sha256": "bbc08ab5c791ebb530a069f158c2ff6c3ea82ecf88f00eabb4ed2618aded2e4d",
+    "qualification": "Earlier candidate before Search/Add redesign; never claimed as RC1 screenshot"
+  },
+  "after": {
+    "path": "task-search-after-raw.png",
+    "sha256": "faa5fe7426ef72a1473a1235abc74bf6ad0ccae03c7dbdc8308a4a8c66dcfb59",
+    "application_main_sha256": "c457b18e879cb6d9d371767465232dfe313f17365dd242d3a2ac8a0b314f9b01",
+    "source": "Current complete implementation inventory; final Git source bound by candidate receipt",
+    "test_log": "expanded-build62/final-native/changed-13.log"
+  },
+  "transform": "Crop both raw app images at(0,0,1200,260);stack with separate centered Before/After label bands; no app pixels retouched/resized",
+  "output": {
+    "path": "task-search-before-after.png",
+    "sha256": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0",
+    "dimensions": [
+      1200,
+      580
+    ]
+  }
+}

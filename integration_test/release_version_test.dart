@@ -49,6 +49,7 @@ void registerReleaseVersionTests() {
           tester,
           () => find.text('Reference task').evaluate().isNotEmpty,
         );
+        await flows.openCaptureForTest(tester);
         final capture = find.widgetWithText(TextField, 'What needs doing?');
         await tester.enterText(capture, 'Retained draft');
         expect(find.text('Version'), findsNothing);

@@ -4,6 +4,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../presentation/tag_input.dart';
+import '../presentation/task_toolbar.dart';
+import '../presentation/civil_date_input.dart';
+import 'expiration_presentation.dart';
 import 'inventory.dart';
 
 /// The host owns commands/durability. The page only captures observed targets.
@@ -14,11 +17,16 @@ class FoodInventoryPage extends StatefulWidget {
     required this.onAdd,
     required this.onRemove,
     required this.onRestore,
+    this.onRestoreBatch,
     required this.onContents,
     required this.onDetails,
     this.onUndo,
+    this.undoLabel = 'Undo',
     this.sectionMenu,
     this.settings,
+    this.userName,
+    this.identityMenu,
+    this.now,
     this.busy = false,
     this.error,
     this.savePending = false,
@@ -26,14 +34,19 @@ class FoodInventoryPage extends StatefulWidget {
   });
   final Widget Function(bool compact)? sectionMenu;
   final Widget? settings;
+  final String? userName;
+  final Widget Function(Widget?)? identityMenu;
+  final DateTime Function()? now;
   final FoodState state;
   final FutureOr<void> Function(FoodDetails, int) onAdd;
   final FutureOr<void> Function(List<String>) onRemove;
   final FutureOr<void> Function(FoodContainer) onRestore;
+  final FutureOr<void> Function(List<FoodContainer>)? onRestoreBatch;
   final FutureOr<void> Function(FoodContainer, Contents) onContents;
   final FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)
   onDetails;
   final FutureOr<void> Function()? onUndo;
+  final String undoLabel;
   final bool busy, savePending;
   final bool Function()? hasPendingSave;
   final String? error;
@@ -52,9 +65,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Future<bool> requestCloseEditor() async =>
       await _requestEditorClose?.call() ?? true;
   String? _actionError;
+  late final FoodExpirationClock _expirationClock;
   @override
   void initState() {
     super.initState();
+    _expirationClock = FoodExpirationClock(now: widget.now)
+      ..addListener(_focusChanged);
     FocusManager.instance.addListener(_focusChanged);
   }
 
@@ -81,6 +97,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
+    _expirationClock.removeListener(_focusChanged);
+    _expirationClock.dispose();
     search.dispose();
     reasonQuery.dispose();
     super.dispose();
@@ -90,8 +108,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Widget build(BuildContext context) {
     final addCommand = widget.onAdd, undoCommand = widget.onUndo;
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
+    final querying = search.text.trim().isNotEmpty;
+    // Inbox remains a domain partition. Stock alone composes its unsearched
+    // undated partition; queried partitions would each return all active food.
+    final currentView = view == FoodView.inbox ? FoodView.inventory : view;
+    final inboxGroups = currentView == FoodView.inventory && !querying
+        ? widget.state.view(FoodView.inbox)
+        : <FoodGroup>[];
     final groups = widget.state.view(
-      view,
+      currentView,
       search: search.text,
       reasons: reasons,
     );
@@ -115,6 +140,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   FoodInventoryToolbar(
                     sectionMenu: widget.sectionMenu,
                     settings: widget.settings,
+                    userName: widget.userName,
+                    identityMenu: widget.identityMenu,
+                    filter: _filterControl,
+                    undoLabel: widget.undoLabel,
                     onUndo: widget.busy || widget.onUndo == null
                         ? null
                         : () => _invoke(undoCommand!),
@@ -130,30 +159,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         SliverToBoxAdapter(
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16,
-                                  vertical: 4,
-                                ),
-                                child: Wrap(
-                                  spacing: 8,
-                                  runSpacing: 4,
-                                  children: [
-                                    for (final mode in FoodView.values)
-                                      ChoiceChip(
-                                        label: Text(switch (mode) {
-                                          FoodView.inventory => 'Stock',
-                                          FoodView.inbox => 'Inbox',
-                                          FoodView.retained => 'Retained',
-                                          FoodView.deleted => 'Deleted',
-                                        }),
-                                        selected: view == mode,
-                                        onSelected: (_) =>
-                                            setState(() => view = mode),
-                                      ),
-                                  ],
-                                ),
-                              ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(
                                   16,
@@ -217,25 +222,59 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                     ),
                                   ),
                                 ),
-                              if (view == FoodView.inbox && search.text.isEmpty)
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
-                                  child: Text(
-                                    'Needs an expiration date. A date moves food into stock.',
-                                  ),
-                                ),
                             ],
                           ),
                         ),
-                        if (groups.isEmpty)
+                        if (inboxGroups.isNotEmpty) ...[
+                          const SliverToBoxAdapter(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(16, 4, 16, 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Inbox',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    'Add an expiration date to move food out of Inbox.',
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SliverPadding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12),
+                            sliver: SliverList.builder(
+                              itemCount: inboxGroups.length,
+                              itemBuilder: (_, index) =>
+                                  _group(inboxGroups[index]),
+                            ),
+                          ),
+                          if (groups.isNotEmpty)
+                            const SliverToBoxAdapter(
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(16, 12, 16, 8),
+                                child: Text(
+                                  'Stock',
+                                  style: TextStyle(fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                        ],
+                        if (groups.isEmpty && inboxGroups.isEmpty)
                           SliverFillRemaining(
                             hasScrollBody: false,
                             child: Center(
                               child: Text(
-                                search.text.isNotEmpty
+                                querying
                                     ? 'No matching food'
                                     : switch (view) {
-                                        FoodView.inventory => 'No dated stock',
+                                        FoodView.inventory =>
+                                          'No food in stock',
                                         FoodView.inbox =>
                                           'Everything has an expiration date',
                                         FoodView.retained => 'No retained food',
@@ -245,7 +284,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               ),
                             ),
                           )
-                        else
+                        else if (groups.isNotEmpty)
                           SliverPadding(
                             padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
                             sliver: SliverList.builder(
@@ -299,9 +338,82 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     );
   }
 
+  Widget _filterControl(bool compact) {
+    final querying = search.text.trim().isNotEmpty;
+    final active =
+        view == FoodView.deleted || (view == FoodView.retained && !querying);
+    final count = active
+        ? 1 + (view == FoodView.retained ? reasons.length : 0)
+        : 0;
+    final label = switch (view) {
+      FoodView.deleted => 'Deleted',
+      FoodView.retained => 'Retained',
+      _ => 'Stock',
+    };
+    final icon = Badge(
+      isLabelVisible: count > 0,
+      label: Text('$count'),
+      child: const Icon(Icons.filter_list),
+    );
+    return PopupMenuButton<FoodView>(
+      key: const ValueKey('food-filter'),
+      tooltip: querying && view != FoodView.deleted
+          ? 'Filter food: all active; saved $label filters paused'
+          : 'Filter food: $label',
+      enabled: !widget.busy,
+      onSelected: (next) => setState(() => view = next),
+      itemBuilder: (_) => [
+        for (final mode in [
+          FoodView.inventory,
+          FoodView.retained,
+          FoodView.deleted,
+        ])
+          PopupMenuItem(
+            value: mode,
+            child: Semantics(
+              selected: mode == view,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 28,
+                    child: mode == view ? const Icon(Icons.check) : null,
+                  ),
+                  Flexible(
+                    child: Text(switch (mode) {
+                      FoodView.inventory => 'Stock',
+                      FoodView.retained => 'Retained',
+                      FoodView.deleted => 'Deleted',
+                      FoodView.inbox => 'Inbox',
+                    }),
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 12),
+          child: compact
+              ? Center(child: icon)
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    icon,
+                    const SizedBox(width: 8),
+                    const Text('Filter'),
+                  ],
+                ),
+        ),
+      ),
+    );
+  }
+
   Widget _group(FoodGroup group) {
     final removeCommand = widget.onRemove,
         restoreCommand = widget.onRestore,
+        restoreBatchCommand = widget.onRestoreBatch,
         contentsCommand = widget.onContents,
         detailsCommand = widget.onDetails;
     final details = group.details, key = details.displayGroupKey;
@@ -353,7 +465,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: foodExpiryColor(
+                                    details.expiry,
+                                    _expirationClock.today,
+                                    Theme.of(context).colorScheme,
+                                  ),
                                 ),
                           ),
                           if (details.brand.isNotEmpty)
@@ -376,6 +492,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 if (!deleted && group.quickRemoveTarget != null)
                   IconButton(
                     tooltip: 'Remove one ${details.name} container',
+                    visualDensity: VisualDensity.standard,
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
+                    ),
                     onPressed: widget.busy
                         ? null
                         : () => _invoke(
@@ -386,11 +507,20 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 if (deleted)
                   IconButton(
                     tooltip: 'Restore ${details.name} containers',
+                    visualDensity: VisualDensity.standard,
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
+                    ),
                     onPressed: widget.busy
                         ? null
                         : () => _invoke(() async {
-                            for (final item in group.containers) {
-                              await restoreCommand(item);
+                            if (restoreBatchCommand != null) {
+                              await restoreBatchCommand(group.containers);
+                            } else {
+                              for (final item in group.containers) {
+                                await restoreCommand(item);
+                              }
                             }
                           }),
                     icon: const Icon(Icons.restore),
@@ -398,47 +528,63 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 IconButton(
                   tooltip:
                       '${opened ? 'Collapse' : 'Inspect'} ${details.name} containers',
+                  visualDensity: VisualDensity.standard,
+                  constraints: const BoxConstraints(
+                    minWidth: 48,
+                    minHeight: 48,
+                  ),
                   onPressed: () => setState(() {
                     if (!expanded.add(key)) expanded.remove(key);
                   }),
                   icon: Icon(opened ? Icons.expand_less : Icons.expand_more),
                 ),
-                if (!deleted && opened)
-                  PopupMenuButton<String>(
-                    tooltip: 'Actions for ${details.name}',
-                    enabled: !widget.busy,
-                    onSelected: (action) {
-                      if (action == 'edit') {
-                        _edit(group: group, detailsCommand: detailsCommand);
-                      }
-                      if (action == 'remove') {
-                        _confirmRemove(group, removeCommand);
-                      }
-                    },
-                    itemBuilder: (_) => [
-                      if (!deleted)
-                        PopupMenuItem(
-                          enabled:
-                              !(widget.hasPendingSave?.call() ??
-                                  widget.savePending),
-                          value: 'edit',
-                          child: Text('Edit group details'),
-                        ),
-                      if (!deleted)
-                        PopupMenuItem(
-                          value: 'remove',
-                          child: Text(
-                            'Remove ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
-                          ),
-                        ),
-                    ],
-                  ),
               ],
             ),
             if (opened) ...[
-              Text(
-                '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}${metadata.isEmpty ? '' : ' · ${metadata.join(' · ')}'}',
-                style: Theme.of(context).textTheme.bodySmall,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}${metadata.isEmpty ? '' : ' · ${metadata.join(' · ')}'}',
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
+                  ),
+                  if (!deleted)
+                    SizedBox(
+                      width: 48,
+                      height: 48,
+                      child: PopupMenuButton<String>(
+                        tooltip: 'Actions for ${details.name}',
+                        enabled: !widget.busy,
+                        onSelected: (action) {
+                          if (action == 'edit') {
+                            _edit(group: group, detailsCommand: detailsCommand);
+                          }
+                          if (action == 'remove') {
+                            _confirmRemove(group, removeCommand);
+                          }
+                        },
+                        itemBuilder: (_) => [
+                          if (!deleted)
+                            PopupMenuItem(
+                              enabled:
+                                  !(widget.hasPendingSave?.call() ??
+                                      widget.savePending),
+                              value: 'edit',
+                              child: Text('Edit group details'),
+                            ),
+                          if (!deleted)
+                            PopupMenuItem(
+                              value: 'remove',
+                              child: Text(
+                                'Remove ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                ],
               ),
               if (group.contentsConflict)
                 const Text(
@@ -736,6 +882,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               child: AlertDialog(
                 // Title and fields share the constrained space above the actions.
                 scrollable: true,
+                insetPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                titlePadding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 title: Text(
                   group == null
                       ? 'Add food'
@@ -758,29 +911,21 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                       TextField(
                         enabled: !saving && !pending(),
                         controller: brand,
-                        decoration: const InputDecoration(
-                          labelText: 'Brand (optional)',
-                        ),
+                        decoration: const InputDecoration(labelText: 'Brand'),
                       ),
                       const SizedBox(height: 12),
-                      TextField(
+                      CivilDateInput(
                         enabled: !saving && !pending(),
                         controller: expiry,
-                        decoration: const InputDecoration(
-                          labelText: 'Expiration',
-                          helper: Text(
-                            'Use YYYY-MM-DD, or leave blank for the needs-expiration Inbox.',
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                          ),
-                        ),
+                        fieldKey: const ValueKey('food-expiration'),
+                        label: 'Expiration',
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         enabled: !saving && !pending(),
                         controller: size,
                         decoration: const InputDecoration(
-                          labelText: 'Container size (optional)',
+                          labelText: 'Container size',
                           hintText: 'e.g. 1 lb',
                         ),
                       ),
@@ -789,7 +934,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         enabled: !saving && !pending(),
                         controller: location,
                         decoration: const InputDecoration(
-                          labelText: 'Location (optional)',
+                          labelText: 'Location',
                         ),
                       ),
                       if (group == null) ...[
@@ -815,7 +960,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         onDropdownChanged: (_) {},
                         allowCreate: true,
                         clearQueryOnSelection: true,
-                        queryLabel: 'Retention reason (optional)',
+                        queryLabel: 'Retention reason',
                         hint: 'Retention reason',
                         clearLabel: 'Clear retention reason',
                         chipContext: 'retention reason',
@@ -888,12 +1033,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                   'Add 1 to 100 containers at a time.',
                                 );
                               }
+                              if (expiry.text.trim().isEmpty) {
+                                throw const FormatException(
+                                  'Expiration is required.',
+                                );
+                              }
                               final details = FoodDetails(
                                 name: name.text.trim(),
                                 brand: brand.text.trim(),
-                                expiry: expiry.text.trim().isEmpty
-                                    ? null
-                                    : expiry.text.trim(),
+                                expiry: expiry.text.trim(),
                                 estimated: estimated,
                                 retention: retentionQuery.text.trim().isEmpty
                                     ? retention
@@ -978,9 +1126,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     if (accepted == null || !mounted) return;
     if (group == null) {
       setState(
-        () => view = accepted!.$1.expiry == null
-            ? FoodView.inbox
-            : accepted!.$1.retention.isNotEmpty
+        () => view = accepted!.$1.retention.isNotEmpty
             ? FoodView.retained
             : FoodView.inventory,
       );
@@ -1005,53 +1151,75 @@ bool _composing(TextEditingController controller) =>
     controller.value.composing.isValid &&
     !controller.value.composing.isCollapsed;
 
-/// The host supplies section navigation and Settings, including unavailable Food.
+/// The host owns section navigation and the app-wide account menu.
 class FoodInventoryToolbar extends StatelessWidget {
   const FoodInventoryToolbar({
     super.key,
     this.sectionMenu,
     this.settings,
+    this.userName,
+    this.identityMenu,
+    this.filter,
     this.onUndo,
+    this.undoLabel = 'Undo',
     this.onAdd,
     this.showActions = true,
   });
   final Widget Function(bool compact)? sectionMenu;
+  // Kept for isolated previews whose host does not provide an account menu.
   final Widget? settings;
+  final String? userName;
+  final Widget Function(Widget?)? identityMenu;
+  final Widget Function(bool compact)? filter;
   final VoidCallback? onUndo, onAdd;
+  final String undoLabel;
   final bool showActions;
 
   @override
   Widget build(BuildContext context) => Padding(
     padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-    child: LayoutBuilder(
-      builder: (context, constraints) => Row(
-        children: [
-          if (sectionMenu == null)
-            const Expanded(
-              child: Text(
-                'Food inventory',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-              ),
-            )
-          else ...[
-            sectionMenu!(constraints.maxWidth < 600),
-            const Spacer(),
-          ],
-          if (showActions) ...[
-            IconButton(
-              tooltip: 'Undo removal',
+    child: TaskToolbar(
+      userName: userName,
+      identityMenu: identityMenu ?? (_) => settings ?? const SizedBox.shrink(),
+      sectionName: 'Food inventory',
+      sectionIcon: Icons.kitchen_outlined,
+      sectionMenu: sectionMenu,
+      filter: showActions ? filter : null,
+      inputModeAction: !showActions
+          ? null
+          : (compact) => compact
+                ? IconButton(
+                    tooltip: 'Add food',
+                    onPressed: onAdd,
+                    visualDensity: VisualDensity.standard,
+                    constraints: const BoxConstraints(
+                      minWidth: 48,
+                      minHeight: 48,
+                    ),
+                    icon: const Icon(Icons.add),
+                  )
+                : Tooltip(
+                    message: 'Add food',
+                    child: OutlinedButton.icon(
+                      onPressed: onAdd,
+                      style: OutlinedButton.styleFrom(
+                        visualDensity: VisualDensity.standard,
+                        minimumSize: const Size(48, 48),
+                      ),
+                      icon: const Icon(Icons.add),
+                      label: const Text('Add'),
+                    ),
+                  ),
+      undo: !showActions
+          ? const SizedBox.shrink()
+          : IconButton(
+              key: const ValueKey('undo-food-action'),
+              tooltip: undoLabel,
               onPressed: onUndo,
+              visualDensity: VisualDensity.standard,
+              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
               icon: const Icon(Icons.undo),
             ),
-            IconButton(
-              tooltip: 'Add food',
-              onPressed: onAdd,
-              icon: const Icon(Icons.add),
-            ),
-          ],
-          ?settings,
-        ],
-      ),
     ),
   );
 }

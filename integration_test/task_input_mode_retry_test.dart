@@ -37,7 +37,18 @@ void registerTaskInputModeRetryTests() {
           expect(controller.text, draft);
           expect(tester.widget<TextField>(capture).readOnly, isTrue);
           expect(
-            find.textContaining('remain to finish capture.'),
+            tester
+                .widget<IconButton>(find.byKey(const ValueKey('open-search')))
+                .onPressed,
+            isNull,
+          );
+          final dynamic state = tester.state(find.byType(TasksPage));
+          final failureText = state.error as String?;
+          expect(failureText, isNotNull);
+          debugPrint('INPUT_MODE_CAPTURE_FAILURE $fault: $failureText');
+          expect(find.text(failureText!), findsOneWidget);
+          expect(
+            find.text('Retry to check these tasks before editing.'),
             findsOneWidget,
           );
           final reservedName = folder.delayedName!;
@@ -131,7 +142,24 @@ void registerTaskInputModeRetryTests() {
       await tester.enterText(capture, 'Busy capture');
       folder.holdNextAppend();
       await tester.tap(find.byKey(const ValueKey('capture-add')));
-      await waitForUi(tester, () => folder.entered!.isCompleted);
+      // The ordinary waitForUi helper settles animations after readiness.
+      // This deliberately held save keeps its progress indicator animating.
+      await tester.pump();
+      for (
+        var attempt = 0;
+        attempt < 100 && !folder.entered!.isCompleted;
+        attempt++
+      ) {
+        await tester.pump(const Duration(milliseconds: 100));
+      }
+      expect(folder.entered!.isCompleted, isTrue);
+      expect(tester.widget<TextField>(capture).enabled, isFalse);
+      expect(
+        tester
+            .widget<IconButton>(find.byKey(const ValueKey('open-search')))
+            .onPressed,
+        isNull,
+      );
       final beforeSwitch = await _records(folder.delegate);
       await _attemptSearch(tester, settle: false);
       expect(find.byKey(const ValueKey('task-search')), findsNothing);

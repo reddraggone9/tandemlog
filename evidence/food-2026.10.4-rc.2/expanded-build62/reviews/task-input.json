@@ -1,0 +1,89 @@
+{
+  "decision": "approve reviewed Tasks Search/Add source; no blockers found",
+  "scope": "Independent production source review and native pending-capture, retry, dirty-editor, and compact-selection workflows. Reviewer authored the new regression file; its test design review is self-review, while production implementation and native execution are independent of the implementer.",
+  "head": "1d83f0fa75a10028726ff5678e647b2f279403f7",
+  "reviewed_source": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "sha256": "18a255fd5809ad83f30edbc97985e1dc2eb31390af39377f67f9751a7b1b63e5"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_toolbar.dart",
+      "sha256": "12b56e6f69f4128f4401ee44e553dfe219d595902dd67531db4cd672dd96e381"
+    }
+  ],
+  "runtime_dependency_bindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_editor.dart",
+      "sha256": "8ca099bee9453224635153e3bc88eacddc93ef5b5d890b8319539816491b5f66"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/civil_date_input.dart",
+      "sha256": "6b8eb5fdb30dc63fedc06a5c7eddaae8f6ddcc984e4447b404a2e12beb652d7d"
+    }
+  ],
+  "test": {
+    "path": "/tmp/tandemlog-food-date-readability/integration_test/task_input_mode_retry_test.dart",
+    "sha256": "3f7f28283c56c8c81fd714dfe19a8633389f65d03d95e8fd6d635a256e578698"
+  },
+  "runtime": {
+    "platform": "Actual Linux GTK debug app under Xvfb; synthetic isolated local profiles and canonical logs only",
+    "virtual_screen": "1450x1100",
+    "viewports": [
+      "390x850 dark",
+      "1200x850 dark"
+    ],
+    "result": "5 passed, 0 failed, exit 0",
+    "test_runtime_seconds": 27,
+    "log": {
+      "path": "/tmp/task-input-mode-retry-green-final.log",
+      "sha256": "f5e9126a2f56c3172397701890ca6bb6450ff4fe01b1743d249ecf079e470157"
+    }
+  },
+  "checks": [
+    "Default Search has no autofocus; explicit mode flip clears outgoing capture or Search/query while preserving assignee/status/upcoming/tag filters.",
+    "Admission blocks busy/pending capture/shared safety/absent user/store/Food both before and after awaiting the existing editor close guard; disabled toolbar and capture controls verified at runtime.",
+    "Before-write and creation-prefix faults preserve both titles, readonly capture, exact reserved filename/suffix bytes and retry identities across toolbar Search, Ctrl+F, capture retry and lifecycle reconciliation; no replacement append or canonical byte mutation.",
+    "Late original suffix confirmation clears capture, keeps Add mode active, confirms both tasks, and writes exactly the original prefix plus reserved suffix; subsequent empty Retry and permitted Search add no bytes.",
+    "An intentionally held append blocks toolbar/keyboard Search until released; successful completion creates one task and retains Add mode.",
+    "Dirty editor Cancel preserves editor and outgoing capture drafts with no canonical writes; Discard permits Search and outgoing capture clearing.",
+    "Compact selection hides the active input; same-mode Ctrl+F releases clean hidden editor/selection and focuses the unchanged Search query. Opposite mode flips clear selection and outgoing text, and ordinary task tap still opens the editor.",
+    "Latest bounded module snackbar/Undo patch read: accepted module change clears snackbars only after editor guards; task Undo rejects Food before and after awaits and refresh without clearing session history. Its dedicated native crossover evidence belongs to Food account owner."
+  ],
+  "visual_review": {
+    "screenshots": [
+      {
+        "path": "/tmp/task-input-mode-retry-review/screens/input-mode-before-retry-retained.png",
+        "sha256": "3d632a97d287366045be58d19a6c7fd29c991148cfcda826843336b3b9d64c99"
+      },
+      {
+        "path": "/tmp/task-input-mode-retry-review/screens/input-mode-prefix-retry-retained.png",
+        "sha256": "2024769ea53cac118147e96b3161a73a9f56c37b75137b1f0191b2bccb2aa272"
+      }
+    ],
+    "actual_pixels_inspected": true,
+    "observations": "At390px dark, full saved-operation warning and Retry action are readable without overlap. Two original capture titles and Retry helper remain visible, Search is disabled, and native controls retain usable geometry. Prefix fixture shows its created first task in Inbox while initial move remains unconfirmed; this does not release capture identities."
+  },
+  "test_first_history": {
+    "original_red": {
+      "result": "4 failed on previous source because default Search was absent; fifth selection case authored afterward and was not separately executed RED",
+      "log": {
+        "path": "/tmp/task-input-mode-retry-red.log",
+        "sha256": "9a8a37f4ba4a7ee15bda05f84c3b3e70d16d79adf65a209d23911c6f453d8e87"
+      },
+      "executed_test_sha256": "148385a8467df7d3d4a916fcf94b899df3ec75235689f3301801185fc0a716f4"
+    },
+    "first_new_source_attempt": {
+      "result": "Incomplete harness attempt, not a product pass: first two assertions incorrectly required transient capture error copy; held append then stalled because shared waitForUi calls pumpAndSettle while progress animates. Runner interrupted to release native mutex.",
+      "log": {
+        "path": "/tmp/task-input-mode-retry-green.log",
+        "sha256": "8e674de5b0098c40a7ee70f2a345cfc03935bc2e5b2c6d7bf616acfc99da98ee"
+      }
+    },
+    "harness_correction": "Only the new regression file changed: assert actual visible unresolved-save warning plus stable Retry helper, preserve all exact-byte/identity/no-append assertions, and use finite pumps until held append is released."
+  },
+  "remaining_gates": [
+    "This is source/native Linux evidence, not exact-artifact Android or Windows acceptance. Candidate packaging, full remaining suite and external platform acceptance remain with parent.",
+    "Shared civil-date input extraction and Food behavior receive their separate owner/reviewer checks; no independent broad claim for those changes here."
+  ]
+}

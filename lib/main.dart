@@ -9,6 +9,7 @@ import 'package:flutter/semantics.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 import 'application/undo_history.dart';
+import 'application/food_undo_history.dart';
 import 'application/task_text_session.dart';
 import 'application/text_save_command.dart';
 import 'application/checklist_completion_command.dart';
@@ -46,7 +47,7 @@ import 'storage/checklist_expansion_store.dart';
 import 'food/food_page.dart';
 import 'food/food_store.dart';
 import 'food/food_record.dart';
-import 'food/inventory.dart' show FoodAction;
+import 'food/inventory.dart' show FoodContainer;
 
 void main() {
   debugPrint('TANDEMLOG_MAIN');
@@ -152,8 +153,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   bool foodVisible = false;
   String? foodError, sharedSafetyError;
   final foodPageKey = GlobalKey<FoodInventoryPageState>();
-  List<FoodRecord> foodUndo = [];
-  ({FoodStore origin, String fingerprint, List<FoodRecord> records})?
+  final foodUndoHistory = FoodUndoHistory();
+  ({
+    FoodStore origin,
+    String fingerprint,
+    List<FoodRecord> records,
+    String verb,
+    FoodUndoEntry? undoEntry,
+  })?
   pendingFoodCommand;
   NativeTextEngine? textEngine;
   TaskTextSession? editingText;
@@ -185,7 +192,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   final search = TextEditingController();
   final searchFocus = FocusNode();
   final bodyFocusScope = FocusScopeNode(debugLabel: 'Task and Food body');
-  bool searchOpen = false;
+  bool captureMode = false;
   String get searchQuery => search.text.trim();
   bool get searching => searchQuery.isNotEmpty;
   List<TaskViewEntry> get visibleEntries => searching
@@ -473,12 +480,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     onSelected: busy ? null : _switchModule,
   );
 
-  Widget _foodSettings() => IconButton(
-    tooltip: 'Settings',
-    onPressed: busy ? null : _showSettings,
-    icon: const Icon(Icons.settings_outlined),
-  );
-
   Future<void> _switchModule(bool food) async {
     if (busy ||
         food == foodVisible ||
@@ -489,6 +490,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     FocusManager.instance.primaryFocus?.unfocus();
     _clearSelection();
+    ScaffoldMessenger.of(context).clearSnackBars();
     setState(() => foodVisible = food);
   }
 
@@ -529,14 +531,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         // a shared safety failure.
       }
       if (mounted && identical(foodStore, origin)) {
-        final pending = pendingFoodCommand;
-        if (pending != null &&
-            identical(pending.origin, origin) &&
-            pending.records.every(
-              (r) => r.operation.action == FoodAction.remove,
-            )) {
-          foodUndo = pending.records.where(origin.isAdmitted).toList();
-        }
         setState(() => foodError = failureMessage(e));
       }
       rethrow;
@@ -554,8 +548,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _foodCommand(
     FoodStore expected,
     String fingerprint,
-    Future<void> Function(FoodStore) action,
-  ) => _foodAct(expected, (origin) async {
+    Future<void> Function(FoodStore) action, {
+    required String verb,
+    FoodUndoEntry? undoEntry,
+  }) => _foodAct(expected, (origin) async {
+    foodUndoHistory.setWorkspace(
+      jsonEncode([origin.folder.location, origin.space, origin.writer]),
+    );
     final pending = pendingFoodCommand;
     if (pending != null && identical(pending.origin, origin)) {
       if (pending.fingerprint != fingerprint) {
@@ -567,17 +566,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!pending.records.every(origin.isAdmitted)) {
         throw StateError('The earlier food save still needs confirmation.');
       }
-      if (pending.records.every(
-        (r) => r.operation.action == FoodAction.remove,
-      )) {
-        foodUndo = pending.records;
-      }
+      _confirmFoodAction(
+        origin,
+        pending.records,
+        verb: pending.verb,
+        undoEntry: pending.undoEntry,
+      );
       pendingFoodCommand = null;
       return;
     }
     final previous = origin.lastPreparedRecords;
     try {
       await action(origin);
+      final records = identical(previous, origin.lastPreparedRecords)
+          ? <FoodRecord>[]
+          : origin.lastPreparedRecords;
+      _confirmFoodAction(origin, records, verb: verb, undoEntry: undoEntry);
       pendingFoodCommand = null;
     } catch (_) {
       if (!identical(previous, origin.lastPreparedRecords) &&
@@ -586,11 +590,62 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           origin: origin,
           fingerprint: fingerprint,
           records: origin.lastPreparedRecords,
+          verb: verb,
+          undoEntry: undoEntry,
         );
       }
       rethrow;
     }
   });
+
+  void _confirmFoodAction(
+    FoodStore origin,
+    List<FoodRecord> records, {
+    required String verb,
+    FoodUndoEntry? undoEntry,
+  }) {
+    if (!records.every(origin.isAdmitted)) {
+      throw StateError('The food save still needs confirmation.');
+    }
+    if (undoEntry != null) {
+      // Success also covers idempotent Undo with no newly prepared records.
+      // Failed/partial inverses retain this exact entry until full recovery.
+      foodUndoHistory.complete(undoEntry);
+    } else {
+      foodUndoHistory.record(verb, records, confirmed: origin.isAdmitted);
+    }
+  }
+
+  Future<void> _undoFoodLatest(FoodStore expected) async {
+    final entry = foodUndoHistory.latest;
+    if (!foodVisible ||
+        busy ||
+        entry == null ||
+        sharedSafetyError != null ||
+        pendingFoodCommand != null ||
+        expected.hasPreparedAppend ||
+        !identical(foodStore, expected) ||
+        !await _closeFoodEditor() ||
+        !mounted ||
+        !foodVisible ||
+        busy ||
+        !identical(foodStore, expected) ||
+        !identical(foodUndoHistory.latest, entry) ||
+        pendingFoodCommand != null ||
+        expected.hasPreparedAppend) {
+      return;
+    }
+    await _foodCommand(
+      expected,
+      'undo:${entry.records.map((record) => '${record.id}:${record.hash}').join(',')}',
+      (origin) async {
+        await origin.undoOperations(entry.records);
+      },
+      verb: entry.verb,
+      undoEntry: entry,
+    );
+  }
+
   Future<void> _retryFoodOpen(TaskStore expected) async {
     if (busy || !identical(store, expected) || foodStore != null) return;
     await _act(() async {
@@ -631,13 +686,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
 
   Widget _foodSurface() {
     final origin = foodStore;
+    final users = rows.where((row) => row['kind'] == 'user').toList();
+    final name =
+        users.where((entry) => entry['id'] == user).firstOrNull?['name']
+            as String?;
     if (origin == null) {
       final taskOrigin = store!;
       return Column(
         children: [
           FoodInventoryToolbar(
             sectionMenu: _sectionMenu,
-            settings: _foodSettings(),
+            userName: name,
+            identityMenu: (child) => _identityMenu(users, child: child),
             showActions: false,
           ),
           Expanded(
@@ -666,6 +726,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final pending = pendingFoodCommand;
     final hasPendingCommand =
         pending != null && identical(pending.origin, origin);
+    final undo = foodUndoHistory.latest;
+    Future<void> restoreItems(List<FoodContainer> items) => _foodCommand(
+      origin,
+      'restore:${jsonEncode([
+        for (final item in items) [item.id, item.deletions.toList()..sort()],
+      ])}',
+      (store) async {
+        await store.restore(items);
+      },
+      verb: 'restoring',
+    );
     return Column(
       children: [
         if (origin.hasPreparedAppend ||
@@ -694,7 +765,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             key: foodPageKey,
             state: origin.state,
             sectionMenu: _sectionMenu,
-            settings: _foodSettings(),
+            userName: name,
+            identityMenu: (child) => _identityMenu(users, child: child),
             busy: busy,
             error: foodError,
             savePending: origin.hasPreparedAppend || pendingFoodCommand != null,
@@ -705,24 +777,22 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               'add:$count:${details.groupKey}',
               (store) async {
                 await store.add(details, count);
-                foodUndo = [];
               },
+              verb: 'adding',
             ),
             onRemove: (ids) =>
                 _foodCommand(origin, 'remove:${ids.join(',')}', (store) async {
-                  foodUndo = await store.remove(ids);
-                }),
-            onRestore: (item) => _foodAct(origin, (store) async {
-              await store.restore([item]);
-              foodUndo = [];
-            }),
+                  await store.remove(ids);
+                }, verb: 'removing'),
+            onRestore: (item) => restoreItems([item]),
+            onRestoreBatch: restoreItems,
             onContents: (item, contents) => _foodCommand(
               origin,
               'contents:${item.id}:${contents.toJson()}',
               (store) async {
                 await store.changeContents(item, contents);
-                foodUndo = [];
               },
+              verb: 'changing contents of',
             ),
             onDetails: (items, details, fields) => _foodCommand(
               origin,
@@ -733,15 +803,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   details,
                   fields,
                 );
-                foodUndo = [];
               },
+              verb: 'editing',
             ),
-            onUndo: foodUndo.isEmpty
+            undoLabel: undo == null ? 'Undo' : 'Undo ${undo.label}',
+            onUndo:
+                undo == null || origin.hasPreparedAppend || hasPendingCommand
                 ? null
-                : () => _foodAct(origin, (store) async {
-                    await store.undoRemovals(foodUndo);
-                    foodUndo = [];
-                  }),
+                : () => _undoFoodLatest(origin),
           ),
         ),
       ],
@@ -760,11 +829,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
               'The earlier food save is still waiting for admission.',
             );
           }
-          if (pending.records.every(
-            (r) => r.operation.action == FoodAction.remove,
-          )) {
-            foodUndo = pending.records;
-          }
+          _confirmFoodAction(
+            store,
+            pending.records,
+            verb: pending.verb,
+            undoEntry: pending.undoEntry,
+          );
           pendingFoodCommand = null;
         }
       });
@@ -795,6 +865,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!mounted) return;
     rows = store!.rows;
     user = selected;
+    if (selected == null) foodVisible = false;
   }
 
   Future<void> _startDefault() => _act(() async {
@@ -1310,15 +1381,17 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _undoLatest() async {
-    if (busy || closingEditor || undoHistory.latest == null) return;
-    if (!await _closeChecklistEditor()) return;
+    if (foodVisible || busy || closingEditor || undoHistory.latest == null) {
+      return;
+    }
+    if (!await _closeChecklistEditor() || foodVisible || busy) return;
     final origin = store!, requested = undoHistory.latest;
     final preserveEditor = requested?.verb == 'moving';
     if (!preserveEditor && !await _closeEditor()) return;
-    if (!mounted || !identical(store, origin)) return;
+    if (!mounted || foodVisible || busy || !identical(store, origin)) return;
     await _act(() async {
       await origin.refresh();
-      if (!mounted || !identical(store, origin)) return;
+      if (!mounted || foodVisible || !identical(store, origin)) return;
       undoHistory.reconcile(origin.confirmedOperations);
       if (!identical(requested, undoHistory.latest)) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -1663,7 +1736,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await previousFood?.close();
       await previousStore?.close();
       if (!mounted) return;
-      foodUndo = [];
+      foodUndoHistory.clear();
       pendingFoodCommand = null;
       undoHistory.clear();
       _clearSelection();
@@ -1820,7 +1893,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     });
     captureFailure = pendingCapture.isNotEmpty;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && user != null) captureFocus.requestFocus();
+      if (mounted && captureMode && !foodVisible && user != null && !busy) {
+        captureFocus.requestFocus();
+      }
     });
   }
 
@@ -3862,38 +3937,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                   : _undoLatest,
                               icon: const Icon(Icons.undo),
                             ),
-                            search: store != null && user != null
-                                ? _openSearch
-                                : null,
-                            searchField: searchOpen
-                                ? TextField(
-                                    key: const ValueKey('task-search'),
-                                    controller: search,
-                                    focusNode: searchFocus,
-                                    maxLines: 1,
-                                    style: Theme.of(
-                                      context,
-                                    ).textTheme.bodyMedium,
-                                    textAlignVertical: TextAlignVertical.center,
-                                    decoration: InputDecoration(
-                                      hintText: 'Search all tasks',
-                                      isDense: true,
-                                      contentPadding: EdgeInsets.zero,
-                                      border: InputBorder.none,
-                                      suffixIcon: IconButton(
-                                        tooltip: 'Clear search',
-                                        onPressed: () async {
-                                          if (!await _closeEditor()) return;
-                                          search.clear();
-                                          _clearSelection();
-                                          setState(() => searchOpen = false);
-                                          _invalidateView();
-                                        },
-                                        icon: const Icon(Icons.close),
-                                      ),
-                                    ),
-                                    onChanged: _changeSearch,
-                                  )
+                            inputModeAction: store != null && user != null
+                                ? _taskInputModeControl
                                 : null,
                           ),
                         ),
@@ -4283,12 +4328,107 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     mobileEditorOpen = false;
   }
 
-  Future<void> _openSearch() async {
-    if (!await _closeEditor()) return;
-    if (store == null || user == null) return;
-    setState(() => searchOpen = true);
-    searchFocus.requestFocus();
+  bool get _canSwitchTaskInput =>
+      mounted &&
+      !busy &&
+      pendingCapture.isEmpty &&
+      sharedSafetyError == null &&
+      !foodVisible &&
+      store != null &&
+      user != null;
+
+  Future<void> _switchTaskInput(bool nextCapture) async {
+    if (!_canSwitchTaskInput || !await _closeEditor() || !_canSwitchTaskInput) {
+      return;
+    }
+    setState(() {
+      if (captureMode != nextCapture) {
+        if (captureMode) {
+          capture.clear();
+          if (error == 'Keep each task title under 500 characters.') {
+            error = null;
+          }
+        } else {
+          search.clear();
+          lastSearchText = '';
+        }
+        captureMode = nextCapture;
+      }
+      _clearSelection();
+    });
+    _invalidateView();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_canSwitchTaskInput && captureMode == nextCapture && !selecting) {
+        (nextCapture ? captureFocus : searchFocus).requestFocus();
+      }
+    });
   }
+
+  Future<void> _openSearch() => _switchTaskInput(false);
+
+  Widget _taskInputModeControl(bool compact) {
+    final callback = _canSwitchTaskInput
+        ? () => _switchTaskInput(!captureMode)
+        : null;
+    final label = captureMode ? 'Search' : 'Add';
+    final tooltip = captureMode ? 'Search tasks (Ctrl+F)' : 'Add tasks';
+    final key = ValueKey(captureMode ? 'open-search' : 'open-capture');
+    final icon = Icon(captureMode ? Icons.search : Icons.add, size: 20);
+    return compact
+        ? IconButton(
+            key: key,
+            visualDensity: VisualDensity.standard,
+            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
+            tooltip: tooltip,
+            onPressed: callback,
+            icon: icon,
+          )
+        : Tooltip(
+            message: tooltip,
+            child: OutlinedButton.icon(
+              key: key,
+              style: OutlinedButton.styleFrom(
+                minimumSize: const Size(48, 48),
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                visualDensity: VisualDensity.standard,
+              ),
+              onPressed: callback,
+              icon: icon,
+              label: Text(label),
+            ),
+          );
+  }
+
+  Future<void> _clearSearch() async {
+    if (!_canSwitchTaskInput || !await _closeEditor() || !_canSwitchTaskInput) {
+      return;
+    }
+    search.clear();
+    lastSearchText = '';
+    setState(_clearSelection);
+    _invalidateView();
+  }
+
+  Widget _searchField() => TextField(
+    key: const ValueKey('task-search'),
+    controller: search,
+    focusNode: searchFocus,
+    enabled: !busy,
+    maxLines: 1,
+    textInputAction: TextInputAction.search,
+    decoration: InputDecoration(
+      labelText: 'Search tasks',
+      prefixIcon: const Icon(Icons.search),
+      suffixIcon: search.text.isEmpty
+          ? null
+          : IconButton(
+              tooltip: 'Clear search',
+              onPressed: _canSwitchTaskInput ? _clearSearch : null,
+              icon: const Icon(Icons.close),
+            ),
+    ),
+    onChanged: _changeSearch,
+  );
 
   bool get _filtersActive =>
       all || showCompleted || showUpcoming || selectedTags.isNotEmpty;
@@ -4479,7 +4619,23 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       onSelected: (value) async {
         if (value == 'settings') {
           _showSettings();
-        } else if (!busy && await _closeEditor() && mounted) {
+        } else {
+          final origin = store, previousUser = user;
+          bool canSwitch() =>
+              mounted &&
+              !busy &&
+              sharedSafetyError == null &&
+              pendingCapture.isEmpty &&
+              !(foodStore?.hasPreparedAppend ?? false) &&
+              pendingFoodCommand == null &&
+              identical(store, origin) &&
+              user == previousUser;
+          if (!canSwitch() ||
+              !await _closeEditor() ||
+              !await _closeFoodEditor() ||
+              !canSwitch()) {
+            return;
+          }
           await _act(() => _selectUser(value == 'new' ? null : value));
         }
       },
@@ -4627,12 +4783,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Widget _entryArea() => TaskEntryArea(
     key: const ValueKey('task-entry-area'),
     selecting: selecting && !wideLayout && !mobileEditorOpen,
-    captureVisible: !showCompleted || searching,
+    captureVisible: true,
     selectionCount: selectedTasks.length,
     maximumSelectionCount: visibleEntries.length,
     onClear: busy ? null : _clearTaskSelection,
     onEdit: busy ? null : _editSelected,
-    capture: _captureField(),
+    capture: captureMode ? _captureField() : _searchField(),
   );
 
   Widget _tasks(List<TaskViewGroup> groups, List<Map<String, dynamic>> users) =>

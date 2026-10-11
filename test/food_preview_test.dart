@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/inventory.dart';
 import '../tool/food_preview.dart';
+import 'food_expiry_guidance_test.dart' show selectFoodView;
 
 void main() {
   final summaries = <String, (List<Contents>, String?)>{
@@ -61,7 +62,7 @@ void main() {
   ) async {
     await tester.pumpWidget(const FoodPreviewApp());
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Retained'));
+    await selectFoodView(tester, FoodView.retained);
     await tester.pumpAndSettle();
     expect(find.text('Chocolate').hitTestable(), findsNothing);
     await tester.tap(find.widgetWithText(ExpansionTile, 'Birthday baking'));
@@ -100,13 +101,15 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byTooltip('Remove one Oat milk container'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Deleted'));
+    await selectFoodView(tester, FoodView.deleted);
     await tester.pumpAndSettle();
     expect(find.text('Oat milk'), findsOneWidget);
-    await tester.tap(find.byTooltip('Undo removal'));
+    final undo = find.byKey(const ValueKey('undo-food-action'));
+    expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+    await tester.tap(undo);
     await tester.pumpAndSettle();
     expect(find.text('Oat milk'), findsNothing);
-    await tester.tap(find.text('Stock'));
+    await selectFoodView(tester, FoodView.inventory);
     await tester.pumpAndSettle();
     expect(find.text('2 full'), findsOneWidget);
   });

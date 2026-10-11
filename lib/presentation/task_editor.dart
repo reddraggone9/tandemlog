@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show setEquals;
 import 'tag_input.dart';
+import 'civil_date_input.dart';
 import '../domain/schedule.dart';
 import '../domain/event.dart' show validateTags;
 import '../domain/bulk_task_edit.dart';
@@ -670,93 +671,80 @@ class _EditorBodyState extends State<_EditorBody> {
       'dueDate',
       'dueTime',
     }.contains(key);
-    final input = TextField(
-      key: ValueKey(key),
-      controller: controllers[key],
-      focusNode: textFocus[key],
-      enabled:
-          !editingFrozen &&
-          !(widget.disableTextFields &&
-              {'title', 'description'}.contains(key)) &&
-          !(widget.textSession?.frozen == true &&
-              {'title', 'description'}.contains(key)),
-      minLines: key == 'description' ? 3 : 1,
-      maxLines: key == 'description' ? null : lines,
-      inputFormatters: key == 'title' ? [TitleLineFormatter()] : null,
-      keyboardType: key == 'title' ? TextInputType.text : null,
-      textInputAction: key == 'title' ? TextInputAction.next : null,
-      decoration: InputDecoration(
-        labelText: label,
-        border: dateTimeField ? const OutlineInputBorder(gapPadding: 2) : null,
-        suffixIconConstraints: dateTimeField
-            ? const BoxConstraints(minWidth: 48, minHeight: 48)
-            : null,
-        contentPadding: dateTimeField
-            ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
-            : null,
-        suffixIcon: key.endsWith('Date')
-            ? IconButton(
-                tooltip: 'Choose $label',
-                visualDensity: dateTimeField ? VisualDensity.standard : null,
-                padding: dateTimeField ? EdgeInsets.zero : null,
-                constraints: dateTimeField
-                    ? const BoxConstraints(minWidth: 48, minHeight: 48)
-                    : null,
-                icon: const Icon(Icons.calendar_today_outlined),
-                onPressed: editingFrozen
-                    ? null
-                    : () async {
-                        final parsed = DateTime.tryParse(
-                          controllers[key]!.text,
-                        );
-                        final chosen = await showDatePicker(
-                          context: context,
-                          initialDate:
-                              parsed != null &&
-                                  parsed.year >= 1900 &&
-                                  parsed.year <= 9999
-                              ? parsed
-                              : DateTime.now(),
-                          firstDate: DateTime(1900),
-                          lastDate: DateTime(9999),
-                        );
-                        if (chosen != null && mounted) {
-                          controllers[key]!.text = formatCivilDate(chosen);
-                        }
-                      },
-              )
-            : (key == 'startTime' || key == 'dueTime') &&
-                  controllers[key]!.text.isNotEmpty
-            ? IconButton(
-                tooltip: 'Clear ${clearLabel ?? label}',
-                visualDensity: VisualDensity.standard,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-                icon: const Icon(Icons.close),
-                onPressed: editingFrozen
-                    ? null
-                    : () {
-                        textFocus[key]?.unfocus();
-                        controllers[key]!.clear();
-                      },
-              )
-            : key == 'recurrence'
-            ? PopupMenuButton<String>(
-                tooltip: 'Repeat examples',
-                enabled: !editingFrozen,
-                icon: const Icon(Icons.expand_more),
-                onSelected: (rule) => controllers[key]!.text = rule,
-                itemBuilder: (_) => [
-                  for (final rule in observedRecurrences)
-                    PopupMenuItem(value: rule, child: Text(rule)),
-                ],
-              )
-            : null,
-        hintText: mixed.contains(key)
-            ? 'Mixed — unchanged unless applied'
-            : hint,
-      ),
-    );
+    final input = key.endsWith('Date')
+        ? CivilDateInput(
+            fieldKey: ValueKey(key),
+            controller: controllers[key]!,
+            focusNode: textFocus[key],
+            label: label,
+            enabled: !editingFrozen,
+            compactDecoration: dateTimeField,
+            hint: mixed.contains(key)
+                ? 'Mixed — unchanged unless applied'
+                : hint,
+          )
+        : TextField(
+            key: ValueKey(key),
+            controller: controllers[key],
+            focusNode: textFocus[key],
+            enabled:
+                !editingFrozen &&
+                !(widget.disableTextFields &&
+                    {'title', 'description'}.contains(key)) &&
+                !(widget.textSession?.frozen == true &&
+                    {'title', 'description'}.contains(key)),
+            minLines: key == 'description' ? 3 : 1,
+            maxLines: key == 'description' ? null : lines,
+            inputFormatters: key == 'title' ? [TitleLineFormatter()] : null,
+            keyboardType: key == 'title' ? TextInputType.text : null,
+            textInputAction: key == 'title' ? TextInputAction.next : null,
+            decoration: InputDecoration(
+              labelText: label,
+              border: dateTimeField
+                  ? const OutlineInputBorder(gapPadding: 2)
+                  : null,
+              suffixIconConstraints: dateTimeField
+                  ? const BoxConstraints(minWidth: 48, minHeight: 48)
+                  : null,
+              contentPadding: dateTimeField
+                  ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
+                  : null,
+              suffixIcon:
+                  (key == 'startTime' || key == 'dueTime') &&
+                      controllers[key]!.text.isNotEmpty
+                  ? IconButton(
+                      tooltip: 'Clear ${clearLabel ?? label}',
+                      visualDensity: VisualDensity.standard,
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(
+                        minWidth: 48,
+                        minHeight: 48,
+                      ),
+                      icon: const Icon(Icons.close),
+                      onPressed: editingFrozen
+                          ? null
+                          : () {
+                              textFocus[key]?.unfocus();
+                              controllers[key]!.clear();
+                            },
+                    )
+                  : key == 'recurrence'
+                  ? PopupMenuButton<String>(
+                      tooltip: 'Repeat examples',
+                      enabled: !editingFrozen,
+                      icon: const Icon(Icons.expand_more),
+                      onSelected: (rule) => controllers[key]!.text = rule,
+                      itemBuilder: (_) => [
+                        for (final rule in observedRecurrences)
+                          PopupMenuItem(value: rule, child: Text(rule)),
+                      ],
+                    )
+                  : null,
+              hintText: mixed.contains(key)
+                  ? 'Mixed — unchanged unless applied'
+                  : hint,
+            ),
+          );
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: bulk && withApplyControl && TaskSchedule.keys.contains(key)
