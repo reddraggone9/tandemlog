@@ -12,8 +12,10 @@ is ineligible: Windows tooling errors at temporary SQLite fixture cleanup
 Production verify_loaded already closes its connections; the narrow fixture
 correction explicitly closes after commit and retains every original assertion.
 79 Linux tooling checks pass with one skip and independent source review accepts
-the fix. Build67 full candidate, original artifact/signing and installed
-acceptance remain pending. Build66 Linux is allowed to finish naturally. All historical
+the fix. Build67 full candidate38166126728 is dispatched at exact
+3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5 and queued behind build66.
+Signed originals and exact Android acceptance remain pending. Frozen-source
+and final-range editorial reviews pass; notes/media remain unchanged. Build66 Linux is allowed to finish naturally. All historical
 running snapshots below are superseded by this status. No stable promotion or
 live-data operation is authorized here.
 

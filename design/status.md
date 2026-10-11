@@ -27,8 +27,10 @@ Windows1027 unit checks/two skips, Rust4 and107 contracts passed first.
 The production verifier already closes its own connection. The fixture-only
 correction preserves transaction semantics and every readiness/row/cache check;
 79 Linux tooling checks pass with one skip, and independent review accepts it.
-Build67 retains identical UI/production/dependency source; its full hosted
-candidate, signed originals and exact Android acceptance remain pending.
+Build67 full candidate38166126728 is dispatched at exact
+3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5 and queued behind build66.
+Signed originals and exact Android acceptance remain pending. Frozen-source
+and final-range editorial reviews pass; notes/media remain unchanged.
 Build66 Linux continues to terminal; original failed receipts are retained.
 No new RC3 is published.
 

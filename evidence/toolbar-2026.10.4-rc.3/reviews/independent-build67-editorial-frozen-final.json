@@ -1,0 +1,122 @@
+{
+  "reviewer": "Independent editorial agent /root/calendar_editorial_review",
+  "created_utc": "2026-10-11T19:01:16.691880+00:00",
+  "decision": "ACCEPT frozen replacement build67 notes and media for exact baseline-to-source range",
+  "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+  "source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+  "previous_reviewed_source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "prior_editorial_receipt": {
+    "path": "/tmp/toolbar-width-correction/independent-build66-editorial-frozen-final.json",
+    "sha256": "ade8411208f7fea63c55833d09ee61620ab451cc383d3ef3b41f34b8bd830a35"
+  },
+  "scope": "Read-only editorial extension: exact committed source delta, saved revised engineering evidence, unchanged actual notes and approved immutable media. No production edits, builds, test reruns, candidate dispatch or publication.",
+  "source_delta": {
+    "paths": [
+      "pubspec.yaml",
+      "tool/test_startup_diagnostics.py"
+    ],
+    "fixture": "Explicit contextlib.closing releases the SQLite test setup connection after the unchanged transaction context commits or rolls back, including exceptional exit. Production verify_loaded already closes its own connection and remains unchanged.",
+    "version": "2026.10.4-rc.3+66 to +67",
+    "input_inventory": {
+      "entries": 82,
+      "changed_entries": [
+        "pubspec.yaml",
+        "tool/test_startup_diagnostics.py"
+      ],
+      "remaining80_entries_identical": true
+    },
+    "application_and_pipeline": "All lib, Android native, workflow, packaging, dependency and approved UI behavior bytes unchanged from accepted build66 source."
+  },
+  "notes": {
+    "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+    "path": "design/prerelease-notes.md",
+    "bytes": 1888,
+    "sha256": "02b69d5c999e09050c4c65258656122b7067d15db5a967cfa64e57b41b8af115"
+  },
+  "notes_editorial": "Exact1888-byte approved meaningful prose and descriptive immutable image references unchanged. Test-fixture cleanup needs no new user-facing note or QA assurance.",
+  "media": [
+    {
+      "binding": {
+        "commit": "f3ac5cbbac7547cfd728f23fea07030391d4f5b8",
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/section-width-before-after.png",
+        "bytes": 30983,
+        "sha256": "a3b23db49e6fbf60f2b98be67c8f3e957f6ac07baee86c352ca4cd8a2b09d625"
+      },
+      "identical_to_final_and_local": true
+    },
+    {
+      "binding": {
+        "commit": "7515375455d627b8ab224bb39ca8649e97ace053",
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+        "bytes": 50298,
+        "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+      },
+      "identical_to_final_and_local": true
+    }
+  ],
+  "media_qualification": "Previously independently viewed and approved actual dark Linux captures and pixel-exact crops; centered Before/After labels and bounded historical frame-source provenance retained. No Android or exact signed artifact claim.",
+  "verification": {
+    "clean_frozen_tree": true,
+    "manifest_checks": [
+      {
+        "binding": {
+          "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+          "path": "evidence/toolbar-2026.10.4-rc.3/inputs/source-inputs-build67.json",
+          "bytes": 13751,
+          "sha256": "73eccaa53ae94ce87cfde78e50f70808caf7a0b8ff10de163d911d88fb41b2bc"
+        },
+        "entries": 82,
+        "all_git_and_local_hashes_pass": true
+      },
+      {
+        "binding": {
+          "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+          "path": "evidence/toolbar-2026.10.4-rc.3/manifest.json",
+          "bytes": 26975,
+          "sha256": "204afa6d146aac0b3d574c5ebe60afbcbd4dd92f4c111bbe3b9492271d9af2e3"
+        },
+        "entries": 157,
+        "all_git_and_local_hashes_pass": true
+      }
+    ],
+    "full_covered_diff_sha256": "50855e1ccb9bba36a9f1755ca2c44b11e9a335d0748c403f1959801ce4a15a00"
+  },
+  "supporting_evidence": [
+    {
+      "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+      "path": "evidence/toolbar-2026.10.4-rc.3/reviews/build67-sqlite-fixture-independent-review.json",
+      "bytes": 3582,
+      "sha256": "1432464b717d8c830be5ff1224814493c228082bb92c238b997bd262e6afa857"
+    },
+    {
+      "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+      "path": "evidence/toolbar-2026.10.4-rc.3/logs/build67-release-tool-tests.txt",
+      "bytes": 614,
+      "sha256": "03a56dfce3ebb786cd63adfd6b2c42b05511e2b338dbc835e4ccb1bc9abb23ad"
+    },
+    {
+      "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+      "path": "evidence/toolbar-2026.10.4-rc.3/candidate/held-38165025596/failed-windows-provider-decoded.txt",
+      "bytes": 333262,
+      "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731"
+    },
+    {
+      "commit": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+      "path": "evidence/toolbar-2026.10.4-rc.3/candidate/held-38165025596/windows-failure-phase-independent-hold.json",
+      "bytes": 1941,
+      "sha256": "4367126766a9568c970038f7ed91a904febb1e76eff583df430a2e1174b5dac2"
+    }
+  ],
+  "evidence_qualification": [
+    "Build66 is ineligible after its actual Windows fixture cleanup failed with WinError32; no retroactive candidate acceptance.",
+    "333262-byte official decoded Windows log and partial passing earlier phases are engineering evidence, not overall Windows green.",
+    "Replacement Linux tool suite reports79 ran with1 skipped and no errors; this does not reproduce Windows file sharing.",
+    "Independent correctness receipt accepts the narrow source fix with replacement Windows explicitly pending."
+  ],
+  "remaining_editorial_must_fixes": [],
+  "separate_remaining_gates": [
+    "Exact replacement full candidate and Windows execution, signed installer payloads, native platform acceptance and coordinator clearance remain required."
+  ],
+  "windows_candidate_acceptance_claim": false,
+  "publication_claim": false
+}

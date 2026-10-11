@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Exact current evidence bytes for build67 replacement. Frozen build66 source e6e26a1 retains its historical146-entry manifest and source review. This extension preserves Windows fixture-failure evidence and adds the reviewed explicit-close correction, Linux tooling result and82 replacement source inputs; exact replacement hosted/artifact acceptance remains pending.",
+  "qualification": "Exact current documentation/evidence extension. Frozen build67 source3ae00be retains its historical157-entry manifest and482-source review; this extension adds those final reviews and confirmed pending dispatch without executable or notes/media changes.",
   "files": {
     "README.md": {
-      "bytes": 22315,
-      "sha256": "913b69b6b7779aa7b9edb74098908ef0c5a10ebd98fb62c7822d966541cb8c25"
+      "bytes": 22787,
+      "sha256": "0c7efc06f2aedbb63dab62240806dc5880eeb02ed7d280baea66dd66602905bf"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -21,6 +21,14 @@
     "candidate/build66/pending-full-candidate.json": {
       "bytes": 321,
       "sha256": "6c9c9d812c497a160738cf3be187ce411834c05f70cc822b104e7c2d0c2cd555"
+    },
+    "candidate/build67/frozen-source-inventory-independent-verification.json": {
+      "bytes": 85711,
+      "sha256": "8c5c7a74d2ca9b7db5c564de21aa8354a688a050d6656041beb240502efbfef8"
+    },
+    "candidate/build67/pending-full-candidate.json": {
+      "bytes": 371,
+      "sha256": "5ffd759a89c172c1e5921b32baacf3df0ec7b67860e2105eb7023c11c7958931"
     },
     "candidate/held-38153414378/build65-windows-actual-artifact-bindings.json": {
       "bytes": 10505,
@@ -569,6 +577,10 @@
     "reviews/independent-build66-ui-native-pixel-review.json": {
       "bytes": 11885,
       "sha256": "4d132d7c71b3f957d98fd55c603c360c201e6ab25ccdf79f42bd89c458ce7b01"
+    },
+    "reviews/independent-build67-editorial-frozen-final.json": {
+      "bytes": 5959,
+      "sha256": "3eebd5d6b517edbe010c94fb074d28c289f9583d018e6583cae5e46530a06688"
     },
     "reviews/independent-editorial-final-review.json": {
       "bytes": 3742,

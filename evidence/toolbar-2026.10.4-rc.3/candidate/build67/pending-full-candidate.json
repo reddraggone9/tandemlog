@@ -1,0 +1,8 @@
+{
+  "source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+  "candidate_run": 38166126728,
+  "version": "2026.10.4-rc.3+67",
+  "snapshot_utc": "2026-10-11T19:02:47.248374+00:00",
+  "status": "queued behind natural terminal of ineligible build66",
+  "qualification": "Candidate dispatch confirmed; no completed full gate/signing/original APK or native acceptance claim."
+}
