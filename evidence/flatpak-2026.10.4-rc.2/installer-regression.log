@@ -1,0 +1,10 @@
+test_exited_instance_does_not_kill_another_instance (test_installer_smoke.FlatpakCleanup.test_exited_instance_does_not_kill_another_instance) ... ok
+test_kills_exact_captured_instance_and_waits_for_its_disappearance (test_installer_smoke.FlatpakCleanup.test_kills_exact_captured_instance_and_waits_for_its_disappearance) ... ok
+test_never_falls_back_to_application_wide_kill (test_installer_smoke.FlatpakCleanup.test_never_falls_back_to_application_wide_kill) ... ok
+test_surviving_instance_blocks_next_phase (test_installer_smoke.FlatpakCleanup.test_surviving_instance_blocks_next_phase) ... ok
+test_rebuild_clears_only_derived_namespace_and_preserves_authorities (test_installer_smoke.SharedProfileProjection.test_rebuild_clears_only_derived_namespace_and_preserves_authorities) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK

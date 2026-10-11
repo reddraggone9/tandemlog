@@ -716,6 +716,11 @@
       "sha256": "729fa47566a6cfc6ee77a2e95f6212d36ded92c359fc4d02b718b405bce275a8"
     },
     {
+      "path": "reviews/final-editorial.json",
+      "bytes": 7254,
+      "sha256": "3c273ecfa67b4a2ab361c62a495aed8a3e04026f4e23845d68972afdfb2e50f4"
+    },
+    {
       "path": "reviews/fixture-attribution.json",
       "bytes": 1726,
       "sha256": "7241cb9cec632cffa800b6d740c0f895e8a3046772a4f8c14ee9d78c85272736"
@@ -798,7 +803,7 @@
     {
       "path": "unit/frozen-format.log",
       "bytes": 49,
-      "sha256": "1967086e7430af3b25518a561848ac0680ddfcdc5035d642d46e08f42f2a7275"
+      "sha256": "c4bab5c5937939c4cf6b63d7902f6050b6c5f96e6b6c581fbb34e45803388190"
     },
     {
       "path": "unit/frozen-full-unit.log",

@@ -1,0 +1,17 @@
+test_explicit_override_remains_authoritative (tool.test_linux_profile_discovery.ProfileDiscovery.test_explicit_override_remains_authoritative) ... ok
+test_fresh_default_uses_sandbox_xdg_without_profile_override (tool.test_linux_profile_discovery.ProfileDiscovery.test_fresh_default_uses_sandbox_xdg_without_profile_override) ... ok
+test_host_profiles_are_not_discovered_copied_or_selected (tool.test_linux_profile_discovery.ProfileDiscovery.test_host_profiles_are_not_discovered_copied_or_selected) ... ok
+test_catalog_composed_before_export_and_bundle (tool.test_linux_flatpak_metadata.FlatpakSourceContracts.test_catalog_composed_before_export_and_bundle) ... ok
+test_matching_complete_metainfo (tool.test_linux_flatpak_metadata.FlatpakSourceContracts.test_matching_complete_metainfo) ... ok
+test_metainfo_release_matches_actual_candidate_version (tool.test_linux_flatpak_metadata.FlatpakSourceContracts.test_metainfo_release_matches_actual_candidate_version) ... ok
+test_actual_composed_name_and_icon_are_required (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_actual_composed_name_and_icon_are_required) ... ok
+test_missing_catalog_is_not_replaced_by_metainfo (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_missing_catalog_is_not_replaced_by_metainfo) ... ok
+test_no_static_host_filesystem_or_network_grant (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_no_static_host_filesystem_or_network_grant) ... ok
+test_one_permanent_database_after_process_stop_allows_recovery_wal (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_one_permanent_database_after_process_stop_allows_recovery_wal) ... ok
+test_scaled_icon_must_exist_at_its_declared_size (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_scaled_icon_must_exist_at_its_declared_size) ... ok
+test_wrong_catalog_filename_cannot_supply_bundle_metadata (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_wrong_catalog_filename_cannot_supply_bundle_metadata) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.015s
+
+OK

@@ -1,0 +1,6 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_undo_reader_compatibility_test.dart
+00:00 +0: released Food reader source is frozen against its exact provenance
+00:00 +1: actual released codec still reads frozen v1 and explicitly rejects v2
+00:00 +2: actual released reader admission older peer rejects canonical v2 as Food-only without advancing heads or touching Tasks
+00:00 +3: actual released reader admission downgrade with protected v2 bytes fails hard, preserves authority and recovers on current reader
+00:00 +4: All tests passed!

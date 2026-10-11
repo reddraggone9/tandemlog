@@ -1,0 +1,69 @@
+test_catalog_composed_before_export_and_bundle (test_linux_flatpak_metadata.FlatpakSourceContracts.test_catalog_composed_before_export_and_bundle) ... ERROR
+test_matching_complete_metainfo (test_linux_flatpak_metadata.FlatpakSourceContracts.test_matching_complete_metainfo) ... ERROR
+test_actual_composed_name_and_icon_are_required (test_linux_flatpak_metadata.InstalledCatalogContracts.test_actual_composed_name_and_icon_are_required) ... skipped 'verification helper not implemented'
+test_missing_catalog_is_not_replaced_by_metainfo (test_linux_flatpak_metadata.InstalledCatalogContracts.test_missing_catalog_is_not_replaced_by_metainfo) ... skipped 'verification helper not implemented'
+test_no_static_host_filesystem_or_network_grant (test_linux_flatpak_metadata.InstalledCatalogContracts.test_no_static_host_filesystem_or_network_grant) ... skipped 'verification helper not implemented'
+test_explicit_override_remains_authoritative (test_linux_profile_discovery.ProfileDiscovery.test_explicit_override_remains_authoritative) ... ok
+test_fresh_default_uses_sandbox_xdg_without_profile_override (test_linux_profile_discovery.ProfileDiscovery.test_fresh_default_uses_sandbox_xdg_without_profile_override) ... FAIL
+test_host_profiles_are_not_discovered_copied_or_selected (test_linux_profile_discovery.ProfileDiscovery.test_host_profiles_are_not_discovered_copied_or_selected) ... FAIL
+
+======================================================================
+ERROR: test_catalog_composed_before_export_and_bundle (test_linux_flatpak_metadata.FlatpakSourceContracts.test_catalog_composed_before_export_and_bundle)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_flatpak_metadata.py", line 30, in test_catalog_composed_before_export_and_bundle
+    self.assertLess(script.index('appstreamcli validate'), script.index('appstreamcli compose'))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: substring not found
+
+======================================================================
+ERROR: test_matching_complete_metainfo (test_linux_flatpak_metadata.FlatpakSourceContracts.test_matching_complete_metainfo)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_flatpak_metadata.py", line 17, in test_matching_complete_metainfo
+    data = ET.parse(ROOT / f'packaging/linux/{APP}.metainfo.xml').getroot()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/xml/etree/ElementTree.py", line 1204, in parse
+    tree.parse(source, parser)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/xml/etree/ElementTree.py", line 558, in parse
+    source = open(source, "rb")
+             ^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/tandemlog-food-date-readability/packaging/linux/com.reddraggone9.tandemlog.metainfo.xml'
+
+======================================================================
+FAIL: test_fresh_default_uses_sandbox_xdg_without_profile_override (test_linux_profile_discovery.ProfileDiscovery.test_fresh_default_uses_sandbox_xdg_without_profile_override)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_profile_discovery.py", line 42, in test_fresh_default_uses_sandbox_xdg_without_profile_override
+    self.assertEqual(lines, ['unset', env['XDG_DATA_HOME']])
+AssertionError: Lists differ: ['/tmp/tmpcax89tqb/host/com.reddraggone9.ta[37 chars]ata'] != ['unset', '/tmp/tmpcax89tqb/sandbox/data']
+
+First differing element 0:
+'/tmp/tmpcax89tqb/host/com.reddraggone9.tandemlog'
+'unset'
+
+- ['/tmp/tmpcax89tqb/host/com.reddraggone9.tandemlog',
+-  '/tmp/tmpcax89tqb/sandbox/data']
++ ['unset', '/tmp/tmpcax89tqb/sandbox/data']
+? +++++++++
+
+
+======================================================================
+FAIL: test_host_profiles_are_not_discovered_copied_or_selected (test_linux_profile_discovery.ProfileDiscovery.test_host_profiles_are_not_discovered_copied_or_selected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_profile_discovery.py", line 50, in test_host_profiles_are_not_discovered_copied_or_selected
+    self.assertEqual(lines, ['unset', env['XDG_DATA_HOME']])
+AssertionError: Lists differ: ['/tmp/tmpo2om4ebp/host/tandemlog', '/tmp/tmpo2om4ebp/sandbox/data'] != ['unset', '/tmp/tmpo2om4ebp/sandbox/data']
+
+First differing element 0:
+'/tmp/tmpo2om4ebp/host/tandemlog'
+'unset'
+
+- ['/tmp/tmpo2om4ebp/host/tandemlog', '/tmp/tmpo2om4ebp/sandbox/data']
++ ['unset', '/tmp/tmpo2om4ebp/sandbox/data']
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.007s
+
+FAILED (failures=2, errors=2, skipped=3)

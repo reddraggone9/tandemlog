@@ -11,7 +11,7 @@
     "path": "task-search-after-raw.png",
     "sha256": "faa5fe7426ef72a1473a1235abc74bf6ad0ccae03c7dbdc8308a4a8c66dcfb59",
     "application_main_sha256": "c457b18e879cb6d9d371767465232dfe313f17365dd242d3a2ac8a0b314f9b01",
-    "source": "Current complete implementation inventory; final Git source bound by candidate receipt",
+    "source": "43107084646a58a5a5059271655b73b2c6d64bf9",
     "test_log": "expanded-build62/final-native/changed-13.log"
   },
   "transform": "Crop both raw app images at(0,0,1200,260);stack with separate centered Before/After label bands; no app pixels retouched/resized",

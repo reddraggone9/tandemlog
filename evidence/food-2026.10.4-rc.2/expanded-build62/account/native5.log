@@ -1,0 +1,114 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/integration_test/food_account_workflow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[63733]: [session uid=1000 pid=63733 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=63934 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+dbus-daemon[63733]: [session uid=1000 pid=63733 pidfd=5] Successfully activated service 'org.a11y.Bus'
+dbus-daemon[63945]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=63934 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+dbus-daemon[63945]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: Task completion snackbar and its retained Undo cannot affect Tasks from Food
+TANDEMLOG_FIRST_FRAME_MS=420
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=14
+TANDEMLOG_PHASE manifest=78
+TANDEMLOG_PHASE ingest=57
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=1586 FILES_READ=1
+TASK_FOOD_SNACKBAR_PROBE noticeRemains=false canonicalChanged=false additionalAppends=0 taskCompleted=true appendedTypes=[]
+00:09 +1: Food dark account retains view/query/reasons and Settings; Manage users returns to Tasks
+00:10 +1: Task completion snackbar and its retained Undo cannot affect Tasks from Food
+TANDEMLOG_FIRST_FRAME_MS=32
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=32
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=604 FILES_READ=1
+00:19 +2: Food light account retains view/query/reasons and Settings; Manage users returns to Tasks
+00:19 +2: Task completion snackbar and its retained Undo cannot affect Tasks from Food
+TANDEMLOG_FIRST_FRAME_MS=40
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=28
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=459 FILES_READ=1
+00:27 +3: Food account switching respects Keep editing and Discard without writes
+00:28 +3: Task completion snackbar and its retained Undo cannot affect Tasks from Food
+TANDEMLOG_FIRST_FRAME_MS=19
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=25
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=413 FILES_READ=1
+00:33 +4: Uncertain Food save blocks account changes and Retry retains original records
+00:33 +4: Task completion snackbar and its retained Undo cannot affect Tasks from Food
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=13
+TANDEMLOG_PHASE manifest=11
+TANDEMLOG_PHASE ingest=26
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=433 FILES_READ=1
+00:42 +5: (tearDownAll)
+00:42 +5: All tests passed!

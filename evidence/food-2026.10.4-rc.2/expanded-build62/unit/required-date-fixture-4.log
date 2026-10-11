@@ -1,0 +1,7 @@
+Waiting for another flutter command to release the startup lock...
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart
+00:00 +0: manual Food Add requires a valid expiration before any command
+00:01 +1: manual edit cannot clear an existing valid Food expiration
+00:02 +2: legacy undated Food stays readable and Cancel preserves it; manual Save requires date
+00:02 +3: observed grouped edit preserves concurrently mixed dates unless expiration explicitly changes
+00:03 +4: All tests passed!

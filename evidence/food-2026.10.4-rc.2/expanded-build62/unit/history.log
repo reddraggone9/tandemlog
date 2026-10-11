@@ -1,0 +1,7 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_undo_history_test.dart
+00:00 +0: inverse receipts cannot create a new action or Redo entry
+00:00 +1: Food bulk receipts form one immutable action and successive Undo uses the stack
+00:00 +2: unconfirmed saves and failed Undo leave prior history intact; acknowledgment is idempotent
+00:00 +3: same workspace preserves history; another workspace and explicit close clear it
+00:00 +4: Food session retention matches the 50-action Tasks bound
+00:00 +5: All tests passed!

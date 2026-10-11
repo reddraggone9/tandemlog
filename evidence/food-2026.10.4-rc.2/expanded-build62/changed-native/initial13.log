@@ -1,0 +1,219 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart
+Building Linux application...                                   
+warning: unused imports: `BlockRange` and `Block`
+warning: unused import: `Block`
+warning: unused import: `ItemContent`
+warning: unused imports: `SmallVec` and `smallvec`
+warning: unused import: `crate::utils::OptionExt`
+warning: value assigned to `left` is never read
+warning: unused variable: `ptr`
+warning: unused variable: `ptr`
+warning: variable does not need to be mutable
+warning: variable does not need to be mutable
+warning: unused variable: `clear_undo`
+warning: unused variable: `clear_redo`
+warning: method `as_item` is never used
+warning: methods `last_id`, `is_item`, and `is_gc` are never used
+warning: method `delete_as_cleanup` is never used
+warning: method `integrate` is never used
+warning: method `contains` is never used
+warning: constant `WEAK_REF_FLAGS_QUOTE` is never used
+warning: constant `WEAK_REF_FLAGS_START_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_END_ASSOC` is never used
+warning: constant `WEAK_REF_FLAGS_START_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_END_UNBOUNDED` is never used
+warning: constant `WEAK_REF_FLAGS_PARENT_ROOT` is never used
+warning: field `txn` is never read
+warning: method `as_id_set` is never used
+warning: associated functions `next_target` and `return_stack` are never used
+warning: methods `forward`, `backward`, and `values` are never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: method `remove_at` is never used
+warning: method `inner_mut` is never used
+warning: trait `BlockIterator` is never used
+warning: trait `BlockSliceIterator` is never used
+warning: struct `RangeIter` is never constructed
+warning: associated items `new` and `begin` are never used
+warning: enum `RangeIterState` is never used
+warning: struct `Values` is never constructed
+warning: associated function `new` is never used
+warning: field `txn` is never read
+warning: methods `adjacent`, `contains_id`, `right`, and `left` are never used
+warning: methods `within_range` and `get_item` are never used
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: hiding a lifetime that's elided elsewhere is confusing
+warning: `yrs` (lib) generated 58 warnings (run `cargo fix --lib -p yrs` to apply 27 suggestions)
+✓ Built build/linux/x64/debug/bundle/tandemlog
+dbus-daemon[70089]: [session uid=1000 pid=70089 pidfd=5] Activating service name='org.a11y.Bus' requested by ':1.1' (uid=1000 pid=70410 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+
+(process:70415): dconf-CRITICAL **: 06:29:20.485: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:70415): dconf-CRITICAL **: 06:29:20.486: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:70415): dconf-CRITICAL **: 06:29:20.486: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:70415): dconf-CRITICAL **: 06:29:20.486: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[70089]: [session uid=1000 pid=70089 pidfd=5] Successfully activated service 'org.a11y.Bus'
+
+(process:70415): dconf-CRITICAL **: 06:29:20.492: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+
+(process:70415): dconf-CRITICAL **: 06:29:20.492: unable to create directory '/home/agent/.cache/dconf': Read-only file system.  dconf will not work properly.
+dbus-daemon[70421]: Activating service name='org.a11y.atspi.Registry' requested by ':1.0' (uid=1000 pid=70410 comm="/tmp/tandemlog-food-date-readability/build/linux/x" label="kernel")
+dbus-daemon[70421]: Successfully activated service 'org.a11y.atspi.Registry'
+SpiRegistry daemon is running with well-known name - org.a11y.atspi.Registry
+00:00 +0: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=495
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=9
+TANDEMLOG_PHASE ingest=278
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=2071 FILES_READ=1
+00:17 +1: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x2.0
+00:17 +1: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=32
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=49
+TANDEMLOG_PHASE ingest=39
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=819 FILES_READ=1
+00:28 +2: Search/Add clears explicit outgoing input and captures repeatedly 390.0 x1.0
+00:29 +2: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=23
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=19
+TANDEMLOG_PHASE ingest=30
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=576 FILES_READ=1
+00:39 +3: Search/Add clears explicit outgoing input and captures repeatedly 320.0 x2.5
+00:40 +3: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=27
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=15
+TANDEMLOG_PHASE ingest=32
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=576 FILES_READ=1
+00:51 +4: section dropdown dark fits and guards drafts without writes
+00:51 +4: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=18
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=12
+TANDEMLOG_PHASE manifest=10
+TANDEMLOG_PHASE ingest=30
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=532 FILES_READ=1
+01:16 +5: section dropdown light fits and guards drafts without writes
+01:16 +5: Search/Add clears explicit outgoing input and captures repeatedly 1200.0 x1.0
+TANDEMLOG_FIRST_FRAME_MS=21
+TANDEMLOG_PHASE identity_lock=0
+TANDEMLOG_PHASE sqlite_open_schema=36
+TANDEMLOG_PHASE manifest=28
+TANDEMLOG_PHASE ingest=26
+TANDEMLOG_ROWS {"query_ms":0,"decode_ms":0,"sort_ms":0}
+TANDEMLOG_READY_MS=574 FILES_READ=1
+01:42 +6: native combined Food Stock and scoped toolbar Filter
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _TextWidgetFinder:<Found 0 widgets with text "Inbox": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodStockToolbarWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:232:3)
+<asynchronous suspension>
+#5      registerFoodStockToolbarTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/integration_test/food_stock_toolbar_workflow_test.dart:27:9)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart line 232
+The test description was:
+  native combined Food Stock and scoped toolbar Filter
+════════════════════════════════════════════════════════════════════════════════════════════════════
+01:51 +6 -1: native combined Food Stock and scoped toolbar Filter [E]
+  Test failed. See exception logs above.
+  The test description was: native combined Food Stock and scoped toolbar Filter
+  
+01:51 +6 -1: native Food date colors in Stock and Retained, local-day resume
+02:28 +7 -1: manual Food Add requires a valid expiration before any command
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      List.single (dart:core-patch/growable_array.dart:362:22)
+#1      registerFoodRequiredExpirationTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart:105:24)
+<asynchronous suspension>
+#2      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#3      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  manual Food Add requires a valid expiration before any command
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:31 +7 -2: manual Food Add requires a valid expiration before any command [E]
+  Test failed. See exception logs above.
+  The test description was: manual Food Add requires a valid expiration before any command
+  
+02:31 +7 -2: manual edit cannot clear an existing valid Food expiration
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: <1>
+  Actual: <0>
+
+When the exception was thrown, this was the stack:
+#4      registerFoodRequiredExpirationTests.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart:142:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart line 142
+The test description was:
+  manual edit cannot clear an existing valid Food expiration
+════════════════════════════════════════════════════════════════════════════════════════════════════
+02:35 +7 -3: manual edit cannot clear an existing valid Food expiration [E]
+  Test failed. See exception logs above.
+  The test description was: manual edit cannot clear an existing valid Food expiration
+  
+02:35 +7 -3: legacy undated Food stays readable and Cancel preserves it; manual Save requires date
+02:40 +8 -3: observed grouped edit preserves concurrently mixed dates unless expiration explicitly changes
+02:42 +9 -3: native Food group controls keep header anchors and date width
+03:05 +10 -3: (tearDownAll)
+03:05 +10 -3: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart: manual Food Add requires a valid expiration before any command
+  /tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart: manual edit cannot clear an existing valid Food expiration
+  /tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart: native combined Food Stock and scoped toolbar Filter

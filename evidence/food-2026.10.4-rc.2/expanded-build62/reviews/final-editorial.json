@@ -1,0 +1,97 @@
+{
+  "reviewer": "independent delegated editorial reviewer /root/food_rc2_editorial_review",
+  "outcome": "APPROVED full expanded build62 notes and media; no unresolved editorial findings",
+  "scope": "End-user release-note accuracy, meaningful change coverage and actual Before/After media provenance; not implementation correctness, target Android/Flatpak UI acceptance or publication authorization",
+  "guidance": [
+    "AGENTS.md",
+    "design/releases.md: public release-note editorial policy"
+  ],
+  "covered_executable_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "complete_build62_implementation": "43107084646a58a5a5059271655b73b2c6d64bf9"
+  },
+  "draft": {
+    "path": "design/prerelease-notes.md",
+    "sha256": "d93af0f5276f5ba8b9f59cf60f57192d6614c2f7281b39aec2d9d49928f79b94",
+    "meaningful_change_bullets": 8,
+    "compatibility_note": "Narrow actionable same-profile older-version failure after interrupted Food Undo: reopen this preview. No generic cross-device warning or envelope/hash details.",
+    "assessment": "All eight bullets match actual source delta: section dropdown; default full-width Tasks Search/Add; undated Stock plus Filter and expiration colors; required shared date input and removed certainty/optional suffixes; full50-action session Food Undo; Inbox blank-center tap; stable expanded-group controls and withdrawn Task notice after switching; Flatpak app-center identity and private sandbox storage with conditional re-selection. No unrelated feature promise, testing transcript, preservation assurances or private data."
+  },
+  "diff_review": {
+    "production_paths": [
+      "lib/main.dart",
+      "lib/presentation/section_menu.dart",
+      "lib/presentation/task_toolbar.dart",
+      "lib/presentation/task_editor.dart",
+      "lib/presentation/civil_date_input.dart",
+      "lib/food/food_page.dart",
+      "lib/food/expiration_presentation.dart",
+      "lib/food/inventory.dart",
+      "lib/food/food_record.dart",
+      "lib/food/food_store.dart",
+      "lib/application/food_undo_history.dart",
+      "packaging/linux/tandemlog",
+      "packaging/linux/build-flatpak.sh",
+      "packaging/linux/install-smoke.sh",
+      "packaging/linux/verify_flatpak.py",
+      "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml",
+      "packaging/README.md",
+      "pubspec.yaml"
+    ],
+    "application_main_sha256": "c457b18e879cb6d9d371767465232dfe313f17365dd242d3a2ac8a0b314f9b01",
+    "qualification": "Exact immutable3d\u21924310708 diff reviewed. ADR0016/0017/0018 distinguish accepted choices and exceptional downgrade recovery from user-facing release copy. Earlier3-change/build61 editorial approval is not used for this expanded gate."
+  },
+  "media": [
+    {
+      "change": "Food section dropdown, view Filter and expiration color",
+      "composite_path": "evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png",
+      "composite_sha256": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1",
+      "after_raw_sha256": "66eeee5ab791722b2b52df594ecf1ea25102a2fe299810e3ae367d4966693008",
+      "after_source": "43107084646a58a5a5059271655b73b2c6d64bf9",
+      "before_source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+      "before_raw_path": "evidence/food-2026.10.4-rc.1/native/inbox-build60/screens/production-wide-stock.png",
+      "before_raw_sha256": "0df9768a5b1afea37ea030c4260076d24c62030d3fbebc2b13a3d527bc970f2d",
+      "actual_pixels_viewed": [
+        "original Before",
+        "original After",
+        "final composite"
+      ],
+      "crop_recipe": "Original unscaled1200x300px crop at(0,0);30px external centered Before/After label bands; output crop starts y30 and y360.",
+      "pixel_comparison": "Both composite app regions exactly equal their original raw crops.",
+      "hosting_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png",
+      "public_byte_verification": "HTTP200; downloaded bytes exactly equal reviewed local composite.",
+      "assessment": "Useful context; readable centered labels and descriptive alt; matching synthetic fixture/dark theme1200x850/100%text; no private user data. After production hash matches frozen implementation.",
+      "before_qualification": "Food uses exact releasedRC1. Tasks uses intermediate candidate00594 before Search/Add redesign, explicitly qualified in engineering provenance; not claimed as an RC1 capture."
+    },
+    {
+      "change": "Default full-width Tasks Search with toolbar Add",
+      "composite_path": "evidence/food-2026.10.4-rc.2/media/task-search-before-after.png",
+      "composite_sha256": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0",
+      "after_raw_sha256": "faa5fe7426ef72a1473a1235abc74bf6ad0ccae03c7dbdc8308a4a8c66dcfb59",
+      "after_source": "43107084646a58a5a5059271655b73b2c6d64bf9",
+      "before_source": "00594c1f91f478a729e091ab41c418afbfcbb383",
+      "before_raw_path": "evidence/food-2026.10.4-rc.2/preparation/native/section-dark-1200-1.0x-tasks.png",
+      "before_raw_sha256": "bbc08ab5c791ebb530a069f158c2ff6c3ea82ecf88f00eabb4ed2618aded2e4d",
+      "actual_pixels_viewed": [
+        "original Before",
+        "original After",
+        "final composite"
+      ],
+      "crop_recipe": "Original unscaled1200x260px crop at(0,0);30px external centered Before/After label bands; output crop starts y30 and y320.",
+      "pixel_comparison": "Both composite app regions exactly equal their original raw crops.",
+      "hosting_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/task-search-before-after.png",
+      "public_byte_verification": "HTTP200; downloaded bytes exactly equal reviewed local composite.",
+      "assessment": "Useful context; readable centered labels and descriptive alt; matching synthetic fixture/dark theme1200x850/100%text; no private user data. After production hash matches frozen implementation.",
+      "before_qualification": "Food uses exact releasedRC1. Tasks uses intermediate candidate00594 before Search/Add redesign, explicitly qualified in engineering provenance; not claimed as an RC1 capture."
+    }
+  ],
+  "resolved_findings": [
+    "Replaced universal Flatpak reset instruction with conditional existing-folder re-selection; personal reset is not made mandatory.",
+    "Corrected50-action spacing and shortened Tasks mode interaction tutorial.",
+    "Added narrow actionable interrupted-Food-Undo downgrade recovery exception.",
+    "Centered labels in both new composites; exact unchanged raw app pixels retained.",
+    "Refreshed Food image for complete build62 UI, retained raw capture and immutable source-bound hosting URLs.",
+    "Corrected Task alt text to reflect distinct toolbar Search and full-width capture input before redesign."
+  ],
+  "remaining_gates": "Final candidate source must differ from4310708 only through reviewed docs/evidence; full candidate hosted/exact-artifact gates and actual required target-native acceptance remain independent. Editorial approval makes no Android/Flatpak app-center runtime or publication claim."
+}

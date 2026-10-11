@@ -12,4 +12,6 @@ Experimental 2026.10.4-rc.2 preview.
 If an older version cannot open your profile after an interrupted Food Undo,
 reopen this preview.
 
-![Before: Tasks and Food occupy a separate full-width row. After: Food appears in the existing toolbar dropdown.](https://raw.githubusercontent.com/reddraggone9/tandemlog/b8d99baada92060f3b1f99b4839d28b6b03e8faf/evidence/food-2026.10.4-rc.2/media/toolbar-before-after.png)
+![Before: Food uses a separate section row and view buttons. After: Food fits in the toolbar with Filter and expiration colors.](https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png)
+
+![Before: task capture fills the input row, with a compact Search button in the toolbar. After: full-width Search replaces capture, and Add moves into the toolbar.](https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/task-search-before-after.png)
