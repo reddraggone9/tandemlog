@@ -31,7 +31,7 @@ candidate38152037169/source16cb07d failed nine obsolete unit expectations before
 owner signing. Two fixture-only corrections reproduce9 failures then pass16
 checks with clean analysis and independent acceptance; original60 source hashes
 and all application code remain unchanged. The targeted native editor matrix passes12 variants in4:45; replacement signed
-candidate and exact new Android acceptance remain pending. Any old null-contents
+candidate38153414378/source1bd746e and exact new Android acceptance remain pending. Independent editorial review accepts unchanged notes/media through that exact source. Any old null-contents
 or uninitialized throwaway trial needs a separately coordinated fresh path and
 identity; the cloud does not delete/reset it or touch live data. No RC2 republish,
 stable promotion or dependency upgrade is included.

@@ -2,8 +2,8 @@
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
   "files": {
     "README.md": {
-      "bytes": 10410,
-      "sha256": "9366a168db952e5c761931790c8917af7801286e7f39a51410d19cd4e8053936"
+      "bytes": 10837,
+      "sha256": "04bef88d316e6fc2a107fee4bfa25b0bd764df7b9474906dae567428ff436e62"
     },
     "demo/native-linux-bulk-fields-scripted.mp4": {
       "bytes": 494469,
@@ -196,6 +196,10 @@
     "reviews/independent-editorial-final-review.json": {
       "bytes": 3742,
       "sha256": "78dd11785507ddc7a90770197c0b38ab0da8c132318b5b41ab2fb8ffb137e4b4"
+    },
+    "reviews/independent-editorial-replacement-candidate-addendum.json": {
+      "bytes": 5462,
+      "sha256": "b2e6e04f46854621ef5a2b7bf578b176f49febff2a10b4e7615edea06cc59ae9"
     },
     "reviews/independent-editorial-review.json": {
       "bytes": 7566,

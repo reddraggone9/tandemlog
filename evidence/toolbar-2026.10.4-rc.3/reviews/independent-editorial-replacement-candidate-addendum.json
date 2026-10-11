@@ -1,0 +1,92 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "10ec6fc2f353c340c4a03d51029a1c12dc3188b648e29ec5284bab9b0cfd1ce8",
+  "review": {
+    "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+    "reviewed_at_utc": "2026-10-11T16:00:19.534899+00:00",
+    "outcome": "APPROVED editorial extension through replacement build65 candidate source; no new notes or media needed",
+    "scope": "Independent tiny source-range extension after two existing test-fixture corrections. No heavy tests, new image capture, platform acceptance or publication performed.",
+    "covered_source_range": {
+      "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+      "previous_frozen_candidate": "16cb07d62b3b6ef8432120debf45192c3b522ecd",
+      "replacement_candidate_source": "1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c",
+      "replacement_candidate_run": "38153414378",
+      "version": "2026.10.4-rc.3+65"
+    },
+    "extends": {
+      "path": "runtime-evidence/independent-editorial-final-review.json",
+      "bytes": 3452,
+      "sha256": "1919cd77c040a7a394c55be9a3b39cc8001b79173f5d1496850746aad2a3fcf5"
+    },
+    "notes": {
+      "path": "design/prerelease-notes.md",
+      "bytes": 1116,
+      "sha256": "9a534c754a2d4c6db3ce7909c5b74947b3b93b248649ef86205e5ee63b3b83f4"
+    },
+    "media": {
+      "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+      "bytes": 50298,
+      "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+    },
+    "unchanged": {
+      "application_native_platform_dependencies_packaging_and_pipeline_vs_16": "empty Git diff",
+      "all_previous_60_source_inventory_entries": true,
+      "current_62_source_entries_against_frozen_1bd_git_objects": true,
+      "notes_exact_bytes_vs_16": true,
+      "approved_image_raws_provenance_and_composite_vs_16": true,
+      "immutable_image_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/7515375455d627b8ab224bb39ca8649e97ace053/evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+      "public_image_identity": "Prior HTTP200 exact-byte verification retained; unchanged immutable Git object and current image SHA reverified.",
+      "worktree": "clean when reviewed"
+    },
+    "two_fixture_corrections": [
+      {
+        "file": {
+          "path": "test/food_combined_stock_review_test.dart",
+          "bytes": 5607,
+          "sha256": "d8c4605d0ad53d2bd3bcac808962538110eb8e50c3927f544908d994313c295e"
+        },
+        "observation": "Updates obsolete active-only search expectation to approved all-status search across all views and saved filters; explicit nine-ID ordering/uniqueness/status partition and missing-query checks. This test change introduces no new application behavior."
+      },
+      {
+        "file": {
+          "path": "test/food_editor_keyboard_layout_test.dart",
+          "bytes": 11984,
+          "sha256": "5ae57348ab770a0c3e04d55cf60b8407e0886fcd20cd503c89b68bc1d71782f1"
+        },
+        "observation": "Dismisses existing Brand/Location autocomplete with actual Escape before the next pointer target, as already done for retention suggestions; asserts exact controller value and retained focus. No new user-facing keyboard behavior or visible layout change."
+      }
+    ],
+    "correction_review_receipts": [
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/reviews/independent-hosted-fixture-corrections-review.json",
+        "bytes": 4587,
+        "sha256": "6cf199b473e8a75014ee703248ede725fa10f63ce8636a7535f93ddb864a5f8a"
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/reviews/independent-hosted-fixture-native-closure.json",
+        "bytes": 23623,
+        "sha256": "866e9582ec752c26b98d5a4755baba4b842a78fdda23ead8933a36bd281ad8e0"
+      }
+    ],
+    "evidence_read": [
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/logs/hosted-fixture-corrections-green.txt",
+        "bytes": 3176,
+        "sha256": "bcd7b3b9f2c320fba34ba8787dc07b66f326cbe7ff0fcb6e25f91698cf1c24c3"
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/logs/hosted-fixture-corrections-native.txt",
+        "bytes": 5770,
+        "sha256": "162c800642ac4d6d13208857e5143cbb35886c08925f0c48138b62e4db94e145"
+      }
+    ],
+    "evidence_qualification": "Read16/16 unit terminal result and corrected12-variant native GTK1entry4:45PASS, plus distinct independent source/native closure receipts. Reviewer did not rerun tests. Earlier16-source candidate failed before owner signing; no failed acceptance or unrelated matrix is reused.",
+    "corrected_source_inventory": {
+      "path": "evidence/toolbar-2026.10.4-rc.3/inputs/source-inputs-corrected-hosted-fixtures.json",
+      "bytes": 10287,
+      "sha256": "6a01cff8f3494964f78932eeb13426662861f5689c9717eb21e0ba860d82c108"
+    },
+    "copy_conclusion": "Same four concise change paragraphs and exceptional fresh-trial compatibility paragraph remain accurate. Fixture repairs are engineering changes and require no new public bullet, media refresh or QA assurance. Prior actual synthetic Before/After pixel/crop qualification remains unchanged.",
+    "remaining_gates": "Replacement full hosted/artifact/signing gates, exact affected target-native acceptance and coordinator publication clearance remain independent. No Android/Windows/publication or stable promotion claim."
+  }
+}
