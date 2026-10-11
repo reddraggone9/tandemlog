@@ -1,0 +1,50 @@
+{
+  "disposition": "Shared calendar source correction independently reviewed; local gatesPASS; exact signed63 hosted/native gatesPENDING",
+  "version": "2026.10.4-rc.2+63",
+  "data_operations": "None; synthetic UI fixtures only; no live data",
+  "android62_hold": {
+    "path": "evidence/food-2026.10.4-rc.2/calendar-build63/android62-food-expiry-calendar-hold.png",
+    "bytes": 56502,
+    "sha256": "e86c3f46cd70d11c5fcace5c1287d0d1222ed0652ece8790d85df4a839a89042",
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "apk_sha256": "fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452",
+    "execution": "Parent actual Android480x960/density240 =320x640dp,200%, dark, keyboard dismissed; Food two-digit dates wrap/clip"
+  },
+  "preexisting_qualification": "Same uncustomized picker reproduced with frozen build62 Tasks on Linux, exact matching320x640/200% safe padding24/48; stable56 oldTasks call and samepinnedSDK corroborate existing shared behavior. OldTasksAndroid runtime not inspected.",
+  "focused_checks": {
+    "result": "PASS24",
+    "log": "calendar-final-focused.log",
+    "scope": "12new calendar +7existingcivil-date-input +1datetime-layout +4Food-expiration-validation"
+  },
+  "native_checks": {
+    "result": "PASS12",
+    "log": "calendar-native-final.log",
+    "platform": "Actual Linux GTK, scripted Flutter taps; actualXpointervisible in recording",
+    "scope": "Tasks actualTaskEditor/Food sharedCivilDateInput, dark/light,320x640100/200%,390x640200%; all31one-line glyphs withinparagraph, full-date selected/enabled semantics, fullcelltargets, actualscaler,10/17selection"
+  },
+  "baseline_red": {
+    "result": "ExpectedPASSnormal/FAIL200% day10two lines",
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "log": "calendar-native-before-matched.log",
+    "fixture_only": "New regression helper addedto frozenworktree; production unchanged"
+  },
+  "architecture": "PinnedFlutter3.47.5 Material3 portrait defaults:360x568dialog,16horizontal24verticalinsets,120scaledheader,52actions/52month,7columns/rows,4daypadding. Naturalfontmetrics replaceproseleading onlyiforiginalstylefails; fontsizefitslocalizedwidthandheight. TextScaler unchanged.",
+  "limits": [
+    "Default English actionlabels/styles/currentfonts and tested portrait320/390x640 only; customactionheight/locales/landscape/SDKupdates needtheir own acceptance",
+    "Seven columns320dp cannot48dpdaywidth; actualexistingfullcell37.7x38.9 retained",
+    "Linux isnotAndroid runtime acceptance; replacement exactAPK pending",
+    "No universal16KBAPK runtime/compliance claim; acceptedpreexistingRELROqualification unchanged"
+  ],
+  "pending": [
+    "Full signed candidate63 hosted gates/exact artifacts",
+    "Parent replacement Android shared calendar acceptance both themes200%, normal selection",
+    "SAF childswitch/return withworkspace-clearedUndo and coldUInewv2fixtures",
+    "Independent finalnotes/media review andparent publication clearance"
+  ],
+  "execution_qualification": "Focused24/native12 executed same Dart tokens before final formatter-only reflow of helper; source-inventory binds final formatted source. Full exact frozen candidate gates remain pending.",
+  "release_baselines_verified": {
+    "stable": "v2026.10.3/build56",
+    "preview": "v2026.10.4-rc.1/build60",
+    "method": "Fresh official GitHub latest/release list API2026-10-11; noRC2publication"
+  }
+}

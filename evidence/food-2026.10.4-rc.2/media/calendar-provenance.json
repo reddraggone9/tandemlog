@@ -1,0 +1,34 @@
+{
+  "change": "Readable shared Tasks/Food calendar days at narrow widths and enlarged text",
+  "platform": "Actual Linux GTK/Flutter, synthetic TaskEditor, dark,320x640 logical and native app pixels,200% text, top24/bottom48 safe padding; not Android",
+  "before": {
+    "path": "evidence/food-2026.10.4-rc.2/media/calendar-before-raw.png",
+    "bytes": 34423,
+    "sha256": "7981c5d9f800c8b4fc6c8cfcf0127bd2390db007cd4ba70abb16a7d282b1548a",
+    "application_source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "fixture": "Current calendar regression helper added only to detached frozen app worktree; unchanged production source",
+    "test_log": "calendar-native-before-matched.log",
+    "result": "Normal case passes;200% day10 occupies two lines and fails regression"
+  },
+  "after": {
+    "path": "evidence/food-2026.10.4-rc.2/media/calendar-after-raw.png",
+    "bytes": 39026,
+    "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a",
+    "application_base": "7a2d04e41d9af519b82272613b3290846f353012",
+    "production_file": "lib/presentation/civil_date_input.dart",
+    "production_sha256": "926fbc5baf60b1c6c1d0e35b3039dbfebe514d43ddb28bc474e722f4cfa70690",
+    "test_log": "calendar-native-final.log",
+    "execution_qualification": "Final frozen file received dart formatter-only reflow after exact local tests; same Dart tokens/behavior. Full frozen candidate CI remains required."
+  },
+  "transform": "Crop each raw image(0,250,320,520); no app pixel retouch/rescale; side-by-side on dark canvas with centered Before/After labels and8px gutters",
+  "output": {
+    "path": "evidence/food-2026.10.4-rc.2/media/calendar-before-after.png",
+    "bytes": 31027,
+    "sha256": "16ace4113aa469ce1da6afb84ad8c7f4490e13a0bda18cd5df7b06051c0fdc85",
+    "dimensions": [
+      656,
+      302
+    ]
+  },
+  "qualification": "This media illustrates actual shared Tasks picker Linux before/after. Android62 Food defect is separate actual evidence; replacementAndroid acceptance remains pending."
+}

@@ -37,6 +37,8 @@ import 'data_integrity_test.dart' show registerDataIntegrityTests;
 import 'task_precision_test.dart' show registerTaskPrecisionTests;
 import 'release_version_test.dart' show registerReleaseVersionTests;
 import 'date_time_rows_test.dart' show registerDateTimeRowTests;
+import 'civil_date_picker_workflow_test.dart'
+    show registerCivilDatePickerWorkflowTests;
 import 'text_workflow_test.dart' show registerTextWorkflowTests;
 import 'recurring_text_workflow_test.dart'
     show registerRecurringTextWorkflowTests;
@@ -259,6 +261,7 @@ void main() {
   registerTaskPrecisionTests();
   registerReleaseVersionTests();
   registerDateTimeRowTests();
+  registerCivilDatePickerWorkflowTests();
   registerTextWorkflowTests();
   registerRecurringTextWorkflowTests();
   registerChecklistWorkflowTests();

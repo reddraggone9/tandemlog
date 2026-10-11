@@ -10,8 +10,21 @@ profile fixes. The cancelled build61
 checkpoint predates the expanded scope and is ineligible for handoff/publication.
 [RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md) records tests-first
 failures, implementation and source-qualified independent/native reviews.
-Final full hosted gates and exact build62 Android acceptance remain pending;
-existing build60 acceptance does not attest the expanded changes.
+Build62 full hosted gates passed, but exact Android acceptance found clipped
+calendar days at320dp/200%. Shared Tasks/Food picker correction now passes24
+focused checks and12 native Linux layout/selection cases across320/390×640,
+both themes and normal/enlarged text. All31 day labels retain full-date semantics;
+normal day typography stays unchanged and enlarged dates remain larger than
+normal. Actual native pixels and pointer-visible scripted Linux demo are retained
+with source attribution. Default English action styles and pinned Flutter3.47.5
+portrait geometry define this bounded coverage; no universal custom-theme,
+locale, landscape or48dp-wide day target claim is made.
+
+Build62 Android passes remain attributed to its exact APK. Replacement build63
+requires complete hosted/artifact gates and exact shared-picker Android acceptance,
+plus remaining SAF child switching/return, workspace-cleared Undo and final cold
+new-v2 fixture UI replay. See [native contract](food-native-acceptance.md). Linux
+images do not supply Android acceptance; no RC2 publication has occurred.
 
 ## Stable2026.10.2 — exact accepted candidate published
 

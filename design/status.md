@@ -1,6 +1,31 @@
 # Current status — 2026-10-11
 
-## Next Food preview — complete build62 ready for Android acceptance
+## Shared calendar correction — build62 held; replacement build63 in preparation
+
+Actual build62 Android acceptance at320dp/200% found wrapped and clipped
+two-digit calendar days. The same uncustomized picker reproduces the defect in
+Tasks on native Linux. Released stable56 used the same picker call and pinned
+Flutter SDK; old Tasks Android runtime was not inspected. This is shared picker
+behavior, rather than a Food-specific fork.
+
+The bounded correction fits localized day typography to the pinned Material3
+portrait grid's width and height, using actual font metrics. It retains the user's
+TextScaler, full-date semantics, selection and full-cell tap geometry. Normal
+typography remains unchanged when it fits. Tests cover current default actions,
+English labels, both themes,320/390×640 and100/200% text; arbitrary custom themes,
+other fonts/locales and landscape are not universally attested. No SDK upgrade,
+canonical-format change or live data operation is involved.
+
+Parent reported build62 passes for synthetic upgrade preservation, Task hit areas
+with Gboard, Search/Add clearing, expiration validation/colors, grouped/repeated
+Food Undo and newer peer preservation, legacy certainty, account continuity and
+Task/Food Undo isolation. These remain attributed to build62. SAF child switching/
+return with workspace-cleared Undo and final cold UI replay of new v2 fixtures
+remain pending, alongside exact replacement-APK shared picker acceptance. Build62
+cannot be published. Build63 requires normal complete hosted candidate gates and
+fresh exact-artifact verification; unrelated Android workflows need not be rerun.
+
+## Prior complete build62 — successful hosted gates; Android calendar HOLD
 
 The approved batch includes the existing-toolbar Tasks/Food dropdown, date-only
 Food interface and short-title Tasks Inbox hit-area fix, plus default full-width
@@ -26,7 +51,7 @@ verification accept all three original archives and14 members, including the
 owner-signed APK artifact11696122674/code62,
 SHA256 `fe63572d1808a190a1b6bea228280d57f7342ae6c81247c6d353b84b84a94452`.
 [Exact native handoff](../evidence/food-2026.10.4-rc.2/candidate/build62/README.md)
-records evidence and the eight pending affected Android items plus Show taps demo.
+records original evidence and the subsequent Android calendar HOLD.
 
 The cancelled intermediate build61 and failed d38/43df attempts remain ineligible.
 Isolated audited-tool extraction, byte-preserving frozen-fixture checkout and

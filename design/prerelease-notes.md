@@ -6,6 +6,7 @@ Experimental 2026.10.4-rc.2 preview.
 - Food Add and edit require an expiration date, using the same calendar control as Tasks. Certainty fields and optional-label suffixes are gone.
 - Undo Food additions, edits, contents changes, removals and restores through a 50-action session stack.
 - Fixed tapping the blank middle of short Inbox tasks to open the editor.
+- Fixed clipped calendar day numbers in Tasks and Food on narrow screens with larger text.
 - Fixed shifting Food controls when expanding a group, and a Task Undo notice remaining active after switching to Food.
 - Linux Flatpak now shows Tandemlog in app centers and uses private sandbox storage. If an update or local reset opens setup, select your existing synced folder again.
 

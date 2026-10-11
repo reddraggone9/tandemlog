@@ -4,7 +4,7 @@
   "build": 62,
   "candidate_run": 38121211371,
   "push_ci_run": 38121201969,
-  "status": "Original signed artifacts verified; parent exact Android acceptance pending",
+  "status": "HOLD: actual exact build62 Android320dp/200% calendar days wrap/clip; replacement build63 required",
   "expected_package": "com.reddraggone9.tandemlog",
   "expected_certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
   "actual_android_artifact": {
@@ -23,8 +23,10 @@
   "scope_completion": "Complete approved feature scope, independently reviewed; current app Dart/native/shipped payload code unchanged after final956unit/13affectedGTK checks",
   "undo_compatibility": "New closed Foodv2 Undo only; all originalFoodv1/Taskv3/manifest records unchanged. Contribution-specific retraction preserves newer peer edits. RC1 canonicalv2 isolates Food; same-profile unresolvedprotectedv2 downgrade can block workspace admission while retainingexactbytes; reopen compatiblepreview to recover. No Redo;50action sessionstack.",
   "remaining_gates": [
-    "Parent exact APK eight affected Android workflows and Show taps demo",
-    "Fresh private parent quota/publication clearance"
+    "Replacement build63 full hosted candidate gates and exact artifacts",
+    "Parent replacement exact APK shared Tasks/Food picker acceptance",
+    "SAF child switching/return and workspace-cleared Undo; final cold UI replay of new v2 fixtures",
+    "Fresh private parent publication clearance"
   ],
   "data_boundary": "Disposable synthetic profiles only; no live synced data reset/import/migration/copy/deletion",
   "failed_prior_attempt": {
@@ -65,5 +67,24 @@
   "stable_promotion_performed": false,
   "android_static_qualification": "WholeAPK ZIP and frozen custom-text ELF/RELRO/export/notices PASS; all15 LOADalignment/congruence PASS. Three supplemental64bitframeworkSQLiteRELRO ends differ from officialguidance; exactsame12nonAOTlibrarybytes in stable56/RC60/RC62; no introducedregression or establishedcrash. No newgate/dependencyupgrade.",
   "parent_RELRO_disposition": "Accepted pre-existing unchanged-library limitation; not a newRC2gate; no fullAPK16Kcompliance/runtimeclaim",
-  "undo_peer_concurrency_evidence": "reviews/undo-peer-concurrency-evidence-and-parent-disposition.json"
+  "undo_peer_concurrency_evidence": "reviews/undo-peer-concurrency-evidence-and-parent-disposition.json",
+  "parent_android_disposition": {
+    "source": "Parent exact build62 synthetic Android acceptance report; not cloud runtime execution",
+    "calendar": "HOLD: dark320dp/200%, keyboard dismissed, two-digit dates wrap/clip",
+    "reported_passes": [
+      "synthetic RC1 upgrade preservation",
+      "Task short-row hits normal/200% with Gboard",
+      "Search/Add clearing",
+      "required expiration and both-theme urgency colors",
+      "grouped operations and repeated Food Undo",
+      "newer peer/edit/deletion/date preservation",
+      "mixed legacy certainty",
+      "user and Settings continuity",
+      "Task/Food Undo isolation"
+    ],
+    "remaining": [
+      "SAF child switching/return and workspace-cleared Undo",
+      "final cold UI replay of new v2 fixtures"
+    ]
+  }
 }

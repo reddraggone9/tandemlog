@@ -1,5 +1,13 @@
 # Complete build62 native handoff
 
+**Subsequent disposition: HOLD.** Parent's actual exact-APK Android check at
+320dp/200% found wrapped/clipped two-digit calendar days. Several affected
+workflows passed with this exact APK, but it is ineligible for publication.
+The bounded shared Tasks/Food correction requires replacement build63 and new
+exact-APK picker acceptance. Remaining Android work is SAF child switching/
+return with workspace-cleared Undo and final cold UI replay of new v2 fixtures.
+The evidence below retains its original source/artifact attribution.
+
 The full approved Food RC2 batch is implemented and independently reviewed.
 Source `7ae14371fa0b734599fcdbb184d93376b8898a2a` passes [signed candidate 38121211371](https://github.com/reddraggone9/tandemlog/actions/runs/38121211371)
 and [push CI38121201969](https://github.com/reddraggone9/tandemlog/actions/runs/38121201969).

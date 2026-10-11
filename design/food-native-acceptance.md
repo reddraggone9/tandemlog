@@ -1,6 +1,30 @@
 # Food RC native acceptance
 
-## Complete RC2/build62 — exact original artifacts ready; Android pending
+## Build62 calendar HOLD and bounded replacement acceptance
+
+Parent's exact owner-signed build62 Android run at480×960px/density240
+(320×640dp),200% text and dark theme found two-digit days wrapping/clipping.
+Build62 is held. Shared Tasks/Food picker correction requires a new build63;
+the exact signed replacement APK must pass readable/selectable dates10/15/17
+at320dp/200% in both themes for Tasks and Food, with keyboard dismissed, plus
+normal-scale selection and accessible full-date selected/enabled labels. Keep
+the existing full-cell targets; seven columns at320dp do not provide48dp widths.
+Do not infer Android acceptance from native Linux captures.
+
+Retain parent-reported build62 passes with their original APK attribution:
+synthetic RC1 upgrade preservation, Task middle-row hits with Gboard, Search/Add
+clearing, expiration validation/colors, grouped/repeated Food Undo and newer-peer
+preservation, legacy certainty, user/settings continuity and Task/Food Undo
+isolation. Remaining bounded Android work is SAF child-folder switching/return,
+workspace-cleared Undo and final cold UI replay of the new v2 fixtures. Hosted
+checks cover partial-write retry,50-action capacity and frozen older readers;
+private importer/root injections were not run and are not requested here.
+
+Replacement still requires the complete hosted candidate gates, exact source/
+signer/hash/package verification and parent acceptance/clearance before any RC2
+publication. No stable behavior promotion is authorized by this correction.
+
+## Original RC2/build62 handoff — historical; superseded by calendar HOLD
 
 Complete executable source `7ae14371fa0b734599fcdbb184d93376b8898a2a` passes all five jobs in
 [signed candidate38121211371](https://github.com/reddraggone9/tandemlog/actions/runs/38121211371)

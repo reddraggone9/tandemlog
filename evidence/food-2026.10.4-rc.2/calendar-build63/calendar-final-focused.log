@@ -1,0 +1,84 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: (setUpAll)
+00:00 +0: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:00 +1: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:00 +2: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+CALENDAR day=10 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+00:01 +3: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+CALENDAR day=15 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+00:01 +4: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:01 +5: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:01 +6: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:01 +7: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 1.0x
+00:02 +8: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp dark 2.0x
+CALENDAR day=10 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=23.7890625 scaler=2.0
+00:02 +9: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:02 +9: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at390dp dark 2.0x
+CALENDAR day=10 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=24.3125 scaler=2.0
+00:03 +9: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+00:03 +10: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:03 +10: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp light 1.0x
+CALENDAR day=10 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+00:04 +11: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:04 +11: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at320dp light 2.0x
+CALENDAR day=10 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=23.7890625 scaler=2.0
+00:05 +12: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+00:05 +12: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Tasks Due calendar days are readable at390dp light 2.0x
+CALENDAR day=10 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=24.3125 scaler=2.0
+00:05 +13: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:05 +13: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at320dp dark 1.0x
+CALENDAR day=10 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+00:06 +13: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+00:06 +14: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:06 +14: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at320dp dark 2.0x
+CALENDAR day=10 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=23.7890625 scaler=2.0
+00:06 +15: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:06 +15: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at390dp dark 2.0x
+CALENDAR day=10 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+00:06 +15: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+00:06 +15: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at390dp dark 2.0x
+CALENDAR day=15 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=24.3125 scaler=2.0
+00:07 +16: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:07 +16: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at320dp light 1.0x
+CALENDAR day=10 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(19.0, 24.0) boxes=[TextBox.fromLTRBD(0.3, 2.6, 19.2, 21.4, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 346.9, 216.6, 389.1) effectiveFont=16.0 scaler=1.0
+00:07 +17: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:07 +17: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at320dp light 2.0x
+CALENDAR day=10 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(27.7, 28.0) boxes=[TextBox.fromLTRBD(0.3, 0.1, 28.0, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(178.9, 360.6, 216.6, 399.4) effectiveFont=23.7890625 scaler=2.0
+00:07 +17: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+00:07 +18: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+00:08 +18: /tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart: Food Expiration calendar days are readable at390dp light 2.0x
+CALENDAR day=10 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR day=15 paragraph=Size(28.3, 28.0) boxes=[TextBox.fromLTRBD(0.3, -0.5, 28.6, 28.0, TextDirection.ltr)]
+CALENDAR target=Rect.fromLTRB(218.9, 360.6, 266.6, 399.4) effectiveFont=24.3125 scaler=2.0
+00:08 +19: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+00:09 +20: /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart: manual Food Add requires a valid expiration before any command
+00:11 +21: /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart: manual edit cannot clear an existing valid Food expiration
+00:11 +22: /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart: legacy undated Food stays readable and Cancel preserves it; manual Save requires date
+00:12 +23: /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart: observed grouped edit preserves concurrently mixed dates unless expiration explicitly changes
+00:13 +24: All tests passed!

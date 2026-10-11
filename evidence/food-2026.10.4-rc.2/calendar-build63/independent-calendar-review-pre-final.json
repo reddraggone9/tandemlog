@@ -1,0 +1,145 @@
+{
+  "review": "Independent bounded shared civil-date picker architecture/layout review",
+  "reviewer": "/root/architecture_review",
+  "reviewedAtUtc": "2026-10-11T10:19:46.930358+00:00",
+  "worktree": "/tmp/tandemlog-food-date-readability",
+  "baseHead": "7a2d04e41d9af519b82272613b3290846f353012",
+  "verdict": "ACCEPTED_SCOPED_SOURCE_AND_SUPPORTING_LINUX_NATIVE_LAYOUT",
+  "mustFix": [],
+  "sourceBindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/civil_date_input.dart",
+      "sha256": "6e7d8070ba36b31399ffafa42320e6e2d5a952338928c3789c0e1385ef84a6b0",
+      "bytes": 6115
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/civil_date_picker_layout_test.dart",
+      "sha256": "46a05d28434ebc84790015350e26948b411326a0577c1fb3a7a850ba6312cf7b",
+      "bytes": 8229
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/civil_date_picker_workflow_test.dart",
+      "sha256": "2a8ee7d4ec515cafa4614619929a617976f1ab2b5814da8f7ae18e69db2505e5",
+      "bytes": 676
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/task_flow_test.dart",
+      "sha256": "33d97de39892d2a2e5c88acff6c041eacbeaad2d4dd89f037fc6c029777297bf",
+      "bytes": 174129
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/presentation/task_editor.dart",
+      "sha256": "8ca099bee9453224635153e3bc88eacddc93ef5b5d890b8319539816491b5f66",
+      "bytes": 41701
+    }
+  ],
+  "pinnedSdkBindings": [
+    {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/material/date_picker.dart",
+      "sha256": "8e9e6f990cf537db3ead6505fd0920683458d0d9bdb176eccc967922cab660af",
+      "bytes": 130268
+    },
+    {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/material/calendar_date_picker.dart",
+      "sha256": "31ddcd9a3b81332be79c2e2dd93dabd60ce3f9c3dfbbe4c1189c67d17c31b730",
+      "bytes": 59424
+    },
+    {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/material/date_picker_theme.dart",
+      "sha256": "33628d0c636297ee1d8d4891c5dc49746588e5eb99c8bbdca64816b48a00cd04",
+      "bytes": 53720
+    },
+    {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/material/dialog.dart",
+      "sha256": "d523ada19c8aa22e9ef1948ca93a5bbff78242836796570abacbb118b8dc0ee4",
+      "bytes": 73030
+    },
+    {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/widgets/safe_area.dart",
+      "sha256": "b4a6f7d84e91d3896204024f436ad085cb79767fc7e34695b7501a9261ab4b94",
+      "bytes": 8100
+    }
+  ],
+  "reviewedBehavior": [
+    "The only production correction in this scope is a local showDatePicker builder in shared CivilDateInput, used by actual TaskEditor Due date and Food Expiration. Original controller/date selection/validation/draft ownership, date bounds and context.mounted update guard remain intact.",
+    "Original style is unchanged when localized labels fit both dimensions. Fitted numeric days use natural font height and binary-search nominal font size after measuring all1..31 localized labels with actual direction/locale and the existing SDK grid scaler. No route/global MediaQuery override or framework modification.",
+    "Effective enlarged day fonts remain greater than normal16: native20.921875 at2x; Roboto23.7890625 at320 and24.3125 at390. TextScaler remains2x. Other picker theme fields remain copied, including colors/shapes/actions; fitted day font size and prose leading are deliberate localized changes.",
+    "Portrait width is clamped to actual pinned default calendar dialog360*dialogScale and route availability. Height budget follows pinned568 dialog, header120/current-entry1.4 scale, actions min52/month52, seven rows with48 plus scale growth. Builder receives SafeArea-adjusted constraints; it does not subtract original outer safe padding twice.",
+    "Current tests inspect all31 glyph selection boxes for one-line/vertical/horizontal containment, full-date button enabled/selected semantics, actual InkResponse cell geometry, unchanged scaler/enlarged font, no exceptions and day10 then17 selection returning17. Assertions were not weakened for native font differences.",
+    "Normal integration runner imports/registers the same twelve-case workflow rather than relying solely on isolated widget tests. Native wrapper uses existing environment-gated actual capture/pointer helper; it does not change production input behavior."
+  ],
+  "evidenceBindings": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-final-focused.log",
+      "sha256": "23c1df2d409eec4aa28110bc7282a3daad0c85328dd254fbfca1ae026bf9210a",
+      "bytes": 10045
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-native-final.log",
+      "sha256": "9a80b9f5118c9f74fd613ecfd100c63545eea61525fe72963be3815caf5b1e1c",
+      "bytes": 9677
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-analysis.log",
+      "sha256": "356b47bbd1c6c2e1be2a835179360df520bbf5cb4cdef6d3df05c336511c2396",
+      "bytes": 96
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-layout-red-final.log",
+      "sha256": "f4d9cafdd14321ee9d9f65b77e6b2c70ad7d048e89c34ce0dc0fa50dec533ac3",
+      "bytes": 9105
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-native-before.log",
+      "sha256": "c211c60e31913175f983c3a65aa7c659ac27646f12c264feb677149a909c66a6",
+      "bytes": 14140
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/calendar-native-after.log",
+      "sha256": "e6c3ff70b0e24c895193fa7bee1fdb898869c7adb925a5f87b8865df91919293",
+      "bytes": 14836
+    }
+  ],
+  "evidenceResults": {
+    "focusedWidgetAndValidation": "24 passed terminal in11seconds; includes12 calendar320x6401x/2x and390x6402x across Tasks/Food and both themes plus existing date validation/layout checks.",
+    "nativeGtk": "12 passed terminal in39seconds on real Linux GTK; natural native font differences preserved.",
+    "analysis": "No issues found, four items8.1seconds.",
+    "independentExecution": "Reviewer read source/tests/pinned SDK/logs and viewed actual pixels; did not build/run tests or emulate Android."
+  },
+  "executionAttribution": "Native12/focused24 executed the natural-metric implementation before parent-reported post-run curly-brace formatting and added pumpAndSettle after each10/17/OK tap. Current source is separately hash-bound here. Those changes preserve production semantics and strengthen settled test selection; current exact-source native rerun/full candidate remains parent-owned and is not claimed completed here.",
+  "actualPixelsViewed": [
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/food-200-expiry-calendar.png",
+      "sha256": "e86c3f46cd70d11c5fcace5c1287d0d1222ed0652ece8790d85df4a839a89042",
+      "bytes": 56502
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/native-before/tasks-dark-2.0x.png",
+      "sha256": "8713d58df48b2f41aec3ea9670db674530cf96fea45126f3287fe0db60794f3a",
+      "bytes": 35049
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/native-after/tasks-dark-2.0x.png",
+      "sha256": "eb6ebcb02b75a2a19a112fa6a2c1d0d01818f21103cc4805516d4227558a8355",
+      "bytes": 40105
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/native-final/tasks-dark-2.0x.png",
+      "sha256": "8e682c53901e278574976bad35c3b8cf8393cda954a17a883b1e1de18c76370a",
+      "bytes": 39026
+    },
+    {
+      "path": "/tmp/food-calendar-acceptance-20261011/native-final/food-light-2.0x-390dp.png",
+      "sha256": "7d202ca2204fa04247efb14a25a7ebebc48658fbf8e72bab6da0d31f7c38b095",
+      "bytes": 40924
+    }
+  ],
+  "pixelConclusion": "Actual Android62 HOLD and Linux baseline show two-digit wrapping/clipping. Final Linux dark Tasks320/2x and light Food390/2x show all day numbers readable with selected/today styling and Cancel/OK. Header ellipsis at320 remains a separate pre-existing behavior; this acceptance addresses numeric days.",
+  "limitationsAndRemainingGates": [
+    "Geometry assumptions deliberately bind pinned Flutter3.47.5/default Material3 portrait calendar and current action styles/English locale. Measuring localized digits preserves formatting, but arbitrary custom action height/localization/font combinations, landscape/Material2/extreme viewport sizes and future SDK layouts are not certified; revisit fitting constants before framework/layout upgrades.",
+    "Day targets remain original cells:320 case approximately37.7wide by38.9high at2x. Seven columns cannot provide48px-wide targets at320; no48px day-target claim or spoken-device acceptance.",
+    "No Task canonical/Food storage/hash/schema/dependency changes belong to this correction. Manual civil-date entry remains available.",
+    "Source evidence attributes identical earlier Task showDatePicker use to stable56; it is not an oldTasksAndroid runtime reproduction.",
+    "Exact replacement Android artifact/manual calendar acceptance, full frozen-source hosted aggregate, release metadata/editorial/version/signer and parent publication gates remain pending. Build62 Food Android HOLD is not closed by Linux proof."
+  ]
+}
