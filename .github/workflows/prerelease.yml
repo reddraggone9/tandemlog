@@ -1,96 +1,71 @@
-name: Experimental prerelease
+name: Isolated dependency smoke (no publication)
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Candidate tag, e.g. v2026.10.0-rc.1'
-        required: true
-        type: string
-      candidate_run_id:
-        description: 'Successful Build signed candidate run with all platform gates green'
-        required: true
-        type: string
-      android_verified_sha256:
-        description: 'SHA-256 of that exact APK after native installation/launch and required QA passed'
-        required: true
-        type: string
-      draft_release_id:
-        description: 'Optional exact owner-authorized private draft; attach assets only, then finalize through authorized connection'
+      source_run_id:
+        description: 'Earlier successful smoke producer run; blank seeds a fixture'
         required: false
         default: ''
         type: string
+# Existing read-only scopes. No write scopes, signing, release jobs, secrets,
+# or candidate concurrency group exist in this temporary branch workflow.
 permissions:
   contents: read
   actions: read
 concurrency:
-  group: prerelease-${{ inputs.tag }}
+  group: dependency-smoke-${{ github.ref }}
   cancel-in-progress: false
 jobs:
-  candidate:
+  artifact:
     runs-on: ubuntu-24.04
-    outputs:
-      sha: ${{ steps.source.outputs.sha }}
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          fetch-depth: 0
-      - id: source
+          name: dependency-smoke
+          path: ${{ runner.temp }}/seed/*
+          retention-days: 2
+          if-no-files-found: error
+      - name: Require a different source run
+        if: inputs.source_run_id != ''
         env:
-          GH_TOKEN: ${{ github.token }}
-          CANDIDATE_RUN_ID: ${{ inputs.candidate_run_id }}
-          CANDIDATE: ${{ inputs.tag }}
-          RELEASE_KIND: prerelease
-        run: |
-          test "$GITHUB_REF" = refs/heads/main
-          python3 tool/candidate_source.py
-  publish:
-    needs: candidate
-    runs-on: ubuntu-24.04
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
-        with:
-          ref: ${{ needs.candidate.outputs.sha }}
-          fetch-depth: 0
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+        run: test "$SOURCE_RUN_ID" != "$GITHUB_RUN_ID"
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+        if: inputs.source_run_id != ''
         with:
-          run-id: ${{ inputs.candidate_run_id }}
+          name: dependency-smoke
+          run-id: ${{ inputs.source_run_id }}
           github-token: ${{ github.token }}
-          pattern: '{linux,windows,android-release}'
-          path: dist
-          merge-multiple: true
-      - name: Verify accepted APK and installed desktop gates; publish experimental preview
-        env:
-          GH_TOKEN: ${{ github.token }}
-          CANDIDATE: ${{ inputs.tag }}
-          CANDIDATE_SHA: ${{ needs.candidate.outputs.sha }}
-          ANDROID_VERIFIED_SHA256: ${{ inputs.android_verified_sha256 }}
-          RELEASE_KIND: prerelease
-          DRAFT_RELEASE_ID: ${{ inputs.draft_release_id }}
+          path: ${{ runner.temp }}/received
+          digest-mismatch: error
+      - name: Require exact filenames, bytes and checksums
+        if: inputs.source_run_id != ''
+        run: python3 tool/dependency_smoke.py verify "$RUNNER_TEMP/received"
+  native-folder:
+    if: inputs.source_run_id == ''
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11
+      - uses: ./.github/actions/setup-flutter
+      - run: flutter pub get --enforce-lockfile
+      - run: dart format --output=none --set-exit-if-changed integration_test/folder_actions_smoke_test.dart
+      - run: python3 tool/dependency_smoke.py desktop "$RUNNER_TEMP/folder-smoke"
+      - name: Real native Linux folder opening with spaces and Unicode
         run: |
-          # Always use the trusted dispatch policy even when selecting an older
-          # candidate. Cwd/source/artifacts remain that exact candidate.
-          mkdir .release-policy
-          for policy in app_version.py android_release.py publish_gate.py release_assets.py attach_preview_assets.py; do
-            git show "$GITHUB_SHA:tool/$policy" > ".release-policy/$policy"
-          done
-          python3 .release-policy/publish_gate.py
-          cd dist
-          sha256sum --check linux-SHA256SUMS.txt
-          sha256sum --check windows-SHA256SUMS.txt
-          sha256sum --check android-SHA256SUMS.txt
-          cd ..
-          # Artifact/source gates remain pinned to the accepted candidate.
-          # Copy may be corrected in a later approved docs-only main commit;
-          # pin it to this dispatch commit, not a moving branch at publish time.
-          git show "$GITHUB_SHA:design/prerelease-notes.md" > release-notes.md
-          # Evidence/checksums stay in the gated candidate; users see installers.
-          python3 .release-policy/release_assets.py
-          if [[ -n "$DRAFT_RELEASE_ID" ]]; then
-            python3 .release-policy/attach_preview_assets.py
-          else
-            gh release create "$CANDIDATE" public-assets/* \
-              --target "$CANDIDATE_SHA" --title "$CANDIDATE — experimental" --prerelease --latest=false --notes-file release-notes.md
-          fi
+          export TANDEMLOG_FOLDER_SMOKE_ROOT="$RUNNER_TEMP/folder-smoke"
+          export XDG_CONFIG_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/config"
+          export XDG_DATA_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/data"
+          xvfb-run -a dbus-run-session -- flutter test integration_test/folder_actions_smoke_test.dart -d linux
+      - name: Real native Linux missing file-manager failure
+        run: |
+          export TANDEMLOG_FOLDER_SMOKE_ROOT="$RUNNER_TEMP/folder-smoke"
+          export TANDEMLOG_FOLDER_SMOKE_MISSING=1
+          export XDG_CONFIG_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/missing/config"
+          export XDG_DATA_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/missing/data"
+          export XDG_DATA_DIRS="$TANDEMLOG_FOLDER_SMOKE_ROOT/missing/system"
+          xvfb-run -a dbus-run-session -- flutter test integration_test/folder_actions_smoke_test.dart -d linux
