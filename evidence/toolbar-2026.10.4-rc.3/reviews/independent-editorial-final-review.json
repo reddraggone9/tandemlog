@@ -1,0 +1,51 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "1919cd77c040a7a394c55be9a3b39cc8001b79173f5d1496850746aad2a3fcf5",
+  "review": {
+    "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+    "reviewed_at_utc": "2026-10-11T15:38:40.726760+00:00",
+    "outcome": "APPROVED final RC3 notes and media; no unresolved editorial findings",
+    "scope": "Final tiny immutable-source/link recheck closing prior complete working-tree notes/media review. No signed candidate, Android acceptance or publication authorization asserted.",
+    "covered_source_range": {
+      "base": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+      "source_and_media_commit": "7515375455d627b8ab224bb39ca8649e97ace053",
+      "final_candidate_source": "16cb07d62b3b6ef8432120debf45192c3b522ecd",
+      "version": "2026.10.4-rc.3+65"
+    },
+    "prior_complete_review": {
+      "path": "runtime-evidence/independent-editorial-review.json",
+      "bytes": 7104,
+      "sha256": "52ea79f083d8d749905559f75e5122a12ada143efe65f3dc3eab63a271902ab7"
+    },
+    "notes": {
+      "path": "design/prerelease-notes.md",
+      "bytes": 1116,
+      "sha256": "9a534c754a2d4c6db3ce7909c5b74947b3b93b248649ef86205e5ee63b3b83f4"
+    },
+    "notes_matches_exact_final_source_git_object": true,
+    "notes_assessment": "Previously approved four concise change paragraphs and exceptional fresh-trial compatibility action remain unchanged. Only descriptive media Markdown added at matching expanded-row paragraph. Alt and adjacent text together identify cleanup: contents retained, opaque IDs/repeated count removed, less action spacing. No QA/preservation assurances, private data or claims about Android/publication.",
+    "closure_checks": {
+      "all_60_settled_source_files_match_reviewed_hashes_and_final_Git_objects": true,
+      "751_to16_application_test_native_platform_dependency_packaging_workflow_diff": "empty",
+      "envelope_delta": "Preserves raw QA logs as.txt, updates engineering README/manifest and notes image link; scoped.gitattributes -text -whitespace records literal evidence bytes only.",
+      "current_worktree": "clean when reviewed",
+      "manifest_files": 45,
+      "manifest_mismatches": []
+    },
+    "approved_media": {
+      "binding": {
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+        "bytes": 50298,
+        "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+      },
+      "immutable_image_commit": "7515375455d627b8ab224bb39ca8649e97ace053",
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/7515375455d627b8ab224bb39ca8649e97ace053/evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+      "http_status": 200,
+      "downloaded_bytes_match_reviewed_local_and_immutable_Git_object": true,
+      "prior_actual_pixels_crop_provenance_and_synthetic_data_review_retained": true,
+      "qualification": "Actual dark nativeLinux component app320/200%, matched unscaled crops; pre-cleanup Before working-source inputs explicitly qualified, not releasedRC2/Android capture. No pixel changes since prior review."
+    },
+    "raw_log_qualification": "Frozen engineering receipts retain earlier run attribution; now committed.txt files replace ignored.log filenames without turning scoped/failed historical checks into current passes.",
+    "remaining_requirements": "Use exact final notes SHA9a534c754a2d4c6db3ce7909c5b74947b3b93b248649ef86205e5ee63b3b83f4 and approved immutable image bytes. Full candidate/artifact/exact native acceptance and coordinator clearance remain separate; no publication occurred in this review."
+  }
+}

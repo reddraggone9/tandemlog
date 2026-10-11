@@ -2,8 +2,8 @@
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
   "files": {
     "README.md": {
-      "bytes": 7720,
-      "sha256": "2541e331cd199c667329e9eda31ea4e779e5e0456edceed3a088c4d9f9c72749"
+      "bytes": 8016,
+      "sha256": "58dfc87ded50716bbcc9999285751ae5da53aeeebef050d07795e4c4463fa147"
     },
     "demo/native-linux-bulk-fields-scripted.mp4": {
       "bytes": 494469,
@@ -152,6 +152,10 @@
     "reviews/continue-readiness-addendum.json": {
       "bytes": 2392,
       "sha256": "4f88b046f5e1aa68451a204be872a2800391fb1fe3fbe6419092fab88f7dc7fa"
+    },
+    "reviews/independent-editorial-final-review.json": {
+      "bytes": 3742,
+      "sha256": "78dd11785507ddc7a90770197c0b38ab0da8c132318b5b41ab2fb8ffb137e4b4"
     },
     "reviews/independent-editorial-review.json": {
       "bytes": 7566,
