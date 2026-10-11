@@ -1,0 +1,96 @@
+{
+  "checked_at_utc": "2026-10-11T19:34:56.193242+00:00",
+  "verdict": "HOLD_CANCELLED_PRE_SIGN_NO_ELIGIBLE_ORIGINALS",
+  "candidate_run": 38166126728,
+  "source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+  "version": "2026.10.4-rc.3+67",
+  "terminal_conclusion": "cancelled",
+  "jobs": [
+    {
+      "id": 114555689465,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T19:31:54Z",
+      "completed_at": "2026-10-11T19:32:01Z"
+    },
+    {
+      "id": 114555723589,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-11T19:32:03Z",
+      "completed_at": "2026-10-11T19:33:27Z"
+    },
+    {
+      "id": 114555723625,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-11T19:32:03Z",
+      "completed_at": "2026-10-11T19:33:38Z"
+    },
+    {
+      "id": 114555723642,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-11T19:32:03Z",
+      "completed_at": "2026-10-11T19:33:27Z"
+    },
+    {
+      "id": 114556062331,
+      "name": "signed-android",
+      "status": "completed",
+      "conclusion": "cancelled",
+      "started_at": "2026-10-11T19:33:39Z",
+      "completed_at": "2026-10-11T19:33:38Z"
+    }
+  ],
+  "artifacts_present": [],
+  "frozen_source": "PASS482Git/checkout files,82input entries,157evidence entries. Only synthetic SQLite fixture lifetime and version67 differ versus66; app/native/platform/pipeline/dependencies unchanged. Snapshot does not assert later mutable checkout equality.",
+  "predecessor66": "Terminal fullnative result155passed3failed plusWindowsfixturecleanupfailure; parent owns single Linux decoded-log retrieval/cause assessment.",
+  "corroboration": "Same-source automatic CI Windows tooling and job success independently retained by root. This does not establish signed candidate gate success, signing or installed Android acceptance.",
+  "release_originals_downloaded": false,
+  "signed_apk_produced": false,
+  "parent_android_qa_handoff": false,
+  "publication_eligibility": false,
+  "preservation": "No original/source/log/data/oldtask files removed; no local native/UI testing, rebuild or source/docs modification by reviewer. Both observer processes reached terminal and exited.",
+  "receipts": [
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/frozen-source-inventory-independent-verification.json",
+      "bytes": 85711,
+      "sha256": "8c5c7a74d2ca9b7db5c564de21aa8354a688a050d6656041beb240502efbfef8"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/final-run-api.json",
+      "bytes": 12643,
+      "sha256": "9c6abaceaf664cb4c9866000e9cd94a41d58763c69d3f401c90d0fd6ac3b6b61"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/final-jobs-api.json",
+      "bytes": 17777,
+      "sha256": "65cd64c248fbd1d6d9be477aa700e8a9079350886d27831a19986191b43e4970"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/final-artifacts-api.json",
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/build67-windows-fixture-hosted-corroboration.json",
+      "bytes": 773,
+      "sha256": "53f2dd39c88444bf3340389d3756fa6126ee4056e5836990efb3d2b794d422b3"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/build67-windows-fixture-hosted-green-receipt.json",
+      "bytes": 809,
+      "sha256": "5bceb1eae4be1f4d73c8d757cb80ff7b02f825f25ad029450b6540c705a68fd1"
+    },
+    {
+      "path": "/tmp/food-rc67-final-artifact-review/root-docs-only-source-equivalence.json",
+      "bytes": 983,
+      "sha256": "0454088d1e3826c2248ffcdfd642466524c859676cc6d301e40f2228d5f797eb"
+    }
+  ]
+}

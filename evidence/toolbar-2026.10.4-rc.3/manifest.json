@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Exact current docs/evidence extension. Frozen build67 source3ae00be retains157-entry manifest; this extension adds frozen reviews/dispatch and actual automaticWindows fix corroboration, separately qualified from pending signed-candidate gates. Executable and notes/media bytes remain unchanged.",
+  "qualification": "Build68 source/evidence freeze preparation.83 inputs include navigation. Terminal failed66 and cancelled67, actual qualified native reproduction/correction, independent reviews and clean scoped checks are retained; no aggregate/signing/original/Android success is claimed. Historical evidence retains original scope.",
   "files": {
     "README.md": {
-      "bytes": 23163,
-      "sha256": "e5372ccfb92dfabc29c9f9e4227556ea6459fbe5715d9f54fb873c7ed51f9eec"
+      "bytes": 24952,
+      "sha256": "a60c5eedeea3166733769f24d50b8de121db10f548d8c81918c6740ebb024434"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -90,9 +90,41 @@
       "bytes": 10533,
       "sha256": "f4b950f8624876f9a8bad9249537237c1a56b448b587d3fa81851aa24d3c980b"
     },
+    "candidate/held-38165025596/failed-38165025596-independent-hold-disposition.json": {
+      "bytes": 12477,
+      "sha256": "4b0ddf15c2480597e0274ea72e77623e3a8f20762ebf607da6029742ef6d7130"
+    },
+    "candidate/held-38165025596/failed-linux-check-annotations-api.json": {
+      "bytes": 605,
+      "sha256": "3983b014a0168fe7a49f665311868bfea77d2df788916285bcf872893f259441"
+    },
+    "candidate/held-38165025596/failed-linux-check-run-api.json": {
+      "bytes": 3072,
+      "sha256": "b07a4cc6c849bb852d5bb1b1e8d6fe77d535afa0ccfb3bd7c143e1751d2ce381"
+    },
+    "candidate/held-38165025596/failed-linux-provider-decoded.txt": {
+      "bytes": 608699,
+      "sha256": "d9b13f99dfcbc3dd2cffe79f7a0585dcb875a7bda1a2f288ea18cba43322a148"
+    },
     "candidate/held-38165025596/failed-windows-provider-decoded.txt": {
       "bytes": 333262,
       "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731"
+    },
+    "candidate/held-38165025596/final-artifacts-api.json": {
+      "bytes": 1403,
+      "sha256": "075dd466c2b605eddda17589906a01e5b0e533e69cd8e44c352fa6c16c4ee414"
+    },
+    "candidate/held-38165025596/final-jobs-api.json": {
+      "bytes": 17763,
+      "sha256": "8afeb5fd2577a74fc9d57bf62b0d1f6628bb0ccfbf33148b2cfddfa0ecd5ed25"
+    },
+    "candidate/held-38165025596/final-run-api.json": {
+      "bytes": 12634,
+      "sha256": "5188618e68f8962f5d4347a21ab2bfbb2389eeea66260ae0d3b12bb5aa662bb5"
+    },
+    "candidate/held-38165025596/linux-native-failures-independent-observation.json": {
+      "bytes": 2282,
+      "sha256": "df7c2ab0655a96c81d56afaf67c6955bb4fcf6365500d56d302eba60fa6457f0"
     },
     "candidate/held-38165025596/windows-failure-phase-independent-hold.json": {
       "bytes": 1941,
@@ -101,6 +133,22 @@
     "candidate/held-38165025596/windows-fixture-failure-independent-diagnosis.json": {
       "bytes": 2084,
       "sha256": "4c6acbdafaadc80b41db3e50b0493fb1cd04c8eb18860f881291bd5c18fd0ca0"
+    },
+    "candidate/held-38166126728/cancelled-38166126728-independent-hold-disposition.json": {
+      "bytes": 3889,
+      "sha256": "04b6506d1990e424d9d6ca6887aae5987679d5ea25d9a51743fbfc20d3ed4000"
+    },
+    "candidate/held-38166126728/final-artifacts-api.json": {
+      "bytes": 32,
+      "sha256": "244563f989470892c537c9a4622920af0d228ee4528f7d00c64a06d6cd95856c"
+    },
+    "candidate/held-38166126728/final-jobs-api.json": {
+      "bytes": 17777,
+      "sha256": "65cd64c248fbd1d6d9be477aa700e8a9079350886d27831a19986191b43e4970"
+    },
+    "candidate/held-38166126728/final-run-api.json": {
+      "bytes": 12643,
+      "sha256": "9c6abaceaf664cb4c9866000e9cd94a41d58763c69d3f401c90d0fd6ac3b6b61"
     },
     "demo/add-another-host-frame-2s.png": {
       "bytes": 83875,
@@ -137,6 +185,10 @@
     "inputs/source-inputs-build67.json": {
       "bytes": 13751,
       "sha256": "73eccaa53ae94ce87cfde78e50f70808caf7a0b8ff10de163d911d88fb41b2bc"
+    },
+    "inputs/source-inputs-build68.json": {
+      "bytes": 14042,
+      "sha256": "1da2b6f08fca671362b894d2535cbce94264b765b9bbc5f6650596dead236b42"
     },
     "inputs/source-inputs-corrected-hosted-fixtures.json": {
       "bytes": 10287,
@@ -181,6 +233,38 @@
     "logs/build67-release-tool-tests.txt": {
       "bytes": 614,
       "sha256": "03a56dfce3ebb786cd63adfd6b2c42b05511e2b338dbc835e4ccb1bc9abb23ad"
+    },
+    "logs/build68-actual-native-dark-closure.txt": {
+      "bytes": 6002,
+      "sha256": "36c1fe7268d47f2d2ce4fc79eb6e0867a36280adb04d6634cb1ff5ecbd8a0b80"
+    },
+    "logs/build68-actual-native-three-green.txt": {
+      "bytes": 59130,
+      "sha256": "1736603206d34488111627670723620dd2e5a236b762175ab47822ca9feb763c"
+    },
+    "logs/build68-actual-native-three-red.txt": {
+      "bytes": 61155,
+      "sha256": "f24890f680eaa37c81a59f8eeb511604654801c5338967c41f5a513c3d6bcdee"
+    },
+    "logs/build68-build68-tool-discovery-command-error.txt": {
+      "bytes": 1318,
+      "sha256": "31da08539aa5e27f03d9b88cf251e1ecbfae22535163c433cc57772ec8f19869"
+    },
+    "logs/build68-final-build68-analyze.txt": {
+      "bytes": 686,
+      "sha256": "8783bbd811c83179730fe8a0db6fe6db7ca26ff4572bc4b18ad09db97ed38dcd"
+    },
+    "logs/build68-final-build68-format.txt": {
+      "bytes": 47,
+      "sha256": "43a0060b01f8d00290502db016cbde393b149f5a0971989771a4fe3fddc181e7"
+    },
+    "logs/build68-final-build68-release-tool-tests.txt": {
+      "bytes": 602,
+      "sha256": "6182c26205c8fb47c3ec80c4ad2f99bcfd250f194e1bd0a32621b3dc08a2e538"
+    },
+    "logs/build68-retained-letter-bounds-widget-green.txt": {
+      "bytes": 51448,
+      "sha256": "666223b32e884fa90a7ee4018f06bef2965803e45f356c4a0a6406eb0afdc405"
     },
     "logs/cancelled-38153414378-linux-provider-decoded.txt": {
       "bytes": 546378,
@@ -486,6 +570,30 @@
       "bytes": 66482,
       "sha256": "142453ce5330d5a24e4c7fe33d398713f232bdfd3b0b4d238b3789e27418c120"
     },
+    "pixels/build68/retained-dark-320-2.0x-flat-retained-geometry-Early.png": {
+      "bytes": 57122,
+      "sha256": "2c93aea723d7049c3c590b1159d454666e24fa1a25e0bd424bcdaf860a9e4f14"
+    },
+    "pixels/build68/retained-dark-320-2.0x-flat-retained-geometry-Middle.png": {
+      "bytes": 55925,
+      "sha256": "acbdf3e5ca10a23ee5cea1c4ea577d1d6e433830905d9ecd1b6909967aa801e3"
+    },
+    "pixels/build68/retained-light-320-2.0x-flat-retained-geometry-Early.png": {
+      "bytes": 58352,
+      "sha256": "ef7fb4ff78124df9ac04e07ba5affdee6f1582fbb02fb973bee65edcaca87680"
+    },
+    "pixels/build68/retained-light-320-2.0x-flat-retained-geometry-Middle.png": {
+      "bytes": 57181,
+      "sha256": "90c7152606c232baee12f1bb87f695c4dfdaa85ad66b7fed8eecea47a005e303"
+    },
+    "pixels/build68/section-dark-returned-tasks.png": {
+      "bytes": 24631,
+      "sha256": "b70fcb26080da06448d467fb79f5a7bff2e42669a595b28ff72059b1911980e8"
+    },
+    "pixels/build68/section-light-returned-tasks.png": {
+      "bytes": 24424,
+      "sha256": "39f46963e228c896284f033e1fd8420cfe92b56bd3dd3960aa75b8f8b9bdc91c"
+    },
     "pixels/food-refinements-dark-320-2.0x-autocomplete-brand-options.png": {
       "bytes": 47396,
       "sha256": "8a69fa3de381bd610be0efeac11d0452575fb299aa598c6da0f9223b1a9d4e8b"
@@ -545,6 +653,22 @@
     "reviews/build67-windows-fixture-hosted-green-receipt.json": {
       "bytes": 809,
       "sha256": "5bceb1eae4be1f4d73c8d757cb80ff7b02f825f25ad029450b6540c705a68fd1"
+    },
+    "reviews/build68-correctness-three-fixture-corrections-review.json": {
+      "bytes": 6076,
+      "sha256": "cdda0a9d54d5cf34dd0df1830cd22fe0c0d877ad8ee30353abad8de30435a7f2"
+    },
+    "reviews/build68-generated-compiler-cleanup-three-terminal-runs.json": {
+      "bytes": 1151,
+      "sha256": "4fefc4208e2a1f7d372401bfc93c2bc52bc17ee938944c183b76b375077a8221"
+    },
+    "reviews/build68-independent-three-fixture-corrections-review.json": {
+      "bytes": 4929,
+      "sha256": "0b2f1428b46f54346407756af139e0a80d2ffe54f252a724b1554d375c9ddd59"
+    },
+    "reviews/build68-native-geometry-summary.json": {
+      "bytes": 2614,
+      "sha256": "17b826d6e07937578bd8b1d606623135772a8d6cb5c4cdde5ea90cc12e127b4e"
     },
     "reviews/continue-readiness-addendum.json": {
       "bytes": 2392,

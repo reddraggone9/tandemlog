@@ -1,0 +1,119 @@
+{
+  "reviewer": "/root/correctness_review",
+  "verdict": "ACCEPTED_BOUNDED_FIXTURE_CORRECTION",
+  "mustFix": [],
+  "headAtReview": "cda8bffa8195a8fb3442bc61c7f5ae2c257a18d9",
+  "scope": "Independent read-only source/log/decoded-pixel review; no builds or tests executed by this reviewer. This receipt is the only file authored.",
+  "sourceBindings": [
+    {
+      "path": "integration_test/section_navigation_workflow_test.dart",
+      "bytes": 8922,
+      "sha256": "a62237495c5860e4ba97708d4b152e98345c99c6060884efe0337ef2317431fe"
+    },
+    {
+      "path": "test/food_retained_flat_list_test.dart",
+      "bytes": 10567,
+      "sha256": "98f460d13497fd775fde9955feacdbc1dd0ea1bd186bba6bae4d5b0d72cf6cf9"
+    },
+    {
+      "path": "pubspec.yaml",
+      "bytes": 590,
+      "sha256": "961e35852d821a0a5dacdfa7c2246c48be78cab77b9ba7576e33588a763e8d7d"
+    },
+    {
+      "path": "lib/main.dart",
+      "bytes": 205522,
+      "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+    },
+    {
+      "path": "lib/food/food_page.dart",
+      "bytes": 68360,
+      "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+    }
+  ],
+  "workingDiff": [
+    "integration_test/section_navigation_workflow_test.dart",
+    "pubspec.yaml",
+    "test/food_retained_flat_list_test.dart"
+  ],
+  "sourceConclusion": "Observed working diff is limited to two test fixtures plus version67-to68 metadata. Production main/Food source hashes match the previously accepted source.",
+  "navigation": {
+    "change": "Adds bounded waitForUi after confirmed Food discard, requiring actual Tasks tooltip, original task visible and no AlertDialog.",
+    "preserved": "Original same-section, Task dirty Cancel/Discard, Food Keep editing draft-value, successful return, no-exception and exact canonical-byte assertions remain.",
+    "rationale": "Host callback awaits both decision-route and editor-route disposal before section publication; frame settling alone does not establish its asynchronous completion. Actual local navigation red and corrected terminal cases support fixture classification; bounded wait fails if the product remains stuck."
+  },
+  "retainedGeometry": {
+    "change": "Preserves whole-range measurements as diagnostics; tests each non-whitespace ASCII fixture code unit has a selection box within unchanged0.5 logical-px horizontal tolerance and added0.5 vertical bounds. Whole metadata rectangle/card horizontal bounds, expiry ordering, filters/search and canonical/state assertions retained.",
+    "sdk": {
+      "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/painting/text_painter.dart",
+      "bytes": 71171,
+      "sha256": "acae4b190f34d4e13294c80d43b569d860f7d7e7fdfb5f0ff45acf9882bb3918"
+    },
+    "sdkMeaning": "Pinned TextPainter documentation allows trailing spaces outside the horizontal paint width; full text selection range is not proof of clipped painted letters.",
+    "observedParagraphs": 12,
+    "observedNonWhitespaceCharacters": 344,
+    "outOfBoundsOrMissing": [],
+    "qualification": "These fixed ASCII fixtures do not establish universal Unicode/grapheme geometry. Local original Retained case passed; exact hosted trailing-whitespace offset was not independently observed. No expanded tolerance or production layout change."
+  },
+  "runtimeEvidence": {
+    "originalLocalRed": {
+      "passed": 1,
+      "failed": 2,
+      "qualification": "Both navigation cases fail original line191 missing task; Retained passes.",
+      "log": {
+        "path": "/tmp/native-ci-corrections/actual-native-three-red.txt",
+        "bytes": 61155,
+        "sha256": "f24890f680eaa37c81a59f8eeb511604654801c5338967c41f5a513c3d6bcdee"
+      }
+    },
+    "correctedMixedRun": {
+      "passed": 2,
+      "failed": 1,
+      "qualification": "Light navigation and Retained complete. Dark fails before the new readiness assertion at existing screenshot helper line112/section fixture line136; this mixed run remains failed, not relabeled3/3.",
+      "log": {
+        "path": "/tmp/native-ci-corrections/actual-native-three-green.txt",
+        "bytes": 59130,
+        "sha256": "1736603206d34488111627670723620dd2e5a236b762175ab47822ca9feb763c"
+      }
+    },
+    "separateDarkClosure": {
+      "passed": 1,
+      "failed": 0,
+      "duration": "26s",
+      "qualification": "Same final test source, no further production fix; closes scoped dark navigation case in separate execution.",
+      "log": {
+        "path": "/tmp/native-ci-corrections/actual-native-dark-closure.txt",
+        "bytes": 6002,
+        "sha256": "36c1fe7268d47f2d2ce4fc79eb6e0867a36280adb04d6634cb1ff5ecbd8a0b80"
+      }
+    },
+    "widgets": {
+      "passed": 4,
+      "failed": 0,
+      "execution": "Author execution, inspected terminal log",
+      "log": {
+        "path": "/tmp/native-ci-corrections/retained-letter-bounds-widget-green.txt",
+        "bytes": 51448,
+        "sha256": "666223b32e884fa90a7ee4018f06bef2965803e45f356c4a0a6406eb0afdc405"
+      }
+    }
+  },
+  "personallyViewedPixels": [
+    {
+      "path": "/tmp/native-ci-corrections/pixels-green/retained-dark-320-2.0x-flat-retained-geometry-Middle.png",
+      "bytes": 55925,
+      "sha256": "acbdf3e5ca10a23ee5cea1c4ea577d1d6e433830905d9ecd1b6909967aa801e3"
+    },
+    {
+      "path": "/tmp/native-ci-corrections/pixels-green/retained-light-320-2.0x-flat-retained-geometry-Middle.png",
+      "bytes": 57181,
+      "sha256": "90c7152606c232baee12f1bb87f695c4dfdaa85ad66b7fed8eecea47a005e303"
+    }
+  ],
+  "pixelObservation": "Native GTK320x1200 at200% dark/light: complete Middle/Alpha reference recipe and Late/Zeta keep for the next household recipe labels wrap readably inside Cards; lower offscreen content is not claimed visible. Linux screenshots are not physical Android evidence.",
+  "remaining": [
+    "Exact-source hosted aggregate execution remains pending.",
+    "Replacement Windows build68 checks and artifacts remain pending; earlier canceled build67 is not acceptance.",
+    "No signed APK, release, publication or live-data acceptance asserted."
+  ]
+}

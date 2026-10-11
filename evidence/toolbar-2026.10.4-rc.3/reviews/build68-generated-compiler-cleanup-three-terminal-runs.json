@@ -1,0 +1,23 @@
+{
+  "qualification": "Only three current root-generated app.dill compiler outputs after actual terminalRED/qualifiedGREEN/darkPASS. Source, pixels, logs, synthetic byte-check receipts, old caches/task files and original archives preserved.",
+  "files": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/.dart_tool/flutter_build/19026ca1836eb3127f698c1c1353c7a2/app.dill",
+      "bytes": 64039864,
+      "sha256": "a4b7b834873dce40c50dded0b6ed6c7e9658984cf6e126377f56f5d893ac163d",
+      "mtime_utc": "2026-10-11T19:37:06.708137+00:00"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/.dart_tool/flutter_build/b4a974fc117450f1911208d1744e8a65/app.dill",
+      "bytes": 64041824,
+      "sha256": "b0230a83e109791eeedcfa7491a5be782ec77132d59ab995b371d89cd1d3750b",
+      "mtime_utc": "2026-10-11T19:40:50.169081+00:00"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/.dart_tool/flutter_build/33ca5a0e7dfdeebae28017c84f762a7f/app.dill",
+      "bytes": 64041824,
+      "sha256": "f270977b07bd89d36967b41d7a6b5adb644f99f8835d6ade395308c675bce88f",
+      "mtime_utc": "2026-10-11T19:43:13.073044+00:00"
+    }
+  ]
+}

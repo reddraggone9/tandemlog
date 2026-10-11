@@ -1,23 +1,10 @@
-# Current RC3/build67 gate status
+# Current RC3/build68 gate status
 
-Build65 candidate38156985011/source3c16234 is terminal FAILED at Linux startup
-smoke; signed Android was skipped. Linux units/native/release/package checks,
-Android debug and Windows completed, but no build65 APK is eligible. Old Windows
-visible-window/model smoke alone may show a recovery window after ingestion and
-does not prove an admitted usable Tasks UI. Original reports keep their original
-scope. Fixture admission correction and approved width/menu/Add another/picker
-and flat Retained work pass scoped native/source/pixel/editorial checks. Build66 candidate38165025596 at exacte6e26a1a253e25ee3edf5515ce2553e75d88ac3a
-is ineligible: Windows tooling errors at temporary SQLite fixture cleanup
-(WinError32), after1027 unit passes/two skips, Rust4 and107 contracts.
-Production verify_loaded already closes its connections; the narrow fixture
-correction explicitly closes after commit and retains every original assertion.
-79 Linux tooling checks pass with one skip and independent source review accepts
-the fix. Build67 full candidate38166126728 is dispatched at exact
-3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5 and queued behind build66.
-Signed originals and exact Android acceptance remain pending. Frozen-source
-and final-range editorial reviews pass; notes/media remain unchanged. Build66 Linux is allowed to finish naturally. All historical
-running snapshots below are superseded by this status. No stable promotion or
-live-data operation is authorized here.
+Build66 candidate38165025596/sourcee6e26a1 is terminal FAILED: Windows tooling hits a synthetic SQLite connection cleanup error after1027 unit passes/two skips, Rust4 and107contracts; Linux completes155native passes/3 failures, without a deadline failure. The explicit-close fixture fix passes actual same-source automatic Windows CI. Build67 candidate38166126728/source3ae00be is terminal CANCELLED by root because both navigation-theme readiness failures and Retained whole-selection geometry are confirmed shared source; its preflight passes and all downstream jobs are cancelled. No eligible signed APK exists from either run.
+
+Build68 changes only two test fixtures and monotonic version code68. Navigation awaits bounded actual Tasks/dialog readiness after Discard; original draft guards and canonical checks stay intact. Retained asserts every visible ASCII fixture character with unchanged0.5px tolerance, adds vertical bounds and keeps row/card/behavior checks; exact hosted overflow character remains unobserved. Actual local reproduction fails both navigation cases; corrected native light/Retained pass and separate same-source dark rerun passes after an explicitly retained X11 capture failure. Four widget cases, clean analysis/formatting and79tool tests pass. Independent architecture/native and correctness reviews accept the narrow corrections. Production/UI/native/platform/dependency/pipeline and release notes/media remain unchanged relative to frozen build67. All83 bound inputs include the previously omitted navigation fixture.
+
+Fresh full candidate dispatch, exact source/notes/media extension, owner signing, original archives and installed Android affected-flow acceptance remain pending. No RC3 publication, stable promotion or live-data operation occurs. [Full receipts](../evidence/toolbar-2026.10.4-rc.3/README.md) retain exact failures and qualified passing evidence.
 
 # Runtime and visual QA — updated 2026-10-11
 

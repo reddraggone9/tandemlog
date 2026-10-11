@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -152,14 +154,45 @@ Future<void> verifyFlatRetained(
     final paragraph = tester.renderObject<RenderParagraph>(
       find.descendant(of: reason, matching: find.byType(RichText)),
     );
-    for (final box in paragraph.getBoxesForSelection(
-      TextSelection(baseOffset: 0, extentOffset: pair.$2.length),
-    )) {
-      // Glyph ink can extend slightly beyond its advance (0.2 logical px for
-      // this fixture's font). Keep that tolerance bounded while separately
-      // checking the whole metadata row against the actual card above.
-      expect(box.left, greaterThanOrEqualTo(-.5));
-      expect(box.right, lessThanOrEqualTo(paragraph.size.width + .5));
+    debugPrint(
+      'RETAINED_TEXT_GEOMETRY=${jsonEncode({
+        'text': pair.$2,
+        'paragraphWidth': paragraph.size.width,
+        'paragraphHeight': paragraph.size.height,
+        'rangeBoxes': [
+          for (final box in paragraph.getBoxesForSelection(TextSelection(baseOffset: 0, extentOffset: pair.$2.length))) [box.left, box.top, box.right, box.bottom],
+        ],
+        'characters': [
+          for (var i = 0; i < pair.$2.length; i++) {
+              'offset': i,
+              'character': pair.$2[i],
+              'boxes': [
+                for (final box in paragraph.getBoxesForSelection(TextSelection(baseOffset: i, extentOffset: i + 1))) [box.left, box.top, box.right, box.bottom],
+              ],
+            },
+        ],
+      })}',
+    );
+    await capture?.call('flat-retained-geometry-${pair.$1.split(' ').first}');
+    for (var i = 0; i < pair.$2.length; i++) {
+      if (pair.$2[i].trim().isEmpty) continue;
+      // Selected whitespace at a soft line break may extend beyond horizontal
+      // paint bounds (TextPainter.width). Check every visible fixture letter
+      // with the same tight tolerance, plus the whole metadata/card above.
+      final boxes = paragraph.getBoxesForSelection(
+        TextSelection(baseOffset: i, extentOffset: i + 1),
+      );
+      expect(
+        boxes,
+        isNotEmpty,
+        reason: 'Retained reason character $i is visible',
+      );
+      for (final box in boxes) {
+        expect(box.left, greaterThanOrEqualTo(-.5));
+        expect(box.right, lessThanOrEqualTo(paragraph.size.width + .5));
+        expect(box.top, greaterThanOrEqualTo(-.5));
+        expect(box.bottom, lessThanOrEqualTo(paragraph.size.height + .5));
+      }
     }
   }
   expect(contentPositions[0], lessThan(contentPositions[1]));
