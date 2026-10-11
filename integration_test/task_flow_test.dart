@@ -83,6 +83,9 @@ import 'food_group_action_geometry_workflow_test.dart'
 import 'food_account_workflow_test.dart' show registerFoodAccountWorkflowTests;
 import 'food_undo_stack_workflow_test.dart'
     show registerFoodUndoStackWorkflowTests;
+import 'folder_picker_progress_workflow_test.dart'
+    show registerFolderPickerProgressTests;
+import 'food_add_another_workflow_test.dart' show registerFoodAddAnotherTests;
 
 Finder taskScrollable() => find
     .descendant(
@@ -295,6 +298,8 @@ void main() {
   registerFoodGroupActionGeometryTests();
   registerFoodAccountWorkflowTests();
   registerFoodUndoStackWorkflowTests();
+  registerFolderPickerProgressTests();
+  registerFoodAddAnotherTests();
   registerFoodBulkDetailsHostUndoReviewTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,

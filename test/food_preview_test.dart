@@ -57,25 +57,25 @@ void main() {
       expect(tester.takeException(), isNull);
     });
   }
-  testWidgets('retained reasons start collapsed; active search bypasses them', (
-    tester,
-  ) async {
-    await tester.pumpWidget(const FoodPreviewApp());
-    await tester.pumpAndSettle();
-    await selectFoodView(tester, FoodView.retained);
-    await tester.pumpAndSettle();
-    expect(find.text('Chocolate').hitTestable(), findsNothing);
-    await tester.tap(find.widgetWithText(ExpansionTile, 'Birthday baking'));
-    await tester.pumpAndSettle();
-    expect(find.text('Chocolate').hitTestable(), findsOneWidget);
-    await tester.enterText(
-      find.byKey(const ValueKey('food-search')),
-      'birthday',
-    );
-    await tester.pumpAndSettle();
-    expect(find.byType(ExpansionTile), findsNothing);
-    expect(find.text('Chocolate').hitTestable(), findsOneWidget);
-  });
+  testWidgets(
+    'retained food is directly visible; active search bypasses filters',
+    (tester) async {
+      await tester.pumpWidget(const FoodPreviewApp());
+      await tester.pumpAndSettle();
+      await selectFoodView(tester, FoodView.retained);
+      await tester.pumpAndSettle();
+      expect(find.byType(ExpansionTile), findsNothing);
+      expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
+      expect(find.text('Chocolate').hitTestable(), findsOneWidget);
+      await tester.enterText(
+        find.byKey(const ValueKey('food-search')),
+        'birthday',
+      );
+      await tester.pumpAndSettle();
+      expect(find.byType(ExpansionTile), findsNothing);
+      expect(find.text('Chocolate').hitTestable(), findsOneWidget);
+    },
+  );
   testWidgets(
     'narrow and wide inventory render partial stock without overflow',
     (tester) async {

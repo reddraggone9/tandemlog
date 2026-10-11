@@ -1,0 +1,17 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart
+00:00 +0 -1: loading /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart [E]
+  Error: Flutter failed to copy file from "/tmp/flutter_tools.REHSWZ/flutter_test_compiler.ISKSVF/output.dill" to "/tmp/flutter_tools.REHSWZ/flutter_test_listener.SOZXRU/listener.dart.dill". The target device is full.
+  FileSystemException: Cannot copy file to '/tmp/flutter_tools.REHSWZ/flutter_test_listener.SOZXRU/listener.dart.dill', path = '/tmp/flutter_tools.REHSWZ/flutter_test_compiler.ISKSVF/output.dill' (OS Error: No space left on device, errno = 28)
+  Free up space and try again.
+  package:flutter_tools/src/base/common.dart 34:3               throwToolExit
+  package:flutter_tools/src/base/error_handling_io.dart 1502:3  _throwFileSystemException
+  package:flutter_tools/src/base/error_handling_io.dart 1400:3  _handlePosixException
+  package:flutter_tools/src/base/error_handling_io.dart 1336:5  _onFileSystemException
+  package:flutter_tools/src/base/error_handling_io.dart 1074:7  _run
+  ===== asynchronous gap ===========================
+  package:flutter_tools/src/test/test_compiler.dart 280:41      TestCompiler._onCompilationRequest
+  
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart: loading /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart

@@ -1,0 +1,16 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart
+00:00 +0: startup synthetic seed is admitted by the actual startup contract without rewriting scalar history
+00:00 +0 -1: startup synthetic seed is admitted by the actual startup contract without rewriting scalar history [E]
+  This workspace has no verified shared-text initialization. Restore its initialized history before opening.
+  package:tandemlog/storage/task_store.dart 614:11  TaskStore._open
+  
+00:00 +0 -1: installer synthetic seed is admitted by the actual startup contract without rewriting scalar history
+00:00 +0 -2: installer synthetic seed is admitted by the actual startup contract without rewriting scalar history [E]
+  This workspace has no verified shared-text initialization. Restore its initialized history before opening.
+  package:tandemlog/storage/task_store.dart 614:11  TaskStore._open
+  
+00:00 +0 -2: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart: installer synthetic seed is admitted by the actual startup contract without rewriting scalar history
+  /tmp/tandemlog-food-date-readability/test/startup_smoke_fixture_contract_test.dart: startup synthetic seed is admitted by the actual startup contract without rewriting scalar history

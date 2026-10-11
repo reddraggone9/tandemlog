@@ -1,3 +1,15 @@
+# Current RC3/build66 gate status
+
+Build65 candidate38156985011/source3c16234 is terminal FAILED at Linux startup
+smoke; signed Android was skipped. Linux units/native/release/package checks,
+Android debug and Windows completed, but no build65 APK is eligible. Old Windows
+visible-window/model smoke alone may show a recovery window after ingestion and
+does not prove an admitted usable Tasks UI. Original reports keep their original
+scope. Fixture admission correction and approved width/menu/Add another/picker
+work require a fresh build66 candidate and installed acceptance. All historical
+running snapshots below are superseded by this status. No stable promotion or
+live-data operation is authorized here.
+
 # Runtime and visual QA — updated 2026-10-11
 
 ## Published RC2/build64 — exact native acceptance complete
@@ -965,4 +977,4 @@ First candidate38152037169/source16cb07d is held: Linux/Windows unit gates fail 
 
 Replacement38153414378/source1bd746e ends cancelled at the explicitly annotated40m0s Linux deadline. Before cancellation, the native capture/edit/completion/Undo/restart/error case fails on a global Undo-text tap matching both approved wide toolbar and Snackbar action. Subsequent cases progress through16:37:16, so the log is neither a full native pass nor a timeout-only green gate. Signing is skipped. Source-bound official decoded text, annotations, terminal APIs and independent hold are retained in [RC3 evidence](../evidence/toolbar-2026.10.4-rc.3/README.md).
 
-The two selectors now target the unique transient SnackBarAction labeled Undo; all remaining workflow assertions stay unchanged. The actual targeted native GTK case passes in25 seconds, with clean analysis, unchanged formatting and74 release-tool passes. Independent review accepts the fixture and Linux-only40→55-minute allowance; runner, permissions, full matrix, release/Flatpak checks and signing dependency are unchanged. Fresh full candidate38156985011/source3c162347105bbd01f55ef09652d29c397d013e01 is running; original static/artifact review, exact installed Android acceptance and publication clearance remain required. Existing held originals/logs remain retained; no live or trial data is touched.
+The two selectors now target the unique transient SnackBarAction labeled Undo; all remaining workflow assertions stay unchanged. The actual targeted native GTK case passes in25 seconds, with clean analysis, unchanged formatting and74 release-tool passes. Independent review accepts the fixture and Linux-only40→55-minute allowance; runner, permissions, full matrix, release/Flatpak checks and signing dependency are unchanged. Build65 candidate38156985011/source3c162347105bbd01f55ef09652d29c397d013e01 later failed startup smoke; signing was skipped. Its terminal receipts remain historical. Fresh build66 original static/artifact review, exact installed Android acceptance and publication clearance remain required. Existing held originals/logs remain retained; no live or trial data is touched.

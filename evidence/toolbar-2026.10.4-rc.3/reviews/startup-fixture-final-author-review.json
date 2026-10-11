@@ -1,0 +1,176 @@
+{
+  "retained_original_sha256": "b12105cda5f1326a7ca5b436fec327d521c8b60b2bb8c7dfc78619d4fa4559fc",
+  "qualification": "Portable path-normalized review copy; original byte representation remains retained in the consumer.",
+  "review": {
+    "scope": "Bounded synthetic startup/installer fixture correction and failure diagnostics",
+    "author": "/root/food_account_regressions",
+    "status": "IMPLEMENTED_TARGETED_GREEN_BEFORE_RESOLVER_ONLY_DELTA_RESOLVER3GREEN_AWAITING_REVIEW_AND_NATIVE_GATES",
+    "source": {
+      "tool/measure_startup.py": {
+        "path": "consumer-repository/tool/measure_startup.py",
+        "bytes": 9201,
+        "sha256": "0ae0f39d714886565406319afd4f00dd539af0fdc93fe31177cca4b518cdfccc"
+      },
+      "packaging/smoke.py": {
+        "path": "consumer-repository/packaging/smoke.py",
+        "bytes": 13931,
+        "sha256": "48d784734f6261509af9fdc9d36bb0bd1938e43092747d8e6fe85cb39991e9ec"
+      },
+      ".github/workflows/validate.yml": {
+        "path": "consumer-repository/.github/workflows/validate.yml",
+        "bytes": 12574,
+        "sha256": "2b56bc385ace15670f6977eda25a1fa688315c20676de47dced1864b37b79931"
+      },
+      "tool/initialize_synthetic_text_fixture.dart": {
+        "path": "consumer-repository/tool/initialize_synthetic_text_fixture.dart",
+        "bytes": 2207,
+        "sha256": "f732bb181b3d29bd0d1d0336426d1e218ab0ceb0a28ffcfd471e546b613465fa"
+      },
+      "tool/synthetic_text_fixture.py": {
+        "path": "consumer-repository/tool/synthetic_text_fixture.py",
+        "bytes": 2648,
+        "sha256": "d5956c6e9962b8eeae09d5234eb48800a4c07157156981429e1f37edaf044822"
+      },
+      "tool/test_startup_diagnostics.py": {
+        "path": "consumer-repository/tool/test_startup_diagnostics.py",
+        "bytes": 2749,
+        "sha256": "716bd3c1dd6b4f3ff98d24a75ce1d1accb0828335cc23a12706d4e7f2fb37811"
+      },
+      "test/startup_smoke_fixture_contract_test.dart": {
+        "path": "consumer-repository/test/startup_smoke_fixture_contract_test.dart",
+        "bytes": 5459,
+        "sha256": "a5cb44d4c5276f9e5612f7b5c825992e29af374e0d358dfc269d0f646e2c80a2"
+      },
+      "tool/test_synthetic_text_fixture.py": {
+        "path": "consumer-repository/tool/test_synthetic_text_fixture.py",
+        "bytes": 2482,
+        "sha256": "6d5e8c341d9e8c60952185277a87ea90ed35d598be028b58df03363d1430eec2"
+      }
+    },
+    "frozen_source": {
+      "commit": "3c162347105bbd01f55ef09652d29c397d013e01",
+      "sha256": {
+        "tool/measure_startup.py": "c6c7e1004a70fb5cf67b43bc94ed995eeedd914c06b720626ae1d24efcb58164",
+        "packaging/smoke.py": "eb9e6ec47343c6db1e2eba74ed0c77b6395be0f33de91738b5a6cc173431d106",
+        "lib/storage/task_store.dart": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+      }
+    },
+    "policy_source": {
+      "path": "consumer-repository/lib/storage/task_store.dart",
+      "bytes": 158992,
+      "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+    },
+    "diagnosis": {
+      "path": "native-review-consumer/independent-startup-fixture-diagnosis.json",
+      "bytes": 4845,
+      "sha256": "44da70461098f05ea6a0508bbb50558485e8e2cefc1081e99630c9a1a340e851"
+    },
+    "cause_qualification": "Frozen/current seeders omitted baseline and actual local contract rejects both. Hosted build65 step17 runtime cause remains unproven because app output was not retained.",
+    "tests": {
+      "red": {
+        "result": "Actual startup and installer synthetic seeds each rejected by unchanged main admission contract",
+        "evidence": {
+          "path": "/tmp/startup-fixture-contract-red.log",
+          "bytes": 1338,
+          "sha256": "c40aa1aba721bc88fe09dafd1658546f253872aafc4db07cfe6be75b4bfe6060"
+        }
+      },
+      "targeted_green": {
+        "result": "10PASS: new fixture contract2 plus existing genuine-new/legacy failclosed/recovery8",
+        "evidence": {
+          "path": "/tmp/startup-fixture-final-targeted.log",
+          "bytes": 2062,
+          "sha256": "391e4407dfe7724864dba0d736e4d515aec8852e1276ddce8c55b02a85db429e"
+        },
+        "qualification": "10PASS was before Python SDK resolver-only change; Dart/storage policy and fixtures unchanged. Current resolver Python3 passes; subsequent actual fixture rerun failed during compilation with ENOSPC, no assertions."
+      },
+      "analyzer": {
+        "result": "No issues found,2owned Dart files",
+        "evidence": {
+          "path": "/tmp/startup-fixture-final-analyze.log",
+          "bytes": 96,
+          "sha256": "d52483ea9b1ddf58901e1d6f834933fe2825b4958dcbaf84884b0c2e6b1c508a"
+        }
+      },
+      "python_startup": {
+        "result": "3PASS: fresh guard, failure stdout/stderr+exit23 retention, loaded-row/warm admission checks",
+        "evidence": {
+          "path": "/tmp/startup-fixture-python-startup.log",
+          "bytes": 621,
+          "sha256": "b7fb4389c1d044fd70e6328641fc8fa74d7a4007b5a0ba87e3599e6b088de9cd"
+        }
+      },
+      "python_installer": {
+        "result": "5PASS: original process-identity cleanup and protected projection contracts",
+        "evidence": {
+          "path": "/tmp/startup-fixture-python-installer.log",
+          "bytes": 886,
+          "sha256": "51d74c69c80118c39b735adf16f599fd67c98671828e34f95bc98b9fad5ad1ed"
+        }
+      },
+      "sdk_negative_control": {
+        "result": "1validRED: frozen bare-dart helper invokes dart instead of absolute Windows SDKexe",
+        "evidence": {
+          "path": "/tmp/startup-fixture-sdk-red-valid.log",
+          "bytes": 869,
+          "sha256": "ba62a9a0639a69a5a8453eba6e66279dccc0ad1c9df3bed629b9cc9627009008"
+        },
+        "probe": {
+          "path": "startup-review-consumer/sdk-negative-control.py",
+          "bytes": 1429,
+          "sha256": "e1f380927e02891d14f0d3b2dc4aaf2bc91d35286fc3b513a0cff899162c5265"
+        },
+        "old_helper": {
+          "path": "startup-review-consumer/source/tool/synthetic_text_fixture.py",
+          "bytes": 2078,
+          "sha256": "b1e4a7eb2288de889c18d4f7dc9482a4cf136dc06bbfbc2dcdc35e1542dfe148"
+        }
+      },
+      "sdk_invalid_attempt": {
+        "result": "INVALID negative-control harness: AttributeError trying to mock old module shutil attribute; not a production or argv assertion failure",
+        "evidence": {
+          "path": "/tmp/startup-fixture-sdk-red.log",
+          "bytes": 934,
+          "sha256": "2cc051357e7a5a386d61c5812d94e90db5d3c3c829ae4938cca77536fcb751e1"
+        }
+      },
+      "sdk_green": {
+        "result": "3PASS: Windows wrapper\u2192SDKexe subprocess argv, missing Windows SDK rejects without spawn, missing pinned toolchain rejects",
+        "evidence": {
+          "path": "/tmp/startup-fixture-sdk-green.log",
+          "bytes": 566,
+          "sha256": "5150a061c80d7dfeebaa16ac470d106384ab9b096a288ea3e23b5702d0dfe024"
+        }
+      },
+      "latest_fixture_attempt": {
+        "result": "NO TEST RESULT: Flutter compilation ENOSPC; own driver stopped after parent hold, no assertions ran",
+        "evidence": {
+          "path": "/tmp/startup-fixture-sdk-contract-green.log",
+          "bytes": 1492,
+          "sha256": "f6e60d196df01e497f6532438cfddd44fbe6c319df9425a1d1e93d0a2369a618"
+        }
+      }
+    },
+    "implementation": [
+      "Generate the same valid chained scalar-v3 workload and append real observed-frontier/native-seed baseline using existing fixture-only API. Verify originals are byte-identical and production history verifies.",
+      "Keep seeder cache separate from application profile; initialization completes before timed launch and installer expected hashes.",
+      "Startup uses measured bundle native library by default; installer uses explicitly supplied or existing CI reviewed same-source native library. Record loaded-library SHA in fixture receipt.",
+      "Retain fresh guards, complete loaded-row count, TANDEMLOG_ROWS/READY contract, warm FILES_READ=0 and existing45s startup/60s installer deadlines.",
+      "Persist merged application stdout/stderr plus partial startup reports on failure; preserve harness stderr and failed-only diagnostics artifacts outside dist/publication inventory.",
+      "Resolve Windows Flutter dart.bat to actual pinned cache/dart-sdk/bin/dart.exe using established packaging-harness policy; check executable file exists and pass absolute executable to subprocess."
+    ],
+    "windows_qualification": "Old visible-window plus SQL projection success did not prove admitted Tasks UI; ingestion precedes rejection. New synthetic baseline prevents this known fixture mismatch; current Windows/native package acceptance still required.",
+    "not_run": [
+      "Native release application startup/warm performance",
+      "Flatpak installation lifecycle",
+      "Windows runtime/installer",
+      "Heavy release/native rebuilds or full CI matrix"
+    ],
+    "remaining": [
+      "Independent architecture review",
+      "Parent disk clearance and exact-source candidate build/native/performance/lifecycle gates",
+      "Rerun actual fixture contract after SDK resolver delta when parent permits compilation; prior10PASS and current resolver3PASS are accurately scoped."
+    ],
+    "boundary": "Only eight owned tool/fixture/workflow files changed. No production lib/UI/pubspec/readers/frozen fixtures/live data/dependencies modified by this agent. No Library artifacts or publication performed."
+  }
+}

@@ -245,3 +245,25 @@ Filter → Select matching active containers captures physical IDs currently vis
 Expanded food keeps its existing Inspect, quick-remove and lower overflow locations with full touch targets. The duplicate count and opaque visible container prefixes are removed; remaining contents stays visible and each per-container action has a distinct accessible ordinal. Reduced separator spacing preserves inline expansion. A different details view is deferred.
 
 Full (`1/1`) is the default for new/imported containers even when nominal size is blank. Partial fractions and measured amounts remain supported; the RC-only all-null unspecified contents state is rejected rather than rewritten. Any required fresh throwaway trial is a separate locally coordinated path and identity, preserving old receipts and established Tasks history.
+
+Standalone Tasks and Food share a centered 1450px content limit and existing
+padding. Task side-panel/modal breakpoints and outer width stay unchanged.
+Desktop secondary click opens the same Food group actions as the lower expanded
+ellipsis. Add another… opens a normal prefilled Add draft from active, retained
+or deleted search results: copied name/Brand/size/Location, blank focused
+expiration and retention, count 1. Submission uses normal validation and creates
+a fresh Full container; Cancel/Back write nothing, and Undo affects only the new
+container. Deleted templates are not restored. See
+[accepted workflow choices](decisions/0019-food-field-editing-and-contents-defaults.md).
+
+A pending native folder chooser has its own duplicate-dialog guard. It does not
+show running-work progress or disable ordinary Add actions. After choosing a
+different folder, guarded validation/loading uses the normal busy state and
+progress. Recheck drafts and active workspace before committing the switch;
+Cancel, same-folder selection, errors and stale results preserve prior state.
+
+Retained shows one flat expiration-sorted list with each row’s retention reason.
+The existing reason input and autocomplete filter items directly. Physical
+container grouping still includes the reason, and Inspect remains expandable.
+Search bypasses saved filters and includes Deleted; clearing Search restores
+the selected reasons.

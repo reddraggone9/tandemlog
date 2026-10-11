@@ -1,0 +1,17 @@
+test_old_helper_must_invoke_sdk_executable (__main__.NegativeControl.test_old_helper_must_invoke_sdk_executable) ... FAIL
+
+======================================================================
+FAIL: test_old_helper_must_invoke_sdk_executable (__main__.NegativeControl.test_old_helper_must_invoke_sdk_executable)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/startup-fixture-review/sdk-negative-control.py", line 30, in test_old_helper_must_invoke_sdk_executable
+    self.assertEqual(run.call_args.args[0][0], str(sdk.resolve()))
+AssertionError: 'dart' != '/tmp/tmp1ao57bkw/flutter/bin/cache/dart-sdk/bin/dart.exe'
+- dart
++ /tmp/tmp1ao57bkw/flutter/bin/cache/dart-sdk/bin/dart.exe
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

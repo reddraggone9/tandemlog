@@ -1,0 +1,276 @@
+{
+  "retained_original_sha256": "f884fbc9e1fed81badedb3982d7f2e8d6c4a9a965aec8193f8b6e5eb0c1826c6",
+  "qualification": "Portable path-normalized review copy; original byte representation remains retained in the consumer.",
+  "review": {
+    "checked_at_utc": "2026-10-11T17:36:37.976768+00:00",
+    "verdict": "HOLD_FAILED_HOSTED_STARTUP_GATE_AND_SUPERSEDED_UI_CANDIDATE",
+    "candidate_run": 38156985011,
+    "source": "3c162347105bbd01f55ef09652d29c397d013e01",
+    "version": "2026.10.4-rc.3+65",
+    "run_conclusion": "failure",
+    "terminal_jobs": [
+      {
+        "id": 114521886058,
+        "name": "candidate",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T16:48:28Z",
+        "completed_at": "2026-10-11T16:48:36Z"
+      },
+      {
+        "id": 114521921737,
+        "name": "checks / android",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T16:48:38Z",
+        "completed_at": "2026-10-11T16:55:05Z"
+      },
+      {
+        "id": 114521921753,
+        "name": "checks / linux",
+        "status": "completed",
+        "conclusion": "failure",
+        "started_at": "2026-10-11T16:48:38Z",
+        "completed_at": "2026-10-11T17:32:21Z"
+      },
+      {
+        "id": 114521921772,
+        "name": "checks / windows",
+        "status": "completed",
+        "conclusion": "success",
+        "started_at": "2026-10-11T16:48:38Z",
+        "completed_at": "2026-10-11T16:58:09Z"
+      },
+      {
+        "id": 114530930278,
+        "name": "signed-android",
+        "status": "completed",
+        "conclusion": "skipped",
+        "started_at": "2026-10-11T17:32:21Z",
+        "completed_at": "2026-10-11T17:32:21Z"
+      }
+    ],
+    "exact_failed_step": {
+      "name": "Smoke-test native release startup with fresh and warm cache",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 17,
+      "started_at": "2026-10-11T17:31:33Z",
+      "completed_at": "2026-10-11T17:32:19Z"
+    },
+    "linux_duration_seconds": 2623,
+    "deadline_exceeded": false,
+    "observed_successful_linux_gates": {
+      "unit_tests_passed": 1017,
+      "rust_tests_passed": 4,
+      "native_contract_tests_passed": 107,
+      "tool_tests_passed": 74,
+      "native_integration_tests_passed": 150,
+      "release_build": "PASS",
+      "packaged_native_library_and_exact_notices": "PASS"
+    },
+    "startup_command": "xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace \"$RUNNER_TEMP/tandemlog-performance\" > linux-startup.json",
+    "failure_diagnostics": {
+      "observed": "Startup smoke step exit 1 after approximately 45.21 seconds; no Python traceback, runtime markers or underlying error appear in retained official provider-decoded log. Check-run output title/summary/text null; sole annotation exit 1.",
+      "inference": "The frozen harness waits at most 45 seconds for TANDEMLOG_READY_MS; timing is consistent with that wait expiring, but the exact failure cause is unestablished. A warm run or another failure path cannot be excluded.",
+      "missing": "Runner startup output/runtime evidence and linux-startup.json were not uploaded; Flatpak packaging/install lifecycle/Linux archive were skipped. stdout-only redirection does not itself explain absent stderr traceback.",
+      "frozen_harness_exit_paths": [
+        "Requires empty dedicated profile/shared directories",
+        "Executable launch or OS/SQLite errors",
+        "No loaded-frame marker within 45 seconds",
+        "Ready marker without successful-model-load rows",
+        "Synthetic projection incomplete",
+        "Warm cache unexpectedly replays canonical logs"
+      ]
+    },
+    "artifacts_present": [
+      {
+        "id": 11709745520,
+        "name": "windows",
+        "bytes": 26247025,
+        "digest": "sha256:e53575a046c2118a70b34feb387c0bbc443d788528fa6aa19dba38ba5c1a7c6b"
+      },
+      {
+        "id": 11709361377,
+        "name": "windows-storage-harness",
+        "bytes": 4176697,
+        "digest": "sha256:0037e2f248cf8a255ce4cf0a1d66bccb20a9a50531dab4bf7e3317795342acb6"
+      },
+      {
+        "id": 11709236470,
+        "name": "windows-unit-tests",
+        "bytes": 58005,
+        "digest": "sha256:eae646aecda6cd7e9713ffce5162a4283a0d8a089b2c88fbeb30d0be262a24d9"
+      },
+      {
+        "id": 11708851499,
+        "name": "android",
+        "bytes": 80762964,
+        "digest": "sha256:01c2aa27c3df3424b1b3e5589a710b4b785c9cfcb9f0d4ccba3381fb3bda1e9e"
+      }
+    ],
+    "original_windows": {
+      "artifact_id": 11709745520,
+      "actual_archive": {
+        "path": "retained-consumer/windows-38156985011-original.zip",
+        "bytes": 26247025,
+        "sha256": "e53575a046c2118a70b34feb387c0bbc443d788528fa6aa19dba38ba5c1a7c6b"
+      },
+      "members": [
+        {
+          "name": "tandemlog-windows-x64-unsigned-portable.zip",
+          "bytes": 14418694,
+          "sha256": "0962ae653c56f391daa5dd42d565aa47edacd1be5afd90b9ec797e9985cb20d2",
+          "crc_valid": true,
+          "crc32": "c62543c7"
+        },
+        {
+          "name": "windows-install-smoke.json",
+          "bytes": 1393,
+          "sha256": "97675e3071a0db7bcef5664b93d022a807daba878985213abeea40620bbd7fa6",
+          "crc_valid": true,
+          "crc32": "f3f18ab5"
+        },
+        {
+          "name": "tandemlog-windows-x64-unsigned-setup.exe",
+          "bytes": 12394860,
+          "sha256": "9ddafd346d0f4b3c9f0e96e24c1c0f8e53af3b984ad968c47d0ed2b1f91eb322",
+          "crc_valid": true,
+          "crc32": "2a2e6350"
+        },
+        {
+          "name": "windows-portable-provenance.json",
+          "bytes": 2181,
+          "sha256": "2b6147d0b6bee94e4b56ebbe7fb466bc2938ce94bef1db4abcaaa987b48c4131",
+          "crc_valid": true,
+          "crc32": "dea76aa9"
+        },
+        {
+          "name": "windows-portable-SHA256SUMS.txt",
+          "bytes": 111,
+          "sha256": "48a2858eb5e3531209bfa7fc55274507b929ec5cab3ba76340c4dd89a2a2175c",
+          "crc_valid": true,
+          "crc32": "38e52072"
+        },
+        {
+          "name": "windows-SHA256SUMS.txt",
+          "bytes": 108,
+          "sha256": "afcea059548492072791f4014a2310474541a1ce1937f47ff957eca2cc59c749",
+          "crc_valid": true,
+          "crc32": "2a23be7d"
+        }
+      ],
+      "static_and_original_install_lifecycle": "PASS independently reviewed; historical only, full candidate failed",
+      "receipt": "retained-consumer/build65-windows-actual-artifact-bindings.json"
+    },
+    "not_produced_or_verified": [
+      "Linux release archive/Flatpak lifecycle",
+      "Signed Android APK/signature/version/ABI/native lineage checks",
+      "Parent installed Android acceptance"
+    ],
+    "source_freeze": "Recorded independent freeze verified 346 Git source inputs and 63 supplied inventory entries against exact source3c162. Does not assert current mutable checkout remains at frozen source.",
+    "superseded_for_ui_acceptance": true,
+    "supersession_reason": "Parent approved separate desktop shared outer width/padding correction; new candidate required. No build65 Android QA handoff requested.",
+    "representation_qualification": "Logs are official GitHub App provider-decoded UTF8 representations retained without newline/BOM normalization. Hashes attest retained representations, not independently downloaded raw log bytes. Windows original ZIP/member bytes independently match API digest/CRC/strict checksums.",
+    "logs": [
+      {
+        "platform": "candidate",
+        "path": "retained-consumer/candidate-provider-decoded-hosted.log",
+        "bytes": 22161,
+        "sha256": "621620a66f39076dfd28b48c5f29df13f9c5861681d8e7c318c97316b587194c",
+        "CRLF_count": 0,
+        "utf8_bom": true,
+        "summary_lines": []
+      },
+      {
+        "platform": "android-debug",
+        "path": "retained-consumer/android-debug-provider-decoded-hosted.log",
+        "bytes": 186379,
+        "sha256": "1f59a41b42c2a1dcbd916ce7af54c4812ca28958ea946f0d8913585b3e30c700",
+        "CRLF_count": 0,
+        "utf8_bom": true,
+        "summary_lines": []
+      },
+      {
+        "platform": "windows",
+        "path": "retained-consumer/windows-provider-decoded-hosted.log",
+        "bytes": 358994,
+        "sha256": "4e6ee8635cfd101cdef050e11b508b4ac85122fcbeaf0f2abfdeda2bd385bbf6",
+        "CRLF_count": 3239,
+        "utf8_bom": true,
+        "summary_lines": [
+          "2026-10-11T16:56:01.5173379Z 05:30 +1014 ~2: All tests passed!",
+          "2026-10-11T16:56:12.1085326Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+          "2026-10-11T16:56:15.8139839Z Ran 107 tests in 3.528s",
+          "2026-10-11T16:56:18.6127609Z Ran 74 tests in 2.286s",
+          "2026-10-11T16:56:18.6127754Z OK (skipped=4)"
+        ]
+      },
+      {
+        "platform": "linux",
+        "path": "retained-consumer/linux-provider-decoded-hosted.log",
+        "bytes": 560725,
+        "sha256": "1fa9582f7e8da21dd3017a29f842da94fba6a9d3e31163cdffeb471d180ddc85",
+        "CRLF_count": 0,
+        "utf8_bom": true,
+        "summary_lines": [
+          "2026-10-11T16:50:03.6883664Z No issues found! (ran in 10.6s)",
+          "2026-10-11T16:54:27.0230699Z \ud83c\udf89 1017 tests passed.",
+          "2026-10-11T16:54:36.9372510Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+          "2026-10-11T16:54:41.5700825Z Ran 107 tests in 4.556s",
+          "2026-10-11T16:54:42.8955461Z Ran 74 tests in 1.163s",
+          "2026-10-11T17:30:55.4779922Z \ud83c\udf89 150 tests passed."
+        ]
+      }
+    ],
+    "evidence_files": [
+      {
+        "path": "retained-consumer/final-run-api.json",
+        "bytes": 12639,
+        "sha256": "ee630a57a0e4238be8ca39844e77ab820ec72c79dd4f4d37fc47bebed6f28c97"
+      },
+      {
+        "path": "retained-consumer/final-jobs-api.json",
+        "bytes": 17395,
+        "sha256": "0c6f0c5817eec33712be0d1b35f609c7a20d8aa0e7e3d31838884a2decb3daf9"
+      },
+      {
+        "path": "retained-consumer/final-artifacts-api.json",
+        "bytes": 2782,
+        "sha256": "9e06ef1805c0030b3c11cb0a2ff96553a3c69e78d6d5a63179fb88e68767dabd"
+      },
+      {
+        "path": "retained-consumer/terminal-linux-check-run-api.json",
+        "bytes": 3072,
+        "sha256": "ae4058d08acb0b710791db12e227f0c44cfb2eb08f3183d0db2a867ec3e8f149"
+      },
+      {
+        "path": "retained-consumer/terminal-linux-check-annotations-api.json",
+        "bytes": 303,
+        "sha256": "3e3918b3c572b519ab1a2a1a7309040c907d80443cd12e51cbbb1c67e9977ef9"
+      },
+      {
+        "path": "retained-consumer/frozen-source-inventory-independent-verification.json",
+        "bytes": 60719,
+        "sha256": "718521371e55caa81a4f250f3413f541b44244733309af01ce1d5f7400ebbb45"
+      },
+      {
+        "path": "retained-consumer/frozen-measure-startup.py.txt",
+        "bytes": 5034,
+        "sha256": "c6c7e1004a70fb5cf67b43bc94ed995eeedd914c06b720626ae1d24efcb58164"
+      },
+      {
+        "path": "retained-consumer/frozen-validation-workflow.yml.txt",
+        "bytes": 11490,
+        "sha256": "71af9469116081b5f5cf096609884c48ad2ee4dd6776866d982dfd983b580901"
+      },
+      {
+        "path": "retained-consumer/build65-windows-actual-artifact-bindings.json",
+        "bytes": 9803,
+        "sha256": "2bcbcf305ad00a93728423fa56b38c28da04959a209635240f834280022df67b"
+      }
+    ],
+    "preservation": "All prior held candidate roots, original Windows ZIPs and accepted build64 baseline preserved; no deletion, rebuild, test runtime or source/docs modification by reviewer.",
+    "publication_eligibility": false
+  }
+}

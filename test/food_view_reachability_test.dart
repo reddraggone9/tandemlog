@@ -275,13 +275,7 @@ Future<void> verifyFoodViewReachability(
     await tap(clear);
     expect(tester.widget<TagInput>(find.byType(TagInput)).selected, isEmpty);
     await capture?.call('$prefix-retention-filter-cleared');
-    final section = find.widgetWithText(ExpansionTile, retentionReason);
-    final expand = find.descendant(
-      of: section,
-      matching: find.byIcon(Icons.expand_more),
-    );
-    await swipeTo(expand);
-    await tap(expand);
+    expect(find.byType(ExpansionTile), findsNothing);
   }
   if (mode == FoodView.inbox) {
     await swipeTo(find.byTooltip('Inspect Synthetic undated beans containers'));

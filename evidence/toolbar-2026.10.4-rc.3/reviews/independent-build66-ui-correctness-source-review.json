@@ -1,0 +1,128 @@
+{
+  "original_sha256": "e938cb87d554088557446d7896d6bd7d4085c5bf17165c2f7c54b5fcdc3b7ee1",
+  "qualification": "Portable receipt normalizes only local checkout/evidence paths; original bytes retained privately. Source-only acceptance; final native4 pending at review.",
+  "review": {
+    "review": "Independent bounded correctness/lifetime review of picker separation, late capture admission, Food dirty-decision disposal, context confirmation and flat Retained UI",
+    "reviewer": "/root/correctness_review",
+    "verdict": "ACCEPTED_SOURCE_ONLY",
+    "mustFixFindings": [],
+    "repository": "/tmp/tandemlog-food-date-readability",
+    "headAtReceipt": "e6ba27597e34b6f723f17f5051363619d6f1a23a",
+    "workingTreeQualification": "Reviewed current uncommitted source bytes; HEAD alone does not identify these changes. No implementation edits or test/build executions by this reviewer.",
+    "sourceBindings": [
+      {
+        "path": "<checkout>/lib/main.dart",
+        "bytes": 205522,
+        "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+      },
+      {
+        "path": "<checkout>/lib/food/food_page.dart",
+        "bytes": 68360,
+        "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+      },
+      {
+        "path": "<checkout>/android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt",
+        "bytes": 19945,
+        "sha256": "69f34933c4d62cdb235febcd3315ac9966d02fab5e6b73a09c69e2b6f7d5fa59"
+      },
+      {
+        "path": "<checkout>/integration_test/folder_picker_progress_workflow_test.dart",
+        "bytes": 13157,
+        "sha256": "769e6a57e81f257f71bbdf02a735d8caa86d3b6513208e879619113f2e973ab1"
+      },
+      {
+        "path": "<checkout>/test/food_retained_flat_list_test.dart",
+        "bytes": 9309,
+        "sha256": "51f5f83dee2eed54ecb2ab53419af10af81a75d2eb5cc8cc34de5e024a6b504e"
+      },
+      {
+        "path": "<checkout>/test/food_add_another_test.dart",
+        "bytes": 7370,
+        "sha256": "e01626f6f05a87ab43f37615eaef54832def046af289f2d3c43fc29617eb7f01"
+      },
+      {
+        "path": "<checkout>/test/food_context_menu_test.dart",
+        "bytes": 6019,
+        "sha256": "933b90a9caf4d1ea9b9466b00d5bab441796dca943965af8e0b08485a0dba9a6"
+      },
+      {
+        "path": "<checkout>/lib/presentation/section_content.dart",
+        "bytes": 186,
+        "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b"
+      }
+    ],
+    "evidenceBindings": [
+      {
+        "path": "<consumer-evidence>/retained-and-disposal-widget-final.txt",
+        "bytes": 1829,
+        "sha256": "a14f185945badc076d89b19d0b7fdb5a7eb206cbdfa41818f8e9ce12371576eb"
+      },
+      {
+        "path": "<consumer-evidence>/native-followup-final-attempt.txt",
+        "bytes": 66054,
+        "sha256": "f1feea023e924934f01190badf6952b1a9993839d5565e44e425f9993938e1da"
+      },
+      {
+        "path": "/tmp/folder-picker-progress/picker-native-capture-valid-red.txt",
+        "bytes": 8888,
+        "sha256": "e01c9512043006f0ab521658f85a04be2f2dd3419fd2f5f9d5bc8606ca105235"
+      },
+      {
+        "path": "/tmp/folder-picker-progress/picker-native-race-red-final.txt",
+        "bytes": 8233,
+        "sha256": "eaf9ae2e78fe323d9c0db7da48b2999165d610d3e0743400a8be041cc8db59fc"
+      },
+      {
+        "path": "<consumer-evidence>/food-dirty-decision-dispose-red.txt",
+        "bytes": 2548,
+        "sha256": "94b006b295ecf7d82b0884cc2d2859e067d01cd1c8e99ce873c4bdc4844af689"
+      },
+      {
+        "path": "<consumer-evidence>/context-confirmation-red.txt",
+        "bytes": 3039,
+        "sha256": "ece2e7d258247956ac59ce24ac232e5c3f66fb907f8c71d7f7f4589dcf08fdf1"
+      }
+    ],
+    "reviewedInvariants": [
+      "Picker admission guard is acquired synchronously; user choice is separate from work busy/progress.",
+      "Cancel and same-folder return without action success clearing diagnostics; post-selection draft veto retains current workspace.",
+      "Origin store, Food store, profile owner, settings object, writer and shared safety are checked before switching.",
+      "Late Task captures reject busy/shared-safety/stale origin and cancel/release private capture resources.",
+      "Android picker launch failure clears native pending picker guard and returns an error.",
+      "Dirty Food close decision captures choice without waiting on a Navigator push result that can remain pending on disposal; awaits route completion, then checks editor context before restoring full controller values.",
+      "Food group removal confirmation rechecks captured workspace and current visible group membership after consent.",
+      "Flat Retained directly renders existing globally expiry-sorted domain groups, preserving reason-distinct grouping, per-row reason, filters/search, container inspection and captured actions.",
+      "Loading fixture checks visible open-capture disabled while retaining progress, busy and absent stale editor assertions."
+    ],
+    "runtimeEvidence": {
+      "widgets": {
+        "passed": 8,
+        "failed": 0,
+        "status": "terminal PASS inspected; author execution",
+        "log": "<consumer-evidence>/retained-and-disposal-widget-final.txt"
+      },
+      "previousNative": {
+        "passed": 8,
+        "failed": 2,
+        "status": "terminal FAIL retained; two picker failures at hidden capture-add fixture. Meaningful late-capture assertion had passed; no relabeling as green.",
+        "log": "<consumer-evidence>/native-followup-final-attempt.txt"
+      },
+      "finalNative": {
+        "status": "PENDING; not used as acceptance evidence",
+        "expectedFlows": 4,
+        "scope": {
+          "picker": 2,
+          "flatRetained": 1,
+          "retainedHostDemo": 1
+        },
+        "log": "<consumer-evidence>/native-final-picker-retained-demo.txt"
+      }
+    },
+    "limitations": [
+      "Source acceptance is bounded to reviewed files/invariants; final native execution still pending at receipt.",
+      "Linux native Android method-channel adapter fixture does not establish actual Android OS picker/device acceptance.",
+      "No Windows/Android device, release artifact, publication or live workspace acceptance is asserted.",
+      "Prior meaningful regressions and fixture-only failed attempts remain distinct evidence; source-only review does not independently execute them."
+    ]
+  }
+}

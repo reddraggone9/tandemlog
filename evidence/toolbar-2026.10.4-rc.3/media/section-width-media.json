@@ -1,0 +1,77 @@
+{
+  "platform": "Native Linux GTK/Flutter, Xvfb, scripted synthetic household, dark theme, 2048x1000, text scale1",
+  "qualification": "Before is the actual pre-width-correction working tree captured in the native negative-control run; not a released binary. After is the recorded shared-width implementation. Pixel crop only; no scaling or retouching; labels outside crops. Final-source native width/editor workflow separately passed in qualified native10 run.",
+  "native_before_log": "../logs/width-native-red.txt",
+  "native_after_log": "../logs/native-followup-final-attempt.txt",
+  "captures": [
+    {
+      "file": "section-width-before.png",
+      "bytes": 24161,
+      "sha256": "73cec2f7f4323edf5bf554e8ab9dc6170b67210f0fd626a54344e39e02d7abed",
+      "capture_size": [
+        2048,
+        1000
+      ],
+      "crop": [
+        250,
+        0,
+        1798,
+        150
+      ]
+    },
+    {
+      "file": "section-width-after.png",
+      "bytes": 24177,
+      "sha256": "4a11162f412ddff48e04e1688e9a7190aa58bd5cd662ef3dba44ff1e631870f5",
+      "capture_size": [
+        2048,
+        1000
+      ],
+      "crop": [
+        250,
+        0,
+        1798,
+        150
+      ]
+    }
+  ],
+  "output": {
+    "file": "section-width-before-after.png",
+    "bytes": 30983,
+    "sha256": "a3b23db49e6fbf60f2b98be67c8f3e957f6ac07baee86c352ca4cd8a2b09d625"
+  },
+  "explanation": "Before Food used a centered900px body; After shares the centered1450px Tasks/Food limit, with existing padding.",
+  "source_scope": {
+    "before": {
+      "commit": "e6ba27597e34b6f723f17f5051363619d6f1a23a",
+      "qualification": "The pre-width negative-control capture used the baseline production frame expressions (Food900px, Tasks1450px) plus the new width/capture fixture. No complete pre-width working-tree inventory was recorded; this binds the relevant baseline frame source, not every contemporaneous file.",
+      "frame_files": {
+        "lib/main.dart": {
+          "bytes": 203720,
+          "sha256": "26013a6cc4f36c597b198c550edee690daeb9c516590d63e3c68a1c45db0b267"
+        },
+        "lib/food/food_page.dart": {
+          "bytes": 67022,
+          "sha256": "d8bc4f06e53bdf9abe3f04019208662976f25236fb4d46c8cc30485ff68a77c7"
+        }
+      }
+    },
+    "after": {
+      "qualification": "Capture precedes later approved menu/picker/Retained edits. Current reviewed sources retain the same shared1450px helper and outer header/frame constraints; current hashes identify that final source, not a reconstructed full historical working-tree snapshot. Final native width/editor workflow separately passes at those same unchanged width expressions.",
+      "current_frame_files": {
+        "lib/main.dart": {
+          "bytes": 205522,
+          "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+        },
+        "lib/food/food_page.dart": {
+          "bytes": 68360,
+          "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+        },
+        "lib/presentation/section_content.dart": {
+          "bytes": 186,
+          "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b"
+        }
+      }
+    }
+  }
+}

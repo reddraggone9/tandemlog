@@ -109,9 +109,7 @@ Future<void> verifyFoodExpirationColorWorkflow(
 
   await inspectColors('stock');
   await chooseFoodView(tester, 'Retained');
-  await tester.ensureVisible(find.widgetWithText(ExpansionTile, 'Emergency'));
-  await tester.tap(find.widgetWithText(ExpansionTile, 'Emergency'));
-  await tester.pumpAndSettle();
+  expect(find.byType(ExpansionTile), findsNothing);
   await inspectColors('retained');
   // Resume on another local day repaints the same records; no durable edit.
   final beforeColor = tester.widget<Text>(find.text('2026-10-14')).style!.color;

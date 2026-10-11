@@ -1,0 +1,43 @@
+{
+  "platform": "Actual Linux GTK/Flutter/Xvfb, synthetic initialized workspace, full TandemlogApp host, scripted Flutter input with actual X pointer",
+  "viewport": [
+    1200,
+    850
+  ],
+  "duration_seconds": 9.133333,
+  "qualification": "Not Windows or physical Android. Exact native host test passes opening/cancel/required-date validation/fresh Full add/source-preserving Undo. Video starts only after fixture setup. The recorded-run Before screenshot shows Test starting and is rejected as app UI evidence; earlier qualified native4 supplies the readable Before screenshot. Root personally viewed draft and the2s actual video frame with X pointer.",
+  "test_log": "../logs/add-another-recorded-native-final.txt",
+  "video": {
+    "file": "native-linux-add-another-host-scripted.mp4",
+    "bytes": 140300,
+    "sha256": "9f7ff5fc9a2014edabd54b0cbb2c1dccd9c95cf4142c9695cae41f5b2a685b29"
+  },
+  "viewed_frame": {
+    "file": "demo-frame-2s.png",
+    "video_offset_seconds": 2,
+    "bytes": 83875,
+    "sha256": "1db16c66ff22c624df371380d612452827c5e8ee18d06912c9bf90ad4b55824b"
+  },
+  "source_bindings": {
+    "lib/main.dart": {
+      "bytes": 205522,
+      "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 68360,
+      "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+    },
+    "lib/presentation/civil_date_input.dart": {
+      "bytes": 6682,
+      "sha256": "1d058fd32ea065dba84aae2f0e0fe5f435aa1e59a68039f9c817f417970e8a0f"
+    },
+    "integration_test/food_add_another_workflow_test.dart": {
+      "bytes": 9834,
+      "sha256": "1152fd2257574c6411ca36d9d1aee76e5fa50baa711a7783381616450f01b5cd"
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "bytes": 6594,
+      "sha256": "32165a7f250a94f693160694efd8faf3a1facf75f94bcf04595cd34ef0f8c490"
+    }
+  }
+}

@@ -333,10 +333,12 @@ Future<void> verifyFoodAllStatusSearch(
   );
   expect(find.text('Food early'), findsNothing);
   await chooseFoodView(tester, 'Retained', input: input);
-  expect(find.widgetWithText(ExpansionTile, 'Emergency'), findsOneWidget);
+  expect(find.byType(ExpansionTile), findsNothing);
+  expect(find.widgetWithText(Card, 'Food retained undated'), findsOneWidget);
   await _query(tester, 'Food early', input: input);
   await _query(tester, '', input: input);
-  expect(find.widgetWithText(ExpansionTile, 'Emergency'), findsOneWidget);
+  expect(find.byType(ExpansionTile), findsNothing);
+  expect(find.widgetWithText(Card, 'Food retained undated'), findsOneWidget);
   expect(find.text('Food early'), findsNothing);
   expect(find.text('Search food'), findsOneWidget);
   expect(tester.takeException(), isNull);
