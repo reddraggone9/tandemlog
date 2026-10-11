@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Build68 source/evidence freeze preparation.83 inputs include navigation. Terminal failed66 and cancelled67, actual qualified native reproduction/correction, independent reviews and clean scoped checks are retained; no aggregate/signing/original/Android success is claimed. Historical evidence retains original scope.",
+  "qualification": "Docs-only closing extension of frozen build68 source8c6ee23. Candidate commit retains193-entry manifest; this extension adds frozen source/root/editorial reviews and actual dispatch snapshot. Every executable/pipeline/dependency/notes/media byte is identical; aggregate/signing/original/Android gates remain pending.",
   "files": {
     "README.md": {
-      "bytes": 24952,
-      "sha256": "a60c5eedeea3166733769f24d50b8de121db10f548d8c81918c6740ebb024434"
+      "bytes": 25601,
+      "sha256": "839c77b7ef684b6cc3a36bf62e348c974b5c184874a6ae0b37644caac3cdc33d"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -29,6 +29,18 @@
     "candidate/build67/pending-full-candidate.json": {
       "bytes": 371,
       "sha256": "5ffd759a89c172c1e5921b32baacf3df0ec7b67860e2105eb7023c11c7958931"
+    },
+    "candidate/build68/dispatched-final-candidate.json": {
+      "bytes": 538,
+      "sha256": "1e9c8cd8377e8425e98104d6765550d96d3aa2eafcbf14883eb195c47b800a88"
+    },
+    "candidate/build68/frozen-source-inventory-independent-verification.json": {
+      "bytes": 85822,
+      "sha256": "b1f41ef543604dd2f321f737b386e4d38a5b1a4c9b5e8fd5db006f2aabe23675"
+    },
+    "candidate/build68/root-frozen-build68-source-verification.json": {
+      "bytes": 78525,
+      "sha256": "e9227ae125fe87ff90534eb73ecb1d44a0dcfcf9bf27979691736296e252f017"
     },
     "candidate/held-38153414378/build65-windows-actual-artifact-bindings.json": {
       "bytes": 10505,
@@ -713,6 +725,10 @@
     "reviews/independent-build67-editorial-frozen-final.json": {
       "bytes": 5959,
       "sha256": "3eebd5d6b517edbe010c94fb074d28c289f9583d018e6583cae5e46530a06688"
+    },
+    "reviews/independent-build68-editorial-frozen-final.json": {
+      "bytes": 7967,
+      "sha256": "0fd91b5a2becf3903fe9840324b83fbcd2553ca2d798e37fb40b6b39a05629f1"
     },
     "reviews/independent-editorial-final-review.json": {
       "bytes": 3742,

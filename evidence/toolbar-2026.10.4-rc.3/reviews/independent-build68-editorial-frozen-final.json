@@ -1,0 +1,165 @@
+{
+  "reviewer": "Independent editorial agent /root/calendar_editorial_review",
+  "created_utc": "2026-10-11T19:51:40.937192+00:00",
+  "decision": "ACCEPT frozen build68 release notes and media for exact covered source range",
+  "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "previous_reviewed_source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+  "prior_review": {
+    "path": "/tmp/food-rc67-final-artifact-review/independent-editorial-frozen-final.json",
+    "sha256": "3eebd5d6b517edbe010c94fb074d28c289f9583d018e6583cae5e46530a06688"
+  },
+  "scope": "Read-only editorial extension of actual committed range/diff, notes, unchanged approved immutable media, source/evidence inventories and current README/status/runtime/native handoff. No builds, source edits, push, candidate dispatch or publication.",
+  "source_delta": {
+    "files": [
+      "integration_test/section_navigation_workflow_test.dart",
+      "pubspec.yaml",
+      "test/food_retained_flat_list_test.dart"
+    ],
+    "navigation_fixture": "Adds bounded wait for actual Tasks section, expected task and absence of modal dialogs after Discard, retaining original draft/canonical assertions.",
+    "retained_fixture": "Checks every non-whitespace visible fixture character against unchanged0.5px tolerance, adds vertical bounds, geometry diagnostics and native snapshots; keeps metadata row/card and behavior checks. Exact historical hosted overflow character remains unobserved.",
+    "version": "2026.10.4-rc.3+67 to +68",
+    "inventory": {
+      "entries": 83,
+      "newly_bound_previously_omitted_file": [
+        "integration_test/section_navigation_workflow_test.dart"
+      ],
+      "changed_previous_bindings": [
+        "pubspec.yaml",
+        "test/food_retained_flat_list_test.dart"
+      ],
+      "other80_previous_entries_unchanged": true
+    },
+    "application": "App/UI/native/dependency/platform/packaging/workflow bytes unchanged from accepted build67; test corrections do not add a user-facing change."
+  },
+  "notes": {
+    "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+    "path": "design/prerelease-notes.md",
+    "bytes": 1888,
+    "sha256": "02b69d5c999e09050c4c65258656122b7067d15db5a967cfa64e57b41b8af115"
+  },
+  "notes_findings": [
+    "Approved1888-byte meaningful release prose and actionable exceptional old-preview compatibility remain unchanged.",
+    "No test, QA, preservation or platform acceptance assurances added; no new release note needed for these fixture corrections."
+  ],
+  "media": [
+    {
+      "binding": {
+        "commit": "f3ac5cbbac7547cfd728f23fea07030391d4f5b8",
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/section-width-before-after.png",
+        "bytes": 30983,
+        "sha256": "a3b23db49e6fbf60f2b98be67c8f3e957f6ac07baee86c352ca4cd8a2b09d625"
+      },
+      "matches_final_and_local": true
+    },
+    {
+      "binding": {
+        "commit": "7515375455d627b8ab224bb39ca8649e97ace053",
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+        "bytes": 50298,
+        "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+      },
+      "matches_final_and_local": true
+    }
+  ],
+  "media_qualification": "Actual dark Linux comparisons retain prior independent raw-pixel/crop/label/provenance acceptance. No new image, recapture, Android or exact signed candidate claim. Immutable f3ac width and751 expanded URLs unchanged.",
+  "verification": {
+    "clean_frozen_tree": true,
+    "manifest_checks": [
+      {
+        "binding": {
+          "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+          "path": "evidence/toolbar-2026.10.4-rc.3/inputs/source-inputs-build68.json",
+          "bytes": 14042,
+          "sha256": "1da2b6f08fca671362b894d2535cbce94264b765b9bbc5f6650596dead236b42"
+        },
+        "entries": 83,
+        "all_git_and_local_hashes_match": true
+      },
+      {
+        "binding": {
+          "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+          "path": "evidence/toolbar-2026.10.4-rc.3/manifest.json",
+          "bytes": 33285,
+          "sha256": "1e4a6d46882a3043cb9f7afc2a86aa029e47e3739a9bda6d8451986aaf82e9f4"
+        },
+        "entries": 193,
+        "all_git_and_local_hashes_match": true
+      }
+    ],
+    "covered_diff_sha256": "cc9a98d285f6869fa38b43755cc8c15c01527199ff689874ae5b23aa95bb8c54"
+  },
+  "supporting_reviews": [
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/reviews/build68-independent-three-fixture-corrections-review.json",
+      "bytes": 4929,
+      "sha256": "0b2f1428b46f54346407756af139e0a80d2ffe54f252a724b1554d375c9ddd59"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/reviews/build68-correctness-three-fixture-corrections-review.json",
+      "bytes": 6076,
+      "sha256": "cdda0a9d54d5cf34dd0df1830cd22fe0c0d877ad8ee30353abad8de30435a7f2"
+    }
+  ],
+  "provenance_docs": [
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/README.md",
+      "bytes": 24952,
+      "sha256": "a60c5eedeea3166733769f24d50b8de121db10f548d8c81918c6740ebb024434"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "design/status.md",
+      "bytes": 118377,
+      "sha256": "cd33c2b5501609931eda3e60ac5d3657db5687ffa86714dad6919e6f733e95d8"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "design/runtime-qa.md",
+      "bytes": 179495,
+      "sha256": "c833a216e1d6fadb15d1c5eac1705fc3c8c54e3c2d566a8bdf34a0d72830444f"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "design/food-rc3-native-acceptance.md",
+      "bytes": 7850,
+      "sha256": "fc90d3221a52b08fe48785c544287b82d731ead5403bef68d42afc549e03c1ad"
+    }
+  ],
+  "native_logs_inspected": [
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/logs/build68-actual-native-three-green.txt",
+      "bytes": 59130,
+      "sha256": "1736603206d34488111627670723620dd2e5a236b762175ab47822ca9feb763c"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/logs/build68-actual-native-dark-closure.txt",
+      "bytes": 6002,
+      "sha256": "36c1fe7268d47f2d2ce4fc79eb6e0867a36280adb04d6634cb1ff5ecbd8a0b80"
+    },
+    {
+      "commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+      "path": "evidence/toolbar-2026.10.4-rc.3/logs/build68-retained-letter-bounds-widget-green.txt",
+      "bytes": 51448,
+      "sha256": "666223b32e884fa90a7ee4018f06bef2965803e45f356c4a0a6406eb0afdc405"
+    }
+  ],
+  "qualified_run_history": [
+    "Build66 terminal FAILED: Linux155 passes/3 failures without deadline failure plus Windows SQLite test cleanup failure; signing skipped, no eligible APK.",
+    "Build67 root-cancelled because confirmed native failures share source; partial/preflight successes do not establish readiness.",
+    "Local native reproduction fails both navigation cases and passes Retained on the local font.",
+    "Corrected native batch has2 passes and1 actual X11 capture failure; separate same-source dark rerun passes1 complete case. These close the affected cases across runs, not a single3/3 aggregate pass.",
+    "Four Retained widget cases pass. Independent reviews accept bounded source corrections; exact replacement hosted/font behavior remains pending."
+  ],
+  "remaining_editorial_must_fixes": [],
+  "separate_remaining_gates": [
+    "Fresh exact full candidate, original owner-signed archive/artifact verification, Windows/platform native acceptance, physical Android/SAF/IME/Show taps, and coordinator readiness/publication clearance."
+  ],
+  "full_candidate_acceptance_claim": false,
+  "publication_claim": false
+}

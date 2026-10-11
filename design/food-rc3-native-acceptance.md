@@ -18,7 +18,7 @@ Linux build66 also ends155passes/3 native fixture failures; build67 is cancelled
 because those failures share source. Build68 preserves approved app/UI code,
 uses reviewed bounded navigation readiness and visible-character Retained bounds,
 and passes the targeted local native/widget checks with qualified capture evidence.
-Fresh full build68, original archive identities and owner-signed APK are pending.
+Fresh full build68 candidate38169726969 uses exact8c6ee23c78232094715b9bf79f9d3be54b3b522a. Frozen-source and final editorial checks pass; full hosted gates, original archive identities and owner-signed APK are pending.
 Use the eventual
 verified original APK without rebuilding. This document does not claim installed
 Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)

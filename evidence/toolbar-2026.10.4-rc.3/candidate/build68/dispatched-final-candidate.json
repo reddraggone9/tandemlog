@@ -1,0 +1,9 @@
+{
+  "checked_at_utc": "2026-10-11T19:52:52.352708+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/38169726969",
+  "version": "2026.10.4-rc.3+68",
+  "status": "IN_PROGRESS_NOT_ELIGIBLE",
+  "qualification": "Actual dispatch19:50:47UTC after source pushedmain.5requiredjobs must completeSUCCESS, owner originals verified and exact Android flows accepted before publication. This is a dispatch snapshot, not terminal success."
+}
