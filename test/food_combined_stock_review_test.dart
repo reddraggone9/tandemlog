@@ -77,34 +77,41 @@ void main() {
   );
 
   test(
-    'searched views return each active match once and bypass retention filters',
+    'searched views return every status once and bypass saved field filters',
     () {
       final state = projectFood(_history());
-      for (final view in [
-        FoodView.inventory,
-        FoodView.inbox,
-        FoodView.retained,
-      ]) {
+      for (final view in FoodView.values) {
         final matches = _ids(
-          state.view(view, search: 'shared food', reasons: {'Gift'}),
+          state.view(
+            view,
+            search: 'shared food',
+            reasons: {'Gift'},
+            brands: {'No matching brand'},
+            locations: {'No matching location'},
+          ),
         );
-        expect(matches.toSet(), state.active.map((e) => e.id).toSet());
-        expect(matches.length, state.active.length);
-        expect(matches, [_id(5), _id(4), _id(2), _id(1), _id(3)]);
+        expect(matches.toSet(), state.containers.map((e) => e.id).toSet());
+        expect(matches.length, state.containers.length);
+        expect(matches, [
+          _id(5),
+          _id(4),
+          _id(2),
+          _id(1),
+          _id(3),
+          _id(9),
+          _id(8),
+          _id(7),
+          _id(6),
+        ]);
+        expect(matches.take(5).toSet(), state.active.map((e) => e.id).toSet());
+        expect(matches.skip(5).toSet(), state.deleted.map((e) => e.id).toSet());
+        expect(state.view(view, search: 'missing'), isEmpty);
       }
       expect(_ids(state.view(FoodView.retained, reasons: {'Gift'})), [_id(4)]);
-      final deletedMatches = _ids(
-        state.view(FoodView.deleted, search: 'shared food'),
-      );
-      expect(deletedMatches.toSet(), state.deleted.map((e) => e.id).toSet());
-      expect(deletedMatches.length, state.deleted.length);
       expect(
-        deletedMatches.toSet().intersection(
-          state.active.map((e) => e.id).toSet(),
-        ),
-        isEmpty,
+        _ids(state.view(FoodView.deleted)).toSet(),
+        state.deleted.map((e) => e.id).toSet(),
       );
-      expect(state.view(FoodView.deleted, search: 'missing'), isEmpty);
     },
   );
 

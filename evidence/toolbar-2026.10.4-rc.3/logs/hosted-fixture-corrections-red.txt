@@ -1,0 +1,711 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: Stock partitions exclude retained and deleted food without losing active IDs
+00:00 +1: /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: searched views return each active match once and bypass retention filters
+00:00 +1 -1: /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: searched views return each active match once and bypass retention filters [E]
+  Expected: Set:[
+              '00000000-0000-4000-8000-000000000001',
+              '00000000-0000-4000-8000-000000000002',
+              '00000000-0000-4000-8000-000000000003',
+              '00000000-0000-4000-8000-000000000004',
+              '00000000-0000-4000-8000-000000000005'
+            ]
+    Actual: Set:[
+              '00000000-0000-4000-8000-000000000005',
+              '00000000-0000-4000-8000-000000000004',
+              '00000000-0000-4000-8000-000000000002',
+              '00000000-0000-4000-8000-000000000001',
+              '00000000-0000-4000-8000-000000000003',
+              '00000000-0000-4000-8000-000000000009',
+              '00000000-0000-4000-8000-000000000008',
+              '00000000-0000-4000-8000-000000000007',
+              '00000000-0000-4000-8000-000000000006'
+            ]
+     Which: larger than expected
+  
+  package:matcher                                     expect
+  package:flutter_test/src/widget_tester.dart 473:18  expect
+  test/food_combined_stock_review_test.dart 91:9      main.<fn>
+  
+00:00 +1 -1: /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: whitespace search keeps ordinary dated and undated partitions
+00:00 +2 -1: /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: date and retention edits reclassify without changing identity or hidden facts
+00:00 +3 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: (setUpAll)
+00:00 +3 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:03 +4 -1: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#a0d3b](controller:
+TextEditingController#89a6e(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#aa6bb, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((whiteMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.8706, green:
+0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#8fe12(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#08126 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#a0d3b] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=188.0, 0.0<=h<=Infinity), size: Size(188.0, 24.0))
+The hit test result at that offset is: HitTestResult(_RenderColoredBox#b65f3@Offset(110.0, 40.0),
+RenderPointerListener#49443@Offset(110.0, 40.0), RenderSemanticsAnnotations#a4767@Offset(110.0,
+40.0), RenderMouseRegion#f27ad@Offset(110.0, 40.0), RenderSemanticsAnnotations#74973@Offset(110.0,
+40.0), RenderSemanticsAnnotations#f9f93@Offset(110.0, 40.0),
+RenderRepaintBoundary#e6485@Offset(110.0, 40.0), RenderIndexedSemantics#b724a@Offset(110.0, 40.0),
+RenderSliverList@(mainAxis: 40.0, crossAxis: 110.0), RenderSliverPadding@(mainAxis: 40.0, crossAxis:
+110.0), RenderShrinkWrappingViewport#8cd42@Offset(110.0, 40.0),
+RenderIgnorePointer#572bc@Offset(110.0, 40.0), RenderSemanticsAnnotations#0436a@Offset(110.0, 40.0),
+RenderPointerListener#d2d64@Offset(110.0, 40.0), RenderSemanticsGestureHandler#c7478@Offset(110.0,
+40.0), RenderPointerListener#eec40@Offset(110.0, 40.0), _RenderScrollSemantics#584f2@Offset(110.0,
+40.0), RenderClipRect#c96ba@Offset(110.0, 40.0), RenderConstrainedBox#0b3e6@Offset(110.0, 40.0),
+_RenderInkFeatures#62239@Offset(110.0, 40.0), RenderPhysicalModel#acb4c@Offset(110.0, 40.0),
+RenderTapRegion#52104@Offset(110.0, 40.0), RenderPositionedBox#6a6f0@Offset(110.0, 40.0),
+RenderConstrainedBox#a4514@Offset(110.0, 40.0), RenderPositionedBox#55cbd@Offset(110.0, 40.0),
+_RenderLayoutBuilder#e52b9@Offset(142.0, 160.0), _RenderDeferredLayoutBox#2e686@Offset(142.0,
+160.0), _RenderTheater#1c6de@Offset(142.0, 160.0), RenderAbsorbPointer#7802a@Offset(142.0, 160.0),
+RenderPointerListener#b3521@Offset(142.0, 160.0), RenderSemanticsAnnotations#c29c6@Offset(142.0,
+160.0), RenderSemanticsAnnotations#708e3@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#343a1@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#3b76d@Offset(142.0, 160.0), RenderTapRegionSurface#aa842@Offset(142.0,
+160.0), RenderSemanticsAnnotations#7bd16@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#2204f@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#20128(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#10d9a(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp dark 1.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:04 +4 -2: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 1.0x editor 1 with IME/errors
+  
+00:04 +4 -2: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#ded24](controller:
+TextEditingController#ebdb1(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#e5177, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((whiteMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.8706, green:
+0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#b84cb(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#fbc76 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#ded24] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=188.0, 0.0<=h<=Infinity), size: Size(188.0, 24.0))
+The hit test result at that offset is: HitTestResult(_RenderColoredBox#a2c10@Offset(110.0, 40.0),
+RenderPointerListener#dbc1a@Offset(110.0, 40.0), RenderSemanticsAnnotations#6c011@Offset(110.0,
+40.0), RenderMouseRegion#1e1b5@Offset(110.0, 40.0), RenderSemanticsAnnotations#f46b5@Offset(110.0,
+40.0), RenderSemanticsAnnotations#51a89@Offset(110.0, 40.0),
+RenderRepaintBoundary#d883a@Offset(110.0, 40.0), RenderIndexedSemantics#a1680@Offset(110.0, 40.0),
+RenderSliverList@(mainAxis: 40.0, crossAxis: 110.0), RenderSliverPadding@(mainAxis: 40.0, crossAxis:
+110.0), RenderShrinkWrappingViewport#e4000@Offset(110.0, 40.0),
+RenderIgnorePointer#73198@Offset(110.0, 40.0), RenderSemanticsAnnotations#1189a@Offset(110.0, 40.0),
+RenderPointerListener#611c4@Offset(110.0, 40.0), RenderSemanticsGestureHandler#a3f4e@Offset(110.0,
+40.0), RenderPointerListener#9bef0@Offset(110.0, 40.0), _RenderScrollSemantics#59db2@Offset(110.0,
+40.0), RenderClipRect#6094b@Offset(110.0, 40.0), RenderConstrainedBox#df298@Offset(110.0, 40.0),
+_RenderInkFeatures#cf271@Offset(110.0, 40.0), RenderPhysicalModel#00c30@Offset(110.0, 40.0),
+RenderTapRegion#1ef7c@Offset(110.0, 40.0), RenderPositionedBox#d3b62@Offset(110.0, 40.0),
+RenderConstrainedBox#71e02@Offset(110.0, 40.0), RenderPositionedBox#77ee5@Offset(110.0, 40.0),
+_RenderLayoutBuilder#9a341@Offset(142.0, 160.0), _RenderDeferredLayoutBox#1c728@Offset(142.0,
+160.0), _RenderTheater#fd85e@Offset(142.0, 160.0), RenderAbsorbPointer#759c1@Offset(142.0, 160.0),
+RenderPointerListener#3deba@Offset(142.0, 160.0), RenderSemanticsAnnotations#4b49a@Offset(142.0,
+160.0), RenderSemanticsAnnotations#ac638@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#69998@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#faa6f@Offset(142.0, 160.0), RenderTapRegionSurface#a0e90@Offset(142.0,
+160.0), RenderSemanticsAnnotations#ef2e3@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#fb149@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#3e38e(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#05c34(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp dark 1.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:08 +4 -3: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 1.0x editor 100 with IME/errors
+  
+00:08 +4 -3: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:09 +5 -3: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#09070](controller:
+TextEditingController#47d69(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#bd757, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((whiteMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.8706, green:
+0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#93f18(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#345ac relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#09070] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=209.3, 0.0<=h<=Infinity), size: Size(209.3, 48.0))
+The hit test result at that offset is:
+HitTestResult(HitTestEntry<HitTestTarget>#a2ab4(TextSpan(debugLabel: (englishLike bodyMedium
+2021).merge((whiteMountainView bodyMedium).apply), inherit: false, color: Color(alpha: 1.0000, red:
+0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 14.0,
+weight: 400, letterSpacing: 0.3, baseline: alphabetic, height: 1.4x, leadingDistribution: even,
+decoration: Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace:
+ColorSpace.sRGB) TextDecoration.none, "Sample Foods")), RenderParagraph#1ad77@Offset(104.7, 36.0),
+RenderPadding#f1224@Offset(120.7, 52.0), _RenderColoredBox#54362@Offset(120.7, 52.0),
+RenderPointerListener#f2b7c@Offset(120.7, 52.0), RenderSemanticsAnnotations#24973@Offset(120.7,
+52.0), RenderMouseRegion#86ca8@Offset(120.7, 52.0), RenderSemanticsAnnotations#13d29@Offset(120.7,
+52.0), RenderSemanticsAnnotations#f7908@Offset(120.7, 52.0),
+RenderRepaintBoundary#d3b37@Offset(120.7, 52.0), RenderIndexedSemantics#de5c7@Offset(120.7, 52.0),
+RenderSliverList@(mainAxis: 52.0, crossAxis: 120.66666666666667), RenderSliverPadding@(mainAxis:
+52.0, crossAxis: 120.66666666666667), RenderShrinkWrappingViewport#f68c2@Offset(120.7, 52.0),
+RenderIgnorePointer#a15af@Offset(120.7, 52.0), RenderSemanticsAnnotations#53f6a@Offset(120.7, 52.0),
+RenderPointerListener#9131b@Offset(120.7, 52.0), RenderSemanticsGestureHandler#ca2a0@Offset(120.7,
+52.0), RenderPointerListener#3498d@Offset(120.7, 52.0), _RenderScrollSemantics#cbffd@Offset(120.7,
+52.0), RenderClipRect#a4cea@Offset(120.7, 52.0), RenderConstrainedBox#b0672@Offset(120.7, 52.0),
+_RenderInkFeatures#30c62@Offset(120.7, 52.0), RenderPhysicalModel#2155a@Offset(120.7, 52.0),
+RenderTapRegion#5fa81@Offset(120.7, 52.0), RenderPositionedBox#52879@Offset(120.7, 52.0),
+RenderConstrainedBox#5ee2b@Offset(120.7, 52.0), RenderPositionedBox#9d3a9@Offset(120.7, 52.0),
+_RenderLayoutBuilder#e07df@Offset(142.0, 160.0), _RenderDeferredLayoutBox#a0c33@Offset(142.0,
+160.0), _RenderTheater#ecab5@Offset(142.0, 160.0), RenderAbsorbPointer#bd39e@Offset(142.0, 160.0),
+RenderPointerListener#46640@Offset(142.0, 160.0), RenderSemanticsAnnotations#d9091@Offset(142.0,
+160.0), RenderSemanticsAnnotations#1cb63@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#a9ad0@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#03dab@Offset(142.0, 160.0), RenderTapRegionSurface#2e7eb@Offset(142.0,
+160.0), RenderSemanticsAnnotations#39d59@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#77521@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#f38d7(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#eadac(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp dark 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:09 +5 -4: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 1 with IME/errors
+  
+00:09 +5 -4: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#7cd35](controller:
+TextEditingController#b1b97(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#d12e6, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((whiteMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.8706, green:
+0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#52dc0(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#84020 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#7cd35] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=209.3, 0.0<=h<=Infinity), size: Size(209.3, 48.0))
+The hit test result at that offset is:
+HitTestResult(HitTestEntry<HitTestTarget>#112f9(TextSpan(debugLabel: (englishLike bodyMedium
+2021).merge((whiteMountainView bodyMedium).apply), inherit: false, color: Color(alpha: 1.0000, red:
+0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 14.0,
+weight: 400, letterSpacing: 0.3, baseline: alphabetic, height: 1.4x, leadingDistribution: even,
+decoration: Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace:
+ColorSpace.sRGB) TextDecoration.none, "Sample Foods")), RenderParagraph#48709@Offset(104.7, 36.0),
+RenderPadding#214cf@Offset(120.7, 52.0), _RenderColoredBox#de374@Offset(120.7, 52.0),
+RenderPointerListener#5b96b@Offset(120.7, 52.0), RenderSemanticsAnnotations#29a0c@Offset(120.7,
+52.0), RenderMouseRegion#35e2d@Offset(120.7, 52.0), RenderSemanticsAnnotations#f057c@Offset(120.7,
+52.0), RenderSemanticsAnnotations#d90f2@Offset(120.7, 52.0),
+RenderRepaintBoundary#92b27@Offset(120.7, 52.0), RenderIndexedSemantics#ab3b1@Offset(120.7, 52.0),
+RenderSliverList@(mainAxis: 52.0, crossAxis: 120.66666666666667), RenderSliverPadding@(mainAxis:
+52.0, crossAxis: 120.66666666666667), RenderShrinkWrappingViewport#1dd93@Offset(120.7, 52.0),
+RenderIgnorePointer#a803e@Offset(120.7, 52.0), RenderSemanticsAnnotations#09877@Offset(120.7, 52.0),
+RenderPointerListener#038ee@Offset(120.7, 52.0), RenderSemanticsGestureHandler#05c13@Offset(120.7,
+52.0), RenderPointerListener#82f3d@Offset(120.7, 52.0), _RenderScrollSemantics#2b065@Offset(120.7,
+52.0), RenderClipRect#0aeba@Offset(120.7, 52.0), RenderConstrainedBox#3e0e1@Offset(120.7, 52.0),
+_RenderInkFeatures#fefbc@Offset(120.7, 52.0), RenderPhysicalModel#5df9b@Offset(120.7, 52.0),
+RenderTapRegion#a8739@Offset(120.7, 52.0), RenderPositionedBox#4af32@Offset(120.7, 52.0),
+RenderConstrainedBox#10ca5@Offset(120.7, 52.0), RenderPositionedBox#d3a51@Offset(120.7, 52.0),
+_RenderLayoutBuilder#01b5f@Offset(142.0, 160.0), _RenderDeferredLayoutBox#ca84f@Offset(142.0,
+160.0), _RenderTheater#65a88@Offset(142.0, 160.0), RenderAbsorbPointer#3b1a2@Offset(142.0, 160.0),
+RenderPointerListener#2356b@Offset(142.0, 160.0), RenderSemanticsAnnotations#d39c6@Offset(142.0,
+160.0), RenderSemanticsAnnotations#35371@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#9fffe@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#88ed4@Offset(142.0, 160.0), RenderTapRegionSurface#5a8c7@Offset(142.0,
+160.0), RenderSemanticsAnnotations#7d86b@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#8d47d@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#4318e(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#cb04b(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp dark 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +5 -5: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp dark 2.0x editor 100 with IME/errors
+  
+00:12 +5 -5: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 0 with IME/errors
+00:13 +6 -5: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#82358](controller:
+TextEditingController#a5e5b(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#db11e, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((blackMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.0902, green:
+0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#1b858(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#65899 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#82358] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=188.0, 0.0<=h<=Infinity), size: Size(188.0, 24.0))
+The hit test result at that offset is: HitTestResult(_RenderColoredBox#fa607@Offset(110.0, 40.0),
+RenderPointerListener#f8262@Offset(110.0, 40.0), RenderSemanticsAnnotations#46a25@Offset(110.0,
+40.0), RenderMouseRegion#b3a5f@Offset(110.0, 40.0), RenderSemanticsAnnotations#a511f@Offset(110.0,
+40.0), RenderSemanticsAnnotations#a2c93@Offset(110.0, 40.0),
+RenderRepaintBoundary#6e310@Offset(110.0, 40.0), RenderIndexedSemantics#99189@Offset(110.0, 40.0),
+RenderSliverList@(mainAxis: 40.0, crossAxis: 110.0), RenderSliverPadding@(mainAxis: 40.0, crossAxis:
+110.0), RenderShrinkWrappingViewport#41da1@Offset(110.0, 40.0),
+RenderIgnorePointer#544f1@Offset(110.0, 40.0), RenderSemanticsAnnotations#0d030@Offset(110.0, 40.0),
+RenderPointerListener#e93df@Offset(110.0, 40.0), RenderSemanticsGestureHandler#abd5f@Offset(110.0,
+40.0), RenderPointerListener#90940@Offset(110.0, 40.0), _RenderScrollSemantics#df297@Offset(110.0,
+40.0), RenderClipRect#4922c@Offset(110.0, 40.0), RenderConstrainedBox#027f7@Offset(110.0, 40.0),
+_RenderInkFeatures#6d6fa@Offset(110.0, 40.0), RenderPhysicalModel#70e80@Offset(110.0, 40.0),
+RenderTapRegion#c4e53@Offset(110.0, 40.0), RenderPositionedBox#ea193@Offset(110.0, 40.0),
+RenderConstrainedBox#e9d3e@Offset(110.0, 40.0), RenderPositionedBox#da256@Offset(110.0, 40.0),
+_RenderLayoutBuilder#b1f51@Offset(142.0, 160.0), _RenderDeferredLayoutBox#e7428@Offset(142.0,
+160.0), _RenderTheater#8b914@Offset(142.0, 160.0), RenderAbsorbPointer#5ea40@Offset(142.0, 160.0),
+RenderPointerListener#09ece@Offset(142.0, 160.0), RenderSemanticsAnnotations#5c9b7@Offset(142.0,
+160.0), RenderSemanticsAnnotations#53668@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#03c7d@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#f12ab@Offset(142.0, 160.0), RenderTapRegionSurface#8cd7f@Offset(142.0,
+160.0), RenderSemanticsAnnotations#0e04c@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#8aeff@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#000ee(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#ab162(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp light 1.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:14 +6 -6: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 1.0x editor 1 with IME/errors
+  
+00:14 +6 -6: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#19f27](controller:
+TextEditingController#fbd3c(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#b54d4, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((blackMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.0902, green:
+0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#8ebe6(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#e0245 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#19f27] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=188.0, 0.0<=h<=Infinity), size: Size(188.0, 24.0))
+The hit test result at that offset is: HitTestResult(_RenderColoredBox#71e6b@Offset(110.0, 40.0),
+RenderPointerListener#e740e@Offset(110.0, 40.0), RenderSemanticsAnnotations#8a3b6@Offset(110.0,
+40.0), RenderMouseRegion#116ca@Offset(110.0, 40.0), RenderSemanticsAnnotations#0c4de@Offset(110.0,
+40.0), RenderSemanticsAnnotations#5548c@Offset(110.0, 40.0),
+RenderRepaintBoundary#f8e23@Offset(110.0, 40.0), RenderIndexedSemantics#94f55@Offset(110.0, 40.0),
+RenderSliverList@(mainAxis: 40.0, crossAxis: 110.0), RenderSliverPadding@(mainAxis: 40.0, crossAxis:
+110.0), RenderShrinkWrappingViewport#d639c@Offset(110.0, 40.0),
+RenderIgnorePointer#5c7ea@Offset(110.0, 40.0), RenderSemanticsAnnotations#96fb8@Offset(110.0, 40.0),
+RenderPointerListener#7a054@Offset(110.0, 40.0), RenderSemanticsGestureHandler#0b538@Offset(110.0,
+40.0), RenderPointerListener#950dd@Offset(110.0, 40.0), _RenderScrollSemantics#1c84a@Offset(110.0,
+40.0), RenderClipRect#34bef@Offset(110.0, 40.0), RenderConstrainedBox#e8353@Offset(110.0, 40.0),
+_RenderInkFeatures#45995@Offset(110.0, 40.0), RenderPhysicalModel#21ac9@Offset(110.0, 40.0),
+RenderTapRegion#f59cf@Offset(110.0, 40.0), RenderPositionedBox#32711@Offset(110.0, 40.0),
+RenderConstrainedBox#1d1ca@Offset(110.0, 40.0), RenderPositionedBox#0b543@Offset(110.0, 40.0),
+_RenderLayoutBuilder#7d3aa@Offset(142.0, 160.0), _RenderDeferredLayoutBox#606ba@Offset(142.0,
+160.0), _RenderTheater#7eede@Offset(142.0, 160.0), RenderAbsorbPointer#5b619@Offset(142.0, 160.0),
+RenderPointerListener#d0f15@Offset(142.0, 160.0), RenderSemanticsAnnotations#f9dfc@Offset(142.0,
+160.0), RenderSemanticsAnnotations#f86fd@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#970b8@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#fb261@Offset(142.0, 160.0), RenderTapRegionSurface#95f33@Offset(142.0,
+160.0), RenderSemanticsAnnotations#f5e1c@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#7ec7f@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#35d5b(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#61360(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp light 1.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +6 -7: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 1.0x editor 100 with IME/errors
+  
+00:17 +6 -7: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+00:17 +7 -7: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#2ee83](controller:
+TextEditingController#76593(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#ae859, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((blackMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.0902, green:
+0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#00fc5(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#b19b9 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#2ee83] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=209.3, 0.0<=h<=Infinity), size: Size(209.3, 48.0))
+The hit test result at that offset is:
+HitTestResult(HitTestEntry<HitTestTarget>#c16cc(TextSpan(debugLabel: (englishLike bodyMedium
+2021).merge((blackMountainView bodyMedium).apply), inherit: false, color: Color(alpha: 1.0000, red:
+0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 14.0,
+weight: 400, letterSpacing: 0.3, baseline: alphabetic, height: 1.4x, leadingDistribution: even,
+decoration: Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace:
+ColorSpace.sRGB) TextDecoration.none, "Sample Foods")), RenderParagraph#a9787@Offset(104.7, 36.0),
+RenderPadding#e1af0@Offset(120.7, 52.0), _RenderColoredBox#61526@Offset(120.7, 52.0),
+RenderPointerListener#3282b@Offset(120.7, 52.0), RenderSemanticsAnnotations#52060@Offset(120.7,
+52.0), RenderMouseRegion#2a93f@Offset(120.7, 52.0), RenderSemanticsAnnotations#f1ba9@Offset(120.7,
+52.0), RenderSemanticsAnnotations#6564f@Offset(120.7, 52.0),
+RenderRepaintBoundary#8fe21@Offset(120.7, 52.0), RenderIndexedSemantics#6e971@Offset(120.7, 52.0),
+RenderSliverList@(mainAxis: 52.0, crossAxis: 120.66666666666667), RenderSliverPadding@(mainAxis:
+52.0, crossAxis: 120.66666666666667), RenderShrinkWrappingViewport#b5951@Offset(120.7, 52.0),
+RenderIgnorePointer#8b3a9@Offset(120.7, 52.0), RenderSemanticsAnnotations#a737b@Offset(120.7, 52.0),
+RenderPointerListener#8a4bc@Offset(120.7, 52.0), RenderSemanticsGestureHandler#4c6df@Offset(120.7,
+52.0), RenderPointerListener#e78c9@Offset(120.7, 52.0), _RenderScrollSemantics#3b4d4@Offset(120.7,
+52.0), RenderClipRect#58c22@Offset(120.7, 52.0), RenderConstrainedBox#2068e@Offset(120.7, 52.0),
+_RenderInkFeatures#438a5@Offset(120.7, 52.0), RenderPhysicalModel#d1ede@Offset(120.7, 52.0),
+RenderTapRegion#83cb8@Offset(120.7, 52.0), RenderPositionedBox#85391@Offset(120.7, 52.0),
+RenderConstrainedBox#736a9@Offset(120.7, 52.0), RenderPositionedBox#9cb53@Offset(120.7, 52.0),
+_RenderLayoutBuilder#f3415@Offset(142.0, 160.0), _RenderDeferredLayoutBox#e1213@Offset(142.0,
+160.0), _RenderTheater#93f96@Offset(142.0, 160.0), RenderAbsorbPointer#ed623@Offset(142.0, 160.0),
+RenderPointerListener#91bb5@Offset(142.0, 160.0), RenderSemanticsAnnotations#efcca@Offset(142.0,
+160.0), RenderSemanticsAnnotations#f21ca@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#68385@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#fa855@Offset(142.0, 160.0), RenderTapRegionSurface#8d90b@Offset(142.0,
+160.0), RenderSemanticsAnnotations#587eb@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#97424@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#d4314(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#d6820(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp light 2.0x editor 1 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:18 +7 -8: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 1 with IME/errors
+  
+00:18 +7 -8: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+Finder specifies a widget that would not receive pointer events.
+A call to tap() with finder "Found 1 widget with type "EditableText" descending from widget with
+type "TextField" that are ancestors of widget with text "Expiration": [
+  EditableText-[LabeledGlobalKey<EditableTextState>#8e42e](controller:
+TextEditingController#b7bf1(TextEditingValue(text: ┤2027-06-01├, selection: TextSelection.invalid,
+composing: TextRange(start: -1, end: -1))), focusNode: FocusNode#b1682, autocorrect: true,
+debugLabel: ((englishLike bodyLarge 2021).merge((blackMountainView
+bodyLarge).apply)).merge(unknown), inherit: false, color: Color(alpha: 1.0000, red: 0.0902, green:
+0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 400,
+letterSpacing: 0.5, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, textAlign: start, keyboardType: TextInputType(name: TextInputType.text, signed:
+null, decimal: null), autofillHints: [], spellCheckConfiguration: SpellCheckConfiguration(disabled,
+service: null, text style: null, toolbar builder: null), dependencies: [Directionality, MediaQuery,
+_EffectiveTickerMode, _ScrollableScope], state: EditableTextState#1c3b7(tickers: tracking 1
+ticker)),
+]" derived an Offset (Offset(142.0, 160.0)) that would not hit test on the specified widget.
+Maybe the widget is actually off-screen, or another widget is obscuring it, or the widget cannot
+receive pointer events.
+The finder corresponds to this RenderBox: _RenderCompositionCallback#2c825 relayoutBoundary=up30(needs compositing, creator: _CompositionCallback ← EditableText-[LabeledGlobalKey<EditableTextState>#8e42e] ← UnmanagedRestorationScope ← RepaintBoundary ← _Decorator ← Semantics ← InputDecorator ← AnimatedBuilder ← Listener ← RawGestureDetector ← TextSelectionGestureDetector ← Semantics ← ⋯, parentData: <none> (can use size), constraints: BoxConstraints(w=209.3, 0.0<=h<=Infinity), size: Size(209.3, 48.0))
+The hit test result at that offset is:
+HitTestResult(HitTestEntry<HitTestTarget>#7b51e(TextSpan(debugLabel: (englishLike bodyMedium
+2021).merge((blackMountainView bodyMedium).apply), inherit: false, color: Color(alpha: 1.0000, red:
+0.0902, green: 0.1137, blue: 0.1059, colorSpace: ColorSpace.sRGB), family: Roboto, size: 14.0,
+weight: 400, letterSpacing: 0.3, baseline: alphabetic, height: 1.4x, leadingDistribution: even,
+decoration: Color(alpha: 1.0000, red: 0.0902, green: 0.1137, blue: 0.1059, colorSpace:
+ColorSpace.sRGB) TextDecoration.none, "Sample Foods")), RenderParagraph#60b4b@Offset(104.7, 36.0),
+RenderPadding#868f7@Offset(120.7, 52.0), _RenderColoredBox#feb66@Offset(120.7, 52.0),
+RenderPointerListener#63d34@Offset(120.7, 52.0), RenderSemanticsAnnotations#28646@Offset(120.7,
+52.0), RenderMouseRegion#4bcf0@Offset(120.7, 52.0), RenderSemanticsAnnotations#8b031@Offset(120.7,
+52.0), RenderSemanticsAnnotations#eaa41@Offset(120.7, 52.0),
+RenderRepaintBoundary#fa365@Offset(120.7, 52.0), RenderIndexedSemantics#b6aa9@Offset(120.7, 52.0),
+RenderSliverList@(mainAxis: 52.0, crossAxis: 120.66666666666667), RenderSliverPadding@(mainAxis:
+52.0, crossAxis: 120.66666666666667), RenderShrinkWrappingViewport#3b70f@Offset(120.7, 52.0),
+RenderIgnorePointer#40c40@Offset(120.7, 52.0), RenderSemanticsAnnotations#cb75c@Offset(120.7, 52.0),
+RenderPointerListener#c10a1@Offset(120.7, 52.0), RenderSemanticsGestureHandler#01012@Offset(120.7,
+52.0), RenderPointerListener#8b176@Offset(120.7, 52.0), _RenderScrollSemantics#11ec1@Offset(120.7,
+52.0), RenderClipRect#ce553@Offset(120.7, 52.0), RenderConstrainedBox#15cdf@Offset(120.7, 52.0),
+_RenderInkFeatures#a64cd@Offset(120.7, 52.0), RenderPhysicalModel#c5794@Offset(120.7, 52.0),
+RenderTapRegion#5d748@Offset(120.7, 52.0), RenderPositionedBox#f8256@Offset(120.7, 52.0),
+RenderConstrainedBox#00621@Offset(120.7, 52.0), RenderPositionedBox#1c985@Offset(120.7, 52.0),
+_RenderLayoutBuilder#138e3@Offset(142.0, 160.0), _RenderDeferredLayoutBox#43120@Offset(142.0,
+160.0), _RenderTheater#0674f@Offset(142.0, 160.0), RenderAbsorbPointer#fff41@Offset(142.0, 160.0),
+RenderPointerListener#819bd@Offset(142.0, 160.0), RenderSemanticsAnnotations#26a49@Offset(142.0,
+160.0), RenderSemanticsAnnotations#c4f6a@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#295fe@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#292ba@Offset(142.0, 160.0), RenderTapRegionSurface#adfc4@Offset(142.0,
+160.0), RenderSemanticsAnnotations#35adc@Offset(142.0, 160.0),
+RenderSemanticsAnnotations#b6037@Offset(142.0, 160.0),
+HitTestEntry<HitTestTarget>#428c6(_ReusableRenderView#c0a4f),
+HitTestEntry<HitTestTarget>#db7b6(<AutomatedTestWidgetsFlutterBinding>))
+If you expected this target not to be able to receive pointer events, pass "warnIfMissed: false" to
+"tap()".
+To make this error into a non-fatal warning, set WidgetController.hitTestWarningShouldBeFatal to
+false.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2133:11)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      verifyFoodEditorKeyboardLayout.tap (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:58:22)
+<asynchronous suspension>
+#4      verifyFoodEditorKeyboardLayout.focus (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:152:5)
+<asynchronous suspension>
+#5      verifyFoodEditorKeyboardLayout (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:197:5)
+<asynchronous suspension>
+#6      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart:302:13)
+<asynchronous suspension>
+#7      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#8      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  320dp light 2.0x editor 100 with IME/errors
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:20 +7 -9: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors [E]
+  Test failed. See exception logs above.
+  The test description was: 320dp light 2.0x editor 100 with IME/errors
+  
+00:20 +7 -9: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: (tearDownAll)
+00:20 +7 -9: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/food_combined_stock_review_test.dart: searched views return each active match once and bypass retention filters
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+  /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+  ... and 5 more

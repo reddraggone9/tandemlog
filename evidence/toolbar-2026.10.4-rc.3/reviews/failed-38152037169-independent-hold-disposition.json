@@ -1,0 +1,44 @@
+{
+  "portability": "Local synthetic evidence paths normalized; original receipt hash retained.",
+  "original_receipt_sha256": "1e53f9eff6a0cd7b272594ef85fb65993cf71539e37c40984103b35fe809c78b",
+  "review": {
+    "checked_at_utc": "2026-10-11T15:44:30.386486+00:00",
+    "source": "16cb07d62b3b6ef8432120debf45192c3b522ecd",
+    "candidate_run": 38152037169,
+    "version": "2026.10.4-rc.3+65",
+    "verdict": "HOLD_FAILED_HOSTED_LINUX_UNIT_GATE_NO_ARTIFACT_HANDOFF",
+    "linux_job_id": 114507333037,
+    "failed_step": {
+      "name": "Run flutter test",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 11,
+      "started_at": "2026-10-11T15:39:26Z",
+      "completed_at": "2026-10-11T15:42:47Z"
+    },
+    "failed_tests": [
+      "2026-10-11T15:42:04.1494274Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_combined_stock_review_test.dart: searched views return each active match once and bypass retention filters (failed)",
+      "2026-10-11T15:42:26.0204088Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors (failed)",
+      "2026-10-11T15:42:29.2514636Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors (failed)",
+      "2026-10-11T15:42:30.8706212Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors (failed)",
+      "2026-10-11T15:42:33.5693606Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors (failed)",
+      "2026-10-11T15:42:34.9428974Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors (failed)",
+      "2026-10-11T15:42:37.3657758Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors (failed)",
+      "2026-10-11T15:42:38.6762541Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors (failed)",
+      "2026-10-11T15:42:41.1171606Z ##[group]\u274c /home/runner/work/tandemlog/tandemlog/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors (failed)"
+    ],
+    "log": {
+      "path": "failed-candidate-evidence/linux-provider-decoded-hosted.log",
+      "bytes": 435394,
+      "sha256": "995dd08560d3e4824a5e3916f638bb31b8ef987ba17acddaf0f42584437e8347",
+      "representation": "Official GitHub App decoded UTF8 content preserved without newline/BOM normalization; hash is of retained decoded representation, not independently attested raw download."
+    },
+    "source_inventory": {
+      "path": "failed-candidate-evidence/frozen-source-inventory-independent-verification.json",
+      "sha256": "81b614d1f83110a392b5d35f4bf3b7425fee5951c0e707e5668ecb4f1f1175db"
+    },
+    "archives_downloaded": [],
+    "parent_owns_source_correction": true,
+    "publication_or_runtime_acceptance": false
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "239efef4c5442c6b26665df4474e12e41f59f2142256dcea892d0b2a6d75d1cf",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T15:49:36.676384+00:00",
+    "verdict": "ACCEPTED_BOUNDED_TEST_CORRECTIONS_NATIVE_RESULT_PENDING",
+    "mustFix": [],
+    "baseCommit": "83a15fe18e94689842820db2ffbfb0b4c4e21d19",
+    "sourceBindings": {
+      "test/food_combined_stock_review_test.dart": {
+        "path": "test/food_combined_stock_review_test.dart",
+        "sha256": "d8c4605d0ad53d2bd3bcac808962538110eb8e50c3927f544908d994313c295e",
+        "bytes": 5607
+      },
+      "test/food_editor_keyboard_layout_test.dart": {
+        "path": "test/food_editor_keyboard_layout_test.dart",
+        "sha256": "5ae57348ab770a0c3e04d55cf60b8407e0886fcd20cd503c89b68bc1d71782f1",
+        "bytes": 11984
+      }
+    },
+    "originalTestSha256": {
+      "test/food_combined_stock_review_test.dart": "1b090ed837329e1f1104535e970d2c8943030f7e57594a5ff24047cff7fd36bb",
+      "test/food_editor_keyboard_layout_test.dart": "46c9ac3e268ec063202b0405cdd25244842c3412d15cf1986fa0f251a5c423f9"
+    },
+    "sourceSnapshot": "runtime-evidence/independent-hosted-fixture-corrections-source",
+    "scopeCheck": "Only two test files differ from HEAD. All60 settled source inventory entries unchanged. No lib/platform/native/dependency/workflow/pubspec/packaging behavior change.",
+    "evidenceBindings": [
+      {
+        "path": "failed-candidate-evidence/linux-provider-decoded-hosted.log",
+        "sha256": "995dd08560d3e4824a5e3916f638bb31b8ef987ba17acddaf0f42584437e8347",
+        "bytes": 435394
+      },
+      {
+        "path": "runtime-evidence/hosted-fixture-corrections-red.log",
+        "sha256": "27161cb411acb7cc5399a26f2d0a1ce4fab5051e4c9ad207094d65ae9f5e944c",
+        "bytes": 59768
+      },
+      {
+        "path": "runtime-evidence/hosted-fixture-corrections-green.log",
+        "sha256": "bcd7b3b9f2c320fba34ba8787dc07b66f326cbe7ff0fcb6e25f91698cf1c24c3",
+        "bytes": 3176
+      },
+      {
+        "path": "runtime-evidence/hosted-fixture-corrections-analyze.log",
+        "sha256": "ad38104fd8bddf6d3d0990d6206e1be32dc3f2e51f98b45bc9390c9044c7c77f",
+        "bytes": 686
+      },
+      {
+        "path": "runtime-evidence/source-inputs-settled.json",
+        "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3",
+        "bytes": 9727
+      }
+    ],
+    "findings": [
+      "Official hosted trace identifies8 Edit1/Edit100 failures across2themes\u00d72scales with Sample Foods autocomplete RenderSliverList intercepting Expiration pointer target; no evidence of date-padding defect.",
+      "All-status search test previously required active-only results and separate deleted-only search. Corrected test uses all4 FoodView values, explicit9-ID active-then-deleted ordering, uniqueness and partition sets, impossible saved Brand/Location/reason filters bypass, missing-query emptiness. Unsearched Stock/Inbox/Retained/Deleted partition checks remain.",
+      "Editor helper extends established Retention Escape dismissal to Brand/Location suggestions before next pointer target. It now asserts exact TextEditingValue and retained focus after Escape. Pinned Flutter RawAutocomplete DismissIntent hides showing options; original fatal pointer-hit, glyph/IME/line/action-size/dirty-close/validation/Save/physical state assertions remain. No direct focus shortcut or ignored hit-test warning."
+    ],
+    "observedChecks": {
+      "localOriginal": "7pass/9fail in00:20; preserved",
+      "localCorrected": "16/16PASS in00:24; includes4stock-domain cases +12Add/Edit layout variants",
+      "analysis": "No issues found,1.6sec"
+    },
+    "pending": [
+      "Actual corrected12-variant native GTK matrix currently running; no terminal native result claimed here.",
+      "Replacement full hosted candidate must pass and produce new exact signed artifacts before native/platform/publication acceptance."
+    ],
+    "candidateQualification": "Parent reports first candidate38152037169 terminalfailure inWindows/Linux checks, Androiddebugpass and ownerSigning skipped. This is a failed source candidate, not an accepted build65 signedartifact. Reusing build65 for replacement is explicitly parent-authorized; earlier failure is retained.",
+    "extends": {
+      "path": "runtime-evidence/independent-rc3-flatpak-metadata-addendum.json",
+      "sha256": "41c0f91dd222b2eb0cd5c3470addfb03b5574f2d866cf049f164212b4028fb0b",
+      "bytes": 2170
+    }
+  }
+}

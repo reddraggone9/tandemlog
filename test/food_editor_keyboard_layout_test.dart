@@ -152,8 +152,14 @@ Future<void> verifyFoodEditorKeyboardLayout(
     await tap(target, reveal: false);
     expect(tester.widget<EditableText>(target).focusNode.hasFocus, isTrue);
     if (dropdown) {
+      final controller = tester.widget<TextField>(field(label)).controller!;
+      final beforeDismissal = controller.value;
+      // Suggestions overlay following fields; dismiss them before the next
+      // actual pointer target, just as for the retention suggestions.
       await tester.sendKeyEvent(LogicalKeyboardKey.escape);
       await tester.pumpAndSettle();
+      expect(controller.value, beforeDismissal);
+      expect(tester.widget<EditableText>(target).focusNode.hasFocus, isTrue);
     }
     expectActions();
   }
@@ -194,7 +200,10 @@ Future<void> verifyFoodEditorKeyboardLayout(
     if (editingCount == 0) 'Containers to add',
     'Retention reason',
   ]) {
-    await focus(label, dropdown: label == 'Retention reason');
+    await focus(
+      label,
+      dropdown: const {'Brand', 'Location', 'Retention reason'}.contains(label),
+    );
   }
   expect(find.byType(DropdownButtonFormField<String>), findsNothing);
   expectActions();

@@ -1,8 +1,10 @@
 # Food RC3/build65 — exact Android acceptance handoff
 
-Candidate source is `16cb07d62b3b6ef8432120debf45192c3b522ecd`, run
-[38152037169](https://github.com/reddraggone9/tandemlog/actions/runs/38152037169).
-Original archive identity, owner-signed APK hash and full hosted gates are pending;
+The first candidate at `16cb07d62b3b6ef8432120debf45192c3b522ecd`, run
+[38152037169](https://github.com/reddraggone9/tandemlog/actions/runs/38152037169),
+failed unit gates before signing and is ineligible. Only two old fixture files
+need corrections; application code is unchanged. Replacement exact source/run,
+original archive identity, owner-signed APK hash and full hosted gates are pending;
 use the eventual verified original APK, without rebuilding. This document does
 not claim installed Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
 records scoped actual Linux checks and independent reviews.

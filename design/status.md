@@ -26,8 +26,12 @@ gates pass. Source/UX review accepts the settled60-file inventory. Actual Linux
 GTK refinements pass7/7; the affected batch passes25 with three fixture failures
 closed by a reviewed3/3 targeted rerun. Final analysis is clean.
 [Toolbar/Food evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) binds settled source,
-scoped native attribution and matched synthetic Before/After pixels. The final native Linux recording and genuine wide-dark recapture pass; full
-signed candidate and exact new Android acceptance remain pending. Any old null-contents
+scoped native attribution and matched synthetic Before/After pixels. The final native Linux recording and genuine wide-dark recapture pass. First
+candidate38152037169/source16cb07d failed nine obsolete unit expectations before
+owner signing. Two fixture-only corrections reproduce9 failures then pass16
+checks with clean analysis and independent acceptance; original60 source hashes
+and all application code remain unchanged. The targeted native editor matrix passes12 variants in4:45; replacement signed
+candidate and exact new Android acceptance remain pending. Any old null-contents
 or uninitialized throwaway trial needs a separately coordinated fresh path and
 identity; the cloud does not delete/reset it or touch live data. No RC2 republish,
 stable promotion or dependency upgrade is included.

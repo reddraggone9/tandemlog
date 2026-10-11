@@ -2,8 +2,8 @@
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
   "files": {
     "README.md": {
-      "bytes": 8016,
-      "sha256": "58dfc87ded50716bbcc9999285751ae5da53aeeebef050d07795e4c4463fa147"
+      "bytes": 10410,
+      "sha256": "9366a168db952e5c761931790c8917af7801286e7f39a51410d19cd4e8053936"
     },
     "demo/native-linux-bulk-fields-scripted.mp4": {
       "bytes": 494469,
@@ -21,6 +21,10 @@
       "bytes": 329,
       "sha256": "6a03c214e3393214a0a34c5a7ec3423b6fc8746892e33568c6d653f827f611df"
     },
+    "inputs/source-inputs-corrected-hosted-fixtures.json": {
+      "bytes": 10287,
+      "sha256": "6a01cff8f3494964f78932eeb13426662861f5689c9717eb21e0ba860d82c108"
+    },
     "inputs/source-inputs-settled.json": {
       "bytes": 9727,
       "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3"
@@ -36,6 +40,10 @@
     "logs/density-before.txt": {
       "bytes": 5784,
       "sha256": "6cff5f7c6e2dc1f5e028239cbe03de3e87344b1b5ed445103b6bcb2c4b67b4e7"
+    },
+    "logs/failed-38152037169-linux-provider-decoded.txt": {
+      "bytes": 435394,
+      "sha256": "995dd08560d3e4824a5e3916f638bb31b8ef987ba17acddaf0f42584437e8347"
     },
     "logs/filter-route-guarded-final.txt": {
       "bytes": 1607,
@@ -72,6 +80,26 @@
     "logs/fresh-initializer-eight.txt": {
       "bytes": 756,
       "sha256": "bc9fbc5ab6a934f20cfe67fe2eacafd349de15836194abf5da3b163fa442b5ea"
+    },
+    "logs/hosted-fixture-corrections-analyze.txt": {
+      "bytes": 686,
+      "sha256": "ad38104fd8bddf6d3d0990d6206e1be32dc3f2e51f98b45bc9390c9044c7c77f"
+    },
+    "logs/hosted-fixture-corrections-format-final.txt": {
+      "bytes": 49,
+      "sha256": "41bbd21fe7f85cecad436e6168efbcc5893a4dee4dafdcc435f21a5137654ba6"
+    },
+    "logs/hosted-fixture-corrections-green.txt": {
+      "bytes": 3176,
+      "sha256": "bcd7b3b9f2c320fba34ba8787dc07b66f326cbe7ff0fcb6e25f91698cf1c24c3"
+    },
+    "logs/hosted-fixture-corrections-native.txt": {
+      "bytes": 5770,
+      "sha256": "162c800642ac4d6d13208857e5143cbb35886c08925f0c48138b62e4db94e145"
+    },
+    "logs/hosted-fixture-corrections-red.txt": {
+      "bytes": 59768,
+      "sha256": "27161cb411acb7cc5399a26f2d0a1ce4fab5051e4c9ad207094d65ae9f5e944c"
     },
     "logs/independent-bulk-components.txt": {
       "bytes": 602,
@@ -137,6 +165,14 @@
       "bytes": 52486,
       "sha256": "f740666088645530609671115301ad2c50e845fc40e1c6713845eeba045222d5"
     },
+    "pixels/keyboard-dark-2x-edit-100-blank-date-hint-calendar-ime.png": {
+      "bytes": 27908,
+      "sha256": "78f0aee191b0f2d5801d3e4b36c2bcb0292882fe808116d2fb0058cae730842f"
+    },
+    "pixels/keyboard-light-2x-edit-100-error-ime.png": {
+      "bytes": 23563,
+      "sha256": "380a5dccb4212fc9ad8f8ce79b1f03dc98ef0e7a200f0c4e8f11d864f3e845c9"
+    },
     "pixels/toolbar-dark-900-1.0-food.png": {
       "bytes": 20631,
       "sha256": "60a001be3829ee47d2f1e8b5db24b72fb316dbbf55520930c780664e991872b6"
@@ -153,6 +189,10 @@
       "bytes": 2392,
       "sha256": "4f88b046f5e1aa68451a204be872a2800391fb1fe3fbe6419092fab88f7dc7fa"
     },
+    "reviews/failed-38152037169-independent-hold-disposition.json": {
+      "bytes": 3219,
+      "sha256": "edcedad01199a9205eb5170af16044a859572f1322d4ed38a48bc7af716b1478"
+    },
     "reviews/independent-editorial-final-review.json": {
       "bytes": 3742,
       "sha256": "78dd11785507ddc7a90770197c0b38ab0da8c132318b5b41ab2fb8ffb137e4b4"
@@ -164,6 +204,14 @@
     "reviews/independent-host-receipt.json": {
       "bytes": 6893,
       "sha256": "3ab3d435f281cb33762bf16f887567d31f1998940f82502e32c176ecacd7d8b3"
+    },
+    "reviews/independent-hosted-fixture-corrections-review.json": {
+      "bytes": 4587,
+      "sha256": "6cf199b473e8a75014ee703248ede725fa10f63ce8636a7535f93ddb864a5f8a"
+    },
+    "reviews/independent-hosted-fixture-native-closure.json": {
+      "bytes": 23623,
+      "sha256": "866e9582ec752c26b98d5a4755baba4b842a78fdda23ead8933a36bd281ad8e0"
     },
     "reviews/independent-rc3-batch-review.json": {
       "bytes": 25524,
