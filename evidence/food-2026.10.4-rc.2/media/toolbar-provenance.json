@@ -13,11 +13,12 @@
     "sha256": "0df9768a5b1afea37ea030c4260076d24c62030d3fbebc2b13a3d527bc970f2d"
   },
   "after": {
-    "path": "/tmp/section-navigation-evidence/final-native/food_production/production-wide-stock.png",
-    "source": "working tree build61; bind production hashes in preparation/validation.json",
+    "path": "evidence/food-2026.10.4-rc.2/media/toolbar-after-raw.png",
+    "source": "00594c1f91f478a729e091ab41c418afbfcbb383",
     "sha256": "d06abf0fff0c9a4a03c0fa6a4aaee4ff362b224c5b6fe85afca802ef1de17452"
   },
-  "composition": "Original pixels crop[0,0,1200,300], unchanged scale, stacked with32px external labels",
-  "output_sha256": "baac4e74763649d4c1c0457fc651eadbc1314265f0ef771fda998f7e70835769",
-  "editorial_review": "pending exact frozen diff and media independent review"
+  "composition": "Original pixels crop[0,0,1200,300], unchanged scale, stacked with32px external centered Before/After labels",
+  "output_sha256": "b4446a99366a553b69b01336288b1e65a0f5a6504e86be0c0f68d19c33651bcc",
+  "editorial_review": "../preparation/reviews/editorial-review.json; pending independent recheck of revised labels/provenance",
+  "text_scale": 1.0
 }
