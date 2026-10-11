@@ -18,6 +18,8 @@ import 'package:tandemlog/platform/view_time_source.dart';
 import 'package:tandemlog/storage/local_settings.dart';
 
 import 'native_text_fixtures.dart';
+import 'task_editor_error_keyboard_workflow_test.dart'
+    show registerTaskEditorErrorKeyboardTests;
 import 'checklist_disclosure_layout_test.dart'
     show registerChecklistDisclosureLayoutTests;
 import 'sticky_task_groups_test.dart' show registerStickyTaskGroupTests;
@@ -299,6 +301,7 @@ void main() {
   registerFoodAccountWorkflowTests();
   registerFoodUndoStackWorkflowTests();
   registerFolderPickerProgressTests();
+  registerTaskEditorErrorKeyboardTests();
   registerFoodAddAnotherTests();
   registerFoodBulkDetailsHostUndoReviewTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (

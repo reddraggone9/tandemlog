@@ -1,0 +1,48 @@
+{
+  "recorded_at_utc": "2026-10-11T23:30:33.463149+00:00",
+  "baseline_main": "6e89353ca7c1740c56b80fdb542612f30c2db908",
+  "failed_native_candidate_source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "failed_native_candidate_run": 38169726969,
+  "failed_native_APK_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+  "scope": "Minimal Tasks host-notice/modal-action/late-caret/draft-confirmation layout fix and4theme/error-control source regressions. No canonical/model/native/dependency/picker lifecycle change.",
+  "source_files": {
+    "lib/main.dart": {
+      "bytes": 204875,
+      "sha256": "1145f14483c18caa8bc04caebb0a9b022996a92f42ce27b2f1afcadd86351b02"
+    },
+    "lib/presentation/task_editor.dart": {
+      "bytes": 44346,
+      "sha256": "ca64de56408de6f0adaa05d9fe3b6426516199b35eb5777c6cf536976cb4e258"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 175158,
+      "sha256": "fe148139ddd73e625aae0d8c16c999ff83d5560c3dbf1b563c8cbd41d6bdeff2"
+    },
+    "integration_test/task_editor_error_keyboard_workflow_test.dart": {
+      "bytes": 12031,
+      "sha256": "f53880a36e4ecca060eeff59faa13d02131d879fc90d84f73c0d443590626881"
+    }
+  },
+  "actual_product_RED": "Native GTK with captured320x640@200%/280dp IME metrics and Android Material targets; actual TandemlogApp, source picker diagnostic and initialized synthetic store. Editor viewport0px and RenderFlex78px overflow. This is not actual Android Gboard execution.",
+  "native_failure_qualification": "Original parent screenshots personally viewed. Stablev2026.10.3 has same structural susceptibility, but old exactAndroidAPK not reproduced. PrivateLibraryv2 remains local/library; private notes/trial content not in Git.",
+  "cleanup": {
+    "receipt_sha256": "e692a15c26a85bfa0ab8a9499659ad6036a46fe0bdf1180afa34bebbd02d8121",
+    "removed_generated_files": 943,
+    "removed_Dart_kernel_bytes": 754358456,
+    "removed_Rust_incremental_bytes": 233743713,
+    "after_free_bytes": {
+      "/tmp": 754044928,
+      "/workspace": 168554496
+    },
+    "protected": "Source/config/Git histories/oldtask/private evidence/original installers/unique experiments/credentials/workspace data retained. No whole-directory/cache deletion."
+  },
+  "checks": "Dart formatting passed; focused four-case native test launched, result pending at checkpoint. Earlier fixture attempts remain privately preserved and do not establish product red. Analysis, independent exact-patch review and corrected candidate gates pending.",
+  "parent_steering": "Repeated disconnect23:29UTC: prioritize transferable source/regression/receipt checkpoint. No corrected candidate or publication until verified gates/parent clearance.",
+  "remaining": [
+    "Finish focused native regression and relevant existing editor/draft checks",
+    "Independent architecture/correctness and final release editorial reviews",
+    "Monotonic corrected candidate version/build, full exact-source hosted/signing/original-artifact gates",
+    "Parent focused installed Android retest and freshquota; PR8 merge remains held"
+  ],
+  "raw_RED_log_qualification": "Original console bytes preserved including native build progress padding/trailing whitespace. Source, JSON and Markdown whitespace checks are separate."
+}
