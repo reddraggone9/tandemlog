@@ -19,6 +19,7 @@ void main() {
       final folder = await Directory('$root/Household café 東京').create();
       final sentinel = File('${folder.path}/retained.json');
       final original = utf8.encode('{"synthetic":"unchanged — 東京"}\n');
+      var retained = <String, List<int>>{sentinel.path: original};
       await sentinel.writeAsBytes(original);
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: Text('Folder launch smoke'))),
@@ -51,6 +52,12 @@ void main() {
         ).writeAsString(jsonEncode({'folder': folder.path}));
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         await tester.pumpAndSettle();
+        // First opening a new synthetic workspace creates its space/user log.
+        // Freeze those bytes after initialization, before Settings navigation.
+        retained = {
+          for (final file in folder.listSync().whereType<File>())
+            file.path: file.readAsBytesSync(),
+        };
         await tester.tap(find.byTooltip('Settings'));
         await tester.pumpAndSettle();
         expect(
@@ -65,7 +72,13 @@ void main() {
         await tester.pumpAndSettle();
       }
       expect(await sentinel.readAsBytes(), original);
-      expect(folder.listSync().map((entry) => entry.path), [sentinel.path]);
+      expect(
+        folder.listSync().map((entry) => entry.path),
+        unorderedEquals(retained.keys),
+      );
+      for (final entry in retained.entries) {
+        expect(await File(entry.key).readAsBytes(), entry.value);
+      }
     },
     skip: !Platform.isLinux || root == null,
   );

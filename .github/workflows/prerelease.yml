@@ -1,5 +1,7 @@
 name: Isolated dependency smoke (no publication)
 on:
+  push:
+    branches: [audit/dependency-smoke-20261011]
   workflow_dispatch:
     inputs:
       source_run_id:
