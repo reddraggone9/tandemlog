@@ -1,0 +1,23 @@
+{
+  "base_main": "e6ba27597e34b6f723f17f5051363619d6f1a23a",
+  "reviewed_head": "77b0c5fa71c58c39eeaf8c9045be00a3246dbcc4",
+  "production_source_changes": [],
+  "changed_paths": [
+    ".github/workflows/android-candidate.yml",
+    ".github/workflows/prerelease.yml",
+    ".github/workflows/stable.yml",
+    ".github/workflows/text-merge-spike.yml",
+    ".github/workflows/validate.yml",
+    "design/dependencies.md",
+    "design/dependency-patches-2026-10-11.md",
+    "integration_test/folder_actions_smoke_test.dart",
+    "pubspec.lock",
+    "pubspec.yaml",
+    "tool/dependency_smoke.py"
+  ],
+  "workflow_semantics": "only reviewed immutable SHA pin replacements and version annotation",
+  "all_external_actions_immutable": true,
+  "app_version": "2026.10.4-rc.3+65",
+  "rc3_candidate_source": "3c162347105bbd01f55ef09652d29c397d013e01",
+  "rc3_candidate_run": 38156985011
+}

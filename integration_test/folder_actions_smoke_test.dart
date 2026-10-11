@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:tandemlog/main.dart';
 import 'package:tandemlog/platform/folder_actions.dart';
 
 // Run only in the isolated desktop-handler environment prepared by the audit.
@@ -13,11 +14,12 @@ void main() {
   final root = Platform.environment['TANDEMLOG_FOLDER_SMOKE_ROOT'];
   final missing = Platform.environment['TANDEMLOG_FOLDER_SMOKE_MISSING'] == '1';
   testWidgets(
-    'native folder opening preserves spaces, Unicode and data; unavailable handler fails',
+    'native folder opening preserves spaces, Unicode and data; missing handler disables Settings action',
     (tester) async {
       final folder = await Directory('$root/Household café 東京').create();
       final sentinel = File('${folder.path}/retained.json');
       final original = utf8.encode('{"synthetic":"unchanged — 東京"}\n');
+      var retained = <String, List<int>>{sentinel.path: original};
       await sentinel.writeAsBytes(original);
       await tester.pumpWidget(
         const MaterialApp(home: Scaffold(body: Text('Folder launch smoke'))),
@@ -25,12 +27,7 @@ void main() {
       final actions = FolderActions();
       await tester.runAsync(() async {
         expect(await actions.canOpen(folder.path), !missing);
-        if (missing) {
-          await expectLater(
-            actions.open(folder.path),
-            throwsA(anyOf(isA<StateError>(), isA<Exception>())),
-          );
-        } else {
+        if (!missing) {
           await actions.open(folder.path);
           final capture = File('$root/launch.json');
           final deadline = DateTime.now().add(const Duration(seconds: 15));
@@ -48,8 +45,40 @@ void main() {
           expect(Uri.directory(received), Uri.directory(folder.path));
         }
       });
+      if (missing) {
+        final profile = await Directory('$root/profile').create();
+        await File(
+          '${profile.path}/settings.json',
+        ).writeAsString(jsonEncode({'folder': folder.path}));
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await tester.pumpAndSettle();
+        // First opening a new synthetic workspace creates its space/user log.
+        // Freeze those bytes after initialization, before Settings navigation.
+        retained = {
+          for (final file in folder.listSync().whereType<File>())
+            file.path: file.readAsBytesSync(),
+        };
+        await tester.tap(find.byTooltip('Settings'));
+        await tester.pumpAndSettle();
+        expect(
+          find.text('No file manager is available to open this folder.'),
+          findsOneWidget,
+        );
+        final button = tester.widget<OutlinedButton>(
+          find.widgetWithText(OutlinedButton, 'Open data folder'),
+        );
+        expect(button.onPressed, isNull);
+        await tester.pumpWidget(const SizedBox.shrink());
+        await tester.pumpAndSettle();
+      }
       expect(await sentinel.readAsBytes(), original);
-      expect(folder.listSync().map((entry) => entry.path), [sentinel.path]);
+      expect(
+        folder.listSync().map((entry) => entry.path),
+        unorderedEquals(retained.keys),
+      );
+      for (final entry in retained.entries) {
+        expect(await File(entry.key).readAsBytes(), entry.value);
+      }
     },
     skip: !Platform.isLinux || root == null,
   );

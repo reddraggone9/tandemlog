@@ -19,8 +19,6 @@ not a claim of release acceptance. Unpublished development candidate
 2026.10.3/build54 requires the actual trusted-main release/R8 package and bounded
 exact-artifact Android checks before any publication; signing policy is unchanged.
 
-## Direct application dependencies
-
 ## Bounded action and URL-launcher patches — 2026-10-11
 
 The isolated [per-version source review and smoke verification](dependency-patches-2026-10-11.md)
