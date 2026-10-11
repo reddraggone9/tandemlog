@@ -1,4 +1,4 @@
-# Food RC3/build66 — exact Android acceptance handoff
+# Food RC3/build67 — exact Android acceptance handoff
 
 The first candidate38152037169 at `16cb07d` fails unit fixtures before signing.
 Replacement38153414378 at `1bd746e` exposes a native Undo-finder ambiguity and
@@ -12,7 +12,9 @@ other Linux gates, with owner signing skipped. Its Windows artifact is retained
 historical evidence; visible window/model checks do not establish admitted UI.
 Fixture-only initialization and preserved failure diagnostics address the seeder
 mismatch without weakening production admission. Approved width, desktop menu,
-Add another… and picker-phase changes supersede that source. Fresh full build66,
+Add another… and picker-phase changes supersede that source. Build66 then fails Windows synthetic SQLite fixture cleanup before signing;
+a reviewed fixture-only close correction and monotonic code67 replace it.
+Fresh full build67,
 original archive identities and owner-signed APK are pending. Use the eventual
 verified original APK without rebuilding. This document does not claim installed
 Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
@@ -60,7 +62,7 @@ rules. This recipe does not authorize a live import.
 
 ## Focused installed checks
 
-1. Bind the verified original APK hash, package, owner signer, RC3 version/code66
+1. Bind the verified original APK hash, package, owner signer, RC3 version/code67
    and nondebuggable state. Upgrade an initialized synthetic RC2 profile and
    check retained settings, SAF grant, writer, Tasks/Food IDs and canonical bytes.
 2. Create a genuinely new synthetic folder/user through the actual app. Capture

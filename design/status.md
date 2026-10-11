@@ -1,6 +1,6 @@
 # Current status — 2026-10-11
 
-## RC3/build66 full candidate after held build65
+## RC3/build67 replacement after build66 Windows fixture failure
 
 Build65/source3c16234 candidate38156985011 terminated with Linux startup-smoke
 failure after its unit/native/build/package checks. Android debug and Windows
@@ -20,10 +20,17 @@ unchanged Task editor behavior, matching desktop secondary-click/ellipsis Food
 menus, Add another… prefilled independent Add drafts, and separating native
 folder choice from validation/loading progress, plus a flat expiration-sorted
 Retained list with reasons shown per row. Focused tests/native pixels and final
-independent source/native/editorial reviews pass. Full candidate38165025596
-is running on exact e6e26a1a253e25ee3edf5515ce2553e75d88ac3a/build66; signed
-originals and exact Android acceptance remain pending. Build65 artifacts
-remain retained historical evidence. No new RC3 is published.
+independent source/native/editorial reviews pass. Build66 candidate38165025596 at exact e6e26a1a253e25ee3edf5515ce2553e75d88ac3a
+is ineligible after Windows tooling failed: its synthetic diagnostics test left
+a SQLite connection open and temporary-directory cleanup hit WinError32.
+Windows1027 unit checks/two skips, Rust4 and107 contracts passed first.
+The production verifier already closes its own connection. The fixture-only
+correction preserves transaction semantics and every readiness/row/cache check;
+79 Linux tooling checks pass with one skip, and independent review accepts it.
+Build67 retains identical UI/production/dependency source; its full hosted
+candidate, signed originals and exact Android acceptance remain pending.
+Build66 Linux continues to terminal; original failed receipts are retained.
+No new RC3 is published.
 
 ## Earlier approved RC3 batch
 

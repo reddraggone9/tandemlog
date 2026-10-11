@@ -1,0 +1,72 @@
+{
+  "reviewer": "/root/correctness_review",
+  "verdict": "ACCEPTED_NARROW_SOURCE_FIX",
+  "mustFixFindings": [],
+  "reviewScope": "Read-only review of exact two-line SQLite test-fixture lifetime repair and build66-to67 metadata bump; no builds/tests or implementation edits by reviewer.",
+  "headAtReview": "a2c3c8fe874f3bf00d7035e6fbfb5c3e98bf8ced",
+  "sourceBindings": [
+    {
+      "path": "tool/test_startup_diagnostics.py",
+      "bytes": 2793,
+      "sha256": "722be71dcb28383cfd4fd72f38384ee768db1e33bc9d218d23fdb5b42ea9e8d2"
+    },
+    {
+      "path": "pubspec.yaml",
+      "bytes": 590,
+      "sha256": "2026112be08547af66ca990c94b2dd529ed75a1a686800368998af4f34d9c717"
+    },
+    {
+      "path": "tool/measure_startup.py",
+      "bytes": 9201,
+      "sha256": "0ae0f39d714886565406319afd4f00dd539af0fdc93fe31177cca4b518cdfccc"
+    }
+  ],
+  "change": {
+    "fixture": "Imports contextlib.closing and replaces transaction-only connection context with with closing(sqlite3.connect(...)) as db, db:.",
+    "ordering": "The inner SQLite transaction context commits or rolls back first; the outer closing context then closes the connection on both normal and exceptional exit. TemporaryDirectory cleanup can no longer retain this fixture handle.",
+    "assertions": "All original startup marker, model load, synthetic workload and warm-cache assertions retained. Production verify_loaded already closes its own connection.",
+    "metadata": "2026.10.4-rc.3+66 to +67; no other working-tree source delta observed at review."
+  },
+  "originalWindowsRed": {
+    "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+    "candidateRun": 38165025596,
+    "job": 114545717716,
+    "toolSuite": {
+      "ran": 79,
+      "errors": 1,
+      "skipped": 4
+    },
+    "failure": "StartupDiagnostics.test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache: TemporaryDirectory teardown PermissionError WinError32 on profile/local.sqlite.",
+    "priorPassingSteps": "Official decoded log reports Flutter1027 passing with2 skips, Cargo4 and native worker107 before the Python tool failure.",
+    "evidence": {
+      "path": "failed-windows-provider-decoded.txt",
+      "bytes": 333262,
+      "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731"
+    },
+    "representation": "Saved official provider-decoded UTF8 content inspected and hash verified; no raw archive or repeated remote retrieval attestation."
+  },
+  "replacementLinuxTools": {
+    "executionOwner": "root",
+    "ran": 79,
+    "passed": 78,
+    "skipped": 1,
+    "errors": 0,
+    "status": "terminal PASS log inspected",
+    "evidence": {
+      "path": "build67-release-tool-tests.txt",
+      "bytes": 614,
+      "sha256": "03a56dfce3ebb786cd63adfd6b2c42b05511e2b338dbc835e4ccb1bc9abb23ad"
+    },
+    "qualification": "Linux execution supports the bounded fix but does not reproduce Windows file-sharing behavior."
+  },
+  "replacementWindows": {
+    "status": "PENDING",
+    "qualification": "No replacement Windows success or artifact/release acceptance is claimed."
+  },
+  "testingRationale": "No implementation-mirroring test added for a two-line fixture lifetime repair. The actual original Windows79-tool failure is the meaningful regression evidence; replacement exact Windows execution remains required.",
+  "limitations": [
+    "Acceptance is bounded to the source correction and saved logs inspected.",
+    "No application/domain/native/dependency/workflow behavior change was reviewed or required for this fix.",
+    "No publication or signed/native package acceptance claim."
+  ]
+}

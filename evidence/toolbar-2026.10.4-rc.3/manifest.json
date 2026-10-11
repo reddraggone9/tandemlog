@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Exactcurrentevidencebytes. Frozen candidatee6e26a1 retainsits146-entryhistoricalmanifest; thisdocs-onlyextension addsfinalreviews/currentrunandonepublicframefilenamecorrection, notexecutablechanges.",
+  "qualification": "Exact current evidence bytes for build67 replacement. Frozen build66 source e6e26a1 retains its historical146-entry manifest and source review. This extension preserves Windows fixture-failure evidence and adds the reviewed explicit-close correction, Linux tooling result and82 replacement source inputs; exact replacement hosted/artifact acceptance remains pending.",
   "files": {
     "README.md": {
-      "bytes": 20565,
-      "sha256": "fc0fab64961d8e9bf7aba9bcf8dc94de6d57e67c17cfb83e1d01f3dc78796b0d"
+      "bytes": 22315,
+      "sha256": "913b69b6b7779aa7b9edb74098908ef0c5a10ebd98fb62c7822d966541cb8c25"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -82,6 +82,18 @@
       "bytes": 10533,
       "sha256": "f4b950f8624876f9a8bad9249537237c1a56b448b587d3fa81851aa24d3c980b"
     },
+    "candidate/held-38165025596/failed-windows-provider-decoded.txt": {
+      "bytes": 333262,
+      "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731"
+    },
+    "candidate/held-38165025596/windows-failure-phase-independent-hold.json": {
+      "bytes": 1941,
+      "sha256": "4367126766a9568c970038f7ed91a904febb1e76eff583df430a2e1174b5dac2"
+    },
+    "candidate/held-38165025596/windows-fixture-failure-independent-diagnosis.json": {
+      "bytes": 2084,
+      "sha256": "4c6acbdafaadc80b41db3e50b0493fb1cd04c8eb18860f881291bd5c18fd0ca0"
+    },
     "demo/add-another-host-frame-2s.png": {
       "bytes": 83875,
       "sha256": "1db16c66ff22c624df371380d612452827c5e8ee18d06912c9bf90ad4b55824b"
@@ -113,6 +125,10 @@
     "inputs/source-inputs-build66.json": {
       "bytes": 13743,
       "sha256": "01efc3b8e31c82052a889b73f509d328882a4bf29af1816d8766d6a7b5672e7c"
+    },
+    "inputs/source-inputs-build67.json": {
+      "bytes": 13751,
+      "sha256": "73eccaa53ae94ce87cfde78e50f70808caf7a0b8ff10de163d911d88fb41b2bc"
     },
     "inputs/source-inputs-corrected-hosted-fixtures.json": {
       "bytes": 10287,
@@ -149,6 +165,10 @@
     "logs/build66-release-tool-tests.txt": {
       "bytes": 614,
       "sha256": "a22507a81ac0b4cb5007c9214866cce14b41774b2844ab00f11ec1297797128c"
+    },
+    "logs/build67-release-tool-tests.txt": {
+      "bytes": 614,
+      "sha256": "03a56dfce3ebb786cd63adfd6b2c42b05511e2b338dbc835e4ccb1bc9abb23ad"
     },
     "logs/cancelled-38153414378-linux-provider-decoded.txt": {
       "bytes": 546378,
@@ -505,6 +525,10 @@
     "pixels/toolbar-light-320-2.0-food-active.png": {
       "bytes": 16927,
       "sha256": "c88fd9b13b8341bd7060abb6becfd311f7bb8275391a3669202f0ca937914a55"
+    },
+    "reviews/build67-sqlite-fixture-independent-review.json": {
+      "bytes": 3582,
+      "sha256": "1432464b717d8c830be5ff1224814493c228082bb92c238b997bd262e6afa857"
     },
     "reviews/continue-readiness-addendum.json": {
       "bytes": 2392,

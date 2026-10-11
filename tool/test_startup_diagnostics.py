@@ -1,5 +1,6 @@
 """Early process failures retain evidence; readiness still requires the model."""
 from pathlib import Path
+from contextlib import closing
 import json
 import hashlib
 import sqlite3
@@ -37,7 +38,7 @@ class StartupDiagnostics(unittest.TestCase):
             profile = root/'profile'
             profile.mkdir()
             table = 'tasks_'+hashlib.sha256(str(folder).encode()).hexdigest()+'_views'
-            with sqlite3.connect(profile/'local.sqlite') as db:
+            with closing(sqlite3.connect(profile/'local.sqlite')) as db, db:
                 db.execute(f'CREATE TABLE {table}(raw TEXT)')
                 for kind in ('user', 'task'):
                     db.execute(f'INSERT INTO {table} VALUES (?)', (json.dumps({'kind': kind}),))
