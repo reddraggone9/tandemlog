@@ -1,0 +1,19 @@
+{
+  "checked_at_utc": "2026-10-11T10:59:22.384466+00:00",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "base_exact62": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+  "same_325_application_pipeline_test_source_bytes_as_cancelled11dd": true,
+  "verified_frozen_source_files": 325,
+  "changed_existing_vs62": [
+    "integration_test/task_flow_test.dart",
+    "lib/presentation/civil_date_input.dart",
+    "lib/presentation/task_editor.dart",
+    "pubspec.yaml"
+  ],
+  "added_vs62": [
+    "integration_test/civil_date_picker_workflow_test.dart",
+    "test/civil_date_picker_layout_test.dart"
+  ],
+  "verdict": "PASS_EXACT_FROZEN_SOURCE_INVENTORY_AND_EVIDENCE_ONLY_REPLACEMENT"
+}

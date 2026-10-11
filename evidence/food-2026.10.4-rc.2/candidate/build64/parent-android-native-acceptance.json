@@ -1,0 +1,26 @@
+{
+  "status": "PASS",
+  "evidence_origin": "Parent actual Android native acceptance on isolated synthetic fixtures, independently read and visually reviewed; private packet retained separately",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "artifact_id": 11701545268,
+  "version": "2026.10.4-rc.2+64",
+  "apk_sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f",
+  "apk_bytes": 67000993,
+  "fresh64": [
+    "Tasks/Food normal date selection and320dp/200% both-theme day10/15/17 glyphs and full-date enabled/selected semantics",
+    "Actual landscape/portrait pending17, OK and native Save retain17",
+    "Native SAF child-folder selection and original-parent return clear workspace Food Undo; child/sibling bytes preserved",
+    "Cold new-v2 UI replay preserves peer-protected active/deleted state, untouched Undo suppression, newer peer date, legacy certainty/undated/retained/workspace fixtures; no canonical append",
+    "Synthetic62-to64 upgrade preserves all SQLite tables/settings/canonical bytes; no unresolved Food/text intents",
+    "Settings restored and lab stopped at2026-10-11T12:18:54Z; peak5.218GiB/zero swap/no new OOM"
+  ],
+  "reused62": {
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "scope": "Broad previously accepted Tasks/Food/Gboard/provider/module-isolation/legacy/account/Undo behaviors; original attribution retained",
+    "runtime_difference": "Only shared date-picker presentation and Tasks mounted-controller callback; domain/storage/transport/native dependencies unchanged"
+  },
+  "windows64": "Current source-bound artifact/lifecycle verification uses exact64 original installer76727c860e176b166f31c615f6ef9210fce97ab77d6a6b43ac5de5954d822c09, not earlierRC1+57 installer; explicit manual-GUI RC waiver retained",
+  "remaining_native_blockers": [],
+  "publication": "Parent explicitly authorized RC2 publication from these exact binaries; no rebuild/stable promotion/live import/file deletion/new feature scope"
+}

@@ -1,0 +1,156 @@
+{
+  "candidate_source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "checked_at_utc": "2026-10-11T12:36:54.406145+00:00",
+  "files": {
+    "independent-final-release-readiness.json": {
+      "bytes": 9956,
+      "sha256": "c52a667614f2ba38b571190e500fad7d44eac772e1741210058f040bbdfb575e"
+    },
+    "independent-final-editorial-review.json": {
+      "bytes": 8595,
+      "sha256": "2b70c23ef0747518b056a305cdc9d5ad801c28e55a8b4fa9cf31b1721cf21de1"
+    },
+    "independent-final-artifact-readiness.json": {
+      "bytes": 3424,
+      "sha256": "bbc83937e22bf44c8e50f897fddb72b3570e5a96e857da7d6b65cb87976d9e68"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    },
+    "README.md": {
+      "bytes": 2409,
+      "sha256": "4376e74e01fa5c09ce19a932919d361df97d2b9561bf5bda2adc562f51b73bb6"
+    },
+    "accepted-public-installer-identities.json": {
+      "bytes": 909,
+      "sha256": "6b6f4ee75a7485a197aa1c4b48c255293d39be3323f6535ff7c56f1ed3d6a9e1"
+    },
+    "parent-android-native-acceptance.json": {
+      "bytes": 2030,
+      "sha256": "ee7a61311db93482f601baf5611a413fcc43ac2899fe99322175b0394ae8742c"
+    },
+    "root-all-original-archives-verification.json": {
+      "bytes": 3375,
+      "sha256": "cc4434cb6e7b42a75c03742b2d2fd7cb1b09a67c0d5fdf99cb2b47f9d06b68e3"
+    },
+    "root-native-payload.txt": {
+      "bytes": 108,
+      "sha256": "386ae9de4870936d0d2d15b733b2e4d7857bdf7f90cf046f601ff5f3378485f1"
+    },
+    "root-badging.txt": {
+      "bytes": 1170,
+      "sha256": "3fc5ba60f3a2cadf4b8ad48abe7d8b4487c2ab9d4e73ff1783d54ff8410e222b"
+    },
+    "root-apksigner.txt": {
+      "bytes": 294,
+      "sha256": "08310826e72f86d49e8efe7d714e47d7206a19ebf3230e8bd85a4e38a8d182c9"
+    },
+    "root-identity.json": {
+      "bytes": 982,
+      "sha256": "18c5d959e8f7629c1c3ee4cf467b1f21422423144bccbfa7e37fadf88b856315"
+    },
+    "signed-android-provider-decoded-hosted.log": {
+      "bytes": 190536,
+      "sha256": "f88f02ba3aa3585531a36b0fbc339727adb4021e650016f304f71f75b4dc7555"
+    },
+    "windows-provider-decoded-hosted.log": {
+      "bytes": 355601,
+      "sha256": "ef424a9a5c6eb90bba564d7dc17108b88c6709b99b048a8c1d6c06e9dba234b4"
+    },
+    "linux-provider-decoded-hosted.log": {
+      "bytes": 569148,
+      "sha256": "d121a6880410a6376cfc72fd5365b1c6420c7fd0b6a29a21a0de38500854be4f"
+    },
+    "final-original-artifacts-api.json": {
+      "bytes": 4151,
+      "sha256": "264d8bec80111c145b1731d24781ea9ef76fae3700375fb41a938b0b799ec08f"
+    },
+    "final-jobs-api.json": {
+      "bytes": 28137,
+      "sha256": "a44b966ddf702b3db3a34ecf33e90d17f0bbb27f5b7aacc7fa50c66e9e819c56"
+    },
+    "final-run-api.json": {
+      "bytes": 13991,
+      "sha256": "686d4b616600a1f3237b86d3584fa6e407113ed658cbf3a4144d5f48734da346"
+    },
+    "frozen-source-inventory-independent-verification.json": {
+      "bytes": 719,
+      "sha256": "e4e8a97e59981ae853a5844c2ba5e8c3aa45da52145c160039828af028ce9f35"
+    },
+    "build64-unchanged-native-baseline-independent-verification.json": {
+      "bytes": 4643,
+      "sha256": "bb761bdac8582b234d23e824ee46a0794441da79d3b3c1c306fa6f01471fe6b9"
+    },
+    "build64-hosted-gates-independent-verification.json": {
+      "bytes": 3389,
+      "sha256": "bd95fd894493ae5a0c3aca957971ff9af097f1455958fb116da31424fe9fac92"
+    },
+    "build64-combined-inventory-independent-verification.json": {
+      "bytes": 3696,
+      "sha256": "ee924f8e07d1b5db60289078d12999a82e26eba2b57333623c5051b3e48e1108"
+    },
+    "build64-android-release-actual-artifact-bindings.json": {
+      "bytes": 3614,
+      "sha256": "1cf77f69d7186d013d54cdd6eb7b0f3d7f6023e2e15677242a968cbf258140b4"
+    },
+    "build64-linux-actual-artifact-bindings.json": {
+      "bytes": 7216,
+      "sha256": "b6e7faedebc002c345d292d94f8f061279f45cae45dce8be868267cf9dacc96c"
+    },
+    "build64-windows-actual-artifact-bindings.json": {
+      "bytes": 10188,
+      "sha256": "0ea69c3b7212911999a9e569cd20ad3fab654383f640d7744e0b6bb54ad7c4b5"
+    },
+    "build64-independent-original-artifact-manifest.json": {
+      "bytes": 4828,
+      "sha256": "07df487efe24221e8787d7649f40a942622d6728b047bd341f8174bb7d5f304d"
+    },
+    "build64-final-independent-artifact-review.json": {
+      "bytes": 4499,
+      "sha256": "0105da6ce75816d7ac07651cdd5021cc61ddb03d908921ee01cc18733b0565b7"
+    },
+    "original-reports/android/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "a9f07eb62365f852f140fa75e635b44f055cc6fd4762c13d4cd4515d531857b4"
+    },
+    "original-reports/android/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "original-reports/android/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "6cdba04c79c5e365c38a28a49e22ce971df31b25aea941f93aeca2569d3fc2be"
+    },
+    "original-reports/linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "8ac81cd15be8798f07022231168e6ca2e3e5876ee9c174aee29b2c203da18506"
+    },
+    "original-reports/linux/linux-install-smoke.json": {
+      "bytes": 2918,
+      "sha256": "3b9a9101f5887e372020343836cef19cb62ce04d9259d07e33b11059284735ce"
+    },
+    "original-reports/linux/linux-startup.json": {
+      "bytes": 6193,
+      "sha256": "b6e7cf28419e02b1f7289d3cfd2ccf670fe9a10e1e395e975c32b84fb68ed176"
+    },
+    "original-reports/windows/windows-install-smoke.json": {
+      "bytes": 1757,
+      "sha256": "29d92594d8955ed0e84e00950b3b582a8628252a8eeaeef10a129220f99facda"
+    },
+    "original-reports/windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "368671ce44bd3641c0d70d5798395db3bc0c70510b4d66781df3b085568c01e6"
+    },
+    "original-reports/windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "e446d186527ebe803bf617a71a5894ff6cfadf0795f5ec455e6f9602572daf89"
+    },
+    "original-reports/windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "d21eef770d7c27086ae5c215376872c29aea12f7ec434af10271828d0904ec3b"
+    }
+  },
+  "qualification": "Inventory excludes itself; reports original byte-exact, logs provider-decoded preserving returned encoding."
+}

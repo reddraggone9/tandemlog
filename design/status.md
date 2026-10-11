@@ -1,6 +1,25 @@
 # Current status — 2026-10-11
 
-## Shared calendar correction — build62 held; replacement build64 in preparation
+## Exact build64 native acceptance complete — RC2 publication authorized
+
+Source71045e5021f9dee821bc24ea1c118158f029fd83, candidate38133887765,
+APKc5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f
+(67,000,993 bytes) passed exact parent Android acceptance: Tasks/Food calendars at
+normal and320dp/200% both themes, day10/15/17 semantics/readability, selected17
+physical rotation/return/OK/Save, actual SAF child switch/return clearing workspace
+Undo, and cold new-v2 UI replay without canonical appends. Settings restored and
+lab stopped; no remaining native blocker. Broad62 Android passes retain exact
+7ae1437 attribution. Current64 Windows/Linux originals, payloads and installed
+lifecycles independently pass; earlierRC1+57 Windows hash is historical only.
+
+Full hosted source gates pass970 Linux units/143 native flows and967 Windows
+units/two skips, plus Rust/contracts/tooling/build/owner signing. Parent cleared
+publication from the exact64 binaries without rebuild. Final review precedes dispatch; public verification follows it, with receipts
+recorded in [build64 evidence](../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
+No stable promotion, live import, deletion or new feature is authorized.
+
+
+## Historical shared calendar preparation — build62/63 held
 
 Actual build62 Android acceptance at320dp/200% found wrapped and clipped
 two-digit calendar days. The same uncustomized picker reproduces the defect in

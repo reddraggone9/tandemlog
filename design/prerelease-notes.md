@@ -8,7 +8,9 @@ Experimental 2026.10.4-rc.2 preview.
 - Fixed tapping the blank middle of short Inbox tasks to open the editor.
 - Fixed clipped calendar day numbers in Tasks and Food on narrow screens with larger text.
 - Fixed shifting Food controls when expanding a group, and a Task Undo notice remaining active after switching to Food.
-- Linux Flatpak now shows Tandemlog in app centers and uses private sandbox storage. If an update or local reset opens setup, select your existing synced folder again.
+- Linux Flatpak now shows Tandemlog in app centers and uses private sandbox storage. Existing local settings are not migrated automatically: reset local setup and reselect your existing synced folder.
+
+Update every participating preview device to this release for Food Undo v2 compatibility.
 
 If an older version cannot open your profile after an interrupted Food Undo,
 reopen this preview.

@@ -1,0 +1,137 @@
+{
+  "reviewer": "architecture_review",
+  "checked_at_utc": "2026-10-11T12:36:29.521985+00:00",
+  "verdict": "ACCEPTED_PREPUBLICATION_READINESS_EXACT_CANDIDATE",
+  "must_fix": [],
+  "executable_source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "version": "2026.10.4-rc.2+64",
+  "tag": "v2026.10.4-rc.2",
+  "scope": "Independent final architecture, source/evidence consistency, actual Android pixel/receipt and synthetic preservation review. Read-only; no builds, Android execution, live profile operations or publication by reviewer.",
+  "current_executable_and_workflow_diff_against_candidate": [],
+  "accepted_public_assets": [
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-android.apk",
+      "original_member": "android-release/tandemlog-android.apk",
+      "bytes": 67000993,
+      "sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f"
+    },
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-windows-x64-setup.exe",
+      "original_member": "windows/tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12376785,
+      "sha256": "76727c860e176b166f31c615f6ef9210fce97ab77d6a6b43ac5de5954d822c09"
+    },
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-linux-x64.flatpak",
+      "original_member": "linux/tandemlog-linux-x64.flatpak",
+      "bytes": 9225872,
+      "sha256": "d3ee6b7b971d742514075075336ace5246f7693f57170ea4db849c8af10527e3"
+    }
+  ],
+  "hosted_gates": {
+    "all_five_jobs": "success",
+    "linux_units": 970,
+    "linux_native_flows": 143,
+    "windows_units": 967,
+    "windows_platform_skips": 2,
+    "qualification": "Exact original archive/report and hosted gate verification inherited from separately bound independent artifact review."
+  },
+  "android_native_acceptance": {
+    "origin": "Parent exact source/run/APK native execution, independently consumed receipts, pixels, XML and copied synthetic SQLite/canonical snapshots.",
+    "calendar_source_bound_checks": 32,
+    "viewed_calendar_pixels": "Tasks/Food, light/dark, 320dp/200%; all day numbers readable, selected dates and full-date semantics agree.",
+    "pending_selection_lifecycle": "17 retained across physical rotation, return, OK and native Save.",
+    "saf": "Actual child switch and parent return clear workspace Food Undo and preserve child/sibling evidence.",
+    "cold_v2": "Actual cold UI projection and canonical nonappend evidence accepted; selective Undo/peer protection retained.",
+    "packet_verification": {
+      "sha256": "9f2c83c403447513b4338b722559b747b6f788281934b839e8746fdea1f63ade",
+      "bytes": 10008289,
+      "safe_unique_members": 545,
+      "crc": "pass",
+      "materialized_members": "all byte-exact"
+    },
+    "independently_viewed_pixel_sha256": {
+      "tasks_dark_calendar": "dffa6bcd25b78a50dc93a55300271773aa2eb1a8e735006e26f3ba6225da019e",
+      "tasks_light_calendar": "d20db96d3994faa2e621dccff47116f0fd25ad33ef1a78cee42c90b3651d1cd6",
+      "food_dark_calendar": "58b5cb523fa8fb095c0975516a996d5cd2689be0050b87fe197dc84375ea741e",
+      "food_light_calendar": "41ef12689bf304c50a9f3255cf9211c8dac3bf99f72aa33d991e0bb2dd9cb2b4",
+      "cold_active_projection": "1cdfc44389b2bd5e05b56c343c266d677c7479995520fe5c43df00f872cfb52b",
+      "cold_deleted_projection": "0eccf6931c48c9979d26f73b0715f17d88ed01c1c503b01c513ddec02db0e91c"
+    },
+    "independent_preservation": {
+      "review": "Independent read-only preservation checks on copied synthetic native evidence",
+      "upgradeCanonicalFilesExact": 15,
+      "allUpgradeSqliteTablesExact": 38,
+      "finalOriginalCanonicalPrefixesExact": 15,
+      "expectedNativeAppendRecordCount": 9,
+      "coldReplayCanonicalFilesExact": 15,
+      "finalProtectedSettingsExactlyRestored": true,
+      "protectedPendingIntentTableCounts": {
+        "protected_text_intents": 0,
+        "protected_food_intents": 0
+      },
+      "syntheticChildHashMapExact": true,
+      "allThreeSQLiteIntegrityChecks": "ok",
+      "method": "Original evidence untouched. Copied DB/WAL/SHM into disposable scratch before read-only SQL; compared all logical table rows pre/post upgrade and protected settings final, binary canonical maps and exact prefixes. No live profile access."
+    }
+  },
+  "reused_native_evidence": {
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "version": "2026.10.4-rc.2+62",
+    "qualification": "Broader native coverage keeps original source attribution. Runtime diff to64 is only civil_date_input.dart and task_editor.dart; domain/storage/transport/native dependencies unchanged. Focused64 acceptance closes calendar/lifecycle HOLD without claiming fresh rerun of all broad62 Android workflows."
+  },
+  "documentation_closure": "Current headers distinguish predispatch review from future public verification; superseded ADR preparation statuses explicitly historical. Original pending/HOLD receipts preserved. Build64 evidence metadata -text rule only preserves original report/log bytes.",
+  "qualifications": [
+    "Manual Windows GUI RC waiver retained; current64 installer/artifact/lifecycle evidence used, never stale RC1/build57 identity.",
+    "Accepted inherited framework/SQLite RELRO qualification retained; no full APK 16KB runtime/compliance claim.",
+    "No new Windows spoken-assistive-technology, every-device, physical-power or exhaustive accessibility claim.",
+    "Calendar geometry is pinned-SDK/default-theme scoped; selected state and live controller ownership fixed and independently accepted."
+  ],
+  "publication_contract": {
+    "authorization": "Parent explicitly authorized exact64 RC2 prerelease publication; reviewer performs no publication.",
+    "consume": "Only these three original installers; no rebuild/recompression/replacement. Engineering QA assets stay separate.",
+    "dispatch": "Recheck exact source/tag/notes and equivalent dispatch blobs; use candidate38133887765.",
+    "remaining_postpublication_checks": [
+      "Exact three public asset sizes/SHA256 and Android owner signer",
+      "Exact tag/source and final accepted note/media links",
+      "Prerelease true; not Latest; stable2026.10.3 remains Latest",
+      "All prior release/tag snapshot identities and assets preserved"
+    ],
+    "baseline_prior_releases": 23,
+    "baseline_latest_release_id": 408448633,
+    "baseline_latest_tag": "v2026.10.3"
+  },
+  "not_authorized": "Stable promotion, live import, deletion, cleanup of live profiles, new features or rebuilds.",
+  "source_and_document_sha256": {
+    "design/status.md": "2482cebfee0811a081716f995001b74f48b2322982a6ab97f28e98641510078e",
+    "design/runtime-qa.md": "c5d0a3f61e4f4536eb036487333b7b7cc5ebded213b6cc3381d733b446c4fc7c",
+    "design/food-native-acceptance.md": "575ac3c4e9d17cc93c8eeeef9aee9d30bc3470ffcb094d05ca358dc9a266a677",
+    "design/prerelease-notes.md": "8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8",
+    "design/decisions/0013-app-wide-local-database.md": "8fd6d2c55ae6df10c5f001481b846931a738c0afd7615af7fc26020a2ceed801",
+    "design/decisions/0016-task-search-and-add-input.md": "274214960542b3493d12802f688736a9c7447e9c9cc35f1e1b1fa5b599f38e59",
+    "design/decisions/0017-food-stock-and-toolbar-refinements.md": "2afefe8ff16bfc883aa523a7da9113e93b45e7a72464e1b5dbf852b46189c475",
+    "design/decisions/0018-food-session-undo.md": "060643da4700badf4b363e5732f3f5bbc88e725935c7af9b56967a3394170042",
+    "lib/presentation/civil_date_input.dart": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82",
+    "lib/presentation/task_editor.dart": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5",
+    ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+    "tool/publish_gate.py": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/README.md": "4376e74e01fa5c09ce19a932919d361df97d2b9561bf5bda2adc562f51b73bb6",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/.gitattributes": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/accepted-public-installer-identities.json": "6b6f4ee75a7485a197aa1c4b48c255293d39be3323f6535ff7c56f1ed3d6a9e1",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/parent-android-native-acceptance.json": "ee7a61311db93482f601baf5611a413fcc43ac2899fe99322175b0394ae8742c",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/build64-final-independent-artifact-review.json": "0105da6ce75816d7ac07651cdd5021cc61ddb03d908921ee01cc18733b0565b7",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/build64-hosted-gates-independent-verification.json": "bd95fd894493ae5a0c3aca957971ff9af097f1455958fb116da31424fe9fac92",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/build64-unchanged-native-baseline-independent-verification.json": "bb761bdac8582b234d23e824ee46a0794441da79d3b3c1c306fa6f01471fe6b9",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/independent-final-artifact-readiness.json": "bbc83937e22bf44c8e50f897fddb72b3570e5a96e857da7d6b65cb87976d9e68",
+    "evidence/food-2026.10.4-rc.2/candidate/build64/independent-final-editorial-review.json": "2b70c23ef0747518b056a305cdc9d5ad801c28e55a8b4fa9cf31b1721cf21de1"
+  },
+  "bound_independent_receipt_sha256": {
+    "artifact_readiness": "bbc83937e22bf44c8e50f897fddb72b3570e5a96e857da7d6b65cb87976d9e68",
+    "editorial": "2b70c23ef0747518b056a305cdc9d5ad801c28e55a8b4fa9cf31b1721cf21de1",
+    "preservation_independently_checked": "62cb0d784f36c4b452681a8866d599aa6608de13a07b190ab6f74f0187a97a87",
+    "original_exact_artifact_review": "0105da6ce75816d7ac07651cdd5021cc61ddb03d908921ee01cc18733b0565b7",
+    "calendar_source_and_lifecycle": "187fac67b580141ad5b061c701cda6cde941ca96f8f4b659edf4c98bc3b0ce03"
+  },
+  "privacy": "Public-safe aggregate record: no private packet identifiers, fixture contents, quota, transfer URLs or live-profile paths."
+}

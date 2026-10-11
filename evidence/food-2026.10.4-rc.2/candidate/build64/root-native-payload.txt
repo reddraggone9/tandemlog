@@ -1,0 +1,1 @@
+Packaged native library and exact notices verified: /tmp/food-build64-parent-delivery/tandemlog-android.apk

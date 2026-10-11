@@ -1,0 +1,25 @@
+{
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "version": "2026.10.4-rc.2+64",
+  "assets": [
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-android.apk",
+      "original_member": "android-release/tandemlog-android.apk",
+      "bytes": 67000993,
+      "sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f"
+    },
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-windows-x64-setup.exe",
+      "original_member": "windows/tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12376785,
+      "sha256": "76727c860e176b166f31c615f6ef9210fce97ab77d6a6b43ac5de5954d822c09"
+    },
+    {
+      "public_name": "tandemlog-2026.10.4-rc.2-linux-x64.flatpak",
+      "original_member": "linux/tandemlog-linux-x64.flatpak",
+      "bytes": 9225872,
+      "sha256": "d3ee6b7b971d742514075075336ace5246f7693f57170ea4db849c8af10527e3"
+    }
+  ]
+}

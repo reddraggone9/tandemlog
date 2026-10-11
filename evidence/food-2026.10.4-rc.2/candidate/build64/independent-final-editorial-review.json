@@ -1,0 +1,136 @@
+{
+  "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+  "reviewed_at_utc": "2026-10-11T12:29:47.229447+00:00",
+  "outcome": "APPROVED final materially revised RC2 notes/media; no unresolved editorial findings",
+  "scope": "Final release-note accuracy, meaningful-change coverage, requested compatibility actions and immutable media identity. Editorial gate only; exact artifact/native/publication gates remain independently owned.",
+  "guidance": [
+    "AGENTS.md",
+    "design/releases.md: end-user release-note and media editorial policy",
+    "Lee explicit final-copy instructions relayed by parent: state Flatpak private/no-automatic-migration/reset-and-reselect transition and update all participating preview devices for Food Undo v2 compatibility. User instruction supersedes policy default omission of routine update warnings."
+  ],
+  "covered_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "final_frozen_build64_source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+    "candidate_run": "38133887765",
+    "version": "2026.10.4-rc.2+64",
+    "working_copy_qualification": "Current changes are docs-only final notes; application/test/platform/native/dependency/packaging/workflow roots have empty diff against frozen71045.11dd0f6->71045 only renames archival Dart source snapshots to.txt; reviewed application bytes remain unchanged."
+  },
+  "notes": {
+    "path": "design/prerelease-notes.md",
+    "bytes": 2217,
+    "sha256": "8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8"
+  },
+  "meaningful_change_bullets": 9,
+  "prior_review_chain": [
+    {
+      "path": "evidence/food-2026.10.4-rc.2/expanded-build62/reviews/final-editorial.json",
+      "bytes": 7254,
+      "sha256": "3c273ecfa67b4a2ab361c62a495aed8a3e04026f4e23845d68972afdfb2e50f4"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/expanded-build62/reviews/final-editorial-correction-addendum.json",
+      "bytes": 4117,
+      "sha256": "587cb902db642fcfabf4496e491dee3d7e6284e7eb2c3f05c81c7a97329e1dc6"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/expanded-build62/reviews/final-editorial-catalog-path-addendum.json",
+      "bytes": 2741,
+      "sha256": "943928a849ffae0910f4998e4592ebdc0efeb365295f365d1e66de76bde5b578"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/calendar-build63/independent-calendar-editorial-review.json",
+      "bytes": 7776,
+      "sha256": "063d762a5017a9dbd7af214f21a833d26a563bec2be0831d82ebef310c15a3c2"
+    },
+    {
+      "path": "evidence/food-2026.10.4-rc.2/calendar-build64/independent-calendar-editorial-review.json",
+      "bytes": 6872,
+      "sha256": "9201275019cad215a495a989764926b5584e196ecbb5f3e9c149c6b9c2411e54"
+    }
+  ],
+  "materially_revised_copy_review": [
+    {
+      "change": "Flatpak transition now explicitly states existing local settings are not migrated automatically and instructs reset local setup/reselect existing synced folder.",
+      "support": [
+        "design/decisions/0013-app-wide-local-database.md: approved sandbox-private XDG/no host-profile migration and Lee-selected manual transition",
+        "packaging/README.md: existing host profile not discovered/copied/migrated; existing sandbox profile selection retained; update itself does not reset/delete old or new data",
+        "Frozen packaging/linux/tandemlog delegates to production path resolution without host-profile discovery."
+      ],
+      "assessment": "Accurate requested migration instruction; synced folder remains existing. No assertion that upgrade automatically resets setup, migrates writer/settings or deletes files."
+    },
+    {
+      "change": "Update every participating preview device to this release for Food Undo v2 compatibility.",
+      "support": [
+        "design/decisions/0018-food-session-undo.md: only Undo envelope uses v2, released-v1 bytes remain unchanged; older peer stops Food at canonicalv2, and protected same-profile unresolvedv2 may block admission",
+        "Frozen lib/food/food_record.dart version getter/decode boundary",
+        "Explicit user-required compatibility wording overrides ordinary editorial warning omission."
+      ],
+      "assessment": "Clear requested release-specific action. Concise Food Undo v2 identifier is intentional user requirement, without wire/hash implementation exposition."
+    },
+    {
+      "change": "Retains narrow older-version interrupted-Food-Undo profile recovery: reopen this preview.",
+      "support": [
+        "ADR0018 Compatibility and recovery: preserve exact profile/canonical bytes and reopen current compatible reader for unresolved protectedv2 receipts."
+      ],
+      "assessment": "Still accurate actionable recovery exception; no invitation to discard receipts/reset writer/history."
+    }
+  ],
+  "unchanged_copy_assessment": "All nine meaningful feature/fix bullets remain supported by prior exact RC1\u2192build62 and calendar/lifecycle reviews now bound to frozen71045. No new feature promise, native QA transcript, expected-interaction/preservation assurance or signing boilerplate.",
+  "media_verification": {
+    "media": [
+      {
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/toolbar-expanded-before-after.png",
+        "http_status": 200,
+        "bytes": 43783,
+        "sha256": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1",
+        "matches_reviewed_local_and_immutable_git_object": true
+      },
+      {
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/43107084646a58a5a5059271655b73b2c6d64bf9/evidence/food-2026.10.4-rc.2/media/task-search-before-after.png",
+        "http_status": 200,
+        "bytes": 41543,
+        "sha256": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0",
+        "matches_reviewed_local_and_immutable_git_object": true
+      },
+      {
+        "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/22a13e5a83ec108392378041422fe58ed9cdae61/evidence/food-2026.10.4-rc.2/media/calendar-before-after.png",
+        "http_status": 200,
+        "bytes": 31027,
+        "sha256": "16ace4113aa469ce1da6afb84ad8c7f4490e13a0bda18cd5df7b06051c0fdc85",
+        "matches_reviewed_local_and_immutable_git_object": true
+      }
+    ],
+    "frozen_build64_bindings": [
+      {
+        "path": "lib/presentation/civil_date_input.dart",
+        "sha256": "47bb76ade7e607a3b65b1302afddb0d6b445a0d22bb4edfe5d92cf3bd0022e82",
+        "matches_prior_review_and_frozen_71045": true
+      },
+      {
+        "path": "lib/presentation/task_editor.dart",
+        "sha256": "d39ea3ade2527bad80eff797756245d2a1055971022a2d8c17b7ec84ff733dc5",
+        "matches_prior_review_and_frozen_71045": true
+      },
+      {
+        "path": "test/civil_date_picker_layout_test.dart",
+        "sha256": "91aff62741d02423b042a0ebf4644a3a16eaef4ddd870088f6d49bdc61321a6c",
+        "matches_prior_review_and_frozen_71045": true
+      },
+      {
+        "path": "pubspec.yaml",
+        "sha256": "77ee1f3a922115bfb77f58adee35dd8c37255994947206ca936f95a22188ea57",
+        "matches_prior_review_and_frozen_71045": true
+      },
+      {
+        "path": "evidence/food-2026.10.4-rc.2/calendar-build64/calendar-media-identity-addendum.json",
+        "sha256": "3209884394e27106ffcc97f3af220d283a587c9a1c7be527648a27454f3bb111",
+        "matches_prior_review_and_frozen_71045": true
+      }
+    ]
+  },
+  "media_assessment": "Three previously visually inspected dark real-app comparisons remain exact immutable public bytes, with descriptive alt text and useful crops. Calendar alt identifies actualLinux. Build64 static dark capture identity addendum preserves original22a provenance; no relabeling historical raw pixels as Android/build64 capture. No new media or image-dependent behavior changed.",
+  "freeze_bindings_verified": true,
+  "private_data_check": "No private Library IDs, quota, transfer URLs, credentials or live-profile data in revised notes or this receipt. Public GitHub image URLs are intended release media.",
+  "remaining_editorial_requirements": "Publication must use exact notes SHA8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8 and these approved image bytes. Material copy/media changes require review again.",
+  "remaining_gate_attribution": "Parent reports exact64 Android/native acceptance and publication clearance separately. This editorial review neither reruns nor substitutes for artifact/native/publication checks; no stable promotion authorization asserted."
+}

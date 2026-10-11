@@ -1,0 +1,89 @@
+{
+  "checked_at_utc": "2026-10-11T11:46:52.842805+00:00",
+  "reviewer": "Independent calendar artifact reviewer",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "version": "2026.10.4-rc.2+64",
+  "verdict": "ACCEPT_EXACT_ORIGINAL_ARTIFACTS_AND_HOSTED_GATES_ANDROID_RUNTIME_PENDING",
+  "archives_and_members": "3 original archives/14 closed members match GitHub API source/run/digest/size and archive CRC/strict member checksums. Original report bytes retained, including Windows CRLF and Linux startup preamble.",
+  "android": {
+    "artifact_id": 11701545268,
+    "apk_bytes": 67000993,
+    "apk_sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.4-rc.2",
+    "version_code": 64,
+    "nondebuggable": true,
+    "ABIs": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "static_gates": "Own SDK36 apksigner/aapt, whole-APK ZIP alignment,3 custom-text ELF/RELRO/exports and exact notices PASS; no Android execution by reviewer."
+  },
+  "hosted_counts": {
+    "candidate_jobs": "5/5SUCCESS",
+    "linux_units": 970,
+    "linux_native_workflows": 143,
+    "windows_units": 967,
+    "windows_unit_platform_skips": 2,
+    "rust_tests_each_platform": 4,
+    "native_contracts_each_platform": 107,
+    "tool_checks_each_platform": 74,
+    "linux_tool_skips": 0,
+    "windows_tool_platform_skips": 4,
+    "analysis_format": "clean"
+  },
+  "desktop_lifecycles": "Both original four-phase hosted installation reports PASS; Linux catalog/icons/private default XDG one permanent local.sqlite/no host-filesystem or network grants and stopped sandbox checks PASS. No local install execution or human Windows GUI claim.",
+  "native_baseline_qualification": "All12non-AOT libraries exactly equal build62;3AOT libapp libraries change. Accepted pre-existing Flutter/SQLite RELRO qualification retained unchanged, with no new gate/upgrade/full-APK16K runtime or compliance claim.",
+  "source_inventory": "All325 frozen Git objects match inventory and cancelled11dd app/pipeline/test bytes; source correction only4existing+2newtest paths vs exact62. Cancelled63/initial64 are preserved and ineligible.",
+  "log_qualification": "Job log files are the official GitHub App decoded UTF8 representation, preserving provided BOM/CRLF/preambles; their hashes do not claim independent raw-download attestation. Original binary archive/report byte attestations are separate.",
+  "remaining": [
+    "Parent focused exact64 Android shared calendar/narrow text/resize and unfinished SAF child-switch/workspace-cleared Undo/coldv2 fixture acceptance",
+    "Parent publication clearance; no publication or stable promotion by reviewer"
+  ],
+  "data_boundary": "No live synced user data touched; no rebuild/recompression/substitution or source/docs edits by reviewer.",
+  "receipts": [
+    {
+      "file": "frozen-source-inventory-independent-verification.json",
+      "bytes": 719,
+      "sha256": "e4e8a97e59981ae853a5844c2ba5e8c3aa45da52145c160039828af028ce9f35"
+    },
+    {
+      "file": "build64-windows-actual-artifact-bindings.json",
+      "bytes": 10188,
+      "sha256": "0ea69c3b7212911999a9e569cd20ad3fab654383f640d7744e0b6bb54ad7c4b5"
+    },
+    {
+      "file": "build64-linux-actual-artifact-bindings.json",
+      "bytes": 7216,
+      "sha256": "b6e7faedebc002c345d292d94f8f061279f45cae45dce8be868267cf9dacc96c"
+    },
+    {
+      "file": "build64-android-release-actual-artifact-bindings.json",
+      "bytes": 3614,
+      "sha256": "1cf77f69d7186d013d54cdd6eb7b0f3d7f6023e2e15677242a968cbf258140b4"
+    },
+    {
+      "file": "build64-combined-inventory-independent-verification.json",
+      "bytes": 3696,
+      "sha256": "ee924f8e07d1b5db60289078d12999a82e26eba2b57333623c5051b3e48e1108"
+    },
+    {
+      "file": "build64-independent-original-artifact-manifest.json",
+      "bytes": 4828,
+      "sha256": "07df487efe24221e8787d7649f40a942622d6728b047bd341f8174bb7d5f304d"
+    },
+    {
+      "file": "build64-unchanged-native-baseline-independent-verification.json",
+      "bytes": 4643,
+      "sha256": "bb761bdac8582b234d23e824ee46a0794441da79d3b3c1c306fa6f01471fe6b9"
+    },
+    {
+      "file": "build64-hosted-gates-independent-verification.json",
+      "bytes": 3389,
+      "sha256": "bd95fd894493ae5a0c3aca957971ff9af097f1455958fb116da31424fe9fac92"
+    }
+  ]
+}

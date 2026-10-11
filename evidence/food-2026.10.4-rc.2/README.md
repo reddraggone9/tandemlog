@@ -1,3 +1,10 @@
+# Food RC2 — exact build64 accepted; publication authorized
+
+[Accepted build64](candidate/build64/README.md) closes all hosted/artifact and
+parent native gates. Final independent readiness/editorial review precedes exact
+no-rebuild publication. The preparation records below retain their original
+source attribution;62/63/cancelled initial64 remain ineligible.
+
 # Food RC2 — build64 replacement candidate;62/63 held
 
 Build62 is held after actual Android calendar clipping at320dp/200%. Build63 was

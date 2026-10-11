@@ -1,0 +1,73 @@
+{
+  "checked_at_utc": "2026-10-11T11:46:19.227464+00:00",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "verdict": "PASS_ALL_5_HOSTED_CANDIDATE_JOBS",
+  "logs": [
+    {
+      "platform": "candidate",
+      "job_id": 114453659813,
+      "bytes_of_retained_UTF8_representation": 22066,
+      "sha256_of_retained_UTF8_representation": "c7bce47136d9ca50b25e8a77b7d6552f0a4329925d7a8b933b4352af625f5dd1",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": true
+    },
+    {
+      "platform": "android-debug",
+      "job_id": 114453692515,
+      "bytes_of_retained_UTF8_representation": 186270,
+      "sha256_of_retained_UTF8_representation": "131ba449d433446964d846c2a799df33345a5cb8d21e65951b40c8e291d4e103",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": false
+    },
+    {
+      "platform": "windows",
+      "job_id": 114453692524,
+      "bytes_of_retained_UTF8_representation": 355601,
+      "sha256_of_retained_UTF8_representation": "ef424a9a5c6eb90bba564d7dc17108b88c6709b99b048a8c1d6c06e9dba234b4",
+      "CRLF_count": 3238,
+      "utf8_bom": true,
+      "summary_lines": [
+        "2026-10-11T11:07:56.0056866Z 06:23 +967 ~2: All tests passed!",
+        "2026-10-11T11:08:13.3466507Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "2026-10-11T11:08:19.5420847Z Ran 107 tests in 5.942s",
+        "2026-10-11T11:08:23.9871480Z Ran 74 tests in 3.696s",
+        "2026-10-11T11:08:23.9871872Z OK (skipped=4)"
+      ],
+      "all_steps_success": true
+    },
+    {
+      "platform": "linux",
+      "job_id": 114453692592,
+      "bytes_of_retained_UTF8_representation": 569148,
+      "sha256_of_retained_UTF8_representation": "d121a6880410a6376cfc72fd5365b1c6420c7fd0b6a29a21a0de38500854be4f",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [
+        "2026-10-11T11:00:42.8487194Z No issues found! (ran in 10.8s)",
+        "2026-10-11T11:04:47.3835310Z \ud83c\udf89 970 tests passed.",
+        "2026-10-11T11:04:57.2146350Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "2026-10-11T11:05:01.9645222Z Ran 107 tests in 4.630s",
+        "2026-10-11T11:05:03.4152785Z Ran 74 tests in 1.208s",
+        "2026-10-11T11:35:44.3697527Z \ud83c\udf89 143 tests passed."
+      ],
+      "all_steps_success": true
+    },
+    {
+      "platform": "signed-android",
+      "job_id": 114460679944,
+      "bytes_of_retained_UTF8_representation": 190536,
+      "sha256_of_retained_UTF8_representation": "f88f02ba3aa3585531a36b0fbc339727adb4021e650016f304f71f75b4dc7555",
+      "CRLF_count": 0,
+      "utf8_bom": true,
+      "summary_lines": [],
+      "all_steps_success": true
+    }
+  ],
+  "representation_qualification": "Official GitHub App fetch_workflow_job_logs returns decoded UTF8 content. Retained that representation without newline or BOM normalization; these hashes are of the retained decoded representation, not independently attested raw download hashes. Direct raw-log redirect returned403; original platform archive/member hashes independently match API digests.",
+  "runtime_qualification": "Hosted native Linux and installed Windows/Flatpak lifecycles do not replace parent exact Android runtime acceptance."
+}

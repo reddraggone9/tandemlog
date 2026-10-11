@@ -1,6 +1,10 @@
 # Food session Undo
 
-Status: Lee approved the full session stack and additive Food v2 operation on
+RC2/build64 milestone: exact hosted/artifact and parent Android native acceptance
+complete; publication authorized, final readiness/public verification pending.
+[Current accepted evidence](../../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
+
+Historical preparation status (superseded by the build64 milestone above): Lee approved the full session stack and additive Food v2 operation on
 2026-10-11. Core implementation and independent review are complete; host/native
 and exact candidate acceptance remain in progress for2026.10.4-rc.2/build62.
 

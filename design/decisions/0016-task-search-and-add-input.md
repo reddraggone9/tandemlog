@@ -1,6 +1,10 @@
 # Task Search and Add input
 
-Status: accepted by Lee on2026-10-11 and implemented for RC2/build62 with
+RC2/build64 milestone: exact hosted/artifact and parent Android native acceptance
+complete; publication authorized, final readiness/public verification pending.
+[Current accepted evidence](../../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
+
+Historical preparation status (superseded by the build64 milestone above): accepted by Lee on2026-10-11 and implemented for RC2/build62 with
 independent source review and native Linux checks. The full frozen candidate and
 exact Android acceptance remain pending.
 

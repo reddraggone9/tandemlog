@@ -1,0 +1,4 @@
+Signer #1 certificate DN: CN=Tandemlog Signing
+Signer #1 certificate SHA-256 digest: 0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d
+Signer #1 certificate SHA-1 digest: e4fbfd9c4db9c799852d2994dcc574daed36da85
+Signer #1 certificate MD5 digest: ea93ba14324aeee9660ba7c0e0f0e909

@@ -1,0 +1,56 @@
+{
+  "checked_at_utc": "2026-10-11T12:29:54.934972+00:00",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "candidate_run": 38133887765,
+  "version": "2026.10.4-rc.2+64",
+  "verdict": "ACCEPT_ARTIFACT_AND_PARENT_EXACT64_NATIVE_READINESS",
+  "supersedes_only": "The runtime-pending status in the historical independent artifact receipt; its exact-byte/static/hosted assertions remain unchanged.",
+  "historical_artifact_receipt": {
+    "file": "build64-final-independent-artifact-review.json",
+    "sha256": "0105da6ce75816d7ac07651cdd5021cc61ddb03d908921ee01cc18733b0565b7"
+  },
+  "current64_installer_identities_from_independently_verified_manifest": {
+    "windows/tandemlog-windows-x64-unsigned-setup.exe": {
+      "bytes": 12376785,
+      "sha256": "76727c860e176b166f31c615f6ef9210fce97ab77d6a6b43ac5de5954d822c09",
+      "crc32": "f4db570e",
+      "crc_valid": true
+    },
+    "linux/tandemlog-linux-x64.flatpak": {
+      "bytes": 9225872,
+      "sha256": "d3ee6b7b971d742514075075336ace5246f7693f57170ea4db849c8af10527e3",
+      "crc32": "0a1c9a37",
+      "crc_valid": true
+    },
+    "android-release/tandemlog-android.apk": {
+      "bytes": 67000993,
+      "sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f",
+      "crc32": "d74ecf1f",
+      "crc_valid": true
+    }
+  },
+  "current64_parent_native_acceptance": {
+    "status": "PASS",
+    "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+    "candidate_run": 38133887765,
+    "android_artifact": 11701545268,
+    "apk_sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f",
+    "apk_bytes": 67000993,
+    "calendar": "32 source-bound native assertions: normal and320dp/200% Tasks/Food calendars, light/dark dates10/15/17, enabled/full-date/selected semantics, keyboard dismissal, landscape/portrait pending17 preservation, returned17 and Save.",
+    "remaining_affected_workflows": "Native synthetic SAF child switch/return clears session Undo; cold native v2 fixture replay passes without canonical additions.",
+    "boundary": "Consumed parent exact64 Android report; no Android execution or pixel review by this artifact reviewer."
+  },
+  "retained62_native_attribution": {
+    "source": "7ae14371fa0b734599fcdbb184d93376b8898a2a",
+    "version": "2026.10.4-rc.2+62",
+    "coverage": "Broader Food/Tasks/Gboard/provider/module-isolation/retention/filter/grouped operation/Undo/upgrade workflows retain their original source attribution. Shared calendar HOLD superseded by focused64 proof only.",
+    "runtime_diff": [
+      "lib/presentation/civil_date_input.dart",
+      "lib/presentation/task_editor.dart"
+    ]
+  },
+  "desktop_identity_qualification": "Uses actual64 Windows/Linux originals from signed-candidate manifest; stale RC1/build57 installer identity in private Android summary is not used as64 acceptance.",
+  "existing_qualification": "All12non-AOT native libraries unchanged from62; accepted inherited Flutter/SQLite RELRO qualification remains, with no fullAPK16K runtime/compliance claim or new gate.",
+  "remaining": "Publication authorization is supplied separately by parent. Postpublication verification must check exact3 original installers, tag/source/notes, prerelease/notLatest and all prior releases unchanged. No publication by reviewer.",
+  "privacy": "No private packet IDs, paths, canonical fixture records, quota or temporary transfer URLs copied into this addendum."
+}
