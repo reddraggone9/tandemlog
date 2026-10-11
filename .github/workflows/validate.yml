@@ -10,8 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common
-      - name: Install reviewed AppStream packaging tools
-        run: sudo apt-get install -y --no-install-recommends appstream=1.0.2-1build6 appstream-compose=1.0.2-1build6 libappstream5=1.0.2-1build6 libappstream-compose0=1.0.2-1build6 libxmlb2=0.3.18-1 libstemmer0d=2.2.0-4build1
+      - name: Prepare reviewed AppStream packaging tools
+        run: python3 packaging/linux/prepare_appstream_tools.py --destination "$RUNNER_TEMP/reviewed-appstream" --github-path "$GITHUB_PATH"
       - uses: ./.github/actions/setup-flutter
       - uses: ./.github/actions/setup-text-engine
         with:

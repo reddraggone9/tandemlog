@@ -1,0 +1,24 @@
+2026-10-11T06:57:52.4356284Z ##[group]Run sudo apt-get install -y --no-install-recommends appstream=1.0.2-1build6 appstream-compose=1.0.2-1build6 libappstream5=1.0.2-1build6 libappstream-compose0=1.0.2-1build6 libxmlb2=0.3.18-1 libstemmer0d=2.2.0-4build1
+2026-10-11T06:57:52.4358011Z [36;1msudo apt-get install -y --no-install-recommends appstream=1.0.2-1build6 appstream-compose=1.0.2-1build6 libappstream5=1.0.2-1build6 libappstream-compose0=1.0.2-1build6 libxmlb2=0.3.18-1 libstemmer0d=2.2.0-4build1[0m
+2026-10-11T06:57:52.4421959Z shell: /usr/bin/bash -e {0}
+2026-10-11T06:57:52.4422480Z ##[endgroup]
+2026-10-11T06:57:52.4694310Z Reading package lists...
+2026-10-11T06:57:52.6612452Z Building dependency tree...
+2026-10-11T06:57:52.6621125Z Reading state information...
+2026-10-11T06:57:52.7950431Z appstream is already the newest version (1.0.2-1build6).
+2026-10-11T06:57:52.7951074Z appstream set to manually installed.
+2026-10-11T06:57:52.7951683Z libappstream5 is already the newest version (1.0.2-1build6).
+2026-10-11T06:57:52.7952766Z libappstream5 set to manually installed.
+2026-10-11T06:57:52.7953431Z libstemmer0d is already the newest version (2.2.0-4build1).
+2026-10-11T06:57:52.7954067Z libstemmer0d set to manually installed.
+2026-10-11T06:57:52.7954677Z Recommended packages:
+2026-10-11T06:57:52.7955107Z   ffmpeg optipng
+2026-10-11T06:57:52.8068230Z The following packages will be REMOVED:
+2026-10-11T06:57:52.8074319Z   fwupd
+2026-10-11T06:57:52.8074820Z The following NEW packages will be installed:
+2026-10-11T06:57:52.8080998Z   appstream-compose libappstream-compose0
+2026-10-11T06:57:52.8093902Z The following packages will be DOWNGRADED:
+2026-10-11T06:57:52.8095814Z   libxmlb2
+2026-10-11T06:57:52.8154335Z E: Packages were downgraded and -y was used without --allow-downgrades.
+2026-10-11T06:57:52.8155132Z 0 upgraded, 2 newly installed, 1 downgraded, 1 to remove and 21 not upgraded.
+2026-10-11T06:57:52.8187727Z ##[error]Process completed with exit code 100.

@@ -1,0 +1,17 @@
+{
+  "failed_candidate": 38119736399,
+  "failed_source": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+  "windows_job": 114411832022,
+  "observed_failure": "Exactly one provenance failure; frozen inventory.dart expected20285B, actual20925B from640LF-to-CRLF transformations; other released reader behavior tests passed",
+  "diagnostic_log": "Official GitHub app decoded job log; leading BOM removed/final newline normalized by independent reviewer; not an original artifact archive",
+  "regression": "Actual git checkout-index core.autocrlf=true into disposable prefix; all five historical source byte lengths/SHA256 and mixed canonical packet preserved",
+  "fix": "Scoped test/fixtures/food-undo/** -text; no fixture bytes/hashes/assertion regeneration or product code change",
+  "tests": {
+    "checkout_RED": "20925 !=20285 exact Windows failure",
+    "checkout_GREEN": 1,
+    "all_tool_policies_executed": 73,
+    "all_tool_policies_passed": 72,
+    "existing_platform_skip": 1
+  },
+  "remaining": "Fresh full hosted candidate gates; original artifact and exact target acceptance"
+}

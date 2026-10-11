@@ -14,7 +14,7 @@ install -m 644 "packaging/linux/$app.desktop" "$build/files/share/applications/"
 install -m 644 "packaging/linux/$app.svg" "$build/files/share/icons/hicolor/scalable/apps/"
 install -m 644 "packaging/linux/$app.metainfo.xml" "$build/files/share/metainfo/"
 appstreamcli --version
-dpkg-query -W appstream appstream-compose libappstream5 libappstream-compose0 libxmlb2 libstemmer0d
+cat "$RUNNER_TEMP/reviewed-appstream/tool-receipt.json"
 appstreamcli validate --no-net "${build}/files/share/metainfo/$app.metainfo.xml"
 # Hand-built bundles need the same composed catalog as flatpak-builder.
 appstreamcli compose --no-net --prefix=/ --origin="$app" \

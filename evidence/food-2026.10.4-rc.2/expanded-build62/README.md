@@ -65,3 +65,28 @@ installed Flatpak catalog/private-profile lifecycle, original artifacts, parent'
 actual Android QA and final full-range editorial approval remain required before
 publication. Bazaar's actual target UI is not inferred from local AppStream
 composition alone.
+
+## First hosted attempt and bounded corrections
+
+Candidate38119736399/source`d38ec4e29ae63dd1ed0925093ae41f0514d38912`
+failed Linux tool acquisition before Flutter setup: apt would downgrade XMLB and
+remove runner fwupd, and refused. Windows ended with exactly one frozen-reader
+provenance failure from LF-to-CRLF checkout;952 other tests passed with2 platform
+skips. Android debug passed; owner signing was skipped. Partial archives are not
+accepted candidates and are not reused.
+
+The corrected adapter verifies/extracts the same six audited packages privately;
+its child-only library environment loads the reviewed tool closure without host
+installation, hooks, downgrade or removal. Eight new acquisition checks,12 retained
+packaging and5 installer checks pass, with independently repeated real acquisition,
+validation/composition and catalog verification. The scoped fixture attribute
+preserves every released source length/hash and canonical packet, demonstrated by
+a real autocrlf Git checkout RED/GREEN regression and independent released-blob
+comparison. Original fixture bytes, hashes and assertions remain unchanged.
+
+All73 tooling checks execute:72 pass and1 existing platform case skips. Application
+Dart/native code, display version and shipped payload source are unchanged. Both
+corrections have independent acceptance. The original source inventory remains
+historical;`corrected-candidate-source-inventory.json` binds the correction. A fresh
+complete hosted run, exact artifacts/installed lifecycles and Android acceptance
+remain mandatory.

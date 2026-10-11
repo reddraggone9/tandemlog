@@ -1,0 +1,11 @@
+# Isolated AppStream acquisition correction
+
+Candidate38119736399 at source `d38ec4e29ae63dd1ed0925093ae41f0514d38912` failed in Linux job114411832002 before Flutter setup. The official decoded job log confirms the old pinned host install would downgrade libxmlb2 and remove fwupd; apt rejected it with exit100. `failed-host-install.log` retains the exact relevant segment. The original package/source audit manifest and independent source acceptance remain unchanged historical evidence.
+
+The replacement downloads and verifies the same six audited archives before unprivileged data-only extraction. Its wrapper passes extracted native library paths only to the tool child and directly delegates compose to the original audited composer. No apt install/downgrade/removal, maintainer hooks, global LD_LIBRARY_PATH, application/runtime source, Flatpak permissions or user data changes occur.
+
+Tests first retain the missing-adapter RED and the test that rejects host-library loading before any CLI acceptance. Eight new focused acquisition tests pass, plus twelve retained Linux packaging and five installer regression tests. Only the actual Linux wrapper execution case is skipped on Windows; pure manifest/hash/mock tests remain portable. Actual final adapter download/extraction, AppStream1.0.2 version/extracted dependency verification and wrapper validation/composition/catalog checks pass locally. The exact package/tool receipt distinguishes this execution from an installed Flatpak lifecycle.
+
+`correction-verification.json` binds source hashes, failure and observations. Independent correction review and a fresh complete combined candidate remain required; no locally executed adapter or catalog proof substitutes for actual exported/installed package and native acceptance.
+
+The independent exact correction review ACCEPTED all five frozen source files with no must-fix. It independently acquired/extracted all six packages and verified runtime closure, wrapper validation/composition/catalog, twenty focused tests and Python3.9 parsing. A Windows discovery simulation passed seven portable tests and skipped only the Linux wrapper execution case; this is not actual Windows runtime evidence. Its unchanged receipt and logs are under `independent-review/`. Actual new candidate, installed Flatpak and native/publication gates remain pending.

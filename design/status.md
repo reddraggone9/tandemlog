@@ -20,8 +20,10 @@ it is an intermediate checkpoint and cannot be handed off or published. Build62 
 local suite passes956 unit tests and13 affected native Linux flows; analysis
 and formatting are clean. Exact hosted and Android acceptance remain pending. [RC2 source-qualified evidence](../evidence/food-2026.10.4-rc.2/README.md)
 keeps earlier passes attributed to their original source. RC1/build60 remains
-published; stable2026.10.3 remains Latest. The complete signed candidate and
-parent's actual Android acceptance are pending. No publication, stable promotion,
+published; stable2026.10.3 remains Latest. The first build62 hosted attempt failed on runner tool installation and Windows
+frozen-fixture line endings; independently accepted isolated-tool extraction and
+scoped byte-preserving checkout corrections leave app code unchanged. A fresh
+complete signed candidate and parent's actual Android acceptance remain pending. No publication, stable promotion,
 import or user/trial data migration is included in this preparation.
 
 ## Food inventory — durable source checkpoint

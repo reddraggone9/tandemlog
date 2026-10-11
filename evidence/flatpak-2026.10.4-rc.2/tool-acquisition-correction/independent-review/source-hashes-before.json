@@ -1,0 +1,7 @@
+{
+  ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+  "packaging/linux/build-flatpak.sh": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf",
+  "packaging/linux/prepare_appstream_tools.py": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052",
+  "tool/test_flatpak_tool_acquisition.py": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
+  "design/dependencies.md": "9ddf5abae6dfb4b16f1985eddec0e408ff5ec20858bda7051836abb46643a620"
+}

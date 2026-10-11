@@ -1,0 +1,14 @@
+{
+  "id": "com.reddraggone9.tandemlog",
+  "name": "Tandemlog",
+  "icons": [
+    "share/app-info/icons/flatpak/48x48/com.reddraggone9.tandemlog.png",
+    "share/app-info/icons/flatpak/64x64/com.reddraggone9.tandemlog.png",
+    "share/app-info/icons/flatpak/64x64@2/com.reddraggone9.tandemlog.png",
+    "share/app-info/icons/flatpak/128x128/com.reddraggone9.tandemlog.png",
+    "share/app-info/icons/flatpak/128x128@2/com.reddraggone9.tandemlog.png"
+  ],
+  "catalogs": [
+    "share/app-info/xmls/com.reddraggone9.tandemlog.xml.gz"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "reviewed_at_utc": "2026-10-11T07:08:45.809871+00:00",
+  "verdict": "ACCEPT_SCOPED_LITERAL_FOOD_FIXTURE_CHECKOUT_CORRECTION",
+  "source_base": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+  "failed_run": 38119736399,
+  "failed_windows_job": 114411832022,
+  "observed_failures": {
+    "count": 1,
+    "test": "released Food reader source is frozen against its exact provenance",
+    "expected_bytes": 20285,
+    "actual_bytes": 20925,
+    "matching_CRLF_explanation": "Released inventory.dart has640LF; CRLF conversion adds640bytes exactly. All actual other old-reader behavior tests passed."
+  },
+  "correction": "Scoped test/fixtures/food-undo/** -text prevents Git checkout text conversion; assertions, original fixture bytes/hashes/provenance preserved",
+  "source_hashes": {
+    ".gitattributes": "4d3adf613f2a4d82428c88410eec41452e2b261683d7448b1f6ad8ccb9721fe5",
+    "tool/test_food_fixture_checkout.py": "9b4bdc119d75fbac96e7bf181c1f8f18420821faba115849ca7966aef4aaf04d",
+    "test/food_undo_reader_compatibility_test.dart": "b70754d3bedfe0e03ce338bb6a0a4ddb5650777458b7fcc99cb5dc2d775e11a6",
+    "test/fixtures/food-undo/released-build60/provenance.json": "c12d3b896371cda21ca1d0874a82926245904c86b8ba67e40e2dee6b039bc389",
+    "test/fixtures/food-undo/mixed-v1-v2.foodlog": "e866b4f013010ebff810d7cce7d2ffa2c756b5c6d94444573574d3a0afcf32fe"
+  },
+  "actual_frozen_released_source_bytes": [
+    {
+      "path": "test/fixtures/food-undo/released-build60/food/inventory.dart",
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    {
+      "path": "test/fixtures/food-undo/released-build60/food/food_record.dart",
+      "bytes": 5623,
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    {
+      "path": "test/fixtures/food-undo/released-build60/food/food_store.dart",
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    {
+      "path": "test/fixtures/food-undo/released-build60/food/food_import.dart",
+      "bytes": 6286,
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305"
+    },
+    {
+      "path": "test/fixtures/food-undo/released-build60/storage/profile_food_intents.dart",
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    }
+  ],
+  "independent_checks": {
+    "real_core_autocrlf_true_checkout_index_to_temporary_prefix": "PASS1test verifies five source lengths/hashes and mixed canonical packet rawbytes",
+    "exact_original_released_source_comparison": "All five frozen source bytes equal git show3d671c20c6a1f6bdc2a2082f9a00e820c34b8050 original paths",
+    "application_native_version_fixture_assertions_delta": "ZERO since failed source d38",
+    "Python39_AST": "PASS",
+    "source_hashes_before_after": "Unchanged"
+  },
+  "root_red_evidence": "/tmp/food-build62-windows-fixture-checkout-red.log reproduces20925!=20285 before attribute fix; reviewer inspected it but did not mutate repo to rerun RED",
+  "must_fix": [],
+  "remaining_gates": [
+    "Fresh complete Windows hosted unit run must pass exact raw-length/hash fixture checks",
+    "Fresh full candidate Linux/Windows/Android +actual installed Flatpak lifecycle gates",
+    "Exact signedAPK/static original-artifact review and parent Android native acceptance before publication"
+  ],
+  "limits": [
+    "Actual Git conversion regression executed on Linux with core.autocrlf=true; not Windows native runtime",
+    "No fixture/hash regeneration or normalization, history rewrite, app/source change or repo edit by reviewer",
+    "No OS package installation, user-data operations or old artifact deletion",
+    "Raw full failed Windows job log independently retained separately; artifact downloads/signing/publication not performed"
+  ],
+  "supporting_log_sha256": "c88d2403391304b1499a3dd6437a1d1ea785a3d507be21f0d12703058220a154",
+  "publication_ready": false
+}

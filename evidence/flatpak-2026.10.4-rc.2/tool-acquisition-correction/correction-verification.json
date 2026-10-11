@@ -1,0 +1,43 @@
+{
+  "base_commit": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+  "failed_candidate": 38119736399,
+  "failed_linux_job": 114411832002,
+  "observed_failure": "Pinned libxmlb2 would downgrade runner library and remove fwupd; apt refused -y without --allow-downgrades, exit100 before Flutter setup.",
+  "failure_log_source": "Official GitHub app fetch_workflow_job_logs; gh redirected endpoint403, decoded official app log succeeded",
+  "correction": "Same six audited exact packages; download size/SHA verification; unprivileged data-only extraction; tool-child-only LD_LIBRARY_PATH; no host package changes",
+  "source_files": {
+    ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+    "packaging/linux/build-flatpak.sh": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf",
+    "packaging/linux/prepare_appstream_tools.py": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052",
+    "tool/test_flatpak_tool_acquisition.py": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
+    "design/dependencies.md": "9ddf5abae6dfb4b16f1985eddec0e408ff5ec20858bda7051836abb46643a620"
+  },
+  "historical_audit_manifest_sha256": "d959c12706623e088efe43816e44eac63eff3767e613ea0cf1c54ca1c7c072e1",
+  "tests": {
+    "new_acquisition": {
+      "passed": 8,
+      "linux_wrapper_skip_on_windows": true
+    },
+    "retained_linux_packaging": {
+      "passed": 12
+    },
+    "retained_installer_regression": {
+      "passed": 5
+    },
+    "actual_adapter": "downloaded/verified/extracted all six with no installation; runtime AppStream1.0.2 and extracted library loading verified",
+    "actual_metadata": "validator/composer via generated wrapper both pass; matching catalog+five icons verifier passes"
+  },
+  "remaining_gates": [
+    "Fresh combined candidate complete CI, actual Flatpak bundle and installed catalog/private-XDG/lifecycle gates",
+    "Normal exact native acceptance/publication gates"
+  ],
+  "application_and_payload_source_changes": false,
+  "existing_audit_receipts_rewritten": false,
+  "host_installation_or_live_data_changes": false,
+  "independent_correction_review": {
+    "verdict": "ACCEPT_ISOLATED_AUDITED_APPSTREAM_ACQUISITION_CORRECTION",
+    "receipt": "independent-review/independent-isolated-tool-correction-review.json",
+    "sha256": "bd06d5f27d0d85bb76ca8f0a169769399f9e7d3e5032b821af2dde215244f3c3",
+    "must_fix": []
+  }
+}

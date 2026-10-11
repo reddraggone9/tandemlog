@@ -1,0 +1,14 @@
+test_autocrlf_checkout_preserves_released_reader_and_packet_bytes (tool.test_food_fixture_checkout.FoodFixtureCheckout.test_autocrlf_checkout_preserves_released_reader_and_packet_bytes) ... FAIL
+
+======================================================================
+FAIL: test_autocrlf_checkout_preserves_released_reader_and_packet_bytes (tool.test_food_fixture_checkout.FoodFixtureCheckout.test_autocrlf_checkout_preserves_released_reader_and_packet_bytes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_food_fixture_checkout.py", line 26, in test_autocrlf_checkout_preserves_released_reader_and_packet_bytes
+    self.assertEqual(len(data), entry['bytes'], path.as_posix())
+AssertionError: 20925 != 20285 : test/fixtures/food-undo/released-build60/food/inventory.dart
+
+----------------------------------------------------------------------
+Ran 1 test in 0.005s
+
+FAILED (failures=1)

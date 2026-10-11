@@ -2,8 +2,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 4366,
-      "sha256": "6ecf24d939cac6c34755302efbfdbd702e9708335a6198eedcf941b50257d095"
+      "bytes": 5924,
+      "sha256": "dd9e4665d929bfbe8983fe76c0f543ff4199f3861fa0270648eb27ac57854ca2"
     },
     {
       "path": "account/native5.log",
@@ -21,6 +21,31 @@
       "sha256": "ffc21ec30de71076b4db2b6349a61e60ccc5d858757d0f4e70168f6c7f571ec9"
     },
     {
+      "path": "candidate-corrections/all-tool-policies.log",
+      "bytes": 608,
+      "sha256": "7e10a364ed8caf740b4488ce3ebd06a52dc8b519d335912b250855e2e4496c60"
+    },
+    {
+      "path": "candidate-corrections/checkout-green.log",
+      "bytes": 290,
+      "sha256": "c88d2403391304b1499a3dd6437a1d1ea785a3d507be21f0d12703058220a154"
+    },
+    {
+      "path": "candidate-corrections/checkout-red.log",
+      "bytes": 998,
+      "sha256": "8f2f94845e92ccb7bcaa99785550f65e0bf1c6bd1fa8c4eac73d76c4b4aa39c9"
+    },
+    {
+      "path": "candidate-corrections/failed-windows-provider-decoded.log",
+      "bytes": 248851,
+      "sha256": "79257c205d124d8d46c1db8cb0eb28a93d1c30e236a59d7d4ccf941c4a8e79ae"
+    },
+    {
+      "path": "candidate-corrections/windows-fixture-correction.json",
+      "bytes": 1084,
+      "sha256": "fa0fa1a79110c10ad3354409de2295108175dd7ff1195bb946f48d07c404cfcc"
+    },
+    {
       "path": "changed-native/initial13.log",
       "bytes": 13512,
       "sha256": "f870e1b19cc2183a1fde336103b2ed5e5c418d92c93d918f52b20f3de0a79b7f"
@@ -29,6 +54,11 @@
       "path": "changed-native/source.sha256",
       "bytes": 375,
       "sha256": "78eb3bf34ed60df5b7e822d319a72b477348a530c4ed9bdf297d9b468e40d9f6"
+    },
+    {
+      "path": "corrected-candidate-source-inventory.json",
+      "bytes": 55938,
+      "sha256": "ba5c1e3d10367355fd34b5f187962b807801cc4a6803b113a1f156e47aebc281"
     },
     {
       "path": "demos/food-undo/exit-code.txt",
@@ -734,6 +764,11 @@
       "path": "reviews/host-ui.json",
       "bytes": 12430,
       "sha256": "709ca9470948dea91a9503ce344eef62017afdc1c95c5cef3f746dec52551f09"
+    },
+    {
+      "path": "reviews/independent-fixture-checkout-correction-review.json",
+      "bytes": 3997,
+      "sha256": "cc9a8a80a8007a17339323864106e23b1565cfa5e0e3a344291969fc7a3a7eed"
     },
     {
       "path": "reviews/search-label-padding-addendum.json",

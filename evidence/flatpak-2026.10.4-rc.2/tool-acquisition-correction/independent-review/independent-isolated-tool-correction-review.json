@@ -1,0 +1,56 @@
+{
+  "reviewed_at_utc": "2026-10-11T07:07:25.217097+00:00",
+  "verdict": "ACCEPT_ISOLATED_AUDITED_APPSTREAM_ACQUISITION_CORRECTION",
+  "base": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+  "failed_run": 38119736399,
+  "failed_linux_job": 114411832002,
+  "source_files": {
+    ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+    "packaging/linux/build-flatpak.sh": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf",
+    "packaging/linux/prepare_appstream_tools.py": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052",
+    "tool/test_flatpak_tool_acquisition.py": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
+    "design/dependencies.md": "9ddf5abae6dfb4b16f1985eddec0e408ff5ec20858bda7051836abb46643a620"
+  },
+  "finding_resolved": "Avoid libxmlb downgrade/fwupd removal by executing the same audited six-package closure extracted privately, rather than modifying host packages",
+  "independent_checks": {
+    "Linux_focused_tests": 20,
+    "new_acquisition_tests": 8,
+    "Python39_syntax": "Both new files pass AST feature_version3.9",
+    "Windows_discovery_simulation": "7 portable cases pass, only actual Linux shebang wrapper case skipped; simulation is not Windows runtime",
+    "actual_acquisition": "All six official exact-size/SHA archives downloaded and data-only extracted using frozen adapter; no install/hooks",
+    "actual_runtime": "AppStream1.0.2; ldd exact extracted AppStream/XMLB/Snowball paths required before CLI acceptance",
+    "actual_metadata": "Generated wrapper validator/composer --no-net pass; catalog name/appID/five actual cachedicons pass",
+    "parent_environment": "Process environment unchanged around acquisition and wrapper subprocesses",
+    "source_hashes": "Five frozen file hashes unchanged before/after"
+  },
+  "scope": [
+    "Unprivileged download allowlist, exact size/hash checks before any dpkg-deb command, metadata identity, data-only extraction",
+    "Wrapper quotes absolute private root safely, exact CLI/composer delegation, extracted LD_LIBRARY_PATH only in tool child",
+    "GITHUB_PATH adds only wrapper bin after successful runtime closure verification; no global LD_LIBRARY_PATH or application/runtime source changes",
+    "Source-bound receipts distinguish extracted tools from installed Flatpak lifecycle; original audit receipts retained"
+  ],
+  "must_fix": [],
+  "remaining_gates": [
+    "Fresh complete candidate full Linux/Windows/Android gate matrix",
+    "Actual built/exported/installed Flatpak catalog/privateXDG/oneDB/lifecycle and exact original artifact checks",
+    "Independent resolution and rerun of separate Windows literal-fixture rawbyte failure",
+    "Parent exact signedAPK Android native acceptance and normal editorial/publication gates"
+  ],
+  "limits": [
+    "No OS packages installed, maintainer hooks executed or system libraries changed",
+    "No actual Flatpak/Bazaar/Windows/Android runtime acceptance by reviewer",
+    "No repo edits, app/source updates, user-data operations or old artifact deletion",
+    "Inherited GTK/render/compression host OS libraries remain original environment; audited newly selected native closure is isolated and required"
+  ],
+  "supporting_sha256": {
+    "source-hashes-after.json": "3bcdd291486e035d3d1a066e55dfb4b453dccea7d21ecbb453f0d7cdc4e08703",
+    "independent-windows-discovery-simulation.log": "3db5044ec90ad3ed3ca4c64231678098f7704b9f15d50ef097ae592eaf9f46fd",
+    "independent-catalog.json": "5b2b0b37859bf585941802021000a13475d4ee073b60f07f30385a89fdcaa772",
+    "independent-composition.log": "9d6869b20c969afb65c907e9500ef13b600ec3387d29f665201a69baf927b4af",
+    "independent-validation.log": "6c0565d7c39e8bb933da619c3865c9259c4c92c9d6642b313aadd664515fa24b",
+    "independent-acquisition.log": "16eefd60ed3c37c7a0e451f7913d6dff462209c6ed83c1934d9f38c543828cb3",
+    "independent-tests.log": "9ed1f3da172d652713e48625f8cac48cfc5386e39762f356ea28a93cacde67da",
+    "source-hashes-before.json": "3bcdd291486e035d3d1a066e55dfb4b453dccea7d21ecbb453f0d7cdc4e08703"
+  },
+  "publication_ready": false
+}

@@ -1,0 +1,6 @@
+test_autocrlf_checkout_preserves_released_reader_and_packet_bytes (tool.test_food_fixture_checkout.FoodFixtureCheckout.test_autocrlf_checkout_preserves_released_reader_and_packet_bytes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.004s
+
+OK
