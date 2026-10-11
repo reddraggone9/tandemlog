@@ -30,11 +30,24 @@ appears only in Retained and keeps its missing-date cue. Keep all group headers,
 guidance and rows in the scroller at narrow/enlarged-text layouts.
 
 Replace persistent Stock/Retained/Deleted tabs with a toolbar Filter control
-matching Tasks. Retain selected-view indication, a meaningful filter badge,
-accessible responsive labels and touch targets. Retention-reason assignment and
-filter autocomplete remain available. Normal search covers all active food and
-ignores ordinary view/reason filters; Deleted is an explicit separate search
-scope and never leaks into normal search. Settings sits in the existing account
+matching Tasks. The approved toolbar parity follow-up shares action sizing,
+vertical centers, header insets and progress placement between sections. Wide
+Add/Filter use the existing Tasks outlined treatment; active filters use its
+small dot rather than Food numeric counts, without moving controls. Retain
+selected-view indication, accessible active-filter labels, responsive text and
+full targets. Pure presentation helpers own the common control policy while
+Stock/Retained/Deleted and Task filter contents remain distinct. Retention-reason
+assignment and filter autocomplete remain available. Lee's subsequent explicit
+search correction supersedes the separate Deleted search scope: **Search food**
+always searches all matching active, retained, undated and deleted food, pausing
+every saved view/reason filter and its active dot. Active results preserve their
+usual order. Deleted matches follow in a separate sticky **Deleted** section,
+using the existing Tasks native heading behavior and deletion-recency ordering.
+They have muted, struck-through titles and explicit Restore actions; searching
+never restores them. Active/deleted containers with identical descriptions are
+grouped separately and keep distinct expansion state. Clearing search returns
+to the saved view/reasons; changing Filter during search changes that saved view
+without narrowing the current matches. Settings sits in the existing account
 menu as in Tasks. Food retains app-wide user switching without adding Food user
 attribution or user-specific inventory filters.
 
@@ -65,6 +78,14 @@ superseded; existing undated reading and projection remain supported.
 
 ## Alternatives and consequences
 
+Keeping Deleted as a separate search scope concealed matching food and diverged
+from Tasks' inclusive search. Mixing active/deleted containers by description
+would give a group the wrong commands; status partitioning precedes descriptive
+grouping. Reusing the native pinned heading avoids a separate overlay and keeps
+accessibility text measurement and push-off behavior consistent with Tasks.
+This is a projection/presentation change; canonical operations, clocks, IDs and
+historical meanings remain unchanged.
+
 Keeping the separate Inbox tab hides everyday attention items behind navigation.
 Duplicating retained undated entries in Stock would contradict retention's
 established exclusion and show the same physical container twice. A sidebar or
@@ -79,3 +100,14 @@ contents, dates, legacy certainty, operation bytes and history are retained.
 Revisit after actual desktop/Android use if missing-date retained food is hard
 to find, view state/search scope is unclear, or enlarged-text controls obstruct
 rows. Stable promotion still needs Lee's acceptance.
+
+
+## Subsequent approved RC3 refinements
+
+Wide Undo also carries its label when other toolbar labels fit. Shared date
+fields use the same internal label/value inset as ordinary inputs; the Tasks
+responsive date-row measurement includes that inset. Suggestions, Brand/Location
+filters, exact-container bulk editing and conservative expansion cleanup are
+recorded in [ADR0019](0019-food-field-editing-and-contents-defaults.md).
+Lee's explicit RC-only contents removal supersedes the earlier unspecified
+state; numeric partials and measured amounts remain supported.

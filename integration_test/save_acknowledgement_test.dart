@@ -213,6 +213,9 @@ void registerSaveAcknowledgementTests() {
       final store = await openNativeFixtureStore(
         folder,
         '${root.path}/private',
+        // Standalone editor receipt fixture deliberately covers native task
+        // creation before a baseline, not application workspace admission.
+        initializeNewWorkspaceText: false,
       );
       TaskTextSession? session;
       var closes = 0;

@@ -135,7 +135,12 @@ void registerCompletionFocusTests() {
               for (final line in await file.readAsLines()) {
                 final event = jsonDecode(line) as Map;
                 if (event['entity'] == task &&
-                    event['type'] == 'task.completed') {
+                    const {
+                      'task.completed',
+                      'task.completedWithText',
+                      'task.completedWithChecklist',
+                      'task.completedKeepingSuccessor',
+                    }.contains(event['type'])) {
                   count++;
                 }
               }

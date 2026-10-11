@@ -80,48 +80,30 @@ class FoodDetails {
   }
 }
 
-/// Exact rational contents. Unknown is distinct from full; no unit conversion.
+/// Exact numeric contents; Full is 1/1 independently of nominal container size.
 class Contents {
-  const Contents.unknown() : numerator = null, denominator = null, unit = null;
-  const Contents.fraction(int this.numerator, int this.denominator)
-    : unit = null;
-  const Contents.amount(
-    int this.numerator,
-    int this.denominator,
-    String this.unit,
-  );
-  final int? numerator, denominator;
+  const Contents.fraction(this.numerator, this.denominator) : unit = null;
+  const Contents.amount(this.numerator, this.denominator, String this.unit);
+  final int numerator, denominator;
   final String? unit;
-  bool get full =>
-      unit == null && numerator != null && numerator == denominator;
-  bool get unknown => numerator == null;
+  bool get full => unit == null && numerator == denominator;
   void validate() {
-    if (unknown) {
-      if (denominator != null || unit != null) _invalid('unknown contents');
-      return;
-    }
-    if (numerator! < 0 ||
-        numerator! > 1000000000 ||
-        denominator == null ||
-        denominator! < 1 ||
-        denominator! > 1000000 ||
-        (unit == null && numerator! > denominator!)) {
+    if (numerator < 0 ||
+        numerator > 1000000000 ||
+        denominator < 1 ||
+        denominator > 1000000 ||
+        (unit == null && numerator > denominator)) {
       _invalid('contents');
     }
     if (unit != null) _text(unit!, 40, required: true);
   }
 
   Map<String, dynamic> toJson() => {
-    'numerator': numerator == null
-        ? null
-        : numerator! ~/ numerator!.gcd(denominator!),
-    'denominator': numerator == null
-        ? null
-        : denominator! ~/ numerator!.gcd(denominator!),
+    'numerator': numerator ~/ numerator.gcd(denominator),
+    'denominator': denominator ~/ numerator.gcd(denominator),
     'unit': unit,
   };
   String get label {
-    if (unknown) return 'Unspecified contents';
     if (full) return 'Full';
     final reduced = toJson(),
         n = reduced['numerator'] as int,
@@ -145,11 +127,6 @@ class Contents {
 
   factory Contents.fromJson(Map<String, dynamic> j) {
     _keys(j, {'numerator', 'denominator', 'unit'});
-    if (j['numerator'] == null) {
-      final v = const Contents.unknown();
-      if (j['denominator'] != null || j['unit'] != null) _invalid('contents');
-      return v;
-    }
     if (j['numerator'] is! int ||
         j['denominator'] is! int ||
         (j['unit'] != null && j['unit'] is! String)) {
@@ -426,13 +403,10 @@ class FoodGroup {
     if (contentsConflict) {
       return '${containers.length} containers · contents need review';
     }
-    if (containers.every((e) => e.contents.unknown)) {
-      return '× ${containers.length}';
-    }
     final full = containers.where((e) => e.contents.full).length;
     final rest = containers.where((e) => !e.contents.full).toList();
     if (rest.isEmpty) return '$full full';
-    if (rest.length == 1 && !rest.first.contents.unknown) {
+    if (rest.length == 1) {
       return '${full > 0 ? '$full full + ' : ''}1 container ${rest.first.contents.unit == null ? rest.first.contents.label.replaceFirst(' remaining', ' full') : rest.first.contents.label}';
     }
     return '${containers.length} containers · ${full > 0 ? '$full full · ' : ''}inspect contents';
@@ -448,6 +422,15 @@ class FoodState {
   List<FoodContainer> get deleted =>
       containers.where((e) => e.deleted).toList();
   List<FoodGroup> get groups => _group(active);
+  List<String> get brands => _fieldValues((details) => details.brand);
+  List<String> get locations => _fieldValues((details) => details.location);
+  List<String> _fieldValues(String Function(FoodDetails) field) =>
+      (containers
+          .map((item) => field(item.details))
+          .where((value) => value.trim().isNotEmpty)
+          .toSet()
+          .toList()
+        ..sort());
   List<String> get reasons =>
       (active
           .map((e) => e.details.retention)
@@ -459,6 +442,8 @@ class FoodState {
     FoodView view, {
     String search = '',
     Set<String> reasons = const {},
+    Set<String> brands = const {},
+    Set<String> locations = const {},
   }) {
     final terms = search
         .toLowerCase()
@@ -466,31 +451,44 @@ class FoodState {
         .split(RegExp(r'\s+'))
         .where((s) => s.isNotEmpty)
         .toList();
-    final values = (view == FoodView.deleted ? deleted : active).where((e) {
-      if (terms.isNotEmpty) {
-        final text = [
-          e.details.name,
-          e.details.brand,
-          e.details.retention,
-          e.details.location,
-          e.details.size,
-        ].join(' ').toLowerCase();
-        return terms.every(text.contains);
-      }
-      return switch (view) {
-        FoodView.inventory =>
-          e.details.expiry != null && e.details.retention.isEmpty,
-        FoodView.inbox =>
-          e.details.expiry == null && e.details.retention.isEmpty,
-        FoodView.retained =>
-          e.details.retention.isNotEmpty &&
-              (reasons.isEmpty || reasons.contains(e.details.retention)),
-        FoodView.deleted => true,
-      };
-    });
-    final result = _group(values);
-    if (view == FoodView.deleted) {
-      result.sort((a, b) {
+    final values =
+        (terms.isNotEmpty
+                ? containers
+                : (view == FoodView.deleted ? deleted : active))
+            .where((e) {
+              if (terms.isNotEmpty) {
+                final text = [
+                  e.details.name,
+                  e.details.brand,
+                  e.details.retention,
+                  e.details.location,
+                  e.details.size,
+                ].join(' ').toLowerCase();
+                return terms.every(text.contains);
+              }
+              if ((brands.isNotEmpty && !brands.contains(e.details.brand)) ||
+                  (locations.isNotEmpty &&
+                      !locations.contains(e.details.location))) {
+                return false;
+              }
+              return switch (view) {
+                FoodView.inventory =>
+                  e.details.expiry != null && e.details.retention.isEmpty,
+                FoodView.inbox =>
+                  e.details.expiry == null && e.details.retention.isEmpty,
+                FoodView.retained =>
+                  e.details.retention.isNotEmpty &&
+                      (reasons.isEmpty ||
+                          reasons.contains(e.details.retention)),
+                FoodView.deleted => true,
+              };
+            });
+    // Group each status separately: equal descriptions never let a deleted
+    // container inherit an active group's commands (or vice versa).
+    final result = _group(values.where((e) => !e.deleted));
+    final removed = _group(values.where((e) => e.deleted));
+    if (removed.isNotEmpty) {
+      removed.sort((a, b) {
         FoodContainer latest(FoodGroup group) => group.containers.reduce(
           (left, right) => _compareDeletions(left, right) >= 0 ? left : right,
         );
@@ -500,7 +498,7 @@ class FoodState {
             : a.containers.first.id.compareTo(b.containers.first.id);
       });
     }
-    return result;
+    return [...result, ...removed];
   }
 }
 
@@ -594,7 +592,7 @@ FoodState projectFood(Iterable<FoodOperation> delivery) {
     // including work that arrives after the Undo.
     if (retracted.contains(seed.id) && !histories.containsKey(id)) continue;
     var details = seed.details!,
-        contents = seed.contents ?? const Contents.unknown(),
+        contents = seed.contents ?? const Contents.fraction(1, 1),
         deletedOrder = 0;
     final deletions = <String>{},
         restored = <String>{},

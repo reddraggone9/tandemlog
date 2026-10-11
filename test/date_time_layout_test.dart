@@ -82,7 +82,7 @@ void registerDateTimeLayoutTests({
               (measure('2026-10-04') > measure('YYYY-MM-DD')
                   ? measure('2026-10-04')
                   : measure('YYYY-MM-DD')) +
-              60;
+              70;
           final boundary =
               (12 +
                       (bulk ? 96 : 0) +

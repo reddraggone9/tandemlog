@@ -1,3 +1,4 @@
+import 'support/toolbar_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -7,7 +8,6 @@ import 'food_expiry_guidance_test.dart' show selectFoodView;
 void main() {
   final summaries = <String, (List<Contents>, String?)>{
     'single known full': ([const Contents.fraction(1, 1)], null),
-    'single unknown': ([const Contents.unknown()], '× 1'),
     'single partial': ([const Contents.fraction(1, 3)], '1 container ⅓ full'),
     'multiple full': (
       [const Contents.fraction(1, 1), const Contents.fraction(1, 1)],
@@ -49,8 +49,8 @@ void main() {
         expect(find.text('1 full'), findsNothing);
         await tester.tap(find.byTooltip('Inspect Rice containers'));
         await tester.pumpAndSettle();
-        expect(find.text('1 container · 1 lb · Freezer'), findsOneWidget);
-        expect(find.textContaining(' · Full'), findsOneWidget);
+        expect(find.text('1 lb · Freezer'), findsOneWidget);
+        expect(find.text('Full'), findsOneWidget);
       } else {
         expect(find.text(expected), findsOneWidget);
       }
@@ -87,7 +87,7 @@ void main() {
         expect(find.text('7 full + 1 container ⅓ full'), findsOneWidget);
         await tester.tap(find.byTooltip('Inspect Rice containers'));
         await tester.pumpAndSettle();
-        expect(find.text('8 containers · 1 lb'), findsOneWidget);
+        expect(find.text('1 lb'), findsOneWidget);
         expect(tester.takeException(), isNull);
       }
       addTearDown(tester.view.resetPhysicalSize);
@@ -105,7 +105,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Oat milk'), findsOneWidget);
     final undo = find.byKey(const ValueKey('undo-food-action'));
-    expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+    expect(toolbarButton(tester, undo).onPressed, isNotNull);
     await tester.tap(undo);
     await tester.pumpAndSettle();
     expect(find.text('Oat milk'), findsNothing);

@@ -1,0 +1,9 @@
+{
+  "lib/food/food_page.dart": "472f54189af60e6bcd04c6e7ee28479556a31a257aebae00a241d4e2f150b461",
+  "lib/food/inventory.dart": "c5c5cb73f7b50c12a5dcd582a63dedd3fc272161acd31f9075aab9843a479b58",
+  "lib/presentation/task_toolbar.dart": "4a1052035369038feb75f86cb7a9e4158eb29572be3190b4dc28d3c88411306a",
+  "lib/presentation/toolbar_action.dart": "9f6c6773bfa042aa10575f8660ef83827976dfe5ba2787677c69eebb57e5e837",
+  "integration_test/food_group_action_geometry_workflow_test.dart": "f7a21bda43dc3286bc2762140ca45e484109e7f2b441a24afbfe3fb4367149de",
+  "test/food_group_action_geometry_test.dart": "8b54028e9cb767b3ff0a7fea903ccc7f85f8daf66cfbe8f9fd8e8057d031aea9",
+  "pubspec.yaml": "9f7bca14b738b7a060b74537968a5e56b97fd1965ecc3dc8c21e844b7ec0e13d"
+}

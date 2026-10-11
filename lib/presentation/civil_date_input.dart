@@ -41,14 +41,12 @@ class CivilDateInput extends StatelessWidget {
     enabled: enabled,
     decoration: InputDecoration(
       labelText: label,
-      border: compactDecoration
-          ? const OutlineInputBorder(gapPadding: 2)
-          : null,
+      border: compactDecoration ? const OutlineInputBorder() : null,
       suffixIconConstraints: compactDecoration
           ? const BoxConstraints(minWidth: 48, minHeight: 48)
           : null,
       contentPadding: compactDecoration
-          ? const EdgeInsets.fromLTRB(4, 16, 0, 16)
+          ? const EdgeInsetsDirectional.fromSTEB(12, 16, 0, 16)
           : null,
       suffixIcon: IconButton(
         tooltip: 'Choose $label',

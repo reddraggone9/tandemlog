@@ -50,8 +50,14 @@ the host records/pops complete confirmed actions and retains pending save/invers
 packets. `FoodStore` owns immutable preparation, admission, exact-byte recovery
 and selective durable inverses; the pure Food projection owns retraction meaning.
 The histories remain separate from Tasks. See[ADR0018](decisions/0018-food-session-undo.md).
-Shared `presentation/task_toolbar.dart` owns responsive geometry without module
-semantics. `presentation/civil_date_input.dart` owns date typing/picker presentation
+Shared `presentation/task_toolbar.dart` owns responsive geometry and header
+insets without module semantics. `presentation/toolbar_action.dart` owns common
+20px Add/Filter glyphs,24px Undo, minimum48px action targets, outlined wide
+actions and the existing6px active-filter dot. Native popup menus remain the
+sole input/focus/semantic owner of their decorated trigger. The host supplies
+progress state, placed after either section header; section labels are measured
+as actually rendered. Module callbacks, filters, counts and identity eligibility
+retain their own inputs. `presentation/civil_date_input.dart` owns date typing/picker presentation
 and focus; Task/Food editors retain their distinct validation and draft ownership.
 
 The isolated checklist component keeps membership/order, item kind and durable
@@ -93,3 +99,16 @@ Model-derived content is untrusted input. A later ingestion adapter produces a p
 The app-wide profile owner released in stable2026.10.3 serializes workspace and settings work through one SQLite connection; task namespaces borrow it explicitly. Startup performs source-backed migration before opening adapters, and failed workspace switches retain prior UI/importer/Undo ownership. See [ADR0013](decisions/0013-app-wide-local-database.md) for the integrated local persistence boundary and completed acceptance. The next preview's Flatpak packaging correction uses its private XDG profile by default, with no automatic host-profile migration.
 
 At each milestone, review dependencies, duplicated rules, error/recovery paths, UX consistency and actual performance. For every module addition, review cross-module transactions and compatibility before UI expansion. Record refactors and bounded debt; do not use “future flexibility” to justify unused infrastructure.
+
+Food search is a read-only `FoodState.view` projection over all statuses when a
+query is nonempty. It partitions active/deleted containers before descriptive
+grouping, preserving active ordering and the existing deleted recency comparator.
+The page uses the shared native pinned heading inside `SliverMainAxisGroup` for
+its separate Deleted results; row commands follow the group's actual status,
+never the saved view. Search pauses all saved filters without mutating them.
+No record schema, replay, persistence, transport or native dependency changes.
+
+
+Food selection and Brand/Location suggestions/filters are page-local projections. Bulk Save captures an immutable physical-container list and explicit field names, then uses the existing host command, FoodStore batch append and single Undo receipt. It introduces no catalog, record format or wildcard update. The page receives the admitted FoodStore identity solely to invalidate workspace-local selections and guard open drafts.
+
+The RC-only unspecified contents branch is removed. Numeric fraction/amount encoding and existing frozen numeric record hashes are unchanged; omitted Add contents and import-builder contents default Full. All-null payloads fail decoding rather than changing signed bytes. Old import vectors remain frozen as rejection evidence; a new independently generated Full vector covers current identities and hashes.

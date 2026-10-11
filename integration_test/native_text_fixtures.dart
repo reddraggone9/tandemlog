@@ -15,10 +15,17 @@ Future<TaskStore> openNativeFixtureStore(
   LogFolder folder,
   String privatePath, {
   DateTime Function()? now,
+  bool initializeNewWorkspaceText = true,
 }) async {
   final engine = NativeTextEngine();
   addTearDown(engine.dispose);
-  return TaskStore.open(folder, privatePath, textEngine: engine, now: now);
+  return TaskStore.open(
+    folder,
+    privatePath,
+    textEngine: engine,
+    now: now,
+    initializeNewWorkspaceText: initializeNewWorkspaceText,
+  );
 }
 
 extension NativeTaskFixtures on TaskStore {

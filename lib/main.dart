@@ -20,6 +20,7 @@ import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
 import 'presentation/task_entry_area.dart';
 import 'presentation/task_toolbar.dart';
+import 'presentation/toolbar_action.dart';
 import 'presentation/section_menu.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
@@ -409,6 +410,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       profileDatabase: profileDatabase,
       writerIdentity: settings!.writer,
       textEngine: textEngine ??= NativeTextEngine(),
+      initializeNewWorkspaceText: true,
       onTiming: (phase, ms) => debugPrint('TANDEMLOG_PHASE $phase=$ms'),
     );
     if (!mounted) {
@@ -700,6 +702,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             identityMenu: (child) => _identityMenu(users, child: child),
             showActions: false,
           ),
+          toolbarProgress(busy: busy && !awaitingCompletionConfirmation),
           Expanded(
             child: Center(
               child: Padding(
@@ -764,6 +767,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           child: FoodInventoryPage(
             key: foodPageKey,
             state: origin.state,
+            workspaceIdentity: origin,
+            progress: toolbarProgress(
+              busy: busy && !awaitingCompletionConfirmation,
+            ),
             sectionMenu: _sectionMenu,
             userName: name,
             identityMenu: (child) => _identityMenu(users, child: child),
@@ -1040,17 +1047,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     ),
                   ),
                 const Divider(height: 32),
-                if (store != null && !store!.sharedTextInitialized)
-                  ListTile(
-                    key: const ValueKey('initialize-shared-text'),
-                    contentPadding: EdgeInsets.zero,
-                    title: const Text('Set up shared text editing'),
-                    trailing: const Icon(Icons.chevron_right),
-                    enabled: !busy,
-                    onTap: !busy
-                        ? () => Navigator.pop(ctx, 'initialize-text')
-                        : null,
-                  ),
                 ListTile(
                   contentPadding: EdgeInsets.zero,
                   title: const Text('Licenses'),
@@ -1077,8 +1073,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       await _act(() => widget.folderActions.open(location!));
     } else if (action == 'verify') {
       await _checkDataIntegrity();
-    } else if (action == 'initialize-text') {
-      await _initializeSharedText();
     } else if (action == 'licenses') {
       if (mounted) {
         showLicensePage(context: context, applicationName: 'Tandemlog');
@@ -1086,38 +1080,6 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     } else {
       await _setAppearance(Appearance.values.byName(action));
     }
-  }
-
-  Future<void> _initializeSharedText() async {
-    final origin = store;
-    if (origin == null || busy || !await _closeEditor() || !mounted) return;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Set up shared text editing'),
-        content: const Text(
-          'Do this once on one device after its folder has received the tasks '
-          'you want to include. Your sync app will share this setup with your '
-          'other devices. Later text edits from an older app remain in the '
-          'folder but do not replace shared text. Newly created tasks can '
-          'already be edited offline.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx, false),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Set up'),
-          ),
-        ],
-      ),
-    );
-    if (confirmed != true || !mounted || !identical(store, origin)) return;
-    await _act(() async {
-      await origin.initializeSharedText();
-    });
   }
 
   Future<void> _checkDataIntegrity() async {
@@ -1972,7 +1934,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (openedCapture != null) origin.releaseTextCapture(openedCapture);
         status = origin.sharedTextInitialized
             ? failureMessage(e)
-            : 'Set up shared text editing in Settings to edit this task’s title and notes.';
+            : 'This workspace has no verified shared text setup. Restore its initialized history before editing.';
       }
       if (!mounted ||
           !identical(store, origin) ||
@@ -3905,49 +3867,48 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   child: Column(
                     children: [
                       if (!foodVisible && sharedSafetyError == null)
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                          child: TaskToolbar(
-                            sectionMenu: store == null ? null : _sectionMenu,
-                            checklistMenu: _checklistDisplayToggle(),
-                            userName:
-                                users
-                                        .where((entry) => entry['id'] == user)
-                                        .firstOrNull?['name']
-                                    as String?,
-                            count: taskView == null || user == null
+                        TaskToolbar(
+                          sectionMenu: store == null ? null : _sectionMenu,
+                          checklistMenu: _checklistDisplayToggle(),
+                          userName:
+                              users
+                                      .where((entry) => entry['id'] == user)
+                                      .firstOrNull?['name']
+                                  as String?,
+                          count: taskView == null || user == null
+                              ? null
+                              : _taskCount(showCompleted),
+                          countLabels: [_taskCount(false), _taskCount(true)],
+                          filter: taskView == null || user == null
+                              ? null
+                              : _taskFilter,
+                          identityMenu: (child) =>
+                              _identityMenu(users, child: child),
+                          undo: const SizedBox.shrink(),
+                          undoAction: (compact) => toolbarAction(
+                            compact: compact,
+                            label: 'Undo',
+                            iconSize: 24,
+                            key: const ValueKey('undo-task-action'),
+                            tooltip: undoHistory.latest == null
+                                ? 'Undo'
+                                : 'Undo ${undoHistory.latest!.label}',
+                            onPressed:
+                                busy ||
+                                    closingEditor ||
+                                    undoHistory.latest == null
                                 ? null
-                                : _taskCount(showCompleted),
-                            countLabels: [_taskCount(false), _taskCount(true)],
-                            filter: taskView == null || user == null
-                                ? null
-                                : _taskFilter,
-                            identityMenu: (child) =>
-                                _identityMenu(users, child: child),
-                            undo: IconButton(
-                              key: const ValueKey('undo-task-action'),
-                              tooltip: undoHistory.latest == null
-                                  ? 'Undo'
-                                  : 'Undo ${undoHistory.latest!.label}',
-                              onPressed:
-                                  busy ||
-                                      closingEditor ||
-                                      undoHistory.latest == null
-                                  ? null
-                                  : _undoLatest,
-                              icon: const Icon(Icons.undo),
-                            ),
-                            inputModeAction: store != null && user != null
-                                ? _taskInputModeControl
-                                : null,
+                                : _undoLatest,
+                            icon: const Icon(Icons.undo),
                           ),
+                          inputModeAction: store != null && user != null
+                              ? _taskInputModeControl
+                              : null,
                         ),
-                      SizedBox(
-                        height: 2,
-                        child: busy && !awaitingCompletionConfirmation
-                            ? const LinearProgressIndicator(minHeight: 2)
-                            : null,
-                      ),
+                      if (!foodVisible || store == null)
+                        toolbarProgress(
+                          busy: busy && !awaitingCompletionConfirmation,
+                        ),
                       if (error != null &&
                           (sharedSafetyError == null || keepSetupInputs))
                         Padding(
@@ -4373,30 +4334,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final label = captureMode ? 'Search' : 'Add';
     final tooltip = captureMode ? 'Search tasks (Ctrl+F)' : 'Add tasks';
     final key = ValueKey(captureMode ? 'open-search' : 'open-capture');
-    final icon = Icon(captureMode ? Icons.search : Icons.add, size: 20);
-    return compact
-        ? IconButton(
-            key: key,
-            visualDensity: VisualDensity.standard,
-            constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-            tooltip: tooltip,
-            onPressed: callback,
-            icon: icon,
-          )
-        : Tooltip(
-            message: tooltip,
-            child: OutlinedButton.icon(
-              key: key,
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(48, 48),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                visualDensity: VisualDensity.standard,
-              ),
-              onPressed: callback,
-              icon: icon,
-              label: Text(label),
-            ),
-          );
+    return toolbarAction(
+      key: key,
+      compact: compact,
+      tooltip: tooltip,
+      icon: Icon(captureMode ? Icons.search : Icons.add),
+      label: label,
+      onPressed: callback,
+    );
   }
 
   Future<void> _clearSearch() async {
@@ -4664,27 +4609,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         : _filtersActive
         ? 'Filter tasks · active filters'
         : 'Filter tasks';
-    final icon = Badge(
-      isLabelVisible: !searching && _filtersActive,
-      child: const Icon(Icons.filter_list, size: 20),
+    final icon = toolbarFilterIcon(active: !searching && _filtersActive);
+    return toolbarAction(
+      key: const ValueKey('task-filter'),
+      compact: compact,
+      tooltip: tooltip,
+      icon: icon,
+      label: 'Filter',
+      onPressed: searching ? null : _showFilters,
     );
-    return compact
-        ? IconButton(
-            key: const ValueKey('task-filter'),
-            tooltip: tooltip,
-            onPressed: searching ? null : _showFilters,
-            icon: icon,
-          )
-        : Tooltip(
-            message: tooltip,
-            child: OutlinedButton.icon(
-              key: const ValueKey('task-filter'),
-              style: OutlinedButton.styleFrom(minimumSize: const Size(48, 48)),
-              onPressed: searching ? null : _showFilters,
-              icon: icon,
-              label: const Text('Filter'),
-            ),
-          );
   }
 
   Widget _captureField() => Focus(

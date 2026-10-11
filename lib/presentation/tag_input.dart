@@ -20,6 +20,9 @@ class TagInput extends StatefulWidget {
     this.expandLabel = 'Expand tag options',
     this.collapseLabel = 'Collapse tag options',
     this.chipContext = 'tag filters',
+    this.valuePrefix = '#',
+    this.emptyLabel = 'No tags yet',
+    this.noMatchesLabel = 'No matching tags',
     this.queryKey = const ValueKey('tag-search'),
     this.queryErrorText,
     this.onSubmitQuery,
@@ -38,7 +41,10 @@ class TagInput extends StatefulWidget {
       clearLabel,
       expandLabel,
       collapseLabel,
-      chipContext;
+      chipContext,
+      valuePrefix,
+      emptyLabel,
+      noMatchesLabel;
   final Key queryKey;
   final bool Function()? onSubmitQuery;
   final ValueChanged<bool> onDropdownChanged;
@@ -316,9 +322,15 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
     }
 
     final resultHeights = matches.isEmpty && !_showCreate
-        ? [rowHeight(widget.tags.isEmpty ? 'No tags yet' : 'No matching tags')]
+        ? [
+            rowHeight(
+              widget.tags.isEmpty ? widget.emptyLabel : widget.noMatchesLabel,
+            ),
+          ]
         : [
-            ...matches.take(4).map((tag) => rowHeight('#$tag')),
+            ...matches
+                .take(4)
+                .map((tag) => rowHeight('${widget.valuePrefix}$tag')),
             if (_showCreate) rowHeight(_createLabel),
           ];
     final desired = math.min(200.0, resultHeights.reduce((a, b) => a + b));
@@ -361,8 +373,8 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
                         ? Center(
                             child: Text(
                               widget.tags.isEmpty
-                                  ? 'No tags yet'
-                                  : 'No matching tags',
+                                  ? widget.emptyLabel
+                                  : widget.noMatchesLabel,
                             ),
                           )
                         : ListView.builder(
@@ -406,9 +418,9 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
                                       : const SizedBox(width: 20),
                                   title: Tooltip(
                                     excludeFromSemantics: true,
-                                    message: '#$tag',
+                                    message: '${widget.valuePrefix}$tag',
                                     child: Text(
-                                      '#$tag',
+                                      '${widget.valuePrefix}$tag',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -434,11 +446,16 @@ class TagInputState extends State<TagInput> with WidgetsBindingObserver {
   Widget _chip(String tag) => InputChip(
     key: ValueKey('selected-tag-$tag'),
     label: Tooltip(
-      message: '#$tag',
+      message: '${widget.valuePrefix}$tag',
       excludeFromSemantics: true,
-      child: Text('#$tag', maxLines: 1, overflow: TextOverflow.ellipsis),
+      child: Text(
+        '${widget.valuePrefix}$tag',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
     ),
-    deleteButtonTooltipMessage: 'Remove #$tag from ${widget.chipContext}',
+    deleteButtonTooltipMessage:
+        'Remove ${widget.valuePrefix}$tag from ${widget.chipContext}',
     isEnabled: widget.enabled,
     onDeleted: widget.enabled ? () => _toggle(tag, consumeQuery: false) : null,
   );

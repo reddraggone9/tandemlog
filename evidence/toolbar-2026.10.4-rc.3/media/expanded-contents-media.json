@@ -1,0 +1,44 @@
+{
+  "description": "Matched synthetic native Linux GTK app screenshots, dark theme, 320px viewport, 200% text. Exact screenshot pixels cropped without retouching or scaling; labels added outside crops. Before source uses the same toolbar and geometry fixture but precedes the approved expanded-row cleanup. Neither screenshot contains user data.",
+  "inputs": [
+    {
+      "image": "expanded-contents-before-dark-320-200.png",
+      "sha256": "3aae0b8aaf96bf87b2dadb1d7e7c32b2f2faec293760ea6d0407b0f35010d47b",
+      "size": [
+        320,
+        1200
+      ],
+      "crop": [
+        16,
+        172,
+        304,
+        757
+      ]
+    },
+    {
+      "image": "expanded-contents-after-dark-320-200.png",
+      "sha256": "12ef43bf1b9d6d039e68f95943d3dc29eb60dccf5db8a39215e1a22325470a76",
+      "size": [
+        320,
+        1200
+      ],
+      "crop": [
+        16,
+        172,
+        304,
+        757
+      ]
+    }
+  ],
+  "output": "expanded-contents-before-after.png",
+  "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8",
+  "output_size": [
+    628,
+    645
+  ],
+  "source_provenance": {
+    "base_commit": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+    "before": "Recorded pre-cleanup uncommitted input hashes in density-before-inputs.json; not a released binary.",
+    "after": "Recorded native refinements runtime inputs in refinements-final-inputs.json; subsequent modal lifecycle correction does not change these contents rows."
+  }
+}

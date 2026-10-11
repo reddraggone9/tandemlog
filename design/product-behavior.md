@@ -4,8 +4,12 @@ The approved second capability is [food inventory](decisions/0014-food-inventory
 Its scope is separate from tasks. Its first experimental prerelease uses production
 navigation and the shared profile DB. The accepted next preview combines undated,
 unretained Inbox food at the top of Stock, keeps retained food exclusively
-Retained, and uses Filter for Stock/Retained/Deleted choices. Ordinary search
-matches all active food; Deleted remains an explicit separate scope. The account
+Retained, and uses Filter for Stock/Retained/Deleted choices. **Search food** matches all food regardless of saved Stock/Retained/Deleted or
+retention-reason filters. Active matches keep their ordinary ordering; deleted
+matches follow in a separate sticky **Deleted** group, ordered by deletion
+recency and visibly distinguished with explicit Restore actions. Equal active
+and deleted descriptions remain separate groups. Searching never restores food.
+Clearing search returns to the chosen view and reasons unchanged. The account
 menu retains app-wide user switching and Settings. Expiration date text uses
 local-calendar red/orange/yellow urgency thresholds with theme-readable tones.
 [Accepted Food refinement](decisions/0017-food-stock-and-toolbar-refinements.md)
@@ -36,7 +40,10 @@ The menu always names both sections and marks the current selection. Counts,
 filters, account identity and section actions retain their existing roles.
 Switching resolves any active editor draft first; choosing the current section
 leaves it alone. Food navigation and Settings remain available on its unavailable
-screen. [Approved rationale](decisions/0015-toolbar-section-navigation.md).
+screen. Both sections use matching toolbar action sizes and vertical alignment.
+Wide Add and Filter actions share an outlined style. Active filters use the same
+small dot plus an accessible active-filter description, without numeric badges
+or a layout shift; Food pauses every filter while searching; Tasks retains its existing active-filter conditions. [Approved rationale](decisions/0015-toolbar-section-navigation.md).
 
 The accepted next preview defaults to one full-width **Search tasks** input.
 The toolbar's plus **Add** action switches it to **What needs doing?**; the
@@ -227,3 +234,14 @@ values remain readable in published records, but do not appear as controls,
 labels or display-group distinctions. New additions make no certainty assertion;
 edits preserve existing hidden values without rewriting history. See the
 [Food compatibility rationale](decisions/0014-food-inventory.md#accepted-simplification-expiration-date-only).
+
+
+### Approved RC3 Food editing refinements
+
+Brand and Location remain optional free text. Suggestions come from exact nonblank existing values, including Deleted, and do not create a separate catalog. Each filter accepts multiple values: OR within a field, AND between Brand and Location; an empty field means any. Search pauses all saved filters and clearing it restores them.
+
+Filter → Select matching active containers captures physical IDs currently visible under those rules. Deleted, hidden containers and later arrivals do not join the selection. Group and inspected-row checkboxes allow partial selection. The search slot shows the selected count, Clear Selection and Edit. The bulk editor contains only Brand and Location; each has an explicit Apply control and Clear action. Unapplied mixed values and every other field stay untouched. One Save is one Undo action. Changing view/filter/search or workspace clears selection; an open editor retains its captured targets and refuses a workspace change or newly hidden/deleted target. Cancel and unchanged Save author no records. Exact pending-save retry remains owned by the host.
+
+Expanded food keeps its existing Inspect, quick-remove and lower overflow locations with full touch targets. The duplicate count and opaque visible container prefixes are removed; remaining contents stays visible and each per-container action has a distinct accessible ordinal. Reduced separator spacing preserves inline expansion. A different details view is deferred.
+
+Full (`1/1`) is the default for new/imported containers even when nominal size is blank. Partial fractions and measured amounts remain supported; the RC-only all-null unspecified contents state is rejected rather than rewritten. Any required fresh throwaway trial is a separate locally coordinated path and identity, preserving old receipts and established Tasks history.

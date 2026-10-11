@@ -64,7 +64,7 @@ reordered delivery. Its DTO is a prototype, not an accepted canonical wire forma
 `lib/food/food_page.dart` captures observed targets and delegates changes to its
 host. `tool/food_preview.dart` supplies synthetic process-local stock, bounded
 command batches and session Undo. It opens no profile or sync folder. The preview
-offers full, half, third, quarter and unknown contents. Arbitrary measured-amount
+offers full, half, third and quarter contents. Lee’s RC3 correction removes the development-only unspecified state: new/imported containers default Full, independently of optional nominal container size. Explicit fractions and measured amounts remain supported. Arbitrary measured-amount
 editing remains later implementation. Production navigation now offers Tasks and
 Food in the same selected workspace. Container inspection labels use stable ID
 suffixes rather than list positions. The wide Food surface caps at900px and expiry

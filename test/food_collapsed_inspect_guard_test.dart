@@ -105,8 +105,15 @@ void main() {
           find.byTooltip('Inspect Rice containers'),
         );
         expect(warning, findsOneWidget);
-        expect(find.text('1 container · 500 g · Freezer'), findsOneWidget);
-        expect(find.text('Container 00000001 · Full'), findsOneWidget);
+        expect(find.text('500 g · Freezer'), findsOneWidget);
+        expect(
+          find.byKey(
+            const ValueKey(
+              'food-container-contents:00000000-0000-4000-8000-000000000001',
+            ),
+          ),
+          findsOneWidget,
+        );
         expect(
           find.text('Observed alternatives: ½ remaining / Full'),
           findsOneWidget,
@@ -119,7 +126,7 @@ void main() {
           findsOneWidget,
         );
         expect(
-          find.byTooltip('Edit Rice container 00000001 contents'),
+          find.byTooltip('Edit Rice contents, container 1 of 1'),
           findsOneWidget,
         );
         final remove = tester.widget<TextButton>(

@@ -22,6 +22,9 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Food field editing and Full defaults](decisions/0019-food-field-editing-and-contents-defaults.md): approved suggestions/multiple filters/exact-container Brand/Location bulk editing, conservative expanded-row cleanup and removal of RC-only unspecified contents; native acceptance in progress.
+
+
 - [Food import contract v1](food-import-contract.md): bounded reviewed staging, explicit official commit and exact-byte retry; private extraction/data remain external.
 
 - [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.

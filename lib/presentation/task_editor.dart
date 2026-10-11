@@ -805,13 +805,13 @@ class _EditorBodyState extends State<_EditorBody> {
       return width;
     }
 
-    // 4px leading padding + 2px outline gap + 48px suffix target
+    // 12px leading padding + 4px outline gap + 48px suffix target
     // + 4px Material text-to-suffix gap + 2px caret clearance.
     // A blank Time hint has no clear button, so it uses only padding.
     final dateValueWidth = textWidth('2026-10-04');
     final dateHintWidth = textWidth('YYYY-MM-DD');
     final dateWidth =
-        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 60;
+        (dateValueWidth > dateHintWidth ? dateValueWidth : dateHintWidth) + 70;
     final populatedTimeWidth = textWidth('23:59') + 60;
     final blankTimeWidth = textWidth('HH:mm') + 10;
     final timeWidth = populatedTimeWidth > blankTimeWidth

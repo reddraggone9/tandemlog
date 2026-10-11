@@ -381,14 +381,167 @@ void main() {
       ]);
     },
   );
-  test('Deleted is explicit, searchable, and durable with no age cutoff', () {
+  test(
+    'search ignores every saved filter, separates statuses and preserves ordering',
+    () {
+      final events = [
+        operation(1, FoodAction.add, [a, b], details: rice),
+        operation(
+          2,
+          FoodAction.add,
+          [c],
+          details: const FoodDetails(
+            name: 'Rice undated',
+            retention: 'Emergency',
+          ),
+        ),
+        operation(3, FoodAction.remove, [a]),
+      ];
+      final state = projectFood(events);
+      for (final view in FoodView.values) {
+        final groups = state.view(
+          view,
+          search: ' RICE ',
+          reasons: {'Unrelated'},
+        );
+        expect(groups.expand((g) => g.containers).map((c) => c.id), [b, c, a]);
+        expect(
+          groups.every(
+            (g) => g.containers.map((c) => c.deleted).toSet().length == 1,
+          ),
+          isTrue,
+        );
+        expect(groups.last.containers.single.deleted, isTrue);
+      }
+      expect(state.view(FoodView.retained, reasons: {'Unrelated'}), isEmpty);
+      expect(state.view(FoodView.inventory).single.containers.single.id, b);
+      expect(state.view(FoodView.deleted).single.containers.single.id, a);
+      expect(state.view(FoodView.deleted, search: 'no match'), isEmpty);
+      expect(
+        state
+            .view(FoodView.inventory, search: 'undated')
+            .single
+            .containers
+            .single
+            .id,
+        c,
+      );
+      final allDeleted = projectFood([
+        ...events,
+        operation(4, FoodAction.remove, [b]),
+        operation(5, FoodAction.remove, [c]),
+      ]);
+      for (final view in FoodView.values) {
+        final result = allDeleted.view(view, search: 'Rice');
+        expect(result.map((g) => g.containers.map((c) => c.id).toList()), [
+          [c],
+          [a, b],
+        ]);
+      }
+    },
+  );
+  test(
+    'brand/location filters OR within field, AND between fields, and pause during search',
+    () {
+      final state = projectFood([
+        operation(
+          1,
+          FoodAction.add,
+          [a],
+          details: const FoodDetails(
+            name: 'Rice',
+            expiry: '2026-10-15',
+            brand: 'Acme',
+            location: 'Pantry',
+          ),
+        ),
+        operation(
+          2,
+          FoodAction.add,
+          [b],
+          details: const FoodDetails(
+            name: 'Rice',
+            expiry: '2026-10-16',
+            brand: 'Other',
+            location: 'Pantry',
+          ),
+        ),
+        operation(
+          3,
+          FoodAction.add,
+          [c],
+          details: const FoodDetails(
+            name: 'Rice retained',
+            retention: 'Emergency',
+            brand: 'Acme',
+            location: 'Freezer',
+          ),
+        ),
+      ]);
+      List<String> ids(List<FoodGroup> groups) =>
+          groups.expand((g) => g.containers).map((c) => c.id).toList();
+      expect(
+        ids(
+          state.view(
+            FoodView.inventory,
+            brands: {'Acme', 'Other'},
+            locations: {'Pantry'},
+          ),
+        ),
+        [a, b],
+      );
+      expect(
+        ids(
+          state.view(
+            FoodView.inventory,
+            brands: {'Acme'},
+            locations: {'Pantry', 'Freezer'},
+          ),
+        ),
+        [a],
+      );
+      expect(
+        state.view(
+          FoodView.inventory,
+          brands: {'Acme'},
+          locations: {'Freezer'},
+        ),
+        isEmpty,
+      );
+      expect(
+        ids(
+          state.view(
+            FoodView.retained,
+            brands: {'Acme'},
+            locations: {'Freezer'},
+          ),
+        ),
+        [c],
+      );
+      expect(
+        ids(
+          state.view(
+            FoodView.inventory,
+            search: 'Rice',
+            brands: {'Missing'},
+            locations: {'Missing'},
+            reasons: {'Missing'},
+          ),
+        ),
+        [a, b, c],
+      );
+      expect(state.brands, ['Acme', 'Other']);
+      expect(state.locations, ['Freezer', 'Pantry']);
+    },
+  );
+  test('Search includes Deleted without changing durable meaning', () {
     final events = [
       operation(1, FoodAction.add, [a], details: rice),
       operation(2, FoodAction.remove, [a]),
     ];
     expect(
       projectFood(events).view(FoodView.inventory, search: 'rice'),
-      isEmpty,
+      hasLength(1),
     );
     expect(
       projectFood(events).view(FoodView.deleted, search: 'rice'),

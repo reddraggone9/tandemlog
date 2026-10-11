@@ -1,3 +1,4 @@
+import '../test/support/toolbar_button.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -31,6 +32,12 @@ import 'historical_checklist_recompletion_test.dart'
     show registerHistoricalChecklistRecompletionTests;
 import 'header_search_test.dart' show registerHeaderSearchTests;
 import 'task_input_mode_workflow_test.dart' show registerTaskInputModeTests;
+import 'toolbar_parity_workflow_test.dart' show registerToolbarParityTests;
+import 'food_bulk_details_host_undo_review_test.dart'
+    show registerFoodBulkDetailsHostUndoReviewTests;
+import 'food_refinements_workflow_test.dart' show registerFoodRefinementTests;
+import 'food_all_status_search_workflow_test.dart'
+    show registerFoodAllStatusSearchTests;
 import 'task_input_mode_retry_test.dart' show registerTaskInputModeRetryTests;
 import 'inbox_flow_test.dart' show registerInboxFlowTests;
 import 'data_integrity_test.dart' show registerDataIntegrityTests;
@@ -255,6 +262,9 @@ void main() {
   registerBulkFailureVisibilityTests();
   registerHeaderSearchTests();
   registerTaskInputModeTests();
+  registerToolbarParityTests();
+  registerFoodAllStatusSearchTests();
+  registerFoodRefinementTests();
   registerTaskInputModeRetryTests();
   registerInboxFlowTests();
   registerDataIntegrityTests();
@@ -285,6 +295,7 @@ void main() {
   registerFoodGroupActionGeometryTests();
   registerFoodAccountWorkflowTests();
   registerFoodUndoStackWorkflowTests();
+  registerFoodBulkDetailsHostUndoReviewTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
     tester,
   ) async {
@@ -3605,7 +3616,7 @@ void main() {
         () => find.text('Review household supplies').evaluate().isNotEmpty,
       );
       final undo = find.byKey(const ValueKey('undo-task-action'));
-      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      expect(toolbarButton(tester, undo).onPressed, isNull);
       Future<void> editTitle(String current, String next) async {
         await tester.tap(find.text(current));
         await tester.pumpAndSettle();
@@ -3637,7 +3648,7 @@ void main() {
       }
 
       await editTitle('Review household supplies', 'Check household supplies');
-      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      expect(toolbarButton(tester, undo).onPressed, isNotNull);
       await editTitle('Check household supplies', 'Plan household supplies');
       // Capture keeps its own text undo; Ctrl+Z must not consume task history.
       await openCaptureForTest(tester);
@@ -3704,7 +3715,7 @@ void main() {
         await captureNativeFixtureUi(tester, 'session-undo-second-failure');
         rethrow;
       }
-      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      expect(toolbarButton(tester, undo).onPressed, isNull);
       await captureNativeFixtureUi(tester, 'session-second-undo-restored');
       // Completion remains undoable after its transient notice expires.
       final checkbox = find.descendant(
@@ -3720,7 +3731,7 @@ void main() {
       await tester.pump();
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
-      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      expect(toolbarButton(tester, undo).onPressed, isNotNull);
       await tester.tap(undo);
       await waitForUi(
         tester,
@@ -3777,7 +3788,7 @@ void main() {
       await tester.pump();
       await tester.pumpAndSettle();
       expect(find.byType(SnackBar), findsNothing);
-      expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+      expect(toolbarButton(tester, undo).onPressed, isNotNull);
       await mouse.removePointer();
       tester.view.resetPadding();
       tester.platformDispatcher.clearAccessibilityFeaturesTestValue();
@@ -3888,7 +3899,7 @@ void main() {
         tester,
         () => find.text(afterSelectiveUndo).evaluate().isNotEmpty,
       );
-      expect(tester.widget<IconButton>(undo).onPressed, isNull);
+      expect(toolbarButton(tester, undo).onPressed, isNull);
       await tester.pumpWidget(const SizedBox());
       await tester.pumpAndSettle();
       tester.view.resetPhysicalSize();

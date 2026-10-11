@@ -269,8 +269,9 @@ void registerCompletionActionTests() {
         await tester.tap(check(repeat));
         await flows.waitForUi(tester, () => check(repeat).evaluate().isEmpty);
         final next = const Uuid().v5(repeat, 'successor');
-        // This derived successor retains its original unactivated v3 text semantics.
-        await writer.command(next, 'task.edited', {
+        // The legacy creation is retained; the initialized successor is edited
+        // through its captured native field rather than an uncovered scalar edit.
+        await writer.editNativeFixtureTask(next, {
           'title': 'Water balcony plants',
         });
         await flows.waitForUi(

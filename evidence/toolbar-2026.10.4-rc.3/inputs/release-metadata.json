@@ -1,0 +1,7 @@
+{
+  "base_commit": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+  "change": "Only release version attribute RC2 to RC3; date/type/package/permissions unchanged.",
+  "file": "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml",
+  "bytes": 1146,
+  "sha256": "0c960321e54d99e84fda9d819b19e5e4a050bd0b02d47fb9dc10da91f2280069"
+}

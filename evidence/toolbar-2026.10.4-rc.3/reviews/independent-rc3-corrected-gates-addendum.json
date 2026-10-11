@@ -1,0 +1,59 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "4491954c61b89266508726c60e0eb0065b1a93478755c7023d7ec6fccea15b42",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T15:27:56.176601+00:00",
+    "verdict": "ACCEPTED_CORRECTED_NATIVE_FIXTURES_AND_CLEAN_ANALYZER",
+    "mustFix": [],
+    "extends": {
+      "path": "runtime-evidence/independent-rc3-batch-review.json",
+      "sha256": "04968053d674a49f6eb36e9829226517d4ca7aa618feba73b6da2de9d18a2e60",
+      "bytes": 26820
+    },
+    "sourceInventory": {
+      "path": "runtime-evidence/source-inputs-settled.json",
+      "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3",
+      "bytes": 9727
+    },
+    "currentSourceComparison": {
+      "files": 60,
+      "readableHashesMatched": 60,
+      "deltaFromOriginalReviewedCurrentBindings": []
+    },
+    "evidenceBindings": [
+      {
+        "path": "runtime-evidence/corrected-acceptance.log",
+        "sha256": "af178ded85d3e785bca4646e5fceea04c96ea05275ce41237d9d2a5f7b37ac03",
+        "bytes": 17756
+      },
+      {
+        "path": "runtime-evidence/final-analyze2.log",
+        "sha256": "31a7d556713daa56c4f6c043d543b484de6d0778d8c4836ae4b04ececb998a7b",
+        "bytes": 686
+      }
+    ],
+    "closedGates": [
+      {
+        "gate": "Three failed native fixtures from prior affected aggregate",
+        "result": "Current corrected native rerun terminal3/3PASS01:38. Fresh workspace auto-initialization/cold byte preservation plus dark/light toolbar parity now pass.",
+        "qualification": "Original25PASS/3FAIL05:02 remains preserved; this is the actual3-case rerun, not a claim of one28-case green run."
+      },
+      {
+        "gate": "Clean final analyzer",
+        "result": "No issues found,1.4sec. Read terminal output independently."
+      }
+    ],
+    "reviewedCorrections": [
+      "Fresh-name workflow waits for enabled and hit-testable Continue after onChanged rebuild; initialization/readability/cold exact-byte assertions retained.",
+      "Toolbar keeps equal account size at equal tested constraints\u2264900; at1200/200 Food retains900 cap, verifies\u226548px target, same vertical center/full identity and functional Settings access. Add/Undo/Filter geometry/color/dot checks retained. No app-width redesign or blanket account-width equality claim.",
+      "Fixture brace formatting does not change application behavior."
+    ],
+    "remainingGates": [
+      "First wide-dark autocomplete capture remains rejected black diagnostic; valid warmup recapture/demo still pending.",
+      "Final durable evidence assembly, full hosted candidate and exact original signed-package/native Android/platform acceptance remain separate.",
+      "Separate editorial/media/publication approval required; no release/publication authorization supplied by this addendum."
+    ],
+    "preservation": "Original independent-rc3-batch-review.json and prior failed/partial observations left unchanged. Current60-file inventory is identical to reviewed snapshot; no new production change."
+  }
+}

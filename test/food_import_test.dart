@@ -38,7 +38,7 @@ FoodImportPlan plan({
           retention: 'Fridge',
         ),
         contents: n == 1
-            ? const Contents.unknown()
+            ? const Contents.fraction(1, 1)
             : const Contents.fraction(2, 6),
         createdAt: '2020-01-02T03:04:05+02:00',
       ),
@@ -195,7 +195,7 @@ void main() {
     },
   );
   test(
-    'dry run stages nothing and explicit commit preserves physical and unknown data',
+    'dry run stages nothing and explicit commit preserves physical Full and partial contents',
     () async {
       final p = plan();
       final report = await store.dryRunImport(p);

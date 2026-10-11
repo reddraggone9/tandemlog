@@ -11,7 +11,7 @@ final class FoodImportContainer {
     required this.sourceId,
     required this.ordinal,
     required FoodDetails details,
-    required Contents contents,
+    Contents contents = const Contents.fraction(1, 1),
     required this.createdAt,
   }) : details = FoodDetails.fromJson(details.toJson()),
        contents = Contents.fromJson(contents.toJson());

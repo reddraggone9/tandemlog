@@ -94,9 +94,30 @@ void main() {
         find.byTooltip('Collapse Legacy lentils containers'),
         findsOneWidget,
       );
-      expect(find.text('Container 00000002 · Full'), findsOneWidget);
-      expect(find.text('Container 00000003 · Full'), findsOneWidget);
-      expect(find.text('Container 00000001 · Full'), findsNothing);
+      expect(
+        find.byKey(
+          const ValueKey(
+            'food-container-contents:00000000-0000-4000-8000-000000000002',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey(
+            'food-container-contents:00000000-0000-4000-8000-000000000003',
+          ),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(
+          const ValueKey(
+            'food-container-contents:00000000-0000-4000-8000-000000000001',
+          ),
+        ),
+        findsNothing,
+      );
       expect(
         projectFood(operations.value).active.map((e) => e.details.estimated),
         [false, true],

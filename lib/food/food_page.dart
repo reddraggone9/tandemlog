@@ -4,7 +4,11 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 import '../presentation/tag_input.dart';
+import '../presentation/free_text_autocomplete.dart';
+import '../presentation/sticky_task_group.dart';
 import '../presentation/task_toolbar.dart';
+import '../presentation/task_entry_area.dart';
+import '../presentation/toolbar_action.dart';
 import '../presentation/civil_date_input.dart';
 import 'expiration_presentation.dart';
 import 'inventory.dart';
@@ -14,6 +18,7 @@ class FoodInventoryPage extends StatefulWidget {
   const FoodInventoryPage({
     super.key,
     required this.state,
+    this.workspaceIdentity,
     required this.onAdd,
     required this.onRemove,
     required this.onRestore,
@@ -24,6 +29,7 @@ class FoodInventoryPage extends StatefulWidget {
     this.undoLabel = 'Undo',
     this.sectionMenu,
     this.settings,
+    this.progress,
     this.userName,
     this.identityMenu,
     this.now,
@@ -33,11 +39,12 @@ class FoodInventoryPage extends StatefulWidget {
     this.hasPendingSave,
   });
   final Widget Function(bool compact)? sectionMenu;
-  final Widget? settings;
+  final Widget? settings, progress;
   final String? userName;
   final Widget Function(Widget?)? identityMenu;
   final DateTime Function()? now;
   final FoodState state;
+  final Object? workspaceIdentity;
   final FutureOr<void> Function(FoodDetails, int) onAdd;
   final FutureOr<void> Function(List<String>) onRemove;
   final FutureOr<void> Function(FoodContainer) onRestore;
@@ -57,8 +64,44 @@ class FoodInventoryPage extends StatefulWidget {
 class FoodInventoryPageState extends State<FoodInventoryPage> {
   FoodView view = FoodView.inventory;
   final search = TextEditingController(), reasonQuery = TextEditingController();
-  Set<String> reasons = {};
-  final expanded = <String>{}, selected = <String>{};
+  Set<String> reasons = {}, brands = {}, locations = {};
+  final expanded = <String>{}, selected = <String>{}, bulkSelected = <String>{};
+  bool selecting = false;
+
+  void _clearBulkSelection() {
+    selecting = false;
+    bulkSelected.clear();
+  }
+
+  @override
+  void didUpdateWidget(covariant FoodInventoryPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.workspaceIdentity != widget.workspaceIdentity) {
+      _clearBulkSelection();
+      selected.clear();
+      expanded.clear();
+    }
+  }
+
+  List<FoodGroup> _matches() => widget.state.view(
+    view == FoodView.inbox ? FoodView.inventory : view,
+    search: search.text,
+    reasons: reasons,
+    brands: brands,
+    locations: locations,
+  );
+
+  List<FoodGroup> _inbox() =>
+      (view == FoodView.inventory || view == FoodView.inbox) &&
+          search.text.trim().isEmpty
+      ? widget.state.view(FoodView.inbox, brands: brands, locations: locations)
+      : [];
+
+  List<FoodContainer> _visibleActive() => [
+    for (final group in [..._inbox(), ..._matches()])
+      for (final item in group.containers)
+        if (!item.deleted) item,
+  ];
   Future<bool> Function()? _requestEditorClose;
   Completer<void>? _editorDone;
   Future<void>? get editorDone => _editorDone?.future;
@@ -110,16 +153,17 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final pending = widget.hasPendingSave?.call() ?? widget.savePending;
     final querying = search.text.trim().isNotEmpty;
     // Inbox remains a domain partition. Stock alone composes its unsearched
-    // undated partition; queried partitions would each return all active food.
-    final currentView = view == FoodView.inbox ? FoodView.inventory : view;
-    final inboxGroups = currentView == FoodView.inventory && !querying
-        ? widget.state.view(FoodView.inbox)
+    // undated partition; search includes both active and deleted food.
+    final inboxGroups = _inbox();
+    final matchingGroups = _matches();
+    final visibleIds = _visibleActive().map((e) => e.id).toSet();
+    bulkSelected.retainAll(visibleIds);
+    final groups = querying
+        ? matchingGroups.where((g) => !g.containers.first.deleted).toList()
+        : matchingGroups;
+    final deletedGroups = querying
+        ? matchingGroups.where((g) => g.containers.first.deleted).toList()
         : <FoodGroup>[];
-    final groups = widget.state.view(
-      currentView,
-      search: search.text,
-      reasons: reasons,
-    );
     return Theme(
       data: Theme.of(context).copyWith(
         iconButtonTheme: IconButtonThemeData(
@@ -151,6 +195,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         ? null
                         : () => _edit(addCommand: addCommand),
                   ),
+                  ?widget.progress,
                   Expanded(
                     // Controls and guidance yield space to rows and focused
                     // inputs at large text sizes, instead of exhausting it.
@@ -159,28 +204,40 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         SliverToBoxAdapter(
                           child: Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                  16,
-                                  8,
-                                  16,
-                                  8,
-                                ),
-                                child: TextField(
+                              TaskEntryArea(
+                                selecting: selecting,
+                                captureVisible: true,
+                                selectionCount: bulkSelected.length,
+                                maximumSelectionCount: visibleIds.length,
+                                onClear: () => setState(_clearBulkSelection),
+                                onEdit:
+                                    widget.busy ||
+                                        pending ||
+                                        bulkSelected.isEmpty
+                                    ? null
+                                    : () => _edit(
+                                        bulkTargets: [
+                                          for (final item in _visibleActive())
+                                            if (bulkSelected.contains(item.id))
+                                              item,
+                                        ],
+                                      ),
+                                capture: TextField(
                                   key: const ValueKey('food-search'),
                                   controller: search,
-                                  onChanged: (_) => setState(() {}),
+                                  onChanged: (_) =>
+                                      setState(_clearBulkSelection),
                                   decoration: InputDecoration(
-                                    labelText: view == FoodView.deleted
-                                        ? 'Search deleted food'
-                                        : 'Search all active food',
+                                    labelText: 'Search food',
                                     prefixIcon: const Icon(Icons.search),
                                     suffixIcon: search.text.isEmpty
                                         ? null
                                         : IconButton(
                                             tooltip: 'Clear food search',
-                                            onPressed: () =>
-                                                setState(() => search.clear()),
+                                            onPressed: () => setState(() {
+                                              search.clear();
+                                              _clearBulkSelection();
+                                            }),
                                             icon: const Icon(Icons.close),
                                           ),
                                   ),
@@ -198,8 +255,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                   child: TagInput(
                                     tags: widget.state.reasons,
                                     selected: reasons,
-                                    onChanged: (value) =>
-                                        setState(() => reasons = value),
+                                    onChanged: (value) => setState(() {
+                                      reasons = value;
+                                      _clearBulkSelection();
+                                    }),
                                     queryController: reasonQuery,
                                     onDropdownChanged: (_) {},
                                     queryLabel: 'Retention reasons',
@@ -265,7 +324,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               ),
                             ),
                         ],
-                        if (groups.isEmpty && inboxGroups.isEmpty)
+                        if (groups.isEmpty &&
+                            inboxGroups.isEmpty &&
+                            deletedGroups.isEmpty)
                           SliverFillRemaining(
                             hasScrollBody: false,
                             child: Center(
@@ -326,6 +387,28 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               },
                             ),
                           ),
+                        if (deletedGroups.isNotEmpty)
+                          SliverPadding(
+                            padding: const EdgeInsets.fromLTRB(12, 0, 12, 16),
+                            sliver: SliverMainAxisGroup(
+                              slivers: [
+                                const SliverPadding(
+                                  padding: EdgeInsets.symmetric(horizontal: 4),
+                                  sliver: StickyTaskGroupHeading(
+                                    title: 'Deleted',
+                                    headingKey: ValueKey(
+                                      'food-deleted-heading',
+                                    ),
+                                  ),
+                                ),
+                                SliverList.builder(
+                                  itemCount: deletedGroups.length,
+                                  itemBuilder: (_, index) =>
+                                      _group(deletedGroups[index]),
+                                ),
+                              ],
+                            ),
+                          ),
                       ],
                     ),
                   ),
@@ -341,73 +424,179 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Widget _filterControl(bool compact) {
     final querying = search.text.trim().isNotEmpty;
     final active =
-        view == FoodView.deleted || (view == FoodView.retained && !querying);
-    final count = active
-        ? 1 + (view == FoodView.retained ? reasons.length : 0)
-        : 0;
+        !querying &&
+        (view == FoodView.deleted ||
+            view == FoodView.retained ||
+            brands.isNotEmpty ||
+            locations.isNotEmpty);
     final label = switch (view) {
       FoodView.deleted => 'Deleted',
       FoodView.retained => 'Retained',
       _ => 'Stock',
     };
-    final icon = Badge(
-      isLabelVisible: count > 0,
-      label: Text('$count'),
-      child: const Icon(Icons.filter_list),
-    );
-    return PopupMenuButton<FoodView>(
+    final icon = toolbarFilterIcon(active: active);
+    return toolbarMenuAction<FoodView>(
+      context: context,
+      compact: compact,
+      label: 'Filter',
+      icon: icon,
       key: const ValueKey('food-filter'),
-      tooltip: querying && view != FoodView.deleted
-          ? 'Filter food: all active; saved $label filters paused'
-          : 'Filter food: $label',
+      tooltip: querying
+          ? 'Filter food: all food; saved $label filters paused'
+          : 'Filter food: $label${active ? ' · active filters' : ''}',
       enabled: !widget.busy,
-      onSelected: (next) => setState(() => view = next),
-      itemBuilder: (_) => [
-        for (final mode in [
-          FoodView.inventory,
-          FoodView.retained,
-          FoodView.deleted,
-        ])
-          PopupMenuItem(
-            value: mode,
-            child: Semantics(
-              selected: mode == view,
-              child: Row(
-                children: [
-                  SizedBox(
-                    width: 28,
-                    child: mode == view ? const Icon(Icons.check) : null,
+      onSelected: (next) => setState(() {
+        view = next;
+        _clearBulkSelection();
+      }),
+      itemBuilder: (_) {
+        final observed = _visibleActive().map((e) => e.id).toSet();
+        return [
+          for (final mode in [
+            FoodView.inventory,
+            FoodView.retained,
+            FoodView.deleted,
+          ])
+            PopupMenuItem(
+              value: mode,
+              child: Semantics(
+                selected: mode == view,
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 28,
+                      child: mode == view ? const Icon(Icons.check) : null,
+                    ),
+                    Flexible(
+                      child: Text(switch (mode) {
+                        FoodView.inventory => 'Stock',
+                        FoodView.retained => 'Retained',
+                        FoodView.deleted => 'Deleted',
+                        FoodView.inbox => 'Inbox',
+                      }),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          const PopupMenuDivider(),
+          PopupMenuItem<FoodView>(
+            onTap: _fieldFilters,
+            child: const Text('Brand and location'),
+          ),
+          PopupMenuItem<FoodView>(
+            enabled:
+                observed.isNotEmpty &&
+                !(widget.hasPendingSave?.call() ?? widget.savePending),
+            onTap: () => setState(() {
+              selecting = true;
+              bulkSelected
+                ..clear()
+                ..addAll(
+                  observed.intersection(
+                    _visibleActive().map((e) => e.id).toSet(),
                   ),
-                  Flexible(
-                    child: Text(switch (mode) {
-                      FoodView.inventory => 'Stock',
-                      FoodView.retained => 'Retained',
-                      FoodView.deleted => 'Deleted',
-                      FoodView.inbox => 'Inbox',
-                    }),
+                );
+            }),
+            child: const Text('Select matching active containers'),
+          ),
+        ];
+      },
+    );
+  }
+
+  Future<void> _fieldFilters() async {
+    var selectedBrands = Set<String>.of(brands);
+    var selectedLocations = Set<String>.of(locations);
+    final brandValues = widget.state.brands,
+        locationValues = widget.state.locations;
+    final brandQuery = TextEditingController(),
+        locationQuery = TextEditingController();
+    final route = DialogRoute<void>(
+      context: context,
+      builder: (dialogContext) {
+        final answer = _answerOnce<void>(dialogContext);
+        return StatefulBuilder(
+          builder: (context, setDialog) => AlertDialog(
+            scrollable: true,
+            title: const Text('Brand and location'),
+            content: SizedBox(
+              width: 480,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TagInput(
+                    tags: brandValues,
+                    selected: selectedBrands,
+                    queryController: brandQuery,
+                    queryKey: const ValueKey('food-brand-filter-query'),
+                    queryLabel: 'Brands',
+                    hint: 'Find brands',
+                    valuePrefix: '',
+                    emptyLabel: 'No brands yet',
+                    noMatchesLabel: 'No matching brands',
+                    clearLabel: 'Clear brand filters',
+                    chipContext: 'brand filters',
+                    expandLabel: 'Show brands',
+                    collapseLabel: 'Hide brands',
+                    onDropdownChanged: (_) {},
+                    onChanged: (next) => setDialog(() => selectedBrands = next),
+                  ),
+                  const SizedBox(height: 16),
+                  TagInput(
+                    tags: locationValues,
+                    selected: selectedLocations,
+                    queryController: locationQuery,
+                    queryKey: const ValueKey('food-location-filter-query'),
+                    queryLabel: 'Locations',
+                    hint: 'Find locations',
+                    valuePrefix: '',
+                    emptyLabel: 'No locations yet',
+                    noMatchesLabel: 'No matching locations',
+                    clearLabel: 'Clear location filters',
+                    chipContext: 'location filters',
+                    expandLabel: 'Show locations',
+                    collapseLabel: 'Hide locations',
+                    onDropdownChanged: (_) {},
+                    onChanged: (next) =>
+                        setDialog(() => selectedLocations = next),
                   ),
                 ],
               ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => answer(null),
+                child: const Text('Cancel'),
+              ),
+              FilledButton(
+                onPressed: () {
+                  if (!mounted ||
+                      !dialogContext.mounted ||
+                      ModalRoute.of(dialogContext)?.isCurrent != true) {
+                    return;
+                  }
+                  setState(() {
+                    brands = selectedBrands;
+                    locations = selectedLocations;
+                    _clearBulkSelection();
+                  });
+                  answer(null);
+                },
+                child: const Text('Apply'),
+              ),
+            ],
           ),
-      ],
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: compact ? 0 : 12),
-          child: compact
-              ? Center(child: icon)
-              : Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    icon,
-                    const SizedBox(width: 8),
-                    const Text('Filter'),
-                  ],
-                ),
-        ),
-      ),
+        );
+      },
     );
+    try {
+      unawaited(Navigator.of(context).push(route));
+      await route.completed;
+    } finally {
+      brandQuery.dispose();
+      locationQuery.dispose();
+    }
   }
 
   Widget _group(FoodGroup group) {
@@ -416,8 +605,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         restoreBatchCommand = widget.onRestoreBatch,
         contentsCommand = widget.onContents,
         detailsCommand = widget.onDetails;
-    final details = group.details, key = details.displayGroupKey;
-    final opened = expanded.contains(key), deleted = view == FoodView.deleted;
+    final details = group.details, deleted = group.containers.first.deleted;
+    final key = '${deleted ? 'deleted' : 'active'}:${details.displayGroupKey}';
+    final opened = expanded.contains(key);
     final singleKnownFull =
         group.containers.length == 1 &&
         group.containers.single.contents.full &&
@@ -427,6 +617,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       if (details.location.isNotEmpty) details.location,
     ];
     return Card(
+      key: ValueKey('food-group:$key'),
+      color: deleted ? Theme.of(context).colorScheme.surfaceContainerLow : null,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
         child: Column(
@@ -435,6 +627,33 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (selecting && !deleted)
+                  Checkbox(
+                    key: ValueKey('food-group-selection:$key'),
+                    semanticLabel:
+                        'Select ${group.containers.length} ${details.name} containers',
+                    tristate: true,
+                    value:
+                        group.containers.every(
+                          (e) => bulkSelected.contains(e.id),
+                        )
+                        ? true
+                        : group.containers.any(
+                            (e) => bulkSelected.contains(e.id),
+                          )
+                        ? null
+                        : false,
+                    onChanged: widget.busy
+                        ? null
+                        : (_) => setState(() {
+                            final ids = group.containers.map((e) => e.id);
+                            if (ids.every(bulkSelected.contains)) {
+                              bulkSelected.removeAll(ids);
+                            } else {
+                              bulkSelected.addAll(ids);
+                            }
+                          }),
+                  ),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,7 +664,17 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         children: [
                           Text(
                             details.name,
-                            style: Theme.of(context).textTheme.titleMedium,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  color: deleted
+                                      ? Theme.of(
+                                          context,
+                                        ).colorScheme.onSurfaceVariant
+                                      : null,
+                                  decoration: deleted
+                                      ? TextDecoration.lineThrough
+                                      : null,
+                                ),
                           ),
                           if (opened || !singleKnownFull)
                             Text(
@@ -546,7 +775,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 children: [
                   Expanded(
                     child: Text(
-                      '${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}${metadata.isEmpty ? '' : ' · ${metadata.join(' · ')}'}',
+                      metadata.join(' · '),
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ),
@@ -555,6 +784,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                       width: 48,
                       height: 48,
                       child: PopupMenuButton<String>(
+                        // The native popup reads its current widget callback
+                        // on selection. Replace its state when observed members
+                        // change so an old menu cannot include unseen arrivals.
+                        key: ValueKey(
+                          'food-actions:$key:${group.containers.map((e) => e.id).join(',')}',
+                        ),
                         tooltip: 'Actions for ${details.name}',
                         enabled: !widget.busy,
                         onSelected: (action) {
@@ -590,22 +825,29 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 const Text(
                   'Contents changed on another device. Choose contents to resolve.',
                 ),
-              const Divider(),
-              for (final item in group.containers)
+              const Divider(height: 1),
+              for (final (index, item) in group.containers.indexed)
                 Row(
                   children: [
                     if (!deleted)
                       Checkbox(
+                        key: ValueKey('food-container-selection:${item.id}'),
                         semanticLabel:
-                            '${details.name} container ${item.id.substring(item.id.length - 8)}, ${item.contents.label}',
-                        value: selected.contains(item.id),
+                            '${details.name}, ${item.contents.label}, container ${index + 1} of ${group.containers.length}',
+                        value: (selecting ? bulkSelected : selected).contains(
+                          item.id,
+                        ),
                         onChanged: widget.busy
                             ? null
                             : (value) => setState(() {
                                 if (value == true) {
-                                  selected.add(item.id);
+                                  (selecting ? bulkSelected : selected).add(
+                                    item.id,
+                                  );
                                 } else {
-                                  selected.remove(item.id);
+                                  (selecting ? bulkSelected : selected).remove(
+                                    item.id,
+                                  );
                                 }
                               }),
                       ),
@@ -614,7 +856,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Container ${item.id.substring(item.id.length - 8)} · ${item.contents.label}',
+                            item.contents.label,
+                            key: ValueKey('food-container-contents:${item.id}'),
                           ),
                           if (item.contentsConflict)
                             Text(
@@ -625,8 +868,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     ),
                     if (!deleted)
                       IconButton(
+                        key: ValueKey('food-container-edit:${item.id}'),
                         tooltip:
-                            'Edit ${details.name} container ${item.id.substring(item.id.length - 8)} contents',
+                            'Edit ${details.name} contents, container ${index + 1} of ${group.containers.length}',
                         onPressed: widget.busy
                             ? null
                             : () => _contents(item, contentsCommand),
@@ -634,8 +878,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                       ),
                     if (deleted)
                       IconButton(
+                        key: ValueKey('food-container-restore:${item.id}'),
                         tooltip:
-                            'Restore ${details.name} container ${item.id.substring(item.id.length - 8)}',
+                            'Restore ${details.name}, container ${index + 1} of ${group.containers.length}',
                         onPressed: widget.busy
                             ? null
                             : () => _invoke(() => restoreCommand(item)),
@@ -643,7 +888,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                       ),
                   ],
                 ),
-              if (!deleted)
+              if (!deleted && !selecting)
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton.icon(
@@ -724,7 +969,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               const Contents.fraction(1, 2),
               const Contents.fraction(1, 3),
               const Contents.fraction(1, 4),
-              const Contents.unknown(),
             ])
               SimpleDialogOption(
                 onPressed: () => answer(choice),
@@ -744,6 +988,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
 
   Future<void> _edit({
     FoodGroup? group,
+    List<FoodContainer>? bulkTargets,
     FutureOr<void> Function(FoodDetails, int)? addCommand,
     FutureOr<void> Function(List<FoodContainer>, FoodDetails, List<String>)?
     detailsCommand,
@@ -755,12 +1000,29 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     final done = _editorDone = Completer<void>();
     final add = addCommand ?? widget.onAdd,
         changeDetails = detailsCommand ?? widget.onDetails;
-    final original = group?.details;
+    final targets = bulkTargets == null
+        ? null
+        : List<FoodContainer>.unmodifiable(bulkTargets);
+    final bulk = targets != null;
+    final workspace = widget.workspaceIdentity;
+    final original = bulk ? targets.first.details : group?.details;
+    String common(String Function(FoodDetails) field) =>
+        targets!.map((e) => field(e.details)).toSet().length == 1
+        ? field(targets.first.details)
+        : '';
+    var applyBrand = false,
+        applyLocation = false,
+        clearBrand = false,
+        clearLocation = false;
     final name = TextEditingController(text: original?.name ?? ''),
-        brand = TextEditingController(text: original?.brand ?? ''),
+        brand = TextEditingController(
+          text: bulk ? common((e) => e.brand) : original?.brand ?? '',
+        ),
         expiry = TextEditingController(text: original?.expiry ?? ''),
         size = TextEditingController(text: original?.size ?? ''),
-        location = TextEditingController(text: original?.location ?? ''),
+        location = TextEditingController(
+          text: bulk ? common((e) => e.location) : original?.location ?? '',
+        ),
         count = TextEditingController(text: '1'),
         retentionQuery = TextEditingController();
     var retention = original?.retention ?? '';
@@ -781,6 +1043,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       retentionQuery.text,
       retention,
       estimated,
+      applyBrand,
+      applyLocation,
+      clearBrand,
+      clearLocation,
     ]);
     final initial = snapshot();
     void answer(BuildContext context, (FoodDetails, int)? result) {
@@ -890,7 +1156,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                 contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
                 actionsPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                 title: Text(
-                  group == null
+                  bulk
+                      ? 'Edit ${targets.length} containers'
+                      : group == null
                       ? 'Add food'
                       : 'Edit ${group.containers.length} ${group.containers.length == 1 ? 'container' : 'containers'}',
                 ),
@@ -899,94 +1167,174 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      TextField(
-                        enabled: !saving && !pending(),
-                        controller: name,
-                        autofocus: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Food name',
+                      if (bulk) ...[
+                        for (final field in ['Brand', 'Location']) ...[
+                          CheckboxListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text('Apply $field'),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            value: field == 'Brand'
+                                ? applyBrand
+                                : applyLocation,
+                            onChanged: saving || pending()
+                                ? null
+                                : (value) => setDialog(() {
+                                    if (field == 'Brand') {
+                                      applyBrand = value ?? false;
+                                    } else {
+                                      applyLocation = value ?? false;
+                                    }
+                                  }),
+                          ),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: FreeTextAutocomplete(
+                                  enabled:
+                                      !saving &&
+                                      !pending() &&
+                                      (field == 'Brand'
+                                          ? applyBrand
+                                          : applyLocation),
+                                  controller: field == 'Brand'
+                                      ? brand
+                                      : location,
+                                  label: field,
+                                  hint:
+                                      common(
+                                        (e) => field == 'Brand'
+                                            ? e.brand
+                                            : e.location,
+                                      ).isEmpty
+                                      ? 'Mixed or empty — unchanged unless applied'
+                                      : null,
+                                  values: field == 'Brand'
+                                      ? widget.state.brands
+                                      : widget.state.locations,
+                                  onChanged: (_) => setDialog(() {
+                                    if (field == 'Brand') {
+                                      clearBrand = false;
+                                    } else {
+                                      clearLocation = false;
+                                    }
+                                  }),
+                                ),
+                              ),
+                              IconButton(
+                                tooltip: 'Clear $field',
+                                constraints: const BoxConstraints(
+                                  minWidth: 48,
+                                  minHeight: 48,
+                                ),
+                                onPressed: saving || pending()
+                                    ? null
+                                    : () => setDialog(() {
+                                        if (field == 'Brand') {
+                                          applyBrand = true;
+                                          clearBrand = true;
+                                          brand.clear();
+                                        } else {
+                                          applyLocation = true;
+                                          clearLocation = true;
+                                          location.clear();
+                                        }
+                                      }),
+                                icon: const Icon(Icons.clear),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                        ],
+                      ] else ...[
+                        TextField(
+                          enabled: !saving && !pending(),
+                          controller: name,
+                          autofocus: true,
+                          decoration: const InputDecoration(
+                            labelText: 'Food name',
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        enabled: !saving && !pending(),
-                        controller: brand,
-                        decoration: const InputDecoration(labelText: 'Brand'),
-                      ),
-                      const SizedBox(height: 12),
-                      CivilDateInput(
-                        enabled: !saving && !pending(),
-                        controller: expiry,
-                        fieldKey: const ValueKey('food-expiration'),
-                        label: 'Expiration',
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        enabled: !saving && !pending(),
-                        controller: size,
-                        decoration: const InputDecoration(
-                          labelText: 'Container size',
-                          hintText: 'e.g. 1 lb',
+                        const SizedBox(height: 12),
+                        FreeTextAutocomplete(
+                          enabled: !saving && !pending(),
+                          controller: brand,
+                          label: 'Brand',
+                          values: widget.state.brands,
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      TextField(
-                        enabled: !saving && !pending(),
-                        controller: location,
-                        decoration: const InputDecoration(
-                          labelText: 'Location',
+                        const SizedBox(height: 12),
+                        CivilDateInput(
+                          enabled: !saving && !pending(),
+                          controller: expiry,
+                          fieldKey: const ValueKey('food-expiration'),
+                          label: 'Expiration',
                         ),
-                      ),
-                      if (group == null) ...[
                         const SizedBox(height: 12),
                         TextField(
                           enabled: !saving && !pending(),
-                          controller: count,
-                          keyboardType: TextInputType.number,
+                          controller: size,
                           decoration: const InputDecoration(
-                            labelText: 'Containers to add',
-                            helperText:
-                                'Creates a separate container for each one',
-                            helperMaxLines: 2,
+                            labelText: 'Container size',
+                            hintText: 'e.g. 1 lb',
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        FreeTextAutocomplete(
+                          enabled: !saving && !pending(),
+                          controller: location,
+                          label: 'Location',
+                          values: widget.state.locations,
+                        ),
+                        if (group == null) ...[
+                          const SizedBox(height: 12),
+                          TextField(
+                            enabled: !saving && !pending(),
+                            controller: count,
+                            keyboardType: TextInputType.number,
+                            decoration: const InputDecoration(
+                              labelText: 'Containers to add',
+                              helperText:
+                                  'Creates a separate container for each one',
+                              helperMaxLines: 2,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 12),
+                        TagInput(
+                          enabled: !saving && !pending(),
+                          tags: widget.state.reasons,
+                          selected: retention.isEmpty ? {} : {retention},
+                          queryController: retentionQuery,
+                          onDropdownChanged: (_) {},
+                          allowCreate: true,
+                          clearQueryOnSelection: true,
+                          queryLabel: 'Retention reason',
+                          hint: 'Retention reason',
+                          clearLabel: 'Clear retention reason',
+                          chipContext: 'retention reason',
+                          expandLabel: 'Show retention reasons',
+                          collapseLabel: 'Hide retention reasons',
+                          onSubmitQuery: () {
+                            final text = retentionQuery.text.trim();
+                            if (text.isEmpty || _composing(retentionQuery)) {
+                              return false;
+                            }
+                            if (text.length > 200) {
+                              setDialog(
+                                () => error =
+                                    'Retention reason must be 200 characters or fewer.',
+                              );
+                              return false;
+                            }
+                            setDialog(() => retention = text);
+                            retentionQuery.clear();
+                            return true;
+                          },
+                          onChanged: (next) => setDialog(
+                            () => retention =
+                                next.difference({retention}).firstOrNull ?? '',
                           ),
                         ),
                       ],
-                      const SizedBox(height: 12),
-                      TagInput(
-                        enabled: !saving && !pending(),
-                        tags: widget.state.reasons,
-                        selected: retention.isEmpty ? {} : {retention},
-                        queryController: retentionQuery,
-                        onDropdownChanged: (_) {},
-                        allowCreate: true,
-                        clearQueryOnSelection: true,
-                        queryLabel: 'Retention reason',
-                        hint: 'Retention reason',
-                        clearLabel: 'Clear retention reason',
-                        chipContext: 'retention reason',
-                        expandLabel: 'Show retention reasons',
-                        collapseLabel: 'Hide retention reasons',
-                        onSubmitQuery: () {
-                          final text = retentionQuery.text.trim();
-                          if (text.isEmpty || _composing(retentionQuery)) {
-                            return false;
-                          }
-                          if (text.length > 200) {
-                            setDialog(
-                              () => error =
-                                  'Retention reason must be 200 characters or fewer.',
-                            );
-                            return false;
-                          }
-                          setDialog(() => retention = text);
-                          retentionQuery.clear();
-                          return true;
-                        },
-                        onChanged: (next) => setDialog(
-                          () => retention =
-                              next.difference({retention}).firstOrNull ?? '',
-                        ),
-                      ),
                       if (error != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 8),
@@ -1033,15 +1381,28 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                   'Add 1 to 100 containers at a time.',
                                 );
                               }
-                              if (expiry.text.trim().isEmpty) {
+                              if (!bulk && expiry.text.trim().isEmpty) {
                                 throw const FormatException(
                                   'Expiration is required.',
+                                );
+                              }
+                              if (bulk &&
+                                  ((applyBrand &&
+                                          brand.text.trim().isEmpty &&
+                                          !clearBrand) ||
+                                      (applyLocation &&
+                                          location.text.trim().isEmpty &&
+                                          !clearLocation))) {
+                                throw const FormatException(
+                                  'Use Clear Brand or Clear Location to remove a value.',
                                 );
                               }
                               final details = FoodDetails(
                                 name: name.text.trim(),
                                 brand: brand.text.trim(),
-                                expiry: expiry.text.trim(),
+                                expiry: bulk
+                                    ? original!.expiry
+                                    : expiry.text.trim(),
                                 estimated: estimated,
                                 retention: retentionQuery.text.trim().isEmpty
                                     ? retention
@@ -1051,7 +1412,38 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                               );
                               details.validate();
                               setDialog(() => saving = true);
-                              if (group == null) {
+                              if (bulk) {
+                                final visible = _visibleActive()
+                                    .map((e) => e.id)
+                                    .toSet();
+                                if (workspace != widget.workspaceIdentity ||
+                                    (!pending() &&
+                                        targets.any(
+                                          (e) => !visible.contains(e.id),
+                                        ))) {
+                                  throw const FormatException(
+                                    'The selected containers changed. Close this editor and select again.',
+                                  );
+                                }
+                                final fields = [
+                                  if (applyBrand &&
+                                      targets.any(
+                                        (e) => e.details.brand != details.brand,
+                                      ))
+                                    'brand',
+                                  if (applyLocation &&
+                                      targets.any(
+                                        (e) =>
+                                            e.details.location !=
+                                            details.location,
+                                      ))
+                                    'location',
+                                ];
+                                if (fields.isNotEmpty) {
+                                  await changeDetails(targets, details, fields);
+                                }
+                                if (mounted) setState(_clearBulkSelection);
+                              } else if (group == null) {
                                 await add(details, amount);
                               } else {
                                 final before = original!.toJson(),
@@ -1088,7 +1480,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     child: Text(
                       pending()
                           ? 'Retry save'
-                          : group == null
+                          : !bulk && group == null
                           ? 'Add'
                           : 'Save',
                     ),
@@ -1124,7 +1516,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       controller.dispose();
     }
     if (accepted == null || !mounted) return;
-    if (group == null) {
+    if (!bulk && group == null) {
       setState(
         () => view = accepted!.$1.retention.isNotEmpty
             ? FoodView.retained
@@ -1176,50 +1568,33 @@ class FoodInventoryToolbar extends StatelessWidget {
   final bool showActions;
 
   @override
-  Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-    child: TaskToolbar(
-      userName: userName,
-      identityMenu: identityMenu ?? (_) => settings ?? const SizedBox.shrink(),
-      sectionName: 'Food inventory',
-      sectionIcon: Icons.kitchen_outlined,
-      sectionMenu: sectionMenu,
-      filter: showActions ? filter : null,
-      inputModeAction: !showActions
-          ? null
-          : (compact) => compact
-                ? IconButton(
-                    tooltip: 'Add food',
-                    onPressed: onAdd,
-                    visualDensity: VisualDensity.standard,
-                    constraints: const BoxConstraints(
-                      minWidth: 48,
-                      minHeight: 48,
-                    ),
-                    icon: const Icon(Icons.add),
-                  )
-                : Tooltip(
-                    message: 'Add food',
-                    child: OutlinedButton.icon(
-                      onPressed: onAdd,
-                      style: OutlinedButton.styleFrom(
-                        visualDensity: VisualDensity.standard,
-                        minimumSize: const Size(48, 48),
-                      ),
-                      icon: const Icon(Icons.add),
-                      label: const Text('Add'),
-                    ),
-                  ),
-      undo: !showActions
-          ? const SizedBox.shrink()
-          : IconButton(
-              key: const ValueKey('undo-food-action'),
-              tooltip: undoLabel,
-              onPressed: onUndo,
-              visualDensity: VisualDensity.standard,
-              constraints: const BoxConstraints(minWidth: 48, minHeight: 48),
-              icon: const Icon(Icons.undo),
-            ),
-    ),
+  Widget build(BuildContext context) => TaskToolbar(
+    userName: userName,
+    identityMenu: identityMenu ?? (_) => settings ?? const SizedBox.shrink(),
+    sectionName: sectionMenu == null ? 'Food inventory' : 'Food',
+    sectionIcon: Icons.kitchen_outlined,
+    sectionMenu: sectionMenu,
+    filter: showActions ? filter : null,
+    inputModeAction: !showActions
+        ? null
+        : (compact) => toolbarAction(
+            compact: compact,
+            tooltip: 'Add food',
+            icon: const Icon(Icons.add),
+            label: 'Add',
+            onPressed: onAdd,
+          ),
+    undo: const SizedBox.shrink(),
+    undoAction: !showActions
+        ? null
+        : (compact) => toolbarAction(
+            compact: compact,
+            label: 'Undo',
+            iconSize: 24,
+            key: const ValueKey('undo-food-action'),
+            tooltip: undoLabel,
+            onPressed: onUndo,
+            icon: const Icon(Icons.undo),
+          ),
   );
 }

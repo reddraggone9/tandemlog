@@ -68,14 +68,10 @@ void main() {
       await tester.pumpAndSettle();
       final item = food.view(FoodView.deleted).single.containers.first;
       await tester.ensureVisible(
-        find.byTooltip(
-          'Restore Batch beans container ${item.id.substring(item.id.length - 8)}',
-        ),
+        find.byKey(ValueKey('food-container-restore:${item.id}')),
       );
       await tester.tap(
-        find.byTooltip(
-          'Restore Batch beans container ${item.id.substring(item.id.length - 8)}',
-        ),
+        find.byKey(ValueKey('food-container-restore:${item.id}')),
       );
       await tester.pumpAndSettle();
       expect(singles, [item]);

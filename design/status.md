@@ -1,5 +1,37 @@
 # Current status — 2026-10-11
 
+## RC3/build65 Food editing and new-workspace initialization in native QA
+
+The approved batch includes shared Tasks/Food toolbar geometry, colors, wide
+Undo labels and active-filter dots; inclusive all-status Food search with a
+sticky Deleted section; free-text Brand/Location suggestions, multiple-value
+filters and exact-container bulk editing; aligned date-field insets; and denser
+expanded contents rows while retaining lower overflow and stable header controls.
+Lee additionally removed the RC-only unspecified contents state: new/imported
+containers default Full, explicit fractions/amounts remain exact, and all-null
+historical payloads fail decoding without rewritten hashes. A fresh independent
+Full import vector complements the unchanged old rejection fixture.
+
+Genuine empty workspace creation initializes shared text automatically before
+returning. Existing initialized production roots replay normally. The obsolete
+Settings setup tile/dialog is removed; existing uninitialized directories are
+rejected without silently adopting their history. Checked baseline math/readers
+and explicitly named historical fixture helpers retain required production
+replay/integrity coverage. A fresh trial importer must use the current admitted
+TaskStore with native engine and creation initialization before Food import.
+
+The focused Food/toolbar/date batch passes120 checks and cross-module checks98;
+independent205-container host Undo, eight-case initializer and12-case Full-vector
+gates pass. Source/UX review accepts the settled60-file inventory. Actual Linux
+GTK refinements pass7/7; the affected batch passes25 with three fixture failures
+closed by a reviewed3/3 targeted rerun. Final analysis is clean.
+[Toolbar/Food evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) binds settled source,
+scoped native attribution and matched synthetic Before/After pixels. The final native Linux recording and genuine wide-dark recapture pass; full
+signed candidate and exact new Android acceptance remain pending. Any old null-contents
+or uninitialized throwaway trial needs a separately coordinated fresh path and
+identity; the cloud does not delete/reset it or touch live data. No RC2 republish,
+stable promotion or dependency upgrade is included.
+
 ## Published RC2/build64 — exact native acceptance complete
 
 Source71045e5021f9dee821bc24ea1c118158f029fd83, candidate38133887765,

@@ -1,0 +1,9 @@
+{
+  "targetIds": [
+    "17fa9bc9-940a-53fe-b45a-3b4632409931"
+  ],
+  "planHash": "8598215f5eb931fd0145b92fcaaea1bc6e0c67a3af4dcfce13f91c1801a0be1c",
+  "canonicalJson": "{\"containers\":[{\"contents\":{\"denominator\":1,\"numerator\":1,\"unit\":null},\"createdAt\":\"2020-01-02T03:04:05+02:00\",\"details\":{\"brand\":\"Sample Foods\",\"estimated\":null,\"expiry\":\"2027-03-01\",\"location\":\"Freezer\",\"name\":\"Synthetic full-default beans\",\"retention\":\"Birthday cooking\",\"size\":\"\"},\"ordinal\":1,\"sourceId\":\"synthetic-full-default-row\"}],\"importId\":\"00000000-0000-4000-8000-000000000004\",\"sourceSha256\":\"f5bce3729a1cc5f0a99dcf3d1702a27ca03b5edf8c232418b151db0d71fa7cad\",\"space\":\"00000000-0000-4000-8000-000000000001\",\"v\":1}",
+  "sourceBytesUtf8": "synthetic-food-source-full-default-v1\n",
+  "reference": "Python standard-library hashlib.sha256 and uuid.uuid5; explicit v1 domains; Full default is 1/1 with no unit and nominal size remains blank."
+}

@@ -230,7 +230,13 @@ class TaskStore {
     WriterGuard? writerGuard,
     NativeTextEngine? textEngine,
     LocalProfileDatabase? profileDatabase,
+    bool initializeNewWorkspaceText = false,
   }) async {
+    if (initializeNewWorkspaceText && textEngine == null) {
+      throw ArgumentError(
+        'New workspace text initialization requires native text support.',
+      );
+    }
     if (profileDatabase == null) {
       return _open(
         folder,
@@ -240,6 +246,7 @@ class TaskStore {
         writerIdentity: writerIdentity,
         writerGuard: writerGuard,
         textEngine: textEngine,
+        initializeNewWorkspaceText: initializeNewWorkspaceText,
       );
     }
     if (writerIdentity == null || writerGuard != null) {
@@ -260,6 +267,7 @@ class TaskStore {
           now: now,
           writerIdentity: writerIdentity,
           textEngine: textEngine,
+          initializeNewWorkspaceText: initializeNewWorkspaceText,
           profileDatabase: profileDatabase,
           tables: TaskTables.forLocation(key),
           locationKey: key,
@@ -282,6 +290,7 @@ class TaskStore {
     LocalProfileDatabase? profileDatabase,
     TaskTables tables = const TaskTables.legacy(),
     String? locationKey,
+    bool initializeNewWorkspaceText = false,
   }) async {
     final phase = Stopwatch()..start();
     void mark(String name) {
@@ -494,13 +503,19 @@ class TaskStore {
         "SELECT value FROM ${tables.metadata} WHERE key='space'",
       );
       final files = await folder.list();
+      var createdManifest = false;
       if (!files.any((f) => f.name == 'tandemlog-space.json')) {
         if (old.isNotEmpty) {
           throw FormatFailure(
             'Previously opened workspace manifest is missing. Restore it before writing.',
           );
         }
-        if (files.any((f) => f.name.endsWith('.jsonl'))) {
+        if (files.any(
+          (f) =>
+              f.name.endsWith('.jsonl') ||
+              (initializeNewWorkspaceText &&
+                  (f.name.endsWith('.foodlog') || isFoodConflictName(f.name))),
+        )) {
           throw FormatFailure(
             'Logs exist without a workspace manifest. Restore the manifest before opening.',
           );
@@ -513,6 +528,7 @@ class TaskStore {
             ),
           ),
         );
+        createdManifest = true;
       }
       store.space = await _readSpace(folder);
       if (binding != null &&
@@ -576,6 +592,31 @@ class TaskStore {
         }
       }
       mark('ingest');
+      if (initializeNewWorkspaceText) {
+        // A retained preparation is the authority for an uncertain bootstrap;
+        // reopening must finish those exact bytes, never generate a new root.
+        for (final receipt in store.pendingTextOperations) {
+          if (LogEvent.decode(receipt.raw).type == 'text.baselineInitialized') {
+            await store._retryTextOperation(receipt);
+          }
+        }
+        if (createdManifest && !store.sharedTextInitialized) {
+          // A peer may have written after manifest creation. Such history is
+          // not an empty bootstrap and must not be silently adopted.
+          if (db.select('SELECT 1 FROM ${tables.events} LIMIT 1').isNotEmpty) {
+            throw FormatFailure(
+              'New workspace history changed before text initialization. Restore its initialized history before opening.',
+            );
+          }
+          await store._initializeSharedText(requireEmptyHistory: true);
+        }
+        if (!store.sharedTextInitialized) {
+          throw FormatFailure(
+            store.textWriteBlocked ??
+                'This workspace has no verified shared-text initialization. Restore its initialized history before opening.',
+          );
+        }
+      }
       return store;
     } catch (_) {
       try {
@@ -1611,7 +1652,7 @@ class TaskStore {
     if (!native && (_textBaseline == null || textWriteBlocked != null)) {
       throw FormatFailure(
         textWriteBlocked ??
-            'Initialize shared text before editing this existing task.',
+            'Restore verified shared-text initialization before editing this existing task.',
       );
     }
     if (!native &&
@@ -2402,10 +2443,23 @@ class TaskStore {
   bool get sharedTextInitialized =>
       _textBaseline != null && textWriteBlocked == null;
 
-  Future<LogEvent> initializeSharedText({
+  /// Historical fixture construction only. The application initializes empty
+  /// workspaces through [open], and never adopts an existing legacy workspace.
+  Future<LogEvent> initializeSharedTextForHistoricalFixture({
     void Function(OperationReceipt)? onPrepared,
-  }) => _serialize(() async {
+  }) => _serialize(() => _initializeSharedText(onPrepared: onPrepared));
+
+  Future<LogEvent> _initializeSharedText({
+    void Function(OperationReceipt)? onPrepared,
+    bool requireEmptyHistory = false,
+  }) async {
     await _refresh();
+    if (requireEmptyHistory &&
+        db.select('SELECT 1 FROM ${tables.events} LIMIT 1').isNotEmpty) {
+      throw FormatFailure(
+        'New workspace history changed before text initialization. Restore its initialized history before opening.',
+      );
+    }
     if (textEngine == null) {
       throw FormatFailure('Native text support is unavailable.');
     }
@@ -2438,13 +2492,21 @@ class TaskStore {
       {'frontiers': frontiers},
     );
     final digest = textBaselineSeedDigest(_baselineSeedFields(reference));
-    return _command(space, 'text.baselineInitialized', {
-      'codec': 'yrs-v1',
-      'adapter': 1,
-      'frontiers': frontiers,
-      'seedDigest': digest,
-    }, onPrepared: onPrepared);
-  });
+    return _command(
+      space,
+      'text.baselineInitialized',
+      {
+        'codec': 'yrs-v1',
+        'adapter': 1,
+        'frontiers': frontiers,
+        'seedDigest': digest,
+      },
+      onPrepared: onPrepared,
+      canCommit: requireEmptyHistory
+          ? () => db.select('SELECT 1 FROM ${tables.events} LIMIT 1').isEmpty
+          : null,
+    );
+  }
 
   File _textIntentFile(LogEvent event) =>
       File('$privatePath/text-intents/${event.writer}-${event.sequence}.json');
@@ -2763,7 +2825,7 @@ class TaskStore {
       if (!nativeCreation && _textBaseline == null) {
         throw FormatFailure(
           textWriteBlocked ??
-              'Initialize shared text before saving this existing task.',
+              'Restore verified shared-text initialization before saving this existing task.',
         );
       }
       if (!nativeCreation &&

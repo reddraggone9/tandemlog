@@ -1,3 +1,4 @@
+import '../test/support/toolbar_button.dart';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -118,7 +119,7 @@ void registerFoodAccountWorkflowTests() {
         // when the user returns to that section.
         await switchSection(tester, food: false);
         final undo = find.byKey(const ValueKey('undo-task-action'));
-        expect(tester.widget<IconButton>(undo).onPressed, isNotNull);
+        expect(toolbarButton(tester, undo).onPressed, isNotNull);
         await tester.tap(undo);
         await waitForUi(
           tester,

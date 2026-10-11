@@ -22,6 +22,24 @@ No canonical history is rewritten, deleted or timestamped at reception.
 
 ## Shared basis and captured editing
 
+Lee subsequently requested automatic shared-text initialization for genuinely
+new workspaces and removal of the obsolete Settings migration workflow. App
+opening now opts into `TaskStore.open(initializeNewWorkspaceText: true)` with
+native text support. Only a manifest created by that opening, with no admitted
+history, receives the empty shared baseline. Selecting an existing manifest
+never adopts its legacy fields: it must already have verified initialization,
+or opening reports an admission failure and preserves the folder. The public
+historical-fixture helper retains deliberate legacy test construction; it is
+not an application migration action. Baseline decoding, seed/frontier checks,
+peer text merging and previously initialized production history remain active.
+
+A retained uncertain bootstrap receipt may finish only its original exact
+bytes on the same writer/profile. An incomplete local canonical tail still
+blocks admission until its exact history is recovered; opening never rewrites
+that tail or invents another root. A surviving manifest without initialized
+history or a retained bootstrap receipt does not establish permission to adopt
+an existing folder. This also covers interruption before receipt staging.
+
 An explicit `text.baselineInitialized` record names exact per-writer sequence/hash
 frontiers and a digest of their original projected legacy field seeds. Verify
 the complete declared prefix before accepting a legacy text Save. Users establish

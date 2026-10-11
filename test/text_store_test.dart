@@ -341,7 +341,9 @@ void main() {
                 nativeCreation ? 'task.createdWithText' : 'task.created',
                 data,
               );
-              if (!nativeCreation) await store.initializeSharedText();
+              if (!nativeCreation) {
+                await store.initializeSharedTextForHistoricalFixture();
+              }
               expect(
                 store.db.select('SELECT 1 FROM text_fields WHERE entity=?', [
                   task,
@@ -503,7 +505,7 @@ void main() {
               completionDay: DateTime(2030, 5, 10),
             );
             expect(old.type, 'task.completed');
-            await store.initializeSharedText();
+            await store.initializeSharedTextForHistoricalFixture();
             await store.reopen(task, [old.id]);
             final file = File('${shared.path}/${store.writer}.jsonl');
             final before = await file.readAsBytes();
@@ -1338,9 +1340,9 @@ void main() {
               '${root.path}/pb',
               textEngine: engine,
             );
-            final baseline = await b.initializeSharedText();
+            final baseline = await b.initializeSharedTextForHistoricalFixture();
             await expectLater(
-              b.initializeSharedText(),
+              b.initializeSharedTextForHistoricalFixture(),
               throwsA(isA<FormatFailure>()),
             );
             await File(

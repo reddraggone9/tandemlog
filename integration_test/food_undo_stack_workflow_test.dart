@@ -1,3 +1,4 @@
+import '../test/support/toolbar_button.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -44,6 +45,42 @@ void registerFoodUndoStackWorkflowTests() {
       await captureNativeFixtureUi(tester, 'food-undo-bulk-add');
       _expectUndo(tester, contains('adding'));
 
+      await tester.enterText(
+        find.byKey(const ValueKey('food-search')),
+        'Synthetic undo rice',
+      );
+      await tester.pumpAndSettle();
+      await _tap(tester, find.byKey(const ValueKey('food-filter')));
+      await _tap(tester, find.text('Select matching active containers'));
+      expect(find.text('2 selected'), findsOneWidget);
+      await _tap(tester, find.widgetWithText(TextButton, 'Edit'));
+      await _tap(tester, find.text('Apply Brand'));
+      await tester.enterText(
+        find.widgetWithText(TextField, 'Brand'),
+        'Synthetic bulk brand',
+      );
+      await _tap(tester, find.widgetWithText(FilledButton, 'Save'));
+      await _idle(tester);
+      expect(
+        _named(
+          tester,
+          'Synthetic undo rice',
+        ).every((item) => item.details.brand == 'Synthetic bulk brand'),
+        isTrue,
+      );
+      _expectUndo(tester, contains('editing'));
+      await captureNativeFixtureUi(tester, 'food-undo-brand-bulk-applied');
+      await _undo(
+        tester,
+        () => _named(
+          tester,
+          'Synthetic undo rice',
+        ).every((item) => item.details.brand.isEmpty),
+      );
+      expect(_snapshot(tester), states.last);
+      _expectUndo(tester, contains('adding'));
+      await captureNativeFixtureUi(tester, 'food-undo-brand-bulk-restored');
+
       await _edit(tester, 'Synthetic undo rice', {
         'Brand': 'Edited brand',
         'Expiration': '2027-07-09',
@@ -78,9 +115,7 @@ void registerFoodUndoStackWorkflowTests() {
       final first = _named(tester, 'Synthetic undo rice').first;
       await _tap(
         tester,
-        find.byTooltip(
-          'Edit Synthetic undo rice container ${_suffix(first.id)} contents',
-        ),
+        find.byKey(ValueKey('food-container-edit:${first.id}')),
       );
       await _tap(
         tester,
@@ -200,7 +235,7 @@ void registerFoodUndoStackWorkflowTests() {
         await switchSection(tester, food: false);
         expect(tester.widget<Checkbox>(checkbox).value, true);
         final taskUndo = find.byKey(const ValueKey('undo-task-action'));
-        expect(tester.widget<IconButton>(taskUndo).onPressed, isNotNull);
+        expect(toolbarButton(tester, taskUndo).onPressed, isNotNull);
         await tester.tap(taskUndo);
         await waitForUi(
           tester,
@@ -443,7 +478,6 @@ FoodState _state(WidgetTester tester) =>
     tester.widget<FoodInventoryPage>(find.byType(FoodInventoryPage)).state;
 List<FoodContainer> _named(WidgetTester tester, String name) =>
     _state(tester).containers.where((e) => e.details.name == name).toList();
-String _suffix(String id) => id.substring(id.length - 8);
 String _snapshot(WidgetTester tester) {
   final rows = _state(tester).containers.toList()
     ..sort((a, b) => a.id.compareTo(b.id));
@@ -474,8 +508,8 @@ Finder _undoFinder(WidgetTester tester) {
   );
 }
 
-IconButton _undoButton(WidgetTester tester) =>
-    tester.widget(_undoFinder(tester));
+({VoidCallback? onPressed, String? tooltip}) _undoButton(WidgetTester tester) =>
+    toolbarButton(tester, _undoFinder(tester));
 void _expectUndo(WidgetTester tester, Matcher label) {
   final button = _undoButton(tester);
   expect(

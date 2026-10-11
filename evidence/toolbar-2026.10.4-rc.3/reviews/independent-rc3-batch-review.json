@@ -1,0 +1,504 @@
+{
+  "portability": "Local synthetic source/runtime paths normalized; original review SHA256 retained separately. Referenced historical logs/snapshots keep their original scope and are not all copied.",
+  "original_receipt_sha256": "04968053d674a49f6eb36e9829226517d4ca7aa618feba73b6da2de9d18a2e60",
+  "review": {
+    "version": 1,
+    "reviewer": "independent architecture reviewer",
+    "reviewedUtc": "2026-10-11T15:21:01.653555+00:00",
+    "verdict": "SOURCE_ACCEPTED_COMPLETED_NATIVE_EVIDENCE_SCOPED_REMAINING_GATES_PENDING",
+    "mustFixSource": [],
+    "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+    "suppliedSourceInventory": {
+      "path": "runtime-evidence/source-inputs-final.json",
+      "sha256": "6bc5dfba5378faa6aa8ca6207f7e716ba6ca00b5d585edf0fb74de3876b2386b",
+      "bytes": 9727
+    },
+    "currentReviewedBindings": {
+      "integration_test/checklist_lifecycle_test.dart": {
+        "path": "integration_test/checklist_lifecycle_test.dart",
+        "sha256": "7d523a5d9fd5b8bac83a4f7ec890e75a28abdffd407536b7f8ddf6748e0dd123",
+        "bytes": 17809
+      },
+      "integration_test/completion_actions_test.dart": {
+        "path": "integration_test/completion_actions_test.dart",
+        "sha256": "e47207c7b5f258ed99221f794318d1fc72de2519e54f79d9fc6252638ab6bc86",
+        "bytes": 12200
+      },
+      "integration_test/completion_focus_test.dart": {
+        "path": "integration_test/completion_focus_test.dart",
+        "sha256": "9768f00536389de6b491772eea48797dd36886144ba64b019b544346d9c030a4",
+        "bytes": 8749
+      },
+      "integration_test/food_account_workflow_test.dart": {
+        "path": "integration_test/food_account_workflow_test.dart",
+        "sha256": "6002245ffe8678d647382da7e17cac9dc5995e82da28a0130f14bf78cfb253b3",
+        "bytes": 21668
+      },
+      "integration_test/food_all_status_search_workflow_test.dart": {
+        "path": "integration_test/food_all_status_search_workflow_test.dart",
+        "sha256": "18145feadefd0feeb40778d9ad28034d8d62ccf5831bb0e119b142344654a140",
+        "bytes": 1774
+      },
+      "integration_test/food_bulk_details_host_undo_review_test.dart": {
+        "path": "integration_test/food_bulk_details_host_undo_review_test.dart",
+        "sha256": "cffcb1ed84b93642d953bdcf012435a365d2cbf294ccc0111aab0ff28e4ae274",
+        "bytes": 412
+      },
+      "integration_test/food_inspect_accessibility_test.dart": {
+        "path": "integration_test/food_inspect_accessibility_test.dart",
+        "sha256": "d7dffa74142429a852719b0cae2ceacec2194461fc7f7edd25d626395213ea53",
+        "bytes": 5954
+      },
+      "integration_test/food_production_workflow_test.dart": {
+        "path": "integration_test/food_production_workflow_test.dart",
+        "sha256": "ecdac29d95e68073c840bf066a2eed7b72b8e89949e65855cd935f1133ceb4e5",
+        "bytes": 24227
+      },
+      "integration_test/food_refinements_workflow_test.dart": {
+        "path": "integration_test/food_refinements_workflow_test.dart",
+        "sha256": "54a2d8f46bff0f0e1996e5d6c085eeaedb4470dbcb8615745b67bf0221010c56",
+        "bytes": 3265
+      },
+      "integration_test/food_undo_stack_workflow_test.dart": {
+        "path": "integration_test/food_undo_stack_workflow_test.dart",
+        "sha256": "ad5efff9c11e306cf67509af1e2fdd27d6a9ecc58b59ca30f6ad2f49cc6f6b68",
+        "bytes": 28277
+      },
+      "integration_test/native_text_fixtures.dart": {
+        "path": "integration_test/native_text_fixtures.dart",
+        "sha256": "61d478071446541e0e17c0eb4c364185a5e9e89e9d60f8525e52a97af99d375d",
+        "bytes": 5007
+      },
+      "integration_test/rc3_affected_acceptance_test.dart": {
+        "path": "integration_test/rc3_affected_acceptance_test.dart",
+        "sha256": "8e47ec679a3906e69c06206200747877a85b14c3d83471f1d5cc6f62f7076fc3",
+        "bytes": 966
+      },
+      "integration_test/save_acknowledgement_test.dart": {
+        "path": "integration_test/save_acknowledgement_test.dart",
+        "sha256": "1a1953a233617a477e3d760152f0918534348954fa31974fc855c6881c1091d5",
+        "bytes": 12560
+      },
+      "integration_test/task_flow_test.dart": {
+        "path": "integration_test/task_flow_test.dart",
+        "sha256": "a6724c3f8c7adca53e2937ec5e0d2abbe908a2e2db01d481b8f796f618ea99c8",
+        "bytes": 174658
+      },
+      "integration_test/task_precision_test.dart": {
+        "path": "integration_test/task_precision_test.dart",
+        "sha256": "156da66d1ca879800a60a39bc3d2a933ff425619ca72c0530608ba296d76955f",
+        "bytes": 6672
+      },
+      "integration_test/text_workflow_test.dart": {
+        "path": "integration_test/text_workflow_test.dart",
+        "sha256": "13c5e8c6ed4fa386067c3237fbb5bda13783cf890e09258b18f4e8051a2710d7",
+        "bytes": 18610
+      },
+      "integration_test/toolbar_parity_workflow_test.dart": {
+        "path": "integration_test/toolbar_parity_workflow_test.dart",
+        "sha256": "4c75c14162db06588d3daba5836f5e84de264e0d9f1ab4b29e3c4423e9e96dca",
+        "bytes": 12350
+      },
+      "lib/food/food_import.dart": {
+        "path": "lib/food/food_import.dart",
+        "sha256": "404f56da757b682420d166fac0df28d1c63bde81c4cf0d465ac5d8b09f62b7a4",
+        "bytes": 6309
+      },
+      "lib/food/food_page.dart": {
+        "path": "lib/food/food_page.dart",
+        "sha256": "d8bc4f06e53bdf9abe3f04019208662976f25236fb4d46c8cc30485ff68a77c7",
+        "bytes": 67022
+      },
+      "lib/food/inventory.dart": {
+        "path": "lib/food/inventory.dart",
+        "sha256": "b2726737d7581f51b8516ae0ce4b08412365eb9861564a382c1d6cb7e1abb6f1",
+        "bytes": 24057
+      },
+      "lib/main.dart": {
+        "path": "lib/main.dart",
+        "sha256": "26013a6cc4f36c597b198c550edee690daeb9c516590d63e3c68a1c45db0b267",
+        "bytes": 203720
+      },
+      "lib/presentation/civil_date_input.dart": {
+        "path": "lib/presentation/civil_date_input.dart",
+        "sha256": "bca5bf871fe79f0f176172d7e2b19cf028be13e21e73a2f6de51da967ebc597a",
+        "bytes": 6604
+      },
+      "lib/presentation/free_text_autocomplete.dart": {
+        "path": "lib/presentation/free_text_autocomplete.dart",
+        "sha256": "f2b82719e5c9026b1fb9d6c4e0856b3b757ee528cbeb7d4c5511ddcbcbc22ff9",
+        "bytes": 1631
+      },
+      "lib/presentation/tag_input.dart": {
+        "path": "lib/presentation/tag_input.dart",
+        "sha256": "a7caf9da03f018d4e41c436a04d836eb356bcfa1eec5b51d42f9f9d1d4c7da37",
+        "bytes": 23703
+      },
+      "lib/presentation/task_editor.dart": {
+        "path": "lib/presentation/task_editor.dart",
+        "sha256": "46f01e3123f69299ce6a65dc37f47536d24270119e78813434de6a333c0f8120",
+        "bytes": 41745
+      },
+      "lib/presentation/task_toolbar.dart": {
+        "path": "lib/presentation/task_toolbar.dart",
+        "sha256": "4a1052035369038feb75f86cb7a9e4158eb29572be3190b4dc28d3c88411306a",
+        "bytes": 8880
+      },
+      "lib/presentation/toolbar_action.dart": {
+        "path": "lib/presentation/toolbar_action.dart",
+        "sha256": "9f6c6773bfa042aa10575f8660ef83827976dfe5ba2787677c69eebb57e5e837",
+        "bytes": 2871
+      },
+      "lib/storage/task_store.dart": {
+        "path": "lib/storage/task_store.dart",
+        "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0",
+        "bytes": 158992
+      },
+      "pubspec.yaml": {
+        "path": "pubspec.yaml",
+        "sha256": "9f7bca14b738b7a060b74537968a5e56b97fd1965ecc3dc8c21e844b7ec0e13d",
+        "bytes": 590
+      },
+      "test/checklist_baseline_selection_test.dart": {
+        "path": "test/checklist_baseline_selection_test.dart",
+        "sha256": "f7574f98ce5f82f95950406647f6f9d9cfdd6fccce8c8c5d1a2fe3cfe394bcf1",
+        "bytes": 7235
+      },
+      "test/checklist_storage_test.dart": {
+        "path": "test/checklist_storage_test.dart",
+        "sha256": "3314b157ef75dcd258f0287d03ecece54c7435222d5e25eb07365aa989277957",
+        "bytes": 20463
+      },
+      "test/date_input_alignment_workflow_test.dart": {
+        "path": "test/date_input_alignment_workflow_test.dart",
+        "sha256": "6a84bf04222a6cad0b00bbf298dfd8901eaaacdc445874ec1c4940cb052ca579",
+        "bytes": 3608
+      },
+      "test/date_time_layout_test.dart": {
+        "path": "test/date_time_layout_test.dart",
+        "sha256": "04447a6717c90c865164abb2637eb3a136cc9a51ad12a540196ac92228893fa7",
+        "bytes": 9566
+      },
+      "test/fixtures/food-import/expected-v1-full-default.json": {
+        "path": "test/fixtures/food-import/expected-v1-full-default.json",
+        "sha256": "4056ddb7ccbb0648c2bc5c51aa7429b20d1c9c460105dbd42e010edf43f0f143",
+        "bytes": 982
+      },
+      "test/fixtures/food-import/plan-v1-full-default.json": {
+        "path": "test/fixtures/food-import/plan-v1-full-default.json",
+        "sha256": "102096a7f994fa846931a411e7c7477bcec89be9f6b4cca40462e667b681b501",
+        "bytes": 713
+      },
+      "test/food_all_status_search_workflow_test.dart": {
+        "path": "test/food_all_status_search_workflow_test.dart",
+        "sha256": "0ebd3e9bbc598802a2c26e9a8328174e14a6ace6f22f493518c621639644534f",
+        "bytes": 12707
+      },
+      "test/food_bulk_details_undo_review_test.dart": {
+        "path": "test/food_bulk_details_undo_review_test.dart",
+        "sha256": "e0f7218cd662ffdddea8500961d32e8e2609879addf6246ac8ecad7525b67f87",
+        "bytes": 21532
+      },
+      "test/food_bulk_details_workflow_test.dart": {
+        "path": "test/food_bulk_details_workflow_test.dart",
+        "sha256": "0c79acf380e05e0c21200f1932969d3c3bbb16f04e7f618f68d0896d21fca37e",
+        "bytes": 8440
+      },
+      "test/food_collapsed_inspect_guard_test.dart": {
+        "path": "test/food_collapsed_inspect_guard_test.dart",
+        "sha256": "a97e307365de421addb4ac9e00ec500486da0a706f456d2710202ba04f43ca1e",
+        "bytes": 4999
+      },
+      "test/food_expiration_observed_group_review_test.dart": {
+        "path": "test/food_expiration_observed_group_review_test.dart",
+        "sha256": "9b4a9abd00535ef65e79cb37caec8bc4fa69ceb01e37c643e6e4d3056613aa08",
+        "bytes": 5574
+      },
+      "test/food_field_filter_workflow_test.dart": {
+        "path": "test/food_field_filter_workflow_test.dart",
+        "sha256": "f1898a94d6933b5c6f5416f03dbb806379fab87d448080cac799732df39fcde3",
+        "bytes": 7210
+      },
+      "test/food_filter_route_ownership_test.dart": {
+        "path": "test/food_filter_route_ownership_test.dart",
+        "sha256": "e5a8ae048d7ef33bb919a9a4a587c0cfc53ad8aec3eed283158cc556798ec4f9",
+        "bytes": 3389
+      },
+      "test/food_full_default_import_vector_test.dart": {
+        "path": "test/food_full_default_import_vector_test.dart",
+        "sha256": "e51c4803c27ceca143d39a5cdc567ce017f2bc0167da0fc1ccd606d29b3f5c6e",
+        "bytes": 5310
+      },
+      "test/food_full_default_test.dart": {
+        "path": "test/food_full_default_test.dart",
+        "sha256": "7034278a0015c123a6dcd091b932908d0e1c06f90be24b1cf1d02fdc1807c0ab",
+        "bytes": 2114
+      },
+      "test/food_group_action_geometry_test.dart": {
+        "path": "test/food_group_action_geometry_test.dart",
+        "sha256": "9bf1c8f839101d480f82893dac783f156247e0388209fd435eb65c970045c202",
+        "bytes": 5690
+      },
+      "test/food_import_contract_vector_test.dart": {
+        "path": "test/food_import_contract_vector_test.dart",
+        "sha256": "51a833324bbee63a47202a8f967b34b1db4608c762e54508a6819c4a9f4458d4",
+        "bytes": 741
+      },
+      "test/food_import_test.dart": {
+        "path": "test/food_import_test.dart",
+        "sha256": "2de7ea8267709e2b23ff4c489d8d19359244645f04216442d9f5bef253f502f1",
+        "bytes": 21497
+      },
+      "test/food_inventory_test.dart": {
+        "path": "test/food_inventory_test.dart",
+        "sha256": "7aae02586aa01a113479e8f5053118b1ad18aafceff5bd1acd778548e32eb556",
+        "bytes": 17745
+      },
+      "test/food_preview_test.dart": {
+        "path": "test/food_preview_test.dart",
+        "sha256": "782268f08e608cf8a116e99a1bd9d5f99c643b93587cb831e64a47f0fbe59ab0",
+        "bytes": 5114
+      },
+      "test/food_restore_batch_callback_test.dart": {
+        "path": "test/food_restore_batch_callback_test.dart",
+        "sha256": "9f3eea2419e475166fa8dc71715277e48263739bc50726e3661cefe51127a78d",
+        "bytes": 4408
+      },
+      "test/food_stock_toolbar_workflow_test.dart": {
+        "path": "test/food_stock_toolbar_workflow_test.dart",
+        "sha256": "4d9b2c85b16b44cba8037c4f3aea5ea2c8559bf7f4da21c74df1a0d79ff5b77f",
+        "bytes": 9350
+      },
+      "test/food_value_autocomplete_workflow_test.dart": {
+        "path": "test/food_value_autocomplete_workflow_test.dart",
+        "sha256": "ce6e41ad5cacba2dd915c49215dfee437ec4a421488358b25c6718b4d1ee70a5",
+        "bytes": 4998
+      },
+      "test/food_view_reachability_test.dart": {
+        "path": "test/food_view_reachability_test.dart",
+        "sha256": "7d4b9409e66a9d654ab4fcf760e0a209cf9554fcdbc184ac0f56f5ba40ef42a9",
+        "bytes": 14908
+      },
+      "test/historical_delivery_test.dart": {
+        "path": "test/historical_delivery_test.dart",
+        "sha256": "5f274f3eed1901a9dab81e6770ea10d7b22ae921927a66c57a36475da4e5ad33",
+        "bytes": 9726
+      },
+      "test/historical_recompletion_test.dart": {
+        "path": "test/historical_recompletion_test.dart",
+        "sha256": "7379ca457d347fa38db3e70e62e08cfdf87d2079db874a4806a31e5b940f7cb2",
+        "bytes": 10934
+      },
+      "test/new_workspace_text_initialization_test.dart": {
+        "path": "test/new_workspace_text_initialization_test.dart",
+        "sha256": "1d181edfc4a90d9bf3c887022bc54eba4d0beeb5be999020d6c2b44bf2e7d9ba",
+        "bytes": 11511
+      },
+      "test/support/toolbar_button.dart": {
+        "path": "test/support/toolbar_button.dart",
+        "sha256": "28cfacd3e218673abca39451691c2fb5fc9ca2efa0dd914a75eb4637753f1198",
+        "bytes": 837
+      },
+      "test/task_editor_test.dart": {
+        "path": "test/task_editor_test.dart",
+        "sha256": "ba68f359ab8802c76264454ba6526acd630d7a365576c83cab36bb16f0c2d019",
+        "bytes": 47677
+      },
+      "test/text_store_test.dart": {
+        "path": "test/text_store_test.dart",
+        "sha256": "3f733f5958807cc2845900c9b6ec1cfec6b6241aeadadd58298bd56e9b387a15",
+        "bytes": 79372
+      },
+      "test/toolbar_undo_label_test.dart": {
+        "path": "test/toolbar_undo_label_test.dart",
+        "sha256": "e87533a4453e01460c55a1d5a6ccfc52f92527d06b10d690c597c72c0fc5591a",
+        "bytes": 2125
+      }
+    },
+    "fixtureOnlyDeltaSinceSuppliedInventory": [
+      "integration_test/text_workflow_test.dart",
+      "integration_test/toolbar_parity_workflow_test.dart",
+      "test/text_store_test.dart"
+    ],
+    "reviewedSnapshot": "runtime-evidence/independent-reviewed-rc3-batch-snapshot",
+    "documentationBindings": {
+      "design/README.md": {
+        "path": "design/README.md",
+        "sha256": "6116fcff3da1d55b725d361377ac932bceebe9393a5f2f7185bc51d13eaae039",
+        "bytes": 7027
+      },
+      "design/status.md": {
+        "path": "design/status.md",
+        "sha256": "444fb3f6e978836ddcdc752eb246a074ab7de27a436dfe6c5e53d302fecb68ba",
+        "bytes": 115075
+      },
+      "design/architecture.md": {
+        "path": "design/architecture.md",
+        "sha256": "4f8090db121a11e8904e231c335eef9bb044de2508eec44b001b8ebd7f4b3b93",
+        "bytes": 11224
+      },
+      "design/product-behavior.md": {
+        "path": "design/product-behavior.md",
+        "sha256": "854b9af248067097eb50b4e79a39c990785a1d8cec9f93960721a7ee1b82dcd2",
+        "bytes": 37632
+      },
+      "design/decisions/0010-collaborative-text-adoption.md": {
+        "path": "design/decisions/0010-collaborative-text-adoption.md",
+        "sha256": "107f3dd05da1935a3946b1bcd1b6a560398c1d238e7cacaaf65958c3435b5892",
+        "bytes": 31403
+      },
+      "design/decisions/0017-food-stock-and-toolbar-refinements.md": {
+        "path": "design/decisions/0017-food-stock-and-toolbar-refinements.md",
+        "sha256": "3ac7de7b0aae68bdd0b2d1420b91789e2ada6aafd06b6766345731bd91468a4d",
+        "bytes": 6633
+      },
+      "design/decisions/0019-food-field-editing-and-contents-defaults.md": {
+        "path": "design/decisions/0019-food-field-editing-and-contents-defaults.md",
+        "sha256": "f14eb728ae09982648e36af7433c6c765ba9bf40855fc451caad048e7af700ad",
+        "bytes": 3005
+      },
+      "design/food-import-contract.md": {
+        "path": "design/food-import-contract.md",
+        "sha256": "ebb0b9ec72ed8f3c70cdf23d45c6c6ed398cd7ad6d1d4febe5fc903728a6b9e9",
+        "bytes": 8502
+      },
+      "design/prerelease-notes.md": {
+        "path": "design/prerelease-notes.md",
+        "sha256": "889a8e9c4574b9cbe00424c38d011b0e5599363e2010cb9717930af4e46ddd1c",
+        "bytes": 726
+      }
+    },
+    "evidenceBindings": [
+      {
+        "path": "runtime-evidence/refinements-native-final.log",
+        "sha256": "173c159bd98e2ef6d51d3c6592957427eecefe6171809ceb565f2c3de2a63f92",
+        "bytes": 8273
+      },
+      {
+        "path": "runtime-evidence/filter-route-red.log",
+        "sha256": "ec75d6e2d6d2a9c415b11e9bde4e5253f61f8bbd84253e44283e8dc1c810a1ec",
+        "bytes": 4614
+      },
+      {
+        "path": "runtime-evidence/filter-route-guarded-final.log",
+        "sha256": "210fdcd2c22d0bd8980988e7ae3acc6c75f9a9f7e613829b7fcc1568e23148aa",
+        "bytes": 1607
+      },
+      {
+        "path": "runtime-evidence/final-focused-batch.log",
+        "sha256": "7afca42face7a1e94a6c3f54b88fa3941468cbbd23b6b37b8f175ee49f187ed2",
+        "bytes": 17710
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-dark-320-2.0x-bulk-mixed-untouched.png",
+        "sha256": "536e163a76e9c0d65bb0f65ebc030cf5caf06c8b924e87cfad67cabd3c857dac",
+        "bytes": 40286
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-light-320-2.0x-filters-multi-selection.png",
+        "sha256": "cca6dd3c11d8cdb315ac7716b5357a1fc31b2653b9fe349a08dec12a27ec79b7",
+        "bytes": 50408
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-light-320-2.0x-date-focused-blank.png",
+        "sha256": "5765a21eeb1b0558604306766c57afaee6a665ff16e9bd63ea14bf2debf2dd1d",
+        "bytes": 17830
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-dark-320-2.0x-autocomplete-brand-options.png",
+        "sha256": "8a69fa3de381bd610be0efeac11d0452575fb299aa598c6da0f9223b1a9d4e8b",
+        "bytes": 47396
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-light-900-1.0x-autocomplete-free-text.png",
+        "sha256": "ac02806ba399895cc62705cae7408eb1a35c915f4d91636499f17a583f3f8c51",
+        "bytes": 57421
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-light-900-1.0x-bulk-apply-brand.png",
+        "sha256": "f740666088645530609671115301ad2c50e845fc40e1c6713845eeba045222d5",
+        "bytes": 52486
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/group-actions-dark-320-2.0x-expanded-1.png",
+        "sha256": "12ef43bf1b9d6d039e68f95943d3dc29eb60dccf5db8a39215e1a22325470a76",
+        "bytes": 31624
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/group-actions-light-1200-1.0x-expanded-0.png",
+        "sha256": "47809d396413b50964281ef1e1cd626987f43243914a3e8b1860ce7dff724764",
+        "bytes": 31118
+      },
+      {
+        "path": "runtime-evidence/refinements-native-final/food-refinements-light-900-1.0x-date-populated.png",
+        "sha256": "ee7caf8c117df78a1916bbd794f7cc42d4603a0fbee91e03eb6df419ea1c1970",
+        "bytes": 14657
+      }
+    ],
+    "conclusions": [
+      "Bulk editor captures immutable exact selected active visible physical IDs; excludes hidden/deleted/later-arriving IDs. Apply starts off; explicit Clear prevents accidentally clearing mixed values. Other fields stay untouched; Cancel/no-op emit no writes.",
+      "Workspace and visible-membership guards protect initial submission. Frozen controller values, captured host origin and command fingerprint preserve exact pending retry, one batch receipt and one Undo action.",
+      "Free-text autocomplete constrains no input and owns only focus. Suggestions include existing values across statuses. Filters OR within field and AND across fields; trimmed query bypasses saved filters without modifying them.",
+      "All-status search partitions status before grouping; deleted matches retain explicit Restore and scoped native sticky heading. Popup state includes observed member identity to reject stale membership actions.",
+      "Conservative lower overflow preserves48px targets/header centers. Visible opaque prefixes/duplicate count removed, distinct accessible per-container actions retained. Shared Undo and date-inset/fit budget changes remain presentation-owned.",
+      "New TaskStore initializer opts in only at app open with native engine: created manifest plus empty refreshed history, existing verified replay, exact pending-baseline retry, fail-closed existing-uninitialized history. Historical fixture helper preserves checked seed/frontier mathematics and required readers.",
+      "No changes in native/platform/workflows/lockfile, Food codec/store or protected DB owner. No live data operation, cleanup or in-place history adoption.",
+      "Current docs distinguish accepted changes, unsupported old RC-only null-contents trials, preserved bytes and remaining exact candidate/native gates. Full-default implementation/vector has separate independent owner review; not re-generated here."
+    ],
+    "resolvedP2": {
+      "issue": "Filter Cancel/Apply could pop containing route repeatedly and queries could remain undisposed after unmount.",
+      "fix": "One-shot/current-route guard; route.completed is sole cleanup signal.",
+      "proof": "Actual2-case red retained; final7 widget checks pass including repeated decisions, abrupt unmount disposal and4 existing filter variants."
+    },
+    "observedChecks": {
+      "nativeRefinements": "7/7 terminalPASS04:59 on pre-modal-fix runtime inventory",
+      "filterRoute": "7/7 terminalPASS00:08 final corrected source",
+      "sourceInventory": "all60 supplied hashes matched before fixture corrections; current snapshot binds listed allowed fixture-only deltas",
+      "pixels": "Actual synthetic GTK wide/narrow, both themes,200% inspected; accepted images readable with no material UX defect",
+      "focused": "Parent120 focused report; completed log bound, no independent broad rerun"
+    },
+    "nativeAttribution": {
+      "preModalInventory": {
+        "path": "runtime-evidence/refinements-final-inputs.json",
+        "sha256": "29241518ba1d788f84a583267c028f1f58696e1b152a6d9197e2bc21c47455e4",
+        "bytes": 19019
+      },
+      "qualification": "Earlier7/7 native does not assert blanket exact-current fixture/application acceptance. Current widget7 closes localized production modal delta."
+    },
+    "pendingGates": [
+      {
+        "gate": "Affected exact-current native",
+        "observation": {
+          "path": "runtime-evidence/independent-reviewed-rc3-batch-snapshot/observed-affected-native.log",
+          "sha256": "8a3073a814e29a610e0b35ff854acc13def13b31a0e0c48e16ba7c3890b3950d",
+          "bytes": 32721
+        },
+        "status": "Affected native terminal25PASS/3FAIL05:02 preserved: fresh-name fixture clicked pre-enabled Continue; both account-size equality cases at1200/200 ignored inherited Food900 vs wider Tasks constraint. Current source-bound test corrections add enabled/hit-test readiness and qualify account width while retaining48px targets/full identity/vertical parity and functional Settings access. Passing affected rerun remains pending; no inferred pass."
+      },
+      {
+        "gate": "Clean final analyzer",
+        "observation": {
+          "path": "runtime-evidence/independent-reviewed-rc3-batch-snapshot/observed-final-analyze.log",
+          "sha256": "45ee51aec7cbda4ea4e88e84fed2ffbaedc2d9ba7e12c56dc13e0f38319cf113",
+          "bytes": 868
+        },
+        "status": "Observed one test/text_store fixture brace info; current formatting correction is source-bound, finalclean log pending."
+      },
+      {
+        "gate": "Wide-dark first autocomplete pixel",
+        "status": "Original black Test starting frame rejected as UI proof and preserved diagnostic. Warmup recapture pending."
+      },
+      {
+        "gate": "Durable evidence assembly and release",
+        "status": "README assembly, full hosted source candidate, original signed exact-package checks, Android/platform native acceptance and separate final editorial/media/publication gates remain pending."
+      }
+    ],
+    "scopeLimits": [
+      "Source acceptance only; no publication/stable-promotion/live-import/reset/deletion authorization.",
+      "GTK component and host screenshots are explicitly distinct; no Android/Windows/runtime-AT claim.",
+      "No proposed extra header slot or details navigation implemented; latest lower-row direction supersedes earlier preflight.",
+      "Historical toolbar/search receipts remain preserved."
+    ],
+    "completedChecksQualification": "Completed source and prior native acceptance does not close the failed affected aggregate. Its three failing fixtures must pass after the reviewed corrections before full integration/candidate acceptance."
+  }
+}

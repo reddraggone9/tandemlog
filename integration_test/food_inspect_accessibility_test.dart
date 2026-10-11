@@ -83,7 +83,7 @@ void main() {
               .containers
               .map((e) => e.toJson())
               .toList();
-          final metadata = find.text('1 container · 500 g · Freezer');
+          final metadata = find.text('500 g · Freezer');
           expect(metadata, findsNothing);
           expect(find.byTooltip('Actions for Oat milk'), findsNothing);
           await activateWithKeyboard(
@@ -95,7 +95,14 @@ void main() {
           );
           await tester.pumpAndSettle();
           expect(metadata.hitTestable(), findsOneWidget);
-          expect(find.text('Container 00000001 · Full'), findsOneWidget);
+          expect(
+            find.byKey(
+              const ValueKey(
+                'food-container-contents:00000000-0000-4000-8000-000000000001',
+              ),
+            ),
+            findsOneWidget,
+          );
           await pixels.capture(tester, name);
           final actions = find.byTooltip('Actions for Oat milk');
           await activateWithKeyboard(tester, actions);

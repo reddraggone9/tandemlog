@@ -1,0 +1,51 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "41c0f91dd222b2eb0cd5c3470addfb03b5574f2d866cf049f164212b4028fb0b",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T15:35:15.534454+00:00",
+    "verdict": "ACCEPTED_VERSION_METADATA_ONLY_CORRECTION",
+    "mustFix": [],
+    "extends": {
+      "path": "runtime-evidence/independent-rc3-recapture-closure.json",
+      "sha256": "6768e3a3e97237e30b146b767677144311cb546c929e96f0a546cc560c0a52e4",
+      "bytes": 4360
+    },
+    "sourceBindings": [
+      {
+        "path": "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml",
+        "sha256": "0c960321e54d99e84fda9d819b19e5e4a050bd0b02d47fb9dc10da91f2280069",
+        "bytes": 1146
+      },
+      {
+        "path": "pubspec.yaml",
+        "sha256": "9f7bca14b738b7a060b74537968a5e56b97fd1965ecc3dc8c21e844b7ec0e13d",
+        "bytes": 590
+      },
+      {
+        "path": "runtime-evidence/source-inputs-settled.json",
+        "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3",
+        "bytes": 9727
+      }
+    ],
+    "delta": "Exact single attribute replacement2026.10.4-rc.2\u21922026.10.4-rc.3 independently compared against baseline527064c. Date2026-10-11,type development and all remaining XML bytes unchanged. Matches pubspec RC3+65.",
+    "settledSourceCheck": "All60 lib/test/fixture inventory entries unchanged.",
+    "evidenceBindings": [
+      {
+        "path": "runtime-evidence/final-tool-check-green.log",
+        "sha256": "e42e582c17fea24b6d1d8fe0e87a6e31fd881993ff77d480e9b3676abb0b76ec",
+        "bytes": 609
+      },
+      {
+        "path": "runtime-evidence/final-format-check.log",
+        "sha256": "efc1c1e56c7371bf4e3963cb39933b72938e4d940353014407077ee14ca9f073",
+        "bytes": 49
+      }
+    ],
+    "observedChecks": {
+      "tools": "Ran74 tests,OK with1 skipped (73 non-skipped successful checks); synthetic portable hash stdout is test fixture, not an accepted package identity.",
+      "format": "270 files,0 changed,1.62sec."
+    },
+    "qualification": "No runtime/codec/dependency/signing change or new acceptance claim. Final candidate must build/package the corrected metadata; prior package/native/platform/publication gates remain unchanged. Originalfailed metadata check and prior review receipts remain preserved."
+  }
+}

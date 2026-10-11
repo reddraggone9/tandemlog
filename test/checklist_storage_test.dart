@@ -379,7 +379,7 @@ void main() {
         completionDay: DateTime(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
-      await a.initializeSharedText();
+      await a.initializeSharedTextForHistoricalFixture();
       final childItem = await add('Existing child work', owner: child);
       await a.command(childItem, 'checklist.itemEdited', {'completed': true});
       await a.undoOperations([original.id]);
@@ -467,7 +467,7 @@ void main() {
         completionDay: DateTime(2030, 5, 1),
       );
       final child = const Uuid().v5(scalar, 'successor');
-      await a.initializeSharedText();
+      await a.initializeSharedTextForHistoricalFixture();
       final copied = const Uuid().v5(child, 'checklist:$originalItem');
       await saveText(a, copied, 'title', 'Independent child');
       await a.undoOperations([original.id]);

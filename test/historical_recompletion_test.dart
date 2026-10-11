@@ -58,7 +58,7 @@ class _Fixture {
         'remove': [],
       },
     });
-    await store.initializeSharedText();
+    await store.initializeSharedTextForHistoricalFixture();
     await store.reopen(parent, [original.id]);
     return _Fixture(root, folder, engine, store, parent, child, original);
   }

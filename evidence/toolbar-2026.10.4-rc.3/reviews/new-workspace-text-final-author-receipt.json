@@ -1,0 +1,168 @@
+{
+  "portability": "Local synthetic source/runtime paths normalized; original review SHA256 retained separately. Referenced historical logs/snapshots keep their original scope and are not all copied.",
+  "original_receipt_sha256": "ee12a1d36913fdbdf7701f33d8ef983f85c6ccded417229a6297d6553b6e449d",
+  "review": {
+    "status": "Author implementation complete; focused unit validation passed; independent review and actual native UI execution owned by parent remain pending",
+    "base": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+    "issue": "New TaskStore.open created workspace manifest without shared-text baseline; desktop and Android main opener share this path. Actual private/out-of-repo importer source was unavailable and was not inspected.",
+    "authorizedPolicy": "Lee explicitly requested automatic genuinely new initialization and removal of obsolete one-time Settings migration, while preserving initialized CRDT history/replay/integrity and released scalar v3 meaning.",
+    "implemented": [
+      "Explicit initializeNewWorkspaceText option defaultfalse for compatibility/intentional historical fixtures; root main opener passes true with NativeTextEngine.",
+      "New baseline only after this call created manifest and admitted history stays empty; refreshed pre-prepare checks prevent silently adopting peer history.",
+      "Existing initialized workspaces replay; existing uninitialized manifests (even empty) fail admission without changing canonical bytes. Food canonical/conflict history without manifest rejects before creation.",
+      "Retained same-owner baseline preparation retries original receipt; zero-byte unknown append resumes, incomplete owned tail still fails closed until exact history is restored.",
+      "Public legacy activation API renamed initializeSharedTextForHistoricalFixture; all original legacy baseline/digest/frontier/recurrence/Undo tests retained.",
+      "Native fixture default initializes new workspaces, with deliberate pre-baseline precision/historical/standalone-receipt exceptions. Completion duplicate count includes current required completion families; independently edited successor uses native captured Save."
+    ],
+    "scopeLimits": [
+      "No live/trial folders inspected or mutated",
+      "No scalar v3 bytes/hashes/clocks/IDs/meaning changed",
+      "No schema/native/dependency upgrades",
+      "No app main.dart edit by this author; root owns flag and Settings removal",
+      "No app build, commit, push or publication by this author"
+    ],
+    "validation": {
+      "newInitializer": {
+        "passed": 8,
+        "failed": 0,
+        "log": {
+          "path": "initializer-review/initializer-eight-green.log",
+          "bytes": 756,
+          "sha256": "bc9fbc5ab6a934f20cfe67fe2eacafd349de15836194abf5da3b163fa442b5ea"
+        }
+      },
+      "finalInitializerAndHistorical": {
+        "passed": 57,
+        "failed": 0,
+        "skipped": 0,
+        "files": [
+          "test/new_workspace_text_initialization_test.dart",
+          "test/text_store_test.dart",
+          "test/checklist_baseline_selection_test.dart",
+          "test/checklist_storage_test.dart",
+          "test/historical_delivery_test.dart",
+          "test/historical_recompletion_test.dart"
+        ],
+        "log": {
+          "path": "initializer-review/initializer-historical-source-final-green.log",
+          "bytes": 9825,
+          "sha256": "bab921e938583066c39d14ad514037d2b27d7f2731fda83c78c8120d8045ecfb"
+        }
+      },
+      "validRed": {
+        "passed": 0,
+        "failed": 8,
+        "qualification": "Identical final regression file executed in isolated small copied package against preimplementation TaskStore with ignored option stub; production worktree was never reverted.",
+        "log": {
+          "path": "initializer-review/initializer-eight-frozen-valid-red.log",
+          "bytes": 5429,
+          "sha256": "72fc952f8f979b1da861c96fa2a00408131958b087ffd5d0ed2fdb7c4f60397b"
+        },
+        "test": {
+          "path": "initializer-review/red-package/test/new_workspace_text_initialization_test.dart",
+          "bytes": 11511,
+          "sha256": "1d181edfc4a90d9bf3c887022bc54eba4d0beeb5be999020d6c2b44bf2e7d9ba"
+        },
+        "storage": {
+          "path": "initializer-review/red-package/lib/storage/task_store.dart",
+          "bytes": 156501,
+          "sha256": "2e951c983f3b412375b8fd2339cbcea7eec18ef04418ec53e7514072ae61225f"
+        }
+      },
+      "analysis": {
+        "issues": 0,
+        "log": {
+          "path": "initializer-review/scoped-analysis-ack-final.log",
+          "bytes": 96,
+          "sha256": "a93e5bd511a775428a3c73782eaefd16c143e6abd26e64253bf8004242698835"
+        }
+      },
+      "format": "12 scoped Dart files formatted; final additional acknowledgement fixture formatted unchanged",
+      "diffCheck": "Passed",
+      "nativeLibrary": {
+        "path": "runtime-evidence/rust-target/x86_64-unknown-linux-gnu/release/libtandemlog_text.so",
+        "bytes": 1167040,
+        "sha256": "a9b0c51f4f6cf347e321d9f47a0dec6161be161adfca44eb5be60c7db7a37e56"
+      }
+    },
+    "nativeUI": "Four text entrypoint workflows authored (fresh app/cold, existing-uninitialized/no migration, migrated-peer draft Save/Undo/narrow/cold, historical recompletion). Execution delegated to parent combined native build; not yet claimed passed. Android OS/provider and private trial initializer acceptance remain separate.",
+    "importerContract": "Fresh authorized folder WITHOUT manifest; current installation writer + shared LocalProfileDatabase + NativeTextEngine; TaskStore.open(... initializeNewWorkspaceText:true) before FoodStore/import. Existing uninitialized trial is not adopted; use separately authorized fresh namespace. No private direct manifest/text canonical writes.",
+    "files": [
+      {
+        "path": "lib/storage/task_store.dart",
+        "bytes": 158992,
+        "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+      },
+      {
+        "path": "test/new_workspace_text_initialization_test.dart",
+        "bytes": 11511,
+        "sha256": "1d181edfc4a90d9bf3c887022bc54eba4d0beeb5be999020d6c2b44bf2e7d9ba"
+      },
+      {
+        "path": "test/checklist_baseline_selection_test.dart",
+        "bytes": 7235,
+        "sha256": "f7574f98ce5f82f95950406647f6f9d9cfdd6fccce8c8c5d1a2fe3cfe394bcf1"
+      },
+      {
+        "path": "test/checklist_storage_test.dart",
+        "bytes": 20463,
+        "sha256": "3314b157ef75dcd258f0287d03ecece54c7435222d5e25eb07365aa989277957"
+      },
+      {
+        "path": "test/historical_delivery_test.dart",
+        "bytes": 9726,
+        "sha256": "5f274f3eed1901a9dab81e6770ea10d7b22ae921927a66c57a36475da4e5ad33"
+      },
+      {
+        "path": "test/historical_recompletion_test.dart",
+        "bytes": 10934,
+        "sha256": "7379ca457d347fa38db3e70e62e08cfdf87d2079db874a4806a31e5b940f7cb2"
+      },
+      {
+        "path": "test/text_store_test.dart",
+        "bytes": 79354,
+        "sha256": "8a18a981672d0a157030e5c4b0ac89b08da643255d716fa4ce5b54d65020d861"
+      },
+      {
+        "path": "integration_test/native_text_fixtures.dart",
+        "bytes": 5007,
+        "sha256": "61d478071446541e0e17c0eb4c364185a5e9e89e9d60f8525e52a97af99d375d"
+      },
+      {
+        "path": "integration_test/task_precision_test.dart",
+        "bytes": 6672,
+        "sha256": "156da66d1ca879800a60a39bc3d2a933ff425619ca72c0530608ba296d76955f"
+      },
+      {
+        "path": "integration_test/text_workflow_test.dart",
+        "bytes": 18080,
+        "sha256": "028f6c7e8c0f22dd4391d4b7b766edb956c2f5e3dabeb13b059c2b34539fe4f8"
+      },
+      {
+        "path": "integration_test/completion_actions_test.dart",
+        "bytes": 12200,
+        "sha256": "e47207c7b5f258ed99221f794318d1fc72de2519e54f79d9fc6252638ab6bc86"
+      },
+      {
+        "path": "integration_test/completion_focus_test.dart",
+        "bytes": 8749,
+        "sha256": "9768f00536389de6b491772eea48797dd36886144ba64b019b544346d9c030a4"
+      },
+      {
+        "path": "integration_test/save_acknowledgement_test.dart",
+        "bytes": 12560,
+        "sha256": "1a1953a233617a477e3d760152f0918534348954fa31974fc855c6881c1091d5"
+      },
+      {
+        "path": "design/decisions/0010-collaborative-text-adoption.md",
+        "bytes": 31403,
+        "sha256": "107f3dd05da1935a3946b1bcd1b6a560398c1d238e7cacaaf65958c3435b5892"
+      },
+      {
+        "path": "design/food-import-contract.md",
+        "bytes": 8502,
+        "sha256": "ebb0b9ec72ed8f3c70cdf23d45c6c6ed398cd7ad6d1d4febe5fc903728a6b9e9"
+      }
+    ]
+  }
+}

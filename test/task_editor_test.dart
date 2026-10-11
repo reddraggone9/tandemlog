@@ -85,7 +85,7 @@ void main() {
     'blocked text instruction wraps with full semantics at narrow 200 percent',
     (tester) async {
       const instruction =
-          'Set up shared text editing in Settings to edit this task’s title and notes.';
+          'This workspace has no verified shared text setup. Restore its initialized history before editing.';
       final semantics = tester.ensureSemantics();
       await tester.binding.setSurfaceSize(const Size(360, 900));
       addTearDown(() => tester.binding.setSurfaceSize(null));

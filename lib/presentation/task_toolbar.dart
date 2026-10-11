@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
-/// Reserve both status counts. Selection never affects header geometry.
+/// Shared section geometry; reserve both status counts without selection drift.
 class TaskToolbar extends StatelessWidget {
   final String? userName, count;
   final List<String> countLabels;
@@ -9,6 +9,7 @@ class TaskToolbar extends StatelessWidget {
   final Widget Function(bool compact)? sectionMenu;
   final Widget Function(bool compact)? filter;
   final Widget undo;
+  final Widget Function(bool compact)? undoAction;
   final Widget? checklistMenu;
   final Widget Function(bool compact)? inputModeAction;
   final String sectionName;
@@ -18,6 +19,7 @@ class TaskToolbar extends StatelessWidget {
     required this.userName,
     required this.identityMenu,
     required this.undo,
+    this.undoAction,
     this.inputModeAction,
     this.sectionName = 'Tasks',
     this.sectionIcon = Icons.check_circle_outline,
@@ -29,7 +31,12 @@ class TaskToolbar extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => LayoutBuilder(
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+    child: _contents(),
+  );
+
+  Widget _contents() => LayoutBuilder(
     builder: (context, constraints) {
       final theme = Theme.of(context),
           scaler = MediaQuery.textScalerOf(context);
@@ -82,7 +89,9 @@ class TaskToolbar extends StatelessWidget {
           ? 48.0
           : measure('Filter', theme.textTheme.labelLarge).width + 64;
       final closedActionsWidth =
-          48.0 +
+          (undoAction == null || compact
+              ? 48.0
+              : measure('Undo', theme.textTheme.labelLarge).width + 68) +
           (inputModeAction == null
               ? 0.0
               : compact
@@ -215,7 +224,7 @@ class TaskToolbar extends StatelessWidget {
                         64,
               child: inputModeAction!(compact),
             ),
-          undo,
+          undoAction?.call(compact) ?? undo,
           if (filter != null) filter!(compact),
           ?checklistMenu,
           identityMenu(identity),

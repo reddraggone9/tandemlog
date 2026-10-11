@@ -1,0 +1,47 @@
+{
+  "portability": "Local synthetic source/runtime paths normalized; original review SHA256 retained separately. Referenced historical logs/snapshots keep their original scope and are not all copied.",
+  "original_receipt_sha256": "613359212ef55a94e1cbacba650f365ad925e0d49986a75551ba31b71cba2078",
+  "review": {
+    "status": "fixture correction implemented; actual native parent rerun pending",
+    "diagnosis": "The first name onChanged schedules rebuilding Continue from disabled to enabled. The test tapped immediately before pumping that rebuild. Retained synthetic fixture canonical stream has only text.baselineInitialized, no user.created; initializer succeeded.",
+    "retainedSyntheticFixture": "/tmp/fresh-text-ui-BXSNBP",
+    "fixtureCanonical": {
+      "bytes": 512,
+      "sha256": "582a17daa140acd8169302dbe510efb15036aea48da7cc8717ff7082ecfba837",
+      "eventTypes": [
+        "text.baselineInitialized"
+      ]
+    },
+    "fix": "Wait for actual Continue onPressed non-null, assert hitTestable and exact typed controller value, then tap. Existing empty-list/capture/Settings/cold/byte assertions retained.",
+    "productionChanges": "None in this additive correction",
+    "lint": "Added required braces around renamed historical fixture initialization call; no behavior change.",
+    "files": [
+      {
+        "path": "integration_test/text_workflow_test.dart",
+        "bytes": 18610,
+        "sha256": "13c5e8c6ed4fa386067c3237fbb5bda13783cf890e09258b18f4e8051a2710d7"
+      },
+      {
+        "path": "test/text_store_test.dart",
+        "bytes": 79372,
+        "sha256": "3f733f5958807cc2845900c9b6ec1cfec6b6241aeadadd58298bd56e9b387a15"
+      }
+    ],
+    "preservedRed": {
+      "path": "initializer-review/actual-native-continue-readiness-red-excerpt.log",
+      "bytes": 2216,
+      "sha256": "a700c88387be59001bfdf0a87eef3cff5028c3fc8f4a7037334a6d813ffd5f5a"
+    },
+    "before": {
+      "path": "initializer-review/text_workflow-before-continue-readiness.dart",
+      "bytes": 18080,
+      "sha256": "028f6c7e8c0f22dd4391d4b7b766edb956c2f5e3dabeb13b059c2b34539fe4f8"
+    },
+    "analyze": {
+      "path": "initializer-review/continue-readiness-analyze.log",
+      "bytes": 96,
+      "sha256": "590807ac9f73713a7cde89a364411090262b446c9cc58b4a936d6a94b7571fde"
+    },
+    "checks": "Dartformat unchanged; diffcheck passed; no native build by this author."
+  }
+}

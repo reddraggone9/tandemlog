@@ -27,6 +27,7 @@ void registerTaskPrecisionTests() {
       final writer = await openNativeFixtureStore(
         LocalLogFolder(folder.path),
         '${root.path}/writer',
+        initializeNewWorkspaceText: false,
       );
       final user = const Uuid().v4(), ids = <String, String>{};
       await writer.command(user, 'user.created', {'name': 'Alex Example'});
@@ -57,7 +58,7 @@ void registerTaskPrecisionTests() {
       const historical = 'Historical title\nwith a retained second line';
       await add(historical, {});
       // Preserve legacy record meaning, then establish its shared native basis.
-      await writer.initializeSharedText();
+      await writer.initializeSharedTextForHistoricalFixture();
       await File(
         '${profile.path}/settings.json',
       ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));

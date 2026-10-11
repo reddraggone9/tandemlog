@@ -111,7 +111,7 @@ void main() {
             await a.command(child, 'task.edited', {
               'title': 'Independent child',
             });
-            await a.initializeSharedText();
+            await a.initializeSharedTextForHistoricalFixture();
           }
           await a.reopen(parent, [original.id]);
           final fc = await copyFolder(fa, '${root.path}/c'),

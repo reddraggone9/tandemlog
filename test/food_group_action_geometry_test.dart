@@ -118,11 +118,14 @@ Future<void> verifyFoodGroupActionGeometry(
       tester.getRect(menu).top,
       greaterThanOrEqualTo(tester.getRect(collapse).bottom),
     );
-    final metadata = find.text('2 containers · 500 g · Freezer');
+    final metadata = find.text('500 g · Freezer');
     expect(
       tester.getRect(metadata).right,
       lessThanOrEqualTo(tester.getRect(menu).left),
     );
+    expect(find.textContaining('Container 000'), findsNothing);
+    expect(find.text('Full'), findsNWidgets(2));
+    expect(tester.widget<Divider>(find.byType(Divider)).height, 1);
     await capture?.call('expanded-$cycle');
     if (input == null) {
       await tester.tap(collapse);

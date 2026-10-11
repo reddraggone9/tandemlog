@@ -1,0 +1,83 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "6768e3a3e97237e30b146b767677144311cb546c929e96f0a546cc560c0a52e4",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T15:33:37.119335+00:00",
+    "verdict": "ACCEPTED_REPLACEMENT_PIXELS_DEMO_SAMPLE_AND_DURABLE_EVIDENCE",
+    "mustFix": [],
+    "extends": [
+      {
+        "path": "runtime-evidence/independent-rc3-batch-review.json",
+        "sha256": "04968053d674a49f6eb36e9829226517d4ca7aa618feba73b6da2de9d18a2e60",
+        "bytes": 26820
+      },
+      {
+        "path": "runtime-evidence/independent-rc3-corrected-gates-addendum.json",
+        "sha256": "4491954c61b89266508726c60e0eb0065b1a93478755c7023d7ec6fccea15b42",
+        "bytes": 2815
+      }
+    ],
+    "settledSourceInventory": {
+      "path": "runtime-evidence/source-inputs-settled.json",
+      "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3",
+      "bytes": 9727
+    },
+    "sourceCheck": "All60 current file hashes independently match settled inventory; no source changes since prior accepted snapshot.",
+    "closedGates": [
+      "Replacement dark900px autocomplete screenshot is genuine readable component UI with typed query and existing Brand option. The previous black startup frame remains diagnostic and is excluded from accepted UI proof.",
+      "Actual native recapture terminal1/1PASS01:05 independently read.",
+      "Video metadata independently inspected:28.600sec,1200x850 canvas with900x850 native GTK component app. Actual sampled frame shows bulk editor/mixed Apply controls and visible white X desktop pointer at Edit. Independently extracted frame at3.0sec is pixel-identical to supplied demo-frame-03s.png.",
+      "Public-safe README links resolve locally and qualifications distinguish pre-modal7-native, final7-widget modal checks, original25/3 failures and targeted3-case native rerun. No single28-case green claim, exact signed/native/platform acceptance or production-host demo is implied.",
+      "Durable copied native recapture log and video are byte-identical to original inspected files; portable review copies retain the correct original review hashes."
+    ],
+    "evidenceBindings": [
+      {
+        "path": "runtime-evidence/refinements-demo-final.log",
+        "sha256": "2a6b0f887234455c892f7aab03c731aca24161d10d3443df25b2db6b7ecf9ebe",
+        "bytes": 5779
+      },
+      {
+        "path": "runtime-evidence/refinements-demo-final/food-refinements-dark-900-1.0x-autocomplete-brand-options.png",
+        "sha256": "03f366a2536e09756d32c50828dd6455851d572eb91a00af23d60c50a171525f",
+        "bytes": 46795
+      },
+      {
+        "path": "runtime-evidence/refinements-demo-final/native-linux-scripted-preview.mp4",
+        "sha256": "5b201bb1bddcdc5c9ff19c81fbfa5cebb9f3dd5d7d3c9a21127b614ee4336bcd",
+        "bytes": 494469
+      },
+      {
+        "path": "runtime-evidence/refinements-demo-final/demo-frame-03s.png",
+        "sha256": "8298dffc32d5aadc0b0df3e234f251bcfb0063df6069261d2a44929b75e17323",
+        "bytes": 73458
+      },
+      {
+        "path": "runtime-evidence/independent-demo-video-frame03.png",
+        "sha256": "8298dffc32d5aadc0b0df3e234f251bcfb0063df6069261d2a44929b75e17323",
+        "bytes": 73458
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/README.md",
+        "sha256": "39720c648071d64002036e5d556d20c93799280c72d3989186890075f73da751",
+        "bytes": 7248
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/logs/refinements-demo-final.log",
+        "sha256": "2a6b0f887234455c892f7aab03c731aca24161d10d3443df25b2db6b7ecf9ebe",
+        "bytes": 5779
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/demo/native-linux-bulk-fields-scripted.mp4",
+        "sha256": "5b201bb1bddcdc5c9ff19c81fbfa5cebb9f3dd5d7d3c9a21127b614ee4336bcd",
+        "bytes": 494469
+      }
+    ],
+    "remainingGates": [
+      "Full frozen-source hosted candidate and original archive/signing/payload verification.",
+      "Exact Android affected-flow acceptance and platform-qualified native handoff; desktop component demo is not Android/Windows evidence.",
+      "Separate release-note/media review against actual source range, accepted exact binaries and coordinator publication clearance. Stable promotion/live import/reset/deletion remain outside this review."
+    ],
+    "preservation": "Prior receipts and failure/black-frame qualifications remain unchanged; this additive closure does not rewrite earlier pending gate observations."
+  }
+}

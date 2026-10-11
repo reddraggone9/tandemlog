@@ -1,0 +1,129 @@
+{
+  "portability": "Local synthetic source/runtime paths normalized; original review SHA256 retained separately. Referenced historical logs/snapshots keep their original scope and are not all copied.",
+  "original_receipt_sha256": "a5d81a9bbe41065f10304e51074ac19116fa7467d1ef070c65aa8ba9faeb2e1a",
+  "review": {
+    "reviewer": "/root/food_account_regressions",
+    "scope": "Independent Food Brand/Location bulk details and one host Undo action",
+    "disposition": "PASS: component3 and actual native host callback1. Full aggregate acceptance remains OPEN.",
+    "source_manifest": {
+      "path": "runtime-evidence/source-inputs-final.json",
+      "bytes": 9727,
+      "sha256": "6bc5dfba5378faa6aa8ca6207f7e716ba6ca00b5d585edf0fb74de3876b2386b"
+    },
+    "scoped_source": {
+      "lib/main.dart": {
+        "path": "lib/main.dart",
+        "bytes": 203720,
+        "sha256": "26013a6cc4f36c597b198c550edee690daeb9c516590d63e3c68a1c45db0b267"
+      },
+      "lib/food/food_page.dart": {
+        "path": "lib/food/food_page.dart",
+        "bytes": 67022,
+        "sha256": "d8bc4f06e53bdf9abe3f04019208662976f25236fb4d46c8cc30485ff68a77c7"
+      },
+      "lib/storage/task_store.dart": {
+        "path": "lib/storage/task_store.dart",
+        "bytes": 158992,
+        "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+      },
+      "test/food_bulk_details_undo_review_test.dart": {
+        "path": "test/food_bulk_details_undo_review_test.dart",
+        "bytes": 21532,
+        "sha256": "e0f7218cd662ffdddea8500961d32e8e2609879addf6246ac8ecad7525b67f87"
+      },
+      "integration_test/food_bulk_details_host_undo_review_test.dart": {
+        "path": "integration_test/food_bulk_details_host_undo_review_test.dart",
+        "bytes": 412,
+        "sha256": "cffcb1ed84b93642d953bdcf012435a365d2cbf294ccc0111aab0ff28e4ae274"
+      },
+      "integration_test/rc3_affected_acceptance_test.dart": {
+        "path": "integration_test/rc3_affected_acceptance_test.dart",
+        "bytes": 966,
+        "sha256": "8e47ec679a3906e69c06206200747877a85b14c3d83471f1d5cc6f62f7076fc3"
+      }
+    },
+    "source_qualification": "All six scoped hashes independently match the parent final input inventory. Core hashes below are independently observed and match the earlier component baseline, but were not entries in that inventory.",
+    "core_source": {
+      "lib/food/food_store.dart": {
+        "path": "lib/food/food_store.dart",
+        "bytes": 42349,
+        "sha256": "56fff749e7f6416632c1c72b473541f7c8be972d360441513bab2f472116bfd4"
+      },
+      "lib/application/food_undo_history.dart": {
+        "path": "lib/application/food_undo_history.dart",
+        "bytes": 2620,
+        "sha256": "d4c9d076cf9b86388ced25080d7ebee152d9e66cca48f77d2a2976b2a90f223b"
+      }
+    },
+    "native": {
+      "log": {
+        "path": "runtime-evidence/affected-native.log",
+        "bytes": 32721,
+        "sha256": "8a3073a814e29a610e0b35ff854acc13def13b31a0e0c48e16ba7c3890b3950d"
+      },
+      "test": "Food bulk details Undo independent review actual Food host groups a 205-container details callback into one Undo action",
+      "registration": "registerFoodBulkDetailsHostUndoReviewTests()",
+      "entrypoint": "integration_test/rc3_affected_acceptance_test.dart",
+      "start_line": 162,
+      "passing_transition_line": 171,
+      "start": "00:29 +3 -1: Food bulk details Undo independent review actual Food host groups a 205-container details callback into one Undo action",
+      "passing_transition": "00:32 +4 -1: actual section toolbar parity dark",
+      "scoped_result": "1 PASS: actual page callbacks under native Linux GTK integration runner",
+      "assertions": [
+        "Actual FoodInventoryPage.onDetails targets exactly 205 observed IDs; three records and one actual host history entry containing all lastPreparedRecords.",
+        "One append for edit, all original records admitted.",
+        "Actual FoodInventoryPage.onUndo consumes the one history entry.",
+        "Full container JSON snapshot restored except newer peer Brand/Location on third-chunk selected container; dates, contents, IDs and unselected metadata preserved.",
+        "Peer canonical bytes unchanged; no uncaught widget exception."
+      ],
+      "coverage_limit": "Callback-level native host/storage evidence; does not establish pointer access, selection-dialog UX, Android acceptance or exact release artifact acceptance.",
+      "aggregate_result": "25 PASS / 3 FAIL at 05:02; aggregate failed",
+      "unrelated_failures": [
+        {
+          "test": "fresh application workspace initializes automatically and cold reopens without setup",
+          "observed": "waitForUi timeout, Expected true/Actual false; text_workflow_test.dart:67/task_flow_test.dart:244",
+          "review_disposition": "Independent batch review attributes to Continue clicked before enabled rebuild; reviewed readiness/hit-test correction rerun pending."
+        },
+        {
+          "test": "actual section toolbar parity dark",
+          "observed": "1200dp/200% account size expected334.4x48, actual64x48; toolbar_parity_workflow_test.dart:151",
+          "review_disposition": "Independent batch review attributes to equality ignoring inherited Food900dp constraint; reviewed fixture correction rerun pending."
+        },
+        {
+          "test": "actual section toolbar parity light",
+          "observed": "Same account size assertion as dark",
+          "review_disposition": "Same reviewed fixture correction; rerun pending."
+        }
+      ],
+      "qualification": "Failures independently observed in completed log. Fixture-only explanations corroborated by independent batch review. No passing corrected rerun inferred.",
+      "corroborating_batch_review": {
+        "path": "runtime-evidence/independent-rc3-batch-review.json",
+        "bytes": 26820,
+        "sha256": "04968053d674a49f6eb36e9829226517d4ca7aa618feba73b6da2de9d18a2e60"
+      }
+    },
+    "components": {
+      "result": "3 PASS, exit0; no skipped host test",
+      "log": {
+        "path": "bulk-review/components-final.log",
+        "bytes": 602,
+        "sha256": "026b2d2072f2e45642fd0d39f799f3042dce17ed085cf6823d3a3f140cc4539f"
+      },
+      "analyzer": {
+        "path": "bulk-review/analyze.log",
+        "bytes": 96,
+        "sha256": "51db499d61667a1c149e1b7a0caede0917ea864d5d00997d759459d8460b352c"
+      },
+      "format": {
+        "path": "bulk-review/format.log",
+        "bytes": 47,
+        "sha256": "43a0060b01f8d00290502db016cbde393b149f5a0971989771a4fe3fddc181e7"
+      }
+    },
+    "followup_work": "Read-only source/log checks and receipt only; no production edits, native builds, frozen fixture edits or live data access.",
+    "remaining_gates": [
+      "Parent corrected affected-native rerun",
+      "Normal exact-artifact/native/release gates outside scoped review"
+    ]
+  }
+}

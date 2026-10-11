@@ -1,3 +1,4 @@
+import '../test/support/toolbar_button.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -398,9 +399,10 @@ void registerChecklistLifecycleTests() {
             };
             // Invoke the same host action twice, representing overlapping native
             // shortcut/navigation requests while one dirty-close prompt is open.
-            final undo = tester
-                .widget<IconButton>(_key('undo-task-action'))
-                .onPressed!;
+            final undo = toolbarButton(
+              tester,
+              _key('undo-task-action'),
+            ).onPressed!;
             undo();
             undo();
             await tester.pumpAndSettle();

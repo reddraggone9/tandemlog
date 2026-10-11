@@ -128,7 +128,7 @@ void main() {
           expect(retained['description'], expectedNotes);
           final beforeChecklist = jsonEncode(retained['checklist']);
           expect(a.sharedTextInitialized, false);
-          await a.initializeSharedText();
+          await a.initializeSharedTextForHistoricalFixture();
           final initialized = a.rows.singleWhere((row) => row['id'] == child);
           expect(
             initialized['title'],

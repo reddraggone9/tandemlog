@@ -311,7 +311,7 @@ Future<void> verifyFoodViewReachability(
   }
   await tap(inspect);
   if (mode == FoodView.deleted) {
-    final restore = find.byTooltip('Restore $name container 00000005');
+    final restore = find.byTooltip('Restore $name, container 1 of 1');
     await swipeTo(restore);
     await capture?.call('$prefix-restore-reached');
     expect(commandCount, 0, reason: 'Browsing and scrolling must not write');

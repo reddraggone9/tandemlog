@@ -1,0 +1,137 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "52ea79f083d8d749905559f75e5122a12ada143efe65f3dc3eab63a271902ab7",
+  "review": {
+    "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+    "reviewed_at_utc": "2026-10-11T15:33:10.219915+00:00",
+    "outcome": "APPROVED final working-tree RC3 change copy, actionable compatibility paragraph and actual media; immutable notes image URL/final source commit tiny recheck pending",
+    "scope": "Independent release-note/media review of actual527064c baseline through current settled RC3/build65 working tree. No candidate/native acceptance/publication/stable-promotion claim.",
+    "guidance": [
+      "AGENTS.md",
+      "design/releases.md: end-user release-note and real-app Before/After policy"
+    ],
+    "covered_range": {
+      "base": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+      "after": "Current uncommitted settled60-file application/test/fixture inventory",
+      "version": "2026.10.4-rc.3+65",
+      "source_inventory": {
+        "path": "evidence/toolbar-2026.10.4-rc.3/inputs/source-inputs-settled.json",
+        "bytes": 9727,
+        "sha256": "c6406b94090d0eb53efe36d227932ce1588243a45335d10b86cf0e138dfb5cc3"
+      },
+      "source_file_count": 60,
+      "current_mismatches": []
+    },
+    "notes": {
+      "path": "design/prerelease-notes.md",
+      "bytes": 892,
+      "sha256": "85ae0397e55463b8496297dc688d3a40ed4e7e1a0e615ef2497c955c935103e5"
+    },
+    "copy_assessment": [
+      "Four short change paragraphs match actual source: matching toolbar controls/dots and wide Undo; shared date-label/value inset correction; all-status search with stickyDeleted; Brand/Location free-text suggestions, multiple filters and exact active-container bulk editing; expanded-row density/opaque-ID/duplicate-count removal; new/importedFull defaults and removedRC-onlyUnspecified; automatic shared-text initialization of genuinely new workspaces and removal of oldSettings workflow.",
+      "No expected interaction/QA assurance/preservation transcript or inheritedRC2 boilerplate. Other changes are clear in prose; one useful image illustrates visible expanded-row cleanup.",
+      "Added exceptional actionable compatibility paragraph: preview trials with oldUnspecifiedcontents or uninitialized sharedtext cannot upgrade inplace; preserve oldtrial/usefreshworkspace/importplan. This matches ADR0019/null-decoder rejection and ADR0010 existingmanifest admission behavior. It does not offer oldSettings initialization, rewrite oldpayloads, cache-reset workaround or live-data deletion. Coordinator handles practical separatepath/profileidentity/newFull-plan locally."
+    ],
+    "resolved_findings": [
+      "Added actionableRC-only null/uninitializedtrial compatibility paragraph; author adopted exact recommendation."
+    ],
+    "media": [
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-dark-320-200.png",
+        "bytes": 44073,
+        "sha256": "3aae0b8aaf96bf87b2dadb1d7e7c32b2f2faec293760ea6d0407b0f35010d47b"
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-after-dark-320-200.png",
+        "bytes": 31624,
+        "sha256": "12ef43bf1b9d6d039e68f95943d3dc29eb60dccf5db8a39215e1a22325470a76"
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+        "bytes": 50298,
+        "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+      },
+      {
+        "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-media.json",
+        "bytes": 1478,
+        "sha256": "d586b43e5b3227fe48371a36d2df272b93375595c996d1e1c9d4d66aed216694"
+      }
+    ],
+    "media_pixels_review": {
+      "actual_viewed": [
+        "FullBefore raw",
+        "FullAfter raw",
+        "Finalcomposite"
+      ],
+      "platform": "Actual nativeLinuxGTK/Flutter syntheticcomponent fixture; dark320x1200pixels,200%text; notAndroid/Windows",
+      "matching_fixture": "Geometrybeans,2Fullsyntheticcontainers,2026-10-15,500g,Freezer; matchingtheme/viewport/scale",
+      "before_source_qualification": "Recordedprecleanupuncommitteddensity-before-inputs hashes on527064c; not claimed as releasedRC2binary.",
+      "after_source_qualification": "Recordedrefinements-final runtimeinputs; latermodal lifecycle correction does not alter contentsrow. Settled60-file source verified separately.",
+      "source_receipts": [
+        {
+          "path": "evidence/toolbar-2026.10.4-rc.3/inputs/density-before-inputs.json",
+          "bytes": 752,
+          "sha256": "878b7999dfc437a9b5ce79d741da41e92f69303dc2f2f304744a0798efb939e1"
+        },
+        {
+          "path": "evidence/toolbar-2026.10.4-rc.3/inputs/refinements-final-inputs.json",
+          "bytes": 19019,
+          "sha256": "29241518ba1d788f84a583267c028f1f58696e1b152a6d9197e2bc21c47455e4"
+        }
+      ],
+      "raw_crop_xyxy": [
+        16,
+        172,
+        304,
+        757
+      ],
+      "composite_dimensions": [
+        628,
+        645
+      ],
+      "before_crop_origin": [
+        16,
+        44
+      ],
+      "after_crop_origin": [
+        324,
+        44
+      ],
+      "both_crops_exactly_equal_original_app_pixels": true,
+      "assessment": "Clear removal of opaqueIDs/repeatedcount, improveddensity, unchanged loweroverflow/headercontext. Exact unscaled/unretouchedpixels; centeredreadableBefore/After labels outsideappcrop, matchingdarkcanvas. Syntheticonly, noprivateuserreferencephotos/data.",
+      "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+    },
+    "new_sampled_supporting_media": {
+      "autocomplete": {
+        "path": "evidence/toolbar-2026.10.4-rc.3/pixels/food-refinements-dark-900-1.0x-autocomplete-brand-options.png",
+        "bytes": 46795,
+        "sha256": "03f366a2536e09756d32c50828dd6455851d572eb91a00af23d60c50a171525f"
+      },
+      "assessment": "Genuine readable native syntheticBrand suggestion capture; supersedes rejectedblackstartup frame.",
+      "demo": {
+        "path": "evidence/toolbar-2026.10.4-rc.3/demo/native-linux-bulk-fields-scripted.mp4",
+        "bytes": 494469,
+        "sha256": "5b201bb1bddcdc5c9ff19c81fbfa5cebb9f3dd5d7d3c9a21127b614ee4336bcd"
+      },
+      "sampled_frame": {
+        "path": "runtime-evidence/editorial-demo-pointer-frame.png",
+        "bytes": 84677,
+        "sha256": "f5a30cd0994c1ce1952a35de71d0b65e398016cad6161d19d12586a6d903cf0c"
+      },
+      "sample_position_seconds": 5,
+      "observed": "ActualX pointer visible onSave in bulkBrand editor.1200x850recordingcanvas;900x850syntheticcomponentUI;28.6secondscriptedLinuxdemo, notfullproductionhost/Android/Windows acceptance.",
+      "log": {
+        "path": "evidence/toolbar-2026.10.4-rc.3/logs/refinements-demo-final.log",
+        "bytes": 5779,
+        "sha256": "2a6b0f887234455c892f7aab03c731aca24161d10d3443df25b2db6b7ecf9ebe"
+      },
+      "terminal_result": "OnecasePASS1:05; readlogonly, no heavytestsrunbyreviewer."
+    },
+    "remaining_editorial_step": "After source/media commit, insert descriptive image alt plus immutable exactcommitURL into notes. Tiny independent recheck must bind final sourcecommit,notesSHA,andpublic imagebytes.",
+    "independent_remaining_gates": [
+      "Fullsignedcandidate65/artifact/source/signing verification",
+      "ExactAndroidaffectedworkflow/Showtaps acceptance",
+      "Coordinator publicationclearance; noRC2republish orstablepromotion"
+    ]
+  }
+}

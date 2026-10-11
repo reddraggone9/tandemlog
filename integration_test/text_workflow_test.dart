@@ -22,7 +22,175 @@ void main() {
 
 void registerTextWorkflowTests() {
   testWidgets(
-    'offline new text, remote draft Save, Undo and explicit legacy setup',
+    'fresh application workspace initializes automatically and cold reopens without setup',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp('fresh-text-ui-');
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': null}));
+      Future<Map<String, String>> canonical() async => {
+        await for (final file in folder.list())
+          if (file is File) file.path: base64Encode(await file.readAsBytes()),
+      };
+      Future<void> closeApp() async {
+        final retired = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.pumpWidget(const SizedBox.shrink());
+        await flows.waitForUi(tester, () {
+          final owner = retired.profileDatabase;
+          if (owner == null) return false;
+          try {
+            owner.database;
+            return false;
+          } on StateError {
+            return true;
+          }
+        });
+      }
+
+      try {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(1200, 850);
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await flows.waitForUi(
+          tester,
+          () => find
+              .widgetWithText(FilledButton, 'Continue')
+              .evaluate()
+              .isNotEmpty,
+        );
+        final state = tester.state(find.byType(TasksPage)) as dynamic;
+        expect((state.store as TaskStore).sharedTextInitialized, isTrue);
+        await tester.enterText(find.byType(TextField), 'Fresh user');
+        final continueButton = find.widgetWithText(FilledButton, 'Continue');
+        // The name's onChanged schedules the rebuild that enables Continue.
+        // Act only on that enabled, visible button, not its previous frame.
+        await flows.waitForUi(
+          tester,
+          () => tester.widget<FilledButton>(continueButton).onPressed != null,
+        );
+        expect(continueButton.hitTestable(), findsOneWidget);
+        expect(
+          tester.widget<TextField>(find.byType(TextField)).controller!.text,
+          'Fresh user',
+        );
+        await tester.tap(continueButton);
+        await flows.waitForUi(
+          tester,
+          () => find.text('No open tasks').evaluate().isNotEmpty,
+        );
+        await flows.openCaptureForTest(tester);
+        await tester.enterText(
+          find.widgetWithText(TextField, 'One task per line'),
+          'Fresh initialized task',
+        );
+        await tester.tap(find.byKey(const ValueKey('capture-add')));
+        await flows.waitForUi(
+          tester,
+          () => find.text('Fresh initialized task').evaluate().isNotEmpty,
+        );
+        await flows.openSettings(tester);
+        expect(
+          find.byKey(const ValueKey('initialize-shared-text')),
+          findsNothing,
+        );
+        expect(find.text('Set up shared text editing'), findsNothing);
+        await tester.tap(find.widgetWithText(TextButton, 'Done'));
+        await tester.pumpAndSettle();
+        await _capture(tester, 'fresh-auto-initialized');
+        final before = await canonical();
+        await closeApp();
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await flows.waitForUi(
+          tester,
+          () => find.text('Fresh initialized task').evaluate().isNotEmpty,
+        );
+        final reopened = tester.state(find.byType(TasksPage)) as dynamic;
+        expect((reopened.store as TaskStore).sharedTextInitialized, isTrue);
+        expect(await canonical(), before);
+        expect(tester.takeException(), isNull);
+      } finally {
+        if (find.byType(TasksPage).evaluate().isNotEmpty) await closeApp();
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      }
+    },
+  );
+
+  testWidgets(
+    'existing uninitialized application workspace preserves bytes and offers no setup migration',
+    (tester) async {
+      final root = await Directory.systemTemp.createTemp(
+        'uninitialized-text-ui-',
+      );
+      final folder = await Directory('${root.path}/shared').create();
+      final profile = await Directory('${root.path}/profile').create();
+      final seed = await TaskStore.open(
+        LocalLogFolder(folder.path),
+        '${root.path}/seed',
+      );
+      final user = const Uuid().v4(), task = const Uuid().v4();
+      await seed.command(user, 'user.created', {'name': 'Historical user'});
+      await seed.command(task, 'task.created', {
+        'title': 'Retained legacy task',
+        'description': '',
+        'assignee': user,
+      });
+      await seed.close();
+      await File(
+        '${profile.path}/settings.json',
+      ).writeAsString(jsonEncode({'folder': folder.path, 'user': user}));
+      Future<Map<String, String>> canonical() async => {
+        await for (final file in folder.list())
+          if (file is File) file.path: base64Encode(await file.readAsBytes()),
+      };
+      final before = await canonical();
+      try {
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(1200, 850);
+        await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
+        await flows.waitForUi(
+          tester,
+          () => find
+              .textContaining('no verified shared-text initialization')
+              .evaluate()
+              .isNotEmpty,
+        );
+        final state = tester.state(find.byType(TasksPage)) as dynamic;
+        expect(state.store, isNull);
+        await flows.openSettings(tester);
+        expect(
+          find.byKey(const ValueKey('initialize-shared-text')),
+          findsNothing,
+        );
+        expect(find.text('Set up shared text editing'), findsNothing);
+        await tester.tap(find.widgetWithText(TextButton, 'Done'));
+        await tester.pumpAndSettle();
+        expect(await canonical(), before);
+        expect(tester.takeException(), isNull);
+        await _capture(tester, 'uninitialized-history-preserved');
+      } finally {
+        final retired = tester.state(find.byType(TasksPage)) as dynamic;
+        await tester.pumpWidget(const SizedBox.shrink());
+        await flows.waitForUi(tester, () {
+          final owner = retired.profileDatabase;
+          if (owner == null) return false;
+          try {
+            owner.database;
+            return false;
+          } on StateError {
+            return true;
+          }
+        });
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      }
+    },
+  );
+
+  testWidgets(
+    'initialized text, remote draft Save, Undo and restart without migration workflow',
     (tester) async {
       final root = await Directory.systemTemp.createTemp('native-text-ui-');
       final folder = await Directory('${root.path}/shared').create();
@@ -30,6 +198,7 @@ void registerTextWorkflowTests() {
       final seed = await TaskStore.open(
         LocalLogFolder(folder.path),
         '${root.path}/seed',
+        initializeNewWorkspaceText: false,
       );
       final user = const Uuid().v4(), legacy = const Uuid().v4();
       await seed.command(user, 'user.created', {'name': 'Alex Example'});
@@ -49,6 +218,7 @@ void registerTextWorkflowTests() {
         textEngine: engine,
       );
       try {
+        await peer.initializeSharedTextForHistoricalFixture();
         tester.view.devicePixelRatio = 1;
         tester.view.physicalSize = const Size(1200, 850);
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
@@ -69,7 +239,7 @@ void registerTextWorkflowTests() {
           (row) => row['title'] == 'Shared draft',
         );
         final id = created['id'] as String;
-        expect(peer.sharedTextInitialized, isFalse);
+        expect(peer.sharedTextInitialized, isTrue);
         await flows.selectTask(tester, id, control: false);
         final title = find.byKey(const ValueKey('title'));
         expect(tester.widget<TextField>(title).enabled, isTrue);
@@ -116,26 +286,13 @@ void registerTextWorkflowTests() {
           'Remote Shared draft',
         );
 
-        await flows.selectTask(tester, legacy, control: false);
-        expect(
-          tester.widget<TextField>(find.byKey(const ValueKey('title'))).enabled,
-          isFalse,
-        );
-        expect(
-          find.textContaining('Set up shared text editing in Settings'),
-          findsOneWidget,
-        );
-        await _capture(tester, 'wide-legacy-gate');
-        await tester.tap(find.text('Cancel').last);
-        await tester.pumpAndSettle();
         await flows.openSettings(tester);
-        await tester.ensureVisible(
+        expect(
           find.byKey(const ValueKey('initialize-shared-text')),
+          findsNothing,
         );
-        await tester.tap(find.byKey(const ValueKey('initialize-shared-text')));
-        await tester.pumpAndSettle();
-        await _capture(tester, 'wide-shared-setup');
-        await tester.tap(find.widgetWithText(FilledButton, 'Set up'));
+        expect(find.text('Set up shared text editing'), findsNothing);
+        await tester.tap(find.widgetWithText(TextButton, 'Done'));
         await tester.pumpAndSettle();
         await peer.refresh();
         expect(peer.sharedTextInitialized, isTrue);
@@ -201,6 +358,7 @@ void registerTextWorkflowTests() {
       final store = await openNativeFixtureStore(
         LocalLogFolder(shared.path),
         '${root.path}/seed',
+        initializeNewWorkspaceText: false,
       );
       final user = const Uuid().v4(), task = const Uuid().v4();
       try {
@@ -224,7 +382,7 @@ void registerTextWorkflowTests() {
           'title': 'Existing next occurrence',
           'description': 'Independent child notes',
         });
-        await store.initializeSharedText();
+        await store.initializeSharedTextForHistoricalFixture();
         await store.reopen(task, [completion.id]);
         await File('${profile.path}/settings.json').writeAsString(
           jsonEncode({

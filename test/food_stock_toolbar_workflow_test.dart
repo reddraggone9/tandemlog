@@ -148,6 +148,7 @@ Future<void> verifyFoodStockToolbarWorkflow(
     'Food late',
     'Food retained undated',
     'Food retained dated',
+    'Food deleted',
   ]) {
     final scrollable = find.descendant(
       of: find.byType(CustomScrollView),
@@ -165,16 +166,26 @@ Future<void> verifyFoodStockToolbarWorkflow(
     await tester.pumpAndSettle();
     expect(find.text(name), findsOneWidget);
   }
-  expect(find.text('Food deleted'), findsNothing);
+  expect(find.byTooltip('Restore Food deleted containers'), findsOneWidget);
   expect(find.text('Inbox'), findsNothing);
-  await capture?.call('active-search');
+  await capture?.call('all-food-search');
 
-  // Search must leave Deleted reachable through the only view control.
+  // Search pauses every saved view, including Deleted, until it is cleared.
   await chooseFoodView(tester, 'Deleted', input: input);
-  expect(find.text('Search deleted food'), findsOneWidget);
-  expect(find.text('Food deleted'), findsOneWidget);
-  expect(find.text('Food early'), findsNothing);
-  await capture?.call('deleted-search');
+  tester
+      .state<ScrollableState>(
+        find.descendant(
+          of: find.byType(CustomScrollView),
+          matching: find.byWidgetPredicate(
+            (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+          ),
+        ),
+      )
+      .position
+      .jumpTo(0);
+  await tester.pumpAndSettle();
+  expect(find.text('Search food'), findsOneWidget);
+  await capture?.call('all-food-search-saved-deleted');
   await chooseFoodView(tester, 'Stock', input: input);
   tester
       .state<ScrollableState>(
@@ -188,8 +199,7 @@ Future<void> verifyFoodStockToolbarWorkflow(
       .position
       .jumpTo(0);
   await tester.pumpAndSettle();
-  expect(find.text('Search all active food'), findsOneWidget);
-  expect(find.text('Food deleted'), findsNothing);
+  expect(find.text('Search food'), findsOneWidget);
   await tester.scrollUntilVisible(
     find.text('Food undated'),
     250,
