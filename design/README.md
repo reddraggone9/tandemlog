@@ -26,6 +26,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
 
+- [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
+
 - [Task parity decisions](decisions/0003-task-parity-and-prerelease-boundary.md): authorized scope, time semantics and prerelease compatibility boundary.
 
 - [Editing, bulk actions and installers](decisions/0004-editing-bulk-actions-and-installers.md): RC4 rationale.

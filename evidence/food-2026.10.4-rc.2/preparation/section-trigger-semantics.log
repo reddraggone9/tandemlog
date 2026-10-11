@@ -1,0 +1,4 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/section_menu_test.dart
+00:00 +0: wide and narrow triggers expose full selected section choices
+00:00 +1: keyboard opens and selects; disabled trigger cannot switch
+00:00 +2: All tests passed!

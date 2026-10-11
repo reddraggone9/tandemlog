@@ -49,7 +49,12 @@ import 'bulk_failure_visibility_test.dart'
     show registerBulkFailureVisibilityTests;
 import 'field_layout_test.dart' show registerFieldLayoutTests;
 import 'tag_input_workflow_test.dart' show registerTagInputWorkflowTests;
+import 'food_expiration_deprecation_workflow_test.dart'
+    show registerFoodExpirationDeprecationTests;
+import 'task_body_hit_test.dart' show registerTaskBodyHitTests;
 import 'food_production_workflow_test.dart' show registerFoodProductionTests;
+import 'section_navigation_workflow_test.dart'
+    show registerSectionNavigationTests;
 import 'food_expiry_guidance_workflow_test.dart'
     show registerFoodExpiryGuidanceTests;
 import 'food_editor_keyboard_workflow_test.dart'
@@ -214,7 +219,10 @@ void main() {
   registerFieldLayoutTests();
   registerTagInputWorkflowTests();
   registerFoodProductionTests();
+  registerSectionNavigationTests();
+  registerTaskBodyHitTests();
   registerFoodExpiryGuidanceTests();
+  registerFoodExpirationDeprecationTests();
   registerFoodEditorKeyboardTests();
   registerFoodViewReachabilityTests();
   testWidgets('phone single and bulk editors keep fields usable with the IME', (
@@ -2552,8 +2560,8 @@ void main() {
         ),
         findsNothing,
       );
-      expect(find.byKey(const ValueKey('module-tasks')), findsOneWidget);
-      expect(find.byKey(const ValueKey('module-food')), findsOneWidget);
+      expect(find.byKey(const ValueKey('section-menu')), findsOneWidget);
+      expect(find.byType(SegmentedButton<bool>), findsNothing);
       await filterChoice(tester, 'Completed');
       expect(
         tester.getRect(find.byKey(const ValueKey('identity-menu'))),

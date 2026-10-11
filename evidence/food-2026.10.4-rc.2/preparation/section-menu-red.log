@@ -1,0 +1,32 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/section_menu_test.dart
+test/section_menu_test.dart:4:8: Error: Error when reading 'lib/presentation/section_menu.dart': No such file or directory
+import 'package:tandemlog/presentation/section_menu.dart';
+       ^
+test/section_menu_test.dart:13:41: Error: Method not found: 'SectionMenu'.
+        builder: (context, setState) => SectionMenu(
+                                        ^^^^^^^^^^^
+test/section_menu_test.dart:42:62: Error: Method not found: 'SectionMenu'.
+    await tester.pumpWidget(MaterialApp(home: Scaffold(body: SectionMenu(
+                                                             ^^^^^^^^^^^
+test/section_menu_test.dart:53:68: Error: Method not found: 'SectionMenu'.
+    await tester.pumpWidget(const MaterialApp(home: Scaffold(body: SectionMenu(
+                                                                   ^^^^^^^^^^^
+00:00 +0 -1: loading /tmp/tandemlog-food-date-readability/test/section_menu_test.dart [E]
+  Failed to load "/tmp/tandemlog-food-date-readability/test/section_menu_test.dart":
+  Compilation failed for testPath=/tmp/tandemlog-food-date-readability/test/section_menu_test.dart: test/section_menu_test.dart:4:8: Error: Error when reading 'lib/presentation/section_menu.dart': No such file or directory
+  import 'package:tandemlog/presentation/section_menu.dart';
+         ^
+  test/section_menu_test.dart:13:41: Error: Method not found: 'SectionMenu'.
+          builder: (context, setState) => SectionMenu(
+                                          ^^^^^^^^^^^
+  test/section_menu_test.dart:42:62: Error: Method not found: 'SectionMenu'.
+      await tester.pumpWidget(MaterialApp(home: Scaffold(body: SectionMenu(
+                                                               ^^^^^^^^^^^
+  test/section_menu_test.dart:53:68: Error: Method not found: 'SectionMenu'.
+      await tester.pumpWidget(const MaterialApp(home: Scaffold(body: SectionMenu(
+                                                                     ^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/section_menu_test.dart: loading /tmp/tandemlog-food-date-readability/test/section_menu_test.dart

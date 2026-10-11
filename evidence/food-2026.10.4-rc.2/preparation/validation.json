@@ -1,0 +1,41 @@
+{
+  "baseline_source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+  "base_checkpoint": "12242ea7a36a4b6cab7db50fd2af5be444535f7d",
+  "version": "2026.10.4-rc.2",
+  "build": 61,
+  "working_tree_source_hashes": {
+    "lib/main.dart": "a664e1609f7286f25ec92bb52c80c2afe3ed87a9669de5bb8d67f20e99b06ea8",
+    "lib/food/inventory.dart": "f33c070f7519cd8a023f5709055d2ba18d4e6335384002f568ca0b349f79bcc8",
+    "lib/food/food_page.dart": "e3287cd37b83fad22504f01231b030872efaa6272a0343bdc53b3ab24f99124b",
+    "lib/presentation/section_menu.dart": "763320d2a86e5e5b15f9114086de5f07f7b8dd57a5c2248f68cc950e2e36cb07",
+    "lib/presentation/task_toolbar.dart": "719d0780a09b00ae4fd00386844daaedc18215028b4bc2eeafe7419a6baac537",
+    "pubspec.yaml": "9924520a598c87eb2090a493f303aa4e28d335552dd5a7a1e7e6c7c5fd514986"
+  },
+  "validation": {
+    "analysis": "clean",
+    "unit_tests": 886,
+    "native_changed_cases": 13,
+    "independent_checklist_cases": 1,
+    "policy_tests": 57,
+    "policy_skips": 1
+  },
+  "review": {
+    "navigation": "independent architecture/task UX approved; stable account/search geometry regression corrected and independently tested",
+    "food": "independent compatibility/security approved;14 independent checks pass",
+    "task_body": "independent production-fix and compact disclosure review approved; regression authored by that reviewer, root independently ran GREEN"
+  },
+  "android_report": {
+    "platform": "actual Android",
+    "version": "2026.10.4-rc.1",
+    "build": 60,
+    "source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "attestation": "Parent separately confirmed short-title center/blank tap failure with keyboard open/dismissed and restart; controls/long title/dated row work. Library packet remains private in parent context."
+  },
+  "gates_pending": [
+    "full frozen candidate hosted gates",
+    "exact original installer verification",
+    "actual Android build61 focused acceptance",
+    "independent release notes/media review before publication"
+  ],
+  "data": "Only disposable synthetic profiles; no user or trial import/migration/history rewrite"
+}

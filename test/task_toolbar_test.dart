@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/presentation/task_toolbar.dart';
+import 'package:tandemlog/presentation/section_menu.dart';
 
 void main() {
   testWidgets(
@@ -25,6 +26,11 @@ void main() {
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: TaskToolbar(
+                          sectionMenu: (compact) => SectionMenu(
+                            food: false,
+                            compact: compact,
+                            onSelected: (_) {},
+                          ),
                           checklistMenu: IconButton(
                             key: const ValueKey('checklist-display'),
                             tooltip: 'Checklist display',
@@ -86,6 +92,17 @@ void main() {
                     'width=$width scale=$scale search=$searching theme=$brightness',
               );
               expect(find.text('Tandemlog'), findsNothing);
+              final section = tester.getRect(
+                find.byKey(const ValueKey('section-menu')),
+              );
+              expect(section.width, greaterThanOrEqualTo(48));
+              expect(section.height, greaterThanOrEqualTo(48));
+              if (width == 320) {
+                expect(find.text('Tasks'), findsNothing);
+              }
+              if (width == 1450 && !searching && scale == 1) {
+                expect(find.text('Tasks'), findsOneWidget);
+              }
               expect(find.byTooltip('Active user: $name'), findsOneWidget);
               final menu = tester.getRect(
                 find.byKey(const ValueKey('identity-menu')),
@@ -124,6 +141,11 @@ void main() {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: TaskToolbar(
+                  sectionMenu: (compact) => SectionMenu(
+                    food: false,
+                    compact: compact,
+                    onSelected: (_) {},
+                  ),
                   userName: 'Alex Example',
                   count: count,
                   countLabels: const ['10000 open', '1 completed'],

@@ -1,0 +1,21 @@
+{
+  "platform": "actual Linux GTK/Flutter, scripted native integration",
+  "version": "2026.10.4-rc.2",
+  "build": 61,
+  "file": "native-linux-scripted-pointer-demo.mp4",
+  "sha256": "90646d181b5d0b029998e9cbdbacd169b9e1751a7534329974d7d24e81238d21",
+  "bytes": 341173,
+  "duration_seconds": 28.133333,
+  "pointer": "X pointer visible; purple pointer pulse at scripted taps",
+  "visually_inspected_frames_seconds": [
+    21,
+    26
+  ],
+  "observations": [
+    "Task dirty-editor guard rendered at 21s with visible pointer pulse",
+    "Food date-only Add editor rendered at 26s with actual X pointer"
+  ],
+  "raw_capture_directory": "section_navigation_settled",
+  "source_binding": "../validation.json working_tree_source_hashes",
+  "coverage_limit": "Native Linux, not Android or Windows; new exact Android acceptance pending"
+}

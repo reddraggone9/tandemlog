@@ -1,0 +1,903 @@
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: mixed legacy group remains inspected after first representative is removed
+00:00 +1: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: mixed legacy group remains inspected after first representative is removed
+00:00 +2: /tmp/tandemlog-food-date-readability/test/food_expiration_observed_group_review_test.dart: mixed legacy group remains inspected after first representative is removed
+00:01 +3: /tmp/tandemlog-food-date-readability/test/food_expiration_deprecation_test.dart: date-only grouped edit preserves hidden legacy values; new food asserts no certainty
+00:02 +4: /tmp/tandemlog-food-date-readability/test/food_expiration_deprecation_test.dart: date-only grouped edit preserves hidden legacy values; new food asserts no certainty
+00:02 +5: /tmp/tandemlog-food-date-readability/test/section_menu_search_geometry_test.dart: (setUpAll)
+00:02 +5: /tmp/tandemlog-food-date-readability/test/section_menu_search_geometry_test.dart: section fit keeps account and actions fixed when Search toggles
+00:03 +6: /tmp/tandemlog-food-date-readability/test/section_menu_search_geometry_test.dart: section fit keeps account and actions fixed when Search toggles
+00:03 +7: /tmp/tandemlog-food-date-readability/test/section_menu_test.dart: keyboard opens and selects; disabled trigger cannot switch
+00:04 +8: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: (setUpAll)
+00:04 +8: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/1.0x/error=false
+00:05 +9: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:06 +10: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:06 +11: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:07 +12: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 0 with IME/errors
+00:07 +13: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/dark/1.0x/error=false
+00:07 +14: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:08 +15: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:08 +16: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:08 +17: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 1 with IME/errors
+00:08 +18: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/dark/2.0x/error=false
+00:08 +19: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:09 +20: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:09 +21: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:09 +22: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:10 +23: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:10 +24: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:10 +25: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +26: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +27: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +28: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +29: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +30: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:11 +31: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:12 +32: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:12 +33: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:12 +34: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 1.0x editor 100 with IME/errors
+00:12 +35: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/1.0x/error=false
+00:12 +36: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:13 +37: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:13 +38: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:13 +39: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:13 +40: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 0 with IME/errors
+00:13 +41: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food inventory reachable at320/light/2.0x/error=true
+00:13 +42: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:13 +43: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:14 +44: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:14 +45: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:14 +46: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 1 with IME/errors
+00:14 +47: /tmp/tandemlog-food-date-readability/test/food_view_reachability_test.dart: Food retained reachable at320/light/2.0x/error=false
+00:14 +48: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +49: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +50: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +51: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +52: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:15 +53: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp dark 2.0x editor 100 with IME/errors
+00:17 +54: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 1.0x date guidance and saving
+00:18 +55: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 1.0x date guidance and saving
+00:18 +56: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 1 with IME/errors
+00:18 +57: /tmp/tandemlog-food-date-readability/test/food_expiry_guidance_test.dart: 320dp dark 2.0x date guidance and saving
+00:19 +58: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:20 +59: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +60: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 1.0x editor 100 with IME/errors
+00:21 +61: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 0 with IME/errors
+00:22 +62: /tmp/tandemlog-food-date-readability/test/writer_identity_test.dart: migration prefers selected cache and preserves every legacy identity
+00:22 +63: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +64: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +65: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +66: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +67: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +68: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +69: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +70: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +71: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:22 +72: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:23 +73: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:23 +74: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 1 with IME/errors
+00:23 +75: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:23 +76: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:23 +77: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +78: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +79: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +80: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +81: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +82: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +83: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +84: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +85: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +86: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +87: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +88: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:24 +89: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +90: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +91: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +92: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +93: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +94: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +95: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +96: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +97: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +98: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +99: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:25 +100: /tmp/tandemlog-food-date-readability/test/food_editor_keyboard_layout_test.dart: 320dp light 2.0x editor 100 with IME/errors
+00:26 +101: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: same-offset zone changes notify; unchanged fallback stays quiet
+00:26 +102: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: late requests and disposed callbacks cannot replace current zone
+00:26 +103: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: unknown local zone is explicit, and recovers without UTC guessing
+00:26 +104: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: local mapping refuses disabled-DST or inconsistent OS offsets
+00:26 +105: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: explicit Linux TZ identity does not need filesystem access
+00:26 +106: /tmp/tandemlog-food-date-readability/test/view_time_source_test.dart: Linux zone files honor localtime symlink and copied-file identity
+00:27 +107: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: exact boundary updates without edits; watchdog avoids projection
+00:27 +108: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: resume samples current time after skipped boundaries without replay
+00:27 +109: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: native invalidation immediate; fallback detects clock and zone changes
+00:27 +110: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: delayed wake uses current instant and input invalidation rearms
+00:27 +111: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: cancelled workspace timer cannot publish and callback can dispose
+00:27 +112: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: callback disposal and invalid boundary cannot produce timer loops
+00:27 +113: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: injected calendar boundary crosses DST day 2027-03-14
+00:27 +114: /tmp/tandemlog-food-date-readability/test/view_clock_test.dart: injected calendar boundary crosses DST day 2027-11-07
+00:27 +115: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:27 +116: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:27 +117: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: bulk Undo restores mixed schedules/assignees/tags and retains newer synced registers
+00:27 +118: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: completion and reopening Undo preserve successor work and independent completion/deletion
+00:28 +119: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: move Undo retains later relative move and replays after known-cache upgrade
+00:28 +120: /tmp/tandemlog-food-date-readability/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:28 +121: /tmp/tandemlog-food-date-readability/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:28 +122: /tmp/tandemlog-food-date-readability/test/unavailable_completion_test.dart: unavailable completion explains by tap and keyboard without completing
+00:28 +123: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: unresolved write blocks new payload until exact delayed record appears
+00:28 +124: /tmp/tandemlog-food-date-readability/test/undo_storage_test.dart: delayed cross-entity Undo target fails transactionally with canonical bytes preserved
+00:29 +125: /tmp/tandemlog-food-date-readability/test/text_undo_event_test.dart: native Undo preserves compensation bytes and names original command
+00:29 +126: /tmp/tandemlog-food-date-readability/test/text_undo_event_test.dart: Undo nontext effects remains possible when native compensation is empty
+00:29 +127: /tmp/tandemlog-food-date-readability/test/text_undo_event_test.dart: Undo retracts only the original nontext effects in pure projection
+00:29 +128: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +129: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +130: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +131: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +132: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +133: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore successive closed-editor replacements Undo without duplicating restored identities
+00:30 +134: /tmp/tandemlog-food-date-readability/test/text_save_command_test.dart: production native Save coordinator nontext guard rejects before append without consuming private edits
+00:30 +135: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore acknowledged unregistered Save blocks stale native Undo without appending
+00:30 +136: /tmp/tandemlog-food-date-readability/test/text_save_command_test.dart: production native Save coordinator remote text merges into the returned row without rebasing private intent
+00:31 +137: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore mixed native ordering survives warm reopen and canonical rebuild
+00:31 +138: /tmp/tandemlog-food-date-readability/test/text_save_command_test.dart: production native Save coordinator nontext-only native session permits remote text under the same guard
+00:31 +139: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: true)
+00:31 +140: /tmp/tandemlog-food-date-readability/test/text_save_command_test.dart: production native Save coordinator Undo registration failure reports the already saved result
+00:31 +141: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:31 +142: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native recurring completion proves its immutable inheritance (native creation: false)
+00:31 +143: /tmp/tandemlog-food-date-readability/test/text_save_command_test.dart: production native Save coordinator native Save rejects whole-string fields
+00:31 +144: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore causal peer reuse retains original character ownership through selective Undo
+00:31 +145: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore explicit mixed historical inheritance refuses without changing history
+00:31 +146: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:31 +147: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:31 +148: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:31 +149: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:31 +150: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:31 +151: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore repeated cancelled editors release source documents while saved scoped Undo survives
+00:32 +152: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native guard ignores remote text while preserving metadata and creation tags
+00:32 +153: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore Undo naming remote-deleted latest Save never consumes an older Save
+00:32 +154: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:32 +155: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:32 +156: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=false
+00:32 +157: /tmp/tandemlog-food-date-readability/test/text_event_test.dart: one text command can carry atomic existing nontext edits
+00:32 +158: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:32 +159: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:32 +160: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:32 +161: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown native Undo preserves exact compensation retry restart=true
+00:32 +162: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore session Undo survives editor close and touches only canonical changed fields
+00:32 +163: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore bulk capture with native engine creates independently editable native tasks
+00:32 +164: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native compensation restores deletion and retracts only original nontext effects
+00:32 +165: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:32 +166: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:32 +167: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:32 +168: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:32 +169: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:32 +170: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:33 +171: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore buffered native dependency survives full SQLite cache loss and settles on late parent
+00:33 +172: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore missing baseline prefixes stay pending and competing roots block only legacy text
+00:33 +173: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore offline peers merge owned packets and preserve atomic metadata after cache loss
+00:33 +174: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore one legacy baseline excludes late scalar text and preserves nontext changes
+00:33 +175: /tmp/tandemlog-food-date-readability/test/text_cache_inheritance_test.dart: resolved inherited cache preserves original claims and rebuilds corrupt disposable state
+00:33 +176: /tmp/tandemlog-food-date-readability/test/text_cache_inheritance_test.dart: resolved inherited cache preserves original claims and rebuilds corrupt disposable state
+00:33 +177: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=false
+00:33 +178: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=false afterAppend=true
+00:33 +179: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore unknown append exact receipt after restart cacheLoss=true afterAppend=true
+00:33 +180: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore misnamed private native intent rejects recovery before append and retains evidence
+00:33 +181: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore new native creation verifies actor1 seed and persists full native state
+00:33 +182: /tmp/tandemlog-food-date-readability/test/text_store_test.dart: actual native TaskStore native storage extends cache13 without replaying frozen v3 logs
+00:34 +183: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA01 durable actor derivation is exact, stable and context scoped
+00:34 +184: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA02 reserved, unsafe, malformed and mismatched owners reject
+00:34 +185: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA03 actual allocator collision retains first owner and rejects second
+00:34 +186: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA04 multi-field admission is atomic when a later owner conflicts
+00:34 +187: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA05 canonical-only ownership replay is duplicate/order independent
+00:34 +188: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA06 operation struct authors must be the declared owner
+00:34 +189: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA07 separate documents do not conflate equal actor numbers
+00:34 +190: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: TA08 unknown ownership metadata fails explicitly
+00:34 +191: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: a failed delta preserves every previously bound owner
+00:34 +192: /tmp/tandemlog-food-date-readability/test/text_actor_registry_test.dart: cached owner still rejects changed identity and unknown authors
+00:34 +193: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: exact times precede date-only on the same day without invented time
+00:34 +194: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: scheduled override supplies both date and precision for sorting
+00:34 +195: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: calendar bounds retain precision over viewer midnight and DST
+00:34 +196: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: visible future hints refresh at viewer midnight before the start
+00:34 +197: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: recurring completion eligibility changes at civil midnight and on zone changes
+00:34 +198: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: completion boundary follows 23-hour and 25-hour named-zone days
+00:34 +199: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: ordinary tag intersects assignee, upcoming and completed views
+00:34 +200: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: upcoming is opt-in and does not change stored rows
+00:34 +201: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: standalone timing evaluates hidden and completed rows without changing state
+00:34 +202: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: bounds accept only nullable integers and preserve recurrence anchor
+00:34 +203: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: availability includes exact boundary and completed history stays visible
+00:34 +204: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: effective scheduled precedence, bounds, Someday and manual ties
+00:34 +205: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: bounds clamp civil day while retaining exact time and manual tie order
+00:34 +206: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: pinned exact dates convert to viewer calendar but date-only remains civil
+00:34 +207: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: start midnight and DST gap/fold use calendar transitions
+00:34 +208: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: date-only start midnight uses the shared pinned task zone
+00:34 +209: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: supported bound horizon is admitted and renderable, larger values rejected
+00:34 +210: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: derived bound groups may cross the persisted date year limit
+00:34 +211: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: bounds midnight boundary follows 23 and 25 hour local days
+00:34 +212: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: filter and hidden bounds select earliest relevant clock boundary
+00:34 +213: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: search bypasses filters and availability without changing source
+00:34 +214: /tmp/tandemlog-food-date-readability/test/task_view_test.dart: multiple tags match any then combine with visibility and assignee
+00:34 +215: /tmp/tandemlog-food-date-readability/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:35 +216: /tmp/tandemlog-food-date-readability/test/task_toolbar_test.dart: identity fits actual name/scale and retains accessible full name at narrow widths
+00:36 +217: /tmp/tandemlog-food-date-readability/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:36 +218: /tmp/tandemlog-food-date-readability/test/task_text_session_test.dart: confirmed Save keeps an open editor editable with a fresh lease
+00:37 +219: /tmp/tandemlog-food-date-readability/test/task_text_session_test.dart: later-field preparation failure retains earlier packet for retry
+00:37 +220: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: future hints use projection availability and the observed local day
+00:37 +221: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: passed start and history hints stay absent even with a retained instant
+00:37 +222: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: same heading removes date-only details and empty separators
+00:37 +223: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: same heading retains role and time
+00:37 +224: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: day groups hide due dates and available starts
+00:37 +225: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: day groups hide pinned dates even across local days
+00:37 +226: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: repeat perimeter needs no redundant metadata line or verbose rule
+00:37 +227: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: local zone changes alter only pinned presentation
+00:37 +228: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: pinned DST gaps and folds share projection resolution
+00:37 +229: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: local day headings and bounded task times share the observed zone
+00:37 +230: /tmp/tandemlog-food-date-readability/test/task_metadata_test.dart: date-only occurrence override suppresses timed base due
+00:37 +231: /tmp/tandemlog-food-date-readability/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:39 +232: /tmp/tandemlog-food-date-readability/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:39 +233: /tmp/tandemlog-food-date-readability/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:39 +234: /tmp/tandemlog-food-date-readability/test/task_entry_area_test.dart: selection swaps preserve slot geometry, draft and semantics
+00:39 +235: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: unactivated text stays visible and disabled while scheduling saves
+00:40 +236: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: blank Time focus preserves date precision and midnight is explicit
+00:41 +237: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:41 +238: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:41 +239: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: removing a chip retains unrelated query, caret, and active composition
+00:41 +240: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: date rows stack at narrow widths and enlarged text
+00:41 +241: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: Enter uses existing match idempotently and Save resolves opaque pending inventory tag
+00:42 +242: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title caret survives viewport and text scale changes without unrelated jumps
+00:42 +243: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: touch creation adds all new tokens and invalid query never enables it
+00:42 +244: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:43 +245: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:43 +246: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: description caret survives viewport and text scale changes without unrelated jumps
+00:43 +247: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: active tag composition blocks Save and canClose Save
+00:43 +248: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:43 +249: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: changed composing title cannot save until normalized commit
+00:44 +250: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: pending query participates in canClose; Cancel retains it, Save commits it
+00:44 +251: /tmp/tandemlog-food-date-readability/test/task_editor_tags_test.dart: pending query participates in canClose; Cancel retains it, Save commits it
+00:44 +252: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:44 +253: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: historical multiline title opens clean and notes save preserves title
+00:44 +254: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title grows from one to two lines and notes grow then scroll with caret
+00:44 +255: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: keyboard and large text bound notes and keep modal actions reachable
+00:45 +256: /tmp/tandemlog-food-date-readability/test/task_completion_checkbox_test.dart: disabled repeat perimeter has uniform opacity at overlapping tips
+00:45 +257: /tmp/tandemlog-food-date-readability/test/task_completion_checkbox_test.dart: disabled repeat perimeter has uniform opacity at overlapping tips
+00:45 +258: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: live schedule validation and repeat conditional fields
+00:45 +259: /tmp/tandemlog-food-date-readability/test/task_completion_checkbox_test.dart: repeat geometry retains padded touch and checked semantics
+00:45 +260: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:45 +261: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:45 +262: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: nonrepeat override survives title edit and frozen original ignores incoming data
+00:46 +263: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk caret and focus changes do not apply mixed fields
+00:46 +264: /tmp/tandemlog-food-date-readability/test/task_clock_test.dart: Chicago completion day follows local midnight across DST
+00:46 +265: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:46 +266: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk blank untouched preserves mixed precision; explicit blank clears
+00:47 +267: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:47 +268: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:47 +269: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:47 +270: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: hardware Enter propagates active IME composition
+00:47 +271: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:48 +272: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: invalid tags timezone recurrence and bounds block submission live
+00:48 +273: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: hardware ArrowDown then Enter selects existing option
+00:48 +274: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:48 +275: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: panel flag changes retain draft and public close guard
+00:48 +276: /tmp/tandemlog-food-date-readability/test/tag_input_test.dart: opaque __create inventory tag and creation row keep separate identities
+00:48 +277: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title and notes wire limits validate before save
+00:48 +278: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title and notes wire limits validate before save
+00:48 +279: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: title and notes wire limits validate before save
+00:48 +280: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: draft occurrence remains accessible after removing repeat
+00:49 +281: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: override actions wrap with narrow viewport and large text
+00:49 +282: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: host owns Back and opens exactly one discard prompt
+00:49 +283: /tmp/tandemlog-food-date-readability/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:50 +284: /tmp/tandemlog-food-date-readability/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:50 +285: /tmp/tandemlog-food-date-readability/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:51 +286: /tmp/tandemlog-food-date-readability/test/tag_input_geometry_test.dart: many selected chips keep query and results reachable with IME
+00:51 +287: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk guard Save applies patch against frozen tasks without closing
+00:51 +288: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: selection header wraps at narrow large text
+00:51 +289: /tmp/tandemlog-food-date-readability/test/task_editor_test.dart: bulk header is compact, wraps accessibly, and Clear retains dirty guard
+00:51 +290: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:52 +291: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:52 +292: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:52 +293: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:53 +294: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/1.0
+00:53 +295: /tmp/tandemlog-food-date-readability/test/storage_test.dart: bulk move reconciles durable append after refresh failure before retry
+00:53 +296: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:53 +297: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 260.0/2.0
+00:53 +298: /tmp/tandemlog-food-date-readability/test/storage_test.dart: bulk guard rechecks before the batch append; retry block uses global order
+00:53 +299: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: query underline gap stays stable with chips at 390.0/1.0
+00:53 +300: /tmp/tandemlog-food-date-readability/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:53 +301: /tmp/tandemlog-food-date-readability/test/storage_test.dart: offline edits and completions cannot resurrect deletion; successor survives restart
+00:53 +302: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:53 +303: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 1.0 text scale
+00:53 +304: /tmp/tandemlog-food-date-readability/test/storage_test.dart: guarded move rejects changes arriving inside its refresh without append
+00:53 +305: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: initial suggestions survive IME relayout at 2.0 text scale
+00:54 +306: /tmp/tandemlog-food-date-readability/test/storage_test.dart: typed due bounds are atomic across offline edits and rebuild
+00:54 +307: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:54 +308: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:54 +309: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:54 +310: /tmp/tandemlog-food-date-readability/test/tag_filter_picker_test.dart: below-first dialog overlay uses content size and stays stable through queries and metrics
+00:54 +311: /tmp/tandemlog-food-date-readability/test/storage_test.dart: reopen targets observed completions, is idempotent and survives restart
+00:54 +312: /tmp/tandemlog-food-date-readability/test/storage_test.dart: reopen refresh does not expand the observed target set
+00:54 +313: /tmp/tandemlog-food-date-readability/test/storage_test.dart: partial reopen retries without duplicating a committed undo
+00:54 +314: /tmp/tandemlog-food-date-readability/test/storage_test.dart: restart retains state and unchanged files avoid parsing/replay
+00:54 +315: /tmp/tandemlog-food-date-readability/test/storage_test.dart: cache deletion rebuilds exact projection and writer stays stable
+00:54 +316: /tmp/tandemlog-food-date-readability/test/storage_test.dart: offline independent fields, duplicate transport and atomic replacement converge
+00:55 +317: /tmp/tandemlog-food-date-readability/test/storage_test.dart: concurrent completion survives targeted undo from another user
+00:55 +318: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +319: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +320: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +321: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +322: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +323: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +324: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +325: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +326: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +327: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 1.0x text
+00:55 +328: /tmp/tandemlog-food-date-readability/test/storage_test.dart: invalid local commands leave canonical bytes unchanged
+00:55 +329: /tmp/tandemlog-food-date-readability/test/sticky_task_group_test.dart: native heading pins and pushes off at 2.0x text
+00:55 +330: /tmp/tandemlog-food-date-readability/test/storage_test.dart: manifest deletion, replacement and future format block commands
+00:55 +331: /tmp/tandemlog-food-date-readability/test/storage_test.dart: manifest deletion, replacement and future format block commands
+00:56 +332: /tmp/tandemlog-food-date-readability/test/storage_test.dart: local undo requires an earlier completion of the same entity
+00:56 +333: /tmp/tandemlog-food-date-readability/test/storage_test.dart: remote undo arriving before completion is revalidated when target arrives
+00:56 +334: /tmp/tandemlog-food-date-readability/test/storage_test.dart: remote undo cannot suppress a future-clock completion
+00:56 +335: /tmp/tandemlog-food-date-readability/test/storage_test.dart: close drains accepted work, rejects new work and is idempotent
+00:56 +336: /tmp/tandemlog-food-date-readability/test/storage_test.dart: pending undo is validated before its local target is appended
+00:56 +337: /tmp/tandemlog-food-date-readability/test/storage_test.dart: missing canonical folder contents do not initialize a new manifest
+00:56 +338: /tmp/tandemlog-food-date-readability/test/storage_test.dart: offline tag removal preserves unseen same-name additions and atomic edits
+00:56 +339: /tmp/tandemlog-food-date-readability/test/stable_v3_compatibility_test.dart: first stable v3 bytes, identities, clocks and event meanings stay frozen
+00:56 +340: /tmp/tandemlog-food-date-readability/test/storage_test.dart: concurrent relative moves converge and survive cache rebuild
+00:56 +341: /tmp/tandemlog-food-date-readability/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [22222222-2222-4222-8222-222222222222, 33333333-3333-4333-8333-333333333333] and cache rebuild
+00:57 +342: /tmp/tandemlog-food-date-readability/test/storage_test.dart: unchanged repeating completion rejects before append and refreshes remote schedule
+00:57 +343: /tmp/tandemlog-food-date-readability/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [33333333-3333-4333-8333-333333333333, 22222222-2222-4222-8222-222222222222] and cache rebuild
+00:57 +344: /tmp/tandemlog-food-date-readability/test/stable_v3_compatibility_test.dart: frozen history converges after arrival [33333333-3333-4333-8333-333333333333, 22222222-2222-4222-8222-222222222222] and cache rebuild
+00:57 +345: /tmp/tandemlog-food-date-readability/test/storage_test.dart: concurrent recurrence completion has one durable successor and history reopen retains edits
+00:57 +346: /tmp/tandemlog-food-date-readability/test/storage_test.dart: concurrent recurrence completion has one durable successor and history reopen retains edits
+00:57 +347: /tmp/tandemlog-food-date-readability/test/storage_test.dart: protocol v1 remains untouched and explicitly rejected
+00:57 +348: /tmp/tandemlog-food-date-readability/test/storage_test.dart: late winning recurrence seed cannot resurrect removed successor tags
+00:57 +349: /tmp/tandemlog-food-date-readability/test/storage_test.dart: successor collision and invalid tag/move references fail before append
+00:57 +350: /tmp/tandemlog-food-date-readability/test/storage_test.dart: offline schedule edits converge atomically without mixing precise date-times
+00:57 +351: /tmp/tandemlog-food-date-readability/test/storage_test.dart: completion reconciles changed timezone before selecting civil day
+00:57 +352: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +353: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +354: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +355: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +356: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +357: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +358: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:58 +359: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:59 +360: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:59 +361: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:59 +362: /tmp/tandemlog-food-date-readability/test/shared_text_storage_test.dart: shared recurrence cache stores references and survives warm/cold reconstruction
+00:59 +363: /tmp/tandemlog-food-date-readability/test/shared_text_history_test.dart: reordered originals bound disposable interning and retain old references
+01:01 +364: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +365: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +366: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +367: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +368: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +369: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +370: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +371: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +372: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +373: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:01 +374: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +375: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +376: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +377: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +378: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +379: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: query clear and dropdown actions identify every editing context
+01:02 +380: /tmp/tandemlog-food-date-readability/test/schedule_test.dart: named-zone gap and fold obey end-of-due-day bounds
+01:02 +381: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +382: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +383: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +384: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +385: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +386: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: editor exposes named query and removable selected tags
+01:02 +387: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+01:03 +388: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+01:03 +389: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+01:03 +390: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk suggestions are readable and semantics activation is local
+01:03 +391: /tmp/tandemlog-food-date-readability/test/release_version_tile_test.dart: clipboard failure is contextual and can be retried
+01:03 +392: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+01:04 +393: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: bulk chip actions preserve independent deltas and Apply state
+01:04 +394: /tmp/tandemlog-food-date-readability/test/recurring_text_test.dart: failed native admission discards rejected replay authority and recovers, cancellation fault=true
+01:04 +395: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+01:04 +396: /tmp/tandemlog-food-date-readability/test/shared_tag_semantics_test.dart: Saving freezes tag editing and chip removal in both bulk contexts
+01:04 +397: /tmp/tandemlog-food-date-readability/test/recurring_text_test.dart: actual native recurring inherited text resolver shares recurrence references and advances native history once
+01:04 +398: /tmp/tandemlog-food-date-readability/test/recurring_text_test.dart: actual native recurring inherited text memo preserves union and rejects sparse closed prefixes after a hit
+01:04 +399: /tmp/tandemlog-food-date-readability/test/recurring_text_test.dart: actual native recurring inherited text memo budgets evict without changing replay or requiring native checkpoints
+01:05 +400: /tmp/tandemlog-food-date-readability/test/recurring_text_test.dart: actual native recurring inherited text shared originals remain bounded without evicting the latest edited proof
+01:05 +401: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +402: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +403: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +404: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +405: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +406: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +407: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +408: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:05 +409: /tmp/tandemlog-food-date-readability/test/recurring_store_test.dart: offline recurring peers retain child edits drafts Undo and exact cold replay
+01:06 +410: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: true Undo suppresses untouched successor, preserves bytes, and survives rebuild
+01:06 +411: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: ordinary Reopen retains successor and generic recurring Undo rejects
+01:06 +412: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: edit protects successor from cleanup
+01:06 +413: /tmp/tandemlog-food-date-readability/test/profile_task_store_test.dart: immutable names reject injected identifiers
+01:06 +414: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: tags protects successor from cleanup
+01:07 +415: /tmp/tandemlog-food-date-readability/test/profile_task_store_test.dart: shared checklist display state is scoped and uses owner rollback
+01:07 +416: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: move protects successor from cleanup
+01:07 +417: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: move protects successor from cleanup
+01:07 +418: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: move protects successor from cleanup
+01:07 +419: /tmp/tandemlog-food-date-readability/test/profile_task_store_test.dart: queued open prevents owner close before its handle is returned
+01:07 +420: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: complete protects successor from cleanup
+01:07 +421: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: complete protects successor from cleanup
+01:07 +422: /tmp/tandemlog-food-date-readability/test/profile_task_store_test.dart: protected native receipt survives alias confirmation/rebuild appended=false
+01:07 +423: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: delete protects successor from cleanup
+01:07 +424: /tmp/tandemlog-food-date-readability/test/profile_task_store_test.dart: protected native receipt survives alias confirmation/rebuild appended=true
+01:07 +425: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+01:07 +426: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+01:07 +427: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: anchor protects successor from cleanup
+01:07 +428: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: undoneEdit protects successor from cleanup
+01:07 +429: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote edit restores protected successor and converges after rebuild
+01:07 +430: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+01:08 +431: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+01:08 +432: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+01:08 +433: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote completion restores protected successor and converges after rebuild
+01:08 +434: /tmp/tandemlog-food-date-readability/test/profile_safety_store_test.dart: rollback and projection deletion do not clear protected evidence
+01:08 +435: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+01:08 +436: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+01:08 +437: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: late remote anchor restores protected successor and converges after rebuild
+01:08 +438: /tmp/tandemlog-food-date-readability/test/profile_safety_store_test.dart: distinct profile writers converge in one canonical workspace
+01:08 +439: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+01:08 +440: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+01:08 +441: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: untouched recompletion uses surviving snapshot and current parent position
+01:08 +442: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (0 retained)
+01:08 +443: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: mixed Undo confirms only prefix and retries cleanup (1 retained)
+01:08 +444: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: same process and canonical aliases contend until release
+01:08 +445: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+01:08 +446: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: new cleanup rejects nonrecurring and wrong-task targets before append
+01:08 +447: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+01:08 +448: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+01:09 +449: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+01:09 +450: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+01:09 +451: /tmp/tandemlog-food-date-readability/test/profile_lock_test.dart: child process holds OS lock; killing it allows reacquisition
+01:09 +452: /tmp/tandemlog-food-date-readability/test/recurring_completion_undo_test.dart: pure seed selection is independent of arrival order and preserves historical Undo
+01:09 +453: loading /tmp/tandemlog-food-date-readability/test/order_projection_test.dart
+01:09 +453: /tmp/tandemlog-food-date-readability/test/order_projection_test.dart: moving a legacy task below a native task uses both creation actions
+01:09 +454: /tmp/tandemlog-food-date-readability/test/order_projection_test.dart: native creation after a move keeps chronological manual ordering
+01:10 +455: /tmp/tandemlog-food-date-readability/test/native_text_engine_test.dart: missing native library is an explicit failure
+01:10 +456: /tmp/tandemlog-food-date-readability/test/native_text_engine_test.dart: operation bytes require exact canonical Base64 and bounded size
+01:10 +457: /tmp/tandemlog-food-date-readability/test/native_text_engine_test.dart: actual production FFI inspection reuse is immutable budget-specific and bounded
+01:10 +458: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +459: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +460: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +461: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +462: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +463: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +464: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +465: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +466: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +467: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +468: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:10 +469: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +470: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +471: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +472: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +473: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +474: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+01:11 +475: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion
+HISTORICAL_RECOMPLETION recompletion: Native item Saved ChildItemA
+01:11 +476: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:12 +477: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:12 +478: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:12 +479: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+01:12 +480: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo
+HISTORICAL_RECOMPLETION Undo: Native item Saved ChildItemA
+01:13 +481: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: restart resumes without identity change at caches.imported
+01:13 +482: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +483: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +484: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +485: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +486: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +487: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:13 +488: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:14 +489: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:14 +490: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+01:14 +491: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after recompletion cold replay
+HISTORICAL_RECOMPLETION recompletion cold replay: Native item Saved ChildItemA
+01:14 +492: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:15 +492: /tmp/tandemlog-food-date-readability/test/native_checklist_recompletion_test.dart: native offline checklist successor keeps its edited item after Undo cold replay
+HISTORICAL_RECOMPLETION Undo cold replay: Native item Saved ChildItemA
+01:15 +493: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:15 +494: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:15 +495: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:16 +496: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:16 +497: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:16 +498: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: actual crash-retained legacy WAL and SHM import and cleanup
+01:16 +499: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:16 +500: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:16 +501: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +502: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +503: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +504: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +505: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +506: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +507: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives commit and process death
+01:17 +508: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at files.imported
+01:19 +509: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at files.imported
+01:19 +510: /tmp/tandemlog-food-date-readability/test/local_profile_database_test.dart: OS exclusion survives uncommitted and process death
+01:20 +511: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:20 +512: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:20 +513: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:20 +514: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:20 +515: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:20 +516: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +517: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +518: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +519: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +520: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +521: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +522: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +523: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +524: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +525: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +526: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +527: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +528: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +529: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +530: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +531: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +532: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:21 +533: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +534: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +535: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +536: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +537: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +538: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +539: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +540: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +541: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +542: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +543: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +544: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.planned
+01:22 +545: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +546: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +547: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +548: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +549: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +550: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:23 +551: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:24 +552: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:25 +553: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at activation.committed
+01:25 +554: /tmp/tandemlog-food-date-readability/test/initial_task_rank_test.dart: legacy creations and retries retain their released append order
+01:25 +555: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +556: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +557: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +558: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +559: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +560: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:25 +561: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:26 +562: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +563: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +564: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +565: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +566: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +567: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +568: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.marked
+01:27 +569: /tmp/tandemlog-food-date-readability/test/incremental_history_test.dart: truncated admitted log fails on resume and cold reopen without content reads
+01:27 +570: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +571: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +572: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +573: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +574: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +575: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +576: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +577: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:27 +578: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +579: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +580: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +581: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +582: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +583: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +584: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +585: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +586: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +587: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +588: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +589: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:28 +590: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +591: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +592: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +593: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +594: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +595: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +596: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +597: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +598: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +599: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +600: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +601: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +602: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +603: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +604: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +605: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +606: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:29 +607: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.deleted
+01:30 +608: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:30 +609: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:31 +610: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:31 +611: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:31 +612: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:31 +613: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:32 +614: /tmp/tandemlog-food-date-readability/test/local_profile_migration_test.dart: SIGKILL recovery retains identity and canonical bytes at cleanup.committed
+01:32 +615: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:33 +616: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:33 +617: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:33 +618: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: historical source and marker arrive after cross-writer Undo
+01:33 +619: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:33 +620: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:33 +621: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:33 +622: /tmp/tandemlog-food-date-readability/test/historical_delivery_test.dart: review: native historical source and marker arrive after cross-writer Undo
+01:34 +623: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: malformed Food disables only Food and existing Tasks remain writable
+01:34 +624: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: Food-only provider failure preserves the typed module boundary
+01:34 +625: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: moved manifest stays a shared fatal fault
+01:34 +626: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: malformed protected Food head is shared integrity, not history
+01:34 +627: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.sync-conflict-synthetic.foodlog
+01:34 +628: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: recognized Food conflict stays module-scoped: food-00000000-0000-4000-8000-000000000001.foodlog.sync-conflict-synthetic
+01:34 +629: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: unclassified conflict preserves released Task fail-closed policy
+01:34 +630: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: disabled Food retains exact prepared bytes for explicit recovery
+01:34 +631: /tmp/tandemlog-food-date-readability/test/food_store_test.dart: food physical count and durable Deleted survive restart without changing task v3 bytes
+01:34 +632: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +633: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +634: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +635: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +636: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +637: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:34 +638: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: 101-container group removal and Undo use bounded captured batches
+01:35 +639: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:35 +640: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:36 +641: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:36 +642: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:36 +643: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:37 +644: /tmp/tandemlog-food-date-readability/test/food_retention_draft_test.dart: removing newly created retention chip stays removed on Add
+01:37 +645: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +646: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +647: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +648: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +649: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +650: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:37 +651: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:38 +652: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:38 +653: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:38 +654: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:39 +655: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:39 +656: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:39 +657: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:39 +658: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:40 +659: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:40 +660: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:40 +661: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:41 +662: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+01:41 +663: /tmp/tandemlog-food-date-readability/test/food_replay_budget_test.dart: wide-target thousand-reference history has a bounded replay budget
+FOOD_REPLAY_BUDGET bytes=12418562 records=1002 targets=100 refs=1000 elapsed_ms=2181
+01:41 +664: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: legacy date certainty stays unknown unless evidence establishes it
+01:41 +665: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Deleted sorts tied writers and uses latest still-active deletion
+01:41 +666: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Deleted sequence tie uses numeric sequence rather than lexical ID
+01:41 +667: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: equivalent fractions do not conflict; real alternatives require review
+01:41 +668: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: multiwriter tied clocks and delayed Restore replay deterministically
+01:41 +669: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: independent field edits merge without overwriting the other field
+01:41 +670: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: concurrent contents alternatives remain visible until observed resolution
+01:41 +671: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Add N creates physical containers; count is derived
+01:41 +672: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: eight containers stay eight with seven full and one third remaining
+01:41 +673: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: identical full containers have a deterministic quick target
+01:41 +674: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: observed group deletion excludes concurrent new containers
+01:41 +675: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: concurrent same-target remove counts once; unseen delete survives Restore
+01:41 +676: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: duplicate and arbitrarily reordered delivery replay identically
+01:41 +677: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: retention hides even preexpiry; undated stays Inbox; search ignores filters
+01:41 +678: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: expiry order is global; different expiry or descriptive data stay separate
+01:41 +679: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: Deleted is explicit, searchable, and durable with no age cutoff
+01:41 +680: /tmp/tandemlog-food-date-readability/test/food_inventory_test.dart: invalid counts, fractions, dates, paths and unknown fields fail closed
+01:42 +681: /tmp/tandemlog-food-date-readability/test/food_intents_test.dart: reservation and exact bytes commit or roll back together
+01:42 +682: /tmp/tandemlog-food-date-readability/test/food_intents_test.dart: receipt cannot be retired by different bytes or without transaction
+01:42 +683: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: strict v1 contract canonical fractions stable identities and invalid inputs
+01:42 +684: /tmp/tandemlog-food-date-readability/test/food_import_contract_vector_test.dart: v1 import identity and plan hash match independent frozen vector
+01:42 +685: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: dry run stages nothing and explicit commit preserves physical and unknown data
+01:42 +686: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: cold retry after later edit and deletion uses original admission not projection
+01:42 +687: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: partial append cold retry recovers exact reserved bytes without fresh IDs
+01:43 +688: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: uncertain full append cold retry admits originals without second append
+01:43 +689: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +690: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +691: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +692: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +693: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +694: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +695: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +696: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +697: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:43 +698: /tmp/tandemlog-food-date-readability/test/food_durable_editor_test.dart: a failed durable Add retains editor and exact visible draft
+01:44 +699: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+01:44 +700: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+01:45 +701: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+01:45 +702: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+01:45 +703: /tmp/tandemlog-food-date-readability/test/food_import_test.dart: fully staged maximum batch preserves all 1000 physical identities
+01:47 +704: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +705: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +706: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +707: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +708: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +709: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +710: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +711: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +712: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 1.0x
+01:47 +713: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect dark 2.0x
+01:47 +714: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+01:47 +715: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+01:47 +716: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+01:47 +717: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+01:48 +718: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 1.0x
+01:48 +719: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+01:48 +720: /tmp/tandemlog-food-date-readability/test/food_collapsed_inspect_guard_test.dart: latest Full conflict retains warning and Inspect light 2.0x
+01:48 +721: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: new records require an explicit predecessor beyond genesis
+01:48 +722: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: canonical bytes reject alternate spellings and duplicate fields
+01:48 +723: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: data key order is recursive and array order remains significant
+01:48 +724: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: altering any envelope field or content breaks the retained hash
+01:48 +725: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: hash fields must be full lowercase hex and are mandatory
+01:48 +726: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: literal Unicode survives, malformed surrogates never become replacements
+01:48 +727: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: canonical numeric grammar is plain safe integers, never floats
+01:48 +728: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: obsolete separate tag events are rejected rather than reinterpreted
+01:48 +729: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: event size admission counts UTF-8 bytes with an inclusive 1 MiB limit
+01:48 +730: /tmp/tandemlog-food-date-readability/test/event_chain_test.dart: v1 and v2 prerelease histories remain explicit preserved failures
+01:49 +731: /tmp/tandemlog-food-date-readability/test/domain_test.dart: deletion is a validated permanent tombstone in every arrival order
+01:49 +732: /tmp/tandemlog-food-date-readability/test/domain_test.dart: canonical UUID admission matches namespace validation and rejects aliases
+01:49 +733: /tmp/tandemlog-food-date-readability/test/domain_test.dart: all arrival permutations yield identical field conflict and undo state
+01:49 +734: /tmp/tandemlog-food-date-readability/test/domain_test.dart: unknown event/fields and counter overflow are rejected
+01:49 +735: /tmp/tandemlog-food-date-readability/test/domain_test.dart: historical v1 events and invalid new active fields fail explicitly
+01:49 +736: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.0 rowBoundary=392.0
+01:50 +737: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:51 +738: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:51 +739: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=1.3 rowBoundary=456.0
+01:51 +740: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:51 +741: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:51 +742: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:51 +743: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +744: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +745: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=false scale=2.0 rowBoundary=628.0
+01:52 +746: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +747: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +748: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +749: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+01:52 +750: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.0 rowBoundary=488.0
+01:53 +751: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=1.3 rowBoundary=552.0
+01:54 +752: /tmp/tandemlog-food-date-readability/test/date_time_layout_test.dart: populated rows fit at measured boundary and retain composing drafts
+LAYOUT bulk=true scale=2.0 rowBoundary=724.0
+01:55 +753: /tmp/tandemlog-food-date-readability/test/checklist_suppressed_capture_test.dart: canceled untouched checklist successor cannot open a private native editor or become visible through capture
+01:56 +754: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: stale inline reorder stops before receipt after peer refresh
+01:56 +755: /tmp/tandemlog-food-date-readability/test/checklist_security_review_test.dart: admissible large checklist copy has bounded decode work and preserves canonical bytes
+01:57 +756: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: one-level items have native title/notes, completion, order and targeted Undo
+01:57 +757: /tmp/tandemlog-food-date-readability/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:58 +758: /tmp/tandemlog-food-date-readability/test/checklist_security_review_test.dart: scalar checklist historical recompletion preserves protected child without shared-text initialization
+01:58 +759: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: recurrence copies fresh unchecked items preserving order and native field identities
+01:58 +760: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: offline completions union item text and membership while preserving successor edits
+01:59 +761: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: holding child reorder handle never opens help popup
+01:59 +762: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: scalar parent can recur with native checklist without a forced parent text baseline
+01:59 +763: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: child reorder drag still works after holding 0:00:00.000000
+01:59 +764: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+01:59 +765: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+02:00 +766: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+02:00 +767: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: historical recompletion leaves the independently initialized child checklist untouched
+02:00 +768: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: panel exposes check/edit/add, relative moves and edge restrictions
+02:00 +769: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+02:00 +770: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+02:00 +771: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: saved item completion/move/delete protects successor from completion Undo
+02:00 +772: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: late control callbacks cannot dispatch after panel becomes busy
+02:00 +773: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+02:00 +774: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+02:00 +775: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+02:00 +776: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: late offline copy cannot overwrite a saved child order or checked state
+02:01 +777: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: new item saves normalized title and multiline notes independently
+02:01 +778: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: scalar-mode checklist history also preserves initialized child on historical recompletion
+02:01 +779: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: dirty close can be cancelled, dismissed and asked repeatedly without popping
+02:01 +780: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+02:01 +781: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+02:01 +782: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: copied-item native proofs work through three generations and exact membership cannot be forged
+02:01 +783: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: IME composition cannot save; length errors retain fields
+02:02 +784: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+02:02 +785: /tmp/tandemlog-food-date-readability/test/checklist_storage_test.dart: untouched copied items follow successor suppression and identical cold/warm cache replay
+02:02 +786: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: busy Save admits one command and freezes draft until success
+02:02 +787: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: Cancel and route back resolve dirty item before closing host
+02:02 +788: /tmp/tandemlog-food-date-readability/test/checklist_presentation_test.dart: render dark desktop and narrow enlarged components
+02:02 +789: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:03 +790: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:03 +791: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:03 +792: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:03 +793: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:04 +794: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:04 +795: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:04 +796: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: remote deleted parent rejects private native Save without receipt and permits Discard
+02:04 +797: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: late cross-parent move anchor rolls back arrival without changing the pending source item
+02:04 +798: /tmp/tandemlog-food-date-readability/test/checklist_item_native_editor_test.dart: native caret-only edits stay clean; composition propagates; committed merged text renews before close
+02:04 +799: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: late user creation anchor rejects with transactional rollback
+02:04 +800: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: late task creation anchor rejects with transactional rollback
+02:04 +801: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: copy contribution waits for its source frontier then reconstructs unchecked native item exactly
+02:04 +802: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: forged membership copy rejects before receipt and leaves canonical history untouched
+02:05 +803: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+02:05 +804: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+02:05 +805: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: all checked items complete without warning and prepare exactly one receipt
+02:05 +806: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: forged history proof copy rejects before receipt and leaves canonical history untouched
+02:05 +807: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: cancel unfinished warning prepares nothing and preserves exact canonical bytes
+02:05 +808: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: forged source parent copy rejects before receipt and leaves canonical history untouched
+02:05 +809: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+02:06 +810: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: warning observes whole current checklist including checked items notes and order
+02:06 +811: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: copied ID collision with independent item rejects before receipt
+02:06 +812: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming new unchecked item during warning requires fresh confirmation before receipt
+02:06 +813: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: late duplicate copy contribution preserves child-owned ordering and check state
+02:06 +814: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming completion state during warning requires fresh confirmation before receipt
+02:06 +815: /tmp/tandemlog-food-date-readability/test/checklist_delivery_test.dart: parent recurrence preserves live item private draft and later source Save does not flow into copied notes
+02:06 +816: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+02:07 +817: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming title during warning requires fresh confirmation before receipt
+02:07 +818: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming notes during warning requires fresh confirmation before receipt
+02:07 +819: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: incoming order during warning requires fresh confirmation before receipt
+02:07 +820: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+02:07 +821: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+02:08 +822: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+02:08 +823: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+02:08 +824: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by checked copied-item history
+02:08 +825: /tmp/tandemlog-food-date-readability/test/checklist_completion_command_test.dart: already completed task returns null without warning or duplicate receipt
+02:08 +826: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+02:08 +827: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+02:09 +828: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: shared baseline preserves earliest scalar successor protected by undone and deleted copied-item history
+02:09 +829: /tmp/tandemlog-food-date-readability/test/checklist_baseline_selection_test.dart: later copied-item activity preserves the declared scalar baseline through native capture and cold replay
+02:09 +830: /tmp/tandemlog-food-date-readability/test/checklist_architecture_gate_test.dart: genuine offline item activity arriving after cancellation restores its task
+02:10 +831: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:10 +832: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:10 +833: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:10 +834: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:11 +835: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:11 +836: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:11 +837: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 0.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 1.0, width: 390.0)
+02:11 +838: /tmp/tandemlog-food-date-readability/test/bulk_failure_visibility_test.dart: bulk failure remains visible after bottom scroll (height: 820.0, keyboard: 280.0, message: Selected tasks changed. Close this editor and review them before retrying., scale: 2.0, width: 390.0)
+02:12 +839: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+02:12 +840: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+02:13 +841: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+02:13 +842: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+02:14 +843: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (900.0, 1.0)
+02:14 +844: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: 1-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+02:14 +845: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: bulk apply names and accessible actions isolate fields at (390.0, 2.0)
+02:15 +846: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: 30-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+02:15 +847: /tmp/tandemlog-food-date-readability/test/bulk_apply_semantics_test.dart: keyboard applies only Due time; tag operations stay distinct
+02:16 +848: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+02:16 +849: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+02:17 +850: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: 100-task create/edit/tag/move/delete/Undo use one durable append/cache transaction
+02:18 +851: /tmp/tandemlog-food-date-readability/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+02:18 +852: /tmp/tandemlog-food-date-readability/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+02:18 +853: /tmp/tandemlog-food-date-readability/test/android_recovery_harness_test.dart: bounded recovery harness passes all six synthetic cases
+02:18 +854: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: capture tail write reconciles exact records and never discards incomplete tail
+02:18 +855: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: capture after write reconciles exact records and never discards incomplete tail
+02:18 +856: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: capture cache write reconciles exact records and never discards incomplete tail
+02:18 +857: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: invalid deferred reference to second batch event rejects all before append
+02:18 +858: /tmp/tandemlog-food-date-readability/test/batch_storage_test.dart: deferred tag reference to second prepared event rejects the complete batch
+02:19 +859: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: range bridge returns suffix and exposes nonseekable fallback explicitly
+02:19 +860: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: range truncation/provider errors remain failures rather than fallback
+02:19 +861: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: unsupported watch retains 15-second foreground fallback and retries
+02:19 +862: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: metadata remains optional observations and never creates trusted stamps
+02:19 +863: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: false)
+02:19 +864: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list rejects duplicate tandemlog-space.json before returning observations (same identity: true)
+02:19 +865: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: false)
+02:19 +866: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list rejects duplicate writer.jsonl before returning observations (same identity: true)
+02:19 +867: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: unrelated duplicate names do not reject the folder
+02:19 +868: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list preserves native duplicate-name diagnostics and fails closed
+02:19 +869: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: read preserves native duplicate-name diagnostics and fails closed
+02:19 +870: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: readFrom preserves native duplicate-name diagnostics and fails closed
+02:19 +871: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: append preserves native duplicate-name diagnostics and fails closed
+02:19 +872: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: create preserves native duplicate-name diagnostics and fails closed
+02:19 +873: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: watch cancellation and old callbacks cannot trigger the new folder
+02:19 +874: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: unsupported watch activation becomes a stream error for polling fallback
+02:19 +875: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: observer error is delivered and a resumed watch uses fresh token
+02:19 +876: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: successful folder calls preserve bytes, names and forced revalidation
+02:19 +877: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: missing manifest gives restoration guidance without blaming permission
+02:19 +878: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: list generic IO failure stays honest and omits provider internals
+02:19 +879: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: read generic IO failure stays honest and omits provider internals
+02:19 +880: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: append generic IO failure stays honest and omits provider internals
+02:19 +881: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: create generic IO failure stays honest and omits provider internals
+02:19 +882: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: actual denied access and picker failures have specific recovery
+02:19 +883: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: presentation retains partial progress and canonical validation messages
+02:19 +884: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: food duplicates remain visible for module-scoped admission
+02:19 +885: /tmp/tandemlog-food-date-readability/test/android_log_folder_test.dart: bounded food reads send the limit to the provider
+02:19 +886: All tests passed!

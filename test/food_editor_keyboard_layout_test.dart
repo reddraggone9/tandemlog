@@ -195,10 +195,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
   ]) {
     await focus(label, dropdown: label == 'Retention reason');
   }
-  await tap(find.byType(DropdownButtonFormField<String>));
-  expect(find.text('Estimated').hitTestable(), findsOneWidget);
-  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
-  await tester.pumpAndSettle();
+  expect(find.byType(DropdownButtonFormField<String>), findsNothing);
   expectActions();
   await focus('Expiration');
   await tester.enterText(field('Expiration'), '2027-02-30');

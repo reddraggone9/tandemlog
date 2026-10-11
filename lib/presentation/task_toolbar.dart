@@ -6,6 +6,7 @@ class TaskToolbar extends StatelessWidget {
   final String? userName, count;
   final List<String> countLabels;
   final Widget Function(Widget?) identityMenu;
+  final Widget Function(bool compact)? sectionMenu;
   final Widget Function(bool compact)? filter;
   final Widget undo;
   final Widget? checklistMenu;
@@ -22,6 +23,7 @@ class TaskToolbar extends StatelessWidget {
     this.countLabels = const [],
     this.filter,
     this.checklistMenu,
+    this.sectionMenu,
   });
 
   @override
@@ -63,7 +65,7 @@ class TaskToolbar extends StatelessWidget {
       final titleStyle = theme.textTheme.titleLarge!.copyWith(
         fontWeight: FontWeight.w700,
       );
-      final titleWidth = compact || count == null
+      final titleWidth = compact || (count == null && sectionMenu == null)
           ? 0.0
           : measure('Tasks', titleStyle).width + 8;
       final minimumRowHeight = math.max(
@@ -83,15 +85,27 @@ class TaskToolbar extends StatelessWidget {
       final actionsWidth =
           closedActionsWidth -
           (searchField != null && search != null ? 48.0 : 0);
-      final headingWidth =
-          24.0 + titleWidth + (count == null ? 0 : countWidth + 8);
       final searchMinimum = measure('Search').width + 64;
+      // Keep the whole switch target, counts and actions comfortable. The
+      // current section name yields when enlarged text consumes that space.
+      final sectionCompact =
+          compact ||
+          48 +
+                  titleWidth +
+                  (count == null ? 0 : countWidth + 8) +
+                  closedActionsWidth +
+                  avatarWidth >
+              constraints.maxWidth;
+      final sectionWidth = sectionMenu == null
+          ? 24.0 + titleWidth
+          : 48.0 + (sectionCompact ? 0 : titleWidth);
+      final headingWidth = sectionWidth + (count == null ? 0 : countWidth + 8);
       final fullName =
           !compact &&
           name != null &&
           // Reserve Search's opening/close slot in both header modes, keeping
           // the identity shape stable so Undo stays anchored beside it.
-          math.max(headingWidth, 32 + searchMinimum) +
+          math.max(headingWidth, sectionWidth + 8 + searchMinimum) +
                   closedActionsWidth +
                   namedWidth <=
               constraints.maxWidth;
@@ -100,14 +114,16 @@ class TaskToolbar extends StatelessWidget {
       // cannot fit rather than shrinking text or comfortable targets.
       final enlarged = scaler.scale(14) > 20;
       final secondRow = searchField != null
-          ? 32 + actionsWidth + identityWidth + searchMinimum >
+          ? sectionWidth + 8 + actionsWidth + identityWidth + searchMinimum >
                 constraints.maxWidth
-          : count != null &&
-                !compact &&
-                headingWidth <= constraints.maxWidth &&
-                enlarged &&
-                headingWidth + actionsWidth + identityWidth >
-                    constraints.maxWidth;
+          : (sectionWidth + actionsWidth + identityWidth >
+                    constraints.maxWidth) ||
+                (count != null &&
+                    !compact &&
+                    headingWidth <= constraints.maxWidth &&
+                    enlarged &&
+                    headingWidth + actionsWidth + identityWidth >
+                        constraints.maxWidth);
       final showCount =
           count != null &&
           headingWidth <= constraints.maxWidth &&
@@ -155,16 +171,20 @@ class TaskToolbar extends StatelessWidget {
       Widget heading({bool withCount = true}) => Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Semantics(
-            label: 'Tasks',
-            excludeSemantics: true,
-            child: Icon(
-              Icons.check_circle_outline,
-              size: 24,
-              color: theme.colorScheme.primary,
+          if (sectionMenu != null)
+            sectionMenu!(sectionCompact)
+          else
+            Semantics(
+              label: 'Tasks',
+              excludeSemantics: true,
+              child: Icon(
+                Icons.check_circle_outline,
+                size: 24,
+                color: theme.colorScheme.primary,
+              ),
             ),
-          ),
           if (withCount &&
+              sectionMenu == null &&
               !compact &&
               count != null &&
               (searchField == null || secondRow)) ...[

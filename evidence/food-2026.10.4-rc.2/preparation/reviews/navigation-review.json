@@ -1,0 +1,23 @@
+{
+  "scope": "Bounded navigation architecture and taskUX review only; separate Inbox/certainty reviewers cover those changes",
+  "reviewer": "/root/navigation_review",
+  "decision": "approved",
+  "source_hashes": {
+    "lib/main.dart": "a664e1609f7286f25ec92bb52c80c2afe3ed87a9669de5bb8d67f20e99b06ea8",
+    "lib/presentation/task_toolbar.dart": "719d0780a09b00ae4fd00386844daaedc18215028b4bc2eeafe7419a6baac537",
+    "lib/presentation/section_menu.dart": "763320d2a86e5e5b15f9114086de5f07f7b8dd57a5c2248f68cc950e2e36cb07",
+    "lib/food/food_page.dart": "e3287cd37b83fad22504f01231b030872efaa6272a0343bdc53b3ab24f99124b"
+  },
+  "findings_resolved": [
+    "Unavailable Food needs section escape and Settings; retained",
+    "Search toggling changed account shape; stable measurement reservation and real-font regression pass",
+    "Food retry must wait actual page recovery; final production5/5 verifies corrected assertion"
+  ],
+  "visuals": "Re-viewed final actual native dark1200 Tasks and light320250% Food menu; wide/narrow/selected labels correct",
+  "regression_provenance": "Reviewer independently authored search/account geometry test and verified RED/prior+GREEN/fix; root full886-unit suite independently includes it",
+  "pending": [
+    "actual Android new signed artifact acceptance",
+    "full frozen candidate/artifact gates",
+    "independent publication notes/media review"
+  ]
+}

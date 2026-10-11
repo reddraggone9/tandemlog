@@ -1,4 +1,17 @@
-# Current status — 2026-10-10
+# Current status — 2026-10-11
+
+## Next Food preview — build61 in preparation
+
+Lee approved a responsive Tasks/Food dropdown in the existing toolbar identity,
+removing the duplicated full-width selector row. Food now displays just its
+expiration date; hidden legacy certainty values remain wire-compatible and no
+longer split display groups. A reproduced short-title Tasks Inbox hit-area bug
+is fixed by expanding the task body without covering its separate controls.
+Independent navigation, compatibility/security and task-row reviews approve the
+bounded changes. [RC2 evidence and pending native/candidate gates](../evidence/food-2026.10.4-rc.2/README.md).
+RC1/build60 remains published; stable2026.10.3 remains Latest. No replacement
+publication is authorized by a passing cloud-only check; parent actual Android
+acceptance is still required.
 
 ## Food inventory — durable source checkpoint
 

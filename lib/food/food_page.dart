@@ -17,11 +17,15 @@ class FoodInventoryPage extends StatefulWidget {
     required this.onContents,
     required this.onDetails,
     this.onUndo,
+    this.sectionMenu,
+    this.settings,
     this.busy = false,
     this.error,
     this.savePending = false,
     this.hasPendingSave,
   });
+  final Widget Function(bool compact)? sectionMenu;
+  final Widget? settings;
   final FoodState state;
   final FutureOr<void> Function(FoodDetails, int) onAdd;
   final FutureOr<void> Function(List<String>) onRemove;
@@ -108,35 +112,15 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
               constraints: const BoxConstraints(maxWidth: 900),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
-                    child: Row(
-                      children: [
-                        const Expanded(
-                          child: Text(
-                            'Food inventory',
-                            style: TextStyle(
-                              fontSize: 22,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        IconButton(
-                          tooltip: 'Undo removal',
-                          onPressed: widget.busy || widget.onUndo == null
-                              ? null
-                              : () => _invoke(undoCommand!),
-                          icon: const Icon(Icons.undo),
-                        ),
-                        IconButton(
-                          tooltip: 'Add food',
-                          onPressed: widget.busy || pending
-                              ? null
-                              : () => _edit(addCommand: addCommand),
-                          icon: const Icon(Icons.add),
-                        ),
-                      ],
-                    ),
+                  FoodInventoryToolbar(
+                    sectionMenu: widget.sectionMenu,
+                    settings: widget.settings,
+                    onUndo: widget.busy || widget.onUndo == null
+                        ? null
+                        : () => _invoke(undoCommand!),
+                    onAdd: widget.busy || pending
+                        ? null
+                        : () => _edit(addCommand: addCommand),
                   ),
                   Expanded(
                     // Controls and guidance yield space to rows and focused
@@ -237,7 +221,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(16, 0, 16, 8),
                                   child: Text(
-                                    'Needs an expiration date. A known or estimated date moves food into stock.',
+                                    'Needs an expiration date. A date moves food into stock.',
                                   ),
                                 ),
                             ],
@@ -320,7 +304,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         restoreCommand = widget.onRestore,
         contentsCommand = widget.onContents,
         detailsCommand = widget.onDetails;
-    final details = group.details, key = details.groupKey;
+    final details = group.details, key = details.displayGroupKey;
     final opened = expanded.contains(key), deleted = view == FoodView.deleted;
     final singleKnownFull =
         group.containers.length == 1 &&
@@ -365,11 +349,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                           Text(
                             details.expiry == null
                                 ? 'Needs expiration'
-                                : '${details.estimated == true
-                                      ? 'Estimated · '
-                                      : details.estimated == null
-                                      ? 'Certainty unknown · '
-                                      : ''}${details.expiry}',
+                                : details.expiry!,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -638,7 +618,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         count = TextEditingController(text: '1'),
         retentionQuery = TextEditingController();
     var retention = original?.retention ?? '';
-    bool? estimated = original == null ? false : original.estimated;
+    // Preserve each existing container's legacy value through fieldwise edits.
+    // New additions make no assertion about a deprecated certainty fact.
+    final estimated = original?.estimated;
     String? error;
     double? editorViewportHeight;
     var answered = false, saving = false, deciding = false;
@@ -794,38 +776,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      DropdownButtonFormField<String>(
-                        initialValue: estimated == null
-                            ? 'unknown'
-                            : estimated!
-                            ? 'estimated'
-                            : 'known',
-                        decoration: const InputDecoration(
-                          labelText: 'Expiration certainty',
-                        ),
-                        items: const [
-                          DropdownMenuItem(
-                            value: 'known',
-                            child: Text('Known'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'estimated',
-                            child: Text('Estimated'),
-                          ),
-                          DropdownMenuItem(
-                            value: 'unknown',
-                            child: Text('Unknown'),
-                          ),
-                        ],
-                        onChanged: saving || pending()
-                            ? null
-                            : (value) => setDialog(
-                                () => estimated = value == 'unknown'
-                                    ? null
-                                    : value == 'estimated',
-                              ),
-                      ),
-                      const SizedBox(height: 12),
                       TextField(
                         enabled: !saving && !pending(),
                         controller: size,
@@ -959,7 +909,11 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                 final before = original!.toJson(),
                                     after = details.toJson();
                                 final fields = after.keys
-                                    .where((key) => before[key] != after[key])
+                                    .where(
+                                      (key) =>
+                                          key != 'estimated' &&
+                                          before[key] != after[key],
+                                    )
                                     .toList();
                                 if (fields.isNotEmpty) {
                                   await changeDetails(
@@ -1050,3 +1004,54 @@ void Function(T?) _answerOnce<T>(BuildContext context) {
 bool _composing(TextEditingController controller) =>
     controller.value.composing.isValid &&
     !controller.value.composing.isCollapsed;
+
+/// The host supplies section navigation and Settings, including unavailable Food.
+class FoodInventoryToolbar extends StatelessWidget {
+  const FoodInventoryToolbar({
+    super.key,
+    this.sectionMenu,
+    this.settings,
+    this.onUndo,
+    this.onAdd,
+    this.showActions = true,
+  });
+  final Widget Function(bool compact)? sectionMenu;
+  final Widget? settings;
+  final VoidCallback? onUndo, onAdd;
+  final bool showActions;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
+    child: LayoutBuilder(
+      builder: (context, constraints) => Row(
+        children: [
+          if (sectionMenu == null)
+            const Expanded(
+              child: Text(
+                'Food inventory',
+                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+              ),
+            )
+          else ...[
+            sectionMenu!(constraints.maxWidth < 600),
+            const Spacer(),
+          ],
+          if (showActions) ...[
+            IconButton(
+              tooltip: 'Undo removal',
+              onPressed: onUndo,
+              icon: const Icon(Icons.undo),
+            ),
+            IconButton(
+              tooltip: 'Add food',
+              onPressed: onAdd,
+              icon: const Icon(Icons.add),
+            ),
+          ],
+          ?settings,
+        ],
+      ),
+    ),
+  );
+}

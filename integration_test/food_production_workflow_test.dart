@@ -48,6 +48,16 @@ void main() {
   registerFoodProductionTests();
 }
 
+Future<void> switchSection(WidgetTester tester, {required bool food}) async {
+  await pixels.tap(tester, find.byKey(const ValueKey('section-menu')));
+  await tester.pumpAndSettle();
+  await pixels.tap(
+    tester,
+    find.byKey(ValueKey(food ? 'module-food' : 'module-tasks')),
+  );
+  await tester.pumpAndSettle();
+}
+
 void registerFoodProductionTests() {
   testWidgets(
     'queued task capture cannot append after reconciliation discovers shared authority loss',
@@ -374,7 +384,7 @@ void registerFoodProductionTests() {
           tester,
           () => find.text('Added while Food unavailable').evaluate().isNotEmpty,
         );
-        await tester.tap(find.byKey(const ValueKey('module-food')));
+        await switchSection(tester, food: true);
         await tester.pumpAndSettle();
         expect(find.text('Food is unavailable'), findsOneWidget);
         expect(find.byTooltip('Add food'), findsNothing);
@@ -382,9 +392,10 @@ void registerFoodProductionTests() {
         await tester.tap(find.widgetWithText(TextButton, 'Retry food'));
         await flows.waitForUi(
           tester,
-          () => find.text('Food inventory').evaluate().isNotEmpty,
+          () => find.byType(FoodInventoryPage).evaluate().isNotEmpty,
         );
-        await tester.tap(find.byKey(const ValueKey('module-tasks')));
+        expect(find.text('Food is unavailable'), findsNothing);
+        await switchSection(tester, food: false);
         await tester.pumpAndSettle();
         expect(find.text('Preserved synthetic task'), findsOneWidget);
         expect(find.text('Added while Food unavailable'), findsOneWidget);
@@ -430,9 +441,12 @@ void registerFoodProductionTests() {
           tester,
           () => find.text('Preserved synthetic task').evaluate().isNotEmpty,
         );
-        await tester.tap(find.byKey(const ValueKey('module-food')));
+        await switchSection(tester, food: true);
         await tester.pumpAndSettle();
-        expect(find.text('Food inventory'), findsOneWidget);
+        expect(
+          find.byTooltip('Switch section (current: Food)'),
+          findsOneWidget,
+        );
         await tester.tap(find.byTooltip('Add food'));
         await tester.pumpAndSettle();
         await tester.enterText(
@@ -493,7 +507,7 @@ void registerFoodProductionTests() {
           tester,
           () => find.text('Preserved synthetic task').evaluate().isNotEmpty,
         );
-        await tester.tap(find.byKey(const ValueKey('module-food')));
+        await switchSection(tester, food: true);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Deleted'));
         await tester.pumpAndSettle();
@@ -506,7 +520,7 @@ void registerFoodProductionTests() {
         await tester.tap(find.text('Stock'));
         await tester.pumpAndSettle();
         expect(find.text('2 full'), findsOneWidget);
-        await tester.tap(find.byKey(const ValueKey('module-tasks')));
+        await switchSection(tester, food: false);
         await tester.pumpAndSettle();
         expect(find.text('Preserved synthetic task'), findsOneWidget);
         expect(tester.takeException(), isNull);

@@ -1,5 +1,7 @@
 # Decision records
 
+- [0015 — Toolbar section navigation](0015-toolbar-section-navigation.md): accepted next Food preview scope; focused native acceptance pending.
+
 - [0001 — Flutter client and portable file history](0001-client-and-storage.md): accepted.
 - [0007 — Canonical record chains and explicit integrity checks](0007-canonical-history-integrity.md): accepted; current wire-format and integrity rationale.
 - [0008 — Calendar versions and explicit stable promotion](0008-calver-and-release-promotion.md): accepted; stable publication remains separately gated.

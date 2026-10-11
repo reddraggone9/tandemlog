@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "reviewer": "/root/tasks_inbox_tap_review",
+  "reviewed_at_utc": "2026-10-11T05:17:12.148859+00:00",
+  "decision": "approved",
+  "scope": "Tasks Inbox short-title row body width fix; independent production-source review and native compact-disclosure verification",
+  "baseline_head": "12242ea7a36a4b6cab7db50fd2af5be444535f7d",
+  "source_hashes": {
+    "lib/main.dart": "a664e1609f7286f25ec92bb52c80c2afe3ed87a9669de5bb8d67f20e99b06ea8",
+    "integration_test/task_body_hit_test.dart": "438df47f5c3102e6a8e25125f657d7958707b2e5460d544edb7c64749d8ca171",
+    "integration_test/checklist_disclosure_layout_test.dart": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292"
+  },
+  "findings": [],
+  "reasoning": [
+    "Only the outer ListTile title Column changes from start to stretch for the task-row fix. Its existing opaque GestureDetector now covers the full allocated title column; inner title/notes stay left aligned.",
+    "Leading checkbox and trailing menu/drag controls remain outside that column and retain existing callbacks and gesture ownership.",
+    "Checklist disclosure outer Align may take the allocated title-column width; the inner Semantics/SizedBox/Stack/InkResponse keeps the explicit compact width. Align delegates hit testing to the positioned child and does not create a full-row disclosure tap target.",
+    "No Task/Food storage, text engine, durable record or command semantics change is involved in this task-row fix."
+  ],
+  "tests": {
+    "regression_authorship": "Reviewer authored task_body_hit_test.dart; final production fix was authored by root. Test-file review is explicitly a self-review.",
+    "native_red": {
+      "executor": "this reviewer",
+      "platform": "actual Linux GTK/Flutter debug under Xvfb",
+      "passed": 0,
+      "failed": 5,
+      "runtime_seconds": 15,
+      "log": "/tmp/task-inbox-hit-review-red.log",
+      "sha256": "06b481aa262d3aa7ba954157db98ba509e6b886d48bd9b7b4720fd60d0801e7f",
+      "failure": "Glyph opened editor; blank midpoint failed to open at320/390/1200 normal text and320 200%; blank longpress failed selection."
+    },
+    "native_green": {
+      "executor": "root; terminal log inspected by reviewer",
+      "passed": 5,
+      "failed": 0,
+      "runtime_seconds": 18,
+      "log": "/tmp/section-navigation-evidence/inbox-green.log",
+      "sha256": "2e5b7d6d8c428d0e622b8ec26bb0f16f290618615b826a1d2b2f3481330afb86",
+      "covered": "Midpoint opening/Cancellation/canonical-byte stability, longpress and multiple selection, independent menu, completion/Undo and real handle reorder."
+    },
+    "independent_disclosure_native": {
+      "executor": "this reviewer",
+      "platform": "actual Linux GTK/Flutter debug under Xvfb",
+      "test": "integration_test/checklist_disclosure_layout_test.dart",
+      "passed": 1,
+      "failed": 0,
+      "runtime_seconds": 32,
+      "log": "/tmp/task-inbox-hit-review-disclosure-green.log",
+      "sha256": "1514532a6189708dfa4f6add781ae04a16cd8eb65f16350dfa4d5e6fab610860",
+      "viewports": [
+        1200,
+        390
+      ],
+      "text_scales": [
+        1.0,
+        2.0
+      ],
+      "theme": "dark",
+      "variants": "With/without secondary text; expanded/collapsed; keyboard Space/Enter; corner taps; semantics and paint host coverage. Disclosure width48 normal /55.7 enlarged, height28/48; body remains separate; bottom gap6px."
+    }
+  },
+  "screenshots": {
+    "directory": "/tmp/task-inbox-hit-review/disclosure-screens",
+    "inspected": [
+      "disclosure-1200-1-false.png",
+      "disclosure-390-1-true.png",
+      "disclosure-held-ink.png",
+      "disclosure-390-2-false.png",
+      "disclosure-expanded-390-2-true.png"
+    ],
+    "sha256": {
+      "disclosure-1200-1-false.png": "cd64daddcb6ac49eede74ca770284fb282fc0c00753784ed62eb9119109278aa",
+      "disclosure-1200-1-true.png": "cd64daddcb6ac49eede74ca770284fb282fc0c00753784ed62eb9119109278aa",
+      "disclosure-1200-2-false.png": "158bfa503f03b2f65edb13e3405f7ab47154f45b2cd98a8850724c1f393153b3",
+      "disclosure-1200-2-true.png": "158bfa503f03b2f65edb13e3405f7ab47154f45b2cd98a8850724c1f393153b3",
+      "disclosure-390-1-false.png": "d0bd13d77f0e40b414165ad27bbd5d51c61099105a377fc029084cc83580d616",
+      "disclosure-390-1-true.png": "d0bd13d77f0e40b414165ad27bbd5d51c61099105a377fc029084cc83580d616",
+      "disclosure-390-2-false.png": "11cd4d0d5b78c15caaabd77a6fd138cae7f310b66c8cf295cd4035ec0d52a065",
+      "disclosure-390-2-true.png": "08f072c96c2196016c724caab299e8ca94b6b28cae6d97eadc05e6d88ab0e9a4",
+      "disclosure-expanded-1200-1-false.png": "7396ccd1314a35988d1d3c3f2b2bdbe9fc1d4f2031df5dffe6b3dca8ec154533",
+      "disclosure-expanded-1200-1-true.png": "c27427b2c274b50d8fcce4c724e3e8d5987e72dc48188a3d72bdfb1362eb5c0b",
+      "disclosure-expanded-1200-2-false.png": "5ac6c0c48ed60997ec26b3bb0672e0f6d35adfadb95ef2e673736a16a6cfd27a",
+      "disclosure-expanded-1200-2-true.png": "cc460fadf3659800007e720508e9a5141680cd32d668e2d1fcdec226bd81eb58",
+      "disclosure-expanded-390-1-false.png": "ddf627df895a5468f8e5aaa00124b8ab664f342e0903397dfcaa0371439998d4",
+      "disclosure-expanded-390-1-true.png": "79da794b2a1064b73855d2e9bc6abb387f89e6e52b36d3f019fdbd9d1da1a2b9",
+      "disclosure-expanded-390-2-false.png": "79b5c7aadf6ef1d6070b649d881eec81c81b4322e1d322ed037c210b50e7953d",
+      "disclosure-expanded-390-2-true.png": "98a99c4a814d14f2b815bc87011f759af2c1448b68cb67806c430decfed7e501",
+      "disclosure-held-ink.png": "2482fbaa9198030b6414b9dddb7cb153778b5509759fbe274386eeae169b1098",
+      "disclosure-unpressed.png": "cd64daddcb6ac49eede74ca770284fb282fc0c00753784ed62eb9119109278aa"
+    }
+  },
+  "remaining_acceptance": [
+    "Actual Android reproduction result and focused replacement-candidate native acceptance belong to parent; this review does not claim Android or Windows runtime evidence.",
+    "Candidate exact artifacts and publication gates remain separate."
+  ]
+}

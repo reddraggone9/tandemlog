@@ -1,0 +1,3 @@
+- Switch between Tasks and Food from the toolbar dropdown, with a compact icon on narrow screens.
+- Food expiration now uses just a date, without certainty fields or labels.
+- Fixed tapping the blank middle of short Inbox tasks to open the editor.

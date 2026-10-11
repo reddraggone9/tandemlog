@@ -7,11 +7,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
 import 'package:tandemlog/presentation/tag_input.dart';
+import 'package:tandemlog/presentation/section_menu.dart';
 
 import 'food_expiry_guidance_test.dart' show loadSdkRoboto;
 
-const inboxGuidance =
-    'Needs an expiration date. A known or estimated date moves food into stock.';
+const inboxGuidance = 'Needs an expiration date. A date moves food into stock.';
 const retentionReason = 'Keep for the next family birthday recipe';
 const reachabilityError =
     'The synthetic folder could not save this change. Check its connection and permissions, then try again. Your existing food containers are still available.';
@@ -114,40 +114,18 @@ Future<void> verifyFoodViewReachability(
         body: SafeArea(
           child: Column(
             children: [
-              // Match the production module strip above the Food page.
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: SegmentedButton<bool>(
-                        showSelectedIcon: false,
-                        segments: const [
-                          ButtonSegment(
-                            value: false,
-                            label: Text('Tasks'),
-                            icon: Icon(Icons.checklist),
-                          ),
-                          ButtonSegment(
-                            value: true,
-                            label: Text('Food'),
-                            icon: Icon(Icons.kitchen_outlined),
-                          ),
-                        ],
-                        selected: const {true},
-                        onSelectionChanged: (_) {},
-                      ),
-                    ),
-                    IconButton(
-                      tooltip: 'Settings',
-                      onPressed: () {},
-                      icon: const Icon(Icons.settings_outlined),
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
                 child: FoodInventoryPage(
+                  sectionMenu: (compact) => SectionMenu(
+                    food: true,
+                    compact: compact,
+                    onSelected: (_) {},
+                  ),
+                  settings: IconButton(
+                    tooltip: 'Settings',
+                    onPressed: () {},
+                    icon: const Icon(Icons.settings_outlined),
+                  ),
                   state: state,
                   error: withError ? reachabilityError : null,
                   onAdd: (_, _) => commandCount++,

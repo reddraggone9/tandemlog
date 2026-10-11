@@ -13,13 +13,13 @@ It must work offline, preserve all released task v3 records, hashes, clocks,
 IDs and meanings, and use the established app-wide local DB.
 
 Ordinary dated stock has one globally expiration-ordered list. Identical name,
-brand, expiration, estimate status, retention reason, location and nominal size
+brand, expiration, retention reason, location and nominal size
 can form a display group. Grouping never replaces physical identities. Each
 container has its own stable ID and remaining contents. Count is derived, not
 an editable quantity. Add N creates N fresh identities; different dates or
 descriptive fields remain separate rows.
 
-Undated food stays in a needs-expiration Inbox until a known or estimated date
+Undated food stays in a needs-expiration Inbox until a date
 is supplied. A retention reason hides food from ordinary stock even before
 expiry. Retained reason sections start collapsed. Assigning and filtering
 reasons reuse the shared tag-style autocomplete. Active search matches all
@@ -140,7 +140,7 @@ The first-name setup form alone preserves local typing and focus during a stop;
 its diagnostic is bounded and scrollable. Continue preserves the pending user
 identity and performs the same bound read-only admission before user creation.
 The existing-user picker and all other command callbacks remain blocked. On
-phones the module selector yields space while a Task editor's software keyboard
+phones the original separate module selector yielded space while a Task editor's software keyboard
 is visible, preserving the existing caret viewport and touch targets.
 
 The expiration editor uses a short permanent "Expiration" label and a wrapping
@@ -204,3 +204,23 @@ The menu behind Inspect trades direct secondary-action discovery for compact
 everyday scanning; retain this as provisional until Lee sees the revised preview. Revisit
 record/receipt boundaries if crash, replay or native-provider evidence requires
 change before the unreleased format is frozen.
+
+
+The next approved preview replaces the separate module-selector row with the
+[toolbar section dropdown](0015-toolbar-section-navigation.md). This supersedes
+the original selector's keyboard-visibility rule and retains protected drafts.
+
+
+## Accepted simplification: expiration date only
+
+Lee removed expiration certainty from the next preview on2026-10-11. Editors and
+Inspect display just the date; hidden legacy certainty no longer splits or sorts
+visible groups. View filters already depended only on the date and retention.
+
+Published v1 records retain their existing `estimated` boolean/null wire field,
+validation, hashes and exact prepared-save recovery. Canonical creation identity
+and command fingerprints continue to include that field. Display grouping alone
+omits it. New UI additions write null, making no certainty assertion; fieldwise
+edits explicitly exclude it and preserve each existing container's historical
+value, including mixed groups. Historical constructor defaults and frozen wire
+fixtures stay unchanged. No migration or rewrite of trial/shared files is needed.

@@ -12,7 +12,7 @@ Durable append is still the commit point. Only exact canonical `(ID, raw bytes)`
 
 ## Toolbar
 
-Remove “Tandemlog” from the everyday chrome, retaining the checkmark as the task position; no mode switch is implemented. Show the entire active user name if its measured text, current text scale and neighboring controls fit. Otherwise use an initial circle, with the full name in accessible menu labeling and a minimum 48px target. This replaces arbitrary width caps and truncation; the editor's existing 900px wide-pane breakpoint remains. Identity and assignee filtering stay distinct.
+Remove “Tandemlog” from the everyday chrome, retaining the checkmark as the task position. This original Tasks-only toolbar has been superseded for section switching by [ADR0015](0015-toolbar-section-navigation.md). Show the entire active user name if its measured text, current text scale and neighboring controls fit. Otherwise use an initial circle, with the full name in accessible menu labeling and a minimum 48px target. This replaces arbitrary width caps and truncation; the editor's existing 900px wide-pane breakpoint remains. Identity and assignee filtering stay distinct.
 
 Current events identify a writer device and task assignee, not the acting user for each change. Lee chose device-only event attribution: any advisory device-to-person association/display may come later. Historic people cannot safely be inferred from writer/assignee. Acting-user fields, audit UI, rollback of other people's history, redo and cross-restart Undo are outside this candidate. Device-signed logs remain a future idea requiring a separate key/integrity design.
 

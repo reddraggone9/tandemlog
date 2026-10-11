@@ -19,6 +19,7 @@ import 'presentation/unavailable_completion.dart';
 import 'presentation/task_completion_checkbox.dart';
 import 'presentation/task_entry_area.dart';
 import 'presentation/task_toolbar.dart';
+import 'presentation/section_menu.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
@@ -466,6 +467,18 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     return true;
   }
 
+  Widget _sectionMenu(bool compact) => SectionMenu(
+    food: foodVisible,
+    compact: compact,
+    onSelected: busy ? null : _switchModule,
+  );
+
+  Widget _foodSettings() => IconButton(
+    tooltip: 'Settings',
+    onPressed: busy ? null : _showSettings,
+    icon: const Icon(Icons.settings_outlined),
+  );
+
   Future<void> _switchModule(bool food) async {
     if (busy ||
         food == foodVisible ||
@@ -620,23 +633,34 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     final origin = foodStore;
     if (origin == null) {
       final taskOrigin = store!;
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Text('Food is unavailable'),
-              const SizedBox(height: 12),
-              Text(foodError ?? 'Food could not be opened.'),
-              const SizedBox(height: 12),
-              TextButton(
-                onPressed: busy ? null : () => _retryFoodOpen(taskOrigin),
-                child: const Text('Retry food'),
-              ),
-            ],
+      return Column(
+        children: [
+          FoodInventoryToolbar(
+            sectionMenu: _sectionMenu,
+            settings: _foodSettings(),
+            showActions: false,
           ),
-        ),
+          Expanded(
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Food is unavailable'),
+                    const SizedBox(height: 12),
+                    Text(foodError ?? 'Food could not be opened.'),
+                    const SizedBox(height: 12),
+                    TextButton(
+                      onPressed: busy ? null : () => _retryFoodOpen(taskOrigin),
+                      child: const Text('Retry food'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       );
     }
     final pending = pendingFoodCommand;
@@ -669,6 +693,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           child: FoodInventoryPage(
             key: foodPageKey,
             state: origin.state,
+            sectionMenu: _sectionMenu,
+            settings: _foodSettings(),
             busy: busy,
             error: foodError,
             savePending: origin.hasPreparedAppend || pendingFoodCommand != null,
@@ -3803,54 +3829,11 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   constraints: const BoxConstraints(maxWidth: 1450),
                   child: Column(
                     children: [
-                      if (store != null &&
-                          sharedSafetyError == null &&
-                          !((editingTask != null || editingBulk != null) &&
-                              MediaQuery.viewInsetsOf(context).bottom > 0))
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: SegmentedButton<bool>(
-                                  showSelectedIcon: false,
-                                  segments: const [
-                                    ButtonSegment(
-                                      value: false,
-                                      label: Text(
-                                        'Tasks',
-                                        key: ValueKey('module-tasks'),
-                                      ),
-                                      icon: Icon(Icons.checklist),
-                                    ),
-                                    ButtonSegment(
-                                      value: true,
-                                      label: Text(
-                                        'Food',
-                                        key: ValueKey('module-food'),
-                                      ),
-                                      icon: Icon(Icons.kitchen_outlined),
-                                    ),
-                                  ],
-                                  selected: {foodVisible},
-                                  onSelectionChanged: busy
-                                      ? null
-                                      : (next) => _switchModule(next.single),
-                                ),
-                              ),
-                              if (foodVisible)
-                                IconButton(
-                                  tooltip: 'Settings',
-                                  onPressed: busy ? null : _showSettings,
-                                  icon: const Icon(Icons.settings_outlined),
-                                ),
-                            ],
-                          ),
-                        ),
                       if (!foodVisible && sharedSafetyError == null)
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 12, 8, 4),
                           child: TaskToolbar(
+                            sectionMenu: store == null ? null : _sectionMenu,
                             checklistMenu: _checklistDisplayToggle(),
                             userName:
                                 users
@@ -4972,7 +4955,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     ).colorScheme.primaryContainer,
                                     title: Column(
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                          CrossAxisAlignment.stretch,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         GestureDetector(

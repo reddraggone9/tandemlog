@@ -18,6 +18,8 @@ class FoodDetails {
   });
   final String name, brand, retention, location, size;
   final String? expiry;
+  // Retained for published v1 records and exact prepared-save recovery.
+  // Certainty is no longer a user-facing descriptive fact.
   final bool? estimated;
   Map<String, dynamic> toJson() => {
     'name': name,
@@ -29,6 +31,8 @@ class FoodDetails {
     'size': size,
   };
   String get groupKey => canonicalDataJson(toJson());
+  String get displayGroupKey =>
+      canonicalDataJson(toJson()..remove('estimated'));
   void validate() {
     _text(name, 500, required: true);
     for (final value in [brand, retention, location, size]) {
@@ -563,7 +567,7 @@ FoodState projectFood(Iterable<FoodOperation> delivery) {
 List<FoodGroup> _group(Iterable<FoodContainer> values) {
   final grouped = <String, List<FoodContainer>>{};
   for (final item in values) {
-    grouped.putIfAbsent(item.details.groupKey, () => []).add(item);
+    grouped.putIfAbsent(item.details.displayGroupKey, () => []).add(item);
   }
   final result = grouped.values
       .map((items) => FoodGroup(items..sort((a, b) => a.id.compareTo(b.id))))
@@ -572,7 +576,9 @@ List<FoodGroup> _group(Iterable<FoodContainer> values) {
     final date = (a.details.expiry ?? '9999-99-99').compareTo(
       b.details.expiry ?? '9999-99-99',
     );
-    return date != 0 ? date : a.details.groupKey.compareTo(b.details.groupKey);
+    return date != 0
+        ? date
+        : a.details.displayGroupKey.compareTo(b.details.displayGroupKey);
   });
   return result;
 }

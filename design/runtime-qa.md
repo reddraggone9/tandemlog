@@ -1,4 +1,13 @@
-# Runtime and visual QA — updated 2026-10-09
+# Runtime and visual QA — updated 2026-10-11
+
+## Food RC2 in preparation
+
+The approved toolbar dropdown, date-only Food interface and reproduced Inbox
+body hit-area fix have bounded actual Linux GTK/Flutter evidence and independent
+reviews in [RC2 preparation](../evidence/food-2026.10.4-rc.2/README.md). Final
+build61 native runs and full hosted candidate gates are recorded there. Android
+acceptance remains pending on the exact new signed installer; existing build60
+acceptance is retained with its original source and does not attest these changes.
 
 ## Stable2026.10.2 — exact accepted candidate published
 

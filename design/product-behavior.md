@@ -19,6 +19,15 @@ all scheduling content, before actions, in single and bulk editors. [Layout rati
 
 Offline household task management first. Windows and Android are the first intended user platforms. Food inventory is the approved second capability; future modules include games, nutrition logging, and assisted input. Time tracking is undecided and excluded.
 
+The current section identity in the toolbar opens the Tasks/Food menu. Wide
+layouts show its icon, name and downward triangle; sufficiently narrow layouts
+show the icon and triangle with the full current-section accessibility label.
+The menu always names both sections and marks the current selection. Counts,
+filters, account identity and section actions retain their existing roles.
+Switching resolves any active editor draft first; choosing the current section
+leaves it alone. Food navigation and Settings remain available on its unavailable
+screen. [Approved rationale](decisions/0015-toolbar-section-navigation.md).
+
 The first slice is folder/user selection, capture, edit, complete, undo, persistence, and convergence tests. Recurrence, reminders, deletion, advanced dates, floating priorities, manual shared sorting, and other modules are outside this slice.
 
 ## Platform verification milestone M0 — remove platform uncertainty
@@ -181,3 +190,10 @@ edits, notes, schedule, tags, manual order, draft and scoped Undo survive; compl
 or deleted children keep that status. Undo/reopen affects the old parent's
 completion and keeps the existing child. Forward native recurrence retains its
 approved completion-observed union. See the [policy and compatibility boundary](historical-recurring-text-policy.md).
+
+
+Food expiration is a calendar date only in the interface. Historical certainty
+values remain readable in published records, but do not appear as controls,
+labels or display-group distinctions. New additions make no certainty assertion;
+edits preserve existing hidden values without rewriting history. See the
+[Food compatibility rationale](decisions/0014-food-inventory.md#accepted-simplification-expiration-date-only).

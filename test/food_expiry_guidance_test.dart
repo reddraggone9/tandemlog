@@ -29,8 +29,8 @@ void expectUntruncatedGuidance(WidgetTester tester) {
   }
 }
 
-// Use the SDK's production font: Ahem's square glyphs spuriously overflow the
-// unchanged certainty selector and cannot establish native text readability.
+// Use the SDK's production font: Ahem's square glyphs cannot establish native
+// text readability.
 Future<void> loadSdkRoboto() async {
   var directory = File(Platform.resolvedExecutable).parent;
   while (true) {
