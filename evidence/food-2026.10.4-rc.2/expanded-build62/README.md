@@ -90,3 +90,15 @@ corrections have independent acceptance. The original source inventory remains
 historical;`corrected-candidate-source-inventory.json` binds the correction. A fresh
 complete hosted run, exact artifacts/installed lifecycles and Android acceptance
 remain mandatory.
+
+## Portable catalog correction
+
+Corrected source43df cleared actual Windows app units953+2skips and107 native
+contracts, but two catalog-tool tests exposed backslash relative paths compared
+against required forward-slash paths. The two report-path conversions now use
+`as_posix()`. A real catalog/PureWindowsPath regression reproduces the exact RED
+and all10 metadata tests pass after correction. Independent review repeated RED,
+GREEN and actual five-icon composed-catalog comparison; Linux catalog JSON is
+byte-equivalent. All74 local tooling checks execute:73 pass,1 existing platform
+case skips. No skips/bypass, fixture or app-code changes are added. Both incomplete
+prior attempts remain ineligible; a fresh complete candidate remains required.

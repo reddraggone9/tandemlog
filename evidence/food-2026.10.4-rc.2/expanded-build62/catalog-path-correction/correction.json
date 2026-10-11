@@ -1,0 +1,25 @@
+{
+  "failed_source": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+  "failed_candidate": 38120531043,
+  "failed_push_ci": 38120527468,
+  "windows_app_tests": {
+    "passed": 953,
+    "platform_skipped": 2
+  },
+  "native_contracts_passed": 107,
+  "failed_tool_cases": [
+    "InstalledCatalogContracts.test_actual_composed_name_and_icon_are_required",
+    "InstalledCatalogContracts.test_scaled_icon_must_exist_at_its_declared_size"
+  ],
+  "cause": "OS-relative paths had Windows backslashes and did not match required canonical forward-slash catalog paths",
+  "fix": "Two report-path conversions use Path.as_posix; physical file checks/name/icon/permission validation unchanged",
+  "tests_first": "Same real catalog/icons with PureWindowsPath-relative reporting reproduces exact RED; all10metadata GREEN",
+  "all_tool_policies": {
+    "executed": 74,
+    "passed": 73,
+    "existing_platform_skip": 1
+  },
+  "application_dart_native_pubspec_payload_changed": false,
+  "independent_review": "independent-source-review.json",
+  "remaining": "Fresh complete candidate and actual original artifact/native lifecycle/device gates"
+}

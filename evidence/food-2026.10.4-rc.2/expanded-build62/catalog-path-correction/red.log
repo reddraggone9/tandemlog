@@ -1,0 +1,17 @@
+test_catalog_relative_paths_are_portable_on_windows (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_catalog_relative_paths_are_portable_on_windows) ... ERROR
+
+======================================================================
+ERROR: test_catalog_relative_paths_are_portable_on_windows (tool.test_linux_flatpak_metadata.InstalledCatalogContracts.test_catalog_relative_paths_are_portable_on_windows)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/tandemlog-food-date-readability/tool/test_linux_flatpak_metadata.py", line 77, in test_catalog_relative_paths_are_portable_on_windows
+    catalog = self.verifier.verify_catalog(self.root)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/tmp/tandemlog-food-date-readability/packaging/linux/verify_flatpak.py", line 45, in verify_catalog
+    raise ValueError('Catalog must include the 64px and 128px icons embedded by Flatpak')
+ValueError: Catalog must include the 64px and 128px icons embedded by Flatpak
+
+----------------------------------------------------------------------
+Ran 1 test in 0.003s
+
+FAILED (errors=1)

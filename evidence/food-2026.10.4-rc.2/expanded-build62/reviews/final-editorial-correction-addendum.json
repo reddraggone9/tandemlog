@@ -1,0 +1,61 @@
+{
+  "reviewer": "independent editorial reviewer /root/food_rc2_editorial_review",
+  "outcome": "APPROVED editorial addendum; no end-user release-note additions needed for candidate CI repairs",
+  "prior_full_scope_approval": {
+    "receipt": "/tmp/food-rc2-expanded-editorial-review.json",
+    "receipt_sha256": "3c273ecfa67b4a2ab361c62a495aed8a3e04026f4e23845d68972afdfb2e50f4",
+    "released_source": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "full_build62_implementation": "43107084646a58a5a5059271655b73b2c6d64bf9"
+  },
+  "correction_range": {
+    "failed_candidate_source": "d38ec4e29ae63dd1ed0925093ae41f0514d38912",
+    "replacement_source": "43df314e4e0bca0bfe54bab04dcc2e616b48174d"
+  },
+  "reviewed_correction_hashes": {
+    ".gitattributes": "4d3adf613f2a4d82428c88410eec41452e2b261683d7448b1f6ad8ccb9721fe5",
+    ".github/workflows/validate.yml": "7821d671710424e17abfa8ea0043e06d16000fd6c2916f4595fdeba965842b0e",
+    "packaging/linux/build-flatpak.sh": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf",
+    "packaging/linux/prepare_appstream_tools.py": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052",
+    "tool/test_flatpak_tool_acquisition.py": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c",
+    "tool/test_food_fixture_checkout.py": "9b4bdc119d75fbac96e7bf181c1f8f18420821faba115849ca7966aef4aaf04d"
+  },
+  "observations": [
+    "Scoped test/fixtures/food-undo/** -text preserves exact released-reader/packet checkout bytes; new real-checkout regression covers it. No fixture/Dart test bytes changed.",
+    "Linux changes acquire only the same audited six tool packages by hash-checked data-only extraction and restrict their library environment to tool children. Existing composition source, sandbox metadata, launcher/runtime/payload source and audit manifest remain unchanged.",
+    "Helper and regression tooling affect CI/build-tool acquisition and exact evidence preservation, without adding a user-facing feature or repair action. Engineering documentation correctly records failed candidate attribution and pending new hosted gates."
+  ],
+  "closure_verification": {
+    "git_diff_against_d38_for_reviewed_app_payload_roots": "empty",
+    "roots": [
+      "lib",
+      "native",
+      "test",
+      "integration_test",
+      "pubspec.yaml",
+      "pubspec.lock",
+      "android",
+      "windows",
+      "linux",
+      "packaging/linux/tandemlog",
+      "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml",
+      "packaging/linux/com.reddraggone9.tandemlog.desktop",
+      "packaging/linux/com.reddraggone9.tandemlog.svg",
+      "evidence/flatpak-2026.10.4-rc.2/tool-audit-manifest.json"
+    ],
+    "qualification": "Source closure check, not a claim that the failed candidate produced an accepted installer."
+  },
+  "notes_sha256": "d93af0f5276f5ba8b9f59cf60f57192d6614c2f7281b39aec2d9d49928f79b94",
+  "approved_media_sha256": {
+    "task-search-before-after.png": "1a75634c050bd39574e12340e375c212c5f93bdba023ab8f801da9e6ac1d7cb0",
+    "toolbar-expanded-before-after.png": "a4b2fb55b3aa36b9858f07bdfec20f7de860177a0f5d124961d4f59821b667b1"
+  },
+  "media_verification": "Exact unchanged bytes match previously visually reviewed media and d38 Git objects. Previous immutable4310708 hosting and raw-pixel provenance remain accurate because application and media bytes did not change.",
+  "remaining_gates": "New full hosted/exact-artifact/native/publication gates remain independent; failed candidate acceptance is not reused.",
+  "final_covered_range": {
+    "released_rc1": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "corrected_complete_build62_candidate": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+    "composition": "Prior exact3d\u21924310708 fullscope approval plus unchanged app/media/docs-only d38 provenance and exactd38\u219243df correction review."
+  },
+  "final_freeze_verification": "All six reviewed correction hashes, unchanged app/payload roots, notes and media verified directly from final43df Git objects.",
+  "candidate_run": "38120531043; runtime/artifact gate not part of editorial acceptance"
+}

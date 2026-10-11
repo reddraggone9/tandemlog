@@ -3,9 +3,10 @@ import configparser
 import gzip
 import re
 import importlib.util
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 import tempfile
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +69,16 @@ class InstalledCatalogContracts(unittest.TestCase):
             self.write_catalog(name, app, icon)
             with self.assertRaises(ValueError):
                 self.verifier.verify_catalog(self.root)
+
+    def test_catalog_relative_paths_are_portable_on_windows(self):
+        relative_to = Path.relative_to
+        with patch.object(Path, 'relative_to', lambda path, *parents:
+                          PureWindowsPath(relative_to(path, *parents).as_posix())):
+            catalog = self.verifier.verify_catalog(self.root)
+        self.assertEqual(catalog['icons'], [
+            f'share/app-info/icons/flatpak/{size}/{APP}.png'
+            for size in ['64x64', '128x128']])
+        self.assertEqual(catalog['catalogs'], [f'share/app-info/xmls/{APP}.xml.gz'])
 
     def test_wrong_catalog_filename_cannot_supply_bundle_metadata(self):
         self.xml.rename(self.xml.with_name('wrong.xml.gz'))

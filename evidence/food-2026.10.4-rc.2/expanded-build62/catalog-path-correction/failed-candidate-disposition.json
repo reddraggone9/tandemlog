@@ -1,0 +1,71 @@
+{
+  "checked_at_utc": "2026-10-11T07:20:49.459102+00:00",
+  "source": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+  "candidate_run": 38120531043,
+  "push_run": 38120527468,
+  "version": "2026.10.4-rc.2+62",
+  "verdict": "REJECT_WINDOWS_GATE_FAILURE_NO_RELEASE_HANDOFF",
+  "snapshot": {
+    "38120531043-run": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120531043-windows-failure-run-api.json",
+      "sha256": "19f051e2e1e5928709d1d54a1e8ddf661b73a46ae952a7821000a2b608f3f208"
+    },
+    "38120531043-jobs": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120531043-windows-failure-jobs-api.json",
+      "sha256": "fccad1d4794035c2ec4d97623a485166513d07460be15d6587363612c18d26c0"
+    },
+    "38120531043-artifacts": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120531043-windows-failure-artifacts-api.json",
+      "sha256": "3afe16ecd954d616196b6f81cd51bd4a46f2abd60ca3c20b19af1003e8f16a59"
+    },
+    "38120527468-run": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120527468-windows-failure-run-api.json",
+      "sha256": "ae10bbed45a20d3ba9898e7db516b3f63eaa332c32af9da02b5bfb57e57e7e16"
+    },
+    "38120527468-jobs": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120527468-windows-failure-jobs-api.json",
+      "sha256": "4c3bfa9b8450924f56e1d8ef4186b1d8c0769bb5ce17d13821e2017c0b63d4a1"
+    },
+    "38120527468-artifacts": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-38120527468-windows-failure-artifacts-api.json",
+      "sha256": "a767c2642665fd96d76958502db0743eb283f1f7ba888f3bc3e41b2619e8528a"
+    }
+  },
+  "decoded_log_evidence": {
+    "43df-candidate-windows-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-candidate-windows-provider-decoded.log",
+      "sha256": "5929c4d09d41891795864e84106aaa6a98fe3265690f929ad066ff7df2df7709"
+    },
+    "43df-push-windows-provider-decoded.log": {
+      "path": "/tmp/food-rc62-artifact-independent-review/43df-push-windows-provider-decoded.log",
+      "sha256": "c922289fa46a2866c362cfc661a11738a24aea183ee9142e58f1fc7cbbdff22d"
+    }
+  },
+  "log_format_qualification": "Official GitHub app provider-decoded full logs, leading BOM removed and final newline normalized; not claimed raw original log archive bytes. Windows CRLF preserved.",
+  "candidate_windows": {
+    "job": 114414171047,
+    "actual_unit_passed": 953,
+    "actual_unit_skipped": 2,
+    "unit_failed": 0,
+    "frozen_native_contracts": 107,
+    "native_contracts_verdict": "PASS",
+    "tool_tests_total": 73,
+    "tool_test_errors": 2,
+    "tool_test_skips": 4,
+    "failing_names": [
+      "InstalledCatalogContracts.test_actual_composed_name_and_icon_are_required",
+      "InstalledCatalogContracts.test_scaled_icon_must_exist_at_its_declared_size"
+    ],
+    "actual_exception": "ValueError: Catalog must include the 64px and 128px icons embedded by Flatpak",
+    "source_diagnosis": "verify_catalog appends str(path.relative_to(root)), producing Windows backslashes; required_icons use canonical forward slashes. PureWindowsPath independently confirms this representation difference.",
+    "correction_required": "Canonical .as_posix() relative catalog/icon report paths, tests-first; do not skip Windows tests or weaken required icon gates."
+  },
+  "original_release_archives_downloaded": false,
+  "signed_apk_accepted": false,
+  "publication_ready": false,
+  "limits": [
+    "Linux job still running at snapshot; no Linux terminal acceptance claimed",
+    "No local Windows/Flatpak or actual target Android execution",
+    "No app edits, OS installation, deletion or publication performed"
+  ]
+}

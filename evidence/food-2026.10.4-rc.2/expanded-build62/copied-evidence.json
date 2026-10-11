@@ -2,8 +2,8 @@
   "files": [
     {
       "path": "README.md",
-      "bytes": 5924,
-      "sha256": "dd9e4665d929bfbe8983fe76c0f543ff4199f3861fa0270648eb27ac57854ca2"
+      "bytes": 6676,
+      "sha256": "70078b8e6b9246fdc8071721fa7a01659da3b937c92fd9572af6f0418d030ec0"
     },
     {
       "path": "account/native5.log",
@@ -44,6 +44,41 @@
       "path": "candidate-corrections/windows-fixture-correction.json",
       "bytes": 1084,
       "sha256": "fa0fa1a79110c10ad3354409de2295108175dd7ff1195bb946f48d07c404cfcc"
+    },
+    {
+      "path": "catalog-path-correction/correction.json",
+      "bytes": 1124,
+      "sha256": "50ed106db6b3e68311e30fc6ebdcec11eb33756ebffe3d759dc34aa60f897ddf"
+    },
+    {
+      "path": "catalog-path-correction/failed-candidate-disposition.json",
+      "bytes": 3689,
+      "sha256": "95f526a2c81a455a3258b1ba7fbbbb5b6f1823e6379bc986e9024bed19d1fc0b"
+    },
+    {
+      "path": "catalog-path-correction/failed-candidate-windows-provider-decoded.log",
+      "bytes": 312851,
+      "sha256": "5929c4d09d41891795864e84106aaa6a98fe3265690f929ad066ff7df2df7709"
+    },
+    {
+      "path": "catalog-path-correction/final-all-policies.log",
+      "bytes": 609,
+      "sha256": "4db43011a3f07a622091e34d8fd535229c779a64a74769d634fc729a5cdf6b20"
+    },
+    {
+      "path": "catalog-path-correction/green.log",
+      "bytes": 1780,
+      "sha256": "8e6a7e1cdbf2ac5162fa90ec07c92eac9eebbbaf1adcae2b7ace5495454af258"
+    },
+    {
+      "path": "catalog-path-correction/independent-source-review.json",
+      "bytes": 2514,
+      "sha256": "8be38b29cc057a0a5f6cf6be933bd7e4586337cc7b6622e851529b7e14990860"
+    },
+    {
+      "path": "catalog-path-correction/red.log",
+      "bytes": 1168,
+      "sha256": "45d36eab686321de21c922e95b64934a2a4649652da7cd4f7ee16962cfacd26b"
     },
     {
       "path": "changed-native/initial13.log",
@@ -209,6 +244,11 @@
       "path": "demos/task-search-add/video-probe.json",
       "bytes": 2219,
       "sha256": "824bef6b99a11c08433f9bc14283351567654b5c800b4e24d51d87223a7fab58"
+    },
+    {
+      "path": "final-candidate-source-inventory.json",
+      "bytes": 55791,
+      "sha256": "9c7406e630884e2f0ba07efa4a01e376069ec3cdc1b4007fa17d4503e30adee4"
     },
     {
       "path": "final-native/changed-13.log",
@@ -744,6 +784,11 @@
       "path": "input/search-label-red.log",
       "bytes": 7454,
       "sha256": "729fa47566a6cfc6ee77a2e95f6212d36ded92c359fc4d02b718b405bce275a8"
+    },
+    {
+      "path": "reviews/final-editorial-correction-addendum.json",
+      "bytes": 4117,
+      "sha256": "587cb902db642fcfabf4496e491dee3d7e6284e7eb2c3f05c81c7a97329e1dc6"
     },
     {
       "path": "reviews/final-editorial.json",

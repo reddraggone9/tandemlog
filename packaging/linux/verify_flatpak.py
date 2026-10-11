@@ -38,13 +38,13 @@ def verify_catalog(root):
         path = root / 'share/app-info/icons/flatpak' / size / name
         if not path.is_file() or not path.stat().st_size:
             raise ValueError('Composed catalog references a missing app icon')
-        icons.append(str(path.relative_to(root)))
+        icons.append(path.relative_to(root).as_posix())
     required_icons = {f'share/app-info/icons/flatpak/{size}/{APP}.png'
                       for size in ['64x64', '128x128']}
     if not required_icons.issubset(icons):
         raise ValueError('Catalog must include the 64px and 128px icons embedded by Flatpak')
     return {'id': APP, 'name': component.findtext('name'), 'icons': icons,
-            'catalogs': [str(p.relative_to(root)) for p in sorted(catalog_dir.glob('*.xml*'))]}
+            'catalogs': [p.relative_to(root).as_posix() for p in sorted(catalog_dir.glob('*.xml*'))]}
 
 
 def verify_permissions(metadata):

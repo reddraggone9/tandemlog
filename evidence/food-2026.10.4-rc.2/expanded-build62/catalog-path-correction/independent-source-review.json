@@ -1,0 +1,41 @@
+{
+  "checked_at_utc": "2026-10-11T07:22:28.320091+00:00",
+  "verdict": "ACCEPT_NARROW_CANONICAL_CATALOG_PATH_CORRECTION",
+  "base_source": "43df314e4e0bca0bfe54bab04dcc2e616b48174d",
+  "reviewed_exact_files_sha256": {
+    "packaging/linux/verify_flatpak.py": "428b03056e70a301077dec082e0130f7836bb97261c33364f1b5167f30f01362",
+    "tool/test_linux_flatpak_metadata.py": "09e05cd8fa23720eb9ca8347822c6a39ab4af673307c8beaf4cdd431bb2397ea"
+  },
+  "production_delta": "Only icon/catalog relative report paths use as_posix(); all identity/icon-existence/64px+128px/permission/profile gates retained.",
+  "independent_checks": {
+    "old_frozen_source_red": "1 case errors with exact observed Windows failure; old source copy under private tmp",
+    "corrected_metadata_green": "10 passed, no skips",
+    "actual_prior_composed_catalog": "Same actual composed XML and five actual cached icons return byte-equivalent catalog JSON, with normal and Windows-relative path semantics",
+    "python39_ast": "PASS both changed files"
+  },
+  "regression_method": "Real local files and PureWindowsPath relative results; no synthetic Windows runtime claim.",
+  "unchanged_app_and_data": "No application/native/version/fixture/canonical record changes in these two reviewed files; unchanged data validation remains active.",
+  "limits": [
+    "Actual fresh Windows hosted suite must pass after freeze",
+    "Actual installed Flatpak full lifecycle and catalog gates remain new-run requirements",
+    "No local Windows/Flatpak app execution, OS package install, user data mutation, publication or original release artifact acceptance"
+  ],
+  "evidence": {
+    "independent-red.log": {
+      "path": "/tmp/flatpak-catalog-path-independent-review/independent-red.log",
+      "sha256": "816974c4b09c57909d79fe0599081bb7e750c175e18bb5baf0fef4bf1baee0dc"
+    },
+    "independent-green.log": {
+      "path": "/tmp/flatpak-catalog-path-independent-review/independent-green.log",
+      "sha256": "ef9ae2f3b3945cd0f19dc77df00b57eac19689c5863b2302bbb412b7e6906ede"
+    },
+    "actual-prior-composed-catalog-rechecked.json": {
+      "path": "/tmp/flatpak-catalog-path-independent-review/actual-prior-composed-catalog-rechecked.json",
+      "sha256": "5b2b0b37859bf585941802021000a13475d4ee073b60f07f30385a89fdcaa772"
+    },
+    "old-43df-verify_flatpak.py": {
+      "path": "/tmp/flatpak-catalog-path-independent-review/old-43df-verify_flatpak.py",
+      "sha256": "5e20f1f346513fd30d321b7dbefa67c981d75471d432f004aca9f851da9f0d72"
+    }
+  }
+}
