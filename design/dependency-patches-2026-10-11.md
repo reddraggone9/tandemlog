@@ -174,3 +174,15 @@ inputs, dependency resolution or release workflow semantics. A `[skip ci]`
 evidence commit preserves this already running matrix; final exact-head full
 checks remain required after the coordinator's RC source settles and this
 proposal is rebased. This draft has no integration or release acceptance.
+
+The completed Android and Windows CI archives were independently downloaded
+through the existing connector and verified against service ZIP digests, exact
+file sets, ZIP CRC and internal payload SHA256 files. Android artifact11710485446
+is a test-only debug APK, not an owner-signed release. Windows artifact11710380360
+contains the unsigned installer and portable ZIP. The retained Windows unit
+artifact11710100488 also matches its service digest and reports1014 passes,
+two skips and zero failures with a successful final summary. The
+[artifact receipt](../evidence/dependency-patches-2026-10-11/current-ci-artifact-verification.json)
+binds IDs, source/run, filenames, sizes and hashes without temporary download
+credentials. No installation or release acceptance is inferred from archive
+verification.
