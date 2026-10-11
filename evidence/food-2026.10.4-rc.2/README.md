@@ -1,4 +1,13 @@
-# Food RC2 — complete build62 Android handoff
+# Food RC2 — build64 replacement candidate;62/63 held
+
+Build62 is held after actual Android calendar clipping at320dp/200%. Build63 was
+cancelled before signing after a pending-date resize reset. Reviewed replacement64
+uses unchanged app/test bytes from11dd0f6 and passes26 focused/14 Linux native
+checks, preserving date selection across responsive layouts and controller-owner
+lifetimes. [Build64 evidence](calendar-build64/README.md) retains exact source,
+reviews, logs and captures. Initial preparation38133720009 was cancelled before signing to correct archive
+file extensions; full repository analysis passes after the evidence-only rename.
+Replacement full candidate and new exact Android gates remain pending. The build62 evidence below keeps its original source attribution.
 
 Approved scope: use the existing toolbar section identity for a responsive
 Tasks/Food dropdown, remove Food expiration-certainty UI/display distinctions,
@@ -16,8 +25,8 @@ control geometry; and the Flatpak name/catalog and sandbox-private-profile fixes
 ADR0016/0017/0018 and ADR0013 record the approved
 behavior. Implementation and independent source reviews are complete; final local checks
 pass956 unit tests and13 changed native flows. All final hosted gates and exact
-original-artifact verification now pass; parent affected Android acceptance remains
-pending. [Exact build62 handoff](candidate/build62/README.md) records source7ae,
+original-artifact verification now pass; parent later reported several affected Android passes but the calendar finding
+holds this artifact. [Historical build62 handoff](candidate/build62/README.md) records source7ae,
 run38121211371, the three original archives and owner-signed APK identity. [Expanded source-qualified closure](expanded-build62/README.md) records
 the full approved scope and disclosed Undo compatibility boundary.
 
@@ -67,10 +76,10 @@ focused cases pass. The final full unit/analysis and changed native runs are
 recorded separately.
 
 Exact candidate installer hashes and all full hosted gates are recorded in the
-[final manifest](candidate/build62/artifacts/manifest.json). Parent's actual Android build62 acceptance must cover section
-navigation, large text/keyboard/editor protection, short Inbox body taps and
-date-only Food behavior, Task Search/Add, combined Stock/Inbox, expiration colors
-and Filter/account behavior. Published RC1 and stable2026.10.3 remain unchanged.
+[final manifest](candidate/build62/artifacts/manifest.json). Parent's actual build62 Android run passed several affected workflows; its
+calendar defect requires exact build64 picker acceptance. Remaining SAF child
+switch/return, workspace-cleared Undo and cold new-v2 fixture replay are recorded
+in the [native contract](../../design/food-native-acceptance.md). Published RC1 and stable2026.10.3 remain unchanged.
 No publication, stable promotion, import or user/trial data migration is part of
 this candidate preparation. Original recovery is closed; no files/tasks deleted.
 

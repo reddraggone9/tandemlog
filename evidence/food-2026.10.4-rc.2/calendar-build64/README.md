@@ -40,3 +40,10 @@ picker readability/selection plus selected17 rotation/return remain pending.
 Parent-reported62 Android passes retain62 attribution. Remaining Android SAF child
 switch/return, workspace-cleared Undo and final cold new-v2 UI replay still apply.
 No RC2 publication, stable promotion, old-file deletion or live-data change occurs.
+
+Initial build64 preparation candidate38133720009 at11dd0f6 was cancelled
+before signing because retained snapshots used executable.dart extensions; full
+analysis found38 archive-only issues. Those three new evidence files now retain
+identical bytes as.dart.txt; no production/test/inventory source changed. Full
+repository analysis then passes. The cancelled preparation API and both analyzer
+logs are retained. Replacement64 must run all gates from the new frozen commit.
