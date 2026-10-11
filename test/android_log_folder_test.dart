@@ -559,6 +559,45 @@ void main() {
   );
 
   test(
+    'picker adapter preserves delayed choice and retries after launch failure',
+    () async {
+      var result = Completer<String?>();
+      messenger.setMockMethodCallHandler(AndroidLogFolder.channel, (
+        call,
+      ) async {
+        expect(call.method, 'pick');
+        return result.future;
+      });
+      var completed = false;
+      final cancelled = AndroidLogFolder.pick().whenComplete(
+        () => completed = true,
+      );
+      await Future<void>.delayed(Duration.zero);
+      expect(completed, false);
+      result.complete(null);
+      expect(await cancelled, isNull);
+      result = Completer<String?>();
+      final failed = AndroidLogFolder.pick();
+      final failure = expectLater(
+        failed,
+        throwsA(
+          isA<FolderAccessFailure>().having(
+            (e) => e.message,
+            'recovery',
+            contains('Try again'),
+          ),
+        ),
+      );
+      result.completeError(PlatformException(code: 'launch'));
+      await failure;
+      result = Completer<String?>();
+      final retried = AndroidLogFolder.pick();
+      result.complete('content://synthetic/tree/new');
+      expect(await retried, 'content://synthetic/tree/new');
+    },
+  );
+
+  test(
     'presentation retains partial progress and canonical validation messages',
     () {
       final access = FolderAccessFailure(

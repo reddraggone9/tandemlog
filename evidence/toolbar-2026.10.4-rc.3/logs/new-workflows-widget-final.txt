@@ -1,0 +1,61 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_context_menu_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_context_menu_test.dart: Food context menu eligibility, stale observations and exact targets
+00:02 +1: /tmp/tandemlog-food-date-readability/test/food_context_menu_test.dart: Food context menu eligibility, stale observations and exact targets
+00:03 +2: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +3: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +4: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +5: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +6: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +7: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +8: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +9: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +10: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +11: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +12: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +13: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +14: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +15: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +16: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +17: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +18: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +19: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +20: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +21: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +22: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +23: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +24: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +25: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +26: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +27: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +28: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +29: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +30: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (false, true)
+00:03 +31: /tmp/tandemlog-food-date-readability/test/food_add_another_test.dart: Add another prefilled independent draft (true, true)
+00:05 +32: /tmp/tandemlog-food-date-readability/test/food_required_expiration_test.dart: manual Food Add requires a valid expiration before any command
+00:06 +33: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 1200.0 1.0x
+00:06 +34: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 1200.0 1.0x
+00:07 +35: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 1200.0 1.0x
+00:08 +36: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 1200.0 1.0x
+00:08 +37: /tmp/tandemlog-food-date-readability/test/food_group_action_geometry_test.dart: Food action anchors dark 320.0 1.0x
+00:09 +38: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: Food keeps the Tasks outer edges for empty and populated views
+00:10 +39: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: Food keeps the Tasks outer edges for empty and populated views
+00:11 +40: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: Food keeps the Tasks outer edges for empty and populated views
+00:12 +41: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: Food keeps the Tasks outer edges for empty and populated views
+00:13 +42: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: Food keeps the Tasks outer edges for empty and populated views
+00:13 +43: /tmp/tandemlog-food-date-readability/test/food_section_width_test.dart: (tearDownAll)
+00:13 +43: All tests passed!

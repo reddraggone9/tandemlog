@@ -118,8 +118,8 @@ void main() {
     );
     await selectFoodView(tester, FoodView.retained);
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(ExpansionTile, 'Review trip'));
-    await tester.pumpAndSettle();
+    expect(find.byType(ExpansionTile), findsNothing);
+    expect(find.widgetWithText(Card, 'Review trip'), findsOneWidget);
     expect(find.text('Review beans'), findsOneWidget);
   });
   testWidgets('repeated dialog Cancel callback cannot pop food page', (

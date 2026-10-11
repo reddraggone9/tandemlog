@@ -65,11 +65,10 @@ void main() {
         input: (target) => tap(tester, target),
       );
       await tester.pumpAndSettle();
-      expect(find.text('Chocolate').hitTestable(), findsNothing);
-      await capture(tester, 'narrow-retained-collapsed');
-      await tap(tester, find.widgetWithText(ExpansionTile, 'Birthday baking'));
-      await tester.pumpAndSettle();
-      await capture(tester, 'narrow-retained-expanded');
+      expect(find.byType(ExpansionTile), findsNothing);
+      expect(find.text('Chocolate').hitTestable(), findsOneWidget);
+      expect(find.widgetWithText(Card, 'Birthday baking'), findsOneWidget);
+      await capture(tester, 'narrow-retained-flat');
       await selectFoodView(
         tester,
         FoodView.inventory,
@@ -142,7 +141,7 @@ Future<void> capture(WidgetTester tester, String name) async {
 
 // This fixture scripts Flutter taps; the actual X pointer marks each input in
 // the native desktop recording. It is not a physical-device touch attestation.
-Future<void> tap(WidgetTester tester, Finder target) async {
+Future<void> tap(WidgetTester tester, Finder target, {int buttons = 1}) async {
   if (Platform.isLinux && Platform.environment['FOOD_PREVIEW_RECORD'] == '1') {
     final point = tester.getCenter(target);
     expect(
@@ -157,7 +156,7 @@ Future<void> tap(WidgetTester tester, Finder target) async {
       () => Future<void>.delayed(const Duration(milliseconds: 200)),
     );
   }
-  await tester.tap(target);
+  await tester.tap(target, buttons: buttons);
 }
 
 Future<void> startRecording(WidgetTester tester) async {

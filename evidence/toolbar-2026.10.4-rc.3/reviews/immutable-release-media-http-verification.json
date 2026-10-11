@@ -1,0 +1,22 @@
+{
+  "utc": "2026-10-11T18:49:52.306693+00:00",
+  "notes_sha256": "02b69d5c999e09050c4c65258656122b7067d15db5a967cfa64e57b41b8af115",
+  "immutable_images": [
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/f3ac5cbbac7547cfd728f23fea07030391d4f5b8/evidence/toolbar-2026.10.4-rc.3/media/section-width-before-after.png",
+      "http_status": 200,
+      "mime_type": "image/png",
+      "bytes": 30983,
+      "sha256": "a3b23db49e6fbf60f2b98be67c8f3e957f6ac07baee86c352ca4cd8a2b09d625",
+      "exact_committed_local_pixels_equal": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/7515375455d627b8ab224bb39ca8649e97ace053/evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+      "http_status": 200,
+      "mime_type": "image/png",
+      "bytes": 50298,
+      "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8",
+      "exact_committed_local_pixels_equal": true
+    }
+  ]
+}

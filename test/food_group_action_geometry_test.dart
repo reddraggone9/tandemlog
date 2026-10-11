@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -79,6 +81,39 @@ Future<void> verifyFoodGroupActionGeometry(
       .map((e) => e.toRect())
       .toList();
   final initialLines = dateLines();
+  List<(String?, bool)> menuActions() => [
+    for (final item in tester.widgetList<PopupMenuItem<String>>(
+      find.byType(PopupMenuItem<String>),
+    ))
+      (item.value, item.enabled),
+  ];
+  Future<void> secondaryMenu(String name) async {
+    await tester.tap(
+      find.text('Geometry beans'),
+      buttons: kSecondaryMouseButton,
+    );
+    await tester.pumpAndSettle();
+    expect(menuActions(), [
+      ('add-another', true),
+      ('edit', true),
+      ('remove', true),
+    ]);
+    for (final item in find.byType(PopupMenuItem<String>).evaluate()) {
+      final bounds = tester.getRect(find.byWidget(item.widget));
+      expect(bounds.left, greaterThanOrEqualTo(0));
+      expect(bounds.right, lessThanOrEqualTo(tester.view.physicalSize.width));
+      expect(bounds.top, greaterThanOrEqualTo(0));
+      expect(bounds.bottom, lessThanOrEqualTo(tester.view.physicalSize.height));
+    }
+    expect(commands, isEmpty, reason: 'opening a menu never issues a command');
+    await capture?.call(name);
+  }
+
+  await secondaryMenu('collapsed-secondary-menu');
+  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+  await tester.pumpAndSettle();
+  expect(find.byType(PopupMenuItem<String>), findsNothing);
+  expect(find.byTooltip('Actions for Geometry beans'), findsNothing);
   await capture?.call('collapsed');
   for (var cycle = 0; cycle < 2; cycle++) {
     if (input == null) {
@@ -126,6 +161,35 @@ Future<void> verifyFoodGroupActionGeometry(
     expect(find.textContaining('Container 000'), findsNothing);
     expect(find.text('Full'), findsNWidgets(2));
     expect(tester.widget<Divider>(find.byType(Divider)).height, 1);
+    await secondaryMenu('expanded-secondary-menu-$cycle');
+    final secondaryActions = menuActions();
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    await tester.tap(menu);
+    await tester.pumpAndSettle();
+    expect(
+      menuActions(),
+      secondaryActions,
+      reason: 'ellipsis and secondary click share exact actions',
+    );
+    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    await tester.pumpAndSettle();
+    await secondaryMenu('expanded-secondary-edit-$cycle');
+    await tester.tap(
+      find.widgetWithText(PopupMenuItem<String>, 'Edit group details'),
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('Edit 2 containers'), findsOneWidget);
+    expect(
+      tester
+          .widget<TextField>(find.widgetWithText(TextField, 'Food name'))
+          .controller!
+          .text,
+      'Geometry beans',
+    );
+    await tester.tap(find.widgetWithText(TextButton, 'Cancel'));
+    await tester.pumpAndSettle();
+    expect(commands, isEmpty);
     await capture?.call('expanded-$cycle');
     if (input == null) {
       await tester.tap(collapse);

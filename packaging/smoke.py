@@ -17,6 +17,10 @@ import threading
 import tempfile
 import time
 import uuid
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]/'tool'))
+from synthetic_text_fixture import initialize_fixture
 
 
 def hashes(folder):
@@ -103,6 +107,8 @@ def main():
     parser.add_argument('--default-profile', action='store_true', help='Let installed launcher choose its native profile')
     parser.add_argument('--phase', required=True)
     parser.add_argument('--seed', action='store_true')
+    parser.add_argument('--native-library', default=os.environ.get('TANDEMLOG_TEXT_LIBRARY'),
+                        help='Reviewed same-source native library for synthetic seed initialization')
     parser.add_argument('command', nargs=argparse.REMAINDER)
     args = parser.parse_args()
     root = Path(args.workspace).resolve()
@@ -134,6 +140,9 @@ def main():
             events.append(json.dumps(record, ensure_ascii=False, separators=(',', ':')))
         # Canonical LF framing must survive Windows text-mode CRLF translation.
         (folder/f'{writer}.jsonl').write_bytes(('\n'.join(events)+'\n').encode('utf-8'))
+        if not args.native_library:
+            raise RuntimeError('Synthetic installer seed requires its pinned native library')
+        initialize_fixture(folder, root, args.native_library)
         # Lifecycle replacement tests start with current preferences. Legacy
         # settings legitimately gain a writer during their separately tested
         # migration; arbitrary preference changes must still fail this gate.
@@ -174,7 +183,8 @@ def main():
         def reader():
             for line in proc.stdout:
                 lines.put(line.rstrip())
-        threading.Thread(target=reader, daemon=True).start()
+        reader_thread = threading.Thread(target=reader, daemon=True)
+        reader_thread.start()
         output, ready = [], False
         visible_since = None
         deadline = time.monotonic()+60
@@ -228,6 +238,13 @@ def main():
                 except subprocess.TimeoutExpired:
                     proc.kill()
                     proc.wait()
+                reader_thread.join(timeout=1)
+                while not lines.empty():
+                    output.append(lines.get_nowait())
+                diagnostics = root/'installer-diagnostics'
+                diagnostics.mkdir(exist_ok=True)
+                with (diagnostics/'application.stdout-stderr.log').open('a', encoding='utf-8') as log:
+                    log.write('PHASE='+args.phase+'\n'+'\n'.join(output)+'\n')
         if not ready or (os.name != 'nt' and not any(line.startswith('TANDEMLOG_ROWS ') for line in output)):
             raise RuntimeError('Installed app failed to load synthetic tasks: '+'\n'.join(output))
         views = read_projection(profile, folder)

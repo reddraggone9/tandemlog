@@ -1,0 +1,433 @@
+Resolving dependencies...
+Downloading packages...
+  code_assets 1.2.1 (2.1.0 available)
+  cross_file 0.3.5+5 (0.4.0 available)
+  jni 1.0.3 (1.1.0 available)
+  jni_flutter 1.0.3 (1.0.4+1 available)
+  material_color_utilities 0.13.0 (0.13.1 available)
+  native_toolchain_c 0.19.3 (0.19.5 available)
+  objective_c 9.5.0 (9.6.2 available)
+  test_api 0.7.12 (0.7.15 available)
+  url_launcher 6.3.2 (6.3.3 available)
+  vector_math 2.4.0 (2.4.3 available)
+Got dependencies!
+10 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+00:00 +0: loading /tmp/tandemlog-food-date-readability/test/food_preview_test.dart
+00:00 +0: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: collapsed summary preserves single known full
+00:01 +1: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x dark
+00:01 +2: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x dark
+00:01 +3: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x dark
+00:01 +4: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x dark
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodStockToolbarWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:131:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:278:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  combined Food Stock and Filter 1200.0 1.0x dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:01 +4 -1: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+00:01 +4 -1: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x dark [E]
+  Test failed. See exception logs above.
+  The test description was: combined Food Stock and Filter 1200.0 1.0x dark
+  
+00:02 +4 -1: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: no matching candidates
+  Actual: _HitTestableWidgetFinder:<Found 1 widget with text "Chocolate" (considering only
+hit-testable widgets with a RenderBox): [
+            Text("Chocolate", debugLabel: ((englishLike titleMedium 2021).merge((whiteMountainView
+titleMedium).apply)).copyWith, inherit: false, color: Color(alpha: 1.0000, red: 0.8706, green:
+0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB), family: Roboto, size: 16.0, weight: 500,
+letterSpacing: 0.1, baseline: alphabetic, height: 1.5x, leadingDistribution: even, decoration:
+Color(alpha: 1.0000, red: 0.8706, green: 0.8941, blue: 0.8784, colorSpace: ColorSpace.sRGB)
+TextDecoration.none, dependencies: [DefaultSelectionStyle, DefaultTextStyle, MediaQuery]),
+          ]>
+   Which: means one was found but none were expected
+
+When the exception was thrown, this was the stack:
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_preview_test.dart:67:5)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_preview_test.dart line 67
+The test description was:
+  retained reasons start collapsed; active search bypasses them
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +4 -2: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x light
+00:02 +4 -2: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: retained reasons start collapsed; active search bypasses them [E]
+  Test failed. See exception logs above.
+  The test description was: retained reasons start collapsed; active search bypasses them
+  
+00:02 +4 -2: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x light
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodStockToolbarWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:131:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:278:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  combined Food Stock and Filter 1200.0 1.0x light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +4 -3: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: narrow and wide inventory render partial stock without overflow
+00:02 +4 -3: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 1200.0 1.0x light [E]
+  Test failed. See exception logs above.
+  The test description was: combined Food Stock and Filter 1200.0 1.0x light
+  
+00:02 +5 -3: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x dark
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodStockToolbarWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:131:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:278:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  combined Food Stock and Filter 320.0 2.0x dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:02 +5 -4: /tmp/tandemlog-food-date-readability/test/food_preview_test.dart: quick remove, Deleted and Undo preserve physical identity
+00:02 +5 -4: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x dark [E]
+  Test failed. See exception logs above.
+  The test description was: combined Food Stock and Filter 320.0 2.0x dark
+  
+00:03 +6 -4: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x light
+00:03 +7 -4: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x light
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodStockToolbarWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:131:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart:278:9)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  combined Food Stock and Filter 320.0 2.0x light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:03 +7 -5: /tmp/tandemlog-food-date-readability/test/food_stock_toolbar_workflow_test.dart: combined Food Stock and Filter 320.0 2.0x light [E]
+  Test failed. See exception logs above.
+  The test description was: combined Food Stock and Filter 320.0 2.0x light
+  
+00:03 +7 -5: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 1200.0 1.0x
+00:04 +8 -5: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 1200.0 1.0x
+00:04 +9 -5: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 1200.0 1.0x
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodExpirationColorWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:112:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:147:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  Food date colors and local resume dark 1200.0 1.0x
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:05 +9 -6: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:05 +9 -6: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 1200.0 1.0x [E]
+  Test failed. See exception logs above.
+  The test description was: Food date colors and local resume dark 1200.0 1.0x
+  
+00:06 +9 -6: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 320.0 2.0x
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodExpirationColorWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:112:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:147:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  Food date colors and local resume dark 320.0 2.0x
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +9 -7: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+00:06 +9 -7: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume dark 320.0 2.0x [E]
+  Test failed. See exception logs above.
+  The test description was: Food date colors and local resume dark 320.0 2.0x
+  
+00:06 +9 -7: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following assertion was thrown running a test:
+The finder "Found 0 widgets with type "ExpansionTile" that are ancestors of widgets with text
+"Review trip": []" (used in a call to "tap()") could not find any matching widgets.
+
+When the exception was thrown, this was the stack:
+#0      WidgetController._getElementPoint (package:flutter_test/src/controller.dart:2095:7)
+#1      WidgetController.getCenter (package:flutter_test/src/controller.dart:1947:12)
+#2      WidgetController.tap (package:flutter_test/src/controller.dart:1080:7)
+#3      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart:121:18)
+<asynchronous suspension>
+#4      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#5      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  typed retention reason survives direct Add
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +9 -8: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 1200.0 1.0x
+00:06 +9 -8: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: typed retention reason survives direct Add [E]
+  Test failed. See exception logs above.
+  The test description was: typed retention reason survives direct Add
+  
+00:06 +9 -8: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 1200.0 1.0x
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodExpirationColorWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:112:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:147:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  Food date colors and local resume light 1200.0 1.0x
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:06 +9 -9: /tmp/tandemlog-food-date-readability/test/food_review_regression_test.dart: repeated dialog Cancel callback cannot pop food page
+00:06 +9 -9: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 1200.0 1.0x [E]
+  Test failed. See exception logs above.
+  The test description was: Food date colors and local resume light 1200.0 1.0x
+  
+00:06 +10 -9: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 320.0 2.0x
+00:06 +11 -9: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 320.0 2.0x
+00:07 +12 -9: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 320.0 2.0x
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following StateError was thrown running a test:
+Bad state: No element
+
+When the exception was thrown, this was the stack:
+#0      Iterable.single (dart:core/iterable.dart:694:25)
+#1      WidgetController.element (package:flutter_test/src/controller.dart:888:30)
+#2      WidgetController.ensureVisible (package:flutter_test/src/controller.dart:2389:32)
+#3      verifyFoodExpirationColorWorkflow (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:112:16)
+<asynchronous suspension>
+#4      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart:147:11)
+<asynchronous suspension>
+#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+The test description was:
+  Food date colors and local resume light 320.0 2.0x
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:07 +12 -10: /tmp/tandemlog-food-date-readability/test/food_expiration_color_workflow_test.dart: Food date colors and local resume light 320.0 2.0x [E]
+  Test failed. See exception logs above.
+  The test description was: Food date colors and local resume light 320.0 2.0x
+  
+00:07 +12 -10: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _AncestorWidgetFinder:<Found 0 widgets with type "ExpansionTile" that are ancestors of
+widgets with text "Emergency": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodAllStatusSearch (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:336:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:355:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart line 336
+The test description was:
+  all-status Food search 900.0 1.0x dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:12 +12 -11: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark [E]
+  Test failed. See exception logs above.
+  The test description was: all-status Food search 900.0 1.0x dark
+  
+00:12 +12 -11: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x light
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _AncestorWidgetFinder:<Found 0 widgets with type "ExpansionTile" that are ancestors of
+widgets with text "Emergency": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodAllStatusSearch (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:336:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:355:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart line 336
+The test description was:
+  all-status Food search 900.0 1.0x light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:15 +12 -12: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x light [E]
+  Test failed. See exception logs above.
+  The test description was: all-status Food search 900.0 1.0x light
+  
+00:15 +12 -12: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x dark
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _AncestorWidgetFinder:<Found 0 widgets with type "ExpansionTile" that are ancestors of
+widgets with text "Emergency": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodAllStatusSearch (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:336:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:355:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart line 336
+The test description was:
+  all-status Food search 320.0 2.0x dark
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:17 +12 -13: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x dark [E]
+  Test failed. See exception logs above.
+  The test description was: all-status Food search 320.0 2.0x dark
+  
+00:17 +12 -13: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x light
+══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
+The following TestFailure was thrown running a test:
+Expected: exactly one matching candidate
+  Actual: _AncestorWidgetFinder:<Found 0 widgets with type "ExpansionTile" that are ancestors of
+widgets with text "Emergency": []>
+   Which: means none were found but one was expected
+
+When the exception was thrown, this was the stack:
+#4      verifyFoodAllStatusSearch (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:336:3)
+<asynchronous suspension>
+#5      main.<anonymous closure> (file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart:355:11)
+<asynchronous suspension>
+#6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
+<asynchronous suspension>
+#7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)
+<asynchronous suspension>
+<asynchronous suspension>
+(elided one frame from package:stack_trace)
+
+This was caught by the test expectation on the following line:
+  file:///tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart line 336
+The test description was:
+  all-status Food search 320.0 2.0x light
+════════════════════════════════════════════════════════════════════════════════════════════════════
+00:19 +12 -14: /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x light [E]
+  Test failed. See exception logs above.
+  The test description was: all-status Food search 320.0 2.0x light
+  
+00:19 +12 -14: Some tests failed.
+
+Failing tests:
+  /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x dark
+  /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 320.0 2.0x light
+  /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x dark
+  /tmp/tandemlog-food-date-readability/test/food_all_status_search_workflow_test.dart: all-status Food search 900.0 1.0x light
+  ... and 10 more

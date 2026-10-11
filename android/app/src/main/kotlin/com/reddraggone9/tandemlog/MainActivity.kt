@@ -151,9 +151,14 @@ class MainActivity : FlutterActivity() {
             if (call.method == "pick") {
                 if (picker != null) { result.error("busy", "Folder picker is already open", null); return@setMethodCallHandler }
                 picker = result
-                startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
-                }, 42)
+                try {
+                    startActivityForResult(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION or Intent.FLAG_GRANT_PREFIX_URI_PERMISSION)
+                    }, 42)
+                } catch (_: Exception) {
+                    picker = null
+                    result.error("launch", "Could not open the folder picker. Try again.", null)
+                }
                 return@setMethodCallHandler
             }
             io.execute {

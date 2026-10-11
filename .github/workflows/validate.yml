@@ -39,15 +39,38 @@ jobs:
       - run: flutter build linux --release
       - run: python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle
       - name: Smoke-test native release startup with fresh and warm cache
+        id: linux-startup
         run: |
-          xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" > linux-startup.json
+          mkdir -p linux-startup-diagnostics
+          xvfb-run -a dbus-run-session -- python3 tool/measure_startup.py --tasks 10 --runs 2 --workspace "$RUNNER_TEMP/tandemlog-performance" --diagnostics linux-startup-diagnostics > linux-startup.json 2> linux-startup-diagnostics/harness.stderr.log
+      - name: Preserve failed startup diagnostics
+        if: failure() && steps.linux-startup.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linux-startup-diagnostics
+          path: |
+            linux-startup.json
+            linux-startup-diagnostics/*
+          retention-days: 5
+          if-no-files-found: warn
       - run: |
           mkdir dist
           cp linux-startup.json dist/
       - name: Build user-installable Flatpak bundle
         run: bash packaging/linux/build-flatpak.sh
       - name: Install, launch, replace and uninstall Flatpak with synthetic data
+        id: linux-install-smoke
         run: xvfb-run -a dbus-run-session -- bash packaging/linux/install-smoke.sh
+      - name: Preserve failed installed application diagnostics
+        if: failure() && steps.linux-install-smoke.outcome == 'failure'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: linux-install-smoke-diagnostics
+          path: |
+            ${{ runner.temp }}/tandemlog-flatpak-qa/*.log
+            ${{ runner.temp }}/tandemlog-flatpak-qa/installer-diagnostics/*
+          retention-days: 5
+          if-no-files-found: warn
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: linux

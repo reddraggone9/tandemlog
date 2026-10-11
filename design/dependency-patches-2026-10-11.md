@@ -186,3 +186,30 @@ two skips and zero failures with a successful final summary. The
 binds IDs, source/run, filenames, sizes and hashes without temporary download
 credentials. No installation or release acceptance is inferred from archive
 verification.
+
+
+## Settled build66 integration
+
+The isolated proposal now integrates main
+`a2c3c8fe874f3bf00d7035e6fbfb5c3e98bf8ced`, whose build66 application source
+is `e6e26a1a253e25ee3edf5515ce2553e75d88ac3a`. All RC application, startup
+fixture, packaging and release changes are retained. One workflow conflict was
+resolved by preserving main's new failed-startup/installed-application diagnostic
+uploads and applying the same reviewed immutable upload pin to those steps.
+No signing policy, cleanup, permission, release notes or candidate run is changed.
+The temporary dependency smoke branch remains unmergeable.
+
+Previous full CI38159861434 completed: Android and Windows passed. Linux passed
+formatting, analysis, unit/native policy tests,150 integration tests, release
+build and native payload verification, then failed the approximately45-second
+startup benchmark. RC3 run38156985011 had failed the same unchanged benchmark;
+console logs did not expose the underlying exception. Those old results do not
+accept this build66 proposal. Main now uses initialized native synthetic seeders
+and retains failure diagnostics. Required CI must pass on the updated proposal.
+
+The previously audited action bundles, pub archive, native platform locks and
+FolderActions adapter are unchanged by this integration. Exact-source bundle
+checks and the green non-publishing cross-run artifact smoke remain applicable.
+The native folder smoke remains scoped evidence for unchanged URI dispatch and
+Settings availability handling; full updated-source CI validates integration.
+The coordinator retains publication control and final candidate acceptance.

@@ -22,6 +22,7 @@ import 'presentation/task_entry_area.dart';
 import 'presentation/task_toolbar.dart';
 import 'presentation/toolbar_action.dart';
 import 'presentation/section_menu.dart';
+import 'presentation/section_content.dart';
 import 'presentation/sticky_task_group.dart';
 import 'domain/task_view.dart';
 import 'domain/timed_view.dart';
@@ -213,6 +214,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Set<String> expandedChecklists = {};
   bool taskMenuOpen = false;
   bool busy = true, all = false, showCompleted = false, showUpcoming = false;
+  bool choosingFolder = false;
   // Consent retains command admission/lifecycle ownership without displaying
   // a running operation while the user is deciding.
   bool awaitingCompletionConfirmation = false;
@@ -397,8 +399,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     await _start();
   }
 
-  Future<void> _open(String location) async {
-    if (!await _closeEditor() || !await _closeFoodEditor()) return;
+  Future<bool> _open(String location, {bool closeEditors = true}) async {
+    if (closeEditors && (!await _closeEditor() || !await _closeFoodEditor())) {
+      return false;
+    }
     final LogFolder folder =
         widget.folderFactory?.call(location) ??
         (Platform.isAndroid
@@ -415,7 +419,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     );
     if (!mounted) {
       await opened.close();
-      return;
+      return false;
     }
     Set<String> expanded;
     FoodStore? openedFood;
@@ -442,7 +446,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!mounted) {
         await openedFood?.close();
         await opened.close();
-        return;
+        return false;
       }
       expanded = ChecklistExpansionStore(
         opened.db,
@@ -466,6 +470,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     }
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
     if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) user = null;
+    return true;
   }
 
   Future<bool> _closeFoodEditor() async {
@@ -879,8 +884,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!settingsLoaded || settings!.folder != null) return;
     final location = await settings!.desktopDefaultFolder();
     await ensureDirectoryDurable(Directory(location));
-    await _open(location);
-    if (!mounted) return;
+    if (!await _open(location) || !mounted) return;
     await _saveSettings();
   });
 
@@ -1014,7 +1018,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                         minimumSize: const Size(64, 48),
                         visualDensity: VisualDensity.standard,
                       ),
-                      onPressed: settingsLoaded
+                      onPressed: settingsLoaded && !busy && !choosingFolder
                           ? () => Navigator.pop(ctx, 'choose')
                           : null,
                       child: Text(
@@ -1663,53 +1667,96 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   }
 
   Future<void> _chooseFolder() async {
-    if (!await _closeEditor() || !await _closeFoodEditor()) return;
-    await _act(() async {
-      final selected = await widget.folderActions.pick();
-      if (selected == null || !mounted) return;
-      if (selected == store?.folder.location) return;
-      final previousStore = store;
-      final previousFood = foodStore, previousFoodError = foodError;
-      final previousUser = user;
-      final previousRows = rows;
-      final previousFolder = settings!.folder;
-      final previousExpanded = expandedChecklists;
-      final previousError = error;
-      final previousErrorFromRefresh = errorFromRefresh;
-      try {
-        await _open(selected);
-        if (!mounted) return;
-        await _saveSettings();
-      } catch (_) {
-        if (!identical(foodStore, previousFood)) await foodStore?.close();
-        if (!identical(store, previousStore)) await store?.close();
-        store = previousStore;
-        foodStore = previousFood;
-        foodError = previousFoodError;
-        user = previousUser;
-        rows = previousRows;
-        expandedChecklists = previousExpanded;
-        error = previousError;
-        errorFromRefresh = previousErrorFromRefresh;
-        settings!.folder = previousFolder;
-        settings!.user = previousUser;
-        rethrow;
+    if (!mounted ||
+        busy ||
+        choosingFolder ||
+        !settingsLoaded ||
+        sharedSafetyError != null) {
+      return;
+    }
+    final origin = store, owner = profileDatabase, preferences = settings;
+    final originalFood = foodStore;
+    final writer = preferences!.writer;
+    bool current() =>
+        mounted &&
+        identical(store, origin) &&
+        identical(foodStore, originalFood) &&
+        identical(profileDatabase, owner) &&
+        identical(settings, preferences) &&
+        preferences.writer == writer &&
+        sharedSafetyError == null;
+    setState(() => choosingFolder = true);
+    try {
+      if (!await _closeEditor() ||
+          !await _closeFoodEditor() ||
+          !current() ||
+          busy) {
+        return;
       }
-      await previousFood?.close();
-      await previousStore?.close();
-      if (!mounted) return;
-      foodUndoHistory.clear();
-      pendingFoodCommand = null;
-      undoHistory.clear();
-      _clearSelection();
-      ScaffoldMessenger.of(context).clearSnackBars();
-      pendingCapture.clear();
-      showCompleted = false;
-      capture.clear();
-      firstName.clear();
-      pendingUserId = null;
-      pendingUserName = null;
-    });
+      final selected = await widget.folderActions.pick();
+      if (selected == null || !current() || busy) return;
+      if (selected == store?.folder.location) return;
+      // Editors can be opened while the user is choosing. Ask about those
+      // drafts before starting work or changing the active workspace.
+      if (!await _closeEditor() ||
+          !await _closeFoodEditor() ||
+          !current() ||
+          busy) {
+        return;
+      }
+      await _act(() async {
+        if (!current()) return;
+        final previousStore = store;
+        final previousFood = foodStore, previousFoodError = foodError;
+        final previousUser = user;
+        final previousRows = rows;
+        final previousFolder = settings!.folder;
+        final previousExpanded = expandedChecklists;
+        final previousError = error;
+        final previousErrorFromRefresh = errorFromRefresh;
+        try {
+          if (!await _open(selected, closeEditors: false) || !mounted) return;
+          await _saveSettings();
+        } catch (_) {
+          if (!identical(foodStore, previousFood)) await foodStore?.close();
+          if (!identical(store, previousStore)) await store?.close();
+          store = previousStore;
+          foodStore = previousFood;
+          foodError = previousFoodError;
+          user = previousUser;
+          rows = previousRows;
+          expandedChecklists = previousExpanded;
+          error = previousError;
+          errorFromRefresh = previousErrorFromRefresh;
+          settings!.folder = previousFolder;
+          settings!.user = previousUser;
+          rethrow;
+        }
+        await previousFood?.close();
+        await previousStore?.close();
+        if (!mounted) return;
+        foodUndoHistory.clear();
+        pendingFoodCommand = null;
+        undoHistory.clear();
+        _clearSelection();
+        ScaffoldMessenger.of(context).clearSnackBars();
+        pendingCapture.clear();
+        showCompleted = false;
+        capture.clear();
+        firstName.clear();
+        pendingUserId = null;
+        pendingUserName = null;
+      });
+    } catch (e) {
+      if (current()) {
+        setState(() {
+          error = failureMessage(e);
+          errorFromRefresh = false;
+        });
+      }
+    } finally {
+      if (mounted) setState(() => choosingFolder = false);
+    }
   }
 
   Future<void> _createFirstUser() async {
@@ -1910,7 +1957,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   Future<void> _openSelectionSession() async {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final origin = store;
-    if (origin == null) return;
+    if (origin == null || busy || sharedSafetyError != null) return;
     final tasks = rows
         .where(
           (row) => row['kind'] == 'task' && selectedTasks.contains(row['id']),
@@ -1937,6 +1984,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             : 'This workspace has no verified shared text setup. Restore its initialized history before editing.';
       }
       if (!mounted ||
+          busy ||
+          sharedSafetyError != null ||
           !identical(store, origin) ||
           selectedTasks.length != 1 ||
           !selectedTasks.contains(id)) {
@@ -2042,7 +2091,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         .map((entry) => entry.task['id'])
         .toList();
     if (!await _closeEditor() || !mounted) return false;
-    if (!identical(origin, store) || !timeSource.ready) return false;
+    if (busy || !identical(origin, store) || !timeSource.ready) return false;
     final current = projectTaskView(
       store!.rows,
       timeSource.readTime(),
@@ -3863,7 +3912,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             body: SafeArea(
               child: Center(
                 child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 1450),
+                  constraints: sectionContentConstraints,
                   child: Column(
                     children: [
                       if (!foodVisible && sharedSafetyError == null)
@@ -4169,10 +4218,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   visualDensity: VisualDensity.standard,
                   textStyle: Theme.of(context).textTheme.labelLarge,
                 ),
-                onPressed: busy || !settingsLoaded
+                onPressed: busy || choosingFolder || !settingsLoaded
                     ? null
                     : settings!.folder != null
-                    ? () => _act(() => _open(settings!.folder!))
+                    ? () => _act(() async {
+                        await _open(settings!.folder!);
+                      })
                     : widget.folderActions.requiresPicker
                     ? _chooseFolder
                     : _startDefault,
@@ -4186,7 +4237,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                     visualDensity: VisualDensity.standard,
                     textStyle: Theme.of(context).textTheme.labelLarge,
                   ),
-                  onPressed: busy || !settingsLoaded ? null : _chooseFolder,
+                  onPressed: busy || choosingFolder || !settingsLoaded
+                      ? null
+                      : _chooseFolder,
                   child: const Text('Choose an existing folder'),
                 ),
             ],

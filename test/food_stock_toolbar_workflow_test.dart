@@ -128,13 +128,15 @@ Future<void> verifyFoodStockToolbarWorkflow(
   await chooseFoodView(tester, 'Retained', input: input);
   expect(find.text('Food undated'), findsNothing);
   expect(find.text('Inbox'), findsNothing);
-  await tester.ensureVisible(find.widgetWithText(ExpansionTile, 'Emergency'));
-  if (input == null) {
-    await tester.tap(find.widgetWithText(ExpansionTile, 'Emergency'));
-  } else {
-    await input(find.widgetWithText(ExpansionTile, 'Emergency'));
-  }
-  await tester.pumpAndSettle();
+  expect(find.byType(ExpansionTile), findsNothing);
+  await tester.ensureVisible(find.text('Food retained undated'));
+  expect(
+    find.descendant(
+      of: find.widgetWithText(Card, 'Food retained undated'),
+      matching: find.text('Emergency'),
+    ),
+    findsOneWidget,
+  );
   expect(find.text('Food retained undated'), findsOneWidget);
   expect(find.text('Needs expiration'), findsOneWidget);
   await capture?.call('retained-undated');

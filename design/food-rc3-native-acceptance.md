@@ -1,4 +1,4 @@
-# Food RC3/build65 — exact Android acceptance handoff
+# Food RC3/build66 — exact Android acceptance handoff
 
 The first candidate38152037169 at `16cb07d` fails unit fixtures before signing.
 Replacement38153414378 at `1bd746e` exposes a native Undo-finder ambiguity and
@@ -7,13 +7,16 @@ The reviewed fixture correction targets the Snackbar action; its actual Linux
 native case passes in25 seconds. A Linux-only55-minute allowance keeps every
 existing gate. Application/native/dependency source is unchanged.
 
-Fresh full candidate
-[38156985011](https://github.com/reddraggone9/tandemlog/actions/runs/38156985011)
-uses exact source `3c162347105bbd01f55ef09652d29c397d013e01`.
-Full gates, original archive identities and owner-signed APK remain pending. Use the eventual verified original APK without rebuilding.
-This document does not claim installed Android acceptance.
-[Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) retains both failures,
-targeted actual checks and independent review.
+Build65 candidate38156985011/source3c16234 failed Linux startup smoke after
+other Linux gates, with owner signing skipped. Its Windows artifact is retained
+historical evidence; visible window/model checks do not establish admitted UI.
+Fixture-only initialization and preserved failure diagnostics address the seeder
+mismatch without weakening production admission. Approved width, desktop menu,
+Add another… and picker-phase changes supersede that source. Fresh full build66,
+original archive identities and owner-signed APK are pending. Use the eventual
+verified original APK without rebuilding. This document does not claim installed
+Android acceptance. [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md)
+retains failures, attributed actual checks and independent reviews.
 
 Use disposable synthetic data and the locally coordinated fresh trial only.
 Keep live synced data and the old trial/receipts intact. Existing initialized
@@ -57,7 +60,7 @@ rules. This recipe does not authorize a live import.
 
 ## Focused installed checks
 
-1. Bind the verified original APK hash, package, owner signer, RC3 version/code65
+1. Bind the verified original APK hash, package, owner signer, RC3 version/code66
    and nondebuggable state. Upgrade an initialized synthetic RC2 profile and
    check retained settings, SAF grant, writer, Tasks/Food IDs and canonical bytes.
 2. Create a genuinely new synthetic folder/user through the actual app. Capture
@@ -68,8 +71,9 @@ rules. This recipe does not authorize a live import.
 3. Compare Tasks/Food Add/Undo/Filter controls in both themes at normal width and
    320dp/200% text. Check shared target sizes/colors/vertical alignment, narrow
    icon-only and wide visible Undo, active6px filter dot and accessible labels.
-   Check full account identity and working Settings access. Food retains its
-   existing desktop900px content cap; account label widths can differ above it.
+   Check full account identity and working Settings access. Standalone Tasks/Food now share a centered1450px desktop content limit;
+   preserve existing420px Task editor and narrow modal behavior. Android widths
+   stay within the viewport.
 4. Search across saved view/reason/Brand/Location filters using active and deleted
    matches. Check active order, sticky Deleted heading, muted struck deleted
    title and explicit Restore. Clear Search and verify saved filters return.
@@ -77,7 +81,10 @@ rules. This recipe does not authorize a live import.
    Include suggestions drawn from deleted Food. Save/reopen and Cancel/Discard;
    check values are neither catalog-constrained nor forcibly normalized. Select
    multiple Brand/Location filters: OR within each field, AND across fields,
-   empty field means any; Search bypasses them.
+   empty field means any; Search bypasses them. In Retained, verify one flat
+   expiration-sorted list with interleaved reasons shown per row. Select/clear
+   reason filters, exercise empty results, and verify identical containers remain
+   grouped while different reasons stay separate.
 6. Select matching active containers and deselect one for a partial selection.
    Verify count, mixed Brand/Location initially untouched, field-specific Apply
    labels and explicit Clear. Save Brand only and verify exact selected physical
@@ -90,6 +97,19 @@ rules. This recipe does not authorize a live import.
    overflow/Inspect and48px targets retained. Confirm no Unspecified menu option.
    Check date label/value insets with an empty focused field and a populated
    date; open the shared calendar and return/save without losing the selection.
+
+8. Search retained/deleted Food and use the expanded menu's Add another….
+   Verify copied descriptive fields, blank focused expiration and retention,
+   count1, required-date validation, Cancel/Back no-write behavior, one fresh Full
+   container and source-preserving Undo. Deleted source stays deleted. Desktop
+   secondary click/ellipsis parity is a Linux/Windows check, not mobile long press.
+9. Hold the actual Android SAF chooser open: no app work-progress bar during
+   choice, duplicate chooser blocked, normal Add enabled. Cancel/reopen/same-folder
+   and permission/launch error recovery preserve current workspace and drafts.
+   After another folder is chosen, actual validation/loading shows work progress;
+   successful/cancelled/failed switch clears it. Recheck an intervening draft and
+   cold reopen after a successful synthetic switch. Linux mock-channel adapter
+   evidence does not establish actual SAF lifecycle behavior.
 
 Record actual Android OS/device, exact APK, observations, canonical/integrity
 checks and a demonstration with Show taps. Restore synthetic test settings and

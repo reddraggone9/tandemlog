@@ -1,0 +1,204 @@
+{
+  "retained_original_sha256": "7f3da584e6ff72b7de84a40b6b693147abc76f72ea661d55c9b12d9c862004e1",
+  "qualification": "Portable path-normalized review copy; original byte representation remains retained in the consumer.",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T17:56:49.067655+00:00",
+    "verdict": "ACCEPTED_BOUNDED_SYNTHETIC_FIXTURE_AND_DIAGNOSTICS_FINAL_HOSTED_NATIVE_GATES_PENDING",
+    "mustFix": [],
+    "scope": "Eight QA/tool/fixture/workflow files; no production lib/UI/format/dependency change by this correction.",
+    "sourceBindings": {
+      "tool/measure_startup.py": {
+        "path": "consumer-repository/tool/measure_startup.py",
+        "sha256": "0ae0f39d714886565406319afd4f00dd539af0fdc93fe31177cca4b518cdfccc",
+        "bytes": 9201
+      },
+      "packaging/smoke.py": {
+        "path": "consumer-repository/packaging/smoke.py",
+        "sha256": "48d784734f6261509af9fdc9d36bb0bd1938e43092747d8e6fe85cb39991e9ec",
+        "bytes": 13931
+      },
+      ".github/workflows/validate.yml": {
+        "path": "consumer-repository/.github/workflows/validate.yml",
+        "sha256": "2b56bc385ace15670f6977eda25a1fa688315c20676de47dced1864b37b79931",
+        "bytes": 12574
+      },
+      "tool/initialize_synthetic_text_fixture.dart": {
+        "path": "consumer-repository/tool/initialize_synthetic_text_fixture.dart",
+        "sha256": "f732bb181b3d29bd0d1d0336426d1e218ab0ceb0a28ffcfd471e546b613465fa",
+        "bytes": 2207
+      },
+      "tool/synthetic_text_fixture.py": {
+        "path": "consumer-repository/tool/synthetic_text_fixture.py",
+        "sha256": "d5956c6e9962b8eeae09d5234eb48800a4c07157156981429e1f37edaf044822",
+        "bytes": 2648
+      },
+      "tool/test_startup_diagnostics.py": {
+        "path": "consumer-repository/tool/test_startup_diagnostics.py",
+        "sha256": "716bd3c1dd6b4f3ff98d24a75ce1d1accb0828335cc23a12706d4e7f2fb37811",
+        "bytes": 2749
+      },
+      "test/startup_smoke_fixture_contract_test.dart": {
+        "path": "consumer-repository/test/startup_smoke_fixture_contract_test.dart",
+        "sha256": "a5cb44d4c5276f9e5612f7b5c825992e29af374e0d358dfc269d0f646e2c80a2",
+        "bytes": 5459
+      },
+      "tool/test_synthetic_text_fixture.py": {
+        "path": "consumer-repository/tool/test_synthetic_text_fixture.py",
+        "sha256": "6d5e8c341d9e8c60952185277a87ea90ed35d598be028b58df03363d1430eec2",
+        "bytes": 2482
+      }
+    },
+    "unchangedProductionPolicy": {
+      "path": "consumer-repository/lib/storage/task_store.dart",
+      "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0",
+      "bytes": 158992
+    },
+    "authorOriginalReceipt": {
+      "path": "startup-review-consumer/implementation-receipt.json",
+      "sha256": "5a96104be93f6a29db7c9e7ac0e5b82bb35c9862261a9f05e323518c2ecaf24c",
+      "bytes": 6300
+    },
+    "extendsDiagnosis": {
+      "path": "native-review-consumer/independent-startup-fixture-diagnosis.json",
+      "sha256": "44da70461098f05ea6a0508bbb50558485e8e2cefc1081e99630c9a1a340e851",
+      "bytes": 4845
+    },
+    "finalDeltaFromAuthorOriginalReceipt": {
+      "changed": "tool/synthetic_text_fixture.py: explicit pinned Dart SDK resolver only",
+      "added": "tool/test_synthetic_text_fixture.py: bounded Windows argv and fail-before-spawn tests"
+    },
+    "findings": [
+      "Existing historical-fixture API computes observed-frontier/native seed digest. Separate text-seed-private avoids warming measured app profile. Original scalar source files are compared byte-for-byte, row count retained, production history verified. Installer expected canonical/settings snapshot occurs after baseline preparation.",
+      "New caller uses measured bundle native library by default for startup and explicit/current-CI same-source native library for installer; receipt binds actual native SHA. This is seed-library provenance, not evidence that installer library bytes equal seed library or installed GUI acceptance.",
+      "Pinned SDK resolver follows existing repo which/batch-to-cache/dart.exe policy and rejects missing executable before launching. Paths are structured argv, not shell-interpolated.",
+      "45s startup,60s installer, complete model/row checks, warm FILES_READ=0, fresh-root and canonical/settings preservation checks remain. Seed preparation occurs before launch timer; no OS page-cache cold-boot claim.",
+      "Failed-only diagnostics retain merged process output, exit/partial run state and harness stderr outside dist; pinned upload action and read-only permissions preserved; cannot satisfy publication installer inventory.",
+      "Actual fixture tests exercise both Python seeders then production admission, native receipt hash, exact canonical history, cold replay and measured-profile absence. Earlier initialized/legacy-refusal tests remain unchanged."
+    ],
+    "evidenceBindings": [
+      {
+        "path": "/tmp/startup-fixture-contract-red.log",
+        "sha256": "c40aa1aba721bc88fe09dafd1658546f253872aafc4db07cfe6be75b4bfe6060",
+        "bytes": 1338
+      },
+      {
+        "path": "/tmp/startup-fixture-final-targeted.log",
+        "sha256": "391e4407dfe7724864dba0d736e4d515aec8852e1276ddce8c55b02a85db429e",
+        "bytes": 2062
+      },
+      {
+        "path": "/tmp/startup-fixture-final-analyze.log",
+        "sha256": "d52483ea9b1ddf58901e1d6f834933fe2825b4958dcbaf84884b0c2e6b1c508a",
+        "bytes": 96
+      },
+      {
+        "path": "/tmp/startup-fixture-python-startup.log",
+        "sha256": "b7fb4389c1d044fd70e6328641fc8fa74d7a4007b5a0ba87e3599e6b088de9cd",
+        "bytes": 621
+      },
+      {
+        "path": "/tmp/startup-fixture-python-installer.log",
+        "sha256": "51d74c69c80118c39b735adf16f599fd67c98671828e34f95bc98b9fad5ad1ed",
+        "bytes": 886
+      },
+      {
+        "path": "/tmp/startup-fixture-sdk-red.log",
+        "sha256": "2cc051357e7a5a386d61c5812d94e90db5d3c3c829ae4938cca77536fcb751e1",
+        "bytes": 934
+      },
+      {
+        "path": "/tmp/startup-fixture-sdk-red-valid.log",
+        "sha256": "ba62a9a0639a69a5a8453eba6e66279dccc0ad1c9df3bed629b9cc9627009008",
+        "bytes": 869
+      },
+      {
+        "path": "/tmp/startup-fixture-sdk-green.log",
+        "sha256": "5150a061c80d7dfeebaa16ac470d106384ab9b096a288ea3e23b5702d0dfe024",
+        "bytes": 566
+      },
+      {
+        "path": "/tmp/startup-fixture-sdk-contract-green.log",
+        "sha256": "f6e60d196df01e497f6532438cfddd44fbe6c319df9425a1d1e93d0a2369a618",
+        "bytes": 1492
+      },
+      {
+        "path": "startup-review-consumer/sdk-negative-control.py",
+        "sha256": "e1f380927e02891d14f0d3b2dc4aaf2bc91d35286fc3b513a0cff899162c5265",
+        "bytes": 1429
+      }
+    ],
+    "observedChecks": {
+      "originalAdmissionRed": "Both old scalar seeders rejected by actual production initialization contract.",
+      "admissionGreenBeforeResolver": "10PASS: actual fixture2 + unchanged policy8; initializer/Dart source unchanged in final resolver delta.",
+      "PythonDiagnostics": "3PASS",
+      "PythonInstaller": "5PASS",
+      "PythonResolver": "3PASS",
+      "validResolverRed": "Preserved old helper invokes dart vs expected SDKexe; assertion mismatch.",
+      "invalidResolverAttempt": "Original SDK red log is AttributeError old helper lacked shutil; excluded from meaningful behavior red claims.",
+      "postResolverAdmissionAttempt": "ENOSPC while compiling Flutter listener; no test assertions executed, not pass or behavior regression.",
+      "analysis": "Two owned Dart files clean before resolver-only Python delta."
+    },
+    "executionQualification": "No release application build/launch, performance/warm measured runtime, Flatpak lifecycle or Windows execution by this reviewer/author for finalsource. Read-only review and retained actual logs; no tests launched by reviewer.",
+    "remainingGates": [
+      "Final exact-source full hosted candidate including Windows helper execution and actual startup/warm/installed lifecycle gates.",
+      "New exact signed artifacts and native/platform acceptance before any publication."
+    ],
+    "knownLimits": [
+      "Original hosted startup cause remains qualified because redirected diagnostics unavailable; local actual admission reproductions establish concrete fixture defect.",
+      "Old Windows visible-window/projection fallback success does not attest usable admitted Tasks UI; revised correct fixture removes known mismatch but exact next package runtime acceptance remains required."
+    ],
+    "extendsIndependentReview": {
+      "path": "startup-review-consumer/independent-architecture-review.json",
+      "sha256": "0517b45f644f456077962f43fd387f6e72297101a9ef300f3547d586856f7c88",
+      "bytes": 8162
+    },
+    "authorFinalReceipt": {
+      "path": "startup-review-consumer/implementation-final-receipt.json",
+      "sha256": "b12105cda5f1326a7ca5b436fec327d521c8b60b2bb8c7dfc78619d4fa4559fc",
+      "bytes": 9024
+    },
+    "frozenFinalSnapshotBindings": {
+      "tool/measure_startup.py": {
+        "path": "startup-review-consumer/source-final/tool/measure_startup.py",
+        "sha256": "0ae0f39d714886565406319afd4f00dd539af0fdc93fe31177cca4b518cdfccc",
+        "bytes": 9201
+      },
+      "packaging/smoke.py": {
+        "path": "startup-review-consumer/source-final/packaging/smoke.py",
+        "sha256": "48d784734f6261509af9fdc9d36bb0bd1938e43092747d8e6fe85cb39991e9ec",
+        "bytes": 13931
+      },
+      ".github/workflows/validate.yml": {
+        "path": "startup-review-consumer/source-final/.github/workflows/validate.yml",
+        "sha256": "2b56bc385ace15670f6977eda25a1fa688315c20676de47dced1864b37b79931",
+        "bytes": 12574
+      },
+      "tool/initialize_synthetic_text_fixture.dart": {
+        "path": "startup-review-consumer/source-final/tool/initialize_synthetic_text_fixture.dart",
+        "sha256": "f732bb181b3d29bd0d1d0336426d1e218ab0ceb0a28ffcfd471e546b613465fa",
+        "bytes": 2207
+      },
+      "tool/synthetic_text_fixture.py": {
+        "path": "startup-review-consumer/source-final/tool/synthetic_text_fixture.py",
+        "sha256": "d5956c6e9962b8eeae09d5234eb48800a4c07157156981429e1f37edaf044822",
+        "bytes": 2648
+      },
+      "tool/test_startup_diagnostics.py": {
+        "path": "startup-review-consumer/source-final/tool/test_startup_diagnostics.py",
+        "sha256": "716bd3c1dd6b4f3ff98d24a75ce1d1accb0828335cc23a12706d4e7f2fb37811",
+        "bytes": 2749
+      },
+      "test/startup_smoke_fixture_contract_test.dart": {
+        "path": "startup-review-consumer/source-final/test/startup_smoke_fixture_contract_test.dart",
+        "sha256": "a5cb44d4c5276f9e5612f7b5c825992e29af374e0d358dfc269d0f646e2c80a2",
+        "bytes": 5459
+      },
+      "tool/test_synthetic_text_fixture.py": {
+        "path": "startup-review-consumer/source-final/tool/test_synthetic_text_fixture.py",
+        "sha256": "6d5e8c341d9e8c60952185277a87ea90ed35d598be028b58df03363d1430eec2",
+        "bytes": 2482
+      }
+    }
+  }
+}

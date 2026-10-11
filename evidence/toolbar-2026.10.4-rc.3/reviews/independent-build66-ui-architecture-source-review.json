@@ -1,0 +1,133 @@
+{
+  "portability": "Only consumer checkout/evidence paths normalized; exact original receipt retained privately.",
+  "original_receipt_sha256": "709d43022a565070d84e452bf479409ab9af52453e89a272e1cf85fae0517e52",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T18:28:08.970660+00:00",
+    "verdict": "SOURCE_ACCEPTED_LIFECYCLE_FINDING_RESOLVED_RETAINED_APPROVED_NATIVE_CANDIDATE_PENDING",
+    "mustFix": [],
+    "baseCommit": "e6ba27597e34b6f723f17f5051363619d6f1a23a",
+    "sourceBindings": {
+      "lib/food/food_page.dart": {
+        "path": "<checkout>/lib/food/food_page.dart",
+        "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62",
+        "bytes": 68360
+      },
+      "lib/presentation/section_content.dart": {
+        "path": "<checkout>/lib/presentation/section_content.dart",
+        "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b",
+        "bytes": 186
+      },
+      "lib/presentation/civil_date_input.dart": {
+        "path": "<checkout>/lib/presentation/civil_date_input.dart",
+        "sha256": "1d058fd32ea065dba84aae2f0e0fe5f435aa1e59a68039f9c817f417970e8a0f",
+        "bytes": 6682
+      },
+      "lib/main.dart": {
+        "path": "<checkout>/lib/main.dart",
+        "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198",
+        "bytes": 205522
+      },
+      "test/food_add_another_test.dart": {
+        "path": "<checkout>/test/food_add_another_test.dart",
+        "sha256": "e01626f6f05a87ab43f37615eaef54832def046af289f2d3c43fc29617eb7f01",
+        "bytes": 7370
+      },
+      "test/food_context_menu_test.dart": {
+        "path": "<checkout>/test/food_context_menu_test.dart",
+        "sha256": "933b90a9caf4d1ea9b9466b00d5bab441796dca943965af8e0b08485a0dba9a6",
+        "bytes": 6019
+      },
+      "test/food_section_width_test.dart": {
+        "path": "<checkout>/test/food_section_width_test.dart",
+        "sha256": "2b04e16c7954e8e0335f53bb560edfd3b173ce31ef610511a4020d9bee357a62",
+        "bytes": 3487
+      },
+      "test/food_retained_flat_list_test.dart": {
+        "path": "<checkout>/test/food_retained_flat_list_test.dart",
+        "sha256": "51f5f83dee2eed54ecb2ab53419af10af81a75d2eb5cc8cc34de5e024a6b504e",
+        "bytes": 9309
+      },
+      "lib/food/inventory.dart": {
+        "path": "<checkout>/lib/food/inventory.dart",
+        "sha256": "b2726737d7581f51b8516ae0ce4b08412365eb9861564a382c1d6cb7e1abb6f1",
+        "bytes": 24057
+      },
+      "design/product-behavior.md": {
+        "path": "<checkout>/design/product-behavior.md",
+        "sha256": "b20f634c2338334e5af5f8f63fa6a0c4212a0a4c632b89650c97d4b2a8e8c70e",
+        "bytes": 39047
+      },
+      "design/decisions/0019-food-field-editing-and-contents-defaults.md": {
+        "path": "<checkout>/design/decisions/0019-food-field-editing-and-contents-defaults.md",
+        "sha256": "ea1418d3b5f74b3472ade250fc47026e096af494fab7abe5fdd1139bfd635605",
+        "bytes": 5333
+      }
+    },
+    "evidenceBindings": [
+      {
+        "path": "<consumer-evidence>/food-dirty-decision-dispose-red.txt",
+        "sha256": "94b006b295ecf7d82b0884cc2d2859e067d01cd1c8e99ce873c4bdc4844af689",
+        "bytes": 2548
+      },
+      {
+        "path": "<consumer-evidence>/retained-flat-widget-valid-red.txt",
+        "sha256": "97f70f1746b7de028d885864530a000555b325a7b741e455312040893ff3ae67",
+        "bytes": 10913
+      },
+      {
+        "path": "<consumer-evidence>/retained-and-disposal-widget-green-attempt.txt",
+        "sha256": "896367f63f98e60310eb04873b45f341f3ef002a6dc8b3518f0b5b01bf36bb2e",
+        "bytes": 6118
+      },
+      {
+        "path": "<consumer-evidence>/retained-and-disposal-widget-final.txt",
+        "sha256": "a14f185945badc076d89b19d0b7fdb5a7eb206cbdfa41818f8e9ce12371576eb",
+        "bytes": 1829
+      },
+      {
+        "path": "<consumer-evidence>/native-followup-final-attempt.txt",
+        "sha256": "f1feea023e924934f01190badf6952b1a9993839d5565e44e425f9993938e1da",
+        "bytes": 66054
+      },
+      {
+        "path": "<consumer-evidence>/analyze-final-source.txt",
+        "sha256": "f7d45ceea176928befb0be15e98b9d5204f6b0d4962e4fa7e5fb5d375b66183f",
+        "bytes": 686
+      },
+      {
+        "path": "<consumer-evidence>/new-workflows-widget-final.txt",
+        "sha256": "a118793b820764ce0348637c29e9f2412810ab37fe66aa7d219b64fac332c20c",
+        "bytes": 6664
+      }
+    ],
+    "scope": "Shared standalone section1450 constraints, Food desktop secondary-menu parity, independent Add another template draft, dirty-decision disposal/full-value restoration, approved flat Retained presentation. No platform-transport/picker source acceptance or all other mutable changes inferred.",
+    "resolvedFinding": {
+      "severity": "P2",
+      "problem": "Awaiting Navigator.push before TransitionRoute.completed stranded the close request on Navigator disposal.",
+      "actualRed": "food-dirty-decision-dispose-red.txt expected completedtrue actualfalse.",
+      "fix": "Unawaited push captures choice; sole completed barrier resolves disposal; context-mounted guard prevents restoring disposed controllers; previous private TextEditingValues restored on Keep editing.",
+      "green": "Final8widget suite includes actual disposing-dirty-decision regression."
+    },
+    "findings": [
+      "One presentation-owned1450 BoxConstraints is reused by host and standalone Food without introducing a wrapper framework, changing Task panel420/current900 breakpoint or modal geometry. Shared16px padding remains.",
+      "One Food menu builder/handler serves lower48px ellipsis and whole-card secondary click. Captured host commands/workspace and exact visible group identity are checked after selection and before Remove confirmation commits. Group visibility/membership changes or workspace changes reject stale actions. Primary interaction and mobile long press are not changed.",
+      "Add another copies only name/Brand/nominalsize/Location into a normal new Add draft; expiration/retention blank, expiration autofocused, count1 and fresh Full contents through existing Add command. Deleted template remains deleted; context menu does not introduce Restore.",
+      "Flat Retained renders the existing expiry-sorted grouped list directly and shows retention metadata. Canonical grouping still includes retention; saved reason filters and all-status search bypass/clear restoration remain intact. No domain/store/codec/guard change.",
+      "Meaningful Retained tests assert expiry interleaving across reasons, no reason ExpansionTiles, metadata card bounds and glyph readability, filter select/clear, deleted search and saved-filter preservation. Bounded0.5px glyph ink tolerance corrects observed0.19px overhang while exact whole metadata row/card containment remains."
+    ],
+    "observedChecks": {
+      "initialFocused": "43widgetPASS before later Retained/disposal fixes",
+      "latestFocused": "8/8widgetPASS00:05: Retained4 plus Add/disposal4",
+      "retainedRed": "Actual old reason sections fail all4variants; first bad-selector attempt is not relied on.",
+      "intermediateGreen": "Two wide cases fail0.19px ink bounds; narrow cases/disposal pass, retained as intermediate not blanket green.",
+      "nativeEarlier": "Combined10 actual8PASS/2FAIL folder-picker fixtures06:17. Partial prior successes are not full currentsource/native acceptance and newest Retained/disposal delta has no native claim here.",
+      "analysisEarlier": "Noissues3.7s before newest two changes; finalsource fullanalysis remains parent-owned."
+    },
+    "remaining": [
+      "Current-source affected native/pixels and final source analyzer/format/full exact candidate gates.",
+      "Independent picker/platform proof and exact signed package/native acceptance/publication gates."
+    ],
+    "reviewMethod": "Read-only source/diff/actual retained log review; no builds/tests/production edits by reviewer. This receipt does not claim Library transfer or private artifact verification."
+  }
+}

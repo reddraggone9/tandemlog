@@ -13,6 +13,7 @@ class CivilDateInput extends StatelessWidget {
     required this.label,
     this.fieldKey,
     this.focusNode,
+    this.autofocus = false,
     this.enabled = true,
     this.hint = 'YYYY-MM-DD',
     this.errorText,
@@ -24,6 +25,7 @@ class CivilDateInput extends StatelessWidget {
   final String label;
   final Key? fieldKey;
   final FocusNode? focusNode;
+  final bool autofocus;
   final bool enabled;
   final String? hint;
   final String? errorText;
@@ -38,6 +40,7 @@ class CivilDateInput extends StatelessWidget {
     key: fieldKey,
     controller: controller,
     focusNode: focusNode,
+    autofocus: autofocus,
     enabled: enabled,
     decoration: InputDecoration(
       labelText: label,
