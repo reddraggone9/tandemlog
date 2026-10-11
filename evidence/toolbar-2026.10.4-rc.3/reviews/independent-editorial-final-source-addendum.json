@@ -1,0 +1,60 @@
+{
+  "portability": "Local synthetic paths normalized; original receipt SHA256 retained.",
+  "original_receipt_sha256": "637735edec5db0d08d7e1da66a591bd3167b48eedecfab8240d6931897560248",
+  "review": {
+    "reviewer": "Independent delegated editorial reviewer /root/calendar_editorial_review",
+    "reviewed_at_utc": "2026-10-11T16:49:25.154160+00:00",
+    "outcome": "APPROVED editorial extension through final3c16234 candidate source; no new public copy/media needed",
+    "scope": "Tiny independent source-range extension for historical native test locator correction and Linux CI allowance. No tests/builds/recaptures or target platform/publication acceptance performed.",
+    "covered_range": {
+      "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
+      "prior_replacement_source": "1bd746e228b09c6b5629c8ecfa29f5ff21f1a83c",
+      "final_candidate_source": "3c162347105bbd01f55ef09652d29c397d013e01",
+      "version": "2026.10.4-rc.3+65"
+    },
+    "extends": {
+      "path": "runtime-evidence/independent-editorial-replacement-candidate-addendum.json",
+      "bytes": 5090,
+      "sha256": "10ec6fc2f353c340c4a03d51029a1c12dc3188b648e29ec5284bab9b0cfd1ce8"
+    },
+    "notes": {
+      "path": "design/prerelease-notes.md",
+      "bytes": 1116,
+      "sha256": "9a534c754a2d4c6db3ce7909c5b74947b3b93b248649ef86205e5ee63b3b83f4"
+    },
+    "media": {
+      "path": "evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+      "bytes": 50298,
+      "sha256": "77b2df0c667b1489614fb480db65e348ff86b556a4e8e4f810627c37fd3c88a8"
+    },
+    "final_source_inventory": {
+      "path": "evidence/toolbar-2026.10.4-rc.3/inputs/source-inputs-final-ci-corrections.json",
+      "bytes": 10678,
+      "sha256": "e7fdd287059613c2212b30f82d7c3542292aca1d88fc3f3d6ce2c9245bd2db67"
+    },
+    "final_source_inventory_entries": 63,
+    "final_source_hash_or_git_mismatches": [],
+    "notes_or_media_changes": [],
+    "source_diff_review": [
+      "All app/native/platform/dependency/packaging roots have empty1bd->3c diff. Notes, image and immutable751URL unchanged.",
+      "integration_test/task_flow_test.dart replaces ambiguous globalUndo finder with uniqueSnackBarAction finder for tap and later absence. Persistent wideUndo remains allowed; no production behavior changed.",
+      "validate.yml changes only Linux job timeout40to55minutes. Same runner, permissions, steps, full checks/builds/install/native gates/signing dependencies retained. This CI allowance introduces no end-user release-note change.",
+      "Cancelled38153414378 evidence and annotation/API receipts retain its incomplete native/check/signing status; no old acceptance is adopted."
+    ],
+    "independent_correction_receipt": {
+      "path": "runtime-evidence/independent-native-undo-timeout-review.json",
+      "bytes": 4652,
+      "sha256": "825a26added1d6c3f6d6220cc5531063caff89456eeb1ca789ad175f430469b5"
+    },
+    "scoped_evidence": {
+      "path": "evidence/toolbar-2026.10.4-rc.3/logs/hosted-native-undo-fix-green.txt",
+      "bytes": 6291,
+      "sha256": "1842b8846f2e9eebf1d95006c8285a3f049fe3380569df672a79a978f7a9f9a2"
+    },
+    "evidence_attribution": "Distinct independent source/log review accepts bounded fixture/allowance correction and records actual one-caseLinux nativePASS25seconds. Editorial reviewer read source/receipt, did not rerun native matrix and does not claim new full candidate success.",
+    "copy_media_assessment": "Existing final conciseRC3 change paragraphs and exceptional fresh-trial compatibility action remain accurate. No public QA/test-locator/timeout bullet or media refresh needed. Prior actual synthetic Before/After crops, centeredlabels and recorded source qualification remain valid.",
+    "immutable_image_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/7515375455d627b8ab224bb39ca8649e97ace053/evidence/toolbar-2026.10.4-rc.3/media/expanded-contents-before-after.png",
+    "public_image_verification": "Prior exactHTTP200 byte verification retained; immutableGit/localSHA77b2df unchanged.",
+    "remaining_gates": "New exact-source full candidate/artifact/signing gates, parent-owned exactAPK installed workflows and publicationclearance remain independent. No Android/Windows/runtime/publication/stablepromotion claim."
+  }
+}

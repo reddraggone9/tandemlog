@@ -2,8 +2,16 @@
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
   "files": {
     "README.md": {
-      "bytes": 12914,
-      "sha256": "cdc4064335e74833576140ee589a6705cf44dddd746fdd0d57a3880401092a07"
+      "bytes": 13489,
+      "sha256": "0f69c95cda4d62bd74dca31184b777f5edb37716ac001b79eb21cd443888fa5a"
+    },
+    "candidate/build65/frozen-source-inventory-independent-verification.json": {
+      "bytes": 64426,
+      "sha256": "7c188cd7f5ccccd6bee5d61c02617635e81827f86e69dba8d286b57589a46247"
+    },
+    "candidate/build65/pending-final-candidate.json": {
+      "bytes": 668,
+      "sha256": "24bde39eb58be2a99f49a63c8577504f20de6dba01491dcc754840b93ace24ed"
     },
     "candidate/held-38153414378/build65-windows-actual-artifact-bindings.json": {
       "bytes": 10505,
@@ -252,6 +260,10 @@
     "reviews/independent-editorial-final-review.json": {
       "bytes": 3742,
       "sha256": "78dd11785507ddc7a90770197c0b38ab0da8c132318b5b41ab2fb8ffb137e4b4"
+    },
+    "reviews/independent-editorial-final-source-addendum.json": {
+      "bytes": 4293,
+      "sha256": "82cadd4e74f56733ade41867b9ccef49b9bf2fb71dcdf280bf3c1c6cd4267e39"
     },
     "reviews/independent-editorial-replacement-candidate-addendum.json": {
       "bytes": 5462,

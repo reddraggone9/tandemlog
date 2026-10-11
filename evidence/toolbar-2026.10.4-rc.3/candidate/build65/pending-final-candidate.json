@@ -1,0 +1,11 @@
+{
+  "observed_at_utc": "2026-10-11T16:50:54.732576+00:00",
+  "source_commit": "3c162347105bbd01f55ef09652d29c397d013e01",
+  "candidate_run": 38156985011,
+  "url": "https://github.com/reddraggone9/tandemlog/actions/runs/38156985011",
+  "version": "2026.10.4-rc.3+65",
+  "observed_status": "in_progress",
+  "observed_conclusion": null,
+  "qualification": "Preliminary candidate identity only; all full gates, original artifact/static acceptance, exact installed Android acceptance and publication clearance remain required. No signed APK or release readiness is claimed.",
+  "editorial_notes_sha256": "9a534c754a2d4c6db3ce7909c5b74947b3b93b248649ef86205e5ee63b3b83f4"
+}

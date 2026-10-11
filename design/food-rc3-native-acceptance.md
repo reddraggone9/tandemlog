@@ -7,8 +7,10 @@ The reviewed fixture correction targets the Snackbar action; its actual Linux
 native case passes in25 seconds. A Linux-only55-minute allowance keeps every
 existing gate. Application/native/dependency source is unchanged.
 
-A fresh exact-source full candidate, original archive identities and owner-signed
-APK remain pending. Use the eventual verified original APK without rebuilding.
+Fresh full candidate
+[38156985011](https://github.com/reddraggone9/tandemlog/actions/runs/38156985011)
+uses exact source `3c162347105bbd01f55ef09652d29c397d013e01`.
+Full gates, original archive identities and owner-signed APK remain pending. Use the eventual verified original APK without rebuilding.
 This document does not claim installed Android acceptance.
 [Source evidence](../evidence/toolbar-2026.10.4-rc.3/README.md) retains both failures,
 targeted actual checks and independent review.
