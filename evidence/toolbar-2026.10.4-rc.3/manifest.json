@@ -4,7 +4,7 @@
   "files": {
     "README.md": {
       "bytes": 23163,
-      "sha256": "d0ed2ae951bd3844cbeb4a65af3a89750a38f8f4b0bcbb88158cec7c5b86bd1e"
+      "sha256": "e5372ccfb92dfabc29c9f9e4227556ea6459fbe5715d9f54fb873c7ed51f9eec"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -174,7 +174,7 @@
       "bytes": 614,
       "sha256": "a22507a81ac0b4cb5007c9214866cce14b41774b2844ab00f11ec1297797128c"
     },
-    "logs/build67-automatic-ci-windows-provider-decoded.log": {
+    "logs/build67-automatic-ci-windows-provider-decoded.txt": {
       "bytes": 364282,
       "sha256": "3740fd9302f472ac935f46c496fc902840ed5ac77d8ac51b09ebae81949da147"
     },
