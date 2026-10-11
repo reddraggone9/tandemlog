@@ -1,6 +1,6 @@
 Tasks and Food now share the same centered width on large screens, matching toolbar controls and active-filter dots, with an Undo label on wide screens. Date fields align their labels and values with other inputs.
 
-![Food width before and after matching Tasks](../evidence/toolbar-2026.10.4-rc.3/media/section-width-before-after.png)
+![Food width before and after matching Tasks](https://raw.githubusercontent.com/reddraggone9/tandemlog/f3ac5cbbac7547cfd728f23fea07030391d4f5b8/evidence/toolbar-2026.10.4-rc.3/media/section-width-before-after.png)
 
 Food search finds active and deleted food across all filters, with deleted matches under a sticky Deleted heading. Brand and Location offer suggestions from existing food, multiple-value filters, and bulk editing for selected active containers.
 
