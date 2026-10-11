@@ -1,0 +1,277 @@
+{
+  "checked_at_utc": "2026-10-11T19:35:49.359545+00:00",
+  "verdict": "HOLD_FAILED_WINDOWS_FIXTURE_AND_THREE_LINUX_NATIVE_ASSERTIONS_SIGNING_SKIPPED",
+  "candidate_run": 38165025596,
+  "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "version": "2026.10.4-rc.3+66",
+  "run_conclusion": "failure",
+  "terminal_jobs": [
+    {
+      "id": 114545687661,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T18:43:46Z",
+      "completed_at": "2026-10-11T18:43:54Z"
+    },
+    {
+      "id": 114545717638,
+      "name": "checks / linux",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": "2026-10-11T19:31:51Z"
+    },
+    {
+      "id": 114545717692,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": "2026-10-11T18:49:39Z"
+    },
+    {
+      "id": 114545717716,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": "2026-10-11T18:51:37Z"
+    },
+    {
+      "id": 114555688786,
+      "name": "signed-android",
+      "status": "completed",
+      "conclusion": "skipped",
+      "started_at": "2026-10-11T19:31:52Z",
+      "completed_at": "2026-10-11T19:31:51Z"
+    }
+  ],
+  "failed_steps": [
+    {
+      "job": "checks / linux",
+      "step": {
+        "name": "Run xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 14,
+        "started_at": "2026-10-11T18:51:06Z",
+        "completed_at": "2026-10-11T19:31:47Z"
+      }
+    },
+    {
+      "job": "checks / windows",
+      "step": {
+        "name": "Run python -m unittest discover -s tool -p 'test_*.py'",
+        "status": "completed",
+        "conclusion": "failure",
+        "number": 10,
+        "started_at": "2026-10-11T18:51:31Z",
+        "completed_at": "2026-10-11T18:51:34Z"
+      }
+    }
+  ],
+  "linux_observed_failures": {
+    "checked_at_utc": "2026-10-11T19:35:49.170011+00:00",
+    "verdict": "CONFIRMED_THREE_LINUX_NATIVE_ASSERTION_FAILURES_HOLD",
+    "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+    "candidate_run": 38165025596,
+    "job_id": 114545717638,
+    "native_passed": 155,
+    "native_failed": 3,
+    "failed_cases": [
+      {
+        "name": "section dropdown dark fits and guards drafts without writes",
+        "file": "integration_test/section_navigation_workflow_test.dart",
+        "line": 191,
+        "observed": "Expected exactly one Synthetic navigation task text widget, found0"
+      },
+      {
+        "name": "section dropdown light fits and guards drafts without writes",
+        "file": "integration_test/section_navigation_workflow_test.dart",
+        "line": 191,
+        "observed": "Expected exactly one Synthetic navigation task text widget, found0"
+      },
+      {
+        "name": "native Food flat Retained expiry filters and metadata",
+        "file": "test/food_retained_flat_list_test.dart",
+        "line": 162,
+        "caller": "integration_test/food_add_another_workflow_test.dart:36",
+        "observed": "Expected geometry <=168.5; actual174.8195343017578"
+      }
+    ],
+    "cause_qualification": "Observed assertions and stacks only. Root owns source/runtime diagnosis and any correction; no test-fixture or production-cause classification inferred here.",
+    "log": {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-linux-provider-decoded.txt",
+      "bytes": 608699,
+      "sha256": "d9b13f99dfcbc3dd2cffe79f7a0585dcb875a7bda1a2f288ea18cba43322a148",
+      "representation": "Root fetched official GitHub App provider-decoded UTF8 content once; independent reviewer inspected same retained bytes."
+    },
+    "summary_lines": [
+      "2026-10-11T18:45:48.6801406Z No issues found! (ran in 11.3s)",
+      "2026-10-11T18:50:50.7506546Z \ud83c\udf89 1030 tests passed.",
+      "2026-10-11T18:51:00.8260593Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+      "2026-10-11T18:51:05.6043290Z Ran 107 tests in 4.700s",
+      "2026-10-11T18:51:06.9654761Z Ran 79 tests in 1.191s",
+      "2026-10-11T19:31:47.5529950Z ##[error]155 tests passed, 3 failed."
+    ],
+    "scope": "No local runtime/test execution, source/docs edits or original artifact downloads by reviewer."
+  },
+  "windows_diagnosis": {
+    "checked_at_utc": "2026-10-11T18:55:24.972998+00:00",
+    "verdict": "CONFIRMED_WINDOWS_FIXTURE_CONNECTION_CLEANUP_ERROR_HOLD",
+    "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+    "candidate_run": 38165025596,
+    "job_id": 114545717716,
+    "observed_error": "StartupDiagnostics.test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache failed in TemporaryDirectory cleanup, PermissionError WinError32 on profile/local.sqlite.",
+    "source_analysis": "Frozen test fixture opens SQLite with its transaction context manager; that manager does not close connection. Fixture binding db remains live on TemporaryDirectory exit. Production verify_loaded already uses contextlib.closing for its own connection.",
+    "scope": "Independent read-only source/log review, no local test execution or source changes. Root owns correction and full fresh candidate.",
+    "tool_tests": {
+      "ran": 79,
+      "errors": 1,
+      "skipped": 4
+    },
+    "log": {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-windows-provider-decoded.txt",
+      "bytes": 333262,
+      "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731",
+      "representation": "Root fetched official GitHub App provider-decoded UTF8 content once; independent reviewer inspected same saved bytes, no repeated retrieval/raw-download attestation."
+    },
+    "summary_lines": [
+      "2026-10-11T18:51:16.0171795Z 05:34 +1027 ~2: All tests passed!",
+      "2026-10-11T18:51:27.4161463Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+      "2026-10-11T18:51:31.2430973Z Ran 107 tests in 3.629s",
+      "2026-10-11T18:51:34.3087914Z Ran 79 tests in 2.578s",
+      "2026-10-11T18:51:34.3088050Z FAILED (errors=1, skipped=4)"
+    ],
+    "frozen_test": {
+      "path": "/tmp/food-rc66-final-artifact-review/frozen-test-startup-diagnostics.py.txt",
+      "bytes": 2749,
+      "sha256": "716bd3c1dd6b4f3ff98d24a75ce1d1accb0828335cc23a12706d4e7f2fb37811"
+    },
+    "remaining": "Linux job still running at phase receipt; no release artifact or signed Android acceptance eligibility."
+  },
+  "artifacts_present": [
+    {
+      "id": 11712365355,
+      "name": "windows-unit-tests",
+      "bytes": 58989,
+      "digest": "sha256:e902622dd6b73c66329b6c5f7d872698e6e2c4c858780936979914a247b47457"
+    },
+    {
+      "id": 11711434558,
+      "name": "android",
+      "bytes": 80767940,
+      "digest": "sha256:e808bcf5ff7c70a0d10a8c1f4f377112941cfa487b2354bb1b2b383baa0e184a"
+    }
+  ],
+  "original_artifacts_review": "No original release archive downloaded for failed66; parent directed preservation and fresh reviewed replacement. Android debug is not eligible signed acceptance candidate.",
+  "source_freeze": "Recorded read-only freeze checked 358 application/pipeline/test/packaging files plus124 native/platform files, all82 supplied input entries and146 evidence entries against exact e6e26a Git bytes and then clean checkout. No assertion later mutable checkout remains equal.",
+  "logs": [
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/candidate-provider-decoded-hosted.log",
+      "bytes": 22407,
+      "sha256": "44488c100d8fc58c6cd5e3761480b64c97d9bcd9159ee476216dac5bf911a91c",
+      "BOM": true,
+      "CRLF_count": 0,
+      "summary_lines": []
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/android-debug-provider-decoded-hosted.log",
+      "bytes": 185955,
+      "sha256": "0c8975a469690d2572bb868a7f280f3f0cbb7a7604185b7ad77fdb4bd6de43f3",
+      "BOM": true,
+      "CRLF_count": 0,
+      "summary_lines": []
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-windows-provider-decoded.txt",
+      "bytes": 333262,
+      "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731",
+      "BOM": true,
+      "CRLF_count": 2962,
+      "summary_lines": [
+        "2026-10-11T18:51:16.0171795Z 05:34 +1027 ~2: All tests passed!",
+        "2026-10-11T18:51:27.4161463Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+        "2026-10-11T18:51:31.2430973Z Ran 107 tests in 3.629s",
+        "2026-10-11T18:51:34.3087914Z Ran 79 tests in 2.578s",
+        "2026-10-11T18:51:34.3088050Z FAILED (errors=1, skipped=4)"
+      ]
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-linux-provider-decoded.txt",
+      "bytes": 608699,
+      "sha256": "d9b13f99dfcbc3dd2cffe79f7a0585dcb875a7bda1a2f288ea18cba43322a148",
+      "BOM": true,
+      "CRLF_count": 0,
+      "summary_lines": [
+        "2026-10-11T18:45:48.6801406Z No issues found! (ran in 11.3s)",
+        "2026-10-11T18:50:50.7506546Z \ud83c\udf89 1030 tests passed.",
+        "2026-10-11T18:51:00.8260593Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+        "2026-10-11T18:51:05.6043290Z Ran 107 tests in 4.700s",
+        "2026-10-11T18:51:06.9654761Z Ran 79 tests in 1.191s"
+      ]
+    }
+  ],
+  "representation_qualification": "Official GitHub App provider-decoded UTF8 representations retained without newline/BOM normalization. Root fetched Windows log once; reviewer inspected same original saved bytes. These representation hashes are not independently downloaded raw-log attestations.",
+  "receipts": [
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/frozen-source-inventory-independent-verification.json",
+      "bytes": 86921,
+      "sha256": "cba8b5cd4d5bb6883993d38ae3d39715181df4bf40959d7eb7ae46b9e140009b"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/windows-fixture-failure-independent-diagnosis.json",
+      "bytes": 2084,
+      "sha256": "4c6acbdafaadc80b41db3e50b0493fb1cd04c8eb18860f881291bd5c18fd0ca0"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/windows-failure-phase-independent-hold.json",
+      "bytes": 1941,
+      "sha256": "4367126766a9568c970038f7ed91a904febb1e76eff583df430a2e1174b5dac2"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-windows-check-run-api.json",
+      "bytes": 3074,
+      "sha256": "34cb515dbcf736da046ffaa0823880786c8633695c7ee76869220c78ac9032fe"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-windows-check-annotations-api.json",
+      "bytes": 303,
+      "sha256": "6145ca352c73c04401bb5eb1584ea6f89c2b62333ca00f8d036bf0365111a430"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/final-run-api.json",
+      "bytes": 12634,
+      "sha256": "5188618e68f8962f5d4347a21ab2bfbb2389eeea66260ae0d3b12bb5aa662bb5"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/final-jobs-api.json",
+      "bytes": 17763,
+      "sha256": "8afeb5fd2577a74fc9d57bf62b0d1f6628bb0ccfbf33148b2cfddfa0ecd5ed25"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/final-artifacts-api.json",
+      "bytes": 1403,
+      "sha256": "075dd466c2b605eddda17589906a01e5b0e533e69cd8e44c352fa6c16c4ee414"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-linux-check-run-api.json",
+      "bytes": 3072,
+      "sha256": "b07a4cc6c849bb852d5bb1b1e8d6fe77d535afa0ccfb3bd7c143e1751d2ce381"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/failed-linux-check-annotations-api.json",
+      "bytes": 605,
+      "sha256": "3983b014a0168fe7a49f665311868bfea77d2df788916285bcf872893f259441"
+    },
+    {
+      "path": "/tmp/food-rc66-final-artifact-review/linux-native-failures-independent-observation.json",
+      "bytes": 2282,
+      "sha256": "df7c2ab0655a96c81d56afaf67c6955bb4fcf6365500d56d302eba60fa6457f0"
+    }
+  ],
+  "publication_eligibility": false,
+  "parent_android_qa_handoff": false,
+  "preservation": "All previous source/evidence/originals/log/data/old task files retained; no app/source/docs edits, local native/UI tests, rebuild or deletion by reviewer. Root owns fixture correction and fresh candidate."
+}

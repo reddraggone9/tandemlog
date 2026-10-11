@@ -1,0 +1,57 @@
+{
+  "checked_at_utc": "2026-10-11T18:53:57.620016+00:00",
+  "verdict": "HOLD_WINDOWS_TOOL_TEST_FAILURE_OTHER_GATES_PENDING",
+  "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "candidate_run": 38165025596,
+  "version": "2026.10.4-rc.3+66",
+  "observed_jobs": [
+    {
+      "id": 114545687661,
+      "name": "candidate",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T18:43:46Z",
+      "completed_at": "2026-10-11T18:43:54Z"
+    },
+    {
+      "id": 114545717638,
+      "name": "checks / linux",
+      "status": "in_progress",
+      "conclusion": null,
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": null
+    },
+    {
+      "id": 114545717692,
+      "name": "checks / android",
+      "status": "completed",
+      "conclusion": "success",
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": "2026-10-11T18:49:39Z"
+    },
+    {
+      "id": 114545717716,
+      "name": "checks / windows",
+      "status": "completed",
+      "conclusion": "failure",
+      "started_at": "2026-10-11T18:43:56Z",
+      "completed_at": "2026-10-11T18:51:37Z"
+    }
+  ],
+  "failed_step": [
+    {
+      "name": "Run python -m unittest discover -s tool -p 'test_*.py'",
+      "status": "completed",
+      "conclusion": "failure",
+      "number": 10,
+      "started_at": "2026-10-11T18:51:31Z",
+      "completed_at": "2026-10-11T18:51:34Z"
+    }
+  ],
+  "job_api_snapshot": "20261011T185347Z-jobs-api.json",
+  "windows_log": "Root owns one completed official decoded log retrieval; independent reviewer will inspect same actual retained bytes. Exact cause pending here.",
+  "publication_eligibility": false,
+  "android_debug_release_eligibility": false,
+  "artifacts": "No release originals retrieved; current debug artifact is not signed acceptance candidate.",
+  "preservation": "Earlier originals/source/log/data retained; no rebuild/test runtime/source/docs changes by reviewer."
+}

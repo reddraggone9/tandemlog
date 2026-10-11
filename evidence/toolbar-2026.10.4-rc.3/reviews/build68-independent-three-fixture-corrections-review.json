@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "reviewedUtc": "2026-10-11T19:44:38.164413+00:00",
+  "verdict": "ACCEPTED_BOUNDED_TEST_CORRECTIONS_HOSTED_EXACT_CASE_REMAINS_PENDING",
+  "mustFix": [],
+  "baseCommit": "cda8bffa8195a8fb3442bc61c7f5ae2c257a18d9",
+  "sourceBindings": [
+    {
+      "path": "/tmp/tandemlog-food-date-readability/test/food_retained_flat_list_test.dart",
+      "bytes": 10567,
+      "sha256": "98f460d13497fd775fde9955feacdbc1dd0ea1bd186bba6bae4d5b0d72cf6cf9"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/integration_test/section_navigation_workflow_test.dart",
+      "bytes": 8922,
+      "sha256": "a62237495c5860e4ba97708d4b152e98345c99c6060884efe0337ef2317431fe"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/food/food_page.dart",
+      "bytes": 68360,
+      "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+    },
+    {
+      "path": "/tmp/tandemlog-food-date-readability/lib/main.dart",
+      "bytes": 205522,
+      "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+    }
+  ],
+  "evidenceBindings": [
+    {
+      "path": "/tmp/native-ci-corrections/actual-native-three-red.txt",
+      "bytes": 61155,
+      "sha256": "f24890f680eaa37c81a59f8eeb511604654801c5338967c41f5a513c3d6bcdee"
+    },
+    {
+      "path": "/tmp/native-ci-corrections/actual-native-three-green.txt",
+      "bytes": 59130,
+      "sha256": "1736603206d34488111627670723620dd2e5a236b762175ab47822ca9feb763c"
+    },
+    {
+      "path": "/tmp/native-ci-corrections/actual-native-dark-closure.txt",
+      "bytes": 6002,
+      "sha256": "36c1fe7268d47f2d2ce4fc79eb6e0867a36280adb04d6634cb1ff5ecbd8a0b80"
+    }
+  ],
+  "personallyViewedPixels": [
+    {
+      "path": "/tmp/native-ci-corrections/pixels-green/retained-dark-320-2.0x-flat-retained-geometry-Early.png",
+      "bytes": 57122,
+      "sha256": "2c93aea723d7049c3c590b1159d454666e24fa1a25e0bd424bcdaf860a9e4f14"
+    },
+    {
+      "path": "/tmp/native-ci-corrections/pixels-green/retained-light-320-2.0x-flat-retained-geometry-Early.png",
+      "bytes": 58352,
+      "sha256": "ef7fb4ff78124df9ac04e07ba5affdee6f1582fbb02fb973bee65edcaca87680"
+    }
+  ],
+  "geometryInspection": {
+    "paragraphs": 12,
+    "nonWhitespaceSelections": 344,
+    "missingOrOutOfBoundsNonWhitespaceSelections": [],
+    "bounds": "Unchanged horizontal0.5px tolerance plus added vertical0.5px bounds; every ASCII fixture letter requires a nonempty box. Existing metadata/card horizontal bounds remain unchanged.",
+    "qualification": "Selection boxes describe text ranges, not exact raster ink; pixel inspection complements them. Per-code-unit measurement applies to these fixed ASCII strings, not a universal Unicode/grapheme claim. No hosted failing offset has been observed; trailing line-space explanation is supported by pinned SDK source but not independently established for exact hostedfailure."
+  },
+  "navigationReview": "Added condition waits actual Tasks mode, original task and no AlertDialog after awaited decision-route/editor disposal. Existing Keep editing draft assertions, canonical-byte equality and no-exception remain intact. Does not silently skip a permanently stuck callback.",
+  "observedRuntime": {
+    "red": "1PASS/2FAIL; both navigation failures reproduced locally; Retained passed local font.",
+    "firstCorrected": "2PASS/1FAIL; dark failure at screenshot helper capture before navigation assertions, not labeled overall green. Light navigation and Retained completed.",
+    "darkClosure": "1PASS00:26; actual terminal independently read. Separate runs close the three scoped cases, not a single3/3run."
+  },
+  "pixelAssessment": "Both actual320x1200/200% GTK screenshots show all letters of early long retention reason wrapping completely and readably within card. Lower later rows extend beyond screenshot and are not claimed visible; geometry snapshots cover Early/Middle/Late. Not physicalAndroid evidence.",
+  "primarySource": {
+    "path": "/workspace/toolchains/flutter/packages/flutter/lib/src/painting/text_painter.dart",
+    "bytes": 71171,
+    "sha256": "acae4b190f34d4e13294c80d43b569d860f7d7e7fdfb5f0ff45acf9882bb3918"
+  },
+  "sdkObservation": "TextPainter _TextLayout.width documentation explicitly allows trailing spaces outside horizontal paint bounds. The test no longer calls entire selection range glyph ink; it preserves those ranges as diagnostics and checks all non-space fixture letters instead.",
+  "scope": "Test-only diagnosis/correction, no production mutation/build/test launched by independent reviewer. Pubspec version change is separate release metadata, not part of this assertion review.",
+  "remaining": [
+    "Exact-source hosted aggregate must exercise final diagnostics and existing invariants.",
+    "Any real non-space overflow or visibly clipped actual hosted rendering remains a blocker; no production layout defect demonstrated by local evidence."
+  ]
+}

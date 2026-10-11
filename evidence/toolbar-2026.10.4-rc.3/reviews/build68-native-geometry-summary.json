@@ -1,0 +1,96 @@
+{
+  "qualification": "Actual final corrected local native GTK diagnostic geometry; not a reconstruction of the exact hosted overflow offset. Original hosted whole-range failure is retained. Two corrected cases pass in the combined run, whose third case has an X11 screenshot-tool failure before navigation. The separate same-source dark rerun passes. This is not one three-case all-green run.",
+  "log": {
+    "bytes": 59130,
+    "sha256": "1736603206d34488111627670723620dd2e5a236b762175ab47822ca9feb763c"
+  },
+  "paragraphs": [
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 240.0736083984375,
+      "height": 16.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 135.62892150878906,
+      "height": 16.0,
+      "nonspace_selections": 20,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 240.0736083984375,
+      "height": 16.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 96.0,
+      "nonspace_selections": 20,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 240.0736083984375,
+      "height": 16.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 135.62892150878906,
+      "height": 16.0,
+      "nonspace_selections": 20,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 240.0736083984375,
+      "height": 16.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_selections": 33,
+      "errors": []
+    },
+    {
+      "text": "Alpha reference recipe",
+      "width": 168.0,
+      "height": 96.0,
+      "nonspace_selections": 20,
+      "errors": []
+    },
+    {
+      "text": "Zeta keep for the next household recipe",
+      "width": 168.0,
+      "height": 128.0,
+      "nonspace_selections": 33,
+      "errors": []
+    }
+  ],
+  "total_paragraphs": 12,
+  "total_nonspace_selections": 344,
+  "errors": 0
+}

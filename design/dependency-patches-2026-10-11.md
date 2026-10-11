@@ -213,3 +213,32 @@ checks and the green non-publishing cross-run artifact smoke remain applicable.
 The native folder smoke remains scoped evidence for unchanged URI dispatch and
 Settings availability handling; full updated-source CI validates integration.
 The coordinator retains publication control and final candidate acceptance.
+
+
+## Settled build68 integration
+
+This proposal now integrates main
+`a22742cd5fcf46c381d6e0d43034ca716f726721`, containing frozen build68 source
+`8c6ee23c78232094715b9bf79f9d3be54b3b522a`. The parent-owned SQLite fixture
+cleanup and native section-switch/visible-letter geometry test corrections are
+retained unchanged. There were no merge conflicts and no production-code changes
+in this integration. Build68 and all candidate/release/signing safeguards remain
+main's exact inputs, apart from the already reviewed immutable action pins.
+No candidate run, publication or held AGP/Gradle proposal is modified.
+
+Dependency CI38165875973 on prior head
+`5c2c10ee0446bc402e9bee845d943f83223ff067` completed failure: Android passed;
+Windows had1028 visible unit passes/two skips but failed synthetic SQLite fixture
+cleanup; Linux had155 native passes and the same three assertion failures seen
+on main. Desktop release/startup/installer gates were skipped, not accepted.
+The [terminal receipt](../evidence/dependency-patches-2026-10-11/build66-terminal-verification.json)
+retains exact job IDs, failure excerpts and independent artifact verification.
+Both retained ZIPs passed service digest/CRC checks; the Windows report had zero
+visible unit failures and the Android test-only APK matched its checksum file.
+The original failures remain historical evidence and are not rewritten as green.
+
+The prior dependency audit, action-bundle checks and green cross-run/native folder
+smokes retain their scoped validity: reviewed package bytes, federated native
+locks, FolderActions adapter and smoke fixtures are unchanged. Full exact-head CI
+is now required once for this updated proposal; this does not accept or alter the
+parent's separate release candidate. Keep the temporary smoke branch unmergeable.

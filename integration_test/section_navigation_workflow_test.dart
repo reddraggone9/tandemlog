@@ -188,6 +188,18 @@ void registerSectionNavigationTests() {
           await tester.pumpAndSettle();
           await pixels.tap(tester, find.text('Discard'));
           await tester.pumpAndSettle();
+          // Module selection also awaits disposal of both modal routes. Frames
+          // settling alone does not establish completion of that host callback.
+          await waitForUi(
+            tester,
+            () =>
+                find
+                    .byTooltip('Switch section (current: Tasks)')
+                    .evaluate()
+                    .isNotEmpty &&
+                find.text('Synthetic navigation task').evaluate().isNotEmpty &&
+                find.byType(AlertDialog).evaluate().isEmpty,
+          );
           expect(find.text('Synthetic navigation task'), findsOneWidget);
           await pixels.capture(
             tester,

@@ -1,0 +1,6 @@
+................................................................s..............
+----------------------------------------------------------------------
+Ran 79 tests in 0.291s
+
+OK (skipped=1)
+{"executable_sha256": "0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310", "github_run_id": "123", "native_library_sha256": "7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8", "portable_archive": "tandemlog-windows-x64-unsigned-portable.zip", "portable_sha256": "eb670883a2d280d34f3ecd0aa501fae91dfbf133ebdcda6cba29ad3da0ae51c5", "source_revision": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}

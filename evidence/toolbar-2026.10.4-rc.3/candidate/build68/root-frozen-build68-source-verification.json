@@ -1,0 +1,1955 @@
+{
+  "checked_at_utc": "2026-10-11T19:52:04.898134+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "verified_total_files": 482,
+  "changes_vs67": [
+    "integration_test/section_navigation_workflow_test.dart",
+    "pubspec.yaml",
+    "test/food_retained_flat_list_test.dart"
+  ],
+  "source_and_evidence_closure": {
+    "inputs/source-inputs-build68.json": {
+      "bytes": 14042,
+      "sha256": "1da2b6f08fca671362b894d2535cbce94264b765b9bbc5f6650596dead236b42",
+      "verified_entries": 83
+    },
+    "manifest.json": {
+      "bytes": 33285,
+      "sha256": "1e4a6d46882a3043cb9f7afc2a86aa029e47e3739a9bda6d8451986aaf82e9f4",
+      "verified_entries": 193
+    }
+  },
+  "all_remaining_479_source_files_unchanged": true,
+  "qualification": "Independent root comparison of all482 frozen Git/checkout source files, plus all83 source-input and193 evidence bindings. Build68 changes only two test fixtures and code68. No aggregate/exact-original/runtime success inferred.",
+  "files": {
+    ".gitattributes": {
+      "bytes": 1277,
+      "sha256": "ceedd4181263e914d408ec625fdb8224e76e082c7668be9a07977903ecee98af"
+    },
+    ".github/actions/setup-flutter/action.yml": {
+      "bytes": 530,
+      "sha256": "d0b94d3f1eea9e4cc260eeabe008df39ef2aab9290fd29fb895481dca5896c22"
+    },
+    ".github/actions/setup-text-engine/action.yml": {
+      "bytes": 901,
+      "sha256": "381c945e6249b0892e48c73078374b043ce640e3281770dd94b4b9f71d311426"
+    },
+    ".github/dependabot.yml": {
+      "bytes": 381,
+      "sha256": "9949a643c82ca050bb6484373cf417f84907b3258510d91670f68a80114cd042"
+    },
+    ".github/workflows/android-candidate.yml": {
+      "bytes": 2132,
+      "sha256": "f09709143e1522982d5bb43553f4270e2254967a29e2d26dcf32c209a7486e74"
+    },
+    ".github/workflows/ci.yml": {
+      "bytes": 493,
+      "sha256": "8d73576952f4b9e657be136372c45dcfc0cdc0ffd27588720b3621cd781e1f60"
+    },
+    ".github/workflows/prerelease.yml": {
+      "bytes": 3821,
+      "sha256": "6f140f9e99c286385b71796c959887ad16685d043228971b9b6ae5f334c270f1"
+    },
+    ".github/workflows/stable.yml": {
+      "bytes": 3223,
+      "sha256": "40034bea2b65a5a67a9b17e3264624ab5214a625df10d93927dcc93f5c1300c5"
+    },
+    ".github/workflows/text-merge-spike.yml": {
+      "bytes": 5305,
+      "sha256": "5435a1d0bf34920d3af433a1254b6b91b3d094aad713623d4d6c99d8a2b95b38"
+    },
+    ".github/workflows/validate.yml": {
+      "bytes": 12574,
+      "sha256": "2b56bc385ace15670f6977eda25a1fa688315c20676de47dced1864b37b79931"
+    },
+    "integration_test/bulk_apply_semantics_test.dart": {
+      "bytes": 10284,
+      "sha256": "cacad3ce28e918e50ef373607c359bc972cd0170c15ac4c7776aeb3919a8b345"
+    },
+    "integration_test/bulk_failure_visibility_test.dart": {
+      "bytes": 8434,
+      "sha256": "478fc2cab79fab6492ef5e069cdf79f097ec2137a06c0da71b48feb6c7640636"
+    },
+    "integration_test/checklist_disclosure_layout_test.dart": {
+      "bytes": 12531,
+      "sha256": "da3d97b8ea2c478d231e6af9cbe58eccd54190eff8675a1206777f165f26a292"
+    },
+    "integration_test/checklist_lifecycle_test.dart": {
+      "bytes": 17809,
+      "sha256": "7d523a5d9fd5b8bac83a4f7ec890e75a28abdffd407536b7f8ddf6748e0dd123"
+    },
+    "integration_test/checklist_workflow_test.dart": {
+      "bytes": 12307,
+      "sha256": "c1b22277816c998565e73be6bfed15ee00ed7688eefc9e7b62247d82c91d8f60"
+    },
+    "integration_test/civil_date_picker_workflow_test.dart": {
+      "bytes": 676,
+      "sha256": "2a8ee7d4ec515cafa4614619929a617976f1ab2b5814da8f7ae18e69db2505e5"
+    },
+    "integration_test/completion_actions_test.dart": {
+      "bytes": 12200,
+      "sha256": "e47207c7b5f258ed99221f794318d1fc72de2519e54f79d9fc6252638ab6bc86"
+    },
+    "integration_test/completion_confirmation_progress_test.dart": {
+      "bytes": 9619,
+      "sha256": "360c7d8092059e3d87dea6a5255ccb835b8aa5ec5d79c0b54346428e6090dc8b"
+    },
+    "integration_test/completion_disabled_opacity_workflow_test.dart": {
+      "bytes": 3657,
+      "sha256": "6c41429d30ed7369ffd6b1c014d01e5ab61557c1c0f9767d03f20162a9e9f093"
+    },
+    "integration_test/completion_focus_test.dart": {
+      "bytes": 8749,
+      "sha256": "9768f00536389de6b491772eea48797dd36886144ba64b019b544346d9c030a4"
+    },
+    "integration_test/data_integrity_test.dart": {
+      "bytes": 9705,
+      "sha256": "0e8a668729954deb4a1e7adaa70354822ce9948dd2b0f2bf0bbaa166f5c713b9"
+    },
+    "integration_test/date_time_layout_test.dart": {
+      "bytes": 2946,
+      "sha256": "9d466a2b5d4a7bbf23f2095aec8d8beb54a3a68716b8643eae4fbf1ab76d6264"
+    },
+    "integration_test/date_time_rows_test.dart": {
+      "bytes": 6487,
+      "sha256": "4a77660b8a3585a9b3e1db05ac5d5d9f2fd308d83a50ab9d753d6d5eab84843d"
+    },
+    "integration_test/field_layout_test.dart": {
+      "bytes": 5895,
+      "sha256": "14405440e1460b1095df3354d6f77add9d1fb722476783ac524837676aafa771"
+    },
+    "integration_test/fixtures/task_completion_checkbox_before.dart": {
+      "bytes": 2780,
+      "sha256": "2fa98a074c725e7ce3dcc9862a5faf10b414cefb328157f7f9e36186d2e7d161"
+    },
+    "integration_test/folder_picker_progress_workflow_test.dart": {
+      "bytes": 13157,
+      "sha256": "769e6a57e81f257f71bbdf02a735d8caa86d3b6513208e879619113f2e973ab1"
+    },
+    "integration_test/food_account_workflow_test.dart": {
+      "bytes": 21668,
+      "sha256": "6002245ffe8678d647382da7e17cac9dc5995e82da28a0130f14bf78cfb253b3"
+    },
+    "integration_test/food_add_another_workflow_test.dart": {
+      "bytes": 9834,
+      "sha256": "1152fd2257574c6411ca36d9d1aee76e5fa50baa711a7783381616450f01b5cd"
+    },
+    "integration_test/food_all_status_search_workflow_test.dart": {
+      "bytes": 1774,
+      "sha256": "18145feadefd0feeb40778d9ad28034d8d62ccf5831bb0e119b142344654a140"
+    },
+    "integration_test/food_bulk_details_host_undo_review_test.dart": {
+      "bytes": 412,
+      "sha256": "cffcb1ed84b93642d953bdcf012435a365d2cbf294ccc0111aab0ff28e4ae274"
+    },
+    "integration_test/food_density_workflow_test.dart": {
+      "bytes": 3958,
+      "sha256": "ba040d948ae5f117e12a07b5de1bacecf42b82fa025327fd8e5295fb64e393c7"
+    },
+    "integration_test/food_editor_keyboard_workflow_test.dart": {
+      "bytes": 1636,
+      "sha256": "1d282705dd80934bd5b74da067c4e3b7c2efc579c44bb7177d9ef70986d961e8"
+    },
+    "integration_test/food_expiration_color_workflow_test.dart": {
+      "bytes": 1202,
+      "sha256": "73eb11e044c82c7baaadb67715ff94f51331beaab5cd3026bdadbc65a00a00a5"
+    },
+    "integration_test/food_expiration_deprecation_workflow_test.dart": {
+      "bytes": 1268,
+      "sha256": "8116c52233e80198bee8fbfb18450fd822db9c3c369e3fcf25f4441a8572a543"
+    },
+    "integration_test/food_expiry_guidance_workflow_test.dart": {
+      "bytes": 1386,
+      "sha256": "f69b2f3956c41f930d31c32b157d63a3603f5edf7bf2933b27fd5afadf3ca20d"
+    },
+    "integration_test/food_group_action_geometry_workflow_test.dart": {
+      "bytes": 1269,
+      "sha256": "f7a21bda43dc3286bc2762140ca45e484109e7f2b441a24afbfe3fb4367149de"
+    },
+    "integration_test/food_inspect_accessibility_test.dart": {
+      "bytes": 5954,
+      "sha256": "d7dffa74142429a852719b0cae2ceacec2194461fc7f7edd25d626395213ea53"
+    },
+    "integration_test/food_preview_workflow_test.dart": {
+      "bytes": 6594,
+      "sha256": "32165a7f250a94f693160694efd8faf3a1facf75f94bcf04595cd34ef0f8c490"
+    },
+    "integration_test/food_production_workflow_test.dart": {
+      "bytes": 24227,
+      "sha256": "ecdac29d95e68073c840bf066a2eed7b72b8e89949e65855cd935f1133ceb4e5"
+    },
+    "integration_test/food_refinements_workflow_test.dart": {
+      "bytes": 3265,
+      "sha256": "54a2d8f46bff0f0e1996e5d6c085eeaedb4470dbcb8615745b67bf0221010c56"
+    },
+    "integration_test/food_required_expiration_workflow_test.dart": {
+      "bytes": 341,
+      "sha256": "9322d11e900631e9f80f986ae2f57310962c16bff0e230cf248a4b4b2f55dcfd"
+    },
+    "integration_test/food_stock_toolbar_workflow_test.dart": {
+      "bytes": 1586,
+      "sha256": "a780ac6f289654ab477b63ef5f51a8c90641491caa7af83b141856b4bf0d36b6"
+    },
+    "integration_test/food_undo_stack_workflow_test.dart": {
+      "bytes": 28277,
+      "sha256": "ad5efff9c11e306cf67509af1e2fdd27d6a9ecc58b59ca30f6ad2f49cc6f6b68"
+    },
+    "integration_test/food_view_reachability_workflow_test.dart": {
+      "bytes": 2738,
+      "sha256": "680a648d6933141eed1d0f8e2b8e0647a39caa8c202c41ec1c3bf0e8fad3ec78"
+    },
+    "integration_test/header_search_test.dart": {
+      "bytes": 5809,
+      "sha256": "0742fe29fcfad4d01f2bd353a06ac92edde6e66b67437a273b4ed8ba5a50af10"
+    },
+    "integration_test/header_selection_test.dart": {
+      "bytes": 12487,
+      "sha256": "70caa0518e4be75d3bf0576ab362283919254c931bee6edbf66d1c4fe03d1462"
+    },
+    "integration_test/historical_checklist_recompletion_test.dart": {
+      "bytes": 10377,
+      "sha256": "3eb3dd1213ddc45901eeebe5a47b3bdf47287be255e03707e624284be6659d2d"
+    },
+    "integration_test/inbox_flow_test.dart": {
+      "bytes": 12163,
+      "sha256": "ee07d7fc8e1f6e7986095375421b062649c891a39d5fddab6a937a5c8ea29e85"
+    },
+    "integration_test/inline_checklist_workflow_test.dart": {
+      "bytes": 34732,
+      "sha256": "ad359cdc2fe4fef7cd9e4e7b7fbecb317690f283a3f3ea8018a97d0f67dab936"
+    },
+    "integration_test/inline_checklist_workspace_test.dart": {
+      "bytes": 9552,
+      "sha256": "3e764295d683fca84d3b28bdb931a7ba3d3bcb4bf021a97e359f15e765b0c040"
+    },
+    "integration_test/local_profile_workflow_test.dart": {
+      "bytes": 6824,
+      "sha256": "ce14fdf0f6b23d87f18cb36a8252bab6b4f80156eafb98a542acc426b6101869"
+    },
+    "integration_test/native_text_fixtures.dart": {
+      "bytes": 5007,
+      "sha256": "61d478071446541e0e17c0eb4c364185a5e9e89e9d60f8525e52a97af99d375d"
+    },
+    "integration_test/rc3_affected_acceptance_test.dart": {
+      "bytes": 966,
+      "sha256": "8e47ec679a3906e69c06206200747877a85b14c3d83471f1d5cc6f62f7076fc3"
+    },
+    "integration_test/recurring_text_workflow_test.dart": {
+      "bytes": 7323,
+      "sha256": "55db376553d9fc6772e8dc539bb23f5b1f5197e0d549db0518d3236cc49535de"
+    },
+    "integration_test/release_version_test.dart": {
+      "bytes": 4321,
+      "sha256": "dd1fdac8a192ca69f0523fa6420da04e5027f54674c02966b75d8c407c9af6cd"
+    },
+    "integration_test/save_acknowledgement_test.dart": {
+      "bytes": 12560,
+      "sha256": "1a1953a233617a477e3d760152f0918534348954fa31974fc855c6881c1091d5"
+    },
+    "integration_test/section_navigation_workflow_test.dart": {
+      "bytes": 8922,
+      "sha256": "a62237495c5860e4ba97708d4b152e98345c99c6060884efe0337ef2317431fe"
+    },
+    "integration_test/start_hints_test.dart": {
+      "bytes": 6836,
+      "sha256": "8ee832d15a8608b4dd1c39613eef4fbb60d1d94eb549ceb4adf4eb4ca4f5cbb9"
+    },
+    "integration_test/sticky_task_groups_test.dart": {
+      "bytes": 9510,
+      "sha256": "617e9c5b494b01eccc12d09651eddfcd06c1d59646f66a768a915af6d40962f4"
+    },
+    "integration_test/tag_input_workflow_test.dart": {
+      "bytes": 10675,
+      "sha256": "ea8acf864ebe0e0046f9855da9f3a59aa7039c941ac266c190043fabf4efaf8d"
+    },
+    "integration_test/task_body_hit_test.dart": {
+      "bytes": 8181,
+      "sha256": "438df47f5c3102e6a8e25125f657d7958707b2e5460d544edb7c64749d8ca171"
+    },
+    "integration_test/task_flow_test.dart": {
+      "bytes": 175014,
+      "sha256": "c92e69baec8c4bc4f3e44a9e01705f0838b7511b47352c896a1650396c760793"
+    },
+    "integration_test/task_input_mode_retry_test.dart": {
+      "bytes": 16134,
+      "sha256": "3f7f28283c56c8c81fd714dfe19a8633389f65d03d95e8fd6d635a256e578698"
+    },
+    "integration_test/task_input_mode_workflow_test.dart": {
+      "bytes": 8242,
+      "sha256": "4f2ff6c2d451243a0d4b356aaa3b812942f2b0da0d85c1542486e89522734838"
+    },
+    "integration_test/task_precision_test.dart": {
+      "bytes": 6672,
+      "sha256": "156da66d1ca879800a60a39bc3d2a933ff425619ca72c0530608ba296d76955f"
+    },
+    "integration_test/text_workflow_test.dart": {
+      "bytes": 18610,
+      "sha256": "13c5e8c6ed4fa386067c3237fbb5bda13783cf890e09258b18f4e8051a2710d7"
+    },
+    "integration_test/toolbar_parity_workflow_test.dart": {
+      "bytes": 21355,
+      "sha256": "e38625a930c51c922c6718d74bc95370505f805e759c21db14f4a85936827226"
+    },
+    "lib/application/checklist_completion_command.dart": {
+      "bytes": 1947,
+      "sha256": "ad414c59f00a25d69830fc5b7c8a83d76607bb7101647ab26028926da8e01625"
+    },
+    "lib/application/food_undo_history.dart": {
+      "bytes": 2620,
+      "sha256": "d4c9d076cf9b86388ced25080d7ebee152d9e66cca48f77d2a2976b2a90f223b"
+    },
+    "lib/application/task_clock.dart": {
+      "bytes": 522,
+      "sha256": "19df84a1f03233c35fb93a011a8a965e86eb3b4cf516e96fd9b90beb3dfd019e"
+    },
+    "lib/application/task_text_session.dart": {
+      "bytes": 8316,
+      "sha256": "2a3a07584307b71b471e73914d31efd5ba8eca424a0a925f9d7cf056d9b8efbd"
+    },
+    "lib/application/text_save_command.dart": {
+      "bytes": 4932,
+      "sha256": "6d33ec54c101682c4b8f123ec725ac95592f0785936d6e5a67d66ad999dd26ae"
+    },
+    "lib/application/undo_history.dart": {
+      "bytes": 2315,
+      "sha256": "78dcf6157ce9c0caafcfd219e65eab0564a8338202c630e21ad0a3055b617ff1"
+    },
+    "lib/domain/bulk_task_edit.dart": {
+      "bytes": 3307,
+      "sha256": "5b28c567e9d7c137aa733ced037e1c4dfce6865408177798c75df909b2e80d17"
+    },
+    "lib/domain/checklist.dart": {
+      "bytes": 9428,
+      "sha256": "7017357942c4c6b88ed3d1f65e19f569fe4aa17b07ae9169f4c1f9bd3847e83d"
+    },
+    "lib/domain/event.dart": {
+      "bytes": 27584,
+      "sha256": "0dee5dbc7b2514d8e71059ef1dadeab01e19f8aefbf16f3cf45aa9dec2026401"
+    },
+    "lib/domain/event_chain.dart": {
+      "bytes": 4593,
+      "sha256": "64d8981cece52802434a97a7dda841f34a51386b82eca4e942a4f4f3d810c054"
+    },
+    "lib/domain/event_clock.dart": {
+      "bytes": 1905,
+      "sha256": "4d43107a42b70792e2df2ab092f9e6cd8eeb4d2b32e624aef810c44180d1bb3f"
+    },
+    "lib/domain/historical_completion.dart": {
+      "bytes": 1321,
+      "sha256": "3f2e3f6ae5a6357d9be980ae076cb56e5881ca237d96ceed5403d6b99fd58afe"
+    },
+    "lib/domain/projection.dart": {
+      "bytes": 3615,
+      "sha256": "0c084307ba1fddd4edb34624d1b115a534ed6ac147356b890512678802b33754"
+    },
+    "lib/domain/schedule.dart": {
+      "bytes": 13565,
+      "sha256": "aad2427344feeefc38b661577f5bbcdfe22df16d0f57c36ba3dcfb71b235cd13"
+    },
+    "lib/domain/task_view.dart": {
+      "bytes": 12665,
+      "sha256": "365d1351e48f2aff529c2d6fd576f18fd33ea57eb22c723264b214cb8fca28b9"
+    },
+    "lib/domain/text_actor.dart": {
+      "bytes": 4447,
+      "sha256": "fc7b0c3bdd4b1dae23e1d5dea96f682c6deee10d8c08187431946adcadead9c4"
+    },
+    "lib/domain/text_context.dart": {
+      "bytes": 3672,
+      "sha256": "391a15bc585b3668a2526e4677d912c494a67547d9973ef855bd7f12c38d2994"
+    },
+    "lib/domain/text_inheritance.dart": {
+      "bytes": 2614,
+      "sha256": "a6303a56e269c4b0ad1847e6f933aea50d28c3315c8a50c98c7159c9c385b874"
+    },
+    "lib/domain/timed_view.dart": {
+      "bytes": 1008,
+      "sha256": "281d674e2c94d3c5cd07edb2afb1e4fe23e839c4d6ef7ab8013075dc0b2d53c6"
+    },
+    "lib/domain/undo.dart": {
+      "bytes": 1046,
+      "sha256": "0db909db40b21cb3846d85511054530bfb7925f029f960bf3a82dca70ad671d7"
+    },
+    "lib/domain/wall_time.dart": {
+      "bytes": 3352,
+      "sha256": "65df9512c5378a8ab9456b44aa00d68045f4c9068bb69465cb540113a8bf49a0"
+    },
+    "lib/food/expiration_presentation.dart": {
+      "bytes": 3862,
+      "sha256": "72541cb7dc094ca66481d410f277e729833c0d928477634ea9ea7bee8f95922b"
+    },
+    "lib/food/food_import.dart": {
+      "bytes": 6309,
+      "sha256": "404f56da757b682420d166fac0df28d1c63bde81c4cf0d465ac5d8b09f62b7a4"
+    },
+    "lib/food/food_page.dart": {
+      "bytes": 68360,
+      "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+    },
+    "lib/food/food_record.dart": {
+      "bytes": 6002,
+      "sha256": "64b8e7235292559e9583a7eb5bc6706c822eb9f39e56d7f58badc76f42658206"
+    },
+    "lib/food/food_store.dart": {
+      "bytes": 42349,
+      "sha256": "56fff749e7f6416632c1c72b473541f7c8be972d360441513bab2f472116bfd4"
+    },
+    "lib/food/inventory.dart": {
+      "bytes": 24057,
+      "sha256": "b2726737d7581f51b8516ae0ce4b08412365eb9861564a382c1d6cb7e1abb6f1"
+    },
+    "lib/main.dart": {
+      "bytes": 205522,
+      "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+    },
+    "lib/platform/folder_actions.dart": {
+      "bytes": 871,
+      "sha256": "5e8aad2152e63b41e9e97fbb885cc8dfd41cd8bd34cacf986d49d7a3fcc15451"
+    },
+    "lib/platform/foreground_importer.dart": {
+      "bytes": 2440,
+      "sha256": "a61df034f31273f84e4aa9ac75d2d6e763d252e29da0bc5c79d9e615536b3bbc"
+    },
+    "lib/platform/log_folder.dart": {
+      "bytes": 7534,
+      "sha256": "49b59f9b82d21c1c333c993f3b2f0f80cd6318ea490a286cd8bdba32f5c06899"
+    },
+    "lib/platform/view_time_source.dart": {
+      "bytes": 6609,
+      "sha256": "78ded19e969f16d411e0a77f188c79a92745131f1889766417f0510cad97be54"
+    },
+    "lib/presentation/checklist_disclosure_ink_border.dart": {
+      "bytes": 1695,
+      "sha256": "9e4b922524e7e1a1329f9f5db9c535599622c7b09c9da7f38193dbf7bf05880b"
+    },
+    "lib/presentation/checklist_item_editor.dart": {
+      "bytes": 12937,
+      "sha256": "0bc9ccfe08060f133e4a54e6024cef7254323bd50d0428acb7dc88a1fa42ba46"
+    },
+    "lib/presentation/checklist_panel.dart": {
+      "bytes": 12197,
+      "sha256": "a0b63001cbf9ce3a2e8278f6bf86b555263c6816e8fbd4c763536e06b615ed0a"
+    },
+    "lib/presentation/civil_date_input.dart": {
+      "bytes": 6682,
+      "sha256": "1d058fd32ea065dba84aae2f0e0fe5f435aa1e59a68039f9c817f417970e8a0f"
+    },
+    "lib/presentation/compact_selection_actions.dart": {
+      "bytes": 1017,
+      "sha256": "a9f3ad737eefbb48221aa36f506b2bc4bffc3ddc4953c13d88029857c2da9bbd"
+    },
+    "lib/presentation/failure_message.dart": {
+      "bytes": 262,
+      "sha256": "471d40e4cdd36004286914d3cec30b9b13f71e5fdb0ec1fecc4d2a07d203a303"
+    },
+    "lib/presentation/free_text_autocomplete.dart": {
+      "bytes": 1631,
+      "sha256": "f2b82719e5c9026b1fb9d6c4e0856b3b757ee528cbeb7d4c5511ddcbcbc22ff9"
+    },
+    "lib/presentation/release_version_tile.dart": {
+      "bytes": 1748,
+      "sha256": "8020ef52e48223556e53b45438605e64f6e964e9af7e1103e75882c7e475499c"
+    },
+    "lib/presentation/section_content.dart": {
+      "bytes": 186,
+      "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b"
+    },
+    "lib/presentation/section_menu.dart": {
+      "bytes": 2388,
+      "sha256": "763320d2a86e5e5b15f9114086de5f07f7b8dd57a5c2248f68cc950e2e36cb07"
+    },
+    "lib/presentation/sticky_task_group.dart": {
+      "bytes": 2152,
+      "sha256": "2989c45e98ad3fd5dabd019f6e94410528e9d7b204c625f3aea60f1f41c1db77"
+    },
+    "lib/presentation/tag_filter_picker.dart": {
+      "bytes": 1442,
+      "sha256": "bc4242262a07f90a86aeb24889cef66ba4fd262a3fb1a92696b29e7a8aacba7e"
+    },
+    "lib/presentation/tag_input.dart": {
+      "bytes": 23703,
+      "sha256": "a7caf9da03f018d4e41c436a04d836eb356bcfa1eec5b51d42f9f9d1d4c7da37"
+    },
+    "lib/presentation/task_actions_menu.dart": {
+      "bytes": 1654,
+      "sha256": "1044e513a8b4dee166463e001e28359be0339a158bd11d4cbf6eb85c8f8dc786"
+    },
+    "lib/presentation/task_completion_checkbox.dart": {
+      "bytes": 3011,
+      "sha256": "f56011a8555b4c86cff6fe2a45c1964daaf3c08729202008c61a4ed9448f55b8"
+    },
+    "lib/presentation/task_editor.dart": {
+      "bytes": 41745,
+      "sha256": "46f01e3123f69299ce6a65dc37f47536d24270119e78813434de6a333c0f8120"
+    },
+    "lib/presentation/task_entry_area.dart": {
+      "bytes": 2918,
+      "sha256": "afa2b669425555d53eb281a103db237a66e44ab240fcb3874df8b511b599c2e3"
+    },
+    "lib/presentation/task_metadata.dart": {
+      "bytes": 2544,
+      "sha256": "1368b720bc16a0feb1b3a77c2a80e61385d0b6256a9b3744ef48187ba3a5fcb4"
+    },
+    "lib/presentation/task_toolbar.dart": {
+      "bytes": 8880,
+      "sha256": "4a1052035369038feb75f86cb7a9e4158eb29572be3190b4dc28d3c88411306a"
+    },
+    "lib/presentation/title_line_formatter.dart": {
+      "bytes": 1250,
+      "sha256": "2bee26a9a0b17b4b874b71ff4905b2419db05436037baf0d30d3a4fad34a01cd"
+    },
+    "lib/presentation/toolbar_action.dart": {
+      "bytes": 2871,
+      "sha256": "9f6c6773bfa042aa10575f8660ef83827976dfe5ba2787677c69eebb57e5e837"
+    },
+    "lib/presentation/unavailable_completion.dart": {
+      "bytes": 1513,
+      "sha256": "4026c64c0033e350f2a9899db6f1818eab8f3a7f5635cc81222bb7fe9e3ecb8b"
+    },
+    "lib/presentation/view_clock.dart": {
+      "bytes": 3126,
+      "sha256": "c176b9fe1e42bd0fd443a1b3a7261a7b2c1c9bd4709d4e1541a7e39c13d0b74e"
+    },
+    "lib/storage/checklist_expansion_store.dart": {
+      "bytes": 2237,
+      "sha256": "641a6f8ba4a71bec97f059a9c6e792b377bbe2298509136ec6161431a9c6e250"
+    },
+    "lib/storage/checklist_store.dart": {
+      "bytes": 13798,
+      "sha256": "866be0a1c1b226c32ec9bd9e79880c0390dcd3fcdfd00089e74432ea27ca2896"
+    },
+    "lib/storage/legacy_cache_import.dart": {
+      "bytes": 22298,
+      "sha256": "b80a0f19a4d98ed6f93ceba218a9727ebfc7c3b43615a60e92dbf757eec52a1d"
+    },
+    "lib/storage/legacy_profile_lease.dart": {
+      "bytes": 3128,
+      "sha256": "ded9665978486358e8f87e72a002d1dd40b52754bf6d82dda215752aab2fa6c6"
+    },
+    "lib/storage/legacy_protected_files_import.dart": {
+      "bytes": 18001,
+      "sha256": "5852aff41d8f249673210e5e81821f0c4ba43bfd6f19e5da666377e0953006af"
+    },
+    "lib/storage/local_durability.dart": {
+      "bytes": 10043,
+      "sha256": "fc3f6811d9c956c78f4fa64737fa1f4a9da88ce4590eadef74b4785e16d9d6ef"
+    },
+    "lib/storage/local_profile_database.dart": {
+      "bytes": 12688,
+      "sha256": "36c3b6e1bd98e693deda58a18aac6214599f7ed57372c7cccda61f3482500b04"
+    },
+    "lib/storage/local_profile_migration.dart": {
+      "bytes": 22404,
+      "sha256": "4d123a2432b1269f0e4ea576cd00d91105d142c7496dd033c996a21c7aacebda"
+    },
+    "lib/storage/local_settings.dart": {
+      "bytes": 7325,
+      "sha256": "166e0722aacdd37236b03a306e42f38d06dda683b3edb8cdc2322a20547b8561"
+    },
+    "lib/storage/log_folder.dart": {
+      "bytes": 4520,
+      "sha256": "3652a6dee2867a39453f20683d8661619697b65d1c5d9146c273f7d84913807a"
+    },
+    "lib/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "lib/storage/profile_lock.dart": {
+      "bytes": 1664,
+      "sha256": "8517fa29e81770cb1cca6bb23b9d68c4b32d53147e199fff84c36aae5938fbc6"
+    },
+    "lib/storage/profile_text_intents.dart": {
+      "bytes": 7505,
+      "sha256": "c5dba0698819c26670cfff24326fcd5ed3bf5e9744b7ba8ecadd5aa5ff6e9ea0"
+    },
+    "lib/storage/task_store.dart": {
+      "bytes": 158992,
+      "sha256": "0aa1e3598b8b129764dcfe34511e508f492d2c8360355373cfe9aac410c53cf0"
+    },
+    "lib/storage/task_tables.dart": {
+      "bytes": 1223,
+      "sha256": "9cd94cb2e785100ecae820fa2ffee78454505001e9be89cac1bf8799c69ffa5f"
+    },
+    "lib/storage/text_cache.dart": {
+      "bytes": 19580,
+      "sha256": "b97b02d07a9475f4e4fcaa390a376b2c8cd834af020bfc7f1c2b12192ac976ed"
+    },
+    "lib/storage/writer_guard.dart": {
+      "bytes": 11161,
+      "sha256": "7f926cf24041699178b1194e41b009b4b0de266335b8669d5973c6af12d817d6"
+    },
+    "lib/text/native_text_engine.dart": {
+      "bytes": 29156,
+      "sha256": "1447cd6944e152234fa5850f7534c7fd77bd3ebe39f85adfe8b8b863b5e2ca84"
+    },
+    "lib/text/native_text_licenses.dart": {
+      "bytes": 512,
+      "sha256": "1334cc454f628791e221e9a1e318357d4234b1f525c743c9bbe2d535e0882962"
+    },
+    "lib/text/recurring_text.dart": {
+      "bytes": 27304,
+      "sha256": "55c33f0d2071976e18857ad5aa80a1c9c4023d79c0b74556f7aa4c6eead1b948"
+    },
+    "lib/text/shared_text_history.dart": {
+      "bytes": 13795,
+      "sha256": "bf67c488099cae4d57268695857c8a5d5be65e45b73ec47f50a43a4d3990477c"
+    },
+    "lib/text/text_history_operation.dart": {
+      "bytes": 479,
+      "sha256": "b09ec0c0ab39c084b77adeb1c0ad6e153029771ee2cbcbe2e3b912c1733850cd"
+    },
+    "packaging/README.md": {
+      "bytes": 8401,
+      "sha256": "cc7bb4b6356ce910342e6a7e2b2569b529284497be99aa9959f65dbfc4c81d58"
+    },
+    "packaging/linux/build-flatpak.sh": {
+      "bytes": 2341,
+      "sha256": "bb09613c8d7e25e2b4f44856961a3eadf410e2fed1b0cb201f47d37fb1cbe4bf"
+    },
+    "packaging/linux/com.reddraggone9.tandemlog.desktop": {
+      "bytes": 227,
+      "sha256": "ee98f5cac88bf43f2637e23948b944bbf9d7d21a5f5d6c12fa5aa9a1a298c7ab"
+    },
+    "packaging/linux/com.reddraggone9.tandemlog.metainfo.xml": {
+      "bytes": 1146,
+      "sha256": "0c960321e54d99e84fda9d819b19e5e4a050bd0b02d47fb9dc10da91f2280069"
+    },
+    "packaging/linux/com.reddraggone9.tandemlog.svg": {
+      "bytes": 245,
+      "sha256": "eb70e3d64e7a401396d5d324bc2e971d66b505bf6670decac719f745dc9f1070"
+    },
+    "packaging/linux/install-smoke.sh": {
+      "bytes": 4549,
+      "sha256": "8e3a69db3316f32d8499f2c683da91f94643cfaabbdc0f021dd69e9481a83de2"
+    },
+    "packaging/linux/prepare_appstream_tools.py": {
+      "bytes": 6887,
+      "sha256": "105fdc78aaa88783fef06458e4c471250f2c8a7173c30883c7dce27742cb3052"
+    },
+    "packaging/linux/tandemlog": {
+      "bytes": 281,
+      "sha256": "e4cd23b50a4b11439ab35865a691854b396a5d7ce93539aea5df455cd0a3df26"
+    },
+    "packaging/linux/verify_flatpak.py": {
+      "bytes": 4040,
+      "sha256": "428b03056e70a301077dec082e0130f7836bb97261c33364f1b5167f30f01362"
+    },
+    "packaging/smoke.py": {
+      "bytes": 13931,
+      "sha256": "48d784734f6261509af9fdc9d36bb0bd1938e43092747d8e6fe85cb39991e9ec"
+    },
+    "packaging/windows/build-and-smoke.ps1": {
+      "bytes": 4324,
+      "sha256": "b0442ee1541b30e67180343c73a73c19870c757f02724c065bbc18b13c1bb451"
+    },
+    "packaging/windows/package_portable.py": {
+      "bytes": 2687,
+      "sha256": "8e4251b400c92d40394a0eae89e0d82f78962190bcf6c29255f6cff6a1e8a137"
+    },
+    "packaging/windows/tandemlog.iss": {
+      "bytes": 2834,
+      "sha256": "c556931b1de31c549509c9b4853fabe7dba0c86f146fbc84b8000f0bbb39d7b0"
+    },
+    "pubspec.lock": {
+      "bytes": 19088,
+      "sha256": "15c472203a380705001c26a759d0e47c255ad0ebfb86d8cec80f4560a28852c8"
+    },
+    "pubspec.yaml": {
+      "bytes": 590,
+      "sha256": "961e35852d821a0a5dacdfa7c2246c48be78cab77b9ba7576e33588a763e8d7d"
+    },
+    "test/android_log_folder_test.dart": {
+      "bytes": 20897,
+      "sha256": "8a7b7bc517a8e280812297c7f6576427dc0559ab11c9bd7ff2289ab83ff91203"
+    },
+    "test/android_recovery_harness_test.dart": {
+      "bytes": 1758,
+      "sha256": "15217dd3a99c933dc4a591ed49ae51d90e5846f34cc6fa7950e5ed67767eec42"
+    },
+    "test/batch_storage_test.dart": {
+      "bytes": 12937,
+      "sha256": "89ffdcf03368fbb852242cb33e45455b2841702a00deb2510c39cb8c717e68c1"
+    },
+    "test/bulk_apply_semantics_test.dart": {
+      "bytes": 8017,
+      "sha256": "3378add7ea6cdafb914ff905f777cff4d2ece39faa94e3f319c3b527f753d0d5"
+    },
+    "test/bulk_failure_visibility_test.dart": {
+      "bytes": 7849,
+      "sha256": "140cb5ce2cb430ac4b5456f9ac04749f91e3862ba5c0c22ce9c5984fd62d47ee"
+    },
+    "test/checklist_architecture_gate_test.dart": {
+      "bytes": 9162,
+      "sha256": "2f861101bca239d626b2612da27ef94e33a1aa68b66353a7adfc6b484acad180"
+    },
+    "test/checklist_baseline_selection_test.dart": {
+      "bytes": 7235,
+      "sha256": "f7574f98ce5f82f95950406647f6f9d9cfdd6fccce8c8c5d1a2fe3cfe394bcf1"
+    },
+    "test/checklist_completion_command_test.dart": {
+      "bytes": 15281,
+      "sha256": "38f1cae972fbcbb46c2f48379bbc34fae24057336ce84f2dc026f4723dd9b70b"
+    },
+    "test/checklist_delivery_test.dart": {
+      "bytes": 23824,
+      "sha256": "5ea7786b8c3b654565086af79d4d549787fa01a675abfe22cf88366ab996c47b"
+    },
+    "test/checklist_expansion_store_test.dart": {
+      "bytes": 2672,
+      "sha256": "89f6100d69910fdf947718d51f6cad8053e18f5d105cd533a2e8135fba700837"
+    },
+    "test/checklist_item_native_editor_test.dart": {
+      "bytes": 9467,
+      "sha256": "1e10bbd0b87ebb98102244a49b994a394679527c9b54330de7098ee583098ee7"
+    },
+    "test/checklist_presentation_test.dart": {
+      "bytes": 33817,
+      "sha256": "22213659fb0cdde5f9d8e5a0d8c5a23086f7801d6ea8b2fc8691e455dba1e75c"
+    },
+    "test/checklist_security_review_test.dart": {
+      "bytes": 5624,
+      "sha256": "47f6ca8e41263c53143902b4a36fbc3febcca84646ed84f52699f2243ad3847a"
+    },
+    "test/checklist_storage_test.dart": {
+      "bytes": 20463,
+      "sha256": "3314b157ef75dcd258f0287d03ecece54c7435222d5e25eb07365aa989277957"
+    },
+    "test/checklist_suppressed_capture_test.dart": {
+      "bytes": 3857,
+      "sha256": "d412835ff75b0ec46e8f8370c94871c554ff2f7d508cb25abb5f10018699004b"
+    },
+    "test/checklist_suppressed_item_capture_test.dart": {
+      "bytes": 3857,
+      "sha256": "51526467e53c5f0acb06b4d23b99a91b8f62f99723f7184ca1bb097912127906"
+    },
+    "test/civil_date_input_test.dart": {
+      "bytes": 6213,
+      "sha256": "eee77ed1931978dc00409eea0c692cd816eb307e9406aeaf7cfd3a090bd24894"
+    },
+    "test/civil_date_picker_layout_test.dart": {
+      "bytes": 12863,
+      "sha256": "91aff62741d02423b042a0ebf4644a3a16eaef4ddd870088f6d49bdc61321a6c"
+    },
+    "test/closed_runtime_actor_test.dart": {
+      "bytes": 7045,
+      "sha256": "0b71fe069a5290f880d73dc5b6d21739299590d5beee013c57d0676f8118c136"
+    },
+    "test/command_acknowledgement_test.dart": {
+      "bytes": 9618,
+      "sha256": "dfac13b36774b1ba71e7a2b293a20dbcc44a2f9b259bedcd9bdc897f1b91c1b3"
+    },
+    "test/compact_selection_actions_test.dart": {
+      "bytes": 1757,
+      "sha256": "513f860984a7d7980e4663b4bed93c245feb35a772b6024b733fcd29e2bd33f6"
+    },
+    "test/date_input_alignment_workflow_test.dart": {
+      "bytes": 3608,
+      "sha256": "6a84bf04222a6cad0b00bbf298dfd8901eaaacdc445874ec1c4940cb052ca579"
+    },
+    "test/date_time_layout_test.dart": {
+      "bytes": 9566,
+      "sha256": "04447a6717c90c865164abb2637eb3a136cc9a51ad12a540196ac92228893fa7"
+    },
+    "test/domain_test.dart": {
+      "bytes": 6450,
+      "sha256": "9969c34ff2560ab84c4a4cc342c033013510896f29b31388537cef9faf3df625"
+    },
+    "test/event_chain_test.dart": {
+      "bytes": 10425,
+      "sha256": "cb6ad0f9b707abe2c326b0c6d50b23ab892afd6f69fb104d92c085ac68d5edf1"
+    },
+    "test/event_clock_test.dart": {
+      "bytes": 2488,
+      "sha256": "e8521c570c48ad7ae1da97466780e817ad9537817e227c0debf99d410d8a4f40"
+    },
+    "test/fixtures/event_chain_v3.jsonl": {
+      "bytes": 995,
+      "sha256": "3d07e0f95329f77fed3320c241bb6021f7f49c50c2a2dd5cfbfcc343d97431a5"
+    },
+    "test/fixtures/food-import/expected-v1-full-default.json": {
+      "bytes": 982,
+      "sha256": "4056ddb7ccbb0648c2bc5c51aa7429b20d1c9c460105dbd42e010edf43f0f143"
+    },
+    "test/fixtures/food-import/expected-v1.json": {
+      "bytes": 901,
+      "sha256": "22cbb31b33bf3fc97944b09c9c556a7bd1d2f12a4905965e19ac9d5112c4470e"
+    },
+    "test/fixtures/food-import/plan-v1-full-default.json": {
+      "bytes": 713,
+      "sha256": "102096a7f994fa846931a411e7c7477bcec89be9f6b4cca40462e667b681b501"
+    },
+    "test/fixtures/food-import/plan-v1.json": {
+      "bytes": 698,
+      "sha256": "ef11751bf7c53a89951acbf8d85faaeca51fda0d68566c0c5d2cf96935998047"
+    },
+    "test/fixtures/food-undo/mixed-v1-v2.foodlog": {
+      "bytes": 1174,
+      "sha256": "e866b4f013010ebff810d7cce7d2ffa2c756b5c6d94444573574d3a0afcf32fe"
+    },
+    "test/fixtures/food-undo/released-build60/README.md": {
+      "bytes": 530,
+      "sha256": "de992c16065ec8ff7bf496faac5288082795f4857bc0042271198203b34df873"
+    },
+    "test/fixtures/food-undo/released-build60/domain/event.dart": {
+      "bytes": 46,
+      "sha256": "f889ddac0df435b3e37cea01d1d30549bb3595f9a305ca141bdf5c813fff9788"
+    },
+    "test/fixtures/food-undo/released-build60/domain/event_chain.dart": {
+      "bytes": 52,
+      "sha256": "640e7c151d51d47bb53479ca8e7607de4213445c895ac98cc4d3b0222d23795e"
+    },
+    "test/fixtures/food-undo/released-build60/food/food_import.dart": {
+      "bytes": 6286,
+      "sha256": "336858b0098f63733b50d5cf112cddd6c44968e2266702b20b932de9a54c0305"
+    },
+    "test/fixtures/food-undo/released-build60/food/food_record.dart": {
+      "bytes": 5623,
+      "sha256": "c9deb624bd2f17dbd50bebfe1884ec14e010915c5d4a9dc6e8b6a78261257cf7"
+    },
+    "test/fixtures/food-undo/released-build60/food/food_store.dart": {
+      "bytes": 39856,
+      "sha256": "beb13bdee7ddf41307cc8ecf2698f8fb2991633bc908b57dac8cb601e0426d81"
+    },
+    "test/fixtures/food-undo/released-build60/food/inventory.dart": {
+      "bytes": 20285,
+      "sha256": "f3fa779d5470bdd43fb287db49cb1a79a93e75ea022a2c491cfac740cddbed69"
+    },
+    "test/fixtures/food-undo/released-build60/provenance.json": {
+      "bytes": 1125,
+      "sha256": "c12d3b896371cda21ca1d0874a82926245904c86b8ba67e40e2dee6b039bc389"
+    },
+    "test/fixtures/food-undo/released-build60/storage/local_profile_database.dart": {
+      "bytes": 64,
+      "sha256": "5e64fcacfbb431c045c2e6ced2235791c999001737a5a3fd7f5165feb02867b7"
+    },
+    "test/fixtures/food-undo/released-build60/storage/local_settings.dart": {
+      "bytes": 56,
+      "sha256": "3a5803a1897abd4eaf11eb23dcee866a98800a8865e6973f37aa2c6ccd0223fe"
+    },
+    "test/fixtures/food-undo/released-build60/storage/log_folder.dart": {
+      "bytes": 52,
+      "sha256": "2e91e7d0018b2cb43183eea4f54aaa1ec09b2db9aa117310cfa62da3b05a9d24"
+    },
+    "test/fixtures/food-undo/released-build60/storage/profile_food_intents.dart": {
+      "bytes": 4773,
+      "sha256": "2a40141cd131704556f87af2a0e9c10cd540358f686476833dea7cd8fe7680b1"
+    },
+    "test/fixtures/food-undo/released-build60/storage/writer_guard.dart": {
+      "bytes": 54,
+      "sha256": "bd24f2ee99cd74843b121d4f193ae5bbcf5e7872665cebaee8109e76097f6175"
+    },
+    "test/fixtures/recurring_operation_undone_v2.jsonl": {
+      "bytes": 1338,
+      "sha256": "f942f2142ac06ae8c9061535223b00574b8fc2dabc326448f8a435aa2dd70bf6"
+    },
+    "test/fixtures/stable-v3-2026.10.0/22222222-2222-4222-8222-222222222222.jsonl": {
+      "bytes": 10057,
+      "sha256": "288c5695f760dc2abc4b4815c42b80bef3052b4f769086c21b3c2b66eebdbd5e"
+    },
+    "test/fixtures/stable-v3-2026.10.0/33333333-3333-4333-8333-333333333333.jsonl": {
+      "bytes": 828,
+      "sha256": "a358e34769fc7d58a909dba4e7ff12d9285e623e95198f2229732c5a4d248dde"
+    },
+    "test/fixtures/stable-v3-2026.10.0/README.md": {
+      "bytes": 1444,
+      "sha256": "ca81165c474bf7d81800484e138b546dbf45b1ef4610302f799b9261e97db7db"
+    },
+    "test/fixtures/stable-v3-2026.10.0/expected-rows.json": {
+      "bytes": 4844,
+      "sha256": "bfd2eb917d586a56ade7b66a13ad6052561c1457be22f0cfb100a77dc0b2c38b"
+    },
+    "test/fixtures/stable-v3-2026.10.0/fixture-metadata.json": {
+      "bytes": 362,
+      "sha256": "f8fb504c16aef3bd7af5365102fe3c622f4225169225040e3b5d9bd7283f7539"
+    },
+    "test/fixtures/stable-v3-2026.10.0/tandemlog-space.json": {
+      "bytes": 52,
+      "sha256": "e2bbcbc4e7ea85b2a4b10e727dd762615e1de721ae03c9b89b5a6a81cd48e420"
+    },
+    "test/food_add_another_test.dart": {
+      "bytes": 7370,
+      "sha256": "e01626f6f05a87ab43f37615eaef54832def046af289f2d3c43fc29617eb7f01"
+    },
+    "test/food_all_status_search_workflow_test.dart": {
+      "bytes": 12817,
+      "sha256": "68226418928028790c9077c9a50ce99d6628641ce8f988785c2f0235fe6df463"
+    },
+    "test/food_bulk_details_undo_review_test.dart": {
+      "bytes": 21532,
+      "sha256": "e0f7218cd662ffdddea8500961d32e8e2609879addf6246ac8ecad7525b67f87"
+    },
+    "test/food_bulk_details_workflow_test.dart": {
+      "bytes": 8440,
+      "sha256": "0c79acf380e05e0c21200f1932969d3c3bbb16f04e7f618f68d0896d21fca37e"
+    },
+    "test/food_collapsed_inspect_guard_test.dart": {
+      "bytes": 4999,
+      "sha256": "a97e307365de421addb4ac9e00ec500486da0a706f456d2710202ba04f43ca1e"
+    },
+    "test/food_combined_stock_review_test.dart": {
+      "bytes": 5607,
+      "sha256": "d8c4605d0ad53d2bd3bcac808962538110eb8e50c3927f544908d994313c295e"
+    },
+    "test/food_context_menu_test.dart": {
+      "bytes": 6019,
+      "sha256": "933b90a9caf4d1ea9b9466b00d5bab441796dca943965af8e0b08485a0dba9a6"
+    },
+    "test/food_durable_editor_test.dart": {
+      "bytes": 6086,
+      "sha256": "754aa8bc0cf9c23613e5119d92edcb5bddb2a783bd4b34cb9600ff57c34f78ce"
+    },
+    "test/food_editor_keyboard_layout_test.dart": {
+      "bytes": 11984,
+      "sha256": "5ae57348ab770a0c3e04d55cf60b8407e0886fcd20cd503c89b68bc1d71782f1"
+    },
+    "test/food_expiration_color_workflow_test.dart": {
+      "bytes": 5658,
+      "sha256": "28a177159b50db575e47b06beaab3fc84b00c1c94cb4b5d5ebc8ff4114e6fd05"
+    },
+    "test/food_expiration_deprecation_test.dart": {
+      "bytes": 9183,
+      "sha256": "5b68c4ece75a02618623e998754a2685c935e03d60eda09c343df73a1d802c2c"
+    },
+    "test/food_expiration_observed_group_review_test.dart": {
+      "bytes": 5574,
+      "sha256": "9b4a9abd00535ef65e79cb37caec8bc4fa69ceb01e37c643e6e4d3056613aa08"
+    },
+    "test/food_expiration_presentation_test.dart": {
+      "bytes": 7958,
+      "sha256": "ed6631893cb34943619f2f1e53c7da1c8ac45a55a80ea1f0c2f7cce5aec767e7"
+    },
+    "test/food_expiry_guidance_test.dart": {
+      "bytes": 9745,
+      "sha256": "43bf5d2e8cf463cabf5548c8af940752469433ecf462445ee8f46b4e9bff7efc"
+    },
+    "test/food_field_filter_workflow_test.dart": {
+      "bytes": 7210,
+      "sha256": "f1898a94d6933b5c6f5416f03dbb806379fab87d448080cac799732df39fcde3"
+    },
+    "test/food_filter_route_ownership_test.dart": {
+      "bytes": 3389,
+      "sha256": "e5a8ae048d7ef33bb919a9a4a587c0cfc53ad8aec3eed283158cc556798ec4f9"
+    },
+    "test/food_full_default_import_vector_test.dart": {
+      "bytes": 5310,
+      "sha256": "e51c4803c27ceca143d39a5cdc567ce017f2bc0167da0fc1ccd606d29b3f5c6e"
+    },
+    "test/food_full_default_test.dart": {
+      "bytes": 2114,
+      "sha256": "7034278a0015c123a6dcd091b932908d0e1c06f90be24b1cf1d02fdc1807c0ab"
+    },
+    "test/food_group_action_geometry_test.dart": {
+      "bytes": 8087,
+      "sha256": "8c51207afc242856b643d544d5750fe6736086be7f33379d0855240ea3a248a1"
+    },
+    "test/food_import_contract_vector_test.dart": {
+      "bytes": 741,
+      "sha256": "51a833324bbee63a47202a8f967b34b1db4608c762e54508a6819c4a9f4458d4"
+    },
+    "test/food_import_test.dart": {
+      "bytes": 21497,
+      "sha256": "2de7ea8267709e2b23ff4c489d8d19359244645f04216442d9f5bef253f502f1"
+    },
+    "test/food_intents_test.dart": {
+      "bytes": 4105,
+      "sha256": "cc540db665288d84b5f2d8a3c1559c2ec66f78b9152faf99d93e3936f62bb3ac"
+    },
+    "test/food_inventory_test.dart": {
+      "bytes": 17745,
+      "sha256": "7aae02586aa01a113479e8f5053118b1ad18aafceff5bd1acd778548e32eb556"
+    },
+    "test/food_operation_undo_test.dart": {
+      "bytes": 11496,
+      "sha256": "2adeb5526b3983502c2352d41a68e80650caab8352a90750a4e7523dea377564"
+    },
+    "test/food_preview_test.dart": {
+      "bytes": 5105,
+      "sha256": "1f8ba465f42596e59d57ff5730866f718f063cc6beb9759226fa1f4ddcd8ffcf"
+    },
+    "test/food_profile_upgrade_test.dart": {
+      "bytes": 6228,
+      "sha256": "037a5bd153f8a69d7c9a62ee2c1a8e2540355057b54809419e940d53f06fa523"
+    },
+    "test/food_record_test.dart": {
+      "bytes": 5661,
+      "sha256": "4dd5268d24f5c8c76bc72db066a981a18bade99e5d1599a5be37ef0f38856f8d"
+    },
+    "test/food_replay_budget_test.dart": {
+      "bytes": 3818,
+      "sha256": "93014c6510d5a34c6a697aedcb8571db31f1c4af6236b9d154f5ebf33b6686e0"
+    },
+    "test/food_required_expiration_test.dart": {
+      "bytes": 8640,
+      "sha256": "5e749cc207e5f88b428a5cee938258498a34f8f9b31ac43406d8b5898cca6657"
+    },
+    "test/food_restore_batch_callback_test.dart": {
+      "bytes": 4408,
+      "sha256": "9f3eea2419e475166fa8dc71715277e48263739bc50726e3661cefe51127a78d"
+    },
+    "test/food_retained_flat_list_test.dart": {
+      "bytes": 10567,
+      "sha256": "98f460d13497fd775fde9955feacdbc1dd0ea1bd186bba6bae4d5b0d72cf6cf9"
+    },
+    "test/food_retention_draft_test.dart": {
+      "bytes": 1879,
+      "sha256": "f8b51f79f76c216cac04f4818f97340d8259fd415ac23cde1172881f0b18e9b1"
+    },
+    "test/food_review_regression_test.dart": {
+      "bytes": 5767,
+      "sha256": "bd5d46ff21f06c39429004f9eacd93ee3866171e67e2e7802ce4917711961d99"
+    },
+    "test/food_section_width_test.dart": {
+      "bytes": 3487,
+      "sha256": "2b04e16c7954e8e0335f53bb560edfd3b173ce31ef610511a4020d9bee357a62"
+    },
+    "test/food_stock_toolbar_workflow_test.dart": {
+      "bytes": 9347,
+      "sha256": "8941fbdd3ad81007692e62e5c7780642bbc8f237f89b15ff1968f4a8fd25440d"
+    },
+    "test/food_store_test.dart": {
+      "bytes": 14695,
+      "sha256": "3b38044bbbfb99d39bbcf53833c9bc10f10116b6918a158f2ce079348d786cb2"
+    },
+    "test/food_store_undo_test.dart": {
+      "bytes": 17619,
+      "sha256": "da4356a67df0841cb13d25e96ec8b2e9f9e146bde18517b982fc8f48ba725fbb"
+    },
+    "test/food_undo_history_test.dart": {
+      "bytes": 4774,
+      "sha256": "931e7987198c18096b8e07110cfa783329a9a21bae3f9645bcc079588b5c1fa1"
+    },
+    "test/food_undo_reader_compatibility_test.dart": {
+      "bytes": 6133,
+      "sha256": "b70754d3bedfe0e03ce338bb6a0a4ddb5650777458b7fcc99cb5dc2d775e11a6"
+    },
+    "test/food_value_autocomplete_workflow_test.dart": {
+      "bytes": 4998,
+      "sha256": "ce6e41ad5cacba2dd915c49215dfee437ec4a421488358b25c6718b4d1ee70a5"
+    },
+    "test/food_view_reachability_test.dart": {
+      "bytes": 14729,
+      "sha256": "e378f78a16d769bea8286ad91b5ca00c1d19f395814f988980db0ef898dcf5a6"
+    },
+    "test/foreground_importer_test.dart": {
+      "bytes": 3360,
+      "sha256": "d961f8b70bf38242dcc2740e50b107552975f0b942ae9616c70babae19088681"
+    },
+    "test/historical_completion_event_test.dart": {
+      "bytes": 3552,
+      "sha256": "802e5ad95e02d14228d62dfdf5e4da6bdc0cb6fc781c61bfd45b210aeb972f95"
+    },
+    "test/historical_delivery_test.dart": {
+      "bytes": 9726,
+      "sha256": "5f274f3eed1901a9dab81e6770ea10d7b22ae921927a66c57a36475da4e5ad33"
+    },
+    "test/historical_recompletion_test.dart": {
+      "bytes": 10934,
+      "sha256": "7379ca457d347fa38db3e70e62e08cfdf87d2079db874a4806a31e5b940f7cb2"
+    },
+    "test/inbox_test.dart": {
+      "bytes": 4043,
+      "sha256": "7fc929d6ce48d26d30fc3139da00f37f08de062574eced5c6995e409c6413ba0"
+    },
+    "test/incremental_history_test.dart": {
+      "bytes": 33714,
+      "sha256": "2a83b0d0462500e44361d6ddf7a1a6f2a78c3a1b4819f1448534b617c80d0d60"
+    },
+    "test/initial_task_rank_test.dart": {
+      "bytes": 20004,
+      "sha256": "d440031ddad4338af572b433b95238698c1eda14c5507d58db0292910ae6963b"
+    },
+    "test/legacy_cache_import_test.dart": {
+      "bytes": 9138,
+      "sha256": "b21ee1b19094bebd66a5e89808e5536ec13d237c6cf2e6cf6e2e4a02b60dbcb2"
+    },
+    "test/legacy_protected_files_import_test.dart": {
+      "bytes": 9687,
+      "sha256": "2688885a8bd3171f183591371596380a080494d9fd5a20b783fd2e848e138277"
+    },
+    "test/local_durability_test.dart": {
+      "bytes": 15290,
+      "sha256": "292e262173928cd290d198ab15b04c9763ff4cfb0a948aab04b925f778644d1d"
+    },
+    "test/local_profile_database_test.dart": {
+      "bytes": 8390,
+      "sha256": "d4e16840e19b86fa2c013f75a0b016cea27e92ec1523d8832f6cb4908d0c0e5e"
+    },
+    "test/local_profile_migration_test.dart": {
+      "bytes": 18544,
+      "sha256": "85f25ca6441243f49d19562fe2fae22a454206885a89d4ffcdea4982aa31c428"
+    },
+    "test/local_settings_test.dart": {
+      "bytes": 4290,
+      "sha256": "815361065438c895c49fb45d3119772cf3763344e081cace75957f65a087cea8"
+    },
+    "test/native_checklist_recompletion_test.dart": {
+      "bytes": 12111,
+      "sha256": "8a17843c22d014bce5d08c6f46e9efecfbad35b45cf6d492a7bca6d5cf124443"
+    },
+    "test/native_text_engine_test.dart": {
+      "bytes": 13821,
+      "sha256": "5aadbe880704f0aedd44ad86a043e6919dbabeeb5c69f380e5c7f44b7a8cd43d"
+    },
+    "test/new_workspace_text_initialization_test.dart": {
+      "bytes": 11511,
+      "sha256": "1d181edfc4a90d9bf3c887022bc54eba4d0beeb5be999020d6c2b44bf2e7d9ba"
+    },
+    "test/order_projection_test.dart": {
+      "bytes": 980,
+      "sha256": "5b30f3b9f13c4490f94fdbcee5d88c3c5fe2374ac309b1703a4e06f261aeb657"
+    },
+    "test/profile_lock_test.dart": {
+      "bytes": 3234,
+      "sha256": "9df7894637f6a971c7d057ddc2156d9b92bd181a9335374be8ee7c2b4338f510"
+    },
+    "test/profile_safety_store_test.dart": {
+      "bytes": 10657,
+      "sha256": "66af7e1d83ff34618cf257d82d7ea734a1cc66f5ff9822a6cab38bdb2e99621e"
+    },
+    "test/profile_task_store_test.dart": {
+      "bytes": 14230,
+      "sha256": "73a4bc04c5bfeec069164d28e489d4e056df0d38e793914c68eedd86d0eb4890"
+    },
+    "test/recurring_completion_undo_test.dart": {
+      "bytes": 19087,
+      "sha256": "ccfa5543bbbd84cf75efeb445c3da8e05f6f40dbca776031be77e7f8a78e7184"
+    },
+    "test/recurring_store_test.dart": {
+      "bytes": 9830,
+      "sha256": "981daa8bacf53b46d31a7221fb61581913c92353b250ae414884f9a3d3b8801a"
+    },
+    "test/recurring_text_test.dart": {
+      "bytes": 27343,
+      "sha256": "2356b82ef1023a6e46de26b39788d303b41b7d15b7618f98cf8c4abf3c7420a7"
+    },
+    "test/release_version_tile_test.dart": {
+      "bytes": 3148,
+      "sha256": "d314000a1865144bc1f091f16302beafea0cd11065935bb96461d022e7692efc"
+    },
+    "test/schedule_test.dart": {
+      "bytes": 33057,
+      "sha256": "22a4ff38b07cb2a970390bd58a7257b528a01f1b4fda220ba14d3f9491db8861"
+    },
+    "test/section_menu_search_geometry_test.dart": {
+      "bytes": 6515,
+      "sha256": "b8795660d19857fa83257036be0b4999631e5d59d20391750f9f2ce2dcbfafe4"
+    },
+    "test/section_menu_test.dart": {
+      "bytes": 4773,
+      "sha256": "3dd2e6f0d89830dc6b1d604ce2ecda53a3b61f44507ce33f9b23acb0b20bf8d5"
+    },
+    "test/shared_tag_semantics_test.dart": {
+      "bytes": 12136,
+      "sha256": "3f95bced2e55200192206b3ae5431710fc4bbe92bf4484b99584a6ec94345233"
+    },
+    "test/shared_text_history_test.dart": {
+      "bytes": 12561,
+      "sha256": "d1e38936dc4d66080de4101694b9614efae891b6d83a686d0913378ebdc9360d"
+    },
+    "test/shared_text_storage_test.dart": {
+      "bytes": 4914,
+      "sha256": "79e8dbfcb1d246e2a6a05d9155fe49e7ad6c241907731ebdb7563f395c4826cd"
+    },
+    "test/stable_v3_compatibility_test.dart": {
+      "bytes": 5616,
+      "sha256": "cccef78e3fd5cd6c7360d3336054c5b7b08be7041fc0670d093304bb7a3dbdbb"
+    },
+    "test/startup_smoke_fixture_contract_test.dart": {
+      "bytes": 5459,
+      "sha256": "a5cb44d4c5276f9e5612f7b5c825992e29af374e0d358dfc269d0f646e2c80a2"
+    },
+    "test/sticky_task_group_test.dart": {
+      "bytes": 4766,
+      "sha256": "6a13f1d61f86e38427d55eebbad198e46f3e7e176f3198b703e616f79e7507d8"
+    },
+    "test/storage_test.dart": {
+      "bytes": 74345,
+      "sha256": "d10ca6fffa193a37f1c97293c219af648cd72f7218b7174e77829e20f1c47d37"
+    },
+    "test/support/local_profile_database_child.dart": {
+      "bytes": 611,
+      "sha256": "be98c43fae081701625a36d52336d99773557eadb88ede6383889908f07d26ff"
+    },
+    "test/support/local_profile_migration_child.dart": {
+      "bytes": 1777,
+      "sha256": "903df8c40701f51d7590b3ad598d270bba47a17e1e3905213f1404f18d363bfd"
+    },
+    "test/support/toolbar_button.dart": {
+      "bytes": 837,
+      "sha256": "28cfacd3e218673abca39451691c2fb5fc9ca2efa0dd914a75eb4637753f1198"
+    },
+    "test/tag_filter_picker_test.dart": {
+      "bytes": 12356,
+      "sha256": "341796e26f68d785de04278c2965f0ecbf9fd31c42742256b34e5ff066657bdf"
+    },
+    "test/tag_input_geometry_test.dart": {
+      "bytes": 2444,
+      "sha256": "848301dca08bd25e6f4eb236ac7d9e2e5b17d74f10b3fb3de2399e275666cbf4"
+    },
+    "test/tag_input_test.dart": {
+      "bytes": 6577,
+      "sha256": "849c67f54c6bd8dba8668865114ec3c90fa9a1d73671c2924045fc9a13557ec8"
+    },
+    "test/task_clock_test.dart": {
+      "bytes": 1105,
+      "sha256": "7b86673fee78643ca268ace883e76fdf92078de0c60006610aa9323d70760080"
+    },
+    "test/task_completion_checkbox_test.dart": {
+      "bytes": 7067,
+      "sha256": "f2215da6f012c3d452303a04e5781491b7318d3229be163936dceb069dfa3667"
+    },
+    "test/task_editor_tags_test.dart": {
+      "bytes": 10538,
+      "sha256": "e25a4e9816e3bda7389c89bb53138ff6e8818160ae67e389504f6054ae188c19"
+    },
+    "test/task_editor_test.dart": {
+      "bytes": 47677,
+      "sha256": "ba68f359ab8802c76264454ba6526acd630d7a365576c83cab36bb16f0c2d019"
+    },
+    "test/task_entry_area_test.dart": {
+      "bytes": 4684,
+      "sha256": "321c8782b1f86186371be123bc34f0dbb95df1fc9042edeb273fbc5193a8337a"
+    },
+    "test/task_metadata_test.dart": {
+      "bytes": 7984,
+      "sha256": "8bcca00f2655acc73672a54206e99375dcaebb1b1ebc8927f724b502a42975f6"
+    },
+    "test/task_text_session_test.dart": {
+      "bytes": 13628,
+      "sha256": "153a3e14f7a6755124e639c8ce7d972e93278939fa0b3ecd98fe248cc506af2e"
+    },
+    "test/task_toolbar_test.dart": {
+      "bytes": 8701,
+      "sha256": "7dbcffadf6c7c572a26c51bebe3a62e6b80ff12a02a0865a4f87405efb4e70ea"
+    },
+    "test/task_view_test.dart": {
+      "bytes": 23229,
+      "sha256": "6839d9ca7ab224e9a8535f62a6a520a2170058e459231334962680fab778b27b"
+    },
+    "test/text_actor_registry_test.dart": {
+      "bytes": 6421,
+      "sha256": "facaa27a0bb671fac31366e04c65df7069a0a999fa6dbcc1230f41c320ed1f69"
+    },
+    "test/text_cache_inheritance_test.dart": {
+      "bytes": 8695,
+      "sha256": "bbf64825055224b64fbfd7c70d8c1d196eba7a086c5cf81d87e46421c3f8dd33"
+    },
+    "test/text_context_test.dart": {
+      "bytes": 4640,
+      "sha256": "5ac18be6da889bd7d13b2e690e5cce423d7a43bcee58eaa0242529f9f6856117"
+    },
+    "test/text_event_test.dart": {
+      "bytes": 5826,
+      "sha256": "712dd36cb8601e84a3fff470f2041f0cb88aebad7abb3809357f50c15cc0d589"
+    },
+    "test/text_inheritance_test.dart": {
+      "bytes": 4397,
+      "sha256": "361b6a6933c030f606025ea3648fc62bb8581734ab0a7d3cf60792f053fbd881"
+    },
+    "test/text_save_command_test.dart": {
+      "bytes": 19439,
+      "sha256": "a454c7a7d1b972cfd146dae53d01230940fdac521075527b9950b662efe69064"
+    },
+    "test/text_store_test.dart": {
+      "bytes": 79372,
+      "sha256": "3f733f5958807cc2845900c9b6ec1cfec6b6241aeadadd58298bd56e9b387a15"
+    },
+    "test/text_undo_event_test.dart": {
+      "bytes": 3125,
+      "sha256": "a35cbbcf426083b384b6cbac631c07ccfb7958ebd172b1abd0e9cd8c1ba4f26f"
+    },
+    "test/toolbar_undo_label_test.dart": {
+      "bytes": 2125,
+      "sha256": "e87533a4453e01460c55a1d5a6ccfc52f92527d06b10d690c597c72c0fc5591a"
+    },
+    "test/unavailable_completion_test.dart": {
+      "bytes": 1331,
+      "sha256": "6b4840a4251b7d081dfddc4d2140f2edec5ab097b02607e29c104669bb25c78f"
+    },
+    "test/undo_history_test.dart": {
+      "bytes": 2888,
+      "sha256": "fa1571e560067c953e0a0743f0eb6fd063fd0debcb801763872863fda7feb107"
+    },
+    "test/undo_storage_test.dart": {
+      "bytes": 13142,
+      "sha256": "eb30276d4a1de5ad1025119d477e3b0ae21a2d13a2d4a31c4043c1610bb6f647"
+    },
+    "test/view_clock_test.dart": {
+      "bytes": 7992,
+      "sha256": "4373baab28f9b6b9b90ac8cbac98f542000a565aab48b1ac5f8df18dc7db106e"
+    },
+    "test/view_time_source_test.dart": {
+      "bytes": 5864,
+      "sha256": "b11fec8d668755308d3f73add71b66cc4e45b0437a886e12565c0f5675b7ed56"
+    },
+    "test/wall_time_test.dart": {
+      "bytes": 1384,
+      "sha256": "ba2e962b28af14f4d7e1a97994085823e3fc93e7e66f83427e8676ed7e7b2ec7"
+    },
+    "test/writer_guard_test.dart": {
+      "bytes": 25125,
+      "sha256": "3f24dc432104407b208edad883d01dbf5316f3750722b73f34f465bed67ac82f"
+    },
+    "test/writer_identity_test.dart": {
+      "bytes": 10603,
+      "sha256": "75c8fc274487478541320ae5eb6c8ec99f28f230830382746431d6c5206d61c6"
+    },
+    "tool/android_recovery/README.md": {
+      "bytes": 4360,
+      "sha256": "dd3e0335d01e049ea2af35381deaeae6391e2061867df0f79ad65e05444841d2"
+    },
+    "tool/android_recovery/build_apk.py": {
+      "bytes": 3794,
+      "sha256": "54a08f573f91d5e53ac780bdde303a5a2d5b559fdc781e112a56bd8181e62909"
+    },
+    "tool/android_recovery/harness.dart": {
+      "bytes": 11618,
+      "sha256": "afedea06cd81847f7a02ba65080849313747278a77bb5a5e78bd73b3cd617019"
+    },
+    "tool/android_recovery/main.dart": {
+      "bytes": 2918,
+      "sha256": "8a6018b322bd85737e9f909a5a61fe79ba126330434c86ccfea75fc633db703e"
+    },
+    "tool/android_release.py": {
+      "bytes": 4394,
+      "sha256": "ecadd269abaca903ee15cd19b64e57f54cf16b0c53063987a20c005775a733c7"
+    },
+    "tool/app_version.py": {
+      "bytes": 2306,
+      "sha256": "03a321a8168d76aa915440e58a2720b9d941d95f510cff8c0448a81503b34ccd"
+    },
+    "tool/attach_preview_assets.py": {
+      "bytes": 2427,
+      "sha256": "a53bb05ddff56422da90c5ab4c261b095f351d3ba7e519a4517b49384aef1fab"
+    },
+    "tool/bootstrap_text_engine.py": {
+      "bytes": 2723,
+      "sha256": "b40a6f02f0c878e022b4fe8243e90f6ab5b4849af0084ff0e9b220822c01a672"
+    },
+    "tool/build_android_release.sh": {
+      "bytes": 1013,
+      "sha256": "8592ac65f3cbb9be5099f2d89cfc745c3eabf60ebb8ea85b89cf7b2f35d664c6"
+    },
+    "tool/build_text_engine.py": {
+      "bytes": 15486,
+      "sha256": "e79e6d546182aca645730db26c08ba00d428b43d6a4859932ef286dffb7d1ad2"
+    },
+    "tool/candidate_source.py": {
+      "bytes": 1948,
+      "sha256": "8b4cc06ab974e0a1ece99c9b71be2a12990f5248c076004fea3a1102f710acab"
+    },
+    "tool/checklist_qa_fixture.dart": {
+      "bytes": 2563,
+      "sha256": "ed6411e1d31456e7f08dc8e49372bd8fac7a3e8da91dd7752232e7267d4ea5c9"
+    },
+    "tool/food_preview.dart": {
+      "bytes": 5693,
+      "sha256": "8f32a5bba70245d806d5a051d73d62aea34ad43f815d3824546ef3ec9c9545ec"
+    },
+    "tool/initial_rank_qa_fixture.dart": {
+      "bytes": 1896,
+      "sha256": "247c1378899187cabd50639e63c70d8c493a4009b966650abc4202bc30ad39a1"
+    },
+    "tool/initialize_synthetic_text_fixture.dart": {
+      "bytes": 2207,
+      "sha256": "f732bb181b3d29bd0d1d0336426d1e218ab0ceb0a28ffcfd471e546b613465fa"
+    },
+    "tool/measure_batches.dart": {
+      "bytes": 5239,
+      "sha256": "2a1439126ef212b0026b9d8dec0ad527a7bc8865d7a824c84e00e19b32174867"
+    },
+    "tool/measure_startup.py": {
+      "bytes": 9201,
+      "sha256": "0ae0f39d714886565406319afd4f00dd539af0fdc93fe31177cca4b518cdfccc"
+    },
+    "tool/minimal_startup.dart": {
+      "bytes": 529,
+      "sha256": "6f484b05166631172a49b79fc48365c9c5b3f94dc2eb813121bcf292ecef67b4"
+    },
+    "tool/native_build_gates.py": {
+      "bytes": 5048,
+      "sha256": "6b5296484b9dd98e48fe2eade8be388bdd2ab971589fa2cc876b405cfb203748"
+    },
+    "tool/package_storage_harness.py": {
+      "bytes": 3614,
+      "sha256": "67822c5fa6ac9c96552e6699d2d9264c2f73eab85db54fc9ed27b11714a66d59"
+    },
+    "tool/publish_gate.py": {
+      "bytes": 7650,
+      "sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147"
+    },
+    "tool/release_assets.py": {
+      "bytes": 1302,
+      "sha256": "46037d2c8e2271936d7d0b625eff8679bbf462e4d4ccc3bac8bb708d5c524b95"
+    },
+    "tool/synthetic_text_fixture.py": {
+      "bytes": 2648,
+      "sha256": "d5956c6e9962b8eeae09d5234eb48800a4c07157156981429e1f37edaf044822"
+    },
+    "tool/test_android_native_hook.py": {
+      "bytes": 920,
+      "sha256": "2f76f327a1bdeae47534f9fe4e45ab7b68c0b58ca19d2719399c13c3d085a4c6"
+    },
+    "tool/test_draft_release.py": {
+      "bytes": 1543,
+      "sha256": "7494d0f1ad1ae3b5b8cce66008bec745427049f6b2e93fa681d96768bf63f59c"
+    },
+    "tool/test_flatpak_tool_acquisition.py": {
+      "bytes": 7055,
+      "sha256": "9b3dc734fb802d56ac3e29d1f6113017ab95561924c7832dd80f5f2525c4c94c"
+    },
+    "tool/test_food_fixture_checkout.py": {
+      "bytes": 1504,
+      "sha256": "9b4bdc119d75fbac96e7bf181c1f8f18420821faba115849ca7966aef4aaf04d"
+    },
+    "tool/test_installer_smoke.py": {
+      "bytes": 4498,
+      "sha256": "094ed426fea38df7365c74b99d470c00ec13c9d6f02d69124ee7cf887bcb80fb"
+    },
+    "tool/test_linux_flatpak_metadata.py": {
+      "bytes": 6918,
+      "sha256": "09e05cd8fa23720eb9ca8347822c6a39ab4af673307c8beaf4cdd431bb2397ea"
+    },
+    "tool/test_linux_profile_discovery.py": {
+      "bytes": 2931,
+      "sha256": "b60e26fe1153d24040d02a83ef86d146bb3322111c13ebb92270f251ace7e618"
+    },
+    "tool/test_native_alignment_gate.py": {
+      "bytes": 1116,
+      "sha256": "03883fe24b71e6b3852cb0ea531caca81af3309b096570add005818ab1828abe"
+    },
+    "tool/test_native_build_gates.py": {
+      "bytes": 4432,
+      "sha256": "78ebe9f440f1a3e811a28b2e6d2e258e74ea1773d3b1a04d879f307c77ddd876"
+    },
+    "tool/test_publish_inventory.py": {
+      "bytes": 8599,
+      "sha256": "4c93ec6a32597e91a381ebfc11fe9436b7b69fcf24e12b3bc9a195c25b93d274"
+    },
+    "tool/test_release_gates.py": {
+      "bytes": 10131,
+      "sha256": "9433095e7d0912c5ba4b7c9934a9a11f13da95148e2d3ccb71923729bd05d6d7"
+    },
+    "tool/test_resolved_text_capability.py": {
+      "bytes": 1904,
+      "sha256": "98105d59a6ee25116c809f89ffb2764170c5bb7f8527738a93b8c00a08b3196c"
+    },
+    "tool/test_startup_diagnostics.py": {
+      "bytes": 2793,
+      "sha256": "722be71dcb28383cfd4fd72f38384ee768db1e33bc9d218d23fdb5b42ea9e8d2"
+    },
+    "tool/test_startup_fixture_guard.py": {
+      "bytes": 1094,
+      "sha256": "2a66c797c70bdfe14d0f80a8a7c21afeed649786e1ab47c12409bb22ee8ca238"
+    },
+    "tool/test_synthetic_text_fixture.py": {
+      "bytes": 2482,
+      "sha256": "6d5e8c341d9e8c60952185277a87ea90ed35d598be028b58df03363d1430eec2"
+    },
+    "tool/test_text_engine_packaging.py": {
+      "bytes": 3529,
+      "sha256": "3e1b0357d05afeab553e42f9e9153e20f80225b49700a3cb955df0e781924fda"
+    },
+    "tool/test_vendored_yrs.py": {
+      "bytes": 3800,
+      "sha256": "62448b7ca90203c550a5fbd98ab71283b7f7f3fa5d48052e8441856474b19eef"
+    },
+    "android/.gitignore": {
+      "bytes": 253,
+      "sha256": "b027c9de1011765c015e5819bf857c0d75bfcd0886fb01721c091159012e50f1"
+    },
+    "android/app/build.gradle.kts": {
+      "bytes": 3933,
+      "sha256": "729ced73cb750a925d4144de2b80e4f28182610ba818390e3fcb738601d767b5"
+    },
+    "android/app/src/debug/AndroidManifest.xml": {
+      "bytes": 378,
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    "android/app/src/main/AndroidManifest.xml": {
+      "bytes": 2225,
+      "sha256": "51020f2c78aa1758e2736c991e3350b5db9174053669422f847c55eb51a234f7"
+    },
+    "android/app/src/main/kotlin/com/reddraggone9/tandemlog/MainActivity.kt": {
+      "bytes": 19945,
+      "sha256": "69f34933c4d62cdb235febcd3315ac9966d02fab5e6b73a09c69e2b6f7d5fa59"
+    },
+    "android/app/src/main/res/drawable-v21/launch_background.xml": {
+      "bytes": 438,
+      "sha256": "7ca6d5cec2169c5a98661a119db23a6f3399c8fef2256ff04f3a642831282478"
+    },
+    "android/app/src/main/res/drawable/launch_background.xml": {
+      "bytes": 434,
+      "sha256": "94433756fe10005ddd6fc55cc5c0b1e9f3c10b66a08ceac795ece6713d34e28a"
+    },
+    "android/app/src/main/res/mipmap-hdpi/ic_launcher.png": {
+      "bytes": 544,
+      "sha256": "6a7c8f0d703e3682108f9662f813302236240d3f8f638bb391e32bfb96055fef"
+    },
+    "android/app/src/main/res/mipmap-mdpi/ic_launcher.png": {
+      "bytes": 442,
+      "sha256": "c7c0c0189145e4e32a401c61c9bdc615754b0264e7afae24e834bb81049eaf81"
+    },
+    "android/app/src/main/res/mipmap-xhdpi/ic_launcher.png": {
+      "bytes": 721,
+      "sha256": "e14aa40904929bf313fded22cf7e7ffcbf1d1aac4263b5ef1be8bfce650397aa"
+    },
+    "android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png": {
+      "bytes": 1031,
+      "sha256": "4d470bf22d5c17d84edc5f82516d1ba8a1c09559cd761cefb792f86d9f52b540"
+    },
+    "android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png": {
+      "bytes": 1443,
+      "sha256": "3c34e1f298d0c9ea3455d46db6b7759c8211a49e9ec6e44b635fc5c87dfb4180"
+    },
+    "android/app/src/main/res/values-night/styles.xml": {
+      "bytes": 995,
+      "sha256": "8c5bad5152f217e837519f9c15211d19f39bd45f5f67faf6dd81cb4b299e518f"
+    },
+    "android/app/src/main/res/values/styles.xml": {
+      "bytes": 996,
+      "sha256": "937d7c82f539c72eb94fd3a3773f29b3d3fef1997213c92cb632298cedf4bda9"
+    },
+    "android/app/src/profile/AndroidManifest.xml": {
+      "bytes": 378,
+      "sha256": "30b0832ed8b92dfbd6ae2abfa939ccf26333d37600056b1572bd4a397a18a74b"
+    },
+    "android/build.gradle.kts": {
+      "bytes": 537,
+      "sha256": "6a26dba2cb8dfba1e74f540b0d17a89d96c1301d3c3bfda14348bed257fddcba"
+    },
+    "android/gradle.properties": {
+      "bytes": 300,
+      "sha256": "0f82b18017fba6bb5ce3aa4b2d1a00c9382fc8aae7b1d9326e44b18abd66d80b"
+    },
+    "android/gradle/wrapper/gradle-wrapper.properties": {
+      "bytes": 289,
+      "sha256": "5fae3ec3252de35dfb3b676fb1f915827aac6d8b9f059783551ea8a31ec8170c"
+    },
+    "android/settings.gradle.kts": {
+      "bytes": 771,
+      "sha256": "f36ce862e73b9afe72900a0d7d75e34d8eaf6f414f80732d14f9dd28e12008af"
+    },
+    "android/signing-certificate.sha256": {
+      "bytes": 65,
+      "sha256": "3e6ad9144a18b8b0a594c088ad45e14c22be028ba8b711f12cc503fdc1d57db3"
+    },
+    "linux/.gitignore": {
+      "bytes": 18,
+      "sha256": "5ded4f1a9d10d34bf6ee5beb0711d88ee2ef07b0f07ace9ed77935a246e8eb82"
+    },
+    "linux/CMakeLists.txt": {
+      "bytes": 5470,
+      "sha256": "37079088872ce0305fdeb54bbf925539ad485057ee37933eb98c05591ea83453"
+    },
+    "linux/flutter/CMakeLists.txt": {
+      "bytes": 2815,
+      "sha256": "787189e2623313cfee590a0b553338eb9fc68b3af922ddd77c5d39c75f989aeb"
+    },
+    "linux/flutter/generated_plugin_registrant.cc": {
+      "bytes": 713,
+      "sha256": "be4702057f167b6f2c3fedb9a5d36cde7870c7370867018dcbc6e28cc9c6622c"
+    },
+    "linux/flutter/generated_plugin_registrant.h": {
+      "bytes": 303,
+      "sha256": "00f93bb5b1faefdede8f6065df327522900fb0b8efee86bacf424fd947ed14bb"
+    },
+    "linux/flutter/generated_plugins.cmake": {
+      "bytes": 788,
+      "sha256": "58c7d076efeef8b3277ff06907891f13a01dfdb5f4042b7f71fdc9cafa994acf"
+    },
+    "linux/runner/CMakeLists.txt": {
+      "bytes": 995,
+      "sha256": "b59fb2bb4641bd00dbd8f94a95094c5388a8e7ea0aa39fca64ac82c19c561fc7"
+    },
+    "linux/runner/main.cc": {
+      "bytes": 180,
+      "sha256": "ea23f7cdf74091d63bba29ef60486370b766157b848f0cfe62bd8b1c1695a0c1"
+    },
+    "linux/runner/my_application.cc": {
+      "bytes": 5516,
+      "sha256": "08f96c48daa243f57fd6314f92a495b231fff7f7b1a8bd1efe97a5efad42dc28"
+    },
+    "linux/runner/my_application.h": {
+      "bytes": 451,
+      "sha256": "a4218d7ac0db8a9a6716daf216b2d4fc6bdc7ac647e3183078b2c962ebdfcf70"
+    },
+    "linux/runner/time_observer.cc": {
+      "bytes": 3021,
+      "sha256": "032aa7f6923bbdaf5bbaa3cc04c2652d925e8d50b5777d35c4a8bab80cc13e4b"
+    },
+    "linux/runner/time_observer.h": {
+      "bytes": 161,
+      "sha256": "cb8a0f823a50d8ea3127841367f1733fd357a72d073a355eae7c9d50351961b7"
+    },
+    "native/text_engine/Cargo.lock": {
+      "bytes": 10657,
+      "sha256": "b09d300c305bd78d7689aad3e91effaeebc51a0f4da1c10dcae253b814104244"
+    },
+    "native/text_engine/Cargo.toml": {
+      "bytes": 327,
+      "sha256": "e61f0f558d3f6e94ee77623dd842cedd98ee3f3f8a3505cdc2d3a25fc7f02395"
+    },
+    "native/text_engine/THIRD_PARTY_NOTICES.txt": {
+      "bytes": 1967143,
+      "sha256": "79d33080dbc8211dff8ad7815e4cba37dfdf631b8115a3f4ccca9f4c5fb2ba2c"
+    },
+    "native/text_engine/src/admission.rs": {
+      "bytes": 8268,
+      "sha256": "a0efe257c67c8452a12fb0e8a8c3d3c487768e41cede6b71349fdb6d0d9e4d5e"
+    },
+    "native/text_engine/src/lib.rs": {
+      "bytes": 59642,
+      "sha256": "4353b2795a06b76c3802918f79d052454791991650e3fc3cf85d347cb41976a5"
+    },
+    "native/text_engine/tests/test_third_party_notices.py": {
+      "bytes": 4241,
+      "sha256": "e1bfd25dfa87663323077ffef7210b935630cbd83e4ec30de71180a0766f1a91"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/.cargo_vcs_info.json": {
+      "bytes": 97,
+      "sha256": "b360afa38057d789a27f70f3be1fa454e8b99159824beb4893cb4be37efcdb41"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/.gitignore": {
+      "bytes": 32,
+      "sha256": "206b35dbf8d7a73bad6e0f3afc1ad34f3b7c7b05be2c74057b7ae8febb96cc0d"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/Cargo.lock": {
+      "bytes": 29309,
+      "sha256": "53a56e3e14693c1ecbde5cc93828fc1c9799cd2a89925a37b9efa999c8990314"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/Cargo.toml": {
+      "bytes": 2206,
+      "sha256": "2085b13775601afe212f93a5fbbe31abfd45e840da0f62c557b91a1ffd0d346a"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/Cargo.toml.orig": {
+      "bytes": 1091,
+      "sha256": "ad560977cdad06a087d94fafcf0a464754fd5f0b2a527b5bafd1471b684b60ba"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/README.md": {
+      "bytes": 4726,
+      "sha256": "6c56d67ee262839d49c3d5bba0930800274f78d5a3a3aacb7225d9649f019b6c"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/benches/benches.rs": {
+      "bytes": 15900,
+      "sha256": "b3196024b9e3904085a3927e1cfcfee3dce38baeb71c7f259d83384a38bb6784"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/benches/id_set.rs": {
+      "bytes": 7428,
+      "sha256": "90790cde288a056b6dcf33f5b4e006295e4e400eebafc3c936fc904350be6761"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/benches/serialization.rs": {
+      "bytes": 5762,
+      "sha256": "ba868f355a910b39e4121621b585ef885a583340d1fca856d7c3c1249042fb23"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/alt.rs": {
+      "bytes": 6476,
+      "sha256": "cdd569c656ac5bb94f353886f5f1bf9d49e07b40bff2033d840c75975d50e272"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/any.rs": {
+      "bytes": 33472,
+      "sha256": "2e5ee918b0c29a707ae259bd71474f5f6a72045f8bf062de2f5aa979c4591230"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/atomic.rs": {
+      "bytes": 7004,
+      "sha256": "3a3f2cfeacbc6d97a678d72a6a975ee0fde6e54f8e95a8ed8c74989cafb24784"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/block.rs": {
+      "bytes": 84512,
+      "sha256": "86dcf0f33bc59c40e3793679badecab6dc3cc8d9651d34096d48c70cda6511d3"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/block_iter.rs": {
+      "bytes": 12353,
+      "sha256": "176074723260296892a8567cb660c5a81b87984c7149407bee745483fd9354b2"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/block_store.rs": {
+      "bytes": 19861,
+      "sha256": "f847209b60ca6e2b9d5667a586fe8fc5271dfa1b844e9b3d9b2d6d0bdd976391"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/branch.rs": {
+      "bytes": 29598,
+      "sha256": "22734a9877161f87f1543fbd6fe27099dc4a14d886f9485e04d8b328008aa794"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/doc.rs": {
+      "bytes": 83469,
+      "sha256": "d44dff119bba51fbcd7a69d3b179f1190096e531a8742b4d96c5e1e7113120a8"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/mod.rs": {
+      "bytes": 7629,
+      "sha256": "bde6947363f0c42106035b2da31d5e62e964d15af507f533e8a7a4d052fc3c02"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/read.rs": {
+      "bytes": 4980,
+      "sha256": "733ef78e1d2f2db7d6a3da6fcc77d27f642b65ea2ce7ab3c23d173ecb91d1936"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/de.rs": {
+      "bytes": 25619,
+      "sha256": "a4cfb97aca9fa5045dafd55ac89406a1ff00846f543319c569f78b378f3cf31c"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/mod.rs": {
+      "bytes": 7943,
+      "sha256": "fcc015de3dd54231a2588b4827961e2f65de0cbe0d5ada574eb25de81e7b1a78"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/serde/ser.rs": {
+      "bytes": 19980,
+      "sha256": "02c607ee20c839a5a74047446b4ac29b04bdbd83251dd541737c54d83edbd211"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/varint.rs": {
+      "bytes": 11836,
+      "sha256": "37d24f5ee019a59ec83d95e1b85b2d12432e8ac09ec26d2ac4ac352c728c7dfc"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/encoding/write.rs": {
+      "bytes": 2857,
+      "sha256": "a0117c689ec93bcb2871115791e33e3e91588486561b5811d41a0c5e53e5090d"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/error.rs": {
+      "bytes": 486,
+      "sha256": "4a57f59683c17347022fd087fad9a2a30b22ee825f8ff52b29b992558da6f2f2"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/event.rs": {
+      "bytes": 2871,
+      "sha256": "2658442ab8b5eea485217ec2ff7dae57599f9c5623734ad2d893f3604642bd9a"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/gc.rs": {
+      "bytes": 3789,
+      "sha256": "fa1ab49207697d8c2e182048e3023e226513f9331b90c3aef065a950b795d63d"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/id_map.rs": {
+      "bytes": 29336,
+      "sha256": "579ccb3ec2208eb983106d65ffcae30c500b3e24c92174451868e709b09105cf"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/id_set.rs": {
+      "bytes": 37663,
+      "sha256": "49e386c51b6297ae278361abea6f3181c8939ef5bb5c33c70d0f8060f07f0d25"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/ids.rs": {
+      "bytes": 47809,
+      "sha256": "9040539c9ef680ca10e04f765cfc0a23052be0f0b56ef8b17891f7c0099c299d"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/input.rs": {
+      "bytes": 3250,
+      "sha256": "78eff9f0128a0bb2b13e9c6e844d5a1b15904c6b30498469944f0b4df3ba5fd1"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/iter.rs": {
+      "bytes": 15888,
+      "sha256": "c1303953bec70bb2b68b02b7948fa7c2f43b8c3f7389885f457e8d9a501c552f"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/json_path/iter_any.rs": {
+      "bytes": 14203,
+      "sha256": "8a4d997539c6a25df95ad606c12d2087f9be849ee8d193fc29477bea1d2efa9e"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/json_path/iter_txn.rs": {
+      "bytes": 21180,
+      "sha256": "ce864d642ec05dfc5bceabf0c526ed340c0a99c16e13332af899363462729585"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/json_path/mod.rs": {
+      "bytes": 2463,
+      "sha256": "da4d9067a1e8d868899d0c6762a2afabf51ab04a8d0601008b6a3a56fdf8dd1e"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/json_path/parse.rs": {
+      "bytes": 13908,
+      "sha256": "4f521787b5bb445d02ab601a0e2cf0acf6ee4b59a0552993f7938e4aece16829"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/lib.rs": {
+      "bytes": 36788,
+      "sha256": "32bcc29e46572aef447528ac8421a41898c108863f8c34bbeb8135e887943a59"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/observer.rs": {
+      "bytes": 7839,
+      "sha256": "b08f6e1c3f390eec764d316033373eb460437d1b6ccc308e2215895da6133aac"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/out.rs": {
+      "bytes": 8430,
+      "sha256": "7f4562d84cc16d56e679d0ec178617367660e70a0c86bab5147ee340a38a7c85"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/slice.rs": {
+      "bytes": 9610,
+      "sha256": "328df6ab85a13990b6de10839900d0b97c4469d498fb3dec7fbe8758943e6210"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/state_vector.rs": {
+      "bytes": 11271,
+      "sha256": "19a03d6cf0a4f174df9d7e2b22ed1f96d13064aed42f3af41edcfd3e4ba6680b"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/sticky_index.rs": {
+      "bytes": 29116,
+      "sha256": "e2bfa8cbfc8407c0c1585a65a50c1def49b5696a6435c5c75b3e556a0c41e7b5"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/store.rs": {
+      "bytes": 22978,
+      "sha256": "c4fbebccd29c2552a3c0f657fb94dbe9d1bc783ac1b37106d31bca7c203bb9ae"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/sync/awareness.rs": {
+      "bytes": 30826,
+      "sha256": "c322d3efeec96b36a0c2fa53c96c49c84ead2de51c7e307ae09f8dc8e74440e8"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/sync/mod.rs": {
+      "bytes": 473,
+      "sha256": "5999c93424d3bba819de2922ef49f93857e5b286f334150e2a9358b977cb7f7a"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/sync/protocol.rs": {
+      "bytes": 25273,
+      "sha256": "0887f7e7d1007a879316bc8adb1fe1dbd7aabfa71842571ce6183b7779a7bbdd"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/sync/time.rs": {
+      "bytes": 830,
+      "sha256": "bc302d99aa85f9d3169752c3369882e6cd806e5856f70e4c2828f6063c35087c"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/test_utils.rs": {
+      "bytes": 21239,
+      "sha256": "31e0845546d85300f6f12a5c35b0ff607a96794c4a83405ba357020753863881"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/tests/compatibility_tests.rs": {
+      "bytes": 16698,
+      "sha256": "6a6e9761d6174f598b530901ccfec965b07eba2cf54e9ff652fc18e146ac5947"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/tests/edit_traces.rs": {
+      "bytes": 3879,
+      "sha256": "f8b5965ae50bd369fc5e2ce73e1ed7a43b29d6461224512fed93f8dd5d810e8f"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/tests/edit_traces_tests.rs": {
+      "bytes": 1785,
+      "sha256": "11f875b7abbbc6ec664c1e7f28ccaac9c903307f05baada6e65bfa440aad1962"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/tests/mod.rs": {
+      "bytes": 65,
+      "sha256": "bed339b92949cceadfc5d128c85a35a6009a72cb4affb676988f41e440431eca"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/transact.rs": {
+      "bytes": 10501,
+      "sha256": "e0ee48b3a108a0bf05669be06c90db5b2dc6c846579d624ac587b7759ea0520c"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/transaction.rs": {
+      "bytes": 64035,
+      "sha256": "f08d4836260d047382586976b741c30e7a992536b1dd77e2a9829eec1908d500"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/array.rs": {
+      "bytes": 40592,
+      "sha256": "93d985cb367551577af2d6534a85f09ad057a42cee8dab9cd58054dd3c490e88"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/map.rs": {
+      "bytes": 46957,
+      "sha256": "5ebd1a960cf258ee97904dd69d8bc81d68763fb288afc089d6a466d4ff496e13"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/mod.rs": {
+      "bytes": 36393,
+      "sha256": "835ed9cdfddcb65e1a91b2db3cf5cd9c3b039a443c719f331b651be352855d05"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/text.rs": {
+      "bytes": 102425,
+      "sha256": "0f9dfa82c11ab8f9547f100367653feb0891318e055cb0932585e043c8eb1691"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/weak.rs": {
+      "bytes": 74405,
+      "sha256": "d27a49c7ab115e8e72b729c153cc7065f5293a348df542fcf94d1e4db269fa39"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/types/xml.rs": {
+      "bytes": 65117,
+      "sha256": "aa1071730511d373d2766e9af38326e160099e03bf4b6928817d53722e14f0e2"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/undo.rs": {
+      "bytes": 80820,
+      "sha256": "2e37cd3f1114822a18be6fc9cebd2acc3da79786a342bd0a528e9a4e8afb14f6"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/update.rs": {
+      "bytes": 66090,
+      "sha256": "f3719ef93e9dad0221f658077ad89bab251a466c87f092e75c6777655db31f8d"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/updates/decoder.rs": {
+      "bytes": 14974,
+      "sha256": "4ac62a307eabd8ac156526e22c32966db72fcf696d4208ff92c42c71d27eb5d1"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/updates/encoder.rs": {
+      "bytes": 15592,
+      "sha256": "808dca538a0cb6cc8b2f526995a72ae89906f22c39e777623b3b5f0876367aa5"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/updates/mod.rs": {
+      "bytes": 34,
+      "sha256": "12954b9be2c0512f93e93d6bf57584536aaed2689c9003a11873cc36d2850903"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/utils/client_hasher.rs": {
+      "bytes": 823,
+      "sha256": "f72c959781699537adc96b036d62aa6b91cf7f64da7c8a615be7f035b6ccc3d6"
+    },
+    "native/text_engine/vendor/yrs-0.28.0/src/utils/mod.rs": {
+      "bytes": 260,
+      "sha256": "814a38a0ca1b078d656b8e70236d3b0412cd8d0aee4a5405299d8342fb4574b1"
+    },
+    "native/text_engine/vendor/yrs-provenance.json": {
+      "bytes": 14759,
+      "sha256": "9bb7bcd022394f5a692fb9ea2192e1b5566c83a948d68eaeab2473c48b809a0e"
+    },
+    "windows/.gitignore": {
+      "bytes": 291,
+      "sha256": "96345475f1a3c66bd32d28178fba151ab1506b35b1f7857b8f7651863093ea11"
+    },
+    "windows/CMakeLists.txt": {
+      "bytes": 4857,
+      "sha256": "b5726bec45de8f0668df05db2056015a36012814ddac533f44832ae50d9ae6f9"
+    },
+    "windows/flutter/CMakeLists.txt": {
+      "bytes": 3742,
+      "sha256": "1fe418971b6f41bb35ceb3d64113a835f3f6f171ecaa707bf232492b57a588d6"
+    },
+    "windows/flutter/generated_plugin_registrant.cc": {
+      "bytes": 488,
+      "sha256": "3b262051d01edd1f2635dff9236a7a25d8a1e80d644aa589637053b43c9fbd31"
+    },
+    "windows/flutter/generated_plugin_registrant.h": {
+      "bytes": 302,
+      "sha256": "dbc11635d7b1ba1887adf40df5b83d634e9c3ab0bee34510c71528bb4d73602a"
+    },
+    "windows/flutter/generated_plugins.cmake": {
+      "bytes": 796,
+      "sha256": "d7716f3bcafd6b18d7de8cac5c47184c06b9d2cba61cad5cd18eb1df55515f69"
+    },
+    "windows/runner/CMakeLists.txt": {
+      "bytes": 1796,
+      "sha256": "34119ec122e36940235ef4bc245fcfb43b6960ed443e28af1a8d833a81209b9e"
+    },
+    "windows/runner/Runner.rc": {
+      "bytes": 3039,
+      "sha256": "8121be8e09783285d4bb95b00f58ef0d19fa9dc46e14541d8a1a55a7a656e68c"
+    },
+    "windows/runner/flutter_window.cpp": {
+      "bytes": 4633,
+      "sha256": "2c16f969ab4c3348c20a63a63187036ce03812ff6c9814c1516fcb6e4e990190"
+    },
+    "windows/runner/flutter_window.h": {
+      "bytes": 1114,
+      "sha256": "72e35a2e3fbde9ca355997dbcbff677deda8bd7dfdf07808dbd00638a2f60563"
+    },
+    "windows/runner/main.cpp": {
+      "bytes": 1262,
+      "sha256": "003efe74c5cf35c1367f5d436322dc6232a26546ac9ce54882eb09c163aae266"
+    },
+    "windows/runner/resource.h": {
+      "bytes": 432,
+      "sha256": "1fa98588b04561590ba1cf0521ab86a9db4a878312f21c9d5861d965ddd8d1ae"
+    },
+    "windows/runner/resources/app_icon.ico": {
+      "bytes": 33772,
+      "sha256": "c098d3fc85cacff98b8e69811b48e9f0d852fcee278132d794411d978869cbf8"
+    },
+    "windows/runner/runner.exe.manifest": {
+      "bytes": 602,
+      "sha256": "825d243e9fa1542619909c1b72d09b3ed7c1f3b225bb8367c125835e5dc3f8aa"
+    },
+    "windows/runner/utils.cpp": {
+      "bytes": 2168,
+      "sha256": "6c2c87106b4b29d534c7edcafb3b7f7b9079caa3cdafa7e56671ad2adf5a2543"
+    },
+    "windows/runner/utils.h": {
+      "bytes": 672,
+      "sha256": "95a7f7dddb832997cefa937a96f89472332277e75734a5de553610760b744b03"
+    },
+    "windows/runner/win32_window.cpp": {
+      "bytes": 8534,
+      "sha256": "9065f31ccf746cf8b390121f958f9e959033af864aed779597066625ed56bc36"
+    },
+    "windows/runner/win32_window.h": {
+      "bytes": 3522,
+      "sha256": "7dd03746b19dcf3542829b2f6e8ed40a2714ce5f2cb3b0e23f0118a2fcf62d62"
+    }
+  }
+}

@@ -1,29 +1,12 @@
 # Current status — 2026-10-11
 
-## RC3/build66 full candidate after held build65
+## RC3/build68 replacement after reviewed native fixture corrections
 
-Build65/source3c16234 candidate38156985011 terminated with Linux startup-smoke
-failure after its unit/native/build/package checks. Android debug and Windows
-passed; owner signing was skipped. It is ineligible for delivery/publication.
-Its official log reports only exit1 because startup stdout was redirected and
-not retained. Independent source review establishes that the synthetic startup
-and installer seeders left an existing uninitialized scalar history, incompatible
-with the new fail-closed app admission policy; exact hosted failure details remain
-unproven. The fixture-only correction uses the established historical-baseline
-initializer, isolated seed caches and a pinned Windows SDK executable, preserves
-admission/rows/budgets, and retains failed startup diagnostics outside assets.
-Targeted checks and independent review accept that bounded source correction;
-full exact hosted startup/package gates remain pending.
+Build66 candidate38165025596/sourcee6e26a1 is terminal FAILED: Windows tooling hits a synthetic SQLite connection cleanup error after1027 unit passes/two skips, Rust4 and107contracts; Linux completes155native passes/3 failures, without a deadline failure. The explicit-close fixture fix passes actual same-source automatic Windows CI. Build67 candidate38166126728/source3ae00be is terminal CANCELLED by root because both navigation-theme readiness failures and Retained whole-selection geometry are confirmed shared source; its preflight passes and all downstream jobs are cancelled. No eligible signed APK exists from either run.
 
-Lee subsequently approved shared standalone1450px Tasks/Food content width,
-unchanged Task editor behavior, matching desktop secondary-click/ellipsis Food
-menus, Add another… prefilled independent Add drafts, and separating native
-folder choice from validation/loading progress, plus a flat expiration-sorted
-Retained list with reasons shown per row. Focused tests/native pixels and final
-independent source/native/editorial reviews pass. Full candidate38165025596
-is running on exact e6e26a1a253e25ee3edf5515ce2553e75d88ac3a/build66; signed
-originals and exact Android acceptance remain pending. Build65 artifacts
-remain retained historical evidence. No new RC3 is published.
+Build68 changes only two test fixtures and monotonic version code68. Navigation awaits bounded actual Tasks/dialog readiness after Discard; original draft guards and canonical checks stay intact. Retained asserts every visible ASCII fixture character with unchanged0.5px tolerance, adds vertical bounds and keeps row/card/behavior checks; exact hosted overflow character remains unobserved. Actual local reproduction fails both navigation cases; corrected native light/Retained pass and separate same-source dark rerun passes after an explicitly retained X11 capture failure. Four widget cases, clean analysis/formatting and79tool tests pass. Independent architecture/native and correctness reviews accept the narrow corrections. Production/UI/native/platform/dependency/pipeline and release notes/media remain unchanged relative to frozen build67. All83 bound inputs include the previously omitted navigation fixture.
+
+Fresh full [candidate38169726969](https://github.com/reddraggone9/tandemlog/actions/runs/38169726969) is dispatched at exact8c6ee23c78232094715b9bf79f9d3be54b3b522a. Frozen482source/83input/193evidence and final-range editorial reviews pass. Owner signing, original archives and installed Android affected-flow acceptance remain pending. No RC3 publication, stable promotion or live-data operation occurs. [Full receipts](../evidence/toolbar-2026.10.4-rc.3/README.md) retain exact failures and qualified passing evidence.
 
 ## Earlier approved RC3 batch
 

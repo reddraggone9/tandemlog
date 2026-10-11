@@ -1,0 +1,46 @@
+{
+  "checked_at_utc": "2026-10-11T19:35:49.170011+00:00",
+  "verdict": "CONFIRMED_THREE_LINUX_NATIVE_ASSERTION_FAILURES_HOLD",
+  "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "candidate_run": 38165025596,
+  "job_id": 114545717638,
+  "native_passed": 155,
+  "native_failed": 3,
+  "failed_cases": [
+    {
+      "name": "section dropdown dark fits and guards drafts without writes",
+      "file": "integration_test/section_navigation_workflow_test.dart",
+      "line": 191,
+      "observed": "Expected exactly one Synthetic navigation task text widget, found0"
+    },
+    {
+      "name": "section dropdown light fits and guards drafts without writes",
+      "file": "integration_test/section_navigation_workflow_test.dart",
+      "line": 191,
+      "observed": "Expected exactly one Synthetic navigation task text widget, found0"
+    },
+    {
+      "name": "native Food flat Retained expiry filters and metadata",
+      "file": "test/food_retained_flat_list_test.dart",
+      "line": 162,
+      "caller": "integration_test/food_add_another_workflow_test.dart:36",
+      "observed": "Expected geometry <=168.5; actual174.8195343017578"
+    }
+  ],
+  "cause_qualification": "Observed assertions and stacks only. Root owns source/runtime diagnosis and any correction; no test-fixture or production-cause classification inferred here.",
+  "log": {
+    "path": "/tmp/food-rc66-final-artifact-review/failed-linux-provider-decoded.txt",
+    "bytes": 608699,
+    "sha256": "d9b13f99dfcbc3dd2cffe79f7a0585dcb875a7bda1a2f288ea18cba43322a148",
+    "representation": "Root fetched official GitHub App provider-decoded UTF8 content once; independent reviewer inspected same retained bytes."
+  },
+  "summary_lines": [
+    "2026-10-11T18:45:48.6801406Z No issues found! (ran in 11.3s)",
+    "2026-10-11T18:50:50.7506546Z \ud83c\udf89 1030 tests passed.",
+    "2026-10-11T18:51:00.8260593Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s",
+    "2026-10-11T18:51:05.6043290Z Ran 107 tests in 4.700s",
+    "2026-10-11T18:51:06.9654761Z Ran 79 tests in 1.191s",
+    "2026-10-11T19:31:47.5529950Z ##[error]155 tests passed, 3 failed."
+  ],
+  "scope": "No local runtime/test execution, source/docs edits or original artifact downloads by reviewer."
+}

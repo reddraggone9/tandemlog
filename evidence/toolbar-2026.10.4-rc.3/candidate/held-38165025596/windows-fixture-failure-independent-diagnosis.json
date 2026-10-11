@@ -1,0 +1,34 @@
+{
+  "checked_at_utc": "2026-10-11T18:55:24.972998+00:00",
+  "verdict": "CONFIRMED_WINDOWS_FIXTURE_CONNECTION_CLEANUP_ERROR_HOLD",
+  "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "candidate_run": 38165025596,
+  "job_id": 114545717716,
+  "observed_error": "StartupDiagnostics.test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache failed in TemporaryDirectory cleanup, PermissionError WinError32 on profile/local.sqlite.",
+  "source_analysis": "Frozen test fixture opens SQLite with its transaction context manager; that manager does not close connection. Fixture binding db remains live on TemporaryDirectory exit. Production verify_loaded already uses contextlib.closing for its own connection.",
+  "scope": "Independent read-only source/log review, no local test execution or source changes. Root owns correction and full fresh candidate.",
+  "tool_tests": {
+    "ran": 79,
+    "errors": 1,
+    "skipped": 4
+  },
+  "log": {
+    "path": "/tmp/food-rc66-final-artifact-review/failed-windows-provider-decoded.txt",
+    "bytes": 333262,
+    "sha256": "9628b8f438e09842663261a246d4aedf91291198a508380277813b905d735731",
+    "representation": "Root fetched official GitHub App provider-decoded UTF8 content once; independent reviewer inspected same saved bytes, no repeated retrieval/raw-download attestation."
+  },
+  "summary_lines": [
+    "2026-10-11T18:51:16.0171795Z 05:34 +1027 ~2: All tests passed!",
+    "2026-10-11T18:51:27.4161463Z test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s",
+    "2026-10-11T18:51:31.2430973Z Ran 107 tests in 3.629s",
+    "2026-10-11T18:51:34.3087914Z Ran 79 tests in 2.578s",
+    "2026-10-11T18:51:34.3088050Z FAILED (errors=1, skipped=4)"
+  ],
+  "frozen_test": {
+    "path": "/tmp/food-rc66-final-artifact-review/frozen-test-startup-diagnostics.py.txt",
+    "bytes": 2749,
+    "sha256": "716bd3c1dd6b4f3ff98d24a75ce1d1accb0828335cc23a12706d4e7f2fb37811"
+  },
+  "remaining": "Linux job still running at phase receipt; no release artifact or signed Android acceptance eligibility."
+}

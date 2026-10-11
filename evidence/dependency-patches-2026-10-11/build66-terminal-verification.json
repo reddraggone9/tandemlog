@@ -1,0 +1,127 @@
+{
+  "run_id": 38165875973,
+  "head": "5c2c10ee0446bc402e9bee845d943f83223ff067",
+  "conclusion": "failure",
+  "completed": "2026-10-11T19:42:50Z",
+  "source_preserved": true,
+  "branch_mutations_held": true,
+  "linux": {
+    "passes": 155,
+    "failures": 3
+  },
+  "windows_shared_main_failure": {
+    "candidate_run": 38165025596,
+    "candidate_job": 114545717716,
+    "fixture": "tool/test_startup_diagnostics.py",
+    "line": 40,
+    "error": "PermissionError: [WinError 32] profile/local.sqlite remains open",
+    "parent_fix_source": "3ae00be28efd5864d90f8cb1dccdd8a65f36c3f5",
+    "fix_reviewed": true,
+    "fix_integrated": false
+  },
+  "jobs": [
+    {
+      "id": 114548203464,
+      "name": "checks / android",
+      "conclusion": "success",
+      "failed": [],
+      "skipped": [
+        "Observe reviewed Kotlin scopes on the remediation branch",
+        "Repeat warm Android debug build on the remediation branch",
+        "Preserve cold and warm Kotlin evaluation receipts",
+        "Remove the remediation observation script",
+        "Package separate recovery harness on the isolated adoption branch"
+      ]
+    },
+    {
+      "id": 114548203602,
+      "name": "checks / windows",
+      "conclusion": "failure",
+      "failed": [
+        "Run python -m unittest discover -s tool -p 'test_*.py'"
+      ],
+      "skipped": [
+        "Run python tool/app_version.py",
+        "Run flutter build windows --release",
+        "Run python tool/native_build_gates.py verify_payload --platform windows --payload build/windows/x64/runner/Release",
+        "Compile exact-source synthetic migration process harness",
+        "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9",
+        "Preserve exact portable Windows payload for isolated native acceptance",
+        "Build per-user installer and verify native installation lifecycle",
+        "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    },
+    {
+      "id": 114548203675,
+      "name": "checks / linux",
+      "conclusion": "failure",
+      "failed": [
+        "Run xvfb-run -a dbus-run-session -- flutter test integration_test/task_flow_test.dart -d linux"
+      ],
+      "skipped": [
+        "Run flutter build linux --release",
+        "Run python tool/native_build_gates.py verify_payload --platform linux --payload build/linux/x64/release/bundle",
+        "Smoke-test native release startup with fresh and warm cache",
+        "Preserve failed startup diagnostics",
+        "Run mkdir dist",
+        "Build user-installable Flatpak bundle",
+        "Install, launch, replace and uninstall Flatpak with synthetic data",
+        "Preserve failed installed application diagnostics",
+        "Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9"
+      ]
+    }
+  ],
+  "failure_excerpts": [
+    "2026-10-11T19:22:04.6806110Z ##[group]\u274c section dropdown dark fits and guards drafts without writes (failed)\n2026-10-11T19:22:04.6806891Z \u2550\u2550\u2561 EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK \u255e\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:22:04.6807527Z The following TestFailure was thrown running a test:\n2026-10-11T19:22:04.6807860Z Expected: exactly one matching candidate\n2026-10-11T19:22:04.6808298Z   Actual: _TextWidgetFinder:<Found 0 widgets with text \"Synthetic navigation task\": []>\n2026-10-11T19:22:04.6808762Z    Which: means none were found but one was expected\n2026-10-11T19:22:04.6808980Z \n2026-10-11T19:22:04.6809113Z When the exception was thrown, this was the stack:\n2026-10-11T19:22:04.6809906Z #4      registerSectionNavigationTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/section_navigation_workflow_test.dart:191:11)\n2026-10-11T19:22:04.6810652Z <asynchronous suspension>\n2026-10-11T19:22:04.6811143Z #5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n2026-10-11T19:22:04.6812067Z <asynchronous suspension>\n2026-10-11T19:22:04.6813011Z #6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)\n2026-10-11T19:22:04.6813471Z <asynchronous suspension>\n2026-10-11T19:22:04.6813696Z <asynchronous suspension>\n2026-10-11T19:22:04.6814055Z (elided one frame from package:stack_trace)\n2026-10-11T19:22:04.6814397Z \n2026-10-11T19:22:04.6814670Z This was caught by the test expectation on the following line:\n2026-10-11T19:22:04.6815408Z   file:///home/runner/work/tandemlog/tandemlog/integration_test/section_navigation_workflow_test.dart line 191\n2026-10-11T19:22:04.6815939Z The test description was:\n2026-10-11T19:22:04.6816247Z   section dropdown dark fits and guards drafts without writes\n2026-10-11T19:22:04.6816851Z \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:22:04.6817411Z Test failed. See exception logs above.\n2026-10-11T19:22:04.6818128Z The test description was: section dropdown dark fits and guards drafts without writes\n2026-10-11T19:22:04.6818671Z \n2026-10-11T19:22:04.6819089Z ##[endgroup]\n2026-10-11T19:22:05.1309544Z TANDEMLOG_FIRST_FRAME_MS=11\n2026-10-11T19:22:05.3722950Z TANDEMLOG_PHASE identity_lock=0\n2026-10-11T19:22:05.3989227Z TANDEMLOG_PHASE sqlite_open_schema=26\n2026-10-11T19:22:05.4102097Z TANDEMLOG_PHASE manifest=11",
+    "2026-10-11T19:22:18.2713753Z ##[group]\u274c section dropdown light fits and guards drafts without writes (failed)\n2026-10-11T19:22:18.2715201Z \u2550\u2550\u2561 EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK \u255e\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:22:18.2716131Z The following TestFailure was thrown running a test:\n2026-10-11T19:22:18.2716849Z Expected: exactly one matching candidate\n2026-10-11T19:22:18.2717588Z   Actual: _TextWidgetFinder:<Found 0 widgets with text \"Synthetic navigation task\": []>\n2026-10-11T19:22:18.2718519Z    Which: means none were found but one was expected\n2026-10-11T19:22:18.2719212Z \n2026-10-11T19:22:18.2719653Z When the exception was thrown, this was the stack:\n2026-10-11T19:22:18.2721131Z #4      registerSectionNavigationTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/section_navigation_workflow_test.dart:191:11)\n2026-10-11T19:22:18.2722598Z <asynchronous suspension>\n2026-10-11T19:22:18.2723404Z #5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n2026-10-11T19:22:18.2724448Z <asynchronous suspension>\n2026-10-11T19:22:18.2725123Z #6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)\n2026-10-11T19:22:18.2725597Z <asynchronous suspension>\n2026-10-11T19:22:18.2725823Z <asynchronous suspension>\n2026-10-11T19:22:18.2726072Z (elided one frame from package:stack_trace)\n2026-10-11T19:22:18.2726280Z \n2026-10-11T19:22:18.2726445Z This was caught by the test expectation on the following line:\n2026-10-11T19:22:18.2727033Z   file:///home/runner/work/tandemlog/tandemlog/integration_test/section_navigation_workflow_test.dart line 191\n2026-10-11T19:22:18.2727560Z The test description was:\n2026-10-11T19:22:18.2727867Z   section dropdown light fits and guards drafts without writes\n2026-10-11T19:22:18.2728476Z \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:22:18.2728868Z Test failed. See exception logs above.\n2026-10-11T19:22:18.2729294Z The test description was: section dropdown light fits and guards drafts without writes\n2026-10-11T19:22:18.2729641Z \n2026-10-11T19:22:18.2729895Z ##[endgroup]\n2026-10-11T19:22:18.8133460Z TANDEMLOG_FIRST_FRAME_MS=10\n2026-10-11T19:22:19.0515401Z TANDEMLOG_PHASE identity_lock=0\n2026-10-11T19:22:19.0670431Z TANDEMLOG_PHASE sqlite_open_schema=15\n2026-10-11T19:22:19.0871304Z TANDEMLOG_PHASE manifest=19",
+    "2026-10-11T19:33:48.4005178Z ##[group]\u274c native Food flat Retained expiry filters and metadata (failed)\n2026-10-11T19:33:48.4006650Z \u2550\u2550\u2561 EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK \u255e\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:33:48.4008283Z The following TestFailure was thrown running a test:\n2026-10-11T19:33:48.4009088Z Expected: a value less than or equal to <168.5>\n2026-10-11T19:33:48.4009818Z   Actual: <174.8195343017578>\n2026-10-11T19:33:48.4010532Z    Which: is not a value less than or equal to <168.5>\n2026-10-11T19:33:48.4011075Z \n2026-10-11T19:33:48.4011492Z When the exception was thrown, this was the stack:\n2026-10-11T19:33:48.4012939Z #4      verifyFlatRetained (file:///home/runner/work/tandemlog/tandemlog/test/food_retained_flat_list_test.dart:162:7)\n2026-10-11T19:33:48.4014119Z <asynchronous suspension>\n2026-10-11T19:33:48.4015344Z #5      registerFoodAddAnotherTests.<anonymous closure> (file:///home/runner/work/tandemlog/tandemlog/integration_test/food_add_another_workflow_test.dart:36:9)\n2026-10-11T19:33:48.4016786Z <asynchronous suspension>\n2026-10-11T19:33:48.4018008Z #6      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)\n2026-10-11T19:33:48.4020604Z <asynchronous suspension>\n2026-10-11T19:33:48.4021795Z #7      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1953:5)\n2026-10-11T19:33:48.4023302Z <asynchronous suspension>\n2026-10-11T19:33:48.4024021Z <asynchronous suspension>\n2026-10-11T19:33:48.4024695Z (elided one frame from package:stack_trace)\n2026-10-11T19:33:48.4025387Z \n2026-10-11T19:33:48.4025897Z This was caught by the test expectation on the following line:\n2026-10-11T19:33:48.4027021Z   file:///home/runner/work/tandemlog/tandemlog/test/food_retained_flat_list_test.dart line 162\n2026-10-11T19:33:48.4028099Z The test description was:\n2026-10-11T19:33:48.4028837Z   native Food flat Retained expiry filters and metadata\n2026-10-11T19:33:48.4030156Z \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\n2026-10-11T19:33:48.4031615Z Test failed. See exception logs above.\n2026-10-11T19:33:48.4032868Z The test description was: native Food flat Retained expiry filters and metadata\n2026-10-11T19:33:48.4033500Z \n2026-10-11T19:33:48.4033914Z ##[endgroup]\n2026-10-11T19:34:15.2021350Z ##[group]\u2705 Passing tests\n2026-10-11T19:34:15.2023093Z \u2705 native Food Add another drafts and shared menu eligibility",
+    "2026-10-11T19:07:15.9556499Z ...........s.................sss..................................E............\r\n2026-10-11T19:07:15.9557193Z ======================================================================\r\n2026-10-11T19:07:15.9558296Z ERROR: test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache (test_startup_diagnostics.StartupDiagnostics.test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache)\r\n2026-10-11T19:07:15.9559257Z ----------------------------------------------------------------------\r\n2026-10-11T19:07:15.9559701Z Traceback (most recent call last):\r\n2026-10-11T19:07:15.9560282Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\shutil.py\", line 632, in _rmtree_unsafe\r\n2026-10-11T19:07:15.9560833Z     os.unlink(fullname)\r\n2026-10-11T19:07:15.9561612Z PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnzjyim8a\\\\profile\\\\local.sqlite'\r\n2026-10-11T19:07:15.9562211Z \r\n2026-10-11T19:07:15.9562415Z During handling of the above exception, another exception occurred:\r\n2026-10-11T19:07:15.9562691Z \r\n2026-10-11T19:07:15.9562794Z Traceback (most recent call last):\r\n2026-10-11T19:07:15.9563399Z   File \"D:\\a\\tandemlog\\tandemlog\\tool\\test_startup_diagnostics.py\", line 34, in test_loaded_marker_does_not_accept_missing_rows_or_replayed_warm_cache\r\n2026-10-11T19:07:15.9564011Z     with tempfile.TemporaryDirectory() as directory:\r\n2026-10-11T19:07:15.9564465Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\tempfile.py\", line 943, in __exit__\r\n2026-10-11T19:07:15.9564875Z     self.cleanup()\r\n2026-10-11T19:07:15.9565269Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\tempfile.py\", line 947, in cleanup\r\n2026-10-11T19:07:15.9565771Z     self._rmtree(self.name, ignore_errors=self._ignore_cleanup_errors)\r\n2026-10-11T19:07:15.9566257Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\tempfile.py\", line 929, in _rmtree\r\n2026-10-11T19:07:15.9566689Z     _shutil.rmtree(name, onerror=onerror)\r\n2026-10-11T19:07:15.9567132Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\shutil.py\", line 787, in rmtree\r\n2026-10-11T19:07:15.9567556Z     return _rmtree_unsafe(path, onerror)\r\n2026-10-11T19:07:15.9567833Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\r\n2026-10-11T19:07:15.9568246Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\shutil.py\", line 629, in _rmtree_unsafe\r\n2026-10-11T19:07:15.9568702Z     _rmtree_unsafe(fullname, onerror)\r\n2026-10-11T19:07:15.9569121Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\shutil.py\", line 634, in _rmtree_unsafe\r\n2026-10-11T19:07:15.9569567Z     onerror(os.unlink, fullname, sys.exc_info())\r\n2026-10-11T19:07:15.9569996Z   File \"C:\\hostedtoolcache\\windows\\Python\\3.11.9\\x64\\Lib\\tempfile.py\", line 893, in onerror\r\n2026-10-11T19:07:15.9570437Z     _os.unlink(path)\r\n2026-10-11T19:07:15.9571085Z PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\\\Users\\\\RUNNER~1\\\\AppData\\\\Local\\\\Temp\\\\tmpnzjyim8a\\\\profile\\\\local.sqlite'\r\n2026-10-11T19:07:15.9573395Z \r\n2026-10-11T19:07:15.9573581Z ----------------------------------------------------------------------\r\n2026-10-11T19:07:15.9573937Z Ran 79 tests in 5.408s\r\n2026-10-11T19:07:15.9574057Z \r\n2026-10-11T19:07:15.9574180Z FAILED (errors=1, skipped=4)\r\n2026-10-11T19:07:15.9575639Z {\"executable_sha256\": \"0370190d81a1bc1e156676eb83f3adb83bb65e765fd5b7b74719004b77345310\", \"github_run_id\": \"123\", \"native_library_sha256\": \"7bc2fcce9d2525bcb6a722a6cc144de4fd8946c0047d7de73788e37d1f2d42d8\", \"portable_archive\": \"tandemlog-windows-x64-unsigned-portable.zip\", \"portable_sha256\": \"cdee9be2fe63d2930003c474c6e299c81835488566f5e3bdd318499e8c66a131\", \"source_revision\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\"}\r\n2026-10-11T19:07:16.0771682Z ##[error]Process completed with exit code 1.\r\n2026-10-11T19:07:16.0996031Z Post job cleanup.\r\n2026-10-11T19:07:16.2711801Z [command]\"C:\\Program Files\\Git\\bin\\git.exe\" version\r\n2026-10-11T19:07:16.2975959Z git version 2.56.0.windows.1\r"
+  ],
+  "artifact_verification": {
+    "run_id": 38165875973,
+    "head": "5c2c10ee0446bc402e9bee845d943f83223ff067",
+    "artifacts": [
+      {
+        "id": 11712111995,
+        "name": "android",
+        "zip_bytes": 80767696,
+        "zip_sha256": "392e7082ee7ed585032c1c65d874631648ae6eb26b15470a037a8a37a5125af9",
+        "crc": "pass",
+        "files": [
+          "android-SHA256SUMS.txt",
+          "android-signature.txt",
+          "tandemlog-android-test-only.apk"
+        ],
+        "apk": {
+          "filename": "tandemlog-android-test-only.apk",
+          "sha256": "25ea0bc7fa6a997c5c8917fca589740ac157c76b881900232e7c9e2b06b379ea",
+          "bytes": 165286099,
+          "test_only": true
+        }
+      },
+      {
+        "id": 11711728684,
+        "name": "windows-unit-tests",
+        "zip_bytes": 59454,
+        "zip_sha256": "f85416f5742fde34bdc18bcc80332a1ccf87f878e58e0bae4582d01351b5aaa7",
+        "crc": "pass",
+        "files": [
+          "windows-unit-tests.json"
+        ],
+        "unit_results": {
+          "success": 1028,
+          "skipped": 2,
+          "failure": 0,
+          "done": [
+            {
+              "success": true,
+              "type": "done",
+              "time": 495281
+            }
+          ],
+          "hidden_events_excluded": 145
+        }
+      }
+    ]
+  }
+}
