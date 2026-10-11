@@ -49,7 +49,7 @@ jobs:
           if [[ "$RUNNER_OS" == Linux ]]; then
             xvfb-run -a dbus-run-session -- flutter test integration_test/editor_flow_test.dart -d linux 2>&1 | tee ../evidence/editor-native-linux.log
           fi
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         if: always()
         with:
           name: isolated-text-${{ matrix.os }}
@@ -93,7 +93,7 @@ jobs:
           flutter pub get --enforce-lockfile
           flutter build apk --debug --target-platform android-arm64,android-x64
           sha256sum build/app/outputs/flutter-apk/app-debug.apk > ../evidence/editor-android-apk-sha256.txt
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
           name: isolated-text-android-lab-runtime-pending
           retention-days: 5
