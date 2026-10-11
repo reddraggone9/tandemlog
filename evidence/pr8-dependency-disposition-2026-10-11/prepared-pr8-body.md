@@ -1,0 +1,5 @@
+Updates reviewed immutable artifact Actions pins and url_launcher6.3.3 without changing app source, native platform locks, signing policy or release permissions.
+
+Exact head `54e4ac0011710648d670c7e9c801f058e79256fe`: [CI38170327228](https://github.com/reddraggone9/tandemlog/actions/runs/38170327228) passed all three jobs. Parent reports1031 Linux units,158 native flows and1173 Windows passing checks/two skips, plus independent verification of all five artifacts. Earlier failed CI receipts remain historical. Scoped cross-run artifact and native folder smokes retain their audited-source coverage.
+
+Keep draft/unmerged until parent confirms RC3 publication acceptance. Preserve main build68 terminal evidence during the later ordinary merge. Held AGP/Gradle and temporary audit smoke branch remain outside scope. A dependency-only stable release must use isolated v2026.10.3-derived source and separately reviewed maintenance-branch candidate admission; current main includes preview Food features. No publication is authorized by this PR.

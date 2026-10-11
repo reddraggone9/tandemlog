@@ -1,0 +1,102 @@
+{
+  "checked_at_utc": "2026-10-11T21:43:33.195660+00:00",
+  "proposal_head": "54e4ac0011710648d670c7e9c801f058e79256fe",
+  "proposal_state": "open",
+  "draft": true,
+  "CI_run": 38170327228,
+  "CI_event": "pull_request",
+  "CI_conclusion": "success",
+  "jobs": [
+    {
+      "id": 114561424907,
+      "name": "checks / android",
+      "conclusion": "success"
+    },
+    {
+      "id": 114561425023,
+      "name": "checks / windows",
+      "conclusion": "success"
+    },
+    {
+      "id": 114561425050,
+      "name": "checks / linux",
+      "conclusion": "success"
+    }
+  ],
+  "CI_counts_parent_reported": {
+    "linux_units": 1031,
+    "linux_native_flows": 158,
+    "windows_passing_checks": 1173,
+    "windows_skips": 2
+  },
+  "counts_qualification": "Parent reports exact-head counts and byte verification of all5 artifacts. This preparation independently reads final GitHub run/jobs/artifact metadata but deliberately does not re-download logs or artifacts. Windows1173 is preserved as parent reported passing-check count, not newly asserted standalone app-unit count.",
+  "artifacts": [
+    {
+      "id": 11715111554,
+      "name": "linux",
+      "bytes": 9246541,
+      "digest": "sha256:786c0d76a3155f0b4ea4d5b4ba723c317e6b18ea7c72b7be972bcfef3ebd882d",
+      "expired": false
+    },
+    {
+      "id": 11713868520,
+      "name": "windows-unit-tests",
+      "bytes": 61917,
+      "digest": "sha256:09f43f0a0e244ce367f9978ebb998521376b0a48b1ffdb1b6447808ece424c81",
+      "expired": false
+    },
+    {
+      "id": 11713837650,
+      "name": "windows-storage-harness",
+      "bytes": 4176698,
+      "digest": "sha256:3723d628e80b55f32bd4d3b0ad4088feb56f58115c111a06cfd25dc011427408",
+      "expired": false
+    },
+    {
+      "id": 11713828974,
+      "name": "windows",
+      "bytes": 26233734,
+      "digest": "sha256:0c5b723fa34e44bf862cc17fec39ad41d3a1d0cd8722c42a9681e7aa1ba8ed60",
+      "expired": false
+    },
+    {
+      "id": 11713192950,
+      "name": "android",
+      "bytes": 80767758,
+      "digest": "sha256:f8b02a7900692413cef5cde34930156e0cc8104efc1832669e507e98dc7f7a8b",
+      "expired": false
+    }
+  ],
+  "diff_review": "27 paths against settled main: 7 dependency/workflow inputs, 3 additive test/helper files, docs and evidence. No lib/native/android/packaging production changes. Workflow changes only immutable action pins and one version annotation. pub locks change only url_launcher6.3.2->6.3.3/hash; federated platform locks unchanged.",
+  "inherited_qualification": "Prior executable-bundle/native-package/hook audit and scoped cross-run/native folder evidence retained; existing npm advisories unchanged, GTK capability-to-dispatch race remains existing debt. PR debug APK is not owner-signed candidate/native installed acceptance.",
+  "main_after_review": "9c2bb80874bbe5f47713e037e4c16aec496272d4 is docs/evidence-only newer than integrated a227; normal merge must preserve its build68 terminal receipts. Do not rebase or discard current main merely to reuse PR checks.",
+  "merge_disposition": "ACCEPT_BOUNDED_CHANGE_FOR_LATER_MERGE; HOLD until parent accepts RC3 publication, then refresh PR head/state, retain draft until release clearance, and merge exact reviewed54e4ac head via ordinary non-force merge preserving main evidence. No merge performed.",
+  "release_disposition": "DO_NOT_PUBLISH_CURRENT_MAIN_AS_DEPENDENCY_ONLY_STABLE: it includes preview Food/user-facing changes. Create isolated maintenance source from exact released stable tag v2026.10.3/76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9 and apply only reviewed dependency changes, adapted tests/docs and later approved release metadata. Do not cherry-pick full integration/merge history.",
+  "stable_patch": {
+    "path": "stable-dependency-only.patch",
+    "bytes": 6215,
+    "sha256": "b10f969841adb020036eefc63f60d5766f3662fd19ff8eaeb06103e9a3897551",
+    "baseline_tag": "v2026.10.3",
+    "baseline_commit": "76c5dd5cb7eedb09d2d4b62f737d429e1abab7d9",
+    "changed_paths": [
+      ".github/workflows/android-candidate.yml",
+      ".github/workflows/prerelease.yml",
+      ".github/workflows/stable.yml",
+      ".github/workflows/text-merge-spike.yml",
+      ".github/workflows/validate.yml",
+      "pubspec.lock",
+      "pubspec.yaml"
+    ],
+    "validation": "git apply --cached --check and complete7-path staged diff against stable PASS using isolated temporary index only. No real worktree/branch/ref change or execution of updated dependencies.",
+    "not_release_ready": "Retains stable2026.10.3+56 deliberately; new approved stable display version and global monotonic build required at candidate freeze. Contains neither Food changes nor workflow branch-admission extension."
+  },
+  "policy_blocker": "Current android-candidate.yml and stable.yml demand refs/heads/main; candidate_source.validate_run requires head_branch=main. Stable branch cannot use current pipeline. Need separately reviewed tightly scoped maintenance-branch admission retaining trusted same-repo/approved ref, signer, source/version/hash, full matrix, native acceptance, exact originals and Lee attestation. Do not weaken checks or reset main.",
+  "remaining": [
+    "Parent full exactRC68 Android/new-trial acceptance and fresh quota before RC3 publication",
+    "Parent RC3 publication acceptance before PR8 merge",
+    "Reviewed maintenance-branch workflow support or later explicit Lee approval of all preview behavior before stable release",
+    "Fresh stable source-bound candidate matrix, owner signing, original artifacts, native acceptance, notes/editorial and applicable Lee authorization"
+  ],
+  "operations": "No merge, publication, signed-candidate dispatch, heavy testing, artifact downloads, source deletion or live synced data touched.",
+  "exact_production_patch_check": "PASS API hunk removal/addition pairing permits only both reviewed pins and annotation, url_launcher declaration/archive hash/version; no extra dependency/workflow semantic change."
+}

@@ -1,0 +1,137 @@
+--- a/.github/workflows/android-candidate.yml
++++ b/.github/workflows/android-candidate.yml
+@@ -54,7 +54,7 @@
+       - name: Remove temporary signing material
+         if: always()
+         run: rm -rf -- "$RUNNER_TEMP/tandemlog-signing"
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: android-release
+           path: dist/*
+--- a/.github/workflows/prerelease.yml
++++ b/.github/workflows/prerelease.yml
+@@ -54,7 +54,7 @@
+         with:
+           ref: ${{ needs.candidate.outputs.sha }}
+           fetch-depth: 0
+-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
++      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+         with:
+           run-id: ${{ inputs.candidate_run_id }}
+           github-token: ${{ github.token }}
+--- a/.github/workflows/stable.yml
++++ b/.github/workflows/stable.yml
+@@ -56,7 +56,7 @@
+         with:
+           ref: ${{ needs.candidate.outputs.sha }}
+           fetch-depth: 0
+-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
++      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+         with:
+           run-id: ${{ inputs.candidate_run_id }}
+           github-token: ${{ github.token }}
+--- a/.github/workflows/text-merge-spike.yml
++++ b/.github/workflows/text-merge-spike.yml
+@@ -49,7 +49,7 @@
+           if [[ "$RUNNER_OS" == Linux ]]; then
+             xvfb-run -a dbus-run-session -- flutter test integration_test/editor_flow_test.dart -d linux 2>&1 | tee ../evidence/editor-native-linux.log
+           fi
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         if: always()
+         with:
+           name: isolated-text-${{ matrix.os }}
+@@ -93,7 +93,7 @@
+           flutter pub get --enforce-lockfile
+           flutter build apk --debug --target-platform android-arm64,android-x64
+           sha256sum build/app/outputs/flutter-apk/app-debug.apk > ../evidence/editor-android-apk-sha256.txt
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: isolated-text-android-lab-runtime-pending
+           retention-days: 5
+--- a/.github/workflows/validate.yml
++++ b/.github/workflows/validate.yml
+@@ -8,7 +8,7 @@
+     runs-on: ubuntu-24.04
+     timeout-minutes: 30
+     steps:
+-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
++      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.2
+       - run: sudo apt-get update && sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev xvfb dbus-x11 flatpak librsvg2-common
+       - uses: ./.github/actions/setup-flutter
+       - uses: ./.github/actions/setup-text-engine
+@@ -46,7 +46,7 @@
+         run: bash packaging/linux/build-flatpak.sh
+       - name: Install, launch, replace and uninstall Flatpak with synthetic data
+         run: xvfb-run -a dbus-run-session -- bash packaging/linux/install-smoke.sh
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+         with:
+           name: linux
+           path: dist/*
+@@ -88,7 +88,7 @@
+           if ($LASTEXITCODE -ne 0) { throw 'Native migration harness compilation failed' }
+           python tool/package_storage_harness.py --bundle build/storage-harness/bundle --app-bundle build/windows/x64/runner/Release --output storage-harness-dist --source "$env:GITHUB_SHA" --run "$env:GITHUB_RUN_ID"
+           if ($LASTEXITCODE -ne 0) { throw 'Native migration harness provenance failed' }
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: windows-storage-harness
+           path: storage-harness-dist/*
+@@ -107,7 +107,7 @@
+         run: |
+           ./packaging/windows/build-and-smoke.ps1
+           Get-Content dist/windows-SHA256SUMS.txt
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: windows
+           path: dist/*
+@@ -171,7 +171,7 @@
+           cat android-signature.txt
+       - name: Preserve cold and warm Kotlin evaluation receipts
+         if: github.ref == 'refs/heads/fix/kotlin-2.4.20-remediation' && always()
+-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: kotlin-remediation-android-evidence
+           path: ${{ runner.temp }}/kotlin-remediation/*
+@@ -192,7 +192,7 @@
+           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --print-certs \
+             dist/android-recovery/tandemlog-TEST-ONLY-recovery-debug.apk \
+             > dist/android-recovery/signature.txt
+-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
++      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+         with:
+           name: android
+           path: dist/*
+--- a/pubspec.lock
++++ b/pubspec.lock
+@@ -536,10 +536,10 @@
+     dependency: "direct main"
+     description:
+       name: url_launcher
+-      sha256: f6a7e5c4835bb4e3026a04793a4199ca2d14c739ec378fdfe23fc8075d0439f8
+-      url: "https://pub.dev"
+-    source: hosted
+-    version: "6.3.2"
++      sha256: e8cc955c97e06df9879140a1fe301f3d493f01b7c62dec7f46834be31d7e9fda
++      url: "https://pub.dev"
++    source: hosted
++    version: "6.3.3"
+   url_launcher_android:
+     dependency: transitive
+     description:
+--- a/pubspec.yaml
++++ b/pubspec.yaml
+@@ -13,7 +13,7 @@
+   file_selector: ^1.0.4
+   crypto: ^3.0.6
+   uuid: ^4.5.1
+-  url_launcher: ^6.3.2
++  url_launcher: ^6.3.3
+   timezone: 0.11.1
+ dev_dependencies:
+   flutter_test:

@@ -1,0 +1,37 @@
+{
+  "qualification": "Read-only exact PR8 final diff/metadata review plus unexecuted dependency-only stable patch and unpublished PR body. Parent-attested current CI counts/artifact bytes remain distinct from root metadata/patch checks. No merge/release/policy change.",
+  "files": {
+    "artifacts.json": {
+      "bytes": 3596,
+      "sha256": "949b9fa8b8511e044839e7796ecd964fd492c2fab66999006688b3db501e0536"
+    },
+    "files.json": {
+      "bytes": 255782,
+      "sha256": "9ffab8171a7a27e9061209ce5c05bbd034ca09c5596c1dcbdf9d4aaa558ee513"
+    },
+    "final-disposition.json": {
+      "bytes": 5955,
+      "sha256": "077b55478b3a1e488a69d4bcde8c749a765598469a245e6af4c4cab6a7871405"
+    },
+    "jobs.json": {
+      "bytes": 15104,
+      "sha256": "4af3d0fe9e3ca679c0fa743724dd0f2df39dd62187f4485741bffa27f28bc564"
+    },
+    "pr.json": {
+      "bytes": 18336,
+      "sha256": "4ed875c254b1d1a22f1c8883d9a38fb66688c56be5a96a81b30b590f851ad5ed"
+    },
+    "prepared-pr8-body.md": {
+      "bytes": 1045,
+      "sha256": "a0f4908a562e732e76e1164d2322485b48dc57f95c0bfb49b626b6d730aca3fc"
+    },
+    "run.json": {
+      "bytes": 13155,
+      "sha256": "82bcb1b2277910b49c55ad177bd90771c0a2a5edc93287c33b3a630fd783cb7d"
+    },
+    "stable-dependency-only.patch": {
+      "bytes": 6215,
+      "sha256": "b10f969841adb020036eefc63f60d5766f3662fd19ff8eaeb06103e9a3897551"
+    }
+  }
+}
