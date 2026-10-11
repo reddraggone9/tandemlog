@@ -1,9 +1,7 @@
-Experimental 2026.10.4-rc.1 preview.
+Experimental 2026.10.4-rc.2 preview.
 
-- Added Food inventory with expiration dates, Inbox, retained stock, partial contents, and per-container removal and restoration.
+- Switch between Tasks and Food from the toolbar dropdown, with a compact icon on narrow screens.
+- Food expiration now uses just a date, without certainty fields or labels.
+- Fixed tapping the blank middle of short Inbox tasks to open the editor.
 
-- Disabled repeating-task checkboxes now have even opacity around their arrow tips.
-
-- Long error messages now scroll so task controls stay accessible.
-
-![Before: disabled repeat arrow tips have darker seams. After: the arrow tips and perimeter have even opacity.](https://raw.githubusercontent.com/reddraggone9/tandemlog/48d55416c6e593921e67ed77c2fe46a469a1b10a/evidence/food-2026.10.4-rc.1/media/disabled-repeat-before-after.png)
+![Before: Tasks and Food occupy a separate full-width row. After: Food appears in the existing toolbar dropdown.](https://raw.githubusercontent.com/reddraggone9/tandemlog/b8d99baada92060f3b1f99b4839d28b6b03e8faf/evidence/food-2026.10.4-rc.2/media/toolbar-before-after.png)

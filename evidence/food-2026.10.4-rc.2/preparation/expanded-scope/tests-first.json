@@ -1,0 +1,40 @@
+{
+  "base_executable_source": "00594c1f91f478a729e091ab41c418afbfcbb383",
+  "old_candidate_build": 61,
+  "next_build_planned": 62,
+  "production_changes_for_expanded_scope": "NOT_STARTED",
+  "approved_new_scope": [
+    "Default full-width Search/Add toggle with explicit outgoing-value clear and guarded pending submitted capture",
+    "Undated unretained Inbox group at top of Stock; no separate Inbox navigation; retained undated exclusively Retained",
+    "Local calendar-day expiration text colors: overdue red, today..+2 orange, +3..+6 yellow, +7 onward default, theme-readable and midnight rollover",
+    "Food toolbar Filter replaces Stock/Retained/Deleted tabs; Settings/account switching match Tasks account menu; distinct Deleted search scope and retention autocomplete preserved"
+  ],
+  "root_input_mode_red": {
+    "tests": 4,
+    "result": "0 passed,4 failed on missing default task-search (expected)",
+    "log": "task-input-mode-red.log",
+    "test_file": "integration_test/task_input_mode_workflow_test.dart",
+    "sha256_before_format": "60dbcef25fa142b4c12f82db7f4554c92ebbca08faf62cc3aea9f310aa09b5ca"
+  },
+  "independent_retry_red": {
+    "tests": 4,
+    "result": "0 passed,4 failed on missing default task-search (expected)",
+    "log": "task-input-mode-retry-red.log",
+    "test_revision_sha256": "148385a8467df7d3d4a916fcf94b899df3ec75235689f3301801185fc0a716f4",
+    "current_tests": 5,
+    "attribution": "Fifth selection/CtrlF test and actual pending Retry assertions added after initial4caseRED; not claimed as executed.",
+    "current_test_file_sha256": "4ada273bea068f32f0edd78829b9c0458d8a42a67ce6ded0cecf49b177e00053"
+  },
+  "independent_food_classification": {
+    "file": "test/food_combined_stock_review_test.dart",
+    "tests": 4,
+    "status": "Authored/formatted, not run"
+  },
+  "remaining": [
+    "Complete implementation and scoped/native visual testing",
+    "Update old hierarchy tests without weakening unaffected safeguards",
+    "Fresh source freeze and full hosted candidate gates",
+    "Independent expanded-range source/editorial/artifact reviews",
+    "Actual exact new Android acceptance before publication"
+  ]
+}

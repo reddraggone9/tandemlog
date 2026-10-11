@@ -26,6 +26,10 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
 
+- [Food Stock and toolbar refinements](decisions/0017-food-stock-and-toolbar-refinements.md): accepted combined Stock/Inbox, local date urgency and filter/account parity; implementation and native acceptance pending.
+
+- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): accepted default Search and explicit clearing toggle; implementation/native acceptance pending.
+
 - [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
 
 - [Task parity decisions](decisions/0003-task-parity-and-prerelease-boundary.md): authorized scope, time semantics and prerelease compatibility boundary.

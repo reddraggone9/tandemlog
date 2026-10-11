@@ -35,7 +35,9 @@
     "full frozen candidate hosted gates",
     "exact original installer verification",
     "actual Android build61 focused acceptance",
-    "independent release notes/media review before publication"
+    "independent release notes/media review before publication",
+    "Expanded Search/Add and combined Stock/color implementation and independent reviews, fresh build62 candidate"
   ],
-  "data": "Only disposable synthetic profiles; no user or trial import/migration/history rewrite"
+  "data": "Only disposable synthetic profiles; no user or trial import/migration/history rewrite",
+  "disposition": "BUILD61_INTERMEDIATE; later approved expanded scope pending. All recorded passes retain original source and scope."
 }

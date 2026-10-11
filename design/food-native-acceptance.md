@@ -1,5 +1,60 @@
 # Food RC native acceptance
 
+## Complete RC2/build62 — preparation and exact acceptance pending
+
+Build61 source `00594c1f91f478a729e091ab41c418afbfcbb383` and
+[signed candidate38115053314](https://github.com/reddraggone9/tandemlog/actions/runs/38115053314)
+are cancelled intermediate records. Lee added the Search/Add toggle and combined
+Stock/Inbox with expiration colors and toolbar filter/account parity after that
+source froze. No build61 APK is
+accepted or eligible for handoff/publication. The complete build62 source/run
+will be recorded after implementation and fresh gates.
+[Tests-first checkpoint](../evidence/food-2026.10.4-rc.2/preparation/expanded-scope/README.md)
+separates pending work from the earlier reviewed three-change source.
+
+Use only the complete successful run's original owner-signed APK with its actual
+APK SHA256 recorded in the final handoff. Reuse isolated synthetic profiles;
+do not import, migrate or touch production/trial records. Prior acceptance keeps
+its exact source/build attribution.
+
+Focused actual Android acceptance for the complete changed candidate:
+
+1. Verify exact package, owner signer, display version/build, install/update and
+   launch. Check existing synthetic Tasks, Food container IDs, settings, folder
+   grant and canonical records survive. Historical `estimated` true/false/null
+   records retain their original values and hashes.
+2. Open the Tasks/Food toolbar menu at wide/narrow widths and enlarged text in
+   both themes. Check full names/selected mark, compact icon/caret, counts,
+   actions/account identity and Settings. Navigate back from unavailable Food.
+   Check task-editor Cancel/Discard/Save and current-section choice without loss.
+3. Verify default full-width Search, toolbar Add/Search toggle and single main
+   input. Explicit flips clear outgoing text and query while preserving chosen
+   filters; repeated Add stays active, Enter/IME/submission remains clear, and
+   pending/failed submitted writes retain their Retry path with toggles disabled.
+   Check keyboard focus, selection overlays, shortcut, large text and navigation
+   without automatic Search keyboard. Existing editor protection remains separate.
+4. Tap the blank middle/center of a short plain Inbox task with Gboard open and
+   dismissed and after restart. Checkbox, overflow, checklist disclosure, long
+   press/multiselection and drag remain separate. RC1's failure is historical.
+5. Verify Stock's undated unretained Inbox group only when nonempty, followed by
+   globally expiration-sorted dated stock. Retained undated food appears only in
+   Retained with its missing-date cue. Search/deleted/reason filters retain their
+   scope without duplicates. Stock/Retained/Deleted live in the toolbar Filter;
+   Settings and user switching match Tasks account menu, with selected view/badge
+   and retention reason autocomplete available. Add/Edit has only a date, legacy mixed-certainty
+   grouping/fieldwise preservation still works, and blank-date Add lands Stock.
+   Date text uses local-calendar overdue/today..+2/+3..+6/+7 thresholds in red/
+   orange/yellow/default; both themes remain readable and rollover changes no
+   records. At320dp/200% reach scrolling guidance and all rows/controls with
+   Gboard open/dismissed; check date Save/restart UI replay.
+6. Provide a native Android Show taps demo and exact-APK acceptance attestation.
+   Linux GTK screenshots/demo and static inspection do not establish Android QA.
+
+Stable promotion requires Lee's acceptance. Preview publication follows all
+normal exact-artifact/native/editorial gates and the parent's final clearance.
+
+## Published RC1/build60 and qualified earlier coverage
+
 RC2026.10.4-rc.1/build60 passed the parent's affected Android native acceptance
 and is now published as an experimental prerelease. Executable source `3d671c20c6a1f6bdc2a2082f9a00e820c34b8050` passed
 [signed candidate38085381679](https://github.com/reddraggone9/tandemlog/actions/runs/38085381679)

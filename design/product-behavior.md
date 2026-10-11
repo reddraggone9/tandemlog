@@ -1,8 +1,9 @@
 # Product behavior and milestones
 
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
-Its scope is separate from tasks. The unreleased durable implementation uses production navigation and the shared
-profile DB. Final native and release gates remain pending.
+Its scope is separate from tasks. Its first experimental prerelease uses production
+navigation and the shared profile DB. The next refinements require fresh native
+and release gates.
 
 ## Accepted direction
 
@@ -27,6 +28,17 @@ filters, account identity and section actions retain their existing roles.
 Switching resolves any active editor draft first; choosing the current section
 leaves it alone. Food navigation and Settings remain available on its unavailable
 screen. [Approved rationale](decisions/0015-toolbar-section-navigation.md).
+
+The accepted next preview defaults to one full-width **Search tasks** input.
+The toolbar's plus **Add** action switches it to **What needs doing?**; the
+magnifier **Search** action switches back. Wide actions may show their names;
+narrow actions keep full accessible descriptions and touch targets. Explicit
+mode changes clear outgoing text and remove any outgoing search query while
+keeping chosen filters. Pending submitted captures retain their confirmation/
+retry ownership and block the switch. Successful capture stays in Add for
+repeated entry. Default Search does not summon the keyboard on section navigation;
+deliberate Add focuses entry. Task-editor draft guards remain separate.
+[Accepted rationale](decisions/0016-task-search-and-add-input.md).
 
 The first slice is folder/user selection, capture, edit, complete, undo, persistence, and convergence tests. Recurrence, reminders, deletion, advanced dates, floating priorities, manual shared sorting, and other modules are outside this slice.
 

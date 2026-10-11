@@ -1,0 +1,11 @@
+{
+  "source": "00594c1f91f478a729e091ab41c418afbfcbb383",
+  "version": "2026.10.4-rc.2",
+  "build": 61,
+  "candidate_run": 38115053314,
+  "push_ci_run": 38115046435,
+  "disposition": "INTERMEDIATE_CANCELLED_NOT_FOR_HANDOFF_OR_PUBLICATION",
+  "reason": "Lee approved the Search/Add main-input toggle after this source froze; fresh complete build62 must pass all gates.",
+  "artifacts": "No owner-signed APK accepted or downloaded; no handoff/native attestation/publication.",
+  "retention": "Original commits, run records, reviewed source and evidence retained; no old recovery/task/files deleted."
+}

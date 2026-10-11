@@ -1,5 +1,7 @@
 # Decision records
 
+- [0017 — Food Stock and toolbar refinements](0017-food-stock-and-toolbar-refinements.md): accepted combined Stock/Inbox, calendar urgency and action-bar parity; implementation and native acceptance pending.
+- [0016 — Task Search and Add input](0016-task-search-and-add-input.md): accepted next Food preview scope; implementation and new native acceptance pending.
 - [0015 — Toolbar section navigation](0015-toolbar-section-navigation.md): accepted next Food preview scope; focused native acceptance pending.
 
 - [0001 — Flutter client and portable file history](0001-client-and-storage.md): accepted.

@@ -19,6 +19,6 @@
   },
   "composition": "Original pixels crop[0,0,1200,300], unchanged scale, stacked with32px external centered Before/After labels",
   "output_sha256": "b4446a99366a553b69b01336288b1e65a0f5a6504e86be0c0f68d19c33651bcc",
-  "editorial_review": "../preparation/reviews/editorial-review.json; pending independent recheck of revised labels/provenance",
+  "editorial_review": "APPROVED: ../preparation/reviews/editorial-review.json; exact range3d671c20c6a1f6bdc2a2082f9a00e820c34b8050\u219200594c1f91f478a729e091ab41c418afbfcbb383",
   "text_scale": 1.0
 }

@@ -1,0 +1,62 @@
+{
+  "reviewer": "independent delegated editorial reviewer /root/food_rc2_editorial_review",
+  "scope": "Actual prerelease draft and media; no code, artifact, Android acceptance or publication approval",
+  "covered_source_range": {
+    "before": "3d671c20c6a1f6bdc2a2082f9a00e820c34b8050",
+    "after": "00594c1f91f478a729e091ab41c418afbfcbb383"
+  },
+  "guidance": [
+    "AGENTS.md",
+    "design/releases.md: end-user release-note and Before/After editorial policy"
+  ],
+  "draft": {
+    "paths": [
+      "design/prerelease-notes.md",
+      "evidence/food-2026.10.4-rc.2/release-notes-draft.md"
+    ],
+    "sha256": "3854d942c99e0edced2bb091a8d9fd46c06b183615a2df8f8112776fb899aaec",
+    "copies_identical": true,
+    "assessment": "APPROVED wording: three concise, accurate meaningful user-facing changes; no implementation/testing/preservation boilerplate or exceptional compatibility action required."
+  },
+  "media": {
+    "path": "evidence/food-2026.10.4-rc.2/media/toolbar-before-after.png",
+    "sha256": "b4446a99366a553b69b01336288b1e65a0f5a6504e86be0c0f68d19c33651bcc",
+    "raw_before_sha256": "0df9768a5b1afea37ea030c4260076d24c62030d3fbebc2b13a3d527bc970f2d",
+    "raw_after_sha256": "d06abf0fff0c9a4a03c0fa6a4aaee4ff362b224c5b6fe85afca802ef1de17452",
+    "actual_pixels_viewed": [
+      "composite",
+      "original Before",
+      "original After",
+      "revised composite with centered Before/After labels"
+    ],
+    "crop_verification": "Both300px crops exactly match unscaled raw pixels at y32 and364 of1200x664 composite.",
+    "assessment": "APPROVED: useful matching dark Linux GTK1200x850 text-scale1.0 synthetic Rice2-container captures; centered labels readable; controls/context useful; exact original unscaled crops preserved. Descriptive alt text present; no private user data.",
+    "raw_after_repository_path": "evidence/food-2026.10.4-rc.2/media/toolbar-after-raw.png",
+    "hosting_commit": "b8d99baada92060f3b1f99b4839d28b6b03e8faf",
+    "hosting_url": "https://raw.githubusercontent.com/reddraggone9/tandemlog/b8d99baada92060f3b1f99b4839d28b6b03e8faf/evidence/food-2026.10.4-rc.2/media/toolbar-before-after.png",
+    "public_media_check": "HTTP200 exact image hash; media commit is docs/evidence-only and contains no lib/pubspec changes from executable source00594c1."
+  },
+  "outcome": "APPROVED notes and media for exact covered executable range; no unresolved editorial findings",
+  "findings": [
+    {
+      "id": "center-labels",
+      "requirement": "design/releases.md: Keep only centered Before/After labels, without extra annotations.",
+      "observed": "Left-aligned Before \u2014 RC1 and After \u2014 RC2 candidate labels.",
+      "requested": "Use centered Before and After labels, preserving real-app crop pixels.",
+      "status": "RESOLVED and independently rechecked"
+    },
+    {
+      "id": "durable-provenance",
+      "requirement": "Record exact source revisions, raw captures and crop recipe in engineering evidence.",
+      "observed": "After source is working-tree description and raw path exists only under/tmp; text scale is not explicit.",
+      "requested": "Bind After to00594c1f91f478a729e091ab41c418afbfcbb383, record1.0 text scale, retain raw After PNG in repository evidence and reference receipt after approval.",
+      "status": "RESOLVED and independently rechecked"
+    }
+  ],
+  "publication_conditions": "Editorial gate only: frozen candidate gates and actual Android build61 exact-artifact acceptance remain separate; this receipt does not authorize publication or stable promotion.",
+  "revision_review": {
+    "original_draft_sha256": "3041d53b34c0c47217f9f0077f5b1ed4f9afcabfde1eae12c3df88ab9437fd47",
+    "original_media_sha256": "baac4e74763649d4c1c0457fc651eadbc1314265f0ef771fda998f7e70835769",
+    "resolution": "Author centered labels, retained exact After raw capture, recorded exact source and1.0 scale; reviewer visually and pixelwise rechecked revised image, notes URL and publicly hosted bytes."
+  }
+}
