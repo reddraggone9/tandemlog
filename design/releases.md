@@ -166,3 +166,25 @@ stays Latest. [Public evidence](../evidence/food-2026.10.4-rc.1/candidate/build6
 records exact identity, and the [native handoff](food-native-acceptance.md) preserves
 current60 acceptance and older59 editor/upgrade attribution. Private fixtures and
 importer evidence remain separate; no live import or stable promotion occurred.
+
+
+## Published experimental2026.10.4-rc.2/build64
+
+[Food2026.10.4-rc.2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.2)
+published2026-10-11T12:37:41Z as prerelease/not-Latest after exact build64 parent
+Android acceptance and independent readiness/artifact/editorial review.
+Candidate38133887765/source `71045e5021f9dee821bc24ea1c118158f029fd83`
+supplied the exact three installers. [Promotion38139953180](https://github.com/reddraggone9/tandemlog/actions/runs/38139953180)
+used reviewed docs dispatch `445f608d29c83a5dabd545e34887341cbeb09796` and notes
+SHA256 `8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8`.
+Normal source/signer/version/closed-asset/checksum/installed-lifecycle gates passed
+without rebuilding, a draft bridge or workflow changes.
+
+[Publication evidence](../evidence/food-2026.10.4-rc.2/candidate/build64/publication/README.md)
+records actual anonymous three-installer checks, public APK owner signing/package/
+version/code64/nondebuggable/ABIs, exact source/tag/notes and unchanged stable2026.10.3
+Latest plus all23 prior release identities/assets/notes/tag refs. Native64 focused
+calendar/SAF/cold-v2 passes and broader62 acceptance keep distinct source attribution.
+The existing manual Windows GUI RC waiver and inherited Flutter/SQLite RELRO
+qualification remain; no general16KB runtime/compliance claim is made. Private
+fixtures remain separate; no live-data operation or stable promotion occurred.

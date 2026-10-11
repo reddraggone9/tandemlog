@@ -1,7 +1,8 @@
 # One app-wide local database
 
-RC2/build64 milestone: exact hosted/artifact and parent Android native acceptance
-complete; publication authorized, final readiness/public verification pending.
+RC2/build64 milestone: published as prerelease/not-Latest after exact hosted,
+artifact, parent Android native and independent readiness acceptance. Actual public
+installer identities/source/notes/signature and prior-release preservation verified.
 [Current accepted evidence](../../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
 
 Historical preparation status (superseded by the build64 milestone above): published stable2026.10.3/build56, with completed bounded Windows/Android native acceptance and independent final source/artifact/publication review. [Release receipts](../../evidence/stable-2026.10.3/README.md) bind the accepted implementation. The Flatpak private-XDG correction below is newly user-approved for 2026.10.4-rc.2; its exact installed-package gates remain pending. No live-data operation is authorized.

@@ -1,6 +1,6 @@
 # Runtime and visual QA — updated 2026-10-11
 
-## Exact build64 native acceptance complete — RC2 publication authorized
+## Published RC2/build64 — exact native acceptance complete
 
 Source71045e5021f9dee821bc24ea1c118158f029fd83, candidate38133887765,
 APKc5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f
@@ -14,8 +14,13 @@ lifecycles independently pass; earlierRC1+57 Windows hash is historical only.
 
 Full hosted source gates pass970 Linux units/143 native flows and967 Windows
 units/two skips, plus Rust/contracts/tooling/build/owner signing. Parent cleared
-publication from the exact64 binaries without rebuild. Final review precedes dispatch; public verification follows it, with receipts
-recorded in [build64 evidence](../evidence/food-2026.10.4-rc.2/candidate/build64/README.md).
+publication from the exact64 binaries without rebuild.
+[RC2/build64](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.2) published2026-10-11T12:37:41Z through
+normal promotion38139953180 using reviewed docs dispatch445f608. Actual public
+installer bytes, tag/source, approved notes and owner APK signer/version pass;
+stable2026.10.3 remains Latest and all23 prior releases/assets/notes/tag refs
+remain unchanged. [Publication receipts](../evidence/food-2026.10.4-rc.2/candidate/build64/publication/README.md)
+retain exact identities, native attribution and existing qualifications.
 No stable promotion, live import, deletion or new feature is authorized.
 
 

@@ -1,0 +1,97 @@
+{
+  "release_id": 409657804,
+  "candidate_source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "promotion_run": 38139953180,
+  "dispatch_sha": "445f608d29c83a5dabd545e34887341cbeb09796",
+  "files": {
+    "README.md": {
+      "bytes": 2995,
+      "sha256": "bf3332f37233b58d0157f736bc9a6c2ebdea3a19883ce77126cb15aeb4dfe3f3"
+    },
+    "independent_postpublication_verify.py": {
+      "bytes": 7478,
+      "sha256": "cf0e511045c2a5482718534298bd8f37a19e6f4914787c3c6f9dab7531da82d9"
+    },
+    "independent-public-apk-badging.txt": {
+      "bytes": 1170,
+      "sha256": "3fc5ba60f3a2cadf4b8ad48abe7d8b4487c2ab9d4e73ff1783d54ff8410e222b"
+    },
+    "independent-public-apk-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "independent-anonymous-release-api.json": {
+      "bytes": 10554,
+      "sha256": "dffa779ce686823cda85200118744f2a855c25afecdd5779ce88c2b7ad747651"
+    },
+    "independent-public-verification.json": {
+      "bytes": 3064,
+      "sha256": "63fef2d598732552052e4d5e4ad626ee96181540fc7efd2ec8664e94baa21475"
+    },
+    "root_public_verify.py": {
+      "bytes": 6407,
+      "sha256": "0d0dd7c91fc1555943e5e59f7d0c0ff70d279f45dc2f2257977aa9a0b2b3afca"
+    },
+    "promotion-provider-decoded.log": {
+      "bytes": 30215,
+      "sha256": "4996a5c8d47ac7035ad4672a6118f8432e74021a60adef4720c139a1e84c5335"
+    },
+    "tags-before.json": {
+      "bytes": 8468,
+      "sha256": "06a746fafc3ee26b42f6052166eec9c67906ffaf963dfba48d503e413abfef22"
+    },
+    "latest-before.json": {
+      "bytes": 8350,
+      "sha256": "ff6cb0c41ac790b88e6b61e75ad26cbaad8620abe1274e7bd33aa9437a92198a"
+    },
+    "releases-before.json": {
+      "bytes": 319379,
+      "sha256": "3dcd875e1703f0a9468fb2c7775d8ea2d9ce10a35c2e0d2ef82a48d1bd093fc9"
+    },
+    "release-api.json": {
+      "bytes": 10554,
+      "sha256": "dffa779ce686823cda85200118744f2a855c25afecdd5779ce88c2b7ad747651"
+    },
+    "published-notes.md": {
+      "bytes": 2217,
+      "sha256": "8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8"
+    },
+    "public-apksigner.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "public-badging.txt": {
+      "bytes": 1170,
+      "sha256": "3fc5ba60f3a2cadf4b8ad48abe7d8b4487c2ab9d4e73ff1783d54ff8410e222b"
+    },
+    "latest-api.json": {
+      "bytes": 8350,
+      "sha256": "ff6cb0c41ac790b88e6b61e75ad26cbaad8620abe1274e7bd33aa9437a92198a"
+    },
+    "tag-refs-api.json": {
+      "bytes": 10262,
+      "sha256": "2d51635834c04634642dc0800a0a491fb0518534060869555c7f0ff58b867494"
+    },
+    "all-releases-api.json": {
+      "bytes": 330236,
+      "sha256": "b029df62e7cd7502ba6bd6d93a8bb279a4bb4aec77cbcd816ad261ee93abaf73"
+    },
+    "promotion-run-api.json": {
+      "bytes": 13799,
+      "sha256": "e2e2e594c43f7bf1f0d996a99f17fb847649c2db7bdbfac4b8f7b54d8c74c313"
+    },
+    "promotion-jobs-api.json": {
+      "bytes": 5317,
+      "sha256": "f2e3eadb56b32b3485a28ea4cd4a18edc0487e6f5f4c57876faf24786547bfbc"
+    },
+    "root-public-verification.json": {
+      "bytes": 2438,
+      "sha256": "df2a36e88b838ab24a02bb724d1e79b157a6bce63b78e12401693aee49f37f19"
+    },
+    ".gitattributes": {
+      "bytes": 8,
+      "sha256": "705fd4d6451a31d36b3df7de96f83f30ac976c9b4a6d1e51671d8e2f33e2d0da"
+    }
+  },
+  "qualification": "Excludes itself; public binaries are checked but retained outside repo."
+}

@@ -1,4 +1,4 @@
-# Accepted build64 — RC2 publication readiness
+# Accepted build64 — RC2 published and verified
 
 Exact executable source71045e5021f9dee821bc24ea1c118158f029fd83 and signed
 candidate38133887765 pass all five jobs:970 Linux units/143 native workflows,
@@ -29,7 +29,10 @@ mounted controller owner. Release-note images retain truthful historical source
 attribution and current64 byte-identical pixel evidence. No canonical semantics,
 old files/tasks, live data or dependencies changed in the calendar correction.
 
-Publication is explicitly authorized only as prerelease/not-Latest from these
-exact accepted binaries without rebuilding. Final independent readiness/editorial
-review precedes dispatch; public byte/tag/notes/signer/Latest/prior-release checks
-follow it. Stable2026.10.3 remains Latest; every prior release is preserved.
+[RC2/build64](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.2) published2026-10-11T12:37:41Z as
+prerelease/not-Latest from these exact accepted binaries without rebuilding.
+Independent readiness and editorial ACCEPT precede normal promotion38139953180
+at trusted docs dispatch445f608. [Publication receipts](publication/README.md)
+verify actual public installer bytes/tag/source/approved notes/owner signer,
+stable2026.10.3 Latest and every prior release/tag preserved. Native source and
+existing qualification boundaries above remain unchanged.

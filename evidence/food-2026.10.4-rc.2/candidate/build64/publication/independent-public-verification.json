@@ -1,0 +1,56 @@
+{
+  "checked_at_utc": "2026-10-11T12:39:54.383581+00:00",
+  "verdict": "ACCEPT_INDEPENDENT_ANONYMOUS_PUBLIC_BYTES_AND_RELEASE_PRESERVATION",
+  "release_id": 409657804,
+  "tag": "v2026.10.4-rc.2",
+  "source": "71045e5021f9dee821bc24ea1c118158f029fd83",
+  "version": "2026.10.4-rc.2+64",
+  "candidate_run": 38133887765,
+  "promotion_run": 38139953180,
+  "dispatch_sha": "445f608d29c83a5dabd545e34887341cbeb09796",
+  "notes_sha256": "8608fcdba20b61f67ae9f9cd33b3c4da00c65c47af5fb34a7ae2011b6830fea8",
+  "assets": [
+    {
+      "asset_id": 630713899,
+      "name": "tandemlog-2026.10.4-rc.2-android.apk",
+      "bytes": 67000993,
+      "sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f",
+      "crc32": "d74ecf1f",
+      "original_archive_member_crc32": "PASS",
+      "GitHub_API_digest_size": "PASS",
+      "anonymous_public_download": "PASS no Authorization header; exact returned public browser_download_url",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.2/tandemlog-2026.10.4-rc.2-android.apk"
+    },
+    {
+      "asset_id": 630713897,
+      "name": "tandemlog-2026.10.4-rc.2-linux-x64.flatpak",
+      "bytes": 9225872,
+      "sha256": "d3ee6b7b971d742514075075336ace5246f7693f57170ea4db849c8af10527e3",
+      "crc32": "0a1c9a37",
+      "original_archive_member_crc32": "PASS",
+      "GitHub_API_digest_size": "PASS",
+      "anonymous_public_download": "PASS no Authorization header; exact returned public browser_download_url",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.2/tandemlog-2026.10.4-rc.2-linux-x64.flatpak"
+    },
+    {
+      "asset_id": 630713896,
+      "name": "tandemlog-2026.10.4-rc.2-windows-x64-setup.exe",
+      "bytes": 12376785,
+      "sha256": "76727c860e176b166f31c615f6ef9210fce97ab77d6a6b43ac5de5954d822c09",
+      "crc32": "f4db570e",
+      "original_archive_member_crc32": "PASS",
+      "GitHub_API_digest_size": "PASS",
+      "anonymous_public_download": "PASS no Authorization header; exact returned public browser_download_url",
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4-rc.2/tandemlog-2026.10.4-rc.2-windows-x64-setup.exe"
+    }
+  ],
+  "public_APK_signature_package_version_nondebuggable_threeABIs": "PASS ownSDK36",
+  "APK_zip_crc_members": 79,
+  "tag_source": "PASS exact accepted candidate source",
+  "prerelease_notLatest": true,
+  "stableLatest_unchanged": "v2026.10.3",
+  "prior_releases_unchanged": 23,
+  "prior_tag_refs_unchanged": 23,
+  "prior_comparison_scope": "Release identities/notes/source targets/flags/timestamps and asset identities/names/digests/sizes/timestamps; download_count intentionally excluded as mutable traffic statistics. All prior tag ref/object metadata exact.",
+  "qualification": "Verified actual anonymous public installer bytes and source-bound promotion; no rebuild or runtime execution. Native64 acceptance consumed in separate readiness receipt. Existing inherited RELRO qualification retained; no fullAPK16K runtime/compliance claim."
+}

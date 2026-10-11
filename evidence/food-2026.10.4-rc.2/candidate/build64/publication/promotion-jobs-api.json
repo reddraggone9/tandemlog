@@ -1,0 +1,149 @@
+{
+  "total_count": 2,
+  "jobs": [
+    {
+      "id": 114471584895,
+      "run_id": 38139953180,
+      "workflow_name": "Experimental prerelease",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/38139953180",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAapwnEfw",
+      "head_sha": "445f608d29c83a5dabd545e34887341cbeb09796",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114471584895",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/38139953180/job/114471584895",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-11T12:37:14Z",
+      "started_at": "2026-10-11T12:37:15Z",
+      "completed_at": "2026-10-11T12:37:22Z",
+      "name": "candidate",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-11T12:37:16Z",
+          "completed_at": "2026-10-11T12:37:17Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-11T12:37:17Z",
+          "completed_at": "2026-10-11T12:37:20Z"
+        },
+        {
+          "name": "Run test \"$GITHUB_REF\" = refs/heads/main",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-11T12:37:20Z",
+          "completed_at": "2026-10-11T12:37:20Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 6,
+          "started_at": "2026-10-11T12:37:20Z",
+          "completed_at": "2026-10-11T12:37:21Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 7,
+          "started_at": "2026-10-11T12:37:21Z",
+          "completed_at": "2026-10-11T12:37:21Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114471584895",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000860,
+      "runner_name": "GitHub Actions 1000000860",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    },
+    {
+      "id": 114471610125,
+      "run_id": 38139953180,
+      "workflow_name": "Experimental prerelease",
+      "head_branch": "main",
+      "run_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/runs/38139953180",
+      "run_attempt": 1,
+      "node_id": "CR_kwDOR8uaUM8AAAAapwonDQ",
+      "head_sha": "445f608d29c83a5dabd545e34887341cbeb09796",
+      "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/jobs/114471610125",
+      "html_url": "https://github.com/reddraggone9/tandemlog/actions/runs/38139953180/job/114471610125",
+      "status": "completed",
+      "conclusion": "success",
+      "created_at": "2026-10-11T12:37:22Z",
+      "started_at": "2026-10-11T12:37:25Z",
+      "completed_at": "2026-10-11T12:37:44Z",
+      "name": "publish",
+      "steps": [
+        {
+          "name": "Set up job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 1,
+          "started_at": "2026-10-11T12:37:25Z",
+          "completed_at": "2026-10-11T12:37:27Z"
+        },
+        {
+          "name": "Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 2,
+          "started_at": "2026-10-11T12:37:27Z",
+          "completed_at": "2026-10-11T12:37:30Z"
+        },
+        {
+          "name": "Run actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 3,
+          "started_at": "2026-10-11T12:37:30Z",
+          "completed_at": "2026-10-11T12:37:32Z"
+        },
+        {
+          "name": "Verify accepted APK and installed desktop gates; publish experimental preview",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 4,
+          "started_at": "2026-10-11T12:37:32Z",
+          "completed_at": "2026-10-11T12:37:42Z"
+        },
+        {
+          "name": "Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 8,
+          "started_at": "2026-10-11T12:37:42Z",
+          "completed_at": "2026-10-11T12:37:42Z"
+        },
+        {
+          "name": "Complete job",
+          "status": "completed",
+          "conclusion": "success",
+          "number": 9,
+          "started_at": "2026-10-11T12:37:42Z",
+          "completed_at": "2026-10-11T12:37:42Z"
+        }
+      ],
+      "check_run_url": "https://api.github.com/repos/reddraggone9/tandemlog/check-runs/114471610125",
+      "labels": [
+        "ubuntu-24.04"
+      ],
+      "runner_id": 1000000861,
+      "runner_name": "GitHub Actions 1000000861",
+      "runner_group_id": 0,
+      "runner_group_name": "GitHub Actions"
+    }
+  ]
+}

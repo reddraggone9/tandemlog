@@ -1,11 +1,13 @@
-# Food RC2 — exact build64 accepted; publication authorized
+# Food RC2 — exact build64 published and verified
 
 [Accepted build64](candidate/build64/README.md) closes all hosted/artifact and
-parent native gates. Final independent readiness/editorial review precedes exact
-no-rebuild publication. The preparation records below retain their original
-source attribution;62/63/cancelled initial64 remain ineligible.
+parent native gates. [Public RC2](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4-rc.2) publishes exact64 binaries
+without rebuild through promotion38139953180. [Publication receipts](candidate/build64/publication/README.md)
+verify actual downloads, signer/source/notes, stableLatest and all23 prior releases.
+The historical preparation records below retain their original attribution;
+62/63/cancelled initial64 remain ineligible.
 
-# Food RC2 — build64 replacement candidate;62/63 held
+## Historical build64 replacement preparation;62/63 held
 
 Build62 is held after actual Android calendar clipping at320dp/200%. Build63 was
 cancelled before signing after a pending-date resize reset. Reviewed replacement64
