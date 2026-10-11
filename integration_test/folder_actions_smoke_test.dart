@@ -46,8 +46,9 @@ void main() {
       });
       if (missing) {
         final profile = await Directory('$root/profile').create();
-        await File('${profile.path}/settings.json')
-            .writeAsString(jsonEncode({'folder': folder.path}));
+        await File(
+          '${profile.path}/settings.json',
+        ).writeAsString(jsonEncode({'folder': folder.path}));
         await tester.pumpWidget(TandemlogApp(profilePath: profile.path));
         await tester.pumpAndSettle();
         await tester.tap(find.byTooltip('Settings'));
