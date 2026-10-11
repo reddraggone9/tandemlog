@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Exact evidence bytes. Historical receipts retain their attributed scopes; current build66 evidence does not imply candidate/platform/publication completion.",
+  "qualification": "Exactcurrentevidencebytes. Frozen candidatee6e26a1 retainsits146-entryhistoricalmanifest; thisdocs-onlyextension addsfinalreviews/currentrunandonepublicframefilenamecorrection, notexecutablechanges.",
   "files": {
     "README.md": {
-      "bytes": 19819,
-      "sha256": "f9f8ac8dc46578860f8baad76d3b999308dc3d187b879d6bd0d198c2e0a9a795"
+      "bytes": 20565,
+      "sha256": "fc0fab64961d8e9bf7aba9bcf8dc94de6d57e67c17cfb83e1d01f3dc78796b0d"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -13,6 +13,14 @@
     "candidate/build65/pending-final-candidate.json": {
       "bytes": 668,
       "sha256": "24bde39eb58be2a99f49a63c8577504f20de6dba01491dcc754840b93ace24ed"
+    },
+    "candidate/build66/frozen-source-inventory-independent-verification.json": {
+      "bytes": 92118,
+      "sha256": "84c7e2bb67540ff2fab08e9f7fe6ca27416ea3eb7c36fc55387de8fc776fcfb4"
+    },
+    "candidate/build66/pending-full-candidate.json": {
+      "bytes": 321,
+      "sha256": "6c9c9d812c497a160738cf3be187ce411834c05f70cc822b104e7c2d0c2cd555"
     },
     "candidate/held-38153414378/build65-windows-actual-artifact-bindings.json": {
       "bytes": 10505,
@@ -79,8 +87,8 @@
       "sha256": "1db16c66ff22c624df371380d612452827c5e8ee18d06912c9bf90ad4b55824b"
     },
     "demo/native-linux-add-another-host-media.json": {
-      "bytes": 1899,
-      "sha256": "6feaa584072d76046a5474222c2e1775e6ecedc4d34bec4b791761dc5f4dc57b"
+      "bytes": 1911,
+      "sha256": "a92b630bf75452aa07b04da8a23749a8afa7f48d8458e3faf8447f66fbe58dde"
     },
     "demo/native-linux-add-another-host-scripted.mp4": {
       "bytes": 140300,
@@ -506,9 +514,21 @@
       "bytes": 3219,
       "sha256": "edcedad01199a9205eb5170af16044a859572f1322d4ed38a48bc7af716b1478"
     },
+    "reviews/immutable-release-media-http-verification.json": {
+      "bytes": 984,
+      "sha256": "c39d1b32380d3f0f82f7cfd29dbcdd4e3ed096c4cea006648a2c1c908f726265"
+    },
+    "reviews/independent-build66-editorial-frozen-final.json": {
+      "bytes": 24923,
+      "sha256": "a7f42250524e4ce3d96969dbedac6d2a23042a6c386f5281ea2813c75e1776bd"
+    },
     "reviews/independent-build66-editorial-precommit.json": {
       "bytes": 24144,
       "sha256": "b7044038523d11ddd711635612105a95d19eb31ecf4dea5b6159d60cb5c888e2"
+    },
+    "reviews/independent-build66-native-closure-final.json": {
+      "bytes": 8040,
+      "sha256": "dd2d9a5483b486f412a6999f6bf13d837df9ab2a5a848e23d391b2cdbedc2da0"
     },
     "reviews/independent-build66-ui-architecture-source-review.json": {
       "bytes": 8026,

@@ -1,0 +1,7 @@
+{
+  "source": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+  "candidate_run": 38165025596,
+  "version": "2026.10.4-rc.3+66",
+  "status": "in_progress",
+  "qualification": "Status snapshot only; candidate preflight passes, allplatformchecks/signing/originals/exactAndroid/publication remain gated. NoeligibleAPKclaimed."
+}

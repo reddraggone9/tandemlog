@@ -1,0 +1,140 @@
+{
+  "portability": "Consumer-local paths normalized only; original exact receipt retained. Historical frozen candidate bindings remain unchanged.",
+  "original_receipt_sha256": "b51e8245fe398a71086d1d0960df4f0f0e93c3893d9afc3f352f44a9e8b0e46b",
+  "review": {
+    "version": 1,
+    "reviewedUtc": "2026-10-11T18:46:41.351140+00:00",
+    "verdict": "ACCEPTED_SCOPED_BUILD66_LINUX_NATIVE_CLOSURE",
+    "mustFixArchitectureOrRuntime": [],
+    "sourceCommit": "e6e26a1a253e25ee3edf5515ce2553e75d88ac3a",
+    "extends": {
+      "path": "<consumer-evidence>/independent-ui-followup-native-pixel-final-addendum.json",
+      "bytes": 11593,
+      "sha256": "fd6c2f1c776283f595c2f0f0e5e02da83cd3e7480d37e1116249413ae8796c9d"
+    },
+    "sourceBindings": {
+      "integration_test/food_add_another_workflow_test.dart": {
+        "path": "<checkout>/integration_test/food_add_another_workflow_test.dart",
+        "bytes": 9834,
+        "sha256": "1152fd2257574c6411ca36d9d1aee76e5fa50baa711a7783381616450f01b5cd"
+      },
+      "integration_test/food_all_status_search_workflow_test.dart": {
+        "path": "<checkout>/integration_test/food_all_status_search_workflow_test.dart",
+        "bytes": 1774,
+        "sha256": "18145feadefd0feeb40778d9ad28034d8d62ccf5831bb0e119b142344654a140"
+      },
+      "integration_test/food_preview_workflow_test.dart": {
+        "path": "<checkout>/integration_test/food_preview_workflow_test.dart",
+        "bytes": 6594,
+        "sha256": "32165a7f250a94f693160694efd8faf3a1facf75f94bcf04595cd34ef0f8c490"
+      },
+      "integration_test/local_profile_workflow_test.dart": {
+        "path": "<checkout>/integration_test/local_profile_workflow_test.dart",
+        "bytes": 6824,
+        "sha256": "ce14fdf0f6b23d87f18cb36a8252bab6b4f80156eafb98a542acc426b6101869"
+      },
+      "lib/food/food_page.dart": {
+        "path": "<checkout>/lib/food/food_page.dart",
+        "bytes": 68360,
+        "sha256": "82efcddb57f0c83f6fd567931efc955184bdf208f6250c356c0a5f83dc8e9e62"
+      },
+      "lib/food/inventory.dart": {
+        "path": "<checkout>/lib/food/inventory.dart",
+        "bytes": 24057,
+        "sha256": "b2726737d7581f51b8516ae0ce4b08412365eb9861564a382c1d6cb7e1abb6f1"
+      },
+      "lib/main.dart": {
+        "path": "<checkout>/lib/main.dart",
+        "bytes": 205522,
+        "sha256": "2c6c52849981fbf224a1f272494c554a351248ffa7286d764d8f847017f1f198"
+      },
+      "lib/presentation/civil_date_input.dart": {
+        "path": "<checkout>/lib/presentation/civil_date_input.dart",
+        "bytes": 6682,
+        "sha256": "1d058fd32ea065dba84aae2f0e0fe5f435aa1e59a68039f9c817f417970e8a0f"
+      },
+      "lib/presentation/section_content.dart": {
+        "path": "<checkout>/lib/presentation/section_content.dart",
+        "bytes": 186,
+        "sha256": "4847f43d6939c8a747b68679517090819f9e382a1f9dd4d2c9bb0cbf1467be6b"
+      }
+    },
+    "evidenceBindings": [
+      {
+        "path": "<consumer-evidence>/retained-legacy-native-final.txt",
+        "bytes": 5908,
+        "sha256": "255a6634b69f574d51bf21d278026e5bff52c76ffd81a9a3d4b9869c94ee4b03"
+      },
+      {
+        "path": "<consumer-evidence>/add-another-recorded-native-final.txt",
+        "bytes": 6084,
+        "sha256": "0ec555e69c7dbdf30d1a0e341a69432cdfaf6b743ef4c53afc2c2d6b19013b8e"
+      },
+      {
+        "path": "<consumer-evidence>/picker-profile-restart-native-final.txt",
+        "bytes": 6642,
+        "sha256": "b7b86afff70a673d3d35333cdba3a8ed43c2886de05182d7868b7d0cb16e7774"
+      },
+      {
+        "path": "<consumer-evidence>/analyze-final-build66.txt",
+        "bytes": 686,
+        "sha256": "d09008f40669429e5214c6ad4ba4d84c6c70fb57130c968021eb6903961a9f5a"
+      },
+      {
+        "path": "<consumer-evidence>/build66-release-tool-tests.txt",
+        "bytes": 614,
+        "sha256": "a22507a81ac0b4cb5007c9214866cce14b41774b2844ab00f11ec1297797128c"
+      }
+    ],
+    "observedTerminalChecks": {
+      "legacyFoodNative": "3/3 PASS, 02:41; all-status search, combined Stock/filter, date display/resume.",
+      "recordedAddAnotherHost": "1/1 PASS, 00:15; complete TandemlogApp synthetic host.",
+      "profileSwitchAndRestart": "1/1 PASS, 00:10; actual settings-trigger rejection retains original store/watch/expansion/Undo/preferences, successful switch clears workspace history, owner close/reopen retains writer/folder and one permanent local.sqlite. Mock folder chooser does not prove physical Android SAF.",
+      "analysis": "No issues found, 1.9s.",
+      "releaseToolChecks": "79 checks: 78 passed, 1 skipped. Printed synthetic packaging-test hashes/run identity are test output, not a released artifact."
+    },
+    "demo": {
+      "video": {
+        "path": "<checkout>/evidence/toolbar-2026.10.4-rc.3/demo/native-linux-add-another-host-scripted.mp4",
+        "bytes": 140300,
+        "sha256": "9f7ff5fc9a2014edabd54b0cbb2c1dccd9c95cf4142c9695cae41f5b2a685b29"
+      },
+      "metadata": {
+        "path": "<checkout>/evidence/toolbar-2026.10.4-rc.3/demo/native-linux-add-another-host-media.json",
+        "bytes": 1911,
+        "sha256": "a92b630bf75452aa07b04da8a23749a8afa7f48d8458e3faf8447f66fbe58dde"
+      },
+      "deliveredFrame": {
+        "path": "<checkout>/evidence/toolbar-2026.10.4-rc.3/demo/add-another-host-frame-2s.png",
+        "bytes": 83875,
+        "sha256": "1db16c66ff22c624df371380d612452827c5e8ee18d06912c9bf90ad4b55824b"
+      },
+      "independentlyExtractedFrame": {
+        "path": "<consumer-evidence>/independent-add-another-frame-2s.png",
+        "bytes": 83875,
+        "sha256": "1db16c66ff22c624df371380d612452827c5e8ee18d06912c9bf90ad4b55824b"
+      },
+      "actualProbe": "ffprobe: 9.133333s, 1200x850, 15fps; 140300 bytes.",
+      "verification": "Scratch video equals public copy byte-for-byte. Independently decoded 2s frame equals the supplied/public frame pixel-for-pixel. Actual frame personally viewed: visible X pointer, readable Add editor, copied descriptive fields, blank focused expiration, blank retention and count 1.",
+      "scope": "Scripted Flutter inputs plus actual X pointer; Linux GTK/Xvfb synthetic workspace. A single sampled frame confirms pointer presence, not uninterrupted pointer visibility or every behavior in the 9.13s video. Functional add/cancel/validation/Undo assertions are in the passing native test. Recorded-run Before is rejected Test starting; earlier accepted native4 supplies Before."
+    },
+    "sourceAndProvenanceChecks": [
+      "All five production hashes from previous independent source/pixel review remain unchanged.",
+      "All demo source bindings match current committed files.",
+      "Five closing logs and video/frame public copies are byte-identical to reviewed scratch artifacts.",
+      "No build, test suite, application launch or source mutation performed by reviewer; only log/source reads, frame decoding and scratch receipt writes."
+    ],
+    "documentationCorrection": {
+      "status": "CLOSED",
+      "finding": "Corrected viewed_frame.file to add-another-host-frame-2s.png. Relative public path resolves and delivered byte hash matches.",
+      "qualification": "Metadata-only working-tree correction after executable source commit e6e26a1a253e25ee3edf5515ce2553e75d88ac3a; no production or runtime evidence changed."
+    },
+    "remainingGates": [
+      "Exact final-source hosted/full candidate checks, signing and exact-package acceptance remain required.",
+      "Physical Android/SAF and applicable Windows native acceptance remain pending; GTK/mock transport results do not close them.",
+      "No publication or stable promotion acceptance is implied."
+    ],
+    "historicalQualification": "Preserves previous review receipts, initial native8/10 and rejected/black images as historical diagnostics. Current closing logs independently read to terminal; no earlier failed gate rewritten as successful.",
+    "candidateStatus": "Parent reports candidate38165025596 exact e6e26a1a253e25ee3edf5515ce2553e75d88ac3a running. Not independently closed by this local-native receipt."
+  }
+}

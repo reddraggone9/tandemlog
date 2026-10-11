@@ -1,6 +1,6 @@
 # Current status — 2026-10-11
 
-## RC3/build66 preparation after held build65
+## RC3/build66 full candidate after held build65
 
 Build65/source3c16234 candidate38156985011 terminated with Linux startup-smoke
 failure after its unit/native/build/package checks. Android debug and Windows
@@ -18,9 +18,11 @@ full exact hosted startup/package gates remain pending.
 Lee subsequently approved shared standalone1450px Tasks/Food content width,
 unchanged Task editor behavior, matching desktop secondary-click/ellipsis Food
 menus, Add another… prefilled independent Add drafts, and separating native
-folder choice from validation/loading progress. Build66 carries these changes;
-focused tests/native pixels, independent final review, a fresh full signed
-candidate and exact Android acceptance remain in progress. Build65 artifacts
+folder choice from validation/loading progress, plus a flat expiration-sorted
+Retained list with reasons shown per row. Focused tests/native pixels and final
+independent source/native/editorial reviews pass. Full candidate38165025596
+is running on exact e6e26a1a253e25ee3edf5515ce2553e75d88ac3a/build66; signed
+originals and exact Android acceptance remain pending. Build65 artifacts
 remain retained historical evidence. No new RC3 is published.
 
 ## Earlier approved RC3 batch
@@ -54,7 +56,7 @@ candidate38152037169/source16cb07d failed nine obsolete unit expectations before
 owner signing. Two fixture-only corrections reproduce9 failures then pass16
 checks with clean analysis and independent acceptance; original60 source hashes
 and all application code remain unchanged. The targeted native editor matrix passes12 variants in4:45; replacement signed
-candidate38153414378/source1bd746e is also held: a global native Undo finder matches both wide toolbar and Snackbar, then Linux reaches its40-minute deadline. The scoped Snackbar fixture passes its actual native case in25 seconds; independent review accepts that correction and a Linux-only55-minute allowance retaining all gates. Build65 candidate38156985011/source3c162347105bbd01f55ef09652d29c397d013e01 later failed Linux startup smoke and signing was skipped. Fixture-only seeder initialization and diagnostic retention plus the approved current UI corrections supersede it in build66; fresh signed artifacts, updated editorial review and Android acceptance remain pending. Historical editorial approval covers only the unchanged notes/media through build65. Any old null-contents
+candidate38153414378/source1bd746e is also held: a global native Undo finder matches both wide toolbar and Snackbar, then Linux reaches its40-minute deadline. The scoped Snackbar fixture passes its actual native case in25 seconds; independent review accepts that correction and a Linux-only55-minute allowance retaining all gates. Build65 candidate38156985011/source3c162347105bbd01f55ef09652d29c397d013e01 later failed Linux startup smoke and signing was skipped. Fixture-only seeder initialization and diagnostic retention plus the approved current UI corrections supersede it in build66; fresh signed artifacts and Android acceptance remain pending; current frozen build66 editorial review passes. Historical editorial approval covers only the unchanged notes/media through build65. Any old null-contents
 or uninitialized throwaway trial needs a separately coordinated fresh path and
 identity; the cloud does not delete/reset it or touch live data. No RC2 republish,
 stable promotion or dependency upgrade is included.

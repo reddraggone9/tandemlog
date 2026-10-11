@@ -6,7 +6,9 @@ Android debug and Windows completed, but no build65 APK is eligible. Old Windows
 visible-window/model smoke alone may show a recovery window after ingestion and
 does not prove an admitted usable Tasks UI. Original reports keep their original
 scope. Fixture admission correction and approved width/menu/Add another/picker
-work require a fresh build66 candidate and installed acceptance. All historical
+and flat Retained work pass scoped native/source/pixel/editorial checks. Full
+build66 candidate38165025596 runs exacte6e26a1a253e25ee3edf5515ce2553e75d88ac3a;
+original artifact/signing and installed acceptance remain pending. All historical
 running snapshots below are superseded by this status. No stable promotion or
 live-data operation is authorized here.
 
