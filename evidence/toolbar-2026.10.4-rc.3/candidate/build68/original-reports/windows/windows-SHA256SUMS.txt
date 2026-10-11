@@ -1,0 +1,1 @@
+bc1606ddd179a7f61ae6aacbf884f106c8e8bd2150876fe634bd695d114e79b9  tandemlog-windows-x64-unsigned-setup.exe

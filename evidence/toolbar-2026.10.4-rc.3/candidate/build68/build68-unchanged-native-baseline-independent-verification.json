@@ -1,0 +1,107 @@
+{
+  "checked_at_utc": "2026-10-11T20:50:44.093584+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "baseline": {
+    "build": 64,
+    "apk_sha256": "c5e6aff8cb25c0b6a67a8fce79aaabd000be352d891fc11025d7b20efcca117f"
+  },
+  "candidate": {
+    "build": 68,
+    "apk_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c"
+  },
+  "members": [
+    {
+      "name": "lib/arm64-v8a/libapp.so",
+      "build68_sha256": "2b7f9bf30a71cac8471bda2c3896ae264942b065cc0b41acf147697100ee26c6",
+      "build64_sha256": "92e77eead360371e796bfdccc29538abd1a9a86a30ea3b80803af808ffea774d",
+      "equal": false
+    },
+    {
+      "name": "lib/arm64-v8a/libdartjni.so",
+      "build68_sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "build64_sha256": "62730751967a2a16873b9e096f36c8606050473408c96a5a23062b1e090727f2",
+      "equal": true
+    },
+    {
+      "name": "lib/arm64-v8a/libflutter.so",
+      "build68_sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "build64_sha256": "1617e3b3bf10f4569c30db20b37fccfcc0b9a179b827543c01e5f18e91966b6c",
+      "equal": true
+    },
+    {
+      "name": "lib/arm64-v8a/libsqlite3.so",
+      "build68_sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "build64_sha256": "081df67ee9ab852daea6a0679427e90fc89a0245d06f93dafe2309875c609c5c",
+      "equal": true
+    },
+    {
+      "name": "lib/arm64-v8a/libtandemlog_text.so",
+      "build68_sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "build64_sha256": "924baed84df50cea7ded8a81b523dbf4f1a19aa26c1df77d9f5cb437c206a0c0",
+      "equal": true
+    },
+    {
+      "name": "lib/armeabi-v7a/libapp.so",
+      "build68_sha256": "fa4a07ad1d97ed0e3e6fac1e13cec5fb0863cb281fbed1459d82588272b91f10",
+      "build64_sha256": "6889fb49651ac28b3c5ef98409ce1a1ad225360aedafdcb0d06a5323647e454c",
+      "equal": false
+    },
+    {
+      "name": "lib/armeabi-v7a/libdartjni.so",
+      "build68_sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "build64_sha256": "49a3ddced203a49f104c974dddc70ce2b3547bb6035de318cb4f1bacdc2904c2",
+      "equal": true
+    },
+    {
+      "name": "lib/armeabi-v7a/libflutter.so",
+      "build68_sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "build64_sha256": "5ef72b4565efac255eb08ffdbd6cb9b7ed027215ffa47ca6b7745f0e2074eee1",
+      "equal": true
+    },
+    {
+      "name": "lib/armeabi-v7a/libsqlite3.so",
+      "build68_sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "build64_sha256": "5f331b44ef2549f1e3fa2153ad22d60d85c5a43766e4690a29cc49a0652db772",
+      "equal": true
+    },
+    {
+      "name": "lib/armeabi-v7a/libtandemlog_text.so",
+      "build68_sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "build64_sha256": "70871d83e75f6012d7166377274a20a0f8ebd3a4d31c6afbcfe834ffc8a0a4f5",
+      "equal": true
+    },
+    {
+      "name": "lib/x86_64/libapp.so",
+      "build68_sha256": "0f4b2e6a3ebf5441ba7ba6eaf944239d9f548ed668feff18acd97f5d437889ba",
+      "build64_sha256": "d72c0c8328425f5e89e306ff4a14edde205c48719b3b7d40e4275ad4cd45652c",
+      "equal": false
+    },
+    {
+      "name": "lib/x86_64/libdartjni.so",
+      "build68_sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "build64_sha256": "c38274c6147dcfd760b2bd5d519427fad7bd0b2bc368c117036d8579049b8813",
+      "equal": true
+    },
+    {
+      "name": "lib/x86_64/libflutter.so",
+      "build68_sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "build64_sha256": "b1ec05dba7ee856f093c189ee46fb5893ba1096fcd4ac955f3662a9d4c5e1ea2",
+      "equal": true
+    },
+    {
+      "name": "lib/x86_64/libsqlite3.so",
+      "build68_sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "build64_sha256": "c773c3a25e4c11a450cc700ac95d665c3a1ae75ad426a204fc9b7a7a69b0e191",
+      "equal": true
+    },
+    {
+      "name": "lib/x86_64/libtandemlog_text.so",
+      "build68_sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "build64_sha256": "2c1aa04dc56039676648edf3bd88a234b06899c82685722b7eabe1c0396641d8",
+      "equal": true
+    }
+  ],
+  "verdict": "PASS_ALL_12_NON_AOT_NATIVE_LIBRARY_BYTES_UNCHANGED",
+  "qualification": "Accepted build64 pre-existing framework/SQLite RELRO qualification remains unchanged byte-for-byte. No new gate, dependency upgrade, full-APK16K compliance/runtime claim or Android execution by reviewer."
+}

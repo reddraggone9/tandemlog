@@ -1,0 +1,269 @@
+{
+  "checked_at_utc": "2026-10-11T20:53:56.381673+00:00",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "version": "2026.10.4-rc.3+68",
+  "artifact_api_metadata": {
+    "id": 11713188716,
+    "node_id": "MDg6QXJ0aWZhY3QxMTcxMzE4ODcxNg==",
+    "name": "windows",
+    "size_in_bytes": 26236993,
+    "url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11713188716",
+    "archive_download_url": "https://api.github.com/repos/reddraggone9/tandemlog/actions/artifacts/11713188716/zip",
+    "expired": false,
+    "digest": "sha256:088a4a414291610a0bd366410f30c8945302d7b971f2063772b5efff5d04fa14",
+    "created_at": "2026-10-11T20:00:58Z",
+    "updated_at": "2026-10-11T20:00:58Z",
+    "expires_at": "2026-10-16T20:00:57Z",
+    "workflow_run": {
+      "id": 38169726969,
+      "repository_id": 1204525648,
+      "head_repository_id": 1204525648,
+      "head_branch": "main",
+      "head_sha": "8c6ee23c78232094715b9bf79f9d3be54b3b522a"
+    }
+  },
+  "actual_archive": {
+    "path": "/tmp/food-rc68-final-artifact-review/windows-38169726969-original.zip",
+    "bytes": 26236993,
+    "sha256": "088a4a414291610a0bd366410f30c8945302d7b971f2063772b5efff5d04fa14"
+  },
+  "original_member_inventory_and_crc": "PASS",
+  "strict_member_checksums": "PASS",
+  "actual_members": [
+    {
+      "name": "tandemlog-windows-x64-unsigned-setup.exe",
+      "bytes": 12390469,
+      "sha256": "bc1606ddd179a7f61ae6aacbf884f106c8e8bd2150876fe634bd695d114e79b9",
+      "crc_valid": true,
+      "crc32": "606531ae",
+      "payload_extracted": false
+    },
+    {
+      "name": "tandemlog-windows-x64-unsigned-portable.zip",
+      "bytes": 14412983,
+      "sha256": "b0a1c414cd3bee2483bb53ace80fc76734bb7f758ac4fdd8b90c8eee27d19ce7",
+      "crc_valid": true,
+      "crc32": "cbf23e36",
+      "payload_extracted": true
+    },
+    {
+      "name": "windows-install-smoke.json",
+      "bytes": 1758,
+      "sha256": "b39f5f10ca9bd3ebc102240928b292c34db1fe25bdd2e285a0f9849611496a27",
+      "crc_valid": true,
+      "crc32": "ee0f9cc3",
+      "payload_extracted": true
+    },
+    {
+      "name": "windows-portable-provenance.json",
+      "bytes": 2181,
+      "sha256": "9fcd2d1af052b0352120973a84d9c0248bbb5dce5d0d56caa1939b0d3bd98d9f",
+      "crc_valid": true,
+      "crc32": "1b6b9217",
+      "payload_extracted": true
+    },
+    {
+      "name": "windows-portable-SHA256SUMS.txt",
+      "bytes": 111,
+      "sha256": "0b25c8054b15a90a6a969a71baca9e2873c3c673b86c70243c494fed3165c2a4",
+      "crc_valid": true,
+      "crc32": "fa48bd5a",
+      "payload_extracted": true
+    },
+    {
+      "name": "windows-SHA256SUMS.txt",
+      "bytes": 108,
+      "sha256": "376b6e9edb53f5a4fbb1614c0635bb4b440c2c65b48588b2d913a7203c33d9c4",
+      "crc_valid": true,
+      "crc32": "effa71ae",
+      "payload_extracted": true
+    }
+  ],
+  "frozen_policy_sha256": "257e124987e2a3f43c2f98c797880916d977b001a0f191850885e7e577a07147",
+  "lifecycle": {
+    "phases": [
+      {
+        "phase": "after-install",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": false,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=38",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=3",
+          "TANDEMLOG_PHASE manifest=1",
+          "TANDEMLOG_PHASE ingest=7",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=129 FILES_READ=2"
+        ]
+      },
+      {
+        "phase": "after-upgrade",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": false,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=5",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=2",
+          "TANDEMLOG_PHASE manifest=1",
+          "TANDEMLOG_PHASE ingest=7",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=72 FILES_READ=2"
+        ]
+      },
+      {
+        "phase": "after-uninstall",
+        "passed": true,
+        "loaded_projection": false,
+        "sandbox_stopped": false,
+        "markers": []
+      },
+      {
+        "phase": "after-reinstall",
+        "passed": true,
+        "loaded_projection": true,
+        "sandbox_stopped": false,
+        "markers": [
+          "TANDEMLOG_MAIN",
+          "TANDEMLOG_FIRST_FRAME_MS=5",
+          "TANDEMLOG_PHASE identity_lock=0",
+          "TANDEMLOG_PHASE sqlite_open_schema=4",
+          "TANDEMLOG_PHASE manifest=2",
+          "TANDEMLOG_PHASE ingest=8",
+          "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+          "TANDEMLOG_READY_MS=228 FILES_READ=2"
+        ]
+      }
+    ]
+  },
+  "lifecycle_frozen_policy": "PASS",
+  "portable_actual_members": [
+    {
+      "name": "dartjni.dll",
+      "bytes": 59904,
+      "sha256": "ff3b04454125129e1ce316366850ee3fb4f3873ef56763699117ab2d73ba31c4"
+    },
+    {
+      "name": "data/app.so",
+      "bytes": 8651656,
+      "sha256": "095d9c8df3eb2d90097ed89d2e219332e5f32465b73317c82589ea0a3e401a35"
+    },
+    {
+      "name": "data/flutter_assets/AssetManifest.bin",
+      "bytes": 101,
+      "sha256": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665"
+    },
+    {
+      "name": "data/flutter_assets/FontManifest.json",
+      "bytes": 82,
+      "sha256": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d"
+    },
+    {
+      "name": "data/flutter_assets/fonts/MaterialIcons-Regular.otf",
+      "bytes": 4732,
+      "sha256": "2e17e964f4c9c1835a55b116a164c1cd88b35834f5b00623966035f3427723eb"
+    },
+    {
+      "name": "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt",
+      "bytes": 2008832,
+      "sha256": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49"
+    },
+    {
+      "name": "data/flutter_assets/NativeAssetsManifest.json",
+      "bytes": 131,
+      "sha256": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379"
+    },
+    {
+      "name": "data/flutter_assets/NOTICES.Z",
+      "bytes": 103365,
+      "sha256": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc"
+    },
+    {
+      "name": "data/flutter_assets/shaders/ink_sparkle.frag",
+      "bytes": 21856,
+      "sha256": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af"
+    },
+    {
+      "name": "data/flutter_assets/shaders/stretch_effect.frag",
+      "bytes": 17616,
+      "sha256": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f"
+    },
+    {
+      "name": "data/icudtl.dat",
+      "bytes": 864880,
+      "sha256": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7"
+    },
+    {
+      "name": "file_selector_windows_plugin.dll",
+      "bytes": 111616,
+      "sha256": "429e42613df303019b290e20bdf45c332e8bb9f2b2400f1db705b901ba1e8cd2"
+    },
+    {
+      "name": "flutter_windows.dll",
+      "bytes": 21274112,
+      "sha256": "8bd7b61eee31aa436edb182db41624d1cd3b2688a7e03622320dbeae067b5251"
+    },
+    {
+      "name": "sqlite3.dll",
+      "bytes": 1709056,
+      "sha256": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce"
+    },
+    {
+      "name": "tandemlog.exe",
+      "bytes": 135168,
+      "sha256": "6e96fbe70595a42dc85e4f575b3fee002e9a370839dd6dd0f89dcfd15aaf48f0"
+    },
+    {
+      "name": "tandemlog_text.dll",
+      "bytes": 1160192,
+      "sha256": "ccf164b534130944ee50f7490d23328e8a05578aa0ddca4f77594d2b43622bc1"
+    },
+    {
+      "name": "url_launcher_windows_plugin.dll",
+      "bytes": 98304,
+      "sha256": "9375b896bebeb1d1f1bf7025c760e118e59bdcdc366d1dbdc716fdea00266606"
+    }
+  ],
+  "portable_x64_native_PE_export_check": "PASS static PE inspection, no DLL execution",
+  "actual_windows_executable_file_versions": [
+    [
+      2026,
+      10,
+      4,
+      68
+    ]
+  ],
+  "actual_windows_display_version_utf16": "2026.10.4-rc.3",
+  "portable_metadata": {
+    "source_revision": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+    "github_run_id": "38169726969",
+    "artifact": "tandemlog-windows-x64-unsigned-portable.zip",
+    "artifact_sha256": "b0a1c414cd3bee2483bb53ace80fc76734bb7f758ac4fdd8b90c8eee27d19ce7",
+    "payload_sha256": {
+      "dartjni.dll": "ff3b04454125129e1ce316366850ee3fb4f3873ef56763699117ab2d73ba31c4",
+      "data/app.so": "095d9c8df3eb2d90097ed89d2e219332e5f32465b73317c82589ea0a3e401a35",
+      "data/flutter_assets/AssetManifest.bin": "a63b19baf4fbe15c009b38cdea6cf3eabb1574318b99a9031f810399e52e5665",
+      "data/flutter_assets/FontManifest.json": "28b1eb2b3d2e1ad60b8c8b0f9100b1ccbf492f7fa97f5bebb51ea97e73926e7d",
+      "data/flutter_assets/fonts/MaterialIcons-Regular.otf": "2e17e964f4c9c1835a55b116a164c1cd88b35834f5b00623966035f3427723eb",
+      "data/flutter_assets/native/text_engine/THIRD_PARTY_NOTICES.txt": "430c9445a65bdbef4584264e99e4ec350a763553ad773f13022abf30b2a96c49",
+      "data/flutter_assets/NativeAssetsManifest.json": "4ac70f7d67abb2ffc105d2cabfdee68c9aa138d132107e5be4949c539f7ce379",
+      "data/flutter_assets/NOTICES.Z": "7aaf694d4e8c7090cbe591d29c61327b20559fe6fb0fcbe4c31b668340c951cc",
+      "data/flutter_assets/shaders/ink_sparkle.frag": "1fe8436a743884cb65078fe8c7b38e18f5365f2a2961270916f426fd13c604af",
+      "data/flutter_assets/shaders/stretch_effect.frag": "bc7599dbbbaab310efe41520574138d21fb18a88c8fe4495ed79315309336f6f",
+      "data/icudtl.dat": "325a86063d26334c2eabe1743cea073b612540fbf3d8fc2ef0b5708e3763a8c7",
+      "file_selector_windows_plugin.dll": "429e42613df303019b290e20bdf45c332e8bb9f2b2400f1db705b901ba1e8cd2",
+      "flutter_windows.dll": "8bd7b61eee31aa436edb182db41624d1cd3b2688a7e03622320dbeae067b5251",
+      "sqlite3.dll": "98b4be674137b85ec111a7a29223e87aa41c3e964d61f73602471ddd7b9c56ce",
+      "tandemlog.exe": "6e96fbe70595a42dc85e4f575b3fee002e9a370839dd6dd0f89dcfd15aaf48f0",
+      "tandemlog_text.dll": "ccf164b534130944ee50f7490d23328e8a05578aa0ddca4f77594d2b43622bc1",
+      "url_launcher_windows_plugin.dll": "9375b896bebeb1d1f1bf7025c760e118e59bdcdc366d1dbdc716fdea00266606"
+    },
+    "scope": "Exact unsigned Release bundle; isolated synthetic QA only"
+  },
+  "portable_frozen_policy_and_crc": "PASS",
+  "notices": "Content equals source with Windows checkout CRLF / Unix LF representation accounted for; hosted native gate proves exact Windows checkout bytes."
+}

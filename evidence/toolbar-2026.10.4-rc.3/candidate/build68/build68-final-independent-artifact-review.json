@@ -1,0 +1,111 @@
+{
+  "checked_at_utc": "2026-10-11T20:54:26.764465+00:00",
+  "reviewer": "Independent exact-artifact reviewer",
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "version": "2026.10.4-rc.3+68",
+  "verdict": "ACCEPT_ORIGINAL_ARTIFACTS_AND_HOSTED_GATES_ANDROID_RUNTIME_PENDING",
+  "archives_and_members": "All3 original ZIPs/14 closed members match GitHub API source/run/digest/size and original CRC/strict member checksums. Original report bytes retained including Windows CRLF and Linux startup preamble. One-time supported GitHub resolved-reference to current Library full-transfer materialization; no duplicate originals.",
+  "android": {
+    "artifact_id": 11714269945,
+    "apk_bytes": 67099301,
+    "apk_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.4-rc.3",
+    "version_code": 68,
+    "nondebuggable": true,
+    "ABIs": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "static_gates": "Own SDK36 apksigner/aapt, whole-APK ZIP alignment,3 custom-text ELF/RELRO/exports and exact notices PASS; no Android execution by reviewer."
+  },
+  "actual_hosted_counts": {
+    "candidate_jobs": "5/5SUCCESS",
+    "linux_units": 1030,
+    "linux_native_workflows": 158,
+    "windows_units": 1027,
+    "windows_unit_platform_skips": 2,
+    "rust_tests": {
+      "windows": [
+        4
+      ],
+      "linux": [
+        4
+      ]
+    },
+    "native_contracts_and_tool_counts": {
+      "windows": [
+        107,
+        79
+      ],
+      "linux": [
+        107,
+        79
+      ]
+    },
+    "analysis_format": "PASS source-bound hosted steps"
+  },
+  "desktop_lifecycles": "Both original four-phase hosted installation reports PASS; Linux catalog/icons/private default XDG one permanent local.sqlite/no host-filesystem or network grants/stopped sandbox PASS. No local installer execution or human Windows GUI claim; standing manual Windows GUI waiver retained.",
+  "native_baseline_qualification": "All12non-AOT libraries exactly equal accepted build64;3AOT libapp libraries change. Accepted pre-existing Flutter/SQLite RELRO qualification retained unchanged, no new gate/upgrade/full-APK16K runtime or compliance claim.",
+  "source_inventory": "At recorded freeze, 358 application/pipeline/test/packaging and 124 native/platform files matched frozen Git and checkout. All83 supplied source-input entries and193 evidence manifest entries match exact frozen8c6ee23 source. Prior three failed build65 runs remain preserved and ineligible",
+  "retained_geometry_observation": "Once-retained Linux log has24 diagnostics:12unit/12native. Four native width168 Zeta paragraphs extend full-range selection to174.8195343017578 only through SPACEoffset13; all nonspace letter geometry is present and within bounds plus frozen0.5 tolerance. Failed66 exact character offset was not logged and remains unproven.",
+  "preserved_prior_candidates": "Failed65 predecessors, failed66 and cancelled67 retain historical HOLD receipts and originals where available; none substituted into68.",
+  "log_qualification": "Official GitHub App provider-decoded UTF8 log content preserved without newline/BOM normalization. Hashes are of retained decoded representations; independent original archive/member byte attestations are separate.",
+  "superseded_for_final_ui_acceptance": false,
+  "candidate_scope": "Reviewed build68 shared outer Tasks/Food desktop width/context/Add Another/picker/Retained UI and synthetic startup-fixture correction",
+  "remaining": [
+    "Parent exact installed Android acceptance",
+    "Fresh quota and explicit publication clearance"
+  ],
+  "data_boundary": "No live synced user data touched; no rebuild/recompression/substitution or source/docs edits by reviewer.",
+  "receipts": [
+    {
+      "file": "frozen-source-inventory-independent-verification.json",
+      "bytes": 85822,
+      "sha256": "b1f41ef543604dd2f321f737b386e4d38a5b1a4c9b5e8fd5db006f2aabe23675"
+    },
+    {
+      "file": "build68-windows-actual-artifact-bindings.json",
+      "bytes": 10373,
+      "sha256": "fce20d6a2c0508b0e59da45fba79288c701b8b12219a5ea444f3c88f787fbce9"
+    },
+    {
+      "file": "build68-linux-actual-artifact-bindings.json",
+      "bytes": 8049,
+      "sha256": "54ac61d0fc44b486851334d8eba58e157f688d312eb10338801fb8bbeb511288"
+    },
+    {
+      "file": "build68-android-release-actual-artifact-bindings.json",
+      "bytes": 3716,
+      "sha256": "54cfed8562ab21dcf80706e0c72cdf51a3d8fe6840b2fbcaaa3ad9ca93734a2f"
+    },
+    {
+      "file": "build68-combined-inventory-independent-verification.json",
+      "bytes": 4160,
+      "sha256": "5d01c72cb0d9bb5e34e4553a2acf5e8f2a7a4366e5ad11eea8d667939238a3a7"
+    },
+    {
+      "file": "build68-independent-original-artifact-manifest.json",
+      "bytes": 4849,
+      "sha256": "9ea4d3ee78fc65b479ccdbc77aee5d7425fe79025debf7d2687e0245754be0da"
+    },
+    {
+      "file": "build68-unchanged-native-baseline-independent-verification.json",
+      "bytes": 4643,
+      "sha256": "26a2850c4c969199359f072e409e6775ed994a8147a98257dd134eaf51a92cf5"
+    },
+    {
+      "file": "build68-hosted-gates-independent-verification.json",
+      "bytes": 3413,
+      "sha256": "92b677f15f2cf274c2f6e40c667dcc8be62cba8b9f40ee9721fc1d994d5aa148"
+    },
+    {
+      "file": "build68-native-retained-geometry-independent-observation.json",
+      "bytes": 11971,
+      "sha256": "15f5576b6d737718e6ef02434272d3e402d185d4012293fc79d219b07a9187dc"
+    }
+  ]
+}

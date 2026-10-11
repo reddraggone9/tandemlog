@@ -1,0 +1,56 @@
+{
+  "source_commit": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "candidate_run": 38169726969,
+  "candidate_url": "https://github.com/reddraggone9/tandemlog/actions/runs/38169726969",
+  "version": "2026.10.4-rc.3+68",
+  "run_conclusion": "success",
+  "required_jobs": "5/5 SUCCESS",
+  "terminal_at_utc": "2026-10-11T20:47:25Z",
+  "original_archives": {
+    "windows": {
+      "artifact_id": 11713188716,
+      "bytes": 26236993,
+      "sha256": "088a4a414291610a0bd366410f30c8945302d7b971f2063772b5efff5d04fa14",
+      "original_API_size_digest_source_run_crc": "PASS"
+    },
+    "linux": {
+      "artifact_id": 11715045921,
+      "bytes": 9215794,
+      "sha256": "02ae9abff4117c02acf56dd9e7aed0c1861a23c88912ee42eabd2b1a27b91576",
+      "original_API_size_digest_source_run_crc": "PASS"
+    },
+    "android-release": {
+      "artifact_id": 11714269945,
+      "bytes": 31115048,
+      "sha256": "b21231f0991405e56e1588ce316e3a483abf23c059eb61395953c4c611449bd1",
+      "original_API_size_digest_source_run_crc": "PASS"
+    }
+  },
+  "android": {
+    "artifact_id": 11714269945,
+    "apk_bytes": 67099301,
+    "apk_sha256": "19bfdaa8052c8522cc5e142bdcd2e92a7ee13ea81705714b7e87b63c85c58f0c",
+    "certificate_sha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.4-rc.3",
+    "version_code": 68,
+    "nondebuggable": true,
+    "ABIs": [
+      "armeabi-v7a",
+      "arm64-v8a",
+      "x86_64"
+    ],
+    "static_gates": "Own SDK36 apksigner/aapt, whole-APK ZIP alignment,3 custom-text ELF/RELRO/exports and exact notices PASS; no Android execution by reviewer."
+  },
+  "independent_final_review_sha256": "b9cf5e2ad9cc5214eb5aa1c0a08daddf272fcc992a2bc1dfbee99161fa623504",
+  "original_apk_retained_local_path": "/tmp/food-rc68-final-artifact-review/android-release-38169726969/tandemlog-android.apk",
+  "cloud_checks": "Frozen 482 source files, 83 input bindings, 193 frozen evidence entries; original 3 archives and 14 closed actual members; exact signed Android static checks; hosted Windows/Linux installed lifecycles; Linux 1030 units/158 native and Windows 1027 units/2 platform skips PASS. Both platforms 4 Rust/107 contracts/79 tooling checks PASS.",
+  "root_qualification": "Root independently checked frozen source and official hosted logs. Second root original-artifact verifier was prepared but never executed after parent stop instruction; original byte checks are independently performed by artifact reviewer.",
+  "remaining": [
+    "Parent exact installed Android acceptance and actual SAF/IME/Show taps evidence",
+    "Fresh parent quota and publication clearance"
+  ],
+  "publication": "Not published; parent coordinated after local QA/quota. Stable feature promotion requires Lee acceptance.",
+  "recovery": "Executor responsive again; current source/evidence pushed and original installers preserved. No further downloads, cleanup or heavy cloud work. Parent previously closed old checkpoint recovery accounting.",
+  "data_boundary": "No live synced user data touched."
+}

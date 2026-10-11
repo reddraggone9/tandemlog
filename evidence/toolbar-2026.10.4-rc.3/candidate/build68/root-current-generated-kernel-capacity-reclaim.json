@@ -1,0 +1,31 @@
+{
+  "checked_at_utc": "2026-10-11T20:53:21.592066+00:00",
+  "action": "Remove exactly one current-root-generated debug compiler output after all associated native runs terminal",
+  "file": {
+    "path": "/tmp/tandemlog-food-date-readability/build/linux/x64/debug/bundle/data/flutter_assets/kernel_blob.bin",
+    "bytes": 64041824,
+    "sha256": "f270977b07bd89d36967b41d7a6b5adb644f99f8835d6ade395308c675bce88f",
+    "mtime_utc": "2026-10-11T19:43:14+00:00"
+  },
+  "proof_identical_recorded_current_run_compiler_output": {
+    "path": "/tmp/tandemlog-food-date-readability/.dart_tool/flutter_build/33ca5a0e7dfdeebae28017c84f762a7f/app.dill",
+    "bytes": 64041824,
+    "sha256": "f270977b07bd89d36967b41d7a6b5adb644f99f8835d6ade395308c675bce88f",
+    "mtime_utc": "2026-10-11T19:43:13.073044+00:00"
+  },
+  "native_terminal_log": {
+    "path": "/tmp/native-ci-corrections/actual-native-dark-closure.txt",
+    "bytes": 6002,
+    "sha256": "36c1fe7268d47f2d2ce4fc79eb6e0867a36280adb04d6634cb1ff5ecbd8a0b80",
+    "result": "1PASS dark same-source build68"
+  },
+  "process_check": {
+    "non_zombie_tandemlog_processes": 0,
+    "qualification": "Initial name-only pgrep matched already-exited zombie processes and prevented the first attempted cleanup; no deletion then. Actual ps states show all matching processes exited(Z), including finaldarkPID164792. No process terminated."
+  },
+  "capacity_reason": "ActualWindows6members26,807,610B plusLinuxoriginal9,215,794B and10MiBcushion exceeds actualfree19,603,456B by26,905,708B beforeFlatpak/DLL. Subsequent Linuxmaterialization explicitlyfailsErrno28 and is held. Kernel64,041,824B is a current generated output, byte-identical to the already-accounted finalrootdarkcompile.",
+  "free_bytes_before": 3604480,
+  "preserved": "All tracked source and current uncommitted state(clean/pushed); all logs/pixels/receipts; old caches/taskfiles; originalarchives/APK/installerpayloads; all user/trialdata",
+  "removed": true,
+  "free_bytes_after": 67645440
+}

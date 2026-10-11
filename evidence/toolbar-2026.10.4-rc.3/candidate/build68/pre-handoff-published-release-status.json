@@ -1,0 +1,9 @@
+{
+  "checked_at_utc": "2026-10-11T20:13:54.084134+00:00",
+  "published_release_count": 24,
+  "latest_stable": "v2026.10.3",
+  "latest_preview": "v2026.10.4-rc.2",
+  "rc3_exists": false,
+  "all_releases_sha256": "aee33d40b93c2acc8a7380999ec556bda6b6d10b4dc1d44472a3b27d2839cb44",
+  "qualification": "Fresh read-only status during candidate wait; no publication clearance or Android runtime acceptance inferred. Publication still requires fresh exact-byte/native/quota gates."
+}

@@ -1,10 +1,10 @@
 {
   "baseline": "527064c1c1418ef0f18b0bcb1c0cfe7f7d13549d",
-  "qualification": "Docs-only closing extension of frozen build68 source8c6ee23. Candidate commit retains193-entry manifest; this extension adds frozen source/root/editorial reviews and actual dispatch snapshot. Every executable/pipeline/dependency/notes/media byte is identical; aggregate/signing/original/Android gates remain pending.",
+  "qualification": "Docs/evidence-only terminal build68 handoff extension of frozen source8c6ee23. Candidate commit retains193-entry manifest. All5hosted jobs, signing and3original archives/14members independently pass; installedAndroid/freshquota/publication remain parent-owned. Executable/pipeline/dependency/notes/media bytes unchanged. Logs attest retained official provider-decoded representations; original archive identities separately attested. Private transfer metadata excluded.",
   "files": {
     "README.md": {
-      "bytes": 25601,
-      "sha256": "839c77b7ef684b6cc3a36bf62e348c974b5c184874a6ae0b37644caac3cdc33d"
+      "bytes": 27815,
+      "sha256": "fb1257eeebec8eed253cdb72a15e2da8a68f50deaff69420ae2d5da698da1703"
     },
     "candidate/build65/frozen-source-inventory-independent-verification.json": {
       "bytes": 64426,
@@ -30,17 +30,141 @@
       "bytes": 371,
       "sha256": "5ffd759a89c172c1e5921b32baacf3df0ec7b67860e2105eb7023c11c7958931"
     },
+    "candidate/build68/build68-android-release-actual-artifact-bindings.json": {
+      "bytes": 3716,
+      "sha256": "54cfed8562ab21dcf80706e0c72cdf51a3d8fe6840b2fbcaaa3ad9ca93734a2f"
+    },
+    "candidate/build68/build68-combined-inventory-independent-verification.json": {
+      "bytes": 4160,
+      "sha256": "5d01c72cb0d9bb5e34e4553a2acf5e8f2a7a4366e5ad11eea8d667939238a3a7"
+    },
+    "candidate/build68/build68-final-independent-artifact-review.json": {
+      "bytes": 5627,
+      "sha256": "b9cf5e2ad9cc5214eb5aa1c0a08daddf272fcc992a2bc1dfbee99161fa623504"
+    },
+    "candidate/build68/build68-hosted-gates-independent-verification.json": {
+      "bytes": 3413,
+      "sha256": "92b677f15f2cf274c2f6e40c667dcc8be62cba8b9f40ee9721fc1d994d5aa148"
+    },
+    "candidate/build68/build68-independent-badging.txt": {
+      "bytes": 1170,
+      "sha256": "4896238df1c14bec4a675dd63c0edb9ccf05858f47e73bd8b117b6cc8e10b044"
+    },
+    "candidate/build68/build68-independent-original-artifact-manifest.json": {
+      "bytes": 4849,
+      "sha256": "9ea4d3ee78fc65b479ccdbc77aee5d7425fe79025debf7d2687e0245754be0da"
+    },
+    "candidate/build68/build68-independent-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "candidate/build68/build68-linux-actual-artifact-bindings.json": {
+      "bytes": 8049,
+      "sha256": "54ac61d0fc44b486851334d8eba58e157f688d312eb10338801fb8bbeb511288"
+    },
+    "candidate/build68/build68-native-retained-geometry-independent-observation.json": {
+      "bytes": 11971,
+      "sha256": "15f5576b6d737718e6ef02434272d3e402d185d4012293fc79d219b07a9187dc"
+    },
+    "candidate/build68/build68-supported-materialization-provenance.json": {
+      "bytes": 3797,
+      "sha256": "9aa55f0d84b6662b25d3415449dc515b4da89b5110a96c65db223e0258ce24e4"
+    },
+    "candidate/build68/build68-unchanged-native-baseline-independent-verification.json": {
+      "bytes": 4643,
+      "sha256": "26a2850c4c969199359f072e409e6775ed994a8147a98257dd134eaf51a92cf5"
+    },
+    "candidate/build68/build68-windows-actual-artifact-bindings.json": {
+      "bytes": 10373,
+      "sha256": "fce20d6a2c0508b0e59da45fba79288c701b8b12219a5ea444f3c88f787fbce9"
+    },
     "candidate/build68/dispatched-final-candidate.json": {
       "bytes": 538,
       "sha256": "1e9c8cd8377e8425e98104d6765550d96d3aa2eafcbf14883eb195c47b800a88"
+    },
+    "candidate/build68/exact-parent-handoff.json": {
+      "bytes": 3081,
+      "sha256": "75cab12a38dcdc1f5e58cfe0ce8f4d7b012bce280f170560a192f2c3c2b91934"
+    },
+    "candidate/build68/final-artifacts-api.json": {
+      "bytes": 4151,
+      "sha256": "54e36c2bfb91c78edd44d6dd4338fd04702212f5c3c63dd6856bc480669802d9"
+    },
+    "candidate/build68/final-jobs-api.json": {
+      "bytes": 20207,
+      "sha256": "0720a7f5f236b23b3ac5670ce05ebfd27a9d419e12e0b845c9de9edd77a2c3cf"
+    },
+    "candidate/build68/final-run-api.json": {
+      "bytes": 12659,
+      "sha256": "c87eeacce9ff2218ba69a98c63886d97bb478218bad409c49b32f6b1e113faa9"
     },
     "candidate/build68/frozen-source-inventory-independent-verification.json": {
       "bytes": 85822,
       "sha256": "b1f41ef543604dd2f321f737b386e4d38a5b1a4c9b5e8fd5db006f2aabe23675"
     },
+    "candidate/build68/original-reports/android-release/android-SHA256SUMS.txt": {
+      "bytes": 88,
+      "sha256": "d55e04136d75ddcd3ad93db6d5d081243721d018cc54aa5a790ee98567376051"
+    },
+    "candidate/build68/original-reports/android-release/android-release-metadata.json": {
+      "bytes": 295,
+      "sha256": "40942d434137d9f32c87129dcb38a230144cf733bc814959ba08fec09ef4d5bb"
+    },
+    "candidate/build68/original-reports/android-release/android-signature.txt": {
+      "bytes": 942,
+      "sha256": "ad6cf36cb190fe41f3bddb1a806f66cd57a226e7c0b6c51ef5960e3bd1e2507f"
+    },
+    "candidate/build68/original-reports/linux/linux-SHA256SUMS.txt": {
+      "bytes": 94,
+      "sha256": "7eec8cf888555ffa8f650f4a85728276d581a1af9afcebabb1df7e5a43dbc08c"
+    },
+    "candidate/build68/original-reports/linux/linux-install-smoke.json": {
+      "bytes": 2919,
+      "sha256": "e4d1f228f9c7be71bd3ec2f1b3274ecb864d74b1eefb4bfe78406136bac65e8d"
+    },
+    "candidate/build68/original-reports/linux/linux-startup.json": {
+      "bytes": 6537,
+      "sha256": "2bcfdbbf38092cd6f48eb0ab5cae2e4021afe52375df00203d4b202425f64fad"
+    },
+    "candidate/build68/original-reports/windows/windows-SHA256SUMS.txt": {
+      "bytes": 108,
+      "sha256": "376b6e9edb53f5a4fbb1614c0635bb4b440c2c65b48588b2d913a7203c33d9c4"
+    },
+    "candidate/build68/original-reports/windows/windows-install-smoke.json": {
+      "bytes": 1758,
+      "sha256": "b39f5f10ca9bd3ebc102240928b292c34db1fe25bdd2e285a0f9849611496a27"
+    },
+    "candidate/build68/original-reports/windows/windows-portable-SHA256SUMS.txt": {
+      "bytes": 111,
+      "sha256": "0b25c8054b15a90a6a969a71baca9e2873c3c673b86c70243c494fed3165c2a4"
+    },
+    "candidate/build68/original-reports/windows/windows-portable-provenance.json": {
+      "bytes": 2181,
+      "sha256": "9fcd2d1af052b0352120973a84d9c0248bbb5dce5d0d56caa1939b0d3bd98d9f"
+    },
+    "candidate/build68/pre-handoff-published-release-status.json": {
+      "bytes": 477,
+      "sha256": "b41ca3faaf6977823f47fa92b44f2fed5612768422fb0292934f0399342e0862"
+    },
+    "candidate/build68/root-current-generated-kernel-capacity-reclaim.json": {
+      "bytes": 1997,
+      "sha256": "31384f5a9f1f231c2516f76f50b88c7ad543d52101a50e9ee79a2832d9ebbe9b"
+    },
+    "candidate/build68/root-docs-only-source-equivalence.json": {
+      "bytes": 1019,
+      "sha256": "096db9a3cd80bc4d5b30b18c83817d401673631daf61f9c9f04de23008ace120"
+    },
     "candidate/build68/root-frozen-build68-source-verification.json": {
       "bytes": 78525,
       "sha256": "e9227ae125fe87ff90534eb73ecb1d44a0dcfcf9bf27979691736296e252f017"
+    },
+    "candidate/build68/root-linux-exact-candidate-closure.json": {
+      "bytes": 9385,
+      "sha256": "bdc8b0ec680e11bfe34aa8ee84ca2d4f2b71b96b730124ce6e70f5f3c59a8ca0"
+    },
+    "candidate/build68/root-windows-exact-candidate-closure.json": {
+      "bytes": 837,
+      "sha256": "6a608a4f23845f08a786855d35ed6f0c113febc20692b4b01e6d311861f84205"
     },
     "candidate/held-38153414378/build65-windows-actual-artifact-bindings.json": {
       "bytes": 10505,
@@ -258,9 +382,17 @@
       "bytes": 61155,
       "sha256": "f24890f680eaa37c81a59f8eeb511604654801c5338967c41f5a513c3d6bcdee"
     },
+    "logs/build68-android-debug-provider-decoded-hosted.txt": {
+      "bytes": 185626,
+      "sha256": "980197d5edd1ad7557b7900df53a140b7599efd48de47dfee79305e21e3063ce"
+    },
     "logs/build68-build68-tool-discovery-command-error.txt": {
       "bytes": 1318,
       "sha256": "31da08539aa5e27f03d9b88cf251e1ecbfae22535163c433cc57772ec8f19869"
+    },
+    "logs/build68-candidate-provider-decoded-hosted.txt": {
+      "bytes": 22407,
+      "sha256": "f51fd824628bffce221acfca2081d81d8b39aa41a081d24c8f99d43e1857a8a7"
     },
     "logs/build68-final-build68-analyze.txt": {
       "bytes": 686,
@@ -274,9 +406,21 @@
       "bytes": 602,
       "sha256": "6182c26205c8fb47c3ec80c4ad2f99bcfd250f194e1bd0a32621b3dc08a2e538"
     },
+    "logs/build68-linux-provider-decoded-hosted.txt": {
+      "bytes": 742779,
+      "sha256": "77ec4a396d7122ebdfc349f7b81e58efb734192111a8f8f60b0835e44e29a78a"
+    },
     "logs/build68-retained-letter-bounds-widget-green.txt": {
       "bytes": 51448,
       "sha256": "666223b32e884fa90a7ee4018f06bef2965803e45f356c4a0a6406eb0afdc405"
+    },
+    "logs/build68-signed-android-provider-decoded-hosted.txt": {
+      "bytes": 191556,
+      "sha256": "37a9a75916c52451f2dc152f33ab5d38784076ed0ab6b4f576b27bc6dacb05ff"
+    },
+    "logs/build68-windows-provider-decoded-hosted.txt": {
+      "bytes": 414611,
+      "sha256": "490db71155f6cc2137334aa6a1142889a6bfa88cd51fe39747f71e5bfc64228c"
     },
     "logs/cancelled-38153414378-linux-provider-decoded.txt": {
       "bytes": 546378,

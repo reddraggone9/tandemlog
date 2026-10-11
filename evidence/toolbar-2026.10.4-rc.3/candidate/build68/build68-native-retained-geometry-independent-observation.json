@@ -1,0 +1,388 @@
+{
+  "checked_at_utc": "2026-10-11T20:46:06.180774+00:00",
+  "candidate_run": 38169726969,
+  "source": "8c6ee23c78232094715b9bf79f9d3be54b3b522a",
+  "representation": "Same once-retained official provider-decoded UTF8 Linux log; no additional fetch/runtime",
+  "log": {
+    "file": "linux-provider-decoded-hosted.log",
+    "bytes": 742779,
+    "sha256": "77ec4a396d7122ebdfc349f7b81e58efb734192111a8f8f60b0835e44e29a78a"
+  },
+  "geometry_paragraphs": 24,
+  "unit_geometry_paragraphs": 12,
+  "native_geometry_paragraphs": 12,
+  "all_nonspace_missing_and_overflow": 0,
+  "overflowing_range_paragraphs": 4,
+  "exact_direct_observation": "Four native Zeta width168 paragraphs extend range selection through whitespace at offset13: [166.79061889648438,2.071249008178711,174.8195343017578,30.00874900817871]. Nonspace letters retain geometry within paragraph bounds plus frozen0.5 tolerance.",
+  "historical_qualification": "Failed66 log did not record exact character offsets; matching174.8195343017578 right edge supports explanation for current68 hosted run, does not establish exact old66 overflowing character or diagnose old run conclusively.",
+  "paragraphs": [
+    {
+      "line": 2095,
+      "time": "2026-10-11T19:53:58.2266323Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 483.6000061035156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2096,
+      "time": "2026-10-11T19:53:58.2305911Z",
+      "stage": "unit-tests",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 272.79998779296875,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2097,
+      "time": "2026-10-11T19:53:58.2346274Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 483.6000061035156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2108,
+      "time": "2026-10-11T19:53:59.5904648Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 256.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2109,
+      "time": "2026-10-11T19:53:59.5951367Z",
+      "stage": "unit-tests",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2110,
+      "time": "2026-10-11T19:53:59.6002754Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 256.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2113,
+      "time": "2026-10-11T19:54:00.6502220Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 483.6000061035156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2114,
+      "time": "2026-10-11T19:54:00.6544880Z",
+      "stage": "unit-tests",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 272.79998779296875,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2115,
+      "time": "2026-10-11T19:54:00.6622707Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 483.6000061035156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2118,
+      "time": "2026-10-11T19:54:01.8000551Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 256.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2119,
+      "time": "2026-10-11T19:54:01.8043520Z",
+      "stage": "unit-tests",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 2120,
+      "time": "2026-10-11T19:54:01.8087577Z",
+      "stage": "unit-tests",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 256.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5206,
+      "time": "2026-10-11T20:29:24.6349741Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 256.9007873535156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5207,
+      "time": "2026-10-11T20:29:24.6374766Z",
+      "stage": "native-integration",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 144.8312530517578,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5208,
+      "time": "2026-10-11T20:29:24.6397668Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 256.9007873535156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5209,
+      "time": "2026-10-11T20:29:24.6426980Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "overflowing_whitespace_selections": [
+        {
+          "offset": 13,
+          "character": " ",
+          "boxes": [
+            [
+              166.79061889648438,
+              2.071249008178711,
+              174.8195343017578,
+              30.00874900817871
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "line": 5210,
+      "time": "2026-10-11T20:29:24.6450829Z",
+      "stage": "native-integration",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 96.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5211,
+      "time": "2026-10-11T20:29:24.6474853Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "overflowing_whitespace_selections": [
+        {
+          "offset": 13,
+          "character": " ",
+          "boxes": [
+            [
+              166.79061889648438,
+              2.071249008178711,
+              174.8195343017578,
+              30.00874900817871
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "line": 5212,
+      "time": "2026-10-11T20:29:24.6504067Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 256.9007873535156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5213,
+      "time": "2026-10-11T20:29:24.6526615Z",
+      "stage": "native-integration",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 144.8312530517578,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5214,
+      "time": "2026-10-11T20:29:24.6548969Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 256.9007873535156,
+      "paragraphHeight": 16.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5215,
+      "time": "2026-10-11T20:29:24.6578162Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "overflowing_whitespace_selections": [
+        {
+          "offset": 13,
+          "character": " ",
+          "boxes": [
+            [
+              166.79061889648438,
+              2.071249008178711,
+              174.8195343017578,
+              30.00874900817871
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "line": 5216,
+      "time": "2026-10-11T20:29:24.6602948Z",
+      "stage": "native-integration",
+      "text": "Alpha reference recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 96.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [],
+      "overflowing_whitespace_selections": []
+    },
+    {
+      "line": 5217,
+      "time": "2026-10-11T20:29:24.6626717Z",
+      "stage": "native-integration",
+      "text": "Zeta keep for the next household recipe",
+      "paragraphWidth": 168.0,
+      "paragraphHeight": 128.0,
+      "nonspace_missing": [],
+      "nonspace_overflow": [],
+      "overflowing_full_range_boxes": [
+        [
+          0.20000000298023224,
+          2.071249008178711,
+          174.8195343017578,
+          30.00874900817871
+        ]
+      ],
+      "overflowing_whitespace_selections": [
+        {
+          "offset": 13,
+          "character": " ",
+          "boxes": [
+            [
+              166.79061889648438,
+              2.071249008178711,
+              174.8195343017578,
+              30.00874900817871
+            ]
+          ]
+        }
+      ]
+    }
+  ]
+}

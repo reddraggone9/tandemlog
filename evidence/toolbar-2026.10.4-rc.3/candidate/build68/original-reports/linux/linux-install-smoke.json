@@ -1,0 +1,91 @@
+{
+  "phases": [
+    {
+      "phase": "after-install",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=80",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=16",
+        "TANDEMLOG_PHASE manifest=12",
+        "TANDEMLOG_PHASE ingest=31",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=1340 FILES_READ=2"
+      ]
+    },
+    {
+      "phase": "after-upgrade",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=74",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=46",
+        "TANDEMLOG_PHASE manifest=46",
+        "TANDEMLOG_PHASE ingest=103",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=407 FILES_READ=2"
+      ]
+    },
+    {
+      "phase": "after-uninstall",
+      "passed": true,
+      "loaded_projection": false,
+      "sandbox_stopped": false,
+      "markers": []
+    },
+    {
+      "phase": "after-reinstall",
+      "passed": true,
+      "loaded_projection": true,
+      "sandbox_stopped": true,
+      "markers": [
+        "TANDEMLOG_MAIN",
+        "TANDEMLOG_FIRST_FRAME_MS=74",
+        "TANDEMLOG_PHASE identity_lock=0",
+        "TANDEMLOG_PHASE sqlite_open_schema=48",
+        "TANDEMLOG_PHASE manifest=51",
+        "TANDEMLOG_PHASE ingest=99",
+        "TANDEMLOG_ROWS {\"query_ms\":0,\"decode_ms\":0,\"sort_ms\":0}",
+        "TANDEMLOG_READY_MS=423 FILES_READ=2"
+      ]
+    }
+  ],
+  "upgrade": {
+    "candidate_commit": "19feeb859a4c4e5530f42296373df2d6f02e16a0546acdb0de4c2081d046fb13",
+    "baseline_commit": "df6ed7f37276844c75b4501ea2fdbaabab33abd910f24326808371ef00058587",
+    "baseline_payload_equal": true,
+    "baseline_permissions_equal": true,
+    "final_candidate_restored": true
+  },
+  "appstream": {
+    "id": "com.reddraggone9.tandemlog",
+    "name": "Tandemlog",
+    "icons": [
+      "share/app-info/icons/flatpak/48x48/com.reddraggone9.tandemlog.png",
+      "share/app-info/icons/flatpak/64x64/com.reddraggone9.tandemlog.png",
+      "share/app-info/icons/flatpak/64x64@2/com.reddraggone9.tandemlog.png",
+      "share/app-info/icons/flatpak/128x128/com.reddraggone9.tandemlog.png",
+      "share/app-info/icons/flatpak/128x128@2/com.reddraggone9.tandemlog.png"
+    ],
+    "catalogs": [
+      "share/app-info/xmls/com.reddraggone9.tandemlog.xml.gz"
+    ]
+  },
+  "sandbox_profile": {
+    "profile": "/home/runner/.var/app/com.reddraggone9.tandemlog/data/com.reddraggone9.tandemlog",
+    "permanent_databases": [
+      "local.sqlite"
+    ],
+    "default_without_override": true
+  },
+  "permissions": {
+    "static_host_filesystem_access": false,
+    "network_access": false
+  }
+}
