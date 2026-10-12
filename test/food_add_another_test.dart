@@ -91,6 +91,13 @@ Future<void> verifyFoodAddAnother(
     await tester.tap(action);
     await tester.pumpAndSettle();
     expect(find.text('Add food'), findsOneWidget);
+    expect(find.text('Retention reason'), findsNothing);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is TextField && w.decoration?.hintText == 'Retention reason',
+      ),
+      findsNothing,
+    );
     for (final pair in [
       ('Food name', 'Template beans'),
       ('Brand', 'Test brand'),

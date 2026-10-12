@@ -143,9 +143,15 @@ void registerFoodAccountWorkflowTests() {
             );
             final before = await _records(fixture.folder.delegate);
             await selectFoodView(tester, FoodView.retained);
+            await tester.tap(find.byKey(const ValueKey('food-filter')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.text('More filters…'));
+            await tester.pumpAndSettle();
             await tester.tap(find.byTooltip('Show retention reasons'));
             await tester.pumpAndSettle();
             await tester.tap(find.byKey(const ValueKey('tag-option-Freezer')));
+            await tester.pumpAndSettle();
+            await tester.tap(find.widgetWithText(FilledButton, 'Apply'));
             await tester.pumpAndSettle();
             expect(page.reasons, {'Freezer'});
             await tester.enterText(

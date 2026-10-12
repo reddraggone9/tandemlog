@@ -1,5 +1,12 @@
 # Product behavior and milestones
 
+## Following RC: local sections and Food refinements
+
+Approved for the next RC after stable 2026.10.4; implementation remains under acceptance. Each device remembers its last successfully visited Tasks/Food section. Unknown or missing preferences default to Tasks. Cancelled editor guards do not change the remembered section. Android Tasks/Food launcher shortcuts override that preference for an explicit launch and wait for workspace and user setup. Fresh newer requests take precedence; Recents and activity restoration do not replay an old shortcut.
+
+Food keeps Stock/Retained/Deleted choices. **More filters…** contains Brand and Location and, only in Retained mode, **Retention reason** with **All reasons** when empty. Search bypasses those filters. Add and Add another omit retention; Edit retains it. Secondary Food metadata and checklist notes use existing secondary colors. All supported packages share the existing green-square white-checkmark identity. [Accepted rationale and alternatives](decisions/0021-local-sections-and-launcher-shortcuts.md).
+
+
 The approved second capability is [food inventory](decisions/0014-food-inventory.md).
 Its scope is separate from tasks. Its first experimental prerelease uses production
 navigation and the shared profile DB. The accepted next preview combines undated,

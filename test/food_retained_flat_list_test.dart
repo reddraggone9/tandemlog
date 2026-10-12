@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tandemlog/food/food_page.dart';
 import 'package:tandemlog/food/inventory.dart';
@@ -217,15 +216,31 @@ Future<void> verifyFlatRetained(
     hasLength(2),
   );
   await top();
+  await tester.tap(find.byKey(const ValueKey('food-filter')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('More filters…'));
+  await tester.pumpAndSettle();
   await tester.tap(find.byTooltip('Show retention reasons'));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const ValueKey('tag-option-$_zeta')));
   await tester.pumpAndSettle();
-  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   FocusManager.instance.primaryFocus?.unfocus();
   await tester.pumpAndSettle();
+  expect(
+    tester
+        .widget<TagInput>(
+          find.byWidgetPredicate(
+            (w) =>
+                w is TagInput &&
+                w.queryKey == const ValueKey('food-reason-filter-query'),
+          ),
+        )
+        .selected,
+    {_zeta},
+  );
+  await tester.tap(find.widgetWithText(FilledButton, 'Apply'));
+  await tester.pumpAndSettle();
   expect(key.currentState!.reasons, {_zeta});
-  expect(tester.widget<TagInput>(find.byType(TagInput)).selected, {_zeta});
   expect(find.text('Middle retained beans'), findsNothing);
   await capture?.call('flat-retained-filtered');
   await tester.enterText(find.byKey(const ValueKey('food-search')), 'beans');
@@ -241,7 +256,12 @@ Future<void> verifyFlatRetained(
   await tester.pumpAndSettle();
   expect(key.currentState!.reasons, {_zeta});
   expect(find.text('Middle retained beans'), findsNothing);
+  await tester.tap(find.byKey(const ValueKey('food-filter')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('More filters…'));
+  await tester.pumpAndSettle();
   await tester.tap(find.byTooltip('Clear retention filters'));
+  await tester.tap(find.widgetWithText(FilledButton, 'Apply'));
   await tester.pumpAndSettle();
   expect(key.currentState!.reasons, isEmpty);
   await reach(find.text('Middle retained beans'));
@@ -249,12 +269,17 @@ Future<void> verifyFlatRetained(
   // A saved reason can cease to have active containers; keep its filter and show
   // the empty state rather than silently clearing the user's selection.
   await top();
+  await tester.tap(find.byKey(const ValueKey('food-filter')));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('More filters…'));
+  await tester.pumpAndSettle();
   await tester.tap(find.byTooltip('Show retention reasons'));
   await tester.pumpAndSettle();
   await tester.tap(find.byKey(const ValueKey('tag-option-$_zeta')));
   await tester.pumpAndSettle();
-  await tester.sendKeyEvent(LogicalKeyboardKey.escape);
   FocusManager.instance.primaryFocus?.unfocus();
+  await tester.tap(find.widgetWithText(FilledButton, 'Apply'));
+  await tester.pumpAndSettle();
   incoming(
     () => displayed = projectFood([
       ...operations,

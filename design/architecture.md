@@ -112,3 +112,7 @@ No record schema, replay, persistence, transport or native dependency changes.
 Food selection and Brand/Location suggestions/filters are page-local projections. Bulk Save captures an immutable physical-container list and explicit field names, then uses the existing host command, FoodStore batch append and single Undo receipt. It introduces no catalog, record format or wildcard update. The page receives the admitted FoodStore identity solely to invalidate workspace-local selections and guard open drafts.
 
 The RC-only unspecified contents branch is removed. Numeric fraction/amount encoding and existing frozen numeric record hashes are unchanged; omitted Add contents and import-builder contents default Full. All-null payloads fail decoding rather than changing signed bytes. Old import vectors remain frozen as rejection evidence; a new independently generated Full vector covers current identities and hashes.
+
+## Following RC section adapter
+
+The Android bridge emits only validated constant section destinations and monotonically sequenced delivery IDs. The existing application host owns readiness, coalescing, editor guards and successful LocalSettings persistence. Native shortcut publication and restored-intent suppression stay in the Android adapter; domain, canonical replay and sync remain independent. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) records the accepted boundary and alternatives.

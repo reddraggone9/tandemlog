@@ -18,6 +18,34 @@ FoodOperation add(int n, List<String> ids) => FoodOperation(
   createdAt: '2026-10-10T00:00:00Z',
   contents: const Contents.fraction(1, 1),
 );
+Future<void> editReviewBeans(WidgetTester tester) async {
+  await tester.pumpWidget(
+    FoodPreviewApp(
+      initialOperations: [
+        FoodOperation(
+          id: '$writer:1',
+          order: 1,
+          action: FoodAction.add,
+          targets: [id(1)],
+          details: const FoodDetails(
+            name: 'Review beans',
+            expiry: '2027-06-01',
+          ),
+          createdAt: '2026-10-10T00:00:00Z',
+          contents: const Contents.fraction(1, 1),
+        ),
+      ],
+    ),
+  );
+  await tester.pumpAndSettle();
+  await tester.tap(find.byTooltip('Inspect Review beans containers'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.byTooltip('Actions for Review beans'));
+  await tester.pumpAndSettle();
+  await tester.tap(find.text('Edit group details'));
+  await tester.pumpAndSettle();
+}
+
 void main() {
   testWidgets(
     '101-container group removal and Undo use bounded captured batches',
@@ -66,11 +94,10 @@ void main() {
       expect(() => projectFood([seed, orphan]), throwsFormatException);
     },
   );
-  testWidgets('typed retention reason survives direct Add', (tester) async {
-    await tester.pumpWidget(const FoodPreviewApp());
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add food'));
-    await tester.pumpAndSettle();
+  testWidgets('typed retention reason survives direct Edit Save', (
+    tester,
+  ) async {
+    await editReviewBeans(tester);
     await tester.enterText(
       find.widgetWithText(TextField, 'Food name'),
       'Review beans',
@@ -95,10 +122,10 @@ void main() {
       findsOneWidget,
     );
     expect(
-      find.widgetWithText(FilledButton, 'Add').hitTestable(),
+      find.widgetWithText(FilledButton, 'Save').hitTestable(),
       findsOneWidget,
     );
-    await tester.tap(find.widgetWithText(FilledButton, 'Add'));
+    await tester.tap(find.widgetWithText(FilledButton, 'Save'));
     await tester.pumpAndSettle();
     await tester.pump(const Duration(milliseconds: 350));
     await tester.pumpAndSettle();
@@ -150,10 +177,7 @@ void main() {
   testWidgets('active retention composition is not staged by submit', (
     tester,
   ) async {
-    await tester.pumpWidget(const FoodPreviewApp());
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('Add food'));
-    await tester.pumpAndSettle();
+    await editReviewBeans(tester);
     final query = find.byWidgetPredicate(
       (w) => w is TextField && w.decoration?.hintText == 'Retention reason',
     );

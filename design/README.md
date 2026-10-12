@@ -23,6 +23,8 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 ## Current milestone and supporting research
 
+- [Local section memory and Android launcher shortcuts](decisions/0021-local-sections-and-launcher-shortcuts.md): approved next-RC scope, with Food filter/retention/presentation refinements and shared icons; native acceptance is pending.
+
 - [Food field editing and Full defaults](decisions/0019-food-field-editing-and-contents-defaults.md): approved suggestions/multiple filters/exact-container Brand/Location bulk editing, conservative expanded-row cleanup and removal of RC-only unspecified contents; accepted RC3/build70 native evidence retains its original attribution.
 
 

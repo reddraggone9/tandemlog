@@ -13,6 +13,7 @@ import android.provider.DocumentsContract
 import android.os.Handler
 import android.os.Looper
 import android.os.Build
+import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -29,6 +30,17 @@ private class DuplicateCanonicalFile(val fileName: String) : java.io.IOException
 
 /** Folder capabilities, never guessed filesystem paths. Resolve children anew. */
 class MainActivity : FlutterActivity() {
+    private val sectionShortcuts by lazy { SectionShortcuts(this) }
+    private var restoringActivity = false
+    override fun onCreate(savedInstanceState: Bundle?) {
+        restoringActivity = savedInstanceState != null
+        super.onCreate(savedInstanceState)
+    }
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        sectionShortcuts.onNewIntent(intent)
+    }
     private var folderEvents: MethodChannel? = null
     private var folderChannel: MethodChannel? = null
     @Volatile private var folderWatch: FolderWatch? = null
@@ -64,6 +76,7 @@ class MainActivity : FlutterActivity() {
         if (observingTime) { unregisterReceiver(timeReceiver); observingTime = false }
     }
     override fun cleanUpFlutterEngine(engine: FlutterEngine) {
+        sectionShortcuts.close()
         stopFolderWatch()
         folderEvents?.setMethodCallHandler(null)
         folderEvents = null
@@ -72,6 +85,7 @@ class MainActivity : FlutterActivity() {
         super.cleanUpFlutterEngine(engine)
     }
     override fun onDestroy() {
+        sectionShortcuts.close()
         stopFolderWatch()
         folderEvents?.setMethodCallHandler(null)
         folderEvents = null
@@ -88,6 +102,7 @@ class MainActivity : FlutterActivity() {
     private val main = Handler(Looper.getMainLooper())
     override fun configureFlutterEngine(engine: FlutterEngine) {
         super.configureFlutterEngine(engine)
+        sectionShortcuts.configure(engine, restoringActivity)
         timeChannel = MethodChannel(engine.dartExecutor.binaryMessenger, "tandemlog/time").also { channel ->
             channel.setMethodCallHandler { call, result ->
                 when (call.method) {

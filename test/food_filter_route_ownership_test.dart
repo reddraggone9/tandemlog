@@ -41,7 +41,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('food-filter')));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Brand and location'));
+      await tester.tap(find.text('More filters…'));
       await tester.pumpAndSettle();
       final button = action == 'Apply'
           ? tester
@@ -82,7 +82,7 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.byKey(const ValueKey('food-filter')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Brand and location'));
+    await tester.tap(find.text('More filters…'));
     await tester.pumpAndSettle();
     final controllers = [
       for (final field in ['brand', 'location'])

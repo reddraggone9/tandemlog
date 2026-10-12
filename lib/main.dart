@@ -40,6 +40,7 @@ import 'platform/view_time_source.dart';
 import 'platform/log_folder.dart';
 import 'platform/folder_actions.dart';
 import 'platform/foreground_importer.dart';
+import 'platform/android_section_navigation.dart';
 import 'storage/local_settings.dart';
 import 'storage/local_durability.dart';
 import 'storage/local_profile_database.dart';
@@ -65,11 +66,13 @@ class TandemlogApp extends StatefulWidget {
     this.folderActions,
     this.timeSourceFactory,
     this.folderFactory,
+    this.sectionNavigation,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
   final FolderActions? folderActions;
   final ViewTimeSource Function(void Function())? timeSourceFactory;
+  final AndroidSectionNavigation? sectionNavigation;
   @override
   State<TandemlogApp> createState() => _TandemlogAppState();
 }
@@ -126,6 +129,7 @@ class _TandemlogAppState extends State<TandemlogApp> {
         folderActions: widget.folderActions ?? FolderActions(),
         timeSourceFactory: widget.timeSourceFactory,
         folderFactory: widget.folderFactory,
+        sectionNavigation: widget.sectionNavigation,
       ),
     ),
   );
@@ -139,12 +143,14 @@ class TasksPage extends StatefulWidget {
     required this.folderActions,
     this.timeSourceFactory,
     this.folderFactory,
+    this.sectionNavigation,
   });
   final LogFolder Function(String)? folderFactory;
   final String? profilePath;
   final ValueNotifier<Appearance> appearance;
   final FolderActions folderActions;
   final ViewTimeSource Function(void Function())? timeSourceFactory;
+  final AndroidSectionNavigation? sectionNavigation;
   @override
   State<TasksPage> createState() => _TasksPageState();
 }
@@ -153,6 +159,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   TaskStore? store;
   FoodStore? foodStore;
   bool foodVisible = false;
+  AndroidSectionNavigation? sectionNavigation;
+  int sectionRevision = 0;
+  ({bool food, int revision})? requestedSection;
+  Future<void>? sectionWork;
   String? foodError, sharedSafetyError;
   final foodPageKey = GlobalKey<FoodInventoryPageState>();
   final foodUndoHistory = FoodUndoHistory();
@@ -308,6 +318,14 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     super.initState();
     FocusManager.instance.addListener(_focusChanged);
     WidgetsBinding.instance.addObserver(this);
+    sectionNavigation =
+        widget.sectionNavigation ??
+        (Platform.isAndroid ? AndroidSectionNavigation() : null);
+    unawaited(
+      sectionNavigation?.start((section) {
+        _requestSection(section == AppSection.food);
+      }),
+    );
     timeSource =
         widget.timeSourceFactory?.call(_invalidateView) ??
         ViewTimeSource(onChanged: _invalidateView);
@@ -379,6 +397,12 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       if (!mounted) return;
       widget.appearance.value = settings!.appearance;
       user = settings!.user;
+      if (sectionRevision == 0) {
+        requestedSection = (
+          food: settings!.lastSection == AppSection.food,
+          revision: ++sectionRevision,
+        );
+      }
       if (settings!.folder != null) await _open(settings!.folder!);
     } catch (e) {
       error = failureMessage(e);
@@ -387,6 +411,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     setState(() => busy = false);
     _configureImporter();
     _reportStartupAfterFrame();
+    _wakeSectionRequests();
   }
 
   Future<void> _retryStartup() async {
@@ -469,7 +494,13 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       errorFromRefresh = true;
     }
     debugPrint('TANDEMLOG_ROWS ${jsonEncode(store!.lastReadTimings)}');
-    if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) user = null;
+    if (!rows.any((r) => r['kind'] == 'user' && r['id'] == user)) {
+      user = null;
+      if (foodVisible) {
+        if (requestedSection == null) _requestSection(true);
+        foodVisible = false;
+      }
+    }
     return true;
   }
 
@@ -488,17 +519,98 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   );
 
   Future<void> _switchModule(bool food) async {
-    if (busy ||
-        food == foodVisible ||
-        !await _closeEditor() ||
-        !await _closeFoodEditor() ||
-        !mounted) {
-      return;
+    sectionNavigation?.manualNavigation();
+    _requestSection(food);
+    await sectionWork;
+  }
+
+  void _requestSection(bool food) {
+    requestedSection = (food: food, revision: ++sectionRevision);
+    unawaited(_drainSectionRequests());
+  }
+
+  void _wakeSectionRequests() {
+    if (!mounted || requestedSection == null) return;
+    // Save callbacks return before their child clears its saving/route state.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) unawaited(_drainSectionRequests());
+    });
+    WidgetsBinding.instance.ensureVisualUpdate();
+  }
+
+  bool get _sectionReady =>
+      mounted &&
+      !busy &&
+      !choosingFolder &&
+      !openingChecklistEditor &&
+      !closingEditor &&
+      !checklistEditorClosing &&
+      !(editorKey.currentState?.closeBusy ?? (editingTask != null)) &&
+      !(bulkEditorKey.currentState?.closeBusy ?? (editingBulk != null)) &&
+      !(checklistEditorKey?.currentState?.closeBusy ?? false) &&
+      !(foodPageKey.currentState?.closeBusy ?? false) &&
+      (checklistEditorKey == null ||
+          checklistEditorKey!.currentState != null) &&
+      settingsLoaded &&
+      store != null &&
+      user != null &&
+      sharedSafetyError == null;
+
+  Future<void> _drainSectionRequests() {
+    final running = sectionWork;
+    if (running != null) return running;
+    if (!_sectionReady || requestedSection == null) return Future<void>.value();
+    final completion = Completer<void>();
+    sectionWork = completion.future;
+    unawaited(_runSectionRequests(completion));
+    return completion.future;
+  }
+
+  Future<void> _runSectionRequests(Completer<void> completion) async {
+    try {
+      while (_sectionReady && requestedSection != null) {
+        final origin = store;
+        if (requestedSection!.food != foodVisible) {
+          if (!await _closeEditor() || !await _closeFoodEditor()) {
+            // Cancel also dismisses requests coalesced while this prompt was up.
+            requestedSection = null;
+            break;
+          }
+        }
+        if (!mounted || !_sectionReady) {
+          break;
+        }
+        if (!identical(store, origin)) {
+          continue;
+        }
+        final latest = requestedSection!;
+        if (latest.food != foodVisible) {
+          FocusManager.instance.primaryFocus?.unfocus();
+          _clearSelection();
+          ScaffoldMessenger.of(context).clearSnackBars();
+          setState(() => foodVisible = latest.food);
+        }
+        final section = latest.food ? AppSection.food : AppSection.tasks;
+        if (settings!.lastSection != section) {
+          await settings!.saveSection(section);
+        }
+        if (requestedSection?.revision == latest.revision) {
+          requestedSection = null;
+        }
+      }
+    } catch (failure) {
+      requestedSection = null;
+      if (mounted) {
+        setState(
+          () =>
+              error = 'Cannot remember the section: ${failureMessage(failure)}',
+        );
+      }
+    } finally {
+      completion.complete();
+      if (identical(sectionWork, completion.future)) sectionWork = null;
+      _wakeSectionRequests();
     }
-    FocusManager.instance.primaryFocus?.unfocus();
-    _clearSelection();
-    ScaffoldMessenger.of(context).clearSnackBars();
-    setState(() => foodVisible = food);
   }
 
   Future<void> _foodAct(
@@ -548,6 +660,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() => busy = false);
         _configureImporter();
         importer?.request();
+        _wakeSectionRequests();
       }
     }
   }
@@ -771,6 +884,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         Expanded(
           child: FoodInventoryPage(
             key: foodPageKey,
+            onCloseReadinessChanged: _wakeSectionRequests,
             state: origin.state,
             workspaceIdentity: origin,
             progress: toolbarProgress(
@@ -877,7 +991,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     if (!mounted) return;
     rows = store!.rows;
     user = selected;
-    if (selected == null) foodVisible = false;
+    if (selected == null && foodVisible) {
+      if (requestedSection == null) _requestSection(true);
+      foodVisible = false;
+    }
   }
 
   Future<void> _startDefault() => _act(() async {
@@ -1208,6 +1325,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() => busy = false);
         _configureImporter();
         importer?.request();
+        _wakeSectionRequests();
       }
     }
   }
@@ -1637,6 +1755,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         setState(() => busy = false);
         _configureImporter();
         if (sharedSafetyError == null) importer?.request();
+        _wakeSectionRequests();
       }
     }
   }
@@ -1755,7 +1874,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         });
       }
     } finally {
-      if (mounted) setState(() => choosingFolder = false);
+      if (mounted) {
+        setState(() => choosingFolder = false);
+        _wakeSectionRequests();
+      }
     }
   }
 
@@ -1936,6 +2058,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       return okay;
     } finally {
       closingEditor = false;
+      _wakeSectionRequests();
     }
   }
 
@@ -2448,6 +2571,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       final editor = task != null
           ? TaskEditor(
               key: editorKey,
+              onCloseReadinessChanged: _wakeSectionRequests,
               contextNotice:
                   !panel && error != null && sharedSafetyError == null
                   ? _actionErrorNotice()
@@ -2583,6 +2707,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
             )
           : BulkTaskEditor(
               key: bulkEditorKey,
+              onCloseReadinessChanged: _wakeSectionRequests,
               contextNotice:
                   !panel && error != null && sharedSafetyError == null
                   ? _actionErrorNotice()
@@ -3777,6 +3902,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
           checklistDialogContext = ctx;
           return ChecklistItemEditor(
             key: key,
+            onCloseReadinessChanged: _wakeSectionRequests,
             item: item,
             textSession: session,
             hasPendingReceipt: () => creationReceipt != null,
@@ -3852,6 +3978,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   _invalidateView();
                   _configureImporter();
                   importer?.request();
+                  _wakeSectionRequests();
                 }
               }
             },
@@ -3861,6 +3988,9 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       // Navigator disposal need not complete its popped future. The transition
       // completion also fires when an application shutdown disposes the route.
       unawaited(Navigator.of(context).push(route));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _wakeSectionRequests();
+      });
       await route.completed;
     } catch (failure) {
       if (mounted) setState(() => error = failureMessage(failure));
@@ -3885,7 +4015,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         if (identical(checklistEditorDone, editorDone)) {
           checklistEditorDone = null;
         }
-        if (mounted) setState(() => openingChecklistEditor = false);
+        if (mounted) {
+          setState(() => openingChecklistEditor = false);
+          _wakeSectionRequests();
+        }
       }
     }
   }
@@ -3893,6 +4026,8 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
   @override
   void dispose() {
     FocusManager.instance.removeListener(_focusChanged);
+    sectionNavigation?.dispose();
+    requestedSection = null;
     _stopDragScroll();
     taskScroll.dispose();
     dragScrollTick.dispose();
@@ -3922,6 +4057,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
     // Never release the installation lease while a startup, preference write,
     // command or ingestion can still complete against the old instance.
     await starting;
+    await sectionWork;
     await activeActionDone?.future;
     await syncing;
     await checklistEditorDone?.future;
@@ -4102,7 +4238,10 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                                     descendantsAreFocusable:
                                         sharedSafetyError == null ||
                                         keepSetupInputs,
-                                    child: foodVisible && store != null
+                                    child:
+                                        foodVisible &&
+                                            store != null &&
+                                            user != null
                                         ? _foodSurface()
                                         : store == null
                                         ? _welcome()
@@ -4339,10 +4478,7 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
                   title: Text(u['name']),
                   onTap: busy
                       ? null
-                      : () => _act(() async {
-                          user = u['id'];
-                          await _saveSettings();
-                        }),
+                      : () => _act(() => _selectUser(u['id'] as String)),
                 ),
               ),
             const SizedBox(height: 12),

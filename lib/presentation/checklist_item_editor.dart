@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../application/task_text_session.dart';
 import 'failure_message.dart';
 import 'title_line_formatter.dart';
+import 'unsaved_draft_dialog.dart';
 
 class ChecklistItemEditor extends StatefulWidget {
   const ChecklistItemEditor({
@@ -11,12 +12,13 @@ class ChecklistItemEditor extends StatefulWidget {
     required this.save,
     this.hasPendingReceipt,
     this.onClose,
+    this.onCloseReadinessChanged,
   });
   final Map<String, dynamic>? item;
   final TaskTextSession? textSession;
   final Future<void> Function(String title, String notes) save;
   final bool Function()? hasPendingReceipt;
-  final VoidCallback? onClose;
+  final VoidCallback? onClose, onCloseReadinessChanged;
   @override
   ChecklistItemEditorState createState() => ChecklistItemEditorState();
 }
@@ -39,6 +41,7 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
       widget.textSession?.hasPendingReceipt == true;
   bool get _frozen => _busy || _pending || widget.textSession?.frozen == true;
   // Private preparation is discardable until immutable bytes have a receipt.
+  bool get closeBusy => _busy;
   bool get _closeBlocked => _busy || _pending;
   bool get _dirty => _title.text != _savedTitle || _notes.text != _savedNotes;
 
@@ -105,27 +108,7 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
   }
 
   Future<bool> _askClose() async {
-    final choice = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Unsaved changes'),
-        content: const Text('Save your draft before continuing?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'discard'),
-            child: const Text('Discard'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, 'save'),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
+    final choice = await askUnsavedDraft(context);
     if (!mounted || _closeBlocked) return false;
     if (choice == 'discard') return true;
     if (choice == 'save') return _commit(closeAfter: false);
@@ -210,6 +193,8 @@ class ChecklistItemEditorState extends State<ChecklistItemEditor> {
         });
       }
       return false;
+    } finally {
+      if (mounted) widget.onCloseReadinessChanged?.call();
     }
   }
 

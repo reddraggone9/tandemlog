@@ -8,6 +8,8 @@ import 'local_profile_database.dart';
 
 enum Appearance { system, light, dark }
 
+enum AppSection { tasks, food }
+
 /// Device preferences only. Canonical workspace records never live here.
 class LocalSettings {
   LocalSettings(this.root, {LocalDurability? durability, this.profileDatabase})
@@ -17,6 +19,8 @@ class LocalSettings {
   final String root;
   String? folder, user;
   Appearance appearance = Appearance.system;
+  AppSection? _lastSection;
+  AppSection get lastSection => _lastSection ?? AppSection.tasks;
   String? _writer;
   String get writer =>
       _writer ??
@@ -43,6 +47,7 @@ class LocalSettings {
   Future<void> load() async {
     folder = user = _writer = null;
     appearance = Appearance.system;
+    _lastSection = null;
     if (profileDatabase != null) {
       final value = protectedValues(profileDatabase!);
       folder = value['folder'] as String?;
@@ -51,6 +56,7 @@ class LocalSettings {
         value['appearance'] as String? ?? 'system',
       );
       _writer = value['writer'] as String;
+      _lastSection = _section(value['lastSection']);
       return;
     }
     final file = File('$root/settings.json');
@@ -150,6 +156,7 @@ class LocalSettings {
           'folder': folder,
           'user': user,
           'appearance': appearance.name,
+          if (_lastSection != null) 'lastSection': _lastSection!.name,
         });
         profile.transaction(
           () => profile.database.execute(
@@ -164,6 +171,30 @@ class LocalSettings {
     await _ensureWriter();
     await _writeSettings();
   }
+
+  // Call only after navigation was admitted by the host's draft/setup guards.
+  // Other preference writes preserve a missing or unknown optional value.
+  Future<void> saveSection(AppSection section) async {
+    if (profileDatabase == null) {
+      throw StateError(
+        'Section preferences require the local profile database.',
+      );
+    }
+    final previous = _lastSection;
+    _lastSection = section;
+    try {
+      await save();
+    } catch (_) {
+      _lastSection = previous;
+      rethrow;
+    }
+  }
+
+  static AppSection? _section(Object? value) => switch (value) {
+    'tasks' => AppSection.tasks,
+    'food' => AppSection.food,
+    _ => null,
+  };
 
   static Map<String, dynamic> protectedValues(LocalProfileDatabase profile) {
     final rows = profile.database.select(

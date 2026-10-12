@@ -2,6 +2,11 @@
 
 Approved foundation: canonical per-device JSON logs and one SQLite cache. [Protocol v3](schema.md) describes the implemented subset and [recovery](recovery.md) its limits. This document explains the larger contract.
 
+
+## Device-local section preference
+
+The following RC stores optional `lastSection` (`tasks`/`food`) in the existing LocalSettings JSON in `protected_settings.raw` of `local.sqlite`. Missing, unknown and malformed optional values default to Tasks. Other preference saves preserve unrelated JSON fields and the protected writer binding. Save the section only after navigation succeeds through setup and draft guards. This adds no schema version, canonical event, synced preference or new file. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) owns navigation rationale.
+
 ## Canonical data and local cache
 
 Retain per-writer append-only JSONL as the initial format for any compatible folder-sync transport. Only the owning install writes its stream. Writer identity belongs to the installation's private settings; sequence and event identity are interpreted within each workspace. An installation-wide lease protects preferences and writing, with a defensive per-cache store lease. Keep identities outside synced data and do not clone them through backup/restore. [ADR 0006](decisions/0006-installation-identity-and-instance-lock.md) specifies legacy migration and settings reset. Duplicate IDs with different payloads are corruption, not ignorable duplicates. Use lowercase filename-safe IDs to avoid case-sensitive naming assumptions.

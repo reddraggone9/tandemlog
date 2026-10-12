@@ -198,7 +198,7 @@ Future<void> verifyFoodEditorKeyboardLayout(
     'Container size',
     'Location',
     if (editingCount == 0) 'Containers to add',
-    'Retention reason',
+    if (editingCount != 0) 'Retention reason',
   ]) {
     await focus(
       label,

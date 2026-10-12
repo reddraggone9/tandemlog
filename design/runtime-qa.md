@@ -1,3 +1,11 @@
+# Following 2026.10.5-rc.1/build72 native gates
+
+The following RC is under acceptance. Earlier native receipts retain their original source/build attribution. Widget evidence covers coalesced/repeated guard answers, late dismissed callbacks, setup/picker/recovery queues, successful/failed direct saves, retained reason filtering and keyboard/layout regressions; it does not replace native launcher or installed icon acceptance.
+
+The exact signed candidate must verify Android cold/warm Tasks/Food shortcuts, newer destination precedence, missing workspace/user setup, unsaved Tasks/checklist/Food decisions, an in-flight save, repeated delivery, activity recreation and Home/process-kill/Recents restoration. Confirm two fixed-ID dynamic shortcuts and no automatic pinning/new permissions. Capture real launcher/resource icons on Android and Windows and installed Flatpak metadata/pixels. Exercise Food Add/Add another/Edit and Retained More filters… at normal and 200% text in both themes on native desktop and Android; retain actual OS/build labels and demo inputs. Compare synthetic canonical filenames and bytes before/after navigation and cold reopen, with expected command changes separately identified.
+
+Use isolated synthetic profiles, one emulator, 6GiB/2CPU/zero swap and bounded temporary processes. Restore settings and stop processes after acceptance or blockers. Remove the precisely verified temporary native-test symlink after local widget checks. Candidate native acceptance and publication remain pending.
+
 # Current RC3/build68 gate status
 
 Build66 candidate38165025596/sourcee6e26a1 is terminal FAILED: Windows tooling hits a synthetic SQLite connection cleanup error after1027 unit passes/two skips, Rust4 and107contracts; Linux completes155native passes/3 failures, without a deadline failure. The explicit-close fixture fix passes actual same-source automatic Windows CI. Build67 candidate38166126728/source3ae00be is terminal CANCELLED by root because both navigation-theme readiness failures and Retained whole-selection geometry are confirmed shared source; its preflight passes and all downstream jobs are cancelled. No eligible signed APK exists from either run.

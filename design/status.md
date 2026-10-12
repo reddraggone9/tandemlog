@@ -1,5 +1,16 @@
 # Current status — 2026-10-12
 
+## Following candidate 2026.10.5-rc.1/build72 — acceptance pending
+
+The approved next RC adds guarded one-shot Tasks/checklist answers, shared platform icons, softer secondary metadata/notes, Add retention cleanup, Retained-only reasons in More filters…, device-local section memory and Android Tasks/Food shortcuts. [ADR 0021](decisions/0021-local-sections-and-launcher-shortcuts.md) records the scope, alternatives and boundaries. Stable 2026.10.4 remains published; no next-RC publication is authorized by these results alone.
+
+The four recovered host failures were reproduced and corrected as stale fixtures: await actual profile lease closure, await native editor readiness, and open Settings through the selected-user menu with its folder control scrolled into view. Draft and canonical-byte assertions remain. Independent review additionally identified and closed setup fallback overwriting newer requests, editor opening/direct-save request loss, Android restored-intent replay, Food close-decision coalescing and disposed-dialog callback access. Held success/failure and user-choice regressions cover the repaired guards.
+
+A complete bounded app aggregate passed 1,057 tests with clean analysis before the final two small guard refinements. Their affected batch passed 108 cases but included one invalid runner filename, retained as a load failure. The final build72 source passes all 1,060 app tests, 83 tooling tests, formatting, analysis and candidate preflight. The Flatpak metadata version/type now matches the RC; its original mismatch failure remains in private evidence. Independent source, architecture and editorial review accepts the candidate for hosted/native acceptance. No canonical/native text/dependency pin changed; optional Base64 SIMD is not included.
+
+Release blocker, owner: maintainer. After the signed candidate finishes, bind Windows/Android/Flatpak install/resource results to its exact bytes; accept cold/warm Tasks/Food launcher actions, Recents/process/activity restoration, setup and unsaved-draft behavior, both themes, narrow/enlarged layouts, visible inputs in demo recordings and canonical pre/post bytes. Exit condition: full candidate gates plus explicit required native acceptance. Revisit at build72 completion. Private fixture/evidence remains external.
+
+
 ## Published stable2026.10.4/build71
 
 Lee accepted RC3 and authorized its full stable release with audited PR8/PR9, then the disclosed bounded Gradle mitigation. Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and push CI38299988681 passed every hosted gate. The original owner APK and Windows/Linux installers passed independent source/payload/notice/lifecycle review. [Accepted candidate](../evidence/stable-2026.10.4/candidate71/README.md) records source-bound native preservation and limits. [Stable publication](../evidence/stable-2026.10.4/publication/README.md) completed 2026-10-12T21:28:15Z through38310766986 as Latest, using the original three installers without rebuild; actual anonymous bytes/source/tag/notes/public APK signing and all25 prior releases/assets/tag refs verify.

@@ -74,7 +74,7 @@ Future<void> verifyFoodFieldFilters(
 
   Future<void> openFilters() async {
     await tap(find.byKey(const ValueKey('food-filter')));
-    await tap(find.text('Brand and location'));
+    await tap(find.text('More filters…'));
   }
 
   Future<void> option(String field, String query, String label) async {

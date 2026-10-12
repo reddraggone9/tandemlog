@@ -9,6 +9,7 @@ import '../domain/bulk_task_edit.dart';
 import 'failure_message.dart';
 import '../application/task_text_session.dart';
 import 'title_line_formatter.dart';
+import 'unsaved_draft_dialog.dart';
 
 class TaskEditor extends StatefulWidget {
   const TaskEditor({
@@ -17,6 +18,7 @@ class TaskEditor extends StatefulWidget {
     required this.save,
     this.onDelete,
     this.onClose,
+    this.onCloseReadinessChanged,
     this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
@@ -34,7 +36,7 @@ class TaskEditor extends StatefulWidget {
   final Future<void> Function(Map<String, dynamic>, List<String>, List<String>)
   save;
   final Future<void> Function()? onDelete;
-  final VoidCallback? onClose;
+  final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
@@ -47,6 +49,7 @@ class TaskEditor extends StatefulWidget {
 
 class TaskEditorState extends State<TaskEditor> {
   final GlobalKey<_EditorBodyState> _body = GlobalKey();
+  bool get closeBusy => _body.currentState?.busy ?? true;
   Future<bool> canClose() async => await _body.currentState?.canClose() ?? true;
   Future<bool> confirmDiscard() => canClose();
   @override
@@ -57,6 +60,7 @@ class TaskEditorState extends State<TaskEditor> {
     tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
+    onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
@@ -75,6 +79,7 @@ class BulkTaskEditor extends StatefulWidget {
     required this.onSave,
     this.onDelete,
     this.onClose,
+    this.onCloseReadinessChanged,
     this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
@@ -85,7 +90,7 @@ class BulkTaskEditor extends StatefulWidget {
   final List<Map<String, dynamic>> tasks;
   final Future<void> Function(BulkTaskEdit) onSave;
   final Future<void> Function()? onDelete;
-  final VoidCallback? onClose;
+  final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
@@ -98,6 +103,7 @@ class BulkTaskEditor extends StatefulWidget {
 
 class BulkTaskEditorState extends State<BulkTaskEditor> {
   final GlobalKey<_EditorBodyState> _body = GlobalKey();
+  bool get closeBusy => _body.currentState?.busy ?? true;
   Future<bool> canClose() async => await _body.currentState?.canClose() ?? true;
   Future<bool> confirmDiscard() => canClose();
   @override
@@ -108,6 +114,7 @@ class BulkTaskEditorState extends State<BulkTaskEditor> {
     tagInventory: widget.tagInventory,
     panel: widget.panel,
     onClose: widget.onClose,
+    onCloseReadinessChanged: widget.onCloseReadinessChanged,
     contextNotice: widget.contextNotice,
     selectionCount: widget.selectionCount,
     onClearSelection: widget.onClearSelection,
@@ -124,6 +131,7 @@ class _EditorBody extends StatefulWidget {
     required this.tagInventory,
     required this.panel,
     this.onClose,
+    this.onCloseReadinessChanged,
     this.contextNotice,
     this.selectionCount,
     this.onClearSelection,
@@ -140,7 +148,7 @@ class _EditorBody extends StatefulWidget {
   final List<Map<String, dynamic>> tasks, users;
   final bool panel;
   final List<String> tagInventory;
-  final VoidCallback? onClose;
+  final VoidCallback? onClose, onCloseReadinessChanged;
   final Widget? contextNotice;
   final int? selectionCount;
   final Future<void> Function()? onClearSelection;
@@ -198,6 +206,9 @@ class _EditorBodyState extends State<_EditorBody> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) widget.onCloseReadinessChanged?.call();
+    });
     originals = (jsonDecode(jsonEncode(widget.tasks)) as List)
         .cast<Map<String, dynamic>>();
     final first = originals.first;
@@ -459,28 +470,7 @@ class _EditorBodyState extends State<_EditorBody> {
   }
 
   Future<bool> askClose() async {
-    final choice = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        scrollable: true,
-        title: const Text('Unsaved changes'),
-        content: const Text('Save your draft before continuing?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'cancel'),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, 'discard'),
-            child: const Text('Discard'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, 'save'),
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
+    final choice = await askUnsavedDraft(context);
     if (!mounted) return false;
     if (choice == 'discard') return true;
     if (choice == 'save') return commit(closeAfter: false);
@@ -598,6 +588,8 @@ class _EditorBodyState extends State<_EditorBody> {
         });
       }
       return false;
+    } finally {
+      if (mounted) widget.onCloseReadinessChanged?.call();
     }
   }
 
@@ -639,6 +631,8 @@ class _EditorBodyState extends State<_EditorBody> {
           failure = failureMessage(e);
         });
       }
+    } finally {
+      if (mounted) widget.onCloseReadinessChanged?.call();
     }
   }
 

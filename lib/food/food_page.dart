@@ -38,6 +38,7 @@ class FoodInventoryPage extends StatefulWidget {
     this.error,
     this.savePending = false,
     this.hasPendingSave,
+    this.onCloseReadinessChanged,
   });
   final Widget Function(bool compact)? sectionMenu;
   final Widget? settings, progress;
@@ -58,13 +59,14 @@ class FoodInventoryPage extends StatefulWidget {
   final bool busy, savePending;
   final bool Function()? hasPendingSave;
   final String? error;
+  final VoidCallback? onCloseReadinessChanged;
   @override
   State<FoodInventoryPage> createState() => FoodInventoryPageState();
 }
 
 class FoodInventoryPageState extends State<FoodInventoryPage> {
   FoodView view = FoodView.inventory;
-  final search = TextEditingController(), reasonQuery = TextEditingController();
+  final search = TextEditingController();
   Set<String> reasons = {}, brands = {}, locations = {};
   final expanded = <String>{}, selected = <String>{}, bulkSelected = <String>{};
   bool selecting = false;
@@ -103,6 +105,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       for (final item in group.containers)
         if (!item.deleted) item,
   ];
+  bool Function()? _editorCloseBusy;
+  bool get closeBusy =>
+      _editorDone != null && (_editorCloseBusy?.call() ?? true);
   Future<bool> Function()? _requestEditorClose;
   Completer<void>? _editorDone;
   Future<void>? get editorDone => _editorDone?.future;
@@ -144,7 +149,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     _expirationClock.removeListener(_focusChanged);
     _expirationClock.dispose();
     search.dispose();
-    reasonQuery.dispose();
     super.dispose();
   }
 
@@ -244,32 +248,6 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                   ),
                                 ),
                               ),
-                              if (view == FoodView.retained &&
-                                  search.text.trim().isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    16,
-                                    0,
-                                    16,
-                                    8,
-                                  ),
-                                  child: TagInput(
-                                    tags: widget.state.reasons,
-                                    selected: reasons,
-                                    onChanged: (value) => setState(() {
-                                      reasons = value;
-                                      _clearBulkSelection();
-                                    }),
-                                    queryController: reasonQuery,
-                                    onDropdownChanged: (_) {},
-                                    queryLabel: 'Retention reasons',
-                                    hint: 'Find retention reasons',
-                                    clearLabel: 'Clear retention filters',
-                                    chipContext: 'retention filters',
-                                    expandLabel: 'Show retention reasons',
-                                    collapseLabel: 'Hide retention reasons',
-                                  ),
-                                ),
                               if (widget.error != null || _actionError != null)
                                 Padding(
                                   padding: const EdgeInsets.all(12),
@@ -449,7 +427,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
           const PopupMenuDivider(),
           PopupMenuItem<FoodView>(
             onTap: _fieldFilters,
-            child: const Text('Brand and location'),
+            child: const Text('More filters…'),
           ),
           PopupMenuItem<FoodView>(
             enabled:
@@ -475,10 +453,13 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
   Future<void> _fieldFilters() async {
     var selectedBrands = Set<String>.of(brands);
     var selectedLocations = Set<String>.of(locations);
+    var selectedReasons = Set<String>.of(reasons);
+    final retained = view == FoodView.retained;
     final brandValues = widget.state.brands,
         locationValues = widget.state.locations;
     final brandQuery = TextEditingController(),
-        locationQuery = TextEditingController();
+        locationQuery = TextEditingController(),
+        reasonQuery = TextEditingController();
     final route = DialogRoute<void>(
       context: context,
       builder: (dialogContext) {
@@ -486,7 +467,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
         return StatefulBuilder(
           builder: (context, setDialog) => AlertDialog(
             scrollable: true,
-            title: const Text('Brand and location'),
+            title: const Text('More filters…'),
             content: SizedBox(
               width: 480,
               child: Column(
@@ -528,6 +509,30 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     onChanged: (next) =>
                         setDialog(() => selectedLocations = next),
                   ),
+                  if (retained) ...[
+                    const SizedBox(height: 16),
+                    TagInput(
+                      tags: widget.state.reasons,
+                      selected: selectedReasons,
+                      queryController: reasonQuery,
+                      queryKey: const ValueKey('food-reason-filter-query'),
+                      label: 'Retention reason',
+                      queryLabel: 'Retention reason',
+                      hint: selectedReasons.isEmpty
+                          ? 'All reasons'
+                          : 'Find reasons',
+                      valuePrefix: '',
+                      emptyLabel: 'No reasons yet',
+                      noMatchesLabel: 'No matching reasons',
+                      clearLabel: 'Clear retention filters',
+                      chipContext: 'retention filters',
+                      expandLabel: 'Show retention reasons',
+                      collapseLabel: 'Hide retention reasons',
+                      onDropdownChanged: (_) {},
+                      onChanged: (next) =>
+                          setDialog(() => selectedReasons = next),
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -546,6 +551,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                   setState(() {
                     brands = selectedBrands;
                     locations = selectedLocations;
+                    if (retained && view == FoodView.retained) {
+                      reasons = selectedReasons;
+                    }
                     _clearBulkSelection();
                   });
                   answer(null);
@@ -563,6 +571,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     } finally {
       brandQuery.dispose();
       locationQuery.dispose();
+      reasonQuery.dispose();
     }
   }
 
@@ -724,7 +733,12 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             if (opened || !singleKnownFull)
                               Text(
                                 group.summary,
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: Theme.of(context).textTheme.bodyMedium
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
                               ),
                           ],
                         ),
@@ -749,12 +763,22 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             if (details.brand.isNotEmpty)
                               Text(
                                 details.brand,
-                                style: Theme.of(context).textTheme.bodySmall,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
                               ),
                             if (details.retention.isNotEmpty)
                               Text(
                                 details.retention,
-                                style: Theme.of(context).textTheme.bodySmall,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.onSurfaceVariant,
+                                    ),
                               ),
                           ],
                         ),
@@ -819,7 +843,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                     Expanded(
                       child: Text(
                         metadata.join(' · '),
-                        style: Theme.of(context).textTheme.bodySmall,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                       ),
                     ),
                     SizedBox(
@@ -1060,6 +1086,8 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     String? error;
     double? editorViewportHeight;
     var answered = false, saving = false, deciding = false;
+    Future<bool>? closeRequest;
+    _editorCloseBusy = () => saving || answered;
     bool pending() => widget.hasPendingSave?.call() ?? widget.savePending;
     String snapshot() => jsonEncode([
       name.text,
@@ -1092,7 +1120,7 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (context, setDialog) {
-          Future<bool> cancel() async {
+          Future<bool> decideClose() async {
             if (saving || answered || deciding) return false;
             if (snapshot() != initial) {
               deciding = true;
@@ -1160,6 +1188,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
             return true;
           }
 
+          Future<bool> cancel() => closeRequest ??= decideClose().whenComplete(
+            () => closeRequest = null,
+          );
           _requestEditorClose = cancel;
           return PopScope(
             canPop: false,
@@ -1352,42 +1383,45 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                             ),
                           ),
                         ],
-                        const SizedBox(height: 12),
-                        TagInput(
-                          enabled: !saving && !pending(),
-                          tags: widget.state.reasons,
-                          selected: retention.isEmpty ? {} : {retention},
-                          queryController: retentionQuery,
-                          onDropdownChanged: (_) {},
-                          allowCreate: true,
-                          clearQueryOnSelection: true,
-                          queryLabel: 'Retention reason',
-                          hint: 'Retention reason',
-                          clearLabel: 'Clear retention reason',
-                          chipContext: 'retention reason',
-                          expandLabel: 'Show retention reasons',
-                          collapseLabel: 'Hide retention reasons',
-                          onSubmitQuery: () {
-                            final text = retentionQuery.text.trim();
-                            if (text.isEmpty || _composing(retentionQuery)) {
-                              return false;
-                            }
-                            if (text.length > 200) {
-                              setDialog(
-                                () => error =
-                                    'Retention reason must be 200 characters or fewer.',
-                              );
-                              return false;
-                            }
-                            setDialog(() => retention = text);
-                            retentionQuery.clear();
-                            return true;
-                          },
-                          onChanged: (next) => setDialog(
-                            () => retention =
-                                next.difference({retention}).firstOrNull ?? '',
+                        if (group != null) ...[
+                          const SizedBox(height: 12),
+                          TagInput(
+                            enabled: !saving && !pending(),
+                            tags: widget.state.reasons,
+                            selected: retention.isEmpty ? {} : {retention},
+                            queryController: retentionQuery,
+                            onDropdownChanged: (_) {},
+                            allowCreate: true,
+                            clearQueryOnSelection: true,
+                            queryLabel: 'Retention reason',
+                            hint: 'Retention reason',
+                            clearLabel: 'Clear retention reason',
+                            chipContext: 'retention reason',
+                            expandLabel: 'Show retention reasons',
+                            collapseLabel: 'Hide retention reasons',
+                            onSubmitQuery: () {
+                              final text = retentionQuery.text.trim();
+                              if (text.isEmpty || _composing(retentionQuery)) {
+                                return false;
+                              }
+                              if (text.length > 200) {
+                                setDialog(
+                                  () => error =
+                                      'Retention reason must be 200 characters or fewer.',
+                                );
+                                return false;
+                              }
+                              setDialog(() => retention = text);
+                              retentionQuery.clear();
+                              return true;
+                            },
+                            onChanged: (next) => setDialog(
+                              () => retention =
+                                  next.difference({retention}).firstOrNull ??
+                                  '',
+                            ),
                           ),
-                        ),
+                        ],
                       ],
                       if (error != null)
                         Padding(
@@ -1458,7 +1492,9 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                     ? original!.expiry
                                     : expiry.text.trim(),
                                 estimated: estimated,
-                                retention: retentionQuery.text.trim().isEmpty
+                                retention: group == null && !bulk
+                                    ? ''
+                                    : retentionQuery.text.trim().isEmpty
                                     ? retention
                                     : retentionQuery.text.trim(),
                                 size: size.text.trim(),
@@ -1529,6 +1565,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
                                       : e.toString();
                                 });
                               }
+                            } finally {
+                              if (mounted) {
+                                widget.onCloseReadinessChanged?.call();
+                              }
                             }
                           },
                     child: Text(
@@ -1556,8 +1596,10 @@ class FoodInventoryPageState extends State<FoodInventoryPage> {
     // Wait for the route's exit animation and overlay disposal before inputs.
     await route.completed;
     _requestEditorClose = null;
+    _editorCloseBusy = null;
     _editorDone = null;
     done.complete();
+    if (mounted) widget.onCloseReadinessChanged?.call();
     expiryFocus.dispose();
     for (final controller in [
       name,

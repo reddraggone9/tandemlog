@@ -257,23 +257,45 @@ Future<void> verifyFoodViewReachability(
     return;
   }
   if (mode == FoodView.retained) {
+    await tap(find.byKey(const ValueKey('food-filter')));
+    await tap(find.text('More filters…'));
     final show = find.byTooltip('Show retention reasons');
-    await swipeTo(show, backwards: true);
+    await tester.ensureVisible(show);
     await tap(show);
     final option = find.byKey(const ValueKey('tag-option-$retentionReason'));
     await tester.ensureVisible(option);
     await tester.pumpAndSettle();
     await tap(option);
-    expect(tester.widget<TagInput>(find.byType(TagInput)).selected, {
-      retentionReason,
-    });
-    await tester.sendKeyEvent(LogicalKeyboardKey.escape);
+    expect(
+      tester
+          .widget<TagInput>(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is TagInput &&
+                  w.queryKey == const ValueKey('food-reason-filter-query'),
+            ),
+          )
+          .selected,
+      {retentionReason},
+    );
     FocusManager.instance.primaryFocus?.unfocus();
     await tester.pumpAndSettle();
     final clear = find.byTooltip('Clear retention filters');
-    await swipeTo(clear, backwards: true);
+    await tester.ensureVisible(clear);
     await tap(clear);
-    expect(tester.widget<TagInput>(find.byType(TagInput)).selected, isEmpty);
+    expect(
+      tester
+          .widget<TagInput>(
+            find.byWidgetPredicate(
+              (w) =>
+                  w is TagInput &&
+                  w.queryKey == const ValueKey('food-reason-filter-query'),
+            ),
+          )
+          .selected,
+      isEmpty,
+    );
+    await tap(find.widgetWithText(FilledButton, 'Apply'));
     await capture?.call('$prefix-retention-filter-cleared');
     expect(find.byType(ExpansionTile), findsNothing);
   }
