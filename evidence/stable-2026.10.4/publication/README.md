@@ -1,0 +1,9 @@
+# Published stable2026.10.4/build71
+
+[Stable2026.10.4](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4) published 2026-10-12T21:28:15Z as stable Latest, draft=false/prerelease=false, from exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc` and original signed candidate38299989871. [Promotion38310766986](https://github.com/reddraggone9/tandemlog/actions/runs/38310766986) used reviewed documentation dispatch `f9e1bdf719b8e5085273e6b329c69286a092e1e0` and notes SHA256 `03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f`; it reused the accepted installers without rebuilding.
+
+[Anonymous verification](public-verification71.json) records actual downloaded Android APK, Windows installer and Linux Flatpak bytes matching accepted SHA256/size/service digests; public APK owner signing/package/stable version/code71/nondebuggable; exact tag/source/notes; stable Latest and all25 previous release identities/assets/notes/tag refs unchanged. Only three versioned installers were published, without portable/debug/QA/private evidence.
+
+[Native/source-bound acceptance](../candidate71/README.md) preserves both exact upgrades, affected native workflows, independent reviews and remaining platform qualifications. Its acceptance JSON is an immutable pre-publication record; this publication receipt supplies final state. The private Library native packet and frozen importer rehearsal remain external. Settings/adbd privilege were restored, temporary lab processes stopped and both synthetic datasets preserved. No live Food import, profile change or cutover occurred.
+
+[Independent postpublication ACCEPT](independent-postpublication-review.json) freshly checks anonymous release metadata, independently rehashes the actual downloaded installers, compares all25 complete prior release records except live download counters and verifies every prior tag object. No remaining material blocker.

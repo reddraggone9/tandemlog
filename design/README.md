@@ -2,7 +2,7 @@
 
 ## Current source of truth
 
-Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is implemented as a separate module and accepted in stable2026.10.4/build71 candidate; publication is pending.
+Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is released as a separate module in stable2026.10.4/build71; [publication receipts](../evidence/stable-2026.10.4/publication/README.md) record exact native acceptance and public verification.
 
 1. [Status, commands and limitations](status.md)
 2. [Product and milestone](product-behavior.md)
@@ -28,13 +28,13 @@ Each subject has one source of truth. Keep status/evidence current; link rather 
 
 - [Food import contract v1](food-import-contract.md): bounded reviewed staging, explicit official commit and exact-byte retry; private extraction/data remain external.
 
-- [Food inventory](decisions/0014-food-inventory.md): approved physical-container scope, private import boundary, provisional early preview and remaining durability/native/release gates.
+- [Food inventory](decisions/0014-food-inventory.md): physical-container scope and separately coordinated private import boundary; Food is released in stable2026.10.4/build71.
 
-- [Food Stock and toolbar refinements](decisions/0017-food-stock-and-toolbar-refinements.md): implemented combined Stock/Inbox, local date urgency and filter/account parity; exact candidate/Android acceptance pending.
+- [Food Stock and toolbar refinements](decisions/0017-food-stock-and-toolbar-refinements.md): combined Stock/Inbox, local date urgency and filter/account parity, released in stable2026.10.4/build71 with source-bound native qualifications.
 
-- [Food session Undo](decisions/0018-food-session-undo.md): accepted50-action stack and selective additive v2 retractions; reviewed core complete, native host and exact candidate acceptance in progress.
+- [Food session Undo](decisions/0018-food-session-undo.md): accepted50-action stack and selective additive v2 retractions, released in stable2026.10.4/build71 with reviewed native/hosted coverage.
 
-- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): implemented default Search and explicit clearing toggle; exact candidate/Android acceptance pending.
+- [Task Search and Add input](decisions/0016-task-search-and-add-input.md): default Search and explicit clearing toggle, released in stable2026.10.4/build71.
 
 - [Toolbar section navigation](decisions/0015-toolbar-section-navigation.md): approved Tasks/Food dropdown in the existing section identity, responsive labels and protected drafts.
 

@@ -1,8 +1,8 @@
 # Current status — 2026-10-12
 
-## Stable2026.10.4/build71 accepted candidate
+## Published stable2026.10.4/build71
 
-Lee accepted RC3 and authorized its full stable release with audited PR8/PR9, then the disclosed bounded Gradle mitigation. Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and push CI38299988681 passed every hosted gate. The original owner APK and Windows/Linux installers passed independent source/payload/notice/lifecycle review. [Accepted candidate](../evidence/stable-2026.10.4/candidate71/README.md) records source-bound native preservation and limits; publication is pending.
+Lee accepted RC3 and authorized its full stable release with audited PR8/PR9, then the disclosed bounded Gradle mitigation. Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and push CI38299988681 passed every hosted gate. The original owner APK and Windows/Linux installers passed independent source/payload/notice/lifecycle review. [Accepted candidate](../evidence/stable-2026.10.4/candidate71/README.md) records source-bound native preservation and limits. [Stable publication](../evidence/stable-2026.10.4/publication/README.md) completed 2026-10-12T21:28:15Z through38310766986 as Latest, using the original three installers without rebuild; actual anonymous bytes/source/tag/notes/public APK signing and all25 prior releases/assets/tag refs verify.
 
 Native prepared stable2026.10.3+56→71 and separate RC70→71 upgrades passed. Tasks/protected rows and canonical bytes are preserved; older stable adds the expected local Food schema/empty guard. Offline native text save/cold replay, Food add/remove/Undo, module isolation, actual SAF switch/return and normal/200% Gboard checks pass. Actual emulator runtime is Android11/API30. Broader unchanged RC70/earlier Food/storage/provider evidence retains its exact attribution; the applicable stable Windows GUI waiver remains qualified alongside fresh hosted installer lifecycle.
 

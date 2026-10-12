@@ -1,6 +1,6 @@
 # Accepted stable2026.10.4/build71 candidate
 
-Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and push CI38299988681 passed every required hosted gate. [Acceptance](acceptance.json) binds the original three installers, native upgrades and qualifications. Publication remains pending. No artifacts are rebuilt or relabeled from an RC.
+Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and push CI38299988681 passed every required hosted gate. [Acceptance](acceptance.json) binds the original three installers, native upgrades and qualifications. [Publication](../publication/README.md) completed 2026-10-12T21:28:15Z as stable Latest from these exact original installers. The acceptance JSON preserves its pre-publication recording state. No artifacts are rebuilt or relabeled from an RC.
 
 Lee accepted RC3 and authorized its full stable release with audited PR8/PR9. After the disclosed Gradle TLS-fallback blocker he authorized the bounded mitigation. [Build-security review](../build-security/README.md) keeps the original toolchain pins and records29 controlled cases plus independent review.
 

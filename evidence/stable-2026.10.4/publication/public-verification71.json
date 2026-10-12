@@ -1,0 +1,54 @@
+{
+  "atUtc": "2026-10-12T21:30:25.359719+00:00",
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4",
+  "releaseId": 411009405,
+  "publishedAtUtc": "2026-10-12T21:28:15Z",
+  "source": "b8cdfc3941cf171fb6e89bbd19c24e33729799bc",
+  "tag": "v2026.10.4",
+  "tagSourceVerified": true,
+  "candidateRun": 38299989871,
+  "publicationRun": 38310766986,
+  "dispatchSource": "f9e1bdf719b8e5085273e6b329c69286a092e1e0",
+  "notesSha256": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f",
+  "notesExact": true,
+  "draft": false,
+  "prerelease": false,
+  "stableLatest": "v2026.10.4",
+  "latestReleaseIdMatches": true,
+  "priorReleasesAndAssetsUnchanged": 25,
+  "priorTagRefsUnchanged": 25,
+  "assets": [
+    {
+      "id": 635044597,
+      "name": "tandemlog-2026.10.4-android.apk",
+      "bytes": 67099269,
+      "sha256": "6f8f82191075a139c361be0207623c47da6a5ace861bbed30cc5ba417850b38c",
+      "anonymousDownload": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4/tandemlog-2026.10.4-android.apk"
+    },
+    {
+      "id": 635044599,
+      "name": "tandemlog-2026.10.4-linux-x64.flatpak",
+      "bytes": 9240344,
+      "sha256": "701edf71372df81d5d9cd5fcc9c110eaea567a865f228b60171605774f408a46",
+      "anonymousDownload": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4/tandemlog-2026.10.4-linux-x64.flatpak"
+    },
+    {
+      "id": 635044601,
+      "name": "tandemlog-2026.10.4-windows-x64-setup.exe",
+      "bytes": 12390163,
+      "sha256": "61969aacfd77ca2e8634fece529137dd2b587ef21e06e2163c0376c6e4dac6b4",
+      "anonymousDownload": true,
+      "url": "https://github.com/reddraggone9/tandemlog/releases/download/v2026.10.4/tandemlog-2026.10.4-windows-x64-setup.exe"
+    }
+  ],
+  "publicApkOwnerSigner": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "publicApkPackage": "com.reddraggone9.tandemlog",
+  "publicApkCode": 71,
+  "publicApkNonDebuggable": true,
+  "originalArtifactsNoRebuild": true,
+  "noFullApk16KBClaim": true,
+  "privateEvidenceNotUploaded": true,
+  "noLiveProfileSwitchImportOrCutover": true
+}

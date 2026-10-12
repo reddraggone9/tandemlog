@@ -1,0 +1,61 @@
+{
+  "checkedAtUtc": "2026-10-12T21:32:30.020469+00:00",
+  "verdict": "ACCEPT",
+  "releaseId": 411009405,
+  "releaseUrl": "https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4",
+  "publishedAtUtc": "2026-10-12T21:28:15Z",
+  "source": "b8cdfc3941cf171fb6e89bbd19c24e33729799bc",
+  "tag": "v2026.10.4",
+  "latest": true,
+  "draft": false,
+  "prerelease": false,
+  "immutable": true,
+  "candidateRun": 38299989871,
+  "publicationRun": 38310766986,
+  "publicationRunSucceededAtExactDispatch": true,
+  "dispatchSource": "f9e1bdf719b8e5085273e6b329c69286a092e1e0",
+  "notesSha256": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f",
+  "notesByteExactToReviewedDispatchGitBlob": true,
+  "anonymousApiFresh": true,
+  "retainedAnonymousActualDownloadsIndependentlyRehashed": true,
+  "newDownloadsPerformedByReviewer": false,
+  "assets": [
+    {
+      "name": "tandemlog-2026.10.4-android.apk",
+      "sha256": "6f8f82191075a139c361be0207623c47da6a5ace861bbed30cc5ba417850b38c",
+      "bytes": 67099269,
+      "assetId": 635044597
+    },
+    {
+      "name": "tandemlog-2026.10.4-linux-x64.flatpak",
+      "sha256": "701edf71372df81d5d9cd5fcc9c110eaea567a865f228b60171605774f408a46",
+      "bytes": 9240344,
+      "assetId": 635044599
+    },
+    {
+      "name": "tandemlog-2026.10.4-windows-x64-setup.exe",
+      "sha256": "61969aacfd77ca2e8634fece529137dd2b587ef21e06e2163c0376c6e4dac6b4",
+      "bytes": 12390163,
+      "assetId": 635044601
+    }
+  ],
+  "publicAssetSetExactlyThreeAcceptedInstallers": true,
+  "publicApkByteIdenticalToIndependentlyVerifiedOwnerSignedCandidate": true,
+  "publicSignerSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+  "priorReleasesAndAssetsPreserved": 25,
+  "priorTagRefsPreserved": 25,
+  "priorRecordComparison": "All complete prior release records exact after excluding only live download_count fields; notes, identifiers, targets, asset names, sizes, digests, timestamps and states preserved",
+  "privateLibraryReceiptAndPacketVerified": true,
+  "privateLibraryIdentityAndPacketDetailsOmitted": true,
+  "noWindowsXattrClaim": true,
+  "noLiveCutover": true,
+  "reviewerMutations": "Only this local review receipt; no source, workflow, fixture, public release or Library mutation",
+  "reviewedReceiptSha256": {
+    "public-verification71.json": "38f1bdd7bab558efd342e15112916f34d2a4804eb1ca31edb3ea1dd7b11d68b6",
+    "releases-before.json": "797a811a60cbef63693469c779d8ba611e177cb54df1346cad456a816707d51a",
+    "tags-before.json": "f569176bdc24f1fc8a5794fe8651e9ea17bfe878cef3ba56ba2b01c00541d2e6",
+    "releases-after.json": "f8a9241533bbddda5dee8b9258bdd8a9e9b5f4792a5c00607368572bb3936838",
+    "tags-after.json": "c2836fb71eaebdc3c5493f26dff7a09af9a947e7b9879ea9e1052f3fc096de80"
+  },
+  "materialBlockers": []
+}

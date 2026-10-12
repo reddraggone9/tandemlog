@@ -190,3 +190,10 @@ calendar/SAF/cold-v2 passes and broader62 acceptance keep distinct source attrib
 The existing manual Windows GUI RC waiver and inherited Flutter/SQLite RELRO
 qualification remain; no general16KB runtime/compliance claim is made. Private
 fixtures remain separate; no live-data operation or stable promotion occurred.
+
+
+## Published stable2026.10.4/build71
+
+[Stable2026.10.4](https://github.com/reddraggone9/tandemlog/releases/tag/v2026.10.4) published 2026-10-12T21:28:15Z as Latest after Lee accepted RC3 and explicitly authorized its full stable release with audited PR8/PR9, then the bounded Gradle mitigation. Exact source `b8cdfc3941cf171fb6e89bbd19c24e33729799bc`, signed candidate38299989871 and promotion38310766986 bind the original three installers. Reviewed notes SHA256 `03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f` and docs dispatch `f9e1bdf719b8e5085273e6b329c69286a092e1e0` passed existing admission/source/signer/closed-assets/lifecycle gates without rebuilding.
+
+[Final public evidence](../evidence/stable-2026.10.4/publication/README.md) records actual anonymous byte verification, public APK signing/version/code71, source/tag/notes/Latest and all25 prior release/asset/tag identities unchanged. [Candidate acceptance](../evidence/stable-2026.10.4/candidate71/README.md) preserves direct prepared stable56 and separate RC70 upgrades, affected native text/Food/SAF/Gboard checks and qualified reused coverage. Current runtime is Android11/API30; applicable manual Windows GUI waiver and inherited RELRO/16KB limits remain explicit. Private inventory/import/native packet remains external; no live Food cutover occurred.
