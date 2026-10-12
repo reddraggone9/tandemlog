@@ -1,0 +1,10 @@
+{
+  "atUtc": "2026-10-12T14:23:49.386325+00:00",
+  "newNativeLibrarySha256": "6c1b072db0f55ef984aefdfc31149bad7a6524136f09d10b563e98ad588a64b8",
+  "invalidSyntaxAndUtf8Cases": 4,
+  "allFixedInvalidJsonErrors": true,
+  "validUnicodeRequestAccepted": true,
+  "ownerRemainedReadableAfterErrors": true,
+  "syntheticInMemoryOnly": true,
+  "productionWorkspaceWrites": false
+}

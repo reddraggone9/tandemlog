@@ -1,0 +1,87 @@
+{
+  "from": "v1.0.151",
+  "to": "v1.0.154",
+  "count": 20,
+  "commits": [
+    {
+      "sha": "99edc94fc340fe3bccad69794f29d2ed14e15156",
+      "subject": "Remove deprecated package authors field from Cargo.toml"
+    },
+    {
+      "sha": "a3e9758ffc88247ab82182cb2505867768a702e3",
+      "subject": "Merge pull request #1334 from xtqqczze/authors"
+    },
+    {
+      "sha": "577729ef3191f4ed0c2d5acb44ca69535a11e005",
+      "subject": "Resolve deprecated f64 constants warning"
+    },
+    {
+      "sha": "afdf6fc67247dd7fa4fcde1381e6ecc6bcc7a30e",
+      "subject": "Ignore clone_on_copy clippy lint in test"
+    },
+    {
+      "sha": "35ca8ef0bc2f0d2e5be5fbb93374811f100399af",
+      "subject": "Support preserve_order in no_std builds"
+    },
+    {
+      "sha": "e759c5b64ea73303c24f9055e8e73ee1fb2f0932",
+      "subject": "Report invalid UTF-8 at the first bad byte."
+    },
+    {
+      "sha": "65a38ed64553347f4e67e9e57421e1d8bca3e21a",
+      "subject": "Keep the sign of -0 in Value with arbitrary_precision"
+    },
+    {
+      "sha": "d8bbd390f0f04331ff3e66fc2e0d7cd40faa06c0",
+      "subject": "Value == f32 is false for numbers outside the range of f32"
+    },
+    {
+      "sha": "76e44e2b89d442d49f096fdbeb7ab39d265ee755",
+      "subject": "Merge pull request 1346 from yuxi-liu-wired/pr/ap-negative-zero"
+    },
+    {
+      "sha": "80a5406cceca26e72e94b150b2a22547230ac480",
+      "subject": "Merge pull request #1347 from yuxi-liu-wired/pr/partialeq-f32"
+    },
+    {
+      "sha": "854fc70fa3449c302265b75e750401b009b85cd1",
+      "subject": "Touch up PR 1347"
+    },
+    {
+      "sha": "c9f1e3b0216328591262889d9a1c2771f3dd5fff",
+      "subject": "Release 1.0.152"
+    },
+    {
+      "sha": "452afa2630f1d568ba06a5f43ad2e2f5303ac000",
+      "subject": "Correct multiline raw UTF-8 error positions and simplify indexing"
+    },
+    {
+      "sha": "8af71cc0d7ceecd53b9c9b5a9ac512e98d1c78e7",
+      "subject": "Merge pull request #1345 from 00200200/fix-invalid-utf8-error-column"
+    },
+    {
+      "sha": "4b4810a451a3095c7bcce792782e460cf1105d8d",
+      "subject": "Resolve range_plus_one pedantic clippy lint"
+    },
+    {
+      "sha": "83335eed01fcfe5f3cfb8064938df935e99e3d61",
+      "subject": "Touch up PR 1345"
+    },
+    {
+      "sha": "4b2d7264cef72ef297058ef7d731e7d77574cf3e",
+      "subject": "Release 1.0.153"
+    },
+    {
+      "sha": "3c932c05f73bcbc7626db4e1959cbce075d7106e",
+      "subject": "Merge pull request #1333 from razmser/no-std-preserve-order"
+    },
+    {
+      "sha": "a91bfaf539aa7927ab88086d7a9ff522cb090f7a",
+      "subject": "Fix RandomState links in map documentation"
+    },
+    {
+      "sha": "20572a6d066958542d79cdd6cf1a7cd9f0c8e1f8",
+      "subject": "Release 1.0.154"
+    }
+  ]
+}

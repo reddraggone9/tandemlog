@@ -1,0 +1,9 @@
+serde_json v1.0.151
+├── serde_json feature "default"
+│   ├── tandemlog-text v0.0.0 (<isolated-worktree>/native/text_engine)
+│   │   └── tandemlog-text feature "default" (command-line)
+│   └── yrs v0.28.0 (<isolated-worktree>/native/text_engine/vendor/yrs-0.28.0)
+│       └── yrs feature "default"
+│           └── tandemlog-text v0.0.0 (<isolated-worktree>/native/text_engine) (*)
+└── serde_json feature "std"
+    └── serde_json feature "default" (*)
