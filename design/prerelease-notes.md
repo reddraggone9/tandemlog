@@ -18,6 +18,6 @@ New workspaces set up shared text editing automatically. The old Settings setup 
 
 Preview trials with Unspecified contents or uninitialized shared text cannot be upgraded in place. Preserve the old trial and use a fresh workspace and import plan.
 
-Tasks editors keep the title and actions reachable with larger text and the keyboard open, including after a folder chooser error or a window resize. Folder chooser errors can be scrolled to read the full message.
+Fixed cramped Tasks editor layouts with larger text or an open keyboard, including after folder chooser errors and window resizing. Long folder chooser errors are scrollable.
 
-Tasks bulk-edit save errors stay readable beside the actions with larger text and the keyboard open.
+Fixed clipped Tasks bulk-edit save errors with larger text or an open keyboard.
