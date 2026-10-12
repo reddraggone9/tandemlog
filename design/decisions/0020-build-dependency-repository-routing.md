@@ -11,7 +11,9 @@ bounded fix before signing.
 Decision: keep the existing toolchain pins and enforce strict disjoint group
 routing on all Gradle repository handlers before resolution. Google owns Android
 and AndroidX groups, the Portal owns Gradle Kotlin DSL plugin groups, Flutter's
-repository owns io.flutter, and Central owns all other groups. Exact HTTPS
+repository owns io.flutter, and Central owns all other groups. The verified legacy
+com.google.android:annotations module is excluded from Google entirely and only
+its audited4.1.1.4 coordinate is admitted on Central; other versions fail closed. Exact HTTPS
 endpoints are required; secondary URLs, unknown types and late mutations fail
 closed. Complement exclusions prevent later content inclusions from widening
 the routing. The policy covers settings plugins, included builds, buildscript

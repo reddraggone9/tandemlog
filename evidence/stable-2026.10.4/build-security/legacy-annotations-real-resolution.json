@@ -1,0 +1,9 @@
+{
+  "atUtc": "2026-10-12T19:37:27.795336+00:00",
+  "exitCode": 0,
+  "policySha256": "b4fff0b728ff1d5af3533023715cfba7870bde4b8957caddd51780ff4b6cdb41",
+  "actualResolvedJarMatchesAuditedBytes": true,
+  "normalSystemTlsVerification": true,
+  "ownerCredentialsUsed": false,
+  "gradleVersion": "9.4.1"
+}

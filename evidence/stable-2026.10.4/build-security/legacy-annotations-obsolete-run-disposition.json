@@ -1,0 +1,18 @@
+[
+  {
+    "run": 38296861898,
+    "source": "a2ce7d9a1c5205cc4d2027d13756cf646c7a5a99",
+    "failedAndroidJob": 114969987750,
+    "failedStep": "Build Android debug APK",
+    "reason": "Superseded after precise legacy annotations repository-ownership failure; signing never eligible",
+    "cancelRequestedAtUtc": "2026-10-12T19:33:45.150950+00:00"
+  },
+  {
+    "run": 38296862559,
+    "source": "a2ce7d9a1c5205cc4d2027d13756cf646c7a5a99",
+    "failedAndroidJob": 114969919435,
+    "failedStep": "Build Android debug APK",
+    "reason": "Superseded after precise legacy annotations repository-ownership failure; signing never eligible",
+    "cancelRequestedAtUtc": "2026-10-12T19:33:47.056786+00:00"
+  }
+]

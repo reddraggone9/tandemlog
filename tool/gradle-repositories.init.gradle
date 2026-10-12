@@ -57,6 +57,8 @@ def protect = { handler ->
                 case 'google':
                     content.includeGroupByRegex(googleGroups)
                     content.excludeGroupByRegex('(?!(?:' + googleGroups + ')$).*')
+                    // Legacy AOSP annotation jar is published only on Central.
+                    content.excludeModule('com.google.android', 'annotations')
                     break
                 case 'portal':
                     content.includeGroupByRegex(portalGroups)
@@ -67,7 +69,9 @@ def protect = { handler ->
                     content.excludeGroupByRegex('(?!(?:' + flutterGroups + ')$).*')
                     break
                 case 'central':
-                    content.excludeGroupByRegex(googleGroups)
+                    content.excludeGroupByRegex('(?!(?:com\\.google\\.android)$)(?:' + googleGroups + ')')
+                    content.excludeModuleByRegex('com\\.google\\.android', '(?!annotations$).*')
+                    content.excludeVersionByRegex('com\\.google\\.android', 'annotations', '(?!4\\.1\\.1\\.4$).*')
                     content.excludeGroupByRegex(portalGroups)
                     content.excludeGroupByRegex(flutterGroups)
                     break

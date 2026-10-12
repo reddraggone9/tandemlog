@@ -3,11 +3,18 @@
   "baseMain": "5d3ff16ca81121a38bd073fc83e8875aa2506701",
   "version": "2026.10.4+71",
   "selectedMitigation": "strict disjoint repository routing on existing toolchain",
-  "productionPolicySha256": "8fdcce17f00b4d932e8921dc8cacdf2e1dac925135ef58e4ac540e0d949c5153",
+  "productionPolicySha256": "bad7bedd6be38141ab6bcc3c70f134bdbb428643754585cb6d504bcd7bcf3650",
   "v4Passed": 21,
   "v5FinalSourcePassed": 4,
   "installerTestsPassed": 4,
   "noOwnerCredentialsInLocalQualification": true,
   "fullCandidateAndNativeGatesPending": true,
-  "explicitGradleHomeAndNoJvmHomeOverrideRequired": true
+  "explicitGradleHomeAndNoJvmHomeOverrideRequired": true,
+  "exactFinalV7CasesPassed": 29,
+  "protectedNegativeLaterRepositoryRequests": 0,
+  "legacyAnnotationCoordinate": "com.google.android:annotations:4.1.1.4",
+  "legacyAnnotationJarSha256": "ba734e1e84c09d615af6a09d33034b4f0442f8772dec120efb376d86a565ae15",
+  "legacyAnnotationSourcesMatchOfficialAOSP": true,
+  "initialCandidateFailedBeforeSigning": 38296861898,
+  "correctionChangedDependencyVersions": false
 }

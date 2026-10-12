@@ -4,7 +4,7 @@ Lee explicitly approved a bounded mitigation before signing on2026-10-12.
 Application code and Gradle9.4.1/AGP9.2.1/Kotlin2.4.20/Flutter pins remain unchanged.
 The official TLS-fallback workaround is implemented with disjoint content filters
 in every settings/plugin/project/buildscript repository handler, including nested
-builds and future repository additions. Each group can resolve from one approved
+builds and future repository additions. Each module can resolve from one approved
 logical repository only; HTTPS errors cannot expose the same coordinate at a
 different repository. Unknown types/endpoints, secondary artifact URLs, later URL
 changes and content widening fail closed. This is repository routing, not a new
@@ -44,3 +44,28 @@ Sources:
 - https://github.com/gradle/gradle/security/advisories/GHSA-j5m7-59rp-24f5
 - https://github.com/gradle/gradle/security/advisories/GHSA-mvvg-497x-hmj8
 - https://github.com/gradle/gradle/security/advisories/GHSA-xwqc-3h47-hg64
+
+## Corrected legacy coordinate ownership
+
+Initial final-source candidate38296861898/push38296862559 failed Android debug
+before signing: file_selector_android's existing AGP8.13.1 → grpc-core1.69.1
+classpath requires com.google.android:annotations:4.1.1.4 from Central. The
+original namespace-only policy incorrectly assigned it to Google. Both runs
+were cancelled after preserving the failed Android job receipts; no eligible
+owner-signed APK exists from that source.
+
+The corrected policy gives the annotations module one repository owner, Central,
+and admits only its audited fixed4.1.1.4 version. Google excludes that module
+including dynamic version listings; Central rejects other modules/versions in
+the otherwise Google-owned group. The two source files match official
+android-4.1.1_r4 bytes exactly. The3120-byte annotation-only JAR has no executable
+entry point/service hooks and retains SHAba734e1e84c09d615af6a09d33034b4f0442f8772dec120efb376d86a565ae15.
+
+Exact final-policy v7 passes29 cases: three positives, four unprotected fallback
+controls, and22 protected negatives with zero later-repository requests. This
+includes fixed and dynamic annotation lookup, later content widening and
+unsupported module/version boundaries. v6 and real public Maven resolution
+retain their earlier exact-policy attribution; the final one-line hardening
+changes Google from an exact-version exclusion to a complete-module exclusion.
+No existing dependency version or application source changes in this correction.
+Fresh full Android/candidate/native gates are still required.

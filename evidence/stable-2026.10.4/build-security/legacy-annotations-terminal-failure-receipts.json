@@ -1,0 +1,34 @@
+[
+  {
+    "run": 38296861898,
+    "source": "a2ce7d9a1c5205cc4d2027d13756cf646c7a5a99",
+    "runConclusion": "cancelled",
+    "failedAndroidJob": 114969987750,
+    "jobConclusion": "failure",
+    "ownerSignedArtifactEligible": false,
+    "rootFailure": "com.google.android:annotations:4.1.1.4 assigned to Google; Central-owned legacy annotation coordinate",
+    "logDownloaded": true,
+    "logSha256": "4253a282ea89599a4d09b2a422ea82f8f44d1617daaef4aea0df0d2705b26410",
+    "logBytes": 61697,
+    "rootCauseLines": [
+      "2026-10-12T19:22:25.8867679Z    > Could not find com.google.android:annotations:4.1.1.4.",
+      "2026-10-12T19:22:25.8901847Z        - https://dl.google.com/dl/android/maven2/com/google/android/annotations/4.1.1.4/annotations-4.1.1.4.pom"
+    ]
+  },
+  {
+    "run": 38296862559,
+    "source": "a2ce7d9a1c5205cc4d2027d13756cf646c7a5a99",
+    "runConclusion": "cancelled",
+    "failedAndroidJob": 114969919435,
+    "jobConclusion": "failure",
+    "ownerSignedArtifactEligible": false,
+    "rootFailure": "com.google.android:annotations:4.1.1.4 assigned to Google; Central-owned legacy annotation coordinate",
+    "logDownloaded": true,
+    "logSha256": "19ed25563620b8429b23f8059f3ba0c5953ed78d6669ff84769cafa25d4e053c",
+    "logBytes": 60742,
+    "rootCauseLines": [
+      "2026-10-12T19:21:34.1443505Z    > Could not find com.google.android:annotations:4.1.1.4.",
+      "2026-10-12T19:21:34.1443987Z        - https://dl.google.com/dl/android/maven2/com/google/android/annotations/4.1.1.4/annotations-4.1.1.4.pom"
+    ]
+  }
+]

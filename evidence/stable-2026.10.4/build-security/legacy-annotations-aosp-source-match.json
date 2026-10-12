@@ -1,0 +1,14 @@
+[
+  {
+    "class": "SuppressLint",
+    "officialSourceUrl": "https://android.googlesource.com/platform/frameworks/base/+/android-4.1.1_r4/core/java/android/annotation/SuppressLint.java?format=TEXT",
+    "sourceSha256": "9ce42c55385758f7f37029b1726e1c5b076894ef262b8e4680f05570678d9b6e",
+    "archivedSourceByteExact": true
+  },
+  {
+    "class": "TargetApi",
+    "officialSourceUrl": "https://android.googlesource.com/platform/frameworks/base/+/android-4.1.1_r4/core/java/android/annotation/TargetApi.java?format=TEXT",
+    "sourceSha256": "cd6d90f503a1b5903237e45da3ccb893823209657884100b11585febebc51af8",
+    "archivedSourceByteExact": true
+  }
+]
