@@ -2361,11 +2361,19 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
       taskView != null &&
       viewError == null &&
       sharedSafetyError == null &&
+      _taskEditorModalAtWidth(
+        MediaQuery.sizeOf(context).width -
+            MediaQuery.paddingOf(context).horizontal,
+      );
+
+  bool _taskEditorModalAtWidth(double width) =>
+      width < 900 &&
       (editingTask != null || editingBulk != null) &&
-      (!selecting || mobileEditorOpen) &&
-      MediaQuery.sizeOf(context).width -
-              MediaQuery.paddingOf(context).horizontal <
-          900;
+      (!selecting ||
+          mobileEditorOpen ||
+          (wideLayout &&
+              (editorKey.currentState != null ||
+                  bulkEditorKey.currentState != null)));
 
   Widget _actionErrorNotice() => Padding(
     padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
@@ -2427,14 +2435,15 @@ class _TasksPageState extends State<TasksPage> with WidgetsBindingObserver {
         return list;
       }
       final panel = constraints.maxWidth >= 900;
+      final modal = _taskEditorModalAtWidth(constraints.maxWidth);
       if (wideLayout &&
-          !panel &&
+          modal &&
           (editorKey.currentState != null ||
               bulkEditorKey.currentState != null)) {
         mobileEditorOpen = true;
       }
       wideLayout = panel;
-      if (!panel && selecting && !mobileEditorOpen) return list;
+      if (!panel && !modal) return list;
       final task = editingTask;
       final editor = task != null
           ? TaskEditor(

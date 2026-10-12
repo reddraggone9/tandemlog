@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:tandemlog/main.dart';
@@ -221,6 +220,45 @@ void registerTaskEditorErrorKeyboardTests() {
             await tester.ensureVisible(notice);
             await tester.pumpAndSettle();
             expect(notice.hitTestable(), findsOneWidget);
+            final diagnosticViewport = tester.getRect(notice);
+            final diagnosticText = find.descendant(
+              of: notice,
+              matching: find.text(state.error as String),
+            );
+            final diagnosticRich = find.descendant(
+              of: diagnosticText,
+              matching: find.byType(RichText),
+            );
+            final diagnosticParagraph = tester.renderObject<RenderParagraph>(
+              diagnosticRich,
+            );
+            final diagnosticScroll = tester.state<ScrollableState>(
+              find.descendant(of: notice, matching: find.byType(Scrollable)),
+            );
+            diagnosticScroll.position.jumpTo(
+              diagnosticScroll.position.maxScrollExtent,
+            );
+            await tester.pumpAndSettle();
+            final message = state.error as String;
+            final ending = message.lastIndexOf('Try again.');
+            expect(ending, greaterThanOrEqualTo(0));
+            final endingBoxes = diagnosticParagraph.getBoxesForSelection(
+              TextSelection(baseOffset: ending, extentOffset: message.length),
+            );
+            expect(endingBoxes, isNotEmpty);
+            for (final box in endingBoxes) {
+              final rect = box.toRect().shift(
+                diagnosticParagraph.localToGlobal(Offset.zero),
+              );
+              expect(
+                rect.top,
+                greaterThanOrEqualTo(diagnosticViewport.top - 0.5),
+              );
+              expect(
+                rect.bottom,
+                lessThanOrEqualTo(diagnosticViewport.bottom + 0.5),
+              );
+            }
             expect(state.error, contains('Could not open the folder picker'));
             await captureNativeFixtureUi(
               tester,
@@ -273,7 +311,186 @@ void registerTaskEditorErrorKeyboardTests() {
   }
 }
 
+void registerTaskEditorResizeTests() {
+  for (final appearance in ['light', 'dark']) {
+    testWidgets(
+      'Wide selected Tasks editor keeps one diagnostic and composing draft after narrow resize $appearance',
+      (tester) async {
+        final root = await Directory.systemTemp.createTemp(
+          'task-error-resize-',
+        );
+        final folder = await Directory('${root.path}/shared').create();
+        final profile = await Directory('${root.path}/profile').create();
+        final seed = await openNativeFixtureStore(
+          LocalLogFolder(folder.path),
+          '${root.path}/seed',
+        );
+        final user = const Uuid().v4(), task = const Uuid().v4();
+        await seed.command(user, 'user.created', {
+          'name': 'Synthetic household',
+        });
+        await seed.createTasks({task: 'RC68 capture edited'}, user);
+        await seed.close();
+        await File('${profile.path}/settings.json').writeAsString(
+          jsonEncode({
+            'folder': folder.path,
+            'user': user,
+            'appearance': appearance,
+          }),
+        );
+        Map<String, List<int>> canonical() => {
+          for (final file in folder.listSync().whereType<File>())
+            file.path: file.readAsBytesSync(),
+        };
+        tester.view.devicePixelRatio = 1;
+        tester.view.physicalSize = const Size(1200, 800);
+        tester.view.viewPadding = const FakeViewPadding(top: 24, bottom: 24);
+        tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
+        tester.platformDispatcher.textScaleFactorTestValue = 2;
+        debugDefaultTargetPlatformOverride = TargetPlatform.android;
+        final picker = _FailingPicker();
+        try {
+          await tester.pumpWidget(
+            TandemlogApp(profilePath: profile.path, folderActions: picker),
+          );
+          await tester.pumpAndSettle();
+          final state = tester.state(find.byType(TasksPage)) as dynamic;
+          final before = canonical();
+          await flows.openSettings(tester);
+          final choose = find.widgetWithText(
+            TextButton,
+            'Use a different folder',
+          );
+          await tester.ensureVisible(choose);
+          await tester.pumpAndSettle();
+          await tester.tap(choose);
+          await tester.pumpAndSettle();
+          expect(picker.calls, 1);
+          await flows.selectTask(tester, task, control: true);
+          expect(state.selecting, true);
+          expect(state.mobileEditorOpen, false);
+          final editor = tester.state<TaskEditorState>(find.byType(TaskEditor));
+          final title = find.byKey(const ValueKey('title'));
+          final editableFinder = find.descendant(
+            of: title,
+            matching: find.byType(EditableText),
+          );
+          final editable = tester.state<EditableTextState>(editableFinder);
+          final controller = editable.widget.controller;
+          final original = controller.text;
+          final draft = '$original resize draft';
+          controller.value = TextEditingValue(
+            text: draft,
+            selection: TextSelection.collapsed(offset: draft.length),
+            composing: TextRange(start: original.length + 1, end: draft.length),
+          );
+          await tester.pumpAndSettle();
+          final value = controller.value;
+          final textSession = state.editingText;
+          final saveCommand = state.textSaveCommand;
+          expect(
+            find.byKey(const ValueKey('action-error-scroll')),
+            findsOneWidget,
+          );
+          tester.view.physicalSize = const Size(320, 640);
+          tester.view.padding = const FakeViewPadding(top: 24);
+          tester.view.viewInsets = const FakeViewPadding(bottom: 280);
+          // Inspect the first resized frame before later layout can repair a
+          // duplicate host/modal diagnostic allocation.
+          await tester.pump();
+          expect(
+            find.byKey(const ValueKey('action-error-scroll')),
+            findsOneWidget,
+          );
+          await tester.pumpAndSettle();
+          expect(
+            tester.state<TaskEditorState>(find.byType(TaskEditor)),
+            same(editor),
+          );
+          expect(controller.value, value);
+          expect(state.editingText, same(textSession));
+          expect(state.textSaveCommand, same(saveCommand));
+          expect(state.choosingFolder, false);
+          expect(state.busy, false);
+          expect(
+            tester
+                .widget<FilledButton>(
+                  find.widgetWithText(FilledButton, 'Save changes'),
+                )
+                .onPressed,
+            isNull,
+          );
+          await tester.ensureVisible(title);
+          await tester.pumpAndSettle();
+          await tester.tap(title);
+          await tester.pumpAndSettle();
+          // Responsive reparenting keeps TaskEditorState and its controller,
+          // but may rebuild the nested EditableText. Resolve the live render
+          // object after resize instead of measuring the detached wide field.
+          final resizedEditable = tester.state<EditableTextState>(
+            editableFinder,
+          );
+          expect(resizedEditable.widget.controller, same(controller));
+          resizedEditable.bringIntoView(TextPosition(offset: draft.length));
+          await tester.pumpAndSettle();
+          final viewport = tester.getRect(
+            find
+                .ancestor(
+                  of: title,
+                  matching: find.byType(SingleChildScrollView),
+                )
+                .first,
+          );
+          final caret = resizedEditable.renderEditable
+              .getLocalRectForCaret(TextPosition(offset: draft.length))
+              .shift(resizedEditable.renderEditable.localToGlobal(Offset.zero));
+          expect(
+            viewport.height,
+            greaterThanOrEqualTo(
+              resizedEditable.renderEditable.preferredLineHeight + 8,
+            ),
+          );
+          expect(caret.top, greaterThanOrEqualTo(viewport.top - 0.5));
+          expect(caret.bottom, lessThanOrEqualTo(viewport.bottom + 0.5));
+          expect(caret.bottom, lessThanOrEqualTo(360));
+          await captureNativeFixtureUi(
+            tester,
+            'task-editor-$appearance-wide-narrow-title-ime',
+          );
+          for (final label in ['Delete', 'Cancel', 'Save changes']) {
+            final button = label == 'Save changes'
+                ? find.widgetWithText(FilledButton, label)
+                : find.widgetWithText(TextButton, label);
+            await tester.ensureVisible(button);
+            await tester.pumpAndSettle();
+            expect(button.hitTestable(), findsOneWidget);
+            expect(tester.getRect(button).height, greaterThanOrEqualTo(48));
+            expect(tester.getRect(button).bottom, lessThanOrEqualTo(360));
+          }
+          await captureNativeFixtureUi(
+            tester,
+            'task-editor-$appearance-wide-narrow-actions-ime',
+          );
+          expect(canonical(), before);
+          expect(tester.takeException(), isNull);
+        } finally {
+          debugDefaultTargetPlatformOverride = null;
+          tester.view.resetDevicePixelRatio();
+          tester.view.resetPhysicalSize();
+          tester.view.resetViewPadding();
+          tester.view.resetPadding();
+          tester.view.resetViewInsets();
+          tester.platformDispatcher.clearTextScaleFactorTestValue();
+          await tester.pumpWidget(const SizedBox.shrink());
+          await tester.pumpAndSettle();
+        }
+      },
+    );
+  }
+}
+
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
   registerTaskEditorErrorKeyboardTests();
+  registerTaskEditorResizeTests();
 }
