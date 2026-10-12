@@ -27,6 +27,10 @@ current main. Native URL-launcher locks stay unchanged. Integration/publication
 remain coordinated with active RC3; held AGP #1/Gradle #2 remain outside scope.
 Historical inventory below is retained as its dated observation.
 
+## Accepted stable2026.10.4 dependency maintenance — 2026-10-12
+
+Audited PR8/PR9 are merged: download-artifact8.0.2, upload-artifact7.0.2, url_launcher6.3.3 with unchanged federated native locks, and serde_json1.0.154 with the otherwise unchanged47-package native graph. The signed stable71 candidate and actual native text/upgrade checks passed. [Candidate evidence](../evidence/stable-2026.10.4/candidate71/README.md) records original payload/notice bindings. [ADR0020](decisions/0020-build-dependency-repository-routing.md) records the approved bounded Gradle repository policy; Gradle9.4.1/AGP9.2.1/Kotlin2.4.20 pins remain. Held Gradle/AGP/base64 proposals are outside this release. Historical inventory below is retained with its original date.
+
 ## Direct application dependencies (historical inventory)
 
 | Dependency | Declared | Resolved | Purpose |

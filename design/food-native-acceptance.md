@@ -1,4 +1,8 @@
-# Food RC native acceptance
+# Food native acceptance
+
+## Accepted stable2026.10.4/build71 candidate
+
+[Source-bound acceptance and qualifications](../evidence/stable-2026.10.4/candidate71/README.md) supersede pending current-release statements below. Prepared stable56→71 and separate RC70→71 native upgrades passed, with preserved existing history and affected offline text/Food/SAF/Gboard checks. Actual emulator runtime is Android11/API30. Earlier RC observations keep their original source attribution. Publication remains pending; no live Food import or cutover occurred.
 
 ## Published RC2/build64 — exact native acceptance complete
 

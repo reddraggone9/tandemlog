@@ -2,7 +2,7 @@
 
 ## Current source of truth
 
-Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is implemented as a separate module and accepted in RC3/build70. Stable2026.10.4 preparation is in progress.
+Lee approved Flutter/Dart + SQLite cache + canonical per-device JSON logs on 2026-09-30. File-based provider-independent serverless sync is foundational. Default household data is shared within one space. Tasks are released; Food is implemented as a separate module and accepted in stable2026.10.4/build71 candidate; publication is pending.
 
 1. [Status, commands and limitations](status.md)
 2. [Product and milestone](product-behavior.md)

@@ -1,0 +1,61 @@
+{
+  "recordedAtUtc": "2026-10-12T21:21:45.352064+00:00",
+  "source": "b8cdfc3941cf171fb6e89bbd19c24e33729799bc",
+  "version": "2026.10.4+71",
+  "candidateRun": 38299989871,
+  "pushCI": 38299988681,
+  "allCandidateFiveJobsPassed": true,
+  "allPushCIJobsPassed": true,
+  "apk": {
+    "artifact": 11772213380,
+    "sha256": "6f8f82191075a139c361be0207623c47da6a5ace861bbed30cc5ba417850b38c",
+    "bytes": 67099269,
+    "certificateSha256": "0a39694089338ce29d9b5407a58d16b819621c9697e15830679a4fee24d49b2d",
+    "package": "com.reddraggone9.tandemlog",
+    "version": "2026.10.4",
+    "code": 71,
+    "nonDebuggable": true
+  },
+  "windowsInstaller": {
+    "artifact": 11770845624,
+    "sha256": "61969aacfd77ca2e8634fece529137dd2b587ef21e06e2163c0376c6e4dac6b4",
+    "bytes": 12390163
+  },
+  "linuxFlatpak": {
+    "artifact": 11773115685,
+    "sha256": "701edf71372df81d5d9cd5fcc9c110eaea567a865f228b60171605774f408a46",
+    "bytes": 9240344
+  },
+  "nativeAcceptance": {
+    "directStable56To71": "Prepared older stable through its native Settings action, then direct owner upgrade; existing Tasks/protected rows and canonical history preserved, with additive local Food schema migration",
+    "rc70To71": "Separate pristine synthetic native baseline; all20 database tables/settings and canonical bytes exact after owner upgrade",
+    "affectedRuntime": "Native shared-text offline save/cold replay; Food add2/remove2/Undo; module isolation; provider-native SAF switch/return; normal and200percent Gboard/editor checks",
+    "runtime": "Android11/API30 x86_64,320x640dp; targetSDK36 is not emulator runtime",
+    "measuredAndroidColdAppLaunchMs": {
+      "fromStable56": 1373,
+      "fromRC70": 1023
+    },
+    "desktop": "Original source-bound hosted Windows four-phase installer lifecycle and Linux installed replacement/restore/startup passed",
+    "manualWindowsGui": "Applicable parent-confirmed stable waiver; no unavailable UI bypass",
+    "reusedUnchangedCoverage": "RC70 and earlier Food/filter/retention/Restore/storage-crash/provider evidence retains original source attribution",
+    "qualifications": [
+      "No strict document-end caret claim",
+      "Large-text Cancel checked after IME dismissal",
+      "Persisted SAF access evidenced by successful cold provider replay; empty uri_grants dump is not independent grant evidence"
+    ]
+  },
+  "cleanup": {
+    "settingsAndAdbPrivilegeRestored": true,
+    "transientEmulatorAdbStopped": true,
+    "noRemainingLabProcesses": true,
+    "memoryLimitGiB": 6,
+    "cpuQuota": 2,
+    "swapBytes": 0,
+    "noNewOOMOrOOMKills": true,
+    "bothSyntheticDatasetsPreserved": true
+  },
+  "authorization": "Lee accepted RC3 and explicitly authorized the full stable release on2026-10-12, then the bounded build-security mitigation after disclosure. No live Food import/profile cutover is part of publication.",
+  "notesSha256": "03eac34a93d52555c76a072115a008d7fc6627ced55c5136fbc9f53e11257d0f",
+  "publicationStillPending": true,
+  "privateFixturesAndPacketNotIncluded": true
+}
