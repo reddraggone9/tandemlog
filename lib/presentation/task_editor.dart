@@ -924,8 +924,12 @@ class _EditorBodyState extends State<_EditorBody> {
       failureMaxHeight = availableHeight * .4;
       // Match the dialog's vertical insets and action padding. Flexible notice
       // space below also accommodates buttons that wrap with enlarged text.
-      modalActionsMaxHeight = (availableHeight - 48 - media.padding.vertical)
-          .clamp(0.0, double.infinity);
+      final failureBodyReserve = modalActionsInContent
+          ? lineHeight(styles.bodyLarge) + 8
+          : 0.0;
+      modalActionsMaxHeight =
+          (availableHeight - 48 - media.padding.vertical - failureBodyReserve)
+              .clamp(0.0, double.infinity);
       return buildEditor(context);
     },
   );
@@ -1082,39 +1086,54 @@ class _EditorBodyState extends State<_EditorBody> {
         ],
       ),
     );
-    final actions = Row(
-      children: [
-        if (widget.onDelete != null)
-          TextButton(
+    final deleteAction = widget.onDelete == null
+        ? null
+        : TextButton(
             onPressed: editingFrozen ? null : delete,
             child: const Text('Delete'),
-          ),
-        Expanded(
-          child: Wrap(
+          );
+    final cancelAction = TextButton(
+      onPressed: editingFrozen ? null : close,
+      child: const Text('Cancel'),
+    );
+    final saveAction = FilledButton(
+      onPressed: busy || error != null ? null : submit,
+      child: Text(
+        busy
+            ? 'Saving…'
+            : widget.textSession?.hasPendingReceipt == true
+            ? 'Retry Save'
+            : 'Save changes',
+      ),
+    );
+    final actions = bulk && failure != null && modalActionsInContent
+        // Give failed bulk actions the full footer width. A fixed Delete
+        // column otherwise wraps Save into an extra line and squeezes the
+        // readable notice at enlarged phone text.
+        ? Wrap(
             alignment: WrapAlignment.end,
             spacing: 8,
             runSpacing: 4,
+            children: [?deleteAction, cancelAction, saveAction],
+          )
+        : Row(
             children: [
-              TextButton(
-                onPressed: editingFrozen ? null : close,
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                onPressed: busy || error != null ? null : submit,
-                child: Text(
-                  busy
-                      ? 'Saving…'
-                      : widget.textSession?.hasPendingReceipt == true
-                      ? 'Retry Save'
-                      : 'Save changes',
+              ?deleteAction,
+              Expanded(
+                child: Wrap(
+                  alignment: WrapAlignment.end,
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [cancelAction, saveAction],
                 ),
               ),
             ],
-          ),
-        ),
-      ],
-    );
-    final pinBulkFailure = bulk && !widget.panel && !modalActionsInContent;
+          );
+    final pinBulkFailure = bulk && !widget.panel;
+    // A rejected bulk Save must keep its feedback beside the retry/close
+    // actions, even when the clean editor uses scrolling actions for space.
+    final actionsInContent =
+        modalActionsInContent && !(pinBulkFailure && failure != null);
     Widget failureNotice(String message) => Semantics(
       liveRegion: true,
       child: Text(
@@ -1200,10 +1219,10 @@ class _EditorBodyState extends State<_EditorBody> {
               width: 480,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: [content, if (modalActionsInContent) actions],
+                children: [content, if (actionsInContent) actions],
               ),
             ),
-            actions: modalActionsInContent
+            actions: actionsInContent
                 ? const []
                 : [
                     if (pinBulkFailure && failure != null)
