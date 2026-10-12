@@ -1,0 +1,48 @@
+native-folder	Real native Linux folder opening with spaces and Unicode	﻿2026-10-11T17:28:54.7359196Z ##[group]Run export TANDEMLOG_FOLDER_SMOKE_ROOT="$RUNNER_TEMP/folder-smoke"
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7359638Z [36;1mexport TANDEMLOG_FOLDER_SMOKE_ROOT="$RUNNER_TEMP/folder-smoke"[0m
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7360001Z [36;1mexport XDG_CONFIG_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/config"[0m
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7360325Z [36;1mexport XDG_DATA_HOME="$TANDEMLOG_FOLDER_SMOKE_ROOT/data"[0m
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7360766Z [36;1mxvfb-run -a dbus-run-session -- flutter test integration_test/folder_actions_smoke_test.dart -d linux[0m
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7415384Z shell: /usr/bin/bash -e {0}
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:54.7415611Z ##[endgroup]
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:58.4799920Z [1/3] Linux SDK
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:28:59.6435075Z   ├─ [1/3] linux-x64-debug/linux-x64-flutter-gtk                 1,162ms
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.2496140Z   ├─ [2/3] linux-x64-profile/linux-x64-flutter-gtk                 273ms
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.6387422Z   └─ [3/3] linux-x64-release/linux-x64-flutter-gtk                 217ms
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.8323457Z Resolving dependencies...
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.8981296Z Downloading packages...
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9576495Z   code_assets 1.2.1 (2.1.0 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9576940Z   cross_file 0.3.5+5 (0.4.0 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9577262Z   jni 1.0.3 (1.1.0 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9577470Z   jni_flutter 1.0.3 (1.0.4+1 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9577711Z   material_color_utilities 0.13.0 (0.13.1 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9578103Z   native_toolchain_c 0.19.3 (0.19.5 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9578338Z   objective_c 9.5.0 (9.6.2 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9578920Z   test_api 0.7.12 (0.7.15 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9579230Z   vector_math 2.4.0 (2.4.3 available)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9579514Z Got dependencies!
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9579779Z 9 packages have newer versions incompatible with dependency constraints.
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:00.9580101Z Try `flutter pub outdated` for more information.
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:01.5024013Z 
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:06.9450584Z Building Linux application...                                   
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:06.9459680Z error: toolchain '1.99.0-x86_64-unknown-linux-gnu' is not installed
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3932710Z ##[group]❌ loading /home/runner/work/tandemlog/tandemlog/integration_test/folder_actions_smoke_test.dart (failed)
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3935216Z Failed to load "/home/runner/work/tandemlog/tandemlog/integration_test/folder_actions_smoke_test.dart": Build process failed
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3964959Z package:flutter_tools/src/base/common.dart 34:3                    throwToolExit
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3965645Z package:flutter_tools/src/linux/build_linux.dart 231:5             _runBuild
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3966187Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3966676Z package:flutter_tools/src/linux/build_linux.dart 100:5             buildLinux
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3967179Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3967742Z package:flutter_tools/src/linux/linux_device.dart 64:5             LinuxDevice.buildForDevice
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3968533Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3969085Z package:flutter_tools/src/desktop_device.dart 108:7                DesktopDevice.startApp
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3969653Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3970260Z package:flutter_tools/src/test/integration_test_device.dart 59:39  IntegrationTestTestDevice.start
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3970874Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3971484Z package:flutter_tools/src/test/flutter_platform.dart 679:51        FlutterPlatform._startTest.<fn>
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3972083Z ===== asynchronous gap ===========================
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3972581Z package:flutter_tools/src/base/async_guard.dart 108:24             asyncGuard.<fn>
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3973296Z ##[endgroup]
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.3993398Z 
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.4018155Z ##[error]0 tests passed, 1 failed.
+native-folder	Real native Linux folder opening with spaces and Unicode	2026-10-11T17:29:17.4157978Z ##[error]Process completed with exit code 1.

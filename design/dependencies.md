@@ -19,7 +19,15 @@ not a claim of release acceptance. Unpublished development candidate
 2026.10.3/build54 requires the actual trusted-main release/R8 package and bounded
 exact-artifact Android checks before any publication; signing policy is unchanged.
 
-## Direct application dependencies
+## Bounded action and URL-launcher patches — 2026-10-11
+
+The isolated [per-version source review and smoke verification](dependency-patches-2026-10-11.md)
+proposes download-artifact8.0.2, upload-artifact7.0.2 and url_launcher6.3.3 on
+current main. Native URL-launcher locks stay unchanged. Integration/publication
+remain coordinated with active RC3; held AGP #1/Gradle #2 remain outside scope.
+Historical inventory below is retained as its dated observation.
+
+## Direct application dependencies (historical inventory)
 
 | Dependency | Declared | Resolved | Purpose |
 |---|---|---|---|

@@ -1,0 +1,27 @@
+{
+  "atUtc": "2026-10-12T05:56:55.422979+00:00",
+  "exactAuditedInputsAndEvidencePreserved": true,
+  "files": {
+    "integration_test/folder_actions_smoke_test.dart": "38f4e228b6d0a0d069defb3255fc7a0cc8118e212a7f87f8164ffe0d739d64d3",
+    "test/folder_actions_test.dart": "92e4cf561fbf8023a34d60a4fefe156327043dc499ceca5817febb879d5a9fd9",
+    "tool/dependency_smoke.py": "58243a8b5bb484751ae90dc7b568cea9c5fc823ed4d7eacb19f0d3f8885db28c",
+    "native-missing-launch-expectation-failure.log": "e4a1b84ab60465a7eed60ff0572badbfcb1fdf912b00dded63d4cc40fe2f26dd",
+    "source-preservation.json": "e1f4e154f10b53edb403bae8e933e1215045ee6245ec0b05a6e1082a4247d860",
+    "final-native-folder.log": "6374241a996aad69c18ef4ea3ae78d1d74d7d2e88b46727e4698140e18d746dc",
+    "download-audit.json": "6302a5aeeed7304fce33190fbb9a99e02bc85270a1c493d1109656e12d734e4f",
+    "upload-old-audit.json": "229277f7ac52817148693694fd2efd8f650efbd48bb9d21a7d4c0347ffc243c6",
+    "bundle_checks.cjs": "081e13cc1d4a77ecfca252653ef132c894f085e37d14729410a6d541e0e42882",
+    "initial-native-bootstrap-failure.log": "9a26f7c3b879ed7661175509acd09d1d220ef8542e585eb8704634110409c479",
+    "upload-audit.json": "f6126c5ed63d6a6a5aca32687d4891956675533ebda1e25dc6c6bd7213314daf",
+    "cross-run-download.log": "75ba10b6098920dab041cb56e93082d3708011d256bede8e522f5f030856213d",
+    "download-old-audit.json": "6e606ba738537a6927d30927b566fe40fffa8d14fa505a482597aae3fc069e0f",
+    "local-release-tool-tests.log": "437c2ab35f6f48fdd52241196cfcde495dc753a9c52fd5cf964beb7b3008df27",
+    "bundle-behavior.log": "e878fc4b09e0272565f66eede82d30f989e56cab85ea5c391313d727ccc6564e"
+  },
+  "priorAllGreenCI": 38170327228,
+  "priorAuditedHead": "54e4ac0011710648d670c7e9c801f058e79256fe",
+  "crossRunArtifactSmoke": 38159774647,
+  "nativeFolderSmoke": 38160920589,
+  "newSecurityOrProductImplicationIdentified": false,
+  "inheritedAdvisoryAndGTKQualificationsRetained": true
+}

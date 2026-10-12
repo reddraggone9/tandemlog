@@ -1,0 +1,216 @@
+artifact	Set up job	﻿2026-10-11T17:29:23.6110634Z Current runner version: '2.337.0'
+artifact	Set up job	2026-10-11T17:29:23.6126048Z ##[group]Runner Image Provisioner
+artifact	Set up job	2026-10-11T17:29:23.6126662Z Hosted Compute Agent
+artifact	Set up job	2026-10-11T17:29:23.6127052Z Version: 20261002.596
+artifact	Set up job	2026-10-11T17:29:23.6127446Z Commit: c3d12f3313a95f25162a1503be624f3b0617f8c0
+artifact	Set up job	2026-10-11T17:29:23.6127841Z Build Date: 2026-10-02T22:28:27Z
+artifact	Set up job	2026-10-11T17:29:23.6128297Z Worker ID: {b274c1a3-6938-4ba6-a6ed-f3b6ed0a6edf}
+artifact	Set up job	2026-10-11T17:29:23.6128844Z Region: centralus
+artifact	Set up job	2026-10-11T17:29:23.6129184Z Cloud: Azure
+artifact	Set up job	2026-10-11T17:29:23.6129510Z ##[endgroup]
+artifact	Set up job	2026-10-11T17:29:23.6130306Z ##[group]Operating System
+artifact	Set up job	2026-10-11T17:29:23.6130689Z Ubuntu
+artifact	Set up job	2026-10-11T17:29:23.6131021Z 24.04.5
+artifact	Set up job	2026-10-11T17:29:23.6131308Z LTS
+artifact	Set up job	2026-10-11T17:29:23.6131675Z ##[endgroup]
+artifact	Set up job	2026-10-11T17:29:23.6131990Z ##[group]Runner Image
+artifact	Set up job	2026-10-11T17:29:23.6132365Z Image: ubuntu-24.04
+artifact	Set up job	2026-10-11T17:29:23.6132719Z Version: 20261004.327.1
+artifact	Set up job	2026-10-11T17:29:23.6133297Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20261004.327/images/ubuntu/Ubuntu2404-Readme.md
+artifact	Set up job	2026-10-11T17:29:23.6134290Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20261004.327
+artifact	Set up job	2026-10-11T17:29:23.6134855Z ##[endgroup]
+artifact	Set up job	2026-10-11T17:29:23.6135533Z ##[group]GITHUB_TOKEN Permissions
+artifact	Set up job	2026-10-11T17:29:23.6136802Z Actions: read
+artifact	Set up job	2026-10-11T17:29:23.6137135Z Contents: read
+artifact	Set up job	2026-10-11T17:29:23.6137701Z Metadata: read
+artifact	Set up job	2026-10-11T17:29:23.6138057Z ##[endgroup]
+artifact	Set up job	2026-10-11T17:29:23.6139421Z Secret source: Actions
+artifact	Set up job	2026-10-11T17:29:23.6139964Z Cache mode: write
+artifact	Set up job	2026-10-11T17:29:23.6140401Z Prepare workflow directory
+artifact	Set up job	2026-10-11T17:29:23.6355757Z Prepare all required actions
+artifact	Set up job	2026-10-11T17:29:23.6384906Z Getting action download info
+artifact	Set up job	2026-10-11T17:29:23.8447669Z Download action repository 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1' (SHA:3d3c42e5aac5ba805825da76410c181273ba90b1)
+artifact	Set up job	2026-10-11T17:29:23.9380808Z Download action repository 'actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9' (SHA:cf430e030ddbb5b0abf93d22962f4752f3646cd9)
+artifact	Set up job	2026-10-11T17:29:24.4438224Z Download action repository 'actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333' (SHA:9000827ccba6bdab643e8b6fd33ac0654aef8333)
+artifact	Set up job	2026-10-11T17:29:24.9116145Z Complete job name: artifact
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-10-11T17:29:24.9617323Z ##[group]Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9618197Z with:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9618804Z   repository: reddraggone9/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9623896Z   token: ***
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9624318Z   ssh-strict: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9624754Z   ssh-user: git
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9625197Z   persist-credentials: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9625690Z   clean: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9626149Z   sparse-checkout-cone-mode: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9626683Z   fetch-depth: 1
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9627119Z   fetch-tags: false
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9627559Z   show-progress: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9628011Z   lfs: false
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9628520Z   submodules: false
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9628977Z   set-safe-directory: true
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9629515Z   allow-unsafe-pr-checkout: false
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:24.9630132Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0224059Z Syncing repository: reddraggone9/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0225800Z ##[group]Getting Git version info
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0226614Z Working directory is '/home/runner/work/tandemlog/tandemlog'
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0227664Z [command]/usr/bin/git version
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0256462Z git version 2.55.0
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0267639Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0274160Z Temporarily overriding HOME='/home/runner/work/_temp/a46f9d5d-c010-4aac-96c4-c7f35f9174b6' before making global git config changes
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0276082Z Adding repository directory to the temporary git global config as a safe directory
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0277344Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0307708Z Deleting the contents of '/home/runner/work/tandemlog/tandemlog'
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0309747Z ##[group]Determining repository object format
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0310989Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0311718Z ##[group]Initializing the repository
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0312846Z [command]/usr/bin/git init /home/runner/work/tandemlog/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0396572Z hint: Using 'master' as the name for the initial branch. This default branch name
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0397884Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0399195Z hint: to use in all of your new repositories, which will suppress this warning,
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0400203Z hint: call:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0400770Z hint:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0401583Z hint: 	git config --global init.defaultBranch <name>
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0402400Z hint:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0403009Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0404033Z hint: 'development'. The just-created branch can be renamed via this command:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0404995Z hint:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0405613Z hint: 	git branch -m <name>
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0406130Z hint:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0406794Z hint: Disable this message with "git config set advice.defaultBranchName false"
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0407918Z Initialized empty Git repository in /home/runner/work/tandemlog/tandemlog/.git/
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0410101Z [command]/usr/bin/git remote add origin https://github.com/reddraggone9/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0440103Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0440889Z ##[group]Disabling automatic garbage collection
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0441941Z [command]/usr/bin/git config --local gc.auto 0
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0464676Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0465599Z ##[group]Setting up auth
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0466166Z Removing SSH command configuration
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0467727Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0489730Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0734682Z Removing HTTP extra header
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0738131Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0761000Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0915880Z Removing includeIf entries pointing to credentials config files
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0918255Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.0940029Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1104703Z [command]/usr/bin/git config --file /home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config http.https://github.com/.extraheader AUTHORIZATION: basic ***
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1129420Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path /home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1151811Z [command]/usr/bin/git config --local includeIf.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path /home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1176410Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git.path /github/runner_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1200517Z [command]/usr/bin/git config --local includeIf.gitdir:/github/workspace/.git/worktrees/*.path /github/runner_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1220626Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1221967Z ##[group]Fetching the repository
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:25.1225888Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +fd6b7689fe8b7996d784ff438377d1d6c5749f7f:refs/remotes/origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9474942Z From https://github.com/reddraggone9/tandemlog
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9476019Z  * [new ref]         fd6b7689fe8b7996d784ff438377d1d6c5749f7f -> origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9487181Z [command]/usr/bin/git branch --list --remote origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9501462Z   origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9506609Z [command]/usr/bin/git rev-parse refs/remotes/origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9522659Z fd6b7689fe8b7996d784ff438377d1d6c5749f7f
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9525356Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9526093Z ##[group]Determining the checkout info
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9527350Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9529414Z [command]/usr/bin/git sparse-checkout disable
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9565364Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9588028Z ##[group]Checking out the ref
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:27.9609415Z [command]/usr/bin/git checkout --progress --force -B audit/dependency-smoke-20261011 refs/remotes/origin/audit/dependency-smoke-20261011
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:28.3212088Z Switched to a new branch 'audit/dependency-smoke-20261011'
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:28.3219139Z branch 'audit/dependency-smoke-20261011' set up to track 'origin/audit/dependency-smoke-20261011'.
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:28.3263224Z ##[endgroup]
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:28.3299962Z [command]/usr/bin/git log -1 --format=%H
+artifact	Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:28.3300351Z fd6b7689fe8b7996d784ff438377d1d6c5749f7f
+artifact	Run python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"	﻿2026-10-11T17:29:28.3495043Z ##[group]Run python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"
+artifact	Run python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"	2026-10-11T17:29:28.3495427Z [36;1mpython3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"[0m
+artifact	Run python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"	2026-10-11T17:29:28.3687132Z shell: /usr/bin/bash -e {0}
+artifact	Run python3 tool/dependency_smoke.py seed "$RUNNER_TEMP/seed"	2026-10-11T17:29:28.3687368Z ##[endgroup]
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	﻿2026-10-11T17:29:28.4069253Z ##[group]Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4069525Z with:
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4069642Z   name: dependency-smoke
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4069781Z   path: /home/runner/work/_temp/seed/*
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4069935Z   retention-days: 2
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070053Z   if-no-files-found: error
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070185Z   compression-level: 6
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070327Z   overwrite: false
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070479Z   include-hidden-files: false
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070611Z   archive: true
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4070727Z ##[endgroup]
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4917031Z With the provided path, there will be 2 files uploaded
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4920145Z Artifact name is valid!
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.4920429Z Root directory input is valid!
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.7494049Z Uploading artifact: dependency-smoke.zip
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.7518356Z Beginning upload of artifact content to blob storage
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.8968570Z Uploaded bytes 408
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.9331849Z Finished uploading artifact content to blob storage!
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.9332732Z SHA256 digest of uploaded artifact is 78fa25f8404a0ca4f20d22ba6f1d456264ebaf28478ff0b63cdb291b51df7db6
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:28.9333408Z Finalizing artifact upload
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:29.2899212Z Artifact dependency-smoke successfully finalized. Artifact ID 11709044097
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:29.2899713Z Artifact dependency-smoke has been successfully uploaded! Final size is 408 bytes. Artifact ID is 11709044097
+artifact	Run actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9	2026-10-11T17:29:29.2900127Z Artifact download URL: https://github.com/reddraggone9/tandemlog/actions/runs/38159774647/artifacts/11709044097
+artifact	Require a different source run	﻿2026-10-11T17:29:29.2989007Z ##[group]Run test "$SOURCE_RUN_ID" != "$GITHUB_RUN_ID"
+artifact	Require a different source run	2026-10-11T17:29:29.2989239Z [36;1mtest "$SOURCE_RUN_ID" != "$GITHUB_RUN_ID"[0m
+artifact	Require a different source run	2026-10-11T17:29:29.3039296Z shell: /usr/bin/bash -e {0}
+artifact	Require a different source run	2026-10-11T17:29:29.3039431Z env:
+artifact	Require a different source run	2026-10-11T17:29:29.3039548Z   SOURCE_RUN_ID: 38159734007
+artifact	Require a different source run	2026-10-11T17:29:29.3039684Z ##[endgroup]
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	﻿2026-10-11T17:29:29.3142180Z ##[group]Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3142561Z with:
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3142677Z   name: dependency-smoke
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3142804Z   run-id: 38159734007
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3144366Z   github-token: ***
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3144497Z   path: /home/runner/work/_temp/received
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3144653Z   digest-mismatch: error
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3144784Z   merge-multiple: false
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3144916Z   repository: reddraggone9/tandemlog
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3145062Z   skip-decompress: false
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3145185Z ##[endgroup]
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.3979183Z Downloading single artifact
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.6280209Z Preparing to download the following artifacts:
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.6280617Z - dependency-smoke (ID: 11709479694, Size: 408, Expected Digest: sha256:90d044015b6090f9d3bd959c1cddd795e9906ba0d4921c3d5f76b87424709d68)
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.6299100Z Downloading artifact '11709479694' from 'reddraggone9/tandemlog'
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.8254839Z Redirecting to blob download url: https://productionresultssa18.blob.core.windows.net/actions-results/b6048b52-6a1c-4914-9b93-674588e61bd4/workflow-job-run-e045665b-c208-57d0-aa33-8553a5ecdbdd/artifacts/5633e15dbda1a84757277b17d5d0185a1cf66e3bb4574ad6e82bf55dc56b3f2b.zip
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.8255560Z Starting download of artifact to: /home/runner/work/_temp/received
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9797377Z (node:2141) [DEP0005] DeprecationWarning: Buffer() is deprecated due to security and usability issues. Please use the Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() methods instead.
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9797950Z (Use `node --trace-deprecation ...` to show where the warning was created)
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9821716Z SHA256 digest of downloaded artifact is 90d044015b6090f9d3bd959c1cddd795e9906ba0d4921c3d5f76b87424709d68
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9822074Z Artifact download completed successfully.
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9822231Z Total of 1 artifact(s) downloaded
+artifact	Run actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333	2026-10-11T17:29:29.9824774Z Download artifact has finished successfully
+artifact	Require exact filenames, bytes and checksums	﻿2026-10-11T17:29:29.9912373Z ##[group]Run python3 tool/dependency_smoke.py verify "$RUNNER_TEMP/received"
+artifact	Require exact filenames, bytes and checksums	2026-10-11T17:29:29.9912664Z [36;1mpython3 tool/dependency_smoke.py verify "$RUNNER_TEMP/received"[0m
+artifact	Require exact filenames, bytes and checksums	2026-10-11T17:29:29.9961130Z shell: /usr/bin/bash -e {0}
+artifact	Require exact filenames, bytes and checksums	2026-10-11T17:29:29.9961271Z ##[endgroup]
+artifact	Require exact filenames, bytes and checksums	2026-10-11T17:29:30.0179007Z {"filename": "dependency smoke café 東京.txt", "bytes": 46, "sha256": "56b4f9b18877709a912cf6f1cd80242acf82c80658689ae7dc3e520d024b4947"}
+artifact	Require exact filenames, bytes and checksums	2026-10-11T17:29:30.0179473Z {"filename": "provenance.json", "bytes": 56, "sha256": "d410129eabad091cb11780b65ce97e52f855596717f6afe283fdee65bc544e1f"}
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	﻿2026-10-11T17:29:30.0263786Z Post job cleanup.
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0749777Z [command]/usr/bin/git version
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0776059Z git version 2.55.0
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0799673Z Temporarily overriding HOME='/home/runner/work/_temp/4bf31846-bdbf-4331-a47a-175549a66418' before making global git config changes
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0800337Z Adding repository directory to the temporary git global config as a safe directory
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0803087Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/tandemlog/tandemlog
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0824792Z Removing SSH command configuration
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0828007Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.0851256Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1015434Z Removing HTTP extra header
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1018124Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1040614Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1203851Z Removing includeIf entries pointing to credentials config files
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1204477Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1223341Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1223760Z includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1224034Z includeif.gitdir:/github/workspace/.git.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1224229Z includeif.gitdir:/github/workspace/.git/worktrees/*.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1229843Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1246481Z /home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1253159Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git.path \/home\/runner\/work\/_temp\/git\-credentials\-5d8ffd91\-add7\-4a3c\-9898\-4267c015ec9f\.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1278915Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1295406Z /home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1300713Z [command]/usr/bin/git config --local --unset includeif.gitdir:/home/runner/work/tandemlog/tandemlog/.git/worktrees/*.path \/home\/runner\/work\/_temp\/git\-credentials\-5d8ffd91\-add7\-4a3c\-9898\-4267c015ec9f\.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1348898Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1365348Z /github/runner_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1369898Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git.path \/github\/runner_temp\/git\-credentials\-5d8ffd91\-add7\-4a3c\-9898\-4267c015ec9f\.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1392425Z [command]/usr/bin/git config --local --get-all includeif.gitdir:/github/workspace/.git/worktrees/*.path
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1407605Z /github/runner_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1412214Z [command]/usr/bin/git config --local --unset includeif.gitdir:/github/workspace/.git/worktrees/*.path \/github\/runner_temp\/git\-credentials\-5d8ffd91\-add7\-4a3c\-9898\-4267c015ec9f\.config
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1435271Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+artifact	Post Run actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1	2026-10-11T17:29:30.1592668Z Removing credentials config '/home/runner/work/_temp/git-credentials-5d8ffd91-add7-4a3c-9898-4267c015ec9f.config'
+artifact	Complete job	﻿2026-10-11T17:29:30.1696224Z Cleaning up orphan processes
